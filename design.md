@@ -35,7 +35,14 @@ The purpose of this document is to clearly identify:
 
 ## Specifications
 
+### Stack 
+
 1. Database: PostgreSQL. One table each for users, submissions, and comments
 2. Server: Python Flask
 3. WSGI: Gunicorn
 4. Host: Heroku
+
+### Security
+
+1. Password column is salted and hashed - no plaintext
+2. Failure to login error does not specify if username or password is incorrect
