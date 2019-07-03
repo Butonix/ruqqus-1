@@ -38,6 +38,7 @@ The purpose of this document is to clearly identify:
 ### Stack 
 
 1. Database: PostgreSQL. One table each for users, submissions, and comments
+2. ORM: SQLalchemy
 2. Server: Python Flask
 3. WSGI: Gunicorn
 4. Host: Heroku
