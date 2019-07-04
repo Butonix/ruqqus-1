@@ -16,6 +16,7 @@ def createTables():
                   extend_existing=True,
                   mysql_engine='InnoDB',
                   mysql_charset='utf8')
+
     comments = Table('comments', metadata,
                      Column('id', BigInteger, primary_key=True),
                      Column('author_id', BigInteger, default=0),
@@ -27,6 +28,7 @@ def createTables():
                      extend_existing=True,
                      mysql_engine='InnoDB',
                      mysql_charset='utf8')
+
     submissions = Table('submissions', metadata,
                         Column('id', BigInteger, primary_key=True),
                         Column('author_id', BigInteger, default=0),
@@ -37,6 +39,7 @@ def createTables():
                         extend_existing=True,
                         mysql_engine='InnoDB',
                         mysql_charset='utf8')
+
     metadata.create_all(_engine)
 
 createTables()
