@@ -3,7 +3,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import *
 from os import environ
-from teedee.creds.config import app
 
 
 
