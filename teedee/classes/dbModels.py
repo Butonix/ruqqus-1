@@ -3,25 +3,17 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import *
 from os import environ
-from teedee.classes.__init__ import app
+from teedee.creds.config import app
 
-DBUNAME = "root"
-DBPASS = ""
-DB = "teedee"
-DBPORT = 3306
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{0}:{1}@127.0.0.1/{2}?host=127.0.0.1?port={3}/charset=utf8/' \
-                                        ''.format(DBUNAME, DBPASS, DB,DBPORT)
 
 _engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 db = sessionmaker(bind=_engine)()
-Base=declarative_base()
+Base = declarative_base()
 
 class User(Base):
 
     __tablename__="users"
-
     id = Column(BigInteger, primary_key=True)
     username = Column(String, default=None)
     email = Column(String, default=None)
@@ -92,3 +84,5 @@ class Comment(Base):
                "parent_comment=%s, created_utc=%s, is_banned=%s)>" \
                "" % (self.id, self.author_id, self.body, self.parent_submission,
                    self.parent_comment, self.created_utc, self.is_banned)
+
+
