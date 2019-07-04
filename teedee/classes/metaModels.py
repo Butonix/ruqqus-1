@@ -16,6 +16,14 @@ def createTables():
                   extend_existing=True,
                   mysql_engine='InnoDB',
                   mysql_charset='utf8')
+    ips = Table('ips', metadata,
+                   Column('id', BigInteger, primary_key=True),
+                   Column('uid', BigInteger, default=0),
+                   Column('ip', String(40), default=None),
+                   extend_existing=True,
+                   mysql_engine='InnoDB',
+                   mysql_charset='utf8'
+                   )
 
     comments = Table('comments', metadata,
                      Column('id', BigInteger, primary_key=True),
