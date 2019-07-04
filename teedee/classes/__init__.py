@@ -1,3 +1,1 @@
-from user import *
-from submission import *
-from comment import *
+from dbModels import *
