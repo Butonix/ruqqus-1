@@ -26,6 +26,7 @@ The purpose of this document is to clearly identify:
 4. Allow up/down voting on submissions and comments
 5. Sort submissions by new, hot, etc
 6. Allow users to delete their own content
+7. Allow users to report submissions and comments
 
 ### Administration
 
