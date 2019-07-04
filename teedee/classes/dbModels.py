@@ -6,7 +6,7 @@ from os import environ
 
 
 
-_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+_engine = create_engine(environ.get("DATABASE_URL"))
 db = sessionmaker(bind=_engine)()
 Base = declarative_base()
 
