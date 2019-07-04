@@ -1,1 +1,1 @@
-web: gunicorn teedee/__main__.py:app
+web: gunicorn teedee/__main__:app
