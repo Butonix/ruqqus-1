@@ -46,7 +46,7 @@ class IPs(Base):
     ip = Column(VARCHAR(40), default=None)
 
     def __repr__(self):
-        return "<Ips(id=%s, uid=%s, ip=%s)>" % (self.id, self.uid, self.ip)
+        return f"<Ips(id={self.id}, uid={self.user_id}, ip={self.ip})>"
 
 
 class Submission(Base):
