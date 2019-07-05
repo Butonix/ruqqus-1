@@ -20,7 +20,6 @@ class User(Base):
     passhash = Column(String, default=None)
     created_utc = Column(BigInteger, default=0)
     is_admin = Column(Boolean, default=False)
-    is_mod = Column(Boolean, default=False)
     is_banned = Column(Boolean, default=False)
     ips = relationship('IPs', backref='users')
 
