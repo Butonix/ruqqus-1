@@ -15,7 +15,7 @@ def u_username(username):
     
     #username is unique so at most this returns one result. Otherwise 404
     try:
-        result = next(session.query(User).filter_by(username=username))
+        result = next(db.query(User).filter_by(username=username))
     except StopIteration:
         abort(404)
         
