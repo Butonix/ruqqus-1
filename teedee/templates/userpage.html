@@ -1,8 +1,19 @@
 {% extends "default.html" %}
 
-<!-- User object is passed into context as user -->
+{% block title %}
+<title>{{ u.name }}</title>
+<meta name="description" content="on Tee_Dee">
+{% endblock %}
+
+{% block adminpanel %}
+{% endblock %}
 
 {% block content %}
-<h1>{{ user.username }}</h1>
-<p>More stuff coming later</p>
+<h1>{{ u.name }}</h1>
+{% if u.banned %} <p><span class="red"><b>[This user is banned.]</b></span></p>{% endif %}
+{% if v.admin or v.id==u.id or not u.banned %}
+<p> {% if u.admin %}{% include "tags/a.html"%}| {% endif %}User since: {{ u.created_date }}</p>
+<hr>
+
+{% endif %}
 {% endblock %}

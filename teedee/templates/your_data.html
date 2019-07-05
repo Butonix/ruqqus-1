@@ -1,0 +1,25 @@
+{% extends "default.html" %}
+
+{% block title %}
+<title>Your Data</title>
+<meta name="description" content="All personal data associated with your Captain's Logbook account.">
+{% endblock %}
+
+{% block content %}
+{% set redact=["patreon_token","patreon_refresh_token"] %}
+<h1>Your Data</h1>
+<p>This is the data that is connected to your Captain's Logbook account.</p>
+<table style="max-width:100%">
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+{% for k in v.__dict__ if k not in redact %}
+<tr>
+<td>{{ k }}</td>
+<td>{{ v.__dict__[k] }}</td>
+</tr>
+{% endfor %}
+</table>
+<p>Your Captain's Logbook account also has Reddit {% if v.patreon_token %}and Patreon {% endif %}authentication tokens associated with it. For security purposes, these are not shown.</p>
+{% endblock %}
