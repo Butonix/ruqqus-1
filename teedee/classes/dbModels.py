@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import *
 from os import environ
+from flask import render_template
 
 
 
@@ -31,6 +32,10 @@ class User(Base):
 
     def verifyPass(self, password):
         return check_password_hash(self.hash, password)
+    
+    def rendered_userpage(self):
+        
+        return render_template("userpage.html", user=self)
 
     def __repr__(self):
         return "<User(id=%s, username=%s, email=%s, passhash=%s, " \
