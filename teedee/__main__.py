@@ -30,7 +30,7 @@ def post_base36id(base36id):
     try:
         post=db.query(Submissions).filter_by(id=base10id).all()[0]
     except IndexError:
-        abort 404
+        abort(404)
         
     return f"post {base36id} (id {base10id}) with title {post.title} found."
     
