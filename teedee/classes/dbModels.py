@@ -13,7 +13,7 @@ Base = declarative_base()
 
 class User(Base):
 
-    __tablename__="users"
+    __tablename__="Users"
     id = Column(BigInteger, primary_key=True)
     username = Column(String, default=None)
     email = Column(String, default=None)
@@ -45,7 +45,7 @@ class User(Base):
                     self.created_utc, self.is_activated, self.is_admin,
                      self.is_mod, self.is_banned, self.ips)
 class IPs(Base):
-    __tablename__ = "ips"
+    __tablename__ = "Ips"
     id = Column(BigInteger, primary_key=True)
     user_id = Column(BigInteger, ForeignKey(User.id), default=0)
     ip = Column(VARCHAR(40), default=None)
@@ -56,7 +56,7 @@ class IPs(Base):
 
 class Submission(Base):
 
-    __tablename__="submissions"
+    __tablename__="Submissions"
 
     id = Column(BigInteger, primary_key=True)
     author_id = Column(BigInteger, ForeignKey(User.id))
@@ -73,7 +73,7 @@ class Submission(Base):
 
 class Comment(Base):
 
-    __tablename__="comments"
+    __tablename__="Comments"
 
     id = Column(BigInteger, primary_key=True)
     author_id = Column(BigInteger, ForeignKey(User.id))
