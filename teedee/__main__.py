@@ -11,7 +11,7 @@ def test():
     return "Hello Bros"
 
 @app.route("/u/<username>")
-def u_username():
+def u_username(username):
     
     #username is unique so at most this returns one result. Otherwise 404
     try:
