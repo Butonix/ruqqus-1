@@ -3,7 +3,7 @@
 <head>
 
   <link rel="stylesheet" type="text/css" href="/static/style/style.css">
-  <link rel="icon" href="/assets/images/favicon.ico?v=2">
+  <link rel="icon" href="/assets/images/favicon.ico?v=1">
   
   {% block title %}
   <title>T_D: USA 24/7/365</title>
@@ -71,7 +71,6 @@
  <div class="wrapper">
   <header>
     {% include "header.html" %}
-    {% block storynav %}{% endblock %}
     {% if v %}
       {% if v.admin %}
          {% block adminpanel %}{% endblock %}
@@ -87,6 +86,6 @@
     {% include "footer.html" %}
   </footer>
 </div>
-<script src="/assets/js/scale.js"></script>
+<script src="/static/js/scale.js"></script>
   </body>
 </html>
