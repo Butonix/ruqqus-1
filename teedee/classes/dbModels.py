@@ -6,9 +6,7 @@ from os import environ
 from flask import render_template
 from random import seed, randint
 from teedee.helpers.base36 import *
-
-
-
+from time import strftime
 
 _engine = create_engine(environ.get("DATABASE_URL"))
 db = sessionmaker(bind=_engine)()
@@ -26,7 +24,6 @@ class User(Base):
     is_banned = Column(Boolean, default=False)
     ips = relationship('IPs', backref='users')
     username_verified = Column(Boolean, default=False)
-
 
     def hashPass(self, password):
         self.hash = generate_password_hash(password, method='pbkdf2:sha512', salt_length=8)
