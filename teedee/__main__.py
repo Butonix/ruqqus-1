@@ -15,8 +15,8 @@ def u_username(username):
     
     #username is unique so at most this returns one result. Otherwise 404
     try:
-        result = next(db.query(User).filter_by(username=username).all())
-    except StopIteration:
+        result = db.query(User).filter_by(username=username).all()[0]
+    except IndexError:
         abort(404)
         
     return result.rendered_userpage()
