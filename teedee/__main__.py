@@ -1,7 +1,7 @@
 from teedee.classes.dbModels import *
 from os import environ
 from flask import *
-from helpers import *
+from teedee.helpers import *
 
 app = Flask(__name__, template_folder='../templates', static_folder='../static')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
