@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %}T_D: America 24/7{% endblock title %}</title>
+</head>
+
+<body>
+  <div id="header">
+    {% include "header.html" %}
+  </div>
+  
+  <div id="content">
+    {% block content %}
+    {% endblock %}
+  </div>
+  
+  <div id="footer">
+    {% include "footer.html" %}
+  </div>
+</body>
+
+</html>
