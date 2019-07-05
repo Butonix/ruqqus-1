@@ -19,7 +19,6 @@ class User(Base):
     email = Column(String, default=None)
     passhash = Column(String, default=None)
     created_utc = Column(BigInteger, default=0)
-    is_activated = Column(Boolean, default=False)
     is_admin = Column(Boolean, default=False)
     is_mod = Column(Boolean, default=False)
     is_banned = Column(Boolean, default=False)
