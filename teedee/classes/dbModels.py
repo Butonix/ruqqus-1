@@ -42,7 +42,7 @@ class User(Base):
 class IPs(Base):
     __tablename__ = "ips"
     id = Column(BigInteger, primary_key=True)
-    uid = Column(BigInteger, ForeignKey(User.id), default=0)
+    user_id = Column(BigInteger, ForeignKey(User.id), default=0)
     ip = Column(VARCHAR(40), default=None)
 
     def __repr__(self):
@@ -54,7 +54,7 @@ class Submission(Base):
     __tablename__="submissions"
 
     id = Column(BigInteger, primary_key=True)
-    author_id = Column(BigInteger, default=0)
+    author_id = Column(BigInteger, ForeignKey(User.id))
     title = Column(String(500), default=None)
     url = Column(String(500), default=None)
     created_utc = Column(BigInteger, default=0)
@@ -71,10 +71,10 @@ class Comment(Base):
     __tablename__="comments"
 
     id = Column(BigInteger, primary_key=True)
-    author_id = Column(BigInteger, default=0)
-    body = Column(String(10000), default=None)
-    parent_submission = Column(BigInteger, ForeignKey(Submission.id), default=0)
-    parent_comment = Column(BigInteger, ForeignKey(Comment.id), default=0)
+    author_id = Column(BigInteger, ForeignKey(User.id))
+    body = Column(String(2000), default=None)
+    parent_submission = Column(BigInteger, ForeignKey(Submission.id))
+    parent_comment = Column(BigInteger, ForeignKey(Comment.id))
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
 
