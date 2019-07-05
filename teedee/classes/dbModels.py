@@ -4,6 +4,9 @@ from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import *
 from os import environ
 from flask import render_template
+from random import seed, randint
+from teedee.helpers.base36 import *
+
 
 
 
@@ -22,6 +25,7 @@ class User(Base):
     is_admin = Column(Boolean, default=False)
     is_banned = Column(Boolean, default=False)
     ips = relationship('IPs', backref='users')
+    username_verified = Column(Boolean, default=False)
 
 
     def hashPass(self, password):
@@ -31,9 +35,33 @@ class User(Base):
     def verifyPass(self, password):
         return check_password_hash(self.hash, password)
     
+    @property
     def rendered_userpage(self):
         
         return render_template("userpage.html", user=self)
+    
+    def verify_username(self, username):
+        
+        #For use when verifying username with reddit
+        #Set username. Randomize username of any other existing account with same
+        try:
+            existing = session.query(User).filter_by(username=username).all()[0]
+            
+            # To avoid username collision on renaming any existing account, seed random with username
+            seed(username)
+            random_str = base36encode(randint(0,1000000000))
+            existing.username=f"user_{random_str}"
+            
+            session.add(existing)
+                                     
+        except IndexError:
+            pass
+                                      
+        self.username=username
+        self.username_verified=True
+        
+        session.add(self)
+        session.commit()
 
     def __repr__(self):
         return "<User(id=%s, username=%s, email=%s, passhash=%s, " \
@@ -50,6 +78,7 @@ class IPs(Base):
 
     def __repr__(self):
         return f"<Ips(id={self.id}, uid={self.user_id}, ip={self.ip})>"
+                                      
 
 
 class Submission(Base):
@@ -64,10 +93,15 @@ class Submission(Base):
     is_banned = Column(Boolean, default=False)
 
     def __repr__(self):
-        return "<Submission(id=%s, author_id=%s, title=%s, " \
-               "url=%s, created_utc=%s, is_banned=%s)>" \
-               "" % (self.id, self.author_id, self.title,
-                     self.url, self.created_utc, self.is_banned)
+        return f"<Submission(id={self.id})>"
+    
+    @property
+    def base36id(self):
+        return base36encode(self.id)
+                                      
+                                  
+                                      
+    
 
 class Comment(Base):
 
@@ -86,5 +120,10 @@ class Comment(Base):
                "parent_comment=%s, created_utc=%s, is_banned=%s)>" \
                "" % (self.id, self.author_id, self.body, self.parent_submission,
                    self.parent_comment, self.created_utc, self.is_banned)
+ 
+    
+    @property
+    def base36id(self):
+        return base36encode(self.id)
 
 
