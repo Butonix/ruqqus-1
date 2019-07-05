@@ -35,18 +35,25 @@ class User(Base):
     def verifyPass(self, password):
         return check_password_hash(self.hash, password)
     
-    @property
-    def rendered_userpage(self):
+    def rendered_userpage(self, v):
         
-        return render_template("userpage.html", u=self)
+        return render_template("userpage.html", u=self, v=v)
     
     def verify_username(self, username):
+        
+        #no reassignments allowed
+        if self.username_verified:
+            abort(403)
         
         #For use when verifying username with reddit
         #Set username. Randomize username of any other existing account with same
         try:
             existing = session.query(User).filter_by(username=username).all()[0]
-            
+
+            #No reassignments allowed
+            if existing.username_verified:
+                abort(403)
+                
             # To avoid username collision on renaming any existing account, seed random with username
             seed(username)
             random_str = base36encode(randint(0,1000000000))
