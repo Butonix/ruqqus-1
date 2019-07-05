@@ -6,4 +6,4 @@
 
 [Staging site](https://tee-dee-staging.herokuapp.com)
 
-[Documents](https://captainmeta4.github.io/teedee/)
+[Documents](https://captainmeta4.github.io/teedee/index)
