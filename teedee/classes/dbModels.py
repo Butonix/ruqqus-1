@@ -73,8 +73,8 @@ class Comment(Base):
     id = Column(BigInteger, primary_key=True)
     author_id = Column(BigInteger, default=0)
     body = Column(String(10000), default=None)
-    parent_submission = Column(BigInteger, default=0)
-    parent_comment = Column(BigInteger, default=0)
+    parent_submission = Column(BigInteger, ForeignKey(Submission.id), default=0)
+    parent_comment = Column(BigInteger, ForeignKey(Comment.id), default=0)
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
 
