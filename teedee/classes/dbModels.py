@@ -38,7 +38,7 @@ class User(Base):
     @property
     def rendered_userpage(self):
         
-        return render_template("userpage.html", user=self)
+        return render_template("userpage.html", u=self)
     
     def verify_username(self, username):
         
