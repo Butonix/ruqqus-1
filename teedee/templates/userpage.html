@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-<h1>{{ u.name }}</h1>
+<h1>{{ u.username }}</h1>
 {% if u.is_admin %}{% include "tags/a.html" %}{% endif %}
 {% if u.banned %}
 	<p><span class="red"><b>[This user is banned.]</b></span></p>
