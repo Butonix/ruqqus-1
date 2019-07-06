@@ -8,15 +8,15 @@ from teedee.__main__ import db, app
 
 r=praw.Reddit(client_id=environ.get("reddit_id"),
               client_secret=environ.get("reddit_secret"),
-              user_agent="TeeDee username verification by /u/captainmeta4")
+              user_agent="TeeDee username verification by /u/captainmeta4",
+              redirect_uri="https://tee-dee.herokuapp.com/api/redditredirect")
 
 @app.route("/api/get_reddit_auth")
 @auth_required
 def api_get_reddit_auth(v):
     return redirect(r.auth.url(scopes=["identity"],
                                state=session["session_id"],
-                               duration="temporary",
-                               redirect_uri="https://tee-dee.herokuapp.com/api/redditredirect"))
+                               duration="temporary"))
 
 @app.route("/api/redditredirect")
 @auth_required
