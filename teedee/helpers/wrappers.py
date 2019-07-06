@@ -1,6 +1,6 @@
 from flask import session
 from teedee.__main__ import Base, db
-from teedee.classes.dbModels import User
+from teedee.classes.dbModels import *
 
 #Wrappers
 def auth_desired(f):
