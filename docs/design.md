@@ -36,7 +36,7 @@ Integer|Name|Suggested permissions|Type of user
 -|-|-|-
 0|User|None|Everyone and anyone
 1|Junior Mod|Remove content. Flag accounts for higher review.|Helpful users
-2|Senior Supermod|Issue 24hr bans|Particularly helpful users with a good track record 
+2|Senior Mod|Issue 24hr bans|Particularly helpful users with a good track record 
 3|Junior Admin|Issue permanent bans. Promote/demote users up to level 2 |Non-developer admins.
 4|Senior Admin|See IP/tech info not visible to lower ranks.|Trust+Safety
 5|Deputy Owner|Promote/demote users up to level 4|Active contributors and developers
