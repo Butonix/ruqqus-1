@@ -20,7 +20,6 @@ db = sessionmaker(bind=_engine)()
 Base = declarative_base()
 
 #import and bind all routing functions
-from teedee.helpers import *
 from teedee.routes import *
 
 
