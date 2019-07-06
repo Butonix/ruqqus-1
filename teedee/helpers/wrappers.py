@@ -84,10 +84,11 @@ def admin_level_required(x):
                 abort(401)
 
             return f(*args, v=v, **kwargs)
-        
+
+        wrapper.__name==f.__name__
         return wrapper
 
-    decorator.__name__=f.__name__
+    decorator.__name__=wrapper.__name__
     return decorator
 
 def validate_formkey(f):
