@@ -1,3 +1,4 @@
 <form action="/logout" method="post">
-  <a href="javascript:void(0)" onClick="$(this).parent().submit()">Sign out</a>
+  <input type="hidden" name="formkey" value="{{ v.generate_formkey() }}">
+  <input type="submit" text="Sign Out">
 </form>

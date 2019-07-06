@@ -8,7 +8,7 @@ from secrets import token_hex
 #login form
 @app.route("/login", methods=["GET"])
 @auth_desired
-def login_get(v=None):
+def login_get(v):
     if v:
         return redirect("/")
 
@@ -52,7 +52,8 @@ def me(v):
 
 
 @app.route("/logout", methods=["POST"])
-def logout():
+@validate_form
+def logout(v):
 
     session.pop("user_id", None)
     session.pop("session_id", None)

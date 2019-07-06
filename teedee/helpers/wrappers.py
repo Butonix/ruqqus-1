@@ -1,6 +1,8 @@
 from flask import session
 from teedee.__main__ import Base, db
+from flask import *
 from teedee.classes import *
+
 
 #Wrappers
 def auth_desired(f):
@@ -9,9 +11,11 @@ def auth_desired(f):
     def wrapper(*args, **kwargs):
 
         if "user_id" in session:
-            kwargs['v']=db.query(User).filter_by(id=session["user_id"]).all()[0]
+            v=db.query(User).filter_by(id=session["user_id"]).all()[0]
+        else:
+            v=None
             
-        return f(*args, **kwargs)
+        return f(*args, v=v, **kwargs)
 
     wrapper.__name__=f.__name__
     return wrapper
@@ -52,14 +56,11 @@ def is_not_banned(f):
             if v.is_banned:
                 abort(403)
             
-            if args:
-                args=tuple(list(args).append(v))
-            else:
-                args=(v,)
+
         else:
             abort(401)
 
-        return f(*args, **kwargs)
+        return f(*args, v=v, **kwargs)
 
     wrapper.__name__=f.__name__
     return wrapper
@@ -81,16 +82,27 @@ def admin_level_required(f, x):
             #banned_users have no perms
             if v.is_banned:
                 abort(403)
-
-            if args:
-                args=tuple(list(args).append(v))
-            else:
-                args=(v,)
             
         else:
             abort(401)
 
-        return f(*args, **kwargs)
+        return f(*args, v=v, **kwargs)
+
+    wrapper.__name__=f.__name__
+    return wrapper
+
+def validate_form(f):
+
+    def wrapper(*args, **kwargs):
+
+        submitted_key = request.form.get("formkey","none")
+
+        v=kwargs.pop("v")
+
+        if not v.validate_formkey(submitted_key):
+            abort(403)
+
+        return f(*args, v=v, **kwargs)
 
     wrapper.__name__=f.__name__
     return wrapper

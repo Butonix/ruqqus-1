@@ -1,5 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import render_template
+from flask import render_template, session
 from random import seed, randint
 from teedee.helpers.base36 import *
 from teedee.__main__ import Base, db
@@ -36,13 +36,13 @@ class User(Base):
         else:
             return render_template("userpage_banned.html", u=self, v=v)
 
-    def generate_formkey(self, session_id):
+    def generate_formkey(self):
 
         return hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
-                        msg=bytes(session_id+str(self.id), "utf-16")
+                        msg=bytes(session["session_id"]+str(self.id), "utf-16")
                         ).hexdigest()
 
-    def validate_formkey(self, session_id, formkey):
+    def validate_formkey(self, formkey):
 
         return hmac.compare_digest(formkey, self.generate_formkey(session_id))
     
@@ -74,8 +74,8 @@ class User(Base):
         self.username=username
         self.username_verified=True
         
-        session.add(self)
-        session.commit()
+        db.add(self)
+        db.commit()
 
     @property
     def url(self):
