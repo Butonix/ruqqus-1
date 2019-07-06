@@ -32,7 +32,7 @@ class User(Base):
     def verifyPass(self, password):
         return check_password_hash(self.hash, password)
     
-    def rendered_userpage(self, v):
+    def rendered_userpage(self, v=None):
         
         return render_template("userpage.html", u=self, v=v)
     
@@ -108,7 +108,7 @@ class Submission(Base):
     def url(self):
         return f"/post/{self.base36id}"
                                       
-    def rendered_page(self, v=v):
+    def rendered_page(self, v=None):
 
         #step 1: load and tree comments
         #step 2: render
