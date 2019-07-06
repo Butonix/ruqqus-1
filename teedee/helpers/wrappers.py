@@ -37,7 +37,7 @@ def auth_required(f):
         else:
             abort(401)
 
-        return f(*args, **kwargs)
+        return f(*args, v=v, **kwargs)
 
     wrapper.__name__=f.__name__
     return wrapper
