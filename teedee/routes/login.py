@@ -120,12 +120,6 @@ def sign_up_post(v):
                   ).hexdigest()
     
     now=int(time())
-
-    #debugging stuff - remove once done
-    print(f"submitted formkey: {form_formkey}")
-    print(f"correct formkey: {correct_formkey}")
-    print(f"form timestamp: {form_timestamp}")
-    print(f"now: {time()}")
     
 
     #define function that takes an error message and generates a new signup form
@@ -144,9 +138,15 @@ def sign_up_post(v):
         return render_template("sign_up.html", formkey=new_formkey, now=now, error=error)
 
     #check for tokens
-    if (now-int(form_timestamp)>120
-        or not hmac.compare_digest(form_formkey, correct_formkey)
-       ):
+    if now-int(form_timestamp)>120:
+        print("form expired")
+        return new_signup("There was a problem. Please try again.")
+    elif now-int(form_timestamp)<5:
+        print("slow down!")
+        return new_signup("There was a problem. Please try again.")
+
+    if not hmac.compare_digests(correct_formkey, form_formkey):
+        print("mismatched formkeys")
         return new_signup("There was a problem. Please try again.")
 
     #check for matched passwords
@@ -179,7 +179,8 @@ def sign_up_post(v):
                   email=request.form.get("email"),
                   created_utc=int(time())
                  )
-    except:
+    except Exception as e:
+        print(e)
         return new_signup("Please enter a valid email")
     
     db.add(new_user)
