@@ -10,10 +10,12 @@
 
 {% block content %}
 <h1>{{ u.username }}</h1>
-{% if u.is_admin %}{% include "tags/a.html" %}{% endif %}
-{% if u.is_banned %}
-	<p><span class="red"><b>[This user is banned.]</b></span></p>
-{% else %}
-	<hr>
+{% if u.is_admin or u.verified_username %}
+<p>
+	{% if u.is_admin %}{% include "tags/a.html" %}{% endif %}
+	{% if u.is_admin and u.verified_username %}|{% endif %}
+	{% if u.verified_username %}{% include "tags/v.html" %}{% endif %}
+</p>
 {% endif %}
+<hr>
 {% endblock %}

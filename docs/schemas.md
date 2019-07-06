@@ -2,6 +2,8 @@
 
 These are the schemas for the database. In all tables, the `id` column is the Primary Key.
 
+May be slightly out of date as features are developed.
+
 ## Users
 
 Column|Type|Options

@@ -1,10 +1,10 @@
-# TeeDee Documentation
+# TeeDee Contribution
 
 ## Required Reading
 
-* [Design Document](./design). Contributions should be in line with the goals, requirements, and specifications outlined here.
+* [Design Document](./design)
 
-* [Security](./security)
+* [Security Information](./security)
 
 ## Additional info
 
