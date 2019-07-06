@@ -21,13 +21,13 @@ def login_post():
     #step1: identify if username is username or email
     if "@" in username:
         try:
-            account = db.query(User).filter_by(email=username).all()[0]
+            account = db.query(User).filter_by(email=username).first()
         except IndexError:
             return render_template("login.html", failed=True)
 
     else:
         try:
-            account = db.query(User).filter_by(username=username).all()[0]
+            account = db.query(User).filter_by(username=username).first()
         except IndexError:
             return render_template("login.html", failed=True)
 
