@@ -89,8 +89,6 @@ class admin_level_required():
 
             return f(*args, v=v, **kwargs)
 
-        print(f.__name__)
-
         wrapper.__name__=f.__name__
         return wrapper
 

@@ -22,7 +22,7 @@ def ban_user(user_id, v):
 @app.route("/api/unban_user/<user_id>", methods=["POST"])
 @admin_level_required(3)
 @validate_formkey
-def ban_user(user_id, v):
+def unban_user(user_id, v):
 
     user=db.query(User).filter_by(id=user_id).first()
 
