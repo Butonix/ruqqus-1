@@ -32,7 +32,7 @@ class User(Base):
 
         kwargs["created_utc"]=int(time())
 
-        super().__init__(self, **kwargs)
+        super().__init__(**kwargs)
 
     def hash_password(self, password):
         return generate_password_hash(password, method='pbkdf2:sha512', salt_length=8)
