@@ -14,6 +14,6 @@ The following procedures are in place to prevent cross-site request forgery (CSR
 
 1. All forms for user input must include the following element, copied exactly:
 
-    `{{ "input type="hidden" name="formkey", value="{{ v.formkey  }}">" }}`
+    `{{ "<input type="hidden" name="formkey", value="{{ v.formkey  }}">" }}`
     
 2. Functions handling incoming POST requests must be decorated with `@validate_formkey`. Above that decorator should be one of `@auth_required`, `@admin_level_required(x)`, or `@is_not_banned`.
