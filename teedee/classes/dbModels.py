@@ -33,8 +33,11 @@ class User(Base):
         return check_password_hash(self.hash, password)
     
     def rendered_userpage(self, v=None):
-        
-        return render_template("userpage.html", u=self, v=v)
+
+        if not self.is_banned:
+            return render_template("userpage.html", u=self, v=v)
+        else:
+            return render_template("userpage_banned.html", u=self, v=v)
     
     def verify_username(self, username):
         
