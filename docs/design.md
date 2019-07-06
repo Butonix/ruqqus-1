@@ -59,3 +59,15 @@ Database|PostgreSQL
 1. Password column is salted and hashed - no plaintext
 2. Failure to login error does not specify if username or password is incorrect
 3. Industry standard cryptography (or better, where possible) used everywhere appropriate
+
+##Budget
+
+During development, free resources are used. As the platform is launched, resources will be upgraded/migrated to paid variants
+
+Service|Plan|Function|Justification|$/month
+-|-|-|-
+Heroku PostgreSQL|Standard 0|Database|Rollbacks, fork+follow, no row limit, 64GB storage|$50
+Adminium|Startup|Database Administration|Removes 5 table cap|$10
+Heroku Dynos|Hobby|Run the server|Performance metrics, no sleeping|$7
+Papertrail|Choklad|Logging|Log searching beyond 2 days not yet needed |$0
+**Total**||||$67
