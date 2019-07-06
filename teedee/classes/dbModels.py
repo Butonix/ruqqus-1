@@ -1,16 +1,9 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy import *
-from os import environ
 from flask import render_template
 from random import seed, randint
 from teedee.helpers.base36 import *
+from teedee.__main__ import Base, db
 from time import strftime
-
-_engine = create_engine(environ.get("DATABASE_URL"))
-db = sessionmaker(bind=_engine)()
-Base = declarative_base()
 
 class User(Base):
 
