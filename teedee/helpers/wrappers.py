@@ -30,10 +30,7 @@ def auth_required(f):
             if not v:
                 abort(401)
             v=v[0]
-            if args:
-                args=tuple(list(args).append(v))
-            else:
-                args=(v,)
+
         else:
             abort(401)
 
