@@ -7,10 +7,8 @@ def auth_desired(f):
     def wrapper(*args, **kwargs):
 
         if "user_id" in session:
-            v=db.query(User).filter_by(id=Session["user_id"]).all()[0]
-        else:
-            v=None
-
+            kwargs['v']=db.query(User).filter_by(id=Session["user_id"]).all()[0]
+            
         return f(v, *args, **kwargs)
 
     wrapper.__name__=f.__name__
@@ -22,11 +20,11 @@ def auth_required(f):
     def wrapper(*args, **kwargs):
 
         if "user_id" in session:
-            v=db.query(User).filter_by(id=Session["user_id"]).all()[0]
+            args.append(db.query(User).filter_by(id=Session["user_id"]).all()[0])
         else:
             abort(401)
 
-        return f(v, *args, **kwargs)
+        return f(*args, **kwargs)
 
     wrapper.__name__=f.__name__
     return wrapper
@@ -37,14 +35,14 @@ def admin_required(f):
     def wrapper(*args, **kwargs):
 
         if "user_id" in session:
-            v=db.query(User).filter_by(id=Session["user_id"]).all()[0]
+            args.append(db.query(User).filter_by(id=Session["user_id"]).all()[0])
             if not viewer.is_admin:
                 abort(403)
             
         else:
             abort(401)
 
-        return f(v, *args, **kwargs)
+        return f(*args, **kwargs)
 
     wrapper.__name__=f.__name__
     return wrapper

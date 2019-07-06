@@ -44,7 +44,7 @@ def static_service(path):
 
 @app.route("/u/<username>", methods=["GET"])
 @auth_desired
-def u_username(username, v):
+def u_username(username, v=None):
     
     #username is unique so at most this returns one result. Otherwise 404
     try:
@@ -61,7 +61,7 @@ def u_username(username, v):
 
 @app.route("/post/<base36id>", methods=["GET"])
 @auth_desired
-def post_base36id(base36id, v):
+def post_base36id(base36id, v=None):
     
     base10id = base36decode(base36id)
     
