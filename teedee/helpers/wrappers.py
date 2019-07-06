@@ -95,6 +95,9 @@ def validate_form(f):
 
     def wrapper(*args, **kwargs):
 
+        print(args)
+        print(kwargs)
+
         submitted_key = request.form.get("formkey","none")
 
         v=kwargs.pop("v")
