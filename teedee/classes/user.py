@@ -2,7 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import render_template, session
 from teedee.helpers.base36 import *
 from teedee.__main__ import Base, db
-from time import strftime, time
+from time import strftime, time, gmtime
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 import hmac
@@ -101,7 +101,7 @@ class User(Base):
 
         print(self.created_utc)
 
-        return strftime("%d %B %Y", time.gmtime(self.created_utc))
+        return strftime("%d %B %Y", gmtime(self.created_utc))
 
     def __repr__(self):
         return f"<User(username={self.username})>"
