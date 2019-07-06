@@ -18,6 +18,8 @@ def ban_user(user_id, v):
 
     db.add(user)
     db.commit()
+    
+    return redirect(user.url)
 
 @app.route("/api/unban_user/<user_id>", methods=["POST"])
 @admin_level_required(3)
@@ -33,3 +35,5 @@ def unban_user(user_id, v):
 
     db.add(user)
     db.commit()
+    
+    return redirect(user.url)
