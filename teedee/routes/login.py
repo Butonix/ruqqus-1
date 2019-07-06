@@ -6,7 +6,7 @@ from teedee.helpers.wrappers import *
 #login form
 @app.route("/login", methods=["GET"])
 @auth_desired
-def login_get(v):
+def login_get(v=None):
     if v:
         return redirect("/")
 
@@ -45,13 +45,10 @@ def me(v):
     return redirect(v.url)
 
 
-@app.route("/logout", methods=["GET","POST"])
-@auth_desired
-def logout(v):
-    if v:
-        abort(401)
+@app.route("/logout", methods=["POST"])
+def logout():
 
-    del session["user_id"]
+    session.pop("user_id", None)
 
     return redirect("/")
         
