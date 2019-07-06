@@ -60,7 +60,7 @@ Database|PostgreSQL
 2. Failure to login error does not specify if username or password is incorrect
 3. Industry standard cryptography (or better, where possible) used everywhere appropriate
 
-##Budget
+## Budget
 
 During development, free resources are used. As the platform is launched, resources will be upgraded/migrated to paid variants
 
