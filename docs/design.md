@@ -57,3 +57,4 @@ Database|PostgreSQL
 
 1. Password column is salted and hashed - no plaintext
 2. Failure to login error does not specify if username or password is incorrect
+3. Industry standard cryptography (or better, where possible) used everywhere appropriate
