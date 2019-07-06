@@ -1,5 +1,3 @@
-from flask import session
-
 #Wrappers
 def auth_desired(f):
     #decorator for any view that changes if user is logged in (most pages)

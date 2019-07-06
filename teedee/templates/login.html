@@ -1,0 +1,21 @@
+{% extends "default.html" %}
+
+{% block title %}
+<title>Log in to Tee_Dee</title>
+<meta name="description" content="Log in to Tee_Dee">
+{% endblock %}
+
+{% block content %}
+<h1>Log in</h1>
+<form action="/login" method="post">
+Username or email:<br>
+<input type="text" name="username" required><br>
+Password:<br>
+<input type="password" name="password" required><br>
+
+{% if failed==True %}
+<p><span class="red">Username or password incorrect.</span></p><br>
+{% endif %}
+
+<input type="submit" value="Log in">
+{% endblock %}
