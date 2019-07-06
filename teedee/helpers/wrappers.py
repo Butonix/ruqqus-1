@@ -11,7 +11,7 @@ def auth_desired(f):
     def wrapper(*args, **kwargs):
 
         if "user_id" in session:
-            v=db.query(User).filter_by(id=session["user_id"]).all()[0]
+            v=db.query(User).filter_by(id=session["user_id"]).first()
         else:
             v=None
             
@@ -26,10 +26,9 @@ def auth_required(f):
     def wrapper(*args, **kwargs):
 
         if "user_id" in session:
-            v=db.query(User).filter_by(id=session["user_id"]).all()
+            v=db.query(User).filter_by(id=session["user_id"]).first()
             if not v:
                 abort(401)
-            v=v[0]
 
         else:
             abort(401)
@@ -73,7 +72,7 @@ class admin_level_required():
         def wrapper(*args, **kwargs):
             
             if "user_id" in session:
-                v=db.query(User).filter_by(id=session["user_id"]).all()
+                v=db.query(User).filter_by(id=session["user_id"]).first()
                 if not v:
                     abort(401)
                 v=v[0]

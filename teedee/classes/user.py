@@ -65,7 +65,7 @@ class User(Base):
         
         #no reassignments allowed
         if self.username_verified:
-            abort(403)
+            return render_template("settings.html", v=self, error="Your account has already validated its username.")
         
         #For use when verifying username with reddit
         #Set username. Randomize username of any other existing account with same
@@ -74,14 +74,13 @@ class User(Base):
 
             #No reassignments allowed
             if existing.username_verified:
-                abort(403)
+                return render_template("settings.html", v=self, error="Another account has already validated that username.")
                 
-            # To avoid username collision on renaming any existing account, seed random with username
-            seed(username)
-            random_str = base36encode(randint(0,1000000000))
-            existing.username=f"user_{random_str}"
+            # Rename new account to user_id
+            # guaranteed to be unique
+            existing.username=f"user_{existing.id}"
             
-            session.add(existing)
+            db.add(existing)
                                      
         except IndexError:
             pass
@@ -91,6 +90,8 @@ class User(Base):
         
         db.add(self)
         db.commit()
+
+        return render_template("settings.html", v=self, msg="Your account name has been updated and validated.")
 
     @property
     def url(self):

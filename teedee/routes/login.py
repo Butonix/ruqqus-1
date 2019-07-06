@@ -48,7 +48,7 @@ def login_post():
         session["user_id"]=account.id
         session["session_id"]=token_hex(16)
 
-        return redirect("/me")
+        return redirect(account.url)
 
     else:
         return render_template("login.html", failed=True)
@@ -164,8 +164,8 @@ def sign_up_post(v):
         return new_signup("Password must be 8 characters or longer")
 
     #Check for existing acocunts
-    if (db.query(User).filter_by(email=request.form.get("email")).first()
-        or db.query(User).filter_by(username=request.form.get("username")).first()):
+    if (db.query(User).filter(func.lower(email)==func.lower(request.form.get("email"))).first()
+        or db.query(User).filter_by(func.lower(username)=func.lower(request.form.get("username"))).first()):
         return new_signup("An account with that username or email already exists.")
     
     #success

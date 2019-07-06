@@ -1,0 +1,31 @@
+{% extends "default.html" %}
+
+{% block title %}
+<title>Settings</title>
+<meta name="description" content="Settings">
+{% endblock %}
+
+{% block content %}
+<h1>Settings</h1>
+{% if error %}
+<p><span class="red">{{ error }}</span></p>
+{% endif %}
+{% if msg %}
+<p><span class="green">{{ msg }}</span></p>
+{% endif %}
+
+<h2>Username Verification</h2>
+{% if v.username_verified %}
+<p>Your username "{{ v.username }}" has been verified with reddit.</p>
+{% else %}
+<p>You may permanently change your username to match your reddit account. If the name is already in use and not verified on another account, it will be removed from that account. <a href="/api/get_reddit_auth">Click here to begin.</a></p>
+{% endif %}
+
+<h2>Preferences [NYI]</h2>
+<form action="/api/settings, method="post">
+<input type="checkbox" text="I am over 18 and willing to view adult content">
+<input type="submit" value="Save">
+</form>
+
+
+{% endblock %}
