@@ -117,7 +117,7 @@ def sign_up_post(v):
     
     now=int(time())
 
-    if (now-form_timestamp>120
+    if (now-int(form_timestamp)>120
         or not hmac.compare_digest(form_formkey, correct_formkey)
         or not request.form.get("password") == request.form.get("password_confirm")
        ):
