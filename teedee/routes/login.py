@@ -6,8 +6,12 @@ from secrets import token_hex
 from time import time
 import hmac
 from os import environ
+import re
 
 from teedee.__main__ import app
+
+valid_username_regex=re.compile("^\w{5,}$")
+valid_password_regex=re.compile("^.{8,}$")
 
 #login form
 @app.route("/login", methods=["GET"])
@@ -133,11 +137,11 @@ def sign_up_post(v):
         session["signup_token"]=token
 
         new_formkey_hashstr=str(now)+submitted_token+ip+agent
-        correct_formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
-                   msg=bytes(correct_formkey_hashstr, "utf-16")
-                  ).hexdigest()
+        new_formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
+                               msg=bytes(new_formkey_hashstr, "utf-16")
+                               ).hexdigest()
         
-        return render_template("sign_up.html", formkey=correct_formkey, now=now, error=error)
+        return render_template("sign_up.html", formkey=new_formkey, now=now, error=error)
 
     #check for tokens
     if (now-int(form_timestamp)>120
@@ -148,6 +152,13 @@ def sign_up_post(v):
     #check for matched passwords
     if not request.form.get("password") == request.form.get("password_confirm"):
         return new_signup("Password and Confirm Password do not match.")
+
+    #check username/pass conditions
+    if not re.match(valid_username_regex, request.form.get("username")):
+        return new_signup("Invalid username")
+
+    if not re.match(valid_password_regex, request.form.get("password")):
+        return new_signup("Password must be 8 characters or longer")
 
     #Check for existing acocunts
     if (db.query(User).filter_by(email=request.form.get("email")).first()
