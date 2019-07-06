@@ -72,9 +72,13 @@
   <header>
     {% include "header.html" %}
     {% if v %}
+      {% include "control_panel_logged_in.html" %}
       {% if v.admin %}
-         {% block adminpanel %}{% endblock %}
+        <br>
+        {% block adminpanel %}{% endblock %}
       {% endif %}
+    {% else %}
+      {% include "control_panel_logged_out.html" %}
     {% endif %}
   </header>
   <section>
