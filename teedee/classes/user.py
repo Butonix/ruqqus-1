@@ -27,7 +27,7 @@ class User(Base):
 
         if "password" in kwargs:
 
-            kwargs["passhash"]=self.hash_passpassword(kwargs["password"])
+            kwargs["passhash"]=self.hash_password(kwargs["password"])
             kwargs.pop("password")
 
         kwargs["created_utc"]=int(time())
