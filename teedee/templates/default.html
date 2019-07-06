@@ -74,7 +74,7 @@
     {% if v %}
       {% include "control_panel_logged_in.html" %}
       {% if v.admin_level %}
-        <br>
+        <hr>
 	<h6>Admin Panel</h6>
         {% block adminpanel %}{% endblock %}
       {% endif %}

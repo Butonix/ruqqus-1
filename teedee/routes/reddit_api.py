@@ -24,13 +24,14 @@ def api_redditredirect(v):
 
     #check session id
     if not request.args.get("state")==session["session_id"]:
-        return render_template("settings.html", v=self, error="Invalid token. Please try again.")
+        return render_template("settings.html", v=v, error="Invalid token. Please try again.")
 
     try:
         r.auth.authorize(request.args.get("code"))
         name = r.me().name
-    except:
-        return render_template("settings.html", v=self, error="Unable to check reddit username.")
+    except Exception as e:
+        print(e)
+        return render_template("settings.html", v=v, error="Unable to check reddit username.")
 
     #run username verification procedure
     return v.verify_username(name)
