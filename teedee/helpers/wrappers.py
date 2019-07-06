@@ -93,14 +93,11 @@ def admin_level_required(f, x):
 
 def validate_form(f):
 
-    def wrapper(*args, **kwargs):
+    """Always use @auth_required or @admin_level_required above @validate_form"""
 
-        print(args)
-        print(kwargs)
+    def wrapper(*args, v, **kwargs):
 
         submitted_key = request.form.get("formkey","none")
-
-        v=kwargs.pop("v")
 
         if not v.validate_formkey(submitted_key):
             abort(403)
