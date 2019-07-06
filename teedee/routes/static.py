@@ -3,6 +3,12 @@ from flask import *
 from teedee.__main__ import app
 
 #take care of static pages
+
+@app.route("/", methods=["GET"])
+@auth_desired
+def home(v)
+    return render_template("home.html", v=v)
+
 @app.route('/static/<path:path>')
 def static_service(path):
     return send_from_directory('./static', path)
