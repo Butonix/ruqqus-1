@@ -80,6 +80,7 @@ class User(Base):
             existing.username=f"user_{existing.id}"
             
             db.add(existing)
+            db.commit()
                                      
         except IndexError:
             pass
