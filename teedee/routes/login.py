@@ -90,9 +90,9 @@ def sign_up_get(v):
 
     
     #formkey is a hash of session token, timestamp, and IP address
-    formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
-                   msg=bytes(formkey_hashstr, "utf-16")
-                  ).hexdigest()
+    formkey = hmac.hexdigest(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
+                             msg=bytes(formkey_hashstr, "utf-16")
+                             )
     
     return render_template("sign_up.html", formkey=formkey, now=now)
 
@@ -115,9 +115,9 @@ def sign_up_post(v):
     
     correct_formkey_hashstr = str(form_timestamp)+submitted_token+ip+agent
     
-    correct_formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
-                   msg=bytes(correct_formkey_hashstr, "utf-16")
-                  ).hexdigest()
+    correct_formkey = hmac.hexdigest(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
+                                     msg=bytes(correct_formkey_hashstr, "utf-16")
+                                     )
     
     now=int(time())
     
@@ -131,9 +131,9 @@ def sign_up_post(v):
         session["signup_token"]=token
 
         new_formkey_hashstr=str(now)+submitted_token+ip+agent
-        new_formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
-                               msg=bytes(new_formkey_hashstr, "utf-16")
-                               ).hexdigest()
+        new_formkey = hmac.hexdigest(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
+                                     msg=bytes(new_formkey_hashstr, "utf-16")
+                                     )
         
         return render_template("sign_up.html", formkey=new_formkey, now=now, error=error)
 

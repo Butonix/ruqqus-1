@@ -3,7 +3,7 @@ from flask import render_template, session
 from random import seed, randint
 from teedee.helpers.base36 import *
 from teedee.__main__ import Base, db
-from time import strftime
+from time import strftime, time
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 import hmac
@@ -22,6 +22,18 @@ class User(Base):
     is_banned = Column(Boolean, default=False)
     ips = relationship('IPs', backref='users')
     username_verified = Column(Boolean, default=False)
+
+    def __init__(self, **kwargs):
+
+        if "password" in kwargs:
+
+            kwargs["passhash"]=self.hashpass(kwargs["password"])
+            kwargs.pop("password")
+
+        if "created_utc" not in kwargs:
+            kwargs["created_utc"]=int(time())
+
+        super().__init__(self, **kwargs)
 
     def hashPass(self, password):
         self.hash = generate_password_hash(password, method='pbkdf2:sha512', salt_length=8)
