@@ -99,6 +99,8 @@ class User(Base):
     @property
     def created_date(self):
 
+        print(self.created_utc)
+
         return strftime("%d %B %Y", time.gmtime(self.created_utc))
 
     def __repr__(self):

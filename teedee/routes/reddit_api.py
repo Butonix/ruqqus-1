@@ -28,7 +28,7 @@ def api_redditredirect(v):
 
     try:
         r.auth.authorize(request.args.get("code"))
-        name = r.me().name
+        name = r.user.me().name
     except Exception as e:
         print(e)
         return render_template("settings.html", v=v, error="Unable to check reddit username.")
