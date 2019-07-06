@@ -117,6 +117,13 @@ def sign_up_post(v):
     
     now=int(time())
 
+    #debugging stuff - remove once done
+    print(f"submitted formkey: {form_formkey}")
+    print(f"correct formkey: {correct_formkey}")
+    print(f"form timestamp: {form_timestamp}")
+    print(f"now: {time()}")
+    
+
     #define function that takes an error message and generates a new signup form
     def new_signup(error):
         
