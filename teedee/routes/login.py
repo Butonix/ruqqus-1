@@ -59,5 +59,11 @@ def logout(v):
     session.pop("session_id", None)
 
     return redirect("/")
-        
+
+@app.route("/make-session-id")
+def make_id(v):
+
+    session["session_id"]=token_hex(16)
+
+    return redirect("/")
     
