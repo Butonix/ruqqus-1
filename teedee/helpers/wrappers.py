@@ -50,6 +50,10 @@ def admin_level_required(f, x):
             v=v[0]
             if not v.admin_level >= x:
                 abort(403)
+                
+            #banned_users have no perms
+            if v.is_banned:
+                abort(403)
 
             if args:
                 args=tuple(list(args).append(v))
