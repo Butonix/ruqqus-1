@@ -8,6 +8,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 import hmac
 from os import environ
+from secrets import token_hex
 
 class User(Base):
 
@@ -37,6 +38,9 @@ class User(Base):
             return render_template("userpage_banned.html", u=self, v=v)
 
     def generate_formkey(self):
+
+        if "session_id" not in session:
+            session["session_id"]=token_hex(16)
 
         return hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
                         msg=bytes(session["session_id"]+str(self.id), "utf-16")
