@@ -35,12 +35,12 @@ Several layers of administrative privilege will be implemented
 Integer|Name|Suggested permissions|Type of user
 -|-|-|-
 0|User|None|Everyone and anyone
-1|Community Mod|Remove content. Flag accounts for higher review.|
-2|Community Supermod|Issue 24hr bans|Develop
+1|Junior Mod|Remove content. Flag accounts for higher review.|Helpful users
+2|Senior Supermod|Issue 24hr bans|Particularly helpful users with a good track record 
 3|Junior Admin|Issue permanent bans. Promote/demote users up to level 2 |Non-developer admins.
-4|Senior Admin|See IP/tech info. Promote/demote users up to level 2|Trust+Safety
+4|Senior Admin|See IP/tech info not visible to lower ranks.|Trust+Safety
 5|Deputy Owner|Promote/demote users up to level 4|Active contributors and developers
-6|Owner|All|captainmeta4, because I'm the one who's gonna be paying for this stuff
+6|Owner|Direct Heroku/database access|captainmeta4. Maybe a select few others.
 
 ## Specifications
 
