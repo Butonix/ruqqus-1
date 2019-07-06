@@ -69,7 +69,7 @@ class User(Base):
         #For use when verifying username with reddit
         #Set username. Randomize username of any other existing account with same
         try:
-            existing = session.query(User).filter_by(username=username).all()[0]
+            existing = db.query(User).filter_by(username=username).all()[0]
 
             #No reassignments allowed
             if existing.username_verified:
