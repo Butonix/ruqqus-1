@@ -10,11 +10,11 @@
 
 {% block content %}
 <h1>{{ u.username }}</h1>
-{% if u.is_admin or u.verified_username %}
+{% if u.is_admin or u.username_verified %}
 <p>
 	{% if u.is_admin %}{% include "tags/a.html" %}{% endif %}
-	{% if u.is_admin and u.verified_username %}|{% endif %}
-	{% if u.verified_username %}{% include "tags/v.html" %}{% endif %}
+	{% if u.is_admin and u.username_verified %}|{% endif %}
+	{% if u.username_verified %}{% include "tags/v.html" %}{% endif %}
 </p>
 {% endif %}
 <hr>
