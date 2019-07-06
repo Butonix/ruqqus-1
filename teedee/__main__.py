@@ -2,6 +2,7 @@ from teedee.classes.dbModels import *
 from os import environ
 from flask import *
 from teedee.helpers import *
+from sqlalchemy import func
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -47,7 +48,12 @@ def u_username(username, v):
     
     #username is unique so at most this returns one result. Otherwise 404
     try:
-        result = db.query(User).filter_by(username=username).all()[0]
+        result = db.query(User).filter_by(func.lower(User.username)=username.lower()).all()[0]
+
+        #check for wrong cases
+        if username != result.username:
+            return redirect(result.url)
+        
     except IndexError:
         abort(404)
         

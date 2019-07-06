@@ -67,13 +67,14 @@ class User(Base):
         session.add(self)
         session.commit()
 
+    @property
+    def url(self):
+        return f"/u/{self.username}"
+
     def __repr__(self):
-        return "<User(id=%s, username=%s, email=%s, passhash=%s, " \
-               "created_utc=%s, is_activated=%s, is_admin=%s, " \
-               "is_mod=%s, is_banned=%s, ips=%s)>" \
-               "" % (self.id, self.username, self.email, self.passhash,
-                    self.created_utc, self.is_activated, self.is_admin,
-                     self.is_mod, self.is_banned, self.ips)
+        return f"<User(username={self.username})>"
+
+    
 class IPs(Base):
     __tablename__ = "Ips"
     id = Column(BigInteger, primary_key=True)
@@ -102,6 +103,10 @@ class Submission(Base):
     @property
     def base36id(self):
         return base36encode(self.id)
+
+    @property
+    def url(self):
+        return f"/post/{self.base36id}"
                                       
                                   
                                       
