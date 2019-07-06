@@ -5,6 +5,7 @@ from teedee.helpers.base36 import *
 from secrets import token_hex
 from time import time
 import hmac
+from os import environ
 
 from teedee.__main__ import app
 
@@ -85,7 +86,7 @@ def sign_up_get(v):
 
     
     #formkey is a hash of session token, timestamp, and IP address
-    formkey = hmac(key=bytes(os.environ.get("MASTER_KEY"), "utf-16"),
+    formkey = hmac(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
                    msg=bytes(formkey_hashstr, "utf-16")
                   ).hexdigest()
     
@@ -110,7 +111,7 @@ def sign_up_post(v):
     
     correct_formkey_hashstr = str(form_timestamp)+submitted_token+ip+agent
     
-    correct_formkey = hmac(key=bytes(os.environ.get("MASTER_KEY"), "utf-16"),
+    correct_formkey = hmac(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
                    msg=bytes(correct_formkey_hashstr, "utf-16")
                   ).hexdigest()
     
@@ -127,7 +128,7 @@ def sign_up_post(v):
         session["signup_token"]=token
 
         new_formkey_hashstr=str(now)+submitted_token+ip+agent
-        correct_formkey = hmac(key=bytes(os.environ.get("MASTER_KEY"), "utf-16"),
+        correct_formkey = hmac(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
                    msg=bytes(correct_formkey_hashstr, "utf-16")
                   ).hexdigest()
         
