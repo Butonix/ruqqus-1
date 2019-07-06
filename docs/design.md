@@ -65,7 +65,7 @@ Database|PostgreSQL
 During development, free resources are used. As the platform is launched, resources will be upgraded/migrated to paid variants
 
 Service|Plan|Function|Justification|$/month
--|-|-|-
+-|-|-|-|-
 Heroku PostgreSQL|Standard 0|Database|Rollbacks, fork+follow, no row limit, 64GB storage|$50
 Adminium|Startup|Database Administration|Removes 5 table cap|$10
 Heroku Dynos|Hobby|Run the server|Performance metrics, no sleeping|$7
