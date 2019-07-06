@@ -10,3 +10,8 @@ def static_service(path):
 @app.route("/robots.txt", methods=["GET"])
 def robots_txt():
     return send_from_directory("./static", "robots.txt")
+
+@app.route("/settings", methods=["POST"])
+@auth_required
+def settings(v):
+    return render_template("settings.html", v=v)
