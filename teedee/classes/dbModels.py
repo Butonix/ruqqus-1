@@ -15,7 +15,7 @@ class User(Base):
     email = Column(String, default=None)
     passhash = Column(String, default=None)
     created_utc = Column(BigInteger, default=0)
-    is_admin = Column(Boolean, default=False)
+    admin_level = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
     ips = relationship('IPs', backref='users')
     username_verified = Column(Boolean, default=False)
