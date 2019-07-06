@@ -30,9 +30,16 @@ The purpose of this document is to clearly identify:
 
 ### Administration
 
-1. Site admins can remove (hide) posts and comments
-2. Site admins can ban users
-3. Site admins can view IP addresses (?)
+Several layers of administrative privilege will be implemented
+
+Integer|Name|Suggested permissions
+-|-|-
+0|User|None
+1|Community Mod|Remove content. Flag accounts for higher review.
+2|Community Supermod|Issue 24hr bans
+3|Junior Admin|Issue permanent bans. Promote/demote users upto level 1 
+4|Senior Admin|Promote/demote users up to level 2
+5|Full Admin|Commit to master
 
 ## Specifications
 
