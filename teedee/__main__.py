@@ -48,7 +48,9 @@ def u_username(username, v=None):
     
     #username is unique so at most this returns one result. Otherwise 404
     try:
-        result = db.query(User).filter_by(User.username.ilike(username)).all()[0]
+
+        #case insensitive search
+        result = db.query(User).filter(User.username.ilike(username)).all()[0]
 
         #check for wrong cases
         if username != result.username:
