@@ -37,7 +37,8 @@ class User(Base):
         else:
             return render_template("userpage_banned.html", u=self, v=v)
 
-    def generate_formkey(self):
+    @property
+    def formkey(self):
 
         if "session_id" not in session:
             session["session_id"]=token_hex(16)
@@ -48,7 +49,7 @@ class User(Base):
 
     def validate_formkey(self, formkey):
 
-        return hmac.compare_digest(formkey, self.generate_formkey(session_id))
+        return hmac.compare_digest(formkey, self.formkey)
     
     def verify_username(self, username):
         

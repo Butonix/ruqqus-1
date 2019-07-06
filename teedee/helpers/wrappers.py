@@ -100,7 +100,7 @@ def validate_form(f):
         submitted_key = request.form.get("formkey","none")
 
         if not v.validate_formkey(submitted_key):
-            abort(403)
+            abort(401)
 
         return f(*args, v=v, **kwargs)
 
