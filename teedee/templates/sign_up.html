@@ -1,0 +1,26 @@
+{% extends "default.html" %}
+
+{% block title %}
+<title>Sign up for Tee_Dee</title>
+<meta name="description" content="Sign up for Tee_Dee">
+{% endblock %}
+
+{% block content %}
+<h1>Sign up</h1>
+<form action="/signup" method="post">
+<input type="hidden" name="formkey" value="{{ formkey }}">
+Username:<br>
+<input type="text" name="username" required><br>
+email:<br>
+<input type="text" name="email" required><br>
+Password:<br>
+<input type="password" name="password" required><br>
+Confirm Password:<br>
+<input type="password" name="password_confirm" required><br>
+
+{% if error %}
+<p><span class="red">{{ error }}</span></p><br>
+{% endif %}
+
+<input type="submit" value="Sign Up">
+{% endblock %}
