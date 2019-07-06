@@ -144,7 +144,7 @@ def sign_up_post(v):
 
     #Check for existing acocunts
     if (db.query(User).filter_by(email=request.form.get("email")).first()
-        or db.query(User).filter_by(username=request.form.get("username")).first():
+        or db.query(User).filter_by(username=request.form.get("username")).first()):
         return new_signup("An account with that username or email already exists.")
     
     #success
