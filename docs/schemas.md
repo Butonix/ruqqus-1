@@ -13,8 +13,9 @@ username|varchar(255)|UNIQUE NOT NULL
 email|varchar(255)|UNIQUE
 passhash|varchar(255)|NOT NULL
 created_utc|int|NOT NULL
-is_admin|bool|DEFAULT false
+admin_level|int|DEFAULT 0
 is_banned|bool|DEFAULT false
+over_18|bool|DEFAULT false
 
 ## Submissions
 
@@ -26,6 +27,7 @@ title|charvar(255)
 url|charvar(255)			
 created_utc|int|NOT NULL
 is_banned|boolean|DEFAULT false
+over_18|boolean|DEFAULT false
 
 ## Comments
 
