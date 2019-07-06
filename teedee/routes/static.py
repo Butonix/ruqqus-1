@@ -11,7 +11,7 @@ def static_service(path):
 def robots_txt():
     return send_from_directory("./static", "robots.txt")
 
-@app.route("/settings", methods=["POST"])
+@app.route("/settings", methods=["GET"])
 @auth_required
 def settings(v):
     return render_template("settings.html", v=v)
