@@ -6,6 +6,12 @@
 {% endblock %}
 
 {% block adminpanel %}
+{% if v.admin_level >=3 and v.admin_level > u.admin_level %}
+<form action="/api/ban-user/{{ u.id }}>
+<input type="hidden" name="formkey", value="{{ v.formkey }}">
+<input type="submit" value="Ban User">
+</form>
+{% endif %}
 {% endblock %}
 
 {% block content %}

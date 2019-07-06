@@ -53,7 +53,7 @@ def me(v):
 
 @app.route("/logout", methods=["POST"])
 @auth_required
-@validate_form
+@validate_formkey
 def logout(v):
 
     session.pop("user_id", None)

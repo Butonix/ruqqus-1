@@ -88,7 +88,7 @@ def admin_level_required(f, x):
     wrapper.__name__=f.__name__
     return wrapper
 
-def validate_form(f):
+def validate_formkey(f):
 
     """Always use @auth_required or @admin_level_required above @validate_form"""
 
