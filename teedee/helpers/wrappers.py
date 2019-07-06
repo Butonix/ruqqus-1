@@ -63,10 +63,10 @@ def is_not_banned(f):
     return wrapper
     
 
-def admin_level_required(f, x):
+def admin_level_required(f):
     #decorator for any api that requires admin perms
 
-    def wrapper(*args, **kwargs):
+    def wrapper(x, *args, **kwargs):
 
         if "user_id" in session:
             v=db.query(User).filter_by(id=session["user_id"]).all()
