@@ -108,7 +108,12 @@ class Submission(Base):
     def url(self):
         return f"/post/{self.base36id}"
                                       
-                                  
+    def rendered_page(self, v=v):
+
+        #step 1: load and tree comments
+        #step 2: render
+
+        return "post found successfully, but this page isn't implemented yet"
                                       
     
 

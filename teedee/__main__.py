@@ -70,7 +70,7 @@ def post_base36id(base36id, v):
     except IndexError:
         abort(404)
         
-    return f"post {base36id} (id {base10id}) with title {post.title} found."
+    return post.rendered_page(v=v)
     
     #not yet implemented
     #return post.rendered_webpage
