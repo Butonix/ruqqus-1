@@ -37,7 +37,7 @@ def login_post():
         #set session user id
         session["user_id"]=account.id
 
-        redirect("/me")
+        return redirect("/me")
 
     else:
         return render_template("login.html", failed=True)
