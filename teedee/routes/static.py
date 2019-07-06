@@ -6,7 +6,7 @@ from teedee.__main__ import app
 
 @app.route("/", methods=["GET"])
 @auth_desired
-def home(v)
+def home(v):
     return render_template("home.html", v=v)
 
 @app.route('/static/<path:path>')
