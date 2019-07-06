@@ -15,7 +15,8 @@ r=praw.Reddit(client_id=environ.get("reddit_id"),
 def api_get_reddit_auth(v):
     return redirect(r.auth.url(scopes=["identity"],
                                state=session["session_id"],
-                               duration="temporary"))
+                               duration="temporary",
+                               redirect_uri="https://tee-dee.herokuapp.com/api/redditredirect"))
 
 @app.route("/api/redditredirect")
 @auth_required
