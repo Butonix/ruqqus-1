@@ -1,6 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import render_template, session
-from random import seed, randint
 from teedee.helpers.base36 import *
 from teedee.__main__ import Base, db
 from time import strftime, time
@@ -96,6 +95,11 @@ class User(Base):
     @property
     def url(self):
         return f"/u/{self.username}"
+
+    @property
+    def created_date(self):
+
+        return strftime("%d %B %Y", time.gmtime(self.created_utc))
 
     def __repr__(self):
         return f"<User(username={self.username})>"

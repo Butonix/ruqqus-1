@@ -16,12 +16,6 @@
 
 {% block content %}
 <h1>{{ u.username }}</h1>
-{% if u.admin_level or u.username_verified %}
-<p>
-	{% if u.admin_level %}{% include "tags/a.html" %}{% endif %}
-	{% if u.admin_level and u.username_verified %}|{% endif %}
-	{% if u.username_verified %}{% include "tags/v.html" %}{% endif %}
-</p>
-{% endif %}
+<p>{% if u.admin_level or u.username_verified %}{% if u.admin_level %}{% include "tags/a.html" %}{% endif %}{% if u.admin_level and u.username_verified %}|{% endif %}{% if u.username_verified %}{% include "tags/v.html" %}{% endif %}| {% endif %}Member since {{ u.created_date }}</p>
 <hr>
 {% endblock %}
