@@ -27,17 +27,15 @@ class User(Base):
 
         if "password" in kwargs:
 
-            kwargs["passhash"]=self.hashpass(kwargs["password"])
+            kwargs["passhash"]=self.hash_passpassword(kwargs["password"])
             kwargs.pop("password")
 
-        if "created_utc" not in kwargs:
-            kwargs["created_utc"]=int(time())
+        kwargs["created_utc"]=int(time())
 
         super().__init__(self, **kwargs)
 
-    def hashPass(self, password):
-        self.hash = generate_password_hash(password, method='pbkdf2:sha512', salt_length=8)
-        return self.hash
+    def hash_password(self, password):
+        return generate_password_hash(password, method='pbkdf2:sha512', salt_length=8)
 
     def verifyPass(self, password):
         return check_password_hash(self.passhash, password)
