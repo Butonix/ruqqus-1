@@ -44,7 +44,7 @@ def admin_required(f):
         else:
             abort(401)
 
-        return f(v=*args, **kwargs)
+        return f(v, *args, **kwargs)
 
     wrapper.__name__=f.__name__
     return wrapper
