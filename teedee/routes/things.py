@@ -1,6 +1,6 @@
 from teedee.helpers.wrappers import *
 from teedee.helpers.base36 import *
-from teedee.classes.dbModels import *
+from teedee.classes import *
 from flask import *
 from teedee.__main__ import app
 

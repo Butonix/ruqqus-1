@@ -19,7 +19,7 @@ db = sessionmaker(bind=_engine)()
 Base = declarative_base()
 
 #import and bind all routing functions
-from teedee.classes.dbModels import *
+from teedee.classes import *
 from teedee.routes import *
 
 
