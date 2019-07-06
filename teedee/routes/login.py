@@ -14,7 +14,7 @@ def login_get(v):
 
 #login post procedure
 @app.route("/login", methods=["POST"])
-def login_post()
+def login_post():
 
     username=request.form.get("username")
 
