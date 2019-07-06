@@ -25,6 +25,7 @@ def auth_required(f):
             v=db.query(User).filter_by(id=session["user_id"]).all()
             if not v:
                 abort(401)
+            v=v[0]
             if args:
                 args=tuple(list(args).append(v))
             else:
@@ -43,7 +44,10 @@ def admin_required(f):
     def wrapper(*args, **kwargs):
 
         if "user_id" in session:
-            v=db.query(User).filter_by(id=session["user_id"]).all()[0]
+            v=db.query(User).filter_by(id=session["user_id"]).all()
+            if not v:
+                abort(401)
+            v=v[0]
             if not v.is_admin:
                 abort(403)
 
