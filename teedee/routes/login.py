@@ -170,9 +170,6 @@ def sign_up_post(v):
     #kill tokens
     session.pop("signup_token")
     
-    session["user_id"]=account.id
-    session["session_id"]=token_hex(16)
-    
     #make new user
     try:
         new_user=User(username=request.form.get("username"),
@@ -188,5 +185,9 @@ def sign_up_post(v):
     db.commit()
     
     v=db.query(User).filter_by(username=request.form.get("username")).first()
+
+    session["user_id"]=v.id
+    session["session_id"]=token_hex(16)
+    
     return redirect(v.url)
     
