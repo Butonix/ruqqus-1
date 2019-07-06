@@ -9,7 +9,7 @@ def auth_desired(f):
         if "user_id" in session:
             kwargs['v']=db.query(User).filter_by(id=Session["user_id"]).all()[0]
             
-        return f(v, *args, **kwargs)
+        return f(*args, **kwargs)
 
     wrapper.__name__=f.__name__
     return wrapper
