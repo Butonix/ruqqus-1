@@ -1,5 +1,6 @@
 from teedee.helpers import *
 from flask import *
+from teedee.__main__ import app
 
 @app.route("/u/<username>", methods=["GET"])
 @auth_desired

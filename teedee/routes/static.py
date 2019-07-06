@@ -1,6 +1,6 @@
-from teedee.__main__ import app
 from teedee.helpers.wrappers import *
 from flask import *
+from teedee.__main__ import app
 
 #take care of static pages
 @app.route('/static/<path:path>')

@@ -1,8 +1,7 @@
+from flask import *
 from teedee.__main__ import app
 from teedee.classes.dbModels import *
 from teedee.helpers.wrappers import auth_required
-
-from flask import *
 
 #login form
 @app.route("/login", methods=["GET"])
