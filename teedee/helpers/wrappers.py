@@ -17,7 +17,7 @@ def auth_desired(f):
     return wrapper
 
 def auth_required(f):
-    #decorator for any view requires login (ex. settings)
+    #decorator for any view that requires login (ex. settings)
 
     def wrapper(*args, **kwargs):
 

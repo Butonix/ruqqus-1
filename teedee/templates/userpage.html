@@ -11,7 +11,7 @@
 {% block content %}
 <h1>{{ u.username }}</h1>
 {% if u.is_admin %}{% include "tags/a.html" %}{% endif %}
-{% if u.banned %}
+{% if u.is_banned %}
 	<p><span class="red"><b>[This user is banned.]</b></span></p>
 {% else %}
 {% endif %}
