@@ -1,3 +1,6 @@
+from flask import session
+from teedee.classes import db
+
 #Wrappers
 def auth_desired(f):
     #decorator for any view that changes if user is logged in (most pages)
