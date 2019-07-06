@@ -6,6 +6,8 @@ from teedee.__main__ import Base, db
 from time import strftime
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
+import hmac
+from os import environ
 
 class User(Base):
 
@@ -33,6 +35,16 @@ class User(Base):
             return render_template("userpage.html", u=self, v=v)
         else:
             return render_template("userpage_banned.html", u=self, v=v)
+
+    def generate_formkey(self, session_id):
+
+        return hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
+                        msg=bytes(session_id+str(self.id), "utf-16")
+                        ).hexdigest()
+
+    def validate_formkey(self, session_id, formkey):
+
+        return hmac.compare_digest(formkey, self.generate_formkey(session_id))
     
     def verify_username(self, username):
         

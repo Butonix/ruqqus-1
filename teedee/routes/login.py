@@ -2,6 +2,8 @@ from flask import *
 from teedee.__main__ import app
 from teedee.classes import *
 from teedee.helpers.wrappers import *
+from teedee.helpers.base36 import *
+from secrets import token_hex
 
 #login form
 @app.route("/login", methods=["GET"])
@@ -36,6 +38,7 @@ def login_post():
 
         #set session user id
         session["user_id"]=account.id
+        session["session_id"]=token_hex(16)
 
         return redirect("/me")
 
@@ -52,6 +55,7 @@ def me(v):
 def logout():
 
     session.pop("user_id", None)
+    session.pop("session_id", None)
 
     return redirect("/")
         
