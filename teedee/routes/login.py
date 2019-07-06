@@ -117,10 +117,8 @@ def sign_up_post(v):
     
     now=int(time())
 
-    if (now-int(form_timestamp)>120
-        or not hmac.compare_digest(form_formkey, correct_formkey)
-        or not request.form.get("password") == request.form.get("password_confirm")
-       ):
+    #define function that takes an error message and generates a new signup form
+    def new_signup(error):
         
         #Reset tokens and return to signup form
         
@@ -132,8 +130,22 @@ def sign_up_post(v):
                    msg=bytes(correct_formkey_hashstr, "utf-16")
                   ).hexdigest()
         
-        return render_template("sign_up.html", formkey=correct_formkey, now=now, error="There was a problem. Please try again.")
-    
+        return render_template("sign_up.html", formkey=correct_formkey, now=now, error=error)
+
+    #check for tokens
+    if (now-int(form_timestamp)>120
+        or not hmac.compare_digest(form_formkey, correct_formkey)
+       ):
+        return new_signup("There was a problem. Please try again.")
+
+    #check for matched passwords
+    if not request.form.get("password") == request.form.get("password_confirm"):
+        return new_signup("Password and Confirm Password do not match.")
+
+    #Check for existing acocunts
+    if (db.query(User).filter_by(email=request.form.get("email")).first()
+        or db.query(User).filter_by(username=request.form.get("username")).first():
+        return new_signup("An account with that username or email already exists.")
     
     #success
     
@@ -149,7 +161,7 @@ def sign_up_post(v):
                   email=request.form.get("email")
                  )
     except:
-        abort(500)
+        return new_signup("Please enter a valid email")
     
     db.add(new_user)
     db.commit()
