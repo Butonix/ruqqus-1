@@ -4,6 +4,7 @@ from random import seed, randint
 from teedee.helpers.base36 import *
 from teedee.__main__ import Base, db
 from time import strftime
+from sqlalchemy import *
 
 class User(Base):
 
