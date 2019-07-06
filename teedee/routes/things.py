@@ -1,6 +1,8 @@
 from teedee.helpers import *
+from teedee.classes.dbModels import *
 from flask import *
 from teedee.__main__ import app
+
 
 @app.route("/u/<username>", methods=["GET"])
 @auth_desired
@@ -9,11 +11,12 @@ def u_username(username, v=None):
     #username is unique so at most this returns one result. Otherwise 404
     try:
 
-        #case insensitive se
-        arch
+        #case insensitive search
+
         result = db.query(User).filter(User.username.ilike(username)).all()[0]
 
         #check for wrong cases
+
         if username != result.username:
             return redirect(result.url)
         
@@ -29,7 +32,7 @@ def post_base36id(base36id, v=None):
     base10id = base36decode(base36id)
     
     try:
-        post=db.query(Submissions).filter_by(id=base10id).all()[0]
+        post=db.query(Submission).filter_by(id=base10id).all()[0]
     except IndexError:
         abort(404)
         
