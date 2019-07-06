@@ -140,14 +140,14 @@ def sign_up_post(v):
     #check for tokens
     if now-int(form_timestamp)>120:
         print("form expired")
-        return new_signup("There was a problem. Please try again.")
+        return new_signup("There was a problem. Please refresh the page and try again.")
     elif now-int(form_timestamp)<5:
         print("slow down!")
-        return new_signup("There was a problem. Please try again.")
+        return new_signup("There was a problem. Please refresh the page and try again.")
 
     if not hmac.compare_digest(correct_formkey, form_formkey):
-        print("mismatched formkeys")
-        return new_signup("There was a problem. Please try again.")
+        print(f"{request.form.get('username')} mismatched formkeys")
+        return new_signup("There was a problem. Please refresh the page and try again.")
 
     #check for matched passwords
     if not request.form.get("password") == request.form.get("password_confirm"):
