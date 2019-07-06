@@ -145,7 +145,7 @@ def sign_up_post(v):
         print("slow down!")
         return new_signup("There was a problem. Please try again.")
 
-    if not hmac.compare_digests(correct_formkey, form_formkey):
+    if not hmac.compare_digest(correct_formkey, form_formkey):
         print("mismatched formkeys")
         return new_signup("There was a problem. Please try again.")
 
