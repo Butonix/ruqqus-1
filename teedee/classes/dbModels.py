@@ -5,6 +5,7 @@ from teedee.helpers.base36 import *
 from teedee.__main__ import Base, db
 from time import strftime
 from sqlalchemy import *
+from sqlalchemy.orm import relationship
 
 class User(Base):
 
