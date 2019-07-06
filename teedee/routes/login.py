@@ -1,9 +1,9 @@
 from flask import *
-from teedee.__main__ import app
 from teedee.classes import *
 from teedee.helpers.wrappers import *
 from teedee.helpers.base36 import *
 from secrets import token_hex
+from teedee.__main__ import app
 
 #login form
 @app.route("/login", methods=["GET"])
