@@ -158,7 +158,8 @@ def sign_up_post(v):
     try:
         new_user=User(username=request.form.get("username"),
                   password=request.form.get("password"),
-                  email=request.form.get("email")
+                  email=request.form.get("email"),
+                  created_utc=int(time())
                  )
     except:
         return new_signup("Please enter a valid email")
