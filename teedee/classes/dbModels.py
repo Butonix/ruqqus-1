@@ -25,7 +25,7 @@ class User(Base):
         return self.hash
 
     def verifyPass(self, password):
-        return check_password_hash(self.hash, password)
+        return check_password_hash(self.passhash, password)
     
     def rendered_userpage(self, v=None):
 
