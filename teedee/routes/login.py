@@ -39,6 +39,9 @@ def login_post():
 
         redirect("/me")
 
+    else:
+        return render_template("login.html", failed=True)
+
 @app.route("/me", methods=["GET"])
 @auth_required
 def me(v):
