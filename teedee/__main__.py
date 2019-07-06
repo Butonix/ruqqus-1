@@ -1,7 +1,6 @@
 from teedee.classes.dbModels import *
 from os import environ
 from flask import *
-from teedee.helpers import *
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import *
@@ -21,6 +20,7 @@ db = sessionmaker(bind=_engine)()
 Base = declarative_base()
 
 #import and bind all routing functions
+from teedee.helpers import *
 from teedee.routes import *
 
 
