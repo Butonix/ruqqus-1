@@ -11,10 +11,6 @@ textarea {
     width: 100%;
 }
 
-input[type='text'] {
-    width:100%;
-}
-
 /*Honeypot for bots*/
 input[name="subtitle"] {
     display: none
