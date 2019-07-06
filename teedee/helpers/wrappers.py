@@ -38,7 +38,7 @@ def auth_required(f):
     wrapper.__name__=f.__name__
     return wrapper
 
-def admin_required(f):
+def admin_level_required(f, x):
     #decorator for any api that requires admin perms
 
     def wrapper(*args, **kwargs):
@@ -48,7 +48,7 @@ def admin_required(f):
             if not v:
                 abort(401)
             v=v[0]
-            if not v.is_admin:
+            if not v.admin_level >= x:
                 abort(403)
 
             if args:
