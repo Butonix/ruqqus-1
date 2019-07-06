@@ -170,6 +170,7 @@ def sign_up_post(v):
     #kill tokens
     session.pop("signup_token")
     
+    session["user_id"]=account.id
     session["session_id"]=token_hex(16)
     
     #make new user
