@@ -63,30 +63,32 @@ def is_not_banned(f):
     return wrapper
     
 
-def admin_level_required(f):
+def admin_level_required(x):
     #decorator for any api that requires admin perms
+    def decorator(f):
+        def wrapper(*args, **kwargs):
 
-    def wrapper(x, *args, **kwargs):
-
-        if "user_id" in session:
-            v=db.query(User).filter_by(id=session["user_id"]).all()
-            if not v:
-                abort(401)
-            v=v[0]
-            if not v.admin_level >= x:
-                abort(403)
+            if "user_id" in session:
+                v=db.query(User).filter_by(id=session["user_id"]).all()
+                if not v:
+                    abort(401)
+                v=v[0]
+                if not v.admin_level >= x:
+                    abort(403)
+                    
+                #banned_users have no perms
+                if v.is_banned:
+                    abort(403)
                 
-            #banned_users have no perms
-            if v.is_banned:
-                abort(403)
-            
-        else:
-            abort(401)
+            else:
+                abort(401)
 
-        return f(*args, v=v, **kwargs)
+            return f(*args, v=v, **kwargs)
+        
+        return wrapper
 
-    wrapper.__name__=f.__name__
-    return wrapper
+    decorator.__name__=f.__name__
+    return decorator
 
 def validate_formkey(f):
 
