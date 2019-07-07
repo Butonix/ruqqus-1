@@ -13,7 +13,7 @@ def home(v):
 
     cutoff=int(time())-(60*60*24*30)
 
-    posts = db.query(Submission).filter_by(Submission.created_utc>=cutoff)
+    posts = db.query(Submission).filter(Submission.created_utc>=cutoff)
 
     posts.sort(key=lambda x: x.rank_hot)
     
