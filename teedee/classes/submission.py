@@ -83,7 +83,7 @@ class Submission(Base):
     @property
     def age(self):
         now=int(time.time())
-        return now-self.created_utc()
+        return now-self.created_utc
 
     @property
     def rank_hot(self):
