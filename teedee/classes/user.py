@@ -22,6 +22,8 @@ class User(Base):
     ips = relationship('IPs', backref='users')
     username_verified = Column(Boolean, default=False)
     over_18=Column(Boolean, default=False)
+    creation_ip=Column(String, default=None)
+    most_recent_ip=Column(String, default=None)
 
     def __init__(self, **kwargs):
 

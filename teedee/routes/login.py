@@ -176,9 +176,10 @@ def sign_up_post(v):
     #make new user
     try:
         new_user=User(username=request.form.get("username"),
-                  password=request.form.get("password"),
-                  email=request.form.get("email"),
-                  created_utc=int(time())
+                      password=request.form.get("password"),
+                      email=request.form.get("email"),
+                      created_utc=int(time()),
+                      creation_ip=request.remote_addr
                  )
     except Exception as e:
         print(e)
