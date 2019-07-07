@@ -27,7 +27,6 @@ _callback_functions=bleach.linkifier.DEFAULT_CALLBACKS+[_url_on_hover]
 _clean_wo_links = bleach.Cleaner(tags=_allowed_tags,
                                   attributes=_allowed_attributes,
                                   protocols=_allowed_protocols,
-                                  callbacks=_callback_functions
                                   )
 _clean_w_links = bleach.Cleaner(tags=_allowed_tags,
                                   attributes=_allowed_attributes,
