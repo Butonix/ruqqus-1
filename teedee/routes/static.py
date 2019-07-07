@@ -16,7 +16,7 @@ def home(v):
     posts = db.query(Submission).filter(Submission.created_utc>=cutoff,
                                         Submission.is_banned==False).all()
 
-    posts.sort(key=lambda x: x.rank_hot)
+    posts.sort(key=lambda x: x.rank_hot, reverse=True)
 
     #check for a sticky
     sticky=db.query(Submission).filter(Submission.stickied==True).first()
