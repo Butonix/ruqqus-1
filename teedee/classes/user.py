@@ -21,6 +21,7 @@ class User(Base):
     is_banned = Column(Boolean, default=False)
     ips = relationship('IPs', backref='users')
     username_verified = Column(Boolean, default=False)
+    over_18=Column(Boolean, default=False)
 
     def __init__(self, **kwargs):
 
