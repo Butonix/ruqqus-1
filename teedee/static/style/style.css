@@ -8,7 +8,7 @@ textarea {
 }
 
 .content input[type="text"][name="title"],
-.content input[type="text"][name="url"{
+.content input[type="text"][name="url"] {
     width: 100%;
 }
 
