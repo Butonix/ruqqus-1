@@ -37,9 +37,10 @@ class Submission(Base):
 
     @property
     def author(self):
-        if self.author_id=0:
+        if self.author_id==0:
             return None
-        author= db.query(User).filter_by(id=self.id).first()
+        else:
+            return db.query(User).filter_by(id=self.id).first()
 
     @property
     def ups(self):
