@@ -13,8 +13,7 @@ _allowed_tags=tags=['a',
                    'ul'
                    ]
 
-_allowed_attributes={'a': ['href', 'title'],
-                    styles=[]}
+_allowed_attributes={'a': ['href', 'title']}
 
 _allowed_protocols=['http', 'https']
 
