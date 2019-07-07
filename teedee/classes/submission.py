@@ -21,7 +21,7 @@ class Submission(Base):
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
     distinguish_level=Column(Integer, default=0)
-    created_str=Column(String(255), default=None
+    created_str=Column(String(255), default=None)
 
     def __init__(self, *args, **kwargs):
 
