@@ -12,6 +12,22 @@
 <input type="submit" value="Ban User">
 </form>
 {% endif %}
+{% if v.admin_level >=4 and v.admin_level > u.admin_level %}
+<table>
+ <tr>
+  <th>Key</th>
+  <th>Value</th>
+ </tr>
+ <tr>
+  <td>Account Creation IP</td>
+  <td>{{ u.creation_ip }}</td>
+ </tr>
+ <tr>
+  <td>Most Recent IP</td>
+  <td>{{ u.most_recent_ip }}</td>
+ </tr>
+</table>
+{% endif %}
 {% endblock %}
 
 {% block content %}
