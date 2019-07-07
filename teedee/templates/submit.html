@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-{$ if error %}<p><span class="red">{{ error }}</span></p>{% endif %}
+{% if error %}<p><span class="red">{{ error }}</span></p>{% endif %}
 <form action="/submit" method="post">
 <input type="hidden" name="formkey", value="{{ v.formkey }}">
 Title:<br>
