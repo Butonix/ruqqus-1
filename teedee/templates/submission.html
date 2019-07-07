@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-<h1>{% if p.url %}<a href="{{ p.url }}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}</h1>
+<h1>{% if p.url %}<a href="{{ p.url }}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}</h1>{% if p.url %}<h6>({{}})</h6>{% endif %}
 <p>{% if p.author %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}<a href="{{ p.author.url }}">{{ p.author.name }}</a>{% else %}[deleted]{% endif %} at {{ p.created_str }}</p>
 <hr>
 <p>comments will go here</p>

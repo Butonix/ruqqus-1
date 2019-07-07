@@ -1,9 +1,11 @@
 from flask import render_template
-from teedee.helpers.base36 import *
-from teedee.__main__ import Base, db
 import time
 from sqlalchemy import *
 from .user import User
+from urllib.parse import urlparse
+
+from teedee.helpers.base36 import *
+from teedee.__main__ import Base, db
 
 class Submission(Base):
 
@@ -50,6 +52,10 @@ class Submission(Base):
         else:
             return db.query(User).filter_by(id=self.id).first()
 
+    @property
+    def domain(self):
+        return urlparse(self.url).netloc
+        
     @property
     def ups(self):
         return len(db.query(Vote).filter_by(submission_id=self.id, is_up=True).all())
