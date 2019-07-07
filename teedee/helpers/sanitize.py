@@ -1,4 +1,4 @@
-from bleach import linkify
+import bleach
 from bleach.linkifier import LinkifyFilter
 
 _allowed_tags=tags=['b',
