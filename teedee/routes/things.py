@@ -5,7 +5,7 @@ from teedee.helpers.base36 import *
 from teedee.helpers.sanitize import *
 from teedee.classes import *
 from flask import *
-from teedee.__main__ import app
+from teedee.__main__ import app, db
 
 
 @app.route("/u/<username>", methods=["GET"])
@@ -66,3 +66,14 @@ def submit_post(v):
     #sanitize title
     
     title=CleanWithoutLinkgen(title)
+
+    new_post=Submission(title=title,
+                        url=url,
+                        author_id=v.id
+                        )
+
+    db.add(new_post)
+    db.commit()
+
+    return redirect(new_post.url)
+    

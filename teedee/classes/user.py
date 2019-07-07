@@ -14,7 +14,7 @@ from teedee.__main__ import Base, db
 class User(Base):
 
     __tablename__="users"
-    id = Column(BigInteger, primary_key=True)
+    id = Column(Integer, Sequence('users_pkey'), primary_key=True)
     username = Column(String, default=None)
     email = Column(String, default=None)
     passhash = Column(String, default=None)
