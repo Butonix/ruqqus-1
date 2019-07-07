@@ -65,7 +65,7 @@ def submit_post(v):
 
     #sanitize title
     
-    title=CleanWithoutLinkgen(title)
+    title=sanitize(title, linkgen=False)
 
     new_post=Submission(title=title,
                         url=url,

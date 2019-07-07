@@ -1,8 +1,7 @@
 import bleach
 from bleach.linkify import LinkifyFilter
 
-_allowed_tags=tags=['a',
-                   'b',
+_allowed_tags=tags=['b',
                    'blockquote',
                    'code',
                    'em',
@@ -13,14 +12,11 @@ _allowed_tags=tags=['a',
                    'ul'
                    ]
 
+_allowed_tags_with_links=_allowed_tags+["a"]
+
 _allowed_attributes={'a': ['href', 'title']}
 
 _allowed_protocols=['http', 'https']
-
-CleanWithoutLinkgen = lambda x:bleach.Cleaner(tags=_allowed_tags,
-                                     attributes=_allowed_attributes,
-                                     protocols=_allowed_protocols
-                                     ).clean(x)
 
 def _url_on_hover(attrs, new=False):
     attrs["title"]=attrs["href"]
@@ -28,12 +24,26 @@ def _url_on_hover(attrs, new=False):
 
 _callback_functions=bleach.linkifier.DEFAULT_CALLBACKS+[_url_on_hover]
 
-
-CleanWithLinkgen = lambda x:bleach.Cleaner(tags=_allowed_tags,
+_clean_wo_links = bleach.Cleaner(tags=_allowed_tags,
+                                  attributes=_allowed_attributes,
+                                  protocols=_allowed_protocols,
+                                  callbacks=_callback_functions
+                                  )
+_clean_w_links = bleach.Cleaner(tags=_allowed_tags,
                                   attributes=_allowed_attributes,
                                   protocols=_allowed_protocols,
                                   callbacks=_callback_functions
                                   filters=[lambda:LinkifyFilter(skip_tags=["pre"],
                                                                 parse_email=False)
                                       ]
-                                  ).clean(x)
+                                  )
+
+
+def sanitize(text, linkgen=False):
+
+    if linkgen:
+        return _clean_w_links.clean(text)
+    else:
+        return _clean_wo_links.clean(text)
+    
+
