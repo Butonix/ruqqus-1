@@ -36,6 +36,14 @@ class User(Base):
 
         super().__init__(**kwargs)
 
+    def update_ip(self, remote_addr):
+
+        if not self.most_recent_ip == remote_addr:
+
+            self.most_recent_ip=remote_addr
+            db.add(self)
+            db.commit()
+
     def hash_password(self, password):
         return generate_password_hash(password, method='pbkdf2:sha512', salt_length=8)
 
