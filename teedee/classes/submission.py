@@ -60,11 +60,11 @@ class Submission(Base):
         return now-self.created_utc()
 
     @property
-    def rank_hot(self)
+    def rank_hot(self):
         return self.score/math.log(self.age+2)
 
     @property
-    def rank_controversial(self)
+    def rank_controversial(self):
         return math.sqrt(self.top*self.downs)/math.log(self.age+2)
 
     @property
