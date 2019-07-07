@@ -74,8 +74,3 @@ class Submission(Base):
     @property
     def rank_controversial(self):
         return math.sqrt(self.top*self.downs)/math.log(self.age+2)
-
-    @property
-    def created_str(self):
-
-        return 
