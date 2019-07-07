@@ -24,7 +24,7 @@ def home(v):
         post=posts[i]
         if post.stickied:
             posts.insert(0, post)
-            posts.remove(i+1)
+            posts.pop(i+1)
             break
     else:
         sticky=db.query(Submission).filter(Submission.stickied==True).first()
