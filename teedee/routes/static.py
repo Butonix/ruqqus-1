@@ -1,5 +1,4 @@
-import time
-
+from time import time
 from teedee.helpers.wrappers import *
 from flask import *
 from teedee.__main__ import app
@@ -10,7 +9,7 @@ from teedee.__main__ import app
 @auth_desired
 def home(v):
 
-    cutoff=int(time.time())-(60*60*24*30)
+    cutoff=int(time())-(60*60*24*30)
 
     posts = db.query(Submission).filter_by(created_utc>=cutoff)
 
