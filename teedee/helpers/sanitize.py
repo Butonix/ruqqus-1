@@ -1,5 +1,5 @@
-import bleach
-from bleach.linkify import LinkifyFilter
+from bleach import linkify
+from bleach.linkifier import LinkifyFilter
 
 _allowed_tags=tags=['b',
                    'blockquote',
