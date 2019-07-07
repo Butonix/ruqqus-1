@@ -1,7 +1,9 @@
 from flask import render_template
 import time
 from sqlalchemy import *
+from sqlalchemy.orm import relationship
 from .user import User
+from .votes import Vote
 from urllib.parse import urlparse
 from random import randint
 
@@ -19,7 +21,7 @@ class Submission(Base):
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
     distinguish_level=Column(Integer, default=0)
-    created_str=Column(String(255), default=None)
+    created_str=Column(String(255), default=None
 
     def __init__(self, *args, **kwargs):
 
@@ -60,11 +62,11 @@ class Submission(Base):
         
     @property
     def ups(self):
-        return len(db.query("votes").filter(submission_id==self.id, is_up==True).all())
+        return len(db.query(Vote).filter(Vote.submission_id==self.id, is_up==True).all())
 
     @property
     def downs(self):
-        return len(db.query("votes").filter(submission_id==self.id, is_up==False).all())
+        return len(db.query(Vote).filter(Vote.submission_id==self.id, is_up==False).all())
 
     @property
     def score(self):
