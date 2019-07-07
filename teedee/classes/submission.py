@@ -23,6 +23,7 @@ class Submission(Base):
     is_banned = Column(Boolean, default=False)
     distinguish_level=Column(Integer, default=0)
     created_str=Column(String(255), default=None)
+    stickied=Column(Boolean, default=False)
 
     def __init__(self, *args, **kwargs):
 

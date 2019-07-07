@@ -13,9 +13,15 @@ def home(v):
 
     cutoff=int(time())-(60*60*24*30)
 
-    posts = db.query(Submission).filter(Submission.created_utc>=cutoff).all()
+    posts = db.query(Submission).filter(Submission.created_utc>=cutoff,
+                                        Submission.is_banned==False).all()
 
     posts.sort(key=lambda x: x.rank_hot)
+
+    #check for a sticky
+    sticky=db.query(Submission).filter(Submission.stickied=True).first()
+    if sticky:
+        listing=[sticky]+posts
     
     return render_template("home.html", v=v, listing=posts)
 
