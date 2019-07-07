@@ -33,7 +33,7 @@ class Submission(Base):
         #step 1: load and tree comments
         #step 2: render
 
-        return ""
+        return render_template("submission.html", v=v, p=self)
 
     @property
     def author(self):
