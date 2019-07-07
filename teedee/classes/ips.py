@@ -6,7 +6,7 @@ from .user import User
 
     
 class IP(Base):
-    __tablename__ = "Ips"
+    __tablename__ = "ips"
     id = Column(BigInteger, primary_key=True)
     user_id = Column(BigInteger, ForeignKey(User.id), default=0)
     ip = Column(VARCHAR(40), default=None)
