@@ -55,13 +55,13 @@ def submit_post(v):
     url=request.form.get("url","")
 
     if len(title)<10:
-        return render_template("submit.html", error="Please enter a better title.")
+        return render_template("submit.html", v=v, error="Please enter a better title.")
 
 
 
     x=urlparse(url)
     if not (x.scheme and x.netloc):
-        return render_template("submit.html", error="Please enter a URL.")
+        return render_template("submit.html", v=v, error="Please enter a URL.")
 
     #sanitize title
     
