@@ -1,13 +1,13 @@
 from flask import render_template
 from teedee.helpers.base36 import *
 from teedee.__main__ import Base, db
-from time import strftime
+import time
 from sqlalchemy import *
 from .user import User
 
 class Submission(Base):
 
-    __tablename__="Submissions"
+    __tablename__="submissions"
 
     id = Column(BigInteger, primary_key=True)
     author_id = Column(BigInteger, ForeignKey(User.id))
@@ -15,6 +15,7 @@ class Submission(Base):
     url = Column(String(500), default=None)
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
+    distinguish_level=Column(Integer, default=0)
 
     def __repr__(self):
         return f"<Submission(id={self.id})>"
@@ -24,7 +25,7 @@ class Submission(Base):
         return base36encode(self.id)
 
     @property
-    def url(self):
+    def permalink(self):
         return f"/post/{self.base36id}"
                                       
     def rendered_page(self, v=None):
@@ -32,4 +33,40 @@ class Submission(Base):
         #step 1: load and tree comments
         #step 2: render
 
-        return "post found successfully, but this page isn't implemented yet"
+        return ""
+
+    @property
+    def author(self):
+        if self.author_id=0:
+            return None
+        author= db.query(User).filter_by(id=self.id).first()
+
+    @property
+    def ups(self):
+        return len(db.query(Vote).filter_by(submission_id=self.id, is_up=True).all())
+
+    @property
+    def downs(self):
+        return len(db.query(Vote).filter_by(submission_id=self.id, is_up=False).all())
+
+    @property
+    def score(self):
+        return self.ups-self.downs
+
+    @property
+    def age(self):
+        now=int(time.time())
+        return now-self.created_utc()
+
+    @property
+    def rank_hot(self)
+        return self.score/math.log(self.age+2)
+
+    @property
+    def rank_controversial(self)
+        return math.sqrt(self.top*self.downs)/math.log(self.age+2)
+
+    @property
+    def created_str(self):
+
+        return strftime("%I:%M %p on %d %b %Y", self.created_utc)

@@ -1,0 +1,15 @@
+{% extends "default.html" %}
+
+{% block title %}
+<title>{{ u.name }}</title>
+<meta name="description" content="on Tee_Dee">
+{% endblock %}
+
+{% block adminpanel %}
+{% endblock %}
+
+{% block content %}
+<h1>{% if p.url %}<a href="{{ p.url }}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}</h1>
+<p>{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}submitted at {{ p.created_str }}</p>
+<hr>
+{% endblock %}

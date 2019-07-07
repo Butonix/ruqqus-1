@@ -1,32 +1,20 @@
 {% extends "default.html" %}
 
 {% block title %}
-<title>Settings</title>
+<title>Submit to TD</title>
 <meta name="description" content="Settings">
 {% endblock %}
 
 {% block content %}
-<h1>Settings</h1>
-{% if error %}
-<p><span class="red">{{ error }}</span></p>
-{% endif %}
-{% if msg %}
-<p><span class="green">{{ msg }}</span></p>
-{% endif %}
+<h1>Submit</h1>
 
-<h2>Username Verification</h2>
-{% if v.username_verified %}
-<p>Your username "{{ v.username }}" has been verified with reddit.</p>
-{% else %}
-<p>You may permanently change your username to match your reddit account. If the name is already in use and not verified on another account, it will be removed from that account. <a href="/api/get_reddit_auth">Click here to begin.</a></p>
-{% endif %}
-
-<h2>Preferences</h2>
-<form action="/settings" method="post">
+<form action="/submit" method="post">
 <input type="hidden" name="formkey", value="{{ v.formkey }}">
-<input type="checkbox" name="over18" {% if v.over_18 %}checked{% endif %}>I am over 18 and willing to view adult content.<br>
-<input type="submit" value="Save">
+Title:<br>
+<input type="text" name="title">
+URL:<br>
+<input type="text" name="url">
+<input type="submit" value="Submit">
 </form>
-
 
 {% endblock %}
