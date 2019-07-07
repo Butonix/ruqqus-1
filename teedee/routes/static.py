@@ -23,6 +23,6 @@ def settings(v):
     return render_template("settings.html", v=v)
 
 @app.route("/submit", methods=["GET"])
-@auth_required
+@is_not_banned
 def submit_get(v):
     return render_template("submit.html", v=v)

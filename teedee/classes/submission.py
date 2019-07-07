@@ -3,6 +3,7 @@ import time
 from sqlalchemy import *
 from .user import User
 from urllib.parse import urlparse
+from random import randint
 
 from teedee.helpers.base36 import *
 from teedee.__main__ import Base, db
@@ -22,8 +23,9 @@ class Submission(Base):
 
     def __init__(self, *args, **kwargs):
 
-        if "created_str" not in kwargs:
-            kwargs["created_str"]=time.strftime("%I:%M %p on %d %b %Y", time.gmtime(self.created_utc))
+        if "created_utc" not in kwargs:
+            kwargs["created_utc"]=int(time.time())
+            kwargs["created_str"]=time.strftime("%I:%M %p on %d %b %Y", time.gmtime(kwargs["created_utc"]))
 
         super().__init__(*args, **kwargs)
 
@@ -67,6 +69,11 @@ class Submission(Base):
     @property
     def score(self):
         return self.ups-self.downs
+    
+    @property
+    def score_fuzzed(self)
+
+        
 
     @property
     def age(self):

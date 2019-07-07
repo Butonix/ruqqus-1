@@ -14,7 +14,6 @@ def u_username(username, v=None):
     
     #username is unique so at most this returns one result. Otherwise 404
     try:
-
         #case insensitive search
 
         result = db.query(User).filter(User.username.ilike(username)).all()[0]
@@ -47,7 +46,7 @@ def post_base36id(base36id, v=None):
 
 
 @app.route("/submit", methods=['POST'])
-@auth_required
+@is_not_banned
 @validate_formkey
 def submit_post(v):
 
