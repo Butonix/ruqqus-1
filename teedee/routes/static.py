@@ -1,4 +1,4 @@
-from time import *
+import time
 
 from teedee.helpers.wrappers import *
 from flask import *
