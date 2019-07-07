@@ -78,7 +78,7 @@ class Submission(Base):
         real=self.score
         a=int(real*(1-k))
         b=int(real*(1+k))
-        return random.randint(a,b)        
+        return randint(a,b)        
 
     @property
     def age(self):
