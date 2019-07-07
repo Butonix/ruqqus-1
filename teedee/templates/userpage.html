@@ -7,10 +7,17 @@
 
 {% block adminpanel %}
 {% if v.admin_level >=3 and v.admin_level > u.admin_level %}
+{% if u.is_banned %}
+<form action="/api/unban_user/{{ u.id }}" method="post">
+<input type="hidden" name="formkey", value="{{ v.formkey }}">
+<input type="submit" value="Unban User">
+</form>
+{% else %}
 <form action="/api/ban_user/{{ u.id }}", method="post">
 <input type="hidden" name="formkey", value="{{ v.formkey }}">
 <input type="submit" value="Ban User">
 </form>
+{% endif %}
 {% endif %}
 {% if v.admin_level >=4 and v.admin_level > u.admin_level %}
 <table>
