@@ -71,9 +71,11 @@ class Submission(Base):
         return self.ups-self.downs
     
     @property
-    def score_fuzzed(self)
-
-        
+    def score_fuzzed(self, k=0.01):
+        real=self.score
+        a=int(real*(1-k))
+        b=int(real*(1+k))
+        return random.randint(a,b)        
 
     @property
     def age(self):
