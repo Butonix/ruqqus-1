@@ -10,6 +10,13 @@ class IP(Base):
     id = Column(BigInteger, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     ip = Column(VARCHAR(40), default=None)
+    
+    def __init__(self, *args, **kwargs):
+        
+        if "created_utc" not in kwargs:
+            kwargs["created_utc"]=int(time.time())
+        
+        super().__init__(*args, **kwargs)
 
     def __repr__(self):
         return f"<Ips(id={self.id}, uid={self.user_id}, ip={self.ip})>"
