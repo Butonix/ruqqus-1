@@ -7,6 +7,8 @@ from teedee.__main__ import Base, db
 
 class Vote(Base):
 
+    __tablename__="votes"
+
     id=Column(Integer, primary_key=True)
     user_id=Column(Integer, ForeignKey("users.id"))
     is_up=Column(Boolean)
