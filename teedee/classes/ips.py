@@ -7,7 +7,7 @@ from teedee.__main__ import Base, db
 
 class IP(Base):
     __tablename__ = "ips"
-    id = Column(BigInteger, Sequence('ips_pkey'), primary_key=True)
+    id = Column(BigInteger, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     ip = Column(VARCHAR(40), default=None)
     created_utc=Column(Integer, default=None)
