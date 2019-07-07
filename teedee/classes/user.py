@@ -46,7 +46,7 @@ class User(Base):
             db.add(self)
 
         if not remote_addr in [i.ip for i in self.ips]:
-            db.add(IP(user_id=self.uid, ip=remote_addr))
+            db.add(IP(user_id=self.id, ip=remote_addr))
         
         if db.dirty:
             db.commit()
