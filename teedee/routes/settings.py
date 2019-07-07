@@ -13,4 +13,4 @@ def settings_post(v):
     db.add(v)
     db.commit()
 
-    return render_template("settings.html", msg="Your settings have been saved")
+    return render_template("settings.html", v=v, msg="Your settings have been saved")
