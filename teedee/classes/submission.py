@@ -23,7 +23,7 @@ class Submission(Base):
     def __init__(self, *args, **kwargs):
 
         if "created_str" not in kwargs:
-            kwargs["created_str"]=time.strftime("%I:%M %p on %d %b %Y", self.created_utc)
+            kwargs["created_str"]=time.strftime("%I:%M %p on %d %b %Y", time.gmtime(self.created_utc))
 
         super().__init__(*args, **kwargs)
 
