@@ -75,5 +75,5 @@ def submit_post(v):
     db.add(new_post)
     db.commit()
 
-    return redirect(new_post.url)
+    return redirect(new_post.permalink)
     
