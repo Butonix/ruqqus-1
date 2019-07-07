@@ -19,7 +19,7 @@ class User(Base):
     created_utc = Column(BigInteger, default=0)
     admin_level = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
-    ips = relationship('IPs', backref='users')
+    ips = relationship('IP', backref='users')
     username_verified = Column(Boolean, default=False)
     over_18=Column(Boolean, default=False)
     creation_ip=Column(String, default=None)
