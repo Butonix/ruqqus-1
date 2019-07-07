@@ -50,7 +50,7 @@ class Submission(Base):
         if self.author_id==0:
             return None
         else:
-            return db.query(User).filter_by(id=self.id).first()
+            return db.query(User).filter_by(id=self.author_id).first()
 
     @property
     def domain(self):
