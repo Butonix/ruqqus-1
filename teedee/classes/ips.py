@@ -1,10 +1,10 @@
-from teedee.helpers.base36 import *
-from teedee.__main__ import Base, db
-from time import strftime
+import time
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
-    
+from teedee.helpers.base36 import *
+from teedee.__main__ import Base, db
+
 class IP(Base):
     __tablename__ = "ips"
     id = Column(BigInteger, primary_key=True)
