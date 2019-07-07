@@ -38,13 +38,16 @@ class User(Base):
 
     def update_ip(self, remote_addr):
         
-        self.most_recent_ip = remote_addr
+        if not remote_addr==self.most_recent_ip:
+            self.most_recent_ip = remote_addr
+            db.add(self)
 
         if not remote_addr in [i.ip for i in self.ips]:
             from .ips import IPs
             db.add(IPs(uid=self.uid, ip=remote_addr))
-
-        db.commit()
+        
+        if db.dirty:
+            db.commit()
 
 
     def hash_password(self, password):
