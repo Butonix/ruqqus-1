@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 class IP(Base):
     __tablename__ = "ips"
     id = Column(BigInteger, primary_key=True)
-    user_id = Column(Integer, ForeignKey("User.id"))
+    user_id = Column(Integer, ForeignKey("user.id"))
     ip = Column(VARCHAR(40), default=None)
 
     def __repr__(self):
