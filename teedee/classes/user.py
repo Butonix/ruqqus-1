@@ -26,7 +26,7 @@ class User(Base):
     over_18=Column(Boolean, default=False)
     creation_ip=Column(String, default=None)
     most_recent_ip=Column(String, default=None)
-    submissions=relationship("submissions")
+    submissions=relationship("Submission")
 
     def __init__(self, **kwargs):
 
