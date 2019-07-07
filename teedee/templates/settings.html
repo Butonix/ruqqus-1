@@ -23,7 +23,7 @@
 
 <h2>Preferences</h2>
 <form action="/api/settings, method="post">
-<input type="checkbox" name="over18">I am over 18 and willing to view adult content.<br>
+<input type="checkbox" name="over18", value="{{ v.over_18 }}">I am over 18 and willing to view adult content.<br>
 <input type="submit" value="Save">
 </form>
 
