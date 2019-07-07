@@ -16,6 +16,14 @@ class Submission(Base):
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
     distinguish_level=Column(Integer, default=0)
+    created_str=Column(String(255), default=None)
+
+    def __init__(self, *args, **kwargs):
+
+        if "created_str" not in kwargs:
+            kwargs["created_str"]=time.strftime("%I:%M %p on %d %b %Y", self.created_utc)
+
+        super().__init__(*args, **kwargs)
 
     def __repr__(self):
         return f"<Submission(id={self.id})>"
@@ -70,4 +78,4 @@ class Submission(Base):
     @property
     def created_str(self):
 
-        return time.strftime("%I:%M %p on %d %b %Y", self.created_utc)
+        return 
