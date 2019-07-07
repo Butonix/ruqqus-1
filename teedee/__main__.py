@@ -1,5 +1,6 @@
 from os import environ
 from flask import *
+from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import *
@@ -12,6 +13,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
 app.config["SERVER_NAME"]="tee-dee.herokuapp.com"
+
+Markdown(app)
 
 #setup dbb
 _engine = create_engine(environ.get("DATABASE_URL"))
