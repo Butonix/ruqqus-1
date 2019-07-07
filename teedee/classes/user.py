@@ -43,7 +43,7 @@ class User(Base):
 
     def vote_status_on_post(self, post):
 
-        vote = db.query(Vote).filter_by(Vote.user_id=self.id, Vote.submission_id=post.id)
+        vote = db.query(Vote).filter(Vote.user_id==self.id, Vote.submission_id==post.id)
         if not vote:
             return 0
         if vote.is_up:
