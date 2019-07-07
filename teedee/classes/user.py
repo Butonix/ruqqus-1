@@ -1,13 +1,15 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import render_template, session
-from teedee.helpers.base36 import *
-from teedee.__main__ import Base, db
 from time import strftime, time, gmtime
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 import hmac
 from os import environ
 from secrets import token_hex
+
+from teedee.helpers.base36 import *
+from .ips import IP
+from teedee.__main__ import Base, db
 
 class User(Base):
 
@@ -43,7 +45,6 @@ class User(Base):
             db.add(self)
 
         if not remote_addr in [i.ip for i in self.ips]:
-            from .ips import IPs
             db.add(IPs(uid=self.uid, ip=remote_addr))
         
         if db.dirty:
