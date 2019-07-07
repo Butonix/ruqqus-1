@@ -60,11 +60,11 @@ class Submission(Base):
         
     @property
     def ups(self):
-        return len(db.query(Vote).filter_by(submission_id=self.id, is_up=True).all())
+        return len(db.query("votes").filter_by(submission_id=self.id, is_up=True).all())
 
     @property
     def downs(self):
-        return len(db.query(Vote).filter_by(submission_id=self.id, is_up=False).all())
+        return len(db.query("votes").filter_by(submission_id=self.id, is_up=False).all())
 
     @property
     def score(self):
