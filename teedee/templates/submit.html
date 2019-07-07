@@ -1,0 +1,19 @@
+{% extends "default.html" %}
+
+{% block title %}
+<title>Add Submission</title>
+<meta name="description" content="Make a submission">
+{% endblock %}
+
+{% block adminpanel %}
+{% endblock %}
+
+{% block content %}
+{$ if error %}<p><span class="red">{{ error }}</span></p>{% endif %}
+<form action="/submit" method="post">
+<input type="hidden" name="formkey", value="{{ v.formkey }}">
+Title:<br>
+<input type="text" name="title" required><br>
+<URL:>
+<input type="text" name="url" required><br>
+{% endblock %}
