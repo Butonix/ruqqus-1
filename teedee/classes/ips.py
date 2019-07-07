@@ -10,6 +10,7 @@ class IP(Base):
     id = Column(BigInteger, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     ip = Column(VARCHAR(40), default=None)
+    created_utc=Column(Integer, default=None)
     
     def __init__(self, *args, **kwargs):
         
