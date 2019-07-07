@@ -70,4 +70,4 @@ class Submission(Base):
     @property
     def created_str(self):
 
-        return strftime("%I:%M %p on %d %b %Y", self.created_utc)
+        return time.strftime("%I:%M %p on %d %b %Y", self.created_utc)
