@@ -19,7 +19,7 @@ def home(v):
     posts.sort(key=lambda x: x.rank_hot)
 
     #check for a sticky
-    sticky=db.query(Submission).filter(Submission.stickied=True).first()
+    sticky=db.query(Submission).filter(Submission.stickied==True).first()
     if sticky:
         listing=[sticky]+posts
     
