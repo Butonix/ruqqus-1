@@ -2,13 +2,14 @@ from flask import render_template
 import time
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from .user import User
-from .votes import Vote
+import math
 from urllib.parse import urlparse
 from random import randint
 
 from teedee.helpers.base36 import *
 from teedee.__main__ import Base, db
+from .user import User
+from .votes import Vote
 
 class Submission(Base):
 
