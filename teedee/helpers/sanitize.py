@@ -1,5 +1,6 @@
 import bleach
 from bleach.linkifier import LinkifyFilter
+from urllib.parse import urlparse
 
 _allowed_tags=tags=['b',
                    'blockquote',
@@ -18,8 +19,9 @@ _allowed_attributes={'a': ['href', 'title']}
 
 _allowed_protocols=['http', 'https']
 
+#filter to make all links show domain on hover
 def _url_on_hover(attrs, new=False):
-    attrs["title"]=attrs["href"]
+    attrs["title"]=urlparse(attrs["href"]).netloc
     return attrs
 
 _callback_functions=bleach.linkifier.DEFAULT_CALLBACKS+[_url_on_hover]
@@ -31,9 +33,9 @@ _clean_wo_links = bleach.Cleaner(tags=_allowed_tags,
 _clean_w_links = bleach.Cleaner(tags=_allowed_tags,
                                   attributes=_allowed_attributes,
                                   protocols=_allowed_protocols,
-                                  callbacks=_callback_functions,
                                   filters=[lambda:LinkifyFilter(skip_tags=["pre"],
-                                                                parse_email=False)
+                                                                parse_email=False,
+                                                                callbacks=_callback_functions)
                                       ]
                                   )
 
