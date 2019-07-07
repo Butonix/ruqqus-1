@@ -32,7 +32,7 @@ _clean_wo_links = bleach.Cleaner(tags=_allowed_tags,
 _clean_w_links = bleach.Cleaner(tags=_allowed_tags,
                                   attributes=_allowed_attributes,
                                   protocols=_allowed_protocols,
-                                  callbacks=_callback_functions
+                                  callbacks=_callback_functions,
                                   filters=[lambda:LinkifyFilter(skip_tags=["pre"],
                                                                 parse_email=False)
                                       ]
