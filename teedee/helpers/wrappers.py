@@ -97,6 +97,8 @@ def validate_formkey(f):
     def wrapper(*args, v, **kwargs):
 
         submitted_key = request.form.get("formkey","none")
+        if not submitted_key:
+            abort(401)
 
         if not v.validate_formkey(submitted_key):
             abort(401)

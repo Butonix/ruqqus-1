@@ -3,7 +3,7 @@ from teedee.classes import *
 from teedee.helpers.wrappers import *
 from teedee.__main__ import db, app
 
-@app.route("/api/settings", methods=["POST"])
+@app.route("/settings", methods=["POST"])
 @auth_required
 @validate_formkey
 def settings_post(v):
@@ -13,4 +13,4 @@ def settings_post(v):
     db.add(v)
     db.commit()
 
-    return redirect("/settings")
+    return render_template("settings.html", msg="Your settings have been saved")
