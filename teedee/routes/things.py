@@ -1,5 +1,8 @@
+from urllib.parse import urlparse
+
 from teedee.helpers.wrappers import *
 from teedee.helpers.base36 import *
+from teedee.helpers.sanitize import *
 from teedee.classes import *
 from flask import *
 from teedee.__main__ import app
@@ -41,3 +44,25 @@ def post_base36id(base36id, v=None):
     
     #not yet implemented
     #return post.rendered_webpage
+
+
+@app.route("/submit", methods=['POST'])
+@auth_required
+@validate_formkey
+def submit_post(v):
+
+    title=request.form.get("title","")
+    url=request.form.get("url","")
+
+    if len(title)<10:
+        return render_template("submit.html", error="Please enter a better title.")
+
+
+
+    x=urlparse(url)
+    if not (x.scheme and x.netloc):
+        return render_template("submit.html", error="Please enter a URL.")
+
+    #sanitize title
+    
+    title=CleanWithoutLinkgen(title)

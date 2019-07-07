@@ -2,7 +2,7 @@ from teedee.helpers.wrappers import *
 from flask import *
 from teedee.__main__ import app
 
-#take care of static pages
+#take care of misc pages that never really change (much)
 
 @app.route("/", methods=["GET"])
 @auth_desired
@@ -21,3 +21,8 @@ def robots_txt():
 @auth_required
 def settings(v):
     return render_template("settings.html", v=v)
+
+@app.route("/submit", methods=["GET"])
+@auth_required
+def submit_get(v):
+    return render_template("submit.html", v=v)
