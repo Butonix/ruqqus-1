@@ -20,7 +20,7 @@ class Vote(Base):
             kwargs["created_utc"]=int(time())
             
 
-    def change_to(self, x)
+    def change_to(self, x):
 
         """
         1 - upvote
