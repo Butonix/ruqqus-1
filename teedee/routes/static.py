@@ -1,7 +1,9 @@
 from time import time
 from teedee.helpers.wrappers import *
 from flask import *
+
 from teedee.__main__ import app
+from teedee.classes import *
 
 #take care of misc pages that never really change (much)
 
@@ -11,7 +13,7 @@ def home(v):
 
     cutoff=int(time())-(60*60*24*30)
 
-    posts = db.query(Submission).filter_by(created_utc>=cutoff)
+    posts = db.query(Submission).filter_by(Submission.created_utc>=cutoff)
 
     posts.sort(key=lambda x: x.rank_hot)
     
