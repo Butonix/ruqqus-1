@@ -8,7 +8,7 @@ from teedee.__main__ import db, app
 @validate_formkey
 def settings_post(v):
 
-    v.over_18=request.form.get("over18")
+    v.over_18=bool(request.form.get("over18", None))
 
     db.add(v)
     db.commit()
