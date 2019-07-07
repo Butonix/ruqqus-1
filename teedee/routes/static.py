@@ -18,10 +18,18 @@ def home(v):
 
     posts.sort(key=lambda x: x.rank_hot, reverse=True)
 
-    #check for a sticky
-    sticky=db.query(Submission).filter(Submission.stickied==True).first()
-    if sticky:
-        listing=[sticky]+posts
+    #check for a sticky'
+
+    for i in range(len(posts)):
+        post=posts[i]
+        if post.stickied:
+            posts.insert(0, post)
+            posts.remove(i+1)
+            break
+    else:
+        sticky=db.query(Submission).filter(Submission.stickied==True).first()
+        if sticky:
+            listing=[sticky]+posts
     
     return render_template("home.html", v=v, listing=posts)
 
