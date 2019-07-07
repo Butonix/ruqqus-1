@@ -8,6 +8,7 @@ from os import environ
 from secrets import token_hex
 
 from teedee.helpers.base36 import *
+from .votes import Vote
 from .ips import IP
 from teedee.__main__ import Base, db
 
@@ -22,6 +23,7 @@ class User(Base):
     admin_level = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
     ips = relationship('IP')
+    votes=relationship("Vote")
     username_verified = Column(Boolean, default=False)
     over_18=Column(Boolean, default=False)
     creation_ip=Column(String, default=None)
@@ -38,6 +40,18 @@ class User(Base):
         kwargs["created_utc"]=int(time())
 
         super().__init__(**kwargs)
+
+    def vote_status_on_post(self, post):
+
+        vote = db.query(Vote).filter_by(Vote.user_id=self.id, Vote.submission_id=post.id)
+        if not vote:
+            return 0
+        if vote.is_up:
+            return 1
+        elif vote.is_up==False:
+            return -1
+        else:
+            return 0
 
     def update_ip(self, remote_addr):
         
