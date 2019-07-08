@@ -80,8 +80,8 @@ class Submission(Base):
     @property
     def score_fuzzed(self, k=0.01):
         real=self.score
-        a=int(real*(1-k))
-        b=int(real*(1+k))
+        a=math.floor(real*(1-k))
+        b=math.ceil(real*(1+k))
         return randint(a,b)        
 
     @property
