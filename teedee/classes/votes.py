@@ -13,7 +13,7 @@ class Vote(Base):
     user_id=Column(Integer, ForeignKey("users.id"))
     is_up=Column(Boolean)
     submission_id=Column(Integer, ForeignKey("submissions.id"))
-    comment_id=Column(Integer, ForeignKey("comments.id"))
+    #comment_id=Column(Integer, default=None)#, ForeignKey("comments.id"))
     created_utc=Column(Integer, default=0)
 
     
