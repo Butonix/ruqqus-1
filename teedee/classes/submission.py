@@ -24,6 +24,7 @@ class Submission(Base):
     distinguish_level=Column(Integer, default=0)
     created_str=Column(String(255), default=None)
     stickied=Column(Boolean, default=False)
+    votes=relationship("Vote")
 
     def __init__(self, *args, **kwargs):
 
@@ -66,11 +67,11 @@ class Submission(Base):
         
     @property
     def ups(self):
-        return len(db.query(Vote).filter(Vote.submission_id==self.id, Vote.is_up==True).all())
+        return len([x for x in self.votes if x.is_up=True])
 
     @property
     def downs(self):
-        return len(db.query(Vote).filter(Vote.submission_id==self.id, Vote.is_up==False).all())
+        return len([x for x in self.votes if x.is_up=False])
 
     @property
     def score(self):

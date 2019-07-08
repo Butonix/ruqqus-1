@@ -76,13 +76,10 @@ class User(Base):
 
         if self.is_banned:
             return render_template("userpage_banned.html", u=self, v=v)
-
-        print([post.title for post in self.submissions])
-
+        
         posts = [post for post in self.submissions]
-        print(posts)
         posts.sort(key=lambda x: x.created_utc, reverse=True)
-        print(posts)
+        
         if len(posts)>50:
             posts=posts[0:50]
 
