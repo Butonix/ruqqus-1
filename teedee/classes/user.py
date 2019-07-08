@@ -8,6 +8,7 @@ from os import environ
 from secrets import token_hex
 
 from teedee.helpers.base36 import *
+from teedee.helpers.security import *
 from .votes import Vote
 from .ips import IP
 from teedee.__main__ import Base, db
@@ -95,13 +96,13 @@ class User(Base):
         if "session_id" not in session:
             session["session_id"]=token_hex(16)
 
-        return hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
-                        msg=bytes(session["session_id"]+str(self.id), "utf-16")
-                        ).hexdigest()
+        msg=f"{session['session_id']}{self.id}"
+
+        return generate_hash(msg)
 
     def validate_formkey(self, formkey):
 
-        return hmac.compare_digest(formkey, self.formkey)
+        return validate_hash(f"{session['session_id']}{self.id}", formkey)
     
     def verify_username(self, username):
         
