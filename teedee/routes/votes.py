@@ -30,7 +30,6 @@ def vote_post(post_id, x, v):
     #check for existing vote
     existing = db.query(Vote).filter_by(user_id=v.id, submission_id=post_id).first()
     if existing:
-        print(f"existing vote {existing.is_up}")
         existing.change_to(x)
         return redirect(post.permalink)
 
