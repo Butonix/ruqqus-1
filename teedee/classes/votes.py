@@ -11,12 +11,13 @@ class Vote(Base):
 
     id=Column(Integer, primary_key=True)
     user_id=Column(Integer, ForeignKey("users.id"))
-    is_up=Column(Boolean)
+    vote_type=Column(Integer)
     submission_id=Column(Integer, ForeignKey("submissions.id"))
     created_utc=Column(Integer, default=0)
 
     
     def __init__(self, *args, **kwargs):
+        
         if "created_utc" not in kwargs:
             kwargs["created_utc"]=int(time())
             
@@ -29,11 +30,13 @@ class Vote(Base):
         -1 - downvote
         """
 
-        new={1:True, 0:None, -1:False}[x]
-        if new==self.is_up:
+        if x not in [-1, 0, 1]:
+            abort(400)
+            
+        if new==self.vote_type:
             return
 
-        self.is_up=new
+        self.vote_type=x
         self.created_utc=int(time())
 
         db.add(self)

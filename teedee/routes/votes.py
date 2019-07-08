@@ -18,8 +18,9 @@ def vote_post(post_id, x, v):
         abort(400)
 
     x=int(x)
+    post_id=base36decode(post_id)
 
-    post = db.query(Submission).filter_by(id=base36decode(post_id)).first()
+    post = db.query(Submission).filter_by(id=post_id).first()
     if not post:
         abort(404)
 
@@ -30,16 +31,17 @@ def vote_post(post_id, x, v):
     existing = db.query(Vote).filter_by(user_id=v.id, submission_id=post_id).first()
     if existing:
         print(f"existing vote {existing.is_up}")
-        vote=existing
-        vote.is_up={1:True, 0:None, -1:False}[x]
-    else:
-        print('new vote')
-        vote=Vote(user_id=v.id,
-                  is_up={1:True, 0:None, -1:False}[x],
-                  submission_id=post_id
-                  )
+        existing.change_to(x)
+        return redirect(post.permalink)
+    
+    print('new vote')
+    print(v.id, x, post_id)
+    vote=Vote(user_id=v.id,
+              vote_type=x,
+              submission_id=post_id
+              )
 
-    print(vote.__dict__)
+    print(vote.user_id)
 
     db.add(vote)
     db.commit()
