@@ -30,7 +30,7 @@ class User(Base):
     most_recent_ip=Column(String, default=None)
     submissions=relationship("Submission", lazy="dynamic")
     votes=relationship("Vote", lazy="dynamic")
-    ips = relationship('IPs', backref='users')
+    ips = relationship('IP', backref='users')
 
     def __init__(self, **kwargs):
 

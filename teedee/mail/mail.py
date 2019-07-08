@@ -1,6 +1,7 @@
-from teedee.__main__ import app
 from os import environ
 import requests
+
+from teedee.__main__ import app
 
 app.config['MAILGUN_KEY'] = environ.get("MAILGUN_KEY")
 app.config['MAILGUN_DOMAIN'] = environ.get("MAILGUN_DOMAIN")
