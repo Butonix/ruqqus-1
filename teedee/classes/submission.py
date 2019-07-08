@@ -67,11 +67,11 @@ class Submission(Base):
         
     @property
     def ups(self):
-        return len([x for x in self.votes if x.is_up=True])
+        return len([x for x in self.votes if x.is_up==True])
 
     @property
     def downs(self):
-        return len([x for x in self.votes if x.is_up=False])
+        return len([x for x in self.votes if x.is_up==False])
 
     @property
     def score(self):
