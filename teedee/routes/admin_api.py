@@ -53,7 +53,7 @@ def ban_post(post_id, v):
     db.add(post)
     db.commit()
     
-    return redirect(user.url)
+    return redirect(post.permalink)
 
 @app.route("/api/unban_post/<post_id>", methods=["POST"])
 @admin_level_required(3)
@@ -96,5 +96,7 @@ def promote(user_id, level, v):
 
     db.add(u)
     db.commit()
+
+    return redirect(u.url)
     
     
