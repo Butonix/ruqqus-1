@@ -35,11 +35,11 @@ def vote_post(post_id, x, v):
     else:
         print('new vote')
         vote=Vote(user_id=v.id,
-                    is_up={1:True, 0:None, -1:False}[x],
-                    submission_id=post_id
-                    )
+                  is_up={1:True, 0:None, -1:False}[x],
+                  submission_id=post_id
+                  )
 
-    print(vote)
+    print(vote.__dict__)
 
     db.add(vote)
     db.commit()
