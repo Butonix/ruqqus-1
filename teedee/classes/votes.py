@@ -31,12 +31,10 @@ class Vote(Base):
         0 - novote
         -1 - downvote
         """
-
-        if x not in [-1, 0, 1]:
+        if x in ["-1","0","1"]:
+            x=int(x)
+        elif x not in [-1, 0, 1]:
             abort(400)
-            
-        if new==self.vote_type:
-            return
 
         self.vote_type=x
         self.created_utc=int(time())
