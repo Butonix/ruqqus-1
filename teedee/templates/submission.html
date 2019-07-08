@@ -26,11 +26,11 @@
 {% block content %}
 <h1>{% if p.url %}<a href="{{ p.url }}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}</h1>{% if p.url %}<h6>({{ p.domain }})</h6>{% endif %}
 <p>{% if p.author %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}<a href="{{ p.author.url }}">{{ p.author.username }}</a>{% else %}[deleted]{% endif %} at {{ p.created_str }}</p>
-<form action="/api/vote/post/{{ p.base36id }}/1>
+<form action="/api/vote/post/{{ p.base36id }}/1" method="post">
 <input type="hidden" name="formkey", value="{{ v.formkey }}">
 <input type="submit" class="upvote_arrow" value="↑">
 </form>
-<form action="/api/vote/post/{{ p.base36id }}/-1>
+<form action="/api/vote/post/{{ p.base36id }}/-1" method="post">
 <input type="hidden" name="formkey", value="{{ v.formkey }}">
 <input type="submit" class="downvote_arrow" value="↓">
 </form>
