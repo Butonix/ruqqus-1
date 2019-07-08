@@ -1,7 +1,7 @@
 import hmac
 from os import environ
 
-def generate_hash(string)
+def generate_hash(string):
 
     msg=bytes(string, "utf-16")
 
