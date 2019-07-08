@@ -33,15 +33,11 @@ def vote_post(post_id, x, v):
         print(f"existing vote {existing.is_up}")
         existing.change_to(x)
         return redirect(post.permalink)
-    
-    print('new vote')
-    print(v.id, x, post_id)
+
     vote=Vote(user_id=v.id,
               vote_type=x,
               submission_id=post_id
               )
-
-    print(vote.user_id)
 
     db.add(vote)
     db.commit()

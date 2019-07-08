@@ -20,6 +20,8 @@ class Vote(Base):
         
         if "created_utc" not in kwargs:
             kwargs["created_utc"]=int(time())
+
+        super().__init__(*args, **kwargs)
             
 
     def change_to(self, x):
