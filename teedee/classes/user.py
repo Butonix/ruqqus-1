@@ -50,12 +50,7 @@ class User(Base):
 
         vote=vote[0]
         
-        if vote.is_up:
-            return 1
-        elif vote.is_up==False:
-            return -1
-        else:
-            return 0
+        return vote.vote_type
 
     def update_ip(self, remote_addr):
         
