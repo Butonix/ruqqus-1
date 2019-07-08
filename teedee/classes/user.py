@@ -81,7 +81,7 @@ class User(Base):
 
         posts = [post for post in self.submissions]
         print(posts)
-        posts = posts.sort(key=lambda x: x.created_utc, reverse=True)
+        posts.sort(key=lambda x: x.created_utc, reverse=True)
         print(posts)
         if len(posts)>50:
             posts=posts[0:50]
