@@ -28,7 +28,7 @@ class User(Base):
     over_18=Column(Boolean, default=False)
     creation_ip=Column(String, default=None)
     most_recent_ip=Column(String, default=None)
-    submissions=relationship("Submission")
+    submissions=relationship("Submission", lazy="dynamic")
 
     def __init__(self, **kwargs):
 
@@ -77,8 +77,7 @@ class User(Base):
         if self.is_banned:
             return render_template("userpage_banned.html", u=self, v=v)
 
-        posts = self.submissions.all()
-        posts=posts.sort(key=lambda x: x.created_utc, reverse=True)
+        posts = [post for post in self.submissions].sort(key=lambda x: x.created_utc, reverse=True)
         if len(posts)>50:
             posts=posts[0:50]
 
