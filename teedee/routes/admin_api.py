@@ -38,6 +38,41 @@ def unban_user(user_id, v):
     
     return redirect(user.url)
 
+@app.route("/api/ban_post/<post_id>", methods=["POST"])
+@admin_level_required(3)
+@validate_formkey
+def ban_post(post_id, v):
+
+    post=db.query(Submission).filter_by(id=post_id).first()
+
+    if not post:
+        abort(400)
+
+    post.is_banned=True
+
+    db.add(post)
+    db.commit()
+    
+    return redirect(user.url)
+
+@app.route("/api/unban_post/<post_id>", methods=["POST"])
+@admin_level_required(3)
+@validate_formkey
+def unban_post(post_id, v):
+
+    post=db.query(Submission).filter_by(id=post_id).first()
+
+    if not post:
+        abort(400)
+
+    post.is_banned=False
+
+    db.add(post)
+    db.commit()
+    
+    return redirect(post.permalink)
+
+
 @app.route("/api/promote/<user_id>/<level>", methods=["POST"])
 @admin_level_required(1)
 @validate_formkey

@@ -6,6 +6,19 @@
 {% endblock %}
 
 {% block adminpanel %}
+{% if v.admin_level >=1 and v.admin_level > p.author.admin_level%}
+{% if p.is_banned %}
+<form action="/api/unban_post/{{ p.id }}" method="post">
+<input type="hidden" name="formkey", value="{{ v.formkey }}">
+<input type="submit" value="Approve Post">
+</form>
+{% else %}
+<form action="/api/ban_post/{{ p.id }}", method="post">
+<input type="hidden" name="formkey", value="{{ v.formkey }}">
+<input type="submit" value="Remove Post">
+</form>
+{% endif %}
+{% endif %}
 {% endblock %}
 
 {% block content %}
