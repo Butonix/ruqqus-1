@@ -19,7 +19,6 @@ class User(Base):
     username = Column(String, default=None)
     email = Column(String, default=None)
     passhash = Column(String, default=None)
-    activehash = Column(String, default=None)
     created_utc = Column(BigInteger, default=0)
     admin_level = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
@@ -28,9 +27,9 @@ class User(Base):
     over_18=Column(Boolean, default=False)
     creation_ip=Column(String, default=None)
     most_recent_ip=Column(String, default=None)
-    submissions=relationship("Submission", lazy="dynamic")
-    votes=relationship("Vote", lazy="dynamic")
-    ips = relationship('IP', backref='users')
+    submissions=relationship("Submission", lazy="dynamic", backref="users")
+    votes=relationship("Vote", lazy="dynamic", backref="users")
+    ips = relationship('IP', lazy="dynamic", backref="users")
 
     def __init__(self, **kwargs):
 
