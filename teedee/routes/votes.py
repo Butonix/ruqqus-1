@@ -19,11 +19,12 @@ def vote_post(post_id, x, v):
 
     x=int(x)
 
-    post_id=base36decode(post_id)
-
-    post = db.query(Submission).filter_by(id=post_id).first()
+    post = db.query(Submission).filter_by(id=base36decode(post_id)).first()
     if not post:
         abort(404)
+
+    if post.is_banned:
+        abort(403)
 
     #check for existing upvote
     existing = db.query(IP).filter_by(user_id=v._id, submission_id=post_id)

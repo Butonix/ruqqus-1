@@ -1,6 +1,7 @@
 from flask import *
 from teedee.classes import *
 from teedee.helpers.wrappers import *
+from teedee.helpers.base36 import *
 from secrets import token_hex
 from teedee.__main__ import db, app
 
@@ -43,12 +44,13 @@ def unban_user(user_id, v):
 @validate_formkey
 def ban_post(post_id, v):
 
-    post=db.query(Submission).filter_by(id=post_id).first()
+    post=db.query(Submission).filter_by(id=base36decode(post_id)).first()
 
     if not post:
         abort(400)
 
     post.is_banned=True
+    post.stickied=False
 
     db.add(post)
     db.commit()
@@ -60,7 +62,7 @@ def ban_post(post_id, v):
 @validate_formkey
 def unban_post(post_id, v):
 
-    post=db.query(Submission).filter_by(id=post_id).first()
+    post=db.query(Submission).filter_by(id=base36decode(post_id)).first()
 
     if not post:
         abort(400)

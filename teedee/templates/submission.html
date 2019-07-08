@@ -8,12 +8,12 @@
 {% block adminpanel %}
 {% if v.admin_level >=1 and v.admin_level > p.author.admin_level%}
 {% if p.is_banned %}
-<form action="/api/unban_post/{{ p.id }}" method="post">
+<form action="/api/unban_post/{{ p.base36id }}" method="post">
 <input type="hidden" name="formkey", value="{{ v.formkey }}">
 <input type="submit" value="Approve Post">
 </form>
 {% else %}
-<form action="/api/ban_post/{{ p.id }}", method="post">
+<form action="/api/ban_post/{{ p.base36id }}", method="post">
 <input type="hidden" name="formkey", value="{{ v.formkey }}">
 <input type="submit" value="Remove Post">
 </form>
@@ -26,6 +26,14 @@
 {% block content %}
 <h1>{% if p.url %}<a href="{{ p.url }}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}</h1>{% if p.url %}<h6>({{ p.domain }})</h6>{% endif %}
 <p>{% if p.author %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}<a href="{{ p.author.url }}">{{ p.author.username }}</a>{% else %}[deleted]{% endif %} at {{ p.created_str }}</p>
+<form action="/api/vote/post/{{ p.base36id }}/1>
+<input type="hidden" name="formkey", value="{{ v.formkey }}">
+<input type="submit" class="upvote_arrow" value="↑">
+</form>
+<form action="/api/vote/post/{{ p.base36id }}/-1>
+<input type="hidden" name="formkey", value="{{ v.formkey }}">
+<input type="submit" class="downvote_arrow" value="↓">
+</form>
 <hr>
 <p>comments will go here</p>
 {% endblock %}
