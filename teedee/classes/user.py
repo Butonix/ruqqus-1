@@ -29,6 +29,7 @@ class User(Base):
     creation_ip=Column(String, default=None)
     most_recent_ip=Column(String, default=None)
     submissions=relationship("Submission", lazy="dynamic")
+    votes=relationship("Vote", lazy="dynamic")
 
     def __init__(self, **kwargs):
 
@@ -43,9 +44,12 @@ class User(Base):
 
     def vote_status_on_post(self, post):
 
-        vote = db.query(Vote).filter(Vote.user_id==self.id, Vote.submission_id==post.id)
+        vote = [x for x in self.votes if x.submission_id==post.id]
         if not vote:
             return 0
+
+        vote=vote[0]
+        
         if vote.is_up:
             return 1
         elif vote.is_up==False:
