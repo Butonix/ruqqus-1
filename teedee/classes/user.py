@@ -19,17 +19,18 @@ class User(Base):
     username = Column(String, default=None)
     email = Column(String, default=None)
     passhash = Column(String, default=None)
+    activehash = Column(String, default=None)
     created_utc = Column(BigInteger, default=0)
     admin_level = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
-    ips = relationship('IP')
-    votes=relationship("Vote")
+    is_activated = Column(Boolean, default=False)
     username_verified = Column(Boolean, default=False)
     over_18=Column(Boolean, default=False)
     creation_ip=Column(String, default=None)
     most_recent_ip=Column(String, default=None)
     submissions=relationship("Submission", lazy="dynamic")
     votes=relationship("Vote", lazy="dynamic")
+    ips = relationship('IPs', backref='users')
 
     def __init__(self, **kwargs):
 
@@ -39,6 +40,7 @@ class User(Base):
             kwargs.pop("password")
 
         kwargs["created_utc"]=int(time())
+        kwargs["activehash"]=self.activation_hash(self.username)
 
         super().__init__(**kwargs)
 
@@ -47,7 +49,7 @@ class User(Base):
         vote = [x for x in self.votes if x.submission_id==post.id]
         if not vote:
             return 0
-
+          
         vote=vote[0]
         
         return vote.vote_type
@@ -64,6 +66,8 @@ class User(Base):
         if db.dirty:
             db.commit()
 
+    def activation_hash(self):
+        return generate_password_hash(self.username, method='pbkdf2:sha256', salt_length=8)
 
     def hash_password(self, password):
         return generate_password_hash(password, method='pbkdf2:sha512', salt_length=8)
