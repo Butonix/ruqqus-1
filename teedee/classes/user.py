@@ -16,14 +16,16 @@ class User(Base):
     username = Column(String, default=None)
     email = Column(String, default=None)
     passhash = Column(String, default=None)
+    activehash = Column(String, default=None)
     created_utc = Column(BigInteger, default=0)
     admin_level = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
-    ips = relationship('IPs', backref='users')
+    is_activated = Column(Boolean, default=False)
     username_verified = Column(Boolean, default=False)
     over_18=Column(Boolean, default=False)
     creation_ip=Column(String, default=None)
     most_recent_ip=Column(String, default=None)
+    ips = relationship('IPs', backref='users')
 
     def __init__(self, **kwargs):
 
@@ -33,11 +35,12 @@ class User(Base):
             kwargs.pop("password")
 
         kwargs["created_utc"]=int(time())
+        kwargs["activehash"]=self.activation_hash(self.username)
 
         super().__init__(**kwargs)
 
     def update_ip(self, remote_addr):
-        
+
         self.most_recent_ip = remote_addr
 
         if not remote_addr in [i.ip for i in self.ips]:
@@ -45,6 +48,9 @@ class User(Base):
             db.add(IPs(uid=self.uid, ip=remote_addr))
 
         db.commit()
+
+    def activation_hash(self):
+        return generate_password_hash(self.username, method='pbkdf2:sha256', salt_length=8)
 
 
     def hash_password(self, password):

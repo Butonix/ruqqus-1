@@ -181,14 +181,21 @@ def sign_up_post(v):
                       created_utc=int(time()),
                       creation_ip=request.remote_addr
                  )
+
     except Exception as e:
         print(e)
         return new_signup("Please enter a valid email")
     
     db.add(new_user)
     db.commit()
-    
+
     v=db.query(User).filter_by(username=request.form.get("username")).first()
+
+
+    from teedee.mail.mail import *
+    send_mail(to_address=None, from_address=None,
+              subject="T_D Account Activation",
+              plaintext=f"http://tee-dee.herokuapp.com/activate?hash={v.activehash}", html=None)
 
     session["user_id"]=v.id
     session["session_id"]=token_hex(16)
