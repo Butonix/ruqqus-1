@@ -28,17 +28,20 @@ def vote_post(post_id, x, v):
 
     #check for existing vote
     existing = db.query(Vote).filter_by(user_id=v.id, submission_id=post_id)
-    if existing:
-        return redirect(post.permalink)
-
-    new_upvote=Vote(user_id=v.id,
+    if exisitng:
+        print(f"existing vote {existing.is_up}")
+        vote=existing
+        vote.is_up={1:True, 0:None, -1:False}[x]
+    else:
+        print('new vote')
+        vote=Vote(user_id=v.id,
                     is_up={1:True, 0:None, -1:False}[x],
                     submission_id=post_id
                     )
 
-    print(new_upvote)
+    print(vote)
 
-    db.add(new_upvote)
+    db.add(vote)
     db.commit()
 
     return redirect(post.permalink)
