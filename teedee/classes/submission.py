@@ -48,8 +48,10 @@ class Submission(Base):
 
         #step 1: load and tree comments
         #step 2: render
-
-        return render_template("submission.html", v=v, p=self)
+        if self.is_banned:
+            return render_template("submission_banned.html", v=v, p=self)
+        else:
+            return render_template("submission.html", v=v, p=self)
 
     @property
     def author(self):
