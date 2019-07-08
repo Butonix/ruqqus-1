@@ -28,7 +28,7 @@ def vote_post(post_id, x, v):
 
     #check for existing vote
     existing = db.query(Vote).filter_by(user_id=v.id, submission_id=post_id)
-    if exisitng:
+    if existing:
         print(f"existing vote {existing.is_up}")
         vote=existing
         vote.is_up={1:True, 0:None, -1:False}[x]
