@@ -74,10 +74,15 @@ class User(Base):
     
     def rendered_userpage(self, v=None):
 
-        if not self.is_banned:
-            return render_template("userpage.html", u=self, v=v)
-        else:
+        if self.is_banned:
             return render_template("userpage_banned.html", u=self, v=v)
+
+        posts = db.query(Submission).filter(Submission.created_utc>=cutoff,
+                                        Submission.is_banned==False).all()
+
+        posts.sort(key=lambda x: x.created_utc, reverse=True)
+
+        return render_template("userpage.html", u=self, v=v, listing=posts)
 
     @property
     def formkey(self):
