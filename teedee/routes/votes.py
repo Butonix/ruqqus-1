@@ -26,17 +26,17 @@ def vote_post(post_id, x, v):
     if post.is_banned:
         abort(403)
 
-    #check for existing upvote
+    #check for existing vote
     existing = db.query(Vote).filter_by(user_id=v.id, submission_id=post_id)
     if existing:
-        
-            
         return redirect(post.permalink)
 
     new_upvote=Vote(user_id=v.id,
                     is_up={1:True, 0:None, -1:False}[x],
                     submission_id=post_id
                     )
+
+    print(new_upvote)
 
     db.add(new_upvote)
     db.commit()
