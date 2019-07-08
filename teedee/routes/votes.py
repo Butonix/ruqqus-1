@@ -27,7 +27,7 @@ def vote_post(post_id, x, v):
         abort(403)
 
     #check for existing upvote
-    existing = db.query(IP).filter_by(user_id=v._id, submission_id=post_id)
+    existing = db.query(Vote).filter_by(user_id=v.id, submission_id=post_id)
     if existing:
         
             
