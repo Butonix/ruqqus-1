@@ -67,14 +67,14 @@ def is_not_banned(f):
     
 
 #this wrapper takes args and is a bit more complicated
-class admin_level_required():
-    def __init__(self, level):
-        self.level=level
 
-    def __call__(self, f):
+
+def admin_level_required(x):
+
+    def wrapper_maker(f):
 
         def wrapper(*args, **kwargs):
-            
+
             if "user_id" in session:
                 v=db.query(User).filter_by(id=session["user_id"]).first()
                 if not v:
@@ -83,7 +83,7 @@ class admin_level_required():
                 if v.is_banned:
                     abort(403)
 
-                if v.admin_level < self.level:
+                if v.admin_level < x:
                     abort(403)
 
                 v.update_ip(request.remote_addr)
@@ -95,6 +95,8 @@ class admin_level_required():
 
         wrapper.__name__=f.__name__
         return wrapper
+
+    return wrapper_maker
 
 def validate_formkey(f):
 

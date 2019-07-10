@@ -91,7 +91,7 @@ class Submission(Base):
 
     @property
     def rank_hot(self):
-        return self.score/math.log(self.age+2)
+        return self.score/(((self.age+100)/6)^(1/3))
 
     @property
     def rank_controversial(self):
