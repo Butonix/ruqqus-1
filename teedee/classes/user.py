@@ -74,11 +74,6 @@ class User(Base):
         if db.dirty:
             db.commit()
 
-    @property
-    def ips(self):
-
-        return [x.ip for x in db.query("ips").filter_by(user_id=self.id).all()]
-
     def activation_hash(self):
         return generate_password_hash(self.username, method='pbkdf2:sha256', salt_length=8)
 
