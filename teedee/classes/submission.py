@@ -25,7 +25,6 @@ class Submission(Base):
     created_str=Column(String(255), default=None)
     stickied=Column(Boolean, default=False)
     comments=relationship("Comment")
-    votes=relationship("Vote")
 
     def __init__(self, *args, **kwargs):
 
@@ -52,12 +51,15 @@ class Submission(Base):
                                       
     def rendered_page(self, v=None):
 
-        #step 1: load and tree comments
-        #step 2: render
+        #check for banned
         if self.is_banned:
             return render_template("submission_banned.html", v=v, p=self)
-        else:
-            return render_template("submission.html", v=v, p=self)
+
+        #load and tree comments
+        self.tree_comments()
+
+        #return template
+        return render_template("submission.html", v=v, p=self)
 
     @property
     def author(self):
@@ -107,7 +109,7 @@ class Submission(Base):
         #list comments without re-querying db each time
         comments=[c for c in self.comments]
 
-        self.replies=[c for c in self.comments if c.parent_comment is None]
+        self.replies=[c for c in self.comments if c.parent_fullname=self.fullname]
 
         def tree_replies(comment):
 
