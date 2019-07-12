@@ -126,7 +126,8 @@ def api_distinguish_post(post_id, v):
     return redirect(post.permalink)
 
 @app.route("/api/sticky/<post_id>", methods=["POST"])
-def api_sticky_post
+@admin_level_required(3)
+def api_sticky_post(v)
 
     post=db.query(Submission).filter_by(id=base36decode(post_id)).first()
 
