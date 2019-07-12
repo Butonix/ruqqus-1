@@ -52,6 +52,6 @@
 {% endif %}
 <hr>
 {% for c in p.replies %}
-{{ c.rendered_comment }}
+{{ c.rendered_comment | safe}}
 {% endfor %}
 {% endblock %}

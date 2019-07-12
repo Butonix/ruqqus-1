@@ -1,4 +1,4 @@
 <div class="comment comment-{{ c.base36id }}">
 <h5 class="tagline"><a href="{{ c.author.url }}">{{ c.author.username }}</a></h5>
-{{ c.body_html }}
+{{ c.body_html | safe }}
 </div>

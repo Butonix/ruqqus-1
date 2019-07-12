@@ -17,6 +17,7 @@ class Comment(Base):
     parent_fullname = Column(BigInteger) #this column is foreignkeyed to comment(id) but we can't do that yet as "comment" class isn't yet defined
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
+    body_html = Column(String)
 
     def __repr__(self):
         return "<Comment(id=%s, author_id=%s, body=%s, parent_submission=%s, " \
