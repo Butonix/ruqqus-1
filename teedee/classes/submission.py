@@ -114,7 +114,7 @@ class Submission(Base):
 
         def tree_replies(comment):
 
-            comment.replies=[c for c in comments if c.parent_fullname==comment.fullname]
+            comment.__dict__["replies"]=[c for c in comments if c.parent_fullname==comment.fullname]
 
             for reply in comment.replies:
                 tree_replies(reply)
