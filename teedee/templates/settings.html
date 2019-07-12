@@ -27,11 +27,11 @@
 <h2>Change Password</h2>
 <input type="hidden" name="formkey", value="{{ v.formkey }}">
 New Password:<br>
-<input type="text" name="new_password" required><br>
+<input type="password" name="new_password" required><br>
 Confirm Password:<br>
-<input type="text" name="cnf_password" required><br>
+<input type="password" name="cnf_password" required><br>
 Old Password:<br>
-<input type="text" name="old_password" required><br>
+<input type="password" name="old_password" required><br>
 
 <h2>Preferences</h2>
 <input type="checkbox" name="over18" {% if v.over_18 %}checked{% endif %}>I am over 18 and willing to view adult content.<br>

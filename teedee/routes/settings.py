@@ -14,7 +14,7 @@ def settings_post(v):
         if request.form.get("new_password") != request.form.get("cnf_password"):
             return render_template("settings.html", v=v, error="Passwords do not match.")
 
-        if not v.confirm_password(request.form.get("old_password")):
+        if not v.verifyPass(request.form.get("old_password")):
             return render_template("settings.html", v=v, error="Incorrect password")
 
         v.passhash=v.hash_password(request.form.get("new_password"))
