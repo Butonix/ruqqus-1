@@ -88,7 +88,7 @@ class User(Base):
         if self.is_banned:
             return render_template("userpage_banned.html", u=self, v=v)
         
-        posts = [post for post in self.submissions]
+        posts = [post for post in self.submissions if not post.is_banned]
         posts.sort(key=lambda x: x.created_utc, reverse=True)
         
         if len(posts)>50:

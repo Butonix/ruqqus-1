@@ -21,3 +21,5 @@ class IP(Base):
 
     def __repr__(self):
         return f"<Ips(id={self.id}, uid={self.user_id}, ip={self.ip})>"
+
+    
