@@ -14,7 +14,7 @@ class Comment(Base):
     author_id = Column(BigInteger, ForeignKey(User.id))
     body = Column(String(2000), default=None)
     parent_submission = Column(BigInteger, ForeignKey(Submission.id))
-    parent_comment = Column(BigInteger) #this column is foreignkeyed to comment(id) but we can't do that yet as "comment" class isn't yet defined
+    parent_fullname = Column(BigInteger) #this column is foreignkeyed to comment(id) but we can't do that yet as "comment" class isn't yet defined
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
 
@@ -29,3 +29,23 @@ class Comment(Base):
     def base36id(self):
         return base36encode(self.id)
 
+    @property
+    def fullname(self):
+        return f"t3_{self.base36id}"
+
+    @property
+    def is_top_level(self):
+        return self.parent_fullname.startswith("t2_")
+    
+    @property
+    def parent(self)
+
+        if self.is_top_level:
+            return db.query(Submission).filter_by(id=parent_submission).first()
+        else:
+            return db.query(Comment).filter_by(id=parent_comment).first()
+
+    @property
+    def children(self):
+
+        return db.query(Comment).filter_by(parent_comment=self.id).all()

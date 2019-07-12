@@ -24,6 +24,7 @@ class Submission(Base):
     distinguish_level=Column(Integer, default=0)
     created_str=Column(String(255), default=None)
     stickied=Column(Boolean, default=False)
+    comments=relationship("Comment")
     votes=relationship("Vote")
 
     def __init__(self, *args, **kwargs):
@@ -40,6 +41,10 @@ class Submission(Base):
     @property
     def base36id(self):
         return base36encode(self.id)
+
+    @property
+    def fullname(self):
+        return f"t2_{self.base36id}"
 
     @property
     def permalink(self):
@@ -96,3 +101,24 @@ class Submission(Base):
     @property
     def rank_controversial(self):
         return math.sqrt(self.ups*self.downs)/(((self.age+100000)/6)**(1/3))
+
+    def tree_comments(self):
+
+        #list comments without re-querying db each time
+        comments=[c for c in self.comments]
+
+        self.replies=[c for c in self.comments if c.parent_comment is None]
+
+        def tree_replies(comment):
+
+            comment.replies=[c for c in comments if c.parent_comment==comment.id]
+
+            for reply in comment.replies:
+                tree_replies(reply)
+
+        for reply in self.replies:
+            tree_replies(reply)
+
+        
+        
+        

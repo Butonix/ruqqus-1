@@ -44,6 +44,14 @@ class User(Base):
 
         super().__init__(**kwargs)
 
+    @property
+    def base36id(self):
+        return base36encode(self.id)
+
+    @property
+    def fullname(self):
+        return f"t1_{self.base36id}"
+
     def vote_status_on_post(self, post):
 
         vote = [x for x in self.votes if x.submission_id==post.id]
