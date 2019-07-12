@@ -26,9 +26,6 @@ def u_username(username, v=None):
     if username != result.username:
         return redirect(result.url)
         
-    except IndexError:
-        abort(404)
-        
     return result.rendered_userpage(v=v)
 
 @app.route("/post/<base36id>", methods=["GET"])
