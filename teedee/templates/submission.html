@@ -7,7 +7,7 @@
 
 {% block adminpanel %}
 
-{% if v.admin_level >=3 %}
+{% if v.admin_level >=3 and v.id==p.author_id %}
 <form action="/api/distinguish/{{ p.base36id }}" method="post">
 <input type="hidden" name="formkey", value="{{ v.formkey }}">
 <input type="submit" value="{% if p.distinguish_level %}Un-distinguish{% else %}Distinguish{% endif %}">
