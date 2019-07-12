@@ -1,7 +1,7 @@
 <div class="comment comment-{{ c.base36id }}">
 <h4 class="tagline"><a href="{{ c.author.url }}">{{ c.author.username }}</a></h4>
 {{ c.body_html | safe }}<blockquote>
-{% for reply in comment.replies %}
+{% for reply in c.replies %}
 {{ reply.rendered_comment | safe }}
 {% endfor %}
 </div>
