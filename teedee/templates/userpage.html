@@ -35,11 +35,11 @@
  </tr>
 </table>
 <p>IPs:</p>
-<ul>
-{% for ip in u.ips %}
-<li><a href="/ip/{{ ip.ip }}">{{ ip.ip }}</a></li>
+<p>
+{% for ip in u.ips[0:10] %}
+<a href="/ip/{{ ip.ip }}">{{ ip.ip }}</a><br>
 {% endfor %}
-</ul>
+</p>
 {% endif %}
 {% endblock %}
 
