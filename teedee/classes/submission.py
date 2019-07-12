@@ -110,7 +110,7 @@ class Submission(Base):
         #list comments without re-querying db each time
         comments=[c for c in self.comments]
 
-        #this is done in a hacky way in order to reduce computation time for larger comment sets
+        #this is done in an ugly way in order to reduce computation time for larger comment sets
         self.replies=[]
         i=len(comments)-1
         
