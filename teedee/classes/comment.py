@@ -39,7 +39,7 @@ class Comment(Base):
 
     @property
     def author(self):
-        return db.query(User).filter_by(id=author_id).first()
+        return db.query(User).filter_by(id=self.author_id).first()
     
     @property
     def parent(self):
