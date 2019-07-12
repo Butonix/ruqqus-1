@@ -21,9 +21,19 @@
 <p>You may permanently change your username to match your reddit account. If the name is already in use and not verified on another account, it will be removed from that account. <a href="/api/get_reddit_auth">Click here to begin.</a></p>
 {% endif %}
 
-<h2>Preferences</h2>
 <form action="/settings" method="post">
 <input type="hidden" name="formkey", value="{{ v.formkey }}">
+
+<h2>Change Password</h2>
+<input type="hidden" name="formkey", value="{{ v.formkey }}">
+New Password:<br>
+<input type="text" name="new_password" required><br>
+Confirm Password:<br>
+<input type="text" name="cnf_password" required><br>
+Old Password:<br>
+<input type="text" name="old_password" required><br>
+
+<h2>Preferences</h2>
 <input type="checkbox" name="over18" {% if v.over_18 %}checked{% endif %}>I am over 18 and willing to view adult content.<br>
 <input type="submit" value="Save">
 </form>
