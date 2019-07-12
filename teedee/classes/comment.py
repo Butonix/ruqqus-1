@@ -53,3 +53,16 @@ class Comment(Base):
     def children(self):
 
         return db.query(Comment).filter_by(parent_comment=self.id).all()
+
+    @property
+    def replies(self):
+
+        if "replies" in self.__dict__:
+            return self.__dict__["replies"]
+        else:
+            return db.query(Comment).filter_by(parent_fullname=f"t3_{self.base36id}").all()
+
+    @property
+    def rendered_comment(self):
+
+        return render_template("single_comment.html", c=self, replies=self.replies)

@@ -76,7 +76,7 @@ def unban_post(post_id, v):
 
 
 @app.route("/api/promote/<user_id>/<level>", methods=["POST"])
-@admin_level_required(1)
+@admin_level_required(3)
 @validate_formkey
 def promote(user_id, level, v):
 
@@ -102,3 +102,25 @@ def promote(user_id, level, v):
     return redirect(u.url)
     
     
+@app.route("/api/distinguish/<post_id>", methods=["POST"])
+@admin_level_required(3)
+@validate_formkey
+def distinguish_post(post_id, v):
+
+    post=db.query(Submission).filter_by(id=base36decode(post_id)).first()
+
+    if not post:
+        abort(404)
+
+    if not post.author_id == v._id:
+        abort(403)
+
+    if post.distinguish_level:
+        post.distinguish_level=0
+    else:
+        post.distinguish_level=v.admin_level
+
+    db.add(post)
+    db.commit()
+
+    return redirect(post.permalink)
