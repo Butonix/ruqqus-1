@@ -12,7 +12,7 @@ app = Flask(__name__,
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
-app.config["SERVER_NAME"]="tee-dee.herokuapp.com"
+app.config["SERVER_NAME"]="ruqqus.herokuapp.com"
 
 Markdown(app)
 
@@ -24,6 +24,4 @@ Base = declarative_base()
 #import and bind all routing functions
 from teedee.classes import *
 from teedee.routes import *
-
-print("all functions bound")
 
