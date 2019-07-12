@@ -85,5 +85,5 @@ def ip_address(addr, v):
     users=[db.query(User).filter_by(id=x).first() for x in user_ids]
     users.sort(key=lambda x: x.username)
 
-    return render_template("ips.html", addr=addr, users=users)    
+    return render_template("ips.html", addr=addr, users=users, v=v)    
     
