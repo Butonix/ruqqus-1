@@ -70,4 +70,20 @@ def submit_post(v):
     db.commit()
 
     return redirect(new_post.permalink)
+
+@app.route("/ip/<addr>", methods=["GET"])
+@admin_level_required(4)
+def ip_address(addr, v):
+
+    #Restricted to trust+safety ranks and above (admin level 4)
+
+    user_ids=[]
+    for uid in db.query("IP").filter_by(ip=addr).all():
+        if uid not in user_ids:
+            user_ids.append(uid)
+            
+    users=[db.query("User").filter_by(id=x).first() for x in user_ids]
+    users.sort(key=lambda x: x.username)
+
+    return render_template("ips.html", addr=addr, users=users)    
     
