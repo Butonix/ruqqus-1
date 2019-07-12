@@ -21,7 +21,7 @@ def settings_post(v):
         updated=True
                                   
 
-    if request.form.get("over18") != v.over_18
+    if request.form.get("over18") != v.over_18:
         updated=True
         v.over_18=bool(request.form.get("over18", None))
 
