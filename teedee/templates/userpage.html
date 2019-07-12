@@ -34,6 +34,12 @@
   <td>{{ u.most_recent_ip }}</td>
  </tr>
 </table>
+<p>IPs:</p>
+<ul>
+{% for ip in u.ips %}
+<li><a href="/ip/{{ ip.ip }}">{{ ip.ip }}</a></li>
+{% endfor %}
+</ul>
 {% endif %}
 {% endblock %}
 
