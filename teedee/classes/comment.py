@@ -36,6 +36,10 @@ class Comment(Base):
     @property
     def is_top_level(self):
         return self.parent_fullname.startswith("t2_")
+
+    @property
+    def author(self):
+        return db.query(User).filter_by(id=author_id).first()
     
     @property
     def parent(self):
