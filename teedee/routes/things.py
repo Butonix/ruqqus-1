@@ -13,15 +13,18 @@ from teedee.__main__ import app, db
 def u_username(username, v=None):
     
     #username is unique so at most this returns one result. Otherwise 404
-    try:
-        #case insensitive search
+    
+    #case insensitive search
 
-        result = db.query(User).filter(User.username.ilike(username)).all()[0]
+    result = db.query(User).filter(User.username.ilike(username)).first()
 
-        #check for wrong cases
+    if not result:
+        abort(404)
 
-        if username != result.username:
-            return redirect(result.url)
+    #check for wrong cases
+
+    if username != result.username:
+        return redirect(result.url)
         
     except IndexError:
         abort(404)
