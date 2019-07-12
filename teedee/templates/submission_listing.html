@@ -3,7 +3,7 @@
 <hr>
 <div class="post_listing_entry post_{{ p.base36id }}">
 <h2 class="post_title"><a href="{{ p.permalink }}">{{ p.title }}</a></h2>
-<p class="post_tagline">{% if p.stickied %}<span class="red"><span title="pinned">📌</span> | </span>{% endif %}{% if p.author %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}<a href="{{ p.author.url }}">{{ p.author.username }}</a>{% else %}[deleted]{% endif %} at {{ p.created_str }} | {{ p.score_fuzzed }} points{% if p.url %} | ({{ p.domain }}){% endif %}</p>
+<p class="post_tagline">{% if p.stickied %}<span title="pinned">📌</span> | {% endif %}{% if p.author %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}<a href="{{ p.author.url }}">{{ p.author.username }}</a>{% else %}[deleted]{% endif %} at {{ p.created_str }} | {{ p.score_fuzzed }} points{% if p.url %} | ({{ p.domain }}){% endif %}</p>
 </div>
 {% endfor %}
 </div>
