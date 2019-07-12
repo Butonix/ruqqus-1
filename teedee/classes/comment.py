@@ -8,7 +8,7 @@ from .submission import Submission
 
 class Comment(Base):
 
-    __tablename__="Comments"
+    __tablename__="comments"
 
     id = Column(BigInteger, primary_key=True)
     author_id = Column(BigInteger, ForeignKey(User.id))
