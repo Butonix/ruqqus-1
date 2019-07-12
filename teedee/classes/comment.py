@@ -60,7 +60,7 @@ class Comment(Base):
         if "replies" in self.__dict__:
             return self.__dict__["replies"]
         else:
-            return db.query(Comment).filter_by(parent_fullname=f"t3_{self.base36id}").all()
+            return db.query(Comment).filter_by(parent_fullname=self.fullname).all()
 
     @property
     def rendered_comment(self):
