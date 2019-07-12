@@ -51,5 +51,7 @@
 </form>
 {% endif %}
 <hr>
-<p>comments will go here</p>
+{% for c in p.replies %}
+{{ c rendered_comment }}
+{% endfor %}
 {% endblock %}
