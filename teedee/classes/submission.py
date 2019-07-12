@@ -24,8 +24,8 @@ class Submission(Base):
     distinguish_level=Column(Integer, default=0)
     created_str=Column(String(255), default=None)
     stickied=Column(Boolean, default=False)
-    comments=relationship("comments")
-    votes=relationship("votes")
+    comments=relationship("Comment")
+    votes=relationship("Vote")
 
     def __init__(self, *args, **kwargs):
 
