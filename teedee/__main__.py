@@ -16,7 +16,7 @@ app.config["SERVER_NAME"]="tee-dee.herokuapp.com"
 
 Markdown(app)
 
-#setup dbb
+#setup db
 _engine = create_engine(environ.get("DATABASE_URL"))
 db = sessionmaker(bind=_engine)()
 Base = declarative_base()
@@ -25,4 +25,5 @@ Base = declarative_base()
 from teedee.classes import *
 from teedee.routes import *
 
+print("all functions bound")
 
