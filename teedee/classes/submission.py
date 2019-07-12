@@ -110,11 +110,28 @@ class Submission(Base):
         #list comments without re-querying db each time
         comments=[c for c in self.comments]
 
-        self.replies=[c for c in self.comments if c.parent_fullname==self.fullname]
+        #this is done in a hacky way in order to reduce computation time for larger comment sets
+        self.replies=[]
+        i=len(comments)-1
+        
+        while i>=0:
+            if comments[i].parent_fullname==self.fullname:
+                self.replies.append(comments[i])
+                comments.pop(i)
+
+            i-=1
 
         def tree_replies(comment):
 
-            comment.__dict__["replies"]=[c for c in comments if c.parent_fullname==comment.fullname]
+            comment.__dict__["replies"]=[]
+            i=len(comments)-1
+        
+            while i>=0:
+                if comments[i].parent_fullname==comment.fullname:
+                    comment.__dict__["replies"].append(comments[i])
+                    comments.pop(i)
+
+                i-=1
 
             for reply in comment.replies:
                 tree_replies(reply)
