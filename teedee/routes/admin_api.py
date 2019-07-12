@@ -127,7 +127,7 @@ def api_distinguish_post(post_id, v):
 
 @app.route("/api/sticky/<post_id>", methods=["POST"])
 @admin_level_required(3)
-def api_sticky_post(v)
+def api_sticky_post(v):
 
     post=db.query(Submission).filter_by(id=base36decode(post_id)).first()
 
