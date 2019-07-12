@@ -66,4 +66,10 @@ class Comment(Base):
     @property
     def rendered_comment(self):
 
+        if self.is_banned:
+            if self.replies:
+                return render_template("single_comment_banned.html", c=self, replies=self.replies)
+            else:
+                return ""
+
         return render_template("single_comment.html", c=self, replies=self.replies)
