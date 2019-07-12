@@ -38,7 +38,7 @@ class Comment(Base):
         return self.parent_fullname.startswith("t2_")
     
     @property
-    def parent(self)
+    def parent(self):
 
         if self.is_top_level:
             return db.query(Submission).filter_by(id=parent_submission).first()
