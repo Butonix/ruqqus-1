@@ -1,7 +1,7 @@
 from flask import session
 from teedee.__main__ import Base, db
 from flask import *
-from teedee.classes import *
+from ruqqus.classes import *
 
 
 #Wrappers

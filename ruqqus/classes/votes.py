@@ -2,8 +2,8 @@ from flask import render_template, session
 from time import time, strftime, gmtime
 from sqlalchemy import *
 
-from teedee.helpers.base36 import *
-from teedee.__main__ import Base, db
+from ruqqus.helpers.base36 import *
+from ruqqus.__main__ import Base, db
 
 class Vote(Base):
 

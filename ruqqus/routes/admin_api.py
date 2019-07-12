@@ -1,9 +1,9 @@
 from flask import *
-from teedee.classes import *
-from teedee.helpers.wrappers import *
-from teedee.helpers.base36 import *
+from ruqqus.classes import *
+from ruqqus.helpers.wrappers import *
+from ruqqus.helpers.base36 import *
 from secrets import token_hex
-from teedee.__main__ import db, app
+from ruqqus.__main__ import db, app
 
 @app.route("/api/ban_user/<user_id>", methods=["POST"])
 @admin_level_required(3)

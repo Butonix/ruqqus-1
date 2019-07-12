@@ -1,10 +1,13 @@
 from flask import redirect, url_for, flash
-from teedee.classes.user import *
-from teedee.__main__ import db
+from ruqqus.classes.user import *
+from ruqqus.__main__ import db
 
 
-@app.route("/activate?hash=<string:hash>", methods=['GET'])
-def activate(hash=None):
+@app.route("/activate", methods=['GET'])
+@auth_required
+def activate(v):
+
+    hashstr=request.args.get("hashstr", "")
 
     if not hash:
         return redirect(url_for("index"))

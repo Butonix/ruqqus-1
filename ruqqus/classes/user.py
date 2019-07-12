@@ -7,11 +7,11 @@ import hmac
 from os import environ
 from secrets import token_hex
 
-from teedee.helpers.base36 import *
-from teedee.helpers.security import *
+from ruqqus.helpers.base36 import *
+from ruqqus.helpers.security import *
 from .votes import Vote
 from .ips import IP
-from teedee.__main__ import Base, db
+from ruqqus.__main__ import Base, db
 
 class User(Base):
 

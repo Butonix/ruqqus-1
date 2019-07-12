@@ -1,9 +1,9 @@
 from time import time
-from teedee.helpers.wrappers import *
+from ruqqus.helpers.wrappers import *
 from flask import *
 
-from teedee.__main__ import app
-from teedee.classes import *
+from ruqqus.__main__ import app
+from ruqqus.classes import *
 
 #take care of misc pages that never really change (much)
 

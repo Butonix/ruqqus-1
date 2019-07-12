@@ -2,8 +2,8 @@ from os import environ
 import requests
 from time import time
 
-from teedee.__main__ import app
-from teedee.helpers.security import *
+from ruqqus.__main__ import app
+from ruqqus.helpers.security import *
 
 app.config['MAILGUN_KEY'] = environ.get("MAILGUN_KEY")
 app.config['MAILGUN_DOMAIN'] = environ.get("MAILGUN_DOMAIN")

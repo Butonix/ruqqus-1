@@ -1,11 +1,11 @@
 from urllib.parse import urlparse
 
-from teedee.helpers.wrappers import *
-from teedee.helpers.base36 import *
-from teedee.helpers.sanitize import *
-from teedee.classes import *
+from ruqqus.helpers.wrappers import *
+from ruqqus.helpers.base36 import *
+from ruqqus.helpers.sanitize import *
+from ruqqus.classes import *
 from flask import *
-from teedee.__main__ import app, db
+from ruqqus.__main__ import app, db
 
 
 @app.route("/u/<username>", methods=["GET"])

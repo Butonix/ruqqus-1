@@ -1,6 +1,6 @@
 from flask import render_template
-from teedee.helpers.base36 import *
-from teedee.__main__ import Base, db
+from ruqqus.helpers.base36 import *
+from ruqqus.__main__ import Base, db
 from time import strftime
 from sqlalchemy import *
 from .user import User

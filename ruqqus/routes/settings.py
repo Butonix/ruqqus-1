@@ -1,7 +1,7 @@
 from flask import *
-from teedee.classes import *
-from teedee.helpers.wrappers import *
-from teedee.__main__ import db, app
+from ruqqus.classes import *
+from ruqqus.helpers.wrappers import *
+from ruqqus.__main__ import db, app
 
 @app.route("/settings", methods=["POST"])
 @auth_required

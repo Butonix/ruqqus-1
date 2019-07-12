@@ -6,8 +6,8 @@ import math
 from urllib.parse import urlparse
 from random import randint
 
-from teedee.helpers.base36 import *
-from teedee.__main__ import Base, db
+from ruqqus.helpers.base36 import *
+from ruqqus.__main__ import Base, db
 from .user import User
 from .votes import Vote
 

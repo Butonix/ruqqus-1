@@ -1,6 +1,6 @@
-from teedee.helpers.wrappers import *
+from ruqqus.helpers.wrappers import *
 from flask import *
-from teedee.__main__ import app
+from ruqqus.__main__ import app
 
 #Errors
 @app.errorhandler(401)

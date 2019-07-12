@@ -1,15 +1,15 @@
 from flask import *
-from teedee.classes import *
-from teedee.helpers.wrappers import *
-from teedee.helpers.base36 import *
+from ruqqus.classes import *
+from ruqqus.helpers.wrappers import *
+from ruqqus.helpers.base36 import *
 from secrets import token_hex
 from time import time
 import hmac
 from os import environ
 import re
 
-from teedee.mail import *
-from teedee.__main__ import app
+from ruqqus.mail import *
+from ruqqus.__main__ import app
 
 valid_username_regex=re.compile("^\w{5,}$")
 valid_password_regex=re.compile("^.{8,}$")

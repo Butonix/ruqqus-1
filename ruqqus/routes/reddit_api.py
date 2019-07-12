@@ -1,14 +1,14 @@
 import praw
 from os import environ
 from flask import *
-from teedee.classes import *
-from teedee.helpers.wrappers import *
+from ruqqus.classes import *
+from ruqqus.helpers.wrappers import *
 from secrets import token_hex
-from teedee.__main__ import db, app
+from ruqqus.__main__ import db, app
 
 r=praw.Reddit(client_id=environ.get("reddit_id"),
               client_secret=environ.get("reddit_secret"),
-              user_agent="TeeDee username verification by /u/captainmeta4",
+              user_agent="ruqqus username verification by /u/captainmeta4",
               redirect_uri="https://tee-dee.herokuapp.com/api/redditredirect")
 
 @app.route("/api/get_reddit_auth")
