@@ -1,5 +1,5 @@
 from flask import session
-from teedee.__main__ import Base, db
+from ruqqus.__main__ import Base, db
 from flask import *
 from ruqqus.classes import *
 
