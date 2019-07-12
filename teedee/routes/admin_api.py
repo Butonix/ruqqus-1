@@ -105,7 +105,7 @@ def promote(user_id, level, v):
 @app.route("/api/distinguish/<post_id>", methods=["POST"])
 @admin_level_required(3)
 @validate_formkey
-def distinguish_post(post_id, v):
+def api_distinguish_post(post_id, v):
 
     post=db.query(Submission).filter_by(id=base36decode(post_id)).first()
 
@@ -124,3 +124,19 @@ def distinguish_post(post_id, v):
     db.commit()
 
     return redirect(post.permalink)
+
+@app.route("/api/sticky/<post_id>", methods=["POST"])
+def api_sticky_post
+
+    post=db.query(Submission).filter_by(id=base36decode(post_id)).first()
+
+    already_stickied=post=db.query(Submission).filter_by(stickied=True).first()
+
+    post.stickied=True
+    
+    if already_stickied:
+        already_stickied.stickied=False
+        db.add(already_stickied)
+        
+    db.add(post)
+    db.commit()

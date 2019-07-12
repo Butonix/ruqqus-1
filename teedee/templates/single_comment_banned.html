@@ -1,0 +1,19 @@
+<div class="comment comment-{{ c.base36id }} banned">
+{% if v %}
+{% if v.admin_level %}
+<h4 class="tagline"><a href="{{ c.author.url }}">{{ c.author.username }}</a></h4>
+{{ c.body_html | safe }}
+{% else %}
+<h4 class="tagline">[removed]</h4>
+<p>[removed]</p>
+{% endif %}
+{% else %}
+<h4 class="tagline">[removed]</h4>
+<p>[removed]</p>
+{% endif %}
+<div style="padding-left:20px">
+{% for reply in c.replies %}
+{{ reply.rendered_comment | safe }}
+{% endfor %}
+</div>
+</div>
