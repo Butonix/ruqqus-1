@@ -110,11 +110,11 @@ class Submission(Base):
         #list comments without re-querying db each time
         comments=[c for c in self.comments]
 
-        self.replies=[c for c in self.comments if c.parent_fullname=self.fullname]
+        self.replies=[c for c in self.comments if c.parent_fullname==self.fullname]
 
         def tree_replies(comment):
 
-            comment.replies=[c for c in comments if c.parent_comment==comment.id]
+            comment.replies=[c for c in comments if c.parent_fullname==comment.id]
 
             for reply in comment.replies:
                 tree_replies(reply)
