@@ -36,7 +36,8 @@
 </table>
 <p>IPs:</p>
 <p>
-{% for ip in sorted(u.ips, key=(lambda x: x.created_utc), reverse=True)[0:10] %}
+{% set ips = u.ips | sort(attribute="created_utc", reverse=True) %}
+{% for ip in ips[0:10] %}
 <a href="/ip/{{ ip.ip }}">{{ ip.ip }}</a><br>
 {% endfor %}
 </p>
