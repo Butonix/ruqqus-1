@@ -78,9 +78,9 @@ def ip_address(addr, v):
     #Restricted to trust+safety ranks and above (admin level 4)
 
     user_ids=[]
-    for uid in db.query("ips").filter_by(ip=addr).all():
-        if uid not in user_ids:
-            user_ids.append(uid)
+    for ip in db.query(IP).filter_by(ip=addr).all():
+        if ip.user_id not in user_ids:
+            user_ids.append(ip.user_id)
             
     users=[db.query("User").filter_by(id=x).first() for x in user_ids]
     users.sort(key=lambda x: x.username)
