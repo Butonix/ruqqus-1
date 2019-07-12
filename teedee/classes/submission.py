@@ -25,6 +25,7 @@ class Submission(Base):
     created_str=Column(String(255), default=None)
     stickied=Column(Boolean, default=False)
     comments=relationship("Comment")
+    votes=relationship("Vote")
 
     def __init__(self, *args, **kwargs):
 
