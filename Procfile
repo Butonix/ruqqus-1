@@ -1,1 +1,1 @@
-web: gunicorn teedee.__main__:app
+web: gunicorn ruqqus.__main__:app
