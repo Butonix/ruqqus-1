@@ -112,7 +112,7 @@ def distinguish_post(post_id, v):
     if not post:
         abort(404)
 
-    if not post.author_id == v._id:
+    if not post.author_id == v.id:
         abort(403)
 
     if post.distinguish_level:
