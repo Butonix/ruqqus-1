@@ -82,7 +82,7 @@ def ip_address(addr, v):
         if ip.user_id not in user_ids:
             user_ids.append(ip.user_id)
             
-    users=[db.query("User").filter_by(id=x).first() for x in user_ids]
+    users=[db.query(User).filter_by(id=x).first() for x in user_ids]
     users.sort(key=lambda x: x.username)
 
     return render_template("ips.html", addr=addr, users=users)    
