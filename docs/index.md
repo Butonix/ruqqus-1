@@ -1,3 +1,7 @@
+---
+title: Ruqqus Docs
+---
+
 # Ruqqus Contribution
 
 ## Required Reading
