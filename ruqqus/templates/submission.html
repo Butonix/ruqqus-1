@@ -6,7 +6,11 @@
 {% endblock %}
 
 {% block adminpanel %}
-
+{% if v.admin_level >=3 %}
+<form action="/api/sticky/{{ p.base36id }}" method="post">
+<input type="hidden" name="formkey", value="{{ v.formkey }}">
+<input type="submit" value="{% if p.stickied %}Un-sticky{% else %}Sticky{% endif %}">
+</form>
 {% if v.admin_level >=3 and v.id==p.author_id %}
 <form action="/api/distinguish/{{ p.base36id }}" method="post">
 <input type="hidden" name="formkey", value="{{ v.formkey }}">
