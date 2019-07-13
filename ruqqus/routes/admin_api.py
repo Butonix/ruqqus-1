@@ -129,13 +129,15 @@ def api_distinguish_post(post_id, v):
 @admin_level_required(3)
 def api_sticky_post(post_id, v):
 
+    
     post=db.query(Submission).filter_by(id=base36decode(post_id)).first()
 
-    if post.stickied:
-        post.stickied=False
-        db.add(post)
-        db.commit()
-        return redirect(post.permalink)
+    if post:
+        if post.stickied:
+            post.stickied=False
+            db.add(post)
+            db.commit()
+            return redirect(post.permalink)
 
     already_stickied=post=db.query(Submission).filter_by(stickied=True).first()
 
