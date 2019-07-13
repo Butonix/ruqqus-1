@@ -58,9 +58,19 @@ def submit_post(v):
         return render_template("submit.html", v=v, error="Please enter a URL.")
 
     #sanitize title
-    
     title=sanitize(title, linkgen=False)
 
+    #check for duplicate
+    dup = db.query(Submission).filter_by(title=title,
+                                         author_id=v.id,
+                                         url=url
+                                         ).first()
+
+    if dup:
+        return redirect(dup.permalink)
+
+    #now make new post
+    
     new_post=Submission(title=title,
                         url=url,
                         author_id=v.id
