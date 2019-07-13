@@ -148,3 +148,5 @@ def api_sticky_post(post_id, v):
         
     db.add(post)
     db.commit()
+
+    return redirect(post.permalink)
