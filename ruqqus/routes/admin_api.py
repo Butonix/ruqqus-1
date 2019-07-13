@@ -131,8 +131,6 @@ def api_sticky_post(post_id, v):
 
     
     post=db.query(Submission).filter_by(id=base36decode(post_id)).first()
-    print(post.title)
-
     if post:
         if post.stickied:
             post.stickied=False
@@ -140,7 +138,7 @@ def api_sticky_post(post_id, v):
             db.commit()
             return redirect(post.permalink)
 
-    already_stickied=post=db.query(Submission).filter_by(stickied=True).first()
+    already_stickied=db.query(Submission).filter_by(stickied=True).first()
 
     post.stickied=True
     
