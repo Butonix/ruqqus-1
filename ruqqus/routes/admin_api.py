@@ -131,6 +131,7 @@ def api_sticky_post(post_id, v):
 
     
     post=db.query(Submission).filter_by(id=base36decode(post_id)).first()
+    print(post.title)
 
     if post:
         if post.stickied:
