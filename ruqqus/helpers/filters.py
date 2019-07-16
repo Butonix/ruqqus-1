@@ -1,4 +1,5 @@
 import yaml
+from flask import *
 
 config=yaml.load(open("/app/ruqqus/helpers/banned.txt", "r+"))
 
