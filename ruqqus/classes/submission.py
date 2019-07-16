@@ -40,10 +40,10 @@ class Submission(Base):
 
     def _lazy(f):
 
-        def wrapper(*args, **kwargs):
+        def wrapper(self, *args, **kwargs):
 
             if f.__name__ not in self._lazy_dict:
-                self._lazy_dict[f.__name__]=f(*args, **kwargs)
+                self._lazy_dict[f.__name__]=f(self, *args, **kwargs)
 
             return self._lazy_dict[f.__name__]
 
