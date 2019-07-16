@@ -1,6 +1,34 @@
 {% extends "default.html" %}
 
 {% block content %}
-<h1>Home</h1>
+<div class="row justify-content-between no-gutters border-bottom">
+
+          <div clas="col-2">
+            <span class="post-filter text-uppercase">Sort: 24hrs</span>
+          </div>
+          <div class="col-10">
+
+            <ul class="nav post-nav">
+              <li class="nav-item">
+                <a class="nav-link text-uppercase{% if sort_method=="hot" %} active{% endif %}" href="/">Hot</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-uppercase{% if sort_method=="top" %} active{% endif %}" href="/?sort=top">Top</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-uppercase{% if sort_method=="new" %} active{% endif %}" href="/?sort=new">New</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-uppercase{% if sort_method=="fiery" %} active{% endif %}" href="/?sort=fiery">Fiery</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-uppercase{% if sort_method=="based" %} active{% endif %}" href="#">Based</a>
+              </li>
+            </ul>
+
+          </div>
+        </div>
+
 {% include "submission_listing.html" %}
+
 {% endblock %}

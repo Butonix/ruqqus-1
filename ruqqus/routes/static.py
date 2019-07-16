@@ -16,7 +16,16 @@ def home(v):
     posts = db.query(Submission).filter(Submission.created_utc>=cutoff,
                                         Submission.is_banned==False).all()
 
-    posts.sort(key=lambda x: x.rank_hot, reverse=True)
+    sort_method=request.args.get("sort", "hot")
+
+    if sort_method=="hot":
+        posts.sort(key=lambda x: x.rank_hot, reverse=True)
+    elif sort_method=="new":
+        posts.sort(key=lambda x: x.created_utc, reverse=True)
+    elif sort_method=="fiery":
+        posts.sort(key=lambda x: x.rank_controversial, reverse=True)
+    elif sort_method=="top":
+        posts.sort(key=lambda x: x.score, reverse=True)
 
     #check for a sticky'
 
@@ -31,7 +40,7 @@ def home(v):
         if sticky:
             listing=[sticky]+posts
     
-    return render_template("home.html", v=v, listing=posts)
+    return render_template("home.html", v=v, listing=posts, sort_method=sort_method)
 
 @app.route('/static/<path:path>')
 def static_service(path):

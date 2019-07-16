@@ -13,6 +13,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
 app.config["SERVER_NAME"]=environ.get("domain", None)
+#app.config["SESSION_COOKIE_HTTPONLY"]=False
 
 Markdown(app)
 
@@ -25,3 +26,10 @@ Base = declarative_base()
 from ruqqus.classes import *
 from ruqqus.routes import *
 
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Headers',
+                         "Origin, X-Requested-With, Content-Type, Accept, x-auth"
+                         )
+    return response
+    

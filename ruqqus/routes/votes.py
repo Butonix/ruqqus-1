@@ -31,7 +31,7 @@ def vote_post(post_id, x, v):
     existing = db.query(Vote).filter_by(user_id=v.id, submission_id=post_id).first()
     if existing:
         existing.change_to(x)
-        return redirect(post.permalink)
+        return "", 204
 
     vote=Vote(user_id=v.id,
               vote_type=x,
@@ -41,6 +41,6 @@ def vote_post(post_id, x, v):
     db.add(vote)
     db.commit()
 
-    return redirect(post.permalink)
+    return "", 204
                     
                     

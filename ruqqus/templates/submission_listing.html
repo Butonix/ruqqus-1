@@ -1,9 +1,67 @@
 <div class="post_listing">
+
+{% set i=0 %}
+
 {% for p in listing %}
-<hr>
-<div class="post_listing_entry post_{{ p.base36id }}">
-<h2 class="post_title"><a href="{{ p.permalink }}">{{ p.title }}</a></h2>
-<p class="post_tagline">{% if p.stickied %}<span title="pinned">📌</span> | {% endif %}{% if p.author %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}<a href="{{ p.author.url }}">{{ p.author.username }}</a>{% else %}[deleted]{% endif %} at {{ p.created_str }} | {{ p.score_fuzzed }} points{% if p.url %} | ({{ p.domain }}){% endif %}</p>
-</div>
+
+{% set i = i+1 %}
+
+{% set score=p.score_fuzzed %}
+{% if v %}
+{% set voted=v.vote_status_on_post(p) %}
+{% else %}
+{% set voted=-2 %}
+{% endif %}
+       
+        <div id="post-{{ p.base36id }}" class="row mt-3 post-listing-entry post-{{ p.base36id }} {% if i % 2 == 0 %}even{% else %}odd{% endif %} {% if p.stickied %}stickied{% endif %} {% if voted==1 %}upvoted{% elif voted==-1 %}downvoted{% endif %}">
+
+          <div class="col-12">
+
+            <div class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0 mb-3">
+              <div class="card-header bg-transparent border-0 p-0 ml-auto">
+                {% if p.url.endswith((".jpg",".png")) %}<img href="{{ p.url }}" src="{{ p.url }}" class="post-img" alt="">{% endif %}
+                <!-- Mobile voting visible on smaller devices -->
+
+                <div id="voting" class="d-block d-md-none my-auto mr-3">
+                  <span id="post-{{ p.base36id }}-up-narrow" class="arrow-up {{ p.base36id }}-arrow-up mx-auto my-0" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
+                  </span>
+                  <span id="post-{{ p.base36id }}-score-up-wide" class="score-up text-muted{% if voted!=1 %} noshow{% endif %}">{{ score+1 }}</span>
+		  <span id="post-{{ p.base36id }}-score-none-wide" class="score text-muted{% if voted!=0 and voted!=-2 %} noshow{% endif %}">{{ score }}</span>
+		  <span id="post-{{ p.base36id }}-score-down-wide" class="score-down text-muted{% if voted!=-1 %} noshow{% endif %}">{{ score-1 }}</span>
+                  <span id="post-{{ p.base36id }}-down-narrow" class="arrow-down {{ p.base36id }}-arrow-down mx-auto my-0" {% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}>
+                  </span>
+                </div>
+              </div>
+              <div class="card-block my-auto">
+                <h5 class="card-title text-left mb-2"><a href="{{ p.url }}">{{ p.title }}</a></h5>
+                <div class="post-meta text-left">{% if p.stickied %}<span title="pinned">📌</span> | {% endif %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}Posted by <a href="{{ p.author.url }}">{{ p.author.username }}</a> | ({{ p.domain }})</div>
+                <div class="post-actions">
+                  <ul class="list-inline text-left">
+                    <li class="list-inline-item text-muted text-small"><a href="{{ p.permalink }}">Comments</a></li>
+                    <li class="list-inline-item text-muted">Share</li>
+                    <li class="list-inline-item text-muted">Save</li>
+                    <li class="list-inline-item text-muted">Flag</li>
+                  </ul>
+                </div>
+
+              </div>
+
+              <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
+
+              <div id="voting" class="d-none d-md-block my-auto mr-3">
+                <div id="post-{{ p.base36id }}-up-wide" class="arrow-up {{ p.base36id }}-arrow-up mx-auto" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
+                </div>
+                  <span id="post-{{ p.base36id }}-score-up-narrow" class="score-up text-muted{% if voted!=1 %} noshow{% endif %}">{{ score+1 }}</span>
+		  <span id="post-{{ p.base36id }}-score-none-narrow" class="score text-muted{% if voted!=0 and voted!=-2 %} noshow{% endif %}">{{ score }}</span>
+		  <span id="post-{{ p.base36id }}-score-down-narrow" class="score-down text-muted{% if voted!=-1 %} noshow{% endif %}">{{ score-1 }}</span>
+                <div id="post-{{ p.base36id }}-down-wide" class="arrow-down {{ p.base36id }}-arrow-down mx-auto" {% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
 {% endfor %}
 </div>

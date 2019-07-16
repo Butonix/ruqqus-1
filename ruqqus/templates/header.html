@@ -1,4 +1,31 @@
-<h1><a href="/">Ruqqus</a></h1>
-<input id="night-toggle" type="checkbox" onClick="nightToggle()"></input>
-<label for="night-toggle">Night Mode</label>
-<hr>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top border-bottom">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/"><i class="fas fa-paw"></i> ruqqus</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+	  {% if v %}
+          <li class="nav-item d-flex align-items-center justify-content-center">
+	    <a class="btn btn-primary px-5 mr-2" href="/submit">Post</a>
+          </li>
+          <li class="nav-item d-flex align-items-center justify-content-center">
+            <a class="nav-link" href="#"><i class="fa-icon-circle fas fa-bell"></i></a>
+          </li>
+          <li class="nav-item d-flex align-items-center justify-content-center">
+            <a class="nav-link" href="/settings"><i class="fa-icon-circle fas fa-cog"></i></a>
+          </li>
+       	  {% else %}
+          <li class="nav-item d-flex align-items-center justify-content-center">
+	    <a class="btn btn-primary px-5 mr-2" href="/login">Sign In</a>
+          </li>
+          <li class="nav-item d-flex align-items-center justify-content-center">
+	    <a class="btn btn-primary px-5 mr-2" href="/signup">Sign Up</a>
+          </li>
+	  {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
