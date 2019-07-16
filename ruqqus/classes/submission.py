@@ -25,7 +25,6 @@ class Submission(Base):
     created_str=Column(String(255), default=None)
     stickied=Column(Boolean, default=False)
     comments=relationship("Comment")
-    votes=relationship("Vote")
 
     def __init__(self, *args, **kwargs):
 
@@ -37,6 +36,12 @@ class Submission(Base):
 
     def __repr__(self):
         return f"<Submission(id={self.id})>"
+
+    @property
+    @Base._lazy
+    def votes(self):
+
+        return db.query(Vote).join(User).filter_by(Vote.submission_id=self.id, User.is_banned=False)
     
     @property
     @Base._lazy
