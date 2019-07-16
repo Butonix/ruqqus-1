@@ -83,7 +83,7 @@ def submit_post(v):
 
     vote=Vote(user_id=v.id,
               vote_type=1,
-              submission_id=new_post.base36id
+              submission_id=new_post.id
               )
     db.add(vote)
     db.commit()
