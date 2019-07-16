@@ -1,6 +1,6 @@
 import yaml
 
-config=yaml.load(open("banned.txt", "r+"))
+config=yaml.load(open("helpers/banned.txt", "r+"))
 
 def filter_post(post):
 
