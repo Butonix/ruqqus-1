@@ -38,12 +38,6 @@ class Submission(Base):
     def __repr__(self):
         return f"<Submission(id={self.id})>"
 
-        def __init__(self, *args, **kwargs):
-
-        self._lazy_dict={}
-
-        super().__init__(*args, **kwargs)
-
     def _lazy(f):
 
         def wrapper():
