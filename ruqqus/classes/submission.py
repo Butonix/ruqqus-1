@@ -195,6 +195,5 @@ class Submission(Base):
             return f"{months} month{'s' if months>1 else ''} ago"
         else:
             years=now.tm_year-ctd.tm_year
-            if:
-                return f"{years} year{'s' if years>1 else ''} ago"
+            return f"{years} year{'s' if years>1 else ''} ago"
         
