@@ -88,6 +88,7 @@ class Submission(Base):
         return render_template("submission.html", v=v, p=self)
 
     @property
+    @_lazy
     def author(self):
         if self.author_id==0:
             return None
