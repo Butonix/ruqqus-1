@@ -34,17 +34,17 @@ class Submission(Base):
         
         super().__init__(*args, **kwargs)
 
-        self._lazy_dict={}
-        print([x for x in self.__dict__])
-
     def __repr__(self):
         return f"<Submission(id={self.id})>"
+
+    
 
     def _lazy(f):
 
         def wrapper(self, *args, **kwargs):
 
-            print([x for x in self.__dict__])
+            if "_lazy_dict" not in self.__dict__:
+                self._lazy_dict={}
 
             if f.__name__ not in self._lazy_dict:
                 self._lazy_dict[f.__name__]=f(self, *args, **kwargs)
