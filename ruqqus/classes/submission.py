@@ -54,7 +54,7 @@ class Submission(Base):
     @_lazy
     def votes(self):
 
-        return db.query(Vote).join(User).filter_by(Vote.submission_id=self.id, User.is_banned=False)
+        return db.query(Vote).join(User).filter(Vote.submission_id==self.id).filter(User.is_banned==False)
     
     @property
     @_lazy
