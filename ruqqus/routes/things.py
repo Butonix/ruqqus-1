@@ -1,4 +1,5 @@
 from urllib.parse import urlparse
+import mistletoe
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -77,6 +78,14 @@ def submit_post(v):
                         )
 
     db.add(new_post)
+
+    db.commit()
+
+    vote=Vote(user_id=v.id,
+              vote_type=1,
+              submission_id=new_post.base36id
+              )
+    db.add(vote)
     db.commit()
 
     return redirect(new_post.permalink)
@@ -97,3 +106,32 @@ def ip_address(addr, v):
 
     return render_template("ips.html", addr=addr, users=users, v=v)    
     
+@app.route("/api/comment", methods=["POST"])
+@auth_required
+@validate_formkey
+def api_comment(v):
+
+    body=request.form.get("text")
+    parent_fullname=request.form.get("parent_fullname")
+
+    #sanitize
+    body=request.form.get("body")
+    body_html=mistletoe.markdown(body_md)
+    body_html=sanitize(body_html, linkgen=True)
+
+    #check existing
+    existing=db.query(Comment).filter_by(author_id=v.id,
+                                         body=body,
+                                         parent_fullname=parent_fullname
+                                         ).first()
+    if existing:
+        return redirect(existing.permalink)
+
+
+    c=Comment(author_id=v.id,
+              body=body,
+              body_html=body_html)
+
+    db.add(c)
+    db.commit()
+                                         
