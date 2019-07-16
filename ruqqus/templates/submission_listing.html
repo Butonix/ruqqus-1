@@ -34,7 +34,7 @@
               </div>
               <div class="card-block my-auto">
                 <h5 class="card-title text-left mb-2"><a href="{{ p.url }}">{{ p.title }}</a></h5>
-                <div class="post-meta text-left">{% if p.stickied %}<span title="pinned">📌</span> | {% endif %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}Posted by <a href="{{ p.author.url }}">{{ p.author.username }}</a> | ({{ p.domain }})</div>
+                <div class="post-meta text-left">{% if p.stickied %}<span title="pinned">📌</span> | {% endif %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}Posted by <a href="{{ p.author.url }}">{{ p.author.username }}</a> {{ p.age_string }} | ({{ p.domain }})</div>
                 <div class="post-actions">
                   <ul class="list-inline text-left">
                     <li class="list-inline-item text-muted text-small"><a href="{{ p.permalink }}">Comments</a></li>
