@@ -79,7 +79,7 @@ def submit_post(v):
                         )
 
     #run through content filter
-    x=filter_post(new_post):
+    x=filter_post(new_post)
     if x:
         return render_template("submit.html",v=v, error=x)
         
