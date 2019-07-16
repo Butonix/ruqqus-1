@@ -20,27 +20,7 @@ Markdown(app)
 #setup db
 _engine = create_engine(environ.get("DATABASE_URL"))
 db = sessionmaker(bind=_engine)()
-Base_class = declarative_base()
-
-class Base(Base_class):
-
-    def __init__(self, *args, **kwargs):
-
-        self._lazy_dict={}
-
-        super().__init__(*args, **kwargs)
-
-    def _lazy(f):
-
-        def wrapper():
-
-            if f.__name__ not in self._lazy_dict:
-                self._lazy_dict[f.__name__]=f()
-
-            return self._lazy_dict[f.__name__]
-
-        wrapper.__name__=f.__name__
-        return wrapper
+Base = declarative_base()
 
 #import and bind all routing functions
 from ruqqus.classes import *
