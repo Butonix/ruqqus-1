@@ -102,12 +102,12 @@ class Submission(Base):
     @property
     @_lazy
     def ups(self):
-        return len(db.query(Vote).join(User).filter(Vote.submission_id==self.id).filter(Vote.vote_type=1).filter(User.is_banned==False).all())
+        return len(db.query(Vote).join(User).filter(Vote.submission_id==self.id).filter(Vote.vote_type==1).filter(User.is_banned==False).all())
 
     @property
     @_lazy
     def downs(self):
-        return len(db.query(Vote).join(User).filter(Vote.submission_id==self.id).filter(Vote.vote_type=-1).filter(User.is_banned==False).all())
+        return len(db.query(Vote).join(User).filter(Vote.submission_id==self.id).filter(Vote.vote_type==-1).filter(User.is_banned==False).all())
 
     @property
     @_lazy
