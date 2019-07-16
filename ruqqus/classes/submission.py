@@ -32,29 +32,49 @@ class Submission(Base):
             kwargs["created_utc"]=int(time.time())
             kwargs["created_str"]=time.strftime("%I:%M %p on %d %b %Y", time.gmtime(kwargs["created_utc"]))
 
+        self._lazy_dict={}
+        
         super().__init__(*args, **kwargs)
 
     def __repr__(self):
         return f"<Submission(id={self.id})>"
 
+        def __init__(self, *args, **kwargs):
+
+        self._lazy_dict={}
+
+        super().__init__(*args, **kwargs)
+
+    def _lazy(f):
+
+        def wrapper():
+
+            if f.__name__ not in self._lazy_dict:
+                self._lazy_dict[f.__name__]=f()
+
+            return self._lazy_dict[f.__name__]
+
+        wrapper.__name__=f.__name__
+        return wrapper
+
     @property
-    @Base._lazy
+    @_lazy
     def votes(self):
 
         return db.query(Vote).join(User).filter_by(Vote.submission_id=self.id, User.is_banned=False)
     
     @property
-    @Base._lazy
+    @_lazy
     def base36id(self):
         return base36encode(self.id)
 
     @property
-    @Base._lazy
+    @_lazy
     def fullname(self):
         return f"t2_{self.base36id}"
 
     @property
-    @Base._lazy
+    @_lazy
     def permalink(self):
         return f"/post/{self.base36id}"
                                       
@@ -78,27 +98,27 @@ class Submission(Base):
             return db.query(User).filter_by(id=self.author_id).first()
 
     @property
-    @Base._lazy
+    @_lazy
     def domain(self):
         return urlparse(self.url).netloc
         
     @property
-    @Base._lazy
+    @_lazy
     def ups(self):
         return len([x for x in self.votes if x.vote_type==1])
 
     @property
-    @Base._lazy
+    @_lazy
     def downs(self):
         return len([x for x in self.votes if x.vote_type==-1])
 
     @property
-    @Base._lazy
+    @_lazy
     def score(self):
         return self.ups-self.downs
     
     @property
-    @Base._lazy
+    @_lazy
     def score_fuzzed(self, k=0.01):
         real=self.score
         a=math.floor(real*(1-k))
@@ -106,18 +126,18 @@ class Submission(Base):
         return randint(a,b)        
 
     @property
-    @Base._lazy
+    @_lazy
     def age(self):
         now=int(time.time())
         return now-self.created_utc
 
     @property
-    @Base._lazy
+    @_lazy
     def rank_hot(self):
         return self.score/(((self.age+100000)/6)**(1/3))
 
     @property
-    @Base._lazy
+    @_lazy
     def rank_controversial(self):
         return math.sqrt(self.ups*self.downs)/(((self.age+100000)/6)**(1/3))
 
