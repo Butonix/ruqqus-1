@@ -4,6 +4,7 @@ import mistletoe
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.sanitize import *
+from ruqqus.helpers.filters import *
 from ruqqus.classes import *
 from flask import *
 from ruqqus.__main__ import app, db
@@ -76,6 +77,9 @@ def submit_post(v):
                         url=url,
                         author_id=v.id
                         )
+
+    #run through content filter
+    filter_post(new_post)
 
     db.add(new_post)
 
