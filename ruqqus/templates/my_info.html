@@ -1,0 +1,18 @@
+{% extends "default.html" %}
+
+{% block content %}
+<table>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+{% for key in v.__dict__ %}
+{% if key not in ["passhash"] %}
+<tr>
+<td>{{ key }}</td>
+<td>{{ v.__dict__[key] }}</td>
+</tr>
+{% endif %}
+{% endfor %}
+</table>
+{% endblock %}

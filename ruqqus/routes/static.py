@@ -55,6 +55,16 @@ def robots_txt():
 def settings(v):
     return render_template("settings.html", v=v)
 
+@app.route("/rules",methods=["GET"])
+@auth_desired
+def rules():
+    return render_template("rules.html", v=v)
+
+@app.route("/terms",methods=["GET"])
+@auth_desired
+def terms():
+    return render_template("terms.html", v=v)
+
 @app.route("/submit", methods=["GET"])
 @is_not_banned
 def submit_get(v):
