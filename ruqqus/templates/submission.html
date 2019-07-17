@@ -48,6 +48,7 @@
 <form action="/api/vote/post/{{ p.base36id }}/{% if voted==-1 %}0{% else %}-1{% endif %}" method="post">
 <input type="hidden" name="formkey", value="{{ v.formkey }}">
 <input type="submit" class="{% if voted==-1 %}downvoted_arow{% else %}downvote_arrow{% endif %}"" value="↓" {% if voted==-1 %}style="color:blue"{% endif %}>
+</form>
 {% else %}
 <form>
 <input type="submit" class="upvote_arrow" value="↑" disabled>
