@@ -43,11 +43,11 @@ url="/api/vote/post/"+post_id+"/"+direction;
 post(url);
 
 thing = document.getElementById("post-"+post_id);
-uparrow1=document.getElementById("post-"+post_id+"-up-wide");
-downarrow1=document.getElementById("post-"+post_id+"-down-wide");
-scoreup1=document.getElementById("post-"+post_id+"-score-up-wide");
-scorenone1=document.getElementById("post-"+post_id+"-score-none-wide");
-scoredown1=document.getElementById("post-"+post_id+"-score-down-wide");
+uparrow1=document.getElementById("post-"+post_id+"-up");
+downarrow1=document.getElementById("post-"+post_id+"-down");
+scoreup1=document.getElementById("post-"+post_id+"-score-up");
+scorenone1=document.getElementById("post-"+post_id+"-score-none");
+scoredown1=document.getElementById("post-"+post_id+"-score-down");
 
 if (direction=="1") {
 thing.classList.add("upvoted");

@@ -38,12 +38,12 @@
               <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
 
               <div id="voting" class="d-none d-md-block my-auto mr-3">
-                <div id="post-{{ p.base36id }}-up-wide" class="arrow-up {{ p.base36id }}-arrow-up mx-auto" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
+                <div id="post-{{ p.base36id }}-up" class="arrow-up {{ p.base36id }}-arrow-up mx-auto" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
                 </div>
-                  <span id="post-{{ p.base36id }}-score-up-narrow" class="score-up text-muted{% if voted!=1 %} noshow{% endif %}">{{ score+1 }}</span>
-		  <span id="post-{{ p.base36id }}-score-none-narrow" class="score text-muted{% if voted!=0 and voted!=-2 %} noshow{% endif %}">{{ score }}</span>
-		  <span id="post-{{ p.base36id }}-score-down-narrow" class="score-down text-muted{% if voted!=-1 %} noshow{% endif %}">{{ score-1 }}</span>
-                <div id="post-{{ p.base36id }}-down-wide" class="arrow-down {{ p.base36id }}-arrow-down mx-auto" {% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}>
+                  <span id="post-{{ p.base36id }}-score-up" class="score-up text-muted{% if voted!=1 %} noshow{% endif %}">{{ score+1 }}</span>
+		  <span id="post-{{ p.base36id }}-score-none" class="score text-muted{% if voted!=0 and voted!=-2 %} noshow{% endif %}">{{ score }}</span>
+		  <span id="post-{{ p.base36id }}-score-down" class="score-down text-muted{% if voted!=-1 %} noshow{% endif %}">{{ score-1 }}</span>
+                <div id="post-{{ p.base36id }}-down" class="arrow-down {{ p.base36id }}-arrow-down mx-auto" {% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}>
                 </div>
               </div>
 
