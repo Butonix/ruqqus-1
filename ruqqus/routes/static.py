@@ -57,17 +57,17 @@ def settings(v):
 
 @app.route("/rules",methods=["GET"])
 @auth_desired
-def rules():
+def rules(v):
     return render_template("rules.html", v=v)
 
 @app.route("/terms",methods=["GET"])
 @auth_desired
-def terms():
+def terms(v):
     return render_template("terms.html", v=v)
 
 @app.route("/my_info",methods=["GET"])
-@auth_desired
-def my_info():
+@auth_required
+def my_info(v):
     return render_template("my_info.html", v=v)
 
 @app.route("/submit", methods=["GET"])
