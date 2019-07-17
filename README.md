@@ -1,9 +1,11 @@
-# teedee
+# Ruqqus
+
+This repository is the live codebase for the Ruqqus website. Commits to master here are immediately loaded into the ruqqus staging site, then manually promoted to production.
 
 ## Links
 
-[Main site](https://tee-dee.herokuapp.com)
+[Main site](https://ruqq.us)
 
 [Staging site](https://tee-dee-staging.herokuapp.com)
 
-[Documents](https://captainmeta4.github.io/teedee/index)
+[Documents](https://docs.ruqq.us)
