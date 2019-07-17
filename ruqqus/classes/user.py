@@ -44,11 +44,37 @@ class User(Base):
 
         super().__init__(**kwargs)
 
+    def _lazy(f):
+
+        def wrapper(self, *args, **kwargs):
+
+            if "_lazy_dict" not in self.__dict__:
+                self._lazy_dict={}
+
+            if f.__name__ not in self._lazy_dict:
+                self._lazy_dict[f.__name__]=f(self, *args, **kwargs)
+
+            return self._lazy_dict[f.__name__]
+
+        wrapper.__name__=f.__name__
+        return wrapper
+
     @property
+    @_lazy
+    def energy(self):
+
+        #get non-removed submissions
+        posts = db.query("submissions").filter(is_banned==False)
+
+        return sum([x.score for x in posts])
+
+    @property
+    @_lazy
     def base36id(self):
         return base36encode(self.id)
 
     @property
+    @_lazy
     def fullname(self):
         return f"t1_{self.base36id}"
 
@@ -99,6 +125,7 @@ class User(Base):
         return render_template("userpage.html", u=self, v=v, listing=posts)
 
     @property
+    @_lazy
     def formkey(self):
 
         if "session_id" not in session:
@@ -146,10 +173,12 @@ class User(Base):
         return render_template("settings.html", v=self, msg="Your account name has been updated and validated.")
 
     @property
+    @_lazy
     def url(self):
         return f"/u/{self.username}"
 
     @property
+    @_lazy
     def created_date(self):
 
         print(self.created_utc)
