@@ -63,9 +63,7 @@ class User(Base):
     @_lazy
     def energy(self):
 
-        posts=self.submissions.filter_by(is_banned=False).all()
-
-        return sum([x.score for x in self.posts])
+        return sum([x.score for x in self.submissions.filter_by(is_banned=False).all()])
 
     @property
     @_lazy
