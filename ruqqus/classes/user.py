@@ -63,7 +63,7 @@ class User(Base):
     @_lazy
     def energy(self):
 
-        posts=db.query(relationship("Submission")).filter_by(is_banned=False).all()
+        posts=self.submissions.filter_by(is_banned=False).all()
 
         return sum([x.score for x in self.posts])
 
