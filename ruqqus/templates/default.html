@@ -44,57 +44,37 @@ post(url);
 
 thing = document.getElementById("post-"+post_id);
 uparrow1=document.getElementById("post-"+post_id+"-up-wide");
-uparrow2=document.getElementById("post-"+post_id+"-up-narrow");
 downarrow1=document.getElementById("post-"+post_id+"-down-wide");
-downarrow2=document.getElementById("post-"+post_id+"-down-narrow");
 scoreup1=document.getElementById("post-"+post_id+"-score-up-wide");
-scoreup2=document.getElementById("post-"+post_id+"-score-up-narrow");
 scorenone1=document.getElementById("post-"+post_id+"-score-none-wide");
-scorenone2=document.getElementById("post-"+post_id+"-score-none-narrow");
 scoredown1=document.getElementById("post-"+post_id+"-score-down-wide");
-scoredown2=document.getElementById("post-"+post_id+"-score-down-narrow");
 
 if (direction=="1") {
 thing.classList.add("upvoted");
 thing.classList.remove("downvoted");
 uparrow1.onclick=function(){vote(post_id, 0)};
-uparrow2.onclick=function(){vote(post_id, 0)};
 downarrow1.onclick=function(){vote(post_id, -1)};
-downarrow2.onclick=function(){vote(post_id, -1)};
 scoreup1.classList.remove("noshow");
-scoreup2.classList.remove("noshow");
 scorenone1.classList.add("noshow");
-scorenone2.classList.add("noshow");
 scoredown1.classList.add("noshow");
-scoredown2.classList.add("noshow");
 }
 else if (direction=="-1"){
 thing.classList.remove("upvoted");
 thing.classList.add("downvoted");
 uparrow1.onclick=function(){vote(post_id, 1)};
-uparrow2.onclick=function(){vote(post_id, 1)};
 downarrow1.onclick=function(){vote(post_id, 0)};
-downarrow2.onclick=function(){vote(post_id, 0)};
 scoreup1.classList.add("noshow");
-scoreup2.classList.add("noshow");
 scorenone1.classList.add("noshow");
-scorenone2.classList.add("noshow");
 scoredown1.classList.remove("noshow");
-scoredown2.classList.remove("noshow");
 }
 else if (direction=="0"){
 thing.classList.remove("upvoted");
 thing.classList.remove("downvoted");
 uparrow1.onclick=function(){vote(post_id, 1)};
-uparrow2.onclick=function(){vote(post_id, 1)};
 downarrow1.onclick=function(){vote(post_id, -1)};
-downarrow2.onclick=function(){vote(post_id, -1)};
 scoreup1.classList.add("noshow");
-scoreup2.classList.add("noshow");
 scorenone1.classList.remove("noshow");
-scorenone2.classList.remove("noshow");
 scoredown1.classList.add("noshow");
-scoredown2.classList.add("noshow");
 }
 
 }
