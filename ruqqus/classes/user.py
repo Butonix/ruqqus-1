@@ -110,7 +110,7 @@ class User(Base):
 
     @property
     def visible_posts(self):
-        return db.query(Base.metadata.tables['Submission']).filter_by(is_banned=False).all()
+        return db.query(Base.metadata.tables['submissions']).filter_by(is_banned=False).all()
     
     def rendered_userpage(self, v=None):
 
