@@ -63,10 +63,7 @@ class User(Base):
     @_lazy
     def energy(self):
 
-        #get non-removed submissions
-        posts = db.query(ruqqus.classes.Submission).filter_by(is_banned=False)
-
-        return sum([x.score for x in posts])
+        return sum([x.score for x in self.visible_posts])
 
     @property
     @_lazy
@@ -108,13 +105,18 @@ class User(Base):
 
     def verifyPass(self, password):
         return check_password_hash(self.passhash, password)
+
+    @property
+    @_lazy
+    def visible_posts(self):
+        return [post for post in self.submissions if not post.is_banned]
     
     def rendered_userpage(self, v=None):
 
         if self.is_banned:
             return render_template("userpage_banned.html", u=self, v=v)
         
-        posts = [post for post in self.submissions if not post.is_banned]
+        posts = self.visible_posts
         posts.sort(key=lambda x: x.created_utc, reverse=True)
         
         if len(posts)>50:
