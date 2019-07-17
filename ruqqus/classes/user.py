@@ -63,7 +63,7 @@ class User(Base):
     @_lazy
     def energy(self):
 
-        return sum([x.score for x in self.submissions.filter_by(is_banned=False).all()])
+        return sum([x.score for x in self.visible posts])
 
     @property
     @_lazy
@@ -107,6 +107,7 @@ class User(Base):
         return check_password_hash(self.passhash, password)
 
     @property
+    @_lazy
     def visible_posts(self):
         return self.submissions.filter_by(is_banned=False).all()
     
