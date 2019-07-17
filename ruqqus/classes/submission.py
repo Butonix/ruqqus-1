@@ -33,18 +33,21 @@ class Submission(Base):
             kwargs["created_str"]=time.strftime("%I:%M %p on %d %b %Y", time.gmtime(kwargs["created_utc"]))
         
         super().__init__(*args, **kwargs)
+        
+        self._lazy_dict = {}
 
     def __repr__(self):
         return f"<Submission(id={self.id})>"
 
-    
+    def init_on_load(self, *args, **kwargs)
+
+        super().init_on_load(*args, **kwargs)
+
+        self._lazy_dict={}
 
     def _lazy(f):
 
         def wrapper(self, *args, **kwargs):
-
-            if "_lazy_dict" not in self.__dict__:
-                self._lazy_dict={}
 
             if f.__name__ not in self._lazy_dict:
                 self._lazy_dict[f.__name__]=f(self, *args, **kwargs)
