@@ -109,7 +109,6 @@ class User(Base):
         return check_password_hash(self.passhash, password)
 
     @property
-    @_lazy
     def visible_posts(self):
         return self.submissions.filter_by(is_banned=False).all()
     
