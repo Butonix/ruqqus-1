@@ -65,6 +65,11 @@ def rules():
 def terms():
     return render_template("terms.html", v=v)
 
+@app.route("/my_info",methods=["GET"])
+@auth_desired
+def my_info():
+    return render_template("my_info.html", v=v)
+
 @app.route("/submit", methods=["GET"])
 @is_not_banned
 def submit_get(v):
