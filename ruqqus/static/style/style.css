@@ -11402,4 +11402,8 @@ ol > li::before {
   display: none;
 }
 
+span.red {
+  color: #ED254E
+}
+
 /*# sourceMappingURL=main.css.map */
