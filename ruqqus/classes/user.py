@@ -64,7 +64,7 @@ class User(Base):
     def energy(self):
 
         #get non-removed submissions
-        posts = db.query("submissions").filter(is_banned==False)
+        posts = db.query("submissions").filter_by(is_banned=False)
 
         return sum([x.score for x in posts])
 
