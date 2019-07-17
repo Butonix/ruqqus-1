@@ -39,7 +39,7 @@ class Submission(Base):
     def __repr__(self):
         return f"<Submission(id={self.id})>"
 
-    def init_on_load(self, *args, **kwargs)
+    def init_on_load(self, *args, **kwargs):
 
         super().init_on_load(*args, **kwargs)
 

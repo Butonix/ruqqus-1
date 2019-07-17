@@ -46,7 +46,7 @@ class User(Base):
 
         self._lazy_dict = {}
 
-    def init_on_load(self, *args, **kwargs)
+    def init_on_load(self, *args, **kwargs):
 
         super().init_on_load(*args, **kwargs)
 
