@@ -13,3 +13,5 @@ title: Ruqqus Docs
 ## Additional info
 
 * [Database tables and schemas](./schemas)
+
+* [Package Licenses](./licenses)
