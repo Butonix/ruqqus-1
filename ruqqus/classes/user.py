@@ -63,7 +63,9 @@ class User(Base):
     @_lazy
     def energy(self):
 
-        return sum([x.score for x in self.visible_posts])
+        posts=db.query(relationship("Submission")).filter_by(is_banned=False).all()
+
+        return sum([x.score for x in self.posts])
 
     @property
     @_lazy
@@ -108,7 +110,7 @@ class User(Base):
 
     @property
     def visible_posts(self):
-        return [post for post in self.submissions if not post.is_banned]
+        return db.query(Base.metadata.tables['Submission']).filter_by(is_banned=False).all()
     
     def rendered_userpage(self, v=None):
 
