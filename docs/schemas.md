@@ -1,3 +1,7 @@
+---
+title: Database Schema
+---
+
 # Schemas
 
 These are the schemas for the database. In all tables, the `id` column is the Primary Key.

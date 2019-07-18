@@ -1,3 +1,7 @@
+---
+title: Package License info
+---
+
 # Licenses
 
 Ruqqus uses the following third-party packages
