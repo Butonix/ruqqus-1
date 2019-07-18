@@ -96,7 +96,7 @@ class User(Base):
         existing=self.ips.filter_by(ip=remote_addr).first()
 
         if existing:
-            existing.created_utc=time.time()
+            existing.created_utc=time()
             db.add(existing)
             
         else:
