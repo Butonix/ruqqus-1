@@ -124,7 +124,7 @@ scoredown1.classList.add("noshow");
 	{% endif %}
         <div class="sidebar-section sidebar-stats">
           <h6><i class="fas fa-poll text-primary mr-2"></i></i>Stats</h6>
-          <p class="user-count"><span class="number"></span> 100,000 users</p>
+          <p class="user-count"><span class="number"></span> {{ 1 | total_users }} users</p>
           <p class="online-count"><span class="text-success">&#9673;</span><span class="number"> {{ 1 | users_here }}</span> users online</p>
         </div>
         <div class="sidebar-section sidebar-rules">
