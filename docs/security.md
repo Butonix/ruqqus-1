@@ -12,9 +12,9 @@ If you need to sign something, use the following functions:
 
     from ruqqus.helpers.security import *
     
-    generate_hash(string)
+    hashstr = generate_hash(string)
 
-    validate_hash(string, hashstr)
+    hashstr_is_valid = validate_hash(string, hashstr)
 
 This will generate (or validate) an HMAC hex digest of the string using the Ruqqus master key.
 
