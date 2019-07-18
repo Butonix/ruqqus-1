@@ -11,3 +11,4 @@ def users_here(x):
     cutoff=now-300
 
     return len(db.query(IP).filter(IP.created_utc>=cutoff).all())
+
