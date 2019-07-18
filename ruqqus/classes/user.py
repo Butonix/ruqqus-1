@@ -93,11 +93,16 @@ class User(Base):
             self.most_recent_ip = remote_addr
             db.add(self)
 
-        if not remote_addr in [i.ip for i in self.ips]:
+        existing=self.ips.filter_by(ip=remote_addr).first()
+
+        if existing:
+            existing.created_utc=time.time()
+            db.add(existing)
+            
+        else:
             db.add(IP(user_id=self.id, ip=remote_addr))
         
-        if db.dirty:
-            db.commit()
+        db.commit()
 
     def activation_hash(self):
         return generate_password_hash(self.username, method='pbkdf2:sha256', salt_length=8)
