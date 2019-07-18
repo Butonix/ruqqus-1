@@ -25,6 +25,7 @@ Base = declarative_base()
 #import and bind all routing functions
 from ruqqus.classes import *
 from ruqqus.routes import *
+import ruqqus.helpers.jinja2
 
 @app.after_request
 def after_request(response):
