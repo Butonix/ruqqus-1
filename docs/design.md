@@ -1,3 +1,7 @@
+---
+title: Ruqqus Design Doc
+---
+
 # Design
 
 The purpose of this document is to clearly identify:
