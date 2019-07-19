@@ -44,7 +44,7 @@ class Vote(Base):
 
 class CommentVote(Base):
 
-    __table__name="commentvotes"
+    __tablename__="commentvotes"
 
     id=Column(Integer, primary_key=True)
     user_id=Column(Integer, ForeignKey("users.id"))
