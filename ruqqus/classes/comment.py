@@ -2,6 +2,7 @@ from flask import render_template
 import time
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
+from random import randint
 import math
 
 from ruqqus.helpers.base36 import *
