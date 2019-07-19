@@ -1,13 +1,3 @@
-<div class="comment comment-{{ c.base36id }}">
-<h4 class="tagline"><a href="{{ c.author.url }}">{{ c.author.username }}</a> {{ c.age_string }} | {{ c.score }} point{{ 's' if c.score != 1 else '' }}</h4>
-{{ c.body_html | safe }}
-<div style="padding-left:20px">
-{% for reply in c.replies %}
-{{ reply.rendered_comment | safe }}
-{% endfor %}
-</div>
-</div>
-
 {% set score=c.score_fuzzed %}
 {% if v %}
 {% set voted=v.vote_status_on_comment(c) %}
@@ -56,7 +46,7 @@
 
                                     {{ c.body_html | safe }}
 
-                                    <div class="comment-actions{% if voted=1 %} upvoted{% elif voted=-1 } downvoted{% endif %}">
+                                    <div class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 } downvoted{% endif %}">
                                         <ul class="list-inline text-left">
 
                                             <li class="list-inline-item arrow-up" {% if voted==1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted>-2 %}onclick="vote_comment('{{ c.base36id }}','1')"{% endif %}>
