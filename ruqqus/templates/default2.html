@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/static/style/style.css">
+  <link rel="icon" href="/assets/images/favicon.ico?v=1">
+  
+  {% block title %}
+  <title>Ruqqus: USA 24/7/365</title>
+  <meta name="description" content="Not run by communists.">
+  {% endblock %}
+  
+    <script>
+      function nightToggle() {
+        //toggle night mode
+        var toggle = document.getElementById("night-toggle");
+        var page = document.getElementById("body");
+        if (toggle.checked == true){
+          page.classList.add("night");
+          setCookie("NightMode","true",365);
+        }
+        else {
+          page.classList.remove("night");
+          setCookie("NightMode","false",365);
+        }
+      }
+    function getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(';');
+      for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+      
+    function setCookie(cname, cvalue, exdays) {
+      var d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      var expires = "expires="+ d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+      
+    function checkNightMode() {
+      var nightMode = getCookie("NightMode");
+      if (nightMode != "") {
+        if (nightMode == "true"){
+          document.getElementById("night-toggle").checked = true;
+        }
+        else {
+          document.getElementById("night-toggle").checked = false;
+        }
+        nightToggle();
+      }
+      else {
+        setCookie("NightMode","false",365);
+      }
+    }
+    </script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body id="body" onload="checkNightMode()">
+ <div class="wrapper">
+  <header>
+    {% include "header.html" %}
+    {% if v %}
+      {% include "control_panel_logged_in.html" %}
+      {% if v.admin_level %}
+        <hr>
+	<h3>Admin Panel</h3>
+        {% block adminpanel %}{% endblock %}
+      {% endif %}
+    {% else %}
+      {% include "control_panel_logged_out.html" %}
+    {% endif %}
+  </header>
+  <section>
+    <div class="content" style="max-width:100%">
+    {% block content %}{% endblock %}
+    </div>
+  </section>
+  <footer>
+    {% include "footer.html" %}
+  </footer>
+</div>
+<script src="/static/js/scale.js"></script>
+  </body>
+</html>

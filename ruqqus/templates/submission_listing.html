@@ -7,6 +7,7 @@
 {% set i = i+1 %}
 
 {% set score=p.score_fuzzed %}
+
 {% if v %}
 {% set voted=v.vote_status_on_post(p) %}
 {% else %}
@@ -15,15 +16,18 @@
        
         <div id="post-{{ p.base36id }}" class="row mt-3 post-listing-entry post-{{ p.base36id }} {% if i % 2 == 0 %}even{% else %}odd{% endif %} {% if p.stickied %}stickied{% endif %} {% if voted==1 %}upvoted{% elif voted==-1 %}downvoted{% endif %}">
 
+
           <div class="col-12">
 
             <div class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0 mb-3">
               <div class="card-header bg-transparent border-0 p-0 ml-auto">
+
                 {% if p.url.endswith((".jpg",".png")) %}<img href="{{ p.url }}" src="{{ p.url }}" class="post-img" alt="">{% endif %}
               </div>
               <div class="card-block my-auto">
                 <h5 class="card-title text-left mb-2"><a href="{{ p.url }}">{{ p.title }}</a></h5>
                 <div class="post-meta text-left">{% if p.stickied %}<span title="pinned">📌</span> | {% endif %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}Posted by <a href="{{ p.author.url }}">{{ p.author.username }}</a> {{ p.age_string }} | ({{ p.domain }})</div>
+
                 <div class="post-actions">
                   <ul class="list-inline text-left">
                     <li class="list-inline-item text-muted text-small"><a href="{{ p.permalink }}">Comments</a></li>
@@ -44,6 +48,7 @@
 		  <span id="post-{{ p.base36id }}-score-none" class="score text-muted{% if voted!=0 and voted!=-2 %} noshow{% endif %}">{{ score }}</span>
 		  <span id="post-{{ p.base36id }}-score-down" class="score-down text-muted{% if voted!=-1 %} noshow{% endif %}">{{ score-1 }}</span>
                 <div id="post-{{ p.base36id }}-down" class="arrow-down {{ p.base36id }}-arrow-down mx-auto" {% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}>
+
                 </div>
               </div>
 
