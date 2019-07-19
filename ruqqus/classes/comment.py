@@ -97,12 +97,12 @@ class Comment(Base):
     @property
     @_lazy
     def ups(self):
-        return db.query(CommentVote).join(User).filter(Vote.submission_id==self.id).filter(Vote.vote_type==1).filter(User.is_banned==False).count()
+        return db.query(CommentVote).join(User).filter(CommentVote.comment_id==self.id).filter(CommentVote.vote_type==1).filter(User.is_banned==False).count()
 
     @property
     @_lazy
     def downs(self):
-        return db.query(CommentVote).join(User).filter(Vote.submission_id==self.id).filter(Vote.vote_type==-1).filter(User.is_banned==False).count()
+        return db.query(CommentVote).join(User).filter(CommentVote.comment_id==self.id).filter(CommentVote.vote_type==-1).filter(User.is_banned==False).count()
 
     @property
     @_lazy
