@@ -2,6 +2,7 @@ from flask import render_template
 import time
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
+import math
 
 from ruqqus.helpers.base36 import *
 from ruqqus.__main__ import Base, db
