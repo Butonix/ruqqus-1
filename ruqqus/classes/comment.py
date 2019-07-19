@@ -21,7 +21,7 @@ class Comment(Base):
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
     body_html = Column(String)
-    votes = relationship("commentvotes")
+    votes = relationship("CommentVote")
 
     def __repr__(self):
         return f"<Comment(id={self.id})"
