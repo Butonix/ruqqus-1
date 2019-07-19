@@ -1,8 +1,10 @@
 from flask import render_template
-from ruqqus.helpers.base36 import *
-from ruqqus.__main__ import Base, db
 from time import strftime
 from sqlalchemy import *
+from sqlalchemy.orm import relationship
+
+from ruqqus.helpers.base36 import *
+from ruqqus.__main__ import Base, db
 from .user import User
 from .submission import Submission
 from .votes import CommentVote
