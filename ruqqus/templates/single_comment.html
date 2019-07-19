@@ -1,5 +1,5 @@
 <div class="comment comment-{{ c.base36id }}">
-<h4 class="tagline"><a href="{{ c.author.url }}">{{ c.author.username }}</a></h4>
+<h4 class="tagline"><a href="{{ c.author.url }}">{{ c.author.username }}</a> {{ c.age_string }} | {{ c.score }} points</h4>
 {{ c.body_html | safe }}
 <div style="padding-left:20px">
 {% for reply in c.replies %}
