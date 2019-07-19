@@ -60,11 +60,7 @@
 
                             </div>
                             <div class="card-block my-auto">
-                                <h5 class="card-title post-title text-left mb-2"><a href="#" class="stretched-link">Historic: Trump set to
-                                        raise record $2
-                                        billion for
-                                        reelection,
-                                        4-times 2016</a></h5>
+                                <h5 class="card-title post-title text-left mb-2"><a href="{{ p.url }}" rel="nofollow" class="stretched-link">{{ p.title }}</a></h5>
                                 <div class="post-meta text-left">{% if p.stickied %}📌 | {% endif %}{% if p.author %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}{% endif %}Posted by <a href="{{ p.author.url }}">{{ p.author.username }}</a> {{ p.age_string }}</div>
 
                             </div>
