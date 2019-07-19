@@ -11,7 +11,7 @@ from ruqqus.__main__ import app, db
 @app.route("/api/vote/post/<post_id>/<x>", methods=["POST"])
 @is_not_banned
 @validate_formkey
-def vote_post(post_id, x, v):
+def api_vote_post(post_id, x, v):
 
     
     if x not in ["-1", "0","1"]:
@@ -46,7 +46,7 @@ def vote_post(post_id, x, v):
 @app.route("/api/vote/comment/<comment_id>/<x>", methods=["POST"])
 @is_not_banned
 @validate_formkey
-def vote_post(post_id, x, v):
+def api_vote_comment(post_id, x, v):
 
     
     if x not in ["-1", "0","1"]:
