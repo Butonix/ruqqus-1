@@ -30,6 +30,7 @@ class User(Base):
     most_recent_ip=Column(String, default=None)
     submissions=relationship("Submission", lazy="dynamic", backref="users")
     votes=relationship("Vote", lazy="dynamic", backref="users")
+    commentvotes=relationship("CommentVote", lazy="dynamic", backref="users")
     ips = relationship('IP', lazy="dynamic", backref="users")
 
     def __init__(self, **kwargs):
@@ -79,7 +80,7 @@ class User(Base):
 
     def vote_status_on_post(self, post):
 
-        vote = [x for x in self.votes if x.submission_id==post.id]
+        vote = self.votes.filter_by(submission_id=post.id).first()
         if not vote:
             return 0
           
@@ -87,6 +88,17 @@ class User(Base):
         
         return vote.vote_type
 
+
+    def vote_status_on_comment(self, comment):
+
+        vote = self.commentvotes.filter_by(comment_id=comment.id).first()
+        if not vote:
+            return 0
+          
+        vote=vote[0]
+        
+        return vote.vote_type
+    
     def update_ip(self, remote_addr):
         
         if not remote_addr==self.most_recent_ip:
