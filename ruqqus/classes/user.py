@@ -83,8 +83,6 @@ class User(Base):
         vote = self.votes.filter_by(submission_id=post.id).first()
         if not vote:
             return 0
-          
-        vote=vote[0]
         
         return vote.vote_type
 
@@ -94,8 +92,6 @@ class User(Base):
         vote = self.commentvotes.filter_by(comment_id=comment.id).first()
         if not vote:
             return 0
-          
-        vote=vote[0]
         
         return vote.vote_type
     
