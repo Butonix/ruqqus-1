@@ -37,6 +37,132 @@
 {% endblock %}
 
 {% block content %}
+
+{% set score=p.score_fuzzed %}
+{% if v %}
+{% set voted=v.vote_status_on_post(p) %}
+{% else %}
+{% set voted=-2 %}
+{% endif %}
+
+<div class="container">
+        <div class="row justify-content-around mx-lg-5">
+
+            <div class="col bg-white border rounded py-3">
+
+                <div class="row mb-5{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+
+                    <div class="col-12">
+
+                        <div class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0">
+                            <div class="card-header bg-transparent border-0 p-0 ml-auto">
+                                {% if p.url.endswith((".jpg",".png")) %}<img src="{{ p.url }}" class="post-img" alt=""> {% endif %}
+
+                            </div>
+                            <div class="card-block my-auto">
+                                <h5 class="card-title post-title text-left mb-2"><a href="#" class="stretched-link">Historic: Trump set to
+                                        raise record $2
+                                        billion for
+                                        reelection,
+                                        4-times 2016</a></h5>
+                                <div class="post-meta text-left">{% if p.stickied %}📌 | {% endif %}{% if p.author %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}Posted by <a href="{{ p.author.url }}">{{ p.author.username }}</a> {{ p.age_string }}</div>
+
+                            </div>
+
+                            <!-- Voting -->
+
+                            <div id="voting" class="d-none d-md-block my-auto mr-3">
+                                <div id="post-{{ p.base36id }}-up" class="arrow-up mx-auto" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
+                                </div>
+                                <span id="post-{{ p.base36id }}-score-up" class="score-up text-muted{% if voted!=1 %} noshow{% endif %}">{{ score+1 }}</span>
+		  		<span id="post-{{ p.base36id }}-score-none" class="score text-muted{% if voted!=0 and voted!=-2 %} noshow{% endif %}">{{ score }}</span>
+		  		<span id="post-{{ p.base36id }}-score-down" class="score-down text-muted{% if voted!=-1 %} noshow{% endif %}">{{ score-1 }}</span>
+                                <div id="post-{{ p.base36id }}-down" class="arrow-down mx-auto" {% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row mb-5">
+                    <div class="col-12">
+
+                        <div class="post-actions">
+                            <ul class="list-inline text-left mb-2">
+                                <li class="list-inline-item text-muted text-small"><a href="#"><i
+                                        class="fas fa-comment-dots"></i> 23 Comments</a>
+                                </li>
+                                <li class="list-inline-item text-muted"><a href="#"><i class="fas fa-share-alt"></i><span
+                                        class="share"> Share</span></a>
+                                </li>
+                                <li class="list-inline-item text-muted"><a href="#"><i class="fas fa-save"></i><span class="save">
+                                        Save</span></a>
+                                </li>
+                                <li class="list-inline-item text-muted"><a href="#"><i class="fas fa-flag"></i><span class="flag">
+                                        Flag</span></a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="comment-write">
+                            <div class="input-group">
+                                <textarea class="form-control rounded" aria-label="With textarea"
+                                    placeholder="Add your comment..." rows="7"></textarea>
+                                <div class="bg-light comment-format">
+                                    <small class="format"><i class="fas fa-bold"></i></small>
+                                    <small class="format"><i class="fas fa-italic"></i></small>
+                                    <small class="format"><i class="fas fa-quote-right"></i></small>
+                                    <small class="format"><i class="fas fa-link"></i></small>
+                                    <button class="btn btn-primary btn ml-auto">Comment</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col">
+
+                        <div class="comments-count">
+                            <div class="total">Comments ({{ p.comment_count }})</div>
+                            <div class="post-filter ml-auto"><span>Sort By:</span>
+                                <span class="dropdown">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Time
+                                    </a>
+                                    <span class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Day</a>
+                                        <a class="dropdown-item" href="#">Month</a>
+                                        <a class="dropdown-item" href="#">Year</a>
+                                        <a class="dropdown-item" href="#">All Time</a>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="comment-section">
+
+				{% for c in p.replies %}
+					{{ c.rendered_comment | safe }}
+				{% endfor %}
+
+                            
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+{% endblock %}
+
+
+
+{% block unused %}
+
 <h1>{% if p.url %}<a href="{{ p.url }}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}</h1>{% if p.url %}<h6>({{ p.domain }})</h6>{% endif %}
 <p class="post_tagline">{% if p.author %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}<a href="{{ p.author.url }}">{{ p.author.username }}</a>{% else %}[deleted]{% endif %} at {{ p.created_str }} | {{ p.score_fuzzed }} points</p>
 {% if v %}
@@ -61,4 +187,5 @@
 {% for c in p.replies %}
 {{ c.rendered_comment | safe}}
 {% endfor %}
+
 {% endblock %}

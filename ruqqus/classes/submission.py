@@ -139,6 +139,11 @@ class Submission(Base):
     def rank_controversial(self):
         return math.sqrt(self.ups*self.downs)/(((self.age+100000)/6)**(1/3))
 
+    @property
+    @_lazy
+    def comment_count(self):
+        return self.comments.count()
+
     def tree_comments(self):
 
         #list comments without re-querying db each time
