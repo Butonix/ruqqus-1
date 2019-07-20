@@ -11264,6 +11264,32 @@ ol > li::before {
   text-align: center;
 }
 
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 10px solid #E4E5EC;
+  margin-bottom: 0.5rem;
+}
+
+.upvoted .arrow-up {
+  border-bottom: 10px solid #ED254E;
+}
+
+.arrow-down {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid #E4E5EC;
+  margin-top: 0.5rem;
+}
+
+.downvoted .arrow-down {
+  border-top: 10px solid #3cadf3;
+}
+
 .upvoted .arrow-up,
 .score-up {
   color: #ED254E !important;
@@ -11271,23 +11297,7 @@ ol > li::before {
 
 .downvoted .arrow-down,
 .score-down {
-  color: #3cadf3;
-}
-
-.arrow-up, .arrow-down {
-  color: #E4E5EC;
-}
-
-.arrow-up::before {
-  content: "";
-  font-family: "Font Awesome 5 Free";
-  margin-bottom: 0.5rem;
-}
-
-.arrow-down::before {
-  content: "";
-  font-family: "Font Awesome 5 Free";
-  margin-top: 0.5rem;
+  color: #3cadf3 !important;
 }
 
 .border-1 {
