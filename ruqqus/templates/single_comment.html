@@ -46,7 +46,7 @@
 
                                     {{ c.body_html | safe }}
 
-                                    <div class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+                                    <div id="comment-{{ c.base36id }}-voting" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
                                         <ul class="list-inline text-left">
 
                                             <li class="list-inline-item arrow-up" {% if voted==1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted>-2 %}onclick="vote_comment('{{ c.base36id }}','1')"{% endif %}>
@@ -71,5 +71,13 @@
                                     </div>
 
                                 </div>
+  
+  {% for reply in c.replies %}
+  <div style="padding-left:10px">
+  {{ reply.rendered_comment | safe }}
+  </div>
+  {% endfor %}
                                 
+  
+  
                             </div>
