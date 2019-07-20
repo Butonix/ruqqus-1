@@ -11632,3 +11632,16 @@ ul.comment-section {
 }
 
 /*# sourceMappingURL=main.css.map */
+/* Adam's additions */
+
+.sidebar-adminpanel input[type="submit"] {
+  width:100%
+}
+
+.noshow {
+  display: none;
+}
+
+span.red {
+  color: #ED254E
+}
