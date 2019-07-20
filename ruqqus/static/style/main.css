@@ -6061,7 +6061,7 @@ button.bg-dark:focus {
     display: inline-flex !important;
   }
 }
-@media (min-width: 768px) {
+
   .d-md-none {
     display: none !important;
   }
@@ -6171,7 +6171,7 @@ button.bg-dark:focus {
   .d-xl-inline-flex {
     display: inline-flex !important;
   }
-}
+
 @media print {
   .d-print-none {
     display: none !important;
@@ -11264,11 +11264,11 @@ ol > li::before {
   text-align: center;
 }
 
-.upvoted {
+.upvoted .arrow-up {
   color: #ED254E !important;
 }
 
-.downvoted {
+.downvoted .arrow-down {
   color: #3cadf3;
 }
 
@@ -11632,3 +11632,17 @@ ul.comment-section {
 }
 
 /*# sourceMappingURL=main.css.map */
+
+/* Adam's additions */
+
+.sidebar-adminpanel input[type="submit"] {
+  width:100%
+}
+
+.noshow {
+  display: none;
+}
+
+span.red {
+  color: #ED254E
+}
