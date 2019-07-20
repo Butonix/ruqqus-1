@@ -8,76 +8,76 @@
 
 <div id="comment-{{ c.base36id }}" class="comment rounded">
 
-                                <span class="toggle-collapse"></span>
+<span class="toggle-collapse"></span>
 
-                                <div class="comment-profile">
-                                    <div class="user-profile d-inline dropdown">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                        </a>
+<div class="comment-profile">
+    <div class="user-profile d-inline dropdown">
+        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+        </a>
 
-                                    </div>
-                                </div>
+    </div>
+</div>
 
-                                <div class="comment-body">
+<div class="comment-body">
 
-                                    <div class="user-info">
-                                        <a class="dropdown-toggle" href="{{ c.author.url }}" class="font-weight-bold text-small user-name">{{ c.author.username }}</a>
-                                        <span class="time-stamp"> {{ c.age_string }}</span>
-                                        <span class="points"> </span>
-                                    </div>
-                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left profile-menu p-0 fade mt-3"
-                                            aria-labelledby="dropdownMenuButton">
-                                
-                                            <div class="user-stats text-center">
-                                                <div class="p-3">
-                                                    <div class="font-weight-bold">{{ c.author.username }}</div>
-                                
-                                                    <div class="text-small text-muted">{{ c.author.energy }} energy</div>
-                                                </div>
-                                                <div class="btn-group bg-light p-3" role="group" aria-label="mini-profile buttons">
-                                                    <a href="{{ c.author.url }}" class="btn btn-secondary btn-sm rounded mr-2" role="button"><i class="fas fa-paper-plane"
-                                                            aria-hidden="true"></i></a>
-                                                    <a href="{{ c.author.url }}" class="btn btn-primary btn-sm rounded" role="button">View Profile</a>
-                                                </div>
-                                
-                                            </div>
-                                        </div>
+    <div class="user-info">
+        <a class="dropdown-toggle" href="{{ c.author.url }}" class="font-weight-bold text-small user-name">{{ c.author.username }}</a>
+        <span class="time-stamp"> {{ c.age_string }}</span>
+        <span class="points"> </span>
+    </div>
+        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left profile-menu p-0 fade mt-3"
+            aria-labelledby="dropdownMenuButton">
 
-                                    {{ c.body_html | safe }}
+            <div class="user-stats text-center">
+                <div class="p-3">
+                    <div class="font-weight-bold">{{ c.author.username }}</div>
 
-                                    <div id="comment-{{ c.base36id }}-voting" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-                                        <ul class="list-inline text-left">
+                    <div class="text-small text-muted">{{ c.author.energy }} energy</div>
+                </div>
+                <div class="btn-group bg-light p-3" role="group" aria-label="mini-profile buttons">
+                    <a href="{{ c.author.url }}" class="btn btn-secondary btn-sm rounded mr-2" role="button"><i class="fas fa-paper-plane"
+                            aria-hidden="true"></i></a>
+                    <a href="{{ c.author.url }}" class="btn btn-primary btn-sm rounded" role="button">View Profile</a>
+                </div>
 
-                                            <li class="list-inline-item arrow-up" {% if voted==1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted>-2 %}onclick="vote_comment('{{ c.base36id }}','1')"{% endif %}>
-                                            </li>
-                                            <li class="list-inline-item arrow-down" {% if voted==-1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted>-2 %}onclick="vote_comment('{{ c.base36id }}','-1')"{% endif %}>
-                                            </li>
+            </div>
+        </div>
 
-                                            <li class="list-inline-item text-muted text-small"><a href="#"><i class="fas fa-reply"
-                                                    aria-hidden="true"></i><span class=""><span
-                                                        class="comments-number"></span> Reply</span></a>
-                                            </li>
-                                            <li class="list-inline-item text-muted"><a href="#"><i class="fas fa-share-alt"
-                                                    aria-hidden="true"></i><span class="share"> Share</span></a>
-                                            </li>
-                                            <li class="list-inline-item text-muted"><i class="fas fa-save"
-                                                    aria-hidden="true"></i><span class="save">
-                                                    Save</span></li>
-                                            <li class="list-inline-item text-muted"><a href="#"><i class="fas fa-flag"
-                                                    aria-hidden="true"></i><span class="flag">
-                                                    Flag</span></a></li>
-                                        </ul>
-                                    </div>
+    {{ c.body_html | safe }}
 
-                                </div>
+    <div id="comment-{{ c.base36id }}-voting" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+        <ul class="list-inline text-left">
+
+            <li class="list-inline-item arrow-up" {% if voted==1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted>-2 %}onclick="vote_comment('{{ c.base36id }}','1')"{% endif %}>
+            </li>
+            <li class="list-inline-item arrow-down" {% if voted==-1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted>-2 %}onclick="vote_comment('{{ c.base36id }}','-1')"{% endif %}>
+            </li>
+
+            <li class="list-inline-item text-muted text-small"><a href="#"><i class="fas fa-reply"
+                    aria-hidden="true"></i><span class=""><span
+                        class="comments-number"></span> Reply</span></a>
+            </li>
+            <li class="list-inline-item text-muted"><a href="#"><i class="fas fa-share-alt"
+                    aria-hidden="true"></i><span class="share"> Share</span></a>
+            </li>
+            <li class="list-inline-item text-muted"><i class="fas fa-save"
+                    aria-hidden="true"></i><span class="save">
+                    Save</span></li>
+            <li class="list-inline-item text-muted"><a href="#"><i class="fas fa-flag"
+                    aria-hidden="true"></i><span class="flag">
+                    Flag</span></a></li>
+        </ul>
+    </div>
+
+</div>
   
   {% for reply in c.replies %}
   <div style="padding-left:10px">
   {{ reply.rendered_comment | safe }}
   </div>
   {% endfor %}
-                                
+
   
   
                             </div>
