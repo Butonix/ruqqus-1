@@ -46,11 +46,11 @@
 {% endif %}
 
 <div class="container">
-        <div class="row text-center justify-content-around mx-lg-5">
+        <div class="row justify-content-around mx-lg-5">
 
             <div class="col bg-white border rounded py-3">
 
-                <div id="post-{{ p.base36id }}" class="row mb-5{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+                <div id="post-{{ p.base36id }}" class="row text-center mb-5{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 
                     <div class="col-12">
 
@@ -153,36 +153,5 @@
             </div>
 	</div>
 </div>
-
-{% endblock %}
-
-
-
-{% block unused %}
-
-<h1>{% if p.url %}<a href="{{ p.url }}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}</h1>{% if p.url %}<h6>({{ p.domain }})</h6>{% endif %}
-<p class="post_tagline">{% if p.author %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}<a href="{{ p.author.url }}">{{ p.author.username }}</a>{% else %}[deleted]{% endif %} at {{ p.created_str }} | {{ p.score_fuzzed }} points</p>
-{% if v %}
-{% set voted=v.vote_status_on_post(p) %}
-<form action="/api/vote/post/{{ p.base36id }}/{% if voted==1 %}0{% else %}1{% endif %}" method="post">
-<input type="hidden" name="formkey", value="{{ v.formkey }}">
-<input type="submit" class="{% if voted==1 %}upvoted_arow{% else %}upvote_arrow{% endif %}" value="↑"{% if voted==1 %}style="color:red"{% endif %}>
-</form>
-<form action="/api/vote/post/{{ p.base36id }}/{% if voted==-1 %}0{% else %}-1{% endif %}" method="post">
-<input type="hidden" name="formkey", value="{{ v.formkey }}">
-<input type="submit" class="{% if voted==-1 %}downvoted_arow{% else %}downvote_arrow{% endif %}"" value="↓" {% if voted==-1 %}style="color:blue"{% endif %}>
-</form>
-{% else %}
-<form>
-<input type="submit" class="upvote_arrow" value="↑" disabled>
-</form>
-<form>
-<input type="submit" class="downvote_arrow" value="↓" disabled>
-</form>
-{% endif %}
-<hr>
-{% for c in p.replies %}
-{{ c.rendered_comment | safe}}
-{% endfor %}
 
 {% endblock %}

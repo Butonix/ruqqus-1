@@ -1,6 +1,6 @@
 <div class="comment comment-{{ c.base36id }} banned">
   {% if v %}
-    {% if v.admin_level %}
+    {% if v.admin_level>=3 %}
       <h4 class="tagline"><a href="{{ c.author.url }}">{{ c.author.username }}</a></h4>
       {{ c.body_html | safe }}
     {% else %}

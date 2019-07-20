@@ -10,17 +10,11 @@
 
 <span class="toggle-collapse"></span>
 
-<div class="comment-profile">
-    <div class="user-profile d-inline dropdown">
-        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-        </a>
-
-    </div>
-</div>
-
 <div class="comment-body">
 
+    <div class="user-info">
+        <a class="dropdown-toggle" href="{{ c.author.url }}" class="font-weight-bold text-small user-name">{{ c.author.username }}</a> |<span class="points">{{ score }} points</span> <span class="time-stamp">{{ c.age_string }}</span>
+    </div>
         <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left profile-menu p-0 fade mt-3"
             aria-labelledby="dropdownMenuButton">
 
