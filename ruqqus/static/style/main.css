@@ -11264,11 +11264,13 @@ ol > li::before {
   text-align: center;
 }
 
-.upvoted {
+.upvoted .arrow-up,
+.score-up {
   color: #ED254E !important;
 }
 
-.downvoted {
+.downvoted .arrow-down,
+.score-down {
   color: #3cadf3;
 }
 
