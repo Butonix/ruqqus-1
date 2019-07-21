@@ -435,6 +435,7 @@ ol > li::before {
 }
 
 .comment .comment-body {
+    width: 100%;
     padding: 1rem 1rem 1rem 0;
     margin-top: auto;
     margin-bottom: auto;
@@ -630,8 +631,6 @@ ul.comment-section {
     color: $body-color;
 }
 
-
-
 // Adam's additions
 
 .sidebar-adminpanel input[type="submit"] {
@@ -645,4 +644,3 @@ ul.comment-section {
 span.red {
   color: $admin;
 }
-

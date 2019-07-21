@@ -11462,6 +11462,7 @@ ol > li::before {
 }
 
 .comment .comment-body {
+  width: 100%;
   padding: 1rem 1rem 1rem 0;
   margin-top: auto;
   margin-bottom: auto;
@@ -11564,7 +11565,7 @@ ul.comment-section {
   color: #898EA2;
 }
 
-.comment.collapsed .comment-profile, .comment.collapsed p.text, .comment.collapsed .comment-actions {
+.comment.collapsed .comment-profile, .comment.collapsed p.text, .comment.collapsed .comment-actions, .comment.collapsed .comment-write {
   display: none;
 }
 
