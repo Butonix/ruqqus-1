@@ -43,7 +43,7 @@ def post_base36id(base36id, v=None):
         
     return post.rendered_page(v=v)
 
-@app.route("/post/<p_id>/comment/<c_id>" methods=["GET"])
+@app.route("/post/<p_id>/comment/<c_id>", methods=["GET"])
 @auth_desired
 def post_submission_comment(p_id, c_id, v=None):
 
@@ -133,6 +133,7 @@ def ip_address(addr, v):
 def api_comment(v):
 
     body=request.form.get("text")
+    parent_submission=base36decode(request.form.get("submission"))
     parent_fullname=request.form.get("parent_fullname")
 
     #sanitize
@@ -143,7 +144,8 @@ def api_comment(v):
     #check existing
     existing=db.query(Comment).filter_by(author_id=v.id,
                                          body=body,
-                                         parent_fullname=parent_fullname
+                                         parent_fullname=parent_fullname,
+                                         parent_submission=parent_submission
                                          ).first()
     if existing:
         return redirect(existing.permalink)
@@ -152,6 +154,7 @@ def api_comment(v):
     c=Comment(author_id=v.id,
               body=body,
               body_html=body_html,
+              parent_submission=parent_submission,
               parent_fullname=parent_fullname)
 
     db.add(c)
