@@ -1,6 +1,7 @@
 import bleach
 from bleach.linkifier import LinkifyFilter
 from urllib.parse import urlparse
+from functools import partial
 
 _allowed_tags=tags=['b',
                    'blockquote',
@@ -33,10 +34,12 @@ _clean_wo_links = bleach.Cleaner(tags=_allowed_tags,
 _clean_w_links = bleach.Cleaner(tags=_allowed_tags,
                                   attributes=_allowed_attributes,
                                   protocols=_allowed_protocols,
-                                  filters=[lambda:LinkifyFilter(skip_tags=["pre"],
-                                                                parse_email=False,
-                                                                callbacks=_callback_functions)
-                                      ]
+                                  filters=[partial(LinkifyFilter,
+                                                   skip_tags=["pre"],
+                                                   parse_email=False,
+                                                   callbacks=_callback_functions
+                                                   )
+                                          ]
                                   )
 
 

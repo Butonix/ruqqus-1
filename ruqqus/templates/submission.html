@@ -108,7 +108,7 @@
                             <form id="reply-to-{{ p.fullname }}" action="/api/comment" method="post" class="input-group">
 				<input type="hidden" name="formkey" value="{{ v.formkey }}">
 				<input type="hidden" name="parent_fullname" value="{{ p.fullname }}">
-                                <textarea form="reply-to-{{ p.fullname }}" class="form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="7"></textarea>
+                                <textarea name="body" form="reply-to-{{ p.fullname }}" class="form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="7"></textarea>
                                 <div class="bg-light comment-format">
                                     <small class="format"><i class="fas fa-bold" aria-hidden="true"></i></small>
                                     <small class="format"><i class="fas fa-italic" aria-hidden="true"></i></small>
