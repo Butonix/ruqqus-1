@@ -308,6 +308,13 @@ ol > li::before {
     margin-bottom: 1rem;
 }
 
+.sidebar .sidebar-section .title {
+    font-size: 12px;
+    font-weight: $font-weight-bold;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
 .sidebar-section {
     padding: 1rem;
     margin-bottom: 1rem;
