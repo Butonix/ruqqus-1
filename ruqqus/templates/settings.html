@@ -14,6 +14,11 @@
 <p><span class="green">{{ msg }}</span></p>
 {% endif %}
 
+<form action="/logout" method="post">
+<input type="hidden" name="formkey" value="{{ v.formkey }}">
+<input type="submit" value="Log out">
+</form>
+
 <h2>Username Verification</h2>
 {% if v.username_verified %}
 <p>Your username "{{ v.username }}" has been verified with reddit.</p>
