@@ -25,6 +25,14 @@ class Comment(Base):
     body_html = Column(String)
     votes = relationship("CommentVote")
 
+    def __init__(self, *args, **kwargs):
+
+        if "created_utc" not in kwargs:
+            kwargs["created_utc"]=int(time.time())
+            kwargs["created_str"]=time.strftime("%I:%M %p on %d %b %Y", time.gmtime(kwargs["created_utc"]))
+        
+        super().__init__(*args, **kwargs)
+        
     def __repr__(self):
         return f"<Comment(id={self.id})"
  
