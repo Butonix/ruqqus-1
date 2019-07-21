@@ -181,5 +181,5 @@ def api_comment(v):
     db.add(vote)
     db.commit()
 
-    return redirect(c.permalink)
+    return redirect(f"{c.post.permalink}#comment-{c.fullname}")
                                          
