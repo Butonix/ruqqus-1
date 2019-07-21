@@ -212,9 +212,9 @@ class User(Base):
 
         random.seed(self.id)
 
-        R=random.randint(48, 144)
-        G=random.randint(48, 144)
-        B=random.randint(48, 144)
+        R=random.randint(48, 176)
+        G=random.randint(48, 176)
+        B=random.randint(48, 176)
         
 
         return str(base_encode(R, 16))+str(base_encode(G, 16))+str(base_encode(B, 16))
