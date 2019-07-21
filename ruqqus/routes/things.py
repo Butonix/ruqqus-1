@@ -47,7 +47,7 @@ def post_base36id(base36id, v=None):
 @auth_desired
 def post_submission_comment(p_id, c_id, v=None):
 
-    comemnt=db.query(Comment).filter_by(id=base36decode(c_id)).first()
+    comment=db.query(Comment).filter_by(id=base36decode(c_id)).first()
     if not comment:
         abort(404)
 
