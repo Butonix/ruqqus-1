@@ -107,3 +107,4 @@ venv.bak/
 .DS_Store
 teedee/.DS_Store
 node_modules/
+package-lock.json
