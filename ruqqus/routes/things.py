@@ -157,6 +157,7 @@ def api_comment(v):
                                          ).first()
     if existing:
         return redirect(existing.permalink)
+    
 
 
     c=Comment(author_id=v.id,
@@ -164,6 +165,10 @@ def api_comment(v):
               body_html=body_html,
               parent_submission=parent_submission,
               parent_fullname=parent_fullname)
+
+    #no replying to removed things
+    if c.parent.is_banned:
+        abort(403)
 
     db.add(c)
     db.commit()
