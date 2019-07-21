@@ -36,9 +36,8 @@ def post_base36id(base36id, v=None):
     
     base10id = base36decode(base36id)
     
-    try:
-        post=db.query(Submission).filter_by(id=base10id).all()[0]
-    except IndexError:
+    post=db.query(Submission).filter_by(id=base10id).first()
+    if not post:
         abort(404)
         
     return post.rendered_page(v=v)
@@ -47,15 +46,24 @@ def post_base36id(base36id, v=None):
 @auth_desired
 def post_submission_comment(p_id, c_id, v=None):
 
-    comment=db.query(Comment).filter_by(id=base36decode(c_id)).first()
+    c_id = base36decode(c_id)
+
+    comment=db.query(Comment).filter_by(id=c_id).first()
     if not comment:
         abort(404)
 
-    p_id=base36decode(p_id)
-    if not comment.parent_submission == p_id:
+    p_id = base36decode(p_id)
+    
+    post=db.query(Submission).filter_by(id=p_id).first()
+    if not post:
         abort(404)
 
-    return comment.rendered_permalink(v=v)
+    if comment.parent_submission != p_id:
+        abort(404)
+
+    post.replies=[comment]
+        
+    return post.rendered_page(v=v)
 
 
 @app.route("/submit", methods=['POST'])
