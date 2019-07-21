@@ -116,8 +116,8 @@ class Comment(Base):
 
         return render_template("single_comment.html", c=self, replies=self.replies)
 
-    @property
-    def rendered_permalink(self):
+    
+    def rendered_permalink(self, v=None):
 
         #Manually sets reply "tree" then renders post page
 
@@ -130,7 +130,7 @@ class Comment(Base):
         else:
             self.post.replies=[self.parent]
             self.parent.replies=[self]
-            return self.post.rendered_page
+            return self.post.rendered_page(v=v)
     
     @property
     @_lazy

@@ -55,7 +55,7 @@ def post_submission_comment(p_id, c_id, v=None):
     if not comment.parent_submission == p_id:
         abort(404)
 
-    return comment.rendered_permalink
+    return comment.rendered_permalink(v=v)
 
 
 @app.route("/submit", methods=['POST'])

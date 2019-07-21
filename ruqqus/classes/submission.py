@@ -33,8 +33,7 @@ class Submission(Base):
             kwargs["created_str"]=time.strftime("%I:%M %p on %d %b %Y", time.gmtime(kwargs["created_utc"]))
         
         super().__init__(*args, **kwargs)
-        
-        self._lazy_dict = {}
+
 
     def __repr__(self):
         return f"<Submission(id={self.id})>"
