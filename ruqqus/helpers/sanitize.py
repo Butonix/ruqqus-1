@@ -3,7 +3,8 @@ from bleach.linkifier import LinkifyFilter
 from urllib.parse import urlparse
 from functools import partial
 
-_allowed_tags=tags=['b',
+_allowed_tags=tags=['a',
+                    'b',
                     'blockquote',
                     'code',
                     'em',
