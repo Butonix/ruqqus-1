@@ -74,9 +74,9 @@ class Comment(Base):
     def parent(self):
 
         if self.is_top_level:
-            return db.query(Submission).filter_by(id=parent_submission).first()
+            return db.query(Submission).filter_by(id=self.parent_submission).first()
         else:
-            return db.query(Comment).filter_by(id=parent_comment).first()
+            return db.query(Comment).filter_by(id=self.parent_fullname).first()
 
     @property
     @_lazy
