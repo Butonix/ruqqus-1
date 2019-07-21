@@ -35,7 +35,7 @@
 
     <div class="comment-body">{{ c.body_html | safe }}</div>
 
-    <div id="comment-{{ c.base36id }}-voting" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+    <div id="comment-{{ c.base36id }}-voting" class="comment-actions">
         <ul class="list-inline text-left">
 
             <li id="comment-{{ c.base36id }}-up" class="list-inline-item arrow-up" {% if voted==1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted > -2 %}onclick="vote_comment('{{ c.base36id }}','1')"{% endif %}>
