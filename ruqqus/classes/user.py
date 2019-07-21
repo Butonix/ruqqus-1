@@ -212,8 +212,8 @@ class User(Base):
 
         random.seed(self.id)
 
-        #between 303030 and b0b0b0
-        x=random.randint(3158064, 11579568)
+        #between 303030 and 909090
+        x=random.randint(3158064, 9474192)
 
         return base_encode(x, 16)
 
