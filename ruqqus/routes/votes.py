@@ -59,7 +59,7 @@ def api_vote_comment(comment_id, x, v):
     if not comment_id:
         abort(404)
 
-    if comment_id.is_banned:
+    if comment.is_banned:
         abort(403)
 
     #check for existing vote
