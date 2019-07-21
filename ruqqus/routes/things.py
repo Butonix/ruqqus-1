@@ -168,5 +168,13 @@ def api_comment(v):
     db.add(c)
     db.commit()
 
+    vote=CommentVote(user_id=v.id,
+                     comment_id=c.id,
+                     vote_type=1
+                     )
+
+    db.add(vote)
+    db.commit()
+
     return redirect(c.permalink)
                                          
