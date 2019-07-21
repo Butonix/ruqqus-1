@@ -30,7 +30,7 @@
 
                 <div class="post-actions">
                   <ul class="list-inline text-left">
-                    <li class="list-inline-item text-muted text-small"><a href="{{ p.permalink }}">Comments</a></li>
+                    <li class="list-inline-item text-muted text-small"><a href="{{ p.permalink }}">{{ p.comment_count }} comment{{ 's' if p.comment_count != 1 else '' }}</a></li>
                     <li class="list-inline-item text-muted">Share</li>
                     <li class="list-inline-item text-muted">Save</li>
                     <li class="list-inline-item text-muted">Flag</li>
