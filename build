@@ -1,0 +1,4 @@
+sass ruqqus/static/styles/main.scss ruqqus/static/styles/main.css
+git add .
+git commit
+git push origin master

@@ -253,11 +253,11 @@ ol > li::before {
 }
 
 .score-up {
-    color: $upvote;
+    color: $upvote !important;
 }
 
 .score-down {
-    color: $downvote;
+    color: $downvote !important;
 }
 
 // Custom Borders
