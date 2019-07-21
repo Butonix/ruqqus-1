@@ -128,7 +128,7 @@ def api_comment(v):
 
     #check existing
     existing=db.query(Comment).filter_by(author_id=v.id,
-                                         body=body_md,
+                                         body=body,
                                          parent_fullname=parent_fullname
                                          ).first()
     if existing:
@@ -136,8 +136,9 @@ def api_comment(v):
 
 
     c=Comment(author_id=v.id,
-              body=body_md,
-              body_html=body_html)
+              body=body,
+              body_html=body_html,
+              parent_fullname=parent_fullname)
 
     db.add(c)
     db.commit()
