@@ -477,6 +477,11 @@ ul.comment-section {
 .comment-write {
     position: relative;
 }
+
+.comment-write.child {
+    margin-top: 1rem;
+}
+
 .comment-write textarea {
     width: 100%;
     height: 100%;
