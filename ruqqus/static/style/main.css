@@ -11291,11 +11291,11 @@ ol > li::before {
 }
 
 .score-up {
-  color: #ED254E;
+  color: #ED254E !important;
 }
 
 .score-down {
-  color: #3cadf3;
+  color: #3cadf3 !important;
 }
 
 .border-1 {
