@@ -105,7 +105,7 @@
 			{% if v %}
 			{% if not v.is_banned %}
 			<div class="comment-write">
-                            <form id="reply-to-{{ p.fullname }}" action="/api/comment" class="input-group">
+                            <form id="reply-to-{{ p.fullname }}" action="/api/comment" method="post" class="input-group">
 				<input type="hidden" name="formkey" value="{{ v.formkey }}">
 				<input type="hidden" name="parent_fullname" value="{{ p.fullname }}">
                                 <textarea form="reply-to-{{ p.fullname }}" class="form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="7"></textarea>
