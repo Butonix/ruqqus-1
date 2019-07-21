@@ -123,12 +123,12 @@ def api_comment(v):
 
     #sanitize
     body=request.form.get("body")
-    body_html=mistletoe.markdown(body_md)
-    body_html=sanitize(body_html, linkgen=True)
+    body_md=mistletoe.markdown(body)
+    body_html=sanitize(body_md, linkgen=True)
 
     #check existing
     existing=db.query(Comment).filter_by(author_id=v.id,
-                                         body=body,
+                                         body=body_md,
                                          parent_fullname=parent_fullname
                                          ).first()
     if existing:
@@ -136,7 +136,7 @@ def api_comment(v):
 
 
     c=Comment(author_id=v.id,
-              body=body,
+              body=body_md,
               body_html=body_html)
 
     db.add(c)
