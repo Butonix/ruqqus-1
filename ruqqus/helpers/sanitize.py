@@ -4,14 +4,15 @@ from urllib.parse import urlparse
 from functools import partial
 
 _allowed_tags=tags=['b',
-                   'blockquote',
-                   'code',
-                   'em',
-                   'i',
-                   'li',
-                   'ol',
-                   'strong',
-                   'ul'
+                    'blockquote',
+                    'code',
+                    'em',
+                    'i',
+                    'li',
+                    'ol',
+                    'p',
+                    'strong',
+                    'ul',
                    ]
 
 _allowed_tags_with_links=_allowed_tags+["a"]

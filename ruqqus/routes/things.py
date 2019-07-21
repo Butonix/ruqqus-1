@@ -52,7 +52,7 @@ def post_submission_comment(p_id, c_id, v=None):
         abort(404)
 
     p_id=base36decode(p_id)
-    if not comment.submission_id == p_id:
+    if not comment.parent_submission == p_id:
         abort(404)
 
     return comment.rendered_permalink
