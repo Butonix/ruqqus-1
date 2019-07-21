@@ -31,6 +31,10 @@ $green: #2EC47D;
 $gray-100: #F5F6F7;
 $gray-300: #E6ECf0;
 
+$upvote: #ED254E;
+$downvote: #3cadf3;
+$admin: #ed254e;
+
 // Font size
 
 $small-font-size: 13px;
@@ -220,28 +224,40 @@ ol > li::before {
     text-align: center;
 }
 
-.upvoted {
-    color: $red!important;
+
+
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 10px solid $gray-300;
+  margin-bottom: 0.5rem;
 }
 
-.downvoted {
-    color: $blue;
+.arrow-down {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid $gray-300;
+  margin-top: 0.5rem;
 }
 
-.arrow-up, .arrow-down {
-    color: $gray-300;
+.upvoted .arrow-up {
+  border-bottom: 10px solid $upvote;
 }
 
-.arrow-up::before {
-  content: "\f077";
-  font-family: "Font Awesome 5 Free";
-  margin-bottom: .5rem;
+.downvoted .arrow-down {
+  border-top: 10px solid $downvote;
 }
 
-.arrow-down::before {
-  content: "\f078";
-  font-family: "Font Awesome 5 Free";
-  margin-top: .5rem;
+.score-up {
+    color: $upvote;
+}
+
+.score-down {
+    color: $downvote;
 }
 
 // Custom Borders
@@ -608,5 +624,17 @@ ul.comment-section {
 
 
 
+// Adam's additions
 
+.sidebar-adminpanel input[type="submit"] {
+  width:100%
+}
+
+.noshow {
+  display: none;
+}
+
+span.red {
+  color: $admin;
+}
 
