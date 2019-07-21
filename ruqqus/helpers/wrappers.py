@@ -12,7 +12,8 @@ def auth_desired(f):
 
         if "user_id" in session:
             v=db.query(User).filter_by(id=session["user_id"]).first()
-            v.update_ip(request.remote_addr)
+            if v:
+                v.update_ip(request.remote_addr)
         else:
             v=None
             
@@ -28,9 +29,10 @@ def auth_required(f):
 
         if "user_id" in session:
             v=db.query(User).filter_by(id=session["user_id"]).first()
-            v.update_ip(request.remote_addr)
+            
             if not v:
                 abort(401)
+            v.update_ip(request.remote_addr)
 
         else:
             abort(401)
