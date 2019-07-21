@@ -187,7 +187,8 @@ class Submission(Base):
             for reply in thing.replies:
                 tree_replies(reply)
 
-        tree_replies(self)
+        for reply in self.replies:
+            tree_replies(reply)
 
         
 
