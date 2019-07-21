@@ -82,7 +82,8 @@ class Submission(Base):
             return render_template("submission_banned.html", v=v, p=self)
 
         #load and tree comments
-        self.tree_comments()
+        if "replies" not in self.__dict__:
+            self.tree_comments()
 
         #return template
         return render_template("submission.html", v=v, p=self)

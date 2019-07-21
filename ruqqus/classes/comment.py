@@ -62,6 +62,12 @@ class Comment(Base):
     @_lazy
     def author(self):
         return db.query(User).filter_by(id=self.author_id).first()
+
+    @property
+    @_lazy
+    def post(self):
+
+        return db.query(Submission).filter_by(id=parent_submission).first()
     
     @property
     @_lazy
@@ -97,6 +103,18 @@ class Comment(Base):
                 return ""
 
         return render_template("single_comment.html", c=self, replies=self.replies)
+
+    @property
+    def rendered_permalink(self):
+
+        #Manually sets reply "tree" then renders post page
+
+        self.parent.replies=[self]
+
+        if not self.parent.is_top_level:
+            self.post.replies=[self.parent]
+
+        return self.post.rendered_page
     
     @property
     @_lazy

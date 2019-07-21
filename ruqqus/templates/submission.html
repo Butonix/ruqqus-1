@@ -101,20 +101,28 @@
                                 </li>
                             </ul>
                         </div>
-
+			
+			{% if v %}
+			{% if not v.is_banned %}
                         <div class="comment-write">
                             <div class="input-group">
-                                <textarea class="form-control rounded" aria-label="With textarea"
-                                    placeholder="Add your comment..." rows="7"></textarea>
+				<form action="/api/comment" method="post">
+				<input type="hidden" name="formkey" value="{{ v.formkey }}">
+				<input type="hidden" name="parent_fullname" value="{{ p.fullname }}">
+                                <input type="textarea" name="body" class="form-control rounded" aria-label="With textarea"
+                                    placeholder="Add your comment..." rows="7">
                                 <div class="bg-light comment-format">
                                     <small class="format"><i class="fas fa-bold"></i></small>
                                     <small class="format"><i class="fas fa-italic"></i></small>
                                     <small class="format"><i class="fas fa-quote-right"></i></small>
                                     <small class="format"><i class="fas fa-link"></i></small>
-                                    <button class="btn btn-primary btn ml-auto">Comment</button>
+                                    <input type="submit" class="btn btn-primary btn ml-auto" value="Comment">
                                 </div>
+				</form>
                             </div>
                         </div>
+			{% endif %}
+			{% endif %}
                     </div>
 
                 </div>
