@@ -70,7 +70,7 @@ def api_vote_comment(comment_id, x, v):
 
     vote=CommentVote(user_id=v.id,
               vote_type=x,
-              comment_id=post_id
+              comment_id=comment_id
               )
 
     db.add(vote)
