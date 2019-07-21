@@ -43,6 +43,20 @@ def post_base36id(base36id, v=None):
         
     return post.rendered_page(v=v)
 
+@app.route("/post/<p_id>/comment/<c_id>" methods=["GET"])
+@auth_desired
+def post_submission_comment(p_id, c_id, v=None):
+
+    comemnt=db.query(Comment).filter_by(id=base36decode(c_id)).first()
+    if not comment:
+        abort(404)
+
+    p_id=base36decode(p_id)
+    if not comment.submission_id == p_id:
+        abort(404)
+
+    return comment.rendered_permalink
+
 
 @app.route("/submit", methods=['POST'])
 @is_not_banned

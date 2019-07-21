@@ -94,6 +94,12 @@ class Comment(Base):
             return db.query(Comment).filter_by(parent_fullname=self.fullname).all()
 
     @property
+    @_lazy
+    def permalink(self):
+
+        return f"/post/{self.post.base36id}/comment/{self.base36id}"
+
+    @property
     def rendered_comment(self):
 
         if self.is_banned:
