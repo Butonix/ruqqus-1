@@ -148,7 +148,7 @@
                         <div class="comment-section">
 
 				{% for c in p.replies %}
-					{{ c.rendered_comment | safe }}
+					{{ c.rendered_comment(v=v) | safe }}
 				{% endfor %}
 
                             

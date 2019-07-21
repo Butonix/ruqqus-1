@@ -105,8 +105,7 @@ class Comment(Base):
 
         return f"/post/{self.post.base36id}/comment/{self.base36id}"
 
-    @property
-    def rendered_comment(self):
+    def rendered_comment(self, v=None):
 
         if self.is_banned:
             if self.replies:
@@ -114,7 +113,7 @@ class Comment(Base):
             else:
                 return ""
 
-        return render_template("single_comment.html", c=self, replies=self.replies)
+        return render_template("single_comment.html", v=v c=self, replies=self.replies)
     
     @property
     @_lazy

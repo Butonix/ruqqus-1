@@ -13,7 +13,7 @@
 <div class="comment-body">
 
     <div class="user-info">
-        <a class="dropdown-toggle" href="{{ c.author.url }}" class="font-weight-bold text-small user-name">{{ c.author.username }}</a> {{ voted }}| <span id="comment-{{ c.base36id }}-score-up" {% if not voted==1 %}class="noshow"{% endif %}>{{ score+1 }}</span><span class="comment-{{ c.base36id }}-score-none" {% if voted not in [0,-2] %}class="noshow"{% endif %}>{{ score }}</span><span class="comment-{{ c.base36id }}-score-down" {% if not voted==-1 %}class="noshow"{% endif %}>{{ score-1 }}</span> <span class="time-stamp">{{ c.age_string }}</span> points
+        <a class="dropdown-toggle" href="{{ c.author.url }}" class="font-weight-bold text-small user-name">{{ c.author.username }}</a> | <span id="comment-{{ c.base36id }}-score-up" {% if not voted==1 %}class="noshow"{% endif %}>{{ score+1 }}</span><span class="comment-{{ c.base36id }}-score-none" {% if voted not in [0,-2] %}class="noshow"{% endif %}>{{ score }}</span><span class="comment-{{ c.base36id }}-score-down" {% if not voted==-1 %}class="noshow"{% endif %}>{{ score-1 }}</span> <span class="time-stamp">{{ c.age_string }}</span> points
     </div>
         <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left profile-menu p-0 fade mt-3"
             aria-labelledby="dropdownMenuButton">
@@ -63,7 +63,7 @@
   
   {% for reply in c.replies %}
   <div style="padding-left:10px">
-  {{ reply.rendered_comment | safe }}
+  {{ reply.rendered_comment(v=v) | safe }}
   </div>
   {% endfor %}
 
