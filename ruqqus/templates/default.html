@@ -86,7 +86,7 @@ function vote_comment(comment_id, direction) {
 url="/api/vote/comment/"+ comment_id +"/"+direction;
 post(url);
 
-thing = document.getElementById("comment-"+ comment_id);
+thing = document.getElementById("comment-"+ comment_id+"-voting");
 uparrow1=document.getElementById("comment-"+ comment_id +"-up");
 downarrow1=document.getElementById("comment-"+ comment_id +"-down");
 scoreup1=document.getElementById("comment-"+ comment_id +"-score-up");
