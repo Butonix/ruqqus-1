@@ -536,7 +536,7 @@ ul.comment-section {
     color: $text-muted;
 }
 
-.comment.collapsed .comment-profile, .comment.collapsed p.text, .comment.collapsed .comment-actions {
+.comment.collapsed .comment-profile, .comment.collapsed p.text, .comment.collapsed .comment-actions, .comment.collapsed .comment-write {
     display: none;
 }
 
