@@ -163,6 +163,15 @@ class Submission(Base):
 
             i-=1
 
+        if sort_type=="hot":
+            self.__dict__["replies"].sort(key=lambda x:x.rank_hot, reverse=True)
+        elif sort_type=="top":
+            self.__dict__["replies"].sort(key=lambda x:x.score, reverse=True)
+        elif sort_type=="new":
+            self.__dict__["replies"].sort(key=lambda x:x.created_utc, reverse=True)
+        elif sort_type=="fiery":
+            self.__dict__["replies"].sort(key=lambda x:x.rank_controversial, reverse=True)
+
         def tree_replies(thing):
 
             thing.__dict__["replies"]=[]
