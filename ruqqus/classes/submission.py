@@ -149,6 +149,9 @@ class Submission(Base):
         #list comments without re-querying db each time
         comments=[c for c in self.comments]
 
+        #get sort type
+        sort_type = request.args.get("sort","hot")
+
         #this is done in an ugly way in order to reduce computation time for larger comment sets
         self.replies=[]
         i=len(comments)-1
@@ -160,23 +163,33 @@ class Submission(Base):
 
             i-=1
 
-        def tree_replies(comment):
+        def tree_replies(thing):
 
-            comment.__dict__["replies"]=[]
+            thing.__dict__["replies"]=[]
             i=len(comments)-1
         
             while i>=0:
-                if comments[i].parent_fullname==comment.fullname:
-                    comment.__dict__["replies"].append(comments[i])
+                if comments[i].parent_fullname==thing.fullname:
+                    thing.__dict__["replies"].append(comments[i])
                     comments.pop(i)
 
                 i-=1
 
-            for reply in comment.replies:
+            if sort_type=="hot":
+                thing.__dict__["replies"].sort(key=lambda x:x.rank_hot, reverse=True)
+            elif sort_type=="top":
+                thing.__dict__["replies"].sort(key=lambda x:x.score, reverse=True)
+            elif sort_type=="new":
+                thing.__dict__["replies"].sort(key=lambda x:x.created_utc, reverse=True)
+            elif sort_type=="fiery":
+                thing.__dict__["replies"].sort(key=lambda x:x.rank_controversial, reverse=True)
+
+            for reply in thing.replies:
                 tree_replies(reply)
 
-        for reply in self.replies:
-            tree_replies(reply)
+        tree_replies(self)
+
+        
 
         
     @property
