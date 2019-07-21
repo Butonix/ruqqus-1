@@ -6,7 +6,7 @@
 {% endif %}
 
 
-<div id="comment-{{ c.base36id }}" name="comment-{{ c.fullname }}" class="comment-section {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+<div id="comment-{{ c.base36id }}" name="comment-{{ c.fullname }}" class="comment rounded {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 
 <span class="toggle-collapse"></span>
 
@@ -59,13 +59,14 @@
         </ul>
     </div>
 
-</div>
-  
   {% for reply in c.replies %}
   <div style="padding-left:10px">
   {{ reply.rendered_comment(v=v) | safe }}
   </div>
   {% endfor %}
+</div>
+  
+
 
   
   
