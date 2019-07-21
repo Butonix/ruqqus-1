@@ -42,7 +42,6 @@ class User(Base):
             kwargs.pop("password")
 
         kwargs["created_utc"]=int(time())
-        kwargs["activehash"]=self.activation_hash(self.username)
 
         super().__init__(**kwargs)
 
@@ -112,9 +111,6 @@ class User(Base):
             db.add(IP(user_id=self.id, ip=remote_addr))
         
         db.commit()
-
-    def activation_hash(self):
-        return generate_password_hash(self.username, method='pbkdf2:sha256', salt_length=8)
 
     def hash_password(self, password):
         return generate_password_hash(password, method='pbkdf2:sha512', salt_length=8)
