@@ -1,12 +1,12 @@
 $theme-colors: (
-  "primary": #01B1C9,
-  "danger": #FC6F01
+  "primary": #1486fb,
+  "danger": #F45D01
 );
 
 // Body styling
 
-$body-color: #464855;  //this is the text color
-$body-bg: #FFFFFF; //this is the background color
+$body-color: #070E23;  //this is the text color
+$body-bg: #F5F7F9; //this is the background color
 
 // Borders
 
@@ -23,17 +23,17 @@ $font-family-sans-serif: Open Sans;
 
 // Colors
 
-$blue: #01B1C9;
-$red:  #FC6F01;
+$blue: #1486fb;
+$red:  #F45D01;
 $gray: #898EA2;
 $green: #2EC47D;
 
 $gray-100: #F5F6F7;
 $gray-300: #E6ECf0;
 
-$upvote: #ED254E;
-$downvote: #3cadf3;
-$admin: #ed254e;
+$upvote: #F45D01;
+$downvote: #1486fb;
+$admin: #F45D01;
 
 // Font size
 
