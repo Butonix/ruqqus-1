@@ -168,5 +168,5 @@ def api_comment(v):
     db.add(c)
     db.commit()
 
-    return c.rendered_permalink
+    return redirect(c.permalink)
                                          
