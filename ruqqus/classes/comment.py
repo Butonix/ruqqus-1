@@ -115,12 +115,16 @@ class Comment(Base):
 
         #Manually sets reply "tree" then renders post page
 
-        self.parent.replies=[self]
+        
 
-        if not self.parent.is_top_level:
+        if self.is_top_level:
+            self.post.replies=[self]
+            return self.post.rendered_page
+
+        else:
             self.post.replies=[self.parent]
-
-        return self.post.rendered_page
+            self.parent.replies=[self]
+            return self.post.rendered_page
     
     @property
     @_lazy
