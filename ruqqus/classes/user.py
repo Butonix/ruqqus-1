@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 import hmac
 from os import environ
 from secrets import token_hex
+import random
 
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
@@ -203,3 +204,16 @@ class User(Base):
 
     def __repr__(self):
         return f"<User(username={self.username})>"
+
+
+    @property
+    @_lazy
+    def color(self):
+
+        random.seed(self.id)
+
+        #between 303030 and b0b0b0
+        x=random.randint(3158064, 11579568)
+
+        return base_encode(x, 16)
+
