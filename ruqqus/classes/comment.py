@@ -113,7 +113,7 @@ class Comment(Base):
             else:
                 return ""
 
-        return render_template("single_comment.html", v=v c=self, replies=self.replies)
+        return render_template("single_comment.html", v=v, c=self, replies=self.replies)
     
     @property
     @_lazy
