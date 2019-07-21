@@ -85,7 +85,7 @@ class Submission(Base):
             self.tree_comments()
 
         #return template
-        return render_template("submission.html", v=v, p=self, sort_type=request.args.get("sort","Hot").capwords())
+        return render_template("submission.html", v=v, p=self, sort_type=request.args.get("sort","Hot").capitalize())
 
     @property
     @_lazy
