@@ -68,9 +68,9 @@ def api_vote_comment(comment_id, x, v):
         existing.change_to(x)
         return "", 204
 
-    vote=Vote(user_id=v.id,
+    vote=CommentVote(user_id=v.id,
               vote_type=x,
-              submission_id=post_id
+              comment_id=post_id
               )
 
     db.add(vote)
