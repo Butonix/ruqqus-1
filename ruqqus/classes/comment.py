@@ -73,7 +73,7 @@ class Comment(Base):
     @_lazy
     def post(self):
 
-        return db.query(Submission).filter_by(id=parent_submission).first()
+        return db.query(Submission).filter_by(id=self.parent_submission).first()
     
     @property
     @_lazy
