@@ -231,18 +231,14 @@ ol > li::before {
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-bottom: 10px solid $gray-300;
-  margin-bottom: 0.5rem;
-}
+  border-bottom: 10px solid $gray-300;}
 
 .arrow-down {
   width: 0;
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-top: 10px solid $gray-300;
-  margin-top: 0.5rem;
-}
+  border-top: 10px solid $gray-300;}
 
 .upvoted .arrow-up {
   border-bottom: 10px solid $upvote;
