@@ -1,9 +1,11 @@
 {% extends "default.html" %}
+{% block content %}
+{% filter markdown %}
+# About Ruqqus
 
-{% filter Markdown %}
+"Big Tech" companies have been cracking down on free discourse, under the guise of "tolerance" and "fairness." With traditional American values getting quietly pushed out, silently de-listed, isolated, or outright banned, free speech on the internet needs a new home.
 
-# About
-
-Ruqqus is an independent social media site by and for American patriots.
+The First Amendment has a new home. You've found it. Use your voice. Make a ruqqus.
 
 {% endfilter %}
+{% endblock %}
