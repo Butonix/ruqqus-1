@@ -62,7 +62,7 @@ def rules(v):
 
 @app.route("/about",methods=["GET"])
 @auth_desired
-def rules(v):
+def about(v):
     return render_template("about.html", v=v)
 
 @app.route("/terms",methods=["GET"])
