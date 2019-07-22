@@ -60,6 +60,11 @@ def settings(v):
 def rules(v):
     return render_template("rules.html", v=v)
 
+@app.route("/about",methods=["GET"])
+@auth_desired
+def rules(v):
+    return render_template("about.html", v=v)
+
 @app.route("/terms",methods=["GET"])
 @auth_desired
 def terms(v):
