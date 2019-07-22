@@ -5,6 +5,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import *
 
+_version = "0.1.0"
+
 app = Flask(__name__,
             template_folder='./templates',
             static_folder='./static'
@@ -27,10 +29,12 @@ from ruqqus.classes import *
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
 
+
+
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Headers',
-                         "Origin, X-Requested-With, Content-Type, Accept, x-auth"
+    `   QA                         "Origin, X-Requested-With, Content-Type, Accept, x-auth"
                          )
     return response
     
