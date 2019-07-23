@@ -44,7 +44,7 @@
             <li id="comment-{{ c.base36id }}-down" class="list-inline-item arrow-down" {% if voted==-1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted > -2 %}onclick="vote_comment('{{ c.base36id }}','-1')"{% endif %}>
             </li>
 
-            <li class="list-inline-item text-muted text-small"><a href="#"><i class="fas fa-reply"
+            <li class="list-inline-item text-muted text-small" onclick="addReplyForm('{{ c.base36id }}')"><a href="#"><i class="fas fa-reply"
                     aria-hidden="true"></i><span class=""><span
                         class="comments-number"></span> Reply</span></a>
             </li>
@@ -59,6 +59,8 @@
                     Flag</span></a></li>
         </ul>
     </div>
+
+  <div id="reply-to-{{ c.base36id }}"></div>
 
   {% for reply in c.replies %}
   <div style="padding-left:10px">
