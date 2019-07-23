@@ -142,7 +142,7 @@ class Submission(Base):
     @property
     @_lazy
     def comment_count(self):
-        return len(self.comments)
+        return self.comments.count()
 
     def tree_comments(self):
 
