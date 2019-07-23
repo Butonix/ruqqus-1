@@ -42,9 +42,9 @@ def home(v):
     
     return render_template("home.html", v=v, listing=posts, sort_method=sort_method)
 
-@app.route('/static/<path:path>')
+@app.route('/assets/<path:path>')
 def static_service(path):
-    return send_from_directory('./static', path)
+    return send_from_directory('./assets', path)
 
 @app.route("/robots.txt", methods=["GET"])
 def robots_txt():
