@@ -45,5 +45,5 @@ function delReplyForm(commentId) {
 
     document.getElementById(id).innerHTML = '';
 
-});
+};
 
