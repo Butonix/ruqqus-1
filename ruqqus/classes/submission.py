@@ -124,7 +124,6 @@ class Submission(Base):
         return randint(a,b)        
 
     @property
-    @_lazy
     def age(self):
         now=int(time.time())
         return now-self.created_utc
@@ -140,7 +139,6 @@ class Submission(Base):
         return math.sqrt(self.ups*self.downs)/(((self.age+100000)/6)**(1/3))
 
     @property
-    @_lazy
     def comment_count(self):
         return self.comments.count()
 
@@ -175,29 +173,7 @@ class Submission(Base):
         elif sort_type=="fiery":
             self.__dict__["replies"].sort(key=lambda x:x.rank_controversial, reverse=True)
 
-        def tree_replies(thing):
 
-            thing.__dict__["replies"]=[]
-            i=len(comments)-1
-        
-            while i>=0:
-                if comments[i].parent_fullname==thing.fullname:
-                    thing.__dict__["replies"].append(comments[i])
-                    comments.pop(i)
-
-                i-=1
-
-            if sort_type=="hot":
-                thing.__dict__["replies"].sort(key=lambda x:x.rank_hot, reverse=True)
-            elif sort_type=="top":
-                thing.__dict__["replies"].sort(key=lambda x:x.score, reverse=True)
-            elif sort_type=="new":
-                thing.__dict__["replies"].sort(key=lambda x:x.created_utc, reverse=True)
-            elif sort_type=="fiery":
-                thing.__dict__["replies"].sort(key=lambda x:x.rank_controversial, reverse=True)
-
-            for reply in thing.replies:
-                tree_replies(reply)
 
         for reply in self.replies:
             tree_replies(reply)
@@ -206,7 +182,6 @@ class Submission(Base):
 
         
     @property
-    @_lazy
     def age_string(self):
 
         age=self.age
