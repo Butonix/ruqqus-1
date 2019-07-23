@@ -143,6 +143,33 @@ class Submission(Base):
         return self.comments.count()
 
     def tree_comments(self, comment=None):
+
+        def tree_replies(thing):
+
+            thing.__dict__["replies"]=[]
+            i=len(comments)-1
+        
+            while i>=0:
+                if comments[i].parent_fullname==thing.fullname:
+                    thing.__dict__["replies"].append(comments[i])
+                    comments.pop(i)
+
+                i-=1
+
+            if sort_type=="hot":
+                thing.__dict__["replies"].sort(key=lambda x:x.rank_hot, reverse=True)
+            elif sort_type=="top":
+                thing.__dict__["replies"].sort(key=lambda x:x.score, reverse=True)
+            elif sort_type=="new":
+                thing.__dict__["replies"].sort(key=lambda x:x.created_utc, reverse=True)
+            elif sort_type=="fiery":
+                thing.__dict__["replies"].sort(key=lambda x:x.rank_controversial, reverse=True)
+
+            for reply in thing.replies:
+                tree_replies(reply)
+                
+        ######
+                
         if comment:
             self.replies=[comment]
             return
