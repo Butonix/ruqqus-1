@@ -140,7 +140,7 @@ class Submission(Base):
 
     @property
     def comment_count(self):
-        return self.comments.filter_by(is_banned==False).count()
+        return self.comments.filter_by(is_banned=False).count()
 
     def tree_comments(self, comment=None):
 
