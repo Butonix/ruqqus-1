@@ -24,7 +24,7 @@ class Submission(Base):
     distinguish_level=Column(Integer, default=0)
     created_str=Column(String(255), default=None)
     stickied=Column(Boolean, default=False)
-    comments=relationship("Comment", lazy="dynamic")
+    comments=relationship("Comment", lazy="dynamic", backref="submissions")
 
     def __init__(self, *args, **kwargs):
 
@@ -140,7 +140,7 @@ class Submission(Base):
 
     @property
     def comment_count(self):
-        return self.comments.count()
+        return self.comments.filter_by(is_banned==False).count()
 
     def tree_comments(self, comment=None):
 
