@@ -81,7 +81,6 @@ class Comment(Base):
         return db.query(Submission).filter_by(id=self.parent_submission).first()
     
     @property
-    @_lazy
     def parent(self):
 
         if self.is_top_level:
@@ -90,13 +89,11 @@ class Comment(Base):
             return db.query(Comment).filter_by(id=base36decode(self.parent_fullname.split(sep="_")[1])).first()
 
     @property
-    @_lazy
     def children(self):
 
         return db.query(Comment).filter_by(parent_comment=self.id).all()
 
     @property
-    @_lazy
     def replies(self):
 
         if "replies" in self.__dict__:
@@ -111,7 +108,6 @@ class Comment(Base):
         return f"/post/{self.post.base36id}/comment/{self.base36id}"
 
     @property
-    @_lazy
     def any_descendants_live(self):
 
         if self.replies==[]:
