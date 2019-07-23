@@ -105,10 +105,24 @@ class Comment(Base):
 
         return f"/post/{self.post.base36id}/comment/{self.base36id}"
 
+    @property
+    @_lazy
+    def any_descendants_live(self):
+
+        if self.replies==[]:
+            return False
+
+        if any([not x.is_banned for x in self.replies]):
+            return True
+
+        else:
+            return any([x.any_descendants_live for x in self.replies])
+        
+
     def rendered_comment(self, v=None):
 
         if self.is_banned:
-            if self.replies:
+            if self.any_descendants_live:
                 return render_template("single_comment_banned.html", c=self, replies=self.replies)
             else:
                 return ""

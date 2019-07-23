@@ -1,18 +1,23 @@
-<div class="comment comment-{{ c.base36id }} banned">
-  {% if v %}
-    {% if v.admin_level>=3 %}
-      <h4 class="tagline"><a href="{{ c.author.url }}">{{ c.author.username }}</a></h4>
-      {{ c.body_html | safe }}
-    {% else %}
-      <p>[removed]</p>
-    {% endif %}
-  {% else %}
-    <h4 class="tagline">[removed]</h4>
-    <p>[removed]</p>
-  {% endif %}
-  <div style="padding-left:20px">
+{% set score=c.score_fuzzed %}
+{% if v %}
+{% set voted=v.vote_status_on_comment(c) %}
+{% else %}
+{% set voted=-2 %}
+{% endif %}
+
+
+<div id="comment-{{ c.base36id }}" name="comment-{{ c.base36id }}" class="comment rounded">
+
+<span class="toggle-collapse"></span>
+
+<div class="comment-body">
+
+    <div class="user-info">{% if c.is_banned %}[comment removed]{% else %}[comment deleted by owner]{% endif %}</div>
+
   {% for reply in c.replies %}
-    {{ reply.rendered_comment | safe }}
-  {% endfor %}
+  <div style="padding-left:10px">
+  {{ reply.rendered_comment(v=v) | safe }}
   </div>
+  {% endfor %}
+</div>
 </div>
