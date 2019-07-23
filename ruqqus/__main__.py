@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import *
 
-_version = "0.2.8"
+_version = "0.2.9"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -28,12 +28,6 @@ Base = declarative_base()
 from ruqqus.classes import *
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
-
-
-#db session is not 100% stateless; this makes it effectively 100% stateless
-@app.before_request
-def before_request():
-    db.rollback()
 
 @app.after_request
 def after_request(response):

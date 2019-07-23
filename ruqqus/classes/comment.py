@@ -23,7 +23,6 @@ class Comment(Base):
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
     body_html = Column(String)
-    votes = relationship("CommentVote")
 
     def __init__(self, *args, **kwargs):
 
@@ -48,6 +47,12 @@ class Comment(Base):
 
         wrapper.__name__=f.__name__
         return wrapper
+
+    @property
+    @_lazy
+    def votes(self):
+
+        return db.query(CommentVote).join(User).filter(CommentVote.comment_id==self.id).filter(User.is_banned==False).all()
     
     @property
     @_lazy
