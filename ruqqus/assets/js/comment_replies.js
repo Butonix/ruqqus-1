@@ -1,5 +1,6 @@
 // https://stackoverflow.com/a/42183824/11724748
 
+/*
 function toggleDropdown(e) {
     const _d = $(e.target).closest('.dropdown'),
         _m = $('.dropdown-menu', _d);
@@ -26,7 +27,7 @@ $(".toggle-collapse").click(function (event) {
 
     document.getElementById(id).classList.toggle("collapsed");
 });
-
+*/
 // Reply to parent comment
 
 function addReplyForm(commentId, postId) {
