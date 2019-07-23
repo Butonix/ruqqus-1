@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import *
 
-_version = "0.1.1"
+_version = "0.1.0"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -15,7 +15,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
 app.config["SERVER_NAME"]=environ.get("domain", None)
-app.config["VERSION"]="0.1.1"
+app.config["VERSION"]="0.1.0"
 
 Markdown(app)
 
@@ -33,8 +33,7 @@ import ruqqus.helpers.jinja2
 
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Headers',
-    `   QA                         "Origin, X-Requested-With, Content-Type, Accept, x-auth"
+    response.headers.add('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, x-auth"
                          )
     return response
     
