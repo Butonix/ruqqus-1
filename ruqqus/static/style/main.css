@@ -208,7 +208,7 @@ table {
 caption {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
-  color: #898EA2;
+  color: #6C757D;
   text-align: left;
   caption-side: bottom;
 }
@@ -478,7 +478,7 @@ mark,
 .img-thumbnail {
   padding: 0.25rem;
   background-color: #F5F7F9;
-  border: 1px solid #E6ECf0;
+  border: 1px solid #E0E4E9;
   border-radius: 0.25rem;
   max-width: 100%;
   height: auto;
@@ -1510,14 +1510,14 @@ pre code {
 .table td {
   padding: 0.75rem;
   vertical-align: top;
-  border-top: 1px solid #E6ECf0;
+  border-top: 1px solid #E0E4E9;
 }
 .table thead th {
   vertical-align: bottom;
-  border-bottom: 2px solid #E6ECf0;
+  border-bottom: 2px solid #E0E4E9;
 }
 .table tbody + tbody {
-  border-top: 2px solid #E6ECf0;
+  border-top: 2px solid #E0E4E9;
 }
 
 .table-sm th,
@@ -1526,11 +1526,11 @@ pre code {
 }
 
 .table-bordered {
-  border: 1px solid #E6ECf0;
+  border: 1px solid #E0E4E9;
 }
 .table-bordered th,
 .table-bordered td {
-  border: 1px solid #E6ECf0;
+  border: 1px solid #E0E4E9;
 }
 .table-bordered thead th,
 .table-bordered thead td {
@@ -1735,7 +1735,7 @@ pre code {
 .table .thead-light th {
   color: #495057;
   background-color: #e9ecef;
-  border-color: #E6ECf0;
+  border-color: #E0E4E9;
 }
 
 .table-dark {
@@ -1959,7 +1959,7 @@ textarea.form-control {
   margin-left: -1.25rem;
 }
 .form-check-input:disabled ~ .form-check-label {
-  color: #898EA2;
+  color: #6C757D;
 }
 
 .form-check-label {
@@ -3583,7 +3583,7 @@ input[type=button].btn-block {
   height: 0.5rem;
   color: transparent;
   cursor: pointer;
-  background-color: #E6ECf0;
+  background-color: #E0E4E9;
   border-color: transparent;
   border-radius: 1rem;
 }
@@ -3609,7 +3609,7 @@ input[type=button].btn-block {
   height: 0.5rem;
   color: transparent;
   cursor: pointer;
-  background-color: #E6ECf0;
+  background-color: #E0E4E9;
   border-color: transparent;
   border-radius: 1rem;
 }
@@ -3643,12 +3643,12 @@ input[type=button].btn-block {
   border-width: 0.5rem;
 }
 .custom-range::-ms-fill-lower {
-  background-color: #E6ECf0;
+  background-color: #E0E4E9;
   border-radius: 1rem;
 }
 .custom-range::-ms-fill-upper {
   margin-right: 15px;
-  background-color: #E6ECf0;
+  background-color: #E0E4E9;
   border-radius: 1rem;
 }
 .custom-range:disabled::-webkit-slider-thumb {
@@ -3702,7 +3702,7 @@ input[type=button].btn-block {
 }
 
 .nav-tabs {
-  border-bottom: 1px solid #E6ECf0;
+  border-bottom: 1px solid #E0E4E9;
 }
 .nav-tabs .nav-item {
   margin-bottom: -1px;
@@ -3713,7 +3713,7 @@ input[type=button].btn-block {
   border-top-right-radius: 0.25rem;
 }
 .nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus {
-  border-color: #e9ecef #e9ecef #E6ECf0;
+  border-color: #e9ecef #e9ecef #E0E4E9;
 }
 .nav-tabs .nav-link.disabled {
   color: #6c757d;
@@ -3724,7 +3724,7 @@ input[type=button].btn-block {
 .nav-tabs .nav-item.show .nav-link {
   color: #495057;
   background-color: #F5F7F9;
-  border-color: #E6ECf0 #E6ECf0 #F5F7F9;
+  border-color: #E0E4E9 #E0E4E9 #F5F7F9;
 }
 .nav-tabs .dropdown-menu {
   margin-top: -1px;
@@ -4341,14 +4341,14 @@ input[type=button].btn-block {
   line-height: 1.25;
   color: #1486fb;
   background-color: #fff;
-  border: 1px solid #E6ECf0;
+  border: 1px solid #E0E4E9;
 }
 .page-link:hover {
   z-index: 2;
   color: #0360bf;
   text-decoration: none;
   background-color: #e9ecef;
-  border-color: #E6ECf0;
+  border-color: #E0E4E9;
 }
 .page-link:focus {
   z-index: 2;
@@ -4376,7 +4376,7 @@ input[type=button].btn-block {
   pointer-events: none;
   cursor: auto;
   background-color: #fff;
-  border-color: #E6ECf0;
+  border-color: #E0E4E9;
 }
 
 .pagination-lg .page-link {
@@ -5202,7 +5202,7 @@ a.close.disabled {
   align-items: flex-start;
   justify-content: space-between;
   padding: 1rem 1rem;
-  border-bottom: 1px solid #E6ECf0;
+  border-bottom: 1px solid #E0E4E9;
   border-top-left-radius: 0.3rem;
   border-top-right-radius: 0.3rem;
 }
@@ -5227,7 +5227,7 @@ a.close.disabled {
   align-items: center;
   justify-content: flex-end;
   padding: 1rem;
-  border-top: 1px solid #E6ECf0;
+  border-top: 1px solid #E0E4E9;
   border-bottom-right-radius: 0.3rem;
   border-bottom-left-radius: 0.3rem;
 }
@@ -5863,23 +5863,23 @@ button.bg-dark:focus {
 }
 
 .border {
-  border: 1px solid #E6ECf0 !important;
+  border: 1px solid #E0E4E9 !important;
 }
 
 .border-top {
-  border-top: 1px solid #E6ECf0 !important;
+  border-top: 1px solid #E0E4E9 !important;
 }
 
 .border-right {
-  border-right: 1px solid #E6ECf0 !important;
+  border-right: 1px solid #E0E4E9 !important;
 }
 
 .border-bottom {
-  border-bottom: 1px solid #E6ECf0 !important;
+  border-bottom: 1px solid #E0E4E9 !important;
 }
 
 .border-left {
-  border-left: 1px solid #E6ECf0 !important;
+  border-left: 1px solid #E0E4E9 !important;
 }
 
 .border-0 {
@@ -7075,7 +7075,7 @@ button.bg-dark:focus {
 }
 
 .shadow {
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05) !important;
 }
 
 .shadow-lg {
@@ -9521,7 +9521,7 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .text-muted {
-  color: #898EA2 !important;
+  color: #6C757D !important;
 }
 
 .text-black-50 {
@@ -9637,7 +9637,7 @@ h3 {
 
   .table-bordered th,
 .table-bordered td {
-    border: 1px solid #E6ECf0 !important;
+    border: 1px solid #E0E4E9 !important;
   }
 
   .table-dark {
@@ -9647,12 +9647,12 @@ h3 {
 .table-dark td,
 .table-dark thead th,
 .table-dark tbody + tbody {
-    border-color: #E6ECf0;
+    border-color: #E0E4E9;
   }
 
   .table .thead-dark th {
     color: inherit;
-    border-color: #E6ECf0;
+    border-color: #E0E4E9;
   }
 }
 *,
@@ -9827,7 +9827,7 @@ table {
 caption {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
-  color: #898EA2;
+  color: #6C757D;
   text-align: left;
   caption-side: bottom;
 }
@@ -10097,7 +10097,7 @@ mark,
 .img-thumbnail {
   padding: 0.25rem;
   background-color: #F5F7F9;
-  border: 1px solid #E6ECf0;
+  border: 1px solid #E0E4E9;
   border-radius: 0.25rem;
   max-width: 100%;
   height: auto;
@@ -11174,7 +11174,12 @@ ol > li::before {
 
 .btn {
   line-height: 1.3;
-  border-radius: 50rem;
+  border-radius: 0.25rem;
+}
+
+.btn.login {
+  height: calc(1.5em + 0.75rem + 2px);
+  border-radius: 0.25rem;
 }
 
 .navbar-brand, .navbar-light .navbar-brand {
@@ -11215,7 +11220,15 @@ ol > li::before {
 
 .form-control {
   color: #898EA2;
-  border-color: #E6ECf0;
+  border-color: #E0E4E9;
+}
+
+label {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: #6C757D;
 }
 
 .user-profile > .dropdown-toggle::after {
@@ -11236,7 +11249,7 @@ ol > li::before {
   width: 35px;
   line-height: 1.5rem;
   text-align: center;
-  border: 1px solid #E6ECf0;
+  border: 1px solid #E0E4E9;
   border-radius: 50%;
   padding: 0.5rem;
 }
@@ -11269,7 +11282,7 @@ ol > li::before {
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-bottom: 10px solid #E6ECf0;
+  border-bottom: 10px solid #E0E4E9;
 }
 
 .arrow-down {
@@ -11277,7 +11290,7 @@ ol > li::before {
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-top: 10px solid #E6ECf0;
+  border-top: 10px solid #E0E4E9;
 }
 
 .upvoted .arrow-up {
@@ -11340,7 +11353,9 @@ ol > li::before {
 
 .sidebar .sidebar-section .title {
   font-size: 12px;
+  letter-spacing: 0.5px;
   font-weight: 600;
+  color: #6c757d;
   text-transform: uppercase;
   margin-bottom: 1rem;
 }
@@ -11349,8 +11364,8 @@ ol > li::before {
   padding: 1rem;
   margin-bottom: 1rem;
   background-color: #fff;
-  border: 1px solid #E6ECf0;
   border-radius: 0.25rem;
+  border: 1px solid #E0E4E9;
 }
 
 .user-count {
@@ -11433,7 +11448,7 @@ ol > li::before {
 }
 
 .time-stamp, .points {
-  color: #898EA2;
+  color: #6C757D;
 }
 
 .comments-count {
@@ -11453,7 +11468,7 @@ ol > li::before {
   display: flex;
   position: relative;
   margin-top: 1rem;
-  border: 1px solid #E6ECf0;
+  border: 1px solid #E0E4E9;
 }
 
 .comment .comment-profile {
@@ -11462,7 +11477,6 @@ ol > li::before {
 }
 
 .comment .comment-body {
-  width: 100%;
   padding: 1rem 1rem 1rem 0;
   margin-top: auto;
   margin-bottom: auto;
@@ -11470,7 +11484,7 @@ ol > li::before {
 
 .comment .comment-body .user-info {
   font-size: 13px;
-  color: #898EA2;
+  color: #6C757D;
   margin-bottom: 0.5rem;
 }
 
@@ -11527,14 +11541,14 @@ ul.comment-section {
   width: 100%;
   border-width: 0 1px 1px 1px;
   border-style: solid;
-  border-color: #E6ECf0;
+  border-color: #E0E4E9;
   border-bottom-left-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
   z-index: 3;
 }
 
 .comment-write .form-control:hover, .comment-write .form-control:active, .comment-write .form-control:focus {
-  border-color: #E6ECf0;
+  border-color: #E0E4E9;
 }
 
 .comment-write .comment-format .format {
@@ -11553,7 +11567,8 @@ ul.comment-section {
   top: 0.25rem;
   content: "−";
   font-size: 1.25rem;
-  color: #898EA2;
+  color: #6C757D;
+  z-index: 2;
 }
 
 .comment.collapsed .toggle-collapse::before {
@@ -11562,7 +11577,8 @@ ul.comment-section {
   top: 0.25rem;
   content: "+";
   font-size: 1.25rem;
-  color: #898EA2;
+  color: #6C757D;
+  z-index: 2;
 }
 
 .comment.collapsed .comment-profile, .comment.collapsed p.text, .comment.collapsed .comment-actions, .comment.collapsed .comment-write {
@@ -11599,7 +11615,7 @@ ul.comment-section {
 }
 
 .reaction {
-  border: 1px solid #E6ECf0;
+  border: 1px solid #E0E4E9;
   background-color: #fff;
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
@@ -11643,6 +11659,44 @@ ul.comment-section {
   font-size: 13px;
   color: #070E23;
   font-weight: 400;
+}
+
+#login {
+  padding-top: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.splash-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  font-size: 0;
+}
+
+.splash-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(128, 128, 128, 0.5);
+}
+
+.splash-img {
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+  background-position: bottom;
+  object-fit: cover;
+  background-image: url(https://imgur.com/Jsjqy7a.jpg);
+}
+
+.splash-text {
+  position: absolute;
+  bottom: 0;
+  left: 1.5rem;
+  color: #fff;
 }
 
 .footer a {

@@ -11,11 +11,11 @@ $body-bg: #F5F7F9; //this is the background color
 // Borders
 
 $input-border-color: #DEE2E6;
-$border-color: #E6ECf0;
+$border-color: #E0E4E9;
 
 // Text styling
 
-$text-muted: #898EA2;
+$text-muted: #6C757D;
 
 // Fonts
 
@@ -29,7 +29,7 @@ $gray: #898EA2;
 $green: #2EC47D;
 
 $gray-100: #F5F6F7;
-$gray-300: #E6ECf0;
+$gray-300: #E0E4E9;
 
 $upvote: #F45D01;
 $downvote: #1486fb;
@@ -43,6 +43,10 @@ $small-font-size: 13px;
 
 $font-weight-bold: 600;
 $headings-font-weight: $font-weight-bold;
+
+// Box Shadow
+
+$box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
 
 @import "node_modules/bootstrap/scss/bootstrap";
 
@@ -120,7 +124,12 @@ ol > li::before {
 
 .btn {
     line-height: 1.3;
-    border-radius: 50rem;
+    border-radius: .25rem;
+}
+
+.btn.login {
+    height: calc(1.5em + 0.75rem + 2px);
+    border-radius: .25rem;
 }
 
 // Navbar
@@ -165,13 +174,19 @@ ol > li::before {
 
 // Navbar icons and search box
 
-
-
 // Inputs
 
 .form-control {
     color: $gray;
     border-color: $gray-300;
+}
+
+label {
+    text-transform: uppercase;
+    font-weight: $font-weight-bold;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    color: $text-muted;
 }
 
 .user-profile > .dropdown-toggle::after {
@@ -223,8 +238,6 @@ ol > li::before {
     font-weight: $font-weight-bold;
     text-align: center;
 }
-
-
 
 .arrow-up {
   width: 0;
@@ -306,7 +319,9 @@ ol > li::before {
 
 .sidebar .sidebar-section .title {
     font-size: 12px;
+    letter-spacing: 0.5px;
     font-weight: $font-weight-bold;
+    color: $gray-600;
     text-transform: uppercase;
     margin-bottom: 1rem;
 }
@@ -315,8 +330,8 @@ ol > li::before {
     padding: 1rem;
     margin-bottom: 1rem;
     background-color: $white;
-    border: 1px solid $gray-300;
     border-radius: .25rem;
+    border: 1px solid $border-color;
 }
 
 .user-count {
@@ -435,7 +450,6 @@ ol > li::before {
 }
 
 .comment .comment-body {
-    width: 100%;
     padding: 1rem 1rem 1rem 0;
     margin-top: auto;
     margin-bottom: auto;
@@ -526,6 +540,7 @@ ul.comment-section {
     content: "\2212";
     font-size: $font-size-lg;
     color: $text-muted;
+    z-index: 2;
 }
 
 .comment.collapsed .toggle-collapse::before {
@@ -535,6 +550,7 @@ ul.comment-section {
     content: "\002B";
     font-size: $font-size-lg;
     color: $text-muted;
+    z-index: 2;
 }
 
 .comment.collapsed .comment-profile, .comment.collapsed p.text, .comment.collapsed .comment-actions, .comment.collapsed .comment-write {
@@ -619,6 +635,46 @@ ul.comment-section {
     font-size: $small-font-size;
     color: $body-color;
     font-weight: $font-weight-normal;
+}
+
+// Login Page
+
+#login {
+    padding-top: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.splash-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  font-size: 0;
+}
+
+.splash-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(128,128,128,0.5);
+}
+
+.splash-img {
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position: bottom;
+    object-fit: cover;
+    background-image:url(https://imgur.com/Jsjqy7a.jpg);
+}
+
+.splash-text {
+    position: absolute;
+    bottom: 0;
+    left: 1.5rem;
+    color: $white;
 }
 
 // Footer
