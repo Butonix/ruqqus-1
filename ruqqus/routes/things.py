@@ -44,7 +44,7 @@ def post_base36id(base36id, v=None):
 
 @app.route("/post/<p_id>/comment/<c_id>", methods=["GET"])
 @auth_desired
-def post_submission_comment(p_id, c_id, v=None):
+def post_pid_comment_cid(p_id, c_id, v=None):
 
     c_id = base36decode(c_id)
 
@@ -60,10 +60,8 @@ def post_submission_comment(p_id, c_id, v=None):
 
     if comment.parent_submission != p_id:
         abort(404)
-
-    post.replies=[comment]
         
-    return post.rendered_page(v=v)
+    return post.rendered_page(v=v, comment=comment)
 
 
 @app.route("/submit", methods=['POST'])

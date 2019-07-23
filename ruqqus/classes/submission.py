@@ -74,15 +74,15 @@ class Submission(Base):
     def permalink(self):
         return f"/post/{self.base36id}"
                                       
-    def rendered_page(self, v=None):
+    def rendered_page(self, comment=None, v=None):
 
         #check for banned
         if self.is_banned:
             return render_template("submission_banned.html", v=v, p=self)
 
         #load and tree comments
-        if "replies" not in self.__dict__:
-            self.tree_comments()
+        #calling this function with a comment object will do a comment permalink thing
+        self.tree_comments(comment=comment)
 
         #return template
         return render_template("submission.html", v=v, p=self, sort_type=request.args.get("sort","Hot").capitalize())
@@ -144,10 +144,13 @@ class Submission(Base):
     def comment_count(self):
         return self.comments.count()
 
-    def tree_comments(self):
+    def tree_comments(self, comment=None):
+        if comment:
+            self.replies=[comment]
+            return
 
         #list comments without re-querying db each time
-        comments=[c for c in self.comments]
+        comments=[c for c in self.comments.all()]
 
         #get sort type
         sort_type = request.args.get("sort","hot")
