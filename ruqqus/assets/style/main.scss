@@ -5,7 +5,7 @@ $theme-colors: (
 
 // Body styling
 
-$body-color: #070E23;  //this is the text color
+$body-color: #344055;  //this is the text color
 $body-bg: #F5F7F9; //this is the background color
 
 // Borders
@@ -15,7 +15,7 @@ $border-color: #E0E4E9;
 
 // Text styling
 
-$text-muted: #6C757D;
+$text-muted: #757a84;
 
 // Fonts
 
@@ -26,7 +26,7 @@ $font-family-sans-serif: Open Sans;
 $blue: #1486fb;
 $red:  #F45D01;
 $gray: #898EA2;
-$green: #2EC47D;
+$green: #68D16F;
 
 $gray-100: #F5F6F7;
 $gray-300: #E0E4E9;
@@ -127,12 +127,21 @@ ol > li::before {
     border-radius: .25rem;
 }
 
+.btn-light {
+    background-color: $white;
+    border-color: $white;
+}
+
 .btn.login {
     height: calc(1.5em + 0.75rem + 2px);
     border-radius: .25rem;
 }
 
 // Navbar
+
+.navbar {
+    border-bottom: 1px solid $border-color;
+}
 
 .navbar-brand, .navbar-light .navbar-brand {
     color: $blue;
@@ -232,7 +241,7 @@ label {
 
 // Voting
 
-#voting {
+.voting {
     position: relative;
     z-index: 2;
     font-weight: $font-weight-bold;
@@ -244,14 +253,24 @@ label {
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-bottom: 10px solid $gray-300;}
+  border-bottom: 10px solid $gray-300;
+}
 
 .arrow-down {
   width: 0;
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-top: 10px solid $gray-300;}
+  border-top: 10px solid $gray-300;
+}
+
+.upvoted {
+    color: $upvote;
+}
+
+.downvoted {
+    color: $downvote;
+}
 
 .upvoted .arrow-up {
   border-bottom: 10px solid $upvote;
@@ -340,6 +359,12 @@ label {
 
 .online-count {
     margin-bottom: .25rem;
+}
+
+// Progress Bar
+
+.progress {
+    border-radius: 50rem;
 }
 
 // User and Profile
@@ -464,6 +489,7 @@ label {
 
 .comment .comment-body p.text {
     margin-bottom: 1rem;
+    word-break: break-word;
 }
 
 .comment-actions {
