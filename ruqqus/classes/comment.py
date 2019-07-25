@@ -24,12 +24,24 @@ class Comment(Base):
     is_banned = Column(Boolean, default=False)
     body_html = Column(String)
 
+    #These are virtual properties handled as postgres functions server-side
+    #There is no difference to SQLAlchemy, but they cannot be written to
+    ups = Column(Integer, server_default=FetchedValue())
+    downs=Column(Integer, server_default=FetchedValue())
+    score=Column(Integer, server_default=FetchedValue())
+    rank_hot=Column(Float, server_default=FetchedValue())
+    rank_fiery=Column(Float, server_default=FetchedValue())
+    age=Column(Integer, server_default=FetchedValue())
+
     def __init__(self, *args, **kwargs):
 
         if "created_utc" not in kwargs:
             kwargs["created_utc"]=int(time.time())
-        super().__init__(*args, **kwargs)
-        
+            
+        for x in kwargs:
+            if x not in ["ups","downs","score","rank_hot","rank_fiery","age","comment_count"]:
+                self.__dict__[x]=kwargs[x]
+                
     def __repr__(self):
         return f"<Comment(id={self.id})"
  
@@ -48,12 +60,6 @@ class Comment(Base):
         wrapper.__name__=f.__name__
         return wrapper
 
-    @property
-    @_lazy
-    def votes(self):
-
-        return db.query(CommentVote).join(User).filter(CommentVote.comment_id==self.id).filter(User.is_banned==False).all()
-    
     @property
     @_lazy
     def base36id(self):
@@ -132,43 +138,12 @@ class Comment(Base):
     
     @property
     @_lazy
-    def ups(self):
-        return db.query(CommentVote).join(User).filter(CommentVote.comment_id==self.id).filter(CommentVote.vote_type==1).filter(User.is_banned==False).count()
-
-    @property
-    @_lazy
-    def downs(self):
-        return db.query(CommentVote).join(User).filter(CommentVote.comment_id==self.id).filter(CommentVote.vote_type==-1).filter(User.is_banned==False).count()
-
-    @property
-    @_lazy
-    def score(self):
-        return self.ups-self.downs
-    
-    @property
-    @_lazy
     def score_fuzzed(self, k=0.01):
         real=self.score
         a=math.floor(real*(1-k))
         b=math.ceil(real*(1+k))
-        return randint(a,b)        
-
-    @property
-    @_lazy
-    def age(self):
-        now=int(time.time())
-        return now-self.created_utc
-
-    @property
-    @_lazy
-    def rank_hot(self):
-        return self.score/(((self.age+100000)/6)**(1/3))
-
-    @property
-    @_lazy
-    def rank_controversial(self):
-        return math.sqrt(self.ups*self.downs)/(((self.age+100000)/6)**(1/3))
-
+        return randint(a,b)
+    
     @property
     @_lazy
     def age_string(self):
