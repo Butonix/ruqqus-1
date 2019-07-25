@@ -26,14 +26,23 @@ class Submission(Base):
     stickied=Column(Boolean, default=False)
     comments=relationship("Comment", lazy="dynamic", backref="submissions")
 
+    #These are virtual properties handled as postgres functions server-side
+    #There is no difference to SQLAlchemy, but they cannot be written to
+    #appts = db.session.query(Appointment).from_statement(func.getopenappointments(current_user.id))
+    ups = Column(Integer, server_default=FetchedValue())
+    downs=Column(Integer, server_default=FetchedValue())
+    score=Column(Integer, server_default=FetchedValue())
+    rank_hot=Column(Float, server_default=FetchedValue())
+    rank_fiery=Column(Float, server_default=FetchedValue())
+    age=Column(Integer, server_default=FetchedValue())
+    comment_count=Column(Integer, server_default=FetchedValue())
+    
+
     def __init__(self, *args, **kwargs):
 
         if "created_utc" not in kwargs:
             kwargs["created_utc"]=int(time.time())
             kwargs["created_str"]=time.strftime("%I:%M %p on %d %b %Y", time.gmtime(kwargs["created_utc"]))
-        
-        super().__init__(*args, **kwargs)
-
 
     def __repr__(self):
         return f"<Submission(id={self.id})>"
@@ -53,12 +62,6 @@ class Submission(Base):
         wrapper.__name__=f.__name__
         return wrapper
 
-    @property
-    @_lazy
-    def votes(self):
-
-        return db.query(Vote).join(User).filter(Vote.submission_id==self.id).filter(User.is_banned==False).all()
-    
     @property
     @_lazy
     def base36id(self):
@@ -99,21 +102,6 @@ class Submission(Base):
     @_lazy
     def domain(self):
         return urlparse(self.url).netloc
-        
-    @property
-    @_lazy
-    def ups(self):
-        return db.query(Vote).join(User).filter(Vote.submission_id==self.id).filter(Vote.vote_type==1).filter(User.is_banned==False).count()
-
-    @property
-    @_lazy
-    def downs(self):
-        return db.query(Vote).join(User).filter(Vote.submission_id==self.id).filter(Vote.vote_type==-1).filter(User.is_banned==False).count()
-
-    @property
-    @_lazy
-    def score(self):
-        return self.ups-self.downs
     
     @property
     @_lazy
@@ -122,25 +110,6 @@ class Submission(Base):
         a=math.floor(real*(1-k))
         b=math.ceil(real*(1+k))
         return randint(a,b)        
-
-    @property
-    def age(self):
-        now=int(time.time())
-        return now-self.created_utc
-
-    @property
-    @_lazy
-    def rank_hot(self):
-        return self.score/(((self.age+100000)/6)**(1/3))
-
-    @property
-    @_lazy
-    def rank_controversial(self):
-        return math.sqrt(self.ups*self.downs)/(((self.age+100000)/6)**(1/3))
-
-    @property
-    def comment_count(self):
-        return self.comments.filter_by(is_banned=False).count()
 
     def tree_comments(self, comment=None):
 
@@ -156,15 +125,6 @@ class Submission(Base):
 
                 i-=1
 
-            if sort_type=="hot":
-                thing.__dict__["replies"].sort(key=lambda x:x.rank_hot, reverse=True)
-            elif sort_type=="top":
-                thing.__dict__["replies"].sort(key=lambda x:x.score, reverse=True)
-            elif sort_type=="new":
-                thing.__dict__["replies"].sort(key=lambda x:x.created_utc, reverse=True)
-            elif sort_type=="fiery":
-                thing.__dict__["replies"].sort(key=lambda x:x.rank_controversial, reverse=True)
-
             for reply in thing.replies:
                 tree_replies(reply)
                 
@@ -174,36 +134,23 @@ class Submission(Base):
             self.replies=[comment]
             return
 
-        #list comments without re-querying db each time
-        comments=[c for c in self.comments.all()]
+
 
         #get sort type
         sort_type = request.args.get("sort","hot")
 
-        #this is done in an ugly way in order to reduce computation time for larger comment sets
-        self.replies=[]
-        i=len(comments)-1
-        
-        while i>=0:
-            if comments[i].parent_fullname==self.fullname:
-                self.replies.append(comments[i])
-                comments.pop(i)
-
-            i-=1
-
         if sort_type=="hot":
-            self.__dict__["replies"].sort(key=lambda x:x.rank_hot, reverse=True)
+            comments=self.comments.order_by(text("comments.rank_hot DESC")).all()
         elif sort_type=="top":
-            self.__dict__["replies"].sort(key=lambda x:x.score, reverse=True)
+            comments=self.comments.order_by(text("comments.score DESC")).all()
         elif sort_type=="new":
-            self.__dict__["replies"].sort(key=lambda x:x.created_utc, reverse=True)
+            comments=self.comments.order_by(text("comments.created_utc DESC")).all()
         elif sort_type=="fiery":
-            self.__dict__["replies"].sort(key=lambda x:x.rank_controversial, reverse=True)
+            comments=self.comments.order_by(text("comments.rank_fiery DESC")).all()
 
 
 
-        for reply in self.replies:
-            tree_replies(reply)
+        tree_replies(self)
 
         
 
