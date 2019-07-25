@@ -139,14 +139,16 @@ class Submission(Base):
         #get sort type
         sort_type = request.args.get("sort","hot")
 
+
+        #Treeing is done from the end because reasons, so these sort orders are reversed
         if sort_type=="hot":
-            comments=self.comments.order_by(text("comments.rank_hot DESC")).all()
+            comments=self.comments.order_by(text("comments.rank_hot ASC")).all()
         elif sort_type=="top":
-            comments=self.comments.order_by(text("comments.score DESC")).all()
+            comments=self.comments.order_by(text("comments.score ASC")).all()
         elif sort_type=="new":
-            comments=self.comments.order_by(text("comments.created_utc DESC")).all()
+            comments=self.comments.order_by(text("comments.created_utc")).all()
         elif sort_type=="fiery":
-            comments=self.comments.order_by(text("comments.rank_fiery DESC")).all()
+            comments=self.comments.order_by(text("comments.rank_fiery ASC")).all()
 
 
 
