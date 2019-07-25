@@ -11,34 +11,35 @@ from ruqqus.classes import *
 @auth_desired
 def home(v):
 
+    page=int(request.args.get("page",1))
+
     cutoff=int(time())-(60*60*24*30)
 
     posts = db.query(Submission).filter(Submission.created_utc>=cutoff,
-                                        Submission.is_banned==False).all()
+                                        Submission.is_banned==False,
+                                        Submission.stickied==False)
 
     sort_method=request.args.get("sort", "hot")
 
     if sort_method=="hot":
-        posts.sort(key=lambda x: x.rank_hot, reverse=True)
+        posts=posts.order_by(Submission.rank_hot.desc())
     elif sort_method=="new":
-        posts.sort(key=lambda x: x.created_utc, reverse=True)
+        posts=posts.order_by(Submission.created_utc.desc())
     elif sort_method=="fiery":
-        posts.sort(key=lambda x: x.rank_controversial, reverse=True)
+        posts=posts.order_by(Submission.rank_fiery.desc())
     elif sort_method=="top":
-        posts.sort(key=lambda x: x.score, reverse=True)
+        posts=posts.order_by(Submission.score.desc())
 
-    #check for a sticky'
+    #page
+    posts=posts.offset(25*(page-1)).limit(25).all()
+    
 
-    for i in range(len(posts)):
-        post=posts[i]
-        if post.stickied:
-            posts.insert(0, post)
-            posts.pop(i+1)
-            break
-    else:
-        sticky=db.query(Submission).filter(Submission.stickied==True).first()
+    #If page 1, check for sticky
+    if page==1:
+        sticky =[]
+        sticky=db.query(Submission).filter_by(stickied=True).first()
         if sticky:
-            listing=[sticky]+posts
+            posts=[sticky]+posts
     
     return render_template("home.html", v=v, listing=posts, sort_method=sort_method)
 
