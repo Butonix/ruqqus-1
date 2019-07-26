@@ -1,4 +1,4 @@
-![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/ruqqus/ruqqus)
+[![Known Vulnerabilities](https://snyk.io//test/github/ruqqus/ruqqus/badge.svg?targetFile=requirements.txt)](https://snyk.io//test/github/ruqqus/ruqqus?targetFile=requirements.txt)
 
 # Ruqqus
 
