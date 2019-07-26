@@ -93,7 +93,7 @@ def submit_post(v):
 
     #now make new post
 
-    body=request.form.get("body")
+    body=request.form.get("body","")
     body_md=mistletoe.markdown(body)
     body_html = sanitize(body_md, linkgen=True)
     
@@ -140,7 +140,7 @@ def ip_address(addr, v):
     return render_template("ips.html", addr=addr, users=users, v=v)    
     
 @app.route("/api/comment", methods=["POST"])
-@auth_required
+@is_not_banned
 @validate_formkey
 def api_comment(v):
 
