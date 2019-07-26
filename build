@@ -1,4 +1,4 @@
-sass ruqqus/static/styles/main.scss ruqqus/static/styles/main.css
+sass ruqqus/assets/styles/main.scss ruqqus/assets/styles/main.css
 bumpversion build --allow-dirty
 git add .
 git commit -m "WIP build"
