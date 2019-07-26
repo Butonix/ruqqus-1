@@ -1,5 +1,6 @@
 from urllib.parse import urlparse
 import mistletoe
+from pprint import pprint
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -111,6 +112,8 @@ def submit_post(v):
                         body=body,
                         body_html=body_html
                         )
+
+    pprint(new_post.__dict__)
 
     db.add(new_post)
 
