@@ -20,6 +20,7 @@ created_utc|int|NOT NULL
 admin_level|int|DEFAULT 0
 is_banned|bool|DEFAULT false
 over_18|bool|DEFAULT false
+reddit_username|varchar(64)|UNIQUE
 
 ## Submissions
 
@@ -50,10 +51,18 @@ is_banned|bool|DEFAULT false
 Column|Type|Options
 -|-|-
 id|int| NOT NULL AUTO INCREMENT	
-user|int|NOT NULL REFERENCES Users(id)		
-is_up|bool
-comment_id|int|REFERENCES Comments(id)
+user_id|int|NOT NULL REFERENCES Users(id)		
+vote_type|int|
 submission_id|int|REFERENCES Submissions(id)
+
+## CommentVotes
+
+Column|Type|Options
+-|-|-
+id|int| NOT NULL AUTO INCREMENT	
+user_id|int|NOT NULL REFERENCES Users(id)		
+vote_type|int|
+comment|int|REFERENCES Comments(id)
 
 ## IPs
 
