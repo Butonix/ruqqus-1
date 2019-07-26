@@ -9,7 +9,7 @@ from ruqqus.__main__ import db, app
 r=praw.Reddit(client_id=environ.get("reddit_id"),
               client_secret=environ.get("reddit_secret"),
               user_agent="ruqqus username verification by /u/captainmeta4",
-              redirect_uri="https://tee-dee.herokuapp.com/api/redditredirect")
+              redirect_uri="https://www.ruqqus.com/api/redditredirect")
 
 @app.route("/api/get_reddit_auth", methods=["GET"])
 @auth_required
