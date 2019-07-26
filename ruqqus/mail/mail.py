@@ -27,12 +27,11 @@ def send_mail(to_address, subject, plaintext, html, from_address="noreply@ruqq.u
 
 def send_verification_email(user):
 
-    url=f"https://{app.config['DOMAIN']}/api/verify_email"
-
+    url=f"https://{app.config['DOMAIN']}/activate"
     now=time()
 
     token=generate_hash(f"{user.email}+{user.id}+{now}")
-    params=f"?time={now}&token={token}"
+    params=f"?email={user.email}?id={user.id}?time={now}?token={token}"
 
     link=url+params
 
