@@ -92,10 +92,16 @@ def submit_post(v):
         return redirect(dup.permalink)
 
     #now make new post
+
+    body=request.form.get("body")
+    body_md=mistletoe.markdown(body)
+    body_html = sanitize(body_md, linkgen=True)
     
     new_post=Submission(title=title,
                         url=url,
                         author_id=v.id
+                        body=body,
+                        body_html=body_html
                         )
 
     #run through content filter

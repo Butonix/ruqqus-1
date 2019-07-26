@@ -25,6 +25,8 @@ class Submission(Base):
     created_str=Column(String(255), default=None)
     stickied=Column(Boolean, default=False)
     comments=relationship("Comment", lazy="dynamic", backref="submissions")
+    body=Column(String(2000), default="")
+    body_html=Column(String(2200), default="")
 
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
