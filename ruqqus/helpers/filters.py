@@ -2,7 +2,7 @@ import yaml
 from flask import *
 from os import environ
 
-config=yaml.safe_load(open(environ.get("banlist"), "r+", encoding="utf-16"))
+config=yaml.safe_load(open(environ.get("banlist"), "r+"))
 
 def filter_post(post):
 
