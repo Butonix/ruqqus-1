@@ -49,7 +49,7 @@ def static_service(path):
 
 @app.route("/robots.txt", methods=["GET"])
 def robots_txt():
-    return send_from_directory("./static", "robots.txt")
+    return send_from_directory("./assets", "robots.txt")
 
 @app.route("/settings", methods=["GET"])
 @auth_required
