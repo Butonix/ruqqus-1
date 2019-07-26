@@ -42,8 +42,8 @@ _clean_w_links = bleach.Cleaner(tags=_allowed_tags,
                                   protocols=_allowed_protocols,
                                   filters=[partial(LinkifyFilter,
                                                    skip_tags=["pre"],
-                                                   parse_email=False,
-                                                   callbacks=[nofollow]
+                                                   parse_email=False #,
+                                                   #callbacks=[nofollow]
                                                    )
                                           ]
                                   )
