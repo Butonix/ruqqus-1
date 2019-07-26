@@ -99,7 +99,7 @@ def submit_post(v):
     
     new_post=Submission(title=title,
                         url=url,
-                        author_id=v.id
+                        author_id=v.id,
                         body=body,
                         body_html=body_html
                         )
