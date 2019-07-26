@@ -101,7 +101,6 @@ class Submission(Base):
             return db.query(User).filter_by(id=self.author_id).first()
 
     @property
-    @_lazy
     def domain(self):
         return urlparse(self.url).netloc
     

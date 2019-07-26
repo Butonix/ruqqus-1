@@ -4,11 +4,11 @@ from os import environ
 
 config=yaml.safe_load(open(environ.get("banlist"), "r+"))
 
-def filter_post(post):
+def filter_post(url):
 
-    print(post.domain)
+    domain=urlparse(self.url).netloc
 
-    if any([post.domain.endswith(x) for x in config["nosubmit"]]):
+    if any([domain.endswith(x) for x in config["nosubmit"]]):
         return f"Domain {post.domain} isn't allowed."
 
     return False
