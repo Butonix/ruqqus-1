@@ -1,6 +1,5 @@
 from urllib.parse import urlparse
 import mistletoe
-from pprint import pprint
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -72,7 +71,6 @@ def submit_post(v):
 
     title=request.form.get("title","")
 
-    print(title)
     url=request.form.get("url","")
 
     if len(title)<10:
@@ -89,7 +87,6 @@ def submit_post(v):
 
     #sanitize title
     title=sanitize(title, linkgen=False)
-    print(title)
 
     #check for duplicate
     dup = db.query(Submission).filter_by(title=title,
@@ -112,8 +109,6 @@ def submit_post(v):
                         body=body,
                         body_html=body_html
                         )
-
-    pprint(new_post.__dict__)
 
     db.add(new_post)
 
