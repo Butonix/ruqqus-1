@@ -1,6 +1,7 @@
 import yaml
 from flask import *
 from os import environ
+from urllib.parse import urlparse
 
 config=yaml.safe_load(open(environ.get("banlist"), "r+"))
 
