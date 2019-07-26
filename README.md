@@ -1,3 +1,5 @@
+![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/ruqqus/ruqqus)
+
 # Ruqqus
 
 This repository is the live codebase for the Ruqqus website. Commits to master here are immediately loaded into the ruqqus staging site, then manually promoted to production.
