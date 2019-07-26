@@ -1,4 +1,4 @@
-[![Known Vulnerabilities](https://snyk.io//test/github/ruqqus/ruqqus/badge.svg?targetFile=requirements.txt)](https://snyk.io//test/github/ruqqus/ruqqus?targetFile=requirements.txt)
+![Build status](https://travis-ci.com/ruqqus/ruqqus.svg?branch=master) [![Known Vulnerabilities](https://snyk.io//test/github/ruqqus/ruqqus/badge.svg?targetFile=requirements.txt)](https://snyk.io//test/github/ruqqus/ruqqus?targetFile=requirements.txt)
 
 # Ruqqus
 
