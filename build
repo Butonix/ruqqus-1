@@ -1,5 +1,5 @@
 sass ruqqus/static/styles/main.scss ruqqus/static/styles/main.css
-bumpversion build
+bumpversion build --allow-dirty
 git add .
 git commit -m "WIP build"
 git push origin master
