@@ -46,7 +46,7 @@
 
 {% block content %}
 <h1 style="color:#{{ u.color }}">{{ u.username }}</h1>
-<p>{% if u.admin_level or reddit_username %}{% if u.admin_level %}{% include "tags/a.html" %}{% endif %}{% if u.admin_level and u.username_verified %}|{% endif %}{% if u.username_verified %}{% include "tags/v.html" %}{% endif %}| {% endif %}Member since {{ u.created_date }} | {{ u.energy }} Energy</p>
+<p>{% if u.admin_level or reddit_username %}{% if u.admin_level %}{% include "tags/a.html" %}{% endif %}{% if u.admin_level and u.username_verified %}|{% endif %}{% if reddit_username %}{% include "tags/v.html" %}{% endif %}| {% endif %}Member since {{ u.created_date }} | {{ u.energy }} Energy</p>
 <hr>
 {% include "submission_listing.html" %}
 {% endblock %}
