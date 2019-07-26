@@ -2,7 +2,7 @@
 
 ![GitHub language count](https://img.shields.io/github/languages/count/ruqqus/ruqqus)
 
-![](https://img.shields.io/discord/599258778520518676)
+[![](https://img.shields.io/discord/599258778520518676)](https://discord.gg/U57jqnn)
 
 # Ruqqus
 
