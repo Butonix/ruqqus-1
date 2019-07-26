@@ -1,7 +1,8 @@
 import yaml
 from flask import *
+from os import environ
 
-config=yaml.safe_load(open("/app/ruqqus/helpers/banned.txt", "r+"))
+config=yaml.safe_load(open(environ.get("banlist"), "r+"))
 
 def filter_post(post):
 
@@ -9,4 +10,3 @@ def filter_post(post):
         return f"Domain {post.domain} isn't allowed."
 
     return False
-
