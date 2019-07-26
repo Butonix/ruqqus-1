@@ -33,8 +33,6 @@ def nofollow(attrs, new=False):
     attrs["rel"]="nofollow"
     return attrs
 
-_callback_functions=bleach.linkifier.DEFAULT_CALLBACKS+[nofollow]
-
 _clean_wo_links = bleach.Cleaner(tags=_allowed_tags,
                                   attributes=_allowed_attributes,
                                   protocols=_allowed_protocols,
@@ -45,7 +43,7 @@ _clean_w_links = bleach.Cleaner(tags=_allowed_tags,
                                   filters=[partial(LinkifyFilter,
                                                    skip_tags=["pre"],
                                                    parse_email=False,
-                                                   callbacks=_callback_functions
+                                                   callbacks=[nofollow]
                                                    )
                                           ]
                                   )

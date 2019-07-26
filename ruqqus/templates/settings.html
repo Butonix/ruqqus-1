@@ -20,10 +20,16 @@
 </form>
 
 <h2>Username Verification</h2>
-{% if v.username_verified %}
-<p>Your username "{{ v.username }}" has been verified with reddit.</p>
+{% if v.reddit_username %}
+<form action="/api/del_reddit_name" method="post">
+Your reddit username "{{ v.reddit_username }}" has been verified with reddit.<br>
+<input type="hidden" name="formkey" value="{{ v.formkey }}">
+<input type="submit" value="Un-link reddit account.">
+</form>
+
 {% else %}
-<p>You may permanently change your username to match your reddit account. If the name is already in use and not verified on another account, it will be removed from that account. <a href="/api/get_reddit_auth">Click here to begin.</a></p>
+<p>Link your reddit account</p>
+<a href="/api/get_reddit_auth"><button>Click here to begin.</button></a>
 {% endif %}
 
 <form action="/settings" method="post">
