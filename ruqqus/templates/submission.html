@@ -63,7 +63,7 @@
                                 <h5 class="card-title post-title text-left mb-2"><a href="{{ p.url }}" rel="nofollow">{{ p.title }}</a></h5>
                                 <div class="post-meta text-left">{% if p.stickied %}📌 | {% endif %}{% if p.author %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}{% endif %}Posted by <a href="{{ p.author.url }}">{{ p.author.username }}</a> {{ p.age_string }}</div>
 
-				{% if body_html %}
+				{% if p.body_html %}
 				<hr>
 				<div class="text-left text-muted">
 				{{ p.body_html | safe }}
