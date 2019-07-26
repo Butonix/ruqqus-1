@@ -2,6 +2,7 @@ from flask import *
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
+from ruqqus.helpers.security import *
 from secrets import token_hex
 from time import time
 import hmac
@@ -31,15 +32,13 @@ def login_post():
 
     #step1: identify if username is username or email
     if "@" in username:
-        try:
-            account = db.query(User).filter_by(email=username).first()
-        except IndexError:
+        account = db.query(User).filter_by(email=username).first()
+        if not account:
             return render_template("login.html", failed=True)
 
     else:
-        try:
-            account = db.query(User).filter_by(username=username).first()
-        except IndexError:
+        account = db.query(User).filter_by(username=username).first()
+        if not account:
             return render_template("login.html", failed=True)
 
     #test password
