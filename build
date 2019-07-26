@@ -1,4 +1,5 @@
 sass ruqqus/static/styles/main.scss ruqqus/static/styles/main.css
+bumpversion build
 git add .
-git commit
+git commit -m "WIP build"
 git push origin master
