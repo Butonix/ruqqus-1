@@ -70,6 +70,8 @@ def post_pid_comment_cid(p_id, c_id, v=None):
 def submit_post(v):
 
     title=request.form.get("title","")
+
+    print(title)
     url=request.form.get("url","")
 
     if len(title)<10:
@@ -86,6 +88,7 @@ def submit_post(v):
 
     #sanitize title
     title=sanitize(title, linkgen=False)
+    print(title)
 
     #check for duplicate
     dup = db.query(Submission).filter_by(title=title,
