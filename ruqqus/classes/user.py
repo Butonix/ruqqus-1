@@ -25,7 +25,7 @@ class User(Base):
     admin_level = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
     is_activated = Column(Boolean, default=False)
-    username_verified = Column(Boolean, default=False)
+    reddit_username = Column(String, default=None)
     over_18=Column(Boolean, default=False)
     creation_ip=Column(String, default=None)
     most_recent_ip=Column(String, default=None)
