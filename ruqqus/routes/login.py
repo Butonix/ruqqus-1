@@ -22,7 +22,12 @@ def login_get(v):
     if v:
         return redirect("/")
 
-    return render_template("login.html", failed=False)
+    #get splash image
+    image = random_image()
+
+    return render_template("login.html",
+                           failed=False,
+                           i=image)
 
 #login post procedure
 @app.route("/login", methods=["POST"])
@@ -88,13 +93,20 @@ def sign_up_get(v):
     
     formkey_hashstr = str(now)+token+ip+agent
 
+    #get a random image
+    image = random_image()
+
     
     #formkey is a hash of session token, timestamp, and IP address
     formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
                        msg=bytes(formkey_hashstr, "utf-16")
                        ).hexdigest()
     
-    return render_template("sign_up.html", formkey=formkey, now=now)
+    return render_template("sign_up.html",
+                           formkey=formkey,
+                           now=now,
+                           i=image
+                           )
 
 #signup api
 @app.route("/signup", methods=["POST"])

@@ -1,4 +1,4 @@
-from time import time
+import time
 from ruqqus.helpers.wrappers import *
 from flask import *
 
@@ -13,7 +13,7 @@ def home(v):
 
     page=int(request.args.get("page",1))
 
-    cutoff=int(time())-(60*60*24*30)
+    cutoff=int(time.time())-(60*60*24*30)
 
     posts = db.query(Submission).filter(Submission.created_utc>=cutoff,
                                         Submission.is_banned==False,
@@ -80,3 +80,7 @@ def my_info(v):
 @is_not_banned
 def submit_get(v):
     return render_template("submit.html", v=v)
+
+@app.route("/favicon.ico")
+def favicon_ico():
+    return send_from_directory('./assets', "images/favicon.ico")

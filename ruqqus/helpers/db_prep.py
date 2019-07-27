@@ -183,6 +183,22 @@ IMMUTABLE
 RETURNS NULL ON NULL INPUT;
 """)
 
+
+#==========RANDOM IMAGE SPLASH SELECTION=========
+
+c.execute("""
+CREATE OR REPLACE FUNCTION splash(text)
+RETURNS setof images AS '
+  SELECT *
+  FROM images
+  WHERE state=$1
+  ORDER BY random()
+  LIMIT 1
+'
+LANGUAGE SQL
+IMMUTABLE
+RETURNS NULL ON NULL INPUT;
+""")
 conn.commit()
 c.close()
 conn.close()
