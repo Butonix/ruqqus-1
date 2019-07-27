@@ -11704,7 +11704,6 @@ ul.comment-section {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(128, 128, 128, 0.5);
 }
 
 .splash-img {
@@ -11713,7 +11712,6 @@ ul.comment-section {
   background-size: cover;
   background-position: bottom;
   object-fit: cover;
-  background-image: url(https://imgur.com/Jsjqy7a.jpg);
 }
 
 .splash-text {
