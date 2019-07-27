@@ -14,6 +14,21 @@
 
     <div class="user-info">{% if c.is_banned %}[comment removed]{% else %}[comment deleted by owner]{% endif %}</div>
 
+{% if v %}
+{% if v.admin_level>1 and v.admin_level > c.author.admin_level %}
+<div>
+<ul class="list-inline text-left">
+	    <li class="list-inline-item text-muted">
+		<form action="/api/ban_comment/{{ c.base36id }}" method="post">
+		<input type="hidden" name="formkey" value="{{ v.formkey }}">
+		<input type="submit" value="remove">
+		</form>
+		</li>
+</ul>
+</div>
+{% endif %}
+{% endif %}
+
   {% for reply in c.replies %}
   <div style="padding-left:10px">
   {{ reply.rendered_comment(v=v) | safe }}

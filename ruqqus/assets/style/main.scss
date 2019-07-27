@@ -34,6 +34,7 @@ $gray-300: #E0E4E9;
 $upvote: #F45D01;
 $downvote: #1486fb;
 $admin: #F45D01;
+$banned: #FF9999;
 
 // Font size
 
@@ -727,4 +728,12 @@ ul.comment-section {
 
 span.red {
   color: $admin;
+}
+
+span.green {
+  color: $green;
+}
+
+.comment-body.banned {
+  background-color: $banned;
 }

@@ -11743,4 +11743,12 @@ span.red {
   color: #F45D01;
 }
 
+span.green {
+  color: #68D16F;
+}
+
+.comment-body.banned {
+  background-color: #FF9999;
+}
+
 /*# sourceMappingURL=main.css.map */

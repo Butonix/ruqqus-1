@@ -129,6 +129,10 @@ class Comment(Base):
     def rendered_comment(self, v=None):
 
         if self.is_banned:
+            if v:
+                if v.admin_level>1:
+                    return render_template("single_comment.html", v=v, c=self, replies=self.replies)
+                
             if self.any_descendants_live:
                 return render_template("single_comment_banned.html", c=self, replies=self.replies)
             else:

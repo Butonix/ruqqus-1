@@ -57,6 +57,25 @@
             <li class="list-inline-item text-muted"><a href="#"><i class="fas fa-flag"
                     aria-hidden="true"></i><span class="flag">
                     Flag</span></a></li>
+{% if v %}
+{% if v.admin_level>1 and v.admin_level > c.author.admin_level %}
+{% if not c.is_banned %}
+	    <li class="list-inline-item text-muted">
+		<form action="/api/ban_comment/{{ c.base36id }}" method="post">
+		<input type="hidden" name="formkey" value="{{ v.formkey }}">
+		<input type="submit" value="remove">
+		</form>
+		</li>
+{% else %}
+	    <li class="list-inline-item text-muted">
+		<form action="/api/unban_comment/{{ c.base36id }}" method="post">
+		<input type="hidden" name="formkey" value="{{ v.formkey }}">
+		<input type="submit" value="approve">
+		</form>
+		</li>
+{% endif %}
+{% endif %}
+{% endif %}
         </ul>
     </div>
 

@@ -150,3 +150,33 @@ def api_sticky_post(post_id, v):
     db.commit()
 
     return redirect(post.permalink)
+
+@app.route("/api/ban_comment/<c_id>", methods=["post"])
+@admin_level_required(1)
+def api_ban_comment(c_id, v):
+
+    comment = db.query(Comment).filter_by(id=base36decode(c_id)).first()
+    if not comment:
+        abort(404)
+
+    comment.is_banned=True
+
+    db.add(comment)
+    db.commit()
+
+    return redirect(f"{comment.post.permalink}#comment-{comment.base36id}")
+
+@app.route("/api/unban_comment/<c_id>", methods=["post"])
+@admin_level_required(1)
+def api_unban_comment(c_id, v):
+
+    comment = db.query(Comment).filter_by(id=base36decode(c_id)).first()
+    if not comment:
+        abort(404)
+
+    comment.is_banned=False
+
+    db.add(comment)
+    db.commit()
+
+    return redirect(f"{comment.post.permalink}#comment-{comment.base36id}")
