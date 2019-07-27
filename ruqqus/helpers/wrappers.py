@@ -76,6 +76,8 @@ def admin_level_required(x):
 
         def wrapper(*args, **kwargs):
 
+            print(session)
+
             if "user_id" in session:
                 v=db.query(User).filter_by(id=session["user_id"]).first()
                 if not v:
