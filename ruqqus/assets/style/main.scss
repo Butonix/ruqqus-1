@@ -34,6 +34,7 @@ $gray-300: #E0E4E9;
 $upvote: #F45D01;
 $downvote: #1486fb;
 $admin: #F45D01;
+$mod: #07c20c;
 $banned: #FF9999;
 
 // Font size
@@ -734,4 +735,27 @@ span.green {
 
 .comment-body.banned {
   background-color: $banned;
+}
+
+.distinguish-admin .user-name,
+.distinguish-mod   .user-name {
+  color: white;
+  padding: 0px 3px 2px 3px;
+  border-radius: 3px;
+}
+
+.distinguish-admin .user-name {
+  background-color: $admin;
+}
+
+.distinguish-mod .user-name {
+  background-color: $mod;
+}
+
+.distinguish-admin .user-name::before {
+ content: "[A] "
+}
+
+.distinguish-mod .user-name::before {
+ content: "[M] "
 }

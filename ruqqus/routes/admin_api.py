@@ -180,3 +180,34 @@ def api_unban_comment(c_id, v):
     db.commit()
 
     return redirect(f"{comment.post.permalink}#comment-{comment.base36id}")
+
+@app.route("/api/distinguish_comment/<c_id>", methods=["post"])
+@admin_level_required(1)
+def api_distinguish_comment(c_id, v):
+
+    comment = db.query(Comment).filter_by(id=base36decode(c_id)).first()
+    if not comment:
+        abort(404)
+
+    comment.distinguish_level=v.admin_level
+
+    db.add(comment)
+    db.commit()
+
+    return redirect(f"{comment.post.permalink}#comment-{comment.base36id}")
+
+@app.route("/api/undistinguish_comment/<c_id>", methods=["post"])
+@admin_level_required(1)
+def api_undistinguish_comment(c_id, v):
+
+    comment = db.query(Comment).filter_by(id=base36decode(c_id)).first()
+    if not comment:
+        abort(404)
+
+    comment.distinguish_level=0
+
+    db.add(comment)
+    db.commit()
+
+    return redirect(f"{comment.post.permalink}#comment-{comment.base36id}")
+

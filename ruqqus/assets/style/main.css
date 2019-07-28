@@ -11749,4 +11749,27 @@ span.green {
   background-color: #FF9999;
 }
 
+.distinguish-admin .user-name,
+.distinguish-mod .user-name {
+  color: white;
+  padding: 0px 3px 2px 3px;
+  border-radius: 3px;
+}
+
+.distinguish-admin .user-name {
+  background-color: #F45D01;
+}
+
+.distinguish-mod .user-name {
+  background-color: #07c20c;
+}
+
+.distinguish-admin .user-name::before {
+  content: "[A] ";
+}
+
+.distinguish-mod .user-name::before {
+  content: "[M] ";
+}
+
 /*# sourceMappingURL=main.css.map */
