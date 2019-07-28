@@ -28,6 +28,9 @@
     "reddit_secret": {
       "required": true
     }
+    "banlist": {
+      "required": true
+    }
   },
   "formation": {
     "web": {

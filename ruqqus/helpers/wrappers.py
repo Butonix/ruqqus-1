@@ -81,6 +81,7 @@ def admin_level_required(x):
             if "user_id" in session:
                 v=db.query(User).filter_by(id=session["user_id"]).first()
                 if not v:
+                    print("no v")
                     abort(401)
                 
                 if v.is_banned:
@@ -92,6 +93,7 @@ def admin_level_required(x):
                 v.update_ip(request.remote_addr)
                     
             else:
+                print("no cookie")
                 abort(401)
 
             return f(*args, v=v, **kwargs)
@@ -110,6 +112,7 @@ def validate_formkey(f):
         submitted_key = request.values.get("formkey","none")
             
         if not submitted_key:
+            print("no submitted key")
             abort(401)
 
         if not v.validate_formkey(submitted_key):
