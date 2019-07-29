@@ -11704,6 +11704,7 @@ ul.comment-section {
   left: 0;
   width: 100%;
   height: 100%;
+  background-color: rgba(127, 127, 127, 0.35);
 }
 
 .splash-img {
