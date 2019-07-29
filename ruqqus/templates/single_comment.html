@@ -1,8 +1,10 @@
 {% set score=c.score_fuzzed %}
 {% if v %}
 {% set voted=v.vote_status_on_comment(c) %}
+{% set adjust = voted %}
 {% else %}
 {% set voted=-2 %}
+{% set adjust=0 %}
 {% endif %}
 
 
@@ -17,7 +19,7 @@
 
 
     <div class="user-info">
-        <a class="dropdown-toggle user-name" href="{{ c.author.url }}" class="font-weight-bold text-small user-name">{{ c.author.username }}</a> | <span id="comment-{{ c.base36id }}-score-up" {% if not voted==1 %}class="noshow"{% endif %}>{{ score+1 }}</span><span id="comment-{{ c.base36id }}-score-none" {% if voted not in [0,-2] %}class="noshow"{% endif %}>{{ score }}</span><span id="comment-{{ c.base36id }}-score-down" {% if not voted==-1 %}class="noshow"{% endif %}>{{ score-1 }}</span> points <span class="time-stamp">{{ c.age_string }}</span>
+        <a class="dropdown-toggle user-name" href="{{ c.author.url }}" class="font-weight-bold text-small user-name">{{ c.author.username }}</a> | <span id="comment-{{ c.base36id }}-score-up" {% if not voted==1 %}class="noshow"{% endif %}>{{ score+1-adjust }}</span><span id="comment-{{ c.base36id }}-score-none" {% if voted not in [0,-2] %}class="noshow"{% endif %}>{{ score-adjust }}</span><span id="comment-{{ c.base36id }}-score-down" {% if not voted==-1 %}class="noshow"{% endif %}>{{ score-1-adjust }}</span> points <span class="time-stamp">{{ c.age_string }}</span>
     </div>
     
         <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left profile-menu p-0 fade mt-3"
