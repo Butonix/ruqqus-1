@@ -1,4 +1,4 @@
-![Build status](https://travis-ci.com/ruqqus/ruqqus.svg?branch=master) [![Known Vulnerabilities](https://snyk.io//test/github/ruqqus/ruqqus/badge.svg?targetFile=requirements.txt)](https://snyk.io//test/github/ruqqus/ruqqus?targetFile=requirements.txt) ![Website](https://img.shields.io/website/https/www.ruqqus.com?down_color=red&down_message=down&up_message=up)
+![Build status](https://travis-ci.com/ruqqus/ruqqus.svg?branch=master) ![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/ruqqus/ruqqus) ![Website](https://img.shields.io/website/https/www.ruqqus.com?down_color=red&down_message=down&up_message=up)
 
 ![GitHub language count](https://img.shields.io/github/languages/count/ruqqus/ruqqus) ![Lines of Code](https://tokei.rs/b1/github/ruqqus/ruqqus?category=lines)
 
