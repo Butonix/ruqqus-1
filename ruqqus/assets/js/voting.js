@@ -2,8 +2,8 @@
 
 function vote(post_id, direction) {
 url="/api/vote/post/"+post_id+"/"+direction;
-post(url);
 
+callback=function(){
 thing = document.getElementById("post-"+post_id);
 uparrow1=document.getElementById("post-"+post_id+"-up");
 downarrow1=document.getElementById("post-"+post_id+"-down");
@@ -38,14 +38,16 @@ scoreup1.classList.add("noshow");
 scorenone1.classList.remove("noshow");
 scoredown1.classList.add("noshow");
 }
+}
 
+post(url, callback, "Unable to vote at this time. Please try again later.");
 }
 
 
 function vote_comment(comment_id, direction) {
 url="/api/vote/comment/"+ comment_id +"/"+direction;
-post(url);
 
+callback=function(){
 thing = document.getElementById("comment-"+ comment_id+"-voting");
 uparrow1=document.getElementById("comment-"+ comment_id +"-up");
 downarrow1=document.getElementById("comment-"+ comment_id +"-down");
@@ -80,5 +82,7 @@ scoreup1.classList.add("noshow");
 scorenone1.classList.remove("noshow");
 scoredown1.classList.add("noshow");
 }
+}
 
+post(url, callback, "Unable to vote at this time. Please try again later.");
 }

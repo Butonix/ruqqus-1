@@ -11745,7 +11745,7 @@ span.green {
   color: #68D16F;
 }
 
-.comment-body.banned {
+div.banned {
   background-color: #FF9999;
 }
 

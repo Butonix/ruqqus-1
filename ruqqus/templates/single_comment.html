@@ -10,7 +10,11 @@
 
 <span class="toggle-collapse"></span>
 
-<div class="comment-body{% if c.is_banned %} banned{% endif %}{% if c.distinguish_level >=4 %} distinguish-admin{% elif c.distinguish_level >=1 %} distinguish-mod{% endif %}">
+
+<div class="comment-body">
+
+  <div id="comment-{{ c.base36id }}-only" class="{% if c.is_banned %} banned{% endif %} {% if c.distinguish_level >=4 %} distinguish-admin{% elif c.distinguish_level >=1 %} distinguish-mod{% endif %}">
+
 
     <div class="user-info">
         <a class="dropdown-toggle user-name" href="{{ c.author.url }}" class="font-weight-bold text-small user-name">{{ c.author.username }}</a> | <span id="comment-{{ c.base36id }}-score-up" {% if not voted==1 %}class="noshow"{% endif %}>{{ score+1 }}</span><span id="comment-{{ c.base36id }}-score-none" {% if voted not in [0,-2] %}class="noshow"{% endif %}>{{ score }}</span><span id="comment-{{ c.base36id }}-score-down" {% if not voted==-1 %}class="noshow"{% endif %}>{{ score-1 }}</span> points <span class="time-stamp">{{ c.age_string }}</span>
@@ -60,41 +64,25 @@
 {% if v %}
 {% if v.admin_level>=1 and v.id==c.author_id %}
 {% if c.distinguish_level %}
-	    <li class="list-inline-item text-muted">
-		<form action="/api/undistinguish_comment/{{ c.base36id }}" method="post">
-		<input type="hidden" name="formkey" value="{{ v.formkey }}">
-		<input type="submit" value="undistinguish">
-		</form>
-		</li>
+
+	    <li class="list-inline-item text-muted"><a id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')">undistinguish</a></li>
 {% else %}
-	    <li class="list-inline-item text-muted">
-		<form action="/api/distinguish_comment/{{ c.base36id }}" method="post">
-		<input type="hidden" name="formkey" value="{{ v.formkey }}">
-		<input type="submit" value="distinguish">
-		</form>
-		</li>
+	    <li class="list-inline-item text-muted"><a id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="distinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')">distinguish</a></li>
+
 {% endif %}
 {% endif %}
 {% if v.admin_level>=1 and v.admin_level > c.author.admin_level %}
 {% if not c.is_banned %}
-	    <li class="list-inline-item text-muted">
-		<form action="/api/ban_comment/{{ c.base36id }}" method="post">
-		<input type="hidden" name="formkey" value="{{ v.formkey }}">
-		<input type="submit" value="remove">
-		</form>
-		</li>
+	    <li class="list-inline-item text-muted"><a id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')">remove</a></li>
 {% else %}
-	    <li class="list-inline-item text-muted">
-		<form action="/api/unban_comment/{{ c.base36id }}" method="post">
-		<input type="hidden" name="formkey" value="{{ v.formkey }}">
-		<input type="submit" value="approve">
-		</form>
-		</li>
+	    <li class="list-inline-item text-muted"><a id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')">approve</a></li>
 {% endif %}
 {% endif %}
 {% endif %}
         </ul>
     </div>
+
+  </div>
 
   <div id="reply-to-{{ c.base36id }}"></div>
 
