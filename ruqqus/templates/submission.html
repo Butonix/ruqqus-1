@@ -5,6 +5,10 @@
 <meta name="description" content="{{ p.title }}">
 {% endblock %}
 
+{% block adminscripts %}
+<script src="/assets/js/comment_modding.js"></script>
+{% endblock %}
+
 {% block adminpanel %}
 {% if v.admin_level >=3 %}
 <form action="/api/sticky/{{ p.base36id }}" method="post">
