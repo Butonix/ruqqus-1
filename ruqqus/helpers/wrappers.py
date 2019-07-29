@@ -51,6 +51,7 @@ def is_not_banned(f):
             v=db.query(User).filter_by(id=session["user_id"]).first()
             
             if not v:
+                print("user not found")
                 abort(401)
 
             v.update_ip(request.remote_addr)
@@ -59,6 +60,7 @@ def is_not_banned(f):
                 abort(403)
             
         else:
+            print("no cookie")
             abort(401)
 
         return f(*args, v=v, **kwargs)
