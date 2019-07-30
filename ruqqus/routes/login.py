@@ -22,12 +22,11 @@ def login_get(v):
     if v:
         return redirect("/")
 
-    #get splash image
-    image = random_image()
+    random_image()
 
     return render_template("login.html",
                            failed=False,
-                           i=image)
+                           i=random_image())
 
 #login post procedure
 @app.route("/login", methods=["POST"])
@@ -39,12 +38,12 @@ def login_post():
     if "@" in username:
         account = db.query(User).filter_by(email=username).first()
         if not account:
-            return render_template("login.html", failed=True)
+            return render_template("login.html", failed=True, i=random_image())
 
     else:
         account = db.query(User).filter_by(username=username).first()
         if not account:
-            return render_template("login.html", failed=True)
+            return render_template("login.html", failed=True, i=random_image())
 
     #test password
     if account.verifyPass(request.form.get("password")):
@@ -56,7 +55,7 @@ def login_post():
         return redirect(account.url)
 
     else:
-        return render_template("login.html", failed=True)
+        return render_template("login.html", failed=True, i=random_image())
 
 @app.route("/me", methods=["GET"])
 @auth_required

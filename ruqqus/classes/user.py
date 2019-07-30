@@ -34,6 +34,9 @@ class User(Base):
     commentvotes=relationship("CommentVote", lazy="dynamic", backref="users")
     ips = relationship('IP', lazy="dynamic", backref="users")
 
+    #properties defined as SQL server-side functions
+    energy = Column(Integer, server_default=FetchedValue())
+
     def __init__(self, **kwargs):
 
         if "password" in kwargs:
@@ -61,12 +64,6 @@ class User(Base):
 
         wrapper.__name__=f.__name__
         return wrapper
-
-    @property
-    @_lazy
-    def energy(self):
-
-        return sum([x.score for x in self.visible_posts])
 
     @property
     @_lazy

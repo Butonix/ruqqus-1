@@ -183,6 +183,43 @@ IMMUTABLE
 RETURNS NULL ON NULL INPUT;
 """)
 
+#===========USERS=============
+
+c.execute("""
+CREATE OR REPLACE FUNCTION energy(users)
+RETURNS numeric AS '
+  SELECT SUM(submissions.score)
+  FROM submissions
+  WHERE submissions.author_id=$1.id
+    AND submissions.is_banned=false
+'
+LANGUAGE SQL
+IMMUTABLE
+RETURNS NULL ON NULL INPUT
+""")
+
+
+##c.execute("""
+##CREATE OR REPLACE FUNCTION overview(users)
+##RETURNS refcursor AS '
+##  SELECT * from
+##  (
+##    select id, created_utc, 'submission' as item_type,
+##    from submissions
+##    where author_id=$1.id
+##    union all
+##    select id, created_utc, 'comment' as item_type,
+##    from comments
+##    where author_id=$1.id
+##  ) as t1
+##order by created_utc desc
+##offset 0
+##limit 5
+##'
+##LANGUAGE SQL
+##IMMUTABLE
+##RETURNS NULL ON NULL INPUT
+##""")
 
 #==========RANDOM IMAGE SPLASH SELECTION=========
 
