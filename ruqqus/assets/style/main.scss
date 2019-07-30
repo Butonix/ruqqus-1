@@ -147,7 +147,7 @@ ol > li::before {
 }
 
 .navbar-brand, .navbar-light .navbar-brand {
-    color: $blue;
+    color: $primary;
     font-weight: $font-weight-bold;
 }
 
@@ -267,14 +267,6 @@ label {
   border-top: 10px solid $gray-300;
 }
 
-.upvoted {
-    color: $upvote;
-}
-
-.downvoted {
-    color: $downvote;
-}
-
 .upvoted .arrow-up {
   border-bottom: 10px solid $upvote;
 }
@@ -289,6 +281,10 @@ label {
 
 .score-down {
     color: $downvote !important;
+}
+
+.banned .score {
+    color: $gray-300 !important;
 }
 
 // Custom Borders

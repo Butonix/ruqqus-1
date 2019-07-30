@@ -11303,14 +11303,6 @@ label {
   border-top: 10px solid #E0E4E9;
 }
 
-.upvoted {
-  color: #F45D01;
-}
-
-.downvoted {
-  color: #1486fb;
-}
-
 .upvoted .arrow-up {
   border-bottom: 10px solid #F45D01;
 }
@@ -11325,6 +11317,10 @@ label {
 
 .score-down {
   color: #1486fb !important;
+}
+
+.banned .score {
+  color: #E0E4E9 !important;
 }
 
 .border-1 {
