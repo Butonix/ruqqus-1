@@ -149,7 +149,7 @@ def sign_up_post(v):
                                msg=bytes(new_formkey_hashstr, "utf-16")
                                ).hexdigest()
         
-        return render_template("sign_up.html", formkey=new_formkey, now=now, error=error)
+        return render_template("sign_up.html", formkey=new_formkey, now=now, error=error, i=random_image())
 
     #check for tokens
     if now-int(form_timestamp)>120:
