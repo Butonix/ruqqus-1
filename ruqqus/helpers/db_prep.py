@@ -188,14 +188,19 @@ RETURNS NULL ON NULL INPUT;
 c.execute("""
 CREATE OR REPLACE FUNCTION energy(users)
 RETURNS numeric AS '
+ SELECT COALESCE(
+ (
   SELECT SUM(submissions.score)
   FROM submissions
   WHERE submissions.author_id=$1.id
     AND submissions.is_banned=false
+  ),
+  0
+  )
 '
 LANGUAGE SQL
 IMMUTABLE
-RETURNS NULL ON NULL INPUT
+RETURNS 0 ON NULL INPUT
 """)
 
 
