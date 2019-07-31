@@ -115,10 +115,15 @@ class User(Base):
     def verifyPass(self, password):
         return check_password_hash(self.passhash, password)
 
-    @property
-    def visible_posts(self):
-        return self.submissions.filter_by(is_banned=False).all()
-    
+    def visible_posts(self, v=None):
+        if not v:
+            return self.submissions.filter_by(is_banned=False).all()
+        elif v.admin_level:
+            return self.submissions.all()
+        else:
+            return self.submissions.filter_by(is_banned=False).all()
+            
+        
     def rendered_userpage(self, v=None):
 
         if self.is_banned:
