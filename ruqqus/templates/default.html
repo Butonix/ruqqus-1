@@ -93,6 +93,8 @@ function formkey() {
           <p>Ruqqus is an independent social media platform built by and for American patriots.</p>
           <small><a href="#">Learn more <span>&#8594;</span></a></small>
         </div>
+	{% block sidebarblock %}
+	{% endblock %}
 	{% if v %}
 	{% if v.admin_level %}
 	<div class="sidebar-section sidebar-adminpanel">

@@ -5,6 +5,14 @@
 <meta name="description" content="{{ p.title }}">
 {% endblock %}
 
+{% block sidebarblock %}
+<div class="sidebar-section sidebar-submission">
+  <div class="input-group align-items-center mb-4">
+    shortlink: <input type="text" readonly="readonly" value="https://ruqq.us/{{ p.base36id }}">
+  </div>
+</div>
+{% endblock %}
+
 {% block adminscripts %}
 <script src="/assets/js/comment_modding.js"></script>
 {% endblock %}
