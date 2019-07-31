@@ -116,6 +116,7 @@ class User(Base):
         return check_password_hash(self.passhash, password)
 
     def visible_posts(self, v=None):
+        
         if not v:
             return self.submissions.filter_by(is_banned=False).all()
         elif v.admin_level:
@@ -129,7 +130,7 @@ class User(Base):
         if self.is_banned:
             return render_template("userpage_banned.html", u=self, v=v)
         
-        posts = [x for x in self.visible_posts]
+        posts = [x for x in self.visible_posts(v)]
         posts.sort(key=lambda x: x.created_utc, reverse=True)
         
         if len(posts)>50:
