@@ -49,11 +49,16 @@
             </li>
             <li id="comment-{{ c.base36id }}-down" class="list-inline-item arrow-down" {% if voted==-1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted > -2 %}onclick="vote_comment('{{ c.base36id }}','-1')"{% endif %}>
             </li>
-
+	
+	{% if v %}
+	{% if not v.is_banned %}
             <li class="list-inline-item text-muted text-small"><a href="javascript:void(0)" onclick="addReplyForm('{{ c.base36id }}', '{{ c.post.base36id }}')"><i class="fas fa-reply"
                     aria-hidden="true"></i><span class=""><span
                         class="comments-number"></span> Reply</span></a>
             </li>
+	{% endif %}
+	{% endif %}
+
             <li class="list-inline-item text-muted"><a href="#"><i class="fas fa-share-alt"
                     aria-hidden="true"></i><span class="share"> Share</span></a>
             </li>
