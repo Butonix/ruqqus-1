@@ -1,11 +1,38 @@
+// Colors
+
+$primary: #6d3eb7;
+$dark: #363254;
+$secondary: #7D8CC4;
+$danger: #F45D01;
+$white: #ffffff;
+
+
+$purple: #6d3eb7;
+$blue: #1486fb;
+$red:  #F45D01;
+$gray: #757a84;
+$green: #68D16F;
+
+$gray-100: #F5F6F7;
+$gray-300: #E0E4E9;
+
+$upvote: #F45D01;
+$downvote: #1486fb;
+$admin: #F45D01;
+$banned: #FF9999;
+$mod: #07c20c;
+
 $theme-colors: (
-  "primary": #1486fb,
-  "danger": #F45D01
+  "primary": $primary,
+  "secondary": $secondary,
+  "danger": $danger,
+  "dark": $dark,
+  "white": $white
 );
 
 // Body styling
 
-$body-color: #344055;  //this is the text color
+$body-color: #191919;  //this is the text color
 $body-bg: #F5F7F9; //this is the background color
 
 // Borders
@@ -21,22 +48,6 @@ $text-muted: #757a84;
 
 $font-family-sans-serif: Open Sans;
 
-// Colors
-
-$blue: #1486fb;
-$red:  #F45D01;
-$gray: #898EA2;
-$green: #68D16F;
-
-$gray-100: #F5F6F7;
-$gray-300: #E0E4E9;
-
-$upvote: #F45D01;
-$downvote: #1486fb;
-$admin: #F45D01;
-$mod: #07c20c;
-$banned: #FF9999;
-
 // Font size
 
 $small-font-size: 13px;
@@ -51,18 +62,6 @@ $headings-font-weight: $font-weight-bold;
 $box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
 
 @import "node_modules/bootstrap/scss/bootstrap";
-
-// Required
-@import "node_modules/bootstrap/scss/functions";
-@import "node_modules/bootstrap/scss/variables";
-@import "node_modules/bootstrap/scss/mixins";
-
-// Optional
-@import "node_modules/bootstrap/scss/reboot";
-@import "node_modules/bootstrap/scss/type";
-@import "node_modules/bootstrap/scss/images";
-@import "node_modules/bootstrap/scss/code";
-@import "node_modules/bootstrap/scss/grid";
 
 html {
     font-size: 14px;
@@ -97,25 +96,20 @@ a.dropdown-toggle:hover {
 
 ol > li {
     list-style-type: none;
-    counter-increment: circle-count;
+    counter-increment: count;
     margin-bottom: .75rem;
 }
 
 ol > li::before {
-    content: counter(circle-count) " ";
+    content: counter(count) " ";
     position: relative;
     top: -1px;
-    width: 1.5rem;
-    height: 1.5rem;
     display: inline-block;
-    font-size: $small-font-size;
-    font-weight: $font-weight-bold;
-    line-height: 1.5rem;
-    color: $primary;
-    background-color: rgba(60, 173, 243, 0.15);
-    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 600;
+    color: $secondary;
     text-align: center;
-    margin-right: .5rem;
+    margin-right: 0.5rem;
 }
 
 .footer .list-inline-item:not(:last-child) {
@@ -125,9 +119,8 @@ ol > li::before {
 // Buttons
 
 .btn {
-    line-height: 1.3;
     border-radius: .25rem;
-    font-weight: 600;
+    font-size: $small-font-size;
 }
 
 .btn-light {
@@ -140,15 +133,18 @@ ol > li::before {
     border-radius: .25rem;
 }
 
-// Navbar
+// Navbar and Subnavbar
 
-.navbar {
-    border-bottom: 1px solid $border-color;
-}
 
 .navbar-brand, .navbar-light .navbar-brand {
-    color: $primary;
+    color: $purple;
     font-weight: $font-weight-bold;
+}
+
+.subnavbar {
+    z-index: 2;
+    margin-top: 64px;
+    background-color: $white;
 }
 
 // Nav links
@@ -169,10 +165,15 @@ ol > li::before {
     color: $white;
 }
 
+.navbar-dark .navbar-nav .nav-link {
+    color: $white;
+}
+
 .post-nav .nav-link {
     color: $gray;
     font-size: $small-font-size;
     font-weight: $font-weight-bold;
+    padding-top: 0;
 }
 
 .post-nav > .nav-item > .nav-link.active {
@@ -182,6 +183,10 @@ ol > li::before {
 
 .post-nav .nav-link:hover, .nav-link:focus {
     color: $red;
+}
+
+.post-nav .nav-item:last-child .nav-link {
+    padding-right: 0;
 }
 
 // Navbar icons and search box
@@ -201,11 +206,23 @@ label {
     color: $text-muted;
 }
 
+label.terms {
+    font-weight: normal;
+    text-transform: none;
+    font-size: 13px;
+    color: $body-color;
+    vertical-align: middle;
+}
+
 .user-profile > .dropdown-toggle::after {
     display:none;
 }
 
 // Font Awesome
+
+.sidebar-section .fa, .sidebar-section .fas {
+    font-size: 13px;
+}
 
 .icon::before {
   display: inline-block;
@@ -216,14 +233,10 @@ label {
 }
 
 .fa-icon-circle {
-    font-size: 1rem;
-    height: 35px;
-    width: 35px;
-    line-height: 1.5rem;
+    font-size: $font-size-lg;
     text-align: center;
-    border: 1px solid $gray-300;
     border-radius: 50%;
-    padding: 0.5rem;
+    padding: 0 0.5rem;
 }
 
 .fa-bold:hover {
@@ -267,6 +280,14 @@ label {
   border-top: 10px solid $gray-300;
 }
 
+.upvoted {
+    color: $upvote;
+}
+
+.downvoted {
+    color: $downvote;
+}
+
 .upvoted .arrow-up {
   border-bottom: 10px solid $upvote;
 }
@@ -283,8 +304,8 @@ label {
     color: $downvote !important;
 }
 
-.banned .score {
-    color: $gray-300 !important;
+.banned .score {		
+    color: $gray-300 !important;		
 }
 
 // Custom Borders
@@ -325,8 +346,8 @@ label {
 // Sidebar content
 
 .sidebar {
-    -ms-flex: 0 0 300px;
-    flex: 0 0 300px;
+    -ms-flex: 0 0 250px;
+    flex: 0 0 250px;
     padding-left: 0rem;
     padding-right: 0rem;
 }
@@ -336,20 +357,38 @@ label {
 }
 
 .sidebar .sidebar-section .title {
-    font-size: 12px;
-    letter-spacing: 0.5px;
-    font-weight: $font-weight-bold;
-    color: $gray-600;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
+    font-size: 14px;
+    font-weight: 600;
+    color: $body-color;
+    padding: 0.75rem 1rem 0;
+}
+
+.sidebar .sidebar-section .body {
+    padding: 1rem;
 }
 
 .sidebar-section {
-    padding: 1rem;
     margin-bottom: 1rem;
-    background-color: $white;
-    border-radius: .25rem;
-    border: 1px solid $border-color;
+    background-color: #fff;
+    border-radius: 0.25rem;
+    border: 1px solid #E0E4E9;
+}
+
+.sidebar-section.sidebar-trending .hashtag {
+    margin-bottom: .5rem;
+    padding-bottom: .25rem;
+    color: $secondary;
+    font-weight: bold;
+}
+
+.sidebar-section.sidebar-trending .hashtag a {
+    color: $secondary;
+}
+
+.sidebar-section.sidebar-alert {
+    color: $white;
+    background-color: $dark;
+    border: none;
 }
 
 .user-count {
@@ -394,31 +433,61 @@ label {
 
 // Thread
 
+.post-title {
+    margin-bottom: 0;
+}
+
 .post-title a {
     color: $body-color;
 }
 
 .post-title a:hover, a:active, a:focus  {
-    color: $blue;
+    color: $purple;
     text-decoration: none;
 }
 
 .post-meta {
     position: relative;
     z-index: 2;
-    color: $gray-600;
+    color: $text-muted;
     font-size: $small-font-size;
-    margin-bottom: .5rem;
     width: fit-content;
 }
 
 .post-actions {
     position: relative;
     z-index: 2;
-    font-weight: $font-weight-bold;
+    color: $text-muted;
+    font-weight: $font-weight-normal;
     font-size: $small-font-size;
-    margin-bottom: 0;
     width: fit-content;
+}
+
+.post-actions .fa, .post-actions .fas {
+    font-size: 12px;
+    color: $gray-600;
+    margin-right: .5rem;
+}
+
+.post-actions a:hover .fa, .post-actions a:hover .fas {
+    color: $body-color;
+}
+
+.post-actions .fas.fa-ellipsis-h {
+    font-size: $font-size-lg;
+    vertical-align: bottom;
+}
+
+.post-actions .list-inline {
+    margin-bottom: 0;
+}
+
+.post-actions .list-inline .list-inline-item {
+    margin-right: 1rem;
+}
+
+.post-actions .list-inline .list-inline-item .dropdown-item {
+    font-size: $small-font-size;
 }
 
 .post-actions a {
@@ -426,13 +495,13 @@ label {
 }
 
 .post-actions a:hover, a:active, a:focus {
-    color: $blue;
+    color: $body-color;
     text-decoration: none;
 }
 
 .post-img {
-    width: 130px;
-    height: 90px;
+    width: 145px;
+    height: 100px;
     object-fit: cover;
 }
 
@@ -502,12 +571,13 @@ label {
 }
 
 .comment-actions a:hover, a:active, a:focus {
-    color: $blue;
+    color: $purple;
     text-decoration: none;
 }
 
 ul.comment-section {
     padding-left: 0;
+    margin-bottom: 0;
 }
 
 .comment-count {
@@ -632,9 +702,9 @@ ul.comment-section {
 }
 
 .reaction .reacted {
-    border-color: $blue;
+    border-color: $purple;
     background-color: rgba(60, 173, 243, 0.08);
-    color: $blue
+    color: $purple
 }
 
 // Sidebar
@@ -672,19 +742,19 @@ ul.comment-section {
 }
 
 .splash-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  font-size: 0;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    font-size: 0;
 }
 
 .splash-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(127, 127, 127, 0.35);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(127, 127, 127, 0.35);
 }
 
 .splash-img {
@@ -733,27 +803,22 @@ span.green {
 
 div.banned {
   background-color: $banned;
-}
-
-.distinguish-admin .user-name,
-.distinguish-mod   .user-name {
-  color: white;
-  padding: 0px 3px 2px 3px;
-  border-radius: 3px;
-}
-
-.distinguish-admin .user-name {
-  background-color: $admin;
-}
-
-.distinguish-mod .user-name {
-  background-color: $mod;
-}
-
-.distinguish-admin .user-name::before {
- content: "[A] "
-}
-
-.distinguish-mod .user-name::before {
- content: "[M] "
+}	  
+			
+.distinguish-admin .user-name, .distinguish-mod   .user-name {		
+  color: white;		
+  padding: 0px 3px 2px 3px;		
+  border-radius: 3px;		
+}		
+.distinguish-admin .user-name {		
+  background-color: $admin;		
+}		
+.distinguish-mod .user-name {		
+  background-color: $mod;		
+}		
+.distinguish-admin .user-name::before {		
+ content: "[A] "		
+}		
+.distinguish-mod .user-name::before {		
+ content: "[M] "		
 }
