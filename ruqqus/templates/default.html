@@ -89,29 +89,36 @@ function formkey() {
             <input class="form-control border" type="search" placeholder="search for anything..."
               id="example-search-input">
           </div>
-          <h6><i class="fas fa-info-circle text-primary mr-2"></i>About Ruqqus</h6>
+          <div class="title">About Ruqqus</div>
+          <div class="body">
           <p>Ruqqus is an independent social media platform built by and for American patriots.</p>
-          <small><a href="#">Learn more <span>&#8594;</span></a></small>
+          <small><a href="https://www.ruqqus.com/about">Learn more <span>&#8594;</span></a></small>
+          </div>
         </div>
 	{% block sidebarblock %}
 	{% endblock %}
 	{% if v %}
 	{% if v.admin_level %}
 	<div class="sidebar-section sidebar-adminpanel">
-	<h6>Admin Panel</h6>
+	<div class="title">Admin Panel</div>
+  <div class="body">
 	{% block adminpanel %}
 	<p>[No admin actions available]</p>
 	{% endblock %}
 	</div>
+  </div>
 	{% endif %}
 	{% endif %}
         <div class="sidebar-section sidebar-stats">
-          <h6><i class="fas fa-poll text-primary mr-2"></i></i>Stats</h6>
+          <div class="title">Stats</div>
+          <div class="body">
           <p class="user-count"><span class="number"></span> {{ 1 | total_users }} users</p>
           <p class="online-count"><span class="text-success">&#9673;</span><span class="number"> {{ 1 | users_here }}</span> users online</p>
+          </div>
         </div>
         <div class="sidebar-section sidebar-rules">
-          <h6><i class="fas fa-scroll text-primary mr-2"></i></i>Ruqqus Rules</h6>
+          <div class="title">Ruqqus Rules</div>
+          <div class="body">
           <ol class="pl-0">
             <li>No racism</li>
             <li>No doxxing, threats, or calls to violence</li>
@@ -119,6 +126,7 @@ function formkey() {
             <li>No solicitation</li>
             <li>Patriots only</li>
           </ol>
+          </div>
         </div>
         <div class="sidebar-section sidebar-footer">
           {% include "footer.html" %}
