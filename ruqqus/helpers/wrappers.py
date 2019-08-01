@@ -105,9 +105,14 @@ def admin_level_required(x):
             #admin action logging on main service
             if environ.get('domain')=="www.ruqqus.com":
                 if isinstance(response, tuple):
-                    logstr=f"[{x}] {v.username} {f.__name__} https://{environ.get('domain')}{response[1].permalink}"
+                    logstr=(f"> Admin: {v.username}"+
+                            f"> Action:{f.__name__}"+
+                            f"> Link: https://{environ.get('domain')}{response[1].permalink}"
+                            )
                 else:
                     logstr=f"[{x}] {v.username} {request.path}"
+
+                print(logstr)
                 
                 requests.post(environ.get("DISCORD_WEBHOOK"),
                               headers={"Content-Type":"application/json"},
