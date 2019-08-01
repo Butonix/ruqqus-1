@@ -66,6 +66,9 @@ def activate():
     if not user:
         abort(400)
 
+    if user.is_activated:
+        return render_template("message.html", title="Account already_verified.", message="That link has expired."), 404
+
     user.is_activated=True
     db.add(user)
     db.commit()
