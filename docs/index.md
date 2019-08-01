@@ -1,23 +1,14 @@
 ---
-title: Ruqqus Docs
+title: Ruqqus Org
 ---
 
-# Ruqqus Contributor Information
+# Ruqqus 
 
-Commits made to the master branch will immediately deploy to https://ruqqus-staging.herokuapp.com. If you are signed into the staging app as a level 3 admin or higher, 500 errors will display the crash message in-browser.
+Ruqqus is an organization dedicated to enabling free speech online. To that end, we developed and created [Ruqqus.com](https://ruqqus.com), a platform for those who have been silenced by "big tech.
 
-Owners and deputy owners can provision branch-specific clones of the staging app for any open PR upon request. Contact captainmeta4 for this if needed.
+Free speech has a new home online. Use your voice. Make a ruqqus.
 
-The staging application must be manually promoted to production by captainmeta4. 
+# Contribution
 
-## Required Reading
+As an all-volunteer organization, Ruqqus development is 100% community-driven. If you are interested in contributing, take a look at our contributor guidelines [here](./contribute) and the source code [here](https://github.com/ruqqus/ruqqus).
 
-* [Design Document](./design)
-
-* [Security Information](./security)
-
-## Additional info
-
-* [Database tables and schemas](./schemas)
-
-* [Package Licenses](./licenses)

@@ -49,6 +49,7 @@ def send_verification_email(user):
               )
 
 @app.route("/activate", methods=["GET"])
+@auth_desired
 def activate():
 
     email=request.args.get("email","")
