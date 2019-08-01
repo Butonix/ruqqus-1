@@ -103,6 +103,8 @@ def sign_up_get(v):
     formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
                        msg=bytes(formkey_hashstr, "utf-16")
                        ).hexdigest()
+
+    print(now, token, ip, formkey)
     
     return render_template("sign_up.html",
                            formkey=formkey,
@@ -134,7 +136,8 @@ def sign_up_post(v):
                                ).hexdigest()
     
     now=int(time())
-    
+
+    print(form_timestamp, submitted_token, ip, form_formkey, f"expected: {correct_formkey}")
 
     #define function that takes an error message and generates a new signup form
     def new_signup(error):
