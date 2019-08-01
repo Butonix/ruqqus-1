@@ -93,7 +93,7 @@ def sign_up_get(v):
     session["signup_token"]=token
     ip=request.remote_addr
     
-    formkey_hashstr = str(now)+token+ip
+    formkey_hashstr = str(now)+token+agent
 
     #get a random image
     image = random_image()
@@ -104,8 +104,6 @@ def sign_up_get(v):
                        msg=bytes(formkey_hashstr, "utf-16")
                        ).hexdigest()
 
-    print(now, token, ip, formkey)
-    
     return render_template("sign_up.html",
                            formkey=formkey,
                            now=now,
@@ -127,17 +125,14 @@ def sign_up_post(v):
     form_formkey = request.form.get("formkey","none")
     
     submitted_token=session["signup_token"]
-    ip=request.remote_addr
     
-    correct_formkey_hashstr = form_timestamp+submitted_token+ip
+    correct_formkey_hashstr = form_timestamp+submitted_token+agent
     
     correct_formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
                                msg=bytes(correct_formkey_hashstr, "utf-16")
                                ).hexdigest()
     
     now=int(time())
-
-    print(form_timestamp, submitted_token, ip, form_formkey, f"expected: {correct_formkey}")
 
     #define function that takes an error message and generates a new signup form
     def new_signup(error):
@@ -148,9 +143,8 @@ def sign_up_post(v):
         session["signup_token"]=token
         now=int(time())
         agent=request.headers.get("User-Agent", None)
-        ip=request.remote_addr
 
-        new_formkey_hashstr=str(now)+submitted_token+ip
+        new_formkey_hashstr=str(now)+submitted_token+agent
         new_formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
                                msg=bytes(new_formkey_hashstr, "utf-16")
                                ).hexdigest()
