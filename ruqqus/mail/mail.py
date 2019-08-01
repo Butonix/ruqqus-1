@@ -3,7 +3,7 @@ import requests
 from time import time
 from flask import *
 
-from ruqqus.__main__ import app
+from ruqqus.__main__ import app, db
 from ruqqus.helpers.security import *
 
 def send_mail(to_address, subject, plaintext, html, from_address="Ruqqus <noreply@mail.ruqqus.com>"):
@@ -55,8 +55,8 @@ def activate():
     timestamp=int(request.args.get("time", "0"))
     token=request.args.get("token","")
 
-    if int(time())-timestamp>600:
-        return render_template("message.html", title="Verification link expired.", message=f"That link has expired."), 410
+    if int(time())-timestamp > 3600:
+        return render_template("message.html", title="Verification link expired.", message="That link has expired."), 410
 
 
     if not validate_hash(f"{email}+{id}+{timestamp}", token):
