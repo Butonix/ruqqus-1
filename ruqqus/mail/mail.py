@@ -5,6 +5,7 @@ from flask import *
 
 from ruqqus.__main__ import app, db
 from ruqqus.helpers.security import *
+from ruqqus.classes import *
 
 def send_mail(to_address, subject, plaintext, html, from_address="Ruqqus <noreply@mail.ruqqus.com>"):
 
