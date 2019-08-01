@@ -34,9 +34,9 @@ def send_verification_email(user):
 
     link=url+params
 
-    html="""
-         <p>Thank you for signing up.
-         <a href="{link}">Click here</a> to verify your email address</p>
+    html=f"""
+         <p>Welcome to Ruqqus, {user.name}!<p>
+         <a href="{link}">Click here</a> to verify your email address.</p>
          """
 
     text=f"Thank you for signing up. Click to verify your email address: {link}"
