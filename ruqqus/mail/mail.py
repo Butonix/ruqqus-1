@@ -1,6 +1,6 @@
 from os import environ
 import requests
-from time import time
+import time
 from flask import *
 
 from ruqqus.__main__ import app, db
@@ -28,7 +28,7 @@ def send_mail(to_address, subject, plaintext, html, from_address="Ruqqus <norepl
 def send_verification_email(user):
 
     url=f"https://{environ.get('domain')}/activate"
-    now=int(time())
+    now=int(time.time())
 
     token=generate_hash(f"{user.email}+{user.id}+{now}")
     params=f"?email={escape(user.email)}&id={user.id}&time={now}&token={token}"
@@ -56,7 +56,7 @@ def activate():
     timestamp=int(request.args.get("time", "0"))
     token=request.args.get("token","")
 
-    if int(time())-timestamp > 3600:
+    if int(time.time())-timestamp > 3600:
         return render_template("message.html", title="Verification link expired.", message="That link has expired."), 410
 
 
