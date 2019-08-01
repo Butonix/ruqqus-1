@@ -114,7 +114,10 @@ def admin_level_required(x):
                               json={"content":logstr}
                              )
             
-            return response
+            if isinstance(response, tuple):
+                return response[0]
+            else:
+                return response
 
         wrapper.__name__=f.__name__
         return wrapper

@@ -20,7 +20,7 @@ def ban_user(user_id, v):
     db.add(user)
     db.commit()
     
-    return redirect(user.url)
+    return (redirect(user.url), user)
 
 @app.route("/api/unban_user/<user_id>", methods=["POST"])
 @admin_level_required(3)
@@ -37,7 +37,7 @@ def unban_user(user_id, v):
     db.add(user)
     db.commit()
     
-    return redirect(user.url)
+    return (redirect(user.url), user)
 
 @app.route("/api/ban_post/<post_id>", methods=["POST"])
 @admin_level_required(3)
@@ -55,7 +55,7 @@ def ban_post(post_id, v):
     db.add(post)
     db.commit()
     
-    return redirect(post.permalink)
+    return (redirect(post.permalink), post)
 
 @app.route("/api/unban_post/<post_id>", methods=["POST"])
 @admin_level_required(3)
@@ -72,7 +72,7 @@ def unban_post(post_id, v):
     db.add(post)
     db.commit()
     
-    return redirect(post.permalink)
+    return (redirect(post.permalink), post)
 
 
 @app.route("/api/promote/<user_id>/<level>", methods=["POST"])
@@ -123,7 +123,7 @@ def api_distinguish_post(post_id, v):
     db.add(post)
     db.commit()
 
-    return redirect(post.permalink)
+    return (redirect(post.permalink), post)
 
 @app.route("/api/sticky/<post_id>", methods=["POST"])
 @admin_level_required(3)
@@ -149,7 +149,7 @@ def api_sticky_post(post_id, v):
     db.add(post)
     db.commit()
 
-    return redirect(post.permalink)
+    return (redirect(post.permalink), post)
 
 @app.route("/api/ban_comment/<c_id>", methods=["post"])
 @admin_level_required(1)
@@ -164,7 +164,7 @@ def api_ban_comment(c_id, v):
     db.add(comment)
     db.commit()
 
-    return "", 204
+    return ("", comment)
 
 @app.route("/api/unban_comment/<c_id>", methods=["post"])
 @admin_level_required(1)
@@ -179,7 +179,7 @@ def api_unban_comment(c_id, v):
     db.add(comment)
     db.commit()
 
-    return "", 204
+    return ("", comment)
 
 @app.route("/api/distinguish_comment/<c_id>", methods=["post"])
 @admin_level_required(1)
@@ -194,7 +194,7 @@ def api_distinguish_comment(c_id, v):
     db.add(comment)
     db.commit()
 
-    return "", 204
+    return ("", comment)
 
 @app.route("/api/undistinguish_comment/<c_id>", methods=["post"])
 @admin_level_required(1)
@@ -209,4 +209,4 @@ def api_undistinguish_comment(c_id, v):
     db.add(comment)
     db.commit()
 
-    return "", 204
+    return ("", comment)
