@@ -107,10 +107,10 @@ def admin_level_required(x):
                 if isinstance(response, tuple):
                     logstr=(f"> Admin: `{v.username}`"+
                             f"\n> Action: `{f.__name__}`"+
-                            f"\n> Link: https://{environ.get('domain')}{response[1].permalink}"
+                            f"\n> Link: <https://{environ.get('domain')}{response[1].permalink}>"
                             )
                 else:
-                    logstr=f"[{x}] {v.username} {request.path}"
+                    logstr=f"{v.username} {request.path}"
 
                 print(logstr)
                 

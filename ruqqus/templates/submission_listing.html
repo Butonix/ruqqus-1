@@ -10,11 +10,13 @@
 
 {% if v %}
 {% set voted=v.vote_status_on_post(p) %}
+{% set adjust=voted %}
 {% else %}
 {% set voted=-2 %}
+{% set adjust=0 %}
 {% endif %}
        
-        <div id="post-{{ p.base36id }}" class="row mt-3 post-listing-entry post-{{ p.base36id }} {% if i % 2 == 0 %}even{% else %}odd{% endif %} {% if p.stickied %}stickied{% endif %} {% if voted==1 %}upvoted{% elif voted==-1 %}downvoted{% endif %}">
+        <div id="post-{{ p.base36id }}" class="row mt-3 post-listing-entry post-{{ p.base36id }}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.is_banned %} banned{% endif %}">
 
 
           <div class="col-12">
@@ -44,9 +46,9 @@
               <div id="voting" class="d-md-block my-auto mr-3 text-center">
                 <div id="post-{{ p.base36id }}-up" class="arrow-up {{ p.base36id }}-arrow-up mx-auto" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
                 </div>
-                  <span id="post-{{ p.base36id }}-score-up" class="score-up text-muted{% if voted!=1 %} noshow{% endif %}">{{ score+1 }}</span>
-		  <span id="post-{{ p.base36id }}-score-none" class="score text-muted{% if voted!=0 and voted!=-2 %} noshow{% endif %}">{{ score }}</span>
-		  <span id="post-{{ p.base36id }}-score-down" class="score-down text-muted{% if voted!=-1 %} noshow{% endif %}">{{ score-1 }}</span>
+                  <span id="post-{{ p.base36id }}-score-up" class="score-up text-muted{% if voted!=1 %} noshow{% endif %}">{% if p.is_banned %}✖{% else %}{{ score+1-adjust }}{% endif %}</span>
+		  <span id="post-{{ p.base36id }}-score-none" class="score text-muted{% if voted!=0 and voted!=-2 %} noshow{% endif %}">{% if p.is_banned %}✖{% else %}{{ score-adjust }}{% endif %}</span>
+		  <span id="post-{{ p.base36id }}-score-down" class="score-down text-muted{% if voted!=-1 %} noshow{% endif %}">{% if p.is_banned %}✖{% else %}{{ score-1-adjust }}{% endif %}</span>
                 <div id="post-{{ p.base36id }}-down" class="arrow-down {{ p.base36id }}-arrow-down mx-auto" {% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}>
 
                 </div>
