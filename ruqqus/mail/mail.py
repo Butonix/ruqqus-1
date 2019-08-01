@@ -30,7 +30,7 @@ def send_verification_email(user):
     now=int(time())
 
     token=generate_hash(f"{user.email}+{user.id}+{now}")
-    params=f"?email={user.email}&id={user.id}&time={now}&token={token}"
+    params=f"?email={escape(user.email)}&id={user.id}&time={now}&token={token}"
 
     link=url+params
 
