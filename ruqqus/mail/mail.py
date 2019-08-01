@@ -1,7 +1,7 @@
 from os import environ
 import requests
 import time
-from flask import *
+from flask import render_template, abort
 
 from ruqqus.__main__ import app, db
 from ruqqus.helpers.security import *
@@ -19,7 +19,6 @@ def send_mail(to_address, subject, plaintext, html, from_address="Ruqqus <norepl
           "html": html
           }
         
-
     return requests.post(url,
                          auth=("api",environ.get("MAILGUN_KEY")),
                          data=data
