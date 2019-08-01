@@ -102,7 +102,7 @@ def admin_level_required(x):
             
             logstr=f"[{x}] {v.username} - {request.path}"
             requests.post(environ.get("DISCORD_WEBHOOK"),
-                          headers={"Content-Type":"application/json"}
+                          headers={"Content-Type":"application/json"},
                           json={"content":logstr}
                          )
             
