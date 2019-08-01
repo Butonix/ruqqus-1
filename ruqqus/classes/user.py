@@ -195,6 +195,11 @@ class User(Base):
 
     @property
     @_lazy
+    def permalink(self):
+        return self.url
+
+    @property
+    @_lazy
     def created_date(self):
 
         print(self.created_utc)

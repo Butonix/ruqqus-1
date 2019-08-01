@@ -1,7 +1,8 @@
-from flask import session
-import requests
-from ruqqus.__main__ import Base, db
 from flask import *
+from os import environ
+import requests
+
+from ruqqus.__main__ import Base, db
 from ruqqus.classes import *
 
 
@@ -100,12 +101,18 @@ def admin_level_required(x):
                 abort(401)
 
             response= f(*args, v=v, **kwargs)
-            
-            logstr=f"[{x}] {v.username} - {request.path}"
-            requests.post(environ.get("DISCORD_WEBHOOK"),
-                          headers={"Content-Type":"application/json"},
-                          json={"content":logstr}
-                         )
+
+            #admin action logging on main service
+            if environ.get('domain')=="www.ruqqus.com":
+                if isinstance(response, tuple):
+                    logstr=f"[{x}] {v.username} {f.__name__} https://{environ.get('domain')}{response[1].permalink}"
+                else:
+                    logstr=f"[{x}] {v.username} {request.path}"
+                
+                requests.post(environ.get("DISCORD_WEBHOOK"),
+                              headers={"Content-Type":"application/json"},
+                              json={"content":logstr}
+                             )
             
             return response
 
