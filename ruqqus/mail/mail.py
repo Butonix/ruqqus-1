@@ -43,7 +43,7 @@ def send_verification_email(user):
 
     send_mail(to_address=user.email,
               html=html,
-              text=text,
+              plaintext=text,
               subject="Validate your Ruqqus account"
               )
 
@@ -52,10 +52,10 @@ def activate():
 
     email=request.args.get("email","")
     id=request.args.get("id","")
-    timestamp=request.args.get("time", "0")
+    timestamp=int(request.args.get("time", "0"))
     token=request.args.get("token","")
 
-    if int(time.time())-int(timestamp)>600:
+    if int(time.time())-timestamp>600:
         return render_template("message.html", title="Verification link expired.", message=f"That link has expired."), 410
 
 
