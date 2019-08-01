@@ -1,13 +1,16 @@
 from flask import *
-from ruqqus.classes import *
-from ruqqus.helpers.wrappers import *
-from ruqqus.helpers.base36 import *
-from ruqqus.helpers.security import *
-from secrets import token_hex
 from time import time
 import hmac
 from os import environ
 import re
+
+from ruqqus.classes import *
+from ruqqus.helpers.wrappers import *
+from ruqqus.helpers.base36 import *
+from ruqqus.helpers.security import *
+from ruqqus.mail import send_verification_email
+from secrets import token_hex
+
 
 from ruqqus.mail import *
 from ruqqus.__main__ import app
@@ -201,16 +204,10 @@ def sign_up_post(v):
     db.add(new_user)
     db.commit()
 
-    v=db.query(User).filter_by(username=request.form.get("username")).first()
+    send_verification_email(new_user)
 
-
-
-    #send_mail(to_address=new_user.email, from_address=None,
-    #          subject="T_D Account Activation",
-    #          plaintext=f"http://tee-dee.herokuapp.com/activate?hash={v.activehash}", html=None)
-
-    session["user_id"]=v.id
+    session["user_id"]=new_user.id
     session["session_id"]=token_hex(16)
     
-    return redirect(v.url)
+    return redirect(new_user.permalink)
     
