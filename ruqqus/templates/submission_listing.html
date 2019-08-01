@@ -21,7 +21,7 @@
 
           <div class="col-12">
 
-            <div class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0 mb-3">
+            <div class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0 mb-3{% if p.is_banned %} banned {% endif %}">
               <div class="card-header bg-transparent border-0 p-0 ml-auto">
 
                 {% if p.url.endswith((".jpg",".png")) %}<img href="{{ p.url }}" src="{{ p.url }}" class="post-img" alt="">{% endif %}
