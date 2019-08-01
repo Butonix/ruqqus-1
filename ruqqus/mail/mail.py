@@ -27,7 +27,7 @@ def send_mail(to_address, subject, plaintext, html, from_address="Ruqqus <norepl
 def send_verification_email(user):
 
     url=f"https://{environ.get('domain')}/activate"
-    now=time()
+    now=int(time())
 
     token=generate_hash(f"{user.email}+{user.id}+{now}")
     params=f"?email={user.email}?id={user.id}?time={now}?token={token}"
