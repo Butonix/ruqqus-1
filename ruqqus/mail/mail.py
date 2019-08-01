@@ -55,7 +55,7 @@ def activate():
     timestamp=int(request.args.get("time", "0"))
     token=request.args.get("token","")
 
-    if int(time.time())-timestamp>600:
+    if int(time())-timestamp>600:
         return render_template("message.html", title="Verification link expired.", message=f"That link has expired."), 410
 
 
