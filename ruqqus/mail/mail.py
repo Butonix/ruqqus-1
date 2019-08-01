@@ -1,12 +1,12 @@
 from os import environ
 import requests
 import time
-from flask import render_template, abort
+from flask import *
 
-from ruqqus.__main__ import app, db
 from ruqqus.helpers.security import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.classes import *
+from ruqqus.__main__ import app, db
 
 def send_mail(to_address, subject, plaintext, html, from_address="Ruqqus <noreply@mail.ruqqus.com>"):
 
