@@ -93,7 +93,7 @@ def sign_up_get(v):
     session["signup_token"]=token
     ip=request.remote_addr
     
-    formkey_hashstr = str(now)+token+ip+agent
+    formkey_hashstr = str(now)+token+ip
 
     #get a random image
     image = random_image()
