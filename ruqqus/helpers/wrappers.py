@@ -98,7 +98,15 @@ def admin_level_required(x):
                 print("no cookie")
                 abort(401)
 
-            return f(*args, v=v, **kwargs)
+            response= f(*args, v=v, **kwargs)
+            
+            logstr=f"[{x}] {v.username} - {request.path}"
+            requests.post(environ.get("DISCORD_WEBHOOK"),
+                          headers={"Content-Type":"application/json"}
+                          json={"content":logstr}
+                         )
+            
+            return response
 
         wrapper.__name__=f.__name__
         return wrapper
