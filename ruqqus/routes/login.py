@@ -127,7 +127,7 @@ def sign_up_post(v):
     submitted_token=session["signup_token"]
     ip=request.remote_addr
     
-    correct_formkey_hashstr = form_timestamp+submitted_token+ip+agent
+    correct_formkey_hashstr = form_timestamp+submitted_token+ip
     
     correct_formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
                                msg=bytes(correct_formkey_hashstr, "utf-16")
@@ -147,7 +147,7 @@ def sign_up_post(v):
         agent=request.headers.get("User-Agent", None)
         ip=request.remote_addr
 
-        new_formkey_hashstr=str(now)+submitted_token+ip+agent
+        new_formkey_hashstr=str(now)+submitted_token+ip
         new_formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
                                msg=bytes(new_formkey_hashstr, "utf-16")
                                ).hexdigest()
