@@ -59,12 +59,12 @@
 	{% endif %}
 	{% endif %}
 
-            <li class="list-inline-item text-muted"><a href="#"><i class="fas fa-share-alt"
-                    aria-hidden="true"></i><span class="share"> Share</span></a>
+            <li class="list-inline-item text-muted"><a href="{{ c.permalink }}"><i class="fas fa-share-alt"
+                    aria-hidden="true"></i><span class="share">permalink</span></a>
             </li>
-            <li class="list-inline-item text-muted"><i class="fas fa-save"
-                    aria-hidden="true"></i><span class="save">
-                    Save</span></li>
+            <li class="list-inline-item text-muted"><a href="{{ c.parent.permalink }}><i class="fas fa-save"
+                    aria-hidden="true"></i><span class="save">parent</span></a>
+	    </li>
             <li class="list-inline-item text-muted"><a href="#"><i class="fas fa-flag"
                     aria-hidden="true"></i><span class="flag">
                     Flag</span></a></li>
