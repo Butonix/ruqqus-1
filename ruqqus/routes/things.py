@@ -12,7 +12,7 @@ from ruqqus.__main__ import app, db
 
 @app.route("/api/is_available/<name>", methods=["GET"])
 def api_is_available(name):
-    if db.query(func.count(User)).filter_by(username=name):
+    if db.query(func.count(User.username)).filter_by(username=name).count():
         return False
     else:
         return True
