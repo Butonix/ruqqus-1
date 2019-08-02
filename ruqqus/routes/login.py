@@ -132,7 +132,7 @@ def sign_up_post(v):
                                msg=bytes(correct_formkey_hashstr, "utf-16")
                                ).hexdigest()
     
-    now=int(time())
+    now=int(time.time())
 
     #define function that takes an error message and generates a new signup form
     def new_signup(error):
