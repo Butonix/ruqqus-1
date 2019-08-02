@@ -11,9 +11,15 @@
           <li class="nav-item d-flex align-items-center justify-content-center">
 	    <a class="btn btn-primary px-5 mr-2" href="/submit">Post</a>
           </li>
+	  {% if v.notifications_count %}
           <li class="nav-item d-flex align-items-center justify-content-center">
-            <a class="nav-link" href="#"><i class="fa-icon-circle fas fa-bell"></i></a>
+            <a class="nav-link" href="/notifications"><span class="red"><i class="fa-icon-circle fas fa-bell"></i>[{{ v.notifications_count }}]</span></a>
           </li>
+	  {% else %}
+	  <li class="nav-item d-flex align-items-center justify-content-center">
+            <a class="nav-link" href="/notifications?all=true"><i class="fa-icon-circle fas fa-bell"></i></a>
+          </li>
+	  {% endif %}
           <li class="nav-item d-flex align-items-center justify-content-center">
             <a class="nav-link" href="/settings"><i class="fa-icon-circle fas fa-cog"></i></a>
           </li>

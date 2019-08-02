@@ -30,6 +30,8 @@ class User(Base):
     creation_ip=Column(String, default=None)
     most_recent_ip=Column(String, default=None)
     submissions=relationship("Submission", lazy="dynamic", backref="users")
+    comments=relationship("Comment", lazy="dynamic", primaryjoin="Comment.author_id==User.id")
+    comment_notifications=relationship("Comment", lazy="dynamic", primaryjoin="Comment.parent_author_id==User.id")
     votes=relationship("Vote", lazy="dynamic", backref="users")
     commentvotes=relationship("CommentVote", lazy="dynamic", backref="users")
     ips = relationship('IP', lazy="dynamic", backref="users")
@@ -223,3 +225,28 @@ class User(Base):
 
         return str(base_encode(R, 16))+str(base_encode(G, 16))+str(base_encode(B, 16))
 
+    def notifications_unread(self, page=1, include_read=False):
+
+        page=int(page)
+
+        if include_read:
+            notifications=[c for c in self.comment_notifications.order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
+        else:
+            notifications=[c for c in self.comment_notifications.filter_by(read=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
+
+                                 
+        for c in notifications:
+            if not c.read:
+                c.read=True
+                db.add(c)
+
+        db.commit()
+
+        return render_template("notifications.html", v=self, notifications=notifications)
+    
+    @property
+    @_lazy
+    def notifications_count(self):
+
+        return self.comment_notifications.filter_by(read=False).count()
+        

@@ -9,7 +9,7 @@ $white: #ffffff;
 
 $purple: #6d3eb7;
 $blue: #1486fb;
-$red:  #F45D01;
+$red:  red;
 $gray: #757a84;
 $green: #68D16F;
 
@@ -794,6 +794,10 @@ ul.comment-section {
 }
 
 span.red {
+  color: $red;
+}
+
+span.admin {
   color: $admin;
 }
 

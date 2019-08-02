@@ -24,6 +24,8 @@ class Comment(Base):
     is_banned = Column(Boolean, default=False)
     body_html = Column(String)
     distinguish_level=Column(Integer, default=0)
+    parent_author_id=Column(Integer, ForeignKey(User.id))
+    read=Column(Boolean, default=False)
 
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
@@ -127,7 +129,7 @@ class Comment(Base):
             return any([x.any_descendants_live for x in self.replies])
         
 
-    def rendered_comment(self, v=None):
+    def rendered_comment(self, v=None, render_replies=True):
 
         if self.is_banned:
             if v:
@@ -139,7 +141,7 @@ class Comment(Base):
             else:
                 return ""
 
-        return render_template("single_comment.html", v=v, c=self, replies=self.replies)
+        return render_template("single_comment.html", v=v, c=self, replies=self.replies, render_replies=render_replies)
     
     @property
     @_lazy

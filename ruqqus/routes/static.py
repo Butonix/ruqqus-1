@@ -76,6 +76,12 @@ def terms(v):
 def my_info(v):
     return render_template("my_info.html", v=v)
 
+@app.route("/notifications", methods=["GET"])
+@auth_required
+def notifications(v):
+    return v.notifications_unread(page=request.args.get("page","1"),
+                                   include_read=request.args.get("all",False))
+
 @app.route("/submit", methods=["GET"])
 @is_not_banned
 def submit_get(v):

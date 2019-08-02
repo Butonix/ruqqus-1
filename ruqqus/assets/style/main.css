@@ -10,7 +10,7 @@
   --indigo: #6610f2;
   --purple: #6d3eb7;
   --pink: #e83e8c;
-  --red: #F45D01;
+  --red: red;
   --orange: #fd7e14;
   --yellow: #ffc107;
   --green: #68D16F;
@@ -9890,12 +9890,12 @@ ol > li::before {
 }
 
 .post-nav > .nav-item > .nav-link.active {
-  color: #F45D01;
-  border-bottom: 3px solid #F45D01;
+  color: red;
+  border-bottom: 3px solid red;
 }
 
 .post-nav .nav-link:hover, .nav-link:focus {
-  color: #F45D01;
+  color: red;
 }
 
 .post-nav .nav-item:last-child .nav-link {
@@ -10475,6 +10475,10 @@ ul.comment-section {
 }
 
 span.red {
+  color: red;
+}
+
+span.admin {
   color: #F45D01;
 }
 

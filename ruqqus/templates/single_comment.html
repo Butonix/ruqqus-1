@@ -92,11 +92,12 @@
   </div>
 
   <div id="reply-to-{{ c.base36id }}"></div>
-
+  {% if render_replies %}
   {% for reply in c.replies %}
   <div style="padding-left:10px">
   {{ reply.rendered_comment(v=v) | safe }}
   </div>
   {% endfor %}
+  {% endif %}
 </div>
 </div>

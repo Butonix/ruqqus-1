@@ -1,0 +1,39 @@
+{% extends "default.html" %}
+
+{% block title %}
+<title>Notifications</title>
+<meta name="description" content="Sign into Ruqqus to view">
+{% endblock %}
+
+{% block adminscripts %}
+<script src="/assets/js/comment_modding.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<h1>Inbox</h1>
+
+<div class="container">
+        <div class="row justify-content-around mx-lg-5">
+
+            <div class="col bg-white rounded py-3">
+
+                <div id="comment-listing" class="row text-left mb-5">
+
+                    <div class="col-12">
+
+                        <div class="comment-section">
+
+				{% for c in notifications %}
+					{{ c.rendered_comment(v=v, render_replies=False) | safe }}
+				{% endfor %}
+                            
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+	</div>
+</div>
+
+{% endblock %}
