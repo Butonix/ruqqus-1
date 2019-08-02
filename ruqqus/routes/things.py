@@ -1,5 +1,6 @@
 from urllib.parse import urlparse
 import mistletoe
+from sqlalchemy import func
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -8,6 +9,13 @@ from ruqqus.helpers.filters import *
 from ruqqus.classes import *
 from flask import *
 from ruqqus.__main__ import app, db
+
+@app.route("/api/is_available/<name>", methods=["GET"])
+def api_is_available(name):
+    if db.query(func.count(User)).filter_by(username=name):
+        return False
+    else:
+        return True
 
 
 @app.route("/u/<username>", methods=["GET"])
