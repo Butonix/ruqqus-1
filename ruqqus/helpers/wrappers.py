@@ -103,7 +103,8 @@ def admin_level_required(x):
             response= f(*args, v=v, **kwargs)
 
             #admin action logging on main service
-            if environ.get('domain')=="www.ruqqus.com":
+            if (environ.get('domain')=="www.ruqqus.com"
+                and request.method=="post"):
                 if isinstance(response, tuple):
                     logstr=(f"> Admin: `{v.username}`"+
                             f"\n> Action: `{f.__name__}`"+
