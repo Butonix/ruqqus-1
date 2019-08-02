@@ -88,7 +88,7 @@ def sign_up_get(v):
         abort(403)
     
     #Make a unique form key valid for one account creation
-    now = int(time())
+    now = int(time.time())
     token = token_hex(16)
     session["signup_token"]=token
     ip=request.remote_addr
