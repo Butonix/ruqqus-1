@@ -141,7 +141,7 @@ def sign_up_post(v):
         
         token = token_hex(16)
         session["signup_token"]=token
-        now=int(time())
+        now=int(time.time())
         agent=request.headers.get("User-Agent", None)
 
         new_formkey_hashstr=str(now)+submitted_token+agent
