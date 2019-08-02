@@ -218,9 +218,9 @@ class User(Base):
 
         random.seed(self.id)
 
-        R=random.randint(16, 192)
-        G=random.randint(16, 192)
-        B=random.randint(16, 192)
+        R=random.randint(16, 239)
+        G=random.randint(16, 239)
+        B=random.randint(16, 239)
         
 
         return str(base_encode(R, 16))+str(base_encode(G, 16))+str(base_encode(B, 16))
@@ -248,5 +248,5 @@ class User(Base):
     @_lazy
     def notifications_count(self):
 
-        return self.comment_notifications.filter_by(read=False).count()
+        return self.comment_notifications.filter_by(read=False, is_banned=False).count()
         
