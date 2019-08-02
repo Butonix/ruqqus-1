@@ -12,7 +12,7 @@ from ruqqus.__main__ import app, db
 
 @app.route("/api/is_available/<name>", methods=["GET"])
 def api_is_available(name):
-    if db.query(User.username).filter_by(username=name).count():
+    if db.query(User.username).filter(User.username.ilike(name)).count():
         return jsonify({name:False})
     else:
         return jsonify({name:True})
