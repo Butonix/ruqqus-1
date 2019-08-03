@@ -245,7 +245,6 @@ class User(Base):
         return render_template("notifications.html", v=self, notifications=notifications)
     
     @property
-    @_lazy
     def notifications_count(self):
 
         return self.comment_notifications.filter_by(read=False, is_banned=False).count()
