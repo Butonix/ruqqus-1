@@ -170,6 +170,11 @@ def api_comment(v):
     if existing:
         return redirect(existing.permalink)
     
+    parent_id=int(parent_fullname.split("_")[1], 36)
+    if parent_fullname.startswith("t2"):
+        parent=db.query(Submission).filter_by(id=parent_id).first()
+    elif parent_fullname.startswith("t3"):
+        parent=db.query(Comment).filter_by(id=parent_id).first()
 
 
     c=Comment(author_id=v.id,
