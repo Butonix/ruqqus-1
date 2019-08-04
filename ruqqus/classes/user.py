@@ -143,7 +143,6 @@ class User(Base):
         return render_template("userpage.html", u=self, v=v, listing=posts)
 
     @property
-    @_lazy
     def formkey(self):
 
         if "session_id" not in session:
