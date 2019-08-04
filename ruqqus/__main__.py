@@ -30,6 +30,14 @@ from ruqqus.routes import *
 import ruqqus.helpers.jinja2
 import ruqqus.helpers.db_prep
 
+#enforce https
+@app.before_request
+def before_request():
+    if request.url.startswith('http://'):
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301
+        return redirect(url, code=code)
+
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, x-auth"
