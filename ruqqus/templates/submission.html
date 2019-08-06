@@ -79,7 +79,7 @@
 
                             <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
 
-                            <div id="voting" class="d-md-block my-auto mr-3 text-center">
+                            <div id="voting" class="d-md-block my-auto mr-3 text-center voting">
                                 <div id="post-{{ p.base36id }}-up" class="arrow-up mx-auto" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
                                 </div>
                                 <span id="post-{{ p.base36id }}-score-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">{{ score+1-adjust }}</span>
