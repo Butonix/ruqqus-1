@@ -376,11 +376,11 @@ label.terms {
   border-top: 10px solid $gray-300;
 }
 
-.upvoted {
+.upvoted .arrow-mobile-up {
     color: $upvote;
 }
 
-.downvoted {
+.downvoted .arrow-mobile-down {
     color: $downvote;
 }
 

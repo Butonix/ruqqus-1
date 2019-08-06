@@ -11,6 +11,7 @@ scoreup1=document.getElementById("post-"+post_id+"-score-up");
 scorenone1=document.getElementById("post-"+post_id+"-score-none");
 scoredown1=document.getElementById("post-"+post_id+"-score-down");
 
+thing2=document.getElementById("voting-mobile")
 uparrow2=document.getElementById("arrow-mobile-up");
 downarrow2=document.getElementById("arrow-mobile-down");
 scoreup2=document.getElementById("post-"+post_id+"-score-mobile-up");
@@ -26,6 +27,8 @@ scoreup1.classList.remove("d-none");
 scorenone1.classList.add("d-none");
 scoredown1.classList.add("d-none");
 
+thing2.classList.add("upvoted");
+thing2.classList.remove("downvoted");
 uparrow2.onclick=function(){vote(post_id, 0)};
 downarrow2.onclick=function(){vote(post_id, -1)};
 scoreup2.classList.remove("d-none");
@@ -41,6 +44,8 @@ scoreup1.classList.add("d-none");
 scorenone1.classList.add("d-none");
 scoredown1.classList.remove("d-none");
 
+thing2.classList.remove("upvoted");
+thing2.classList.add("downvoted");
 uparrow2.onclick=function(){vote(post_id, 1)};
 downarrow2.onclick=function(){vote(post_id, 0)};
 scoreup2.classList.add("d-none");
@@ -57,6 +62,8 @@ scoreup1.classList.add("d-none");
 scorenone1.classList.remove("d-none");
 scoredown1.classList.add("d-none");
 
+thing2.classList.remove("upvoted");
+thing2.classList.remove("downvoted");
 uparrow2.onclick=function(){vote(post_id, 1)};
 downarrow2.onclick=function(){vote(post_id, -1)};
 scoreup2.classList.add("d-none");
