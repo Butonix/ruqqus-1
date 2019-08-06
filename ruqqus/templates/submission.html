@@ -148,7 +148,7 @@
 				<input type="hidden" name="formkey" value="{{ v.formkey }}">
 				<input type="hidden" name="parent_fullname" value="t2_{{ p.base36id }}">
 				<input type="hidden" name="submission" value="{{ p.base36id }}">
-                                <textarea class="form-control rounded" name="text" aria-label="With textarea"
+                                <textarea class="form-control rounded" name="text" form="reply-to-{{ p.fullname }}" aria-label="With textarea"
                                     placeholder="Add your comment..." rows="7"></textarea>
                                 <div class="bg-light comment-format">
                                     <small class="format"><i class="fas fa-bold"></i></small>
