@@ -19,7 +19,7 @@
                 <div class="card-block text-left my-md-auto">
                   <div class="post-meta text-left d-block d-md-none mb-1">{% if p.stickied %}📌 | {% endif %}Posted by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {{ p.age_string }}
                   </div>
-                  <h5 class="card-title post-title text-left mb-1 stretched-link"><a target="_blank" href="{{ p.permalink }}" class="stretched-link">{{ p.title }}</a></h5>
+                  <h5 class="card-title post-title text-left mb-1 stretched-link"><a target="_blank" href="{{ p.permalink }}">{{ p.title }}</a></h5>
                   <div class="post-meta text-left d-none d-md-block mb-1">{% if p.stickied %}📌 | {% endif %}Posted by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {{ p.age_string }}
                   </div>
                   <div class="post-actions">
