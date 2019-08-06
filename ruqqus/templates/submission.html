@@ -100,10 +100,10 @@
                     </div>
                 </div>
 
-                <div class="row mb-2 p-3">
+                <div class="row mb-2 no-gutters">
                     <div class="col-12">
 
-                        <div class="post-actions d-none d-md-block">
+                        <div class="post-actions d-none d-md-block px-3">
                             <ul class="list-inline text-left mb-2">
                                 <li class="list-inline-item"><a href="#"><i
                                             class="fas fa-comment-dots"></i>{{ p.comment_count }} Comment{{ 's' if p.comment_count != 1 else '' }}</a>
@@ -143,7 +143,7 @@
                         </div>
 
 {% if not p.is_banned %}
-                        <div class="comment-write">
+                        <div class="comment-write px-3">
                             <form id="reply-to-{{ p.fullname }}" class="input-group" action="/api/comment" method="post">
 				<input type="hidden" name="formkey" value="{{ v.formkey }}">
 				<input type="hidden" name="parent_fullname" value="t2_{{ p.base36id }}">
