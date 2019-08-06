@@ -7,7 +7,7 @@
 {% set adjust=0 %}
 {% endif %}
 
-<div id="comment-{{ c.base36id }}" class="comment rounded">
+<div id="comment-{{ c.base36id }}" class="comment rounded mt-2">
 
 
                                 <span class="toggle-collapse"></span>
@@ -78,7 +78,7 @@
 
 {% if render_replies %}
   {% for reply in c.replies %}
-  <div class="pl-2">
+  <div class="">
   {{ reply.rendered_comment(v=v) | safe }}
   </div>
   {% endfor %}
