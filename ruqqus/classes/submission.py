@@ -100,9 +100,9 @@ class Submission(Base):
         #load and tree comments
         #calling this function with a comment object will do a comment permalink thing
         self.tree_comments(comment=comment)
-
+        
         #return template
-        return render_template(template, v=v, p=self, sort_type=request.args.get("sort","Hot").capitalize())
+        return render_template(template, v=v, p=self, sort_method=request.args.get("sort","Hot").capitalize())
 
     @property
     @_lazy
