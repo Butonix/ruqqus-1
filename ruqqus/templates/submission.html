@@ -170,4 +170,56 @@
 			{% endfor %}
 		</div>
 
+
+
+<!-- Mobile responsive fixed footer with post actions -->
+
+        <div class="row fixed-top bg-white shadow d-inline-flex d-md-none p-3" id="footer-actions" style="z-index: 3; top: 0; transition: top 0.3s;">
+        
+            <div class="col text-center">
+        
+                <div class="post-actions mx-auto">
+                    <ul class="list-inline">
+                        
+                        <li id="voting-mobile" class="voting list-inline-item">
+                            <span class="mr-2 arrow-mobile-up" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
+                                <i class="fas fa-chevron-up mx-0"></i>
+                            </span>
+
+
+                                
+				<span id="post-{{ p.base36id }}-score-mobile-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">{{ score+1-adjust }}</span>
+		  		<span id="post-{{ p.base36id }}-score-mobile-none" class="score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">{{ score-adjust }}</span>
+		  		<span id="post-{{ p.base36id }}-score-mobile-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">{{ score-1-adjust }}</span>
+
+
+                            <span class=".arrow-mobile-down ml-2 my-0" {% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}>
+                                <i class="fas fa-chevron-down mx-0"></i>
+                            </span>
+                        </li>
+
+                        <li class="list-inline-item"><a href="#"><i class="fas fa-share-alt"></i><span class="share">Share Post</span></a>
+                        </li>
+                        <li class="list-inline-item d-inline-block d-md-none">
+                            <div class="dropdown show">
+                                <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <i class="fas fa-ellipsis-h"></i>More
+                                </a>
+                
+                                <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
+                                    <a class="dropdown-item" href="#"><i class="fas fa-save"></i>Save this Post</a>
+                                    <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Report to Mods</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+        
+            </div>
+        
+        </div>
+
+    </div>
+
 {% endblock %}
