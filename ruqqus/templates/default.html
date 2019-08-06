@@ -169,7 +169,8 @@ function formkey() {
       <div class="col">
 
         <div class="d-flex flex-row flex-nowrap justify-content-between">
-
+	
+{% if sort_method %}
           <div class="post-filter">
             <span>Sort By:</span>
             <span class="dropdown">
@@ -185,6 +186,8 @@ function formkey() {
             </span>
 
           </div>
+
+{% endif %}
 
           <div class="post-filter">
             <span>From:</span>
