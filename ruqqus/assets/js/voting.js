@@ -11,6 +11,8 @@ scoreup1=document.getElementById("post-"+post_id+"-score-up");
 scorenone1=document.getElementById("post-"+post_id+"-score-none");
 scoredown1=document.getElementById("post-"+post_id+"-score-down");
 
+uparrow2=document.getElementById("arrow-mobile-up");
+downarrow2=document.getElementById("arrow-mobile-down");
 scoreup2=document.getElementById("post-"+post_id+"-score-mobile-up");
 scorenone2=document.getElementById("post-"+post_id+"-score-mobile-none");
 scoredown2=document.getElementById("post-"+post_id+"-score-mobile-down");
@@ -24,6 +26,8 @@ scoreup1.classList.remove("d-none");
 scorenone1.classList.add("d-none");
 scoredown1.classList.add("d-none");
 
+uparrow2.onclick=function(){vote(post_id, 0)};
+downarrow2.onclick=function(){vote(post_id, -1)};
 scoreup2.classList.remove("d-none");
 scorenone2.classList.add("d-none");
 scoredown2.classList.add("d-none");
@@ -37,6 +41,8 @@ scoreup1.classList.add("d-none");
 scorenone1.classList.add("d-none");
 scoredown1.classList.remove("d-none");
 
+uparrow2.onclick=function(){vote(post_id, 1)};
+downarrow2.onclick=function(){vote(post_id, 0)};
 scoreup2.classList.add("d-none");
 scorenone2.classList.add("d-none");
 scoredown2.classList.remove("d-none");
@@ -51,6 +57,8 @@ scoreup1.classList.add("d-none");
 scorenone1.classList.remove("d-none");
 scoredown1.classList.add("d-none");
 
+uparrow2.onclick=function(){vote(post_id, 1)};
+downarrow2.onclick=function(){vote(post_id, -1)};
 scoreup2.classList.add("d-none");
 scorenone2.classList.remove("d-none");
 scoredown2.classList.add("d-none");
