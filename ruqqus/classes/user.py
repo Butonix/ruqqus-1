@@ -126,10 +126,13 @@ class User(Base):
 
         page=int(request.args.get("page","1"))
         
-        if v.admin_level or v.id==self.id:
-            listing=[p for p in self.submissions.order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
+        if v:
+            if v.admin_level or v.id==self.id:
+                listing=[p for p in self.submissions.order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
+            else:
+                listing=[p for p in self.submissions.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
         else:
-            listing=[p for p in self.submissions.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]    
+            listing=[p for p in self.submissions.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]  
 
         return render_template("userpage.html", u=self, v=v, listing=listing)
 
@@ -139,9 +142,12 @@ class User(Base):
             return render_template("userpage_banned.html", u=self, v=v)
         
         page=int(request.args.get("page","1"))
-        
-        if v.admin_level or v.id==self.id:
-            listing=[p for p in self.comments.order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
+
+        if v:
+            if v.admin_level or v.id==self.id:
+                listing=[p for p in self.comments.order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
+            else:
+                listing=[p for p in self.comments.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
         else:
             listing=[p for p in self.comments.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
 
