@@ -86,14 +86,23 @@ class Submission(Base):
 
         #check for banned
         if self.is_banned:
-            return render_template("submission_banned.html", v=v, p=self)
+            if v:
+                if v.admin:
+                    template="submission.html"
+
+                else: 
+                    template="submission_banned.html"
+            else:
+                template="submission_banned.html"
+        else:
+            template="submission.html"
 
         #load and tree comments
         #calling this function with a comment object will do a comment permalink thing
         self.tree_comments(comment=comment)
 
         #return template
-        return render_template("submission.html", v=v, p=self, sort_type=request.args.get("sort","Hot").capitalize())
+        return render_template(template, v=v, p=self, sort_type=request.args.get("sort","Hot").capitalize())
 
     @property
     @_lazy
