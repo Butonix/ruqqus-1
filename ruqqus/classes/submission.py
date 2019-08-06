@@ -188,3 +188,9 @@ class Submission(Base):
             years=now.tm_year-ctd.tm_year
             return f"{years} year{'s' if years>1 else ''} ago"
         
+
+    @property
+    @_lazy
+    def created_date(self):
+
+        return time.strftime("%d %B %Y", time.gmtime(self.created_utc))

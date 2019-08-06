@@ -7,11 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   
   <meta name="author" content="">
-  
-  {% block title %}
-  <meta name="description" content="Social media for patriots">
-  <title>Make A Ruqqus</title>
-  {% endblock %}
+
+{% block title %}
+  <title>ruqqus - the open, free-speech social platform</title>
+  <meta name="description" content="">
+{% endblock %}
 
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
@@ -25,11 +25,26 @@
   <!-- Ruqqus CSS -->
   <link rel="stylesheet" href="/assets/style/main.css">
 
+  <script>
+    var prevScrollpos = window.pageYOffset;
+    window.onscroll = function () {
+      var currentScrollPos = window.pageYOffset;
+      if (prevScrollpos > currentScrollPos) {
+        document.getElementById("filter-bar-mobile").style.top = "49px";
+      } else {
+        document.getElementById("filter-bar-mobile").style.top = "-98px";
+        document.getElementById("dropdownMenuSortBy").classList.remove('show');
+        document.getElementById("dropdownMenuFrom").classList.remove('show');
+      }
+      prevScrollpos = currentScrollPos;
+    }
 
+
+  </script>
 {% if v %}
+
 <script>
 function post(url, callback, errortext) {
-
   var xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
   var form = new FormData()
@@ -38,15 +53,12 @@ function post(url, callback, errortext) {
   xhr.onload=callback
   xhr.onerror=function(){alert(errortext)}
   xhr.send(form);
-
 }
-
 function formkey() {
   return '{{ v.formkey }}';
-
 }
-
 </script>
+
 <script src="/assets/js/voting.js"></script>
 <script src="/assets/js/comment_replies.js"></script>
 
@@ -54,86 +66,165 @@ function formkey() {
 {% block adminscripts %}
 {% endblock %}
 {% endif %}
-
-
 {% endif %}
-
-
-{% block pagejs %}
-{% endblock %}
 
 </head>
 
-<body>
-
-  <!-- Navigation -->
+<body id="frontpage">
 
   {% include "header.html" %}
-
   <!-- Page Content -->
 
-  <div class="container-fluid">
-    <div class="row justify-content-around mx-lg-5">
+  <div class="container">
+    <div class="row justify-content-around mx-lg-5 no-gutters">
+      <div class="col bg-white border-sm rounded-md">
 
-      <div class="col bg-white rounded py-3">
-	{% block content %}
-	{% endblock %}
+      {% block content %}
+      {% endblock %}
 
       </div>
 
       <!-- Right Sidebar (hidden on devices smaller than "large") -->
 
-      <div class="col sidebar text-left d-none d-lg-block ml-5">
+      <div class="col sidebar text-left d-none d-lg-block ml-3">
+{% block sidebarblock %}
         <div class="sidebar-section sidebar-about">
-          <div class="input-group align-items-center mb-4">
-            <input class="form-control border" type="search" placeholder="search for anything..."
-              id="example-search-input">
-          </div>
           <div class="title">About Ruqqus</div>
           <div class="body">
-          <p>Ruqqus is an independent social media platform built by and for American patriots.</p>
-          <small><a href="https://www.ruqqus.com/about">Learn more <span>&#8594;</span></a></small>
+            <p>Ruqqus is an independent social media platform built by and for Trump supporters.</p>
+            <small><a href="#">Learn more <span>&#8594;</span></a></small>
           </div>
         </div>
-	{% block sidebarblock %}
-	{% endblock %}
-	{% if v %}
-	{% if v.admin_level %}
-	<div class="sidebar-section sidebar-adminpanel">
-	<div class="title">Admin Panel</div>
-  <div class="body">
-	{% block adminpanel %}
-	<p>[No admin actions available]</p>
-	{% endblock %}
-	</div>
-  </div>
-	{% endif %}
-	{% endif %}
+
+{% endblock %}
+
         <div class="sidebar-section sidebar-stats">
           <div class="title">Stats</div>
           <div class="body">
-          <p class="user-count"><span class="number"></span> {{ 1 | total_users }} users</p>
-          <p class="online-count"><span class="text-success">&#9673;</span><span class="number"> {{ 1 | users_here }}</span> users online</p>
+            <div class="d-inline-block w-25">
+              <span style="font-size: 13px;font-weight: bold;">{{ 1 | total_users }}</span>
+              <small style="display: block;">users</small>
+            </div>
+            <div class="d-inline-block w-25">
+              <span style="font-size: 13px;font-weight: bold;">{{ 1 | users_here }}</span>
+              <small style="display: block;">online</small>
+            </div>
+          </div>
+        </div>
+	{% if v %}
+	{% if v.admin_level %}
+	<div class="sidebar-section sidebar-adminpanel">
+	  <div class="title">Admin Panel
+	  </div>
+  	  <div class="body">
+	    {% block adminpanel %}
+	      <p>[No admin actions available]</p>
+	    {% endblock %}
+	  </div>
+	</div>
+	{% endif %}
+	{% endif %}
+        <div class="sidebar-section sidebar-trending d-none">
+          <div class="title">What's Hot</div>
+          <div class="body">
+            <p>Here are the most popular tags from the last 24 hours.</p>
+            <div class="hashtag">
+              <a href="#">#Mueller</a>
+              <div class="text-muted text-small font-weight-normal">2.3K posting about this</div>
+            </div>
+            <div class="hashtag">
+              <a href="#">#MemeWar2</a>
+              <div class="text-muted text-small font-weight-normal">1.2K posting about this</div>
+            </div>
+            <div class="hashtag">
+              <a href="#">#AskTrumpSupporters</a>
+              <div class="text-muted text-small font-weight-normal">900 posting about this</div>
+            </div>
+            <div class="hashtag">
+              <a href="#">#DNCDebates</a>
+              <div class="text-muted text-small font-weight-normal">600 posting about this</div>
+            </div>
           </div>
         </div>
         <div class="sidebar-section sidebar-rules">
           <div class="title">Ruqqus Rules</div>
           <div class="body">
-          <ol class="pl-0">
-            <li>No racism</li>
-            <li>No doxxing, threats, or calls to violence</li>
-            <li>No trolling</li>
-            <li>No solicitation</li>
-            <li>Patriots only</li>
-          </ol>
+            <ol class="pl-0">
+              <li>No racism</li>
+              <li>No doxxing, threats, or calls to violence</li>
+              <li>No trolling</li>
+              <li>No solicitation</li>
+              <li>Patriots only</li>
+            </ol>
           </div>
         </div>
-        <div class="sidebar-section sidebar-footer">
-          {% include "footer.html" %}
+      </div>
+    
+    </div>
+
+    <div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="filter-bar-mobile"
+      style="z-index: 3; top: 0; transition: top 0.3s;">
+
+      <div class="col">
+
+        <div class="d-flex flex-row flex-nowrap justify-content-between">
+
+          <div class="post-filter">
+            <span>Sort By:</span>
+            <span class="dropdown">
+              <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">Hot</a>
+
+              <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
+                <a class="dropdown-item" href="#">Top</a>
+                <a class="dropdown-item" href="#">New</a>
+                <a class="dropdown-item" href="#">Fiery</a>
+                <a class="dropdown-item" href="#">Based</a>
+              </span>
+            </span>
+
+          </div>
+
+          <div class="post-filter">
+            <span>From:</span>
+            <span class="dropdown">
+              <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">Time</a>
+
+              <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
+                <a class="dropdown-item" href="#">Past Day</a>
+                <a class="dropdown-item" href="#">Past Month</a>
+                <a class="dropdown-item" href="#">Past Year</a>
+                <a class="dropdown-item" href="#">All Time</a>
+              </span>
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="footer py-5">
+      <div class="container-fluid">
+        <div class="row justify-content-center">
+          <div class="col">
+            <ul class="list-inline text-center text-small text-muted font-weight-bold mb-0">
+              <li class="list-inline-item">About</li>
+              <li class="list-inline-item">Terms</li>
+              <li class="list-inline-item">Privacy</li>
+              <li class="list-inline-item">Donate</li>
+              <li class="list-inline-item">Press</li>
+              <li class="list-inline-item">Help</li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
   </div>
+  </div>
+  </footer>
 
   <!-- Bootstrap core JavaScript -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
@@ -146,8 +237,8 @@ function formkey() {
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
 
+<script src="/assets/js/collapse.js"></script>
+
 </body>
 
-
 </html>
-

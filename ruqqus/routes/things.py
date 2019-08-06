@@ -19,6 +19,7 @@ def api_is_available(name):
 
 
 @app.route("/u/<username>", methods=["GET"])
+@app.route("/u/<username>/posts", methods=["GET"])
 @auth_desired
 def u_username(username, v=None):
     
@@ -37,6 +38,26 @@ def u_username(username, v=None):
         return redirect(result.url)
         
     return result.rendered_userpage(v=v)
+
+@app.route("/u/<username>/comments", methods=["GET"])
+@auth_desired
+def u_username_comments(username, v=None):
+    
+    #username is unique so at most this returns one result. Otherwise 404
+    
+    #case insensitive search
+
+    result = db.query(User).filter(User.username.ilike(username)).first()
+
+    if not result:
+        abort(404)
+
+    #check for wrong cases
+
+    if username != result.username:
+        return redirect(result.url)
+        
+    return result.rendered_comments_page(v=v)
 
 @app.route("/post/<base36id>", methods=["GET"])
 @auth_desired

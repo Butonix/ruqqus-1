@@ -111,3 +111,4 @@ package-lock.json
 .css.map
 *.map
 tee_dee_templates/
+local.txt
