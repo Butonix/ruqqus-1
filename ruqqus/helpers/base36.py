@@ -20,7 +20,7 @@ def base36encode(number, alphabet='0123456789abcdefghijklmnopqrstuvwxyz'):
     return sign + base36
 
 def base36decode(number):
-    return int(number, 36)
+    return int(str(number), 36)
 
 
 def base_encode(number, base):
