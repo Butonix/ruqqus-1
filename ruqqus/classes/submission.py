@@ -87,7 +87,7 @@ class Submission(Base):
         #check for banned
         if self.is_banned:
             if v:
-                if v.admin:
+                if v.admin_level:
                     template="submission.html"
 
                 else: 
