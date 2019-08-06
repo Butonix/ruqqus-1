@@ -10071,11 +10071,11 @@ label.terms {
   border-top: 10px solid #E0E4E9;
 }
 
-.upvoted {
+.upvoted .arrow-mobile-up {
   color: #F45D01;
 }
 
-.downvoted {
+.downvoted .arrow-mobile-down {
   color: #1486fb;
 }
 
