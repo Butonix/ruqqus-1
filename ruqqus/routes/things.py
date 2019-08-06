@@ -197,6 +197,9 @@ def api_comment(v):
     elif parent_fullname.startswith("t3"):
         parent=db.query(Comment).filter_by(id=parent_id).first()
 
+    if parent.is_banned:
+        abort(403)
+
 
     c=Comment(author_id=v.id,
               body=body,
@@ -205,10 +208,6 @@ def api_comment(v):
               parent_fullname=parent_fullname,
               parent_author_id=parent.author.id if parent.author.id != v.id else None
               )
-
-    #no replying to removed things
-    if c.parent.is_banned:
-        abort(403)
 
     db.add(c)
     db.commit()
