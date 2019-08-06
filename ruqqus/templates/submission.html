@@ -81,7 +81,7 @@
 
                             <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
 
-                            <div id="voting" class="d-md-block my-auto mr-3 text-center voting">
+                            <div id="voting" class="d-md-block d-none my-auto mr-3 text-center voting">
                                 <div id="post-{{ p.base36id }}-up" class="arrow-up mx-auto" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
                                 </div>
                                 <span id="post-{{ p.base36id }}-score-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">{{ score+1-adjust }}</span>
@@ -165,8 +165,8 @@
                     </div>
 
                 </div>
-		<div class="row"
-                            <div class="total">Comments (32)</div>
+		<div class="row">
+                            <div class="total">Comments ({{ p.comment_count }})</div>
                             <div class="post-filter ml-auto"><span>Sort By:</span>
                                 <span class="dropdown">
                                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
