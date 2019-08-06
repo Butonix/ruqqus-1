@@ -41,9 +41,9 @@
 {% if v %}
 {% if v.admin_level >=1 %}
 		{% if p.is_banned %}
-		      <li class="list-inline-item><a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')">approve</a></li>
+		      <li class="list-inline-item"><a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')">approve</a></li>
 		{% else %}
-		      <li class="list-inline-item><a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')">remove</a></li>
+		      <li class="list-inline-item"><a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')">remove</a></li>
 		{% endif %}
 {% endif %}
 {% endif %}
