@@ -130,11 +130,21 @@
                                         </div>
                                     </div>
                                 </li>
+{% if v %}
+{% if v.admin_level >=1 %}
+		{% if p.is_banned %}
+		      <li class="list-inline-item><a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')">approve</a></li>
+		{% else %}
+		      <li class="list-inline-item><a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')">remove</a></li>
+		{% endif %}
+{% endif %}
+{% endif %}
                             </ul>
                         </div>
 
                         <div class="comment-write">
-                            <form id="reply-to-{{ p.fullname }}" class="input-group">
+                            <form id="reply-to-{{ p.fullname }}" class="input-group" action="/api/comment" method="post">
+				<input type="hidden" name="formkey" value="{{ v.formkey }}">
                                 <textarea class="form-control rounded" aria-label="With textarea"
                                     placeholder="Add your comment..." rows="7"></textarea>
                                 <div class="bg-light comment-format">

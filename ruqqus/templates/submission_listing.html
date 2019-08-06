@@ -35,10 +35,18 @@
 
                           <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
                             <a class="dropdown-item" href="#"><i class="fas fa-save"></i>Save</a>
-                            <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Flag</a>
-                          </div>
+                            <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Flag</a>                          </div>
                         </div>
                       </li>
+{% if v %}
+{% if v.admin_level >=1 %}
+		{% if p.is_banned %}
+		      <li class="list-inline-item><a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')">approve</a></li>
+		{% else %}
+		      <li class="list-inline-item><a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')">remove</a></li>
+		{% endif %}
+{% endif %}
+{% endif %}
                     </ul>
                   </div>
 
