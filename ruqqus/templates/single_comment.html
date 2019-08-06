@@ -14,7 +14,7 @@
 
                                 <div class="comment-body">
 
-				<div id="comment-{{ c.base36id }}-only">
+				<div id="comment-{{ c.base36id }}-only" {% if c.distinguish_level>=3 %}class="distinguish-admin"{% elif c.distinguish_level %}class="distinguish-mod"{% endif %}>
 
                                     <div class="user-info">
                                         <a href="{{ c.author.permalink }}" class="font-weight-bold text-small user-name">{{ c.author.username }}</a>
