@@ -142,9 +142,11 @@
                             </ul>
                         </div>
 
+{% if not p.is_banned %}
                         <div class="comment-write">
                             <form id="reply-to-{{ p.fullname }}" class="input-group" action="/api/comment" method="post">
 				<input type="hidden" name="formkey" value="{{ v.formkey }}">
+				<input type="hidden" name="parent_fullname" value="t2_{{ p.base36id }}">
                                 <textarea class="form-control rounded" aria-label="With textarea"
                                     placeholder="Add your comment..." rows="7"></textarea>
                                 <div class="bg-light comment-format">
@@ -156,6 +158,7 @@
                                 </div>
                             </form>
                         </div>
+{% endif %}
                     </div>
 
                 </div>
