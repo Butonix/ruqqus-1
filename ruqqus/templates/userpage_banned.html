@@ -1,6 +1,79 @@
-{% extends "userpage.html" %}
+{% extends "default.html" %}
+
+{% block title %}
+<title>{{ u.username }}</title>
+<meta name="description" content="[banned]">
+{% endblock %}
+
+{% block sidebarblock %}
+<div class="sidebar-section sidebar-profile-basic">
+                    <div class="body">
+                        <h1 class="h6 d-inline-block mb-2 mr-2">@{{ u.username }}</h1>
+                    </div>
+                </div>
+{% endblock %}
+
+{% block adminpanel %}
+{% if v.admin_level >=3 and v.admin_level > u.admin_level %}
+{% if u.is_banned %}
+<form action="/api/unban_user/{{ u.id }}" method="post">
+<input type="hidden" name="formkey", value="{{ v.formkey }}">
+<input type="submit" value="Unban User">
+</form>
+{% else %}
+<form action="/api/ban_user/{{ u.id }}", method="post">
+<input type="hidden" name="formkey", value="{{ v.formkey }}">
+<input type="submit" value="Ban User">
+</form>
+{% endif %}
+{% endif %}
+{% if v.admin_level >=4 and v.admin_level > u.admin_level %}
+<table>
+ <tr>
+  <th>Key</th>
+  <th>Value</th>
+ </tr>
+ <tr>
+  <td>Account Creation IP</td>
+  <td>{{ u.creation_ip }}</td>
+ </tr>
+ <tr>
+  <td>Most Recent IP</td>
+  <td>{{ u.most_recent_ip }}</td>
+ </tr>
+</table>
+<p>IPs:</p>
+<p>
+{% set ips = u.ips | sort(attribute="created_utc", reverse=True) %}
+{% for ip in ips[0:10] %}
+<a href="/ip/{{ ip.ip }}">{{ ip.ip }}</a><br>
+{% endfor %}
+</p>
+{% endif %}
+{% endblock %}
 
 {% block content %}
-<h1>{{ u.username }}</h1>
-<p><span class="red"><b>[This user is banned.]</b></span></p>
+<!-- Post filters bar visible only on medium devices or larger-->
+
+        <div class="flex-row filter-bar sticky d-none d-md-flex">
+
+          <ul class="nav post-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link active text-uppercase" href="/u/{{ u.username}}">Posts</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-uppercase" href="/u/{{ u.username}}/comments">Comments</a>
+            </li>
+
+          </ul>
+
+        </div>
+
+        <div class="row no-gutters">
+
+          <div class="col-12">
+
+            <div>[This user is banned.]</div>
+</div>
+</div>
 {% endblock %}
