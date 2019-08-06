@@ -64,17 +64,17 @@
 {% endblock %}
 
 {% block content %}
-<div class="row mb-2 p-3 no-gutters">
+<div class="row mb-2 no-gutters">
 
                     <div class="col-12">
 
-                        <div id="post-{{ p.base36id }}" class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+                        <div id="post-{{ p.base36id }}" class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
                             <div class="card-header bg-transparent border-0 p-0 ml-auto">
                                 {% if p.url.endswith((".jpg",".png")) %}<img src="{{ p.url }}" class="post-img" alt="">{% endif %}
                             </div>
                             <div class="card-block my-md-auto">
-                                <div class="post-meta text-left d-block d-md-none mb-1">Posted by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {{ p.age_string }}</div>
-                                <h5 class="card-title post-title text-left mb-0 mb-md-1"><a target="_blank" href="{{ p.url }}">{{ p.title }}</a></h5>
+                                <div class="post-meta text-left d-block d-md-none mb-2">Posted by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {{ p.age_string }}</div>
+                                <h5 class="card-title post-title text-left mb-0 mb-md-2"><a target="_blank" href="{{ p.url }}">{{ p.title }}</a></h5>
                                 <div class="post-meta text-left d-none d-md-block">Posted by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {{ p.age_string }}</div>
 
                             </div>
@@ -165,6 +165,23 @@
                     </div>
 
                 </div>
+		<div class="row"
+                            <div class="total">Comments (32)</div>
+                            <div class="post-filter ml-auto"><span>Sort By:</span>
+                                <span class="dropdown">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                                    </a>
+                                    <span class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="?sort=new">New</a>
+                                        <a class="dropdown-item" href="?sort=top">Top</a>
+                                        <a class="dropdown-item" href="?sort=fiery">Fiery</a>
+                                        <a class="dropdown-item" href="#">Based</a>
+                                    </span>
+                                </span>
+                            </div>
+		</div>
 
 		<div class="p-3 comment-section">
 			{% for c in p.replies %}

@@ -1,5 +1,23 @@
 {% extends "default.html" %}
 
+{% block sortbar %}
+         <div class="post-filter">
+            <span>Sort By:</span>
+            <span class="dropdown">
+              <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">{{ sort_method.capitalize() }}</a>
+
+              <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
+                <a class="dropdown-item" href="?sort=top">Top</a>
+                <a class="dropdown-item" href="?sort=new">New</a>
+                <a class="dropdown-item" href="?sort=fiery">Fiery</a>
+                <a class="dropdown-item" href="#">Based</a>
+              </span>
+            </span>
+
+          </div>
+{% endblock %}
+
 {% block content %}
 
         <!-- Post filters bar visible only on medium devices or larger-->
