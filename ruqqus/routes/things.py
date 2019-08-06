@@ -173,7 +173,6 @@ def ip_address(addr, v):
 @validate_formkey
 def api_comment(v):
 
-    body=request.form.get("text")
     parent_submission=base36decode(request.form.get("submission"))
     parent_fullname=request.form.get("parent_fullname")
 
