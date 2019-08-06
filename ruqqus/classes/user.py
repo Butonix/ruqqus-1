@@ -1,5 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import render_template, session
+from flask import render_template, session, request
 from time import strftime, time, gmtime
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
@@ -116,32 +116,36 @@ class User(Base):
 
     def verifyPass(self, password):
         return check_password_hash(self.passhash, password)
-
-    def visible_posts(self, v=None):
-        
-        if not v:
-            return self.submissions.filter_by(is_banned=False).all()
-        elif v.admin_level:
-            return self.submissions.all()
-        else:
-            return self.submissions.filter_by(is_banned=False).all()
+            
             
         
     def rendered_userpage(self, v=None):
 
         if self.is_banned:
             return render_template("userpage_banned.html", u=self, v=v)
+
+        page=int(request.args.get("page","1"))
         
-        posts = [x for x in self.visible_posts(v)]
-        posts.sort(key=lambda x: x.created_utc, reverse=True)
+        if v.admin_level or v.id==self.id:
+            listing=[p for p in self.submissions.order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
+        else:
+            listing=[p for p in self.submissions.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]    
+
+        return render_template("userpage.html", u=self, v=v, listing=listing)
+
+    def rendered_comments_page(self, v=None):
+
+        if self.is_banned:
+            return render_template("userpage_banned.html", u=self, v=v)
         
-        if len(posts)>50:
-            posts=posts[0:50]
+        page=int(request.args.get("page","1"))
+        
+        if v.admin_level or v.id==self.id:
+            listing=[p for p in self.comments.order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
+        else:
+            listing=[p for p in self.comments.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
 
-        posts.sort(key=lambda x: x.created_utc, reverse=True)
-
-        return render_template("userpage.html", u=self, v=v, listing=posts)
-
+        return render_template("userpage_comments.html", u=self, v=v, listing=listing)
     @property
     def formkey(self):
 
@@ -203,8 +207,6 @@ class User(Base):
     @_lazy
     def created_date(self):
 
-        print(self.created_utc)
-
         return strftime("%d %B %Y", gmtime(self.created_utc))
 
     def __repr__(self):
@@ -247,4 +249,9 @@ class User(Base):
     def notifications_count(self):
 
         return self.comment_notifications.filter_by(read=False, is_banned=False).count()
+
+    @property
+    def post_count(self):
+
+        return self.submissions.filter_by(is_banned=False).count()
         

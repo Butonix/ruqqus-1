@@ -7,43 +7,28 @@
 {% set adjust=0 %}
 {% endif %}
 
-
-<div id="comment-{{ c.base36id }}" name="comment-{{ c.base36id }}" class="comment rounded">
-
-<span class="toggle-collapse"></span>
+<div id="comment-{{ c.base36id }}" class="comment rounded">
 
 
-<div class="comment-body">
+                                <span class="toggle-collapse"></span>
 
-  <div id="comment-{{ c.base36id }}-only" class="{% if c.is_banned %} banned{% endif %} {% if c.distinguish_level >=4 %} distinguish-admin{% elif c.distinguish_level >=1 %} distinguish-mod{% endif %}">
+                                <div class="comment-body">
+
+				<div id="comment-{{ c.base36id }}-only">
+
+                                    <div class="user-info">
+                                        <a href="{{ c.author.permalink }}" class="font-weight-bold text-small user-name">{{ c.author.username }}</a>
+                                        <span class="time-stamp"> {{ c.age_string }}</span>
+                                        <span class="points"> <span id="comment-{{ c.base36id }}-score-up"{% if voted!=1 %} class="d-none"{% endif %}>{{ score+1-adjust }}</span><span id="comment-{{ c.base36id }}-score-none"{% if voted not in [-2,0] %} class="d-none"{% endif %}>{{ score-adjust }}</span><span id="comment-{{ c.base36id }}-score-down"{% if voted!=-1 %} class="d-none"{% endif %}>{{ score-1-adjust }}</span> point{{ 's' if score != 1 else '' }}</span>
+                                    </div>
+
+				<div class="comment-text">
+                                    {{ c.body_html | safe }}
+				</div>
 
 
-    <div class="user-info">
-        <a class="dropdown-toggle user-name" href="{{ c.author.url }}" class="font-weight-bold text-small user-name">{{ c.author.username }}</a> | <span id="comment-{{ c.base36id }}-score-up" {% if not voted==1 %}class="noshow"{% endif %}>{{ score+1-adjust }}</span><span id="comment-{{ c.base36id }}-score-none" {% if voted not in [0,-2] %}class="noshow"{% endif %}>{{ score-adjust }}</span><span id="comment-{{ c.base36id }}-score-down" {% if not voted==-1 %}class="noshow"{% endif %}>{{ score-1-adjust }}</span> point{{ 's' if score+adjust != 1 else '' }} <span class="time-stamp">{{ c.age_string }}</span>
-    </div>
-    
-        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left profile-menu p-0 fade mt-3"
-            aria-labelledby="dropdownMenuButton">
-
-            <div class="user-stats text-center">
-                <div class="p-3">
-                    <div class="font-weight-bold">{{ c.author.username }}</div>
-
-                    <div class="text-small text-muted">{{ c.author.energy }} energy</div>
-                </div>
-                <div class="btn-group bg-light p-3" role="group" aria-label="mini-profile buttons">
-                    <a href="{{ c.author.url }}" class="btn btn-secondary btn-sm rounded mr-2" role="button"><i class="fas fa-paper-plane"
-                            aria-hidden="true"></i></a>
-                    <a href="{{ c.author.url }}" class="btn btn-primary btn-sm rounded" role="button">View Profile</a>
-                </div>
-
-            </div>
-        </div>
-
-    <div class="comment-body">{{ c.body_html | safe }}</div>
-
-    <div id="comment-{{ c.base36id }}-voting" class="comment-actions {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-        <ul class="list-inline text-left">
+                                    <div id="comment-{{ c.base36id }}-actions" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+                                        <ul class="list-inline text-left">
 
             <li id="comment-{{ c.base36id }}-up" class="list-inline-item arrow-up" {% if voted==1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted > -2 %}onclick="vote_comment('{{ c.base36id }}','1')"{% endif %}>
             </li>
@@ -85,17 +70,20 @@
 {% endif %}
 {% endif %}
         </ul>
-    </div>
 
-  </div>
+                                    </div>
+				</div>
 
-  <div id="reply-to-{{ c.base36id }}"></div>
-  {% if render_replies %}
+                                    <div id="reply-{{ c.base36id }}"></div>
+
+{% if render_replies %}
   {% for reply in c.replies %}
-  <div style="padding-left:10px">
+  <div class="pl-2">
   {{ reply.rendered_comment(v=v) | safe }}
   </div>
   {% endfor %}
   {% endif %}
-</div>
-</div>
+
+                                </div>
+
+                            </div>

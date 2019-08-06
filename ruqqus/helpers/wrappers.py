@@ -78,7 +78,6 @@ def admin_level_required(x):
 
         def wrapper(*args, **kwargs):
 
-            print(session)
 
             if "user_id" in session:
                 v=db.query(User).filter_by(id=session["user_id"]).first()
@@ -117,7 +116,7 @@ def admin_level_required(x):
                              )
             
             if isinstance(response, tuple):
-                return response[0]
+                return response[0], 204
             else:
                 return response
 

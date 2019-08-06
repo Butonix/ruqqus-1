@@ -1,36 +1,59 @@
 {% extends "default.html" %}
 
 {% block content %}
-<div class="row justify-content-between no-gutters border-bottom">
 
-          <div clas="col-2">
-            <span class="post-filter text-uppercase">Sort: 24hrs</span>
-          </div>
-          <div class="col-10">
+        <!-- Post filters bar visible only on medium devices or larger-->
 
-            <ul class="nav post-nav">
-              <li class="nav-item">
+        <div class="flex-row filter-bar sticky d-none d-md-flex">
 
-                <a class="nav-link text-uppercase{% if sort_method=="hot" %} active{% endif %}" href="/">Hot</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-uppercase{% if sort_method=="top" %} active{% endif %}" href="/?sort=top">Top</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-uppercase{% if sort_method=="new" %} active{% endif %}" href="/?sort=new">New</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-uppercase{% if sort_method=="fiery" %} active{% endif %}" href="/?sort=fiery">Fiery</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-uppercase{% if sort_method=="based" %} active{% endif %}" href="#">Based</a>
+          <div class="post-filter pb-2 d-none">
+            <span>Sort By:</span>
+            <span class="dropdown">
+              <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Time
+              </a>
 
-              </li>
-            </ul>
+              <span class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="#">Day</a>
+                <a class="dropdown-item" href="#">Month</a>
+                <a class="dropdown-item" href="#">Year</a>
+                <a class="dropdown-item" href="#">All Time</a>
+              </span>
+            </span>
 
           </div>
+
+          <ul class="nav post-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link{% if sort_method=="hot" %} active{% endif %} text-uppercase" href="/">Hot</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{% if sort_method=="top" %} active{% endif %} text-uppercase" href="/?sort=top">Top</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{% if sort_method=="new" %} active{% endif %} text-uppercase" href="/?sort=new">New</a> 
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{% if sort_method=="fiery" %} active{% endif %} text-uppercase" href="/?sort=fiery">Fiery</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if sort_method=="based" %} active{% endif %}text-uppercase" href="#">Based</a>
+            </li>
+          </ul>
+
         </div>
 
-{% include "submission_listing.html" %}
+        <div class="row no-gutters">
+
+          <div class="col-12">
+
+            <div class="posts">
+
+		{% include "submission_listing.html" %}
+              
+            </div>
+          </div>
+        </div>
 
 {% endblock %}

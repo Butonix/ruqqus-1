@@ -9,12 +9,13 @@ $white: #ffffff;
 
 $purple: #6d3eb7;
 $blue: #1486fb;
-$red:  red;
+$red:  #F45D01;
 $gray: #757a84;
 $green: #68D16F;
 
 $gray-100: #F5F6F7;
 $gray-300: #E0E4E9;
+$gray-500: #adb5bd;
 
 $upvote: #F45D01;
 $downvote: #1486fb;
@@ -39,6 +40,8 @@ $body-bg: #F5F7F9; //this is the background color
 
 $input-border-color: #DEE2E6;
 $border-color: #E0E4E9;
+
+$border-radius: .25rem;
 
 // Text styling
 
@@ -68,8 +71,43 @@ html {
 }
 
 body {
-    padding-top: 100px;
+    padding-top: 98px;
     background-color: $gray-100;
+}
+
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 767.98px) {
+
+    body {
+    padding-top: 49px;
+}
+
+#thread {
+    padding-top: 98px;
+    background-color: $white;
+}
+
+#frontpage {
+    padding-top: 98px;
+    background-color: $white;
+}
+
+.container {
+        padding-left: 0;
+        padding-right:0;
+    }
+
+}
+
+// Positioning
+
+.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 49px;
+    height: auto;
+    overflow-y: auto;
+    z-index: 3;
 }
 
 // Type
@@ -133,17 +171,18 @@ ol > li::before {
     border-radius: .25rem;
 }
 
-// Navbar and Subnavbar
-
+// Navbar and Filter Bar
 
 .navbar-brand, .navbar-light .navbar-brand {
     color: $purple;
     font-weight: $font-weight-bold;
 }
 
-.subnavbar {
-    z-index: 2;
-    margin-top: 64px;
+.filter-bar {
+    border-bottom: 1px solid $border-color;
+    border-top-left-radius: $border-radius;
+    border-top-right-radius: $border-radius;
+    padding: 1rem 1rem 0 1rem;
     background-color: $white;
 }
 
@@ -191,6 +230,37 @@ ol > li::before {
 
 // Navbar icons and search box
 
+.form-inline.search .form-control:active, .form-inline.search .form-control:focus {
+    background-color: $white;
+    border-color: $white;
+}
+
+.form-inline.search .form-control {
+    background-color: #5c349a;
+    border-color: #5c349a;
+    font-size: $small-font-size;
+}
+
+.form-inline.search .input-group-append .input-group-text .fa.fa-search {
+    color: $white;
+    opacity: .5;
+}
+
+.form-inline.search .form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: $white;
+  opacity: .5; /* Firefox */
+}
+
+.form-inline.search .form-control::-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: $white;
+  opacity: .5;
+}
+
+.form-inline.search .form-control::-ms-input-placeholder { /* Microsoft Edge */
+  color: $white;
+  opacity: .5;
+}
+
 // Inputs
 
 .form-control {
@@ -218,10 +288,26 @@ label.terms {
     display:none;
 }
 
+.dropdown-item {
+    padding: 0.5rem 1rem;
+}
+
+.dropdown .dropdown-menu .dropdown-meta {
+    padding: 0.5rem 1rem;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    color: $white;
+    text-decoration: none;
+    background-color: $secondary;
+}
+
+
+
 // Font Awesome
 
 .sidebar-section .fa, .sidebar-section .fas {
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .icon::before {
@@ -262,7 +348,17 @@ label.terms {
     z-index: 2;
     font-weight: $font-weight-bold;
     text-align: center;
+    min-width: 32px;
 }
+
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 767.98px) {
+
+    .voting {
+    min-width: length;
+}
+}
+
 
 .arrow-up {
   width: 0;
@@ -371,7 +467,7 @@ label.terms {
     margin-bottom: 1rem;
     background-color: #fff;
     border-radius: 0.25rem;
-    border: 1px solid #E0E4E9;
+    border: 1px solid $border-color;
 }
 
 .sidebar-section.sidebar-trending .hashtag {
@@ -433,6 +529,17 @@ label.terms {
 
 // Thread
 
+#frontpage .posts .card {
+    border-width: 0 0 1px 0;
+    border-color: $gray-300;
+    border-style: solid;
+    border-radius: 0;
+}
+
+#frontpage .posts .card:last-of-type {
+    border: none;
+}
+
 .post-title {
     margin-bottom: 0;
 }
@@ -441,14 +548,18 @@ label.terms {
     color: $body-color;
 }
 
-.post-title a:hover, a:active, a:focus  {
+.post-title a:hover, .post-title a:active, .post-title a:focus  {
     color: $purple;
     text-decoration: none;
 }
 
+.stretched-link a:hover {
+    color: $purple
+}
+
 .post-meta {
     position: relative;
-    z-index: 2;
+    z-index: 1;
     color: $text-muted;
     font-size: $small-font-size;
     width: fit-content;
@@ -465,8 +576,15 @@ label.terms {
 
 .post-actions .fa, .post-actions .fas {
     font-size: 12px;
-    color: $gray-600;
     margin-right: .5rem;
+}
+
+.post-actions .dropdown-item:active .fa, .post-actions .dropdown-item:active .fas {
+    color: $white;
+}
+
+.post-actions .dropdown-item:hover .fa, .post-actions .dropdown-item:hover .fas {
+    color: $white;
 }
 
 .post-actions a:hover .fa, .post-actions a:hover .fas {
@@ -486,23 +604,54 @@ label.terms {
     margin-right: 1rem;
 }
 
+.post-actions .list-inline .list-inline-item:last-child {
+    margin-right: 0;
+}
+
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 767.98px) {
+    .post-actions .list-inline .list-inline-item {
+    margin-right: 1.5rem;
+}
+
+.post-actions .list-inline .list-inline-item:last-child {
+    margin-right: 0;
+}
+}
+
 .post-actions .list-inline .list-inline-item .dropdown-item {
     font-size: $small-font-size;
 }
 
-.post-actions a {
-    color: $gray;
+.post-actions .list-inline .list-inline-item .dropdown-item:active {
+    color: $white;
 }
 
-.post-actions a:hover, a:active, a:focus {
-    color: $body-color;
+.post-actions a {
+    color: $gray;
     text-decoration: none;
+}
+
+.post-actions a:hover {
+    color: $body-color;
+}
+
+.post-actions .dropdown-item:hover {
+    color: $white;
 }
 
 .post-img {
     width: 145px;
     height: 100px;
     object-fit: cover;
+}
+
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 767.98px) { 
+    .post-img {
+    width: 80px;
+    height: 60px;
+}
 }
 
 .post-actions .comments, .post-actions .share, .post-actions .save, .post-actions .flag {
@@ -544,7 +693,7 @@ label.terms {
 
 .comment .comment-body {
     width: 100%;
-    padding: 1rem 1rem 1rem 0;
+    padding: 1rem;
     margin-top: auto;
     margin-bottom: auto;
 }
@@ -566,13 +715,55 @@ label.terms {
     margin-bottom: 0;
 }
 
-.comment-actions a {
-    color: $gray;
+.comment-actions .fa, .comment-actions .fas {
+    font-size: 12px;
+    margin-right: .5rem;
 }
 
-.comment-actions a:hover, a:active, a:focus {
-    color: $purple;
+.comment-actions .dropdown-item:active .fa, .comment-actions .dropdown-item:active .fas {
+    color: $white;
+}
+
+.comment-actions .dropdown-item:hover .fa, .comment-actions .dropdown-item:hover .fas {
+    color: $white;
+}
+
+.comment-actions a:hover .fa, .comment-actions a:hover .fas {
+    color: $body-color;
+}
+
+.comment-actions .fas.fa-ellipsis-h {
+    font-size: $font-size-lg;
+    vertical-align: bottom;
+}
+
+.comment-actions .list-inline {
+    margin-bottom: 0;
+}
+
+.comment-actions .list-inline .list-inline-item {
+    margin-right: 1rem;
+}
+
+.comment-actions .list-inline .list-inline-item .dropdown-item {
+    font-size: $small-font-size;
+}
+
+.comment-actions .list-inline .list-inline-item .dropdown-item:active {
+    color: $white;
+}
+
+.comment-actions a {
+    color: $gray;
     text-decoration: none;
+}
+
+.comment-actions a:hover {
+    color: $body-color;
+}
+
+.comment-actions .dropdown-item:hover {
+    color: $white;
 }
 
 ul.comment-section {
@@ -649,7 +840,8 @@ ul.comment-section {
     z-index: 2;
 }
 
-.comment.collapsed .comment-profile, .comment.collapsed p.text, .comment.collapsed .comment-actions, .comment.collapsed .comment-write {
+.comment.collapsed .comment-profile, .comment.collapsed div.comment-text, .comment.collapsed .comment-actions, .comment.collapsed .comment-write,
+.comment.collapsed .comment {
     display: none;
 }
 
@@ -773,10 +965,90 @@ ul.comment-section {
     text-shadow: 0 0 2px black;
 }
 
+// Profile Page
+
+.profile-actions a {
+    color: $gray;
+    text-decoration: none;
+}
+
+.profile-actions .dropdown-item:hover {
+    color: $white;
+}
+
+.profile-actions .dropdown-item {
+    font-size: 13px;
+}
+
+.profile-actions .fa, .profile-actions .fas {
+    font-size: 12px;
+    margin-right: 0.5rem;
+}
+
+.profile-actions .fa, .profile-actions .fas {
+    font-size: 12px;
+    margin-right: .5rem;
+}
+
+.profile-actions .dropdown-item:active .fa, .profile-actions .dropdown-item:active .fas {
+    color: $white;
+}
+
+.profile-actions .dropdown-item:hover .fa, .profile-actions .dropdown-item:hover .fas {
+    color: $white;
+}
+
 // Footer
 
 .footer a {
     color: $gray-600;
+}
+
+// Responsive Borders
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .border#{$infix}-top {      border-top: $border-width solid $border-color !important; }
+    .border#{$infix}-right {    border-right: $border-width solid $border-color !important; }
+    .border#{$infix}-bottom {   border-bottom: $border-width solid $border-color !important; }
+    .border#{$infix}-left {     border-left: $border-width solid $border-color !important; }
+
+    .border#{$infix}-top-0 {    border-top: 0 !important; }
+    .border#{$infix}-right-0 {  border-right: 0 !important; }
+    .border#{$infix}-bottom-0 { border-bottom: 0 !important; }
+    .border#{$infix}-left-0 {   border-left: 0 !important; }
+
+    .border#{$infix}-x {
+      border-left: $border-width solid $border-color !important;
+      border-right: $border-width solid $border-color !important;
+    }
+
+    .border#{$infix}-y {
+      border-top: $border-width solid $border-color !important;
+      border-bottom: $border-width solid $border-color !important;
+    }
+
+    .border#{$infix} {
+      border: $border-width solid $border-color !important;
+    }
+
+    .border#{$infix}-0 {
+      border: none !important;
+    }
+
+// Responsive Border Radius
+ 
+	.rounded#{$infix}        { @include border-radius($border-radius); }
+	.rounded#{$infix}-top    { @include border-top-radius($border-radius); @include border-bottom-radius(0); }
+	.rounded#{$infix}-right  { @include border-right-radius($border-radius); @include border-left-radius(0); }
+	.rounded#{$infix}-bottom { @include border-bottom-radius($border-radius); @include border-top-radius(0); }
+	.rounded#{$infix}-left   { @include border-left-radius($border-radius); @include border-right-radius(0); }
+	.rounded#{$infix}-circle { border-radius: 50%; }
+	.rounded#{$infix}-0 {  border-radius: 0;	}
+
+  }
 }
 
 .footer a:hover, a:focus, a:active {
@@ -794,10 +1066,6 @@ ul.comment-section {
 }
 
 span.red {
-  color: $red;
-}
-
-span.admin {
   color: $admin;
 }
 

@@ -1,10 +1,5 @@
-<div class="post_listing">
-
-{% set i=0 %}
-
 {% for p in listing %}
 
-{% set i = i+1 %}
 
 {% set score=p.score_fuzzed %}
 
@@ -15,49 +10,59 @@
 {% set voted=-2 %}
 {% set adjust=0 %}
 {% endif %}
-       
-        <div id="post-{{ p.base36id }}" class="row mt-3 post-listing-entry post-{{ p.base36id }}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.is_banned %} banned{% endif %}">
 
 
-          <div class="col-12">
+              <div id="post-{{ p.base36id }}" class="card d-flex flex-row-reverse flex-nowrap justify-content-end p-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+                <div class="card-header bg-transparent border-0 p-0 ml-1 ml-auto">
+                  {% if p.url.endswith((".jpg",".png")) %}<img href="{{ p.url }}" src="{{ p.url }}" class="post-img" alt="">{% endif %}
+		</div>
+                <div class="card-block text-left my-md-auto">
+                  <div class="post-meta text-left d-block d-md-none mb-1">Posted by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {{ p.age_string }}
+                  </div>
+                  <h5 class="card-title post-title text-left mb-1"><a target="_blank" href="{{ p.permalink }}">{{ p.title }}</a></h5>
+                  <div class="post-meta text-left d-none d-md-block mb-1">Posted by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {{ p.age_string }}
+                  </div>
+                  <div class="post-actions">
+                    <ul class="list-inline">
+                      <li class="list-inline-item"><a href="{{ p.permalink }}"><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
+                      <li class="list-inline-item"><a href="google.com"><i class="fas fa-share-alt"></i>Share</a></li>
+                      <li class="list-inline-item">
+                        <div class="dropdown show">
+                          <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            <i class="fas fa-ellipsis-h"></i>More
+                          </a>
 
-            <div class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0 mb-3{% if p.is_banned %} banned {% endif %}">
-              <div class="card-header bg-transparent border-0 p-0 ml-auto">
+                          <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
+                            <a class="dropdown-item" href="#"><i class="fas fa-save"></i>Save</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Flag</a>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
 
-                {% if p.url.endswith((".jpg",".png")) %}<img href="{{ p.url }}" src="{{ p.url }}" class="post-img" alt="">{% endif %}
-              </div>
-              <div class="card-block my-auto">
-                <h5 class="card-title text-left mb-2"><a href="{{ p.url }}" rel="nofollow" target="_blank">{{ p.title }}</a></h5>
-                <div class="post-meta text-left">{% if p.stickied %}<span title="pinned">📌</span> | {% endif %}{% if p.distinguish_level %}{% include "tags/d.html" %}| {% endif %}Posted by <a href="{{ p.author.url }}">{{ p.author.username }}</a> {{ p.age_string }} | ({{ p.domain }})</div>
+                </div>
 
-                <div class="post-actions">
-                  <ul class="list-inline text-left">
-                    <li class="list-inline-item text-muted text-small"><a href="{{ p.permalink }}">{{ p.comment_count }} comment{{ 's' if p.comment_count != 1 else '' }}</a></li>
-                    <li class="list-inline-item text-muted">Share</li>
-                    <li class="list-inline-item text-muted">Save</li>
-                    <li class="list-inline-item text-muted">Flag</li>
-                  </ul>
+                <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
+                
+                <div class="voting d-none d-md-block my-auto mr-3">
+
+
+
+                  <div id="post-{{ p.base36id }}-up" class="mx-auto arrow-up" {% if not p.is_banned %}{% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}{% endif %}></div>
+
+		  <span id="post-{{ p.base36id }}-score-up" class="score-up{% if voted!=1 %} d-none{% endif %}">{% if p.is_banned %}✖{% else %}{{ score+1-adjust }}{% endif %}</span>
+		  <span id="post-{{ p.base36id }}-score-none" class="score{% if voted!=0 and voted!=-2 %} d-none{% endif %}">{% if p.is_banned %}✖{% else %}{{ score-adjust }}{% endif %}</span>
+		  <span id="post-{{ p.base36id }}-score-down" class="score-down{% if voted!=-1 %} d-none{% endif %}">{% if p.is_banned %}✖{% else %}{{ score-1-adjust }}{% endif %}</span>
+
+
+                  <div id="post-{{ p.base36id }}-down" class="text-muted mx-auto arrow-down" {% if not p.is_banned %}{% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}{% endif %}></div>
+
+
+
                 </div>
 
               </div>
-
-              <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
-
-              <div id="voting" class="d-md-block my-auto mr-3 text-center">
-                <div id="post-{{ p.base36id }}-up" class="arrow-up {{ p.base36id }}-arrow-up mx-auto" {% if not p.is_banned %}{% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}{% endif %}>
-                </div>
-                  <span id="post-{{ p.base36id }}-score-up" class="score-up text-muted{% if voted!=1 %} noshow{% endif %}">{% if p.is_banned %}✖{% else %}{{ score+1-adjust }}{% endif %}</span>
-		  <span id="post-{{ p.base36id }}-score-none" class="score text-muted{% if voted!=0 and voted!=-2 %} noshow{% endif %}">{% if p.is_banned %}✖{% else %}{{ score-adjust }}{% endif %}</span>
-		  <span id="post-{{ p.base36id }}-score-down" class="score-down text-muted{% if voted!=-1 %} noshow{% endif %}">{% if p.is_banned %}✖{% else %}{{ score-1-adjust }}{% endif %}</span>
-                <div id="post-{{ p.base36id }}-down" class="arrow-down {{ p.base36id }}-arrow-down mx-auto" {% if not p.is_banned %}{% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}{% endif %}>
-
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </div>
 
 {% endfor %}
-</div>
