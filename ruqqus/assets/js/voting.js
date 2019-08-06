@@ -11,6 +11,10 @@ scoreup1=document.getElementById("post-"+post_id+"-score-up");
 scorenone1=document.getElementById("post-"+post_id+"-score-none");
 scoredown1=document.getElementById("post-"+post_id+"-score-down");
 
+scoreup2=document.getElementById("post-"+post_id+"-score-mobile-up");
+scorenone2=document.getElementById("post-"+post_id+"-score-mobile-none");
+scoredown2=document.getElementById("post-"+post_id+"-score-mobile-down");
+
 if (direction=="1") {
 thing.classList.add("upvoted");
 thing.classList.remove("downvoted");
@@ -19,6 +23,10 @@ downarrow1.onclick=function(){vote(post_id, -1)};
 scoreup1.classList.remove("d-none");
 scorenone1.classList.add("d-none");
 scoredown1.classList.add("d-none");
+
+scoreup2.classList.remove("d-none");
+scorenone2.classList.add("d-none");
+scoredown2.classList.add("d-none");
 }
 else if (direction=="-1"){
 thing.classList.remove("upvoted");
@@ -28,6 +36,11 @@ downarrow1.onclick=function(){vote(post_id, 0)};
 scoreup1.classList.add("d-none");
 scorenone1.classList.add("d-none");
 scoredown1.classList.remove("d-none");
+
+scoreup2.classList.add("d-none");
+scorenone2.classList.add("d-none");
+scoredown2.classList.remove("d-none");
+
 }
 else if (direction=="0"){
 thing.classList.remove("upvoted");
@@ -37,6 +50,11 @@ downarrow1.onclick=function(){vote(post_id, -1)};
 scoreup1.classList.add("d-none");
 scorenone1.classList.remove("d-none");
 scoredown1.classList.add("d-none");
+
+scoreup2.classList.add("d-none");
+scorenone2.classList.remove("d-none");
+scoredown2.classList.add("d-none");
+
 }
 }
 
