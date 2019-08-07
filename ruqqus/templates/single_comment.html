@@ -17,8 +17,8 @@
 				<div id="comment-{{ c.base36id }}-only" {% if c.distinguish_level>=3 %}class="distinguish-admin"{% elif c.distinguish_level %}class="distinguish-mod"{% endif %}>
 
 {% if standalone %}
-<div class="submission-info">
-<a href="{{ c.post.permalink }}">{{ c.post.title }}</a>
+<div class="post-info">
+<a class="text-small" href="{{ c.post.permalink }}">{{ c.post.title }}</a>
 </div>
 {% endif %}
 
