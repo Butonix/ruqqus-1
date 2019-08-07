@@ -129,7 +129,7 @@ class Comment(Base):
             return any([x.any_descendants_live for x in self.replies])
         
 
-    def rendered_comment(self, v=None, render_replies=True):
+    def rendered_comment(self, v=None, render_replies=True, standalone=False):
 
         if self.is_banned:
             if v:
@@ -141,7 +141,7 @@ class Comment(Base):
             else:
                 return ""
 
-        return render_template("single_comment.html", v=v, c=self, replies=self.replies, render_replies=render_replies)
+        return render_template("single_comment.html", v=v, c=self, replies=self.replies, render_replies=render_replies, standalone=standalone)
     
     @property
     @_lazy
@@ -178,3 +178,4 @@ class Comment(Base):
         else:
             years=now.tm_year-ctd.tm_year
             return f"{years} year{'s' if years>1 else ''} ago"
+

@@ -25,7 +25,7 @@
                         <div class="comment-section">
 
 				{% for c in notifications %}
-					{{ c.rendered_comment(v=v, render_replies=False) | safe }}
+					{{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
 				{% endfor %}
                             
                         </div>
