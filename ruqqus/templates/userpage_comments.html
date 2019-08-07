@@ -28,7 +28,7 @@
 
             <div class="posts px-3 pt-3">
 	{% for c in listing %}
-		{{ c.rendered_comment(v=v, render_replies=False) | safe }}
+		{{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
 	{% endfor%}
 
 </div>
