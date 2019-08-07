@@ -131,9 +131,6 @@ class Comment(Base):
 
     def rendered_comment(self, v=None, render_replies=True, standalone=False, level=1):
 
-        if level=8:
-            return 
-
         if self.is_banned:
             if v:
                 if v.admin_level>1:
