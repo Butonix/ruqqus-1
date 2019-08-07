@@ -61,7 +61,7 @@
 
                     <div class="col-12">
 
-                        <div id="post-{{ p.base36id }}" class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0 banned{{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+                        <div id="post-{{ p.base36id }}" class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0 banned{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
                             <div class="card-block my-md-auto">
                                 <div class="post-meta text-left d-block d-md-none mb-1">[Removed]</div>
                                 <h5 class="card-title post-title text-left mb-0 mb-md-1">{{ p.title }}</h5>
