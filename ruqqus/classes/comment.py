@@ -129,7 +129,10 @@ class Comment(Base):
             return any([x.any_descendants_live for x in self.replies])
         
 
-    def rendered_comment(self, v=None, render_replies=True, standalone=False):
+    def rendered_comment(self, v=None, render_replies=True, standalone=False, level=1):
+
+        if level=8:
+            return 
 
         if self.is_banned:
             if v:
@@ -141,7 +144,7 @@ class Comment(Base):
             else:
                 return ""
 
-        return render_template("single_comment.html", v=v, c=self, replies=self.replies, render_replies=render_replies, standalone=standalone)
+        return render_template("single_comment.html", v=v, c=self, replies=self.replies, render_replies=render_replies, standalone=standalone, level=level)
     
     @property
     @_lazy

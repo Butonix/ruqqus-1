@@ -126,7 +126,7 @@ class Submission(Base):
 
     def tree_comments(self, comment=None):
 
-        def tree_replies(thing):
+        def tree_replies(thing, layer=1):
 
             thing.__dict__["replies"]=[]
             i=len(comments)-1
@@ -137,9 +137,10 @@ class Submission(Base):
                     comments.pop(i)
 
                 i-=1
-
-            for reply in thing.replies:
-                tree_replies(reply)
+                
+            if layer <=8:
+                for reply in thing.replies:
+                    tree_replies(reply, layer=layer+1)
                 
         ######
                 
