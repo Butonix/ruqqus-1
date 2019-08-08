@@ -47,6 +47,7 @@ def send_verification_email(user):
               plaintext=text,
               subject="Validate your Ruqqus account"
               )
+    return True
 
 @app.route("/activate", methods=["GET"])
 @auth_desired

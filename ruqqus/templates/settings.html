@@ -34,10 +34,11 @@ Your reddit username "{{ v.reddit_username }}" has been verified with reddit.<br
 {% endif %}
 
 <form action="/settings" method="post">
-<input type="hidden" name="formkey", value="{{ v.formkey }}">
+<input type="hidden" name="formkey" value="{{ v.formkey }}">
+
 
 <h2>Change Password</h2>
-<input type="hidden" name="formkey", value="{{ v.formkey }}">
+<input type="hidden" name="formkey" value="{{ v.formkey }}">
 New Password:<br>
 <input type="password" name="new_password"><br>
 Confirm Password:<br>
@@ -51,5 +52,12 @@ Old Password:<br>
 <input type="submit" value="Save">
 </form>
 
+<br>
+{% if v.is_activated == False %}
+<form action="/settings" method="post">
+<h2>Resend Activation email</h2>
+<input type="hidden" name="resend_activation"><input type="submit" value="Click here to resend the activation e-mail.">
+</form>
+{% endif %}
 
 {% endblock %}

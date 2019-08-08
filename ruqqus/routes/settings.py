@@ -2,6 +2,7 @@ from flask import *
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.__main__ import db, app
+from ruqqus.mail.mail import send_verification_email
 
 @app.route("/settings", methods=["POST"])
 @auth_required
@@ -9,6 +10,11 @@ from ruqqus.__main__ import db, app
 def settings_post(v):
 
     updated=False
+
+    if request.form.get("resend_activation"):
+        if not send_verification_email(v):
+            return render_template("settings.html", v=v, error="There was an issue sending the E-mail.")
+        return render_template("settings.html", v=v, msg="Your Activation E-Mail has been resent")
 
     if request.form.get("new_password"):
         if request.form.get("new_password") != request.form.get("cnf_password"):
@@ -19,7 +25,6 @@ def settings_post(v):
 
         v.passhash=v.hash_password(request.form.get("new_password"))
         updated=True
-                                  
 
     if request.form.get("over18") != v.over_18:
         updated=True
