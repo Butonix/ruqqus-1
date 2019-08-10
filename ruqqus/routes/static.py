@@ -56,6 +56,10 @@ def robots_txt():
 def settings(v):
     return render_template("settings.html", v=v)
 
+@app.route("/favicon.ico", methods=["GET"])
+def favicon():
+    return send_from_directory("/assets/images/favicon.ico")
+
 @app.route("/rules",methods=["GET"])
 @auth_desired
 def rules(v):
