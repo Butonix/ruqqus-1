@@ -22,13 +22,13 @@ def home(v):
     sort_method=request.args.get("sort", "hot")
 
     if sort_method=="hot":
-        posts=posts.order_by(Submission.rank_hot.desc())
+        posts=posts.order_by(text("submissions.rank_hot desc"))
     elif sort_method=="new":
         posts=posts.order_by(Submission.created_utc.desc())
     elif sort_method=="fiery":
-        posts=posts.order_by(Submission.rank_fiery.desc())
+        posts=posts.order_by(text("submissions.rank_fiery desc"))
     elif sort_method=="top":
-        posts=posts.order_by(Submission.score.desc())
+        posts=posts.order_by(text("submissions.score desc"))
 
     #page
     posts=posts.offset(25*(page-1)).limit(25).all()

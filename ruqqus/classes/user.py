@@ -52,7 +52,6 @@ class User(Base):
     @property
     @cache.memoize(timeout=60)
     def karma(self):
-        print("energy")
         return self.energy
 
 

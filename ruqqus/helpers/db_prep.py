@@ -153,38 +153,6 @@ IMMUTABLE
 RETURNS NULL ON NULL INPUT;
 """)
 
-#score
-c.execute("""
-CREATE OR REPLACE FUNCTION score(comments)
-RETURNS bigint AS '
-  SELECT ($1.ups - $1.downs)
-  '
-LANGUAGE SQL
-IMMUTABLE
-RETURNS NULL ON NULL INPUT;
-""")
-
-#rank hot
-c.execute("""
-CREATE OR REPLACE FUNCTION rank_hot(comments)
-RETURNS float AS '
-  SELECT CAST(($1.ups - $1.downs) AS float)/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.0/3.0))
-  '
-LANGUAGE SQL
-IMMUTABLE
-RETURNS NULL ON NULL INPUT;
-""")
-
-#rank controversial
-c.execute("""
-CREATE OR REPLACE FUNCTION rank_fiery(comments)
-RETURNS float AS '
-  SELECT SQRT(CAST(($1.ups * $1.downs) AS float))/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.0/3.0))
-  '
-LANGUAGE SQL
-IMMUTABLE
-RETURNS NULL ON NULL INPUT;
-""")
 
 #===========USERS=============
 

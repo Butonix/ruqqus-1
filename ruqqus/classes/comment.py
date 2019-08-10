@@ -1,12 +1,12 @@
 from flask import render_template
 import time
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, deferred
 from random import randint
 import math
 
 from ruqqus.helpers.base36 import *
-from ruqqus.__main__ import Base, db
+from ruqqus.__main__ import Base, db, cache
 from .user import User
 from .submission import Submission
 from .votes import CommentVote
@@ -31,12 +31,10 @@ class Comment(Base):
     #There is no difference to SQLAlchemy, but they cannot be written to
     ups = Column(Integer, server_default=FetchedValue())
     downs=Column(Integer, server_default=FetchedValue())
-    score=Column(Integer, server_default=FetchedValue())
-    rank_hot=Column(Float, server_default=FetchedValue())
-    rank_fiery=Column(Float, server_default=FetchedValue())
     age=Column(Integer, server_default=FetchedValue())
 
     def __init__(self, *args, **kwargs):
+                   
 
         if "created_utc" not in kwargs:
             kwargs["created_utc"]=int(time.time())
@@ -47,44 +45,43 @@ class Comment(Base):
                 
     def __repr__(self):
         return f"<Comment(id={self.id})"
- 
-    def _lazy(f):
-
-        def wrapper(self, *args, **kwargs):
-
-            if "_lazy_dict" not in self.__dict__:
-                self._lazy_dict={}
-
-            if f.__name__ not in self._lazy_dict:
-                self._lazy_dict[f.__name__]=f(self, *args, **kwargs)
-
-            return self._lazy_dict[f.__name__]
-
-        wrapper.__name__=f.__name__
-        return wrapper
+        
 
     @property
-    @_lazy
+    @cache.memoize(timeout=60)
+    def rank_hot(self):
+        return (self.ups-self.down)/(((self.age+100000)/6)**(1/3))
+
+    @property
+    @cache.memoize(timeout=60)
+    def rank_fiery(self):
+        return (math.sqrt(self.ups * self.downs))/(((self.age+100000)/6)**(1/3))
+
+    @property
+    @cache.memoize(timeout=60)
+    def score(self):
+        return self.ups-self.downs
+                
+
+    @property
     def base36id(self):
         return base36encode(self.id)
 
     @property
-    @_lazy
     def fullname(self):
         return f"t3_{self.base36id}"
 
     @property
-    @_lazy
+    @cache.memoize(timeout=60)
     def is_top_level(self):
         return self.parent_fullname.startswith("t2_")
 
     @property
-    @_lazy
+    @cache.memoize(timeout=60)
     def author(self):
         return db.query(User).filter_by(id=self.author_id).first()
 
     @property
-    @_lazy
     def post(self):
 
         return db.query(Submission).filter_by(id=self.parent_submission).first()
@@ -111,12 +108,12 @@ class Comment(Base):
             return db.query(Comment).filter_by(parent_fullname=self.fullname).all()
 
     @property
-    @_lazy
     def permalink(self):
 
         return f"/post/{self.post.base36id}/comment/{self.base36id}"
 
     @property
+    @cache.memoize(timeout=60)
     def any_descendants_live(self):
 
         if self.replies==[]:
@@ -144,7 +141,7 @@ class Comment(Base):
         return render_template("single_comment.html", v=v, c=self, replies=self.replies, render_replies=render_replies, standalone=standalone, level=level)
     
     @property
-    @_lazy
+    @cache.memoize(timeout=60)
     def score_fuzzed(self, k=0.01):
         real=self.score
         a=math.floor(real*(1-k))
@@ -152,7 +149,6 @@ class Comment(Base):
         return randint(a,b)
     
     @property
-    @_lazy
     def age_string(self):
 
         age=self.age
