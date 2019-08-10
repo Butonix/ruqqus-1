@@ -49,7 +49,7 @@ def static_service(path):
 
 @app.route("/robots.txt", methods=["GET"])
 def robots_txt():
-    return send_from_directory("./assets", "robots.txt")
+    return send_file("./assets/robots.txt")
 
 @app.route("/settings", methods=["GET"])
 @auth_required
@@ -58,7 +58,7 @@ def settings(v):
 
 @app.route("/favicon.ico", methods=["GET"])
 def favicon():
-    return send_from_directory("/assets/images/favicon.ico")
+    return send_file("./assets/images/favicon.ico")
 
 @app.route("/rules",methods=["GET"])
 @auth_desired
