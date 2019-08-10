@@ -22,7 +22,7 @@ app.config["CACHE_TYPE"]="redis"
 app.config["CACHE_MEMCACHED_SERVERS"]=environ.get("MEMCACHIER_SERVERS")
 app.config["CACHE_MEMCACHED_USERNAME"]=environ.get("MEMCACHIER_USERNAME")
 app.config["CACHE_MEMCACHED_PASSWORD"]=environ.get("MEMCACHIER_PASSWORD")
-app.config["CACHE_REDIS_URL"]=environ.get("CACHE_REDIS_URL")
+app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL")
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 
 Markdown(app)
