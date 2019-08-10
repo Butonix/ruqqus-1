@@ -1,7 +1,7 @@
 import time
 
+from ruqqus.classes import *
 from ruqqus.__main__ import app, db
-from ruqqus.classes import IP, User
 
 @app.template_filter("users_here")
 def users_here(x):

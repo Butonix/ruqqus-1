@@ -2,8 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import render_template, session, request
 from time import strftime, time, gmtime
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
-import hmac
+from sqlalchemy.orm import relationship, deferred
 from os import environ
 from secrets import token_hex
 import random
@@ -12,7 +11,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from .votes import Vote
 from .ips import IP
-from ruqqus.__main__ import Base, db
+from ruqqus.__main__ import Base, db, cache
 
 class User(Base):
 
@@ -37,7 +36,7 @@ class User(Base):
     ips = relationship('IP', lazy="dynamic", backref="users")
 
     #properties defined as SQL server-side functions
-    energy = Column(Integer, server_default=FetchedValue())
+    energy = deferred(Column(Integer, server_default=FetchedValue()))
 
     def __init__(self, **kwargs):
 
@@ -50,30 +49,20 @@ class User(Base):
 
         super().__init__(**kwargs)
 
-        self._lazy_dict = {}
+    @property
+    @cache.memoize(timeout=60)
+    def karma(self):
+        print("energy")
+        return self.energy
 
-    def _lazy(f):
-
-        def wrapper(self, *args, **kwargs):
-            
-            if "_lazy_dict" not in self.__dict__:
-                self._lazy_dict={}
-
-            if f.__name__ not in self._lazy_dict:
-                self._lazy_dict[f.__name__]=f(self, *args, **kwargs)
-
-            return self._lazy_dict[f.__name__]
-
-        wrapper.__name__=f.__name__
-        return wrapper
 
     @property
-    @_lazy
+    @cache.memoize(timeout=60)
     def base36id(self):
         return base36encode(self.id)
 
     @property
-    @_lazy
+    @cache.memoize(timeout=60)
     def fullname(self):
         return f"t1_{self.base36id}"
 
@@ -200,17 +189,17 @@ class User(Base):
         return render_template("settings.html", v=self, msg="Your account name has been updated and validated.")
 
     @property
-    @_lazy
+    @cache.memoize(timeout=60)
     def url(self):
         return f"/u/{self.username}"
 
     @property
-    @_lazy
+    @cache.memoize(timeout=60)
     def permalink(self):
         return self.url
 
     @property
-    @_lazy
+    @cache.memoize(timeout=60)
     def created_date(self):
 
         return strftime("%d %B %Y", gmtime(self.created_utc))
@@ -220,7 +209,7 @@ class User(Base):
 
 
     @property
-    @_lazy
+    @cache.memoize(timeout=60)
     def color(self):
 
         random.seed(self.id)
