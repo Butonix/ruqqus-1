@@ -18,7 +18,11 @@ app.config['SECRET_KEY']=environ.get('MASTER_KEY')
 app.config["SERVER_NAME"]=environ.get("domain", None)
 app.config["VERSION"]="0.1.0"
 
-app.config["CACHE_TYPE"]="redis"
+if "localhost" in app.config["SERVER_NAME"]:
+    app.config["CACHE_TYPE"]="null"
+else:
+    app.config["CACHE_TYPE"]="redis"
+    
 app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL")
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 
