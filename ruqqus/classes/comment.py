@@ -72,12 +72,10 @@ class Comment(Base):
         return f"t3_{self.base36id}"
 
     @property
-    @cache.memoize(timeout=60)
     def is_top_level(self):
         return self.parent_fullname.startswith("t2_")
 
     @property
-    @cache.memoize(timeout=60)
     def author(self):
         return db.query(User).filter_by(id=self.author_id).first()
 
