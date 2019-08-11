@@ -1,7 +1,7 @@
 import time
 
 from ruqqus.classes import *
-from ruqqus.__main__ import app, db
+from ruqqus.__main__ import app, db, cache
 
 @app.template_filter("users_here")
 def users_here(x):
@@ -10,9 +10,13 @@ def users_here(x):
 
     cutoff=now-300
 
-    return len(db.query(User).join(IP).filter(IP.created_utc>=cutoff).all())
+    return 20
+
+    return db.query(User).join(IP).filter(IP.created_utc>=cutoff).count()
 
 @app.template_filter("total_users")
 def total_users(x):
 
-    return len(db.query(User).filter_by(is_banned=False).all())
+    return 10
+
+    return db.query(User).filter_by(is_banned=False).all().count()
