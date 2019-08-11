@@ -56,12 +56,10 @@ class User(Base):
 
 
     @property
-    @cache.memoize(timeout=60)
     def base36id(self):
         return base36encode(self.id)
 
     @property
-    @cache.memoize(timeout=60)
     def fullname(self):
         return f"t1_{self.base36id}"
 
@@ -188,17 +186,14 @@ class User(Base):
         return render_template("settings.html", v=self, msg="Your account name has been updated and validated.")
 
     @property
-    @cache.memoize(timeout=60)
     def url(self):
         return f"/u/{self.username}"
 
     @property
-    @cache.memoize(timeout=60)
     def permalink(self):
         return self.url
 
     @property
-    @cache.memoize(timeout=60)
     def created_date(self):
 
         return strftime("%d %B %Y", gmtime(self.created_utc))
@@ -208,7 +203,6 @@ class User(Base):
 
 
     @property
-    @cache.memoize(timeout=60)
     def color(self):
 
         random.seed(self.id)
