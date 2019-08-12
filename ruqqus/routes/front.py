@@ -15,8 +15,6 @@ def frontlist(sort="hot", page=1):
                                         Submission.is_banned==False,
                                         Submission.stickied==False)
 
-    
-
     if sort=="hot":
         posts=posts.order_by(text("submissions.rank_hot desc"))
     elif sort=="new":

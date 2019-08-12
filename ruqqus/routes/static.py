@@ -21,7 +21,7 @@ def settings(v):
 
 @app.route("/favicon.ico", methods=["GET"])
 def favicon():
-    return send_file("./assets/images/logo/ruqqus_logo_square.svg")
+    return send_file("./assets/images/logo/ruqqus_logo_square_white_fill.svg")
 
 @app.route("/rules",methods=["GET"])
 @auth_desired
