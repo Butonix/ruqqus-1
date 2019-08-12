@@ -1,9 +1,11 @@
 import time
-from ruqqus.helpers.wrappers import *
 from flask import *
+from sqlalchemy import *
+
+from ruqqus.helpers.wrappers import *
 
 from ruqqus.__main__ import app, db, cache
-from ruqqus.classes import *
+from ruqqus.classes.submission import Submission
 
 
 @cache.memoize(timeout=30)

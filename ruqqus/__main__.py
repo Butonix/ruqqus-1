@@ -35,7 +35,7 @@ db = sessionmaker(bind=_engine)()
 Base = declarative_base()
 
 #import and bind all routing functions
-#from ruqqus.classes import *
+import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
 import ruqqus.helpers.db_prep
