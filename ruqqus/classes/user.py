@@ -9,6 +9,7 @@ import random
 
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
+from ruqqus.helpers.lazy import lazy
 from .votes import Vote
 from .ips import IP
 from ruqqus.__main__ import Base, db, cache
@@ -102,8 +103,6 @@ class User(Base):
 
     def verifyPass(self, password):
         return check_password_hash(self.passhash, password)
-            
-            
         
     def rendered_userpage(self, v=None):
 
@@ -138,6 +137,7 @@ class User(Base):
             listing=[p for p in self.comments.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
 
         return render_template("userpage_comments.html", u=self, v=v, listing=listing)
+
     @property
     def formkey(self):
 
@@ -194,6 +194,7 @@ class User(Base):
         return self.url
 
     @property
+    @lazy
     def created_date(self):
 
         return strftime("%d %B %Y", gmtime(self.created_utc))
@@ -203,6 +204,7 @@ class User(Base):
 
 
     @property
+    @lazy
     def color(self):
 
         random.seed(self.id)

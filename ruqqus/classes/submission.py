@@ -7,6 +7,7 @@ from urllib.parse import urlparse
 from random import randint
 
 from ruqqus.helpers.base36 import *
+from ruqqus.helpers.lazy import lazy
 from ruqqus.__main__ import Base, db, cache
 from .user import User
 from .votes import Vote
@@ -99,6 +100,7 @@ class Submission(Base):
         return render_template(template, v=v, p=self, sort_method=request.args.get("sort","Hot").capitalize())
 
     @property
+    @lazy
     def author(self):
         if self.author_id==0:
             return None
@@ -192,6 +194,7 @@ class Submission(Base):
         
 
     @property
+    @lazy
     def created_date(self):
 
         return time.strftime("%d %B %Y", time.gmtime(self.created_utc))

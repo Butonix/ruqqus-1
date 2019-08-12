@@ -6,6 +6,7 @@ from random import randint
 import math
 
 from ruqqus.helpers.base36 import *
+from ruqqus.helpers.lazy import lazy
 from ruqqus.__main__ import Base, db, cache
 from .user import User
 from .submission import Submission
@@ -76,15 +77,18 @@ class Comment(Base):
         return self.parent_fullname.startswith("t2_")
 
     @property
+    @lazy
     def author(self):
         return db.query(User).filter_by(id=self.author_id).first()
 
     @property
+    @lazy
     def post(self):
 
         return db.query(Submission).filter_by(id=self.parent_submission).first()
     
     @property
+    @lazy
     def parent(self):
 
         if self.is_top_level:
@@ -106,6 +110,7 @@ class Comment(Base):
             return db.query(Comment).filter_by(parent_fullname=self.fullname).all()
 
     @property
+    @lazy
     def permalink(self):
 
         return f"/post/{self.post.base36id}/comment/{self.base36id}"
@@ -147,6 +152,7 @@ class Comment(Base):
         return randint(a,b)
     
     @property
+    @lazy
     def age_string(self):
 
         age=self.age
