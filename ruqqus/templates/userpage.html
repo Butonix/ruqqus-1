@@ -10,16 +10,19 @@
                     <div class="body">
                         <h1 class="h6 d-inline-block mb-2 mr-2" style="color:#{{ u.color }}">@{{ u.username }}</h1>
                         <div class="profile-actions d-inline-block">
+			{% if not v or v.id != u.id %}
                             <div class="dropdown show">
                                 <a href="#" role="button" id="dropdownProfileActionsLink" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-ellipsis-h"></i>
                                 </a>
+
                                 <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
-                                    <a class="dropdown-item" href="#"><i class="fas fa-paper-plane"></i>Message</a>
+                                <a class="dropdown-item" href="#"><i class="fas fa-paper-plane"></i>Message</a>
                                     <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Report</a>
                                 </div>
                             </div>
+			{% endif %}
                         </div>
                         <div>
                             {% if u.is_activated %}<span class="badge badge-pill badge-success text-white">Email Verified</span>{% endif %}
