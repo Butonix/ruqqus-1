@@ -48,9 +48,18 @@ def send_verification_email(user):
               subject="Validate your Ruqqus account"
               )
 
+@app.route("/api/verify_email", methods=["POST"])
+@auth_required
+def api_verify_email(v):
+
+    send_verification_email(v)
+
+    return "", 204
+
+
 @app.route("/activate", methods=["GET"])
 @auth_desired
-def activate():
+def activate(v):
 
     email=request.args.get("email","")
     id=request.args.get("id","")
@@ -58,7 +67,7 @@ def activate():
     token=request.args.get("token","")
 
     if int(time.time())-timestamp > 3600:
-        return render_template("message.html", title="Verification link expired.", message="That link has expired."), 410
+        return render_template("message.html", v=v, title="Verification link expired.", message="That link has expired."), 410
 
 
     if not validate_hash(f"{email}+{id}+{timestamp}", token):
@@ -69,9 +78,9 @@ def activate():
         abort(400)
 
     if user.is_activated:
-        return render_template("message.html", title="Account already_verified.", message="That link has expired."), 404
+        return render_template("message.html", v=v, title="Email already verified.", message="Email already verified."), 404
 
     user.is_activated=True
     db.add(user)
     db.commit()
-    return render_template("message.html", title="Email verified.", message=f"Your email {email} has been verified. Thank you.")
+    return render_template("message.html", v=v, title="Email verified.", message=f"Your email {email} has been verified. Thank you.")

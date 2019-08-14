@@ -1,55 +1,59 @@
-{% extends "default.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}
-<title>Settings</title>
-<meta name="description" content="Settings">
-{% endblock %}
+<head>
 
-{% block content %}
-<h1>Settings</h1>
-{% if error %}
-<p><span class="red">{{ error }}</span></p>
-{% endif %}
-{% if msg %}
-<p><span class="green">{{ msg }}</span></p>
-{% endif %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<h2>Log Out of Ruqqus</h2>
-<form action="/logout" method="post">
-<input type="hidden" name="formkey" value="{{ v.formkey }}">
-<input type="submit" value="Log out">
-</form>
+    <title>Profile Settings</title>
 
-<h2>Username Verification</h2>
-{% if v.reddit_username %}
-<form action="/api/del_reddit_name" method="post">
-Your reddit username "{{ v.reddit_username }}" has been verified with reddit.<br>
-<input type="hidden" name="formkey" value="{{ v.formkey }}">
-<input type="submit" value="Un-link reddit account.">
-</form>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
-{% else %}
-<p>Link your reddit account</p>
-<a href="/api/get_reddit_auth"><button>Click here to begin.</button></a>
-{% endif %}
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-<form action="/settings" method="post">
-<input type="hidden" name="formkey", value="{{ v.formkey }}">
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/e76eba0350.js"></script>
 
-<h2>Change Password</h2>
-<input type="hidden" name="formkey", value="{{ v.formkey }}">
-New Password:<br>
-<input type="password" name="new_password"><br>
-Confirm Password:<br>
-<input type="password" name="cnf_password"><br>
-Old Password:<br>
-<input type="password" name="old_password"><br>
-<br>
+    <!-- Tee Dee CSS -->
+    <link rel="stylesheet" href="https://ruqqus.com/assets/style/main.css">
 
-<h2>Preferences</h2>
-<input type="checkbox" name="over18" {% if v.over_18 %}checked{% endif %}>I am over 18 and willing to view adult content.<br>
-<input type="submit" value="Save">
-</form>
+<script>
+function post(url, callback, errortext) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  var form = new FormData()
+  form.append("formkey", "{{ v.formkey }}");
+  xhr.withCredentials=true;
+  xhr.onload=callback
+  xhr.onerror=function(){alert(errortext)}
+  xhr.send(form);
+}
+function formkey() {
+  return '{{ v.formkey }}';
+}
+</script>
 
+</head>
 
-{% endblock %}
+<body id="settings">
+
+    {% include "header.html" %}
+    <!-- Page Content -->
+    <div class="container">
+
+	{% block content %}
+	{% endblock %}
+
+    </div>
+
+    {% include "footer.html" %}
+    {% include "bootstrap.html" %}
+
+</body>
+
+</html>

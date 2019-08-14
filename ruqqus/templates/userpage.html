@@ -29,10 +29,12 @@
                 </div>
                 <div class="sidebar-section sidebar-profile-stats">
                     <div class="body">
-                        <p class="text-muted text-small mb-0 d-none">Not the diety. Co-founder and front-end developer for
-                            ruqqus. Yuge fan of DJT and the goal of making America great again.
+			{% if u.bio_html %}
+                        <p class="text-muted text-small mb-0">
+				{{ u.bio_html | safe }}
                         </p>
-                        <hr class="d-none">
+                        <hr>
+			{% endif %}
                         <div class="text-muted text-small"><i class="fas fa-medal mr-2"></i>{{ u.karma }} Rep</div>
                         <div class="text-muted text-small mt-2"><i class="fas fa-pen text-muted mr-2"></i>{{ u.post_count }} Post{{ 's' if u.post_count!=1 else '' }}
                         </div>

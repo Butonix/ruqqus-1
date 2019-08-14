@@ -1,0 +1,170 @@
+{% extends "settings.html" %}
+
+{% block content %}
+        <div class="row justify-content-around mx-lg-5 no-gutters">
+
+            <div class="col h-100">
+
+                <div class="py-3 p-md-0">
+
+                    <h1 class="h3">Settings</h1>
+
+                </div>
+
+                <!-- Submission type toggle -->
+
+                <div class="flex-row bg-light border-bottom sticky d-flex pt-3 mb-5">
+
+                    <ul class="nav post-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active text-uppercase" href="/settings/profile">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase" href="/settings/security">Security</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase d-none" href="/settings/notifications">Notifications</a>
+                        </li>
+                    </ul>
+
+                </div>
+
+
+                <div class="row no-gutters">
+
+                    <div class="col col-md-8">
+
+                        <div class="settings">
+{% if error %}
+<p><span class="red">{{ error }}</span></p>
+{% endif %}
+{% if msg %}
+<p><span class="green">{{ msg }}</span></p>
+{% endif %}
+
+                            <h2 class="h5">Social Integrations</h2>
+
+                            <p class="text-small text-muted">Manage 3rd-party apps connected to your Ruqqus profile.</p>
+
+                            <div class="settings-section rounded">
+
+                                
+
+				{% if v.reddit_username %}
+
+
+
+                                    <div class="title">
+                                        <label for="usernameVerification">Reddit</label>
+                                        <p class="mb-0 mb-md-3">You are linked with Reddit profile <a target="blank"
+                                                href="https://reddit.com/user/{{ v.reddit_username }}">/u/{{ v.reddit_username }}</a>.</p>
+                                    </div>
+
+                                    <div class="body">
+					<form id="removeReddit" action="/api/del_reddit_name" method="post">
+
+                                        <input type="hidden" name="formkey" value="{{ v.formkey }}">
+
+                                        <button form="removeReddit" class="btn btn-danger ml-auto" id="usernameVerification" value="">
+                                            <i class="fab fa-reddit-alien align-middle mr-2"
+                                                style="font-size: 16px"></i>
+                                            <span class="align-middle">Unlink Reddit</span>
+                                        </button>
+					</form>
+
+                                    </div>
+
+				{% else %}
+
+                                    <div class="title">
+                                        <label for="usernameVerification">Reddit</label>
+                                        <p class="mb-0 mb-md-3">You are not linked to a Reddit profile.</p>
+                                    </div>
+
+                                    <div class="body">
+
+					<a href="/api/get_reddit_auth">
+                                        <button class="btn btn-danger ml-auto" id="usernameVerification">
+                                            <i class="fab fa-reddit-alien align-middle mr-2"
+                                                style="font-size: 16px"></i>
+                                            <span class="align-middle">Link your reddit account</span>
+                                        </button>
+					</a>
+
+                                    </div>
+
+				{% endif %}
+
+                            </div>
+
+                            <h2 class="h5">Content Filters</h2>
+
+                            <p class="text-small text-muted">Manage what type of content you can see across Ruqqus.</p>
+
+                            <div class="settings-section rounded">
+
+                                <form  id="profile-settings" action="/settings/profile" method="post">
+
+				<input type="hidden" name="formkey" value="{{ v.formkey }}">
+
+                                    <div class="title">
+                                        <label for="usernameVerification">NSFW Content</label>
+                                    </div>
+
+                                    <div class="body">
+
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="customSwitch1" name="over18"{% if v.over_18 %} checked{% endif %}>
+                                            <label class="custom-control-label" for="customSwitch1"></label>
+                                        </div>
+
+                                        <span>Check if you are 18+ and wish to view <a href="#">NSFW</a> content.</span>
+
+                                    </div>
+
+				<br>
+                            <h2 class="h5">Your Profile</h2>
+
+                            <p class="text-small text-muted">Edit how others see you on Ruqqus.</p>
+
+
+                                    <div class="body">
+
+                                        <label for="bio">Bio</label>
+
+                                        <div class="input-group mb-2">
+                                            <textarea class="form-control border" id="bio" aria-label="With textarea"
+                                                placeholder="Tell the Ruqqus community a bit about yourself."
+                                                rows="3" name="bio" form="profile-settings">{{ v.bio }}</textarea>
+                                        </div>
+
+                                        <small>Limit of 280 characters</small>
+
+                                    </div>
+
+                                    <div class="footer border-top">
+
+                                        <div class="d-flex">
+
+                                            <input class="btn btn-secondary ml-auto" id="usernameVerification"
+                                                type="submit" value="Save Changes">
+
+
+                                        </div>
+
+                                    </div>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+{% endblock %}

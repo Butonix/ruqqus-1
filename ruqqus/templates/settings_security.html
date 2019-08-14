@@ -1,0 +1,211 @@
+{% extends "settings.html" %}
+
+{% block content %}
+
+        <div class="row justify-content-around mx-lg-5 no-gutters">
+
+            <div class="col h-100">
+
+                <div class="py-3 p-md-0">
+
+                    <h1 class="h3">Settings</h1>
+
+                </div>
+
+                <!-- Submission type toggle -->
+
+                <div class="flex-row bg-light border-bottom sticky d-flex pt-3 mb-5">
+
+                    <ul class="nav post-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase" href="/settings/profile">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active text-uppercase" href="/settings/security">Security</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase d-none" href="/settings/notifications">Notifications</a>
+                        </li>
+                    </ul>
+
+                </div>
+
+
+                <div class="row no-gutters">
+
+                    <div class="col col-md-8">
+
+                        <div class="settings">
+{% if error %}
+<p><span class="red">{{ error }}</span></p>
+{% endif %}
+{% if msg %}
+<p><span class="green">{{ msg }}</span></p>
+{% endif %}
+
+                            <h2 class="h5">Password</h2>
+
+                            <p class="text-small text-muted">Change your account password.</p>
+
+                            <div class="settings-section rounded">
+
+                                <form action="/settings/security" method="post">
+
+                                    <div class="body">
+
+                                        <label for="new_password">New Password</label>
+
+                                        <input class="form-control" id="new_password"
+                                            aria-describedby="new_password" type="password" name="new_password"
+                                            required>
+                                        <small id="passwordHelpChange"
+                                            class="form-text font-weight-bold text-muted d-none mt-1">Minimum of 8
+                                            characters
+                                            required.</small>
+                                        <small id="passwordHelpChangeSuccess"
+                                            class="form-text font-weight-bold text-success d-none mt-1">Your password
+                                            meets the
+                                            requirements.
+                                        </small>
+
+                                        <label for="cnf_password" class="mt-3">Confirm New Password</label>
+
+                                        <input class="form-control" id="cnf_password"
+                                            aria-describedby="cnf_password" type="password" name="cnf_password"
+                                            required>
+
+                                        <small id="passwordHelpCnf"
+                                            class="form-text font-weight-bold text-muted d-none mt-1">Passwords do not
+                                            match.</small>
+                                        <small id="passwordHelpCnfSuccess"
+                                            class="form-text font-weight-bold text-success d-none mt-1">Passwords match.
+                                        </small>
+
+                                        <label for="old_password" class="mt-3">Old Password</label>
+
+                                        <input class="form-control mb-2" id="old_password"
+                                            aria-describedby="old_password" type="password" name="old_password"
+                                            required>
+
+                                    </div>
+
+                                    <div class="footer">
+
+                                        <input type="hidden" name="formkey" value="{{ v.formkey }}">
+                                        <input type="hidden" name="now" value="1563891643">
+
+                                        <div class="d-flex">
+
+                                            <input class="btn btn-primary disabled ml-auto" id="usernameVerification"
+                                                type="submit" value="Change Password">
+
+                                        </div>
+
+                                    </div>
+
+                                </form>
+
+                            </div>
+
+                            <h2 class="h5">Email</h2>
+				
+				{% if not v.is_activated %}
+				
+				<p class="text-small text-muted">You have not verified your current email address. You will not be able to use your email for account recovery unless you verify it.</p>
+				<div class="footer">
+				<div class="d-flex">
+				<a class="ml-auto" href="javascript:void(0)" onclick="post('/api/verify_email')"><button class="btn btn-primary">Verify Email</button></a>
+				</div>
+				</div>
+
+				{% endif %}
+
+
+
+                            <p class="text-small text-muted">Change the email address associated with your account.</p>
+
+                            <div class="settings-section rounded">
+
+                                <form  action="/settings/security" method="post">
+				<input type="hidden" name="formkey" value="{{ v.formkey }}">
+
+
+                                    <div class="body">
+
+                                        <fieldset disabled>
+
+                                            <label for="current_email">Current Email</label>
+
+                                            <input class="form-control border mb-2" id="current_email"
+                                                placeholder="{{ v.email }}" aria-describedby="current_email"
+                                                type="email" name="current_email" disabled>
+
+                                        </fieldset>
+
+                                        <label for="new-email" class="mt-3">New Email</label>
+
+                                        <input class="form-control mb-2" id="new_email"
+                                            aria-describedby="new_email" type="email" name="new_email" required>
+
+                                    </div>
+
+                                    <div class="footer">
+
+                                        <div class="d-flex">
+
+					
+
+                                            <input class="btn btn-primary disabled ml-auto" id="usernameVerification"
+                                                type="submit" value="Update Email">
+
+
+                                        </div>
+
+                                    </div>
+
+                                </form>
+
+                            </div>
+
+                            <h2 class="h5 text-danger d-none">Danger Zone</h2>
+
+                            <p class="text-small text-muted d-none">Delete your entire Ruqqus account from existence.</p>
+
+                            <div class="settings-section rounded d-none">
+
+                                <div class="body">
+
+                                    <label for="delete_account">Delete Account</label>
+
+                                    <p>This action cannot be undone.</p>
+
+                                </div>
+
+                                <div class="footer border-top">
+
+                                    <input type="hidden" name="formkey" value="x">
+
+                                    <div class="d-flex">
+
+                                        <button class="btn btn-outline-danger ml-auto" id="delete_account_confirm"
+                                            data-toggle="modal" data-target="#exampleModalCenter"
+                                            value="Delete Account">Delete Account
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+{% endblock %}

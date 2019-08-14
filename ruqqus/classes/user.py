@@ -35,6 +35,8 @@ class User(Base):
     votes=relationship("Vote", lazy="dynamic", backref="users")
     commentvotes=relationship("CommentVote", lazy="dynamic", backref="users")
     ips = relationship('IP', lazy="dynamic", backref="users")
+    bio=deferred(Column(String, default=""))
+    bio_html=deferred(Column(String, default=""))
 
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))

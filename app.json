@@ -20,6 +20,9 @@
     "domain": {
       "required": true
     },
+    "DATABASE_URL": {
+      "required": true
+    },
     "MASTER_KEY": {
       "required": true
     },

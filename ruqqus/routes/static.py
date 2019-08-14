@@ -17,7 +17,17 @@ def robots_txt():
 @app.route("/settings", methods=["GET"])
 @auth_required
 def settings(v):
-    return render_template("settings.html", v=v)
+    return redirect("/settings/profile")
+
+@app.route("/settings/profile", methods=["GET"])
+@auth_required
+def settings_profile(v):
+    return render_template("settings_profile.html", v=v)
+
+@app.route("/settings/security", methods=["GET"])
+@auth_required
+def settings_security(v):
+    return render_template("settings_security.html", v=v)
 
 @app.route("/favicon.ico", methods=["GET"])
 def favicon():

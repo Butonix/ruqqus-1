@@ -10,7 +10,7 @@ For faster sorting and pagination
 '''
 
 #Clear any errors (for testing)
-c.execute("ROLLBACK TRANSACTION")
+#c.execute("ROLLBACK TRANSACTION")
 
 #======= SUBMISSIONS =========
 
