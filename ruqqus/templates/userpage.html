@@ -10,7 +10,7 @@
                     <div class="body">
                         <h1 class="h6 d-inline-block mb-2 mr-2" style="color:#{{ u.color }}">@{{ u.username }}</h1>
                         <div class="profile-actions d-inline-block">
-			{% if not v or v.id != u.id %}
+			{% if v and v.id != u.id %}
                             <div class="dropdown show">
                                 <a href="#" role="button" id="dropdownProfileActionsLink" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
