@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import *
 
-_version = "0.4.0"
+_version = "0.5.0"
 
 app = Flask(__name__,
             template_folder='./templates',
