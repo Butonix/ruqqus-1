@@ -108,6 +108,7 @@ class Submission(Base):
             return db.query(User).filter_by(id=self.author_id).first()
 
     @property
+    @lazy
     def domain(self):
         domain= urlparse(self.url).netloc
         if domain.startswith("www."):
