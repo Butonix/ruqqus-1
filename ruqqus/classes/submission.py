@@ -109,7 +109,10 @@ class Submission(Base):
 
     @property
     def domain(self):
-        return urlparse(self.url).netloc
+        domain= urlparse(self.url).netloc
+        if domain.startswith("www."):
+            domain=domain.split("www.")[0]
+        return domain
     
     @property
     def score_fuzzed(self, k=0.01):
