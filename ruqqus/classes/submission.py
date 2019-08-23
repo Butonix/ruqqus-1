@@ -112,7 +112,7 @@ class Submission(Base):
     def domain(self):
         domain= urlparse(self.url).netloc
         if domain.startswith("www."):
-            domain=domain.split("www.")[0]
+            domain=domain.split("www.")[1]
         return domain
     
     @property
