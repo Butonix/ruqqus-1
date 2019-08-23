@@ -73,9 +73,9 @@
                                 {% if p.url.endswith((".jpg",".png")) %}<img src="{{ p.url }}" class="post-img" alt="">{% endif %}
                             </div>
                             <div class="card-block my-md-auto">
-                                <div class="post-meta text-left d-block d-md-none mb-2">Posted by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {{ p.age_string }}</div>
+                                <div class="post-meta text-left d-block d-md-none mb-2">Posted by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {{ p.age_string }} | ({{ p.domain }})</div>
                                 <h5 class="card-title post-title text-left mb-0 mb-md-2"><a target="_blank" href="{{ p.url }}">{{ p.title }}</a></h5>
-                                <div class="post-meta text-left d-none d-md-block">Posted by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {{ p.age_string }}</div>
+                                <div class="post-meta text-left d-none d-md-block">Posted by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {{ p.age_string }} | ({{ p.domain }})</div>
 
                             </div>
 
