@@ -81,6 +81,12 @@ def activate(v):
         return render_template("message.html", v=v, title="Email already verified.", message="Email already verified."), 404
 
     user.is_activated=True
+
+    mail_badge = Badge(user_id=user.id,
+                       badge_id=2,
+                       created_utc=time.time())
+    
     db.add(user)
+    db.add(mail_badge)
     db.commit()
     return render_template("message.html", v=v, title="Email verified.", message=f"Your email {email} has been verified. Thank you.")

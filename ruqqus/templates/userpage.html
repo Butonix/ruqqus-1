@@ -25,7 +25,6 @@
 			{% endif %}
                         </div>
                         <div>
-                            {% if u.is_activated %}<span class="badge badge-pill badge-success text-white">Email Verified</span>{% endif %}
                             {% if u.admin_level>=3 %}<span class="badge badge-pill badge-danger text-white">Admin</span>{% endif %}
                         </div>
                     </div>
@@ -46,8 +45,7 @@
                         </div>
                     </div>
                 </div>
-<<<<<<< Updated upstream
-=======
+
 
 		{% if u.badges %}
 		<div class="sidebar-section sidebar-profile-badges">
@@ -57,11 +55,12 @@
 			{% include "badge_pair.html" %}
 		{% else %}
 			<div class="px-3">Nothing yet!</div>
+
 		{% endfor %}
 		</div>
 		</div>
 		{% endif %}
->>>>>>> Stashed changes
+
 {% endblock %}
 
 {% block adminpanel %}

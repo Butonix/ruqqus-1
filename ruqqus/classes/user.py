@@ -37,6 +37,7 @@ class User(Base):
     ips = relationship('IP', lazy="dynamic", backref="users")
     bio=deferred(Column(String, default=""))
     bio_html=deferred(Column(String, default=""))
+    badges=relationship("Badge", lazy="dynamic", backref="user")
 
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
@@ -246,4 +247,23 @@ class User(Base):
     def post_count(self):
 
         return self.submissions.filter_by(is_banned=False).count()
+
+    @property
+    #@cache.memoize(timeout=60)
+    def badge_pairs(self):
+
+        output=[]
+
+        badges=[x for x in self.badges.all()]
+
+        while badges:
+            
+            to_append=[badges.pop(0)]
+            
+            if badges:
+                to_append.append(badges.pop(0))
+                
+            output.append(to_append)
+
+        return output
         
