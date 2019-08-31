@@ -46,6 +46,22 @@
                         </div>
                     </div>
                 </div>
+<<<<<<< Updated upstream
+=======
+
+		{% if u.badges %}
+		<div class="sidebar-section sidebar-profile-badges">
+		<div class="title">Badges</div>
+		<div class="col py-3 px-0">
+		{% for bp in u.badge_pairs %}
+			{% include "badge_pair.html" %}
+		{% else %}
+			<div class="px-3">Nothing yet!</div>
+		{% endfor %}
+		</div>
+		</div>
+		{% endif %}
+>>>>>>> Stashed changes
 {% endblock %}
 
 {% block adminpanel %}
