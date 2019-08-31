@@ -201,6 +201,12 @@ def sign_up_post(v):
     db.add(new_user)
     db.commit()
 
+    prebeta_badge=Badge(user_id=new_user.id,
+                        badge_id=1)
+
+    db.add(prebeta_badge)
+    db.commit()
+
     send_verification_email(new_user)
 
     session["user_id"]=new_user.id
