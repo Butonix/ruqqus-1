@@ -25,7 +25,6 @@
 			{% endif %}
                         </div>
                         <div>
-                            {% if u.is_activated %}<span class="badge badge-pill badge-success text-white">Email Verified</span>{% endif %}
                             {% if u.admin_level>=3 %}<span class="badge badge-pill badge-danger text-white">Admin</span>{% endif %}
                         </div>
                     </div>
@@ -46,6 +45,19 @@
                         </div>
                     </div>
                 </div>
+
+		{% if u.badges %}
+		<div class="sidebar-section sidebar-profile-badges">
+		<div class="title">Badges</div>
+		<div class="col py-3 px-0">
+		{% for bp in u.badge_pairs %}
+			{% include "badge_pair.html" %}
+		{% else %}
+			<div>Nothing yet!</div>
+		{% endfor %}
+		</div>
+		</div>
+		{% endif %}
 {% endblock %}
 
 {% block adminpanel %}

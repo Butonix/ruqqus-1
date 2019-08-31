@@ -72,6 +72,11 @@ def settings_security_post(v):
         v.email=new_email
         v.is_activated=False
 
+        #delete the "verified email" badge
+        for badge in v.badges.all():
+            if badge.badge_id==2:
+                db.delete(badge)
+
         db.add(v)
         db.commit()
 
