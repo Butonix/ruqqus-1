@@ -26,6 +26,7 @@
                         </div>
                         <div>
                             {% if u.admin_level>=3 %}<span class="badge badge-pill badge-danger text-white">Admin</span>{% endif %}
+			    {% if u.real_id %}<span class="badge badge-pill text-white badge-info">{{ u.real_id }}</span>{% endif %}
                         </div>
                     </div>
                 </div>

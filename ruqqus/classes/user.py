@@ -38,6 +38,7 @@ class User(Base):
     bio=deferred(Column(String, default=""))
     bio_html=deferred(Column(String, default=""))
     badges=relationship("Badge", lazy="dynamic", backref="user")
+    real_id=Column(String, default=None)
 
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
