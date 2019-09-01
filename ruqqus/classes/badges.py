@@ -48,6 +48,10 @@ class Badge(Base):
             return self.badge.description
 
     @property
+    def type(self):
+        return self.badge.id
+
+    @property
     def name(self):
         return self.badge.name
 

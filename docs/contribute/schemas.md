@@ -64,10 +64,4 @@ user_id|int|NOT NULL REFERENCES Users(id)
 vote_type|int|
 comment|int|REFERENCES Comments(id)
 
-## IPs
-
-Column|Type|Options
--|-|-
-id|int|NOT NULL AUTO INCREMENT
-ip|varchar(40)|NOT NULL
-user_id|int|NOT NULL REFERENCES Users(id)
+##
