@@ -22,10 +22,14 @@ def api_get_reddit_auth(v):
 @auth_required
 def api_redditredirect(v):
 
+    if v.reddit_username:
+        return render_template("settings.html", v=v, error=f"You are already linked to the reddit account /u/{v.reddit_username}.")
+
     #check session id
     if not request.args.get("state")==session["session_id"]:
-        return render_template("settings.html", v=v, error="Invalid token. Please refresh this page and try again.")
+        return render_template("settings.html", v=v, error="Invalid token. Please close this page and try again later.")
 
+        
     try:
         r.auth.authorize(request.args.get("code"))
         name = r.user.me().name
