@@ -49,7 +49,7 @@ def api_redditredirect(v):
     #assign reddit badge
     reddit_badge = Badge(user_id=v.id,
                          badge_id=5,
-                         url=f"https://reddit.com/user/{name}"
+                         url=f"https://reddit.com/user/{name}",
                          description=f"/u/{name}"
                          )
     
