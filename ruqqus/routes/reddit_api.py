@@ -41,7 +41,16 @@ def api_redditredirect(v):
         return render_template("settings.html", v=v, error=f"The reddit account {name} is already tied to a different Ruqqus account.")
     
     v.reddit_username = name
+
+    #assign reddit badge
+    reddit_badge = Badge(user_id=v.id,
+                         badge_id=5,
+                         url=f"https://reddit.com/user/{name}"
+                         description=f"/u/{name}"
+                         )
+    
     db.add(v)
+    db.add(reddit_badge)
     db.commit()
 
     return render_template("settings.html", v=v, msg=f"Reddit account {name} successfully linked.")
@@ -55,6 +64,12 @@ def api_del_reddit_name(v):
         render_template("settings.html", v=v, error=f"You didn't have a reddit account to un-link.")
 
     v.reddit_username=None
+
+    #delete reddit badge
+    for badge in v.badges:
+        if badge.type=5:
+            db.delete(badge)
+            
     db.add(v)
     db.commit()
     return render_template("settings.html", v=v, msg=f"Reddit account successfully un-linked.")
