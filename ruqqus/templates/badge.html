@@ -3,16 +3,12 @@
 {% if b.url %}
 <a href="{{ b.url }}">
 <img style="width: 50px; height: 50px" src="{{ b.path }}">
-<div class="row no-gutters d-block">
-{{ b.name }}
-</div>
 </a>
 {% else %}
 <img style="width: 50px; height: 50px" src="{{ b.path }}">
+{% endif %}
+</div>
 <div class="row no-gutters d-block">
 {{ b.name }}
 </div>
-{% endif %}
-</div>
-
 </div>
