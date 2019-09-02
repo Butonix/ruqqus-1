@@ -67,7 +67,7 @@ def api_del_reddit_name(v):
 
     #delete reddit badge
     for badge in v.badges:
-        if badge.type=5:
+        if badge.type==5:
             db.delete(badge)
             
     db.add(v)
