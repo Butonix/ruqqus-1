@@ -2,14 +2,14 @@
 
 {% block content %}
 <h1>My Info</h1>
-<p>This is the information associated with your Ruqqus account.</p>
+<p>This table shows the private information associated with your Ruqqus account. There is also a hashed password associated with your account, but for security reasons it's not shown.</p>
 <table>
 <tr>
 <th>Key</th>
 <th>Value</th>
 </tr>
 {% for key in v.__dict__ %}
-{% if key not in ["passhash", "_lazy_dict", "_sa_instance_state"] %}
+{% if key not in ["passhash", "_lazy", "_sa_instance_state"] %}
 <tr>
 <td>{{ key }}</td>
 <td>{{ v.__dict__[key] }}</td>
@@ -17,5 +17,4 @@
 {% endif %}
 {% endfor %}
 </table>
-<p>There is also a hashed password associated with your account. For security reasons. this is not shown.</p>
 {% endblock %}

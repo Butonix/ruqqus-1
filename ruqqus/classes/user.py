@@ -23,7 +23,7 @@ class User(Base):
     passhash = Column(String, default=None)
     created_utc = Column(BigInteger, default=0)
     admin_level = Column(Integer, default=0)
-    is_banned = Column(Boolean, default=False)
+    ban_state = Column(Integer, default=0)
     is_activated = Column(Boolean, default=False)
     reddit_username = Column(String, default=None)
     over_18=Column(Boolean, default=False)
@@ -67,6 +67,24 @@ class User(Base):
     @property
     def fullname(self):
         return f"t1_{self.base36id}"
+
+    @property
+    def is_banned(self):
+
+        #The schema for ban state is:
+        # 0 by default (unbanned)
+        # Positive integer for temp ban expiration timestamp
+        # -1 for perm ban
+
+        if self.ban_state = 0:
+            return false
+
+        elif self.ban_state = -1:
+            return true
+
+        else:
+            return time.time()>self.ban_state
+            
 
     def vote_status_on_post(self, post):
 
