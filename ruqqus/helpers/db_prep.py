@@ -22,7 +22,7 @@ RETURNS bigint AS '
   FROM votes
   LEFT JOIN users
   ON votes.user_id = users.id
-  WHERE users.is_banned=false
+  WHERE users.ban_state>-1
     AND votes.vote_type=1
     AND votes.submission_id=$1.id
   '
@@ -39,7 +39,7 @@ RETURNS bigint AS '
   FROM votes
   LEFT JOIN users
   ON votes.user_id = users.id
-  WHERE users.is_banned=false
+  WHERE users.ban_state>-1
     AND votes.vote_type=-1
     AND votes.submission_id=$1.id
   '
