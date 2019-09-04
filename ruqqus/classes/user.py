@@ -77,10 +77,10 @@ class User(Base):
         # -1 for perm ban
 
         if self.ban_state == 0:
-            return false
+            return False
 
         elif self.ban_state == -1:
-            return true
+            return True
 
         else:
             return time.time()>self.ban_state
