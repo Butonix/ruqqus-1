@@ -76,10 +76,10 @@ class User(Base):
         # Positive integer for temp ban expiration timestamp
         # -1 for perm ban
 
-        if self.ban_state = 0:
+        if self.ban_state == 0:
             return false
 
-        elif self.ban_state = -1:
+        elif self.ban_state == -1:
             return true
 
         else:
