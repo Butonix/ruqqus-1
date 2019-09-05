@@ -116,7 +116,7 @@ RETURNS bigint AS '
   FROM commentvotes
   LEFT JOIN users
   ON commentvotes.user_id = users.id
-  WHERE users.is_banned=false
+  WHERE users.ban_state>-1
     AND commentvotes.vote_type=1
     AND commentvotes.comment_id=$1.id
   '
@@ -133,7 +133,7 @@ RETURNS bigint AS '
   FROM commentvotes
   LEFT JOIN users
   ON commentvotes.user_id = users.id
-  WHERE users.is_banned=false
+  WHERE users.ban_state>-1
     AND commentvotes.vote_type=-1
     AND commentvotes.comment_id=$1.id
   '
