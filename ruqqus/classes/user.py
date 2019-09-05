@@ -42,7 +42,6 @@ class User(Base):
 
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
-    is_banned = Column(Integer, server_default=FetchedValue())
 
     def __init__(self, **kwargs):
 
@@ -69,6 +68,22 @@ class User(Base):
     def fullname(self):
         return f"t1_{self.base36id}"
 
+    @property
+    def is_banned(self):
+
+        #The schema for ban state is:
+        # 0 by default (unbanned)
+        # Positive integer for temp ban expiration timestamp
+        # -1 for perm ban
+
+        if self.ban_state == 0:
+            return False
+
+        elif self.ban_state == -1:
+            return True
+
+        else:
+            return time.time()>self.ban_state
             
 
     def vote_status_on_post(self, post):
