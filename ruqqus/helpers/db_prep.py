@@ -174,6 +174,23 @@ IMMUTABLE
 RETURNS NULL ON NULL INPUT
 """)
 
+c.execute("""
+CREATE OR REPLACE FUNCTION is_banned(users)
+RETURNS boolean AS '
+  IF $1.ban_state >1 THEN
+    RETURN true
+  ELSEIF $1.ban_state =0 THEN
+    RETURN false
+  ELSEIF CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.ban_state < 0 THEN
+    RETURN true
+  ELSE
+    RETURN false
+'
+LANGUAGE SQL
+IMMUTABLE
+RETURNS NULL ON NULL INPUT
+""")
+
 
 ##c.execute("""
 ##CREATE OR REPLACE FUNCTION overview(users)
