@@ -16,4 +16,4 @@ def users_here(x):
 @app.template_filter("total_users")
 def total_users(x):
 
-    return db.query(User).filter_by(is_banned=False).count()
+    return db.query(User).filter_by(ban_state>-1).count()
