@@ -48,8 +48,6 @@ def settings_profile_post(v):
 @validate_formkey
 def settings_security_post(v):
 
-    updated=False
-
     if request.form.get("new_password"):
         if request.form.get("new_password") != request.form.get("cnf_password"):
             return render_template("settings_security.html", v=v, error="Passwords do not match.")
@@ -65,24 +63,18 @@ def settings_security_post(v):
         return render_template("settings_security.html", v=v, msg="Your password has been changed.")
 
     if request.form.get("new_email"):
+
+        if not v.verifyPass(request.form.get('password')):
+            return render_template("settings_security.html", v=v, error="Invalid password")
+            
+        
         new_email = request.form.get("new_email")
         if new_email == v.email:
             return render_template("settings_security.html", v=v, error="That's already your email!")
 
-        v.email=new_email
-        v.is_activated=False
+        send_verification_email(v, email=new_email)
 
-        #delete the "verified email" badge
-        for badge in v.badges.all():
-            if badge.badge_id==2:
-                db.delete(badge)
-
-        db.add(v)
-        db.commit()
-
-        send_verification_email(v)
-
-        return render_template("settings_security.html", v=v, msg="Your email has been changed. Please check your email to verify it.")
+        return render_template("settings_security.html", v=v, msg=f"Verify your new email address {new_email} to complete the email change process.")
         
 
 

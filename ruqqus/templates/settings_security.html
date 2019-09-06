@@ -132,20 +132,23 @@
 
                                     <div class="body">
 
-                                        <fieldset disabled>
+                                        
 
-                                            <label for="current_email">Current Email</label>
+                                        <label for="current_email">Current Email</label>
 
-                                            <input class="form-control border mb-2" id="current_email"
-                                                placeholder="{{ v.email }}" aria-describedby="current_email"
+                                        <input class="form-control border mb-2" id="current_email"
+                                            placeholder="{{ v.email }}" aria-describedby="current_email"
                                                 type="email" name="current_email" disabled>
 
-                                        </fieldset>
+                                        
 
                                         <label for="new-email" class="mt-3">New Email</label>
 
-                                        <input class="form-control mb-2" id="new_email"
+                                        <input autocomplete="new-password" class="form-control mb-2" id="new_email"
                                             aria-describedby="new_email" type="email" name="new_email" required>
+
+					<label for="email-password" class="mt-3">Password</label>
+					<input autocomplete="new-password" type="new-text" class="form-control mb-2" id="email-password" name="password" required>
 
                                     </div>
 

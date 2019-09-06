@@ -2,6 +2,7 @@ from os import environ
 import requests
 import time
 from flask import *
+from urllib.parse import quote
 
 from ruqqus.helpers.security import *
 from ruqqus.helpers.wrappers import *
@@ -25,24 +26,27 @@ def send_mail(to_address, subject, plaintext, html, from_address="Ruqqus <norepl
                          )
 
 
-def send_verification_email(user):
+def send_verification_email(user, email=None):
+
+    if not email:
+        email=user.email
 
     url=f"https://{environ.get('domain')}/activate"
     now=int(time.time())
 
-    token=generate_hash(f"{user.email}+{user.id}+{now}")
-    params=f"?email={escape(user.email)}&id={user.id}&time={now}&token={token}"
+    token=generate_hash(f"{email}+{user.id}+{now}")
+    params=f"?email={quote(email)}&id={user.id}&time={now}&token={token}"
 
     link=url+params
 
     html=f"""
          <p>Welcome to Ruqqus, {user.username}!<p>
-         <a href="{link}">Click here</a> to verify your email address.</p>
+         <a href="{link}">Click here</a> to verify your email address on {environ.get('domain')}.</p>
          """
 
     text=f"Thank you for signing up. Click to verify your email address: {link}"
 
-    send_mail(to_address=user.email,
+    send_mail(to_address=email,
               html=html,
               plaintext=text,
               subject="Validate your Ruqqus account"
@@ -71,22 +75,24 @@ def activate(v):
 
 
     if not validate_hash(f"{email}+{id}+{timestamp}", token):
-        abort(400)
+        abort(403)
 
     user = db.query(User).filter_by(id=id).first()
     if not user:
-        abort(400)
+        abort(404)
 
-    if user.is_activated:
+    if user.is_activated and user.email==email:
         return render_template("message.html", v=v, title="Email already verified.", message="Email already verified."), 404
 
+    user.email=email
     user.is_activated=True
 
-    mail_badge = Badge(user_id=user.id,
+    if not any([b.badge_id==2 for b in user.badges]):
+        mail_badge = Badge(user_id=user.id,
                        badge_id=2,
                        created_utc=time.time())
+        db.add(mail_badge)
     
     db.add(user)
-    db.add(mail_badge)
     db.commit()
     return render_template("message.html", v=v, title="Email verified.", message=f"Your email {email} has been verified. Thank you.")
