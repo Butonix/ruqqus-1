@@ -14,7 +14,7 @@ def auth_desired(f):
 
         if "user_id" in session:
             v=db.query(User).filter_by(id=session["user_id"]).first()
-            if v:
+            #if v:
                 #v.update_ip(request.remote_addr)
         else:
             v=None
