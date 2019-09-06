@@ -1,6 +1,5 @@
 import time
 
-from sqlalchemy import *
 
 from ruqqus.classes.user import User
 from ruqqus.classes.ips import IP
@@ -18,4 +17,4 @@ def users_here(x):
 @app.template_filter("total_users")
 def total_users(x):
 
-    return db.query(User).filter(text("ban_state>-1")).count()
+    return db.query(User).filter("ban_state>-1").count()
