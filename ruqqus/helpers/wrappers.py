@@ -15,7 +15,7 @@ def auth_desired(f):
         if "user_id" in session:
             v=db.query(User).filter_by(id=session["user_id"]).first()
             if v:
-                v.update_ip(request.remote_addr)
+                #v.update_ip(request.remote_addr)
         else:
             v=None
             
@@ -34,7 +34,7 @@ def auth_required(f):
             
             if not v:
                 abort(401)
-            v.update_ip(request.remote_addr)
+            #v.update_ip(request.remote_addr)
 
         else:
             abort(401)
@@ -55,7 +55,7 @@ def is_not_banned(f):
             if not v:
                 abort(401)
 
-            v.update_ip(request.remote_addr)
+            #v.update_ip(request.remote_addr)
 
             if v.is_banned:
                 abort(403)
@@ -90,7 +90,7 @@ def admin_level_required(x):
                 if v.admin_level < x:
                     abort(403)
 
-                v.update_ip(request.remote_addr)
+                #v.update_ip(request.remote_addr)
                     
             else:
                 abort(401)
