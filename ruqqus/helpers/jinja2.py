@@ -1,5 +1,7 @@
 import time
 
+from sqlalchemy import *
+
 from ruqqus.classes.user import User
 from ruqqus.classes.ips import IP
 from ruqqus.__main__ import app, db, cache
