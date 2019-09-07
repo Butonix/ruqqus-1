@@ -14,7 +14,7 @@
 
                                 <div class="comment-body">
 
-				<div id="comment-{{ c.base36id }}-only" {% if c.distinguish_level>=3 %}class="distinguish-admin"{% elif c.distinguish_level %}class="distinguish-mod"{% elif c.author_id==c.post.author_id %}class="distinguish-op"{% endif %}>
+				<div id="comment-{{ c.base36id }}-only" {% if c.distinguish_level>=3 %}class="distinguish-admin"{% elif c.distinguish_level %}class="distinguish-mod"{% elif c.author_id==c.post.author_id %}class="distinguish-op"{% elif c.is_banned %}class="banned"{% endif %}>
 
 {% if standalone %}
 <div class="post-info">
