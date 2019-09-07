@@ -8,6 +8,72 @@
 {% block content %}
 <!-- Post filters bar visible only on medium devices or larger-->
 
+<div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="filter-bar-mobile" style="z-index: 3; top: 49px; transition: top 0.3s ease 0s;">
+
+      <div class="col">
+
+        <div class="d-flex flex-row flex-nowrap justify-content-between">
+
+          <div class="post-filter">
+            <span>Show:</span>
+            <span class="dropdown">
+              <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Comments</a>
+
+              <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
+                <a class="dropdown-item" href="/u/{{ u.username }}">Posts</a>
+                <a class="dropdown-item" href="/u/{{ u.username }}/comments">Comments</a>
+              </span>
+            </span>
+
+          </div>
+
+          <div class="post-filter">
+            <span>Sort By:</span>
+            <span class="dropdown">
+              <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">New</a>
+
+              <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
+                <a class="dropdown-item" href="#">Top</a>
+                <a class="dropdown-item" href="#">Fiery</a>
+                <a class="dropdown-item" href="#">Based</a>
+              </span>
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+	<div class="row justify-content-around mx-lg-5 mb-3 d-block d-lg-none no-gutters">
+        <div class="col bg-white border-left-0 border-right-0 border-top-0 border-bottom border-sm rounded-md p-3">
+            <div class="profile-details">
+                <h1 class="h6 d-inline-block mb-2 mr-2" style="color:#{{ u.color }}">@{{ u.username }}</h1>
+                <div class="profile-actions d-inline-block">
+                    <div class="dropdown show">
+                        <a href="#" role="button" id="dropdownProfileActionsLink" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </a>
+			{% if v and v.id != u.id %}
+                        <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
+                            <a class="dropdown-item" href="#"><i class="fas fa-paper-plane"></i>Message</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Report</a>
+                        </div>
+			{% endif %}
+                    </div>
+                </div>
+                <div>
+                            {% if u.admin_level>=3 %}<span class="badge badge-pill badge-danger text-white">Admin</span>{% endif %}
+			    {% if u.real_id %}<span class="badge badge-pill text-white badge-info">{{ u.real_id }}</span>{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
         <div class="flex-row filter-bar sticky d-none d-md-flex">
 
           <ul class="nav post-nav ml-auto">
