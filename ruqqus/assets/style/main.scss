@@ -5,6 +5,8 @@ $dark: #363254;
 $secondary: #7D8CC4;
 $danger: #F45D01;
 $white: #ffffff;
+$black: #191919;
+$light: #F9F8FA;
 
 
 $purple: #6d3eb7;
@@ -14,7 +16,9 @@ $gray: #757a84;
 $green: #68D16F;
 
 $gray-100: #F5F6F7;
+$gray-200: #EBE9EF;
 $gray-300: #E0E4E9;
+$gray-400: #CED4DA;
 $gray-500: #adb5bd;
 
 $upvote: #F45D01;
@@ -28,13 +32,13 @@ $theme-colors: (
   "secondary": $secondary,
   "danger": $danger,
   "dark": $dark,
-  "white": $white
+  "white": $white,
+  "black": $black,
+  "light": $light,
+  "gray": $gray,
+  "gray-200": $gray-200,
+  "gray-400": $gray-400
 );
-
-// Body styling
-
-$body-color: #191919;  //this is the text color
-$body-bg: #F5F7F9; //this is the background color
 
 // Borders
 
@@ -49,16 +53,55 @@ $text-muted: #757a84;
 
 // Fonts
 
-$font-family-sans-serif: Open Sans;
+@import url('https://rsms.me/inter/inter.css');
+
+$font-family-sans-serif: 'Inter', 'Helvetica Neue', sans-serif;
 
 // Font size
 
+$font-size-base: 1rem;
+
 $small-font-size: 13px;
+
+$extra-small-font-size: 12px;
+
+$display5-size:  3rem !default;
+
+$display5-weight: 400;
+
+$lead-font-size: $font-size-base * 1.325 !default;
 
 // Font weight
 
 $font-weight-bold: 600;
+$font-weight-bolder: 700;
 $headings-font-weight: $font-weight-bold;
+
+// Spacing
+
+$spacer: 1rem;
+$spacers: (
+  6: ($spacer * 3.5),
+  7: ($spacer * 5),
+  8: ($spacer * 10)
+);
+
+// Sizing
+
+// This variable affects the `.h-*` and `.w-*` classes.
+$sizes: () !default;
+// stylelint-disable-next-line scss/dollar-variable-default
+$sizes: map-merge(
+  (
+    25: 25%,
+    50: 50%,
+    75: 75%,
+    100: 100%,
+    130: 130%,
+    auto: auto
+  ),
+  $sizes
+);
 
 // Box Shadow
 
@@ -70,33 +113,18 @@ html {
     font-size: 14px;
 }
 
+@supports (font-variation-settings: normal) {
+    html { font-family: 'Inter var', sans-serif; }
+  }
+
 body {
     padding-top: 98px;
-    background-color: $gray-100;
+    background-color: $light;
 }
 
-// Small devices (landscape phones, less than 768px)
-@media (max-width: 767.98px) {
-
-    body {
+#page {
     padding-top: 49px;
-}
-
-#thread {
-    padding-top: 98px;
     background-color: $white;
-}
-
-#frontpage {
-    padding-top: 98px;
-    background-color: $white;
-}
-
-.container {
-        padding-left: 0;
-        padding-right:0;
-    }
-
 }
 
 // Positioning
@@ -107,7 +135,7 @@ body {
     top: 49px;
     height: auto;
     overflow-y: auto;
-    z-index: 3;
+    z-index: 4;
 }
 
 // Type
@@ -120,13 +148,39 @@ body {
     font-size: $small-font-size;
 }
 
+.text-small-extra {
+    font-size: $extra-small-font-size;
+}
+
+.display-5 {
+    @include font-size($display5-size);
+    font-weight: $display5-weight;
+    line-height: $display-line-height;
+}
+
+.lead {
+    font-weight: $font-weight-normal;
+}
+
+#page p {
+    font-size: 16px;
+}
+
 // Links
+
+a:hover {
+    text-decoration: none;
+}
 
 a.dropdown-toggle:hover {
     text-decoration: none;
 }
 
 // list items
+
+ul.no-bullets {
+    list-style-type: none;
+}
 
 .comment-section li {
     list-style-type: none;
@@ -144,7 +198,7 @@ ol > li::before {
     top: -1px;
     display: inline-block;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: $font-weight-bold;
     color: $secondary;
     text-align: center;
     margin-right: 0.5rem;
@@ -161,24 +215,35 @@ ol > li::before {
     font-size: $small-font-size;
 }
 
-.btn-light {
-    background-color: $white;
-    border-color: $white;
+.btn.disabled, .btn:disabled {
+    opacity: .5;
 }
 
-.btn.login {
+.btn-success {
+    color: $white;
+}
+
+.btn.login, .btn.register {
     height: calc(1.5em + 0.75rem + 2px);
     border-radius: .25rem;
 }
 
-// Navbar and Filter Bar
+// Navbar and tab Bar
+
+#page .navbar-light .navbar-nav .nav-link {
+    color: $dark;
+}
+
+#page .navbar-light .navbar-nav .nav-link:hover {
+    color: $primary;
+}
 
 .navbar-brand, .navbar-light .navbar-brand {
     color: $purple;
     font-weight: $font-weight-bold;
 }
 
-.filter-bar {
+.tab-bar {
     border-bottom: 1px solid $border-color;
     border-top-left-radius: $border-radius;
     border-top-right-radius: $border-radius;
@@ -210,7 +275,14 @@ ol > li::before {
 
 .post-nav .nav-link {
     color: $gray;
-    font-size: $small-font-size;
+    font-size: $extra-small-font-size;
+    font-weight: $font-weight-bold;
+    padding-top: 0;
+}
+
+.settings-nav .nav-link {
+    color: $gray;
+    font-size: $font-size-base;
     font-weight: $font-weight-bold;
     padding-top: 0;
 }
@@ -220,12 +292,49 @@ ol > li::before {
     border-bottom: 3px solid $red;
 }
 
-.post-nav .nav-link:hover, .nav-link:focus {
+
+.settings-nav > .nav-item > .nav-link.active {
+    color: $red;
+    border-bottom: 3px solid $red;
+}
+
+.post-nav .nav-link:hover, .post-nav .nav-link:focus, .settings-nav .nav-link:hover, .settings-nav .nav-link:focus {
     color: $red;
 }
 
-.post-nav .nav-item:last-child .nav-link {
-    padding-right: 0;
+.post-nav .fa, .post-nav .fas {
+    font-size: $extra-small-font-size;
+    margin-right: .5rem;
+    opacity: .9;
+}
+
+// Nav pills
+
+#page .nav-pills .nav-link {
+    border-radius: 0;
+    font-size: 1rem;
+    font-weight: $font-weight-bold;
+    color: $text-muted;
+    border-bottom: 2px solid transparent;
+    padding: 1rem 1.5rem;
+}
+
+#page .nav-pills .nav-link:hover {
+    color: $primary;
+}
+
+#page .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: $primary;
+    background-color: transparent;
+    transition: ease 0.25s;
+    border-bottom: 2px solid $primary;
+}
+
+#page .bg-light .nav-pills .nav-link.active, .bg-light .nav-pills .show > .nav-link {
+    color: $primary;
+    background-color: transparent;
+    transition: ease 0.25s;
+    border-bottom: 2px solid $primary;
 }
 
 // Navbar icons and search box
@@ -261,6 +370,15 @@ ol > li::before {
   opacity: .5;
 }
 
+// Jumbotron and Backgrounds
+
+.bg-svg {
+    background-color: #363254;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1600 800'%3E%3Cg %3E%3Cpath fill='%23413468' d='M486 705.8c-109.3-21.8-223.4-32.2-335.3-19.4C99.5 692.1 49 703 0 719.8V800h843.8c-115.9-33.2-230.8-68.1-347.6-92.2C492.8 707.1 489.4 706.5 486 705.8z'/%3E%3Cpath fill='%234c377c' d='M1600 0H0v719.8c49-16.8 99.5-27.8 150.7-33.5c111.9-12.7 226-2.4 335.3 19.4c3.4 0.7 6.8 1.4 10.2 2c116.8 24 231.7 59 347.6 92.2H1600V0z'/%3E%3Cpath fill='%2357398f' d='M478.4 581c3.2 0.8 6.4 1.7 9.5 2.5c196.2 52.5 388.7 133.5 593.5 176.6c174.2 36.6 349.5 29.2 518.6-10.2V0H0v574.9c52.3-17.6 106.5-27.7 161.1-30.9C268.4 537.4 375.7 554.2 478.4 581z'/%3E%3Cpath fill='%23623ca3' d='M0 0v429.4c55.6-18.4 113.5-27.3 171.4-27.7c102.8-0.8 203.2 22.7 299.3 54.5c3 1 5.9 2 8.9 3c183.6 62 365.7 146.1 562.4 192.1c186.7 43.7 376.3 34.4 557.9-12.6V0H0z'/%3E%3Cpath fill='%236d3eb7' d='M181.8 259.4c98.2 6 191.9 35.2 281.3 72.1c2.8 1.1 5.5 2.3 8.3 3.4c171 71.6 342.7 158.5 531.3 207.7c198.8 51.8 403.4 40.8 597.3-14.8V0H0v283.2C59 263.6 120.6 255.7 181.8 259.4z'/%3E%3Cpath fill='%23704eba' d='M1600 0H0v136.3c62.3-20.9 127.7-27.5 192.2-19.2c93.6 12.1 180.5 47.7 263.3 89.6c2.6 1.3 5.1 2.6 7.7 3.9c158.4 81.1 319.7 170.9 500.3 223.2c210.5 61 430.8 49 636.6-16.6V0z'/%3E%3Cpath fill='%23735dbc' d='M454.9 86.3C600.7 177 751.6 269.3 924.1 325c208.6 67.4 431.3 60.8 637.9-5.3c12.8-4.1 25.4-8.4 38.1-12.9V0H288.1c56 21.3 108.7 50.6 159.7 82C450.2 83.4 452.5 84.9 454.9 86.3z'/%3E%3Cpath fill='%23776dbf' d='M1600 0H498c118.1 85.8 243.5 164.5 386.8 216.2c191.8 69.2 400 74.7 595 21.1c40.8-11.2 81.1-25.2 120.3-41.7V0z'/%3E%3Cpath fill='%237a7cc1' d='M1397.5 154.8c47.2-10.6 93.6-25.3 138.6-43.8c21.7-8.9 43-18.8 63.9-29.5V0H643.4c62.9 41.7 129.7 78.2 202.1 107.4C1020.4 178.1 1214.2 196.1 1397.5 154.8z'/%3E%3Cpath fill='%237d8cc4' d='M1315.3 72.4c75.3-12.6 148.9-37.1 216.8-72.4h-723C966.8 71 1144.7 101 1315.3 72.4z'/%3E%3C/g%3E%3C/svg%3E");
+    background-attachment: fixed;
+    background-size: cover;
+}
+
 // Inputs
 
 .form-control {
@@ -280,7 +398,7 @@ label.terms {
     font-weight: normal;
     text-transform: none;
     font-size: 13px;
-    color: $body-color;
+    color: $black;
     vertical-align: middle;
 }
 
@@ -299,10 +417,8 @@ label.terms {
 .dropdown-item:hover, .dropdown-item:focus {
     color: $white;
     text-decoration: none;
-    background-color: $secondary;
+    background-color: $primary;
 }
-
-
 
 // Font Awesome
 
@@ -348,7 +464,7 @@ label.terms {
     z-index: 2;
     font-weight: $font-weight-bold;
     text-align: center;
-    min-width: 32px;
+    min-width: 40px;
 }
 
 // Small devices (landscape phones, less than 768px)
@@ -404,6 +520,21 @@ label.terms {
     color: $gray-300 !important;		
 }
 
+// Link Arrow Symbol
+
+a .link-arrow {
+position: relative;
+right: 0;
+transition: right ease 0.25s;
+margin-left: .5rem;
+font-size: $small-font-size;
+}
+
+a:hover .link-arrow {
+right: -.5rem;
+color: $dark;
+}
+
 // Custom Borders
 
 .border-1 {
@@ -431,19 +562,41 @@ label.terms {
     border-style: solid;
 }
 
+// Opacity
+
+.opacity-25 {
+    opacity: .25;
+}
+
+.opacity-50 {
+    opacity: .5;
+}
+
+.opacity-80 {
+    opacity: .8;
+}
+
 // Main Content
 
 .post-filter {
     display: inline-block;
-    color: $body-color;
+    font-size: $extra-small-font-size;
     font-weight: $font-weight-bold;
+}
+
+.post-filter .fa, .post-filter .fas {
+    font-size: $extra-small-font-size;
+    margin-right: .5rem;
+    opacity: .9;
+    color: $primary;
+    width: 1rem;
 }
 
 // Sidebar content
 
 .sidebar {
-    -ms-flex: 0 0 250px;
-    flex: 0 0 250px;
+    -ms-flex: 0 0 275px;
+    flex: 0 0 275px;
     padding-left: 0rem;
     padding-right: 0rem;
 }
@@ -453,9 +606,9 @@ label.terms {
 }
 
 .sidebar .sidebar-section .title {
-    font-size: 14px;
-    font-weight: 600;
-    color: $body-color;
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+    color: $black;
     padding: 0.75rem 1rem 0;
 }
 
@@ -466,19 +619,15 @@ label.terms {
 .sidebar-section {
     margin-bottom: 1rem;
     background-color: #fff;
-    border-radius: 0.25rem;
     border: 1px solid $border-color;
+    border-radius: 0.25rem;
 }
 
 .sidebar-section.sidebar-trending .hashtag {
     margin-bottom: .5rem;
     padding-bottom: .25rem;
-    color: $secondary;
-    font-weight: bold;
-}
-
-.sidebar-section.sidebar-trending .hashtag a {
-    color: $secondary;
+    color: $text-muted;
+    font-weight: $font-weight-bold;
 }
 
 .sidebar-section.sidebar-alert {
@@ -536,20 +685,24 @@ label.terms {
     border-radius: 0;
 }
 
+#frontpage .posts .card:hover {
+    background-color: $gray-100;
+}
+
 #frontpage .posts .card:last-of-type {
     border: none;
+    border-radius: $border-radius;
 }
 
 .post-title {
-    margin-bottom: 0;
+    font-size: 16px;
 }
 
 .post-title a {
-    color: $body-color;
+    color: $black;
 }
 
 .post-title a:hover, .post-title a:active, .post-title a:focus  {
-    color: $purple;
     text-decoration: none;
 }
 
@@ -571,12 +724,12 @@ label.terms {
     color: $text-muted;
     font-weight: $font-weight-normal;
     font-size: $small-font-size;
-    width: fit-content;
 }
 
 .post-actions .fa, .post-actions .fas {
     font-size: 12px;
     margin-right: .5rem;
+    opacity: .8;
 }
 
 .post-actions .dropdown-item:active .fa, .post-actions .dropdown-item:active .fas {
@@ -588,7 +741,7 @@ label.terms {
 }
 
 .post-actions a:hover .fa, .post-actions a:hover .fas {
-    color: $body-color;
+    color: $black;
 }
 
 .post-actions .fas.fa-ellipsis-h {
@@ -633,7 +786,7 @@ label.terms {
 }
 
 .post-actions a:hover {
-    color: $body-color;
+    color: $black;
 }
 
 .post-actions .dropdown-item:hover {
@@ -672,6 +825,7 @@ label.terms {
 
 .comments-count .total {
     font-weight: $font-weight-bold;
+    font-size: $extra-small-font-size;
     margin-bottom: .5rem;
 }
 
@@ -682,8 +836,7 @@ label.terms {
 .comment {
     display: flex;
     position: relative;
-    margin-top: 1rem;
-    border: 1px solid $gray-300;
+    margin-top: 2rem;
 }
 
 .comment .comment-profile {
@@ -693,15 +846,12 @@ label.terms {
 
 .comment .comment-body {
     width: 100%;
-    padding: 1rem;
-    margin-top: auto;
-    margin-bottom: auto;
 }
 
 .comment .comment-body .user-info {
     font-size: $small-font-size;
     color: $text-muted;
-    margin-bottom: .5rem;
+    margin-bottom: .25rem;
 }
 
 .comment .comment-body p.text {
@@ -710,7 +860,7 @@ label.terms {
 }
 
 .comment-actions {
-    font-weight: $font-weight-bold;
+    font-weight: $font-weight-normal;
     font-size: $small-font-size;
     margin-bottom: 0;
 }
@@ -718,6 +868,7 @@ label.terms {
 .comment-actions .fa, .comment-actions .fas {
     font-size: 12px;
     margin-right: .5rem;
+    opacity: .8;
 }
 
 .comment-actions .dropdown-item:active .fa, .comment-actions .dropdown-item:active .fas {
@@ -729,7 +880,7 @@ label.terms {
 }
 
 .comment-actions a:hover .fa, .comment-actions a:hover .fas {
-    color: $body-color;
+    color: $black;
 }
 
 .comment-actions .fas.fa-ellipsis-h {
@@ -759,7 +910,7 @@ label.terms {
 }
 
 .comment-actions a:hover {
-    color: $body-color;
+    color: $black;
 }
 
 .comment-actions .dropdown-item:hover {
@@ -773,7 +924,7 @@ ul.comment-section {
 
 .comment-count {
     font-size: $h5-font-size;
-    color: $body-color;
+    color: $black;
 }
 
 .comment-write {
@@ -820,27 +971,41 @@ ul.comment-section {
     margin-right: .25rem;
 }
 
-.comment .toggle-collapse::before {
-    position: absolute;
-    right: 1rem;
-    top: .25rem;
-    content: "\2212";
-    font-size: $font-size-lg;
-    color: $text-muted;
-    z-index: 2;
+.comment .comment-collapse {
+    padding-right: 15px;
 }
 
-.comment.collapsed .toggle-collapse::before {
+.comment .comment-collapse::before {
+    content: "";
     position: absolute;
-    right: 1rem;
-    top: .25rem;
+    font-family: "Font Awesome 5 Free";
+    border-left: 2px solid $gray-400;
+    font-size: $font-size-base;
+    color: $purple;
+    display: inline-block;
+    height: 100%;
+    cursor: pointer;
+    width: 10px;
+}
+
+.comment .comment-collapse:hover::before {
+    border-left-color: $primary;
+}
+
+.comment.collapsed .comment-collapse::before {
     content: "\002B";
-    font-size: $font-size-lg;
-    color: $text-muted;
-    z-index: 2;
+    font-family: Helvetica, sans-serif;
+    border-left: none;
+    color: $gray-500;
+    left: -2.5px;
+    top: -1px;
 }
 
-.comment.collapsed .comment-profile, .comment.collapsed div.comment-text, .comment.collapsed .comment-actions, .comment.collapsed .comment-write,
+.comment.collapsed .comment-collapse:hover::before {
+    color: $primary;
+}
+
+.comment.collapsed .comment-profile, .comment.collapsed .comment-body p.text, .comment.collapsed div.comment-text, .comment.collapsed .comment-actions, .comment.collapsed .comment-write,
 .comment.collapsed .comment {
     display: none;
 }
@@ -851,6 +1016,10 @@ ul.comment-section {
 
 .comment.collapsed .comment-body {
     opacity: .5;
+}
+
+.comment.collapsed .comment-body:hover {
+    opacity: 1;
 }
 
 .dropdown-menu.user-profile-menu {
@@ -920,7 +1089,7 @@ ul.comment-section {
 
 .sidebar-post-meta .link, .sidebar-post-meta .date{
     font-size: $small-font-size;
-    color: $body-color;
+    color: $black;
     font-weight: $font-weight-normal;
 }
 
@@ -964,6 +1133,23 @@ ul.comment-section {
     text-shadow: 0 0 2px black;
 }
 
+// Settings Page
+
+.settings .settings-section {
+    margin-bottom: 3rem;
+    background: $white;
+    border: 1px solid $border-color;
+    border-radius: 0.25rem;
+}
+
+.settings .settings-section .title, .settings .settings-section .body, .settings .settings-section .footer {
+    padding: 1rem;
+}
+
+.settings .settings-section .footer {
+    background-color: $gray-200;
+}
+
 // Profile Page
 
 .profile-actions a {
@@ -999,8 +1185,25 @@ ul.comment-section {
 
 // Footer
 
+#page .footer h1, #page .footer h2, #page .footer h3, #page .footer h4, #page .footer h5, #page .footer h6 {
+    font-weight: $font-weight-bold;
+}
+
+.footer .list-inline-item {
+    font-weight: $font-weight-normal;
+}
+
 .footer a {
     color: $gray-600;
+    text-decoration: none;
+}
+
+.footer a:hover, .footer a:focus, .footer a:active {
+    text-decoration: underline;
+}
+
+.footer.footer-dark a:hover, .footer.footer-dark a:focus, .footer.footer-dark a:active {
+    color: $white;
 }
 
 // Responsive Borders
@@ -1050,8 +1253,194 @@ ul.comment-section {
   }
 }
 
-.footer a:hover, a:focus, a:active {
-    color: $body-color;
+// Submissions
+
+.text-format {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: .5rem;
+    width: 100%;
+    border-width: 0 1px 1px 1px;
+    border-style: solid;
+    border-color: $gray-300;
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+    z-index: 3;
+}
+
+.text-format .format {
+    padding: 0 0.5rem;
+    font-size: 1rem;
+    color: #adb5bd;
+}
+
+// Custom Switch (iOS-like toggle)
+
+.custom-switch {
+  padding-left: 2.25rem;
+  padding-bottom: 1rem; // added for positioning
+}
+
+.custom-control-label { // added for alignment with the switch
+  padding-top: 0.5rem;
+  padding-left: 2rem;
+  padding-bottom: 0.1rem;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+    opacity: 1;
+    background-color: $success;
+    border: $success solid 1px;
+
+}
+
+.custom-control-input:checked ~ .custom-control-label:hover::before {
+    opacity: 1;
+}
+
+.custom-switch .custom-control-label::before {
+  left: -2.25rem;
+  height: 1.5rem;
+  width: 2.75rem;    // it was 1.75rem before. Sliding way is longer than before.
+  pointer-events: all;
+  border-radius: 1rem;
+  background-color: $gray-500;
+  border: $gray-500 solid 1px;
+  opacity: .7;
+}
+
+.custom-switch .custom-control-label:hover::before {
+    opacity: .85;
+}
+
+.custom-switch .custom-control-label::after {
+  top: calc(0.25rem + 2px);
+  left: calc(-2.25rem + 2px);
+  width: calc(1.5rem - 4px);   // it was calc(1rem - 4px) before. Oval is bigger than before.
+  height: calc(1.5rem - 4px);  // it was calc(1rem - 4px) before. Oval is bigger than before.
+  background-color: $white;
+  border-radius: 2rem; //   it was 0.5rem before. Oval is bigger than before.
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-transform 0.15s ease-in-out;
+  transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-transform 0.15s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .custom-switch .custom-control-label::after {
+    transition: none;
+  }
+}
+
+.custom-switch .custom-control-input:checked ~ .custom-control-label::after {
+  background-color: #fff;
+  -webkit-transform: translateX(1.25rem); //translateX(0.75rem);
+  transform: translateX(1.25rem); //translateX(0.75rem);
+}
+
+// Code Prettify
+
+pre.prettyprint {
+    padding: 0;
+}
+
+pre ol.linenums {
+    padding-left: 0;
+}
+
+pre ol > li {
+    margin-bottom: 0;
+}
+
+pre ol > li::before {
+    color: $white;
+    font-weight: $font-weight-normal;
+    background-color: rgba(72, 68, 107, 0.9);
+    right: 1rem;
+    padding: .25rem;
+    text-align: right;
+    margin-right: 0.5rem;
+    width: 3rem;
+}
+
+pre li.L1, li.L3, li.L5, li.L7, li.L9 {
+    background: none;
+}
+
+pre .pln, code .pln {
+    color: #29b1f3;
+}
+
+pre .lit, code .lit {
+    color: $dark;
+}
+
+pre .kwd, code .kwd {
+    color: $green;
+}
+
+pre .str, code .str {
+    color: $green;
+    opacity: .75;
+}
+
+pre .com, code .com {
+    color: #ab4bc3;
+}
+
+pre .typ, code .typ {
+    color: $white;
+}
+
+pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
+    color: #fff;
+}
+
+// Responsive media queries
+
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 767.98px) {
+
+body {
+    padding-top: 49px;
+}
+
+#thread {
+    padding-top: 98px;
+    background-color: $white;
+}
+
+#frontpage {
+    padding-top: 98px;
+    background-color: $white;
+}
+
+.post-title {
+    font-size: $font-size-base;
+    font-weight: $font-weight-normal;
+    line-height: normal;
+}
+
+.comments-count .total {
+    font-weight: $font-weight-normal;
+}
+
+.footer .list-inline-item {
+    line-height: 3;
+}
+
+.post-filter {
+    font-size: $small-font-size;
+    font-weight: $font-weight-normal;
+}
+
+.post-filter .dropdown-item {
+    font-size: $small-font-size;
+    font-weight: $font-weight-normal;
+}
+
 }
 
 // Adam's additions

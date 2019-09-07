@@ -1,6 +1,6 @@
 // Toggle comment collapse
 
-$(".toggle-collapse").click(function (event) {
+$(".comment-collapse").click(function (event) {
     event.preventDefault();
 
     var id = $(this).parent().attr("id");
