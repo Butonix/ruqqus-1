@@ -22,7 +22,7 @@
                   <h5 class="card-title post-title text-left mb-2"><a href="{{ p.permalink }}" class="stretched-link">{{ p.title }}</a></h5>
                   <div class="post-meta text-left d-none d-md-block mb-2">{% if p.stickied %}📌 | {% endif %}Posted by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {{ p.age_string }} | ({{ p.domain }})
                   </div>
-                  <div class="post-actions">
+                  <div class="post-actions" class="z-index:1">
                     <ul class="list-inline">
 			<li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none">
                             <span id="arrow-{{ p.base36id }}-mobile-up" class="mr-2 arrow-mobile-up" onclick="vote('{{ p.base36id }}','0')">
@@ -51,7 +51,7 @@
                             <i class="fas fa-ellipsis-h"></i>More
                           </a>
 
-                          <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
+                          <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink" style="z-index:1000">
 			    <a class="dropdown-item d-block d-md-none" href="google.com"><i class="fas fa-share-alt"></i>Share</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-save"></i>Save</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Flag</a>
