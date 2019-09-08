@@ -202,8 +202,8 @@
                 <div class="post-actions mx-auto">
                     <ul class="list-inline">
                         
-                        <li id="voting-mobile" class="voting list-inline-item{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-                            <span id="arrow-mobile-up" class="mr-2 arrow-mobile-up" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
+                        <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+                            <span id="arrow-{{ p.base36id }}-mobile-up" class="mr-2 arrow-mobile-up" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
                                 <i class="fas fa-chevron-up mx-0"></i>
                             </span>
 
@@ -214,7 +214,7 @@
 		  		<span id="post-{{ p.base36id }}-score-mobile-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">{{ score-1-adjust }}</span>
 
 
-                            <span id="arrow-mobile-down" class="arrow-mobile-down ml-2 my-0" {% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}>
+                            <span id="arrow-{{ p.base36id }}-mobile-down" class="arrow-mobile-down ml-2 my-0" {% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}>
                                 <i class="fas fa-chevron-down mx-0"></i>
                             </span>
                         </li>

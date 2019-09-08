@@ -24,6 +24,24 @@
                   </div>
                   <div class="post-actions">
                     <ul class="list-inline">
+			<li id="voting-mobile" class="voting list-inline-item">
+                            <span id="arrow-{{ p.base36id }}-mobile-up" class="mr-2 arrow-mobile-up" onclick="vote('{{ p.base36id }}','0')">
+                                <i class="fas fa-chevron-up mx-0" aria-hidden="true"></i>
+                            </span>
+
+
+                                
+				<span id="post-{{ p.base36id }}-score-mobile-up" class="score-up text-muted d-none">{{ score+1 }}</span>
+		  		<span id="post-{{ p.base36id }}-score-mobile-none" class="score text-muted">{{ score }}</span>
+		  		<span id="post-{{ p.base36id }}-score-mobile-down" class="score-down text-muted d-none">{{ score-1 }}</span>
+
+
+                            <span id="arrow-{{ p.base36id }}-mobile-down" class="arrow-mobile-down ml-2 my-0" onclick="vote('{{ p.base36id }}','-1')">
+                                <i class="fas fa-chevron-down mx-0" aria-hidden="true"></i>
+                            </span>
+                        </li>
+
+
                       <li class="list-inline-item"><a href="{{ p.permalink }}"><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
                       <li class="list-inline-item"><a href="google.com"><i class="fas fa-share-alt"></i>Share</a></li>
                       <li class="list-inline-item">
@@ -55,8 +73,6 @@
                 <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
                 
                 <div class="voting d-none d-md-block my-auto mr-3">
-
-
 
                   <div id="post-{{ p.base36id }}-up" class="mx-auto arrow-up" {% if not p.is_banned %}{% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}{% endif %}></div>
 

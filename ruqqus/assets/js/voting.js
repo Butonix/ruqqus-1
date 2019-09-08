@@ -11,9 +11,9 @@ scoreup1=document.getElementById("post-"+post_id+"-score-up");
 scorenone1=document.getElementById("post-"+post_id+"-score-none");
 scoredown1=document.getElementById("post-"+post_id+"-score-down");
 
-thing2=document.getElementById("voting-mobile")
-uparrow2=document.getElementById("arrow-mobile-up");
-downarrow2=document.getElementById("arrow-mobile-down");
+thing2=document.getElementById("voting-"+post_id+"-mobile")
+uparrow2=document.getElementById("arrow-"+post_id+"-mobile-up");
+downarrow2=document.getElementById("arrow-"+post_id+"-mobile-down");
 scoreup2=document.getElementById("post-"+post_id+"-score-mobile-up");
 scorenone2=document.getElementById("post-"+post_id+"-score-mobile-none");
 scoredown2=document.getElementById("post-"+post_id+"-score-mobile-down");
