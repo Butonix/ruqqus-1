@@ -6,7 +6,8 @@ $secondary: #7D8CC4;
 $danger: #F45D01;
 $white: #ffffff;
 $black: #191919;
-$light: #F9F8FA;
+$light: #F6F6F8;
+
 
 
 $purple: #6d3eb7;
@@ -211,8 +212,9 @@ ol > li::before {
 // Buttons
 
 .btn {
-    border-radius: .25rem;
     font-size: $small-font-size;
+    padding: .35rem .75rem;
+    border-radius: $border-radius;
 }
 
 .btn.disabled, .btn:disabled {
@@ -226,6 +228,21 @@ ol > li::before {
 .btn.login, .btn.register {
     height: calc(1.5em + 0.75rem + 2px);
     border-radius: .25rem;
+}
+
+.btn-group.btn-integration {
+    border-radius: $border-radius;
+    border: 1px solid $border-color;
+}
+
+.btn-integration {
+    font-weight: $font-weight-bold;
+    border-left: 1px solid $border-color;
+}
+
+.btn-integration .fab, .btn-integration .fas, .btn-integration .far {
+    font-size: $lead-font-size;
+    vertical-align: middle;
 }
 
 // Navbar and tab Bar
@@ -282,7 +299,7 @@ ol > li::before {
 
 .settings-nav .nav-link {
     color: $gray;
-    font-size: $font-size-base;
+    font-size: $extra-small-font-size;
     font-weight: $font-weight-bold;
     padding-top: 0;
 }
@@ -294,6 +311,11 @@ ol > li::before {
 
 
 .settings-nav > .nav-item > .nav-link.active {
+    color: $red;
+    border-bottom: 3px solid $red;
+}
+
+.post-nav .nav-link:hover, .post-nav .nav-link:focus, .settings-nav .nav-link:hover, .settings-nav .nav-link:focus {
     color: $red;
     border-bottom: 3px solid $red;
 }
@@ -384,6 +406,15 @@ ol > li::before {
 .form-control {
     color: $gray;
     border-color: $gray-300;
+    transition: none;
+}
+
+.form-control:focus {
+    color: $black;
+    background-color: #ffffff;
+    outline: 0;
+    border: none;
+    box-shadow: 0 0 0 1px $primary;
 }
 
 label {
@@ -582,6 +613,15 @@ color: $dark;
     display: inline-block;
     font-size: $extra-small-font-size;
     font-weight: $font-weight-bold;
+    color: $text-muted;
+}
+
+.post-filter .fa, .post-filter .fas {
+    font-size: $extra-small-font-size;
+    margin-right: .5rem;
+    opacity: .9;
+    color: $primary;
+    width: 1rem;
 }
 
 .post-filter .fa, .post-filter .fas {
@@ -606,14 +646,12 @@ color: $dark;
 }
 
 .sidebar .sidebar-section .title {
-    font-size: $font-size-base;
+    font-size: $extra-small-font-size;
     font-weight: $font-weight-bold;
     color: $black;
-    padding: 0.75rem 1rem 0;
-}
-
-.sidebar .sidebar-section .body {
-    padding: 1rem;
+    padding: 0 0 .5rem 0;
+    border-bottom: 1px solid #e1e4e9;
+    margin-bottom: 1rem;
 }
 
 .sidebar-section {
@@ -621,6 +659,7 @@ color: $dark;
     background-color: #fff;
     border: 1px solid $border-color;
     border-radius: 0.25rem;
+    padding: 1rem;
 }
 
 .sidebar-section.sidebar-trending .hashtag {
@@ -714,16 +753,16 @@ color: $dark;
     position: relative;
     z-index: 1;
     color: $text-muted;
-    font-size: $small-font-size;
+    font-size: $extra-small-font-size;
     width: fit-content;
 }
 
 .post-actions {
     position: relative;
-    z-index: 2;
+    z-index: 1;
     color: $text-muted;
     font-weight: $font-weight-normal;
-    font-size: $small-font-size;
+    font-size: $extra-small-font-size;
 }
 
 .post-actions .fa, .post-actions .fas {
@@ -826,7 +865,7 @@ color: $dark;
 .comments-count .total {
     font-weight: $font-weight-bold;
     font-size: $extra-small-font-size;
-    margin-bottom: .5rem;
+    color: $text-muted;
 }
 
 .comment:first-child {
@@ -935,13 +974,23 @@ ul.comment-section {
     margin-top: 1rem;
 }
 
-.comment-write textarea {
+.comment-write.collapsed textarea {
     width: 100%;
-    height: 100%;
+    height: 150px;
     box-sizing: border-box;
     padding: .5rem .75rem;
+    background: $white;
 }
+
+.comment-write textarea {
+    background: $light;
+}
+
 .comment-write .comment-format {
+    display: none;
+}
+
+.comment-write.collapsed .comment-format {
     display: flex;
     align-items: center;
     position: absolute;
@@ -955,10 +1004,6 @@ ul.comment-section {
     border-bottom-left-radius: .25rem;
     border-bottom-right-radius: .25rem;
     z-index: 3;
-}
-
-.comment-write .form-control:hover, .comment-write .form-control:active, .comment-write .form-control:focus {
-    border-color: $gray-300;
 }
 
 .comment-write .comment-format .format {
@@ -1144,6 +1189,10 @@ ul.comment-section {
 
 .settings .settings-section .title, .settings .settings-section .body, .settings .settings-section .footer {
     padding: 1rem;
+}
+
+.settings .settings-section .title p:last-of-type {
+    margin-bottom: 0;
 }
 
 .settings .settings-section .footer {
@@ -1423,12 +1472,17 @@ body {
     line-height: normal;
 }
 
+.footer .list-inline-item {
+    line-height: 3;
+}
+
 .comments-count .total {
+    font-size: $small-font-size;
     font-weight: $font-weight-normal;
 }
 
-.footer .list-inline-item {
-    line-height: 3;
+.comment-write .comment-format .format {
+    display: none;
 }
 
 .post-filter {
