@@ -43,7 +43,7 @@
 
 
                       <li class="list-inline-item"><a href="{{ p.permalink }}"><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
-                      <li class="list-inline-item"><a href="google.com"><i class="fas fa-share-alt"></i>Share</a></li>
+                      <li class="list-inline-item d-none d-md-inline-block"><a href="google.com"><i class="fas fa-share-alt"></i>Share</a></li>
                       <li class="list-inline-item">
                         <div class="dropdown show">
                           <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true"
@@ -52,8 +52,10 @@
                           </a>
 
                           <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
+			    <a class="dropdown-item d-md-block" href="google.com"><i class="fas fa-share-alt"></i>Share</a></li>
                             <a class="dropdown-item" href="#"><i class="fas fa-save"></i>Save</a>
-                            <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Flag</a>                          </div>
+                            <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Flag</a>
+                          </div>
                         </div>
                       </li>
 {% if v %}
