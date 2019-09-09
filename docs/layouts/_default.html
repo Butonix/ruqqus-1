@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="author" content="">
+
+{% block title %}
+  <title>Ruqqus Organization</title>
+  <meta name="description" content="The independent social platform">
+{% endblock %}
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/e76eba0350.js"></script>
+
+  <!-- Ruqqus CSS -->
+  <link rel="stylesheet" href="https://ruqqus.com/assets/style/main.css">
+
+  <script>
+    var prevScrollpos = window.pageYOffset;
+    window.onscroll = function () {
+      var currentScrollPos = window.pageYOffset;
+      if (prevScrollpos > currentScrollPos) {
+        document.getElementById("filter-bar-mobile").style.top = "49px";
+      } else {
+        document.getElementById("filter-bar-mobile").style.top = "-98px";
+        document.getElementById("dropdownMenuSortBy").classList.remove('show');
+        document.getElementById("dropdownMenuFrom").classList.remove('show');
+      }
+      prevScrollpos = currentScrollPos;
+    }
+
+
+  </script>
+{% if v %}
+
+<script>
+function post(url, callback, errortext) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  var form = new FormData()
+  form.append("formkey", "{{ v.formkey }}");
+  xhr.withCredentials=true;
+  xhr.onload=callback
+  xhr.onerror=function(){alert(errortext)}
+  xhr.send(form);
+}
+function formkey() {
+  return '{{ v.formkey }}';
+}
+</script>
+
+<script src="/assets/js/voting.js"></script>
+<script src="/assets/js/comment_replies.js"></script>
+
+{% if v.admin_level %}
+<script src="/assets/js/comment_modding.js"></script>
+<script src="/assets/js/post_modding.js"></script>
+{% endif %}
+
+{% endif %}
+
+</head>
+
+<body id="{% block pagetype %}frontpage{% endblock %}">
+
+  {% include "header.html" %}
+  <!-- Page Content -->
+
+  <div class="container px-0 px-md-3">
+    <div class="row justify-content-around mx-lg-5 no-gutters">
+      <div class="col bg-white border-sm rounded-md h-100">
+
+      {% block content %}
+      {% endblock %}
+
+      </div>
+
+      <!-- Right Sidebar (hidden on devices smaller than "large") -->
+
+      <div class="col sidebar text-left d-none d-lg-block ml-3">
+{% block sidebarblock %}
+        <div class="sidebar-section sidebar-about">
+          <div class="title">About Ruqqus</div>
+          <div class="body">
+            <p>Ruqqus is an independent free-speech-oriented social media platform built by and for Americans.</p>
+            <small><a href="/about">Learn more →</a></small>
+          </div>
+        </div>
+
+{% endblock %}
+
+        <div class="sidebar-section sidebar-stats">
+          <div class="title">Stats</div>
+          <div class="body">
+            <div class="d-inline-block w-25">
+              <span style="font-size: 13px;font-weight: bold;">{{ 1 | total_users }}</span>
+              <small style="display: block;">users</small>
+            </div>
+            <div class="d-inline-block w-25">
+              <span style="font-size: 13px;font-weight: bold;">{{ 1 | users_here }}</span>
+              <small style="display: block;">online</small>
+            </div>
+          </div>
+        </div>
+	{% if v %}
+	{% if v.admin_level %}
+	<div class="sidebar-section sidebar-adminpanel">
+	  <div class="title">Admin Panel
+	  </div>
+  	  <div class="body">
+	    {% block adminpanel %}
+	      <p>[No admin actions available]</p>
+	    {% endblock %}
+	  </div>
+	</div>
+	{% endif %}
+	{% endif %}
+        <div class="sidebar-section sidebar-trending d-none">
+          <div class="title">What's Hot</div>
+          <div class="body">
+            <p>Here are the most popular tags from the last 24 hours.</p>
+            <div class="hashtag">
+              <a href="#">#Mueller</a>
+              <div class="text-muted text-small font-weight-normal">2.3K posting about this</div>
+            </div>
+            <div class="hashtag">
+              <a href="#">#MemeWar2</a>
+              <div class="text-muted text-small font-weight-normal">1.2K posting about this</div>
+            </div>
+            <div class="hashtag">
+              <a href="#">#AskTrumpSupporters</a>
+              <div class="text-muted text-small font-weight-normal">900 posting about this</div>
+            </div>
+            <div class="hashtag">
+              <a href="#">#DNCDebates</a>
+              <div class="text-muted text-small font-weight-normal">600 posting about this</div>
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-section sidebar-rules">
+          <div class="title">Ruqqus Rules</div>
+          <div class="body">
+            <ol class="pl-0">
+              <li>No racism</li>
+              <li>No doxxing, threats, or calls to violence</li>
+              <li>No trolling</li>
+              <li>No solicitation</li>
+              <li>Patriots only</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    
+    </div>
+
+    <div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="filter-bar-mobile"
+      style="z-index: 3; top: 0; transition: top 0.3s;">
+
+      <div class="col">
+
+        <div class="d-flex flex-row flex-nowrap justify-content-between">
+	
+{% if sort_method %}
+{% block sortbar %}
+{% endblock %}
+
+{% endif %}
+
+          <div class="post-filter">
+            <span>From:</span>
+            <span class="dropdown">
+              <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">Time</a>
+
+              <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
+                <a class="dropdown-item" href="#">Past Day</a>
+                <a class="dropdown-item" href="#">Past Month</a>
+                <a class="dropdown-item" href="#">Past Year</a>
+                <a class="dropdown-item" href="#">All Time</a>
+              </span>
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+{% block mobileactions %}
+{% endblock %}
+
+
+    <footer class="footer py-5">
+      <div class="container-fluid">
+        <div class="row justify-content-center">
+          <div class="col">
+            <ul class="list-inline text-center text-small text-muted font-weight-bold mb-0">
+              <li class="list-inline-item"><a href="/about">About</a></li>
+              <li class="list-inline-item"><a href="/terms">Terms</a></li>
+              <li class="list-inline-item">Privacy</li>
+              <li class="list-inline-item">Donate</li>
+              <li class="list-inline-item">Press</li>
+              <li class="list-inline-item"><a href="https://ruqqus.org/contribute">Contribute</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+  </div>
+  </div>
+  </footer>
+
+{% include "bootstrap.html" %}
+
+<script src="/assets/js/collapse.js"></script>
+
+</body>
+
+</html>
