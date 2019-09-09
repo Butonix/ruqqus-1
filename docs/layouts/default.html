@@ -82,41 +82,7 @@
             </div>
           </div>
         </div>
-	{% if v %}
-	{% if v.admin_level %}
-	<div class="sidebar-section sidebar-adminpanel">
-	  <div class="title">Admin Panel
-	  </div>
-  	  <div class="body">
-	    {% block adminpanel %}
-	      <p>[No admin actions available]</p>
-	    {% endblock %}
-	  </div>
-	</div>
-	{% endif %}
-	{% endif %}
-        <div class="sidebar-section sidebar-trending d-none">
-          <div class="title">What's Hot</div>
-          <div class="body">
-            <p>Here are the most popular tags from the last 24 hours.</p>
-            <div class="hashtag">
-              <a href="#">#Mueller</a>
-              <div class="text-muted text-small font-weight-normal">2.3K posting about this</div>
-            </div>
-            <div class="hashtag">
-              <a href="#">#MemeWar2</a>
-              <div class="text-muted text-small font-weight-normal">1.2K posting about this</div>
-            </div>
-            <div class="hashtag">
-              <a href="#">#AskTrumpSupporters</a>
-              <div class="text-muted text-small font-weight-normal">900 posting about this</div>
-            </div>
-            <div class="hashtag">
-              <a href="#">#DNCDebates</a>
-              <div class="text-muted text-small font-weight-normal">600 posting about this</div>
-            </div>
-          </div>
-        </div>
+
         <div class="sidebar-section sidebar-rules">
           <div class="title">Ruqqus Rules</div>
           <div class="body">
@@ -139,12 +105,6 @@
       <div class="col">
 
         <div class="d-flex flex-row flex-nowrap justify-content-between">
-	
-{% if sort_method %}
-{% block sortbar %}
-{% endblock %}
-
-{% endif %}
 
           <div class="post-filter">
             <span>From:</span>
@@ -168,8 +128,6 @@
 
     </div>
 
-{% block mobileactions %}
-{% endblock %}
 
 
     <footer class="footer py-5">
