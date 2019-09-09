@@ -41,7 +41,7 @@
 
 </head>
 
-<body id="{% block pagetype %}frontpage{% endblock %}">
+<body>
 
   {% include header.html %}
   <!-- Page Content -->
@@ -50,8 +50,7 @@
     <div class="row justify-content-around mx-lg-5 no-gutters">
       <div class="col bg-white border-sm rounded-md h-100">
 
-      {% block content %}
-      {% endblock %}
+      {{ content }}
 
       </div>
 
