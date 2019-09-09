@@ -41,33 +41,6 @@
 
 
   </script>
-{% if v %}
-
-<script>
-function post(url, callback, errortext) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
-  var form = new FormData()
-  form.append("formkey", "{{ v.formkey }}");
-  xhr.withCredentials=true;
-  xhr.onload=callback
-  xhr.onerror=function(){alert(errortext)}
-  xhr.send(form);
-}
-function formkey() {
-  return '{{ v.formkey }}';
-}
-</script>
-
-<script src="/assets/js/voting.js"></script>
-<script src="/assets/js/comment_replies.js"></script>
-
-{% if v.admin_level %}
-<script src="/assets/js/comment_modding.js"></script>
-<script src="/assets/js/post_modding.js"></script>
-{% endif %}
-
-{% endif %}
 
 </head>
 
@@ -88,7 +61,6 @@ function formkey() {
       <!-- Right Sidebar (hidden on devices smaller than "large") -->
 
       <div class="col sidebar text-left d-none d-lg-block ml-3">
-{% block sidebarblock %}
         <div class="sidebar-section sidebar-about">
           <div class="title">About Ruqqus</div>
           <div class="body">
@@ -96,8 +68,6 @@ function formkey() {
             <small><a href="/about">Learn more →</a></small>
           </div>
         </div>
-
-{% endblock %}
 
         <div class="sidebar-section sidebar-stats">
           <div class="title">Stats</div>
