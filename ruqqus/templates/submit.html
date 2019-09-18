@@ -78,6 +78,10 @@
 
                             <div class="submission p-3">
 
+				{% if error %}
+				<p><span class="red">{{ error }}</span></p>
+				{% endif %}
+
                                 <form id="submitform" action="/submit" method="post">
 
                                     <input type="hidden" name="formkey" value="{{ v.formkey }}">
