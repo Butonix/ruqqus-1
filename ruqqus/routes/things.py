@@ -106,8 +106,8 @@ def submit_post(v):
         return render_template("submit.html", v=v, error="Please enter a better title.")
 
     x=urlparse(url)
-    if not (x.scheme and x.netloc):
-        return render_template("submit.html", v=v, error="Please enter a URL.")
+    if not (x.scheme and x.netloc) and not request.form.get("body"):
+        return render_template("submit.html", v=v, error="Please enter a URL or a text body.")
 
     x=filter_post(url)
     if x:
