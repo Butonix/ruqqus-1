@@ -24,7 +24,25 @@
 
         <div class="flex-row tab-bar sticky d-none d-md-flex">
 
-          <div class="post-filter pb-2 d-none">
+          <ul class="nav post-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link{% if sort_method=="hot" %} active{% endif %}" href="/"><i class="fas fa-fire"></i>Hot</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{% if sort_method=="top" %} active{% endif %}" href="/?sort=top"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{% if sort_method=="new" %} active{% endif %}" href="/?sort=new"><i class="fas fa-asterisk"></i>New</a> 
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{% if sort_method=="fiery" %} active{% endif %}" href="/?sort=fiery"><i class="fas fa-fire"></i>Fiery</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if sort_method=="based" %} active{% endif %}" href="#"><i class="fas fa-bullhorn"></i>Based</a>
+            </li>
+          </ul>
+
+                    <div class="post-filter pb-2 d-none">
             <span>Sort By:</span>
             <span class="dropdown">
               <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
@@ -41,24 +59,6 @@
             </span>
 
           </div>
-
-          <ul class="nav post-nav ml-auto">
-            <li class="nav-item">
-              <a class="nav-link{% if sort_method=="hot" %} active{% endif %} text-uppercase" href="/">Hot</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link{% if sort_method=="top" %} active{% endif %} text-uppercase" href="/?sort=top">Top</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link{% if sort_method=="new" %} active{% endif %} text-uppercase" href="/?sort=new">New</a> 
-            </li>
-            <li class="nav-item">
-              <a class="nav-link{% if sort_method=="fiery" %} active{% endif %} text-uppercase" href="/?sort=fiery">Fiery</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link {% if sort_method=="based" %} active{% endif %}text-uppercase" href="#">Based</a>
-            </li>
-          </ul>
 
         </div>
 

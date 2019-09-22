@@ -30,9 +30,9 @@
     window.onscroll = function () {
       var currentScrollPos = window.pageYOffset;
       if (prevScrollpos > currentScrollPos) {
-        document.getElementById("filter-bar-mobile").style.top = "49px";
+        document.getElementById("fixed-bar-mobile").style.top = "49px";
       } else {
-        document.getElementById("filter-bar-mobile").style.top = "-98px";
+        document.getElementById("fixed-bar-mobile").style.top = "-98px";
         document.getElementById("dropdownMenuSortBy").classList.remove('show');
         document.getElementById("dropdownMenuFrom").classList.remove('show');
       }
@@ -76,9 +76,9 @@ function formkey() {
   {% include "header.html" %}
   <!-- Page Content -->
 
-  <div class="container px-0 px-md-3">
-    <div class="row justify-content-around mx-lg-5 no-gutters">
-      <div class="col bg-white border-sm rounded-md h-100">
+  <div class="container">
+    <div class="row justify-content-around">
+      <div class="col bg-white border-sm rounded-md h-100 custom-gutters">
 
       {% block content %}
       {% endblock %}
@@ -163,8 +163,8 @@ function formkey() {
     
     </div>
 
-    <div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="filter-bar-mobile"
-      style="z-index: 3; top: 0; transition: top 0.3s;">
+    <div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="fixed-bar-mobile"
+      style="z-index: 3; top: 49px; transition: top 0.3s;">
 
       <div class="col">
 
@@ -201,30 +201,33 @@ function formkey() {
 {% block mobileactions %}
 {% endblock %}
 
-
     <footer class="footer py-5">
-      <div class="container-fluid">
-        <div class="row justify-content-center">
-          <div class="col">
-            <ul class="list-inline text-center text-small text-muted font-weight-bold mb-0">
-              <li class="list-inline-item"><a href="/about">About</a></li>
-              <li class="list-inline-item"><a href="/terms">Terms</a></li>
-              <li class="list-inline-item">Privacy</li>
-              <li class="list-inline-item">Donate</li>
-              <li class="list-inline-item">Press</li>
-              <li class="list-inline-item"><a href="https://ruqqus.org/contribute">Contribute</a></li>
-            </ul>
-          </div>
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col">
+          <ul class="list-inline text-center text-small text-muted font-weight-bold mb-0">
+            <li class="list-inline-item"><a href="/about">About</a></li>
+            <li class="list-inline-item"><a href="#">Contact</a></li>
+            <li class="list-inline-item"><a href="/terms">Terms</a></li>
+            <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+            <li class="list-inline-item"><a href="#">Donate</a></li>
+            <li class="list-inline-item"><a href="#">Press</a></li>
+            <li class="list-inline-item"><a href="#">Help</a></li>
+            <li class="list-inline-item"><a href="https://www.twitter.com/ruqqus">Twitter</a></li>
+            <li class="list-inline-item"><a href="https://ruqqus.org/contribute">Github</a></li>
+            <li class="list-inline-item">&copy; 2019 Ruqqus</li>
+          </ul>
         </div>
-      </div>
-  </div>
-  </div>
   </footer>
 
 {% include "bootstrap.html" %}
 
 <script src="/assets/js/collapse.js"></script>
 <script src="/assets/js/comment_form.js"></script>
+
+{% if v %}
+<script src="/assets/js/comment_form.js"></script>
+{% endif %}
 
 </body>
 

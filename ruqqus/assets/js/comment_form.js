@@ -1,11 +1,8 @@
-$('#comment-box').focus(function () {
+
+/*
+$('.comment-box').blur(function () {
     event.preventDefault();
 
-    document.getElementById("comment-write").classList.add("collapsed");
+    $(this).parent().parent().removeClass("collapsed");
 });
-
-$('#comment-box').blur(function () {
-    event.preventDefault();
-
-    document.getElementById("comment-write").classList.remove("collapsed");
-});
+*/

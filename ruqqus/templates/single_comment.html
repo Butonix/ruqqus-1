@@ -7,7 +7,7 @@
 {% set adjust=0 %}
 {% endif %}
 
-<div id="comment-{{ c.base36id }}" class="comment rounded mt-2">
+<div id="comment-{{ c.base36id }}" class="comment rounded mt-4">
 
 
                                 <span class="comment-collapse"></span>
@@ -23,9 +23,9 @@
 {% endif %}
 
                                     <div class="user-info">
-                                        <a href="{{ c.author.permalink }}" class="font-weight-bold text-small user-name">{{ c.author.username }}</a>
-                                        <span class="time-stamp"> {{ c.age_string }}</span>
-                                        <span class="points"> <span id="comment-{{ c.base36id }}-score-up"{% if voted!=1 %} class="d-none"{% endif %}>{{ score+1-adjust }}</span><span id="comment-{{ c.base36id }}-score-none"{% if voted not in [-2,0] %} class="d-none"{% endif %}>{{ score-adjust }}</span><span id="comment-{{ c.base36id }}-score-down"{% if voted!=-1 %} class="d-none"{% endif %}>{{ score-1-adjust }}</span> point{{ 's' if score != 1 else '' }}</span>
+                                        <a href="{{ c.author.permalink }}" class="user-name">{{ c.author.username }}</a>
+                                        <span class="time-stamp"><span>&#183;</span> {{ c.age_string }} <span>&#183;</span></span>
+                                        <span class="points"><span id="comment-{{ c.base36id }}-score-up"{% if voted!=1 %} class="d-none"{% endif %}>{{ score+1-adjust }}</span><span id="comment-{{ c.base36id }}-score-none"{% if voted not in [-2,0] %} class="d-none"{% endif %}>{{ score-adjust }}</span><span id="comment-{{ c.base36id }}-score-down"{% if voted!=-1 %} class="d-none"{% endif %}>{{ score-1-adjust }}</span> point{{ 's' if score != 1 else '' }}</span>
                                     </div>
 
 				<div class="comment-text">
@@ -45,18 +45,17 @@
 	{% if not v.is_banned %}
             <li class="list-inline-item text-muted text-small"><a href="javascript:void(0)" onclick="addReplyForm('{{ c.base36id }}', '{{ c.post.base36id }}')"><i class="fas fa-reply"
                     aria-hidden="true"></i><span class=""><span
-                        class="comments-number"></span> Reply</span></a>
+                        class="comments-number"></span>Reply</span></a>
             </li>
 	{% endif %}
 	{% endif %}
 
-            <li class="list-inline-item text-muted"><a href="{{ c.permalink }}"><span class="share">permalink</span></a>
+            <li class="list-inline-item text-muted"><a href="{{ c.permalink }}"><span class="share"><i class="fas fa-link"></i>Permalink</span></a>
             </li>
-            <li class="list-inline-item text-muted"><a href="{{ c.parent.permalink }}"><span class="save">parent</span></a>
+            <li class="list-inline-item text-muted"><a href="{{ c.parent.permalink }}"><span class="save"><i class="fas fa-box-open"></i>Parent</span></a>
 	    </li>
             <li class="list-inline-item text-muted"><a href="#"><i class="fas fa-flag"
-                    aria-hidden="true"></i><span class="flag">
-                    Flag</span></a></li>
+                    aria-hidden="true"></i><span class="flag">Flag</span></a></li>
 {% if v %}
 {% if v.admin_level>=1 and v.id==c.author_id %}
 {% if c.distinguish_level %}
@@ -69,9 +68,9 @@
 {% endif %}
 {% if v.admin_level>=1 and v.admin_level > c.author.admin_level %}
 {% if not c.is_banned %}
-	    <li class="list-inline-item text-muted"><a id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')">remove</a></li>
+	    <li class="list-inline-item text-muted"><a id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a></li>
 {% else %}
-	    <li class="list-inline-item text-muted"><a id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')">approve</a></li>
+	    <li class="list-inline-item text-muted"><a id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="far fa-check-square"></i>Approve</a></li>
 {% endif %}
 {% endif %}
 {% endif %}

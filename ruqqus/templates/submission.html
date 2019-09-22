@@ -64,16 +64,16 @@
 {% endblock %}
 
 {% block content %}
-<div class="row mb-2 no-gutters">
+<div class="row mb-5">
 
                     <div class="col-12">
 
-                        <div id="post-{{ p.base36id }}" class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-                            <div class="card-header bg-transparent border-0 p-0 ml-auto">
+                        <div id="post-{{ p.base36id }}" class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 mt-4 mt-md-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+                            <div class="card-header bg-transparent border-0 p-0 ml-auto d-none d-md-block">
                                 {% if p.url.endswith((".jpg",".png")) %}<img src="{{ p.url }}" class="post-img" alt="">{% endif %}
                             </div>
                             <div class="card-block my-md-auto">
-                                <div class="post-meta text-left d-block d-md-none mb-2">Posted by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {{ p.age_string }} | ({{ p.domain }})</div>
+                                <div class="post-meta text-left d-block d-md-none mb-3 mb-md-2">Posted by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {{ p.age_string }} | ({{ p.domain }})</div>
                                 <h5 class="card-title post-title text-left mb-0 mb-md-2"><a target="_blank" href="{{ p.url }}">{{ p.title }}</a></h5>
                                 <div class="post-meta text-left d-none d-md-block">Posted by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {{ p.age_string }} | ({{ p.domain }})</div>
 
@@ -81,7 +81,7 @@
 
                             <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
 
-                            <div id="voting" class="d-md-block d-none my-auto mr-3 text-center voting">
+                            <div id="voting" class="voting d-none d-md-block my-auto ml-2 mr-4">
                                 <div id="post-{{ p.base36id }}-up" class="arrow-up mx-auto" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
                                 </div>
                                 <span id="post-{{ p.base36id }}-score-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">{{ score+1-adjust }}</span>
@@ -100,12 +100,19 @@
 			{% endif %}
 
                     </div>
+
+            <div class="row no-gutters mt-5 d-block d-md-none">
+                <div class="col">
+                   <a target="_blank" href="{{ p.url }}">{% if p.url.endswith((".jpg",".png")) %}<img src="{{ p.url }}" class="img-fluid" alt="post image">{% endif %}</a>
+                </div>
+            </div>
+
                 </div>
 
-                <div class="row mb-5 no-gutters">
+                <div class="row mb-3 d-none d-md-block">
                     <div class="col-12">
 
-                        <div class="post-actions d-none d-md-block px-3">
+                        <div class="post-actions">
                             <ul class="list-inline text-left mb-2">
                                 <li class="list-inline-item"><a href="#"><i
                                             class="fas fa-comment-dots"></i>{{ p.comment_count }} Comment{{ 's' if p.comment_count != 1 else '' }}</a>
@@ -127,45 +134,28 @@
                                         </a>
                                 
                                         <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
-                                            <a class="dropdown-item" href="#"><i class="fas fa-save"></i> Save</a>
-                                            <a class="dropdown-item" href="#"><i class="fas fa-flag"></i> Flag</a>
+                                            <a class="dropdown-item" href="#"><i class="fas fa-save"></i>Save</a>
+                                            <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Flag</a>
                                         </div>
                                     </div>
                                 </li>
 {% if v %}
 {% if v.admin_level >=1 %}
 		{% if p.is_banned %}
-		      <li class="list-inline-item"><a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')">approve</a></li>
+		      <li class="list-inline-item"><a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="far fa-check-square"></i>Approve</a></li>
 		{% else %}
-		      <li class="list-inline-item"><a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')">remove</a></li>
+		      <li class="list-inline-item"><a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a></li>
 		{% endif %}
 {% endif %}
 {% endif %}
                             </ul>
                         </div>
-
-{% if not p.is_banned %}
-                        <div class="comment-write px-3">
-                            <form id="reply-to-{{ p.fullname }}" class="input-group" action="/api/comment" method="post">
-				<input type="hidden" name="formkey" value="{{ v.formkey }}">
-				<input type="hidden" name="parent_fullname" value="t2_{{ p.base36id }}">
-				<input type="hidden" name="submission" value="{{ p.base36id }}">
-                                <textarea class="form-control rounded" name="body" form="reply-to-{{ p.fullname }}" aria-label="With textarea"
-                                    placeholder="Add your comment..." rows="7"></textarea>
-                                <div class="bg-light comment-format">
-                                    <small class="format"><i class="fas fa-bold"></i></small>
-                                    <small class="format"><i class="fas fa-italic"></i></small>
-                                    <small class="format"><i class="fas fa-quote-right"></i></small>
-                                    <small class="format"><i class="fas fa-link"></i></small>
-                                    <button form="reply-to-{{ p.fullname }}" class="btn btn-primary btn ml-auto">Comment</button>
-                                </div>
-                            </form>
-                        </div>
-{% endif %}
                     </div>
 
                 </div>
-		<div class="row px-3 pt-2 no-gutters">
+		<div class="row bg-light border-md-0 pb-3">
+        <div class="col border-top">
+<div class="comments-count py-3">
                             <div class="total">Comments ({{ p.comment_count }})</div>
                             <div class="post-filter ml-auto"><span>Sort By:</span>
                                 <span class="dropdown">
@@ -181,13 +171,35 @@
                                     </span>
                                 </span>
                             </div>
-		</div>
+                        </div>
 
-		<div class="p-3 comment-section">
+                        {% if not p.is_banned %}
+                        <div class="comment-write mb-3">
+                            <form id="reply-to-{{ p.fullname }}" class="input-group" action="/api/comment" method="post">
+                <input type="hidden" name="formkey" value="{{ v.formkey }}">
+                <input type="hidden" name="parent_fullname" value="t2_{{ p.base36id }}">
+                <input type="hidden" name="submission" value="{{ p.base36id }}">
+                                <textarea class="comment-box form-control rounded" name="body" form="reply-to-{{ p.fullname }}" aria-label="With textarea" placeholder="Add your comment..." rows="1"></textarea>
+                                <div class="bg-light comment-format">
+                                    <small class="format"><i class="fas fa-bold"></i></small>
+                                    <small class="format"><i class="fas fa-italic"></i></small>
+                                    <small class="format"><i class="fas fa-quote-right"></i></small>
+                                    <small class="format"><i class="fas fa-link"></i></small>
+                                    <button form="reply-to-{{ p.fullname }}" class="btn btn-primary btn ml-auto">Comment</button>
+                                </div>
+                            </form>
+                        </div>
+{% endif %}
+
+		<div class="comment-section">
 			{% for c in p.replies %}
 				{{ c.rendered_comment(v=v) | safe }}
 			{% endfor %}
 		</div>
+
+        </div>
+
+        </div>
 
 {% endblock %}
 
@@ -195,14 +207,14 @@
 {% block mobileactions %}
 <!-- Mobile responsive fixed footer with post actions -->
 
-        <div class="row fixed-top bg-white shadow d-inline-flex d-md-none p-3" id="footer-actions" style="z-index: 3; top: 49px; transition: top 0.3s;">
+        <div class="row fixed-top bg-white shadow d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 3; top: 49px; transition: top 0.3s;">
         
             <div class="col text-center">
         
                 <div class="post-actions mx-auto">
-                    <ul class="list-inline">
+                    <ul class="list-inline d-flex justify-content-center">
                         
-                        <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+                        <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item mr-auto{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
                             <span id="arrow-{{ p.base36id }}-mobile-up" class="mr-2 arrow-mobile-up" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
                                 <i class="fas fa-chevron-up mx-0"></i>
                             </span>

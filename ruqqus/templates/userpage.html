@@ -106,7 +106,7 @@
 {% block content %}
 <!-- Post filters bar visible only on medium devices or larger-->
 
-<div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="tab-bar-mobile" style="z-index: 3; top: 49px; transition: top 0.3s ease 0s;">
+<div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 3; top: 49px; transition: top 0.3s ease 0s;">
 
       <div class="col">
 
@@ -145,7 +145,7 @@
 
     </div>
 
-	<div class="row justify-content-around mx-lg-5 mb-3 d-block d-lg-none no-gutters">
+	<div class="row justify-content-around mx-lg-5 d-block d-lg-none no-gutters">
         <div class="col bg-light border-bottom rounded-md p-3">
             <div class="profile-details">
                 <h1 class="h6 d-inline-block mb-2 mr-2" style="color:#{{ u.color }}">@{{ u.username }}</h1>
@@ -173,12 +173,12 @@
 
         <div class="flex-row tab-bar sticky d-none d-md-flex">
 
-          <ul class="nav post-nav ml-auto">
+          <ul class="nav post-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link active" href="/u/{{ u.username}}">Posts</a>
+              <a class="nav-link active" href="/u/{{ u.username}}"><i class="fas fa-feather-alt"></i>Posts</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/u/{{ u.username}}/comments">Comments</a>
+              <a class="nav-link" href="/u/{{ u.username}}/comments"><i class="fas fa-comment-dots" aria-hidden="true"></i>Comments</a>
             </li>
 
           </ul>

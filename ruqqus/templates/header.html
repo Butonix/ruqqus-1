@@ -1,7 +1,7 @@
 <!-- Navigation -->
   <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
     <div class="container-fluid">
-      <a class="navbar-brand flex-grow-1" href="/"><img src="/assets/images/logo/ruqqus_logo_square_white_fill.svg" style="width:45px; margin: -10px 0px -10px 0px">ruqqus</a>
+      <div class="flex-grow-1"><a href="/" class="navbar-brand">ruqqus</a></div>
       <div class="flex-grow-1 d-fl d-none d-md-block">
         <form class="form-inline search flex-nowrap mx-0 mx-lg-auto">
           <input class="form-control w-100" type="search" placeholder="Search" aria-label="Search">
@@ -17,11 +17,11 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ml-auto d-none d-md-flex">
 
 {% if v %}
-          <li class="nav-item d-flex align-items-center justify-content-center text-center px-2">
-            <a class="btn btn-outline-white" href="/submit">Add Post</a>
+          <li class="nav-item d-flex align-items-center justify-content-center text-center px-3">
+            <a class="btn btn-outline-white" href="/submit">Create post</a>
           </li>
 
 {% if v.notifications_count %}
@@ -48,8 +48,8 @@
               <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left border-0 shadow fade py-1 mt-3"
                 aria-labelledby="dropdownMenuButton">
                 <div class="dropdown-meta">
-                  <div class="font-weight-bold">{{ v.username }}</div>
-                  <div class="text-small text-secondary">{{ v.energy }} Rep</div>
+                  <div class="font-weight-bold mb-2">{{ v.username }}</div>
+                  <div class="text-small text-primary">{{ v.energy }} Rep</div>
                 </div>
                 <hr class="my-1">
                 <a class="dropdown-item" href="{{ v.permalink }}"><i class="fas fa-user-circle text-left mr-3"></i>My
@@ -75,6 +75,35 @@
           </li>
 {% endif %}
         </ul>
+
+        <!-- Mobile Nav Menu -->
+                <ul class="navbar-nav ml-auto d-flex d-md-none mt-3">
+                {% if v %}
+                    <li class="nav-item pb-2">
+                        <a class="btn btn-outline-white btn-block" href="/submit">Create post</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem mr-3"></i>{{ v.username }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/notifications?all=true"><i class="fas fa-envelope fa-width-rem mr-3"></i>Inbox</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/settings"><i class="fas fa-cog fa-width-rem mr-3"></i>Settings</a>
+                    </li>
+                    <li class="nav-item nav-item border-top mt-2 pt-2">
+                        <a class="nav-link" href="javascript:void(0)", onclick="post('/logout');window.location.href='https://ruqqus.com/'">Log out</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item d-flex align-items-center justify-content-center">
+                        <a class="btn btn-white" href="/login">Sign In</a>
+                    </li>
+                    <li class="nav-item d-flex align-items-center justify-content-center">
+                        <a class="btn btn-outline-white" href="/signup">Sign Up</a>
+                    </li>
+                {% endif %}
+                </ul>
+
       </div>
     </div>
   </nav>
