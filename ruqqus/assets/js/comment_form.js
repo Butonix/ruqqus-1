@@ -1,8 +1,6 @@
-
-/*
-$('.comment-box').blur(function () {
+$('.comment-box').focus(function () {
     event.preventDefault();
 
-    $(this).parent().parent().removeClass("collapsed");
+    $(this).parent().parent().addClass("collapsed");
+
 });
-*/
