@@ -224,7 +224,7 @@ def post_forgot():
     username = request.form.get("username")
     email = request.form.get("email")
 
-    user = db.query(User).filter_by(username=username, email=email).first()
+    user = db.query(User).filter_by(username=username, email=email, is_activated=True).first()
 
     if user:
         #generate url
