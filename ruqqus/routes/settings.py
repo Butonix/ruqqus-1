@@ -1,6 +1,7 @@
 from flask import *
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
+from ruqqus.helpers.security import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.mail import *
 from ruqqus.__main__ import db, app
@@ -72,8 +73,22 @@ def settings_security_post(v):
         if new_email == v.email:
             return render_template("settings_security.html", v=v, error="That's already your email!")
 
-        send_verification_email(v, email=new_email)
 
+        url=f"https://{environ.get('domain')}/activate"
+            
+        now=int(time.time())
+
+        token=generate_hash(f"{new_email}+{v.id}+{now}")
+        params=f"?email={quote(new_email)}&id={v.id}&time={now}&token={token}"
+
+        link=url+params
+        
+        send_mail(to_address=new_email,
+                  subject="Verify your email address.",
+                  html=render_template("email/email_change.html",
+                                       action_url=link,
+                                       v=v)
+                  )
         return render_template("settings_security.html", v=v, msg=f"Verify your new email address {new_email} to complete the email change process.")
         
 

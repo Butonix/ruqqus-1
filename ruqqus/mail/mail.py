@@ -9,7 +9,7 @@ from ruqqus.helpers.wrappers import *
 from ruqqus.classes import *
 from ruqqus.__main__ import app, db
 
-def send_mail(to_address, subject, plaintext, html, from_address="Ruqqus <noreply@mail.ruqqus.com>"):
+def send_mail(to_address, subject, html, plaintext=None, from_address="Ruqqus <noreply@mail.ruqqus.com>"):
 
     url="https://api.mailgun.net/v3/mail.ruqqus.com/messages"
 
@@ -39,17 +39,11 @@ def send_verification_email(user, email=None):
 
     link=url+params
 
-    html=f"""
-         <p>Welcome to Ruqqus, {user.username}!<p>
-         <a href="{link}">Click here</a> to verify your email address on {environ.get('domain')}.</p>
-         """
-
-    text=f"Thank you for signing up. Click to verify your email address: {link}"
-
     send_mail(to_address=email,
-              html=html,
-              plaintext=text,
-              subject="Validate your Ruqqus account"
+              html=render_template("email/email_verify.html",
+                                   action_url=link,
+                                   v=user),
+              subject="Validate your Ruqqus account email."
               )
 
 @app.route("/api/verify_email", methods=["POST"])

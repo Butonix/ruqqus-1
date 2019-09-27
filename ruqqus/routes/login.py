@@ -210,3 +210,107 @@ def sign_up_post(v):
     
     return redirect(new_user.permalink)
     
+
+@app.route("/forgot", methods=["GET"])
+def get_forgot():
+
+    return render_template("forgot_password.html",
+                           i=random_image()
+                           )
+
+@app.route("/forgot", methods=["POST"])
+def post_forgot():
+
+    username = request.form.get("username")
+    email = request.form.get("email")
+
+    user = db.query(User).filter_by(username=username, email=email).first()
+
+    if user:
+        #generate url
+        now=int(time.time())
+        token=generate_hash(f"{user.id}+{now}+forgot")
+        url=f"https://{app.config['SERVER_NAME']}/reset?id={user.id}&time={now}&token={token}"
+
+        send_mail(to_address=user.email,
+                  subject="Ruqqus - Password Reset Request",
+                  html=render_template("email/password_reset.html",
+                                       action_url=url,
+                                       v=user)
+                  )
+
+    return render_template("forgot_password.html",
+                           msg="If the username and email matches an account, you will be sent a password reset email. You have ten minutes to complete the password reset process.",
+                           i=random_image())
+
+
+@app.route("/reset", methods=["GET"])
+def get_reset():
+
+
+    user_id = request.args.get("id")
+    timestamp=int(request.args.get("time"))
+    token=request.args.get("token")
+
+    now=int(time.time())
+
+    if now-timestamp > 600:
+        return render_template("message.html", title="Password Reset Link Expired", text="That password reset link has expired.")
+
+    if not validate_hash(f"{user_id}+{timestamp}+forgot", token):
+        abort(400)
+                           
+    user=db.query(User).filter_by(id=user_id).first()
+
+    if not user:
+        abort(404)
+
+    reset_token=generate_hash(f"{user.id}+{timestamp}+reset")
+
+    return render_template("reset_password.html",
+                           v=user,
+                           token=reset_token,
+                           time=timestamp,
+                           i=random_image()
+                           )
+
+
+@app.route("/reset", methods=["POST"])
+def post_reset():
+
+    user_id=request.form.get("user_id")
+    timestamp=int(request.form.get("time"))
+    token=request.form.get("token")
+
+    password=request.form.get("password")
+    confirm_password=request.form.get("confirm_password")
+
+    now=int(time.time())
+
+    if now-timestamp>600:
+        return render_template("message.html",
+                               title="Password Reset Expired",
+                               text="That password reset form has expired.")
+
+    if not validate_hash(f"{user_id}+{timestamp}+reset", token):
+        abort(400)
+
+    user=db.query(User).filter_by(id=user_id).first()
+    if not user:
+        abort(404)
+
+    if not password==confirm_password:
+        return render_template("reset_password.html",
+                               v=user,
+                               token=token,
+                               time=timestamp,
+                               i=random_image(),
+                               error="Passwords didn't match.")
+
+    user.passhash = hash_password(password)
+    db.add(user)
+    db.commit()
+
+    return render_template("message.html",
+                           title="Password Reset Successful",
+                           text="Login normally to access your account.")
