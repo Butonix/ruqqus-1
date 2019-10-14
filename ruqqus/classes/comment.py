@@ -22,6 +22,7 @@ class Comment(Base):
     parent_submission = Column(BigInteger, ForeignKey(Submission.id))
     parent_fullname = Column(BigInteger) #this column is foreignkeyed to comment(id) but we can't do that yet as "comment" class isn't yet defined
     created_utc = Column(BigInteger, default=0)
+    edited_timestamp = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
     body_html = Column(String)
     distinguish_level=Column(Integer, default=0)

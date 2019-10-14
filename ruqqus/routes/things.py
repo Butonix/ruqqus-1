@@ -221,3 +221,32 @@ def api_comment(v):
 
     return redirect(f"{c.post.permalink}#comment-{c.base36id}")
                                          
+
+
+@app.route("/edit_comment", methods=["POST"])
+@auth_required
+@is_not_banned
+@validate_formkey
+def edit_comment(v):
+
+    comment_id = request.form.get("id")
+    body = request.form.get("comment", "")
+    body_md = mistletoe.markdown(body)
+    body_html = sanitize(body_md, linkgen=True)
+
+    c = db.query(Comment).filter_by(id=comment_id,
+                                    author_id=v.id).first()
+
+    if not c:
+        abort(404)
+
+    c.body=body
+    c.body_html=body_html
+    c.edited_timestamp = time.time()
+
+    db.add(c)
+    db.commit()
+
+
+
+
