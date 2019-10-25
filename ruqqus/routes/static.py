@@ -33,21 +33,6 @@ def settings_security(v):
 def favicon():
     return send_file("./assets/images/logo/ruqqus_logo_square_white_fill.png")
 
-@app.route("/rules",methods=["GET"])
-@auth_desired
-def rules(v):
-    return render_template("rules.html", v=v)
-
-@app.route("/about",methods=["GET"])
-@auth_desired
-def about(v):
-    return render_template("about.html", v=v)
-
-@app.route("/terms",methods=["GET"])
-@auth_desired
-def terms(v):
-    return render_template("terms.html", v=v)
-
 @app.route("/my_info",methods=["GET"])
 @auth_required
 def my_info(v):
@@ -64,6 +49,7 @@ def notifications(v):
 def submit_get(v):
     return render_template("submit.html", v=v)
 
-@app.route("/favicon.ico")
-def favicon_ico():
-    return send_from_directory('./assets', "images/favicon.ico")
+@app.route("/about/<path:path>")
+@auth_desired
+def about_path(path, v):
+    return render_template(safe_join("about", path+".html"))
