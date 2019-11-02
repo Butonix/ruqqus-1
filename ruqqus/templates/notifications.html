@@ -1,39 +1,31 @@
 {% extends "default.html" %}
 
-{% block title %}
-<title>Notifications</title>
-<meta name="description" content="Sign into Ruqqus to view">
-{% endblock %}
-
-{% block adminscripts %}
-<script src="/assets/js/comment_modding.js"></script>
-{% endblock %}
-
 {% block content %}
 
-<h1>Inbox</h1>
+                <h1 class="h3">Inbox</h1>
 
-<div class="container">
-        <div class="row justify-content-around">
 
-            <div class="col bg-white rounded py-3">
-
-                <div id="comment-listing" class="row text-left mb-5">
+                <div class="row no-gutters">
 
                     <div class="col-12">
 
-                        <div class="comment-section">
+                        <div class="p-3">
 
-				{% for c in notifications %}
-					{{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
-				{% endfor %}
-                            
+                            {% for c in notifications %}
+                            	{{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
+			    {% else %}
+                        	<div class="text-center py-7 py-md-8">
+
+                            	<img src="/assets/images/illustrations/nothing_here.png" class="mb-3" style="width: 300px; opacity: .35; filter: brightness(0);" alt="empty state">
+
+                            	<div class="font-weight-bold text-muted">Nothing in your inbox yet.</div>
+                            	<div class="text-small text-muted mb-3">When someone comments or replies, it will show up here.</div>
+                            	<a href="/" class="btn btn-primary">Go to frontpage</a>
+                        	</div>
+                            {% endfor %}
+
                         </div>
+
                     </div>
                 </div>
-
-            </div>
-	</div>
-</div>
-
 {% endblock %}

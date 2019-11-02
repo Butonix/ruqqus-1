@@ -1,11 +1,36 @@
 {% extends "settings.html" %}
 
+{% block pagetitle %}Profile Settings - Ruqqus{% endblock %}
+
 {% block content %}
-        <div class="row justify-content-around mx-lg-5 no-gutters">
+        <div class="row justify-content-around">
 
-            <div class="col h-100">
+            <div class="col-12 col-md-7 h-100">
 
-                <div class="py-3 p-md-0">
+            {% if error %}
+<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+<i class="fas fa-exclamation-circle text-lg my-auto"></i>
+<div>
+  {{ error }}
+</div>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+{% if msg %}
+<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+<i class="fas fa-check-circle text-lg my-auto" aria-hidden="true"></i>
+<div>
+  {{ msg }}
+</div>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
+                <div class="mt-3 mt-md-0">
 
                     <h1 class="h3">Settings</h1>
 
@@ -13,34 +38,28 @@
 
                 <!-- Submission type toggle -->
 
-                <div class="flex-row bg-light border-bottom sticky d-flex pt-3 mb-5">
+                <div class="flex-row bg-light box-shadow-bottom sticky d-flex pt-3 mb-5">
 
                     <ul class="nav post-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link active text-uppercase" href="/settings/profile">Profile</a>
+                            <a class="nav-link active" href="/settings/profile">Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-uppercase" href="/settings/security">Security</a>
+                            <a class="nav-link" href="/settings/security">Security</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-uppercase d-none" href="/settings/notifications">Notifications</a>
+                            <a class="nav-link d-none" href="/settings/notifications">Notifications</a>
                         </li>
                     </ul>
 
                 </div>
 
 
-                <div class="row no-gutters">
+                <div class="row">
 
-                    <div class="col col-md-8">
+                    <div class="col">
 
                         <div class="settings">
-{% if error %}
-<p><span class="red">{{ error }}</span></p>
-{% endif %}
-{% if msg %}
-<p><span class="green">{{ msg }}</span></p>
-{% endif %}
 
                             <h2 class="h5">Social Integrations</h2>
 
@@ -48,11 +67,7 @@
 
                             <div class="settings-section rounded">
 
-                                
-
 				{% if v.reddit_username %}
-
-
 
                                     <div class="title">
                                         <label for="usernameVerification">Reddit</label>
@@ -65,7 +80,7 @@
 
                                         <input type="hidden" name="formkey" value="{{ v.formkey }}">
 
-                                        <button form="removeReddit" class="btn btn-danger ml-auto" id="usernameVerification" value="">
+                                        <button form="removeReddit" class="btn btn-reddit ml-auto" id="usernameVerification" value="">
                                             <i class="fab fa-reddit-alien align-middle mr-2"
                                                 style="font-size: 16px"></i>
                                             <span class="align-middle">Unlink Reddit</span>
@@ -84,10 +99,10 @@
                                     <div class="body">
 
 					<a href="/api/get_reddit_auth">
-                                        <button class="btn btn-danger ml-auto" id="usernameVerification">
+                                        <button class="btn btn-reddit ml-auto" id="usernameVerification">
                                             <i class="fab fa-reddit-alien align-middle mr-2"
                                                 style="font-size: 16px"></i>
-                                            <span class="align-middle">Link your reddit account</span>
+                                            <span class="align-middle">Link your Reddit account</span>
                                         </button>
 					</a>
 
@@ -97,43 +112,48 @@
 
                             </div>
 
+                        <form  id="profile-settings" action="/settings/profile" method="post">
+
                             <h2 class="h5">Content Filters</h2>
 
                             <p class="text-small text-muted">Manage what type of content you can see across Ruqqus.</p>
 
                             <div class="settings-section rounded">
 
-                                <form  id="profile-settings" action="/settings/profile" method="post">
-
 				<input type="hidden" name="formkey" value="{{ v.formkey }}">
 
                                     <div class="title">
-                                        <label for="usernameVerification">NSFW Content</label>
+                                        <label for="over18">NSFW Content</label>
                                     </div>
 
                                     <div class="body">
 
                                         <div class="custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input" id="customSwitch1" name="over18"{% if v.over_18 %} checked{% endif %}>
-                                            <label class="custom-control-label" for="customSwitch1"></label>
+                                            <input type="checkbox" class="custom-control-input" id="over18" name="over18"{% if v.over_18 %} checked{% endif %}>
+                                            <label class="custom-control-label" for="over18"></label>
                                         </div>
 
                                         <span>Enable if you are 18+ and are ok with viewing NSFW content.</span>
 
                                     </div>
 
+                            </div>
+
 				<br>
-                            <h2 class="h5">Your Profile</h2>
+                            <h2 class="h5" id="bio" name="bio">Your Profile</h2>
 
                             <p class="text-small text-muted">Edit how others see you on Ruqqus.</p>
 
+<div class="settings-section rounded">
+
+<input type="hidden" name="formkey" value="{{ v.formkey }}">
 
                                     <div class="body">
 
-                                        <label for="bio">Bio</label>
+                                        <label for="bio" class="text-black">Bio</label>
 
                                         <div class="input-group mb-2">
-                                            <textarea class="form-control border" id="bio" aria-label="With textarea"
+                                            <textarea class="form-control" id="bio" aria-label="With textarea"
                                                 placeholder="Tell the Ruqqus community a bit about yourself."
                                                 rows="3" name="bio" form="profile-settings">{{ v.bio }}</textarea>
                                         </div>
@@ -146,11 +166,13 @@
 
                                         <div class="d-flex">
 
-                                            <input class="btn btn-primary ml-auto" id="usernameVerification"
+                                            <input class="btn btn-primary ml-auto" id="bioSave"
                                                 type="submit" value="Save Changes">
 
 
                                         </div>
+
+                                    </div>
 
                                     </div>
 

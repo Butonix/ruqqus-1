@@ -76,7 +76,7 @@ def activate(v):
         abort(404)
 
     if user.is_activated and user.email==email:
-        return render_template("message.html", v=v, title="Email already verified.", message="Email already verified."), 404
+        return render_template("message_success.html", v=v, title="Email already verified.", message="Email already verified."), 404
 
     user.email=email
     user.is_activated=True
@@ -89,4 +89,4 @@ def activate(v):
     
     db.add(user)
     db.commit()
-    return render_template("message.html", v=v, title="Email verified.", message=f"Your email {email} has been verified. Thank you.")
+    return render_template("message_success.html", v=v, title="Email verified.", message=f"Your email {email} has been verified. Thank you.")

@@ -1,109 +1,117 @@
 <!-- Navigation -->
-  <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
-    <div class="container-fluid">
-      <div class="flex-grow-1"><a href="/" class="navbar-brand">ruqqus</a></div>
-      <div class="flex-grow-1 d-fl d-none d-md-block">
-        <form class="form-inline search flex-nowrap mx-0 mx-lg-auto">
-          <input class="form-control w-100" type="search" placeholder="Search" aria-label="Search">
-          <span class="input-group-append">
-            <span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;">
-              <i class="fa fa-search" aria-hidden="true"></i>
-            </span>
+<nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
+  <div class="container-fluid">
+    <div class="flex-grow-1"><a href="/" class="navbar-brand">ruqqus</a></div>
+    <div class="flex-grow-1 d-fl d-none d-md-block">
+      <form class="form-inline search flex-nowrap mx-0 mx-lg-auto">
+        <input class="form-control w-100" type="search" placeholder="Search" aria-label="Search">
+        <span class="input-group-append">
+          <span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;">
+            <i class="fa fa-search" aria-hidden="true"></i>
           </span>
-        </form>
-      </div>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto d-none d-md-flex">
-
-{% if v %}
-          <li class="nav-item d-flex align-items-center justify-content-center text-center px-3">
-            <a class="btn btn-outline-white" href="/submit">Create post</a>
-          </li>
-
-{% if v.notifications_count %}
-
-          <li class="nav-item d-flex align-items-center text-center justify-content-center">
-            <a class="nav-link" href="/notifications"><span class="text-danger"><i class="fa-icon-circle fas fa-bell"></i>[{{ v.notifications_count }}]</a><span>
-          </li>
-
-{% else %}
-
-          <li class="nav-item d-flex align-items-center text-center justify-content-center">
-            <a class="nav-link" href="/notifications?all=true"><i class="fa-icon-circle fas fa-bell"></i></a>
-          </li>
-
-{% endif %}
-
-
-          <li class="nav-item d-flex align-items-center justify-content-center text-center">
-            <div class="dropdown">
-              <a class="nav-link" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <i class="fa-icon-circle fas fa-user"></i>
-              </a>
-              <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left border-0 shadow fade py-1 mt-3"
-                aria-labelledby="dropdownMenuButton">
-                <div class="dropdown-meta">
-                  <div class="font-weight-bold mb-2">{{ v.username }}</div>
-                  <div class="text-small text-primary">{{ v.energy }} Rep</div>
-                </div>
-                <hr class="my-1">
-                <a class="dropdown-item" href="{{ v.permalink }}"><i class="fas fa-user-circle text-left mr-3"></i>My
-                  Profile</a>
-		{% if v.notifications_count %}
-                <a class="dropdown-item" href="/notifications"><i class="fas fa-envelope text-left mr-3"></i>Inbox<span
-                    class="badge badge-danger align-top ml-1">{{ v.notifications_count }}</span></a>
-		{% else %}
-                <a class="dropdown-item" href="/notifications?all=true"><i class="fas fa-envelope text-left mr-3"></i>Inbox</a>
-		{% endif %}
-                <a class="dropdown-item" href="/settings"><i class="fas fa-cog text-left mr-3"></i>Settings</a>
-                <hr class="my-1">
-                <a class="dropdown-item" href="javascript:void(0)", onclick="post('/logout');window.location.href='https://ruqqus.com/'">Log out</a>
-              </div>
-            </div>
-          </li>
-{% else %}
-          <li class="nav-item d-flex align-items-center justify-content-center">
-	    <a class="btn btn-primary" href="/login">Sign In</a>
-          </li>
-          <li class="nav-item d-flex align-items-center justify-content-center">
-	    <a class="btn btn-outline-white" href="/signup">Sign Up</a>
-          </li>
-{% endif %}
-        </ul>
-
-        <!-- Mobile Nav Menu -->
-                <ul class="navbar-nav ml-auto d-flex d-md-none mt-3">
-                {% if v %}
-                    <li class="nav-item pb-2">
-                        <a class="btn btn-outline-white btn-block" href="/submit">Create post</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem mr-3"></i>{{ v.username }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/notifications?all=true"><i class="fas fa-envelope fa-width-rem mr-3"></i>Inbox</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/settings"><i class="fas fa-cog fa-width-rem mr-3"></i>Settings</a>
-                    </li>
-                    <li class="nav-item nav-item border-top mt-2 pt-2">
-                        <a class="nav-link" href="javascript:void(0)", onclick="post('/logout');window.location.href='https://ruqqus.com/'">Log out</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item d-flex align-items-center justify-content-center">
-                        <a class="btn btn-white" href="/login">Sign In</a>
-                    </li>
-                    <li class="nav-item d-flex align-items-center justify-content-center">
-                        <a class="btn btn-outline-white" href="/signup">Sign Up</a>
-                    </li>
-                {% endif %}
-                </ul>
-
-      </div>
+        </span>
+      </form>
     </div>
-  </nav>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarResponsive">
+    <ul class="navbar-nav ml-auto d-none d-md-flex">
+
+      {% if v %}
+      <li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
+        <a class="nav-link" href="/submit" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Create post"><i class="far fa-feather-alt"></i></a>
+      </li>
+
+      {% if v.notifications_count %}
+
+      <li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
+        <a class="nav-link" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><span class="text-danger"><i class="far fa-bell" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Notifications"></i>[{{ v.notifications_count }}]</a><span>
+      </li>
+
+      {% else %}
+
+      <li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
+        <a class="nav-link" href="/notifications?all=true" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Notifications"><i class="far fa-bell"></i></a>
+      </li>
+
+      {% endif %}
+
+      <li class="nav-item d-flex align-items-center justify-content-center text-center">
+        <div class="dropdown">
+          <a class="nav-link bg-transparent py-0" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <div class="d-inline-block my-auto text-right pr-2">
+            <span class="text-white text-small-extra font-weight-bold">Hi, {{ v.username }}</span>
+          </div>
+          <div class="profile-pic" style="background-color:#{{ v.color }}"><span class="letter">{{ v.username[0] }}</span></div>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left border-0 shadow fade px-0 mt-2"
+        aria-labelledby="dropdownMenuButton">
+        <div class="px-2">
+          <div class="dropdown-meta">
+            <div class="font-weight-bold mb-2">{{ v.username }}</div>
+            <div class="text-small text-primary"><i class="fad fa-medal mr-2"></i>{{ v.energy }} Rep</div>
+          </div>
+        </div>
+        <hr class="my-2">
+        <div class="px-2">
+          <a class="dropdown-item" href="{{ v.permalink }}"><i class="fas fa-user-circle text-left mr-3"></i>My
+            profile</a>
+            {% if v.notifications_count %}
+            <a class="dropdown-item" href="/notifications"><i class="fas fa-inbox text-left mr-3"></i>Inbox<span
+              class="badge badge-danger align-top ml-1">{{ v.notifications_count }}</span></a>
+              {% else %}
+              <a class="dropdown-item" href="/notifications?all=true"><i class="fas fa-inbox text-left mr-3"></i>Inbox</a>
+              {% endif %}
+              <a class="dropdown-item" href="/settings"><i class="fas fa-cog text-left mr-3"></i>Settings</a>
+            </div>
+            <hr class="my-2">
+            <div class="px-2">
+              <a class="dropdown-item" href="javascript:void(0)", onclick="post('/logout');window.location.href='/'">Log out</a>
+            </div>
+          </div>
+        </div>
+      </li>
+      {% else %}
+      <li class="nav-item d-flex align-items-center justify-content-center mx-1">
+       <a class="btn btn-primary" href="/login">Sign In</a>
+     </li>
+     <li class="nav-item d-flex align-items-center justify-content-center mx-1">
+       <a class="btn btn-outline-white" href="/signup">Sign Up</a>
+     </li>
+     {% endif %}
+   </ul>
+
+   <!-- Mobile Nav Menu -->
+   <ul class="navbar-nav ml-auto d-flex d-md-none mt-3">
+    {% if v %}
+    <li class="nav-item pb-2">
+      <a class="btn btn-white btn-block" href="/submit">Create post</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem mr-3"></i>@{{ v.username }}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/notifications?all=true"><i class="fas fa-envelope fa-width-rem mr-3"></i>Inbox</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/settings"><i class="fas fa-cog fa-width-rem mr-3"></i>Settings</a>
+    </li>
+    <li class="nav-item nav-item border-top mt-2 pt-2">
+      <a class="nav-link" href="javascript:void(0)", onclick="post('/logout');window.location.href='https://ruqqus.com/'">Log out</a>
+    </li>
+    {% else %}
+    <li class="nav-item d-flex align-items-center justify-content-center pb-2">
+      <a class="btn btn-white btn-block" href="/login">Sign in</a>
+    </li>
+    <li class="nav-item d-flex align-items-center justify-content-center">
+      <a class="btn btn-outline-white btn-block" href="/signup">Sign up</a>
+    </li>
+    {% endif %}
+  </ul>
+
+</div>
+</div>
+</nav>

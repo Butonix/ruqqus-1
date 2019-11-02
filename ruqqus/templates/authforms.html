@@ -17,7 +17,7 @@
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/e76eba0350.js"></script>
+    <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 
     <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/latest/js/all.js"
         integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
@@ -65,14 +65,32 @@
                     <div class="col-10 col-md-7">
 
                     <div class="text-center mb-5">
-                            <span class="h3 text-primary">ruqqus</span>
+                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">ruqqus</span></a>
                     </div>
 
+                    <h1 class="h3 font-weight-normal text-center mb-5">{% block authtitle %}{% endblock %}</h1>
+
 			{% if error %}
-				<div class="text-center mt-5 mb-3"><span class="red">{{ error }}</span></div>
+				<div class="alert alert-danger alert-dismissible fade show d-flex my-3" role="alert">
+                          <i class="fas fa-exclamation-circle text-lg my-auto"></i>
+                          <div>
+                          {{ error }}
+                          </div>
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
 			{% endif %}
 			{% if msg %}
-				<div class="text-center mt-5 mb-3"><span class="green">{{ msg }}</span></div>
+				<div class="alert alert-success alert-dismissible fade show d-flex my-3" role="alert">
+                          <i class="fas fa-info-circle text-lg my-auto" aria-hidden="true"></i>
+                          <div>
+                          {{ msg }}
+                          </div>
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
 			{% endif %}
 
                         {% block content %}

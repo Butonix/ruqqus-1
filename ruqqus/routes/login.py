@@ -161,7 +161,7 @@ def sign_up_post(v):
 
     #check for matched passwords
     if not request.form.get("password") == request.form.get("password_confirm"):
-        return new_signup("Password and Confirm Password do not match.")
+        return new_signup("Passwords did not match. Please try again.")
 
     #check username/pass conditions
     if not re.match(valid_username_regex, request.form.get("username")):
@@ -255,7 +255,7 @@ def get_reset():
     now=int(time.time())
 
     if now-timestamp > 600:
-        return render_template("message.html", title="Password Reset Link Expired", text="That password reset link has expired.")
+        return render_template("message.html", title="Password reset link expired", text="That password reset link has expired.")
 
     if not validate_hash(f"{user_id}+{timestamp}+forgot", token):
         abort(400)
@@ -289,7 +289,7 @@ def post_reset():
 
     if now-timestamp>600:
         return render_template("message.html",
-                               title="Password Reset Expired",
+                               title="Password reset expired",
                                text="That password reset form has expired.")
 
     if not validate_hash(f"{user_id}+{timestamp}+reset", token):
@@ -311,6 +311,6 @@ def post_reset():
     db.add(user)
     db.commit()
 
-    return render_template("message.html",
-                           title="Password Reset Successful",
+    return render_template("message_success.html",
+                           title="Password reset successful!",
                            text="Login normally to access your account.")

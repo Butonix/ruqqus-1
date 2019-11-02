@@ -8,66 +8,56 @@
   
   <meta name="author" content="">
 
-{% block title %}
+  {% block title %}
   <title>Ruqqus</title>
   <meta name="description" content="The independent social platform">
-{% endblock %}
+  {% endblock %}
 
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-  <!-- Font Awesome -->
-  <script src="https://kit.fontawesome.com/e76eba0350.js"></script>
+  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
   <!-- Ruqqus CSS -->
   <link rel="stylesheet" href="/assets/style/main.css">
 
+  <!-- Font Awesome -->
+  <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+
+  {% block fixedMobileBarJS %}
+  {% endblock %}
+
+  {% if v %}
+
   <script>
-    var prevScrollpos = window.pageYOffset;
-    window.onscroll = function () {
-      var currentScrollPos = window.pageYOffset;
-      if (prevScrollpos > currentScrollPos) {
-        document.getElementById("fixed-bar-mobile").style.top = "49px";
-      } else {
-        document.getElementById("fixed-bar-mobile").style.top = "-98px";
-        document.getElementById("dropdownMenuSortBy").classList.remove('show');
-        document.getElementById("dropdownMenuFrom").classList.remove('show');
-      }
-      prevScrollpos = currentScrollPos;
+    function post(url, callback, errortext) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", url, true);
+      var form = new FormData()
+      form.append("formkey", "{{ v.formkey }}");
+      xhr.withCredentials=true;
+      xhr.onload=callback
+      xhr.onerror=function(){alert(errortext)}
+      xhr.send(form);
     }
-
-
+    function formkey() {
+      return '{{ v.formkey }}';
+    }
   </script>
-{% if v %}
 
-<script>
-function post(url, callback, errortext) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
-  var form = new FormData()
-  form.append("formkey", "{{ v.formkey }}");
-  xhr.withCredentials=true;
-  xhr.onload=callback
-  xhr.onerror=function(){alert(errortext)}
-  xhr.send(form);
-}
-function formkey() {
-  return '{{ v.formkey }}';
-}
-</script>
+  <script src="/assets/js/voting.js"></script>
+  <script src="/assets/js/comment_replies.js"></script>
 
-<script src="/assets/js/voting.js"></script>
-<script src="/assets/js/comment_replies.js"></script>
+  {% if v.admin_level %}
+  <script src="/assets/js/comment_modding.js"></script>
+  <script src="/assets/js/post_modding.js"></script>
+  {% endif %}
 
-{% if v.admin_level %}
-<script src="/assets/js/comment_modding.js"></script>
-<script src="/assets/js/post_modding.js"></script>
-{% endif %}
+  {% endif %}
 
-{% endif %}
+  {% block progressbarJS %}
+  {% endblock %}
 
 </head>
 
@@ -78,28 +68,58 @@ function formkey() {
 
   <div class="container">
     <div class="row justify-content-around">
-      <div class="col bg-white border-sm rounded-md h-100 custom-gutters">
 
-      {% block content %}
-      {% endblock %}
+      <div class="col bg-white shadow-sm rounded-md h-100 custom-gutters">
+
+        {% block PseudoSubmitForm %}
+        {% endblock %}
+
+        {% block content %}
+        {% endblock %}
+
+        {% block pagenav %}
+{% if page %}
+<nav aria-label="Page navigation">
+  <ul class="pagination pagination-sm py-3 pl-3 mb-0">
+    <li class="page-item{% if page==1 %} disabled{% endif %}">
+      <small><a class="page-link" href="?page={{ page-1 }}" tabindex="-1" aria-disabled="true">Back</a></small>
+    </li>
+    <li class="page-item">
+      <small><a class="page-link" href="?page={{ page+1 }}">Next</a></small>
+    </li>
+  </ul>
+</nav>
+{% endif %}
+        {% endblock %}
 
       </div>
 
       <!-- Right Sidebar (hidden on devices smaller than "large") -->
 
       <div class="col sidebar text-left d-none d-lg-block ml-3">
-{% block sidebarblock %}
+        {% block sidebarblock %}
         <div class="sidebar-section sidebar-about">
           <div class="title">About Ruqqus</div>
           <div class="body">
-            <p>Ruqqus is an independent free-speech-oriented social media platform built by and for Americans.</p>
-            <small><a href="/about">Learn more →</a></small>
+            <p>Ruqqus lets you share and discover content from around the web in one place. Vote on what you like or dislike and engage in uncensored discussion with the community.</p>
+            <small><a href="/about/about">Learn more →</a></small>
           </div>
         </div>
 
-{% endblock %}
+        {% endblock %}
 
-        <div class="sidebar-section sidebar-stats">
+        {% if not v %}
+        <div class="sidebar-section sidebar-alert">
+          <div class="body">
+            <h5 class="h4 font-weight-normal">Make a ruqqus!</h5>
+            <p class="text-small">Jump in the discussion. Vote, comment, and engage with your favorite content.
+            </p>
+            <a href="/signup" class="btn btn-primary btn-block">Sign up</a>
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="sidebar-section sidebar-stats d-none">
           <div class="title">Stats</div>
           <div class="body">
             <div class="d-inline-block w-25">
@@ -112,124 +132,135 @@ function formkey() {
             </div>
           </div>
         </div>
-	{% if v %}
-	{% if v.admin_level %}
-	<div class="sidebar-section sidebar-adminpanel">
-	  <div class="title">Admin Panel
-	  </div>
-  	  <div class="body">
-	    {% block adminpanel %}
-	      <p>[No admin actions available]</p>
-	    {% endblock %}
-	  </div>
-	</div>
-	{% endif %}
-	{% endif %}
-        <div class="sidebar-section sidebar-trending d-none">
-          <div class="title">What's Hot</div>
-          <div class="body">
-            <p>Here are the most popular tags from the last 24 hours.</p>
-            <div class="hashtag">
-              <a href="#">#Mueller</a>
-              <div class="text-muted text-small font-weight-normal">2.3K posting about this</div>
-            </div>
-            <div class="hashtag">
-              <a href="#">#MemeWar2</a>
-              <div class="text-muted text-small font-weight-normal">1.2K posting about this</div>
-            </div>
-            <div class="hashtag">
-              <a href="#">#AskTrumpSupporters</a>
-              <div class="text-muted text-small font-weight-normal">900 posting about this</div>
-            </div>
-            <div class="hashtag">
-              <a href="#">#DNCDebates</a>
-              <div class="text-muted text-small font-weight-normal">600 posting about this</div>
-            </div>
+        {% if v %}
+        {% if v.admin_level %}
+        <div class="sidebar-section sidebar-adminpanel">
+         <div class="title">Admin Panel</div>
+         <div class="body">
+           {% block adminpanel %}
+           <p class="text-center text-small text-muted mb-0">No admin actions available</p>
+           {% endblock %}
+         </div>
+       </div>
+       {% endif %}
+       {% endif %}
+       <div class="sidebar-section sidebar-trending d-none">
+        <div class="title">What's Hot</div>
+        <div class="body">
+          <p>Here are the most popular tags from the last 24 hours.</p>
+          <div class="hashtag">
+            <a href="#">#Mueller</a>
+            <div class="text-muted text-small font-weight-normal">2.3K posting about this</div>
           </div>
-        </div>
-        <div class="sidebar-section sidebar-rules">
-          <div class="title">Ruqqus Rules</div>
-          <div class="body">
-            <ol class="pl-0">
-              <li>No racism</li>
-              <li>No doxxing, threats, or calls to violence</li>
-              <li>No trolling</li>
-              <li>No solicitation</li>
-              <li>Patriots only</li>
-            </ol>
+          <div class="hashtag">
+            <a href="#">#MemeWar2</a>
+            <div class="text-muted text-small font-weight-normal">1.2K posting about this</div>
+          </div>
+          <div class="hashtag">
+            <a href="#">#AskTrumpSupporters</a>
+            <div class="text-muted text-small font-weight-normal">900 posting about this</div>
+          </div>
+          <div class="hashtag">
+            <a href="#">#DNCDebates</a>
+            <div class="text-muted text-small font-weight-normal">600 posting about this</div>
           </div>
         </div>
       </div>
+      <!--
+      <div class="sidebar-section sidebar-rules">
+        <div class="title">Ruqqus Rules</div>
+        <div class="body">
+          <ol class="pl-0">
+            <li>No racism</li>
+            <li>No doxxing, threats, or calls to violence</li>
+            <li>No trolling</li>
+            <li>No solicitation</li>
+          </ol>
+        </div>
+      </div>
+      -->
+    </div>
     
-    </div>
+  </div>
+</div>
 
-    <div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="fixed-bar-mobile"
-      style="z-index: 3; top: 49px; transition: top 0.3s;">
+<!-- Clipboard Toast -->
 
+<div class="toast clipboard" id="toast-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-success text-center text-white">
+    <i class="fas fa-check-circle mr-2"></i>Link copied to clipboard
+  </div>
+</div>
+
+<div class="toast clipboard" id="toast-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-danger text-center text-white">
+    <i class="fas fa-exclamation-circle mr-2"></i>Unable to copy link
+  </div>
+</div>
+
+<footer class="footer py-5">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
       <div class="col">
-
-        <div class="d-flex flex-row flex-nowrap justify-content-between">
-	
-{% if sort_method %}
-{% block sortbar %}
-{% endblock %}
-
-{% endif %}
-
-          <div class="post-filter">
-            <span>From:</span>
-            <span class="dropdown">
-              <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">Time</a>
-
-              <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
-                <a class="dropdown-item" href="#">Past Day</a>
-                <a class="dropdown-item" href="#">Past Month</a>
-                <a class="dropdown-item" href="#">Past Year</a>
-                <a class="dropdown-item" href="#">All Time</a>
-              </span>
-            </span>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-{% block mobileactions %}
-{% endblock %}
-
-    <footer class="footer py-5">
-    <div class="container-fluid">
-      <div class="row justify-content-center">
-        <div class="col">
-          <ul class="list-inline text-center text-small text-muted font-weight-bold mb-0">
-            <li class="list-inline-item"><a href="/about/about">About</a></li>
-            <li class="list-inline-item"><a href="#">Contact</a></li>
-            <li class="list-inline-item"><a href="/about/terms">Terms</a></li>
-            <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-            <li class="list-inline-item"><a href="#">Donate</a></li>
-            <li class="list-inline-item"><a href="#">Press</a></li>
-            <li class="list-inline-item"><a href="#">Help</a></li>
-            <li class="list-inline-item"><a href="https://www.twitter.com/ruqqus">Twitter</a></li>
-            <li class="list-inline-item"><a href="https://ruqqus.org/contribute">Github</a></li>
-            <li class="list-inline-item">&copy; 2019 Ruqqus</li>
-          </ul>
-        </div>
+        <ul class="list-inline text-center text-small text-muted font-weight-bold mb-0">
+          <li class="list-inline-item"><a href="/about/about">About</a></li>
+          <li class="list-inline-item"><a href="#">Contact</a></li>
+          <li class="list-inline-item"><a href="/about/terms">Terms</a></li>
+          <li class="list-inline-item"><a href="/about/privacy">Privacy Policy</a></li>
+          <li class="list-inline-item"><a href="#">Donate</a></li>
+          <li class="list-inline-item"><a href="#">Press</a></li>
+          <li class="list-inline-item"><a href="#">Help</a></li>
+          <li class="list-inline-item"><a href="https://www.twitter.com/ruqqus">Twitter</a></li>
+          <li class="list-inline-item"><a href="https://github.com/ruqqus/ruqqus">Github</a></li>
+          <li class="list-inline-item">&copy; 2019 Ruqqus</li>
+        </ul>
       </div>
     </div>
-  </footer>
- </div>
+  </div>
+</footer>
 
 {% include "bootstrap.html" %}
 
 <script src="/assets/js/collapse.js"></script>
+<script src="/assets/js/comment_form.js"></script>
 
 {% if v %}
 <script src="/assets/js/comment_form.js"></script>
 {% endif %}
+
+{% block enlargeThumbJS %}
+{% endblock %}
+
+<!-- ClipboardJS -->
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+
+<!-- Instantiate clipboard by passing a string selector -->
+<script type="text/javascript">
+  var clipboard = new ClipboardJS('.copy-link');
+  clipboard.on('success', function(e) {
+
+    jQuery(function($) {
+      $('#toast-success').toast('show');
+    })
+    console.log(e);
+  });
+  clipboard.on('error', function(e) {
+
+    jQuery(function($) {
+      $('#toast-error').toast('show');
+    })
+    console.log(e);
+  });
+</script>
+
+<!-- Initialize BS 4 tool tips -->
+
+<script src="/assets/js/tooltips.js"></script>
+
+<!-- Search bar icon JS -->
+
+<script src="/assets/js/search_icon.js"></script>
 
 </body>
 

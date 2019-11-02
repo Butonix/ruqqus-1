@@ -34,7 +34,7 @@
 
               <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
                 <a class="dropdown-item" href="#">Top</a>
-                <a class="dropdown-item" href="#">Fiery</a>
+                <a class="dropdown-item" href="#">Disputed</a>
                 <a class="dropdown-item" href="#">Based</a>
               </span>
             </span>
@@ -50,7 +50,7 @@
 	<div class="row justify-content-around mx-lg-5 d-block d-lg-none no-gutters">
         <div class="col bg-light border-bottom rounded-md p-3">
             <div class="profile-details">
-                <h1 class="h6 d-inline-block mb-2 mr-2" style="color:#{{ u.color }}">@{{ u.username }}</h1>
+                <h1 class="h6 d-inline-block mb-0 mr-2" style="color:#{{ u.color }}">@{{ u.username }}</h1>
                 <div class="profile-actions d-inline-block">
                     <div class="dropdown show">
                         <a href="#" role="button" id="dropdownProfileActionsLink" data-toggle="dropdown"
@@ -58,7 +58,7 @@
                             <i class="fas fa-ellipsis-h"></i>
                         </a>
 			{% if v and v.id != u.id %}
-                        <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
+                        <div class="dropdown-menu border-0 shadow py-1" aria-labelledby="dropdownMoreLink">
                             <a class="dropdown-item" href="#"><i class="fas fa-paper-plane"></i>Message</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Report</a>
                         </div>
@@ -92,7 +92,24 @@
 
           <div class="col-12">
 
-            <div class="posts px-3 pt-3">
+          {% if u.comment_count>=1 %}
+          {% else %}
+          <div class="text-center py-7 py-md-8">
+
+            <img src="https://imgur.com/7qp4UpX.png" class="mb-3" style="width: 300px; opacity: .35; filter: brightness(0);" alt="empty state">
+
+            {% if v and v.id == u.id %}
+            <div class="font-weight-bold text-muted">You haven't made a ruckus.</div>
+            <div class="text-small text-muted mb-3">Your comments will show up here.</div>
+            <a href="/" class="btn btn-primary">Go to frontpage</a>
+            {% else %}
+            <div class="font-weight-bold text-muted">Umm, there's nothing here.</div>
+            <div class="text-small text-muted">@{{ u.username }} hasn't made a ruckus yet.</div>
+            {% endif %}
+          </div>
+          {% endif %}
+
+            <div class="posts p-3">
 	{% for c in listing %}
 		{{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
 	{% endfor%}
@@ -100,4 +117,17 @@
 </div>
 </div>
 </div>
+{% endblock %}
+
+{% block pagenav %}
+<nav aria-label="Page navigation">
+  <ul class="pagination pagination-sm border-top rounded-0 py-3 pl-3 mb-0">
+    <li class="page-item disabled">
+      <small><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Back</a></small>
+    </li>
+    <li class="page-item">
+      <small><a class="page-link" href="#">Next</a></small>
+    </li>
+  </ul>
+</nav>
 {% endblock %}

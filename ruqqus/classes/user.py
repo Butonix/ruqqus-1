@@ -141,7 +141,7 @@ class User(Base):
         else:
             listing=[p for p in self.submissions.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]  
 
-        return render_template("userpage.html", u=self, v=v, listing=listing)
+        return render_template("userpage.html", u=self, v=v, listing=listing, page=page)
 
     def rendered_comments_page(self, v=None):
 
@@ -229,7 +229,7 @@ class User(Base):
     @lazy
     def color(self):
 
-        random.seed(self.id)
+        random.seed(f"{self.id}+{self.username}")
 
         R=random.randint(16, 239)
         G=random.randint(16, 239)
@@ -266,6 +266,12 @@ class User(Base):
     def post_count(self):
 
         return self.submissions.filter_by(is_banned=False).count()
+
+    @property
+    @cache.memoize(timeout=60) 
+    def comment_count(self):
+
+        return self.comments.filter_by(is_banned=False).count()
 
     @property
     #@cache.memoize(timeout=60)

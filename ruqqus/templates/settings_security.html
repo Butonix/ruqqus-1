@@ -1,12 +1,37 @@
 {% extends "settings.html" %}
 
+{% block pagetitle %}Security Settings - Ruqqus{% endblock %}
+
 {% block content %}
 
-        <div class="row justify-content-around mx-lg-5 no-gutters">
+        <div class="row justify-content-around">
 
-            <div class="col h-100">
+            <div class="col-12 col-md-7 h-100">
 
-                <div class="py-3 p-md-0">
+            {% if error %}
+<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+<i class="fas fa-exclamation-circle text-lg my-auto"></i>
+<div>
+  {{ error }}
+ </div>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+{% if msg %}
+<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+<i class="fas fa-check-circle text-lg my-auto" aria-hidden="true"></i>
+<div>
+  {{ msg }}
+</div>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
+                <div class="mt-3 mt-md-0">
 
                     <h1 class="h3">Settings</h1>
 
@@ -14,34 +39,28 @@
 
                 <!-- Submission type toggle -->
 
-                <div class="flex-row bg-light border-bottom sticky d-flex pt-3 mb-5">
+                <div class="flex-row bg-light box-shadow-bottom sticky d-flex pt-3 mb-5">
 
                     <ul class="nav post-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-uppercase" href="/settings/profile">Profile</a>
+                            <a class="nav-link" href="/settings/profile">Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active text-uppercase" href="/settings/security">Security</a>
+                            <a class="nav-link active" href="/settings/security">Security</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-uppercase d-none" href="/settings/notifications">Notifications</a>
+                            <a class="nav-link d-none" href="/settings/notifications">Notifications</a>
                         </li>
                     </ul>
 
                 </div>
 
 
-                <div class="row no-gutters">
+                <div class="row">
 
-                    <div class="col col-md-8">
+                    <div class="col">
 
                         <div class="settings">
-{% if error %}
-<p><span class="red">{{ error }}</span></p>
-{% endif %}
-{% if msg %}
-<p><span class="green">{{ msg }}</span></p>
-{% endif %}
 
                             <h2 class="h5">Password</h2>
 
@@ -96,7 +115,7 @@
 
                                         <div class="d-flex">
 
-                                            <input class="btn btn-primary ml-auto" id="usernameVerification"
+                                            <input class="btn btn-primary ml-auto"
                                                 type="submit" value="Change Password">
 
                                         </div>
@@ -108,21 +127,8 @@
                             </div>
 
                             <h2 class="h5">Email</h2>
-				
-				{% if not v.is_activated %}
-				
-				<p class="text-small text-muted">You have not verified your current email address. You will not be able to use your email for account recovery unless you verify it.</p>
-				<div class="footer">
-				<div class="d-flex">
-				<a id="verifyAlink" class="ml-auto" href="javascript:void(0)" onclick="post('/api/verify_email');document.getElementById('verifyButton').innerHTML='Verification email sent!';document.getElementById('verifyAlink').setAttribute('onclick','');"><button id="verifyButton" class="btn btn-primary">Verify Email</button></a>
-				</div>
-				</div>
-
-				{% endif %}
-
-
-
-                            <p class="text-small text-muted">Change the email address associated with your account. This will also change the email address used to log into Ruqqus.</p>
+			
+                            <p class="text-small text-muted">Change the email address used to sign in to your account.</p>
 
                             <div class="settings-section rounded">
 
@@ -132,13 +138,18 @@
 
                                     <div class="body">
                                      
-                                        <label for="new-email" class="mt-3">Email</label>
+                                        <label for="new-email">Email</label>
 
                                         <input autocomplete="new-password" class="form-control mb-2" id="new_email" placeholder="{{ v.email }}"
                                             aria-describedby="new_email" type="email" name="new_email" required>
+                                            {% if not v.is_activated %}
+                                            <div class="text-danger text-small-extra mt-1" id="email-verify-text">Email not verified. <u><a href="javascript:void(0)" onclick="post('/api/verify_email');emailVerifyText();" class="text-danger">Verify now.</a></u></div>
+                                            {% endif %}
 
-					<label for="email-password" class="mt-3">Password</label>
+					<label for="email-password" class="mt-3" id="email-password-label">Password</label>
 					<input autocomplete="new-password" type="password" class="form-control mb-2" id="email-password" name="password" required>
+
+                    <small id="emailpasswordRequired" class="form-text font-weight-bold text-danger d-none mt-1">Password required to update your email.</small>
 
                                     </div>
 
@@ -148,7 +159,7 @@
 
 					
 
-                                            <input class="btn btn-primary ml-auto" id="usernameVerification"
+                                            <input class="btn btn-primary ml-auto"
                                                 type="submit" value="Update Email">
 
 

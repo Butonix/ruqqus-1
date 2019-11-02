@@ -1,77 +1,162 @@
 {% extends "default.html" %}
 
-{% block sortbar %}
-         <div class="post-filter">
-            <span>Sort By:</span>
-            <span class="dropdown">
-              <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">{{ sort_method.capitalize() }}</a>
+{% block enlargeThumbJS %}
+<script src="/assets/js/enlarge_thumb.js"></script>
+{% endblock %}
 
-              <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
-                <a class="dropdown-item" href="?sort=top">Top</a>
-                <a class="dropdown-item" href="?sort=new">New</a>
-                <a class="dropdown-item" href="?sort=fiery">Fiery</a>
-                <a class="dropdown-item" href="#">Based</a>
-              </span>
-            </span>
+{% block fixedMobileBarJS %}
+    <script>
+    var prevScrollpos = window.pageYOffset;
+    window.onscroll = function () {
+      var currentScrollPos = window.pageYOffset;
+      if (prevScrollpos > currentScrollPos) {
+        document.getElementById("fixed-bar-mobile").style.top = "49px";
+      } 
+      else if (currentScrollPos <= 125) {
+        document.getElementById("fixed-bar-mobile").style.top = "49px";
+      }
+      else {
+        document.getElementById("fixed-bar-mobile").style.top = "-98px";
+        document.getElementById("dropdownMenuSortBy").classList.remove('show');
+        document.getElementById("dropdownMenuFrom").classList.remove('show');
+      }
+      prevScrollpos = currentScrollPos;
+    }
+  </script>
+{% endblock %}
 
-          </div>
+{% block PseudoSubmitForm %}
+<!-- Link to submission page from homepage, only visible on home -->
+
+<div class="row no-gutters d-none d-md-flex">
+
+  <div class="col">
+    <div class="card pseudo-submit-form">
+      <div class="card-header bg-white d-none">
+        <ul class="list-inline no-bullets mb-0">
+          <li class="list-inline-item active mr-4"><i class="fas fa-align-left text-gray-400"></i></li>
+          <li class="list-inline-item"><i class="fas fa-link text-gray-400"></i></li>
+        </ul>
+      </div>
+      <div class="card-body">
+        {% if v %}
+        <a href="/submit">
+          <input type="text" class="form-control"
+          placeholder="Share something with the Ruqqus commmunity..." aria-label="Username"
+          aria-describedby="basic-addon1">
+        </a>
+        {% else %}
+        <a href="/signup">
+          <input type="text" class="form-control"
+          placeholder="Share something with the Ruqqus commmunity..." aria-label="Username"
+          aria-describedby="basic-addon1">
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
 {% endblock %}
 
 {% block content %}
 
-        <!-- Post filters bar visible only on medium devices or larger-->
+<!-- Post filters bar visible only on medium devices or larger-->
 
-        <div class="flex-row tab-bar sticky d-none d-md-flex">
+<div class="flex-row tab-bar sticky d-none d-md-flex">
 
-          <ul class="nav post-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link{% if sort_method=="hot" %} active{% endif %}" href="/"><i class="fas fa-fire"></i>Hot</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link{% if sort_method=="top" %} active{% endif %}" href="/?sort=top"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link{% if sort_method=="new" %} active{% endif %}" href="/?sort=new"><i class="fas fa-asterisk"></i>New</a> 
-            </li>
-            <li class="nav-item">
-              <a class="nav-link{% if sort_method=="fiery" %} active{% endif %}" href="/?sort=fiery"><i class="fas fa-fire"></i>Fiery</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link {% if sort_method=="based" %} active{% endif %}" href="#"><i class="fas fa-bullhorn"></i>Based</a>
-            </li>
-          </ul>
+  <ul class="nav post-nav mr-auto">
+    <li class="nav-item">
+      <a class="nav-link{% if sort_method=="hot" %} active{% endif %}" href="/"><i class="fas fa-fire"></i>Hot</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link{% if sort_method=="top" %} active{% endif %}" href="/?sort=top"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link{% if sort_method=="new" %} active{% endif %}" href="/?sort=new"><i class="fas fa-asterisk"></i>New</a> 
+    </li>
+    <li class="nav-item">
+      <a class="nav-link{% if sort_method=="fiery" %} active{% endif %}" href="/?sort=fiery"><i class="fas fa-bullhorn"></i>Disputed</a>
+    </li>
+    <li class="nav-item d-none">
+      <a class="nav-link {% if sort_method=="based" %} active{% endif %}" href="#"><i class="fas fa-bullhorn"></i>Based</a>
+    </li>
+  </ul>
 
-                    <div class="post-filter pb-2 d-none">
-            <span>Sort By:</span>
-            <span class="dropdown">
-              <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                Time
-              </a>
+  <div class="post-filter pb-2 d-none">
+    <span>Sort By:</span>
+    <span class="dropdown">
+      <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      Time
+    </a>
 
-              <span class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="#">Day</a>
-                <a class="dropdown-item" href="#">Month</a>
-                <a class="dropdown-item" href="#">Year</a>
-                <a class="dropdown-item" href="#">All Time</a>
-              </span>
-            </span>
+    <span class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMenuLink">
+      <a class="dropdown-item" href="#">Day</a>
+      <a class="dropdown-item" href="#">Month</a>
+      <a class="dropdown-item" href="#">Year</a>
+      <a class="dropdown-item" href="#">All Time</a>
+    </span>
+  </span>
 
-          </div>
+</div>
 
-        </div>
+</div>
 
-        <div class="row no-gutters">
+<div class="row no-gutters">
 
-          <div class="col-12">
+  <div class="col-12">
 
-            <div class="posts">
+    <div class="posts">
 
-		{% include "submission_listing.html" %}
-              
-            </div>
-          </div>
-        </div>
+      {% include "submission_listing.html" %}
+
+    </div>
+  </div>
+</div>
+
+<div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 49px; transition: top 0.3s;">
+
+<div class="col">
+
+  <div class="d-flex flex-row flex-nowrap justify-content-between">
+
+    <div class="post-filter">
+      <span>Sort By:</span>
+      <span class="dropdown">
+        <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">{{ sort_method.capitalize() }}</a>
+
+        <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
+          <a class="dropdown-item" href="?sort=top">Top</a>
+          <a class="dropdown-item" href="?sort=new">New</a>
+          <a class="dropdown-item" href="?sort=fiery">Disputed</a>
+          <a class="dropdown-item" href="#">Based</a>
+        </span>
+      </span>
+
+    </div>
+
+    <div class="post-filter">
+      <span>From:</span>
+      <span class="dropdown">
+        <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">Time</a>
+
+        <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
+          <a class="dropdown-item" href="#">Past Day</a>
+          <a class="dropdown-item" href="#">Past Month</a>
+          <a class="dropdown-item" href="#">Past Year</a>
+          <a class="dropdown-item" href="#">All Time</a>
+        </span>
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
+
+</div>
 
 {% endblock %}

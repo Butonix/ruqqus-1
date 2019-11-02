@@ -1,0 +1,17 @@
+{% extends "default.html" %}
+
+{% block title %}
+<title>{{ title }}</title>
+{% endblock %}
+
+{% block pagetype %}message-success{% endblock %}
+
+{% block content %}
+<div class="text-center py-7 py-md-8">
+
+	<img src="https://imgur.com/hyRHBf5.png" class="mb-3" style="width: 300px; opacity: .35; filter: brightness(0);" alt="empty state">
+	<div class="font-weight-bold text-muted mb-4">{{ title }}</div>
+	<p class="text-muted">{{ text }}</p>
+
+</div>
+{% endblock %}

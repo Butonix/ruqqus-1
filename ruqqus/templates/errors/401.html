@@ -5,6 +5,12 @@
 {% endblock %}
 
 {% block content %}
-<h1>401 Not Authorized</h1>
-<p>The internet dragons are jealously guarding their hoard. Perhaps if you <a href="/login">signed in</a>, they might recognize you as a friend and let you pass.</p>
+<div class="text-center py-7 py-md-8">
+
+	<img src="https://imgur.com/S9CQ6OD.png" class="mb-3" style="width: 300px; opacity: .35; filter: brightness(0);" alt="empty state">
+	<div class="font-weight-bold text-muted mb-4">You must be logged in to view this page.</div>
+	<div><a href="/signup" class="btn btn-primary mb-2">Create an account</a></div>
+	<div><a href="/login" class="text-muted text-small">Or sign in</a></div>
+
+</div>
 {% endblock %}

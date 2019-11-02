@@ -65,7 +65,7 @@ def api_redditredirect(v):
 def api_del_reddit_name(v):
 
     if not v.reddit_username:
-        render_template("settings.html", v=v, error=f"You didn't have a reddit account to un-link.")
+        render_template("settings_profile.html", v=v, error=f"You didn't have a reddit account to un-link.")
 
     v.reddit_username=None
 
@@ -76,4 +76,4 @@ def api_del_reddit_name(v):
             
     db.add(v)
     db.commit()
-    return render_template("settings.html", v=v, msg=f"Reddit account successfully un-linked.")
+    return render_template("settings_profile.html", v=v, msg=f"Reddit account successfully un-linked.")
