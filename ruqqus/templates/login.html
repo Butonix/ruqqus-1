@@ -87,6 +87,10 @@
                     {% endif %}
 
                     <form action="/login" method="post" class="mt-3">
+			
+			{% if redirect %}
+			<input type="hidden" name="redirect" value="{{ redirect }}">
+			{% endif %}
 
                         <label for="username" class="mt-3">Email Address</label>
 
