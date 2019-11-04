@@ -132,6 +132,7 @@ class User(Base):
             return render_template("userpage_banned.html", u=self, v=v)
 
         page=int(request.args.get("page","1"))
+        page=max(page, 1)
         
         if v:
             if v.admin_level or v.id==self.id:

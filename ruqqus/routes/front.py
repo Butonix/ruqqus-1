@@ -38,6 +38,9 @@ def home(v):
 
     page=int(request.args.get("page",1))
 
+    #prevent invalid paging
+    page=max(page, 1)
+
     sort_method=request.args.get("sort", "hot")
 
     #get list of ids
