@@ -1,59 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "default.html" %}
 
-<head>
+{% block content %}
+{% filter markdown %}
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+# Rules
 
-    <title>Ruqqus Rules</title>
+Ruqqus is a free speech environment. However, in order to comply with US law, and in order to ensure the safety of our users, there are a few things you are not permitted to do with the Ruqqus platform.
 
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+By using Ruqqus, you agree to follow these rules. Violations (in Ruqqus's sole discretion) may lead to the suspension of your Ruqqus account.
 
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+You may not upload to, embed within, or link out from Ruqqus:
 
-    <!-- Font Awesome -->
-    <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+## 1: Intellectual Property
 
-    <!-- Ruqqus CSS -->
-    <link rel="stylesheet" href="/assets/style/main.css">
+* Copyrighted material that you are not authorized to distribute
+* Anything not legal to publish within, or export from, the United States of America
 
-<script>
-function post(url, callback, errortext) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
-  var form = new FormData()
-  form.append("formkey", "{{ v.formkey }}");
-  xhr.withCredentials=true;
-  xhr.onload=callback
-  xhr.onerror=function(){alert(errortext)}
-  xhr.send(form);
-}
-function formkey() {
-  return '{{ v.formkey }}';
-}
-</script>
+## 2: Digital Safety
 
-</head>
+* Digitally malicious content, including but not limited to:
+** Phishing attacks
+** XSS attacks
+* Anything that breaks Ruqqus
+** If you tell us about a problem so that we can fix it, you'll get a nifty badge on your profile.
 
-<body id="terms-policies">
+## 3: User Safety
 
-    {% include "header.html" %}
-    <!-- Page Content -->
-    <div class="container">
+* Harassment of other users, either online or offline
+* Impersonation of Ruqqus administrators or other users.
+* Personal information of yourself or other users
+* Pornographic material
+* Sexual or sexually suggestive material not marked "NSFW"
+* Sexual or sexually suggestive material involving individuals under the age of 18
 
-	{% block content %}
-	{% endblock %}
+## 4: IRL Safety
 
-    </div>
+* Planning or execution of unlawful activity
+** This does not include the exercise of human rights that may be considered unlawful in other countries but protected in the United States
 
-    {% include "footer.html" %}
-    {% include "bootstrap.html" %}
-
-</body>
-
-</html>
+{% endfilter %}
+{% endblock %}
