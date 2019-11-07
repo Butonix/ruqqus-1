@@ -39,11 +39,11 @@
     </div>
   </div>
 </div>
-<div class="card-block text-left my-md-auto">
-  <div class="post-meta text-left d-block d-md-none mb-2">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> <span>&#183;</span> ({{ p.domain }})
+<div class="card-block text-left my-md-auto{% if p.distinguish_level>=3 %} distinguish-admin{% endif %}">
+  <div class="post-meta text-left d-block d-md-none mb-2">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by <a class="user-name" href="{{ p.author.permalink }}">{{ p.author.username }}</a> <span>&#183;</span> ({{ p.domain }})
   </div>
   <h5 class="card-title post-title text-left mb-0 mb-md-2"><a href="{{ p.permalink }}" class="stretched-link" onclick="">{{ p.title }}</a></h5>
-  <div class="post-meta text-left d-none d-md-block">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> <span>&#183;</span> {{ p.comment_count }} comments <span>&#183;</span> ({{ p.domain }})
+  <div class="post-meta text-left d-none d-md-block">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by <a class="user-name" href="{{ p.author.permalink }}">{{ p.author.username }}</a> <span>&#183;</span> {{ p.comment_count }} comments <span>&#183;</span> ({{ p.domain }})
   </div>
 
 </div>
