@@ -5,6 +5,7 @@ Click==7.0
 Flask==1.1.1
 Flask-Caching==1.7.2
 Flask-Markdown==0.3
+gevent==1.4.0
 gunicorn==19.9.0
 idna==2.7
 itsdangerous==1.1.0

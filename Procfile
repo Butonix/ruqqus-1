@@ -1,1 +1,1 @@
-web: gunicorn ruqqus.__main__:app --workers 1
+web: gunicorn ruqqus.__main__:app -w 1 -k gevent
