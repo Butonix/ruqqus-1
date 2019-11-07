@@ -38,7 +38,7 @@ Base = declarative_base()
 import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
-import ruqqus.helpers.db_prep
+#import ruqqus.helpers.db_prep
 
 if __name__ == "__main__":
 
@@ -53,6 +53,8 @@ else:
             url = request.url.replace('http://', 'https://', 1)
             code = 301
             return redirect(url, code=code)
+
+        db.rollback()
 
     @app.after_request
     def after_request(response):
