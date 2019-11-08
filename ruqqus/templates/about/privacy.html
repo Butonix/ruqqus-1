@@ -1,5 +1,11 @@
 {% extends "default.html" %}
 
+{% block title %}
+<title>Ruqqus - The independent social platform</title>
+<meta name="description" content="Privacy Policy.">
+{% endblock %}
+
+
 {% block content %}
 {% filter markdown %}
 # Privacy
@@ -17,4 +23,5 @@ You can see the information associated with your account <a href="/my_info">here
 
 
 {% end filter %}
+
 {% endblock %}

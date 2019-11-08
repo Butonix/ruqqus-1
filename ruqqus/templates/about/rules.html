@@ -1,5 +1,10 @@
 {% extends "default.html" %}
 
+{% block title %}
+<title>Ruqqus - The independent social platform</title>
+<meta name="description" content="Rules.">
+{% endblock %}
+
 {% block content %}
 {% filter markdown %}
 
@@ -28,7 +33,7 @@ You may not upload to, embed within, or link out from Ruqqus:
 
 * Harassment of other users, either online or offline
 * Impersonation of Ruqqus administrators or other users.
-* Personal information of yourself or other users
+* Solicitation or publication of personal information, either yours or another person's
 * URL shorteners and anything else that disguises the true destination of a link
 * Pornographic material
 * Sexual or sexually suggestive material not marked "NSFW"
@@ -36,8 +41,8 @@ You may not upload to, embed within, or link out from Ruqqus:
 
 ## 4: IRL Safety
 
-* Planning or execution of unlawful activity
-    * This does not include the exercise of human rights that may be considered unlawful in other countries but protected in the United States
+* Incitement, planning or execution of unlawful or violent activity
+    * This does not include the exercise of human rights that may be considered unlawful in a user's home country but protected in the United States
 
 {% endfilter %}
 {% endblock %}
