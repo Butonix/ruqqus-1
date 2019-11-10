@@ -53,7 +53,7 @@ class Submission(Base):
     @property
     @cache.memoize(timeout=60)
     def rank_hot(self):
-        return (self.ups-self.down)/(((self.age+100000)/6)**(1/3))
+        return (self.ups-self.downs)/(((self.age+100000)/6)**(1/3))
 
     @property
     @cache.memoize(timeout=60)
