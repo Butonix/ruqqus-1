@@ -1,31 +1,183 @@
-{% extends "default.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
+<head>
 
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Sign into Ruqqus to view">
+    <meta name="author" content="">
+
+    <title>Notifications</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Font Awesome -->
+    <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+
+    <!-- Ruqqus CSS -->
+    <link rel="stylesheet" href="/assets/style/main.css">
+
+    {% block adminscripts %}
+    <script src="/assets/js/comment_modding.js"></script>
+    {% endblock %}
+
+    {% if v %}
+
+    <script>
+        function post(url, callback, errortext) {
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", url, true);
+          var form = new FormData()
+          form.append("formkey", "{{ v.formkey }}");
+          xhr.withCredentials=true;
+          xhr.onload=callback
+          xhr.onerror=function(){alert(errortext)}
+          xhr.send(form);
+      }
+      function formkey() {
+          return '{{ v.formkey }}';
+      }
+  </script>
+
+  {% endif %}
+
+</head>
+
+<body id="notifications">
+
+  <!-- Navigation -->
+  {% include "header.html" %}
+
+  <!-- Page Content -->
+
+  <div class="container">
+
+    <div class="row justify-content-around">
+
+        <div class="col-12 col-md-7 h-100">
+
+            <div class="mt-3 mt-md-0">
                 <h1 class="h3">Inbox</h1>
+            </div>
+
+            <div class="bg-white shadow-sm rounded">
+
+                <!-- Inbox -->
+
+                <div class="flex-row tab-bar sticky d-none">
+
+                    <ul class="nav post-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">Text Post</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Link</a>
+                        </li>
+                    </ul>
+
+                </div>
 
 
                 <div class="row no-gutters">
 
-                    <div class="col-12">
+                            	<img src="/assets/images/illustrations/nothing_here.png" class="mb-3" style="width: 300px; opacity: .35; filter: brightness(0);" alt="empty state">
 
                         <div class="p-3">
 
                             {% for c in notifications %}
-                            	{{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
-			    {% else %}
-                        	<div class="text-center py-7 py-md-8">
 
-                            	<img src="/assets/images/illustrations/nothing_here.png" class="mb-3" style="width: 300px; opacity: .35; filter: brightness(0);" alt="empty state">
+                            {{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
 
-                            	<div class="font-weight-bold text-muted">Nothing in your inbox yet.</div>
-                            	<div class="text-small text-muted mb-3">When someone comments or replies, it will show up here.</div>
-                            	<a href="/" class="btn btn-primary">Go to frontpage</a>
-                        	</div>
+                            {% else %}
+                        <div class="text-center py-7 py-md-8">
+
+                            <img src="/assets/images/illustrations/messages.png" class="empty-state-img mb-3" alt="empty state">
+
+                            <div class="font-weight-bold text-muted">Nothing new in your inbox yet.</div>
+                            <div class="text-small text-muted mb-3">When someone comments or replies, it will show up here.</div>
+                            <a href="/" class="btn btn-primary">Go to frontpage</a>
+                        </div>
+
                             {% endfor %}
 
                         </div>
 
                     </div>
                 </div>
-{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Sidebar (hidden on devices smaller than "large") -->
+
+    <div class="col sidebar text-left d-none ml-3">
+        <div class="sidebar-section sidebar-rules">
+            <div class="title">Ruqqus Rules</div>
+            <div class="body">
+                <ol class="pl-0">
+                    <li>No racism</li>
+                    <li>No doxxing, threats, or calls to violence</li>
+                    <li>No trolling</li>
+                    <li>No solicitation</li>
+                    <li>Patriots only</li>
+                </ol>
+            </div>
+        </div>
+        <div class="sidebar-section sidebar-stats">
+            <div class="title">Stats</div>
+            <div class="body">
+                <div class="d-inline-block w-25">
+                    <span style="font-size: 13px;font-weight: bold;">{{ 1 | total_users }}</span>
+                    <small style="display: block;">users</small>
+                </div>
+                <div class="d-inline-block w-25">
+                    <span style="font-size: 13px;font-weight: bold;">{{ 1 | users_here }}</span>
+                    <small style="display: block;">online</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<footer class="footer py-5">
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col">
+          <ul class="list-inline text-center text-small text-muted font-weight-bold mb-0">
+            <li class="list-inline-item"><a href="/about">About</a></li>
+            <li class="list-inline-item"><a href="#">Contact</a></li>
+            <li class="list-inline-item"><a href="/terms">Terms</a></li>
+            <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+            <li class="list-inline-item"><a href="#">Donate</a></li>
+            <li class="list-inline-item"><a href="#">Press</a></li>
+            <li class="list-inline-item"><a href="#">Help</a></li>
+            <li class="list-inline-item"><a href="https://www.twitter.com/ruqqus">Twitter</a></li>
+            <li class="list-inline-item"><a href="https://ruqqus.org/contribute">Github</a></li>
+            <li class="list-inline-item">&copy; 2019 Ruqqus</li>
+        </ul>
+    </div>
+</footer>
+
+<!-- Bootstrap core JavaScript -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<!-- Initialize BS 4 tool tips -->
+
+<script src="/assets/js/tooltips.js"></script>
+
+<!-- Search bar icon JS -->
+
+<script src="/assets/js/search_icon.js"></script>
+
+</body>
+
+</html>

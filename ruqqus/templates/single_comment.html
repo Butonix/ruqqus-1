@@ -35,13 +35,32 @@
             <div id="comment-{{ c.base36id }}-actions" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
                 <ul class="list-inline text-right text-md-left">
 
-                <li id="comment-{{ c.base36id }}-up" class="list-inline-item arrow-up d-none d-md-inline-block mr-2" {% if voted==1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted > -2 %}onclick="vote_comment('{{ c.base36id }}','1')"{% endif %}>
+                    {% if v %}
+
+                    <li id="comment-{{ c.base36id }}-up" class="list-inline-item arrow-up d-none d-md-inline-block mr-2" {% if voted==1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted > -2 %}onclick="vote_comment('{{ c.base36id }}','1')"{% endif %}>
                     </li>
+
+                    {% else %}
+
+                    <li id="comment-{{ c.base36id }}-up" class="list-inline-item arrow-up d-none d-md-inline-block mr-2" onclick="location.href='/login';">
+                    </li>
+
+                    {% endif %}
+
                     <li class="list-inline-item d-none d-md-inline-block mr-2">
-                    <span class="points"><span id="comment-{{ c.base36id }}-score-up"{% if voted!=1 %} class="d-none text-upvote"{% endif %}>{{ score+1-adjust }}</span><span id="comment-{{ c.base36id }}-score-none"{% if voted not in [-2,0] %} class="d-none text-black"{% endif %}>{{ score-adjust }}</span><span id="comment-{{ c.base36id }}-score-down"{% if voted!=-1 %} class="d-none text-downvote"{% endif %}>{{ score-1-adjust }}</span></span>
+                        <span class="points"><span id="comment-{{ c.base36id }}-score-up"{% if voted!=1 %} class="d-none text-upvote"{% endif %}>{{ score+1-adjust }}</span><span id="comment-{{ c.base36id }}-score-none"{% if voted not in [-2,0] %} class="d-none text-black"{% endif %}>{{ score-adjust }}</span><span id="comment-{{ c.base36id }}-score-down"{% if voted!=-1 %} class="d-none text-downvote"{% endif %}>{{ score-1-adjust }}</span></span>
                     </li>
+
+                    {% if v %}
                     <li id="comment-{{ c.base36id }}-down" class="list-inline-item arrow-down d-none d-md-inline-block" {% if voted==-1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted > -2 %}onclick="vote_comment('{{ c.base36id }}','-1')"{% endif %}>
                     </li>
+
+                    {% else %}
+
+                    <li id="comment-{{ c.base36id }}-down" class="list-inline-item arrow-down d-none d-md-inline-block" onclick="location.href='/login';">
+                    </li>
+
+                    {% endif %}
 
                     {% if v %}
                     {% if not v.is_banned %}
@@ -50,11 +69,9 @@
                     </li>
                     {% endif %}
                     {% endif %}
-                    <li class="list-inline-item text-muted"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="https://www.ruqqus.com{{ c.permalink }}"><i class="fas fa-link d-none d-md-inline-block"></i><i class="fas fa-link d-inline-block d-md-none"></i><span class="d-inline-block d-md-none">Share</span><span class="d-none d-md-inline-block">Copy link</span></a>
+                    <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="https://www.ruqqus.com{{ c.permalink }}"><i class="fas fa-link"></i><span>Copy link</span></a>
                     </li>
-                    <li class="list-inline-item text-muted d-none"><a href="{{ c.parent.permalink }}"><span class="save"><i class="fas fa-dna"></i>Parent</span></a>
-                    </li>
-                    <li class="list-inline-item">
+                    <li class="list-inline-item d-none d-md-inline-block">
                         <div class="dropdown show">
                           <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true"
                           aria-expanded="false">
@@ -63,14 +80,14 @@
 
                       <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
                         <a class="dropdown-item" href="{{ c.parent.permalink }}"><i class="fas fa-dna"></i>Parent</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-save"></i>Save</a>
+                        <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
                         <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Flag</a>
                         {% if v %}
                         {% if v.admin_level>=1 and v.id==c.author_id %}
                         {% if c.distinguish_level %}
 
                         <div class="dropdown-divider"></div>
-                        <h6 class="dropdown-header">Mod actions</h6>
+                        <h6 class="dropdown-header">Admin actions</h6>
 
                         <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Undistinguish</a>
                         {% else %}
@@ -82,7 +99,7 @@
                         {% if not c.is_banned %}
                         <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a>
                         {% else %}
-                        <a lass="dropdown-item approveDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-clipboard-check"></i>Approve</a>
+                        <a class="dropdown-item approveDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-clipboard-check"></i>Approve</a>
                         {% endif %}
                         {% endif %}
                         {% endif %}
@@ -90,13 +107,26 @@
                     </div>
                 </div>
             </li>
-             <li id="comment-{{ c.base36id }}-up" class="list-inline-item arrow-up d-inline-block d-md-none mr-2" {% if voted==1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted > -2 %}onclick="vote_comment('{{ c.base36id }}','1')"{% endif %}>
-                    </li>
-                    <li class="list-inline-item d-inline-block d-md-none mr-2">
-                    <span class="points"><span id="comment-{{ c.base36id }}-score-up"{% if voted!=1 %} class="d-none text-upvote"{% endif %}>{{ score+1-adjust }}</span><span id="comment-{{ c.base36id }}-score-none"{% if voted not in [-2,0] %} class="d-none text-black"{% endif %}>{{ score-adjust }}</span><span id="comment-{{ c.base36id }}-score-down"{% if voted!=-1 %} class="d-none text-downvote"{% endif %}>{{ score-1-adjust }}</span></span>
-                    </li>
-                    <li id="comment-{{ c.base36id }}-down" class="list-inline-item arrow-down d-inline-block d-md-none" {% if voted==-1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted > -2 %}onclick="vote_comment('{{ c.base36id }}','-1')"{% endif %}>
-                    </li>
+            <li class="list-inline-item d-inline-block d-md-none">
+                <a href="#" data-toggle="modal" data-target="#actionsModal-{{ c.base36id }}" data-focus="false"><i class="fas fa-ellipsis-h"></i></a>
+            </li>
+            {% if v %}
+            <li id="comment-{{ c.base36id }}-up" class="list-inline-item arrow-up d-inline-block d-md-none mr-2" {% if voted==1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted > -2 %}onclick="vote_comment('{{ c.base36id }}','1')"{% endif %}>
+            </li>
+            {% else %}
+            <li id="comment-{{ c.base36id }}-up" class="list-inline-item arrow-up d-inline-block d-md-none mr-2" onclick="location.href='/login';">
+            </li>
+            {% endif %}
+            <li class="list-inline-item d-inline-block d-md-none mr-2">
+                <span class="points"><span id="comment-{{ c.base36id }}-score-up"{% if voted!=1 %} class="d-none text-upvote"{% endif %}>{{ score+1-adjust }}</span><span id="comment-{{ c.base36id }}-score-none"{% if voted not in [-2,0] %} class="d-none text-black"{% endif %}>{{ score-adjust }}</span><span id="comment-{{ c.base36id }}-score-down"{% if voted!=-1 %} class="d-none text-downvote"{% endif %}>{{ score-1-adjust }}</span></span>
+            </li>
+            {% if v %}
+            <li id="comment-{{ c.base36id }}-down" class="list-inline-item arrow-down d-inline-block d-md-none" {% if voted==-1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted > -2 %}onclick="vote_comment('{{ c.base36id }}','-1')"{% endif %}>
+            </li>
+            {% else %}
+            <li id="comment-{{ c.base36id }}-down" class="list-inline-item arrow-down d-inline-block d-md-none" onclick="location.href='/login';">
+            </li>
+            {% endif %}
         </ul>
 
     </div>
@@ -120,6 +150,47 @@
 {% endfor %}
 {% endif %}
 {% endif %}
+</div>
+
+<!-- Comment Actions Modal -->
+<div class="modal fade d-md-none" id="actionsModal-{{ c.base36id }}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title h6">More options</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"><i class="far fa-times"></i></span>
+          </button>
+      </div>
+      <div class="modal-body">
+          <ul class="list-group comment-actions">
+            <li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-clipboard-text="https://www.ruqqus.com{{ c.permalink }}"><i class="fas fa-link"></i><span>Share</span></a>
+                <li class="list-group-item"><a class="d-block" href="{{ c.parent.permalink }}"><i class="fas fa-dna"></i>Parent</a></li>
+                <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
+                <li class="list-group-item"><a href="#" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
+
+                {% if v %}
+                {% if v.admin_level>=1 and v.id==c.author_id %}
+                {% if c.distinguish_level %}
+
+                <li class="list-group-item"><a class="d-block id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Undistinguish</a></li>
+                {% else %}
+                <li class="list-group-item"><a class="d-block" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="distinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Distinguish</a></li>
+
+                {% endif %}
+                {% endif %}
+                {% if v.admin_level>=1 and v.admin_level > c.author.admin_level %}
+                {% if not c.is_banned %}
+                <li class="list-group-item"><a class="d-block" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a></li>
+                {% else %}
+                <li class="list-group-item"><a class="d-block" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-clipboard-check"></i>Approve</a></li>
+                {% endif %}
+                {% endif %}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
 </div>
 
 </div>

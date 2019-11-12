@@ -2,19 +2,23 @@
 
 {% block pagetype %}userpage{% endblock %}
 
+{% block enlargeThumbJS %}
+<script src="/assets/js/enlarge_thumb.js"></script>
+{% endblock %}
+
 {% block fixedMobileBarJS %}
     <script>
     var prevScrollpos = window.pageYOffset;
     window.onscroll = function () {
       var currentScrollPos = window.pageYOffset;
       if (prevScrollpos > currentScrollPos) {
-        document.getElementById("fixed-bar-mobile").style.top = "49px";
+        document.getElementById("filter-bar-mobile").style.top = "49px";
       } 
       else if (currentScrollPos <= 125) {
-        document.getElementById("fixed-bar-mobile").style.top = "49px";
+        document.getElementById("filter-bar-mobile").style.top = "49px";
       }
       else {
-        document.getElementById("fixed-bar-mobile").style.top = "-98px";
+        document.getElementById("filter-bar-mobile").style.top = "-98px";
         document.getElementById("dropdownMenuSortBy").classList.remove('show');
         document.getElementById("dropdownMenuFrom").classList.remove('show');
       }
@@ -78,7 +82,7 @@
 {% block content %}
 <!-- Post filters bar visible only on medium devices or larger-->
 
-<div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 49px; transition: top 0.3s ease 0s;">
+<div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="filter-bar-mobile" style="z-index: 100; top: 49px; transition: top 0.3s ease 0s;">
 
   <div class="col">
 
@@ -137,15 +141,28 @@
 
     <div class="text-center py-7 py-md-8">
 
-      <img src="https://imgur.com/7qp4UpX.png" class="mb-3" style="width: 300px; opacity: .35; filter: brightness(0);" alt="empty state">
+      <i class="fad fa-ghost text-muted ghost mb-5" style="font-size: 5rem;"></i>
 
 
-      <div class="font-weight-bold text-muted">Sorry, there's no profile here.</div>
+      <div class="font-weight-bold text-muted">Sorry, no profile here...</div>
       <div class="text-small text-muted">This user was either banned or deleted.</div>
 
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block pagenav %}
+<nav aria-label="Page navigation">
+  <ul class="pagination pagination-sm py-3 pl-3 mb-0">
+    <li class="page-item disabled">
+      <small><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Back</a></small>
+    </li>
+    <li class="page-item">
+      <small><a class="page-link" href="#">Next</a></small>
+    </li>
+  </ul>
+</nav>
 {% endblock %}
 
 {% block pagenav %}

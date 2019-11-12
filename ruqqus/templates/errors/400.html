@@ -4,7 +4,18 @@
 <title>400 Bad Request</title>
 {% endblock %}
 
+{% block pagetype %}error-400{% endblock %}
+
 {% block content %}
-<h1>400 Bad Request</h1>
-<p>The rulers of the land might have been a bit more inclined to accommodate you... if you had only asked properly.</p>
+<div class="row justify-content-center">
+	<div class="col-10 col-md-5">
+	<div class="text-center px-3 my-8">
+			<i class="fab fa-fort-awesome text-muted mb-5" style="font-size: 5rem;"></i>
+			<h1 class="h5">400 Bad Request</h1>
+			<p class="text-muted mb-5">The rulers of the land might have been a bit more inclined to accommodate you... if you had only asked properly.</p>
+			<div><a href="/signup" class="btn btn-primary mb-2">Create an account</a></div>
+			<div><a href="/login" class="text-muted text-small">Or sign in</a></div>
+		</div>
+	</div>
+</div>
 {% endblock %}

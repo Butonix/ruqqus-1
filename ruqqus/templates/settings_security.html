@@ -10,23 +10,23 @@
 
             {% if error %}
 <div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
-<i class="fas fa-exclamation-circle text-lg my-auto"></i>
-<div>
+<i class="fas fa-exclamation-circle"></i>
+<span>
   {{ error }}
- </div>
+ </span>
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
+    <span aria-hidden="true"><i class="far fa-times"></i></span>
   </button>
 </div>
 {% endif %}
 {% if msg %}
 <div class="alert alert-success alert-dismissible fade show my-3" role="alert">
-<i class="fas fa-check-circle text-lg my-auto" aria-hidden="true"></i>
-<div>
+<i class="fas fa-check-circle" aria-hidden="true"></i>
+<span>
   {{ msg }}
-</div>
+</span>
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
+    <span aria-hidden="true"><i class="far fa-times"></i></span>
   </button>
 </div>
 {% endif %}
@@ -72,39 +72,51 @@
 
                                     <div class="body">
 
-                                        <label for="new_password">New Password</label>
+                                    <div class="d-lg-flex">
 
-                                        <input class="form-control" id="new_password"
+                                        <label for="new_password" class="mb-0 w-lg-25">New Password</label>
+
+                                        <input class="form-control w-lg-75" id="new_password"
                                             aria-describedby="new_password" type="password" name="new_password"
                                             required>
                                         <small id="passwordHelpChange"
-                                            class="form-text font-weight-bold text-muted d-none mt-1">Minimum of 8
+                                            class="form-text font-weight-bold text-muted d-none mt-1 w-lg-75">Minimum of 8
                                             characters
                                             required.</small>
                                         <small id="passwordHelpChangeSuccess"
-                                            class="form-text font-weight-bold text-success d-none mt-1">Your password
+                                            class="form-text font-weight-bold text-success d-none mt-1 w-lg-75">Your password
                                             meets the
                                             requirements.
                                         </small>
 
-                                        <label for="cnf_password" class="mt-3">Confirm New Password</label>
+                                    </div>
 
-                                        <input class="form-control" id="cnf_password"
+                                    <div class="d-lg-flex mt-3">
+
+                                        <label for="cnf_password" class="mb-0 w-lg-25">Confirm New Password</label>
+
+                                        <input class="form-control w-lg-75" id="cnf_password"
                                             aria-describedby="cnf_password" type="password" name="cnf_password"
                                             required>
 
                                         <small id="passwordHelpCnf"
-                                            class="form-text font-weight-bold text-muted d-none mt-1">Passwords do not
+                                            class="form-text font-weight-bold text-muted d-none mt-1 w-lg-75">Passwords do not
                                             match.</small>
                                         <small id="passwordHelpCnfSuccess"
-                                            class="form-text font-weight-bold text-success d-none mt-1">Passwords match.
+                                            class="form-text font-weight-bold text-success d-none mt-1 w-lg-75">Passwords match.
                                         </small>
 
-                                        <label for="old_password" class="mt-3">Old Password</label>
+                                    </div>
 
-                                        <input class="form-control mb-2" id="old_password"
+                                    <div class="d-lg-flex mt-5">
+
+                                        <label for="old_password" class="mb-0 w-lg-25">Old Password</label>
+
+                                        <input class="form-control mb-2 w-lg-75" id="old_password"
                                             aria-describedby="old_password" type="password" name="old_password"
                                             required>
+
+                                    </div>
 
                                     </div>
 
@@ -135,19 +147,37 @@
                                 <form  action="/settings/security" method="post">
 				<input type="hidden" name="formkey" value="{{ v.formkey }}">
 
-
                                     <div class="body">
-                                     
-                                        <label for="new-email">Email</label>
 
-                                        <input autocomplete="new-password" class="form-control mb-2" id="new_email" placeholder="{{ v.email }}"
+                                    <div class="d-lg-flex">
+                                     
+                                        <label for="new-email" class="w-lg-25">Email</label>
+
+                                        <div class="w-lg-75">
+
+                                        <input class="form-control" id="new_email" placeholder="{{ v.email }}"
                                             aria-describedby="new_email" type="email" name="new_email" required>
                                             {% if not v.is_activated %}
                                             <div class="text-danger text-small-extra mt-1" id="email-verify-text">Email not verified. <u><a href="javascript:void(0)" onclick="post('/api/verify_email');emailVerifyText();" class="text-danger">Verify now.</a></u></div>
                                             {% endif %}
 
-					<label for="email-password" class="mt-3" id="email-password-label">Password</label>
-					<input autocomplete="new-password" type="password" class="form-control mb-2" id="email-password" name="password" required>
+                                    </div>
+
+                                    </div>
+
+                                    <div class="d-lg-flex mt-3">
+
+					<label for="email-password" class="w-lg-25 d-none" id="email-password-label">Password</label>
+
+                    <div class="w-lg-75">
+
+					<input autocomplete="new-password" type="password" class="form-control mb-2 d-none" id="email-password" name="password" required>
+
+                    <small id="emailpasswordRequired" class="form-text font-weight-bold text-danger d-none mt-1">Password required to update your email.</small>
+
+                    </div>
+
+                    </div>
 
                     <small id="emailpasswordRequired" class="form-text font-weight-bold text-danger d-none mt-1">Password required to update your email.</small>
 

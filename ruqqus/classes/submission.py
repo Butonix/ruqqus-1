@@ -28,6 +28,7 @@ class Submission(Base):
     comments=relationship("Comment", lazy="dynamic", backref="submissions")
     body=Column(String(2000), default="")
     body_html=Column(String(2200), default="")
+    embed_url=Column(String(256), default="")
 
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to

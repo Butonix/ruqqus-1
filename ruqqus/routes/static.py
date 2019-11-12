@@ -46,7 +46,7 @@ def help_conduct(v):
 
 @app.route("/favicon.ico", methods=["GET"])
 def favicon():
-    return send_file("./assets/images/logo/ruqqus_logo_square_white_fill.png")
+    return send_file("./assets/images/logo/favicon.png")
 
 @app.route("/my_info",methods=["GET"])
 @auth_required

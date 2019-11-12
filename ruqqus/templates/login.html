@@ -17,7 +17,7 @@
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/e76eba0350.js" crossorigin="anonymous"></script>
+    <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 
     <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/latest/js/all.js"
     integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
@@ -70,11 +70,11 @@
 
                     <div id="login-form" class="">
 
-                        <h1 class="h3 font-weight-normal text-center mb-5">Welcome back.</h1>
+                        <h1 class="h4 font-weight-normal text-center mb-md-5">Welcome back.</h1>
 
                         {% if failed %}
                         <div class="alert alert-danger alert-dismissible fade show d-flex my-3" role="alert">
-                          <i class="fas fa-exclamation-circle text-lg my-auto"></i>
+                          <i class="fas fa-exclamation-circle my-auto"></i>
                           <div>
                           Incorrect username or password.
                           <br>
@@ -86,11 +86,7 @@
                     </div>
                     {% endif %}
 
-                    <form action="/login" method="post" class="mt-3">
-			
-			{% if redirect %}
-			<input type="hidden" name="redirect" value="{{ redirect }}">
-			{% endif %}
+                    <form action="/login" method="post" class="mt-md-3" id="login">
 
                         <label for="username" class="mt-3">Email Address</label>
 
@@ -104,7 +100,7 @@
 
                         <small><a href="/forgot">Forgot password?</a></small>
 
-                        <input class="btn btn-primary login w-100 mt-3" type="submit" value="Sign in">
+                        <button class="btn btn-primary login w-100 mt-3" id="login_button">Sign in</button>
 
                         <div class="text-center mt-5 mb-3">
                             <a href="/signup" class="text-muted text-small toggle-login">Don't have an
@@ -139,17 +135,15 @@
     </div>
 </div>
 
-<!-- Bootstrap core JavaScript -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-crossorigin="anonymous"></script>
+{% include "bootstrap.html" %}
 
+<!-- Initialize BS 4 tool tips -->
+
+<script src="/assets/js/tooltips.js"></script>
+
+<!-- BS Spinner JS -->
+
+<script src="/assets/js/spinner.js"></script>
 
 </body>
 

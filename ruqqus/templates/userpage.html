@@ -2,19 +2,23 @@
 
 {% block pagetype %}userpage{% endblock %}
 
+{% block enlargeThumbJS %}
+<script src="/assets/js/enlarge_thumb.js"></script>
+{% endblock %}
+
 {% block fixedMobileBarJS %}
 <script>
   var prevScrollpos = window.pageYOffset;
   window.onscroll = function () {
     var currentScrollPos = window.pageYOffset;
     if (prevScrollpos > currentScrollPos) {
-      document.getElementById("fixed-bar-mobile").style.top = "49px";
+      document.getElementById("filter-bar-mobile").style.top = "49px";
     } 
     else if (currentScrollPos <= 125) {
-      document.getElementById("fixed-bar-mobile").style.top = "49px";
+      document.getElementById("filter-bar-mobile").style.top = "49px";
     }
     else {
-      document.getElementById("fixed-bar-mobile").style.top = "-98px";
+      document.getElementById("filter-bar-mobile").style.top = "-98px";
       document.getElementById("dropdownMenuSortBy").classList.remove('show');
       document.getElementById("dropdownMenuFrom").classList.remove('show');
     }
@@ -31,8 +35,12 @@
 {% block sidebarblock %}
 <div class="sidebar-section sidebar-profile-basic">
   <div class="body">
-    <h1 class="h6 d-inline-block mb-0 mr-2" style="color:#{{ u.color }}">@{{ u.username }}</h1>
-    <div class="profile-actions d-inline-block">
+    <h1 class="h6 d-inline-block mb-0" style="color:#{{ u.color }}">@{{ u.username }}</h1>
+    <span>
+      {% if u.admin_level>=3 %}<i class="fad fa-badge-check text-primary ml-1" data-toggle="tooltip" data-placement="bottom" title="Admin"></i>{% endif %}
+      {% if u.real_id %}<span class="badge badge-pill text-white badge-info">{{ u.real_id }}</span>{% endif %}
+    </span>
+    <div class="profile-actions d-inline-block float-right">
      {% if v and v.id != u.id %}
      <div class="dropdown show">
       <a href="#" role="button" id="dropdownProfileActionsLink" data-toggle="dropdown"
@@ -40,7 +48,7 @@
       <i class="fas fa-ellipsis-h"></i>
     </a>
 
-    <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
+    <div class="dropdown-menu dropdown-menu-right border-0 shadow" aria-labelledby="dropdownMoreLink">
       <a class="dropdown-item" href="#"><i class="fas fa-paper-plane"></i>Message</a>
       <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Report</a>
     </div>
@@ -53,16 +61,12 @@
     <i class="fas fa-ellipsis-h"></i>
   </a>
 
-  <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
-    <a class="dropdown-item" href="/settings/profile#bio"><i class="fas fa-user-circle"></i>Edit profile</a>
+  <div class="dropdown-menu dropdown-menu-right border-0 shadow" aria-labelledby="dropdownMoreLink">
+    <a class="dropdown-item" href="/settings/profile#bio"><i class="fas fa-edit"></i>Edit profile</a>
     <a class="dropdown-item" href="/settings/security"><i class="fas fa-cog"></i>Account details</a>
   </div>
 </div>
 {% endif %}   
-</div>
-<div>
-  {% if u.admin_level>=3 %}<span class="badge badge-pill badge-danger text-white">Admin</span>{% endif %}
-  {% if u.real_id %}<span class="badge badge-pill text-white badge-info">{{ u.real_id }}</span>{% endif %}
 </div>
 </div>
 </div>
@@ -70,18 +74,18 @@
  <div class="title">Profile</div>
  <div class="body">
    {% if u.bio_html %}
-   <p class="text-muted text-small">
+   <p>
     {{ u.bio_html | safe }}
   </p>
   {% if v and v.id == u.id %}
-  <div><a class="btn btn-secondary btn-block btn-sm" href="/settings/profile">Update bio</a></div>
+  <div><a class="btn btn-secondary btn-block btn-sm" href="/settings/profile#bio">Update bio</a></div>
   {% endif %}
   <hr>
   {% endif %}
-  <div class="text-muted text-small-extra"><i class="fas fa-medal mr-2"></i>{{ u.karma }} Rep</div>
-  <div class="text-muted text-small-extra mt-2"><i class="fas fa-pen text-muted mr-2"></i>{{ u.post_count }} Post{{ 's' if u.post_count!=1 else '' }}
+  <div class="text-muted text-small"><i class="fas fa-medal mr-2"></i>{{ u.karma }} Rep</div>
+  <div class="text-muted text-small mt-2"><i class="fas fa-feather-alt text-muted mr-2"></i>{{ u.post_count }} Post{{ 's' if u.post_count!=1 else '' }}
   </div>
-  <div class="text-muted text-small-extra mt-2"><i class="fas fa-birthday-cake text-muted mr-2"></i>User
+  <div class="text-muted text-small mt-2"><i class="fas fa-birthday-cake text-muted mr-2"></i>User
     since {{ u.created_date }}
   </div>
 </div>
@@ -91,11 +95,11 @@
 {% if u.badges %}
 <div class="sidebar-section sidebar-profile-badges">
   <div class="title">Badges</div>
-  <div class="col py-3 px-0">
+  <div class="body">
     {% for bp in u.badge_pairs %}
     {% include "badge_pair.html" %}
     {% else %}
-    <div class="px-3">Nothing yet!</div>
+    <p class="text-small text-muted">Nothing yet!</p>
 
     {% endfor %}
   </div>
@@ -146,7 +150,7 @@
 {% block content %}
 <!-- Post filters bar visible only on medium devices or larger-->
 
-<div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 49px; transition: top 0.3s ease 0s;">
+<div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="filter-bar-mobile" style="z-index: 100; top: 49px; transition: top 0.3s ease 0s;">
 
   <div class="col">
 
@@ -165,14 +169,14 @@
 
       </div>
 
-      <div class="post-filter">
+      <div class="post-filter d-none">
         <span>Sort By:</span>
         <span class="dropdown">
           <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">New</a>
 
           <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
             <a class="dropdown-item" href="#">Top</a>
-            <a class="dropdown-item" href="#">Fiery</a>
+            <a class="dropdown-item" href="#">Disputed</a>
             <a class="dropdown-item" href="#">Based</a>
           </span>
         </span>
@@ -187,58 +191,85 @@
 
 <div class="row justify-content-around mx-lg-5 d-block d-lg-none no-gutters">
   <div class="col bg-light border-bottom rounded-md p-3">
-    <div class="profile-details text-center mt-3">
-     <div class="profile-pic mb-3" style="background-color:#{{ u.color }}">
-      <span class="letter">{{ u.username[0]  }}</span>
-    </div>
-    <h1 class="h6 d-inline-block text-gray mb-3">@{{ u.username }}</h1>
-    <span>
-      {% if u.admin_level>=3 %}<i class="fad fa-badge-check text-success" data-toggle="tooltip" data-placement="bottom" title="Admin"></i>{% endif %}
-      {% if u.real_id %}<span class="badge badge-pill text-white badge-info">{{ u.real_id }}</span>{% endif %}
-    </span>
-    <p class="text-muted text-small px-3">
-      {{ u.bio_html | safe }}
-    </p>
-    <div class="profile-actions d-inline-block">
-      {% if v and v.id != u.id %}
-    <!-- Modal -->
-    <i class="fas fa-ellipsis-h" data-toggle="modal" data-target="#profileModal"></i>
+    <div class="profile-details">
+      <div class="media">
+       <div class="profile-pic profile-pic-75 mr-3 mt-0" style="background-color:#{{ u.color }}">
+        <span class="letter">{{ u.username[0] }}</span>
+      </div>
+      <div class="media-body">
+        <h1 class="h6 d-inline-block">@{{ u.username }}</h1>
 
-    <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="Profile Actions" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-body">
-            <div class="list-group">
-            <a href="/settings/profile#bio" class="list-group-item list-group-item-action"><i class="fas fa-paper-plane mr-2"></i>Message</a>
-              <a href="/settings/security" class="list-group-item list-group-item-action"><i class="fas fa-flag mr-2"></i>Flag</a>
+        <span>
+          {% if u.admin_level>=3 %}<i class="fad fa-badge-check text-primary ml-1" data-toggle="tooltip" data-placement="bottom" title="Admin"></i>{% endif %}
+          {% if u.real_id %}<span class="badge badge-pill text-white badge-info">{{ u.real_id }}</span>{% endif %}
+        </span>
+
+        {% if v and v.id != u.id %}
+        <div class="profile-actions d-inline-block">
+          <!-- Modal -->
+          <a href="#"><i class="fas fa-ellipsis-h ml-2" data-toggle="modal" data-target="#profileModal"></i></a>
+
+        </div>
+
+        <div class="modal fade text-left" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="Profile Actions" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title h6">More options</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true"><i class="far fa-times"></i></span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="list-group profile-actions">
+                  <li class="list-group-item"><a href="/settings/profile#bio" class="d-block"><i class="fas fa-paper-plane mr-2"></i>Message</a></li>
+                  <li class="list-group-item"><a href="/settings/security" class="d-block"><i class="fas fa-flag mr-2"></i>Flag</a></li>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    {% endif %}
-    {% if v and v.id == u.id %}
+        {% endif %}
 
-    <i class="fas fa-ellipsis-h" data-toggle="modal" data-target="#settingsModal"></i>
+        {% if u.bio_html %}
+        <p>
+          {{ u.bio_html | safe }}
+        </p>
+        {% endif %}
 
-    <!-- Modal -->
-    <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="Profile Actions" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-body">
-            <div class="list-group">
-            <a href="/settings/profile#bio" class="list-group-item list-group-item-action"><i class="fas fa-user-circle mr-2"></i>Edit profile</a>
-              <a href="/settings/security" class="list-group-item list-group-item-action"><i class="fas fa-cog mr-2"></i>Account details</a>
-            </div>
-          </div>
+        {% if v and v.id == u.id %}
+
+        <div>
+          <a href="/settings/profile#bio" class="btn btn-secondary btn-sm"><i class="fas fa-pen mr-2"></i>Edit profile</a>
         </div>
+
+        {% endif %}
+
       </div>
+
     </div>
-    {% endif %} 
+
   </div>
+</div>
+</div>
 
-</div>
-</div>
+<div class="row border-bottom d-block d-lg-none bg-light no-gutters">
+<div class="col">
+    <ul class="list-inline d-flex justify-content-around text-center py-2 mb-0">
+      <li class="list-inline-item">
+        <span class="text-small font-weight-bold">{{ u.karma }}</span>
+        <div class="text-small text-muted">Rep</div>
+      </li>
+      <li class="list-inline-item">
+        <span class="font-weight-bold">{{ u.comment_count }}</span>
+        <div class="text-small text-muted">Comment{{ 's' if u.comment_count!=1 else '' }}</div>
+      </li>
+      <li class="list-inline-item">
+        <span class="text-small font-weight-bold">{{ u.post_count }}</span>
+        <div class="text-small text-muted">Post{{ 's' if u.post_count!=1 else '' }}</div>
+      </li>
+    </ul>
+  </div>
 </div>
 
 <div class="flex-row tab-bar sticky d-none d-md-flex">
@@ -263,14 +294,14 @@
     {% else %}
     <div class="text-center py-7 py-md-8">
 
-      <img src="https://imgur.com/7qp4UpX.png" class="mb-3" style="width: 300px; opacity: .35; filter: brightness(0);" alt="empty state">
+      <img src="/assets/images/illustrations/searching.png" class="empty-state-img mb-3" alt="empty state">
 
       {% if v and v.id == u.id %}
       <div class="font-weight-bold text-muted">You haven't made a ruckus.</div>
       <div class="text-small text-muted mb-3">Your posts will show up here.</div>
       <a href="/submit" class="btn btn-primary">Create post now</a>
       {% else %}
-      <div class="font-weight-bold text-muted">Umm, there's nothing here.</div>
+      <div class="font-weight-bold text-muted">No posts here...</div>
       <div class="text-small text-muted">@{{ u.username }} hasn't made a ruckus yet.</div>
       {% endif %}
     </div>
@@ -281,4 +312,17 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block pagenav %}
+<nav aria-label="Page navigation">
+  <ul class="pagination pagination-sm py-3 pl-3 mb-0">
+    <li class="page-item disabled">
+      <small><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Back</a></small>
+    </li>
+    <li class="page-item">
+      <small><a class="page-link" href="#">Next</a></small>
+    </li>
+  </ul>
+</nav>
 {% endblock %}

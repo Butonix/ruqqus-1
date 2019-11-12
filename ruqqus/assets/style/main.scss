@@ -1,6 +1,6 @@
 // Colors
 
-$primary: #6350CC;
+$primary: #603abb;
 $dark: #1F2041;
 $secondary: #EAEAEA;
 $danger: #F05D5E;
@@ -15,14 +15,14 @@ $red:  #F05D5E;
 $gray: #5F5F5F;
 $green: #23CE6B;
 
-$gray-100: #F8F8F9;
+$gray-100: #F1F1F1;
 $gray-200: #EBE9EF;
 $gray-300: #E0E4E9;
 $gray-400: #C2C2C2;
 $gray-500: #adb5bd;
 $gray-600: #ACACAC;
 
-$upvote: #6350CC;
+$upvote: #603abb;
 $downvote: #48A9A6;
 $admin: #F05D5E;
 $banned: #FF9999;
@@ -122,6 +122,10 @@ $box-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.1) !default;
 
 $box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
 
+// Tool Tips
+
+$tooltip-opacity: 1;
+
 // Color contrast
 
 $yiq-contrasted-threshold:  160 !default;
@@ -153,14 +157,8 @@ body {
 
 // 400, 401, 403, 404, 405, 500 error Pages
 
-#error-404 {
-    padding-top: 0;
-    height: 100%;
-    overflow: hidden;
-}
-
 #error-400 .sidebar, #error-401 .sidebar, #error-404 .sidebar, #error-404 .sidebar, #error-405 .sidebar, #error-500 .sidebar {
-    display: none;
+    display: none!important;
 }
 
 // Message pages
@@ -269,6 +267,10 @@ ol > li::before {
     border-radius: $border-radius;
 }
 
+.btn-lg {
+    font-size: $font-size-lg;
+}
+
 .btn-secondary {
     color: $text-muted;
 }
@@ -334,11 +336,16 @@ ol > li::before {
 }
 
 .alert-dismissible .close {
+    padding: 0.5rem 1.25rem;
     bottom: 0;
 }
 
-.alert .fa.text-lg, .alert .fas.text-lg, .alert .far.text-lg, .alert .fab.text-lg {
-    margin-right: 1.25rem;
+.alert-dismissible .close .fa, .alert-dismissible .close .fas, .alert-dismissible .close .far, .alert-dismissible .close .fab {
+    margin-right: 0rem;
+}
+
+.alert .fa, .alert .fas, .alert .far, .alert .fab {
+    margin-right: 0.5rem;
 }
 
 // Toasts
@@ -352,6 +359,14 @@ ol > li::before {
 }
 
 // Navbar and tab Bar
+
+.navbar-toggler-icon, .navbar-dark .navbar-toggler-icon, .navbar-light .navbar-toggler-icon {
+    background: transparent;
+}
+
+.navbar-toggler, .navbar-dark .navbar-toggler, .navbar-light .navbar-toggler {
+    border: none;
+}
 
 .navbar-expand-md .navbar-nav .nav-link {
     padding-left: 1rem;
@@ -382,11 +397,11 @@ ol > li::before {
 // Nav links
 
 .navbar-nav .nav-link {
-    padding: 0.35rem 0.75rem;
+    padding: 0.25rem 0.5rem;
 }
 
 .navbar-expand-md .navbar-nav .nav-link {
-    padding: 0.35rem 0.75rem;
+    padding: 0.25rem 0.5rem;
 }
 
 .navbar-light .navbar-nav .nav-link {
@@ -455,6 +470,21 @@ ol > li::before {
     color: $white;
 }
 
+.nav-link .badge-count {
+    width: 20px;
+    height: 20px;
+    border-radius: 50rem;
+    background-color: $danger;
+    position: absolute;
+    color: $white;
+    font-size: 11px;
+    font-weight: $font-weight-medium;
+    top: -6px;
+    left: 14px;
+    line-height: 1.25rem;
+    border: 2px solid $primary;
+}
+
 .post-nav .nav-link {
     color: $gray;
     font-size: $extra-small-font-size;
@@ -492,8 +522,8 @@ ol > li::before {
     color: $primary;
 }
 
-.post-nav .fa, .post-nav .fas {
-    font-size: $extra-small-font-size;
+.post-nav .fa, .post-nav .fas, .post-nav .far, .post-nav .fab, .post-nav .fal {
+    font-size: $small-font-size;
     margin-right: .5rem;
     color: $gray-600;
 }
@@ -538,8 +568,7 @@ ol > li::before {
 }
 
 .form-inline.search .form-control {
-    background-color: rgba(0, 0, 0, 0.15);
-    border-color: rgba(0, 0, 0, 0.15);
+    background-color: rgba(0, 0, 0, 0.25);
     font-size: $font-size-base;
 }
 
@@ -586,8 +615,10 @@ ol > li::before {
 // Inputs
 
 .form-control {
-    color: $gray-600;
-    border-color: $input-border-color;
+    color: $text-muted;
+    border-color: transparent;
+    border-width: 2px;
+    background: $gray-100;
     transition: none;
 }
 
@@ -622,6 +653,7 @@ label {
     font-size: 12px;
     letter-spacing: 0.5px;
     color: $black;
+    pointer-events: none;
 }
 
 #login label {
@@ -683,7 +715,7 @@ label.terms {
     transform: rotate(-45deg);
 }
 
-.sidebar-section .fa, .sidebar-section .fas {
+.sidebar-section .fa, .sidebar-section .fas, .sidebar-section .far, .sidebar-section .fab, .sidebar-section .fal, .sidebar-section .fad {
     font-size: $small-font-size;
 }
 
@@ -733,26 +765,35 @@ label.terms {
     min-width: 40px;
 }
 
-.arrow-up {
-    cursor: pointer;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-bottom: 12px solid $gray-400;
-    width: 0;
-    height: 0;
-    position: relative;
-    top: -5px;
+.voting div:focus {
+    outline: 0;
 }
 
-.arrow-down {
+.arrow-up::before {
     cursor: pointer;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-top: 12px solid $gray-400;
-    width: 0;
-    height: 0;
-    position: relative;
-    bottom: -5px;
+    font-size: $font-size-base;
+    color: $gray-400;
+    font-family: "Font Awesome 5 Pro";
+    font-weight: 900;
+    content: "\f357";
+
+}
+
+.arrow-down::before {
+    cursor: pointer;
+    font-size: $font-size-base;
+    color: $gray-400;
+    font-family: "Font Awesome 5 Pro";
+    font-weight: 900;
+    content: "\f354";
+}
+
+.upvoted .arrow-up::before {
+    color: $upvote;
+}
+
+.downvoted .arrow-down::before {
+    color: $downvote;
 }
 
 .comment-actions .arrow-up {
@@ -761,16 +802,6 @@ label.terms {
 
 .comment-actions .arrow-down {
     bottom: 0;
-}
-
-.upvoted .arrow-up {
-    cursor: pointer;
-    border-bottom: 12px solid $upvote;
-}
-
-.downvoted .arrow-down {
-    cursor: pointer;
-    border-top: 12px solid $downvote;
 }
 
 .upvoted .arrow-mobile-up {
@@ -873,10 +904,10 @@ color: $dark;
 }
 
 #frontpage .pseudo-submit-form.card .card-body .form-control {
-    background-color: $light;
+    background-color: $gray-100;
 }
 
-#frontpage .pseudo-submit-form.card .card-body .form-control:active, #frontpage .pseudo-submit-form.card .card-body .form-control:focus {
+#frontpage .pseudo-submit-form.card .card-body .form-control:hover, #frontpage .pseudo-submit-form.card .card-body .form-control:active, #frontpage .pseudo-submit-form.card .card-body .form-control:focus {
     background-color: $white;
 }
 
@@ -1011,11 +1042,23 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     margin: auto;
     text-align: center;
     color: #fff;
+    -moz-transform: rotate(-25deg);
+    -ms-transform: rotate(-25deg);
+    -o-transform: rotate(-25deg);
+    -webkit-transform: rotate(-25deg);
+    transform: rotate(-25deg);
 }
 
 .profile-pic .letter {
-    line-height: 3.5rem;
+    line-height: 3.6rem;
     font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    text-transform: uppercase;
+}
+
+.profile-pic-75 .letter {
+    line-height: 5.5rem;
+    font-size: 2rem;
 }
 
 .navbar .navbar-nav .profile-pic {
@@ -1101,6 +1144,32 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     margin-bottom: 0;
 }
 
+// Modal Post Actions
+
+.modal-header {
+    border: none;
+    background-color: $gray-100;
+}
+
+.modal .post-actions .list-group-item {
+    border: none;
+    border-radius: $border-radius;
+}
+
+.modal .post-actions .list-group-item:focus, .modal .post-actions .list-group-item:hover {
+    background-color: $gray-200;
+}
+
+.modal .post-actions a {
+    color: $black;
+    font-size: $font-size-base;
+}
+
+.modal .post-actions .fa, .modal .post-actions .fas, .modal .post-actions .far {
+    width: 1.25rem;
+    font-size: $font-size-base;
+}
+
 .post-actions {
     position: relative;
     color: $text-muted;
@@ -1183,6 +1252,10 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     margin-right: 0;
 }
 
+.close .far, .close .fab, .close .fal, .close .fas {
+    font-size: 1.25rem;
+}
+
 // Pagination
 
 .page-link {
@@ -1230,6 +1303,16 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .post-img-lg {
     display: none;
+}
+
+.post-img-overlay {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    bottom: 0;
+    padding: .25rem .5rem;
+    text-align: right;
+    width: 100%;
+    color: $white;
 }
 
 // Small devices (landscape phones, less than 768px)
@@ -1290,6 +1373,27 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .comment .comment-body p.text {
     margin-bottom: 1rem;
     word-break: break-word;
+}
+
+// Modal Comment Actions
+
+.modal .comment-actions .list-group-item {
+    border: none;
+    border-radius: $border-radius;
+}
+
+.modal .comment-actions .list-group-item:focus, .modal .comment-actions .list-group-item:hover {
+    background-color: $gray-200;
+}
+
+.modal .comment-actions a {
+    color: $black;
+    font-size: $font-size-base;
+}
+
+.modal .comment-actions .fa, .modal .comment-actions .fas, .modal .comment-actions .far {
+    width: 1.25rem;
+    font-size: $font-size-base;
 }
 
 .comment-actions {
@@ -1390,16 +1494,19 @@ ul.comment-section {
     margin-top: 1.5rem;
 }
 
+.comment-write.collapsed textarea:focus, .comment-write.collapsed textarea:active {
+    background-color: $white;
+}
+
 .comment-write.collapsed textarea {
     width: 100%;
     box-sizing: border-box;
     padding: .5rem .75rem;
-    background: $white;
     min-height: 84px;
 }
 
 .comment-write textarea {
-    background: $light;
+    background: $gray-100;
 }
 
 .comment-write .comment-format {
@@ -1429,7 +1536,7 @@ ul.comment-section {
 .comment .comment-collapse::before {
     content: "";
     position: absolute;
-    font-family: "Font Awesome 5 Free";
+    font-family: "Font Awesome 5 Pro";
     border-left: 2px solid #E0E0E0;
     font-size: $font-size-base;
     color: $purple;
@@ -1445,7 +1552,8 @@ ul.comment-section {
 
 .comment.collapsed .comment-collapse::before {
     content: "\f138";
-    font-family: "Font Awesome 5 Free";
+    font-family: "Font Awesome 5 Pro";
+    font-weight: 900;
     border-left: none;
     color: $gray-500;
     top: 3px;
@@ -1551,6 +1659,7 @@ ul.comment-section {
     padding-top: 0;
     height: 100%;
     overflow: hidden;
+    background-color: $white;
 }
 
 .splash-wrapper {
@@ -1608,12 +1717,38 @@ ul.comment-section {
     background-color: $gray-200;
 }
 
+// Modal Profile Actions
+
+.modal .profile-actions .list-group-item {
+    border: none;
+    border-radius: $border-radius;
+}
+
+.modal .profile-actions .list-group-item:focus, .modal .profile-actions .list-group-item:hover {
+    background-color: $gray-200;
+}
+
+.modal .profile-actions a {
+    color: $black;
+    font-size: $font-size-base;
+}
+
+.modal .profile-actions .fa, .modal .profile-actions .fas, .modal .profile-actions .far {
+    width: 1.25rem;
+    font-size: $font-size-base;
+}
+
 // Profile Page
 
 .profile-actions a {
     color: $gray;
     text-decoration: none;
     font-size: $small-font-size;
+}
+
+.profile-actions .fa, .profile-actions .fas, .profile-actions .far {
+    font-size: $small-font-size;
+    color: $gray-600;
 }
 
 .profile-actions .dropdown-item:hover {
@@ -1624,12 +1759,11 @@ ul.comment-section {
     font-size: 13px;
 }
 
-.profile-actions .fa, .profile-actions .fas, .profile-actions .far {
+.profile-actions .dropdown .dropdown-menu .dropdown-item .fa, .profile-actions .dropdown .dropdown-menu .dropdown-item .fas, .profile-actions .dropdown .dropdown-menu .dropdown-item .far {
     font-size: $small-font-size;
     color: $gray-600;
-    margin-right: .5rem;
     width: 1rem;
-    vertical-align: middle;
+    margin-right: 0.5rem;
 }
 
 .profile-actions .dropdown-item:active .fa, .profile-actions .dropdown-item:active .fas, .profile-actions .dropdown-item:active .far {
@@ -1642,8 +1776,22 @@ ul.comment-section {
 
 // Footer
 
-#page .footer h1, #page .footer h2, #page .footer h3, #page .footer h4, #page .footer h5, #page .footer h6 {
+#page .footer h1, #page .footer h2, #page .footer h3, #page .footer h4, #page .footer h5, #page .footer h6,
+#article .footer h1, #article .footer h2, #article .footer h3, #article .footer h4, #article .footer h5, #article .footer h6 {
     font-weight: $font-weight-bold;
+}
+
+#page .footer a, #article .footer a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+#page .footer a:hover, #page .footer a:focus, #page .footer a:active, #article .footer a:hover, #article .footer a:focus, #article .footer a:active {
+    color: $white;
+}
+
+#page .footer li, #article .footer li {
+    padding: .25rem 0;
 }
 
 .footer .list-inline-item {
@@ -1662,6 +1810,33 @@ ul.comment-section {
 .footer.footer-dark a:hover, .footer.footer-dark a:focus, .footer.footer-dark a:active {
     color: $white;
 }
+
+// Empty States
+
+.empty-state-img {
+    width: 200px;
+    opacity: .35;
+    filter: brightness(0);
+}
+
+// Animate FA Icons
+
+.ghost {
+    -webkit-animation: ghost 2s infinite  alternate;
+    animation: ghost 2s infinite  alternate;
+};
+@-webkit-keyframes ghost {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-20px); }
+};
+@keyframes ghost {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-20px); }
+};
+@-moz-keyframes ghost {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-20px); }
+};
 
 // Responsive Borders
 
@@ -1709,6 +1884,140 @@ ul.comment-section {
 
   }
 }
+
+// Responsive Sizing
+
+@media (min-width: 576px) {
+    .w-sm-25 {
+      width: 25% !important;
+    }
+    .w-sm-50 {
+      width: 50% !important;
+    }
+    .w-sm-75 {
+      width: 75% !important;
+    }
+    .w-sm-100 {
+      width: 100% !important;
+    }
+    .w-sm-auto {
+      width: auto !important;
+    }
+    .h-sm-25 {
+      height: 25% !important;
+    }
+    .h-sm-50 {
+      height: 50% !important;
+    }
+    .h-sm-75 {
+      height: 75% !important;
+    }
+    .h-sm-100 {
+      height: 100% !important;
+    }
+    .h-sm-auto {
+      height: auto !important;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .w-md-25 {
+      width: 25% !important;
+    }
+    .w-md-50 {
+      width: 50% !important;
+    }
+    .w-md-75 {
+      width: 75% !important;
+    }
+    .w-md-100 {
+      width: 100% !important;
+    }
+    .w-md-auto {
+      width: auto !important;
+    }
+    .h-md-25 {
+      height: 25% !important;
+    }
+    .h-md-50 {
+      height: 50% !important;
+    }
+    .h-md-75 {
+      height: 75% !important;
+    }
+    .h-md-100 {
+      height: 100% !important;
+    }
+    .h-md-auto {
+      height: auto !important;
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .w-lg-25 {
+      width: 25% !important;
+    }
+    .w-lg-50 {
+      width: 50% !important;
+    }
+    .w-lg-75 {
+      width: 75% !important;
+    }
+    .w-lg-100 {
+      width: 100% !important;
+    }
+    .w-lg-auto {
+      width: auto !important;
+    }
+    .h-lg-25 {
+      height: 25% !important;
+    }
+    .h-lg-50 {
+      height: 50% !important;
+    }
+    .h-lg-75 {
+      height: 75% !important;
+    }
+    .h-lg-100 {
+      height: 100% !important;
+    }
+    .h-lg-auto {
+      height: auto !important;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .w-xl-25 {
+      width: 25% !important;
+    }
+    .w-xl-50 {
+      width: 50% !important;
+    }
+    .w-xl-75 {
+      width: 75% !important;
+    }
+    .w-xl-100 {
+      width: 100% !important;
+    }
+    .w-xl-auto {
+      width: auto !important;
+    }
+    .h-xl-25 {
+      height: 25% !important;
+    }
+    .h-xl-50 {
+      height: 50% !important;
+    }
+    .h-xl-75 {
+      height: 75% !important;
+    }
+    .h-xl-100 {
+      height: 100% !important;
+    }
+    .h-xl-auto {
+      height: auto !important;
+    }
+  }
 
 // Submit Page
 
@@ -1838,7 +2147,7 @@ pre ol > li::before {
     width: 3rem;
 }
 
-pre li.L1, li.L3, li.L5, li.L7, li.L9 {
+pre li.L1, pre li.L3, pre li.L5, pre li.L7, pre li.L9 {
     background: none;
 }
 
@@ -1877,12 +2186,15 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 @media (max-width: 767.98px) {
 
 .container {
-    width: 100%;
     max-width: none;
 }
 
 body {
     padding-top: 49px;
+}
+
+.shadow-sm-0 {
+    box-shadow: none!important;
 }
 
 .navbar-nav {
@@ -1904,7 +2216,11 @@ body {
     border-radius: 0;
 }
 
-#thread {
+.navbar-dark .navbar-nav .nav-link .fa, .navbar-dark .navbar-nav .nav-link .fas, .navbar-dark .navbar-nav .nav-link .far, .navbar-dark .navbar-nav .nav-link .fab {
+    font-size: $font-size-base;
+}
+
+#thread, #submit, #error-401, #error-403, #error-404, #error-405, #error-500 {
     background-color: $white;
 }
 
@@ -1918,14 +2234,14 @@ body {
 }
 
 #frontpage .posts .card:hover {
-    background-color: none;
+    background-color: transparent;
 }
 
 #frontpage .posts .card .post-img {
     z-index: 3;
 }
 
-#frontpage .posts .card.enlarged .post-img-lg {
+#frontpage .posts .card.enlarged .post-img-lg, #userpage .posts .card.enlarged .post-img-lg {
     display: block;
 }
 
@@ -1947,6 +2263,15 @@ body {
 #thread .post-title {
     font-size: 16px;
     font-weight: $font-weight-medium;
+}
+
+#submit .submission .body {
+    padding: 0;
+}
+
+#submit .submission .footer {
+    background: transparent;
+    padding: 1rem 0;
 }
 
 .footer .list-inline-item {

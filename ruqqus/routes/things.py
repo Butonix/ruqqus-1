@@ -6,6 +6,7 @@ from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.filters import *
+from ruqqus.helpers.embed import *
 from ruqqus.classes import *
 from flask import *
 from ruqqus.__main__ import app, db
@@ -105,13 +106,13 @@ def submit_post(v):
     if len(title)<10:
         return render_template("submit.html", v=v, error="Please enter a better title.")
 
-    x=urlparse(url)
-    if not (x.scheme and x.netloc) and not request.form.get("body"):
+    parsed_url=urlparse(url)
+    if not (parsed_url.scheme and parsed_url.netloc) and not request.form.get("body"):
         return render_template("submit.html", v=v, error="Please enter a URL or some text.")
 
-    x=filter_post(url)
-    if x:
-        return render_template("submit.html",v=v, error=x)
+    reason=filter_post(url)
+    if reason:
+        return render_template("submit.html",v=v, error=reason)
         
 
     #sanitize title
@@ -131,12 +132,19 @@ def submit_post(v):
     body=request.form.get("body","")
     body_md=mistletoe.markdown(body)
     body_html = sanitize(body_md, linkgen=True)
+
+    #check for embeddable video
+    domain=parsed_url.netloc
+    embed=""
+    if domain.endswith(("youtube.com","youtu.be")):
+        embed=youtube_embed(url)
     
     new_post=Submission(title=title,
                         url=url,
                         author_id=v.id,
                         body=body,
-                        body_html=body_html
+                        body_html=body_html,
+                        embed_url=embed
                         )
 
     db.add(new_post)

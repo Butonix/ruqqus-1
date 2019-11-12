@@ -10,112 +10,148 @@
 
 <div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="filter-bar-mobile" style="z-index: 3; top: 49px; transition: top 0.3s ease 0s;">
 
-      <div class="col">
+  <div class="col">
 
-        <div class="d-flex flex-row flex-nowrap justify-content-between">
+    <div class="d-flex flex-row flex-nowrap justify-content-between">
 
-          <div class="post-filter">
-            <span>Show:</span>
-            <span class="dropdown">
-              <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Comments</a>
+      <div class="post-filter">
+        <span>Show:</span>
+        <span class="dropdown">
+          <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Comments</a>
 
-              <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
-                <a class="dropdown-item" href="/u/{{ u.username }}">Posts</a>
-                <a class="dropdown-item" href="/u/{{ u.username }}/comments">Comments</a>
-              </span>
-            </span>
+          <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
+            <a class="dropdown-item" href="/u/{{ u.username }}">Posts</a>
+            <a class="dropdown-item" href="/u/{{ u.username }}/comments">Comments</a>
+          </span>
+        </span>
 
-          </div>
+      </div>
 
-          <div class="post-filter">
-            <span>Sort By:</span>
-            <span class="dropdown">
-              <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">New</a>
+      <div class="post-filter">
+        <span>Sort By:</span>
+        <span class="dropdown">
+          <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">New</a>
 
-              <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
-                <a class="dropdown-item" href="#">Top</a>
-                <a class="dropdown-item" href="#">Disputed</a>
-                <a class="dropdown-item" href="#">Based</a>
-              </span>
-            </span>
-
-          </div>
-
-        </div>
+          <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
+            <a class="dropdown-item" href="#">Top</a>
+            <a class="dropdown-item" href="#">Disputed</a>
+            <a class="dropdown-item" href="#">Based</a>
+          </span>
+        </span>
 
       </div>
 
     </div>
 
-	<div class="row justify-content-around mx-lg-5 d-block d-lg-none no-gutters">
-        <div class="col bg-light border-bottom rounded-md p-3">
-            <div class="profile-details">
-                <h1 class="h6 d-inline-block mb-0 mr-2" style="color:#{{ u.color }}">@{{ u.username }}</h1>
-                <div class="profile-actions d-inline-block">
-                    <div class="dropdown show">
-                        <a href="#" role="button" id="dropdownProfileActionsLink" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </a>
-			{% if v and v.id != u.id %}
-                        <div class="dropdown-menu border-0 shadow py-1" aria-labelledby="dropdownMoreLink">
-                            <a class="dropdown-item" href="#"><i class="fas fa-paper-plane"></i>Message</a>
-                            <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Report</a>
-                        </div>
-			{% endif %}
-                    </div>
-                </div>
-                <div>
-                            {% if u.admin_level>=3 %}<span class="badge badge-pill badge-danger text-white">Admin</span>{% endif %}
-			    {% if u.real_id %}<span class="badge badge-pill text-white badge-info">{{ u.real_id }}</span>{% endif %}
-                </div>
+  </div>
+
+</div>
+
+<div class="row justify-content-around mx-lg-5 d-block d-lg-none no-gutters">
+  <div class="col bg-light border-bottom rounded-md p-3">
+    <div class="profile-details text-center mt-3">
+     <div class="profile-pic mb-3" style="background-color:#{{ u.color }}">
+      <span class="letter">{{ u.username[0]  }}</span>
+    </div>
+    <h1 class="h6 d-inline-block text-gray mb-3">@{{ u.username }}</h1>
+    <span>
+      {% if u.admin_level>=3 %}<i class="fad fa-badge-check text-primary text-lg ml-1" data-toggle="tooltip" data-placement="bottom" title="Admin"></i>{% endif %}
+      {% if u.real_id %}<span class="badge badge-pill text-white badge-info">{{ u.real_id }}</span>{% endif %}
+    </span>
+    <p class="text-muted text-small px-3">
+      {{ u.bio_html | safe }}
+    </p>
+    <div class="profile-actions d-inline-block">
+      {% if v and v.id != u.id %}
+      <!-- Modal -->
+      <i class="fas fa-ellipsis-h" data-toggle="modal" data-target="#profileModal"></i>
+
+      <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="Profile Actions" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title h6">More options</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true"><i class="far fa-times"></i></span>
+              </button>
             </div>
+            <div class="modal-body">
+              <div class="list-group">
+                <a href="/settings/profile#bio" class="list-group-item list-group-item-action"><i class="fas fa-paper-plane mr-2"></i>Message</a>
+                <a href="/settings/security" class="list-group-item list-group-item-action"><i class="fas fa-flag mr-2"></i>Flag</a>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+      {% endif %}
+      {% if v and v.id == u.id %}
+
+      <i class="fas fa-ellipsis-h" data-toggle="modal" data-target="#settingsModal"></i>
+
+      <!-- Modal -->
+      <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="Profile Actions" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="list-group">
+                <a href="/settings/profile#bio" class="list-group-item list-group-item-action"><i class="fas fa-user-circle mr-2"></i>Edit profile</a>
+                <a href="/settings/security" class="list-group-item list-group-item-action"><i class="fas fa-cog mr-2"></i>Account details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %} 
     </div>
 
-
-        <div class="flex-row tab-bar sticky d-none d-md-flex">
-
-          <ul class="nav post-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/u/{{ u.username}}"><i class="fas fa-feather-alt" aria-hidden="true"></i>Posts</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="/u/{{ u.username}}/comments"><i class="fas fa-comment-dots" aria-hidden="true"></i>Comments</a>
-            </li>
-
-          </ul>
-
-        </div>
-
-        <div class="row no-gutters">
-
-          <div class="col-12">
-
-          {% if u.comment_count>=1 %}
-          {% else %}
-          <div class="text-center py-7 py-md-8">
-
-            <img src="https://imgur.com/7qp4UpX.png" class="mb-3" style="width: 300px; opacity: .35; filter: brightness(0);" alt="empty state">
-
-            {% if v and v.id == u.id %}
-            <div class="font-weight-bold text-muted">You haven't made a ruckus.</div>
-            <div class="text-small text-muted mb-3">Your comments will show up here.</div>
-            <a href="/" class="btn btn-primary">Go to frontpage</a>
-            {% else %}
-            <div class="font-weight-bold text-muted">Umm, there's nothing here.</div>
-            <div class="text-small text-muted">@{{ u.username }} hasn't made a ruckus yet.</div>
-            {% endif %}
-          </div>
-          {% endif %}
-
-            <div class="posts p-3">
-	{% for c in listing %}
-		{{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
-	{% endfor%}
-
+  </div>
 </div>
 </div>
+
+
+<div class="flex-row tab-bar sticky d-none d-md-flex">
+
+  <ul class="nav post-nav mr-auto">
+    <li class="nav-item">
+      <a class="nav-link" href="/u/{{ u.username}}"><i class="fas fa-feather-alt" aria-hidden="true"></i>Posts</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="/u/{{ u.username}}/comments"><i class="fas fa-comment-dots" aria-hidden="true"></i>Comments</a>
+    </li>
+
+  </ul>
+
+</div>
+
+<div class="row no-gutters">
+
+  <div class="col-12">
+
+    {% if u.comment_count>=1 %}
+    {% else %}
+    <div class="text-center py-7 py-md-8">
+
+      <img src="/assets/images/illustrations/searching.png" class="empty-state-img mb-3" alt="empty state">
+
+      {% if v and v.id == u.id %}
+      <div class="font-weight-bold text-muted">You haven't made a ruckus.</div>
+      <div class="text-small text-muted mb-3">Your comments will show up here.</div>
+      <a href="/" class="btn btn-primary">Go to frontpage</a>
+      {% else %}
+      <div class="font-weight-bold text-muted">No comments here...</div>
+      <div class="text-small text-muted">@{{ u.username }} hasn't made a ruckus yet.</div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="posts p-3">
+     {% for c in listing %}
+     {{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
+     {% endfor%}
+
+   </div>
+ </div>
 </div>
 {% endblock %}
 

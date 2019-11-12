@@ -14,7 +14,7 @@
     </div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
     aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
+    <span class="navbar-toggler-icon"><i class="fal fa-bars text-white" style="font-size: 2rem;"></i></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarResponsive">
     <ul class="navbar-nav ml-auto d-none d-md-flex">
@@ -27,7 +27,13 @@
       {% if v.notifications_count %}
 
       <li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-        <a class="nav-link" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><span class="text-danger"><i class="far fa-bell" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Notifications"></i>[{{ v.notifications_count }}]</a><span>
+        <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="far fa-bell" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="{{ v.notifications_count }} notifications"></i><span class="badge-count">{{ v.notifications_count }}</span></a>
+      </li>
+
+      {% elif v.notifications_count > 9 %}
+
+      <li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
+        <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="far fa-bell" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="9+ notifications"></i><span class="badge-count" style="width: 26px;">9+</span></a>
       </li>
 
       {% else %}
@@ -69,17 +75,17 @@
             </div>
             <hr class="my-2">
             <div class="px-2">
-              <a class="dropdown-item" href="javascript:void(0)", onclick="post('/logout');window.location.href='/'">Log out</a>
+              <a class="dropdown-item" href="javascript:void(0)", onclick="post('/logout');window.location.href='https://ruqqus.com/'">Log out</a>
             </div>
           </div>
         </div>
       </li>
       {% else %}
       <li class="nav-item d-flex align-items-center justify-content-center mx-1">
-       <a class="btn btn-primary" href="/login?redirect={{ request.path | urlencode }}">Sign In</a>
+       <a class="btn btn-primary" href="/login">Sign In</a>
      </li>
      <li class="nav-item d-flex align-items-center justify-content-center mx-1">
-       <a class="btn btn-outline-white" href="/signup?redirect={{ request.path | urlencode }}">Sign Up</a>
+       <a class="btn btn-outline-white" href="/signup">Sign Up</a>
      </li>
      {% endif %}
    </ul>
@@ -102,12 +108,42 @@
     <li class="nav-item nav-item border-top mt-2 pt-2">
       <a class="nav-link" href="javascript:void(0)", onclick="post('/logout');window.location.href='https://ruqqus.com/'">Log out</a>
     </li>
+    <li class="nav-item nav-item border-top mt-2 pt-2">
+      <a class="nav-link text-small-extra" href="/about">About</a>
+    </li>
+    <li class="nav-item nav-item">
+      <a class="nav-link text-small-extra" href="/help/conduct">Terms</a>
+    </li>
+    <li class="nav-item nav-item">
+      <a class="nav-link text-small-extra" href="/about/privacy">Privacy</a>
+    </li>
+    <li class="nav-item nav-item">
+      <a class="nav-link text-small-extra" href="#">Contact</a>
+    </li>
+    <li class="nav-item nav-item">
+      <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">Github</a>
+    </li>
     {% else %}
-    <li class="nav-item d-flex align-items-center justify-content-center pb-2">
+    <li class="nav-item d-flex align-items-center justify-content-center pb-3">
       <a class="btn btn-white btn-block" href="/login">Sign in</a>
     </li>
     <li class="nav-item d-flex align-items-center justify-content-center">
       <a class="btn btn-outline-white btn-block" href="/signup">Sign up</a>
+    </li>
+        <li class="nav-item nav-item mt-2">
+      <a class="nav-link text-small-extra" href="/about">About</a>
+    </li>
+    <li class="nav-item nav-item">
+      <a class="nav-link text-small-extra" href="/help/conduct">Terms</a>
+    </li>
+    <li class="nav-item nav-item">
+      <a class="nav-link text-small-extra" href="/about/privacy">Privacy</a>
+    </li>
+    <li class="nav-item nav-item">
+      <a class="nav-link text-small-extra" href="#">Contact</a>
+    </li>
+    <li class="nav-item nav-item">
+      <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">Github</a>
     </li>
     {% endif %}
   </ul>

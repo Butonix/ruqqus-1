@@ -9,10 +9,8 @@
   <meta name="author" content="">
 
   {% block title %}
-
-  <title>Ruqqus - The independent social platform</title>
-  <meta name="description" content="Make a Ruqqus.">
-
+  <title>Ruqqus - The social platform for uncensored discourse</title>
+  <meta name="description" content="The independent social platform">
   {% endblock %}
 
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
@@ -71,7 +69,7 @@
   <div class="container">
     <div class="row justify-content-around">
 
-      <div class="col bg-white shadow-sm rounded-md h-100 custom-gutters">
+      <div class="col bg-white shadow-sm shadow-sm-0 rounded-md h-100 custom-gutters">
 
         {% block PseudoSubmitForm %}
         {% endblock %}
@@ -80,18 +78,6 @@
         {% endblock %}
 
         {% block pagenav %}
-{% if page %}
-<nav aria-label="Page navigation">
-  <ul class="pagination pagination-sm py-3 pl-3 mb-0">
-    <li class="page-item{% if page==1 %} disabled{% endif %}">
-      <small><a class="page-link" href="?page={{ page-1 }}{% if sort_method %}&sort={{ sort_method }}{% endif %}" tabindex="-1" aria-disabled="true">Back</a></small>
-    </li>
-    <li class="page-item">
-      <small><a class="page-link" href="?page={{ page+1 }}{% if sort_method %}&sort={{ sort_method }}{% endif %}">Next</a></small>
-    </li>
-  </ul>
-</nav>
-{% endif %}
         {% endblock %}
 
       </div>
@@ -166,6 +152,22 @@
             <a href="#">#DNCDebates</a>
             <div class="text-muted text-small font-weight-normal">600 posting about this</div>
           </div>
+          <div class="hashtag">
+            <a href="#">#DNCDebates</a>
+            <div class="text-muted text-small font-weight-normal">600 posting about this</div>
+          </div>
+        </div>
+      </div>
+      <!--
+      <div class="sidebar-section sidebar-rules">
+        <div class="title">Ruqqus Rules</div>
+        <div class="body">
+          <ol class="pl-0">
+            <li>No racism</li>
+            <li>No doxxing, threats, or calls to violence</li>
+            <li>No trolling</li>
+            <li>No solicitation</li>
+          </ol>
         </div>
       </div>
       <!--
@@ -200,7 +202,10 @@
   </div>
 </div>
 
-<footer class="footer py-5">
+{% block actionsModal %}
+{% endblock %}
+
+<footer class="footer py-5 d-none d-md-block">
   <div class="container-fluid">
     <div class="row justify-content-center">
       <div class="col">
@@ -213,7 +218,7 @@
           <li class="list-inline-item"><a href="#">Press</a></li>
           <li class="list-inline-item"><a href="#">Help</a></li>
           <li class="list-inline-item"><a href="https://www.twitter.com/ruqqus">Twitter</a></li>
-          <li class="list-inline-item"><a href="https://github.com/ruqqus/ruqqus">Github</a></li>
+          <li class="list-inline-item"><a href="https://ruqqus.org/contribute">Github</a></li>
           <li class="list-inline-item">&copy; 2019 Ruqqus</li>
         </ul>
       </div>
@@ -229,9 +234,6 @@
 {% if v %}
 <script src="/assets/js/comment_form.js"></script>
 {% endif %}
-
-{% block enlargeThumbJS %}
-{% endblock %}
 
 <!-- ClipboardJS -->
 
@@ -263,6 +265,16 @@
 <!-- Search bar icon JS -->
 
 <script src="/assets/js/search_icon.js"></script>
+
+<!-- BS Spinner JS -->
+
+<script src="/assets/js/spinner.js"></script>
+
+{% block enlargeThumbJS %}
+{% endblock %}
+
+{% block embedJS %}
+{% endblock %}
 
 </body>
 

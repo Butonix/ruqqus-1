@@ -22,22 +22,29 @@
     <!-- Ruqqus CSS -->
     <link rel="stylesheet" href="/assets/style/main.css">
 
-    <script>
-        var prevScrollpos = window.pageYOffset;
-        window.onscroll = function () {
-            var currentScrollPos = window.pageYOffset;
-            if (prevScrollpos > currentScrollPos) {
-                document.getElementById("filter-bar-mobile").style.top = "49px";
-            } else {
-                document.getElementById("filter-bar-mobile").style.top = "-98px";
-            }
-            prevScrollpos = currentScrollPos;
-        }
-    </script>
+  {% if v %}
+
+  <script>
+    function post(url, callback, errortext) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", url, true);
+      var form = new FormData()
+      form.append("formkey", "{{ v.formkey }}");
+      xhr.withCredentials=true;
+      xhr.onload=callback
+      xhr.onerror=function(){alert(errortext)}
+      xhr.send(form);
+    }
+    function formkey() {
+      return '{{ v.formkey }}';
+    }
+  </script>
+
+  {% endif %}
 
 </head>
 
-<body id="#submit">
+<body id="submit">
 
   <!-- Navigation -->
 {% include "header.html" %}
@@ -56,7 +63,7 @@
 
                 <p class="text-muted">The first step to making a quality post is choosing an interesting title!</p>
 
-                <div class="bg-white shadow-sm rounded">
+                <div class="bg-white shadow-sm shadow-sm-0 rounded">
 
                     <!-- Submission type toggle -->
 
@@ -74,7 +81,7 @@
                     </div>
 
 
-                    <div class="row no-gutters">
+                    <div class="row no-gutters mb-3">
 
                         <div class="col-12">
 
@@ -119,7 +126,7 @@
 
                                     </div>
 
-                                    <div class="footer border-top">
+                                    <div class="footer">
 
                                         <div class="d-flex">
 
@@ -129,7 +136,7 @@
                                         </p>
                                         {% endif %}
 
-                                            <input class="btn btn-primary ml-auto" type="submit" value="Create post">
+                                            <button class="btn btn-primary ml-auto" id="create_button">Create post</button>
 
                                         </div>
 
@@ -178,35 +185,8 @@
 
         </div>
 
-            <footer class="footer py-5">
-    <div class="container-fluid">
-      <div class="row justify-content-center">
-        <div class="col">
-          <ul class="list-inline text-center text-small text-muted font-weight-bold mb-0">
-            <li class="list-inline-item"><a href="/about">About</a></li>
-            <li class="list-inline-item"><a href="#">Contact</a></li>
-            <li class="list-inline-item"><a href="/terms">Terms</a></li>
-            <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-            <li class="list-inline-item"><a href="#">Donate</a></li>
-            <li class="list-inline-item"><a href="#">Press</a></li>
-            <li class="list-inline-item"><a href="#">Help</a></li>
-            <li class="list-inline-item"><a href="https://www.twitter.com/ruqqus">Twitter</a></li>
-            <li class="list-inline-item"><a href="https://ruqqus.org/contribute">Github</a></li>
-            <li class="list-inline-item">&copy; 2019 Ruqqus</li>
-          </ul>
-        </div>
-  </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
+{% include "footer.html" %}
+{% include "bootstrap.html" %}
 
 <!-- Initialize BS 4 tool tips -->
 
@@ -215,6 +195,10 @@
 <!-- Search bar icon JS -->
 
 <script src="/assets/js/search_icon.js"></script>
+
+<!-- BS Spinner JS -->
+
+<script src="/assets/js/spinner.js"></script>
 
 </body>
 
