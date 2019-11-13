@@ -12,7 +12,7 @@
 
 <div class="comment-body">
 
-    <div class="user-info">{% if c.is_banned %}[comment removed]{% else %}[comment deleted by owner]{% endif %}</div>
+    <div class="user-info">{% if c.is_banned %}[comment removed by adminstrators]{% elif c.is_deleted %}[comment deleted by owner]{% endif %}</div>
 
 {% if v %}
 {% if v.admin_level>1 and v.admin_level > c.author.admin_level %}

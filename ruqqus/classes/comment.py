@@ -28,6 +28,7 @@ class Comment(Base):
     distinguish_level=Column(Integer, default=0)
     parent_author_id=Column(Integer, ForeignKey(User.id))
     read=Column(Boolean, default=False)
+    is_deleted = Column(Boolean, default=False)
 
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
@@ -132,13 +133,13 @@ class Comment(Base):
 
     def rendered_comment(self, v=None, render_replies=True, standalone=False, level=1):
 
-        if self.is_banned:
+        if self.is_banned or self.is_deleted:
             if v:
                 if v.admin_level>1:
                     return render_template("single_comment.html", v=v, c=self, replies=self.replies)
                 
             if self.any_descendants_live:
-                return render_template("single_comment_banned.html", c=self, replies=self.replies)
+                return render_template("single_comment_removed.html", c=self, replies=self.replies)
             else:
                 return ""
 
