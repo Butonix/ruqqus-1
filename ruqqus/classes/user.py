@@ -128,7 +128,7 @@ class User(Base):
         
     def rendered_userpage(self, v=None):
 
-        if self.is_banned:
+        if self.is_banned and (not v or v.admin_level < 3):
             return render_template("userpage_banned.html", u=self, v=v)
 
         page=int(request.args.get("page","1"))
@@ -146,7 +146,7 @@ class User(Base):
 
     def rendered_comments_page(self, v=None):
 
-        if self.is_banned and (not v or v.admin_level <3):
+        if self.is_banned and (not v or v.admin_level < 3):
             return render_template("userpage_banned.html", u=self, v=v)
         
         page=int(request.args.get("page","1"))
