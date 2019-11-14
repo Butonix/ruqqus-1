@@ -13403,6 +13403,20 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   word-break: break-word;
 }
 
+blockquote {
+  border-left: 3px solid #603abb;
+  color: #603abb;
+  font-size: 1rem;
+  font-weight: 500;
+  background-color: #F1F1F1;
+  padding: 0.5rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+blockquote p {
+  margin-bottom: 0;
+}
+
 .modal .comment-actions .list-group-item {
   border: none;
   border-radius: 0.25rem;

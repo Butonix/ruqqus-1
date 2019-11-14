@@ -1379,6 +1379,20 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     word-break: break-word;
 }
 
+blockquote {
+    border-left: 3px solid $primary;
+    color: $primary;
+    font-size: 1rem;
+    font-weight: $font-weight-medium;
+    background-color: $gray-100;
+    padding: 0.5rem 0.25rem;
+    border-radius: $border-radius;
+}
+
+blockquote p {
+    margin-bottom: 0;
+}
+
 // Modal Comment Actions
 
 .modal .comment-actions .list-group-item {
