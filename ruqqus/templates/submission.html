@@ -329,7 +329,7 @@
             <input type="hidden" name="parent_fullname" value="t2_{{ p.base36id }}">
             <input type="hidden" name="submission" value="{{ p.base36id }}">
             {% if v %}
-            <textarea class="comment-box form-control rounded" name="body" form="reply-to-{{ p.fullname }}" aria-label="With textarea" placeholder="Add your comment..." rows="1"></textarea>
+            <textarea class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{ p.fullname }}" aria-label="With textarea" placeholder="Add your comment..." rows="1"></textarea>
             {% else %}
             <textarea class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="1" onclick="location.href='/login';"></textarea>
             {% endif %}
