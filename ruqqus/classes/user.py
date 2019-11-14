@@ -11,7 +11,6 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import lazy
 from .votes import Vote
-from .ips import IP
 from ruqqus.__main__ import Base, db, cache
 
 class User(Base):
@@ -31,7 +30,6 @@ class User(Base):
     most_recent_ip=Column(String, default=None)
     submissions=relationship("Submission", lazy="dynamic", backref="users")
     comments=relationship("Comment", lazy="dynamic", primaryjoin="Comment.author_id==User.id")
-    comment_notifications=relationship("Comment", lazy="dynamic", primaryjoin="Comment.parent_author_id==User.id")
     votes=relationship("Vote", lazy="dynamic", backref="users")
     commentvotes=relationship("CommentVote", lazy="dynamic", backref="users")
     ips = relationship('IP', lazy="dynamic", backref="users")
@@ -39,6 +37,8 @@ class User(Base):
     bio_html=deferred(Column(String, default=""))
     badges=relationship("Badge", lazy="dynamic", backref="user")
     real_id=Column(String, default=None)
+    notifications=relationship("Notification", lazy="dynamic", backref="user")
+    
 
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
@@ -175,39 +175,6 @@ class User(Base):
 
         return validate_hash(f"{session['session_id']}{self.id}", formkey)
     
-    def verify_username(self, username):
-        
-        #no reassignments allowed
-        if self.username_verified:
-            return render_template("settings.html", v=self, error="Your account has already validated its username.")
-        
-        #For use when verifying username with reddit
-        #Set username. Randomize username of any other existing account with same
-        try:
-            existing = db.query(User).filter_by(username=username).all()[0]
-
-            #No reassignments allowed
-            if existing.username_verified:
-                return render_template("settings.html", v=self, error="Another account has already validated that username.")
-                
-            # Rename new account to user_id
-            # guaranteed to be unique
-            existing.username=f"user_{existing.id}"
-            
-            db.add(existing)
-            db.commit()
-                                     
-        except IndexError:
-            pass
-                                      
-        self.username=username
-        self.username_verified=True
-        
-        db.add(self)
-        db.commit()
-
-        return render_template("settings.html", v=self, msg="Your account name has been updated and validated.")
-
     @property
     def url(self):
         return f"/u/{self.username}"
@@ -232,36 +199,38 @@ class User(Base):
 
         random.seed(f"{self.id}+{self.username}")
 
-        R=random.randint(16, 239)
-        G=random.randint(16, 239)
-        B=random.randint(16, 239)
+        R=random.randint(32, 223)
+        G=random.randint(32, 223)
+        B=random.randint(32, 223)
         
 
         return str(base_encode(R, 16))+str(base_encode(G, 16))+str(base_encode(B, 16))
 
-    def notifications_unread(self, page=1, include_read=False):
+    def notifications_page(self, page=1, include_read=False):
 
         page=int(page)
 
-        if include_read:
-            notifications=[c for c in self.comment_notifications.order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
-        else:
-            notifications=[c for c in self.comment_notifications.filter_by(read=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
+        notifications=self.notifications.filter_by(is_banned=False, is_deleted=False)
 
-                                 
-        for c in notifications:
-            if not c.read:
-                c.read=True
-                db.add(c)
+        if not include_read:
+            notifications=notifications.filter_by(read=False)
 
-        db.commit()
+        notifications = notifications.order_by(text("notifications.created_utc desc")).offset(25*(page-1)).limit(25)
 
-        return render_template("notifications.html", v=self, notifications=notifications)
+        comments=[n.comment for n in notifications]
+
+        for n in notifications:
+            if not n.read:
+                n.read=True
+                db.add(n)
+                db.commit()
+
+        return render_template("notifications.html", v=self, notifications=comments)
     
     @property
     def notifications_count(self):
 
-        return self.comment_notifications.filter_by(read=False, is_banned=False).count()
+        return self.notifications.filter_by(read=False, is_banned=False, is_deleted=False).count()
 
     @property
     def post_count(self):

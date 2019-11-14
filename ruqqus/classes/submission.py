@@ -22,6 +22,7 @@ class Submission(Base):
     url = Column(String(500), default=None)
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
+    is_deleted=Column(Boolean, default=False)
     distinguish_level=Column(Integer, default=0)
     created_str=Column(String(255), default=None)
     stickied=Column(Boolean, default=False)
