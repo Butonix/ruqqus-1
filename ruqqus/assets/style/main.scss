@@ -1380,13 +1380,14 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 blockquote {
-    border-left: 5px solid $primary;
+    border-left: 4px solid $primary;
     color: $primary;
     font-size: $font-size-base;
     font-weight: $font-weight-medium;
     background-color: rgba(96, 58, 187, 0.07);
     padding: 0.5rem 0.75rem;
     border-radius: $border-radius;
+    margin: 0.5rem 0rem 0.5rem 0.5rem;
 }
 
 blockquote p {
