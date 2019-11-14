@@ -116,7 +116,7 @@ def admin_level_required(x):
                              )
             
             if isinstance(response, tuple):
-                return response[0], 204
+                return response[0]
             else:
                 return response
 

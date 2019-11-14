@@ -132,18 +132,8 @@
   <td>Account Creation IP</td>
   <td>{{ u.creation_ip }}</td>
 </tr>
-<tr>
-  <td>Most Recent IP</td>
-  <td>{{ u.most_recent_ip }}</td>
-</tr>
 </table>
 <p>IPs:</p>
-<p>
-  {% set ips = u.ips | sort(attribute="created_utc", reverse=True) %}
-  {% for ip in ips[0:10] %}
-  <a href="/ip/{{ ip.ip }}">{{ ip.ip }}</a><br>
-  {% endfor %}
-</p>
 {% endif %}
 {% endblock %}
 
