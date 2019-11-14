@@ -49,64 +49,85 @@
 
 <div class="row justify-content-around mx-lg-5 d-block d-lg-none no-gutters">
   <div class="col bg-light border-bottom rounded-md p-3">
-    <div class="profile-details text-center mt-3">
-     <div class="profile-pic mb-3" style="background-color:#{{ u.color }}">
-      <span class="letter">{{ u.username[0]  }}</span>
-    </div>
-    <h1 class="h6 d-inline-block text-gray mb-3">@{{ u.username }}</h1>
-    <span>
-      {% if u.admin_level>=3 %}<i class="fad fa-badge-check text-primary text-lg ml-1" data-toggle="tooltip" data-placement="bottom" title="Admin"></i>{% endif %}
-      {% if u.real_id %}<span class="badge badge-pill text-white badge-info">{{ u.real_id }}</span>{% endif %}
-    </span>
-    <p class="text-muted text-small px-3">
-      {{ u.bio_html | safe }}
-    </p>
-    <div class="profile-actions d-inline-block">
-      {% if v and v.id != u.id %}
-      <!-- Modal -->
-      <i class="fas fa-ellipsis-h" data-toggle="modal" data-target="#profileModal"></i>
+    <div class="profile-details">
+      <div class="media">
+       <div class="profile-pic profile-pic-75 mr-3 mt-0" style="background-color:#{{ u.color }}">
+        <span class="letter">{{ u.username[0] }}</span>
+      </div>
+      <div class="media-body">
+        <h1 class="h6 d-inline-block">@{{ u.username }}</h1>
 
-      <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="Profile Actions" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title h6">More options</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true"><i class="far fa-times"></i></span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <div class="list-group">
-                <a href="/settings/profile#bio" class="list-group-item list-group-item-action"><i class="fas fa-paper-plane mr-2"></i>Message</a>
-                <a href="/settings/security" class="list-group-item list-group-item-action"><i class="fas fa-flag mr-2"></i>Flag</a>
+        <span>
+          {% if u.admin_level>=3 %}<i class="fad fa-badge-check text-primary ml-1" data-toggle="tooltip" data-placement="bottom" title="Admin"></i>{% endif %}
+          {% if u.real_id %}<span class="badge badge-pill text-white badge-info">{{ u.real_id }}</span>{% endif %}
+        </span>
+
+        {% if v and v.id != u.id %}
+        <div class="profile-actions d-inline-block">
+          <!-- Modal -->
+          <a href="#"><i class="fas fa-ellipsis-h ml-2" data-toggle="modal" data-target="#profileModal"></i></a>
+
+        </div>
+
+        <div class="modal fade text-left" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="Profile Actions" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title h6">More options</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true"><i class="far fa-times"></i></span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="list-group profile-actions">
+                  <li class="list-group-item"><a href="/settings/profile#bio" class="d-block"><i class="fas fa-paper-plane mr-2"></i>Message</a></li>
+                  <li class="list-group-item"><a href="/settings/security" class="d-block"><i class="fas fa-flag mr-2"></i>Flag</a></li>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      {% endif %}
-      {% if v and v.id == u.id %}
+        {% endif %}
 
-      <i class="fas fa-ellipsis-h" data-toggle="modal" data-target="#settingsModal"></i>
+        {% if u.bio_html %}
+        <p>
+          {{ u.bio_html | safe }}
+        </p>
+        {% endif %}
 
-      <!-- Modal -->
-      <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="Profile Actions" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-body">
-              <div class="list-group">
-                <a href="/settings/profile#bio" class="list-group-item list-group-item-action"><i class="fas fa-user-circle mr-2"></i>Edit profile</a>
-                <a href="/settings/security" class="list-group-item list-group-item-action"><i class="fas fa-cog mr-2"></i>Account details</a>
-              </div>
-            </div>
-          </div>
+        {% if v and v.id == u.id %}
+
+        <div>
+          <a href="/settings/profile#bio" class="btn btn-secondary btn-sm"><i class="fas fa-pen mr-2"></i>Edit profile</a>
         </div>
+
+        {% endif %}
+
       </div>
-      {% endif %} 
+
     </div>
 
   </div>
 </div>
+</div>
+
+<div class="row border-bottom d-block d-lg-none bg-light no-gutters">
+<div class="col">
+    <ul class="list-inline d-flex justify-content-around text-center py-2 mb-0">
+      <li class="list-inline-item">
+        <span class="text-small font-weight-bold">{{ u.karma }}</span>
+        <div class="text-small text-muted">Rep</div>
+      </li>
+      <li class="list-inline-item">
+        <span class="font-weight-bold">{{ u.comment_count }}</span>
+        <div class="text-small text-muted">Comment{{ 's' if u.comment_count!=1 else '' }}</div>
+      </li>
+      <li class="list-inline-item">
+        <span class="text-small font-weight-bold">{{ u.post_count }}</span>
+        <div class="text-small text-muted">Post{{ 's' if u.post_count!=1 else '' }}</div>
+      </li>
+    </ul>
+  </div>
 </div>
 
 
