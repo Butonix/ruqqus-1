@@ -19,6 +19,7 @@ _allowed_tags=tags=['a',
                     'li',
                     'ol',
                     'p',
+                    'pre',
                     'strong',
                     'ul',
                    ]
