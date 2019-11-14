@@ -197,28 +197,40 @@ def api_comment(v):
                                          ).first()
     if existing:
         return redirect(existing.permalink)
-    
+
+    #get parent item info
     parent_id=int(parent_fullname.split("_")[1], 36)
     if parent_fullname.startswith("t2"):
         parent=db.query(Submission).filter_by(id=parent_id).first()
     elif parent_fullname.startswith("t3"):
         parent=db.query(Comment).filter_by(id=parent_id).first()
 
-    if parent.is_banned:
+    #No commenting on deleted/removed things
+    if parent.is_banned or parent.is_deleted:
         abort(403)
 
-
+    #create comment
     c=Comment(author_id=v.id,
               body=body,
               body_html=body_html,
               parent_submission=parent_submission,
               parent_fullname=parent_fullname,
-              parent_author_id=parent.author.id if parent.author.id != v.id else None
               )
+
+
+        
 
     db.add(c)
     db.commit()
 
+    #create notification
+    if parent.author.id != v.id:
+        n=Notification(user_id=parent.author.id,
+                       comment_id=c.id)
+        db.add(n)
+        db.commit()
+
+    #create auto upvote
     vote=CommentVote(user_id=v.id,
                      comment_id=c.id,
                      vote_type=1

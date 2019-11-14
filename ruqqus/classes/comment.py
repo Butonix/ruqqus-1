@@ -181,3 +181,26 @@ class Comment(Base):
             years=now.tm_year-ctd.tm_year
             return f"{years} year{'s' if years>1 else ''} ago"
 
+
+class Notification(Base):
+
+    __tablename__="notifications"
+
+    id=Column(Integer, primary_key=True)
+    user_id=Column(Integer, ForeignKey("users.id"))
+    comment_id=Column(Integer, ForeignKey("comments.id"))
+    read=Column(Boolean, default=False)
+
+    #Server side computed values (copied from corresponding comment)
+    created_utc=Column(Integer, server_default=FetchedValue())
+    is_banned=Column(Boolean, server_default=FetchedValue())
+    is_deleted=Column(Boolean, server_default=FetchedValue())
+
+    def __repr__(self):
+
+        return f"<Notification(id={self.id})"
+
+    @property
+    def comment(self):
+
+        return db.query(Comment).filter_by(id=self.comment_id).first()
