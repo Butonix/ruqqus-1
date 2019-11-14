@@ -13408,10 +13408,15 @@ blockquote {
   color: #603abb;
   font-size: 1rem;
   font-weight: 500;
-  background-color: rgba(96, 58, 187, 0.07);
-  padding: 0.5rem 0.75rem;
+  background-color: #f4effa;
   border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
   margin: 0.5rem 0rem 0.5rem 0.5rem;
+}
+
+blockquote > blockquote {
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 blockquote p {
