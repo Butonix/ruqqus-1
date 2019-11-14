@@ -217,13 +217,15 @@ class User(Base):
 
         notifications = notifications.order_by(text("notifications.created_utc desc")).offset(25*(page-1)).limit(25)
 
+        comments=[n.comment for n in notifications]
+
         for n in notifications:
             if not n.read:
                 n.read=True
                 db.add(n)
-        db.commit()
+                db.commit()
 
-        return render_template("notifications.html", v=self, notifications=[n.comment for n in notifications])
+        return render_template("notifications.html", v=self, notifications=comments)
     
     @property
     def notifications_count(self):
