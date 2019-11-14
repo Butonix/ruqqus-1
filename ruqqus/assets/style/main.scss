@@ -635,7 +635,7 @@ ol > li::before {
     color: $black;
     background-color: #ffffff;
     outline: 0;
-    border-color: $gray-400;
+    border-color: $primary;
     box-shadow: none;
 }
 
@@ -653,7 +653,6 @@ label {
     font-size: 12px;
     letter-spacing: 0.5px;
     color: $black;
-    pointer-events: none;
 }
 
 #login label {
