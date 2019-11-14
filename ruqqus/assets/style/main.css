@@ -13404,11 +13404,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 blockquote {
-  border-left: 3px solid #603abb;
+  border-left: 5px solid #603abb;
   color: #603abb;
   font-size: 1rem;
   font-weight: 500;
-  background-color: #F1F1F1;
+  background-color: rgba(96, 58, 187, 0.07);
   padding: 0.5rem 0.75rem;
   border-radius: 0.25rem;
 }
