@@ -232,7 +232,6 @@ def api_comment(v):
 
 
 @app.route("/edit_comment", methods=["POST"])
-@auth_required
 @is_not_banned
 @validate_formkey
 def edit_comment(v):
@@ -242,11 +241,16 @@ def edit_comment(v):
     body_md = mistletoe.markdown(body)
     body_html = sanitize(body_md, linkgen=True)
 
-    c = db.query(Comment).filter_by(id=comment_id,
-                                    author_id=v.id).first()
+    c = db.query(Comment).filter_by(id=comment_id).first()
 
     if not c:
         abort(404)
+
+    if not c.author_id == v.id:
+        abort(403)
+
+    if c.is_banned or c.is_deleted:
+        abort(403)
 
     c.body=body
     c.body_html=body_html
@@ -256,5 +260,23 @@ def edit_comment(v):
     db.commit()
 
 
+@app.route("/delete/comment/<cid>", methods=["POST"])
+@auth_required
+@validate_formkey
+def delete_comment(cid, v):
 
+    c=db.query(Comment).filter_by(id=cid).first()
+
+    if not c:
+        abort(404)
+
+    if not c.author_id==v.id:
+        abort(403)
+
+    c.is_deleted=True
+
+    db.add(c)
+    db.commit()
+
+    return redirect(c.permalink)
 
