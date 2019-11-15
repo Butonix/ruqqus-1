@@ -1350,8 +1350,13 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     margin-top: 1.5rem;
 }
 
-#notifications .comment:first-child, #userpage .comment:first-child {
-    margin-top: 0;
+#notifications .comment, #userpage .comment {
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+#notifications .comment:last-child, #userpage .comment:last-child {
+    margin-bottom: 0;
 }
 
 .comment .comment-profile {
@@ -1372,6 +1377,27 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .comment .comment-body p.text {
     margin-bottom: 1rem;
     word-break: break-word;
+}
+
+blockquote {
+    border-left: 4px solid $primary;
+    color: $primary;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    background-color: #f4effa;
+    border-radius: $border-radius;
+    padding: 0.5rem 0.75rem;
+    margin: 0.5rem 0rem 1rem 0.5rem;
+}
+
+blockquote > blockquote {
+    padding: 0;
+    margin: 0;
+    border-left: none;
+}
+
+blockquote p {
+    margin-bottom: 0;
 }
 
 // Modal Comment Actions
@@ -1556,6 +1582,7 @@ ul.comment-section {
     border-left: none;
     color: $gray-500;
     top: 3px;
+    left: -3px;
     font-size: 10px;
 }
 

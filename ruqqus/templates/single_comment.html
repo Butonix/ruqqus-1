@@ -7,6 +7,12 @@
 {% set adjust=0 %}
 {% endif %}
 
+{% if standalone %}
+<div class="post-info font-weight-bold">
+<span class="align-top"><a href="{{ c.post.permalink }}">{{ c.post.title }}</a></span>
+</div>
+{% endif %}
+
 <div id="comment-{{ c.base36id }}" class="comment rounded">
 
 
@@ -15,12 +21,6 @@
     <div class="comment-body">
 
         <div id="comment-{{ c.base36id }}-only" {% if c.distinguish_level>=3 %}class="distinguish-admin"{% elif c.distinguish_level %}class="distinguish-mod"{% elif c.author_id==c.post.author_id %}class="distinguish-op"{% elif c.is_banned %}class="banned"{% endif %}>
-
-            {% if standalone %}
-            <div class="post-info">
-                <a class="text-small" href="{{ c.post.permalink }}">{{ c.post.title }}</a>
-            </div>
-            {% endif %}
 
             <div class="user-info">
                 <a href="{{ c.author.permalink }}" class="user-name">{{ c.author.username }}</a>

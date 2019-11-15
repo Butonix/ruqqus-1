@@ -24,23 +24,31 @@
     <script src="/assets/js/comment_modding.js"></script>
     {% endblock %}
 
-    {% if v %}
+  {% if v %}
 
-    <script>
-        function post(url, callback, errortext) {
-          var xhr = new XMLHttpRequest();
-          xhr.open("POST", url, true);
-          var form = new FormData()
-          form.append("formkey", "{{ v.formkey }}");
-          xhr.withCredentials=true;
-          xhr.onload=callback
-          xhr.onerror=function(){alert(errortext)}
-          xhr.send(form);
-      }
-      function formkey() {
-          return '{{ v.formkey }}';
-      }
+  <script>
+    function post(url, callback, errortext) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", url, true);
+      var form = new FormData()
+      form.append("formkey", "{{ v.formkey }}");
+      xhr.withCredentials=true;
+      xhr.onload=callback
+      xhr.onerror=function(){alert(errortext)}
+      xhr.send(form);
+    }
+    function formkey() {
+      return '{{ v.formkey }}';
+    }
   </script>
+
+  <script src="/assets/js/voting.js"></script>
+  <script src="/assets/js/comment_replies.js"></script>
+
+  {% if v.admin_level %}
+  <script src="/assets/js/comment_modding.js"></script>
+  <script src="/assets/js/post_modding.js"></script>
+  {% endif %}
 
   {% endif %}
 
@@ -136,6 +144,20 @@
 
     </div>
 
+</div>
+
+<!-- Clipboard Toast -->
+
+<div class="toast clipboard" id="toast-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-success text-center text-white">
+    <i class="fas fa-check-circle mr-2"></i>Link copied to clipboard
+  </div>
+</div>
+
+<div class="toast clipboard" id="toast-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-danger text-center text-white">
+    <i class="fas fa-exclamation-circle mr-2"></i>Unable to copy link
+  </div>
 </div>
 
 <footer class="footer py-5">
