@@ -23,10 +23,11 @@ valid_password_regex=re.compile("^.{8,}$")
 @app.route("/login", methods=["GET"])
 @auth_desired
 def login_get(v):
-    if v:
-        return redirect("/")
 
-    redir=request.args.get("redirect",None)
+
+    redir=request.args.get("redirect","/")
+    if v:
+        return redirect(redir)
     
 
     return render_template("login.html",
