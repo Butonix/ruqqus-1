@@ -286,13 +286,13 @@
 
 </div>
 
-<div class="row no-gutters">
+<div class="row justify-content-center no-gutters">
 
-  <div class="col-12">
+  <div class="col-8">
 
     {% if u.post_count>=1 %}
     {% else %}
-    <div class="text-center py-7 py-md-8">
+    <div class="text-center py-5">
 
       <img src="/assets/images/illustrations/searching.png" class="empty-state-img mb-3" alt="empty state">
 
@@ -314,6 +314,8 @@
 </div>
 {% endblock %}
 
+
+{% if u.post_count>=1 %}
 {% block pagenav %}
 <nav aria-label="Page navigation">
   <ul class="pagination pagination-sm py-3 pl-3 mb-0">
@@ -326,3 +328,4 @@
   </ul>
 </nav>
 {% endblock %}
+{% endif %}
