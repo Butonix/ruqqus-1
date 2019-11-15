@@ -55,7 +55,7 @@ def login_post():
 
         #check for previous page
 
-        redir=request.form.get("redirect", None)
+        redir=request.form.get("redirect", "/")
         if redir:
             return redirect(redir)
         else:
@@ -221,7 +221,7 @@ def sign_up_post(v):
     session["user_id"]=new_user.id
     session["session_id"]=token_hex(16)
 
-    redir=request.form.get("redirect")
+    redir=request.form.get("redirect", None)
     if redir:
         return redirect(redir)
     else:
