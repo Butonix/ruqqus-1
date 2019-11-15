@@ -13411,7 +13411,7 @@ blockquote {
   background-color: #f4effa;
   border-radius: 0.25rem;
   padding: 0.5rem 0.75rem;
-  margin: 0.5rem 0rem 0.5rem 0.5rem;
+  margin: 0.5rem 0rem 1rem 0.5rem;
 }
 
 blockquote > blockquote {
