@@ -13,8 +13,9 @@ def frontlist(sort="hot", page=1):
 
     cutoff=int(time.time())-(60*60*24*30)
 
-    posts = db.query(Submission).filter(Submission.created_utc>=cutoff,
+    posts = db.query(Submission).filter(#Submission.created_utc>=cutoff,
                                         Submission.is_banned==False,
+                                        Submission.is_deleted==False,
                                         Submission.stickied==False)
 
     if sort=="hot":
