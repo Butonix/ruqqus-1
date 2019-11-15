@@ -1,12 +1,14 @@
 from urllib.parse import urlparse
 import mistletoe
 from sqlalchemy import func
+from bs4 import BeautifulSoup
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.filters import *
 from ruqqus.helpers.embed import *
+from ruqqus.helpers.markdown import *
 from ruqqus.classes import *
 from flask import *
 from ruqqus.__main__ import app, db
@@ -130,7 +132,9 @@ def submit_post(v):
     #now make new post
 
     body=request.form.get("body","")
-    body_md=mistletoe.markdown(body)
+
+    with UserRenderer() as renderer:
+        body_md=renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
 
     #check for embeddable video
@@ -159,22 +163,6 @@ def submit_post(v):
     db.commit()
 
     return redirect(new_post.permalink)
-
-@app.route("/ip/<addr>", methods=["GET"])
-@admin_level_required(4)
-def ip_address(addr, v):
-
-    #Restricted to trust+safety ranks and above (admin level 4)
-
-    user_ids=[]
-    for ip in db.query(IP).filter_by(ip=addr).all():
-        if ip.user_id not in user_ids:
-            user_ids.append(ip.user_id)
-            
-    users=[db.query(User).filter_by(id=x).first() for x in user_ids]
-    users.sort(key=lambda x: x.username)
-
-    return render_template("ips.html", addr=addr, users=users, v=v)    
     
 @app.route("/api/comment", methods=["POST"])
 @is_not_banned
@@ -184,9 +172,10 @@ def api_comment(v):
     parent_submission=base36decode(request.form.get("submission"))
     parent_fullname=request.form.get("parent_fullname")
 
-    #sanitize
+    #process and sanitize
     body=request.form.get("body","")
-    body_md=mistletoe.markdown(body)
+    with UserRenderer() as renderer:
+        body_md=renderer.render(mistletoe.Document(body))
     body_html=sanitize(body_md, linkgen=True)
 
     #check existing
@@ -223,12 +212,28 @@ def api_comment(v):
     db.add(c)
     db.commit()
 
-    #create notification
+    notify_users=set()
+
+    #queue up notification for parent author
     if parent.author.id != v.id:
-        n=Notification(user_id=parent.author.id,
-                       comment_id=c.id)
+        notify_users.add(parent.author.id)
+
+    #queue up notifications for username mentions
+    soup=BeautifulSoup(c.body_html)
+    mentions=soup.find_all("a", href=re.compile("/u/(\w+)"), limit=3)
+    for mention in mentions:
+        username=mention["href"].split("/u/")[1]
+        user=db.query(User).filter_by(username=username).first()
+        if user:
+            notify_users.add(user.id)
+
+
+    for id in notify_users:
+        n=Notification(comment_id=c.id,
+                       user_id=id)
         db.add(n)
-        db.commit()
+    db.commit()
+                           
 
     #create auto upvote
     vote=CommentVote(user_id=v.id,
@@ -250,7 +255,8 @@ def edit_comment(v):
 
     comment_id = request.form.get("id")
     body = request.form.get("comment", "")
-    body_md = mistletoe.markdown(body)
+    with UserRenderer() as renderer:
+        body_md=renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
 
     c = db.query(Comment).filter_by(id=comment_id).first()
