@@ -129,6 +129,7 @@ class Submission(Base):
     def author(self):
         return db.query(User).filter_by(id=self.author_id).first()
 
+
     @property
     @lazy
     def domain(self):
