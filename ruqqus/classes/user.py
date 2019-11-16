@@ -57,7 +57,9 @@ class User(Base):
     @property
     @cache.memoize(timeout=60)
     def karma(self):
-        return self.energy
+
+        #limit negative rep to -1
+        return max(self.energy, -1)
 
 
     @property
