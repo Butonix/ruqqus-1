@@ -16,7 +16,7 @@ from secrets import token_hex
 from ruqqus.mail import *
 from ruqqus.__main__ import app
 
-valid_username_regex=re.compile("^\w{5,}$")
+valid_username_regex=re.compile("^\w{5,25}$")
 valid_password_regex=re.compile("^.{8,}$")
 
 #login form
