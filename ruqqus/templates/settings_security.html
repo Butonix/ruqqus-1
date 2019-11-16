@@ -158,7 +158,7 @@
                                         <input class="form-control" id="new_email" placeholder="{{ v.email }}"
                                             aria-describedby="new_email" type="email" name="new_email" required>
                                             {% if not v.is_activated %}
-                                            <div class="text-danger text-small-extra mt-1" id="email-verify-text">Email not verified. <u><a href="javascript:void(0)" onclick="post('/api/verify_email');emailVerifyText();" class="text-danger">Verify now.</a></u></div>
+                                            <div class="text-danger text-small-extra mt-1" id="email-verify-text">Email not verified. You will not be able to recover your account with this email until you verify it. <u><a href="javascript:void(0)" onclick="post('/api/verify_email');emailVerifyText();" class="text-danger">Verify now.</a></u></div>
                                             {% endif %}
 
                                     </div>

@@ -283,7 +283,7 @@ def edit_comment(v):
         body_md=renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
 
-    c = db.query(Comment).filter_by(id=comment_id).first()
+    c = db.query(Comment).filter_by(id=base36decode(comment_id)).first()
 
     if not c:
         abort(404)
@@ -307,7 +307,7 @@ def edit_comment(v):
 @validate_formkey
 def delete_comment(cid, v):
 
-    c=db.query(Comment).filter_by(id=cid).first()
+    c=db.query(Comment).filter_by(id=base36decode(cid)).first()
 
     if not c:
         abort(404)
