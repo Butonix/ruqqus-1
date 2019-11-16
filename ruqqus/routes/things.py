@@ -13,6 +13,10 @@ from ruqqus.classes import *
 from flask import *
 from ruqqus.__main__ import app, db
 
+BAN_REASONS=['',
+            "URL shorteners are not permitted."
+            ]
+
 @app.route("/api/is_available/<name>", methods=["GET"])
 def api_is_available(name):
     if db.query(User.username).filter(User.username.ilike(name)).count():
@@ -112,11 +116,6 @@ def submit_post(v):
     if not (parsed_url.scheme and parsed_url.netloc) and not request.form.get("body"):
         return render_template("submit.html", v=v, error="Please enter a URL or some text.")
 
-    reason=filter_post(url)
-    if reason:
-        return render_template("submit.html",v=v, error=reason)
-        
-
     #sanitize title
     title=sanitize(title, linkgen=False)
 
@@ -128,6 +127,28 @@ def submit_post(v):
 
     if dup:
         return redirect(dup.permalink)
+
+    
+    #check for domain specific rules
+
+    domain=urlparse(url).netloc
+
+    ##all possible subdomains
+    parts=domain.split(".")
+    domains=[]
+    for i in range(len(parts)):
+        new_domain=parts[i]
+        for j in range(i+1, len(parts)):
+            new_domain+="."+parts[j]
+
+        domains.append(new_domain)
+        
+    domain_obj=db.query(Domain).filter(Domain.domain.in_(domains)).first()
+
+    if domain_obj:
+        if not domain_object.can_submit:
+            return render_template("submit.html",v=v, error=BAN_REASONS[domain_obj.reason])
+
 
     #now make new post
 
@@ -142,13 +163,16 @@ def submit_post(v):
     embed=""
     if domain.endswith(("youtube.com","youtu.be")):
         embed=youtube_embed(url)
+
+    
     
     new_post=Submission(title=title,
                         url=url,
                         author_id=v.id,
                         body=body,
                         body_html=body_html,
-                        embed_url=embed
+                        embed_url=embed,
+                        domain_ref=domain_obj.id if domain_obj else None
                         )
 
     db.add(new_post)

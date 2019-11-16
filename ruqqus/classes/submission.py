@@ -11,6 +11,7 @@ from ruqqus.helpers.lazy import lazy
 from ruqqus.__main__ import Base, db, cache
 from .user import User
 from .votes import Vote
+from .domains import Domain
 
 class Submission(Base):
 
@@ -30,6 +31,8 @@ class Submission(Base):
     body=Column(String(2000), default="")
     body_html=Column(String(2200), default="")
     embed_url=Column(String(256), default="")
+    domain_ref=Column(Integer, ForeignKey("domains.id"))
+
 
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
@@ -56,6 +59,15 @@ class Submission(Base):
     @cache.memoize(timeout=60)
     def rank_hot(self):
         return (self.ups-self.downs)/(((self.age+100000)/6)**(1/3))
+
+    @property
+    #@cache.memoize(timeout=60)
+    def domain_obj(self):
+        if not self.domain_ref:
+            return None
+        
+        return db.query(Domain).filter_by(id=self.domain_ref).first()
+
 
     @property
     @cache.memoize(timeout=60)
@@ -106,15 +118,16 @@ class Submission(Base):
         self.tree_comments(comment=comment)
         
         #return template
+
+        if self.domain_obj:
+
+            print(f"anon exempt policy: {self.domain_obj.anon_free_embed}")
         return render_template(template, v=v, p=self, sort_method=request.args.get("sort","Hot").capitalize())
 
     @property
     @lazy
     def author(self):
-        if self.author_id==0:
-            return None
-        else:
-            return db.query(User).filter_by(id=self.author_id).first()
+        db.query(User).filter_by(id=self.author_id).first()
 
     @property
     @lazy
