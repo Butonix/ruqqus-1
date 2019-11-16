@@ -152,7 +152,6 @@ class Comment(Base):
         return randint(a,b)
     
     @property
-    @lazy
     def age_string(self):
 
         age=self.age

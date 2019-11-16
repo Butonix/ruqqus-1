@@ -224,7 +224,6 @@ class Submission(Base):
         
 
     @property
-    @lazy
     def created_date(self):
 
         return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
