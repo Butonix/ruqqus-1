@@ -20,7 +20,7 @@
 
     <div class="comment-body">
 
-        <div id="comment-{{ c.base36id }}-only" {% if c.distinguish_level>=3 %}class="distinguish-admin"{% elif c.distinguish_level %}class="distinguish-mod"{% elif c.author_id==c.post.author_id %}class="distinguish-op"{% elif c.is_banned %}class="banned"{% endif %}>
+        <div id="comment-{{ c.base36id }}-only" class="{% if c.distinguish_level>=3 %} distinguish-admin{% elif c.distinguish_level %} distinguish-mod{% elif c.author_id==c.post.author_id %} distinguish-op{% endif %}{% if c.is_banned %} banned{% endif %}">
 
             <div class="user-info">
                 <a href="{{ c.author.permalink }}" class="user-name">{{ c.author.username }}</a>
