@@ -146,7 +146,7 @@ def submit_post(v):
     domain_obj=db.query(Domain).filter(Domain.domain.in_(domains)).first()
 
     if domain_obj:
-        if not domain_object.can_submit:
+        if not domain_obj.can_submit:
             return render_template("submit.html",v=v, error=BAN_REASONS[domain_obj.reason])
 
 
