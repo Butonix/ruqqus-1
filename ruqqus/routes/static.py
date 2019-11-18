@@ -65,6 +65,10 @@ def submit_get(v):
     return render_template("submit.html", v=v)
 
 @app.route("/about/<path:path>")
-@auth_desired
 def about_path(path, v):
-    return render_template(safe_join("about", path+".html"), v=v)
+    return redirect(f"/help/{path}")
+
+@app.route("/help/<path:path>")
+@auth_desired
+def help_path(path, v):
+    return render_template(safe_join("hep", path+".html"), v=v)

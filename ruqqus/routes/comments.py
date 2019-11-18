@@ -51,6 +51,12 @@ def api_comment(v):
         body_md=renderer.render(mistletoe.Document(body))
     body_html=sanitize(body_md, linkgen=True)
 
+    #Run safety filter
+    ban=filter_comment_html(body_html)
+
+    if ban:
+        abort(422)
+
     #check existing
     existing=db.query(Comment).filter_by(author_id=v.id,
                                          body=body,
