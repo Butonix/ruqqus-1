@@ -1,16 +1,16 @@
 // Colors
 
 $primary: #603abb;
-$dark: #1F2041;
+$dark: #23183E;
 $secondary: #EAEAEA;
 $danger: #F05D5E;
 $white: #ffffff;
-$black: #1E1E24;
+$black: #1F1F1F;
 $light: #FAFAFA;
 $success: #23CE6B;
 
 
-$purple: #311C49;
+$purple: #603abb;
 $red:  #F05D5E;
 $gray: #5F5F5F;
 $green: #23CE6B;
@@ -1562,7 +1562,7 @@ ul.comment-section {
     content: "";
     position: absolute;
     font-family: "Font Awesome 5 Pro";
-    border-left: 2px solid #E0E0E0;
+    border-left: 2px solid $gray-100;
     font-size: $font-size-base;
     color: $purple;
     display: inline-block;
