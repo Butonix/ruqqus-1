@@ -15,7 +15,7 @@ def search(v):
 
     
 
-    posts = db.query(Submission).filter_by(is_banned=False, is_deleted=False).filter(Submission.title.contains(query))
+    posts = db.query(Submission).filter_by(is_banned=False, is_deleted=False).filter(Submission.title.func.lower().contains(query.lower()))
 
     if sort=="hot":
         posts=posts.order_by(text("submissions.rank_hot desc"))
