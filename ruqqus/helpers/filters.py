@@ -6,6 +6,11 @@ from urllib.parse import urlparse
 from ruqqus.classes import Domain
 from ruqqus.__main__ import db, app
 
+reasons=[
+    '',
+    "No url shorteners allowed"
+    ]
+
 def filter_comment_html(html_text):
 
     
@@ -29,9 +34,10 @@ def filter_comment_html(html_text):
                 domain_list.add(new_domain)
         
 
-    #search db for options
-    
+    #search db for domain rules that prohibit commenting
     ban=db.query(Domain).filter_by(can_comment==False).filter(Domain.domain.in_(list(x))).first()
 
     if ban:
-        abort(400)
+        return reasons[ban.reason]
+    else:
+        return None
