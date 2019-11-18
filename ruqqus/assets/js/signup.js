@@ -29,6 +29,8 @@ $('#username-register').on('input', function () {
 
     var ruqqusAPI = 'https://www.ruqqus.com/api/is_available/' + charCount;
 
+    if (charCount.length >= 5) {
+
     $.getJSON(ruqqusAPI, function(result) {
         $.each(result, function(i, field) {
           if (field == false) {
@@ -36,6 +38,8 @@ $('#username-register').on('input', function () {
         }
     });
     });
+
+}
 
     if (!/[^a-zA-Z0-9_$]/.test(charCount)) {
     // Change alert text
