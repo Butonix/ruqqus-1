@@ -135,16 +135,21 @@ class User(Base):
 
         page=int(request.args.get("page","1"))
         page=max(page, 1)
+
         
         if v:
             if v.admin_level or v.id==self.id:
-                listing=[p for p in self.submissions.order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
+                listing=[p for p in self.submissions.order_by(text("created_utc desc")).offset(25*(page-1)).limit(26)]
             else:
-                listing=[p for p in self.submissions.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
+                listing=[p for p in self.submissions.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(26)]
         else:
-            listing=[p for p in self.submissions.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]  
+            listing=[p for p in self.submissions.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(26)]
 
-        return render_template("userpage.html", u=self, v=v, listing=listing, page=page)
+        #we got 26 items just to see if a next page exists
+        next_exists=(len(listing)==26)
+        listing=listing[0:25]
+
+        return render_template("userpage.html", u=self, v=v, listing=listing, page=page, next_exists=next_exists)
 
     def rendered_comments_page(self, v=None):
 
@@ -155,13 +160,17 @@ class User(Base):
 
         if v:
             if v.admin_level or v.id==self.id:
-                listing=[p for p in self.comments.order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
+                listing=[p for p in self.comments.order_by(text("created_utc desc")).offset(25*(page-1)).limit(26)]
             else:
-                listing=[p for p in self.comments.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
+                listing=[p for p in self.comments.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(26)]
         else:
-            listing=[p for p in self.comments.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(25)]
+            listing=[p for p in self.comments.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(26)]
 
-        return render_template("userpage_comments.html", u=self, v=v, listing=listing)
+        #we got 26 items just to see if a next page exists
+        next_exists=(len(listing)==26)
+        listing=listing[0:25]
+        
+        return render_template("userpage_comments.html", u=self, v=v, listing=listing, page=page, next_exists=next_exists)
 
     @property
     def formkey(self):

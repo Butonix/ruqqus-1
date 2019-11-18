@@ -15,70 +15,6 @@ from ruqqus.__main__ import app, db
 from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 
-BAN_REASONS=['',
-            "URL shorteners are not permitted."
-            ]
-
-@app.route("/api/is_available/<name>", methods=["GET"])
-def api_is_available(name):
-    if db.query(User.username).filter(User.username.ilike(name)).count():
-        return jsonify({name:False})
-    else:
-        return jsonify({name:True})
-
-
-@app.route("/u/<username>", methods=["GET"])
-@app.route("/u/<username>/posts", methods=["GET"])
-@auth_desired
-def u_username(username, v=None):
-    
-    #username is unique so at most this returns one result. Otherwise 404
-    
-    #case insensitive search
-
-    result = db.query(User).filter(User.username.ilike(username)).first()
-
-    if not result:
-        abort(404)
-
-    #check for wrong cases
-
-    if username != result.username:
-        return redirect(result.url)
-        
-    return result.rendered_userpage(v=v)
-
-@app.route("/u/<username>/comments", methods=["GET"])
-@auth_desired
-def u_username_comments(username, v=None):
-    
-    #username is unique so at most this returns one result. Otherwise 404
-    
-    #case insensitive search
-
-    result = db.query(User).filter(User.username.ilike(username)).first()
-
-    if not result:
-        abort(404)
-
-    #check for wrong cases
-
-    if username != result.username:
-        return redirect(result.url)
-        
-    return result.rendered_comments_page(v=v)
-
-@app.route("/post/<base36id>", methods=["GET"])
-@auth_desired
-def post_base36id(base36id, v=None):
-    
-    base10id = base36decode(base36id)
-    
-    post=db.query(Submission).filter_by(id=base10id).first()
-    if not post:
-        abort(404)
-        
-    return post.rendered_page(v=v)
 
 @app.route("/post/<p_id>/comment/<c_id>", methods=["GET"])
 @auth_desired
@@ -101,95 +37,6 @@ def post_pid_comment_cid(p_id, c_id, v=None):
         
     return post.rendered_page(v=v, comment=comment)
 
-
-@app.route("/submit", methods=['POST'])
-@is_not_banned
-@validate_formkey
-def submit_post(v):
-
-    title=request.form.get("title","")
-
-    url=request.form.get("url","")
-
-    if len(title)<10:
-        return render_template("submit.html", v=v, error="Please enter a better title.")
-
-    parsed_url=urlparse(url)
-    if not (parsed_url.scheme and parsed_url.netloc) and not request.form.get("body"):
-        return render_template("submit.html", v=v, error="Please enter a URL or some text.")
-
-    #sanitize title
-    title=sanitize(title, linkgen=False)
-
-    #check for duplicate
-    dup = db.query(Submission).filter_by(title=title,
-                                         author_id=v.id,
-                                         url=url
-                                         ).first()
-
-    if dup:
-        return redirect(dup.permalink)
-
-    
-    #check for domain specific rules
-
-    domain=urlparse(url).netloc
-
-    ##all possible subdomains
-    parts=domain.split(".")
-    domains=[]
-    for i in range(len(parts)):
-        new_domain=parts[i]
-        for j in range(i+1, len(parts)):
-            new_domain+="."+parts[j]
-
-        domains.append(new_domain)
-        
-    domain_obj=db.query(Domain).filter(Domain.domain.in_(domains)).first()
-
-    if domain_obj:
-        if not domain_obj.can_submit:
-            return render_template("submit.html",v=v, error=BAN_REASONS[domain_obj.reason])
-
-
-    #now make new post
-
-    body=request.form.get("body","")
-
-    with UserRenderer() as renderer:
-        body_md=renderer.render(mistletoe.Document(body))
-    body_html = sanitize(body_md, linkgen=True)
-
-    #check for embeddable video
-    domain=parsed_url.netloc
-    embed=""
-    if domain.endswith(("youtube.com","youtu.be")):
-        embed=youtube_embed(url)
-
-    
-    
-    new_post=Submission(title=title,
-                        url=url,
-                        author_id=v.id,
-                        body=body,
-                        body_html=body_html,
-                        embed_url=embed,
-                        domain_ref=domain_obj.id if domain_obj else None
-                        )
-
-    db.add(new_post)
-
-    db.commit()
-
-    vote=Vote(user_id=v.id,
-              vote_type=1,
-              submission_id=new_post.id
-              )
-    db.add(vote)
-    db.commit()
-
-    return redirect(new_post.permalink)
-    
 @app.route("/api/comment", methods=["POST"])
 @is_not_banned
 @validate_formkey
@@ -271,7 +118,6 @@ def api_comment(v):
     db.commit()
 
     return redirect(f"{c.post.permalink}#comment-{c.base36id}")
-                                         
 
 
 @app.route("/edit_comment", methods=["POST"])
@@ -303,7 +149,6 @@ def edit_comment(v):
     db.add(c)
     db.commit()
 
-
 @app.route("/delete/comment/<cid>", methods=["POST"])
 @auth_required
 @validate_formkey
@@ -323,7 +168,6 @@ def delete_comment(cid, v):
     db.commit()
 
     return redirect(c.permalink)
-
 
 @app.route('/feeds/<sort>')
 def feeds(sort=None):
