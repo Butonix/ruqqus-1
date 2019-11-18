@@ -12931,8 +12931,7 @@ a:hover .link-arrow {
   opacity: 0.8;
 }
 
-#frontpage .pseudo-submit-form.card,
-#search .pseudo-submit-form.card {
+#frontpage .pseudo-submit-form.card, #search .search-results.card {
   border-width: 0 0 1px 0;
   border-color: #E6E6E6;
   border-top-left-radius: 0.25rem;
@@ -12942,19 +12941,16 @@ a:hover .link-arrow {
   background-color: #ffffff;
 }
 
-#frontpage .pseudo-submit-form.card .card-body,
-#search .pseudo-submit-form.card .card-body {
+#frontpage .pseudo-submit-form.card .card-body, #search .search-results.card .card-body {
   padding-left: 15px;
   padding-right: 15px;
 }
 
-#frontpage .pseudo-submit-form.card .card-body .form-control,
-#search .pseudo-submit-form.card .card-body .form-control {
+#frontpage .pseudo-submit-form.card .card-body .form-control {
   background-color: #F1F1F1;
 }
 
-#frontpage .pseudo-submit-form.card .card-body .form-control:hover, #frontpage .pseudo-submit-form.card .card-body .form-control:active, #frontpage .pseudo-submit-form.card .card-body .form-control:focus,
-#search .pseudo-submit-form.card .card-body .form-control:hover, #search .pseudo-submit-form.card .card-body .form-control:active, #search .pseudo-submit-form.card .card-body .form-control:focus {
+#frontpage .pseudo-submit-form.card .card-body .form-control:hover, #frontpage .pseudo-submit-form.card .card-body .form-control:active, #frontpage .pseudo-submit-form.card .card-body .form-control:focus {
   background-color: #ffffff;
 }
 
@@ -13136,8 +13132,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-radius: 50rem;
 }
 
-#frontpage .posts .card, #userpage .posts .card,
-#search .posts .card {
+#frontpage .posts .card, #userpage .posts .card, #search .posts .card, #userpage .posts .card {
   border-width: 0 0 1px 0;
   border-color: #E6E6E6;
   border-style: solid;
@@ -13145,8 +13140,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   padding: 15px;
 }
 
-#frontpage .posts .card:hover, #userpage .posts .card:hover,
-#search .posts .card:hover {
+#frontpage .posts .card:hover, #userpage .posts .card:hover, #search .posts .card:hover, #userpage .posts .card:hover {
   background-color: #F1F1F1;
 }
 
@@ -13174,7 +13168,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   width: fit-content;
 }
 
-#frontpage .posts .card .card-footer, #userpage .posts .card .card-footer, #thread .card .card-footer {
+#frontpage .posts .card .card-footer, #userpage .posts .card .card-footer, #thread .card .card-footer, #search .posts .card .card-footer {
   border: 0;
   background-color: transparent;
   padding: 0;
@@ -14699,22 +14693,19 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     background-color: #ffffff;
   }
 
-  #frontpage .posts .card:last-of-type,
-#search .posts .card:last-of-type {
+  #frontpage .posts .card:last-of-type, #search .posts .card:last-of-type {
     border-bottom: 1px solid #E6E6E6;
   }
 
-  #frontpage .posts .card:hover,
-#search .posts .card:hover {
+  #frontpage .posts .card:hover, #search .posts .card:hover {
     background-color: transparent;
   }
 
-  #frontpage .posts .card .post-img,
-#search .posts .card .post-img {
+  #frontpage .posts .card .post-img, #search .posts .card .post-img {
     z-index: 3;
   }
 
-  #frontpage .posts .card.enlarged .post-img-lg, #userpage .posts .card.enlarged .post-img-lg, #search .posts .card.enlarged .post-img-lg {
+  #frontpage .posts .card.enlarged .post-img-lg, #userpage .posts .card.enlarged .post-img-lg, #frontpage .posts .card.enlarged .post-img-lg, #search .posts .card.enlarged .post-img-lg {
     display: block;
   }
 
