@@ -13,9 +13,9 @@ def search(v):
     
     page=max(1, int(request.args.get("page", 1)))
 
-    term="%"+query+"%"
+    
 
-    posts = db.query(Submission).filter_by(is_banned=False, is_deleted=False).filter(Submission.title.ilike(term))
+    posts = db.query(Submission).filter_by(is_banned=False, is_deleted=False).filter(Submission.title.contains(query))
 
     if sort=="hot":
         posts=posts.order_by(text("submissions.rank_hot desc"))
