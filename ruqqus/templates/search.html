@@ -1,0 +1,167 @@
+{% extends "default.html" %}
+
+{% block pagetype %}search{% endblock %}
+
+{% block title %}
+<title>Search Ruqqus</title> <!-- include dynamic jinja-generated text in title -->
+<meta name="description" content="">
+{% endblock %}
+
+{% block enlargeThumbJS %}
+<script src="/assets/js/enlarge_thumb.js"></script>
+{% endblock %}
+
+{% block fixedMobileBarJS %}
+<script>
+  var prevScrollpos = window.pageYOffset;
+  window.onscroll = function () {
+    var currentScrollPos = window.pageYOffset;
+    if (prevScrollpos > currentScrollPos) {
+      document.getElementById("fixed-bar-mobile").style.top = "49px";
+    } 
+    else if (currentScrollPos <= 125) {
+      document.getElementById("fixed-bar-mobile").style.top = "49px";
+    }
+    else {
+      document.getElementById("fixed-bar-mobile").style.top = "-98px";
+      document.getElementById("dropdownMenuSortBy").classList.remove('show');
+      document.getElementById("dropdownMenuFrom").classList.remove('show');
+    }
+    prevScrollpos = currentScrollPos;
+  }
+</script>
+{% endblock %}
+
+
+
+{% block content %}
+<!-- Search text -->
+
+<div class="row no-gutters">
+
+  <div class="col">
+    <div class="card pseudo-submit-form">
+      <div class="card-header bg-white d-none">
+        <ul class="list-inline no-bullets mb-0">
+          <li class="list-inline-item active mr-4"><i class="fas fa-align-left text-gray-400"></i></li>
+          <li class="list-inline-item"><i class="fas fa-link text-gray-400"></i></li>
+        </ul>
+      </div>
+      <div class="card-body">
+        <div class="pl-md-3">
+          <div class="text-muted text-small mb-1">Showing {{ listing | length }} of {{ total }} results for</div>
+          <h1 class="h5 mb-0">{{ query }}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Post filters bar visible only on medium devices or larger-->
+
+<div class="flex-row tab-bar sticky d-none d-md-flex">
+
+  <ul class="nav post-nav mr-auto">
+    <li class="nav-item">
+      <a class="nav-link{% if sort_method=="top" %} active{% endif %}" href="?sort=top&q={{ query | urlencode }}"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link{% if sort_method=="new" %} active{% endif %}" href="?sort=new&q={{ query | urlencode }}"><i class="fas fa-asterisk"></i>New</a> 
+    </li>
+    <li class="nav-item">
+      <a class="nav-link{% if sort_method=="fiery" %} active{% endif %}" href="?sort=fiery&q={{ query | urlencode }}"><i class="fas fa-bullhorn"></i>Disputed</a>
+    </li>
+  </ul>
+
+  <div class="post-filter pb-2 d-none">
+    <span>Sort By:</span>
+    <span class="dropdown">
+      <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      Time
+    </a>
+
+    <span class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMenuLink">
+      <a class="dropdown-item" href="#">Day</a>
+      <a class="dropdown-item" href="#">Month</a>
+      <a class="dropdown-item" href="#">Year</a>
+      <a class="dropdown-item" href="#">All Time</a>
+    </span>
+  </span>
+
+</div>
+
+</div>
+
+<div class="row no-gutters">
+
+  <div class="col-12">
+
+    <div class="posts">
+
+      {% include "submission_listing.html" %}
+
+    </div>
+  </div>
+</div>
+
+<div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 49px; transition: top 0.3s;">
+
+  <div class="col">
+
+    <div class="d-flex flex-row flex-nowrap justify-content-between">
+
+      <div class="post-filter">
+        <span>Sort By:</span>
+        <span class="dropdown">
+          <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">{{ sort_method.capitalize() }}</a>
+
+          <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
+            <a class="dropdown-item" href="?sort=hot">Hot</a>
+	    <a class="dropdown-item" href="?sort=top">Top</a>
+            <a class="dropdown-item" href="?sort=new">New</a>
+            <a class="dropdown-item" href="?sort=fiery">Disputed</a>
+          </span>
+        </span>
+
+      </div>
+
+      <div class="post-filter d-none">
+        <span>From:</span>
+        <span class="dropdown">
+          <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">Time</a>
+
+          <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
+            <a class="dropdown-item" href="#">Past Day</a>
+            <a class="dropdown-item" href="#">Past Month</a>
+            <a class="dropdown-item" href="#">Past Year</a>
+            <a class="dropdown-item" href="#">All Time</a>
+          </span>
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block pagenav %}
+<nav aria-label="Page navigation">
+  <ul class="pagination pagination-sm py-3 pl-3 mb-0">
+    <li class="page-item{% if page==1 %} disabled{% endif %}">
+      <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page-1 }}" tabindex="-1"{% if page==1 %} aria-disabled="true"{% endif %}>Back</a></small>
+    </li>
+    <li class="page-item{% if not next_exists %} disabled{% endif %}">
+      <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page+1 }}">Next</a></small>
+    </li>
+  </ul>
+</nav>
+{% endblock %}
