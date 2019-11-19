@@ -75,7 +75,7 @@
       <div class="modal-body">
         <ul class="list-group post-actions">
           <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
-          <li class="list-group-item"><a href="#" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
+          <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
           {% if v %}
           {% if v.admin_level >=1 %}
           {% if p.is_banned %}
@@ -96,7 +96,7 @@
 <div class="sidebar-section sidebar-post-meta">
   <div class="body">
     <div class="score">{{ score }} point{{ 's' if score !=1 else '' }}<span class="score-percent ml-2" id="score-percent"></span></div>
-    <div class="progress mt-2" style="height: 6px;">
+    <div class="progress mt-1" style="height: 6px;">
       <div class="d-none" id="p-ups">{{ p.ups }}</div>
       <div class="d-none" id="p-downs">{{ p.downs }}</div>
       <div class="d-none" id="progressbar-value">{{ p.score_percent }}</div>
@@ -104,7 +104,7 @@
       aria-valuenow="{{ p.score_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
     <div class="submission-date mt-3">Submitted on:<span class="date"> {{ p.created_date }}</span></div>
-    <div class="shortlink">Shortlink:<span class="link"></span> <input type="text" readonly="readonly" value="https://ruqq.us/{{ p.base36id }}"></input></div>
+    <div class="shortlink mt-1">Shortlink:<span class="link"></span> <input type="text" class="form-control form-control-sm w-75 d-md-inline-block" readonly value="https://ruqq.us/{{ p.base36id }}"></input></div>
   </div>
 </div>
 {% endblock %}
@@ -128,7 +128,7 @@
           aria-labelledby="dropdownMoreLink">
           <a href="javascript:void(0);" role="button" class="dropdown-item copy-link" data-clipboard-text="https://www.ruqqus.com{{ p.permalink }}"><i class="fas fa-link"></i>Copy link</a>
           <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
-          <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Flag</a>
+          <a class="dropdown-item d-none" href="#"><i class="fas fa-flag"></i>Flag</a>
           {% if v %}
           {% if v.admin_level >=1 %}
           {% if p.is_banned %}

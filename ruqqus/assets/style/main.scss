@@ -26,6 +26,8 @@ $upvote: #603abb;
 $downvote: #48A9A6;
 $admin: #F05D5E;
 $banned: #FF9999;
+$deleted: #ffff99;
+$deletedandbanned: #ffcc99;
 $mod: #07c20c;
 
 $gold: #ddbd37;
@@ -819,7 +821,8 @@ label.terms {
     color: $downvote !important;
 }
 
-.banned .score {		
+.banned .score,
+.deleted .score {		
     color: $gray-300 !important;		
 }
 
@@ -1143,11 +1146,23 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     margin-bottom: 0;
 }
 
-// Modal Post Actions
+// Modals (post actions, delete confirmations)
 
 .modal-header {
+    border-bottom: 1px solid $border-color;
+    background-color: $white;
+}
+
+.modal-content {
     border: none;
-    background-color: $gray-100;
+    box-shadow: $box-shadow;
+}
+
+.modal-footer {
+    border: none;
+    background-color: $gray-200;
+    border-bottom-right-radius: $border-radius;
+    border-bottom-left-radius: $border-radius;
 }
 
 .modal .post-actions .list-group-item {
@@ -2372,7 +2387,15 @@ span.green {
 
 div.banned {
   background-color: $banned;
-}	  
+}
+
+div.deleted {
+  background-color: $deleted;
+}  
+
+div.deleted.banned {
+  background-color: $deletedandbanned
+}
 			
 .distinguish-admin .user-name, .distinguish-mod   .user-name {		
   color: white;		

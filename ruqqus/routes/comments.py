@@ -165,6 +165,9 @@ def delete_comment(cid, v):
     if not c:
         abort(404)
 
+    print(c.author_id)
+    print(v.id)
+
     if not c.author_id==v.id:
         abort(403)
 
@@ -173,7 +176,7 @@ def delete_comment(cid, v):
     db.add(c)
     db.commit()
 
-    return redirect(c.permalink)
+    return "", 204
 
 @app.route('/feeds/<sort>')
 def feeds(sort=None):

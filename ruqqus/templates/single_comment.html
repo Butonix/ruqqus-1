@@ -9,7 +9,7 @@
 
 {% if standalone %}
 <div class="post-info font-weight-bold">
-<span class="align-top"><a href="{{ c.post.permalink }}">{{ c.post.title }}</a></span>
+    <span class="align-top"><a href="{{ c.post.permalink }}">{{ c.post.title }}</a></span>
 </div>
 {% endif %}
 
@@ -20,7 +20,7 @@
 
     <div class="comment-body">
 
-        <div id="comment-{{ c.base36id }}-only" class="{% if c.distinguish_level>=3 %} distinguish-admin{% elif c.distinguish_level %} distinguish-mod{% elif c.author_id==c.post.author_id %} distinguish-op{% endif %}{% if c.is_banned %} banned{% endif %}">
+        <div id="comment-{{ c.base36id }}-only" class="{% if c.distinguish_level>=3 %} distinguish-admin{% elif c.distinguish_level %} distinguish-mod{% elif c.author_id==c.post.author_id %} distinguish-op{% endif %}{% if c.is_banned %} banned{% endif %}{% if c.is_deleted %} deleted{% endif %}">
 
             <div class="user-info">
                 <a href="{{ c.author.permalink }}" class="user-name">{{ c.author.username }}</a>
@@ -81,7 +81,12 @@
                       <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
                         <a class="dropdown-item" href="{{ c.parent.permalink }}"><i class="fas fa-dna"></i>Parent</a>
                         <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Flag</a>
+                        <a class="dropdown-item d-none" href="#"><i class="fas fa-flag"></i>Flag</a>
+
+                        {% if v and c.author_id==v.id %}
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteModal-{{ c.base36id }}"><i class="fas fa-trash-alt"></i>Delete</a>
+                        {% endif %}
+
                         {% if v %}
                         {% if v.admin_level>=1 and v.id==c.author_id %}
                         {% if c.distinguish_level %}
@@ -103,7 +108,7 @@
                         {% endif %}
                         {% endif %}
                         {% endif %}
-                        
+
                     </div>
                 </div>
             </li>
@@ -167,7 +172,11 @@
             <li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-clipboard-text="https://www.ruqqus.com{{ c.permalink }}"><i class="fas fa-link"></i><span>Share</span></a>
                 <li class="list-group-item"><a class="d-block" href="{{ c.parent.permalink }}"><i class="fas fa-dna"></i>Parent</a></li>
                 <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
-                <li class="list-group-item"><a href="#" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
+                <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
+
+                {% if v and c.author_id==v.id %}
+                <li class="list-group-item"><a class="d-block" href="#" data-toggle="modal" data-dismiss="modal" data-target="#deleteModal-{{ c.base36id }}"><i class="fas fa-trash-alt"></i>Delete</a></li>
+                {% endif %}
 
                 {% if v %}
                 {% if v.admin_level>=1 and v.id==c.author_id %}
@@ -192,5 +201,28 @@
     </div>
 </div>
 </div>
+
+{% if v and v.id==c.author_id %}
+<!-- Delete Comment Modal -->
+<div class="modal fade" id="deleteModal-{{ c.base36id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <div class="my-2" style="font-size: 4rem;">
+            <i class="fad fa-trash-alt text-muted"></i>
+        </div>
+        <div class="h5">Delete comment?</div>
+        <p class="text-muted text-small">Your comment will be removed everywhere on Ruqqus, including your profile. This action cannot be undone. </p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
+        <a href="javascript:void(0)" class="btn btn-danger" onclick="post('/delete/comment/{{ c.base36id }}', callback=function(){window.location.reload(true)})">Yes, delete
+        </a>
+    </div>
+</div>
+</div>
+</div>
+
+{% endif %}
 
 </div>

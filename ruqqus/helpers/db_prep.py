@@ -101,6 +101,7 @@ def prep_database():
       SELECT COUNT(*)
       FROM comments
       WHERE is_banned=false
+        AND is_deleted=false
         AND parent_submission = $1.id
       '
     LANGUAGE SQL
@@ -167,6 +168,7 @@ def prep_database():
       FROM submissions
       WHERE submissions.author_id=$1.id
         AND submissions.is_banned=false
+        AND submissions.is_deleted=false
       ),
       0
       )
@@ -217,3 +219,5 @@ def prep_database():
     conn.commit()
     c.close()
     conn.close()
+
+prep_database()

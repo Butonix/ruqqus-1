@@ -132,12 +132,11 @@ class Comment(Base):
     def rendered_comment(self, v=None, render_replies=True, standalone=False, level=1):
 
         if self.is_banned or self.is_deleted:
-            if v:
-                if v.admin_level>1:
-                    return render_template("single_comment.html", v=v, c=self, replies=self.replies)
+            if v and v.admin_level>1:
+                return render_template("single_comment.html", v=v, c=self, replies=self.replies, render_replies=render_replies, standalone=standalone, level=level)
                 
-            if self.any_descendants_live:
-                return render_template("single_comment_removed.html", c=self, replies=self.replies)
+            elif self.any_descendants_live:
+                return render_template("single_comment_removed.html", c=self, replies=self.replies, render_replies=render_replies, standalone=standalone, level=level)
             else:
                 return ""
 

@@ -12873,7 +12873,8 @@ label.terms {
   color: #48A9A6 !important;
 }
 
-.banned .score {
+.banned .score,
+.deleted .score {
   color: #E0E4E9 !important;
 }
 
@@ -13179,8 +13180,20 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .modal-header {
+  border-bottom: 1px solid #E6E6E6;
+  background-color: #ffffff;
+}
+
+.modal-content {
   border: none;
-  background-color: #F1F1F1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.modal-footer {
+  border: none;
+  background-color: #EBE9EF;
+  border-bottom-right-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
 }
 
 .modal .post-actions .list-group-item {
@@ -14806,6 +14819,14 @@ span.green {
 
 div.banned {
   background-color: #FF9999;
+}
+
+div.deleted {
+  background-color: #ffff99;
+}
+
+div.deleted.banned {
+  background-color: #ffcc99;
 }
 
 .distinguish-admin .user-name, .distinguish-mod .user-name {
