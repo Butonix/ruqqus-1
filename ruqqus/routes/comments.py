@@ -98,7 +98,7 @@ def api_comment(v):
         notify_users.add(parent.author.id)
 
     #queue up notifications for username mentions
-    soup=BeautifulSoup(c.body_html)
+    soup=BeautifulSoup(c.body_html, features="html.parser")
     mentions=soup.find_all("a", href=re.compile("/u/(\w+)"), limit=3)
     for mention in mentions:
         username=mention["href"].split("/u/")[1]
