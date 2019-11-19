@@ -116,7 +116,8 @@ def sign_up_get(v):
     ref = request.args.get("ref",None)
     if ref:
         ref_user = db.query(User).filter(User.username.ilike(ref)).first()
-        
+    else:
+        ref_user=None
 
     return render_template("sign_up.html",
                            formkey=formkey,
@@ -212,7 +213,7 @@ def sign_up_post(v):
                       email=request.form.get("email"),
                       created_utc=int(time.time()),
                       creation_ip=request.remote_addr,
-                      referred_by=ref_user
+                      referred_by=ref_user.id
                  )
 
     except Exception as e:
