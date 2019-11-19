@@ -203,7 +203,7 @@ def sign_up_post(v):
 
     #get referral
     ref_id = int(request.form.get("referred_by", None))
-    ref_user=db.query(User).filter_by(id=ref_id).first():
+    ref_user=db.query(User).filter_by(id=ref_id).first()
         
     #make new user
     try:
