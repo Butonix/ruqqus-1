@@ -180,7 +180,7 @@ def prep_database():
 
     c.execute("""
     CREATE OR REPLACE FUNCTION referral_count(users)
-    RETURN int AS'
+    RETURNS int AS'
         SELECT COUNT(*)
         FROM USERS
         WHERE users.ban_state>=0
