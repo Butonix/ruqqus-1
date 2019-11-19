@@ -42,6 +42,7 @@ class User(Base):
 
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
+    referral_count=deferred(Column(Integer, server_default=FetchedValue()))
 
     def __init__(self, **kwargs):
 

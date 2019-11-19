@@ -178,6 +178,18 @@ def prep_database():
     RETURNS NULL ON NULL INPUT
     """)
 
+    c.execute("""
+    CREATE OR REPLACE FUNCTION referral_count(users)
+    RETURN int AS'
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE users.ban_state>=0
+        AND users.referred_by=$1.id
+    '
+    LANGUAGE SQL
+    IMMUTABLE
+    RETURNS NULL ON NULL INPUT;
+    """)
 
     ##c.execute("""
     ##CREATE OR REPLACE FUNCTION overview(users)

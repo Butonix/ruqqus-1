@@ -70,7 +70,11 @@
 
                         <div id="register-form" class="">
 
-                            <h1 class="h4 font-weight-normal text-center mb-md-5">Create your account.</h1>
+                            {% if ref_user %}
+				<h1 class="h4 font-weight-normal text-center mb-md-5">@{{ ref_user.username }} wants you to make a ruqqus.</h1>
+			    {% else %}
+				<h1 class="h4 font-weight-normal text-center mb-md-5">Create your account.</h1>
+			    {% endif %}
 
                             <form action="/signup" method="post" class="mt-md-3" id="signup">
 
@@ -79,6 +83,7 @@
                                 <input type="hidden" name="formkey" value="{{ formkey }}">
                                 <input type="hidden" name="now" value="{{ now }}">
 				<input type="hidden" name="redirect" value="{{ redirect }}">
+				<input type="hidden" name="referred_by" value="{{ ref_user.id }}">
 
                                 <label for="username" class="mt-3">Username</label>
 

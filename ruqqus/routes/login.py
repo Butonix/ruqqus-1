@@ -110,13 +110,20 @@ def sign_up_get(v):
                        ).hexdigest()
 
     redir = request.args.get("redirect",None)
+
+    #check for referral in link
+    ref_id=None
+    ref = request.args.get("ref",None)
+    if ref:
+        ref_user = db.query(User).filter(User.username.ilike(ref)).first()
         
 
     return render_template("sign_up.html",
                            formkey=formkey,
                            now=now,
                            i=image,
-                           redirect=redir
+                           redirect=redir,
+                           ref_user=ref_user
                            )
 
 #signup api
@@ -193,14 +200,20 @@ def sign_up_post(v):
     
     #kill tokens
     session.pop("signup_token")
-    
+
+    #get referral
+    ref_user = int(request.form.get("referred_by", None))
+    if not db.query(User).filter_by(id=ref_user).first():
+        ref_user=None
+        
     #make new user
     try:
         new_user=User(username=request.form.get("username"),
                       password=request.form.get("password"),
                       email=request.form.get("email"),
                       created_utc=int(time.time()),
-                      creation_ip=request.remote_addr
+                      creation_ip=request.remote_addr,
+                      referred_by=ref_user
                  )
 
     except Exception as e:
