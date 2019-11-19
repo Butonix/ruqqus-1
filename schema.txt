@@ -45,8 +45,8 @@ CREATE TABLE public.comments (
 CREATE FUNCTION public.age(public.comments) RETURNS integer
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-  SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
-  $_$;
+      SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
+      $_$;
 
 
 --
@@ -81,8 +81,8 @@ CREATE TABLE public.submissions (
 CREATE FUNCTION public.age(public.submissions) RETURNS integer
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-  SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
-  $_$;
+      SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
+      $_$;
 
 
 --
@@ -92,11 +92,12 @@ CREATE FUNCTION public.age(public.submissions) RETURNS integer
 CREATE FUNCTION public.comment_count(public.submissions) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-  SELECT COUNT(*)
-  FROM comments
-  WHERE is_banned=false
-    AND parent_submission = $1.id
-  $_$;
+      SELECT COUNT(*)
+      FROM comments
+      WHERE is_banned=false
+        AND is_deleted=false
+        AND parent_submission = $1.id
+      $_$;
 
 
 --
@@ -130,14 +131,14 @@ $_$;
 CREATE FUNCTION public.downs(public.comments) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-  SELECT COUNT(*)
-  FROM commentvotes
-  LEFT JOIN users
-  ON commentvotes.user_id = users.id
-  WHERE users.ban_state>-1
-    AND commentvotes.vote_type=-1
-    AND commentvotes.comment_id=$1.id
-  $_$;
+      SELECT COUNT(*)
+      FROM commentvotes
+      LEFT JOIN users
+      ON commentvotes.user_id = users.id
+      WHERE users.ban_state>-1
+        AND commentvotes.vote_type=-1
+        AND commentvotes.comment_id=$1.id
+      $_$;
 
 
 --
@@ -147,14 +148,14 @@ CREATE FUNCTION public.downs(public.comments) RETURNS bigint
 CREATE FUNCTION public.downs(public.submissions) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-  SELECT COUNT(*)
-  FROM votes
-  LEFT JOIN users
-  ON votes.user_id = users.id
-  WHERE users.ban_state>-1
-    AND votes.vote_type=-1
-    AND votes.submission_id=$1.id
-  $_$;
+      SELECT COUNT(*)
+      FROM votes
+      LEFT JOIN users
+      ON votes.user_id = users.id
+      WHERE users.ban_state>-1
+        AND votes.vote_type=-1
+        AND votes.submission_id=$1.id
+      $_$;
 
 
 --
@@ -187,16 +188,17 @@ CREATE TABLE public.users (
 CREATE FUNCTION public.energy(public.users) RETURNS numeric
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
- SELECT COALESCE(
- (
-  SELECT SUM(submissions.score)
-  FROM submissions
-  WHERE submissions.author_id=$1.id
-    AND submissions.is_banned=false
-  ),
-  0
-  )
-$_$;
+     SELECT COALESCE(
+     (
+      SELECT SUM(submissions.score)
+      FROM submissions
+      WHERE submissions.author_id=$1.id
+        AND submissions.is_banned=false
+        AND submissions.is_deleted=false
+      ),
+      0
+      )
+    $_$;
 
 
 --
@@ -241,8 +243,8 @@ CREATE FUNCTION public.rank_fiery(public.comments) RETURNS double precision
 CREATE FUNCTION public.rank_fiery(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-  SELECT SQRT(CAST(($1.ups * $1.downs) AS float))/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.0/3.0))
-  $_$;
+      SELECT SQRT(CAST(($1.ups * $1.downs) AS float))/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.0/3.0))
+      $_$;
 
 
 --
@@ -263,8 +265,8 @@ CREATE FUNCTION public.rank_hot(public.comments) RETURNS double precision
 CREATE FUNCTION public.rank_hot(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-  SELECT CAST(($1.ups - $1.downs) AS float)/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.0/3.0))
-  $_$;
+      SELECT CAST(($1.ups - $1.downs) AS float)/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.0/3.0))
+      $_$;
 
 
 --
@@ -285,8 +287,8 @@ CREATE FUNCTION public.score(public.comments) RETURNS bigint
 CREATE FUNCTION public.score(public.submissions) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-  SELECT ($1.ups - $1.downs)
-  $_$;
+      SELECT ($1.ups - $1.downs)
+      $_$;
 
 
 --
@@ -308,12 +310,12 @@ CREATE TABLE public.images (
 CREATE FUNCTION public.splash(text) RETURNS SETOF public.images
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-  SELECT *
-  FROM images
-  WHERE state=$1
-  ORDER BY random()
-  LIMIT 1
-$_$;
+      SELECT *
+      FROM images
+      WHERE state=$1
+      ORDER BY random()
+      LIMIT 1
+    $_$;
 
 
 --
@@ -323,14 +325,14 @@ $_$;
 CREATE FUNCTION public.ups(public.comments) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-  SELECT COUNT(*)
-  FROM commentvotes
-  LEFT JOIN users
-  ON commentvotes.user_id = users.id
-  WHERE users.ban_state>-1
-    AND commentvotes.vote_type=1
-    AND commentvotes.comment_id=$1.id
-  $_$;
+      SELECT COUNT(*)
+      FROM commentvotes
+      LEFT JOIN users
+      ON commentvotes.user_id = users.id
+      WHERE users.ban_state>-1
+        AND commentvotes.vote_type=1
+        AND commentvotes.comment_id=$1.id
+      $_$;
 
 
 --
@@ -340,14 +342,14 @@ CREATE FUNCTION public.ups(public.comments) RETURNS bigint
 CREATE FUNCTION public.ups(public.submissions) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-  SELECT COUNT(*)
-  FROM votes
-  LEFT JOIN users
-  ON votes.user_id = users.id
-  WHERE users.ban_state>-1
-    AND votes.vote_type=1
-    AND votes.submission_id=$1.id
-  $_$;
+      SELECT COUNT(*)
+      FROM votes
+      LEFT JOIN users
+      ON votes.user_id = users.id
+      WHERE users.ban_state>-1
+        AND votes.vote_type=1
+        AND votes.submission_id=$1.id
+      $_$;
 
 
 --
