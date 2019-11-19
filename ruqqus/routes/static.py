@@ -71,4 +71,4 @@ def about_path(path, v):
 @app.route("/help/<path:path>")
 @auth_desired
 def help_path(path, v):
-    return render_template(safe_join("hep", path+".html"), v=v)
+    return render_template(safe_join("help", path+".html"), v=v)
