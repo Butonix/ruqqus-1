@@ -49,9 +49,14 @@ def login_post():
     #test password
     if account.verifyPass(request.form.get("password")):
 
-        #set session user id
+        #set session and user id
         session["user_id"]=account.id
         session["session_id"]=token_hex(16)
+
+        #account history
+        past_accs=set(session.get("history", []))
+        past_accs.add(account.id)
+        session["history"]=list(past_accs)
 
         #check for previous page
 
