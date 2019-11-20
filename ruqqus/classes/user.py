@@ -243,6 +243,7 @@ class User(Base):
         return self.notifications.filter_by(read=False, is_banned=False, is_deleted=False).count()
 
     @property
+    @cache.memoize(timeout=60)
     def post_count(self):
 
         return self.submissions.filter_by(is_banned=False).count()
@@ -251,7 +252,7 @@ class User(Base):
     @cache.memoize(timeout=60) 
     def comment_count(self):
 
-        return self.comments.filter_by(is_banned=False).count()
+        return self.comments.filter_by(is_banned=False, is_deleted=False).count()
 
     @property
     #@cache.memoize(timeout=60)
