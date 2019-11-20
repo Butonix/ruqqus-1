@@ -35,6 +35,7 @@ def nofollow(attrs, new=False):
     domain=urlparse.parse(attrs["href"])
     if not domain.endswith(("ruqqus.com","ruqq.us")):
         attrs[(None, "rel")]="nofollow"
+        attrs[(None, "target")]="_blank"
     return attrs
 
 _clean_wo_links = bleach.Cleaner(tags=_allowed_tags,
