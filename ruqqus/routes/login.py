@@ -208,7 +208,8 @@ def sign_up_post(v):
     session.pop("signup_token")
 
     #get referral
-    ref_id = int(request.form.get("referred_by", None))
+    ref_id = int(request.form.get("referred_by", 0))
+    ref_id=None if not ref_id else ref_id
     ref_user=db.query(User).filter_by(id=ref_id).first()
         
     #make new user
