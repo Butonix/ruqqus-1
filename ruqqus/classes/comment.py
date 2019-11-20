@@ -110,7 +110,6 @@ class Comment(Base):
             return db.query(Comment).filter_by(parent_fullname=self.fullname).all()
 
     @property
-    @lazy
     def permalink(self):
 
         return f"/post/{self.post.base36id}/comment/{self.base36id}"
