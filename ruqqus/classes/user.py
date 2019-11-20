@@ -38,7 +38,7 @@ class User(Base):
     badges=relationship("Badge", lazy="dynamic", backref="user")
     real_id=Column(String, default=None)
     notifications=relationship("Notification", lazy="dynamic", backref="user")
-    
+    referred_by=Column(Integer, default=None)    
 
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
