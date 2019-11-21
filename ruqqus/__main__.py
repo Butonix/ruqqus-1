@@ -38,6 +38,8 @@ Markdown(app)
 
 cache=Cache(app)
 
+limit_url=environ.get("HEROKU_REDIS_PURPLE_URL", environ.get("HEROKU_REDIS_ORANGE_URL"))
+
 limiter = Limiter(
     app,
     key_func=get_remote_address,
