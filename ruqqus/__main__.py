@@ -56,7 +56,6 @@ Base = declarative_base()
 import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
-#import ruqqus.helpers.db_prep
 
 if __name__ == "__main__":
 
