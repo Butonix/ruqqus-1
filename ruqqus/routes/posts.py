@@ -11,7 +11,7 @@ from ruqqus.helpers.embed import *
 from ruqqus.helpers.markdown import *
 from ruqqus.classes import *
 from flask import *
-from ruqqus.__main__ import app, db
+from ruqqus.__main__ import app, db, limiter
 
 BAN_REASONS=['',
             "URL shorteners are not permitted."
@@ -38,6 +38,7 @@ def post_base36id(base36id, v=None):
 
 
 @app.route("/submit", methods=['POST'])
+@limiter.limit("2/minute")
 @is_not_banned
 @validate_formkey
 def submit_post(v):

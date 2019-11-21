@@ -1,6 +1,9 @@
 from os import environ
 from flask import *
 from flask_caching import Cache
+from from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
@@ -28,6 +31,11 @@ app.config["CACHE_DEFAULT_TIMEOUT"]=60
 
 Markdown(app)
 cache=Cache(app)
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["60/minute"]
+)
 
 #setup db
 _engine = create_engine(environ.get("DATABASE_URL"))

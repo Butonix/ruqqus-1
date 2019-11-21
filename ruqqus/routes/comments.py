@@ -11,7 +11,7 @@ from ruqqus.helpers.embed import *
 from ruqqus.helpers.markdown import *
 from ruqqus.classes import *
 from flask import *
-from ruqqus.__main__ import app, db
+from ruqqus.__main__ import app, db, limiter
 from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 
@@ -38,6 +38,7 @@ def post_pid_comment_cid(p_id, c_id, v=None):
     return post.rendered_page(v=v, comment=comment)
 
 @app.route("/api/comment", methods=["POST"])
+@limiter.limit("10/minute")
 @is_not_banned
 @validate_formkey
 def api_comment(v):
