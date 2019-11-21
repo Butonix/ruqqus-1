@@ -10,12 +10,16 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import *
 
+from werkzeug.contrib.fixers import ProxyFix
+
 _version = "0.5.0"
 
 app = Flask(__name__,
             template_folder='./templates',
             static_folder='./static'
            )
+app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
@@ -36,7 +40,7 @@ cache=Cache(app)
 
 limiter = Limiter(
     app,
-    key_func=lambda:session["session_id"],
+    key_func=get_remote_addr,
     default_limits=["60/minute"],
     storage_uri=environ.get("HEROKU_REDIS_PURPLE_URL"),
     headers_enabled=True,
