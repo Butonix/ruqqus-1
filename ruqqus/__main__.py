@@ -1,4 +1,5 @@
 from os import environ
+import secrets
 from flask import *
 from flask_caching import Cache
 from flask_limiter import Limiter
@@ -30,10 +31,12 @@ app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL")
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 
 Markdown(app)
+
 cache=Cache(app)
+
 limiter = Limiter(
     app,
-    key_func=get_remote_address,
+    key_func=lambda:session["session_id"],
     default_limits=["60/minute"],
     storage_uri=environ.get("HEROKU_REDIS_PURPLE_URL"),
     headers_enabled=True,
@@ -63,6 +66,9 @@ else:
         if request.url.startswith('http://') and "localhost" not in app.config["SERVER_NAME"]:
             url = request.url.replace('http://', 'https://', 1)
             return redirect(url, code=301)
+
+        if not session.get("session_id"):
+            session["session_id"]=secrets.token_hex(16)
 
         db.rollback()
 
