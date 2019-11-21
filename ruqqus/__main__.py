@@ -1,7 +1,7 @@
 from os import environ
 from flask import *
 from flask_caching import Cache
-from from flask_limiter import Limiter
+from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 from flaskext.markdown import Markdown
