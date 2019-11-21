@@ -33,7 +33,6 @@ class User(Base):
     comments=relationship("Comment", lazy="dynamic", primaryjoin="Comment.author_id==User.id")
     votes=relationship("Vote", lazy="dynamic", backref="users")
     commentvotes=relationship("CommentVote", lazy="dynamic", backref="users")
-    ips = relationship('IP', lazy="dynamic", backref="users")
     bio=deferred(Column(String, default=""))
     bio_html=deferred(Column(String, default=""))
     badges=relationship("Badge", lazy="dynamic", backref="user")
@@ -277,8 +276,8 @@ class User(Base):
     @property
     def alts(self):
 
-        alts1=db.query(User).join(Alt, Alt.user2==User.id).filter(Alt.user1==self.id).all()
-        alts2=db.query(User).join(Alt, Alt.user1==User.id).filter(Alt.user2==self.id).all()
+        alts1=db.query(User).join(Alt, Alt.user2==User.id).filter_by(Alt.user1=self.id).all()
+        alts2=db.query(User).join(Alt, Alt.user1==User.id).filter_by(Alt.user2=self.id).all()
 
         return list(set([x for x in alts1]+[y for y in alts2]))
         
