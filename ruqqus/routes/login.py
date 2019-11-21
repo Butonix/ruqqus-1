@@ -125,7 +125,7 @@ def sign_up_get(v):
     else:
         ref_user=None
 
-    if ref_user and (ref_user.id in session["history"]):
+    if ref_user and (ref_user.id in session.get("history", [])):
         return render_template("sign_up_failed_ref.html",
                                i=random_image())
     
