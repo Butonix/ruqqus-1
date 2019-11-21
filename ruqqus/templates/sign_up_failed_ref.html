@@ -70,7 +70,8 @@
 
                         <div id="register-form" class="">
 				<h1 class="h4 font-weight-normal text-center mb-md-5">Whoops! You can't refer yourself!</h1>
-				<h1 class="h4 font-weight-normal text-center mb-md-5">Send this link to a friend!</h1>
+				<p class="h4 font-weight-normal text-center mb-md-5">Send this link to a friend instead.</p>
+				<input type="text" class="form-control form-control-sm w-75 d-md-inline-block" readonly value="https://ruqqus.com/signup?ref={{ request.args.get('ref') }}">
 
                                 <div class="text-center mt-5 mb-3">
                                     <a href="/login" class="text-muted text-small toggle-login">Already have an
