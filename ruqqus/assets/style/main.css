@@ -13384,6 +13384,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   display: flex;
   position: relative;
   margin-top: 1.5rem;
+  word-break: break-word;
 }
 
 #notifications .comment, #userpage .comment {
@@ -13453,10 +13454,6 @@ blockquote p {
 .modal .comment-actions .fa, .modal .comment-actions .fas, .modal .comment-actions .far {
   width: 1.25rem;
   font-size: 1rem;
-}
-
-.comment p {
-  word-break: break-word;
 }
 
 .comment-actions {

@@ -1362,6 +1362,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     display: flex;
     position: relative;
     margin-top: 1.5rem;
+    word-break: break-word;
 }
 
 #notifications .comment, #userpage .comment {
@@ -1436,10 +1437,6 @@ blockquote p {
 }
 
 // Comments
-
-.comment p {
-    word-break: break-word;
-}
 
 .comment-actions {
     font-weight: $font-weight-normal;
