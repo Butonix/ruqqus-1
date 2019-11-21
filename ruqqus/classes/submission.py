@@ -185,7 +185,7 @@ class Submission(Base):
             comments=self.comments.order_by(text("comments.score ASC")).all()
         elif sort_type=="new":
             comments=self.comments.order_by(text("comments.created_utc")).all()
-        elif sort_type=="fiery":
+        elif sort_type=="disputed":
             comments=self.comments.order_by(text("comments.rank_fiery ASC")).all()
 
 
