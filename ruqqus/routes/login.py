@@ -115,6 +115,19 @@ def sign_up_get(v):
     agent=request.headers.get("User-Agent", None)
     if not agent:
         abort(403)
+
+    #check for referral in link
+    ref_id=None
+    ref = request.args.get("ref",None)
+    if ref:
+        ref_user = db.query(User).filter(User.username.ilike(ref)).first()
+
+    else:
+        ref_user=None
+
+    if ref_user and (ref_user.id in session["history"]):
+        return render_template("sign_up_failed_ref.html")
+    
     
     #Make a unique form key valid for one account creation
     now = int(time.time())
@@ -135,13 +148,7 @@ def sign_up_get(v):
 
     redir = request.args.get("redirect",None)
 
-    #check for referral in link
-    ref_id=None
-    ref = request.args.get("ref",None)
-    if ref:
-        ref_user = db.query(User).filter(User.username.ilike(ref)).first()
-    else:
-        ref_user=None
+
 
     return render_template("sign_up.html",
                            formkey=formkey,
