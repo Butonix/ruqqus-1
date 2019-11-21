@@ -86,6 +86,41 @@ CREATE FUNCTION public.age(public.submissions) RETURNS integer
 
 
 --
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    username character varying(255) NOT NULL,
+    email character varying(255),
+    passhash character varying(255) NOT NULL,
+    created_utc integer NOT NULL,
+    admin_level integer DEFAULT 0,
+    over_18 boolean DEFAULT false,
+    creation_ip character varying(255),
+    most_recent_ip character varying(255),
+    is_activated boolean DEFAULT false,
+    reddit_username character varying(64) DEFAULT NULL::character varying,
+    bio character varying(256) DEFAULT ''::character varying,
+    bio_html character varying(300),
+    real_id character varying,
+    ban_state integer DEFAULT 0,
+    referred_by integer
+);
+
+
+--
+-- Name: age(public.users); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.age(public.users) RETURNS integer
+    LANGUAGE sql IMMUTABLE STRICT
+    AS $_$
+      SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
+      $_$;
+
+
+--
 -- Name: comment_count(public.submissions); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -156,29 +191,6 @@ CREATE FUNCTION public.downs(public.submissions) RETURNS bigint
         AND votes.vote_type=-1
         AND votes.submission_id=$1.id
       $_$;
-
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users (
-    id integer NOT NULL,
-    username character varying(255) NOT NULL,
-    email character varying(255),
-    passhash character varying(255) NOT NULL,
-    created_utc integer NOT NULL,
-    admin_level integer DEFAULT 0,
-    over_18 boolean DEFAULT false,
-    creation_ip character varying(255),
-    most_recent_ip character varying(255),
-    is_activated boolean DEFAULT false,
-    reddit_username character varying(64) DEFAULT NULL::character varying,
-    bio character varying(256) DEFAULT ''::character varying,
-    bio_html character varying(300),
-    real_id character varying,
-    ban_state integer DEFAULT 0
-);
 
 
 --
@@ -270,6 +282,20 @@ CREATE FUNCTION public.rank_hot(public.submissions) RETURNS double precision
 
 
 --
+-- Name: referral_count(public.users); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.referral_count(public.users) RETURNS bigint
+    LANGUAGE sql IMMUTABLE STRICT
+    AS $_$
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE users.ban_state>=0
+        AND users.referred_by=$1.id
+    $_$;
+
+
+--
 -- Name: score(public.comments); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -350,6 +376,37 @@ CREATE FUNCTION public.ups(public.submissions) RETURNS bigint
         AND votes.vote_type=1
         AND votes.submission_id=$1.id
       $_$;
+
+
+--
+-- Name: alts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.alts (
+    id integer NOT NULL,
+    user1 integer NOT NULL,
+    user2 integer NOT NULL
+);
+
+
+--
+-- Name: alts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.alts_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: alts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.alts_id_seq OWNED BY public.alts.id;
 
 
 --
@@ -814,6 +871,13 @@ ALTER SEQUENCE public.votes_id_seq OWNED BY public.votes.id;
 
 
 --
+-- Name: alts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.alts ALTER COLUMN id SET DEFAULT nextval('public.alts_id_seq'::regclass);
+
+
+--
 -- Name: badge_defs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -923,6 +987,14 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 ALTER TABLE ONLY public.votes ALTER COLUMN id SET DEFAULT nextval('public.votes_id_seq'::regclass);
+
+
+--
+-- Name: alts alts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.alts
+    ADD CONSTRAINT alts_pkey PRIMARY KEY (id);
 
 
 --
@@ -1083,6 +1155,22 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.votes
     ADD CONSTRAINT votes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: alts alts_user1_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.alts
+    ADD CONSTRAINT alts_user1_fkey FOREIGN KEY (user1) REFERENCES public.users(id);
+
+
+--
+-- Name: alts alts_user2_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.alts
+    ADD CONSTRAINT alts_user2_fkey FOREIGN KEY (user2) REFERENCES public.users(id);
 
 
 --
@@ -1251,6 +1339,14 @@ ALTER TABLE ONLY public.userflags
 
 ALTER TABLE ONLY public.userflags
     ADD CONSTRAINT userflags_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: users users_referred_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_referred_by_fkey FOREIGN KEY (referred_by) REFERENCES public.users(id);
 
 
 --
