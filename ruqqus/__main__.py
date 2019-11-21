@@ -40,7 +40,7 @@ cache=Cache(app)
 
 limiter = Limiter(
     app,
-    key_func=get_remote_addr,
+    key_func=get_remote_address,
     default_limits=["60/minute"],
     storage_uri=environ.get("HEROKU_REDIS_PURPLE_URL"),
     headers_enabled=True,
