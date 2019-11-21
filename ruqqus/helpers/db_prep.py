@@ -76,7 +76,7 @@ def prep_database():
     c.execute("""
     CREATE OR REPLACE FUNCTION rank_hot(submissions)
     RETURNS float AS '
-      SELECT CAST(($1.ups - $1.downs) AS float)/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.0/3.0))
+      SELECT CAST(($1.ups - $1.downs) AS float)/((CAST(($1.age+1000) AS FLOAT)/6.0)^(1.0/3.0))
       '
     LANGUAGE SQL
     IMMUTABLE
@@ -87,7 +87,7 @@ def prep_database():
     c.execute("""
     CREATE OR REPLACE FUNCTION rank_fiery(submissions)
     RETURNS float AS '
-      SELECT SQRT(CAST(($1.ups * $1.downs) AS float))/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.0/3.0))
+      SELECT SQRT(CAST(($1.ups * $1.downs) AS float))/((CAST(($1.age+1000) AS FLOAT)/6.0)^(1.0/3.0))
       '
     LANGUAGE SQL
     IMMUTABLE
@@ -103,6 +103,17 @@ def prep_database():
       WHERE is_banned=false
         AND is_deleted=false
         AND parent_submission = $1.id
+      '
+    LANGUAGE SQL
+    IMMUTABLE
+    RETURNS NULL ON NULL INPUT;
+    """)
+
+    #activity sort
+    c.execute("""
+    CREATE OR REPLACE FUNCTION rank_activity(submissions)
+    RETURNS float AS '
+      SELECT CAST($1.comment_count AS float)/((CAST(($1.age+1000) AS FLOAT)/6.0)^(1.0/3.0))
       '
     LANGUAGE SQL
     IMMUTABLE
