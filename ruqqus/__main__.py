@@ -34,11 +34,13 @@ cache=Cache(app)
 limiter = Limiter(
     app,
     key_func=get_remote_address,
-    default_limits=["60/minute"],
-    RATELIMIT_STORAGE_URL=environ.get("HEROKU_REDIS_PURPLE_URL"),
-    RATELIMIT_HEADERS_ENABLED=True,
-    RATELIMIT_STRATEGY="fixed-window-elastic-expiry"
-)
+    default_limits=["60/minute"]
+    )
+
+limiter.config["RATELIMIT_STORAGE_URL"]=environ.get("HEROKU_REDIS_PURPLE_URL"),
+limiter.config["RATELIMIT_HEADERS_ENABLED"]=True,
+limiter.config["RATELIMIT_STRATEGY"]="fixed-window-elastic-expiry"
+
 
 #setup db
 _engine = create_engine(environ.get("DATABASE_URL"))
