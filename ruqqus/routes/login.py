@@ -126,7 +126,8 @@ def sign_up_get(v):
         ref_user=None
 
     if ref_user and (ref_user.id in session["history"]):
-        return render_template("sign_up_failed_ref.html")
+        return render_template("sign_up_failed_ref.html",
+                               i=random_image())
     
     
     #Make a unique form key valid for one account creation
@@ -136,9 +137,6 @@ def sign_up_get(v):
     ip=request.remote_addr
     
     formkey_hashstr = str(now)+token+agent
-
-    #get a random image
-    image = random_image()
 
     
     #formkey is a hash of session token, timestamp, and IP address
@@ -153,7 +151,7 @@ def sign_up_get(v):
     return render_template("sign_up.html",
                            formkey=formkey,
                            now=now,
-                           i=image,
+                           i=random_image(),
                            redirect=redir,
                            ref_user=ref_user
                            )
