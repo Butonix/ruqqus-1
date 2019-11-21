@@ -123,18 +123,13 @@
 </form>
 {% endif %}
 {% endif %}
-{% if v.admin_level >=4 and v.admin_level > u.admin_level %}
-<table>
- <tr>
-  <th>Key</th>
-  <th>Value</th>
-</tr>
-<tr>
-  <td>Account Creation IP</td>
-  <td>{{ u.creation_ip }}</td>
-</tr>
-</table>
-<p>IPs:</p>
+{% if v.admin_level >=4 %}
+<p>Alts:</p>
+<ul>
+{% for account in u.alts %}
+<li><a href="{{ account.permalink }}">@{{ account.username }}</a></li>
+{% endfor %}
+</ul>
 {% endif %}
 {% endblock %}
 

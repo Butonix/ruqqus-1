@@ -11,6 +11,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import lazy
 from .votes import Vote
+from .alts import Alt
 from ruqqus.__main__ import Base, db, cache
 
 class User(Base):
@@ -272,4 +273,13 @@ class User(Base):
             output.append(to_append)
 
         return output
+
+    @property
+    def alts(self):
+
+        alts1=db.query(User).join(Alt, Alt.user2==User.id).filter(Alt.user1==self.id).all()
+        alts2=db.query(User).join(Alt, Alt.user1==User.id).filter(Alt.user2==self.id).all()
+
+        return list(set([x for x in alts1]+[y for y in alts2]))
+        
         

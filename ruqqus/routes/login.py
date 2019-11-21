@@ -58,6 +58,22 @@ def login_post():
         past_accs.add(account.id)
         session["history"]=list(past_accs)
 
+        #record alts
+        for past_id in session["history"]:
+
+            if past_id==account.id:
+                continue
+            
+            check1=db.query(Alt).filter_by(user1=account.id, user2=past_id).first()
+            check2=db.query(Alt).filter_by(user1=past_id, user2=account.id).first()
+
+            if not check1 and not check2:
+
+                new_alt=Alt(user1=past_id,
+                            user2=account.id)
+                db.add(new_alt)
+                db.commit()
+
         #check for previous page
 
         redir=request.form.get("redirect", "/")

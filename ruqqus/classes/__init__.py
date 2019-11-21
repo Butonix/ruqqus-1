@@ -1,3 +1,4 @@
+from .alts import *
 from .badges import *
 from .comment import *
 from .user import *
