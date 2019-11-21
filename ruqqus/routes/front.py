@@ -26,6 +26,8 @@ def frontlist(sort="hot", page=1):
         posts=posts.order_by(text("submissions.rank_fiery desc"))
     elif sort=="top":
         posts=posts.order_by(text("submissions.score desc"))
+    elif sort=="activity":
+        posts=posts.order_by(text("submissions.rank_activity desc"))
 
     posts=[x.id for x in posts.offset(25*(page-1)).limit(25).all()]
 
