@@ -125,10 +125,10 @@
     </li>
     {% else %}
     <li class="nav-item d-flex align-items-center justify-content-center pb-3">
-      <a class="btn btn-white btn-block" href="/login">Sign in</a>
+      <a class="btn btn-white btn-block" href="/login?redirect={{ request.path | urlencode}}">Sign in</a>
     </li>
     <li class="nav-item d-flex align-items-center justify-content-center">
-      <a class="btn btn-outline-white btn-block" href="/signup">Sign up</a>
+      <a class="btn btn-outline-white btn-block" href="/signup?redirect={{ request.path | urlencode}}">Sign up</a>
     </li>
         <li class="nav-item nav-item mt-2">
       <a class="nav-link text-small-extra" href="/about">About</a>
