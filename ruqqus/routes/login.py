@@ -35,6 +35,28 @@ def login_get(v):
                            i=random_image(),
                            redirect=redir)
 
+def check_for_alts(current_id):
+    #account history
+    past_accs=set(session.get("history", []))
+    past_accs.add(current_id)
+    session["history"]=list(past_accs)
+
+    #record alts
+    for past_id in session["history"]:
+
+        if past_id==current_id:
+            continue
+        
+        check1=db.query(Alt).filter_by(user1=current_id, user2=past_id).first()
+        check2=db.query(Alt).filter_by(user1=past_id, user2=current_id).first()
+
+        if not check1 and not check2:
+
+            new_alt=Alt(user1=past_id,
+                        user2=current_id)
+            db.add(new_alt)
+            db.commit()
+
 #login post procedure
 @app.route("/login", methods=["POST"])
 def login_post():
@@ -53,26 +75,7 @@ def login_post():
         session["user_id"]=account.id
         session["session_id"]=token_hex(16)
 
-        #account history
-        past_accs=set(session.get("history", []))
-        past_accs.add(account.id)
-        session["history"]=list(past_accs)
-
-        #record alts
-        for past_id in session["history"]:
-
-            if past_id==account.id:
-                continue
-            
-            check1=db.query(Alt).filter_by(user1=account.id, user2=past_id).first()
-            check2=db.query(Alt).filter_by(user1=past_id, user2=account.id).first()
-
-            if not check1 and not check2:
-
-                new_alt=Alt(user1=past_id,
-                            user2=account.id)
-                db.add(new_alt)
-                db.commit()
+        check_for_alts(account.id)
 
         #check for previous page
 
@@ -249,6 +252,8 @@ def sign_up_post(v):
 
     db.add(prebeta_badge)
     db.commit()
+
+    check_for_alts(new_user.id)
 
     send_verification_email(new_user)
 
