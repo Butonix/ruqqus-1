@@ -82,7 +82,8 @@
 
                                 <input type="hidden" name="formkey" value="{{ formkey }}">
                                 <input type="hidden" name="now" value="{{ now }}">
-				<input type="hidden" name="redirect" value="{{ redirect }}">
+				
+{% if redirect %}<input type="hidden" name="redirect" value="{{ redirect }}">{% endif %}
 				{% if ref_user %}
 				<input type="hidden" name="referred_by" value="{{ ref_user.id }}">{% endif %}
 
