@@ -11,4 +11,4 @@ from ruqqus.__main__ import app, db, cache
 @cache.memoize(timeout=60)
 def total_users(x):
 
-    return db.query(User).filter(text("ban_state>-1")).count()
+    return db.query(User).filter(is_banned=0).count()
