@@ -17,10 +17,10 @@
   window.onscroll = function () {
     var currentScrollPos = window.pageYOffset;
     if (prevScrollpos > currentScrollPos) {
-      document.getElementById("fixed-bar-mobile").style.top = "49px";
+      document.getElementById("fixed-bar-mobile").style.top = "48px";
     } 
     else if (currentScrollPos <= 125) {
-      document.getElementById("fixed-bar-mobile").style.top = "49px";
+      document.getElementById("fixed-bar-mobile").style.top = "48px";
     }
     else {
       document.getElementById("fixed-bar-mobile").style.top = "-98px";
@@ -69,7 +69,7 @@
   <ul class="nav post-nav mr-auto">
     <li class="nav-item">
 
-      <a class="nav-link{% if sort_method=="hot" %} active{% endif %}" href="?sort=hot&q={{ query | urlencode }}"><i class="fas fa-arrow-alt-circle-up"></i>Hot</a>
+      <a class="nav-link{% if sort_method=="hot" %} active{% endif %}" href="?sort=hot&q={{ query | urlencode }}"><i class="fas fa-fire"></i>Hot</a>
     </li>
     <li class="nav-item">
       <a class="nav-link{% if sort_method=="top" %} active{% endif %}" href="?sort=top&q={{ query | urlencode }}"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
@@ -79,7 +79,9 @@
     </li>
     <li class="nav-item">
       <a class="nav-link{% if sort_method=="fiery" %} active{% endif %}" href="?sort=fiery&q={{ query | urlencode }}"><i class="fas fa-bullhorn"></i>Disputed</a>
-
+    </li>
+      <li class="nav-item ">
+      <a class="nav-link {% if sort_method=="activity" %} active{% endif %}" href="/?sort=activity"><i class="fas fa-comments"></i>Activity</a>
     </li>
   </ul>
 
@@ -115,7 +117,7 @@
   </div>
 </div>
 
-<div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 49px; transition: top 0.3s;">
+<div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 48px; transition: top 0.3s;">
 
   <div class="col">
 
@@ -133,6 +135,7 @@
 	          <a class="dropdown-item" href="?sort=top">Top</a>
             <a class="dropdown-item" href="?sort=new">New</a>
             <a class="dropdown-item" href="?sort=fiery">Disputed</a>
+            <a class="dropdown-item" href="?sort=activity">Activity</a>
 
           </span>
         </span>

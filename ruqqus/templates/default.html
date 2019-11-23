@@ -18,7 +18,12 @@
   integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
   <!-- Ruqqus CSS -->
-  <link rel="stylesheet" href="/assets/style/main.css">
+
+  {% if v and v.referral_count and session.get("dark_mode_enabled") %}
+  <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css">
+  {% else %}
+  <link id="css-link" rel="stylesheet" href="/assets/style/main.css">
+  {% endif %}
 
   <!-- Font Awesome -->
   <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
@@ -108,45 +113,66 @@
         </div>
         {% endif %}
 
+        {% if v and v.referral_count==0 %}
+        <div class="sidebar-section sidebar-dark-promo text-white bg-black">
+          <div class="title" style="
+          color: #fff;
+          border-color: rgba(230, 230, 230, 0.1);
+          ">Announcement</div>
+          <div class="body">
+            <div class="text-center my-3">
+              <i class="fad fa-moon-stars text-warning" style="font-size: 4rem"></i>
+            </div>
 
-        {% if v %}
-        {% if v.admin_level %}
-        <div class="sidebar-section sidebar-adminpanel">
-         <div class="title">Admin Panel</div>
-         <div class="body">
-           {% block adminpanel %}
-           <p class="text-center text-small text-muted mb-0">No admin actions available</p>
-           {% endblock %}
+            <div class="mb-2">
+              <span class="h5">Refer a friend. Get dark mode.</span>
+            </div>
+            <p class="text-small">When you invite a friend to make a Ruqqus, you'll unlock dark mode. Copy your referral code to get started.</p>
+            <label for="referral_code" class="text-white">Referral code</label>
+            <input type="text" readonly="" class="form-control copy-link" id="referral_code" value="https://ruqqus.com/signup?ref={{ v.username }}" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}">
+            </div>
+          </div>
+          {% endif %}
+
+          </div>
+          {% if v %}
+          {% if v.admin_level %}
+          <div class="sidebar-section sidebar-adminpanel">
+           <div class="title">Admin Panel</div>
+           <div class="body">
+             {% block adminpanel %}
+             <p class="text-center text-small text-muted mb-0">No admin actions available</p>
+             {% endblock %}
+           </div>
          </div>
-       </div>
-       {% endif %}
-       {% endif %}
-       <div class="sidebar-section sidebar-trending d-none">
-        <div class="title">What's Hot</div>
-        <div class="body">
-          <p>Here are the most popular tags from the last 24 hours.</p>
-          <div class="hashtag">
-            <a href="#">#Mueller</a>
-            <div class="text-muted text-small font-weight-normal">2.3K posting about this</div>
-          </div>
-          <div class="hashtag">
-            <a href="#">#MemeWar2</a>
-            <div class="text-muted text-small font-weight-normal">1.2K posting about this</div>
-          </div>
-          <div class="hashtag">
-            <a href="#">#AskTrumpSupporters</a>
-            <div class="text-muted text-small font-weight-normal">900 posting about this</div>
-          </div>
-          <div class="hashtag">
-            <a href="#">#DNCDebates</a>
-            <div class="text-muted text-small font-weight-normal">600 posting about this</div>
-          </div>
-          <div class="hashtag">
-            <a href="#">#DNCDebates</a>
-            <div class="text-muted text-small font-weight-normal">600 posting about this</div>
+         {% endif %}
+         {% endif %}
+         <div class="sidebar-section sidebar-trending d-none">
+          <div class="title">What's Hot</div>
+          <div class="body">
+            <p>Here are the most popular tags from the last 24 hours.</p>
+            <div class="hashtag">
+              <a href="#">#Mueller</a>
+              <div class="text-muted text-small font-weight-normal">2.3K posting about this</div>
+            </div>
+            <div class="hashtag">
+              <a href="#">#MemeWar2</a>
+              <div class="text-muted text-small font-weight-normal">1.2K posting about this</div>
+            </div>
+            <div class="hashtag">
+              <a href="#">#AskTrumpSupporters</a>
+              <div class="text-muted text-small font-weight-normal">900 posting about this</div>
+            </div>
+            <div class="hashtag">
+              <a href="#">#DNCDebates</a>
+              <div class="text-muted text-small font-weight-normal">600 posting about this</div>
+            </div>
+            <div class="hashtag">
+              <a href="#">#DNCDebates</a>
+              <div class="text-muted text-small font-weight-normal">600 posting about this</div>
+            </div>
           </div>
         </div>
-      </div>
       <!--
       <div class="sidebar-section sidebar-rules">
         <div class="title">Ruqqus Rules</div>
@@ -171,10 +197,10 @@
           </ol>
         </div>
       </div>
-      -->
-    </div>
-    
+    -->
   </div>
+
+</div>
 </div>
 
 <!-- Clipboard Toast -->
@@ -208,7 +234,7 @@
           <li class="list-inline-item"><a href="#">Help</a></li>
           <li class="list-inline-item"><a href="https://www.twitter.com/ruqqus">Twitter</a></li>
           <li class="list-inline-item"><a href="https://discord.gg/U57jqnn">Discord</a></li>
-	  <li class="list-inline-item"><a href="https://github.com/ruqqus/ruqqus">Github</a></li>
+          <li class="list-inline-item"><a href="https://github.com/ruqqus/ruqqus">Github</a></li>
           <li class="list-inline-item">&copy; 2019 Ruqqus</li>
         </ul>
       </div>
@@ -259,6 +285,11 @@
 <!-- BS Spinner JS -->
 
 <script src="/assets/js/spinner.js"></script>
+
+{% if v and v.referral_count %}
+<!-- Ruqqus Dark Mode Toggle -->
+<script src="/assets/js/dark_mode.js"></script>
+{% endif %}
 
 {% block enlargeThumbJS %}
 {% endblock %}

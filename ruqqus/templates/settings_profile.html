@@ -61,13 +61,41 @@
 
         <div class="settings">
 
+            {% if v and v.referral_count==0 %}
+
+            <h2 class="h5" name="referral">Referrals</h2>
+
+            <p class="text-small text-muted">Invite a friend to make a Ruqqus. Unlock dark mode!</p>
+
+            <div class="settings-section rounded">
+
+                <div class="d-lg-flex">
+
+                    <div class="title w-lg-25">
+                        <label for="referral_code">Referral code</label>
+                    </div>
+
+                    <div class="body w-lg-75">
+
+                        <input type="text" readonly="" class="form-control copy-link" id="referral_code" value="https://ruqqus.com/signup?ref={{ v.username }}" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}">
+
+                        <div class="text-small-extra text-muted mt-3">Share this link with a friend. When they sign up, you'll be able to use dark mode.</div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
             <h2 class="h5">Social Integrations</h2>
 
             <p class="text-small text-muted">Manage 3rd-party apps connected to your Ruqqus profile.</p>
 
             <div class="settings-section rounded">
 
-            <div class="d-lg-flex">
+                <div class="d-lg-flex">
 
                     {% if v.reddit_username %}
 
@@ -86,9 +114,9 @@
                             <span class="align-middle">Unlink Reddit</span>
                         </button>
 
-                        </form>
+                    </form>
 
-                        <div class="text-small-extra text-muted mt-3">You are linked with Reddit profile <a target="blank"
+                    <div class="text-small-extra text-muted mt-3">You are linked with Reddit profile <a target="blank"
                         href="https://reddit.com/user/{{ v.reddit_username }}">/u/{{ v.reddit_username }}</a>.</div>
 
                     </div>
@@ -107,7 +135,7 @@
                             style="font-size: 16px"></i>
                             <span class="align-middle">Link Reddit</span>
                         </button>
-                        </a>
+                    </a>
                     <div class="text-small-extra text-muted mt-3">You are not linked to a Reddit profile.</div>
 
                 </div>
@@ -175,7 +203,7 @@
 
                 </div>
 
-                <div class="footer border-top">
+                <div class="footer">
 
                     <div class="d-flex">
 

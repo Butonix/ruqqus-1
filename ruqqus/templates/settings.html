@@ -3,56 +3,76 @@
 
 <head>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-    <title>{% block pagetitle %}Settings - Ruqqus{% endblock %}</title>
+  <title>{% block pagetitle %}Settings - Ruqqus{% endblock %}</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <!-- Font Awesome -->
-    <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+  <!-- Ruqqus CSS -->
 
-    <!-- Ruqqus CSS -->
-    <link rel="stylesheet" href="/assets/style/main.css">
+  {% if v and v.referral_count and session.get("dark_mode_enabled") %}
+  <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css">
+  {% else %}
+  <link id="css-link" rel="stylesheet" href="/assets/style/main.css">
+  {% endif %}
 
-<script>
-function post(url, callback, errortext) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
-  var form = new FormData()
-  form.append("formkey", "{{ v.formkey }}");
-  xhr.withCredentials=true;
-  xhr.onload=callback
-  xhr.onerror=function(){alert(errortext)}
-  xhr.send(form);
-}
-function formkey() {
-  return '{{ v.formkey }}';
-}
-</script>
+  <!-- Font Awesome -->
+  <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+
+  <script>
+    function post(url, callback, errortext) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", url, true);
+      var form = new FormData()
+      form.append("formkey", "{{ v.formkey }}");
+      xhr.withCredentials=true;
+      xhr.onload=callback
+      xhr.onerror=function(){alert(errortext)}
+      xhr.send(form);
+    }
+    function formkey() {
+      return '{{ v.formkey }}';
+    }
+  </script>
 
 </head>
 
 <body id="settings">
 
-    {% include "header.html" %}
-    <!-- Page Content -->
-    <div class="container">
+  {% include "header.html" %}
+  <!-- Page Content -->
+  <div class="container">
 
-	{% block content %}
-	{% endblock %}
+   {% block content %}
+   {% endblock %}
 
-    </div>
+ </div>
 
-    {% include "footer.html" %}
-    {% include "bootstrap.html" %}
+ {% include "footer.html" %}
+
+ <!-- Clipboard Toast -->
+
+ <div class="toast clipboard" id="toast-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-success text-center text-white">
+    <i class="fas fa-check-circle mr-2"></i>Link copied to clipboard
+  </div>
+</div>
+
+<div class="toast clipboard" id="toast-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-danger text-center text-white">
+    <i class="fas fa-exclamation-circle mr-2"></i>Unable to copy link
+  </div>
+</div>
+
+{% include "bootstrap.html" %}
 
 <script src="/assets/js/change_email.js"></script>
 <script src="/assets/js/email_verify_text.js"></script>
@@ -60,6 +80,41 @@ function formkey() {
 <!-- Initialize BS 4 tool tips -->
 
 <script src="/assets/js/tooltips.js"></script>
+
+<!-- Search bar icon JS -->
+
+<script src="/assets/js/search_icon.js"></script>
+
+<!-- ClipboardJS -->
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+
+<!-- Instantiate clipboard by passing a string selector -->
+<script type="text/javascript">
+  var clipboard = new ClipboardJS('.copy-link');
+  clipboard.on('success', function(e) {
+
+    jQuery(function($) {
+      $('#toast-success').toast('show');
+    })
+    console.log(e);
+  });
+  clipboard.on('error', function(e) {
+
+    jQuery(function($) {
+      $('#toast-error').toast('show');
+    })
+    console.log(e);
+  });
+</script>
+
+{% if v and v.referral_count %}
+
+<!-- Ruqqus Dark Mode Toggle -->
+
+<script src="/assets/js/dark_mode.js"></script>
+
+{% endif %}
 
 </body>
 

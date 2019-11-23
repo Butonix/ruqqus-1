@@ -92,5 +92,22 @@ def settings_security_post(v):
         return render_template("settings_security.html", v=v, msg=f"Verify your new email address {new_email} to complete the email change process.")
         
 
+@app.route("/settings/dark_mode/<x>", methods=["POST"])
+@auth_required
+def settings_dark_mode(x, v):
 
+    try:
+        x=int(x)
+    except:
+        abort(400)
+
+    if x not in [0,1]:
+        abort(400)
+
+    if not v.referral_count:
+        session["dark_mode_enabled"]=False
+        abort(403)
+    else:
+        session["dark_mode_enabled"]=bool(x)
+        return "",204
         

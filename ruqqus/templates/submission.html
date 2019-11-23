@@ -104,7 +104,7 @@
       aria-valuenow="{{ p.score_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
     <div class="submission-date mt-3">Submitted on:<span class="date"> {{ p.created_date }}</span></div>
-    <div class="shortlink mt-1">Shortlink:<span class="link"></span> <input type="text" class="form-control form-control-sm w-75 d-md-inline-block" readonly value="https://ruqq.us/{{ p.base36id }}"></input></div>
+    <div class="shortlink mt-1">Shortlink:<span class="link"></span> <input type="text" class="form-control form-control-sm copy-link w-75 d-md-inline-block" readonly value="https://ruqq.us/{{ p.base36id }}" data-clipboard-text="https://ruqq.us/{{ p.base36id }}"></input></div>
   </div>
 </div>
 {% endblock %}

@@ -14,14 +14,14 @@
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Font Awesome -->
     <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 
     <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/latest/js/all.js"
-        integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
-        crossorigin="anonymous"></script>
+    integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
+    crossorigin="anonymous"></script>
 
     <!-- Ruqqus CSS -->
     <link rel="stylesheet" href="assets/style/main.css">
@@ -34,49 +34,50 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top border-0">
         <div class="container-fluid">
             <button class="navbar-toggler d-none" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Terms</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
-                    </li>
-                </ul>
-            </div>
+            aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Terms</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <!-- Page Content -->
+<!-- Page Content -->
 
-    <div class="container-fluid position-absolute h-100 p-0">
-        <div class="row no-gutters h-100">
+<div class="container-fluid position-absolute h-100 p-0">
+    <div class="row no-gutters h-100">
 
-            <div class="col-12 col-md-6 my-auto p-3">
+        <div class="col-12 col-md-6 my-auto p-3">
 
-                <div class="row justify-content-center">
+            <div class="row justify-content-center">
 
-                    <div class="col-10 col-md-7">
+                <div class="col-10 col-md-7">
 
                     <div class="text-center mb-5">
                         <a href="/" class="text-decoration-none"><span class="h3 text-primary">ruqqus</span></a>
                     </div>
 
-                        <div id="register-form" class="">
-				<h1 class="h4 font-weight-normal text-center mb-md-5">Whoops! You can't refer yourself!</h1>
-				<p class="h4 font-weight-normal text-center mb-md-5">Send this link to a friend instead.</p>
-				<input type="text" class="form-control form-control-sm d-md-block" readonly value="https://ruqqus.com/signup?ref={{ request.args.get('ref') }}">
+                    <div id="register-form" class="">
+                        <h1 class="h4 font-weight-normal text-center">Whoops! You can't refer yourself!</h1>
+                        <p class="text-center text-muted mb-md-5">Send this link to a friend instead. When they sign up to make a Ruqqus, you'll be able to use dark mode.</p>
+                        <label>Referral code</label>
+                        <input type="text" class="form-control copy-link" readonly value="https://ruqqus.com/signup?ref={{ request.args.get('ref') }}" data-clipboard-text="https://ruqqus.com/signup?ref={{ request.args.get('ref') }}">
 
-                                <div class="text-center mt-5 mb-3">
-                                    <a href="/login" class="text-muted text-small toggle-login">Already have an
-                                        account? Log in.</a>
-                                </div>
+                        <div class="text-center mt-5 mb-3">
+                            <a href="/login" class="text-muted text-small toggle-login">Already have an
+                                account? Log in.</a>
+                            </div>
                         </div>
 
                     </div>
@@ -103,15 +104,52 @@
         </div>
     </div>
 
-    {% include "bootstrap.html" %}
+    <!-- Clipboard Toast -->
 
-    <!-- Sign up script -->
+    <div class="toast clipboard" id="toast-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+      <div class="toast-body bg-success text-center text-white">
+        <i class="fas fa-check-circle mr-2"></i>Link copied to clipboard
+    </div>
+</div>
 
-    <script src="/assets/js/signup.js"></script>
+<div class="toast clipboard" id="toast-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-danger text-center text-white">
+    <i class="fas fa-exclamation-circle mr-2"></i>Unable to copy link
+</div>
+</div>
 
-    <!-- BS Spinner JS -->
+{% include "bootstrap.html" %}
 
-    <script src="/assets/js/spinner.js"></script>
+<!-- ClipboardJS -->
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+
+<!-- Instantiate clipboard by passing a string selector -->
+<script type="text/javascript">
+  var clipboard = new ClipboardJS('.copy-link');
+  clipboard.on('success', function(e) {
+
+    jQuery(function($) {
+      $('#toast-success').toast('show');
+  })
+    console.log(e);
+});
+  clipboard.on('error', function(e) {
+
+    jQuery(function($) {
+      $('#toast-error').toast('show');
+  })
+    console.log(e);
+});
+</script>
+
+<!-- Sign up script -->
+
+<script src="/assets/js/signup.js"></script>
+
+<!-- BS Spinner JS -->
+
+<script src="/assets/js/spinner.js"></script>
 
 </body>
 

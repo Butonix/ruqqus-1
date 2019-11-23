@@ -14,30 +14,35 @@
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Ruqqus CSS -->
+
+    {% if v and v.referral_count and session.get("dark_mode_enabled") %}
+    <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css">
+    {% else %}
+    <link id="css-link" rel="stylesheet" href="/assets/style/main.css">
+    {% endif %}
 
     <!-- Font Awesome -->
     <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 
-    <!-- Ruqqus CSS -->
-    <link rel="stylesheet" href="/assets/style/main.css">
+    {% if v %}
 
-  {% if v %}
-
-  <script>
-    function post(url, callback, errortext) {
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", url, true);
-      var form = new FormData()
-      form.append("formkey", "{{ v.formkey }}");
-      xhr.withCredentials=true;
-      xhr.onload=callback
-      xhr.onerror=function(){alert(errortext)}
-      xhr.send(form);
-    }
-    function formkey() {
-      return '{{ v.formkey }}';
-    }
+    <script>
+        function post(url, callback, errortext) {
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", url, true);
+          var form = new FormData()
+          form.append("formkey", "{{ v.formkey }}");
+          xhr.withCredentials=true;
+          xhr.onload=callback
+          xhr.onerror=function(){alert(errortext)}
+          xhr.send(form);
+      }
+      function formkey() {
+          return '{{ v.formkey }}';
+      }
   </script>
 
   {% endif %}
@@ -47,47 +52,47 @@
 <body id="submit">
 
   <!-- Navigation -->
-{% include "header.html" %}
+  {% include "header.html" %}
 
-    <!-- Page Content -->
+  <!-- Page Content -->
 
-    <div class="container">
+  <div class="container">
 
-        <div class="row justify-content-around">
+    <div class="row justify-content-around">
 
-            <div class="col-12 col-md-7 h-100">
+        <div class="col-12 col-md-7 h-100">
 
             <div class="mt-3 mt-md-0">
                 <h1 class="h3">Create a post</h1>
             </div>
 
-                <p class="text-muted">The first step to making a quality post is choosing an interesting title!</p>
+            <p class="text-muted">The first step to making a quality post is choosing an interesting title!</p>
 
-                <div class="bg-white shadow-sm shadow-sm-0 rounded">
+            <div class="bg-white shadow-sm shadow-sm-0 rounded">
 
-                    <!-- Submission type toggle -->
+                <!-- Submission type toggle -->
 
-                    <div class="flex-row tab-bar sticky d-none">
+                <div class="flex-row tab-bar sticky d-none">
 
-                        <ul class="nav post-nav mr-auto">
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#">Text Post</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Link</a>
-                            </li>
-                        </ul>
+                    <ul class="nav post-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">Text Post</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Link</a>
+                        </li>
+                    </ul>
 
-                    </div>
+                </div>
 
 
-                    <div class="row no-gutters mb-3">
+                <div class="row no-gutters mb-3">
 
-                        <div class="col-12">
+                    <div class="col-12">
 
-                            <div class="submission">
+                        <div class="submission">
 
-                                <form id="submitform" action="/submit" method="post">
+                            <form id="submitform" action="/submit" method="post">
 
                                 <div class="body">
 
@@ -96,91 +101,91 @@
                                     <label for="title">Post Title</label>
 
                                     <input class="form-control" id="title-register"
-                                        aria-describedby="titleHelpRegister" type="text" name="title" required>
+                                    aria-describedby="titleHelpRegister" type="text" name="title" required>
                                     <small id="titleHelpRegister"
-                                        class="form-text font-weight-bold text-muted d-none mt-1">Minimum of 10
-                                        characters
-                                        required.</small>
+                                    class="form-text font-weight-bold text-muted d-none mt-1">Minimum of 10
+                                    characters
+                                    required.</small>
                                     <small id="titleHelpSuccess"
-                                        class="form-text font-weight-bold text-success d-none mt-1">That title is set to
-                                        jet!
-                                    </small>
+                                    class="form-text font-weight-bold text-success d-none mt-1">That title is set to
+                                    jet!
+                                </small>
 
-                                    <label for="URL" class="mt-3">URL</label>
+                                <label for="URL" class="mt-3">URL</label>
 
-                                    <input class="form-control" id="URL" aria-describedby="URLHelp" type="url"
-                                        name="url" id="URL" placeholder="Optional if you have text">
+                                <input class="form-control" id="URL" aria-describedby="URLHelp" type="url"
+                                name="url" id="URL" placeholder="Optional if you have text">
 
-                                    <label for="body" class="mt-3">Text</label>
+                                <label for="body" class="mt-3">Text</label>
 
-                                    <div class="input-group">
-                                        <textarea form="submitform" class="form-control rounded" aria-label="With textarea"
-                                            placeholder="Optional if you have a link" rows="7" name="body"></textarea>
-                                        <div class="bg-light text-format d-none">
-                                            <small class="format"><i class="fas fa-bold"></i></small>
-                                            <small class="format"><i class="fas fa-italic"></i></small>
-                                            <small class="format"><i class="fas fa-quote-right"></i></small>
-                                            <small class="format"><i class="fas fa-link"></i></small>
-                                        </div>
+                                <div class="input-group">
+                                    <textarea form="submitform" class="form-control rounded" aria-label="With textarea"
+                                    placeholder="Optional if you have a link" rows="7" name="body"></textarea>
+                                    <div class="bg-light text-format d-none">
+                                        <small class="format"><i class="fas fa-bold"></i></small>
+                                        <small class="format"><i class="fas fa-italic"></i></small>
+                                        <small class="format"><i class="fas fa-quote-right"></i></small>
+                                        <small class="format"><i class="fas fa-link"></i></small>
                                     </div>
-
-                                    </div>
-
-                                    <div class="footer">
-
-                                        <div class="d-flex">
-
-                                        {% if error %}
-                                        <p class="mb-0">
-                                            <span class="text-danger text-small" style="vertical-align: sub;">{{ error }}</span>
-                                        </p>
-                                        {% endif %}
-
-                                            <button class="btn btn-primary ml-auto" id="create_button">Create post</button>
-
-                                        </div>
-
-                                    </div>
-
-                                </form>
+                                </div>
 
                             </div>
 
+                            <div class="footer">
+
+                                <div class="d-flex">
+
+                                    {% if error %}
+                                    <p class="mb-0">
+                                        <span class="text-danger text-small" style="vertical-align: sub;">{{ error }}</span>
+                                    </p>
+                                    {% endif %}
+
+                                    <button class="btn btn-primary ml-auto" id="create_button">Create post</button>
+
+                                </div>
+
                             </div>
-                        </div>
+
+                        </form>
+
                     </div>
+
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
-            <!-- Right Sidebar (hidden on devices smaller than "large") -->
+<!-- Right Sidebar (hidden on devices smaller than "large") -->
 
-            <div class="col sidebar text-left d-none ml-3">
-                <div class="sidebar-section sidebar-rules">
-                    <div class="title">Ruqqus Rules</div>
-                    <div class="body">
-                        <ol class="pl-0">
-                            <li>No racism</li>
-                            <li>No doxxing, threats, or calls to violence</li>
-                            <li>No trolling</li>
-                            <li>No solicitation</li>
-                            <li>Patriots only</li>
-                        </ol>
-                    </div>
-                </div>
-                <div class="sidebar-section sidebar-stats">
-                    <div class="title">Stats</div>
-                    <div class="body">
-                        <div class="d-inline-block w-25">
-                            <span style="font-size: 13px;font-weight: bold;">{{ 1 | total_users }}</span>
-                            <small style="display: block;">users</small>
-                        </div>
-
-                    </div>
-                </div>
-           
+<div class="col sidebar text-left d-none ml-3">
+    <div class="sidebar-section sidebar-rules">
+        <div class="title">Ruqqus Rules</div>
+        <div class="body">
+            <ol class="pl-0">
+                <li>No racism</li>
+                <li>No doxxing, threats, or calls to violence</li>
+                <li>No trolling</li>
+                <li>No solicitation</li>
+                <li>Patriots only</li>
+            </ol>
+        </div>
+    </div>
+    <div class="sidebar-section sidebar-stats">
+        <div class="title">Stats</div>
+        <div class="body">
+            <div class="d-inline-block w-25">
+                <span style="font-size: 13px;font-weight: bold;">{{ 1 | total_users }}</span>
+                <small style="display: block;">users</small>
             </div>
 
         </div>
+    </div>
+    
+</div>
+
+</div>
 
 {% include "footer.html" %}
 {% include "bootstrap.html" %}
@@ -196,6 +201,37 @@
 <!-- BS Spinner JS -->
 
 <script src="/assets/js/spinner.js"></script>
+
+<!-- ClipboardJS -->
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+
+<!-- Instantiate clipboard by passing a string selector -->
+<script type="text/javascript">
+  var clipboard = new ClipboardJS('.copy-link');
+  clipboard.on('success', function(e) {
+
+    jQuery(function($) {
+      $('#toast-success').toast('show');
+  })
+    console.log(e);
+});
+  clipboard.on('error', function(e) {
+
+    jQuery(function($) {
+      $('#toast-error').toast('show');
+  })
+    console.log(e);
+});
+</script>
+
+{% if v and v.referral_count %}
+
+<!-- Ruqqus Dark Mode Toggle -->
+
+<script src="/assets/js/dark_mode.js"></script>
+
+{% endif %}
 
 </body>
 

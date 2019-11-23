@@ -13050,6 +13050,17 @@ a:hover .link-arrow {
   border: none;
 }
 
+.sidebar-section.sidebar-dark-promo .form-control {
+  background-color: #5F5F5F;
+  color: #ACACAC;
+}
+
+.sidebar-section.sidebar-dark-promo .form-control:hover, .sidebar-section.sidebar-dark-promo .form-control:active, .sidebar-section.sidebar-dark-promo .form-control:focus {
+  background-color: #ffffff;
+  color: #1F1F1F;
+  border-color: #F1F1F1;
+}
+
 .list-group-item-action {
   color: rgba(255, 255, 255, 0.5);
 }
@@ -13767,6 +13778,8 @@ ul.comment-section {
 
 .settings .settings-section .footer {
   background-color: #EBE9EF;
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
 }
 
 .modal .profile-actions .list-group-item {
@@ -14539,6 +14552,8 @@ ul.comment-section {
 .submission .footer {
   background-color: #EBE9EF;
   padding: 1rem;
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
 }
 
 .transition-15 {
