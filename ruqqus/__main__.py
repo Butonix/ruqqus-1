@@ -50,7 +50,7 @@ limiter = Limiter(
 )
 
 #setup db
-_engine = create_engine(environ.get("DATABASE_URL"))
+_engine = create_engine(environ.get("HEROKU_POSTGRESQL_TEAL_URL"))
 db = sessionmaker(bind=_engine)()
 Base = declarative_base()
 
