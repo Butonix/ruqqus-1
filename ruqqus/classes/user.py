@@ -24,7 +24,7 @@ class User(Base):
     created_utc = Column(BigInteger, default=0)
     admin_level = Column(Integer, default=0)
     is_activated = Column(Boolean, default=False)
-    reddit_username = Column(String, default=None)
+    reddit_username = deferred(Column(String, default=None))
     over_18=Column(Boolean, default=False)
     creation_ip=deferred(Column(String, default=None))
     most_recent_ip=deferred(Column(String, default=None))
