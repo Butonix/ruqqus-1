@@ -97,8 +97,7 @@
   <div class="body">
     <div class="score">{{ score }} point{{ 's' if score !=1 else '' }}<span class="score-percent ml-2" id="score-percent"></span></div>
     <div class="progress mt-1" style="height: 6px;">
-      <div class="d-none" id="progressbar-value">{{ p.score_percent }}</div>
-      <div class="progress-bar bg-upvote transition-15" role="progressbar" id="progressbar" style=""
+      <div class="progress-bar bg-upvote transition-15" role="progressbar" id="progressbar" style="width: {{ p.score_percent }}%"
       aria-valuenow="{{ p.score_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
     <div class="submission-date mt-3">Submitted on:<span class="date"> {{ p.created_date }}</span></div>
