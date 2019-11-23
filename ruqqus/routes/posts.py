@@ -38,7 +38,7 @@ def post_base36id(base36id, v=None):
 
 
 @app.route("/submit", methods=['POST'])
-@limiter.limit("2/minute")
+@limiter.limit("6/minute")
 @is_not_banned
 @validate_formkey
 def submit_post(v):
