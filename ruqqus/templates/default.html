@@ -134,9 +134,7 @@
           </div>
           {% endif %}
 
-          </div>
-          {% if v %}
-          {% if v.admin_level %}
+          {% if and v.admin_level %}
           <div class="sidebar-section sidebar-adminpanel">
            <div class="title">Admin Panel</div>
            <div class="body">
@@ -145,7 +143,6 @@
              {% endblock %}
            </div>
          </div>
-         {% endif %}
          {% endif %}
          <div class="sidebar-section sidebar-trending d-none">
           <div class="title">What's Hot</div>
