@@ -37,7 +37,7 @@ class User(Base):
     badges=relationship("Badge", lazy="dynamic", backref="user")
     real_id=Column(String, default=None)
     notifications=relationship("Notification", lazy="dynamic", backref="user")
-    referred_by=Column(Integer, default=None)
+    referred_by=deferred(Column(Integer, default=None))
     is_banned=Column(Integer, default=0)
     ban_reason=deferred(Column(String, default=""))
 
