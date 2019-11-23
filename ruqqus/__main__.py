@@ -43,7 +43,7 @@ limit_url=environ.get("HEROKU_REDIS_PURPLE_URL", environ.get("HEROKU_REDIS_ORANG
 limiter = Limiter(
     app,
     key_func=get_remote_address,
-    default_limits=["60/minute"],
+    default_limits=["100/minute"],
     storage_uri=environ.get("HEROKU_REDIS_PURPLE_URL"),
     headers_enabled=True,
     strategy="fixed-window-elastic-expiry"
