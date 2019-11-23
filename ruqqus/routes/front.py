@@ -29,7 +29,8 @@ def frontlist(sort="hot", page=1):
     elif sort=="activity":
         posts=posts.order_by(text("submissions.rank_activity desc"))
 
-    posts=[x.id for x in posts.offset(25*(page-1)).limit(25).all()]
+    posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
+    
 
     return posts
     
@@ -48,6 +49,10 @@ def home(v):
 
     #get list of ids
     ids = frontlist(sort=sort_method, page=page)
+
+    #check existence of next page
+    next_exists=(len(ids)==26)
+    ids=ids[0:25]
 
     #check if ids exist
     if ids:
@@ -73,6 +78,7 @@ def home(v):
                                 )).all()
     else:
         posts=[]
+
     
 
     #If page 1, check for sticky
@@ -82,4 +88,4 @@ def home(v):
         if sticky:
             posts=[sticky]+posts
     
-    return render_template("home.html", v=v, listing=posts, sort_method=sort_method, page=page)
+    return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort_method=sort_method, page=page)
