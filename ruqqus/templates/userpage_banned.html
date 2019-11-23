@@ -94,7 +94,7 @@
 
 
       <div class="font-weight-bold text-muted">Banned!</div>
-      <div class="text-small text-muted">This user was banned.</div>
+      <div class="text-small text-muted">@{{ u.username }} was banned.</div>
 	{% if u.ban_reason %}
 	<div class="text-small text-muted">Reason: {{ u.ban_reason }}</div>
 	{% endif %}
