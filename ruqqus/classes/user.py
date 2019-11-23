@@ -23,7 +23,6 @@ class User(Base):
     passhash = Column(String, default=None)
     created_utc = Column(BigInteger, default=0)
     admin_level = Column(Integer, default=0)
-    ban_state = Column(Integer, default=0)
     is_activated = Column(Boolean, default=False)
     reddit_username = Column(String, default=None)
     over_18=Column(Boolean, default=False)
