@@ -24,7 +24,7 @@ def prep_database():
       FROM votes
       LEFT JOIN users
       ON votes.user_id = users.id
-      WHERE users.ban_state>-1
+      WHERE users.is_banned=0
         AND votes.vote_type=1
         AND votes.submission_id=$1.id
       '
@@ -41,7 +41,7 @@ def prep_database():
       FROM votes
       LEFT JOIN users
       ON votes.user_id = users.id
-      WHERE users.ban_state>-1
+      WHERE users.is_banned=0
         AND votes.vote_type=-1
         AND votes.submission_id=$1.id
       '
@@ -130,7 +130,7 @@ def prep_database():
       FROM commentvotes
       LEFT JOIN users
       ON commentvotes.user_id = users.id
-      WHERE users.ban_state>-1
+      WHERE users.is_banned=0
         AND commentvotes.vote_type=1
         AND commentvotes.comment_id=$1.id
       '
@@ -147,7 +147,7 @@ def prep_database():
       FROM commentvotes
       LEFT JOIN users
       ON commentvotes.user_id = users.id
-      WHERE users.ban_state>-1
+      WHERE users.is_banned=0
         AND commentvotes.vote_type=-1
         AND commentvotes.comment_id=$1.id
       '
@@ -194,7 +194,7 @@ def prep_database():
     RETURNS bigint AS'
         SELECT COUNT(*)
         FROM USERS
-        WHERE users.ban_state>=0
+        WHERE users.is_banned=0
         AND users.referred_by=$1.id
     '
     LANGUAGE SQL

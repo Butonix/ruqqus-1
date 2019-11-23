@@ -38,7 +38,9 @@ class User(Base):
     badges=relationship("Badge", lazy="dynamic", backref="user")
     real_id=Column(String, default=None)
     notifications=relationship("Notification", lazy="dynamic", backref="user")
-    referred_by=Column(Integer, default=None)    
+    referred_by=Column(Integer, default=None)
+    is_banned=Column(Integer, default=0)
+    ban_reason=Column(String, default="")
 
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
@@ -70,23 +72,13 @@ class User(Base):
         return f"t1_{self.base36id}"
 
     @property
-    def is_banned(self):
+    def banned_by(self):
 
-        #The schema for ban state is:
-        # 0 by default (unbanned)
-        # Positive integer for temp ban expiration timestamp
-        # -1 for perm ban
+        if not self.is_banned:
+            return None
 
-        if self.ban_state == 0:
-            return False
-
-        elif self.ban_state == -1:
-            return True
-
-        else:
-            return time.time()>self.ban_state
-            
-
+        return db.query(User).filter_by(id=self.is_banned).first()
+    
     def vote_status_on_post(self, post):
 
         vote = self.votes.filter_by(submission_id=post.id).first()

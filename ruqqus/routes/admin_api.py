@@ -15,7 +15,8 @@ def ban_user(user_id, v):
     if not user:
         abort(400)
 
-    user.ban_state=-1
+    user.is_banned=v.id
+    user.ban_reason=request.form.get("reason","")
 
     db.add(user)
     db.commit()
@@ -32,7 +33,7 @@ def unban_user(user_id, v):
     if not user:
         abort(400)
 
-    user.ban_state=0
+    user.is_banned=0
 
     db.add(user)
     db.commit()

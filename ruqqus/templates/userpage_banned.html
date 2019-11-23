@@ -90,11 +90,14 @@
 
     <div class="text-center py-7 py-md-8">
 
-      <i class="fad fa-ghost text-muted ghost mb-5" style="font-size: 5rem;"></i>
+      <i class="fad fa-gavel text-muted mb-5" style="font-size: 5rem;"></i>
 
 
-      <div class="font-weight-bold text-muted">Sorry, no profile here...</div>
-      <div class="text-small text-muted">This profile was either banned or deleted.</div>
+      <div class="font-weight-bold text-muted">Banned!</div>
+      <div class="text-small text-muted">This user was banned.</div>
+	{% if u.ban_reason %}
+	<div class="text-small text-muted">Reason: {{ u.ban_reason }}</div>
+	{% endif %}
 
     </div>
   </div>
