@@ -316,6 +316,7 @@
     </li>
     {% else %}
     <li class="page-item disabled"><span class="page-link">Prev</span></li>
+    {% endif %}
     {% if next_exists %}
     <li class="page-item">
       <small><a class="page-link" href="?page={{ page+1 }}">Next</a></small>
