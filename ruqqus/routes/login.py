@@ -18,6 +18,7 @@ from ruqqus.__main__ import app, limiter
 
 valid_username_regex=re.compile("^\w{5,25}$")
 valid_password_regex=re.compile("^.{8,}$")
+valid_email_regex=re.compile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
 #login form
 @app.route("/login", methods=["GET"])
@@ -220,6 +221,9 @@ def sign_up_post(v):
 
     if not re.match(valid_password_regex, request.form.get("password")):
         return new_signup("Password must be 8 characters or longer")
+
+    if not re.match(valid_email_regex, request.form.get("email")):
+        return new_signup("That's not a valid email.")
 
     #Check for existing acocunts
 
