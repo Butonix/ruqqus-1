@@ -34,7 +34,7 @@
 		<div class="text-small text-danger">{{ c.active_flags }} Flags</div>
 		{% endif %}
 
-            <div class="comment-text">
+            <div id="comment-text-{{ c.base36id }}" class="comment-text">
                 {{ c.body_html | safe }}
             </div>
 
