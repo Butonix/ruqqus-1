@@ -88,6 +88,7 @@
 </div>
 {% endblock %}
 
+
 {% block sidebarblock %}
 <div class="sidebar-section sidebar-post-meta">
   <div class="body">
@@ -202,8 +203,8 @@
                           </a>
 
                           <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
-                            <a class="dropdown-item" href="#"><i class="fas fa-save"></i>Save</a>
-                            <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Flag</a>
+                            <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
+                            <a class="dropdown-item d-none" href="#"><i class="fas fa-flag"></i>Flag</a>
                             {% if v %}
 {% if v.admin_level >=1 %}
     {% if p.is_banned %}

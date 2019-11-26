@@ -12,13 +12,13 @@
   window.onscroll = function () {
     var currentScrollPos = window.pageYOffset;
     if (prevScrollpos > currentScrollPos) {
-      document.getElementById("filter-bar-mobile").style.top = "48px";
+      document.getElementById("fixed-bar-mobile").style.top = "48px";
     } 
     else if (currentScrollPos <= 125) {
-      document.getElementById("filter-bar-mobile").style.top = "48px";
+      document.getElementById("fixed-bar-mobile").style.top = "48px";
     }
     else {
-      document.getElementById("filter-bar-mobile").style.top = "-98px";
+      document.getElementById("fixed-bar-mobile").style.top = "-98px";
       document.getElementById("dropdownMenuSortBy").classList.remove('show');
       document.getElementById("dropdownMenuFrom").classList.remove('show');
     }
@@ -141,7 +141,7 @@
 {% block content %}
 <!-- Post filters bar visible only on medium devices or larger-->
 
-<div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="filter-bar-mobile" style="z-index: 100; top: 48px; transition: top 0.3s ease 0s;">
+<div class="row fixed-top bg-white border-0 d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 48px; transition: top 0.3s ease 0s;">
 
   <div class="col">
 
