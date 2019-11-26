@@ -1169,6 +1169,10 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     padding: 0;
 }
 
+.post-body {
+    word-break: break-word;
+}
+
 .post-body p {
     margin-bottom: 0;
 }
@@ -1180,6 +1184,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     background-color: $light;
     border-top-left-radius: $border-radius;
     border-top-right-radius: $border-radius;
+    padding: 0.75rem 1rem;
 }
 
 .modal-content {
