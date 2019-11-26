@@ -27,7 +27,7 @@
                 <span class="time-stamp"><span>&#183;</span> {{ c.age_string }}</span>
             </div>
 
-            <div class="comment-text">
+            <div id="comment-text-{{ c.base36id }}" class="comment-text">
                 {{ c.body_html | safe }}
             </div>
 
