@@ -210,6 +210,8 @@
                 {% endif %}
 
                 {% if v and c.author_id==v.id %}
+                <li class="list-group-item d-none"><a href="javascript:void(0)" onclick="toggleEdit('{{ c.base36id }}')" class="d-block"><i class="fas fa-save"></i>Edit</a></li>
+
                 <li class="list-group-item"><a class="d-block" href="#" data-toggle="modal" data-dismiss="modal" data-target="#deleteModal-{{ c.base36id }}"><i class="fas fa-trash-alt"></i>Delete</a></li>
                 {% endif %}
 
