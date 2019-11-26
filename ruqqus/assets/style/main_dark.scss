@@ -365,7 +365,6 @@ ol > li::before {
 
 .toast {
     border: 0;
-    display: none;
 }
 
 .toast.clipboard {
@@ -505,7 +504,6 @@ ol > li::before {
     left: 14px;
     line-height: 1.25rem;
     border: 2px solid $primary;
-    padding: 0px 4px 2px 3px;
 }
 
 .post-nav .nav-link {
@@ -668,7 +666,7 @@ ol > li::before {
 
 .form-control:focus, .form-control:active {
     color: $black;
-    background-color: $dark;
+    background-color: $light;
     outline: 0;
     border-color: $primary;
     box-shadow: none;
@@ -1176,10 +1174,8 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 // Modals (post actions, delete confirmations)
 
 .modal-header {
-    border-bottom: none;
+    border-bottom: 1px solid $border-color;
     background-color: $light;
-    border-top-left-radius: $border-radius;
-    border-top-right-radius: $border-radius;
 }
 
 .modal-content {
@@ -1474,11 +1470,10 @@ blockquote p {
 .modal .comment-actions .list-group-item {
     border: none;
     border-radius: $border-radius;
-    background-color: $dark;
 }
 
 .modal .comment-actions .list-group-item:focus, .modal .comment-actions .list-group-item:hover {
-    background-color: $light;
+    background-color: $gray-200;
 }
 
 .modal .comment-actions a {
@@ -1592,7 +1587,7 @@ ul.comment-section {
 }
 
 .comment-write.child {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
 }
 
 .comment-write.collapsed textarea:focus, .comment-write.collapsed textarea:active {
@@ -2356,14 +2351,6 @@ body {
 
 .navbar-dark .navbar-nav .nav-link .fa, .navbar-dark .navbar-nav .nav-link .fas, .navbar-dark .navbar-nav .nav-link .far, .navbar-dark .navbar-nav .nav-link .fab {
     font-size: $font-size-base;
-}
-
-#fixed-bar-mobile {
-    box-shadow: none;
-}
-
-.mobile-nav-icon {
-    padding: 0.25rem 0.75rem;
 }
 
 #thread, #submit, #error-401, #error-403, #error-404, #error-405, #error-500 {

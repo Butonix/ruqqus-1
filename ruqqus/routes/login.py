@@ -18,7 +18,7 @@ from ruqqus.__main__ import app, limiter
 
 valid_username_regex=re.compile("^\w{5,25}$")
 valid_password_regex=re.compile("^.{8,}$")
-#valid_email_regex=re.compile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+valid_email_regex=re.compile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
 #login form
 @app.route("/login", methods=["GET"])
@@ -62,14 +62,10 @@ def check_for_alts(current_id):
 @app.route("/login", methods=["POST"])
 @limiter.limit("6/minute")
 def login_post():
-    
+
     username=request.form.get("username")
 
-    if "@" in username:
-        account=db.query(User).filter(User.email.ilike(username)).first()
-    else:
-        account=db.query(User).filter(User.username.ilike(username)).first()
-
+    account = db.query(User).filter_by(email=username).first()
     if not account:
         time.sleep(random.uniform(0,2))
         return render_template("login.html", failed=True, i=random_image())
@@ -226,8 +222,8 @@ def sign_up_post(v):
     if not re.match(valid_password_regex, request.form.get("password")):
         return new_signup("Password must be 8 characters or longer")
 
-    #if not re.match(valid_email_regex, request.form.get("email")):
-    #    return new_signup("That's not a valid email.")
+    if not re.match(valid_email_regex, request.form.get("email")):
+        return new_signup("That's not a valid email.")
 
     #Check for existing acocunts
 
@@ -248,7 +244,7 @@ def sign_up_post(v):
     try:
         new_user=User(username=request.form.get("username"),
                       password=request.form.get("password"),
-                      email=request.form.get("email", None),
+                      email=request.form.get("email"),
                       created_utc=int(time.time()),
                       creation_ip=request.remote_addr,
                       referred_by=ref_id
@@ -261,11 +257,10 @@ def sign_up_post(v):
     db.add(new_user)
     db.commit()
 
-    #give a beta badge
-    beta_badge=Badge(user_id=new_user.id,
+    prebeta_badge=Badge(user_id=new_user.id,
                         badge_id=1)
 
-    db.add(beta_badge)
+    db.add(prebeta_badge)
     db.commit()
 
     check_for_alts(new_user.id)
@@ -295,7 +290,7 @@ def post_forgot():
     username = request.form.get("username")
     email = request.form.get("email")
 
-    user = db.query(User).filter(User.username.ilike(username), User.email.ilike(email), User.is_activated==True).first()
+    user = db.query(User).filter_by(username=username, email=email, is_activated=True).first()
 
     if user:
         #generate url

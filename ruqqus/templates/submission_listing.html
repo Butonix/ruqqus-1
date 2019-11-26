@@ -26,7 +26,7 @@
       aria-labelledby="dropdownMoreLink">
       <a href="javascript:void(0);" role="button" class="dropdown-item copy-link" data-clipboard-text="https://www.ruqqus.com{{ p.permalink }}"><i class="fas fa-link"></i>Copy link</a>
       <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
-      <a class="dropdown-item d-none" href="#"><i class="fas fa-flag"></i>Flag</a>
+      <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Flag</a>
       {% if v %}
       {% if v.admin_level >=1 %}
       {% if p.is_banned %}
@@ -149,7 +149,7 @@
       <div class="modal-body">
         <ul class="list-group post-actions">
           <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
-          <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
+          <li class="list-group-item"><a href="#" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
           {% if v %}
           {% if v.admin_level >=1 %}
           {% if p.is_banned %}
