@@ -12,6 +12,11 @@
         </span>
       </form>
     </div>
+    {% if v %}
+    <a class="mobile-nav-icon text-white text-lg d-block d-md-none" href="/submit"><i class="far fa-feather-alt align-middle"></i></a>
+    {% else %}
+    <a class="mobile-nav-icon text-white text-lg d-block d-md-none" href="/login"><i class="far fa-feather-alt align-middle"></i></a>
+    {% endif %}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
     aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"><i class="fal fa-bars text-white" style="font-size: 2rem;"></i></span>
@@ -73,11 +78,11 @@
               {% endif %}
               <a class="dropdown-item" href="/settings"><i class="fas fa-cog text-left mr-3"></i>Settings</a>
               {% if v and v.referral_count and session.get("dark_mode_enabled")%}
-              <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on mr-3" id="dark-switch"></i>Dark mode</a>
+              <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on text-left mr-3" id="dark-switch"></i>Dark mode</a>
               {% elif v and v.referral_count %}
-              <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off mr-3" id="dark-switch"></i>Dark mode</a>
+              <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off text-left mr-3" id="dark-switch"></i>Dark mode</a>
               {% else %}
-              <a class="dropdown-item" href="/settings/profile#referral"><i class="fad fa-toggle-off mr-3"></i>Dark mode</a>
+              <a class="dropdown-item" href="/settings/profile#referral"><i class="fad fa-toggle-off text-left mr-3"></i>Dark mode</a>
               {% endif %}
             </div>
             <hr class="my-2">
@@ -92,17 +97,24 @@
        <a class="btn btn-primary" href="/login?redirect={{ request.path | urlencode}}">Sign In</a>
      </li>
      <li class="nav-item d-flex align-items-center justify-content-center mx-1">
-       <a class="btn btn-outline-white" href="/signup?redirect={{ request.path | urlencode}}">Sign Up</a>
+       <a class="btn btn-white" href="/signup?redirect={{ request.path | urlencode}}">Sign Up</a>
      </li>
      {% endif %}
    </ul>
 
    <!-- Mobile Nav Menu -->
    <ul class="navbar-nav ml-auto d-flex d-md-none mt-3">
-    {% if v %}
-    <li class="nav-item pb-2">
-      <a class="btn btn-white btn-block" href="/submit">Create post</a>
+     <li class="nav-item pb-3">
+      <form class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search" method="get">
+        <input class="form-control form-control-sm w-100" type="search" placeholder="Search Ruqqus" aria-label="Search" name="q">
+        <span class="input-group-append">
+          <span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </span>
+        </span>
+      </form>
     </li>
+    {% if v %}
     <li class="nav-item">
       <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem mr-3"></i>@{{ v.username }}</a>
     </li>
@@ -113,11 +125,11 @@
       <a class="nav-link" href="/settings"><i class="fas fa-cog fa-width-rem mr-3"></i>Settings</a>
     </li>
     {% if v and v.referral_count and session.get("dark_mode_enabled")%}
-    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on mr-3" id="dark-switch"></i>Dark mode</a></li>
+    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem mr-3" id="dark-switch"></i>Dark mode</a></li>
     {% elif v and v.referral_count %}
-    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off mr-3" id="dark-switch"></i>Dark mode</a></li>
+    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem mr-3" id="dark-switch"></i>Dark mode</a></li>
     {% else %}
-    <li class="nav-item"><a class="nav-link" href="/settings/profile#referral"><i class="fad fa-toggle-off mr-3"></i>Dark mode</a></li>
+    <li class="nav-item"><a class="nav-link" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem mr-3"></i>Dark mode</a></li>
     {% endif %}
     <li class="nav-item nav-item border-top mt-2 pt-2">
       <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})">Log out</a>
@@ -139,10 +151,10 @@
     </li>
     {% else %}
     <li class="nav-item d-flex align-items-center justify-content-center pb-3">
-      <a class="btn btn-white btn-block" href="/login?redirect={{ request.path | urlencode}}">Sign in</a>
+      <a class="btn btn-outline-white btn-block" href="/login?redirect={{ request.path | urlencode}}">Sign in</a>
     </li>
     <li class="nav-item d-flex align-items-center justify-content-center">
-      <a class="btn btn-outline-white btn-block" href="/signup?redirect={{ request.path | urlencode}}">Sign up</a>
+      <a class="btn btn-white btn-block" href="/signup?redirect={{ request.path | urlencode}}">Sign up</a>
     </li>
     <li class="nav-item nav-item mt-2">
       <a class="nav-link text-small-extra" href="/about">About</a>
