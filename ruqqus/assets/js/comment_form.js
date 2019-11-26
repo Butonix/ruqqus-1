@@ -18,3 +18,12 @@ $('.comment-box').blur(function () {
 
 */
 
+//Comment edit form
+
+toggleEdit=function(id){
+   comment=document.getElementById("comment-text-"+id);
+   form=document.getElementById("comment-edit-"+id);
+
+   comment.classList.toggle("d-none");
+   form.classList.toggle("d-none");
+}

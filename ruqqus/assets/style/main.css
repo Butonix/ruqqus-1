@@ -12417,6 +12417,7 @@ ol > li::before {
 
 .toast {
   border: 0;
+  display: none;
 }
 
 .toast.clipboard {
@@ -12544,6 +12545,7 @@ ol > li::before {
   left: 14px;
   line-height: 1.25rem;
   border: 2px solid #603abb;
+  padding: 0px 4px 2px 3px;
 }
 
 .post-nav .nav-link {
@@ -13192,6 +13194,8 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .modal-header {
   border-bottom: 1px solid #E6E6E6;
   background-color: #ffffff;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
 }
 
 .modal-content {
@@ -13359,7 +13363,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .post-img-overlay {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.5);
-  bottom: 0;
+  bottom: 0px;
   padding: 0.25rem 0.5rem;
   text-align: right;
   width: 100%;
@@ -13370,6 +13374,16 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   .post-img {
     width: 80px;
     height: 60px;
+  }
+
+  .post-img-overlay {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    bottom: -1px;
+    padding: 0.25rem 0.5rem;
+    text-align: right;
+    width: 100%;
+    color: #ffffff;
   }
 }
 .post-actions .comments, .post-actions .share, .post-actions .save, .post-actions .flag {
@@ -13562,7 +13576,7 @@ ul.comment-section {
 }
 
 .comment-write.child {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .comment-write.collapsed textarea:focus, .comment-write.collapsed textarea:active {
@@ -14710,6 +14724,14 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
   .navbar-dark .navbar-nav .nav-link .fa, .navbar-dark .navbar-nav .nav-link .fas, .navbar-dark .navbar-nav .nav-link .far, .navbar-dark .navbar-nav .nav-link .fab {
     font-size: 1rem;
+  }
+
+  #fixed-bar-mobile {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+
+  .mobile-nav-icon {
+    padding: 0.25rem 0.75rem;
   }
 
   #thread, #submit, #error-401, #error-403, #error-404, #error-405, #error-500 {
