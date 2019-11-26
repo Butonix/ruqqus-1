@@ -80,6 +80,7 @@
 
                       <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
                         <a class="dropdown-item" href="{{ c.parent.permalink }}"><i class="fas fa-dna"></i>Parent</a>
+			<a class="dropdown-item" href="javascript:void(0)" onclick="toggleEdit('{{ c.base36id }}')"><i class="fas fa-edit"></i>Edit</a>
                         <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
                         <a class="dropdown-item d-none" href="#"><i class="fas fa-flag"></i>Flag</a>
 
@@ -171,6 +172,7 @@
           <ul class="list-group comment-actions">
             <li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-clipboard-text="https://www.ruqqus.com{{ c.permalink }}"><i class="fas fa-link"></i><span>Share</span></a>
                 <li class="list-group-item"><a class="d-block" href="{{ c.parent.permalink }}"><i class="fas fa-dna"></i>Parent</a></li>
+		<li class="list-group-item"><a class="d-block" href="javascript:void(0)" onclick="toggleEdit('{{ c.base36id }}')"><i class="fas fa-edit"></i>Edit</a></li>
                 <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
                 <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
 
