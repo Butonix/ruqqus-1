@@ -273,7 +273,8 @@ def sign_up_post(v):
 
     check_for_alts(new_user.id)
 
-    send_verification_email(new_user)
+    if email:
+        send_verification_email(new_user)
 
     session["user_id"]=new_user.id
     session["session_id"]=token_hex(16)
