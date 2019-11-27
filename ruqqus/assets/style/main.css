@@ -13159,6 +13159,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .post-title {
   font-size: 16px;
+  font-weight: 500;
 }
 
 .post-title a {
