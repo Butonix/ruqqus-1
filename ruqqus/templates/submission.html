@@ -49,6 +49,10 @@
 <script src="/assets/js/comment_modding.js"></script>
 {% endblock %}
 
+{% block progressbarJS %}
+<script src="/assets/js/progressbar.js" defer></script>
+{% endblock %}
+
 {% block embedJS %}
 <script src="/assets/js/yt_embed.js"></script>
 {% endblock %}
@@ -71,11 +75,13 @@
       <div class="modal-body">
         <ul class="list-group post-actions">
           <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
-          <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
+          {% if v and not v.id==p.author_id %}
+          <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{ p.base36id }}')" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
+          {% endif %}
           {% if v %}
-          {% if v.admin_level >=1 %}
+          {% if v.admin_level >=3 %}
           {% if p.is_banned %}
-          <li class="list-group-item"><a class="d-block"id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="fas fa-clipboard-check"></i>Approve</a></li>
+          <li class="list-group-item"><a class="d-block" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="fas fa-clipboard-check"></i>Approve</a></li>
           {% else %}
           <li class="list-group-item"><a class="d-block" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a></li>
           {% endif %}
@@ -88,13 +94,68 @@
 </div>
 {% endblock %}
 
+{% block reportCommentModal %}
+
+{% if v %}
+<!-- Report Comment Modal -->
+<div class="modal fade" id="reportCommentModal" tabindex="-1" role="dialog" aria-labelledby="reportCommentModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Report comment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"><i class="fas fa-times"></i></span>
+          </button>
+      </div>
+      <!-- Before report is made, show this -->
+      <div class="" id="reportCommentFormBefore">
+      <form>
+              <div class="modal-body">
+                <div class="h6">We're sorry something here is wrong.</div>
+                <small class="form-text text-muted">Please select a reason for flagging below.</small>
+                <select class="custom-select mt-3" name="reportReason">
+                  <option value="Spam">This comment is spam</option>
+                  <option value="Contains copyrighted material">Contains copyrighted material</option>
+                  <option value="Contains personal information or harassment">Contains personal information or harassment</option>
+                  <option value="Contains or links to pornographic material">Contains or links to pornographic material</option>
+                  <option value="Contains a threat or involves minors">Contains a threat or involves minors</option>
+                  <option value="Promotes sale of illicit substances">Promotes sale of illicit substances</option>
+              </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
+            <button id="reportCommentButton" class="btn btn-danger">Report comment</button>
+        </div>
+        </form>
+</div>
+<!-- After report is made, show this -->
+<div class="d-none" id="reportCommentFormAfter">
+  <div class="modal-body">
+    <div class="h6">Thank you for reporting this comment!</div>
+    <small class="form-text text-muted">We'll take it from here.</small>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-link text-secondary" data-dismiss="modal">Close</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+
 
 {% block sidebarblock %}
 <div class="sidebar-section sidebar-post-meta">
   <div class="body">
-    <div class="score">{{ score }} point{{ 's' if score !=1 else '' }}<span class="score-percent ml-2" id="score-percent">{{ p.score_percent }}% upvoted</span></div>
+    <div class="score">{{ score }} point{{ 's' if score !=1 else '' }}<span class="score-percent ml-2" id="score-percent"></span></div>
     <div class="progress mt-1" style="height: 6px;">
-      <div class="progress-bar bg-upvote transition-15" role="progressbar" id="progressbar" style="width: {{ p.score_percent }}%"
+      <div class="d-none" id="p-ups">{{ p.ups }}</div>
+      <div class="d-none" id="p-downs">{{ p.downs }}</div>
+      <div class="d-none" id="progressbar-value">{{ p.score_percent }}</div>
+      <div class="progress-bar bg-upvote transition-15" role="progressbar" id="progressbar" style=""
       aria-valuenow="{{ p.score_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
     <div class="submission-date mt-3">Submitted on:<span class="date"> {{ p.created_date }}</span></div>
@@ -122,7 +183,9 @@
           aria-labelledby="dropdownMoreLink">
           <a href="javascript:void(0);" role="button" class="dropdown-item copy-link" data-clipboard-text="https://www.ruqqus.com{{ p.permalink }}"><i class="fas fa-link"></i>Copy link</a>
           <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
-          <a class="dropdown-item d-none" href="#"><i class="fas fa-flag"></i>Flag</a>
+          {% if v and not v.id==p.author_id %}
+          <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportPostModal" onclick="report_postModal('{{ p.base36id }}')"><i class="fas fa-flag"></i>Flag</a>
+          {% endif %}
           {% if v %}
           {% if v.admin_level >=1 %}
           {% if p.is_banned %}

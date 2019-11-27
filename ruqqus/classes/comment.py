@@ -11,6 +11,7 @@ from ruqqus.__main__ import Base, db, cache
 from .user import User
 from .submission import Submission
 from .votes import CommentVote
+from .flags import CommentFlag
 
 class Comment(Base):
 
@@ -27,12 +28,16 @@ class Comment(Base):
     body_html = Column(String)
     distinguish_level=Column(Integer, default=0)
     is_deleted = Column(Boolean, default=False)
+    is_approved = Column(Integer, default=0)
+    approved_utc=Column(Integer, default=0)
 
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
     ups = Column(Integer, server_default=FetchedValue())
     downs=Column(Integer, server_default=FetchedValue())
     age=Column(Integer, server_default=FetchedValue())
+    flags=relationship("CommentFlag", lazy="dynamic", backref="comment")
+    flag_count=Column(Integer, server_default=FetchedValue())
 
     def __init__(self, *args, **kwargs):
                    
@@ -206,7 +211,13 @@ class Comment(Base):
             years=now.tm_year-ctd.tm_year
             return f"{years} year{'s' if years>1 else ''} ago"
 
-
+    @property
+    def active_flags(self):
+        if self.is_approved:
+            return 0
+        else:
+            return self.flag_count
+        
 class Notification(Base):
 
     __tablename__="notifications"

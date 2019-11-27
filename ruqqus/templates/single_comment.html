@@ -31,7 +31,7 @@
             </div>
 
 		{% if v and v.admin_level > 3 and c.active_flags %}
-		<div class="text-small text-danger">{{ c.active_flags }} Flags</div>
+		<div class="text-small text-danger">{{ c.active_flags }} Flag{{ '' if c.active_flags==1 else 's' }}</div>
 		{% endif %}
 
             <div id="comment-text-{{ c.base36id }}" class="comment-text">
@@ -106,7 +106,7 @@
                         <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
 
                         {% if v and not v.id==c.author_id %}
-                        <a class="dropdown-item d-none" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}')"><i class="fas fa-flag"></i>Flag</a>
+                        <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}')"><i class="fas fa-flag"></i>Flag</a>
 
                         {% endif %}
 
@@ -131,7 +131,7 @@
 
                         {% endif %}
                         {% endif %}
-                        {% if v.admin_level>=1 and v.admin_level > c.author.admin_level %}
+                        {% if v.admin_level>=3 %}
                         {% if not c.is_banned or c.active_flags%}
                         <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a>
 			{% endif %}
@@ -206,7 +206,7 @@
                 <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
 
                 {% if v and not v.id==c.author_id %}
-                <li class="list-group-item d-none"><a href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}')" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
+                <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}')" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
                 {% endif %}
 
                 {% if v and c.author_id==v.id %}
@@ -225,7 +225,7 @@
 
                 {% endif %}
                 {% endif %}
-                {% if v.admin_level>=1 and v.admin_level > c.author.admin_level %}
+                {% if v.admin_level>=3 %}
                 {% if not c.is_banned %}
                 <li class="list-group-item"><a class="d-block" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a></li>
 		{% endif %}

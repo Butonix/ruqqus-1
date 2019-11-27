@@ -1,5 +1,12 @@
 {% extends "default.html" %}
 
+{% block adminpanel %}
+<div>
+<p><a href="/flagged/posts">Reported Posts</a></p>
+<p><a href="/flagged/comments">Reported Comments</a></p>
+</div>
+{% endblock %}
+
 {% block enlargeThumbJS %}
 <script src="/assets/js/enlarge_thumb.js"></script>
 {% endblock %}

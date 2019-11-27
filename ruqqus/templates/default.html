@@ -203,6 +203,9 @@
 {% block actionsModal %}
 {% endblock %}
 
+{% block reportCommentModal %}
+{% endblock %}
+
 <footer class="footer py-5 d-none d-md-block">
   <div class="container-fluid">
     <div class="row justify-content-center">
@@ -238,6 +241,8 @@
     <i class="fas fa-exclamation-circle mr-2"></i>Unable to copy link
   </div>
 </div>
+
+{% include "flag_post_modal.html" %}
 
 {% include "bootstrap.html" %}
 
@@ -288,7 +293,15 @@
 <script src="/assets/js/dark_mode.js"></script>
 {% endif %}
 
+{% if v %}
+<!-- Ruqqus Flag Comment & Submission -->
+<script src="/assets/js/flag.js"></script>
+{% endif %}
+
 {% block enlargeThumbJS %}
+{% endblock %}
+
+{% block progressbarJS %}
 {% endblock %}
 
 {% block embedJS %}

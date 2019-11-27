@@ -26,12 +26,15 @@
       aria-labelledby="dropdownMoreLink">
       <a href="javascript:void(0);" role="button" class="dropdown-item copy-link" data-clipboard-text="https://www.ruqqus.com{{ p.permalink }}"><i class="fas fa-link"></i>Copy link</a>
       <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
-      <a class="dropdown-item d-none" href="#"><i class="fas fa-flag"></i>Flag</a>
+      {% if v and not v.id==p.author_id %}
+      <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportPostModal" onclick="report_postModal('{{ p.base36id }}')"><i class="fas fa-flag"></i>Flag</a>
+      {% endif %}
       {% if v %}
       {% if v.admin_level >=1 %}
-      {% if p.is_banned %}
+      {% if p.is_banned or p.active_flags %}
       <a class="dropdown-item approveDropdownItem" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="fas fa-clipboard-check"></i>Approve</a>
-      {% else %}
+      {% endif %}
+      {% if not p.is_banned or p.active_flags %}
       <a class="dropdown-item removeDropdownItem" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a>
       {% endif %}
       {% endif %}
@@ -40,10 +43,10 @@
   </div>
 </div>
 <div class="card-block text-left my-md-auto">
-  <div class="post-meta text-left d-block d-md-none mb-2">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> <span>&#183;</span> ({{ p.domain }})
+  <div class="post-meta text-left d-block d-md-none mb-2">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> <span>&#183;</span> ({{ p.domain }}){% if v and v.admin_level >=3 and p.active_flags %} &#183; <span class="text-danger">{{ p.active_flags }} Flags</span>{% endif %}
   </div>
   <h5 class="card-title post-title text-left mb-0 mb-md-2"><a href="{{ p.permalink }}" class="stretched-link" onclick="">{{ p.title | safe }}</a></h5>
-  <div class="post-meta text-left d-none d-md-block">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> <span>&#183;</span> {{ p.comment_count }} comment{{ '' if p.comment_count==1 else 's' }}  <span>&#183;</span> ({{ p.domain }})
+  <div class="post-meta text-left d-none d-md-block">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> <span>&#183;</span> {{ p.comment_count }} comment{{ '' if p.comment_count==1 else 's' }}  <span>&#183;</span> ({{ p.domain }}){% if v and v.admin_level >=3 and p.active_flags %} &#183; <span class="text-danger">{{ p.active_flags }} Flags</span>{% endif %}
   </div>
 
 </div>
@@ -149,12 +152,15 @@
       <div class="modal-body">
         <ul class="list-group post-actions">
           <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
-          <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
+          {% if v and not v.id==p.author_id %}
+          <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{ p.base36id }}')" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
+          {% endif %}
           {% if v %}
           {% if v.admin_level >=1 %}
-          {% if p.is_banned %}
+          {% if p.is_banned or p.active_flags %}
           <li class="list-group-item"><a class="d-block" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="fas fa-clipboard-check"></i>Approve</a></li>
-          {% else %}
+          {% endif %}
+	  {% if not p.is_banned or p.active_flags %}
           <li class="list-group-item"><a class="d-block" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a></li>
           {% endif %}
           {% endif %}

@@ -1,3 +1,4 @@
+import time
 from flask import *
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
@@ -51,6 +52,8 @@ def ban_post(post_id, v):
         abort(400)
 
     post.is_banned=True
+    post.is_approved=0
+    post.approved_utc=0
     post.stickied=False
 
     db.add(post)
@@ -69,6 +72,8 @@ def unban_post(post_id, v):
         abort(400)
 
     post.is_banned=False
+    post.is_approved = v.id
+    post.approved_utc=int(time.time())
 
     db.add(post)
     db.commit()
@@ -161,6 +166,8 @@ def api_ban_comment(c_id, v):
         abort(404)
 
     comment.is_banned=True
+    comment.is_approved=0
+    comment.approved_utc=0
 
     db.add(comment)
     db.commit()
@@ -176,6 +183,8 @@ def api_unban_comment(c_id, v):
         abort(404)
 
     comment.is_banned=False
+    comment.is_approved=v.id
+    comment.approved_utc=int(time.time())
 
     db.add(comment)
     db.commit()
