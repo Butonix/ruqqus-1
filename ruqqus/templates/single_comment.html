@@ -240,26 +240,4 @@
 </div>
 </div>
 
-{% if v and v.id==c.author_id %}
-<!-- Delete Comment Modal -->
-<div class="modal fade" id="deleteModal-{{ c.base36id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-body text-center">
-        <div class="my-2" style="font-size: 4rem;">
-            <i class="fad fa-trash-alt text-muted"></i>
-        </div>
-        <div class="h5">Delete comment?</div>
-        <p class="text-muted text-small">Your comment will be removed everywhere on Ruqqus, including your profile. This action cannot be undone. </p>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
-        <a href="javascript:void(0)" class="btn btn-danger" onclick="post('/delete/comment/{{ c.base36id }}', callback=function(){window.location.reload(true)})">Yes, delete
-        </a>
-    </div>
-</div>
-</div>
-</div>
-{% endif %}
-
 </div>
