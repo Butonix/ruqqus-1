@@ -162,48 +162,6 @@
   </div>
 </div>
 
-{% block reportCommentModal %}
-
-{% if v %}
-<!-- Report Comment Modal -->
-<div class="modal fade" id="reportCommentModal" tabindex="-1" role="dialog" aria-labelledby="reportCommentModalTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">Report comment?</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true"><i class="fas fa-times"></i></span>
-          </button>
-      </div>
-      <!-- Before report is made, show this -->
-      <div class="" id="reportCommentFormBefore">
-              <div class="modal-body">
-                <div class="h6">We're sorry something here is wrong.</div>
-                <small class="form-text text-muted">Click 'report comment' and we'll take it from here.</small>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
-            <button id="reportCommentButton" type="submit" class="btn btn-danger">Report comment</button>
-        </div>
-</div>
-<!-- After report is made, show this -->
-<div class="d-none" id="reportCommentFormAfter">
-  <div class="modal-body">
-    <div class="h6">Thank you for reporting this comment.</div>
-    <small class="form-text text-muted">Ruqqus admins will look into it.</small>
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Close</button>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-{% endif %}
-
-{% endblock %}
-
 <footer class="footer py-5">
   <div class="container-fluid">
     <div class="row justify-content-center">
