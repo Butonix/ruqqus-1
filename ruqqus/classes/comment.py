@@ -126,7 +126,7 @@ class Comment(Base):
         if self.replies==[]:
             return False
 
-        if any([not x.is_banned for x in self.replies]):
+        if any([not x.is_banned and not x.is_deleted for x in self.replies]):
             return True
 
         else:
