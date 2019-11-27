@@ -223,6 +223,9 @@
       </div>
     </footer>
 
+    {% include "flag_post_modal.html" %}
+    {% include "flag_comment_modal.html" %}
+
     {% include "bootstrap.html" %}
 
     <script src="/assets/js/collapse.js"></script>
@@ -230,8 +233,8 @@
     {% if v %}
     <script src="/assets/js/comment_form.js"></script>
 
-    <!-- Ruqqus Flag Comment -->
-    <script src="/assets/js/flag_comment.js"></script>
+    <!-- Ruqqus Flag Comment & Submission -->
+    <script src="/assets/js/flag.js"></script>
     {% endif %}
 
     <!-- Initialize BS 4 tool tips -->
