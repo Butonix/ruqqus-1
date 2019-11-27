@@ -230,9 +230,12 @@ def sign_up_post(v):
     #    return new_signup("That's not a valid email.")
 
     #Check for existing acocunts
+    email=request.form.get("email")
+    if not email:
+        email=None
 
     if (db.query(User).filter(User.username.ilike(request.form.get("username"))).first()
-        or db.query(User).filter(User.email.ilike(request.form.get("email"))).first()):
+        or db.query(User).filter(User.email.ilike(email)).first()):
         return new_signup("An account with that username or email already exists.")       
     
     #success
