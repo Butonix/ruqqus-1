@@ -235,8 +235,8 @@ def sign_up_post(v):
         email=None
 
     if (db.query(User).filter(User.username.ilike(request.form.get("username"))).first()
-        or db.query(User).filter(User.email.ilike(email)).first()):
-        return new_signup("An account with that username or email already exists.")       
+        or (email and db.query(User).filter(User.email.ilike(email)).first()))
+        return new_signup("An account with that username or email already exists.")
     
     #success
     
