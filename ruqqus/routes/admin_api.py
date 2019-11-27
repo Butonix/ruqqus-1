@@ -172,7 +172,7 @@ def api_ban_comment(c_id, v):
     db.add(comment)
     db.commit()
 
-    return ("", comment)
+    return "", 204
 
 @app.route("/api/unban_comment/<c_id>", methods=["post"])
 @admin_level_required(1)
@@ -189,7 +189,7 @@ def api_unban_comment(c_id, v):
     db.add(comment)
     db.commit()
 
-    return ("", comment)
+    return "", 204
 
 @app.route("/api/distinguish_comment/<c_id>", methods=["post"])
 @admin_level_required(1)
@@ -204,7 +204,7 @@ def api_distinguish_comment(c_id, v):
     db.add(comment)
     db.commit()
 
-    return ("", comment)
+    return "", 204
 
 @app.route("/api/undistinguish_comment/<c_id>", methods=["post"])
 @admin_level_required(1)
@@ -219,4 +219,4 @@ def api_undistinguish_comment(c_id, v):
     db.add(comment)
     db.commit()
 
-    return ("", comment)
+    return "", 204
