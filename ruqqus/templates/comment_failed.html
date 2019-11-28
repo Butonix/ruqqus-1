@@ -9,8 +9,8 @@
 {% block content %}
 <div class="">
 
-	<h1>Oops</h1>
-	<p class="text-left">There's a bad link somewhere in your comment. Although Ruqqus puts your freedom of speech first, there are a few things that aren't allowed:</p>
+	<h1>Whoops!</h1>
+	<p class="text-left">Although Ruqqus puts your freedom of speech first, there are a few things that we don't allow here:</p>
 	<ul>
 	<li>Pornography</li>
 	<li>URL shorteners</li>
@@ -27,7 +27,7 @@
 
 	<div id="reply-to-{{ parent_fullname }}">
 		<div class="comment-write collapsed child">
-			<form id="reply-to-comment" action="/api/comment" method="post" class="input-group">
+			<form id="reply-to-{{ parent_fullname }}" action="/api/comment" method="post" class="input-group">
 				<input type="hidden" name="formkey" value="{{ v.formkey }}">
 				<input type="hidden" name="parent_fullname" value="{{ parent_fullname }}">
 				<input type="hidden" name="submission" value="{{ parent_submission }}">
