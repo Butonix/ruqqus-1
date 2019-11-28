@@ -1380,6 +1380,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     width: 115px;
     height: 80px;
     object-fit: cover;
+    z-index: 2;
 }
 
 .post-img-lg {
@@ -1394,6 +1395,25 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     text-align: right;
     width: 100%;
     color: $white;
+}
+
+
+.thumb-img-link-overlay {
+    display: none;
+}
+
+.thumb-img-link-overlay:hover {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    bottom: 0px;
+    padding: 1.5rem;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    color: $white;
+    line-height: 2;
+    text-transform: uppercase;
+    font-size: 11px;
 }
 
 // Small devices (landscape phones, less than 768px)
