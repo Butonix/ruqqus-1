@@ -16,9 +16,13 @@
   <div class="d-flex flex-row-reverse flex-nowrap justify-content-end">
     <div class="card-header bg-transparent border-0 d-flex flex-row flex-nowrap p-0 my-md-auto pl-3 ml-auto">
       {% if p.url.endswith((".jpg",".png")) and p.domain_obj and p.domain_obj.show_thumbnail %}
-      <div class="position-relative">
-      <div class="thumb-img-link-overlay"><i class="fas fa-external-link-alt text-lg d-block mb-1"></i>View full</div>
-      <img src="{{ p.url }}" class="post-img" alt="">
+      <div class="position-relative" style="z-index: 3;">
+        <a href="{{ p.url }}">
+          <div class="thumb-img-link-overlay">
+            <i class="fas fa-external-link-alt text-lg d-block mb-1"></i>View full
+          </div>
+          <img src="{{ p.url }}" class="post-img" alt="">
+        </a>
       </div>
       {% endif %}
       <div class="dropdown show my-auto post-actions ml-4 d-none d-md-block">
@@ -167,7 +171,7 @@
           {% if p.is_banned or p.active_flags %}
           <li class="list-group-item"><a class="d-block" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="fas fa-clipboard-check"></i>Approve</a></li>
           {% endif %}
-	  {% if not p.is_banned or p.active_flags %}
+          {% if not p.is_banned or p.active_flags %}
           <li class="list-group-item"><a class="d-block" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a></li>
           {% endif %}
           {% endif %}
