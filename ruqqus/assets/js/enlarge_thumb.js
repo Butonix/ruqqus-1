@@ -2,6 +2,6 @@
 
 enlarge_thumb = function(post_id) {
 
-	document.getElementById('post_id').classlist.toggle("enlarged");
+	document.getElementById('post_id').classList.toggle("enlarged");
 
 };
