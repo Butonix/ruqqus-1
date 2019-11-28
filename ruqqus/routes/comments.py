@@ -57,8 +57,8 @@ def api_comment(v):
 
     if bans:
         return render_template("comment_failed.html",
-                               parent_submission=parent_submission,
-                               parent_fullname=parent_fullname,
+                               parent_submission=request.form.get("submission"),
+                               parent_fullname=request.form.get("parent_fullname"),
                                badlinks=[x.domain for x in bans],
                                body=body,
                                v=v
