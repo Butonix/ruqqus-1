@@ -16,13 +16,16 @@
   <div class="d-flex flex-row-reverse flex-nowrap justify-content-end">
     <div class="card-header bg-transparent border-0 d-flex flex-row flex-nowrap p-0 my-md-auto pl-3 ml-auto">
       {% if p.url.endswith((".jpg",".png")) and p.domain_obj and p.domain_obj.show_thumbnail %}
-      <div class="position-relative" style="z-index: 3;">
+      <div class="position-relative d-none d-md-block" style="z-index: 3;">
         <a href="{{ p.url }}">
           <div class="thumb-img-link-overlay">
             <i class="fas fa-external-link-alt text-lg d-block mb-1"></i>View full
           </div>
           <img src="{{ p.url }}" class="post-img" alt="">
         </a>
+      </div>
+      <div class="d-block d-md-none" style="z-index: 3;">
+          <img src="{{ p.url }}" class="post-img" alt="" onclick="enlarge_thumb('post-{{ p.base36id }}')">
       </div>
       {% endif %}
       <div class="dropdown show my-auto post-actions ml-4 d-none d-md-block">
