@@ -2,7 +2,8 @@
 
 toggle_card_view = function() {
 
-	var toggle = document.getElementById('toggle-list-view-btn');
+	var toggleCard = document.getElementById('toggle-card-view-btn');
+	var toggleList = document.getElementById('toggle-list-view-btn');
 
 	var posts = document.getElementById('posts');
 
@@ -12,14 +13,15 @@ toggle_card_view = function() {
 		posts.classList.remove('toggle-list-view')
 	}
 
-	this.classList.add('active');
-	toggle.classList.remove('active');
+	toggleList.classList.add('active');
+	toggleCard.classList.remove('active');
 
 }
 
 toggle_list_view = function() {
 
-	var toggle = document.getElementById('toggle-card-view-btn');
+	var toggleCard = document.getElementById('toggle-card-view-btn');
+	var toggleList = document.getElementById('toggle-list-view-btn');
 
 	var posts = document.getElementById('posts');
 
@@ -28,9 +30,9 @@ toggle_list_view = function() {
 	if ( posts.classList.contains('toggle-card-view')) {
 		posts.classList.remove('toggle-card-view')
 	}
-	
-	this.classList.add('active');
-	toggle.classList.remove('active');
+
+	toggleCard.classList.add('active');
+	toggleList.classList.remove('active');
 
 }
 
