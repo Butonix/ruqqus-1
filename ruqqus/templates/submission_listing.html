@@ -83,11 +83,13 @@
 
 </div>
 
+{% if p.url.endswith((".jpg",".png")) and p.domain_obj and p.domain_obj.show_thumbnail %}
 <div class="row mt-3 post-img-lg">
   <div class="col px-0">
-    {% if p.url.endswith((".jpg",".png")) and p.domain_obj and p.domain_obj.show_thumbnail %}<a target="_blank" href="{{ p.url }}" rel="nofollow"><img src="{{ p.url }}" class="img-fluid" alt="post image"></a>{% endif %}
+    <a target="_blank" href="{{ p.url }}" rel="nofollow"><img src="{{ p.url }}" class="img-fluid" alt="post image"></a>
   </div>
 </div>
+{% endif %}
 
 <div class="card-footer d-block d-md-none mt-3">
   <div class="post-actions">
