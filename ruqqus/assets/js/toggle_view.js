@@ -40,8 +40,8 @@ toggle_list_view = function() {
 
 toggle_card_view_sm = function() {
 
-	var toggleCard = document.getElementById('toggle-card-view-btn');
-	var toggleList = document.getElementById('toggle-list-view-btn');
+	var toggleCard = document.getElementById('toggle-card-view-btn-sm');
+	var toggleList = document.getElementById('toggle-list-view-btn-sm');
 
 	var posts = document.getElementById('posts');
 
