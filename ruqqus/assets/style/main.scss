@@ -1112,9 +1112,25 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50rem;
 }
 
+// Thread Card View
+
+#frontpage .posts.toggle-card-view .card .post-img, #userpage .posts.toggle-card-view .card .post-img, #search .posts.toggle-card-view .card .post-img { 
+    display: none;
+}
+
+#frontpage .posts.toggle-card-view .card .post-img-lg, #userpage .posts.toggle-card-view .card .post-img-lg, #search .posts.toggle-card-view .card .post-img-lg { 
+    display: block;
+    text-align: center;
+}
+
+#frontpage .posts.toggle-card-view .card .post-img-lg img, #userpage .posts.toggle-card-view .card .post-img-lg img, #search .posts.toggle-card-view .card .post-img-lg img { 
+    max-width: 65%;
+    height: auto;
+}
+
 // Thread
 
-#frontpage .posts .card, #userpage .posts .card, #search .posts .card, #userpage .posts .card {
+#frontpage .posts .card, #userpage .posts .card, #search .posts .card {
     border-width: 0 0 1px 0;
     border-color: $border-color;
     border-style: solid;
@@ -1122,8 +1138,12 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     padding: 15px;
 }
 
-#frontpage .posts .card:hover, #userpage .posts .card:hover, #search .posts .card:hover, #userpage .posts .card:hover {
+#frontpage .posts .card:hover, #userpage .posts .card:hover, #search .posts .card:hover {
     background-color: $gray-100;
+}
+
+#frontpage .posts .card.enlarged .post-img-lg, #userpage .posts .card.enlarged .post-img-lg, #search .posts .card.enlarged .post-img-lg {
+    display: block;
 }
 
 .post-title {
