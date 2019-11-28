@@ -510,7 +510,6 @@ ol > li::before {
     box-shadow: inset 0 -2px 0 $primary;
 }
 
-
 .settings-nav > .nav-item > .nav-link.active {
     color: $primary;
     box-shadow: inset 0 -2px 0 $primary;
@@ -1126,6 +1125,14 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 #frontpage .posts.toggle-card-view .card .post-img-lg img, #userpage .posts.toggle-card-view .card .post-img-lg img, #search .posts.toggle-card-view .card .post-img-lg img { 
     max-width: 65%;
     height: auto;
+}
+
+.toggle-view .nav-link:hover, .toggle-view .nav-link:focus {
+    color: $black;
+}
+
+.toggle-view .nav-link:hover .fa , .toggle-view .nav-link:focus .fa, .toggle-view .nav-link:hover .fas, .toggle-view .nav-link:focus .fas, .toggle-view .nav-link:hover .far, .toggle-view .nav-link:focus .far, .toggle-view .nav-link:hover .fab , .toggle-view .nav-link:focus .fab {
+    color: $black;
 }
 
 // Thread
@@ -2351,6 +2358,11 @@ body {
 
 #frontpage .posts .card.enlarged .post-img-lg, #userpage .posts .card.enlarged .post-img-lg, #frontpage .posts .card.enlarged .post-img-lg, #search .posts .card.enlarged .post-img-lg {
     display: block;
+}
+
+#frontpage .posts.toggle-card-view .card .post-img-lg img, #userpage .posts.toggle-card-view .card .post-img-lg img, #search .posts.toggle-card-view .card .post-img-lg img { 
+    max-width: 100%;
+    height: auto;
 }
 
 .post-title a:hover, .post-title a:active, .post-title a:focus {

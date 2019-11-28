@@ -13174,6 +13174,14 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   height: auto;
 }
 
+.toggle-view .nav-link:hover, .toggle-view .nav-link:focus {
+  color: #dadada;
+}
+
+.toggle-view .nav-link:hover .fa, .toggle-view .nav-link:focus .fa, .toggle-view .nav-link:hover .fas, .toggle-view .nav-link:focus .fas, .toggle-view .nav-link:hover .far, .toggle-view .nav-link:focus .far, .toggle-view .nav-link:hover .fab, .toggle-view .nav-link:focus .fab {
+  color: #dadada;
+}
+
 .card {
   background-color: #35363e;
 }
@@ -14844,6 +14852,11 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
   #frontpage .posts .card.enlarged .post-img-lg, #userpage .posts .card.enlarged .post-img-lg, #frontpage .posts .card.enlarged .post-img-lg, #search .posts .card.enlarged .post-img-lg {
     display: block;
+  }
+
+  #frontpage .posts.toggle-card-view .card .post-img-lg img, #userpage .posts.toggle-card-view .card .post-img-lg img, #search .posts.toggle-card-view .card .post-img-lg img {
+    max-width: 100%;
+    height: auto;
   }
 
   .post-title a:hover, .post-title a:active, .post-title a:focus {
