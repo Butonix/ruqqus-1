@@ -13161,8 +13161,26 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   height: auto;
 }
 
+.toggle-view .nav-link {
+  color: #5F5F5F;
+  font-size: 12px;
+  font-weight: 600;
+  padding-top: 0;
+  padding-bottom: 0.75rem;
+}
+
+.toggle-view .fa, .toggle-view .fas, .toggle-view .far, .toggle-view .fab, .toggle-view .fal {
+  font-size: 13px;
+  margin-right: 0.5rem;
+  color: #ACACAC;
+}
+
 .toggle-view .nav-link:hover, .toggle-view .nav-link:focus {
   color: #1F1F1F;
+}
+
+.toggle-view > .nav-item > .nav-link.active .fa, .toggle-view > .nav-item > .nav-link.active .fas, .toggle-view > .nav-item > .nav-link.active .far, .toggle-view > .nav-item > .nav-link.active .fab {
+  color: #603abb;
 }
 
 .toggle-view .nav-link:hover .fa, .toggle-view .nav-link:focus .fa, .toggle-view .nav-link:hover .fas, .toggle-view .nav-link:focus .fas, .toggle-view .nav-link:hover .far, .toggle-view .nav-link:focus .far, .toggle-view .nav-link:hover .fab, .toggle-view .nav-link:focus .fab {

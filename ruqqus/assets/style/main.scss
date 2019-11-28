@@ -1127,8 +1127,26 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     height: auto;
 }
 
+.toggle-view .nav-link {
+    color: $gray;
+    font-size: $extra-small-font-size;
+    font-weight: $font-weight-bold;
+    padding-top: 0;
+    padding-bottom: 0.75rem;
+}
+
+.toggle-view .fa, .toggle-view .fas, .toggle-view .far, .toggle-view .fab, .toggle-view .fal {
+    font-size: $small-font-size;
+    margin-right: .5rem;
+    color: $gray-600;
+}
+
 .toggle-view .nav-link:hover, .toggle-view .nav-link:focus {
     color: $black;
+}
+
+.toggle-view > .nav-item > .nav-link.active .fa, .toggle-view > .nav-item > .nav-link.active .fas, .toggle-view > .nav-item > .nav-link.active .far, .toggle-view > .nav-item > .nav-link.active .fab {
+    color: $primary;
 }
 
 .toggle-view .nav-link:hover .fa , .toggle-view .nav-link:focus .fa, .toggle-view .nav-link:hover .fas, .toggle-view .nav-link:focus .fas, .toggle-view .nav-link:hover .far, .toggle-view .nav-link:focus .far, .toggle-view .nav-link:hover .fab , .toggle-view .nav-link:focus .fab {
