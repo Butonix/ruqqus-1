@@ -1,9 +1,7 @@
 // Enlarge submissionlisting thumbnail
 
-enlarge_thumb = function(id) {
+enlarge_thumb = function(post_id) {
 
-	var card = 'post-'+id;
-
-	document.getElementById(card).classlist.toggle("enlarged");
+	document.getElementById('post-'+post_id).classlist.toggle("enlarged");
 
 };
