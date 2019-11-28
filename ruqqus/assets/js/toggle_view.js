@@ -13,8 +13,8 @@ toggle_card_view = function() {
 		posts.classList.remove('toggle-list-view')
 	}
 
-	toggleList.classList.add('active');
-	toggleCard.classList.remove('active');
+	toggleCard.classList.add('active');
+	toggleList.classList.remove('active');
 
 }
 
@@ -31,8 +31,8 @@ toggle_list_view = function() {
 		posts.classList.remove('toggle-card-view')
 	}
 
-	toggleCard.classList.add('active');
-	toggleList.classList.remove('active');
+	toggleList.classList.add('active');
+	toggleCard.classList.remove('active');
 
 }
 
