@@ -101,6 +101,9 @@
           <div class="body">
             <p>Ruqqus lets you share and discover content from around the web in one place. Vote on what you like or dislike and engage in uncensored discussion with the community.</p>
             <small><a href="/help/about">Learn more →</a></small>
+            {% if v and not v.is_banned %}
+            <div class="mt-3"><a class="btn btn-primary btn-block" href="/submit">Create post</a></div>
+            {% endif %}
           </div>
         </div>
 
