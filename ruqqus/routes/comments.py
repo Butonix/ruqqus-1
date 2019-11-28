@@ -60,7 +60,8 @@ def api_comment(v):
                                parent_submission=parent_submission,
                                parent_fullname=parent_fullname,
                                badlinks=[x.domain for x in bans],
-                               body=body
+                               body=body,
+                               v=v
                                )
 
     #check existing
