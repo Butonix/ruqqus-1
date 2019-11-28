@@ -2,8 +2,8 @@
 
 {% block adminpanel %}
 <div>
-<p><a href="/flagged/posts">Reported Posts</a></p>
-<p><a href="/flagged/comments">Reported Comments</a></p>
+  <p><a href="/flagged/posts">Reported Posts</a></p>
+  <p><a href="/flagged/comments">Reported Comments</a></p>
 </div>
 {% endblock %}
 
@@ -12,24 +12,24 @@
 {% endblock %}
 
 {% block fixedMobileBarJS %}
-    <script>
-    var prevScrollpos = window.pageYOffset;
-    window.onscroll = function () {
-      var currentScrollPos = window.pageYOffset;
-      if (prevScrollpos > currentScrollPos) {
-        document.getElementById("fixed-bar-mobile").style.top = "48px";
-      } 
-      else if (currentScrollPos <= 125) {
-        document.getElementById("fixed-bar-mobile").style.top = "48px";
-      }
-      else {
-        document.getElementById("fixed-bar-mobile").style.top = "-98px";
-        document.getElementById("dropdownMenuSortBy").classList.remove('show');
-        document.getElementById("dropdownMenuFrom").classList.remove('show');
-      }
-      prevScrollpos = currentScrollPos;
+<script>
+  var prevScrollpos = window.pageYOffset;
+  window.onscroll = function () {
+    var currentScrollPos = window.pageYOffset;
+    if (prevScrollpos > currentScrollPos) {
+      document.getElementById("fixed-bar-mobile").style.top = "48px";
+    } 
+    else if (currentScrollPos <= 125) {
+      document.getElementById("fixed-bar-mobile").style.top = "48px";
     }
-  </script>
+    else {
+      document.getElementById("fixed-bar-mobile").style.top = "-98px";
+      document.getElementById("dropdownMenuSortBy").classList.remove('show');
+      document.getElementById("dropdownMenuFrom").classList.remove('show');
+    }
+    prevScrollpos = currentScrollPos;
+  }
+</script>
 {% endblock %}
 
 {% block PseudoSubmitForm %}
@@ -91,82 +91,30 @@
   </ul>
 
   <div>
-  <ul class="nav post-nav ml-auto">
-    <li class="nav-item" style="">
-      <a class="nav-link active pr-3 pb-0 pl-0" href="/" style="box-shadow: none;" onclick="toggle_list_view()">
-      <i class="fas fa-list"></i>List</a>
-    </li>
-    <li class="nav-item" style="">
-      <a class="nav-link p-0" href="/?sort=top" style="box-shadow: none;" onclick="toggle_card_view()">
-      <i class="fas fa-th-large"></i>Card</a>
-    </li>
-  </ul>
-  </div>
+    <ul class="nav post-nav ml-auto">
+      <li class="nav-item" style="">
+        <a class="nav-link active pr-3 pb-0 pl-0" href="#toggleview" style="box-shadow: none;" onclick="toggle_list_view()">
+          <i class="fas fa-list"></i>List</a>
+        </li>
+        <li class="nav-item" style="">
+          <a class="nav-link p-0" href="#toggleview" style="box-shadow: none;" onclick="toggle_card_view()">
+            <i class="fas fa-th-large"></i>Card</a>
+          </li>
+        </ul>
+      </div>
 
-  <div class="post-filter pb-2 d-none">
-    <span>Sort By:</span>
-    <span class="dropdown">
-      <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-      aria-haspopup="true" aria-expanded="false">
-      Time
-    </a>
+      <div class="post-filter pb-2 d-none">
+        <span>Sort By:</span>
+        <span class="dropdown">
+          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          Time
+        </a>
 
-    <span class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMenuLink">
-      <a class="dropdown-item" href="#">Day</a>
-      <a class="dropdown-item" href="#">Month</a>
-      <a class="dropdown-item" href="#">Year</a>
-      <a class="dropdown-item" href="#">All Time</a>
-    </span>
-  </span>
-
-</div>
-
-</div>
-
-<div class="row no-gutters">
-
-  <div class="col-12">
-
-    <div class="posts">
-
-      {% include "submission_listing.html" %}
-
-    </div>
-  </div>
-</div>
-
-<div class="row fixed-top bg-white border-0 d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 48px; transition: top 0.3s;">
-
-<div class="col">
-
-  <div class="d-flex flex-row flex-nowrap justify-content-between">
-
-    <div class="post-filter">
-      <span>Sort By:</span>
-      <span class="dropdown">
-        <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">{{ sort_method.capitalize() }}</a>
-
-        <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
-          <a class="dropdown-item" href="?sort=top">Top</a>
-          <a class="dropdown-item" href="?sort=new">New</a>
-          <a class="dropdown-item" href="?sort=disputed">Disputed</a>
-	  <a class="dropdown-item" href="?sort=activity">Activity</a>
-        </span>
-      </span>
-
-    </div>
-
-    <div class="post-filter d-none">
-      <span>From:</span>
-      <span class="dropdown">
-        <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">Time</a>
-
-        <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
-          <a class="dropdown-item" href="#">Past Day</a>
-          <a class="dropdown-item" href="#">Past Month</a>
-          <a class="dropdown-item" href="#">Past Year</a>
+        <span class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="#">Day</a>
+          <a class="dropdown-item" href="#">Month</a>
+          <a class="dropdown-item" href="#">Year</a>
           <a class="dropdown-item" href="#">All Time</a>
         </span>
       </span>
@@ -175,29 +123,94 @@
 
   </div>
 
-</div>
+  <div class="row no-gutters">
 
-</div>
+    <div class="col-12">
 
-{% endblock %}
+      <div class="posts">
 
-{% block pagenav %}
-<nav aria-label="Page navigation">
-  <ul class="pagination pagination-sm py-3 pl-3 mb-0">
-    {% if page>1 %}
-    <li class="page-item">
-      <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page-1 }}" tabindex="-1">Prev</a></small>
-    </li>
-    {% else %}
-    <li class="page-item disabled"><span class="page-link">Prev</span></li>
-    {% endif %}
-    {% if next_exists %}
-    <li class="page-item">
-      <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page+1 }}">Next</a></small>
-    </li>
-    {% else %}
-    <li class="page-item disabled"><span class="page-link">Next</span></li>
-    {% endif %}
-  </ul>
-</nav>
-{% endblock %}
+        {% include "submission_listing.html" %}
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row fixed-top bg-white border-0 d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 48px; transition: top 0.3s;">
+
+    <div class="col">
+
+      <div class="d-flex flex-row flex-nowrap justify-content-between">
+
+        <div class="post-filter">
+          <span>Sort By:</span>
+          <span class="dropdown">
+            <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">{{ sort_method.capitalize() }}</a>
+
+            <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
+              <a class="dropdown-item" href="?sort=top">Top</a>
+              <a class="dropdown-item" href="?sort=new">New</a>
+              <a class="dropdown-item" href="?sort=disputed">Disputed</a>
+              <a class="dropdown-item" href="?sort=activity">Activity</a>
+            </span>
+          </span>
+
+        </div>
+
+        <div>
+          <ul class="nav post-nav ml-auto">
+            <li class="nav-item" style="">
+              <a class="nav-link active pr-3 pb-0 pl-0" href="#toggleview" style="box-shadow: none;" onclick="toggle_list_view()">
+                <i class="fas fa-list"></i>List</a>
+              </li>
+              <li class="nav-item" style="">
+                <a class="nav-link p-0" href="#toggleview" style="box-shadow: none;" onclick="toggle_card_view()">
+                  <i class="fas fa-th-large"></i>Card</a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="post-filter d-none">
+              <span>From:</span>
+              <span class="dropdown">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">Time</a>
+
+                <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
+                  <a class="dropdown-item" href="#">Past Day</a>
+                  <a class="dropdown-item" href="#">Past Month</a>
+                  <a class="dropdown-item" href="#">Past Year</a>
+                  <a class="dropdown-item" href="#">All Time</a>
+                </span>
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      {% endblock %}
+
+      {% block pagenav %}
+      <nav aria-label="Page navigation">
+        <ul class="pagination pagination-sm py-3 pl-3 mb-0">
+          {% if page>1 %}
+          <li class="page-item">
+            <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page-1 }}" tabindex="-1">Prev</a></small>
+          </li>
+          {% else %}
+          <li class="page-item disabled"><span class="page-link">Prev</span></li>
+          {% endif %}
+          {% if next_exists %}
+          <li class="page-item">
+            <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page+1 }}">Next</a></small>
+          </li>
+          {% else %}
+          <li class="page-item disabled"><span class="page-link">Next</span></li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endblock %}
