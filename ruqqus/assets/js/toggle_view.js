@@ -12,6 +12,7 @@ toggle_card_view = function() {
 		posts.classList.remove('toggle-list-view')
 	}
 
+	this.classList.add('active');
 	toggle.classList.remove('active');
 
 }
@@ -27,7 +28,8 @@ toggle_list_view = function() {
 	if ( posts.classList.contains('toggle-card-view')) {
 		posts.classList.remove('toggle-card-view')
 	}
-
+	
+	this.classList.add('active');
 	toggle.classList.remove('active');
 
 }
