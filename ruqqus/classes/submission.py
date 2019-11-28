@@ -113,10 +113,6 @@ class Submission(Base):
         self.tree_comments(comment=comment)
         
         #return template
-
-        if self.domain_obj:
-
-            print(f"anon exempt policy: {self.domain_obj.anon_free_embed}")
         return render_template(template, v=v, p=self, sort_method=request.args.get("sort","Hot").capitalize())
 
     @property
