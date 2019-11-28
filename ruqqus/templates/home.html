@@ -164,12 +164,12 @@
         <div>
           <ul class="nav post-nav ml-auto">
             <li class="nav-item" style="">
-              <a class="nav-link active pr-3 pb-0 pl-0" href="#toggleview" style="box-shadow: none;" onclick="toggle_list_view()">
-                <i class="fas fa-list" data-toggle="tooltip" data-placement="bottom" title="List view"></i>List</a>
+              <button class="btn nav-link active pr-3 pb-0 pl-0" id="toggle-card-view-btn-sm" style="box-shadow: none;" onclick="toggle_list_view_sm()">
+                <i class="fas fa-list" data-toggle="tooltip"></i>List</button>
               </li>
               <li class="nav-item" style="">
-                <a class="nav-link p-0" href="#toggleview" style="box-shadow: none;" onclick="toggle_card_view()">
-                  <i class="fas fa-th-large" data-toggle="tooltip" data-placement="bottom" title="Card view"></i>Card</a>
+                <button class="btn nav-link p-0" id="toggle-card-view-btn-sm" style="box-shadow: none;" onclick="toggle_card_view_sm()">
+                  <i class="fas fa-th-large"></i>Card</button>
                 </li>
               </ul>
             </div>
