@@ -39,19 +39,21 @@ def nofollow(attrs, new=False):
     return attrs
 
 _clean_wo_links = bleach.Cleaner(tags=_allowed_tags,
-                                  attributes=_allowed_attributes,
-                                  protocols=_allowed_protocols,
-                                  )
+                                 attributes=_allowed_attributes,
+                                 protocols=_allowed_protocols,
+                                 strip=True
+                                 )
 _clean_w_links = bleach.Cleaner(tags=_allowed_tags,
-                                  attributes=_allowed_attributes,
-                                  protocols=_allowed_protocols,
-                                  filters=[partial(LinkifyFilter,
-                                                   skip_tags=["pre"],
-                                                   parse_email=False ,
-                                                   callbacks=[nofollow]
-                                                   )
-                                          ]
-                                  )
+                                attributes=_allowed_attributes,
+                                protocols=_allowed_protocols,
+                                strip=True,
+                                filters=[partial(LinkifyFilter,
+                                                 skip_tags=["pre"],
+                                                 parse_email=False ,
+                                                 callbacks=[nofollow]
+                                                 )
+                                         ]
+                                )
 
 
 def sanitize(text, linkgen=False):
