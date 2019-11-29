@@ -13191,7 +13191,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .toggle-view .nav-link:hover, .toggle-view .nav-link:focus {
-  color: #1F1F1F;
+  color: #603abb;
 }
 
 .toggle-view > .nav-item > .nav-link.active .fa, .toggle-view > .nav-item > .nav-link.active .fas, .toggle-view > .nav-item > .nav-link.active .far, .toggle-view > .nav-item > .nav-link.active .fab {
