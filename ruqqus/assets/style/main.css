@@ -13258,10 +13258,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   word-break: break-word;
 }
 
-.post-body p {
-  margin-bottom: 0;
-}
-
 .modal-header {
   border-bottom: 1px solid #E6E6E6;
   background-color: #ffffff;
