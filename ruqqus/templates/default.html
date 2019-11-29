@@ -106,7 +106,6 @@
             {% endif %}
           </div>
         </div>
-        {% endblock %}
 
         {% if not v %}
         <div class="sidebar-section sidebar-alert">
@@ -114,10 +113,12 @@
             <img src="/assets/images/illustrations/ruckus.png" class="empty-state-img mb-3" alt="empty state">
             <h5 class="h4">Join the discourse.</h5>
             <p class="text-small">Internet freedom of speech has a new home. Use your voice. Make a Ruqqus.</p>
-            <a href="/signup" class="btn btn-primary btn-block">Create post</a>
+            <a href="/signup" class="btn btn-primary btn-block">Sign up</a>
           </div>
         </div>
         {% endif %}
+
+        {% endblock %}
 
         {% if v and v.referral_count==0 %}
         <div class="sidebar-section sidebar-dark-promo text-white bg-black">
@@ -136,49 +137,49 @@
             <p class="text-small">When you invite a friend to make a Ruqqus, you'll unlock dark mode. Copy your referral code to get started.</p>
             <label for="referral_code" class="text-white">Referral code</label>
             <input type="text" readonly="" class="form-control copy-link" id="referral_code" value="https://ruqqus.com/signup?ref={{ v.username }}" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}">
-            </div>
-          </div>
-          {% endif %}
-
-          {% if v %}
-          {% if v.admin_level %}
-          <div class="sidebar-section sidebar-adminpanel">
-           <div class="title">Admin Panel</div>
-           <div class="body">
-             {% block adminpanel %}
-             <p class="text-center text-small text-muted mb-0">No admin actions available</p>
-             {% endblock %}
-           </div>
-         </div>
-         {% endif %}
-         {% endif %}
-
-         <div class="sidebar-section sidebar-trending d-none">
-          <div class="title">What's Hot</div>
-          <div class="body">
-            <p>Here are the most popular tags from the last 24 hours.</p>
-            <div class="hashtag">
-              <a href="#">#Mueller</a>
-              <div class="text-muted text-small font-weight-normal">2.3K posting about this</div>
-            </div>
-            <div class="hashtag">
-              <a href="#">#MemeWar2</a>
-              <div class="text-muted text-small font-weight-normal">1.2K posting about this</div>
-            </div>
-            <div class="hashtag">
-              <a href="#">#AskTrumpSupporters</a>
-              <div class="text-muted text-small font-weight-normal">900 posting about this</div>
-            </div>
-            <div class="hashtag">
-              <a href="#">#DNCDebates</a>
-              <div class="text-muted text-small font-weight-normal">600 posting about this</div>
-            </div>
-            <div class="hashtag">
-              <a href="#">#DNCDebates</a>
-              <div class="text-muted text-small font-weight-normal">600 posting about this</div>
-            </div>
           </div>
         </div>
+        {% endif %}
+
+        {% if v %}
+        {% if v.admin_level %}
+        <div class="sidebar-section sidebar-adminpanel">
+         <div class="title">Admin Panel</div>
+         <div class="body">
+           {% block adminpanel %}
+           <p class="text-center text-small text-muted mb-0">No admin actions available</p>
+           {% endblock %}
+         </div>
+       </div>
+       {% endif %}
+       {% endif %}
+
+       <div class="sidebar-section sidebar-trending d-none">
+        <div class="title">What's Hot</div>
+        <div class="body">
+          <p>Here are the most popular tags from the last 24 hours.</p>
+          <div class="hashtag">
+            <a href="#">#Mueller</a>
+            <div class="text-muted text-small font-weight-normal">2.3K posting about this</div>
+          </div>
+          <div class="hashtag">
+            <a href="#">#MemeWar2</a>
+            <div class="text-muted text-small font-weight-normal">1.2K posting about this</div>
+          </div>
+          <div class="hashtag">
+            <a href="#">#AskTrumpSupporters</a>
+            <div class="text-muted text-small font-weight-normal">900 posting about this</div>
+          </div>
+          <div class="hashtag">
+            <a href="#">#DNCDebates</a>
+            <div class="text-muted text-small font-weight-normal">600 posting about this</div>
+          </div>
+          <div class="hashtag">
+            <a href="#">#DNCDebates</a>
+            <div class="text-muted text-small font-weight-normal">600 posting about this</div>
+          </div>
+        </div>
+      </div>
       <!--
       <div class="sidebar-section sidebar-rules">
         <div class="title">Ruqqus Rules</div>
