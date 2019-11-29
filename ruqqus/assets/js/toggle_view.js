@@ -5,7 +5,7 @@ if (typeof(Storage) !== "undefined") {
 	toggle_card_view = function() {
 
 	// Store Pref
-	localStorage.list_pref = false;
+	localStorage.card_pref = true;
 
 	var toggleCard = document.getElementById('toggle-card-view-btn');
 	var toggleList = document.getElementById('toggle-list-view-btn');
