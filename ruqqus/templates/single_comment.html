@@ -35,7 +35,7 @@
 		{% endif %}
 
             <div id="comment-text-{{ c.base36id }}" class="comment-text">
-                {{ c.body_html | safe }}
+                {{ c.body_html }}
             </div>
 
 	    {% if v and v.id==c.author_id %}
