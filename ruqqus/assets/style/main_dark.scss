@@ -1132,9 +1132,9 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-width: 0 0 1px 0;
     border-color: $border-color;
     border-style: solid;
-    border-radius: 0;
+    border-radius: $border-radius;
     padding: 15px;
-    margin-top: 1rem;
+    margin-top: 1.25rem;
     box-shadow: $box-shadow-sm;
 }
 
@@ -1150,6 +1150,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 #frontpage .posts.toggle-card-view .card .post-img-lg img, #userpage .posts.toggle-card-view .card .post-img-lg img, #search .posts.toggle-card-view .card .post-img-lg img { 
     max-width: 65%;
     height: auto;
+}
+
+#frontpage .posts.toggle-card-view .card .embed-lg, #userpage .posts.toggle-card-view .card .embed-lg, #search .posts.toggle-card-view .card .embed-lg { 
+    display: block;
+    text-align: center;
 }
 
 .toggle-view .nav-link {
@@ -1436,7 +1441,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     display: none;
 }
 
-.thumb-img-link-overlay {
+div:hover .thumb-img-link-overlay {
     position: absolute;
     background-color: rgba(0, 0, 0, 0.5);
     bottom: 0px;
@@ -1448,6 +1453,10 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     line-height: 2;
     text-transform: uppercase;
     font-size: 11px;
+}
+
+.embed-lg {
+    display: none;
 }
 
 // Small devices (landscape phones, less than 768px)
