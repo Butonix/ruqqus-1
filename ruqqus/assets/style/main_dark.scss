@@ -1148,13 +1148,13 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 #frontpage .posts.toggle-card-view .card .post-img-lg img, #userpage .posts.toggle-card-view .card .post-img-lg img, #search .posts.toggle-card-view .card .post-img-lg img { 
-    max-width: 65%;
+    max-width: 55%;
     height: auto;
 }
 
 #frontpage .posts.toggle-card-view .card .embed-lg, #userpage .posts.toggle-card-view .card .embed-lg, #search .posts.toggle-card-view .card .embed-lg { 
-    display: block;
-    text-align: center;
+    display: flex;
+    z-index: 2;
 }
 
 .toggle-view .nav-link {
