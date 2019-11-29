@@ -11,11 +11,11 @@
 
 {% block title %}
 {% if linked_comment and not linked_comment.is_banned and not linked_comment.is_deleted %}
-	<title>@{{ linked_comment.author.username }} comments on "{{ p.title }}"</title>
-	<meta name="description" content="{{ linked_comment.body }}">
+<title>@{{ linked_comment.author.username }} comments on "{{ p.title }}"</title>
+<meta name="description" content="{{ linked_comment.body }}">
 {% else %}
-	<title>{{ p.title }}</title>
-	<meta name="description" content="{{ p.title | safe }}">
+<title>{{ p.title }}</title>
+<meta name="description" content="{{ p.title | safe }}">
 {% endif %}
 {% endblock %}
 
@@ -169,13 +169,19 @@
       <h1 class="card-title post-title text-left mb-2"><a target="_blank" href="{{ p.url }}">{{ p.title | safe }}</a></h1>
       <div class="post-meta text-left d-none d-md-block">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> <span>&#183;</span> ({{ p.domain }})</div>
 
+      {% if p.body_html %}
+      <div class="post-body mt-3"> 
+        {{ p.body_html | safe }}
+      </div>
+      {% endif %}
+
     </div>
 
     <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
 
     {% if v %}
 
-    <div id="voting" class="voting d-none d-md-block my-auto mr-3">
+    <div id="voting" class="voting d-none d-md-block mb-auto mr-3">
       <div id="post-{{ p.base36id }}-up" class="arrow-up mx-auto" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
       </div>
       <span id="post-{{ p.base36id }}-score-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">{{ score+1-adjust }}</span>
@@ -187,7 +193,7 @@
 
     {% else %}
 
-    <div id="voting" class="voting d-none d-md-block my-auto mr-3">
+    <div id="voting" class="voting d-none d-md-block mb-auto mr-3">
       <div id="post-{{ p.base36id }}-up" class="arrow-up mx-auto" onclick="location.href='/login';">
       </div>
       <span id="post-{{ p.base36id }}-score-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">{{ score+1-adjust }}</span>
@@ -253,13 +259,6 @@
 
 
             </div>
-
-            {% if p.body_html %}
-            <div class="post-body mt-3"> 
-              {{ p.body_html | safe }}
-
-            </div>
-            {% endif %}
 
             {% if p.embed_url %}
             <div class="post-body mt-3"> 

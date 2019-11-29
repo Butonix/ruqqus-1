@@ -61,11 +61,19 @@
   <div class="post-meta text-left d-none d-md-block">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> <span>&#183;</span> {{ p.comment_count }} comment{{ '' if p.comment_count==1 else 's' }}  <span>&#183;</span> ({{ p.domain }}){% if v and v.admin_level >=3 and p.active_flags %} &#183; <span class="text-danger">{{ p.active_flags }} Flags</span>{% endif %}
   </div>
 
+  {% if p.body_html %}
+  <div class="post-preview-lg">
+    <div class="post-body mt-3"> 
+      {{ p.body_html |safe|truncate(140, False, '...', 0) }}
+    </div>
+  </div>
+  {% endif %}
+
 </div>
 
 <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
 
-<div class="voting d-none d-md-block my-auto mr-3">
+<div class="voting d-none d-md-block mb-auto mr-3">
 
   {% if v %}
 
@@ -108,16 +116,6 @@
   <div class="col col-md-8 px-0">
     <div class="embed-responsive embed-responsive-16by9">
       <iframe src="{{ p.embed_url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
-  </div>
-</div>
-{% endif %}
-
-{% if p.body_html %}
-<div class="row post-preview-lg">
-  <div class="col">
-    <div class="post-body mt-3"> 
-      {{ p.body_html |safe|truncate(140, False, '...', 0) }}
     </div>
   </div>
 </div>
