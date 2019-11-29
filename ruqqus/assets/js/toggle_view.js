@@ -1,8 +1,6 @@
 // Desktop
 
-if (typeof(Storage) !== "undefined") {
-
-	toggle_card_view = function() {
+toggle_card_view = function() {
 
 	// Store Pref
 	localStorage.setItem("view_pref", "card");
@@ -44,7 +42,7 @@ toggle_list_view = function() {
 
 }
 
-} else if (localStorage.view_pref == 'list') {
+if (localStorage.view_pref == 'list') {
 
 	var toggleCard = document.getElementById('toggle-card-view-btn');
 	var toggleList = document.getElementById('toggle-list-view-btn');
@@ -60,7 +58,7 @@ toggle_list_view = function() {
 	toggleList.classList.add('active');
 	toggleCard.classList.remove('active');
   
-} else if (localStorage.view_pref == 'card') {
+} else {
 
 	var toggleCard = document.getElementById('toggle-card-view-btn');
 	var toggleList = document.getElementById('toggle-list-view-btn');
