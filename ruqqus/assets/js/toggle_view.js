@@ -73,13 +73,15 @@ if (localStorage.view_pref == 'list') {
 
 	toggleCard.classList.add('active');
 	toggleList.classList.remove('active');
-
 }
 
 
 // Mobile
 
 toggle_card_view_sm = function() {
+
+	// Store Mobile Pref
+	localStorage.setItem("view_pref_mobile", "card");
 
 	var toggleCard = document.getElementById('toggle-card-view-btn-sm');
 	var toggleList = document.getElementById('toggle-list-view-btn-sm');
@@ -99,6 +101,9 @@ toggle_card_view_sm = function() {
 
 toggle_list_view_sm = function() {
 
+	// Store Mobile Pref
+	localStorage.setItem("view_pref_mobile", "list");
+
 	var toggleCard = document.getElementById('toggle-card-view-btn-sm');
 	var toggleList = document.getElementById('toggle-list-view-btn-sm');
 
@@ -113,4 +118,37 @@ toggle_list_view_sm = function() {
 	toggleList.classList.add('active');
 	toggleCard.classList.remove('active');
 
+}
+
+if (localStorage.view_pref_mobile == 'list') {
+
+var toggleCard = document.getElementById('toggle-card-view-btn-sm');
+	var toggleList = document.getElementById('toggle-list-view-btn-sm');
+
+	var posts = document.getElementById('posts');
+
+	posts.classList.add('toggle-list-view');
+
+	if ( posts.classList.contains('toggle-card-view')) {
+		posts.classList.remove('toggle-card-view')
+	}
+
+	toggleList.classList.add('active');
+	toggleCard.classList.remove('active');
+	
+} else {
+
+	var toggleCard = document.getElementById('toggle-card-view-btn-sm');
+	var toggleList = document.getElementById('toggle-list-view-btn-sm');
+
+	var posts = document.getElementById('posts');
+
+	posts.classList.add('toggle-card-view');
+
+	if ( posts.classList.contains('toggle-list-view')) {
+		posts.classList.remove('toggle-list-view')
+	}
+
+	toggleCard.classList.add('active');
+	toggleList.classList.remove('active');
 }
