@@ -14917,7 +14917,7 @@ textarea {
   display: none;
 }
 
-span.red {
+span.red, .text-admin {
   color: #F05D5E;
 }
 
@@ -14928,28 +14928,6 @@ span.green {
 div.banned {
   background-color: #4c2b2b;
   border-left: 3px solid #ff0000 !important;
-}
-
-.distinguish-admin .user-name, .distinguish-mod .user-name {
-  color: white;
-  padding: 0px 3px 2px 3px;
-  border-radius: 3px;
-}
-
-.distinguish-admin .user-name {
-  background-color: #F05D5E;
-}
-
-.distinguish-mod .user-name {
-  background-color: #07c20c;
-}
-
-.distinguish-admin .user-name::before {
-  content: "[A] ";
-}
-
-.distinguish-mod .user-name::before {
-  content: "[M] ";
 }
 
 /*# sourceMappingURL=main_dark.css.map */
