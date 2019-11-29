@@ -25,7 +25,7 @@
         </a>
       </div>
       <div class="d-block d-md-none" style="z-index: 3;">
-          <img src="{{ p.url }}" class="post-img" alt="" onclick="enlarge_thumb('post-{{ p.base36id }}')">
+        <img src="{{ p.url }}" class="post-img" alt="" onclick="enlarge_thumb('post-{{ p.base36id }}')">
       </div>
       {% endif %}
       <div class="dropdown show my-auto post-actions ml-4 d-none d-md-block">
@@ -99,6 +99,16 @@
 <div class="row mt-3 post-img-lg">
   <div class="col px-0">
     <a target="_blank" href="{{ p.permalink }}" rel="nofollow"><img src="{{ p.url }}" class="img-fluid" alt="post image"></a>
+  </div>
+</div>
+{% endif %}
+
+{% if p.embed_url %}
+<div class="row mt-3 embed-lg">
+  <div class="col px-0">
+    <div class="embed-responsive embed-responsive-16by9">
+      <iframe src="{{ p.embed_url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
   </div>
 </div>
 {% endif %}
