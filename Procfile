@@ -1,1 +1,1 @@
-web: source startup.sh
+web: source scripts/startup.sh

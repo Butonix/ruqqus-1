@@ -23,6 +23,11 @@ def error_404(e, v):
 def error_405(e, v):
     return render_template('errors/405.html', v=v), 405
 
+@app.errorhandler(422)
+@auth_desired
+def error_405(e, v):
+    return render_template('errors/422.html', v=v), 422
+
 @app.errorhandler(429)
 @auth_desired
 def error_405(e, v):

@@ -2595,7 +2595,7 @@ textarea, input[type=text] {
   display: none;
 }
 
-span.red {
+span.red, .text-admin {
   color: $admin;
 }
 
@@ -2608,20 +2608,3 @@ div.banned {
     border-left: 3px solid #ff0000!important;
 }	  
 			
-.distinguish-admin .user-name, .distinguish-mod   .user-name {		
-  color: white;		
-  padding: 0px 3px 2px 3px;		
-  border-radius: 3px;		
-}		
-.distinguish-admin .user-name {		
-  background-color: $admin;		
-}		
-.distinguish-mod .user-name {		
-  background-color: $mod;		
-}		
-.distinguish-admin .user-name::before {		
- content: "[A] "		
-}		
-.distinguish-mod .user-name::before {		
- content: "[M] "		
-}
