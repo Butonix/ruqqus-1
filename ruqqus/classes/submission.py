@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import *
 import time
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
