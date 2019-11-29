@@ -13154,7 +13154,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-radius: 0.25rem;
   padding: 15px;
   margin-top: 1.25rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 #frontpage .posts.toggle-card-view .card .post-img, #userpage .posts.toggle-card-view .card .post-img, #search .posts.toggle-card-view .card .post-img {
