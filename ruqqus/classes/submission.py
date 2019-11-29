@@ -4,7 +4,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 import math
 from urllib.parse import urlparse
-from random import randint
+import random
 
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.lazy import lazy
@@ -137,7 +137,7 @@ class Submission(Base):
         real=self.score
         a=math.floor(real*(1-k))
         b=math.ceil(real*(1+k))
-        return randint(a,b)        
+        return random.randint(a,b)        
 
     def tree_comments(self, comment=None):
 
@@ -178,6 +178,11 @@ class Submission(Base):
             comments=self.comments.order_by(text("comments.created_utc")).all()
         elif sort_type=="disputed":
             comments=self.comments.order_by(text("comments.rank_fiery ASC")).all()
+        elif sort_type=="random":
+            c=self.comments.all()
+            comments=random.sample(c, k=len(c))
+        else:
+            abort(422)
 
 
 
