@@ -13171,6 +13171,10 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   z-index: 2;
 }
 
+#frontpage .posts.toggle-card-view .card .post-preview-lg, #userpage .posts.toggle-card-view .card .post-preview-lg, #search .posts.toggle-card-view .card .post-preview-lg {
+  display: block;
+}
+
 .toggle-view .nav-link {
   color: #5F5F5F;
   font-size: 12px;
@@ -13452,6 +13456,10 @@ div:hover .thumb-img-link-overlay {
 }
 
 .embed-lg {
+  display: none;
+}
+
+.post-preview-lg {
   display: none;
 }
 
