@@ -1,6 +1,11 @@
 // Desktop
 
-toggle_card_view = function() {
+if (typeof(Storage) !== "undefined") {
+
+	toggle_card_view = function() {
+
+	// Store Pref
+	localStorage.list_pref = false;
 
 	var toggleCard = document.getElementById('toggle-card-view-btn');
 	var toggleList = document.getElementById('toggle-list-view-btn');
@@ -20,6 +25,9 @@ toggle_card_view = function() {
 
 toggle_list_view = function() {
 
+	// Store Pref
+	localStorage.list_pref = true;
+
 	var toggleCard = document.getElementById('toggle-card-view-btn');
 	var toggleList = document.getElementById('toggle-list-view-btn');
 
@@ -35,6 +43,41 @@ toggle_list_view = function() {
 	toggleCard.classList.remove('active');
 
 }
+
+} else if (localStorage.list_pref = true) {
+
+	var toggleCard = document.getElementById('toggle-card-view-btn');
+	var toggleList = document.getElementById('toggle-list-view-btn');
+
+	var posts = document.getElementById('posts');
+
+	posts.classList.add('toggle-list-view');
+
+	if ( posts.classList.contains('toggle-card-view')) {
+		posts.classList.remove('toggle-card-view')
+	}
+
+	toggleList.classList.add('active');
+	toggleCard.classList.remove('active');
+  
+} else {
+
+	var toggleCard = document.getElementById('toggle-card-view-btn');
+	var toggleList = document.getElementById('toggle-list-view-btn');
+
+	var posts = document.getElementById('posts');
+
+	posts.classList.add('toggle-card-view');
+
+	if ( posts.classList.contains('toggle-list-view')) {
+		posts.classList.remove('toggle-list-view')
+	}
+
+	toggleCard.classList.add('active');
+	toggleList.classList.remove('active');
+
+}
+
 
 // Mobile
 
