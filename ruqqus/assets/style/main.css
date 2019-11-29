@@ -13142,7 +13142,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-radius: 50rem;
 }
 
-#frontpage .posts.toggle-card-view .card, #userpage .posts.toggle-card-view .card, #search .posts.toggle-card-view .card {
+#frontpage .toggle-card-view .posts .card, #userpage .toggle-card-view .posts .card, #search .toggle-card-view .posts .card {
   border-width: 0 0 1px 0;
   border-color: #E6E6E6;
   border-style: solid;
@@ -13152,30 +13152,30 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-#frontpage .posts.toggle-card-view .card .post-img, #userpage .posts.toggle-card-view .card .post-img, #search .posts.toggle-card-view .card .post-img {
+#frontpage .toggle-card-view .posts .card .post-img, #userpage .toggle-card-view .posts .card .post-img, #search .toggle-card-view .posts .card .post-img {
   display: none;
 }
 
-#frontpage .posts.toggle-card-view .card .post-img-lg, #userpage .posts.toggle-card-view .card .post-img-lg, #search .posts.toggle-card-view .card .post-img-lg {
+#frontpage .toggle-card-view .posts .card .post-img-lg, #userpage .toggle-card-view .posts .card .post-img-lg, #search .toggle-card-view .posts .card .post-img-lg {
   display: block;
   text-align: center;
 }
 
-#frontpage .posts.toggle-card-view .card .post-img-lg img, #userpage .posts.toggle-card-view .card .post-img-lg img, #search .posts.toggle-card-view .card .post-img-lg img {
+#frontpage .toggle-card-view .posts .card .post-img-lg img, #userpage .toggle-card-view .posts .card .post-img-lg img, #search .toggle-card-view .posts .card .post-img-lg img {
   max-width: 55%;
   height: auto;
 }
 
-#frontpage .posts.toggle-card-view .card .embed-lg, #userpage .posts.toggle-card-view .card .embed-lg, #search .posts.toggle-card-view .card .embed-lg {
+#frontpage .toggle-card-view .posts .card .embed-lg, #userpage .toggle-card-view .posts .card .embed-lg, #search .toggle-card-view .posts .card .embed-lg {
   display: flex;
   z-index: 2;
 }
 
-#frontpage .posts.toggle-card-view .card .post-preview-lg, #userpage .posts.toggle-card-view .card .post-preview-lg, #search .posts.toggle-card-view .card .post-preview-lg {
+#frontpage .toggle-card-view .posts .card .post-preview-lg, #userpage .toggle-card-view .posts .card .post-preview-lg, #search .toggle-card-view .posts .card .post-preview-lg {
   display: block;
 }
 
-#frontpage .posts.toggle-card-view .card .post-preview-lg .post-body, #userpage .posts.toggle-card-view .card .post-preview-lg .post-body, #search .posts.toggle-card-view .card .post-preview-lg .post-body {
+#frontpage .toggle-card-view .posts .card .post-preview-lg .post-body, #userpage .toggle-card-view .posts .card .post-preview-lg .post-body, #search .toggle-card-view .posts .card .post-preview-lg .post-body {
   -webkit-mask-image: linear-gradient(180deg, #000 40%, transparent);
   mask-image: linear-gradient(180deg, #000 40%, transparent);
   overflow: hidden;
@@ -14761,7 +14761,7 @@ pre .pln, code .pln {
 }
 
 pre .lit, code .lit {
-  color: #abbf52;
+  color: #23183E;
 }
 
 pre .kwd, code .kwd {
@@ -14854,13 +14854,13 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     display: block;
   }
 
-  #frontpage .posts.toggle-card-view .card, #userpage .posts.toggle-card-view .card, #search .posts.toggle-card-view .card {
+  #frontpage .toggle-card-view .posts .card, #userpage .toggle-card-view .posts .card, #search .toggle-card-view .posts .card {
     border-radius: 0;
     margin-top: 0;
     box-shadow: none;
   }
 
-  #frontpage .posts.toggle-card-view .card .post-img-lg img, #userpage .posts.toggle-card-view .card .post-img-lg img, #search .posts.toggle-card-view .card .post-img-lg img {
+  #frontpage .toggle-card-view .posts .card .post-img-lg img, #userpage .toggle-card-view .posts .card .post-img-lg img, #search .toggle-card-view .posts .card .post-img-lg img {
     max-width: 100%;
     height: auto;
   }
@@ -14952,7 +14952,7 @@ textarea {
   display: none;
 }
 
-span.red, .text-admin {
+span.red {
   color: #F05D5E;
 }
 
@@ -14970,6 +14970,28 @@ div.deleted {
 
 div.deleted.banned {
   background-color: #ffcc99;
+}
+
+.distinguish-admin .user-name, .distinguish-mod .user-name {
+  color: white;
+  padding: 0px 3px 2px 3px;
+  border-radius: 3px;
+}
+
+.distinguish-admin .user-name {
+  background-color: #F05D5E;
+}
+
+.distinguish-mod .user-name {
+  background-color: #07c20c;
+}
+
+.distinguish-admin .user-name::before {
+  content: "[A] ";
+}
+
+.distinguish-mod .user-name::before {
+  content: "[M] ";
 }
 
 /*# sourceMappingURL=main.css.map */
