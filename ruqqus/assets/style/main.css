@@ -13173,7 +13173,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 #frontpage .posts.toggle-card-view .card .post-preview-lg, #userpage .posts.toggle-card-view .card .post-preview-lg, #search .posts.toggle-card-view .card .post-preview-lg {
   display: block;
-  z-index: 2;
 }
 
 #frontpage .posts.toggle-card-view .card .post-preview-lg .post-body, #userpage .posts.toggle-card-view .card .post-preview-lg .post-body, #search .posts.toggle-card-view .card .post-preview-lg .post-body {
