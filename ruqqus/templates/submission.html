@@ -10,8 +10,13 @@
 {% endif %}
 
 {% block title %}
-<title>{{ p.title }}</title>
-<meta name="description" content="{{ p.title | safe }}">
+{% if linked_comment and not linked_comment.is_banned and not linked_comment.is_deleted %}
+	<title>@{{ linked_comment.author.username }} comments on "{{ p.title }}"</title>
+	<meta name="description" content="{{ linked_comment.body }}">
+{% else %}
+	<title>{{ p.title }}</title>
+	<meta name="description" content="{{ p.title | safe }}">
+{% endif %}
 {% endblock %}
 
 {% block pagetype %}thread{% endblock %}

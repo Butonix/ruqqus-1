@@ -97,12 +97,8 @@ class Submission(Base):
 
         #check for banned
         if self.is_banned:
-            if v:
-                if v.admin_level:
-                    template="submission.html"
-
-                else: 
-                    template="submission_banned.html"
+            if v and v.admin_level>=3:
+                template="submission.html"
             else:
                 template="submission_banned.html"
         else:
@@ -113,7 +109,7 @@ class Submission(Base):
         self.tree_comments(comment=comment)
         
         #return template
-        return render_template(template, v=v, p=self, sort_method=request.args.get("sort","Hot").capitalize())
+        return render_template(template, v=v, p=self, sort_method=request.args.get("sort","Hot").capitalize(), linked_comment=comment)
 
     @property
     @lazy
