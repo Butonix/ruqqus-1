@@ -13186,6 +13186,13 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 #frontpage .posts.toggle-card-view .card .post-preview-lg, #userpage .posts.toggle-card-view .card .post-preview-lg, #search .posts.toggle-card-view .card .post-preview-lg {
   display: block;
+  z-index: 2;
+}
+
+#frontpage .posts.toggle-card-view .card .post-preview-lg .post-body, #userpage .posts.toggle-card-view .card .post-preview-lg .post-body, #search .posts.toggle-card-view .card .post-preview-lg .post-body {
+  -webkit-mask-image: linear-gradient(180deg, #000 65%, transparent);
+  mask-image: linear-gradient(180deg, #000 65%, transparent);
+  overflow: hidden;
 }
 
 .toggle-view .nav-link {
