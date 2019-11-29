@@ -113,14 +113,6 @@
 </div>
 {% endif %}
 
-{% if p.body_html %}
-<div class="row justify-content-center post-preview-lg mt-3 mt-md-0">
-  <div class="col col-md-8 px-0">
-    {{ p.body_html | safe | truncate(280, False, '...', 0) }}
-  </div>
-</div>
-{% endif %}
-
 <div class="card-footer d-block d-md-none mt-3">
   <div class="post-actions">
     <ul class="list-inline text-right d-flex">
