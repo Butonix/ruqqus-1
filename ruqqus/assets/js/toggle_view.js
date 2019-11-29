@@ -5,7 +5,7 @@ if (typeof(Storage) !== "undefined") {
 	toggle_card_view = function() {
 
 	// Store Pref
-	localStorage.card_pref = true;
+	localStorage.setItem("view_pref", "card");
 
 	var toggleCard = document.getElementById('toggle-card-view-btn');
 	var toggleList = document.getElementById('toggle-list-view-btn');
@@ -26,7 +26,7 @@ if (typeof(Storage) !== "undefined") {
 toggle_list_view = function() {
 
 	// Store Pref
-	localStorage.list_pref = true;
+	localStorage.setItem("view_pref", "list");
 
 	var toggleCard = document.getElementById('toggle-card-view-btn');
 	var toggleList = document.getElementById('toggle-list-view-btn');
@@ -44,7 +44,7 @@ toggle_list_view = function() {
 
 }
 
-} else if (localStorage.list_pref = true) {
+} else if (localStorage.getItem("view_pref") == 'list') {
 
 	var toggleCard = document.getElementById('toggle-card-view-btn');
 	var toggleList = document.getElementById('toggle-list-view-btn');
