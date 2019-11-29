@@ -59,8 +59,7 @@ _clean_w_links = bleach.Cleaner(tags=_allowed_tags,
 def sanitize(text, linkgen=False):
 
     if linkgen:
-        return bleach.linkify(text,
-                              skip_tags=["pre"])
+        return _clean_w_links.clean(text)
     else:
         return _clean_wo_links.clean(text)
     
