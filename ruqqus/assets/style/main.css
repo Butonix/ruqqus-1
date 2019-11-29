@@ -14850,11 +14850,9 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   #frontpage .posts.toggle-card-view .card, #userpage .posts.toggle-card-view .card, #search .posts.toggle-card-view .card {
-    border-width: 0 0 1px 0;
-    border-color: #E6E6E6;
-    border-style: solid;
     border-radius: 0;
-    padding: 15px;
+    margin-top: 0;
+    box-shadow: none;
   }
 
   #frontpage .posts.toggle-card-view .card .post-img-lg img, #userpage .posts.toggle-card-view .card .post-img-lg img, #search .posts.toggle-card-view .card .post-img-lg img {

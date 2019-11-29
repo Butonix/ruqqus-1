@@ -2418,11 +2418,9 @@ body {
 }
 
 #frontpage .posts.toggle-card-view .card, #userpage .posts.toggle-card-view .card, #search .posts.toggle-card-view .card {
-    border-width: 0 0 1px 0;
-    border-color: $border-color;
-    border-style: solid;
     border-radius: 0;
-    padding: 15px;
+    margin-top: 0;
+    box-shadow: none;
 }
 
 #frontpage .posts.toggle-card-view .card .post-img-lg img, #userpage .posts.toggle-card-view .card .post-img-lg img, #search .posts.toggle-card-view .card .post-img-lg img { 
