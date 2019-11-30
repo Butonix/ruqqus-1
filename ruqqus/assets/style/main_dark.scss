@@ -962,6 +962,12 @@ color: $dark;
     border-radius: $border-radius;
 }
 
+#thread #main-content-col {
+    background-color: $white;
+    box-shadow: $box-shadow-sm;
+    border-radius: $border-radius;
+}
+
 // Left Sidebar (Terms pages)
 
 .scrollspy.sidebar-sticky {
