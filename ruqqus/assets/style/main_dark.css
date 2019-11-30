@@ -13349,6 +13349,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   background-color: #3f404a;
 }
 
+#frontpage .posts .card:last-of-type, #userpage .posts .card:last-of-type, #search .posts .card:last-of-type {
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
 .post-title a {
   color: #dadada;
 }

@@ -1307,6 +1307,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     background-color: $gray-100;
 }
 
+#frontpage .posts .card:last-of-type, #userpage .posts .card:last-of-type, #search .posts .card:last-of-type {
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+}
+
 #frontpage .posts .card.enlarged .post-img-lg, #userpage .posts .card.enlarged .post-img-lg, #search .posts .card.enlarged .post-img-lg {
     display: block;
 }
