@@ -131,14 +131,54 @@
 {% if v.admin_level >=4 %}
 <p>Alts:</p>
 <ul>
-{% for account in u.alts %}
-<li><a href="{{ account.permalink }}">@{{ account.username }}</a></li>
-{% endfor %}
+  {% for account in u.alts %}
+  <li><a href="{{ account.permalink }}">@{{ account.username }}</a></li>
+  {% endfor %}
 </ul>
 {% endif %}
 {% endblock %}
 
 {% block sidebarLeftblock %}
+
+{% if v and v.id == u.id %}
+
+<div class="sidebar-section sidebar-dashboard">
+  <div class="title">Dashboard</div>
+  <div class="body">
+    <ul class="no-bullets filter-list pl-0">
+      <li class="filter-item">
+        <a class="filter-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem"></i>Profile</a>
+      </li>
+      <li class="filter-item">
+        <a class="filter-link " href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{% else %}
+
+<div class="sidebar-section sidebar-dashboard">
+  <div class="title">Dashboard</div>
+  <div class="body">
+    <ul class="no-bullets filter-list pl-0">
+      <li class="filter-item">
+        <a class="filter-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem"></i>Profile</a>
+      </li>
+      <li class="filter-item">
+        <a class="filter-link " href="{{ v.permalink }}/posts"><i class="fas fa-feather-alt fa-width-rem"></i>Your posts</a>
+      </li>
+      <li class="filter-item">
+        <a class="filter-link " href="{{ v.permalink }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Your comments</a> 
+      </li>
+      <li class="filter-item">
+        <a class="filter-link " href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{% endif %}
 
 <div class="sidebar-section sidebar-filters sticky">
   <div class="body">
@@ -262,7 +302,7 @@
 </div>
 
 <div class="row border-bottom d-block d-lg-none bg-light no-gutters">
-<div class="col">
+  <div class="col">
     <ul class="list-inline d-flex justify-content-around text-center py-2 mb-0">
       <li class="list-inline-item">
         <span class="text-small font-weight-bold">{{ u.karma }}</span>

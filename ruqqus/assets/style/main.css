@@ -13130,6 +13130,17 @@ a:hover .link-arrow {
   color: #603abb;
 }
 
+.sidebar-left .sidebar-section.sidebar-dashboard {
+  margin-bottom: 1rem;
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.sidebar-section.sidebar-dashboard .body {
+  padding: 0;
+}
+
 .list-group-item-action {
   color: rgba(255, 255, 255, 0.5);
 }
