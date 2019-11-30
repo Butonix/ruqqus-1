@@ -922,13 +922,10 @@ color: $dark;
 // Main Content
 
 #frontpage .pseudo-submit-form.card, #search .search-results.card {
-    border-width: 0 0 1px 0;
-    border-color: $border-color;
-    border-top-left-radius: $border-radius;
-    border-top-right-radius: $border-radius;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
     background-color: $light;
+    border-radius: $border-radius;
+    border: none;
+    box-shadow: $box-shadow-sm-extra;
 }
 
 #frontpage .pseudo-submit-form.card .card-body, #search .search-results.card .card-body {
@@ -1213,12 +1210,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 #frontpage.toggle-card-view .tab-bar, #userpage.toggle-card-view .tab-bar, #search.toggle-card-view .tab-bar {
     border-radius: 0;
-}
-
-#frontpage.toggle-card-view .pseudo-submit-form.card, #search.toggle-card-view .search-results.card {
-    border-radius: $border-radius;
-    border: none;
-    box-shadow: $box-shadow-sm-extra;
 }
 
 #frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card {
