@@ -2514,6 +2514,10 @@ body {
     height: auto;
 }
 
+#frontpage.toggle-card-view .pagination, #userpage.toggle-card-view .pagination, #search.toggle-card-view .pagination {
+    padding-left: 1rem;
+}
+
 .thumb-img-link-overlay {
     display: none;
 }

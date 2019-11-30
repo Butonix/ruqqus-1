@@ -2450,6 +2450,10 @@ body {
     height: auto;
 }
 
+#frontpage.toggle-card-view .pagination, #userpage.toggle-card-view .pagination, #search.toggle-card-view .pagination {
+    padding-left: 1rem;
+}
+
 .post-title a:hover, .post-title a:active, .post-title a:focus {
     color: $primary;
 }
