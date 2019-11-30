@@ -6,6 +6,10 @@
 <script src="/assets/js/enlarge_thumb.js"></script>
 {% endblock %}
 
+{% block toggleView %}
+<script src="/assets/js/toggle_view.js"></script>
+{% endblock %}
+
 {% block fixedMobileBarJS %}
 <script>
   var prevScrollpos = window.pageYOffset;
@@ -246,7 +250,7 @@
     </div>
 
   </div>
-  
+
 <!-- Post filters bar visible only on small devices-->
 
 <div class="row fixed-top bg-white border-0 d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 48px; transition: top 0.3s ease 0s;">
