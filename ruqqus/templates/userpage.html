@@ -138,8 +138,25 @@
 {% endif %}
 {% endblock %}
 
+{% block sidebarLeftblock %}
+
+<div class="sidebar-section sidebar-filters sticky">
+  <div class="body">
+    <ul class="no-bullets filter-list pl-0">
+      <li class="filter-item">
+        <a class="filter-link active" href="/u/{{ u.username }}"><i class="fas fa-fire fa-width-rem"></i>Posts</a>
+      </li>
+      <li class="filter-item">
+        <a class="filter-link" href="/u/{{ u.username }}/comments"><i class="fas fa-arrow-alt-circle-up fa-width-rem"></i>Comments</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{% endblock %}
+
 {% block content %}
-<!-- Post filters bar visible only on medium devices or larger-->
+<!-- Post filters bar visible only on small devices-->
 
 <div class="row fixed-top bg-white border-0 d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 48px; transition: top 0.3s ease 0s;">
 
