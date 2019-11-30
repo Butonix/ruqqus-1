@@ -13066,7 +13066,7 @@ a:hover .link-arrow {
   border-color: #F6F5F7;
 }
 
-.sidebar .sidebar-left {
+.sidebar.sidebar-left {
   -ms-flex: 0 0 220px;
   flex: 0 0 220px;
   padding-left: 0rem;
