@@ -101,6 +101,41 @@
 
 {% block sidebarLeftblock %}
 
+{% if v %}
+
+<div class="sidebar-section sidebar-dashboard">
+  <div class="title">Dashboard</div>
+  <div class="body">
+    <ul class="no-bullets filter-list pl-0">
+      <li class="filter-item">
+        <a class="filter-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem"></i>Profile</a>
+      </li>
+      <li class="filter-item">
+        <a class="filter-link " href="{{ v.permalink }}/posts"><i class="fas fa-feather-alt fa-width-rem"></i>Your posts</a>
+      </li>
+      <li class="filter-item">
+        <a class="filter-link " href="{{ v.permalink }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Your comments</a> 
+      </li>
+      <li class="filter-item">
+        <a class="filter-link " href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{% endif %}
+
+{% if not v %}
+<div class="sidebar-section sidebar-alert">
+  <div class="body text-center">
+    <img src="/assets/images/illustrations/ruckus.png" class="empty-state-img mb-3" alt="empty state">
+    <h5 class="h4">Join the discourse.</h5>
+    <p class="text-small">Internet freedom of speech has a new home. Use your voice. Make a Ruqqus.</p>
+    <a href="/signup" class="btn btn-primary btn-block">Sign up</a>
+  </div>
+</div>
+{% endif %}
+
 
 {% endblock %}
 
