@@ -13138,6 +13138,10 @@ a:hover .link-arrow {
   color: #af92de;
 }
 
+.filter-list > .filter-item > .filter-link.active .fa, .filter-list > .filter-item > .filter-link.active .fas, .filter-list > .filter-item > .filter-link.active .far, .filter-list > .filter-item > .filter-link.active .fab {
+  color: #af92de;
+}
+
 .filter-link:hover, .filter-link:focus {
   color: #af92de;
 }

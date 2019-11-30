@@ -13125,6 +13125,10 @@ a:hover .link-arrow {
   color: #603abb;
 }
 
+.filter-list > .filter-item > .filter-link.active .fa, .filter-list > .filter-item > .filter-link.active .fas, .filter-list > .filter-item > .filter-link.active .far, .filter-list > .filter-item > .filter-link.active .fab {
+  color: #603abb;
+}
+
 .filter-link:hover, .filter-link:focus {
   color: #603abb;
 }

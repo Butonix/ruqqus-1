@@ -1106,6 +1106,10 @@ color: $dark;
     color: $primary;
 }
 
+.filter-list > .filter-item > .filter-link.active .fa, .filter-list > .filter-item > .filter-link.active .fas, .filter-list > .filter-item > .filter-link.active .far, .filter-list > .filter-item > .filter-link.active .fab {
+    color: $primary;
+}
+
 .filter-link:hover, .filter-link:focus {
     color: $primary;
 }
