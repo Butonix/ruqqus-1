@@ -1001,8 +1001,8 @@ color: $dark;
 // Sidebar content
 
 .sidebar {
-    -ms-flex: 0 0 275px;
-    flex: 0 0 275px;
+    -ms-flex: 0 0 250px;
+    flex: 0 0 250px;
     padding-left: 0rem;
     padding-right: 0rem;
 }
@@ -1088,7 +1088,7 @@ color: $dark;
     color: $primary;
 }
 
-.sidebar-filters .filter-link:active {
+.sidebar-filters > .filter-item > .filter-link.active {
     color: $primary;
     background-color: $gray-100;
     border-radius: $border-radius;
