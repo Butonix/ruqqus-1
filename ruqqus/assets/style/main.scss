@@ -930,13 +930,7 @@ color: $dark;
     width: 1rem;
 }
 
-.posts {
-    background-color: $white;
-    box-shadow: $box-shadow-sm;
-    border-radius: $border-radius;
-}
-
-#thread #main-content-col {
+.posts, #thread #main-content-col {
     background-color: $white;
     box-shadow: $box-shadow-sm;
     border-radius: $border-radius;
@@ -2569,7 +2563,7 @@ body {
     padding-left: 1rem;
 }
 
-.posts {
+.posts, #thread #main-content-col {
     box-shadow: none;
     border-radius: 0;
 }
