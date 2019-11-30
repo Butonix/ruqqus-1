@@ -1044,6 +1044,10 @@ color: $dark;
     border-radius: 0;
 }
 
+.sidebar.sidebar-left .sidebar-section .title {
+    border-bottom: none;
+}
+
 .sidebar-section.sidebar-filters .body {
     padding: 0;
 }
