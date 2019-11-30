@@ -13294,6 +13294,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   font-weight: 600;
   padding: 0;
   line-height: 1;
+  box-shadow: none;
 }
 
 .toggle-view .fa, .toggle-view .fas, .toggle-view .far, .toggle-view .fab, .toggle-view .fal {
