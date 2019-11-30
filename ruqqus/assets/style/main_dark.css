@@ -13052,7 +13052,6 @@ a:hover .link-arrow {
   color: #dadada;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #56575a;
-  margin-bottom: 1rem;
 }
 
 .sidebar .sidebar-section .body {
@@ -13133,6 +13132,10 @@ a:hover .link-arrow {
   font-size: 13px;
   margin-right: 0.5rem;
   color: #ACACAC;
+}
+
+.filter-list .filter-link:hover .fa, .filter-list .filter-link:focus .fa, .filter-list .filter-link:hover .fas, .filter-list .filter-link:focus .fas, .filter-list .filter-link:hover .far, .filter-list .filter-link:focus .far, .filter-list .filter-link:hover .fab, .filter-list .filter-link:focus .fab {
+  color: #af92de;
 }
 
 .filter-link:hover, .filter-link:focus {

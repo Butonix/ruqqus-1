@@ -991,7 +991,6 @@ color: $dark;
     color: $gray;
     padding: 0.75rem 1rem;
     border-bottom: 1px solid $input-border-color;
-    margin-bottom: 1rem;
 }
 
 .sidebar .sidebar-section .body {
@@ -1085,6 +1084,10 @@ color: $dark;
     font-size: $small-font-size;
     margin-right: 0.5rem;
     color: $gray-600;
+}
+
+.filter-list .filter-link:hover .fa , .filter-list .filter-link:focus .fa, .filter-list .filter-link:hover .fas, .filter-list .filter-link:focus .fas, .filter-list .filter-link:hover .far, .filter-list .filter-link:focus .far, .filter-list .filter-link:hover .fab , .filter-list .filter-link:focus .fab {
+    color: $primary;
 }
 
 .filter-link:hover, .filter-link:focus {
