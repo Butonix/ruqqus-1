@@ -1194,6 +1194,10 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     color: $primary;
 }
 
+#frontpage.toggle-card-view .pagination, #userpage.toggle-card-view .pagination, #search.toggle-card-view .pagination {
+    padding-left: 0;
+}
+
 // Thread
 
 .card {
@@ -1897,6 +1901,12 @@ ul.comment-section {
     left: 1.5rem;
     color: $white;
     font-weight: $font-weight-normal;
+}
+
+// Pagination
+
+.pagination {
+    padding: 1rem;
 }
 
 // Settings Page

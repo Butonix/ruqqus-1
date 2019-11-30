@@ -13211,6 +13211,10 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   color: #603abb;
 }
 
+#frontpage.toggle-card-view .pagination, #userpage.toggle-card-view .pagination, #search.toggle-card-view .pagination {
+  padding-left: 0;
+}
+
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card {
   border-width: 0 0 1px 0;
   border-color: #E6E6E6;
@@ -13872,6 +13876,10 @@ ul.comment-section {
   left: 1.5rem;
   color: #ffffff;
   font-weight: 400;
+}
+
+.pagination {
+  padding: 1rem;
 }
 
 .settings .settings-section {
