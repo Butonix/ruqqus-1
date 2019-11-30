@@ -13310,10 +13310,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   color: #af92de;
 }
 
-#frontpage.toggle-card-view .pagination, #userpage.toggle-card-view .pagination, #search.toggle-card-view .pagination {
-  padding-left: 0;
-}
-
 .toggle-card-view .posts {
   background: none;
   border-radius: 0;
@@ -14020,7 +14016,7 @@ ul.comment-section {
 }
 
 .pagination {
-  padding: 1rem;
+  padding: 1rem 0;
 }
 
 .settings .settings-section {
@@ -15053,10 +15049,6 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   #frontpage.toggle-card-view .posts .card .post-img-lg img, #userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img {
     max-width: 100%;
     height: auto;
-  }
-
-  #frontpage.toggle-card-view .pagination, #userpage.toggle-card-view .pagination, #search.toggle-card-view .pagination {
-    padding-left: 1rem;
   }
 
   .posts, #thread #main-content-col {
