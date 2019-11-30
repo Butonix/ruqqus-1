@@ -12994,7 +12994,7 @@ a:hover .link-arrow {
   width: 1rem;
 }
 
-.posts, #main-content-col {
+.posts, #thread #main-content-col {
   background-color: #35363e;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
   border-radius: 0.25rem;
@@ -15054,7 +15054,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     padding-left: 1rem;
   }
 
-  .posts, #main-content-col {
+  .posts, #thread #main-content-col {
     box-shadow: none;
     border-radius: 0;
   }
