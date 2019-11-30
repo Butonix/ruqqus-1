@@ -13316,6 +13316,12 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   padding-left: 0;
 }
 
+.toggle-card-view .posts {
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
 .card-header {
   font-size: 13px;
   font-weight: 600;
