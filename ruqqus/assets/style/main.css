@@ -12262,7 +12262,7 @@ body {
 .sticky {
   position: -webkit-sticky;
   position: sticky;
-  top: 49px;
+  top: 63px;
   height: auto;
   overflow-y: auto;
   z-index: 4;
@@ -13279,8 +13279,8 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   color: #5F5F5F;
   font-size: 12px;
   font-weight: 600;
-  padding-top: 0;
-  padding-bottom: 0.75rem;
+  padding: 0;
+  line-height: 1;
 }
 
 .toggle-view .fa, .toggle-view .fas, .toggle-view .far, .toggle-view .fab, .toggle-view .fal {
