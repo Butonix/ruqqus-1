@@ -1015,8 +1015,9 @@ color: $dark;
     font-size: $small-font-size;
     font-weight: $font-weight-bold;
     color: $black;
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 1rem;
     border-bottom: 1px solid $input-border-color;
+    line-height: 1.2;
 }
 
 .sidebar .sidebar-section .body {
@@ -1292,6 +1293,15 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 // Thread
 
+.card-header {
+    font-size: $small-font-size;
+    font-weight: $font-weight-bold;
+    color: $black;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid $input-border-color;
+    line-height: 1.2;
+}
+
 .card {
     background-color: $light;
 }
@@ -1345,7 +1355,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     background-color: $light;
     border-top-left-radius: $border-radius;
     border-top-right-radius: $border-radius;
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 1rem;
 }
 
 .modal-content {

@@ -13050,8 +13050,9 @@ a:hover .link-arrow {
   font-size: 13px;
   font-weight: 600;
   color: #dadada;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
   border-bottom: 1px solid #56575a;
+  line-height: 1.2;
 }
 
 .sidebar .sidebar-section .body {
@@ -13314,6 +13315,15 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   padding-left: 0;
 }
 
+.card-header {
+  font-size: 13px;
+  font-weight: 600;
+  color: #dadada;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #56575a;
+  line-height: 1.2;
+}
+
 .card {
   background-color: #35363e;
 }
@@ -13365,7 +13375,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   background-color: #35363e;
   border-top-left-radius: 0.25rem;
   border-top-right-radius: 0.25rem;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
 }
 
 .modal-content {

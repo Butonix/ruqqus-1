@@ -13026,8 +13026,9 @@ a:hover .link-arrow {
   font-size: 13px;
   font-weight: 600;
   color: #5F5F5F;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
   border-bottom: 1px solid #ECECEC;
+  line-height: 1.2;
 }
 
 .sidebar .sidebar-section .body {
@@ -13301,6 +13302,15 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   padding-left: 0;
 }
 
+.card-header {
+  font-size: 13px;
+  font-weight: 600;
+  color: #5F5F5F;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #ECECEC;
+  line-height: 1.2;
+}
+
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card {
   border-width: 0 0 1px 0;
   border-color: #E6E6E6;
@@ -13357,7 +13367,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   background-color: #ffffff;
   border-top-left-radius: 0.35rem;
   border-top-right-radius: 0.35rem;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
 }
 
 .modal-content {
