@@ -13052,7 +13052,6 @@ a:hover .link-arrow {
   color: #dadada;
   padding: 0.5rem 1rem;
   border-bottom: 1px solid #56575a;
-  line-height: 1.2;
 }
 
 .sidebar .sidebar-section .body {
@@ -13321,7 +13320,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   color: #dadada;
   padding: 0.5rem 1rem;
   border-bottom: 1px solid #56575a;
-  line-height: 1.2;
 }
 
 .card {
