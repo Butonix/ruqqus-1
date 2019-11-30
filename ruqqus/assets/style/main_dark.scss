@@ -1011,14 +1011,16 @@ color: $dark;
 }
 
 .sidebar .sidebar-section .title {
-    font-size: $extra-small-font-size;
+    font-size: $small-font-size;
     font-weight: $font-weight-bold;
     color: $black;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 0 0 .5rem 0;
+    padding: 0.75rem 1rem;
     border-bottom: 1px solid $input-border-color;
     margin-bottom: 1rem;
+}
+
+.sidebar .sidebar-section .body {
+    padding: 1rem;
 }
 
 .sidebar-section {
@@ -1026,7 +1028,6 @@ color: $dark;
     background-color: $light;
     box-shadow: $box-shadow-sm;
     border-radius: 0.25rem;
-    padding: 1rem;
 }
 
 .sidebar-section.sidebar-trending .hashtag {

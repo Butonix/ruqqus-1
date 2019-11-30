@@ -13047,14 +13047,16 @@ a:hover .link-arrow {
 }
 
 .sidebar .sidebar-section .title {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: #dadada;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 0 0 0.5rem 0;
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid #56575a;
   margin-bottom: 1rem;
+}
+
+.sidebar .sidebar-section .body {
+  padding: 1rem;
 }
 
 .sidebar-section {
@@ -13062,7 +13064,6 @@ a:hover .link-arrow {
   background-color: #35363e;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
   border-radius: 0.25rem;
-  padding: 1rem;
 }
 
 .sidebar-section.sidebar-trending .hashtag {
