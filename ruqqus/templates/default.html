@@ -80,6 +80,8 @@
 
       <div class="col sidebar sidebar-left d-none d-lg-block mr-3">
 
+      {% block sidebarblock-left %}
+
         <div class="sidebar-section sidebar-filters">
           <div class="title">Filter posts</div>
           <div class="body">
@@ -102,6 +104,8 @@
             </ul>
           </div>
         </div>
+
+        {% endblock %}
 
       </div>
 
