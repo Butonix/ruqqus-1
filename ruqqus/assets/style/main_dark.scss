@@ -55,7 +55,7 @@ $theme-colors: (
 $input-border-color: #56575a;
 $border-color: #494a4e;
 
-$border-radius: .25rem;
+$border-radius: .35rem;
 
 // Text styling
 
@@ -303,7 +303,7 @@ ol > li::before {
 
 .btn.login, .btn.register {
     height: calc(1.5em + 0.75rem + 2px);
-    border-radius: .25rem;
+    border-radius: .35rem;
 }
 
 .btn-group.btn-integration {
@@ -1814,7 +1814,7 @@ ul.comment-section {
     border: 1px solid $gray-300;
     background-color: $light;
     padding: 0.25rem 0.5rem;
-    border-radius: .25rem;
+    border-radius: .35rem;
     font-weight: $font-weight-bold;
     margin-right: .25rem;
 }

@@ -58,7 +58,7 @@ $theme-colors: (
 $input-border-color: #ECECEC;
 $border-color: #E6E6E6;
 
-$border-radius: .25rem;
+$border-radius: .35rem;
 
 // Text styling
 
@@ -293,7 +293,7 @@ ol > li::before {
 
 .btn.login, .btn.register {
     height: calc(1.5em + 0.75rem + 2px);
-    border-radius: .25rem;
+    border-radius: .35rem;
 }
 
 .btn-group.btn-integration {
@@ -999,7 +999,7 @@ color: $dark;
     margin-bottom: 1rem;
     background-color: #fff;
     box-shadow: $box-shadow-sm;
-    border-radius: 0.25rem;
+    border-radius: 0.35rem;
     padding: 1rem;
 }
 
@@ -1783,7 +1783,7 @@ ul.comment-section {
     border: 1px solid $gray-300;
     background-color: $white;
     padding: 0.25rem 0.5rem;
-    border-radius: .25rem;
+    border-radius: .35rem;
     font-weight: $font-weight-bold;
     margin-right: .25rem;
 }
@@ -1884,7 +1884,7 @@ ul.comment-section {
     margin-bottom: 3rem;
     background: $white;
     box-shadow: $box-shadow-sm;
-    border-radius: 0.25rem;
+    border-radius: 0.35rem;
 }
 
 .settings .settings-section .title, .settings .settings-section .body, .settings .settings-section .footer {
