@@ -9,7 +9,6 @@ if (localStorage.view_pref == 'list') {
 	var contentCol = document.getElementById('main-content-col');
 
 	document.body.classList.add('toggle-list-view');
-	contentCol.classList.add('bg-white','shadow-sm','shadow-sm-0');
 
 	if ( document.body.classList.contains('toggle-card-view')) {
 		document.body.classList.remove('toggle-card-view')
@@ -27,10 +26,6 @@ if (localStorage.view_pref == 'list') {
 	var contentCol = document.getElementById('main-content-col');
 
 	document.body.classList.add('toggle-card-view');
-
-	if ( contentCol.classList.contains('bg-white','shadow-sm','shadow-sm-0')) {
-	contentCol.classList.remove('bg-white','shadow-sm','shadow-sm-0')
-	}
 
 	if ( document.body.classList.contains('toggle-list-view')) {
 		document.body.classList.remove('toggle-list-view')
@@ -53,10 +48,6 @@ toggle_card_view = function() {
 
 	document.body.classList.add('toggle-card-view');
 
-	if ( contentCol.classList.contains('bg-white','shadow-sm','shadow-sm-0')) {
-	contentCol.classList.remove('bg-white','shadow-sm','shadow-sm-0')
-	}
-
 	if ( document.body.classList.contains('toggle-list-view')) {
 		document.body.classList.remove('toggle-list-view')
 	}
@@ -78,7 +69,6 @@ toggle_list_view = function() {
 	var contentCol = document.getElementById('main-content-col');
 
 	document.body.classList.add('toggle-list-view');
-	contentCol.classList.add('bg-white','shadow-sm','shadow-sm-0');
 
 	if ( document.body.classList.contains('toggle-card-view')) {
 		document.body.classList.remove('toggle-card-view')
@@ -101,7 +91,6 @@ if (localStorage.view_pref_mobile == 'list') {
 	var contentCol = document.getElementById('main-content-col');
 
 	document.body.classList.add('toggle-list-view');
-	contentCol.classList.add('bg-white','shadow-sm','shadow-sm-0');
 
 	if ( document.body.classList.contains('toggle-card-view')) {
 		document.body.classList.remove('toggle-card-view')
@@ -119,10 +108,6 @@ if (localStorage.view_pref_mobile == 'list') {
 	var contentCol = document.getElementById('main-content-col');
 
 	document.body.classList.add('toggle-card-view');
-
-	if ( contentCol.classList.contains('bg-white','shadow-sm','shadow-sm-0')) {
-	contentCol.classList.remove('bg-white','shadow-sm','shadow-sm-0')
-	}
 
 	if ( document.body.classList.contains('toggle-list-view')) {
 		document.body.classList.remove('toggle-list-view')
@@ -145,10 +130,6 @@ toggle_card_view_sm = function() {
 
 	document.body.classList.add('toggle-card-view');
 
-	if ( contentCol.classList.contains('bg-white','shadow-sm','shadow-sm-0')) {
-	contentCol.classList.remove('bg-white','shadow-sm','shadow-sm-0')
-	}
-
 	if ( document.body.classList.contains('toggle-list-view')) {
 		document.body.classList.remove('toggle-list-view')
 	}
@@ -170,7 +151,6 @@ toggle_list_view_sm = function() {
 	var contentCol = document.getElementById('main-content-col');
 
 	document.body.classList.add('toggle-list-view');
-	contentCol.classList.add('bg-white','shadow-sm','shadow-sm-0');
 
 	if ( document.body.classList.contains('toggle-card-view')) {
 		document.body.classList.remove('toggle-card-view')
