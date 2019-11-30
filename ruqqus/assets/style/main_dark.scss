@@ -1125,6 +1125,10 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 // Thread Card View
 
+#frontpage.toggle-card-view .tab-bar, #userpage.toggle-card-view .tab-bar, #search.toggle-card-view .tab-bar {
+    border-radius: 0;
+}
+
 #frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card {
     border-width: 0 0 1px 0;
     border-color: $border-color;
