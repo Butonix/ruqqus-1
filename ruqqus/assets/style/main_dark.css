@@ -13337,6 +13337,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-top-right-radius: 0.25rem;
 }
 
+#frontpage .posts .card:last-of-type, #userpage .posts .card:last-of-type, #search .posts .card:last-of-type {
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card {
   border-width: 0 0 1px 0;
   border-color: #494a4e;
@@ -13347,11 +13352,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 #frontpage .posts .card:hover, #userpage .posts .card:hover, #search .posts .card:hover {
   background-color: #3f404a;
-}
-
-#frontpage .posts .card:last-of-type, #userpage .posts .card:last-of-type, #search .posts .card:last-of-type {
-  border-bottom-left-radius: 0.25rem;
-  border-bottom-right-radius: 0.25rem;
 }
 
 .post-title a {

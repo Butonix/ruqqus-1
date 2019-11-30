@@ -1295,6 +1295,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-top-right-radius: $border-radius;
 }
 
+#frontpage .posts .card:last-of-type, #userpage .posts .card:last-of-type, #search .posts .card:last-of-type {
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+}
+
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card {
     border-width: 0 0 1px 0;
     border-color: $border-color;
@@ -1305,11 +1310,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 #frontpage .posts .card:hover, #userpage .posts .card:hover, #search .posts .card:hover {
     background-color: $gray-100;
-}
-
-#frontpage .posts .card:last-of-type, #userpage .posts .card:last-of-type, #search .posts .card:last-of-type {
-    border-bottom-left-radius: $border-radius;
-    border-bottom-right-radius: $border-radius;
 }
 
 #frontpage .posts .card.enlarged .post-img-lg, #userpage .posts .card.enlarged .post-img-lg, #search .posts .card.enlarged .post-img-lg {
