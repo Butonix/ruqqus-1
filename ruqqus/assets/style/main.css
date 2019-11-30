@@ -13110,9 +13110,6 @@ a:hover .link-arrow {
   color: #603abb;
   background-color: #F6F5F7;
   border-radius: 0.35rem;
-  border-right: 3px solid #603abb;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
 }
 
 .filter-list .filter-item .fa, .filter-list .filter-item .fas, .filter-list .filter-item .far, .filter-list .filter-item .fab, .filter-list .filter-item .fal {
