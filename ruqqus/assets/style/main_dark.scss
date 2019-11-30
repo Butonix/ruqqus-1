@@ -1201,6 +1201,12 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 0;
 }
 
+#frontpage.toggle-card-view .pseudo-submit-form.card, #search.toggle-card-view .search-results.card {
+    border-radius: $border-radius;
+    border: none;
+    box-shadow: $box-shadow-sm-extra;
+}
+
 #frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card {
     border-width: 0 0 1px 0;
     border-color: $border-color;
