@@ -13066,6 +13066,43 @@ a:hover .link-arrow {
   border-color: #F6F5F7;
 }
 
+.sidebar .sidebar-left {
+  -ms-flex: 0 0 220px;
+  flex: 0 0 220px;
+  padding-left: 0rem;
+  padding-right: 0rem;
+}
+
+.sidebar-left .sidebar-section .sidebar-filters {
+  margin-bottom: 1rem;
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.sidebar-filters .filter-list {
+  list-style: none;
+}
+
+.sidebar-filters .filter-item {
+  color: #5F5F5F;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.sidebar-filters .filter-link {
+  background-color: #EAE9EE;
+  border-radius: 0.35rem;
+  margin-bottom: 0.25rem;
+  border-right: 3px solid #603abb;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.filter-link:hover, .filter-link:focus {
+  color: #603abb;
+}
+
 .list-group-item-action {
   color: rgba(255, 255, 255, 0.5);
 }
