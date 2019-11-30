@@ -76,6 +76,35 @@
   <div class="container">
     <div class="row justify-content-around" id="main-content-row">
 
+      <!-- Left Sidebar (hidden on devices smaller than "large") -->
+
+      <div class="col sidebar sidebar-left d-none d-lg-block mr-3">
+
+        <div class="sidebar-section sidebar-alert">
+          <div class="title">Filter posts</div>
+          <div class="body">
+          <ul class="no-bullets pl-0">
+              <li>
+                <a class="{% if sort_method=="hot" %} active{% endif %}" href="/"><i class="fas fa-fire"></i>Hot</a>
+              </li>
+              <li>
+                <a class="{% if sort_method=="top" %} active{% endif %}" href="/?sort=top"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
+              </li>
+              <li>
+                <a class="{% if sort_method=="new" %} active{% endif %}" href="/?sort=new"><i class="fas fa-asterisk"></i>New</a> 
+              </li>
+              <li>
+                <a class="{% if sort_method=="disputed" %} active{% endif %}" href="/?sort=disputed"><i class="fas fa-bullhorn"></i>Disputed</a>
+              </li>
+              <li>
+                <a class="{% if sort_method=="activity" %} active{% endif %}" href="/?sort=activity"><i class="fas fa-comments"></i>Activity</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
       <div class="col bg-white shadow-sm shadow-sm-0 rounded-md h-100 custom-gutters" id="main-content-col">
 
         {% block PseudoSubmitForm %}
@@ -139,49 +168,49 @@
             <p class="text-small">When you invite a friend to make a Ruqqus, you'll unlock dark mode. Copy your referral code to get started.</p>
             <label for="referral_code" class="text-white">Referral code</label>
             <input type="text" readonly="" class="form-control copy-link" id="referral_code" value="https://ruqqus.com/signup?ref={{ v.username }}" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}">
-            </div>
-          </div>
-          {% endif %}
-
-          {% if v %}
-          {% if v.admin_level %}
-          <div class="sidebar-section sidebar-adminpanel">
-           <div class="title">Admin Panel</div>
-           <div class="body">
-             {% block adminpanel %}
-             <p class="text-center text-small text-muted mb-0">No admin actions available</p>
-             {% endblock %}
-           </div>
-         </div>
-         {% endif %}
-         {% endif %}
-
-         <div class="sidebar-section sidebar-trending d-none">
-          <div class="title">What's Hot</div>
-          <div class="body">
-            <p>Here are the most popular tags from the last 24 hours.</p>
-            <div class="hashtag">
-              <a href="#">#Mueller</a>
-              <div class="text-muted text-small font-weight-normal">2.3K posting about this</div>
-            </div>
-            <div class="hashtag">
-              <a href="#">#MemeWar2</a>
-              <div class="text-muted text-small font-weight-normal">1.2K posting about this</div>
-            </div>
-            <div class="hashtag">
-              <a href="#">#AskTrumpSupporters</a>
-              <div class="text-muted text-small font-weight-normal">900 posting about this</div>
-            </div>
-            <div class="hashtag">
-              <a href="#">#DNCDebates</a>
-              <div class="text-muted text-small font-weight-normal">600 posting about this</div>
-            </div>
-            <div class="hashtag">
-              <a href="#">#DNCDebates</a>
-              <div class="text-muted text-small font-weight-normal">600 posting about this</div>
-            </div>
           </div>
         </div>
+        {% endif %}
+
+        {% if v %}
+        {% if v.admin_level %}
+        <div class="sidebar-section sidebar-adminpanel">
+         <div class="title">Admin Panel</div>
+         <div class="body">
+           {% block adminpanel %}
+           <p class="text-center text-small text-muted mb-0">No admin actions available</p>
+           {% endblock %}
+         </div>
+       </div>
+       {% endif %}
+       {% endif %}
+
+       <div class="sidebar-section sidebar-trending d-none">
+        <div class="title">What's Hot</div>
+        <div class="body">
+          <p>Here are the most popular tags from the last 24 hours.</p>
+          <div class="hashtag">
+            <a href="#">#Mueller</a>
+            <div class="text-muted text-small font-weight-normal">2.3K posting about this</div>
+          </div>
+          <div class="hashtag">
+            <a href="#">#MemeWar2</a>
+            <div class="text-muted text-small font-weight-normal">1.2K posting about this</div>
+          </div>
+          <div class="hashtag">
+            <a href="#">#AskTrumpSupporters</a>
+            <div class="text-muted text-small font-weight-normal">900 posting about this</div>
+          </div>
+          <div class="hashtag">
+            <a href="#">#DNCDebates</a>
+            <div class="text-muted text-small font-weight-normal">600 posting about this</div>
+          </div>
+          <div class="hashtag">
+            <a href="#">#DNCDebates</a>
+            <div class="text-muted text-small font-weight-normal">600 posting about this</div>
+          </div>
+        </div>
+      </div>
       <!--
       <div class="sidebar-section sidebar-rules">
         <div class="title">Ruqqus Rules</div>
