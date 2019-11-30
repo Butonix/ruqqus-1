@@ -930,7 +930,7 @@ color: $dark;
     width: 1rem;
 }
 
-.posts, #thread #main-content-col {
+.posts, #main-content-col {
     background-color: $white;
     box-shadow: $box-shadow-sm;
     border-radius: $border-radius;
@@ -2553,6 +2553,9 @@ body {
 }
 
 #frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card {
+    border-width: 0 0 1px 0;
+    border-color: $border-color;
+    border-style: solid;
     border-radius: 0;
     margin-top: 0;
     box-shadow: none;
@@ -2567,7 +2570,7 @@ body {
     padding-left: 1rem;
 }
 
-.posts, #thread #main-content-col {
+.posts, #main-content-col {
     box-shadow: none;
     border-radius: 0;
 }

@@ -12994,8 +12994,8 @@ a:hover .link-arrow {
   width: 1rem;
 }
 
-.posts, #thread #main-content-col {
-  background-color: #FFFFFF;
+.posts, #main-content-col {
+  background-color: #35363e;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
   border-radius: 0.25rem;
 }
@@ -15037,6 +15037,9 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   #frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card {
+    border-width: 0 0 1px 0;
+    border-color: #494a4e;
+    border-style: solid;
     border-radius: 0;
     margin-top: 0;
     box-shadow: none;
@@ -15051,7 +15054,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     padding-left: 1rem;
   }
 
-  .posts, #thread #main-content-col {
+  .posts, #main-content-col {
     box-shadow: none;
     border-radius: 0;
   }
