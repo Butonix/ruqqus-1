@@ -930,6 +930,12 @@ color: $dark;
     width: 1rem;
 }
 
+.posts {
+    background-color: $white;
+    box-shadow: $box-shadow-sm;
+    border-radius: $border-radius;
+}
+
 // Left Sidebar (Terms pages)
 
 .scrollspy.sidebar-sticky {
@@ -2555,6 +2561,15 @@ body {
 
 #frontpage.toggle-card-view .pagination, #userpage.toggle-card-view .pagination, #search.toggle-card-view .pagination {
     padding-left: 1rem;
+}
+
+.posts {
+    box-shadow: none;
+    border-radius: 0;
+}
+
+.thumb-img-link-overlay {
+    display: none;
 }
 
 .post-title a:hover, .post-title a:active, .post-title a:focus {

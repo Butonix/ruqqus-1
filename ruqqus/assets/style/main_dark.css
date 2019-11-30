@@ -12994,6 +12994,12 @@ a:hover .link-arrow {
   width: 1rem;
 }
 
+.posts {
+  background-color: #FFFFFF;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 0.25rem;
+}
+
 .scrollspy.sidebar-sticky {
   position: sticky;
   overflow-y: auto;
@@ -15039,6 +15045,11 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
   #frontpage.toggle-card-view .pagination, #userpage.toggle-card-view .pagination, #search.toggle-card-view .pagination {
     padding-left: 1rem;
+  }
+
+  .posts {
+    box-shadow: none;
+    border-radius: 0;
   }
 
   .thumb-img-link-overlay {
