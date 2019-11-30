@@ -210,6 +210,43 @@
 {% endblock %}
 
 {% block content %}
+
+<!-- View toggle visible only on medium devices or larger -->
+
+<div class="flex-row p-3 justify-content-end d-none d-md-flex">
+
+  <div>
+    <ul class="nav toggle-view">
+      <li class="nav-item">
+        <button class="btn nav-link pr-3 active" id="toggle-list-view-btn" onclick="toggle_list_view()">
+          <i class="fas fa-list"></i>List</button>
+        </li>
+        <li class="nav-item" style="">
+          <button class="btn nav-link" id="toggle-card-view-btn" onclick="toggle_card_view()">
+            <i class="fas fa-th-large"></i>Card</button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="post-filter pb-2 d-none">
+        <span>Sort By:</span>
+        <span class="dropdown">
+          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Time
+        </a>
+
+        <span class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="#">Day</a>
+          <a class="dropdown-item" href="#">Month</a>
+          <a class="dropdown-item" href="#">Year</a>
+          <a class="dropdown-item" href="#">All Time</a>
+        </span>
+      </span>
+
+    </div>
+
+  </div>
+  
 <!-- Post filters bar visible only on small devices-->
 
 <div class="row fixed-top bg-white border-0 d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 48px; transition: top 0.3s ease 0s;">
