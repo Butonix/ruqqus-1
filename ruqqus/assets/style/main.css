@@ -13080,7 +13080,7 @@ a:hover .link-arrow {
   border-radius: 0;
 }
 
-.sidebar-filters .body {
+.sidebar-section.sidebar-filters .body {
   padding: 0;
 }
 
@@ -13099,12 +13099,18 @@ a:hover .link-arrow {
   color: #7D7D7D;
   font-size: 12px;
   font-weight: 600;
+  margin-bottom: 0.25rem;
+  text-decoration: none;
 }
 
-.sidebar-filters .filter-link:hover, .sidebar-filters .filter-link:active {
-  background-color: #EAE9EE;
+.sidebar-filters .filter-link:hover, .sidebar-filters .filter-link:focus {
+  color: #603abb;
+}
+
+.sidebar-filters .filter-link:active {
+  color: #603abb;
+  background-color: #F6F5F7;
   border-radius: 0.35rem;
-  margin-bottom: 0.25rem;
   border-right: 3px solid #603abb;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
