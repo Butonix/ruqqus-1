@@ -99,7 +99,8 @@
 </div>
 {% endblock %}
 
-{% block sidebarblock %}
+{% block sidebarLeftblock %}
+
 <div class="sidebar-section sidebar-post-meta">
   <div class="body">
     <div class="score">{{ score }} point{{ 's' if score !=1 else '' }}<span class="score-percent ml-2" id="score-percent"></span></div>
@@ -114,6 +115,10 @@
     <div class="shortlink mt-1">Shortlink:<span class="link"></span> <input type="text" class="form-control form-control-sm copy-link w-75 d-md-inline-block" readonly value="https://ruqq.us/{{ p.base36id }}" data-clipboard-text="https://ruqq.us/{{ p.base36id }}"></input></div>
   </div>
 </div>
+
+{% endblock %}
+
+{% block sidebarblock %}
 
 <div class="sidebar-section sidebar-about">
   <div class="title">About Ruqqus</div>
