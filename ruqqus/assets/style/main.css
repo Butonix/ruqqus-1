@@ -13073,11 +13073,15 @@ a:hover .link-arrow {
   padding-right: 0rem;
 }
 
-.sidebar-left .sidebar-section .sidebar-filters {
+.sidebar-left .sidebar-section.sidebar-filters {
   margin-bottom: 1rem;
   background-color: transparent;
   box-shadow: none;
   border-radius: 0;
+}
+
+.sidebar-filters .body {
+  padding: 0;
 }
 
 .sidebar-filters .filter-list {
@@ -13085,18 +13089,31 @@ a:hover .link-arrow {
 }
 
 .sidebar-filters .filter-item {
-  color: #5F5F5F;
+  color: #7D7D7D;
   text-decoration: none;
-  font-size: 13px;
 }
 
 .sidebar-filters .filter-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #7D7D7D;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sidebar-filters .filter-link:hover, .sidebar-filters .filter-link:active {
   background-color: #EAE9EE;
   border-radius: 0.35rem;
   margin-bottom: 0.25rem;
   border-right: 3px solid #603abb;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
+}
+
+.sidebar-filters .filter-item .fa, .sidebar-filters .filter-item .fas, .sidebar-filters .filter-item .far, .sidebar-filters .filter-item .fab, .sidebar-filters .filter-item .fal {
+  font-size: 13px;
+  margin-right: 0.5rem;
+  color: #ACACAC;
 }
 
 .filter-link:hover, .filter-link:focus {
