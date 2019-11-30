@@ -59,6 +59,7 @@ $input-border-color: #ECECEC;
 $border-color: #E6E6E6;
 
 $border-radius: .35rem;
+$border-radius-sm: .25rem;
 
 // Text styling
 
@@ -268,7 +269,7 @@ ol > li::before {
 .btn {
     font-size: $extra-small-font-size;
     font-weight: $font-weight-bold;
-    border-radius: $border-radius;
+    border-radius: $border-radius-sm;
 }
 
 .btn-lg {
