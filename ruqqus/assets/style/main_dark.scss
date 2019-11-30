@@ -1231,6 +1231,10 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     box-shadow: $box-shadow-sm-extra;
 }
 
+#frontpage.toggle-card-view .posts .card:first-of-type, #userpage.toggle-card-view .posts .card:first-of-type, #search.toggle-card-view .posts .card:first-of-type {
+    margin-top: 0;
+}
+
 #frontpage.toggle-card-view .posts .card .post-img, #userpage.toggle-card-view .posts .card .post-img, #search.toggle-card-view .posts .card .post-img { 
     display: none;
 }
@@ -1302,6 +1306,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .card {
     background-color: $light;
+}
+
+#frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type {
+    border-top-left-radius: $border-radius;
+    border-top-right-radius: $border-radius;
 }
 
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card {
@@ -2580,6 +2589,10 @@ body {
 #frontpage, #userpage, #search {
     padding-top: 98px;
     background-color: $light;
+}
+
+#frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type {
+    border-radius: 0;
 }
 
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card, #userpage .posts .card {
