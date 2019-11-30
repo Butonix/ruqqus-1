@@ -13101,12 +13101,12 @@ a:hover .link-arrow {
   list-style: none;
 }
 
-.sidebar-filters .filter-item {
+.filter-list .filter-item {
   color: #8c8d94;
   text-decoration: none;
 }
 
-.sidebar-filters .filter-link {
+.filter-list .filter-link {
   display: block;
   padding: 0.5rem 1rem;
   color: #8c8d94;
@@ -13116,11 +13116,11 @@ a:hover .link-arrow {
   text-decoration: none;
 }
 
-.sidebar-filters .filter-link:hover, .sidebar-filters .filter-link:focus {
+.filter-list .filter-link:hover, .filter-list .filter-link:focus {
   color: #af92de;
 }
 
-.sidebar-filters > .filter-item > .filter-link.active {
+.filter-list > .filter-item > .filter-link.active {
   color: #af92de;
   background-color: #3f404a;
   border-radius: 0.25rem;
@@ -13129,7 +13129,7 @@ a:hover .link-arrow {
   border-bottom-right-radius: 0;
 }
 
-.sidebar-filters .filter-item .fa, .sidebar-filters .filter-item .fas, .sidebar-filters .filter-item .far, .sidebar-filters .filter-item .fab, .sidebar-filters .filter-item .fal {
+.filter-list .filter-item .fa, .filter-list .filter-item .fas, .filter-list .filter-item .far, .filter-list .filter-item .fab, .filter-list .filter-item .fal {
   font-size: 13px;
   margin-right: 0.5rem;
   color: #ACACAC;
