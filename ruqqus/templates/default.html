@@ -82,6 +82,17 @@
 
         {% block sidebarLeftblock %}
 
+        {% if not v %}
+        <div class="sidebar-section sidebar-alert">
+          <div class="body text-center">
+            <img src="/assets/images/illustrations/ruckus.png" class="empty-state-img mb-3" alt="empty state">
+            <h5 class="h4">Join the discourse.</h5>
+            <p class="text-small">Internet freedom of speech has a new home. Use your voice. Make a Ruqqus.</p>
+            <a href="/signup" class="btn btn-primary btn-block">Sign up</a>
+          </div>
+        </div>
+        {% endif %}
+
         {% if v %}
 
         <div class="sidebar-section sidebar-dashboard">
@@ -104,17 +115,6 @@
           </div>
         </div>
 
-        {% endif %}
-
-        {% if not v %}
-        <div class="sidebar-section sidebar-alert">
-          <div class="body text-center">
-            <img src="/assets/images/illustrations/ruckus.png" class="empty-state-img mb-3" alt="empty state">
-            <h5 class="h4">Join the discourse.</h5>
-            <p class="text-small">Internet freedom of speech has a new home. Use your voice. Make a Ruqqus.</p>
-            <a href="/signup" class="btn btn-primary btn-block">Sign up</a>
-          </div>
-        </div>
         {% endif %}
 
         {% endblock %}
