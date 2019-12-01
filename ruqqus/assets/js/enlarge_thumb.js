@@ -1,10 +1,7 @@
-// Enlarge thumbnail on post-img click
+// Enlarge submissionlisting thumbnail
 
-$(".post-img").click(function (event) {
-    event.preventDefault();
+enlarge_thumb = function(post_id) {
 
-    var id = $(this).parent().parent().parent().attr("id");
+	document.getElementById(post_id).classList.toggle("enlarged");
 
-    document.getElementById(id).classList.toggle("enlarged");
-
-});
+};

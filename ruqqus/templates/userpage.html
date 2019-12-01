@@ -131,15 +131,87 @@
 {% if v.admin_level >=4 %}
 <p>Alts:</p>
 <ul>
-{% for account in u.alts %}
-<li><a href="{{ account.permalink }}">@{{ account.username }}</a></li>
-{% endfor %}
+  {% for account in u.alts %}
+  <li><a href="{{ account.permalink }}">@{{ account.username }}</a></li>
+  {% endfor %}
 </ul>
 {% endif %}
 {% endblock %}
 
+{% block sidebarLeftblock %}
+
+{% if not v %}
+<div class="sidebar-section sidebar-alert">
+<div class="body">
+    <img src="/assets/images/illustrations/ruckus.png" class="empty-state-img mb-3" alt="empty state">
+    <h5>Join the discourse.</h5>
+    <p class="text-small">Internet freedom of speech has a new home. Use your voice. Make a Ruqqus.</p>
+    <a href="/signup" class="btn btn-primary btn-block">Sign up</a>
+  </div>
+</div>
+{% endif %}
+
+{% if v and v.id == u.id %}
+
+<div class="sidebar-section sidebar-dashboard">
+  <div class="title">Dashboard</div>
+  <div class="body">
+    <ul class="no-bullets dashboard-list pl-0">
+      <li class="dashboard-item">
+        <a class="dashboard-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem"></i>Profile</a>
+      </li>
+      <li class="dashboard-item">
+        <a class="dashboard-link " href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{% endif %}
+
+{% if v and v.id != u.id %}
+
+<div class="sidebar-section sidebar-dashboard">
+  <div class="title">Dashboard</div>
+  <div class="body">
+    <ul class="no-bullets filter-list pl-0">
+      <li class="filter-item">
+        <a class="filter-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem"></i>Profile</a>
+      </li>
+      <li class="filter-item">
+        <a class="filter-link " href="{{ v.permalink }}/posts"><i class="fas fa-feather-alt fa-width-rem"></i>Your posts</a>
+      </li>
+      <li class="filter-item">
+        <a class="filter-link " href="{{ v.permalink }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Your comments</a> 
+      </li>
+      <li class="filter-item">
+        <a class="filter-link " href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{% endif %}
+
+<div class="sidebar-section sidebar-filters sticky-63">
+  <div class="title">Viewing</div>
+  <div class="body">
+    <ul class="no-bullets filter-list pl-0">
+      <li class="filter-item">
+        <a class="filter-link active" href="/u/{{ u.username }}"><i class="fas fa-feather-alt fa-width-rem"></i>Posts</a>
+      </li>
+      <li class="filter-item">
+        <a class="filter-link" href="/u/{{ u.username }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Comments</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{% endblock %}
+
 {% block content %}
-<!-- Post filters bar visible only on medium devices or larger-->
+
+<!-- Post filters bar visible only on small devices-->
 
 <div class="row fixed-top bg-white border-0 d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 48px; transition: top 0.3s ease 0s;">
 
@@ -181,7 +253,7 @@
 </div>
 
 <div class="row justify-content-around mx-lg-5 d-block d-lg-none no-gutters">
-  <div class="col bg-light border-bottom rounded-md p-3">
+  <div class="col border-bottom rounded-md p-3">
     <div class="profile-details">
       <div class="media">
        <div class="profile-pic profile-pic-75 mr-3 mt-0" style="background-color:#{{ u.color }}">
@@ -244,8 +316,8 @@
 </div>
 </div>
 
-<div class="row border-bottom d-block d-lg-none bg-light no-gutters">
-<div class="col">
+<div class="row border-bottom d-block d-lg-none no-gutters">
+  <div class="col">
     <ul class="list-inline d-flex justify-content-around text-center py-2 mb-0">
       <li class="list-inline-item">
         <span class="text-small font-weight-bold">{{ u.karma }}</span>
@@ -263,7 +335,7 @@
   </div>
 </div>
 
-<div class="flex-row tab-bar sticky d-none d-md-flex">
+<div class="flex-row tab-bar sticky d-none">
 
   <ul class="nav post-nav mr-auto">
     <li class="nav-item">
@@ -308,7 +380,7 @@
 
 {% block pagenav %}
 <nav aria-label="Page navigation">
-  <ul class="pagination pagination-sm py-3 pl-3 mb-0">
+  <ul class="pagination pagination-sm mb-0">
     {% if page>1 %}
     <li class="page-item">
       <small><a class="page-link" href="?page={{ page-1 }}" tabindex="-1">Prev</a></small>
