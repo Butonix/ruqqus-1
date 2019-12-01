@@ -331,11 +331,13 @@
               <li class="list-inline-item mr-auto"><a href="{{ p.permalink }}"><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
 
               <li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="https://www.ruqqus.com{{ p.permalink }}"><i class="fas fa-link"></i>Share</a></li>
+              {% if v %}
               <li class="list-inline-item">
                 <a href="#" data-toggle="modal" data-target="#actionsModal">
                   <i class="fas fa-ellipsis-h"></i>
                 </a>
               </li>
+              {% endif %}
               <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none">
                 {% if v %}
                 <span id="arrow-{{ p.base36id }}-mobile-up" class="mr-2 arrow-mobile-up" onclick="vote('{{ p.base36id }}','0')">
