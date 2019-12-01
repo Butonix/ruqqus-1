@@ -1131,6 +1131,50 @@ color: $dark;
     padding: 0;
 }
 
+
+.dashboard-list .dashboard-item {
+    color: $text-muted;
+    text-decoration: none;
+}
+
+.dashboard-list .dashboard-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: $text-muted;
+    font-size: $extra-small-font-size;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    text-decoration: none;
+}
+
+.dashboard-list .dashboard-link:hover, .dashboard-list .dashboard-link:focus {
+    color: $primary;
+}
+
+.dashboard-list > .dashboard-item > .dashboard-link.active {
+    color: $primary;
+    background-color: $gray-100;
+    border-radius: $border-radius;
+}
+
+.dashboard-list .dashboard-item .fa, .dashboard-list .dashboard-item .fas, .dashboard-list .dashboard-item .far, .dashboard-list .dashboard-item .fab, .dashboard-list .dashboard-item .fal {
+    font-size: $small-font-size;
+    margin-right: 0.5rem;
+    color: $gray-600;
+}
+
+.dashboard-list .dashboard-link:hover .fa , .dashboard-list .dashboard-link:focus .fa, .dashboard-list .dashboard-link:hover .fas, .dashboard-list .dashboard-link:focus .fas, .dashboard-list .dashboard-link:hover .far, .dashboard-list .dashboard-link:focus .far, .dashboard-list .dashboard-link:hover .fab , .dashboard-list .dashboard-link:focus .fab {
+    color: $primary;
+}
+
+.dashboard-list > .dashboard-item > .dashboard-link.active .fa, .dashboard-list > .dashboard-item > .dashboard-link.active .fas, .dashboard-list > .dashboard-item > .dashboard-link.active .far, .dashboard-list > .dashboard-item > .dashboard-link.active .fab {
+    color: $primary;
+}
+
+.dashboard-link:hover, .dashboard-link:focus {
+    color: $primary;
+}
+
 .list-group-item-action {
     color: rgba(255, 255, 255, 0.5);
 }

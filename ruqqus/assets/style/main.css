@@ -13148,6 +13148,49 @@ a:hover .link-arrow {
   padding: 0;
 }
 
+.dashboard-list .dashboard-item {
+  color: #7D7D7D;
+  text-decoration: none;
+}
+
+.dashboard-list .dashboard-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #7D7D7D;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  text-decoration: none;
+}
+
+.dashboard-list .dashboard-link:hover, .dashboard-list .dashboard-link:focus {
+  color: #603abb;
+}
+
+.dashboard-list > .dashboard-item > .dashboard-link.active {
+  color: #603abb;
+  background-color: #F6F5F7;
+  border-radius: 0.35rem;
+}
+
+.dashboard-list .dashboard-item .fa, .dashboard-list .dashboard-item .fas, .dashboard-list .dashboard-item .far, .dashboard-list .dashboard-item .fab, .dashboard-list .dashboard-item .fal {
+  font-size: 13px;
+  margin-right: 0.5rem;
+  color: #ACACAC;
+}
+
+.dashboard-list .dashboard-link:hover .fa, .dashboard-list .dashboard-link:focus .fa, .dashboard-list .dashboard-link:hover .fas, .dashboard-list .dashboard-link:focus .fas, .dashboard-list .dashboard-link:hover .far, .dashboard-list .dashboard-link:focus .far, .dashboard-list .dashboard-link:hover .fab, .dashboard-list .dashboard-link:focus .fab {
+  color: #603abb;
+}
+
+.dashboard-list > .dashboard-item > .dashboard-link.active .fa, .dashboard-list > .dashboard-item > .dashboard-link.active .fas, .dashboard-list > .dashboard-item > .dashboard-link.active .far, .dashboard-list > .dashboard-item > .dashboard-link.active .fab {
+  color: #603abb;
+}
+
+.dashboard-link:hover, .dashboard-link:focus {
+  color: #603abb;
+}
+
 .list-group-item-action {
   color: rgba(255, 255, 255, 0.5);
 }
