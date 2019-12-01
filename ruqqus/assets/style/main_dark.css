@@ -15166,6 +15166,10 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     color: #8c8d94;
   }
 
+  .pagination {
+    padding: 1rem;
+  }
+
   input[type=color],
 input[type=date],
 input[type=datetime],
