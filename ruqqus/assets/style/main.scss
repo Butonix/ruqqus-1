@@ -1346,6 +1346,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 #frontpage .posts .card:last-of-type, #userpage .posts .card:last-of-type, #search .posts .card:last-of-type {
     border-bottom-left-radius: $border-radius;
     border-bottom-right-radius: $border-radius;
+    border-bottom: 0;
 }
 
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card {
