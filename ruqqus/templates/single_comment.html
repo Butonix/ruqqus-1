@@ -9,7 +9,7 @@
 
 {% if standalone %}
 <div class="post-info font-weight-bold">
-    <span class="align-top"><a href="{{ c.permalink }}">{{ c.post.title }}</a></span>
+    <span class="align-top"><a href="{{ c.permalink }}">{{ c.post.title | safe }}</a></span>
 </div>
 {% endif %}
 
