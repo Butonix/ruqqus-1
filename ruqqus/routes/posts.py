@@ -94,7 +94,7 @@ def submit_post(v):
         name=request.get("username",None)
         if name:
 
-            identity=db.query(User).filter_by(username=name).first()
+            identity=db.query(User).filter(User.username.ilike(name)).first()
             if not identity:
                 identity=User(username=name,
                               password=secrets.token_hex(32),
