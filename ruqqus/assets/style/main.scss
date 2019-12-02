@@ -2606,6 +2606,10 @@ body {
     display: block;
 }
 
+.toggle-view {
+    padding-top: 2px;
+}
+
 #frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card {
     border-width: 0 0 1px 0;
     border-color: $border-color;
