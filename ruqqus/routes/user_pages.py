@@ -26,6 +26,7 @@ def api_is_available(name):
 
 @app.route("/u/<username>", methods=["GET"])
 @app.route("/u/<username>/posts", methods=["GET"])
+@app.route("@<username>", methods=["GET"])
 @auth_desired
 def u_username(username, v=None):
     
@@ -46,6 +47,7 @@ def u_username(username, v=None):
     return result.rendered_userpage(v=v)
 
 @app.route("/u/<username>/comments", methods=["GET"])
+@app.route("@<username>/comments", methods=["GET"])
 @auth_desired
 def u_username_comments(username, v=None):
     
