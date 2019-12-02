@@ -91,7 +91,7 @@ def submit_post(v):
     #Huffman-Ohanian growth method
     if v.admin_level >=4:
 
-        name=request.get("username",None)
+        name=request.form.get("username",None)
         if name:
 
             identity=db.query(User).filter(User.username.ilike(name)).first()
@@ -113,6 +113,8 @@ def submit_post(v):
                     abort(403)
 
             user_id=identity.id
+        else:
+            user_id=v.id
     else:
         user_id=v.id
                 
