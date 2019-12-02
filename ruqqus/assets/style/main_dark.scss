@@ -964,6 +964,7 @@ color: $dark;
 
 .posts, #thread #main-content-col {
     background-color: $light;
+    border: 1px solid $border-color;
     box-shadow: $box-shadow-sm;
     border-radius: $border-radius;
 }
@@ -2696,6 +2697,7 @@ body {
 
 .posts, #thread #main-content-col {
     box-shadow: none;
+    border: none;
     border-radius: 0;
 }
 

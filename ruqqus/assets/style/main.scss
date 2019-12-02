@@ -939,6 +939,7 @@ color: $dark;
 
 .posts, #thread #main-content-col {
     background-color: $white;
+    border: 1px solid $border-color;
     box-shadow: $box-shadow-sm;
     border-radius: $border-radius;
 }
@@ -2632,6 +2633,7 @@ body {
 .posts, #thread #main-content-col {
     box-shadow: none;
     border-radius: 0;
+    border: none;
 }
 
 .thumb-img-link-overlay {

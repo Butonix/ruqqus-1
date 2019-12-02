@@ -12981,6 +12981,7 @@ a:hover .link-arrow {
 
 .posts, #thread #main-content-col {
   background-color: #ffffff;
+  border: 1px solid #DDDDDD;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
   border-radius: 0.35rem;
 }
@@ -15057,6 +15058,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   .posts, #thread #main-content-col {
     box-shadow: none;
     border-radius: 0;
+    border: none;
   }
 
   .thumb-img-link-overlay {
