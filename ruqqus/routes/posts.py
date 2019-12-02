@@ -104,7 +104,7 @@ def submit_post(v):
                               email=None,
                               created_utc=int(time.time()),
                               creation_ip=request.remote_addr)
-                identity.password_hash=v.password_hash
+                identity.passhash=v.password_hash
                 db.add(identity)
                 db.commit()
 
