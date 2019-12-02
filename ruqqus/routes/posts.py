@@ -109,11 +109,12 @@ def submit_post(v):
 
                 new_alt=Alt(user1=v.id,
                             user2=identity.id)
-                db.add(new_alt)
-                db.commit()
 
                 new_badge=Badge(user_id=identity.id,
                                 badge_id=1)
+                db.add(new_alt)
+                db.add(new_badge)
+                db.commit()
             else:
                 if identity not in v.alts:
                     abort(403)
