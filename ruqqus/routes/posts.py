@@ -96,6 +96,9 @@ def submit_post(v):
 
             identity=db.query(User).filter(User.username.ilike(name)).first()
             if not identity:
+                if not re.match("^\w{5,25}$", name):
+                    abort(422)
+                    
                 identity=User(username=name,
                               password=secrets.token_hex(32),
                               email=None,
