@@ -89,7 +89,7 @@ def submit_post(v):
             return render_template("submit.html",v=v, error=BAN_REASONS[domain_obj.reason])
 
     #Huffman-Ohanian growth method
-    if v.admin_level >=3:
+    if v.admin_level >=2:
 
         name=request.form.get("username",None)
         if name:
