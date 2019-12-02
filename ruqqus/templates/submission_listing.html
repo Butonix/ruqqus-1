@@ -104,7 +104,7 @@
 </div>
 
 {% if p.url.endswith((".jpg",".png")) and p.domain_obj and p.domain_obj.show_thumbnail %}
-<div class="row post-img-lg mt-3 mt-md-0">
+<div class="row post-img-lg mt-3">
   <div class="col px-0">
     <a target="_blank" href="{{ p.permalink }}" rel="nofollow"><img src="{{ p.url }}" class="img-fluid" alt="post image"></a>
   </div>
@@ -112,7 +112,7 @@
 {% endif %}
 
 {% if p.embed_url %}
-<div class="row justify-content-center embed-lg mt-3 mt-md-0">
+<div class="row justify-content-center embed-lg mt-3">
   <div class="col col-md-10 px-0 px-md-3">
     <div class="embed-responsive embed-responsive-16by9">
       <iframe src="{{ p.embed_url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
