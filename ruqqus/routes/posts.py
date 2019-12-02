@@ -98,8 +98,8 @@ def submit_post(v):
             if not identity:
                 identity=User(username=name,
                               password=secrets.token_hex(32),
-                              email=None
-                              created_utc=int(time.time())
+                              email=None,
+                              created_utc=int(time.time()),
                               creation_ip=request.remote_addr)
                 db.add(identity)
                 db.commit()
