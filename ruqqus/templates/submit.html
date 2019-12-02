@@ -131,7 +131,10 @@
                                         <small class="format"><i class="fas fa-link"></i></small>
                                     </div>
                                 </div>
-
+				{% if v.admin_level >=3 %}
+				<label for="username" class="mt-3">Post as</label>
+				<input class="form-control" name="username">
+				{% endif %}
                             </div>
 
                             <div class="footer">

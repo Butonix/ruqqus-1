@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 import mistletoe
 from sqlalchemy import func
 from bs4 import BeautifulSoup
+import secrets
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -87,6 +88,47 @@ def submit_post(v):
         if not domain_obj.can_submit:
             return render_template("submit.html",v=v, error=BAN_REASONS[domain_obj.reason])
 
+    #Huffman-Ohanian growth method
+    if v.admin_level >=3:
+
+        name=request.form.get("username",None)
+        if name:
+
+            identity=db.query(User).filter(User.username.ilike(name)).first()
+            if not identity:
+                if not re.match("^\w{5,25}$", name):
+                    abort(422)
+                    
+                identity=User(username=name,
+                              password=secrets.token_hex(32),
+                              email=None,
+                              created_utc=int(time.time()),
+                              creation_ip=request.remote_addr)
+                db.add(identity)
+                db.commit()
+
+                new_alt=Alt(user1=v.id,
+                            user2=identity.id)
+
+                new_badge=Badge(user_id=identity.id,
+                                badge_id=1)
+                db.add(new_alt)
+                db.add(new_badge)
+                db.commit()
+            else:
+                if identity not in v.alts:
+                    abort(403)
+
+            user_id=identity.id
+        else:
+            user_id=v.id
+    else:
+        user_id=v.id
+                
+                
+                
+                          
+
 
     #now make new post
 
@@ -106,7 +148,7 @@ def submit_post(v):
     
     new_post=Submission(title=title,
                         url=url,
-                        author_id=v.id,
+                        author_id=user_id,
                         body=body,
                         body_html=body_html,
                         embed_url=embed,
