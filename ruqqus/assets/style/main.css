@@ -15178,26 +15178,8 @@ div.deleted.banned {
   background-color: #ffcc99;
 }
 
-.distinguish-admin .user-name, .distinguish-mod .user-name {
-  color: white;
-  padding: 0px 3px 2px 3px;
-  border-radius: 3px;
-}
-
-.distinguish-admin .user-name {
-  background-color: #F05D5E;
-}
-
-.distinguish-mod .user-name {
-  background-color: #07c20c;
-}
-
-.distinguish-admin .user-name::before {
-  content: "[A] ";
-}
-
-.distinguish-mod .user-name::before {
-  content: "[M] ";
+.text-admin {
+  color: #F05D5E;
 }
 
 /*# sourceMappingURL=main.css.map */

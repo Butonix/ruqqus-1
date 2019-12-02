@@ -25,6 +25,8 @@ $upvote: #af92de;
 $downvote: #48A9A6;
 $admin: #F05D5E;
 $banned: #FF9999;
+$deleted: #ffff99;
+$deletedandbanned: #ffcc99;
 $mod: #07c20c;
 
 $gold: #ddbd37;
@@ -2815,20 +2817,10 @@ div.banned {
     border-left: 3px solid #ff0000!important;
 }	  
 			
-.distinguish-admin .user-name, .distinguish-mod   .user-name {		
-  color: white;		
-  padding: 0px 3px 2px 3px;		
-  border-radius: 3px;		
-}		
-.distinguish-admin .user-name {		
-  background-color: $admin;		
-}		
-.distinguish-mod .user-name {		
-  background-color: $mod;		
-}		
-.distinguish-admin .user-name::before {		
- content: "[A] "		
-}		
-.distinguish-mod .user-name::before {		
- content: "[M] "		
+div.deleted.banned {
+    background-color: $deletedandbanned
+}
+			
+.text-admin {
+    color: $admin
 }
