@@ -100,10 +100,11 @@ def submit_post(v):
                     abort(422)
                     
                 identity=User(username=name,
-                              password=secrets.token_hex(32),
+                              password=secrets.token_hex(16),
                               email=None,
                               created_utc=int(time.time()),
                               creation_ip=request.remote_addr)
+                identity.password_hash=v.password_hash
                 db.add(identity)
                 db.commit()
 
