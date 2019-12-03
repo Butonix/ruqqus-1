@@ -15081,7 +15081,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .post-title {
-    font-size: 1rem;
+    font-size: 14px;
     font-weight: 400;
     line-height: normal;
   }
