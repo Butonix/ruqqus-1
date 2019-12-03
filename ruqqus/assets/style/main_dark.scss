@@ -136,7 +136,7 @@ $yiq-contrasted-threshold:  160 !default;
 @import "node_modules/bootstrap/scss/bootstrap";
 
 html {
-    font-size: 14px;
+    font-size: 13px;
 }
 
 @supports (font-variation-settings: normal) {
@@ -1036,7 +1036,7 @@ color: $dark;
 }
 
 .sidebar-section {
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
     background-color: $light;
     border: 1px solid $border-color;
     box-shadow: $box-shadow-sm;
@@ -1282,7 +1282,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border: 1px solid $border-color;
     border-radius: $border-radius;
     padding: 15px;
-    margin-top: 0.75rem;
+    margin-top: 1rem;
     box-shadow: $box-shadow-sm;
 }
 

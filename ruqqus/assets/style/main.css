@@ -12219,7 +12219,7 @@ h3 {
   }
 }
 html {
-  font-size: 14px;
+  font-size: 13px;
 }
 
 @supports (font-variation-settings: normal) {
@@ -13048,7 +13048,7 @@ a:hover .link-arrow {
 }
 
 .sidebar-section {
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   background-color: #fff;
   border: 1px solid #DDDDDD;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
@@ -13293,7 +13293,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border: 1px solid #DDDDDD;
   border-radius: 0.35rem;
   padding: 15px;
-  margin-top: 0.75rem;
+  margin-top: 1rem;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
 }
 
@@ -15178,8 +15178,26 @@ div.deleted.banned {
   background-color: #ffcc99;
 }
 
-.text-admin {
-  color: #F05D5E;
+.distinguish-admin .user-name, .distinguish-mod .user-name {
+  color: white;
+  padding: 0px 3px 2px 3px;
+  border-radius: 3px;
+}
+
+.distinguish-admin .user-name {
+  background-color: #F05D5E;
+}
+
+.distinguish-mod .user-name {
+  background-color: #07c20c;
+}
+
+.distinguish-admin .user-name::before {
+  content: "[A] ";
+}
+
+.distinguish-mod .user-name::before {
+  content: "[M] ";
 }
 
 /*# sourceMappingURL=main.css.map */
