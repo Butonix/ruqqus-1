@@ -15,6 +15,12 @@ from ruqqus.__main__ import app, db, limiter
 from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 
+@app.route("/comment/<cid>", methods=["GET"])
+@admin_level_required(1)
+def comment_cid(cid, v):
+
+    comment=db.query(Comment).filter_by(id=base36decode(cid)).first()
+    return redirect(comment.permalink)
 
 @app.route("/post/<p_id>/comment/<c_id>", methods=["GET"])
 @auth_desired
