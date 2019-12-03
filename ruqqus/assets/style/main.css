@@ -12233,8 +12233,12 @@ body {
   background-color: #EAE9EE;
 }
 
+p {
+  font-size: 14px;
+}
+
 #page {
-  padding-top: 49px;
+  padding-top: 45px;
   background-color: #ffffff;
 }
 
@@ -12262,7 +12266,7 @@ body {
 .sticky {
   position: -webkit-sticky;
   position: sticky;
-  top: 49px;
+  top: 45px;
   height: auto;
   overflow-y: auto;
   z-index: 4;
@@ -12271,7 +12275,7 @@ body {
 .sticky-63 {
   position: -webkit-sticky;
   position: sticky;
-  top: 63px;
+  top: 56px;
   height: auto;
   overflow-y: auto;
   z-index: 4;
@@ -12342,7 +12346,7 @@ ol > li::before {
 }
 
 .btn {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   border-radius: 0.25rem;
 }
@@ -14972,7 +14976,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   body {
-    padding-top: 49px;
+    padding-top: 45px;
   }
 
   .shadow-sm-0 {

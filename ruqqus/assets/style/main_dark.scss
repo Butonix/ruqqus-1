@@ -149,6 +149,10 @@ body {
     background-color: $dark;
 }
 
+p {
+    font-size: 14px;
+}
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     color: $white;
 }
@@ -199,7 +203,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 .sticky-63 {
     position: -webkit-sticky;
     position: sticky;
-    top: 63px;
+    top: 56px;
     height: auto;
     overflow-y: auto;
     z-index: 4;
@@ -285,7 +289,7 @@ ol > li::before {
 // Buttons
 
 .btn {
-    font-size: $extra-small-font-size;
+    font-size: $small-font-size;
     font-weight: $font-weight-bold;
     border-radius: $border-radius-sm;
 }
