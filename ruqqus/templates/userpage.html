@@ -118,8 +118,9 @@
 </form>
 {% else %}
 <form action="/api/ban_user/{{ u.id }}", method="post">
+  <label for="user-ban-reason">Ban Reason:</label>
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
-  <input type="text" name="reason">
+  <input id="user-ban-reason" type="text" class="form-control" name="reason">
   <input type="submit" class="btn btn-warning" value="Ban user">
 </form>
 {% endif %}
