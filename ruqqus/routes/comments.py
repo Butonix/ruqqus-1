@@ -15,7 +15,7 @@ from ruqqus.__main__ import app, db, limiter
 from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 
-@app.route("/comment/<cid>", methods=["GET"])
+@app.route("/cid/<cid>", methods=["GET"])
 @admin_level_required(1)
 def comment_cid(cid, v):
 

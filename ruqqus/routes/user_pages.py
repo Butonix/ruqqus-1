@@ -24,7 +24,7 @@ def api_is_available(name):
     else:
         return jsonify({name:True})
 
-@app.route("/user/<uid", methods=["GET"])
+@app.route("/user/<uid>", methods=["GET"])
 @admin_level_required(1)
 def user_uid(uid, v):
 
