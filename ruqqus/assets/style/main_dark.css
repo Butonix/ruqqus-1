@@ -12219,7 +12219,7 @@ h3 {
   }
 }
 html {
-  font-size: 14px;
+  font-size: 13px;
 }
 
 @supports (font-variation-settings: normal) {
@@ -12231,6 +12231,10 @@ body {
   color: #FFFFFF;
   padding-top: 98px;
   background-color: #232327;
+}
+
+p {
+  font-size: 14px;
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
@@ -12275,7 +12279,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 .sticky-63 {
   position: -webkit-sticky;
   position: sticky;
-  top: 63px;
+  top: 56px;
   height: auto;
   overflow-y: auto;
   z-index: 4;
@@ -12350,7 +12354,7 @@ ol > li::before {
 }
 
 .btn {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   border-radius: 0.2rem;
 }
@@ -13306,7 +13310,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border: 1px solid #494a4e;
   border-radius: 0.35rem;
   padding: 15px;
-  margin-top: 1.25rem;
+  margin-top: 1rem;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
 }
 
@@ -15138,7 +15142,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .post-title {
-    font-size: 1rem;
+    font-size: 14px;
     font-weight: 400;
     line-height: normal;
   }
