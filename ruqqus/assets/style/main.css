@@ -13048,7 +13048,7 @@ a:hover .link-arrow {
 }
 
 .sidebar-section {
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   background-color: #fff;
   border: 1px solid #DDDDDD;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
