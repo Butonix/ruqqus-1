@@ -110,6 +110,7 @@
 {% endblock %}
 
 {% block adminpanel %}
+<p>user id: {{ u.base36id }}</p>
 {% if v.admin_level >=3 and v.admin_level > u.admin_level %}
 {% if u.is_banned %}
 <form action="/api/unban_user/{{ u.id }}" method="post">
