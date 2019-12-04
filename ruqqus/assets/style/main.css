@@ -15105,6 +15105,10 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 }
 
 @media (max-width: 767.98px) {
+  html {
+    font-size: 14px;
+  }
+
   .container {
     max-width: none;
   }
