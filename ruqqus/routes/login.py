@@ -196,7 +196,7 @@ def sign_up_post(v):
     def new_signup(error):
 
         args={"error":error}
-        if request.args.get("ref"):
+        if request.form.get("ref"):
             args["ref"]=request.args.get("ref")
         
         

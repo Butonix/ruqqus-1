@@ -78,7 +78,7 @@
 
                             <form action="/signup" method="post" class="mt-md-3" id="signup">
 
-				<span class="text-danger">{{ error }}</span><br>
+				{% if error %}<span class="text-danger">{{ error }}</span><br>{% endif %}
 
                                 <input type="hidden" name="formkey" value="{{ formkey }}">
                                 <input type="hidden" name="now" value="{{ now }}">
