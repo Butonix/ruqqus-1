@@ -76,9 +76,9 @@ $font-family-sans-serif: 'Inter', 'Helvetica Neue', sans-serif;
 
 $font-size-base: 1rem;
 
-$small-font-size: 13px;
+$small-font-size: 12px;
 
-$extra-small-font-size: 12px;
+$extra-small-font-size: 11px;
 
 $display5-size:  3rem !default;
 
@@ -301,6 +301,12 @@ ol > li::before {
 
 .btn-secondary {
     color: $text-muted;
+}
+
+.btn-tag {
+    border-radius: 3rem;
+    font-size: $extra-small-font-size;
+    padding: .15rem .5rem;
 }
 
 .btn.disabled, .btn:disabled {
@@ -1109,7 +1115,7 @@ color: $dark;
     display: block;
     padding: 0.5rem 1rem;
     color: $text-muted;
-    font-size: $extra-small-font-size;
+    font-size: $small-font-size;
     font-weight: 600;
     margin-bottom: 0.25rem;
     text-decoration: none;

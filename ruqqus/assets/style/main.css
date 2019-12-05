@@ -437,7 +437,7 @@ hr {
 
 small,
 .small {
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 400;
 }
 
@@ -476,7 +476,7 @@ mark,
 
 .blockquote-footer {
   display: block;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   color: #ACACAC;
 }
 .blockquote-footer::before {
@@ -2236,7 +2236,7 @@ textarea.form-control {
   display: none;
   width: 100%;
   margin-top: 0.25rem;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   color: #23CE6B;
 }
 
@@ -2347,7 +2347,7 @@ textarea.form-control {
   display: none;
   width: 100%;
   margin-top: 0.25rem;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   color: #F05D5E;
 }
 
@@ -12424,11 +12424,11 @@ p {
 }
 
 .text-small {
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .text-small-extra {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .display-5 {
@@ -12480,7 +12480,7 @@ ol > li::before {
 }
 
 .btn {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   border-radius: 0.25rem;
 }
@@ -12491,6 +12491,12 @@ ol > li::before {
 
 .btn-secondary {
   color: #7D7D7D;
+}
+
+.btn-tag {
+  border-radius: 3rem;
+  font-size: 11px;
+  padding: 0.15rem 0.5rem;
 }
 
 .btn.disabled, .btn:disabled {
@@ -12698,7 +12704,7 @@ ol > li::before {
 
 .post-nav .nav-link {
   color: #5F5F5F;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   padding-top: 0;
   padding-bottom: 0.75rem;
@@ -12706,7 +12712,7 @@ ol > li::before {
 
 .settings-nav .nav-link {
   color: #5F5F5F;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   padding-top: 0;
 }
@@ -12734,7 +12740,7 @@ ol > li::before {
 }
 
 .post-nav .fa, .post-nav .fas, .post-nav .far, .post-nav .fab, .post-nav .fal {
-  font-size: 13px;
+  font-size: 12px;
   margin-right: 0.5rem;
   color: #ACACAC;
 }
@@ -12923,7 +12929,7 @@ label.terms {
 }
 
 .sidebar-section .fa, .sidebar-section .fas, .sidebar-section .far, .sidebar-section .fab, .sidebar-section .fal, .sidebar-section .fad {
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .icon::before {
@@ -12964,7 +12970,7 @@ label.terms {
 .voting {
   position: relative;
   z-index: 2;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   text-align: center;
   min-width: 40px;
@@ -13033,7 +13039,7 @@ a .link-arrow {
   right: 0;
   transition: right ease 0.25s;
   margin-left: 0.5rem;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 a:hover .link-arrow {
@@ -13104,13 +13110,13 @@ a:hover .link-arrow {
 
 .post-filter {
   display: inline-block;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: #7D7D7D;
 }
 
 .post-filter .fa, .post-filter .fas {
-  font-size: 12px;
+  font-size: 11px;
   margin-right: 0.5rem;
   opacity: 0.9;
   color: #603abb;
@@ -13174,7 +13180,7 @@ a:hover .link-arrow {
 }
 
 .sidebar .sidebar-section .title {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: #5F5F5F;
   padding: 0.5rem 1rem;
@@ -13280,7 +13286,7 @@ a:hover .link-arrow {
 }
 
 .filter-list .filter-item .fa, .filter-list .filter-item .fas, .filter-list .filter-item .far, .filter-list .filter-item .fab, .filter-list .filter-item .fal {
-  font-size: 13px;
+  font-size: 12px;
   margin-right: 0.5rem;
   color: #ACACAC;
 }
@@ -13317,7 +13323,7 @@ a:hover .link-arrow {
   display: block;
   padding: 0.5rem 1rem;
   color: #7D7D7D;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   margin-bottom: 0.25rem;
   text-decoration: none;
@@ -13334,7 +13340,7 @@ a:hover .link-arrow {
 }
 
 .dashboard-list .dashboard-item .fa, .dashboard-list .dashboard-item .fas, .dashboard-list .dashboard-item .far, .dashboard-list .dashboard-item .fab, .dashboard-list .dashboard-item .fal {
-  font-size: 13px;
+  font-size: 12px;
   margin-right: 0.5rem;
   color: #ACACAC;
 }
@@ -13401,7 +13407,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .navbar .navbar-nav .profile-pic .letter {
   line-height: 2rem;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .profile-pic-25 {
@@ -13475,7 +13481,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .toggle-view .nav-link {
   color: #5F5F5F;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   padding: 0;
   line-height: 1;
@@ -13483,7 +13489,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .toggle-view .fa, .toggle-view .fas, .toggle-view .far, .toggle-view .fab, .toggle-view .fal {
-  font-size: 13px;
+  font-size: 12px;
   margin-right: 0.5rem;
   color: #ACACAC;
 }
@@ -13508,7 +13514,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .card-header {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: #5F5F5F;
   padding: 0.5rem 1rem;
@@ -13563,7 +13569,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   position: relative;
   z-index: 2;
   color: #7D7D7D;
-  font-size: 13px;
+  font-size: 12px;
   width: fit-content;
 }
 
@@ -13624,12 +13630,12 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   position: relative;
   color: #7D7D7D;
   font-weight: 400;
-  font-size: 13px;
+  font-size: 12px;
   z-index: 3;
 }
 
 .post-actions .fa, .post-actions .fas, .post-actions .far {
-  font-size: 13px;
+  font-size: 12px;
   color: #ACACAC;
   margin-right: 0.5rem;
   width: 1rem;
@@ -13720,7 +13726,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   }
 }
 .post-actions .list-inline .list-inline-item .dropdown-item {
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .post-actions .list-inline .list-inline-item .dropdown-item:active {
@@ -13730,7 +13736,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .post-actions a {
   color: #5F5F5F;
   text-decoration: none;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .post-actions a:hover {
@@ -13819,7 +13825,7 @@ div:hover .thumb-img-link-overlay {
 
 .comments-count .total {
   font-weight: 600;
-  font-size: 13px;
+  font-size: 12px;
   color: #7D7D7D;
 }
 
@@ -13849,7 +13855,7 @@ div:hover .thumb-img-link-overlay {
 }
 
 .comment .comment-body .user-info {
-  font-size: 13px;
+  font-size: 12px;
   color: #7D7D7D;
   margin-bottom: 0.25rem;
 }
@@ -13900,7 +13906,7 @@ blockquote p {
 
 .comment-actions {
   font-weight: 400;
-  font-size: 13px;
+  font-size: 12px;
   margin-bottom: 0;
 }
 
@@ -13936,7 +13942,7 @@ blockquote p {
 }
 
 .comment-actions .list-inline .list-inline-item .dropdown-item {
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .comment-actions .list-inline .list-inline-item .dropdown-item:active {
@@ -14133,20 +14139,20 @@ ul.comment-section {
 }
 
 .sidebar-post-meta .score-percent {
-  font-size: 12px;
+  font-size: 11px;
   color: #ACACAC;
   font-weight: 400;
 }
 
 .sidebar-post-meta .shortlink, .sidebar-post-meta .submission-date {
-  font-size: 13px;
+  font-size: 12px;
   color: #7D7D7D;
   font-weight: 400;
   text-transform: lowercase;
 }
 
 .sidebar-post-meta .link, .sidebar-post-meta .date {
-  font-size: 13px;
+  font-size: 12px;
   color: #1F1F1F;
   font-weight: 400;
   text-transform: capitalize;
@@ -14240,11 +14246,11 @@ ul.comment-section {
 .profile-actions a {
   color: #5F5F5F;
   text-decoration: none;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .profile-actions .fa, .profile-actions .fas, .profile-actions .far {
-  font-size: 13px;
+  font-size: 12px;
   color: #ACACAC;
 }
 
@@ -14257,7 +14263,7 @@ ul.comment-section {
 }
 
 .profile-actions .dropdown .dropdown-menu .dropdown-item .fa, .profile-actions .dropdown .dropdown-menu .dropdown-item .fas, .profile-actions .dropdown .dropdown-menu .dropdown-item .far {
-  font-size: 13px;
+  font-size: 12px;
   color: #ACACAC;
   width: 1rem;
   margin-right: 0.5rem;
@@ -15263,7 +15269,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .post-filter .dropdown-item {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 400;
   }
 
