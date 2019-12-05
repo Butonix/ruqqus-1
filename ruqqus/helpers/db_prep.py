@@ -1,7 +1,7 @@
 import psycopg2
 from os import environ
 
-conn = psycopg2.connect(environ.get("DATABASE_URL"))
+conn = psycopg2.connect(environ.get("HEROKU_POSTGRESQL_TEAL_URL"))
 c=conn.cursor()
 
 '''
@@ -76,7 +76,7 @@ def prep_database():
     c.execute("""
     CREATE OR REPLACE FUNCTION rank_hot(submissions)
     RETURNS float AS '
-      SELECT CAST(($1.ups - $1.downs) AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(0.9))
+      SELECT CAST(($1.ups - $1.downs) AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(0.7))
       '
     LANGUAGE SQL
     IMMUTABLE
@@ -87,7 +87,7 @@ def prep_database():
     c.execute("""
     CREATE OR REPLACE FUNCTION rank_fiery(submissions)
     RETURNS float AS '
-      SELECT SQRT(CAST(($1.ups * $1.downs) AS float))/((CAST(($1.age+5000) AS FLOAT)/100.0)^(0.9))
+      SELECT SQRT(CAST(($1.ups * $1.downs) AS float))/((CAST(($1.age+5000) AS FLOAT)/100.0)^(0.7))
       '
     LANGUAGE SQL
     IMMUTABLE
@@ -113,7 +113,7 @@ def prep_database():
     c.execute("""
     CREATE OR REPLACE FUNCTION rank_activity(submissions)
     RETURNS float AS '
-      SELECT CAST($1.comment_count AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(0.9))
+      SELECT CAST($1.comment_count AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(0.7))
     '
     LANGUAGE SQL
     IMMUTABLE

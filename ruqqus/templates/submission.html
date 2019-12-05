@@ -14,8 +14,8 @@
 <title>@{{ linked_comment.author.username }} comments on "{{ p.title }}"</title>
 <meta name="description" content="{{ linked_comment.body }}">
 {% else %}
-<title>{{ p.title }}</title>
-<meta name="description" content="{{ p.title | safe }}">
+<title>{{ p.title | safe}}</title>
+<meta name="description" content="submitted by @{{ p.author.username }}">
 {% endif %}
 {% endblock %}
 
