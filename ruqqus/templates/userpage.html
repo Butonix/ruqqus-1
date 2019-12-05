@@ -81,12 +81,12 @@
   <div><a class="btn btn-secondary btn-block btn-sm mb-3" href="/settings/profile#bio">Update bio</a></div>
   {% endif %}
   {% endif %}
-  <div class="text-muted text-small"><i class="fas fa-medal mr-2"></i>{{ u.karma }} Rep</div>
-  <div class="text-muted text-small mt-2"><i class="fas fa-feather-alt text-muted mr-2"></i>{{ u.post_count }} Post{{ 's' if u.post_count!=1 else '' }}
+  <div class="text-muted text-small"><i class="fas fa-medal fa-width-rem text-muted mr-2"></i>{{ u.karma }} Rep</div>
+  <div class="text-muted text-small mt-2"><i class="fas fa-feather-alt fa-width-rem text-muted mr-2"></i>{{ u.post_count }} Post{{ 's' if u.post_count!=1 else '' }}
   </div>
-  <div class="text-muted text-small mt-2"><i class="fas fa-comment-dots text-muted mr-2"></i>{{ u.comment_count }} Comment{{ 's' if u.comment_count !=1 else '' }}
+  <div class="text-muted text-small mt-2"><i class="fas fa-comment-dots fa-width-rem text-muted mr-2"></i>{{ u.comment_count }} Comment{{ 's' if u.comment_count !=1 else '' }}
   </div>
-  <div class="text-muted text-small mt-2"><i class="fas fa-birthday-cake text-muted mr-2"></i>User
+  <div class="text-muted text-small mt-2"><i class="fas fa-birthday-cake fa-width-rem text-muted mr-2"></i>User
     since {{ u.created_date }}
   </div>
 </div>
