@@ -207,7 +207,7 @@ def sign_up_post(v):
 ##        print(f"signup fail - {username } - form expired")
         
         return new_signup("There was a problem. Please try again.")
-    elif now-int(form_timestamp)<5:
+    if now-int(form_timestamp)<5:
         print(f"signup fail - {username } - too fast")
         return new_signup("There was a problem. Please try again.")
 
