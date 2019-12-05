@@ -15,7 +15,9 @@ from flask import *
 from ruqqus.__main__ import app, db, limiter
 
 BAN_REASONS=['',
-            "URL shorteners are not permitted."
+             "URL shorteners are not permitted.",
+             "Pornographic material is not permitted.",
+             "Copyright infringement is not permitted."
             ]
 
 
