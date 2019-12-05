@@ -197,8 +197,9 @@ def sign_up_post(v):
 
         args={"error":error}
         if request.form.get("referred_by"):
-            user=db.query(User).filter_by(id=request.form.get("referred_by"))
-            args["ref"]=user.username
+            user=db.query(User).filter_by(id=request.form.get("referred_by")).first()
+            if user:
+                args["ref"]=user.username
         
         
         return redirect(f"/signup?{urlencode(args)}")
