@@ -13887,8 +13887,7 @@ blockquote {
   font-size: 1rem;
   font-weight: 500;
   background-color: #46444a;
-  border-radius: 0.35rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 1rem;
   margin: 0.5rem 0rem 1rem 0.5rem;
 }
 
