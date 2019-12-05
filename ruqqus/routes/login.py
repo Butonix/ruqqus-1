@@ -4,6 +4,7 @@ import hmac
 from os import environ
 import re
 import random
+from urllib.parse import urlencode
 
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
@@ -152,6 +153,8 @@ def sign_up_get(v):
 
     redir = request.args.get("redirect",None)
 
+    error= request.args.get("error", None)
+
 
 
     return render_template("sign_up.html",
@@ -159,7 +162,8 @@ def sign_up_get(v):
                            now=now,
                            i=random_image(),
                            redirect=redir,
-                           ref_user=ref_user
+                           ref_user=ref_user,
+                           error=error
                            )
 
 #signup api
@@ -186,34 +190,30 @@ def sign_up_post(v):
     
     now=int(time.time())
 
+    username=request.form.get("username")
+
     #define function that takes an error message and generates a new signup form
     def new_signup(error):
-        
-        #Reset tokens and return to signup form
-        
-        token = token_hex(16)
-        session["signup_token"]=token
-        now=int(time.time())
-        agent=request.headers.get("User-Agent", None)
 
-        new_formkey_hashstr=str(now)+submitted_token+agent
-        new_formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
-                               msg=bytes(new_formkey_hashstr, "utf-16")
-                               ).hexdigest()
+        args={"error":error}
+        if request.args.get("ref"):
+            args["ref"]=request.args.get("ref")
         
-        return render_template("sign_up.html", formkey=new_formkey, now=now, error=error, i=random_image())
+        
+        return redirect(f"/signup?{urlencode(args)}")
 
     #check for tokens
-    if now-int(form_timestamp)>120:
-        print("form expired")
-        return new_signup("There was a problem. Please refresh the page and try again.")
+##    if now-int(form_timestamp)>120:
+##        print(f"signup fail - {username } - form expired")
+        
+        return new_signup("There was a problem. Please try again.")
     elif now-int(form_timestamp)<5:
-        print("slow down!")
-        return new_signup("There was a problem. Please refresh the page and try again.")
+        print(f"signup fail - {username } - too fast")
+        return new_signup("There was a problem. Please try again.")
 
     if not hmac.compare_digest(correct_formkey, form_formkey):
-        print(f"{request.form.get('username')} - mismatched formkeys")
-        return new_signup("There was a problem. Please refresh the page and try again.")
+        print(f"signup fail - {username } - mismatched formkeys"")
+        return new_signup("There was a problem. Please try again.")
 
     #check for matched passwords
     if not request.form.get("password") == request.form.get("password_confirm"):
@@ -221,9 +221,11 @@ def sign_up_post(v):
 
     #check username/pass conditions
     if not re.match(valid_username_regex, request.form.get("username")):
+        print(f"signup fail - {username } - mismatched passwords")
         return new_signup("Invalid username")
 
     if not re.match(valid_password_regex, request.form.get("password")):
+        print(f"signup fail - {username } - invalid password")
         return new_signup("Password must be 8 characters or longer")
 
     #if not re.match(valid_email_regex, request.form.get("email")):
@@ -236,6 +238,7 @@ def sign_up_post(v):
 
     if (db.query(User).filter(User.username.ilike(request.form.get("username"))).first()
         or (email and db.query(User).filter(User.email.ilike(email)).first())):
+        print(f"signup fail - {username } - email already exists")
         return new_signup("An account with that username or email already exists.")
     
     #success
@@ -249,7 +252,7 @@ def sign_up_post(v):
         
     #make new user
     try:
-        new_user=User(username=request.form.get("username"),
+        new_user=User(username=username,
                       password=request.form.get("password"),
                       email=email,
                       created_utc=int(time.time()),
