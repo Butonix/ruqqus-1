@@ -289,13 +289,14 @@ ol > li::before {
 }
 
 .btn-secondary {
-    color: $text-muted;
+    color: $gray;
 }
 
 .btn-tag {
     border-radius: 3rem;
-    font-size: $extra-small-font-size;
-    padding: .15rem .5rem;
+    font-size: 11px;
+    padding: 0.25rem 0.5rem;
+    line-height: 1;
 }
 
 .btn.disabled, .btn:disabled {

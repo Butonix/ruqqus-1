@@ -12490,13 +12490,14 @@ ol > li::before {
 }
 
 .btn-secondary {
-  color: #7D7D7D;
+  color: #5F5F5F;
 }
 
 .btn-tag {
   border-radius: 3rem;
   font-size: 11px;
-  padding: 0.15rem 0.5rem;
+  padding: 0.25rem 0.5rem;
+  line-height: 1;
 }
 
 .btn.disabled, .btn:disabled {
