@@ -8584,7 +8584,7 @@ button.bg-reddit:focus {
 }
 
 .shadow-sm {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03) !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.07) !important;
 }
 
 .shadow {
@@ -13110,7 +13110,7 @@ a:hover .link-arrow {
   background-color: #35363e;
   border-radius: 0.35rem;
   border: 1px solid #494a4e;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.07);
 }
 
 #frontpage .pseudo-submit-form.card .card-body, #search .search-results.card .card-body {
@@ -13144,7 +13144,7 @@ a:hover .link-arrow {
 .posts, #thread #main-content-col {
   background-color: #35363e;
   border: 1px solid #494a4e;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.07);
   border-radius: 0.35rem;
 }
 
@@ -13213,7 +13213,7 @@ a:hover .link-arrow {
   margin-bottom: 1rem;
   background-color: #35363e;
   border: 1px solid #494a4e;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.07);
   border-radius: 0.35rem;
 }
 
@@ -13237,7 +13237,7 @@ a:hover .link-arrow {
 
 .sidebar-section.sidebar-alert {
   border: 1px solid #494a4e;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.07);
 }
 
 .sidebar.sidebar-left {
@@ -13450,7 +13450,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-radius: 0.35rem;
   padding: 15px;
   margin-top: 1rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.07);
 }
 
 #frontpage.toggle-card-view .posts .card:first-of-type, #userpage.toggle-card-view .posts .card:first-of-type, #search.toggle-card-view .posts .card:first-of-type {
@@ -14232,7 +14232,7 @@ ul.comment-section {
   margin-bottom: 3rem;
   background: #35363e;
   border: 1px solid #494a4e;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.07);
   border-radius: 0.35rem;
 }
 
