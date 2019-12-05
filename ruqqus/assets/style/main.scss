@@ -1053,11 +1053,8 @@ color: $dark;
 }
 
 .sidebar-section.sidebar-alert {
-    margin-bottom: 1rem;
-    background-color: $light;
     border: 1px solid $border-color;
     box-shadow: $box-shadow-sm;
-    border-radius: $border-radius;
 }
 
 .sidebar.sidebar-left {
@@ -1428,6 +1425,10 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-top-left-radius: $border-radius;
     border-top-right-radius: $border-radius;
     padding: 0.5rem 1rem;
+}
+
+.modal-header .close {
+    padding: 1.25rem 1rem 0 1rem;
 }
 
 .modal-content {
