@@ -1523,14 +1523,14 @@ pre code {
 .table td {
   padding: 0.75rem;
   vertical-align: top;
-  border-top: 1px solid #DDDDDD;
+  border-top: 1px solid #E3E3E3;
 }
 .table thead th {
   vertical-align: bottom;
-  border-bottom: 2px solid #DDDDDD;
+  border-bottom: 2px solid #E3E3E3;
 }
 .table tbody + tbody {
-  border-top: 2px solid #DDDDDD;
+  border-top: 2px solid #E3E3E3;
 }
 
 .table-sm th,
@@ -1539,11 +1539,11 @@ pre code {
 }
 
 .table-bordered {
-  border: 1px solid #DDDDDD;
+  border: 1px solid #E3E3E3;
 }
 .table-bordered th,
 .table-bordered td {
-  border: 1px solid #DDDDDD;
+  border: 1px solid #E3E3E3;
 }
 .table-bordered thead th,
 .table-bordered thead td {
@@ -1988,7 +1988,7 @@ pre code {
 .table .thead-light th {
   color: #495057;
   background-color: #EBE9EF;
-  border-color: #DDDDDD;
+  border-color: #E3E3E3;
 }
 
 .table-dark {
@@ -6547,7 +6547,7 @@ a.close.disabled {
   align-items: flex-start;
   justify-content: space-between;
   padding: 1rem 1rem;
-  border-bottom: 1px solid #DDDDDD;
+  border-bottom: 1px solid #E3E3E3;
   border-top-left-radius: 0.3rem;
   border-top-right-radius: 0.3rem;
 }
@@ -6572,7 +6572,7 @@ a.close.disabled {
   align-items: center;
   justify-content: flex-end;
   padding: 1rem;
-  border-top: 1px solid #DDDDDD;
+  border-top: 1px solid #E3E3E3;
   border-bottom-right-radius: 0.3rem;
   border-bottom-left-radius: 0.3rem;
 }
@@ -7328,23 +7328,23 @@ button.bg-reddit:focus {
 }
 
 .border {
-  border: 1px solid #DDDDDD !important;
+  border: 1px solid #E3E3E3 !important;
 }
 
 .border-top {
-  border-top: 1px solid #DDDDDD !important;
+  border-top: 1px solid #E3E3E3 !important;
 }
 
 .border-right {
-  border-right: 1px solid #DDDDDD !important;
+  border-right: 1px solid #E3E3E3 !important;
 }
 
 .border-bottom {
-  border-bottom: 1px solid #DDDDDD !important;
+  border-bottom: 1px solid #E3E3E3 !important;
 }
 
 .border-left {
-  border-left: 1px solid #DDDDDD !important;
+  border-left: 1px solid #E3E3E3 !important;
 }
 
 .border-0 {
@@ -12344,12 +12344,12 @@ h3 {
 .table-dark td,
 .table-dark thead th,
 .table-dark tbody + tbody {
-    border-color: #DDDDDD;
+    border-color: #E3E3E3;
   }
 
   .table .thead-dark th {
     color: inherit;
-    border-color: #DDDDDD;
+    border-color: #E3E3E3;
   }
 }
 html {
@@ -12512,12 +12512,12 @@ ol > li::before {
 
 .btn-group.btn-integration {
   border-radius: 0.35rem;
-  border: 1px solid #DDDDDD;
+  border: 1px solid #E3E3E3;
 }
 
 .btn-integration {
   font-weight: 600;
-  border-left: 1px solid #DDDDDD;
+  border-left: 1px solid #E3E3E3;
 }
 
 .btn-integration .fab, .btn-integration .fas, .btn-integration .far {
@@ -12598,7 +12598,7 @@ ol > li::before {
 }
 
 .tab-bar {
-  box-shadow: inset 0 -1px 0 #DDDDDD;
+  box-shadow: inset 0 -1px 0 #E3E3E3;
   border-top-left-radius: 0.35rem;
   border-top-right-radius: 0.35rem;
   padding: 0.75rem 1rem 0 1rem;
@@ -12833,7 +12833,7 @@ ol > li::before {
 }
 
 .home-submission .form-control, .home-submission .input-group-text {
-  border-color: #DDDDDD;
+  border-color: #E3E3E3;
   background-color: #ffffff;
 }
 
@@ -13042,7 +13042,7 @@ a:hover .link-arrow {
 }
 
 .box-shadow-bottom {
-  box-shadow: inset 0 -1px 0 #DDDDDD;
+  box-shadow: inset 0 -1px 0 #E3E3E3;
 }
 
 .border-1 {
@@ -13085,7 +13085,7 @@ a:hover .link-arrow {
 #frontpage .pseudo-submit-form.card, #search .search-results.card {
   background-color: #ffffff;
   border-radius: 0.35rem;
-  border: 1px solid #DDDDDD;
+  border: 1px solid #E3E3E3;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
@@ -13119,7 +13119,7 @@ a:hover .link-arrow {
 
 .posts, #thread #main-content-col {
   background-color: #ffffff;
-  border: 1px solid #DDDDDD;
+  border: 1px solid #E3E3E3;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   border-radius: 0.35rem;
 }
@@ -13132,7 +13132,7 @@ a:hover .link-arrow {
 }
 
 .scrollspy.sidebar-sticky .list-group {
-  border-left: 1px solid #DDDDDD;
+  border-left: 1px solid #E3E3E3;
 }
 
 .scrollspy.sidebar-sticky .list-group .list-group-item {
@@ -13188,7 +13188,7 @@ a:hover .link-arrow {
 .sidebar-section {
   margin-bottom: 1rem;
   background-color: #fff;
-  border: 1px solid #DDDDDD;
+  border: 1px solid #E3E3E3;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   border-radius: 0.35rem;
 }
@@ -13223,7 +13223,7 @@ a:hover .link-arrow {
 }
 
 .sidebar-section.sidebar-alert {
-  border: 1px solid #DDDDDD;
+  border: 1px solid #E3E3E3;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
@@ -13276,7 +13276,7 @@ a:hover .link-arrow {
   color: #603abb;
   background-color: #EBE9EF;
   border-radius: 0.35rem;
-  border: 1px solid #DDDDDD;
+  border: 1px solid #E3E3E3;
 }
 
 .filter-list .filter-item .fa, .filter-list .filter-item .fas, .filter-list .filter-item .far, .filter-list .filter-item .fab, .filter-list .filter-item .fal {
@@ -13433,7 +13433,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 #frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card {
-  border: 1px solid #DDDDDD;
+  border: 1px solid #E3E3E3;
   border-radius: 0.35rem;
   padding: 15px;
   margin-top: 1rem;
@@ -13528,7 +13528,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card {
   border-width: 0 0 1px 0;
-  border-color: #DDDDDD;
+  border-color: #E3E3E3;
   border-style: solid;
   border-radius: 0;
   padding: 15px;
@@ -13578,7 +13578,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .modal-header {
-  border-bottom: 1px solid #DDDDDD;
+  border-bottom: 1px solid #E3E3E3;
   background-color: #ffffff;
   border-top-left-radius: 0.35rem;
   border-top-right-radius: 0.35rem;
@@ -14200,7 +14200,7 @@ ul.comment-section {
 .settings .settings-section {
   margin-bottom: 3rem;
   background: #ffffff;
-  border: 1px solid #DDDDDD;
+  border: 1px solid #E3E3E3;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   border-radius: 0.35rem;
 }
@@ -14343,19 +14343,19 @@ ul.comment-section {
   }
 }
 .border-top {
-  border-top: 1px solid #DDDDDD !important;
+  border-top: 1px solid #E3E3E3 !important;
 }
 
 .border-right {
-  border-right: 1px solid #DDDDDD !important;
+  border-right: 1px solid #E3E3E3 !important;
 }
 
 .border-bottom {
-  border-bottom: 1px solid #DDDDDD !important;
+  border-bottom: 1px solid #E3E3E3 !important;
 }
 
 .border-left {
-  border-left: 1px solid #DDDDDD !important;
+  border-left: 1px solid #E3E3E3 !important;
 }
 
 .border-top-0 {
@@ -14375,17 +14375,17 @@ ul.comment-section {
 }
 
 .border-x {
-  border-left: 1px solid #DDDDDD !important;
-  border-right: 1px solid #DDDDDD !important;
+  border-left: 1px solid #E3E3E3 !important;
+  border-right: 1px solid #E3E3E3 !important;
 }
 
 .border-y {
-  border-top: 1px solid #DDDDDD !important;
-  border-bottom: 1px solid #DDDDDD !important;
+  border-top: 1px solid #E3E3E3 !important;
+  border-bottom: 1px solid #E3E3E3 !important;
 }
 
 .border {
-  border: 1px solid #DDDDDD !important;
+  border: 1px solid #E3E3E3 !important;
 }
 
 .border-0 {
@@ -14434,19 +14434,19 @@ ul.comment-section {
 
 @media (min-width: 576px) {
   .border-sm-top {
-    border-top: 1px solid #DDDDDD !important;
+    border-top: 1px solid #E3E3E3 !important;
   }
 
   .border-sm-right {
-    border-right: 1px solid #DDDDDD !important;
+    border-right: 1px solid #E3E3E3 !important;
   }
 
   .border-sm-bottom {
-    border-bottom: 1px solid #DDDDDD !important;
+    border-bottom: 1px solid #E3E3E3 !important;
   }
 
   .border-sm-left {
-    border-left: 1px solid #DDDDDD !important;
+    border-left: 1px solid #E3E3E3 !important;
   }
 
   .border-sm-top-0 {
@@ -14466,17 +14466,17 @@ ul.comment-section {
   }
 
   .border-sm-x {
-    border-left: 1px solid #DDDDDD !important;
-    border-right: 1px solid #DDDDDD !important;
+    border-left: 1px solid #E3E3E3 !important;
+    border-right: 1px solid #E3E3E3 !important;
   }
 
   .border-sm-y {
-    border-top: 1px solid #DDDDDD !important;
-    border-bottom: 1px solid #DDDDDD !important;
+    border-top: 1px solid #E3E3E3 !important;
+    border-bottom: 1px solid #E3E3E3 !important;
   }
 
   .border-sm {
-    border: 1px solid #DDDDDD !important;
+    border: 1px solid #E3E3E3 !important;
   }
 
   .border-sm-0 {
@@ -14525,19 +14525,19 @@ ul.comment-section {
 }
 @media (min-width: 768px) {
   .border-md-top {
-    border-top: 1px solid #DDDDDD !important;
+    border-top: 1px solid #E3E3E3 !important;
   }
 
   .border-md-right {
-    border-right: 1px solid #DDDDDD !important;
+    border-right: 1px solid #E3E3E3 !important;
   }
 
   .border-md-bottom {
-    border-bottom: 1px solid #DDDDDD !important;
+    border-bottom: 1px solid #E3E3E3 !important;
   }
 
   .border-md-left {
-    border-left: 1px solid #DDDDDD !important;
+    border-left: 1px solid #E3E3E3 !important;
   }
 
   .border-md-top-0 {
@@ -14557,17 +14557,17 @@ ul.comment-section {
   }
 
   .border-md-x {
-    border-left: 1px solid #DDDDDD !important;
-    border-right: 1px solid #DDDDDD !important;
+    border-left: 1px solid #E3E3E3 !important;
+    border-right: 1px solid #E3E3E3 !important;
   }
 
   .border-md-y {
-    border-top: 1px solid #DDDDDD !important;
-    border-bottom: 1px solid #DDDDDD !important;
+    border-top: 1px solid #E3E3E3 !important;
+    border-bottom: 1px solid #E3E3E3 !important;
   }
 
   .border-md {
-    border: 1px solid #DDDDDD !important;
+    border: 1px solid #E3E3E3 !important;
   }
 
   .border-md-0 {
@@ -14616,19 +14616,19 @@ ul.comment-section {
 }
 @media (min-width: 992px) {
   .border-lg-top {
-    border-top: 1px solid #DDDDDD !important;
+    border-top: 1px solid #E3E3E3 !important;
   }
 
   .border-lg-right {
-    border-right: 1px solid #DDDDDD !important;
+    border-right: 1px solid #E3E3E3 !important;
   }
 
   .border-lg-bottom {
-    border-bottom: 1px solid #DDDDDD !important;
+    border-bottom: 1px solid #E3E3E3 !important;
   }
 
   .border-lg-left {
-    border-left: 1px solid #DDDDDD !important;
+    border-left: 1px solid #E3E3E3 !important;
   }
 
   .border-lg-top-0 {
@@ -14648,17 +14648,17 @@ ul.comment-section {
   }
 
   .border-lg-x {
-    border-left: 1px solid #DDDDDD !important;
-    border-right: 1px solid #DDDDDD !important;
+    border-left: 1px solid #E3E3E3 !important;
+    border-right: 1px solid #E3E3E3 !important;
   }
 
   .border-lg-y {
-    border-top: 1px solid #DDDDDD !important;
-    border-bottom: 1px solid #DDDDDD !important;
+    border-top: 1px solid #E3E3E3 !important;
+    border-bottom: 1px solid #E3E3E3 !important;
   }
 
   .border-lg {
-    border: 1px solid #DDDDDD !important;
+    border: 1px solid #E3E3E3 !important;
   }
 
   .border-lg-0 {
@@ -14707,19 +14707,19 @@ ul.comment-section {
 }
 @media (min-width: 1200px) {
   .border-xl-top {
-    border-top: 1px solid #DDDDDD !important;
+    border-top: 1px solid #E3E3E3 !important;
   }
 
   .border-xl-right {
-    border-right: 1px solid #DDDDDD !important;
+    border-right: 1px solid #E3E3E3 !important;
   }
 
   .border-xl-bottom {
-    border-bottom: 1px solid #DDDDDD !important;
+    border-bottom: 1px solid #E3E3E3 !important;
   }
 
   .border-xl-left {
-    border-left: 1px solid #DDDDDD !important;
+    border-left: 1px solid #E3E3E3 !important;
   }
 
   .border-xl-top-0 {
@@ -14739,17 +14739,17 @@ ul.comment-section {
   }
 
   .border-xl-x {
-    border-left: 1px solid #DDDDDD !important;
-    border-right: 1px solid #DDDDDD !important;
+    border-left: 1px solid #E3E3E3 !important;
+    border-right: 1px solid #E3E3E3 !important;
   }
 
   .border-xl-y {
-    border-top: 1px solid #DDDDDD !important;
-    border-bottom: 1px solid #DDDDDD !important;
+    border-top: 1px solid #E3E3E3 !important;
+    border-bottom: 1px solid #E3E3E3 !important;
   }
 
   .border-xl {
-    border: 1px solid #DDDDDD !important;
+    border: 1px solid #E3E3E3 !important;
   }
 
   .border-xl-0 {
@@ -15175,7 +15175,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   #frontpage .posts .card:last-of-type, #search .posts .card:last-of-type {
-    border-bottom: 1px solid #DDDDDD;
+    border-bottom: 1px solid #E3E3E3;
   }
 
   #frontpage .posts .card:hover, #search .posts .card:hover {
@@ -15196,7 +15196,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
   #frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card {
     border-width: 0 0 1px 0;
-    border-color: #DDDDDD;
+    border-color: #E3E3E3;
     border-style: solid;
     border-radius: 0;
     margin-top: 0;
