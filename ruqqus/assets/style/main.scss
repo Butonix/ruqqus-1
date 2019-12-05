@@ -1052,6 +1052,14 @@ color: $dark;
     box-shadow: none;
 }
 
+.sidebar-section.sidebar-alert {
+    margin-bottom: 1rem;
+    background-color: $light;
+    border: 1px solid $border-color;
+    box-shadow: $box-shadow-sm;
+    border-radius: $border-radius;
+}
+
 .sidebar.sidebar-left {
     -ms-flex: 0 0 200px;
     flex: 0 0 200px;

@@ -13222,6 +13222,14 @@ a:hover .link-arrow {
   box-shadow: none;
 }
 
+.sidebar-section.sidebar-alert {
+  margin-bottom: 1rem;
+  background-color: #EAE9EE;
+  border: 1px solid #DDDDDD;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  border-radius: 0.35rem;
+}
+
 .sidebar.sidebar-left {
   -ms-flex: 0 0 200px;
   flex: 0 0 200px;
