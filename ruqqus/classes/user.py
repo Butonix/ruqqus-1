@@ -180,7 +180,7 @@ class User(Base):
     
     @property
     def url(self):
-        return f"/u/{self.username}"
+        return f"/@{self.username}"
 
     @property
     def permalink(self):
