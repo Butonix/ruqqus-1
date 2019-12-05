@@ -14215,8 +14215,8 @@ ul.comment-section {
 
 .settings .settings-section .footer {
   background-color: #EBE9EF;
-  border-bottom-left-radius: 0.25rem;
-  border-bottom-right-radius: 0.25rem;
+  border-bottom-left-radius: 0.35rem;
+  border-bottom-right-radius: 0.35rem;
 }
 
 .modal .profile-actions .list-group-item {

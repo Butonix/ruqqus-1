@@ -2082,8 +2082,8 @@ ul.comment-section {
 
 .settings .settings-section .footer {
     background-color: $gray-200;
-    border-bottom-left-radius: .25rem;
-    border-bottom-right-radius: .25rem;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
 }
 
 // Modal Profile Actions
