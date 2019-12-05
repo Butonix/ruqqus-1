@@ -212,7 +212,7 @@ def sign_up_post(v):
         return new_signup("There was a problem. Please try again.")
 
     if not hmac.compare_digest(correct_formkey, form_formkey):
-        print(f"signup fail - {username } - mismatched formkeys"")
+        print(f"signup fail - {username } - mismatched formkeys")
         return new_signup("There was a problem. Please try again.")
 
     #check for matched passwords
