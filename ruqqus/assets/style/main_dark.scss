@@ -788,7 +788,7 @@ label.terms {
 }
 
 .fa-width-rem {
-    width: 1rem;
+    width: 1.25rem;
 }
 
 .fa-bold:hover {
@@ -1137,6 +1137,7 @@ color: $dark;
     font-size: $small-font-size;
     margin-right: 0.5rem;
     color: $gray-600;
+    text-align: center;
 }
 
 .filter-list .filter-link:hover .fa , .filter-list .filter-link:focus .fa, .filter-list .filter-link:hover .fas, .filter-list .filter-link:focus .fas, .filter-list .filter-link:hover .far, .filter-list .filter-link:focus .far, .filter-list .filter-link:hover .fab , .filter-list .filter-link:focus .fab {
@@ -1194,6 +1195,7 @@ color: $dark;
     font-size: $small-font-size;
     margin-right: 0.5rem;
     color: $gray-600;
+    text-align: center;
 }
 
 .dashboard-list .dashboard-link:hover .fa , .dashboard-list .dashboard-link:focus .fa, .dashboard-list .dashboard-link:hover .fas, .dashboard-list .dashboard-link:focus .fas, .dashboard-list .dashboard-link:hover .far, .dashboard-list .dashboard-link:focus .far, .dashboard-list .dashboard-link:hover .fab , .dashboard-list .dashboard-link:focus .fab {
