@@ -13327,7 +13327,7 @@ a:hover .link-arrow {
 }
 
 .dashboard-list .dashboard-link:hover, .dashboard-list .dashboard-link:focus {
-  color: #603abb;
+  color: #1F1F1F;
 }
 
 .dashboard-list > .dashboard-item > .dashboard-link.active {
