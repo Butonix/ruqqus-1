@@ -13285,7 +13285,7 @@ a:hover .link-arrow {
 }
 
 .filter-list .filter-link:hover, .filter-list .filter-link:focus {
-  color: #af92de;
+  color: #dadada;
 }
 
 .filter-list > .filter-item > .filter-link.active {

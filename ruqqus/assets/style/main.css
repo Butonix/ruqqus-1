@@ -13272,7 +13272,7 @@ a:hover .link-arrow {
 }
 
 .filter-list .filter-link:hover, .filter-list .filter-link:focus {
-  color: #603abb;
+  color: #1F1F1F;
 }
 
 .filter-list > .filter-item > .filter-link.active {
