@@ -13149,7 +13149,6 @@ a:hover .link-arrow {
 
 .posts, #thread #main-content-col {
   background-color: #35363e;
-  border: 1px solid #494a4e;
   border-radius: 0.35rem;
 }
 
@@ -13217,7 +13216,6 @@ a:hover .link-arrow {
 .sidebar-section {
   margin-bottom: 1rem;
   background-color: #35363e;
-  border: 1px solid #494a4e;
   border-radius: 0.35rem;
 }
 
@@ -13290,9 +13288,8 @@ a:hover .link-arrow {
 
 .filter-list > .filter-item > .filter-link.active {
   color: #dadada;
-  background-color: #FFFFFF;
+  background-color: #dadada;
   border-radius: 0.35rem;
-  border: 1px solid #494a4e;
 }
 
 .filter-list .filter-item .fa, .filter-list .filter-item .fas, .filter-list .filter-item .far, .filter-list .filter-item .fab, .filter-list .filter-item .fal {
