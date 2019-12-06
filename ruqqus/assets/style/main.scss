@@ -6,7 +6,7 @@ $secondary: #EAEAEA;
 $danger: #F05D5E;
 $white: #ffffff;
 $black: #1F1F1F;
-$light: #F7F6F8;
+$light: #F6F6F6;
 $success: #23CE6B;
 
 
@@ -57,7 +57,7 @@ $theme-colors: (
 // Borders
 
 $input-border-color: #ECECEC;
-$border-color: #E3E3E3;
+$border-color: #E1E1E1;
 
 $border-radius: .35rem;
 $border-radius-sm: .25rem;
@@ -918,7 +918,7 @@ color: $dark;
     background-color: $white;
     border-radius: $border-radius;
     border: 1px solid $border-color;
-    box-shadow: $box-shadow-sm;
+    //box-shadow: $box-shadow-sm;
 }
 
 #frontpage .pseudo-submit-form.card .card-body, #search .search-results.card .card-body {
@@ -952,7 +952,7 @@ color: $dark;
 .posts, #thread #main-content-col {
     background-color: $white;
     border: 1px solid $border-color;
-    box-shadow: $box-shadow-sm;
+    //box-shadow: $box-shadow-sm;
     border-radius: $border-radius;
 }
 
@@ -1024,7 +1024,7 @@ color: $dark;
     margin-bottom: 1rem;
     background-color: #fff;
     border: 1px solid $border-color;
-    box-shadow: $box-shadow-sm;
+    //box-shadow: $box-shadow-sm;
     border-radius: 0.35rem;
 }
 
@@ -1061,7 +1061,7 @@ color: $dark;
 
 .sidebar-section.sidebar-alert {
     border: 1px solid $border-color;
-    box-shadow: $box-shadow-sm;
+    //box-shadow: $box-shadow-sm;
 }
 
 .sidebar.sidebar-left {
@@ -1110,8 +1110,8 @@ color: $dark;
 }
 
 .filter-list > .filter-item > .filter-link.active {
-    color: $primary;
-    background-color: $gray-200;
+    color: $black;
+    background-color: $white;
     border-radius: $border-radius;
     border: 1px solid $border-color;
 }
@@ -1282,7 +1282,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: $border-radius;
     padding: 15px;
     margin-top: 1rem;
-    box-shadow: $box-shadow-sm;
+    //box-shadow: $box-shadow-sm;
 }
 
 #frontpage.toggle-card-view .posts .card:first-of-type, #userpage.toggle-card-view .posts .card:first-of-type, #search.toggle-card-view .posts .card:first-of-type {
@@ -2075,7 +2075,7 @@ ul.comment-section {
     margin-bottom: 3rem;
     background: $white;
     border: 1px solid $border-color;
-    box-shadow: $box-shadow-sm;
+    //box-shadow: $box-shadow-sm;
     border-radius: 0.35rem;
 }
 
