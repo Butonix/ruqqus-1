@@ -1357,6 +1357,10 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 // Thread
 
+.card-header:first-child {
+    border-radius: $border-radius $border-radius 0 0;
+}
+
 .card-header {
     font-size: $small-font-size;
     font-weight: $font-weight-bold;

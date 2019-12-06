@@ -13512,6 +13512,10 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border: none;
 }
 
+.card-header:first-child {
+  border-radius: 0.35rem 0.35rem 0 0;
+}
+
 .card-header {
   font-size: 12px;
   font-weight: 600;
