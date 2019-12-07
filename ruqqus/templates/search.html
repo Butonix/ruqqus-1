@@ -21,13 +21,13 @@
   window.onscroll = function () {
     var currentScrollPos = window.pageYOffset;
     if (prevScrollpos > currentScrollPos) {
-      document.getElementById("fixed-bar-mobile").style.top = "45px";
+      document.getElementById("fixed-bar-mobile").style.top = "49px";
     } 
     else if (currentScrollPos <= 125) {
-      document.getElementById("fixed-bar-mobile").style.top = "45px";
+      document.getElementById("fixed-bar-mobile").style.top = "49px";
     }
     else {
-      document.getElementById("fixed-bar-mobile").style.top = "-90px";
+      document.getElementById("fixed-bar-mobile").style.top = "-49px";
       document.getElementById("dropdownMenuSortBy").classList.remove('show');
       document.getElementById("dropdownMenuFrom").classList.remove('show');
     }
@@ -169,7 +169,7 @@
     </div>
   </div>
 
-  <div class="row fixed-top bg-white border-0 d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 45px; transition: top 0.3s;">
+  <div class="row fixed-top bg-white border-0 d-inline-flex d-md-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 49px; transition: top 0.3s;">
 
     <div class="col">
 
