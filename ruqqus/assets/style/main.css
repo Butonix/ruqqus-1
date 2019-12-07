@@ -12353,7 +12353,7 @@ h3 {
   }
 }
 html {
-  font-size: 13px;
+  font-size: 14px;
 }
 
 @supports (font-variation-settings: normal) {
@@ -12363,7 +12363,7 @@ html {
 }
 body {
   color: #1F1F1F;
-  padding-top: 98px;
+  padding-top: 90px;
   background-color: #F6F6F6;
 }
 
@@ -15173,7 +15173,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   #frontpage, #userpage, #search {
-    padding-top: 98px;
+    padding-top: 90px;
     background-color: #ffffff;
   }
 
