@@ -15165,6 +15165,11 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   font-weight: 500;
 }
 
+@media (max-width: 991.98px) {
+  #frontpage, #userpage, #search {
+    padding-top: 110px;
+  }
+}
 @media (max-width: 767.98px) {
   html {
     font-size: 14px;
