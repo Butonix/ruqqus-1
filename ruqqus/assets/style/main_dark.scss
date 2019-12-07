@@ -2684,8 +2684,14 @@ body {
 }
 
 #frontpage, #userpage, #search {
-    padding-top: 90px;
+    padding-top: 95px;
     background-color: $light;
+}
+
+#search .search-results.card  {
+    border-bottom: 1px solid #e3e3e3;
+    border-width: 0 0 1px 0;
+    border-radius: 0;
 }
 
 #frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type {
