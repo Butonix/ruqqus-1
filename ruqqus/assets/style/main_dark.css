@@ -13116,7 +13116,7 @@ a:hover .link-arrow {
 #frontpage .pseudo-submit-form.card, #search .search-results.card {
   background-color: #35363e;
   border-radius: 0.35rem;
-  border: 1px solid #494a4e;
+  border: none;
 }
 
 #frontpage .pseudo-submit-form.card .card-body, #search .search-results.card .card-body {
@@ -13288,7 +13288,7 @@ a:hover .link-arrow {
 
 .filter-list > .filter-item > .filter-link.active {
   color: #dadada;
-  background-color: #dadada;
+  background-color: #35363e;
   border-radius: 0.35rem;
 }
 
