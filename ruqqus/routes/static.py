@@ -7,6 +7,7 @@ from ruqqus.classes import *
 
 #take care of misc pages that never really change (much)
 @app.route('/assets/<path:path>')
+@limiter.exempt
 def static_service(path):
     return send_from_directory('./assets', path)
 
