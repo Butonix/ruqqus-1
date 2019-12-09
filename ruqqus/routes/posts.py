@@ -1,4 +1,4 @@
-from urllib.parse import urlparse
+from urllib.parse import urlparse, ParseResult, urlunparse
 import mistletoe
 from sqlalchemy import func
 from bs4 import BeautifulSoup
@@ -72,7 +72,9 @@ def submit_post(v):
     
     #check for domain specific rules
 
-    domain=urlparse(url).netloc
+    parsed_url=urlparse(url)
+
+    domain=parsed_url.netloc
 
     ##all possible subdomains
     parts=domain.split(".")
@@ -129,7 +131,14 @@ def submit_post(v):
         user_id=v.id
                 
                 
-                
+    #Force https for submitted urls
+    new_url=ParseResult(scheme="https",
+                        netloc=parsed_url.netloc,
+                        path=parsed_url.path,
+                        params=parsed_url.params,
+                        query=parsed_url.query,
+                        fragment=parsed_url.fragment)
+    url=urlunparse(new_url)
                           
 
 
