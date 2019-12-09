@@ -2,7 +2,7 @@ import time
 from ruqqus.helpers.wrappers import *
 from flask import *
 
-from ruqqus.__main__ import app
+from ruqqus.__main__ import app, limiter
 from ruqqus.classes import *
 
 #take care of misc pages that never really change (much)
