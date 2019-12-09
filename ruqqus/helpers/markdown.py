@@ -17,7 +17,7 @@ class UserRenderer(HTMLRenderer):
         super().__init__(UserMention)
 
     def render_user_mention(self, token):
-        template = '{space}<a href="/u/{target}">@{target}</a>'
+        template = '{space}<a href="/@{target}">@{target}</a>'
         space = token.target[0]
         target = token.target[1]
         inner = self.render_inner(token)
