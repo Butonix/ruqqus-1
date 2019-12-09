@@ -132,7 +132,7 @@ def submit_post(v):
                 
                 
     #Force https for submitted urls
-    if request.form.get("url")
+    if request.form.get("url"):
         new_url=ParseResult(scheme="https",
                             netloc=parsed_url.netloc,
                             path=parsed_url.path,
