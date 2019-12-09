@@ -15163,6 +15163,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 .post-title {
   font-size: 16px;
   font-weight: 500;
+  word-break: break-word;
 }
 
 @media (max-width: 991.98px) {
