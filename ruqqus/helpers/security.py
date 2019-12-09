@@ -8,7 +8,7 @@ def generate_hash(string):
 
     return hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
                     msg=msg,
-                    digestmod='hmac-md5'
+                    digestmod='md5'
                     ).hexdigest()
 
 def validate_hash(string, hashstr):
