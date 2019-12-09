@@ -1,6 +1,6 @@
 import bleach
 from bleach.linkifier import LinkifyFilter
-from urllib.parse import urlparse
+from urllib.parse import urlparse, ParseResult, urlunparse
 from functools import partial
 
 _allowed_tags=tags=['a',
