@@ -1,8 +1,7 @@
 import psycopg2
 from os import environ
-from ruqqus.__main__ import app
 
-conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
+conn = psycopg2.connect(os.environ.get("DATABASE_URL"))
 c=conn.cursor()
 
 '''
