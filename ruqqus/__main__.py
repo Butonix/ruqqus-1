@@ -21,7 +21,7 @@ app = Flask(__name__,
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("HEROKU_POSTGRESQL_TEAL_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
 app.config["SERVER_NAME"]=environ.get("domain", None)
 app.config["VERSION"]="0.1.0"

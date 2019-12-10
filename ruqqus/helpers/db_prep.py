@@ -1,7 +1,7 @@
 import psycopg2
 from os import environ
 
-conn = psycopg2.connect(environ.get("HEROKU_POSTGRESQL_TEAL_URL"))
+conn = psycopg2.connect(app.config['SQLALCHEMY_DATABASE_URI'])
 c=conn.cursor()
 
 '''
