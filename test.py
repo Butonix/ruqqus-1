@@ -1,1 +1,1 @@
-from ruqqus import __main__
+pass
