@@ -1,7 +1,7 @@
 import psycopg2
 from os import environ
 
-conn = psycopg2.connect(os.environ.get("DATABASE_URL"))
+conn = psycopg2.connect(environ.get("DATABASE_URL"))
 c=conn.cursor()
 
 '''
