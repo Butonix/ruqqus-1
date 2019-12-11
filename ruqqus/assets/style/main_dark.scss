@@ -167,9 +167,10 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     background-color: $light;
 }
 
-// 400, 401, 403, 404, 405, 500 error Pages
+// Hide sidebar on all error pages
 
-#error-400 .sidebar, #error-401 .sidebar, #error-404 .sidebar, #error-404 .sidebar, #error-405 .sidebar, #error-500 .sidebar {
+#error-400 .sidebar, #error-401 .sidebar, #error-403 .sidebar, #error-404 .sidebar, #error-405 .sidebar, #error-409 .sidebar,
+#error-410 .sidebar, #error-422 .sidebar, #error-429 .sidebar, #error-451 .sidebar, #error-500 .sidebar {
     display: none!important;
 }
 
@@ -1303,6 +1304,13 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     padding: 15px;
     margin-top: 1rem;
     //box-shadow: $box-shadow-sm;
+}
+
+#frontpage.toggle-card-view .posts .card:last-of-type, #userpage.toggle-card-view .posts .card:last-of-type, #search.toggle-card-view .posts .card:last-of-type {
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
 }
 
 #frontpage.toggle-card-view .posts .card:first-of-type, #userpage.toggle-card-view .posts .card:first-of-type, #search.toggle-card-view .posts .card:first-of-type {
@@ -2687,7 +2695,7 @@ body {
     padding: 0.25rem 0.75rem;
 }
 
-#thread, #submit, #error-401, #error-403, #error-404, #error-405, #error-500 {
+#thread, #submit, #error-401, #error-403, #error-404, #error-405, #error-409, #error-410, #error-422, #error-429, #error-451, #error-500 {
     background-color: $light;
 }
 
