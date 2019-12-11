@@ -60,7 +60,7 @@ def edit_post(pid, v):
 
     p.body = body
     p.body_html = body_html
-    p.edited_timestamp = int(time.time())
+    p.edited_utc = int(time.time())
 
     db.add(p)
     db.commit()
