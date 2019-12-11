@@ -220,6 +220,7 @@ class Submission(Base):
     def created_date(self):
         return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
 
+    @property
     def edited_date(self):
         return time.strftime("%d %B %Y", time.gmtime(self.edited_utc))
 
