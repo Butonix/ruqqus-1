@@ -38,7 +38,34 @@ def post_base36id(base36id, v=None):
     return post.rendered_page(v=v)
 
 
+@app.route("/edit_post/<pid>", methods=["POST"])
+@is_not_banned
+@validate_formkey
+def edit_post(pid, v):
+    p = db.query(Submission).filter_by(id=base36decode(pid)).first()
 
+    if not p:
+        abort(404)
+
+    if not p.author_id == v.id:
+        abort(403)
+
+    if p.is_banned:
+        abort(403)
+
+    body = request.form.get("body", "")
+    with UserRenderer() as renderer:
+        body_md = renderer.render(mistletoe.Document(body))
+    body_html = sanitize(body_md, linkgen=True)
+
+    p.body = body
+    p.body_html = body_html
+    p.edited_utc = int(time.time())
+
+    db.add(p)
+    db.commit()
+
+    return redirect(p.permalink)
 
 @app.route("/submit", methods=['POST'])
 @limiter.limit("6/minute")

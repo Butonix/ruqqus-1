@@ -22,6 +22,7 @@ class Submission(Base):
     author_id = Column(BigInteger, ForeignKey(User.id))
     title = Column(String(500), default=None)
     url = Column(String(500), default=None)
+    edited_utc = Column(BigInteger, default=0)
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
     is_deleted=Column(Boolean, default=False)
@@ -213,12 +214,42 @@ class Submission(Base):
         else:
             years=now.tm_year-ctd.tm_year
             return f"{years} year{'s' if years>1 else ''} ago"
+
+    @property
+    def edited_string(self):
+
+        age=int(time.time())-self.edited_utc
+
+        if age<60:
+            return "just now"
+        elif age<3600:
+            minutes=int(age/60)
+            return f"{minutes} minute{'s' if minutes>1 else ''} ago"
+        elif age<86400:
+            hours=int(age/3600)
+            return f"{hours} hour{'s' if hours>1 else ''} ago"
+        elif age<2592000:
+            days=int(age/86400)
+            return f"{days} day{'s' if days>1 else ''} ago"
+
+        now=time.gmtime()
+        ctd=time.gmtime(self.created_utc)
+        months=now.tm_mon-ctd.tm_mon+12*(now.tm_year-ctd.tm_year)
+
+        if months < 12:
+            return f"{months} month{'s' if months>1 else ''} ago"
+        else:
+            years=now.tm_year-ctd.tm_year
+            return f"{years} year{'s' if years>1 else ''} ago"
         
 
     @property
     def created_date(self):
-
         return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
+
+    @property
+    def edited_date(self):
+        return time.strftime("%d %B %Y", time.gmtime(self.edited_utc))
 
     @property
     def active_flags(self):
