@@ -22,6 +22,7 @@ class Submission(Base):
     author_id = Column(BigInteger, ForeignKey(User.id))
     title = Column(String(500), default=None)
     url = Column(String(500), default=None)
+    edited_utc = Column(BigInteger, default=0)
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
     is_deleted=Column(Boolean, default=False)
@@ -217,8 +218,10 @@ class Submission(Base):
 
     @property
     def created_date(self):
-
         return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
+
+    def edited_date(self):
+        return time.strftime("%d %B %Y", time.gmtime(self.edited_utc))
 
     @property
     def active_flags(self):
