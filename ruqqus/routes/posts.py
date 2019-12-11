@@ -65,7 +65,7 @@ def edit_post(pid, v):
     db.add(p)
     db.commit()
 
-    return redirect(f"{p.permalink}")
+    return redirect(p.permalink)
 
 @app.route("/submit", methods=['POST'])
 @limiter.limit("6/minute")
