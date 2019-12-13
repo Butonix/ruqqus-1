@@ -21,9 +21,22 @@ $('.comment-box').blur(function () {
 //Comment edit form
 
 toggleEdit=function(id){
-   comment=document.getElementById("comment-text-"+id);
-   form=document.getElementById("comment-edit-"+id);
+    comment=document.getElementById("comment-text-"+id);
+    form=document.getElementById("comment-edit-"+id);
+    box=document.getElementById('edit-box-comment-'+id);
 
-   comment.classList.toggle("d-none");
-   form.classList.toggle("d-none");
+    comment.classList.toggle("d-none");
+    form.classList.toggle("d-none");
+    autoExpand(box);
+}
+
+togglePostEdit=function(){
+
+    body=document.getElementById("post-body");
+    form=document.getElementById("edit-post-body");
+    box=document.getElementById("post-edit-box");
+
+    body.classList.toggle("d-none");
+    form.classList.toggle("d-none");
+    autoExpand(box);
 }
