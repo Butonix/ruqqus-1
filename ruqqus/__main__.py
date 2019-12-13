@@ -77,7 +77,7 @@ def before_request():
 
 def log_event(name, link):
 
-    text=f'> **{name}**\r{link}'
+    text=f'> **{name}**\r> {link}'
 
     url=os.environ.get("DISCORD_WEBHOOK")
     headers={"Content-Type":"application/json"}
