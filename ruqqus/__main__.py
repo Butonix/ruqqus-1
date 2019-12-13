@@ -77,7 +77,7 @@ def before_request():
 
 def log_event(name, link):
 
-    text=f'> **{name}**\n{link}'
+    text=f'> **{name}**\r{link}'
 
     url=os.environ.get("DISCORD_WEBHOOK")
     headers={"Content-Type":"application/json"}
@@ -96,7 +96,7 @@ def after_request(response):
 
     if request.method=="POST" and response.status_code in [301, 302] and request.path=="/signup":
         link=f'https://{app.config["SERVER_NAME"]}/@{request.form.get("username")}'
-        thread=threading.Thread(target=lambda:log_event(name="Signup attempt", link=link))
+        thread=threading.Thread(target=lambda:log_event(name="Account Signup", link=link))
         thread.start()
             
     return response
