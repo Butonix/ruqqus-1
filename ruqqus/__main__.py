@@ -94,7 +94,7 @@ def after_request(response):
                          )
 
     if request.method=="post" and response.status_code==302 and request.path=="/signup":
-        thread=threading.Thread(target=lambda:log_event(text="Signup attempt", link=f"/@{request.form.get('username')")
+        thread=threading.Thread(target=lambda:log_event(text="Signup attempt", link=f"/@{request.form.get('username')}")
                                 )
         thread.start()
             
