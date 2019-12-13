@@ -75,9 +75,9 @@ def before_request():
 
     db.rollback()
 
-def log_event(text, link):
+def log_event(name, link):
 
-    text=f'> **{text}**\nhttps://{app.config["SERVER_NAME"]}{link}'
+    text=f'> **{name}**\n{link}'
 
     url=os.environ.get("DISCORD_WEBHOOK")
     headers={"Content-Type":"application/json"}
@@ -93,8 +93,9 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, x-auth"
                          )
 
-    if request.method=="POST" and response.status_code==302 and request.path=="/signup":
-        thread=threading.Thread(target=lambda:log_event(text="Signup attempt", link=f"/@{request.form.get('username')}")
+    if request.method=="POST" and response.status_code in [301, 302] and request.path=="/signup":
+        link=f'https://{app.config["SERVER_NAME"]}/@{request.form.get("username")}'
+        thread=threading.Thread(target=lambda:log_event(name="Signup attempt", text=text))
                                 )
         thread.start()
             
