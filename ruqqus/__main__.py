@@ -93,7 +93,7 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, x-auth"
                          )
 
-    if request.method=="post" and response.status_code==302 and request.path=="/signup":
+    if request.method=="POST" and response.status_code==302 and request.path=="/signup":
         thread=threading.Thread(target=lambda:log_event(text="Signup attempt", link=f"/@{request.form.get('username')}")
                                 )
         thread.start()
