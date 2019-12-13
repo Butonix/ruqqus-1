@@ -85,7 +85,7 @@ def log_event(name, link):
           "content": text
           }
 
-    request.post(url, headers=headers, data=data)
+    requests.post(url, headers=headers, data=data)
     
 
 @app.after_request
