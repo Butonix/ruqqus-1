@@ -9,6 +9,8 @@ from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import *
+import threading
+import requests
 
 from werkzeug.contrib.fixers import ProxyFix
 
@@ -59,29 +61,44 @@ import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
 
-if __name__ == "__main__":
 
-    app.run(host="0.0.0.0", port="8000")
 
-else:
+#enforce https
+@app.before_request
+def before_request():
+    if request.url.startswith('http://') and "localhost" not in app.config["SERVER_NAME"]:
+        url = request.url.replace('http://', 'https://', 1)
+        return redirect(url, code=301)
 
-    #enforce https
-    @app.before_request
-    def before_request():
-        if request.url.startswith('http://') and "localhost" not in app.config["SERVER_NAME"]:
-            url = request.url.replace('http://', 'https://', 1)
-            return redirect(url, code=301)
+    if not session.get("session_id"):
+        session["session_id"]=secrets.token_hex(16)
 
-        if not session.get("session_id"):
-            session["session_id"]=secrets.token_hex(16)
+    db.rollback()
 
-        db.rollback()
+def log_event(text, link):
 
-    @app.after_request
-    def after_request(response):
-        response.headers.add('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, x-auth"
-                             )
-        return response
+    text=f'> **{text}**\nhttps://{app.config["SERVER_NAME"]}{link}'
+
+    url=os.environ.get("DISCORD_WEBHOOK")
+    headers={"Content-Type":"application/json"}
+    data={"username":"ruqqus",
+          "content": text
+          }
+
+    request.post(url, headers=headers, data=data)
+    
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, x-auth"
+                         )
+
+    if request.method=="post" and response.status_code==302 and request.path=="/signup":
+        thread=threading.Thread(target=lambda:log_event(text="Signup attempt", link=f"/@{request.form.get('username')")
+                                )
+        thread.start()
+            
+    return response
 
     
     
