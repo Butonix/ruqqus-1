@@ -50,6 +50,9 @@ def edit_post(pid, v):
     if not p.author_id == v.id:
         abort(403)
 
+    if p.is_banned:
+        abort(403)
+
     body = request.form.get("body", "")
     with UserRenderer() as renderer:
         body_md = renderer.render(mistletoe.Document(body))
