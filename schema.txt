@@ -1799,13 +1799,6 @@ ALTER TABLE ONLY public.votes
 
 
 --
--- Name: LANGUAGE plpgsql; Type: ACL; Schema: -; Owner: -
---
-
-GRANT ALL ON LANGUAGE plpgsql TO zywpqobigsbonl;
-
-
---
 -- PostgreSQL database dump complete
 --
 
