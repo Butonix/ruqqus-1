@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 11.5 (Ubuntu 11.5-3.pgdg16.04+1)
+-- Dumped from database version 11.6 (Ubuntu 11.6-1.pgdg16.04+1)
 -- Dumped by pg_dump version 12.1
 
 SET statement_timeout = 0;
@@ -34,7 +34,10 @@ CREATE TABLE public.comments (
     distinguish_level integer DEFAULT 0,
     edited_timestamp integer DEFAULT 0,
     is_deleted boolean DEFAULT false NOT NULL,
-    is_approved integer DEFAULT 0 NOT NULL
+    is_approved integer DEFAULT 0 NOT NULL,
+    ip character varying(64),
+    approved_utc integer DEFAULT 0,
+    ban_reason character varying(128) DEFAULT ''::character varying
 );
 
 
@@ -64,13 +67,18 @@ CREATE TABLE public.submissions (
     distinguish_level integer DEFAULT 0,
     created_str character varying(255),
     stickied boolean DEFAULT false,
-    body character varying(2000) DEFAULT ''::character varying,
-    body_html character varying(2200) DEFAULT ''::character varying,
+    body character varying(5000) DEFAULT ''::character varying,
+    body_html character varying(6000) DEFAULT ''::character varying,
     board_id integer,
     embed_url character varying(256) DEFAULT ''::character varying,
     is_deleted boolean DEFAULT false NOT NULL,
     domain_ref integer,
-    is_approved integer DEFAULT 0 NOT NULL
+    is_approved integer DEFAULT 0 NOT NULL,
+    ip character varying(64),
+    approved_utc integer DEFAULT 0,
+    original_board_id integer,
+    edited_utc integer,
+    ban_reason character varying(128) DEFAULT ''::character varying
 );
 
 
@@ -104,8 +112,10 @@ CREATE TABLE public.users (
     bio character varying(256) DEFAULT ''::character varying,
     bio_html character varying(300),
     real_id character varying,
-    ban_state integer DEFAULT 0,
-    referred_by integer
+    referred_by integer,
+    is_banned integer DEFAULT 0,
+    ban_reason character varying(128) DEFAULT ''::character varying,
+    ban_state integer DEFAULT 0
 );
 
 
@@ -170,7 +180,7 @@ CREATE FUNCTION public.downs(public.comments) RETURNS bigint
       FROM commentvotes
       LEFT JOIN users
       ON commentvotes.user_id = users.id
-      WHERE users.ban_state>-1
+      WHERE users.is_banned=0
         AND commentvotes.vote_type=-1
         AND commentvotes.comment_id=$1.id
       $_$;
@@ -187,7 +197,7 @@ CREATE FUNCTION public.downs(public.submissions) RETURNS bigint
       FROM votes
       LEFT JOIN users
       ON votes.user_id = users.id
-      WHERE users.ban_state>-1
+      WHERE users.is_banned=0
         AND votes.vote_type=-1
         AND votes.submission_id=$1.id
       $_$;
@@ -210,6 +220,52 @@ CREATE FUNCTION public.energy(public.users) RETURNS numeric
       ),
       0
       )
+    $_$;
+
+
+--
+-- Name: flag_count(public.comments); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.flag_count(public.comments) RETURNS bigint
+    LANGUAGE sql IMMUTABLE STRICT
+    AS $_$
+      SELECT COUNT(*)
+      FROM commentflags
+      JOIN users ON commentflags.user_id=users.id
+      WHERE comment_id=$1.id
+      AND users.is_banned=0
+      $_$;
+
+
+--
+-- Name: flag_count(public.submissions); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.flag_count(public.submissions) RETURNS bigint
+    LANGUAGE sql IMMUTABLE STRICT
+    AS $_$
+      SELECT COUNT(*)
+      FROM flags
+      JOIN users ON flags.user_id=users.id
+      WHERE post_id=$1.id
+      AND users.is_banned=0
+      $_$;
+
+
+--
+-- Name: follower_count(public.users); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.follower_count(public.users) RETURNS bigint
+    LANGUAGE sql IMMUTABLE STRICT
+    AS $_$
+     select count(*)
+     from follows
+     left join users
+     on follows.target_id=users.id
+     where follows.target_id=$1.id
+     and users.is_banned=0
     $_$;
 
 
@@ -238,6 +294,30 @@ $_$;
 
 
 --
+-- Name: over_18(public.comments); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.over_18(public.comments) RETURNS boolean
+    LANGUAGE sql IMMUTABLE STRICT
+    AS $_$
+      SELECT submissions.over_18
+      FROM submissions
+      WHERE submissions.id=$1.parent_submission
+      $_$;
+
+
+--
+-- Name: rank_activity(public.submissions); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.rank_activity(public.submissions) RETURNS double precision
+    LANGUAGE sql IMMUTABLE STRICT
+    AS $_$
+      SELECT CAST($1.comment_count AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(0.7))
+    $_$;
+
+
+--
 -- Name: rank_fiery(public.comments); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -255,7 +335,7 @@ CREATE FUNCTION public.rank_fiery(public.comments) RETURNS double precision
 CREATE FUNCTION public.rank_fiery(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT SQRT(CAST(($1.ups * $1.downs) AS float))/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.0/3.0))
+      SELECT SQRT(CAST(($1.ups * $1.downs) AS float))/((CAST(($1.age+5000) AS FLOAT)/100.0)^(0.7))
       $_$;
 
 
@@ -277,7 +357,7 @@ CREATE FUNCTION public.rank_hot(public.comments) RETURNS double precision
 CREATE FUNCTION public.rank_hot(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT CAST(($1.ups - $1.downs) AS float)/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.0/3.0))
+      SELECT CAST(($1.ups - $1.downs) AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(0.7))
       $_$;
 
 
@@ -290,7 +370,7 @@ CREATE FUNCTION public.referral_count(public.users) RETURNS bigint
     AS $_$
         SELECT COUNT(*)
         FROM USERS
-        WHERE users.ban_state>=0
+        WHERE users.is_banned=0
         AND users.referred_by=$1.id
     $_$;
 
@@ -345,6 +425,39 @@ CREATE FUNCTION public.splash(text) RETURNS SETOF public.images
 
 
 --
+-- Name: boards; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.boards (
+    id integer NOT NULL,
+    name character varying(64),
+    is_banned boolean,
+    created_utc integer,
+    description character varying(256) DEFAULT ''::character varying,
+    description_html character varying(256) DEFAULT ''::character varying,
+    over_18 boolean DEFAULT false,
+    fa_icon character varying(64),
+    creator_id integer
+);
+
+
+--
+-- Name: subscriber_count(public.boards); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.subscriber_count(public.boards) RETURNS bigint
+    LANGUAGE sql IMMUTABLE STRICT
+    AS $_$
+     select count(*)
+     from subscriptions
+     left join users
+     on subscriptions.user_id=users.id
+     where subscriptions.board_id=$1.id
+     and users.is_banned=0
+    $_$;
+
+
+--
 -- Name: ups(public.comments); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -355,7 +468,7 @@ CREATE FUNCTION public.ups(public.comments) RETURNS bigint
       FROM commentvotes
       LEFT JOIN users
       ON commentvotes.user_id = users.id
-      WHERE users.ban_state>-1
+      WHERE users.is_banned=0
         AND commentvotes.vote_type=1
         AND commentvotes.comment_id=$1.id
       $_$;
@@ -372,7 +485,7 @@ CREATE FUNCTION public.ups(public.submissions) RETURNS bigint
       FROM votes
       LEFT JOIN users
       ON votes.user_id = users.id
-      WHERE users.ban_state>-1
+      WHERE users.is_banned=0
         AND votes.vote_type=1
         AND votes.submission_id=$1.id
       $_$;
@@ -476,15 +589,36 @@ ALTER SEQUENCE public.badges_id_seq OWNED BY public.badges.id;
 
 
 --
--- Name: boards; Type: TABLE; Schema: public; Owner: -
+-- Name: bans; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.boards (
+CREATE TABLE public.bans (
     id integer NOT NULL,
-    board_name character varying(64),
-    is_banned boolean,
-    created_utc integer
+    user_id integer,
+    board_id integer,
+    created_utc integer,
+    banning_mod_id integer
 );
+
+
+--
+-- Name: bans_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.bans_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bans_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.bans_id_seq OWNED BY public.bans.id;
 
 
 --
@@ -636,7 +770,7 @@ CREATE TABLE public.domains (
     can_submit boolean DEFAULT false,
     can_comment boolean DEFAULT false,
     reason integer,
-    anon_free_embed boolean DEFAULT false NOT NULL
+    show_thumbnail boolean DEFAULT false
 );
 
 
@@ -693,6 +827,38 @@ ALTER SEQUENCE public.flags_id_seq OWNED BY public.flags.id;
 
 
 --
+-- Name: follows; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.follows (
+    id integer NOT NULL,
+    user_id integer,
+    target_id integer,
+    created_utc integer
+);
+
+
+--
+-- Name: follows_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.follows_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: follows_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.follows_id_seq OWNED BY public.follows.id;
+
+
+--
 -- Name: images_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -745,6 +911,39 @@ ALTER SEQUENCE public.ips_id_seq OWNED BY public.ips.id;
 
 
 --
+-- Name: mods; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mods (
+    id integer NOT NULL,
+    user_id integer,
+    board_id integer,
+    created_utc integer,
+    accepted boolean DEFAULT false
+);
+
+
+--
+-- Name: mods_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mods_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mods_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mods_id_seq OWNED BY public.mods.id;
+
+
+--
 -- Name: notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -765,6 +964,37 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 
 --
+-- Name: postrels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.postrels (
+    id integer NOT NULL,
+    post_id integer,
+    board_id integer
+);
+
+
+--
+-- Name: postrels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.postrels_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: postrels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.postrels_id_seq OWNED BY public.postrels.id;
+
+
+--
 -- Name: submissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -782,6 +1012,38 @@ CREATE SEQUENCE public.submissions_id_seq
 --
 
 ALTER SEQUENCE public.submissions_id_seq OWNED BY public.submissions.id;
+
+
+--
+-- Name: subscriptions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.subscriptions (
+    id integer NOT NULL,
+    user_id integer,
+    board_id integer,
+    created_utc integer NOT NULL
+);
+
+
+--
+-- Name: subscriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.subscriptions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: subscriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.subscriptions_id_seq OWNED BY public.subscriptions.id;
 
 
 --
@@ -892,6 +1154,13 @@ ALTER TABLE ONLY public.badges ALTER COLUMN id SET DEFAULT nextval('public.badge
 
 
 --
+-- Name: bans id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bans ALTER COLUMN id SET DEFAULT nextval('public.bans_id_seq'::regclass);
+
+
+--
 -- Name: boards id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -941,6 +1210,13 @@ ALTER TABLE ONLY public.flags ALTER COLUMN id SET DEFAULT nextval('public.flags_
 
 
 --
+-- Name: follows id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.follows ALTER COLUMN id SET DEFAULT nextval('public.follows_id_seq'::regclass);
+
+
+--
 -- Name: images id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -955,6 +1231,13 @@ ALTER TABLE ONLY public.ips ALTER COLUMN id SET DEFAULT nextval('public.ips_id_s
 
 
 --
+-- Name: mods id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mods ALTER COLUMN id SET DEFAULT nextval('public.mods_id_seq'::regclass);
+
+
+--
 -- Name: notifications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -962,10 +1245,24 @@ ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: postrels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.postrels ALTER COLUMN id SET DEFAULT nextval('public.postrels_id_seq'::regclass);
+
+
+--
 -- Name: submissions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.submissions ALTER COLUMN id SET DEFAULT nextval('public.submissions_id_seq'::regclass);
+
+
+--
+-- Name: subscriptions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subscriptions ALTER COLUMN id SET DEFAULT nextval('public.subscriptions_id_seq'::regclass);
 
 
 --
@@ -1019,6 +1316,14 @@ ALTER TABLE ONLY public.badge_defs
 
 ALTER TABLE ONLY public.badges
     ADD CONSTRAINT badges_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: bans bans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bans
+    ADD CONSTRAINT bans_pkey PRIMARY KEY (id);
 
 
 --
@@ -1086,11 +1391,27 @@ ALTER TABLE ONLY public.flags
 
 
 --
+-- Name: follows follows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.follows
+    ADD CONSTRAINT follows_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: ips ips_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.ips
     ADD CONSTRAINT ips_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mods mods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mods
+    ADD CONSTRAINT mods_pkey PRIMARY KEY (id);
 
 
 --
@@ -1102,11 +1423,27 @@ ALTER TABLE ONLY public.notifications
 
 
 --
+-- Name: postrels postrels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.postrels
+    ADD CONSTRAINT postrels_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: submissions submissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.submissions
     ADD CONSTRAINT submissions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: subscriptions subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subscriptions
+    ADD CONSTRAINT subscriptions_pkey PRIMARY KEY (id);
 
 
 --
@@ -1187,6 +1524,38 @@ ALTER TABLE ONLY public.badges
 
 ALTER TABLE ONLY public.badges
     ADD CONSTRAINT badges_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: bans bans_banning_mod_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bans
+    ADD CONSTRAINT bans_banning_mod_id_fkey FOREIGN KEY (banning_mod_id) REFERENCES public.users(id);
+
+
+--
+-- Name: bans bans_board_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bans
+    ADD CONSTRAINT bans_board_id_fkey FOREIGN KEY (board_id) REFERENCES public.boards(id);
+
+
+--
+-- Name: bans bans_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bans
+    ADD CONSTRAINT bans_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: boards boards_creator_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.boards
+    ADD CONSTRAINT boards_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES public.users(id);
 
 
 --
@@ -1278,11 +1647,43 @@ ALTER TABLE ONLY public.flags
 
 
 --
+-- Name: follows follows_target_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.follows
+    ADD CONSTRAINT follows_target_id_fkey FOREIGN KEY (target_id) REFERENCES public.users(id);
+
+
+--
+-- Name: follows follows_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.follows
+    ADD CONSTRAINT follows_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: ips ips_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.ips
     ADD CONSTRAINT ips_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: mods mods_board_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mods
+    ADD CONSTRAINT mods_board_id_fkey FOREIGN KEY (board_id) REFERENCES public.boards(id);
+
+
+--
+-- Name: mods mods_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mods
+    ADD CONSTRAINT mods_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -1299,6 +1700,22 @@ ALTER TABLE ONLY public.notifications
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: postrels postrels_board_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.postrels
+    ADD CONSTRAINT postrels_board_id_fkey FOREIGN KEY (board_id) REFERENCES public.boards(id);
+
+
+--
+-- Name: postrels postrels_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.postrels
+    ADD CONSTRAINT postrels_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.submissions(id);
 
 
 --
@@ -1323,6 +1740,30 @@ ALTER TABLE ONLY public.submissions
 
 ALTER TABLE ONLY public.submissions
     ADD CONSTRAINT submissions_domain_ref_fkey FOREIGN KEY (domain_ref) REFERENCES public.domains(id);
+
+
+--
+-- Name: submissions submissions_original_board_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.submissions
+    ADD CONSTRAINT submissions_original_board_id_fkey FOREIGN KEY (original_board_id) REFERENCES public.boards(id);
+
+
+--
+-- Name: subscriptions subscriptions_board_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subscriptions
+    ADD CONSTRAINT subscriptions_board_id_fkey FOREIGN KEY (board_id) REFERENCES public.boards(id);
+
+
+--
+-- Name: subscriptions subscriptions_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subscriptions
+    ADD CONSTRAINT subscriptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -1355,6 +1796,13 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.votes
     ADD CONSTRAINT votes_submission_id_fkey FOREIGN KEY (submission_id) REFERENCES public.submissions(id);
+
+
+--
+-- Name: LANGUAGE plpgsql; Type: ACL; Schema: -; Owner: -
+--
+
+GRANT ALL ON LANGUAGE plpgsql TO zywpqobigsbonl;
 
 
 --
