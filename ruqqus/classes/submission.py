@@ -1,7 +1,7 @@
 from flask import render_template, request, abort
 import time
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, deferred
 import math
 from urllib.parse import urlparse
 import random
