@@ -38,6 +38,7 @@ class Submission(Base):
     is_approved=Column(Integer, default=0)
     approved_utc=Column(Integer, default=0)
     board_id=Column(Integer, default=1)
+    original_board_id=Column(Integer, default=1)
 
 
     #These are virtual properties handled as postgres functions server-side
