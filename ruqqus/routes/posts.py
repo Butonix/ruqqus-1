@@ -1,4 +1,4 @@
-from urllib.parse import urlparse, ParseResult, urlunparse
+from urllib.parse import urlparse, ParseResult, urlunparse, urlencode
 import mistletoe
 from sqlalchemy import func
 from bs4 import BeautifulSoup
@@ -173,6 +173,16 @@ def submit_post(v):
     #now make new post
 
     body=request.form.get("body","")
+
+    #catch too-long body
+    if len(body)>2000:
+
+        return render_template("submit.html",
+                               v=v,
+                               error="2000 character limit for text body",
+                               title=title,
+                               text=body[0,1800],
+                               url=url), 400
 
     with UserRenderer() as renderer:
         body_md=renderer.render(mistletoe.Document(body))

@@ -101,7 +101,7 @@
                                     <label for="title">Post Title</label>
 
                                     <input class="form-control" id="title-register"
-                                    aria-describedby="titleHelpRegister" type="text" name="title" required>
+                                    aria-describedby="titleHelpRegister" type="text" name="title" value="{{ title if title else request.args.get('title','') }}" required>
                                     <small class="form-text text-muted">Title must be at least 5 characters long</small>
                                     <small id="titleHelpRegister"
                                     class="form-text font-weight-bold text-muted d-none mt-1">Minimum of 10
@@ -115,7 +115,7 @@
                                 <label for="URL" class="mt-3">URL</label>
 
                                 <input class="form-control" id="URL" aria-describedby="URLHelp" type="url"
-                                name="url" id="URL" placeholder="Optional if you have text">
+                                name="url" id="URL" placeholder="Optional if you have text" value="{{ url if url else request.args.get('url','') }}">
 
                                 <small class="form-text text-muted">If posting an image, please include .jpg, .png, etc at the end of the URL</small>
 
@@ -123,7 +123,7 @@
 
                                 <div class="input-group">
                                     <textarea form="submitform" class="form-control rounded" aria-label="With textarea"
-                                    placeholder="Optional if you have a link" rows="7" name="body"></textarea>
+                                    placeholder="Optional if you have a link" rows="7" name="body">{{ text if text else request.args.get('text','') }}</textarea>
                                     <div class="bg-light text-format d-none">
                                         <small class="format"><i class="fas fa-bold"></i></small>
                                         <small class="format"><i class="fas fa-italic"></i></small>
