@@ -38,7 +38,6 @@ app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL")
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 
 Markdown(app)
-
 cache=Cache(app)
 
 limit_url=environ.get("HEROKU_REDIS_PURPLE_URL", environ.get("HEROKU_REDIS_ORANGE_URL"))
@@ -73,6 +72,10 @@ def before_request():
 
     if not session.get("session_id"):
         session["session_id"]=secrets.token_hex(16)
+
+    #check ip ban
+    if db.query(ruqqus.classes.IP).filter_by(addr=request.remote_addr).first():
+        abort(403)
 
     db.rollback()
 

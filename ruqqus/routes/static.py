@@ -2,8 +2,8 @@ import time
 from ruqqus.helpers.wrappers import *
 from flask import *
 
-from ruqqus.__main__ import app, limiter
 from ruqqus.classes import *
+from ruqqus.__main__ import app, limiter
 
 #take care of misc pages that never really change (much)
 @app.route('/assets/<path:path>')
