@@ -13,7 +13,7 @@ class IP(Base):
 
 class Agent(Base):
 
-    __tablename__="ips"
+    __tablename__="useragents"
 
     id=Column(Integer, primary_key=True)
     kwd=Column(String(64))
