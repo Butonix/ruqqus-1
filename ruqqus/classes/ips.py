@@ -11,7 +11,7 @@ class IP(Base):
     reason=Column(String(256), default="")
     banned_by=Column(Boolean, ForeignKey("users.id"), default=True)
 
-class Agent(Base)
+class Agent(Base):
 
     __tablename__="ips"
 
