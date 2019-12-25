@@ -79,6 +79,9 @@ class User(Base):
             return None
 
         return db.query(User).filter_by(id=self.is_banned).first()
+
+    def has_badge(badgedef_id):
+        return self.badges.filter_by(badge_id=badgedef_id).first()
     
     def vote_status_on_post(self, post):
 
