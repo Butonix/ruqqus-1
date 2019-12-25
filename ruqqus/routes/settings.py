@@ -30,7 +30,7 @@ def settings_profile_post(v):
 
     if request.form.get("bio") != v.bio:
         updated=True
-        bio = request.form.get("bio")
+        bio = request.form.get("bio")[0:256]
         v.bio=bio
 
         v.bio_html=sanitize(bio)
