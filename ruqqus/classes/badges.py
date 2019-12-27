@@ -12,6 +12,7 @@ class BadgeDef(Base):
     name=Column(String(64))
     description=Column(String(64))
     icon=Column(String(64))
+    qualification_expr=Column(String(128))
 
     def __repr__(self):
 
