@@ -251,6 +251,13 @@ def sign_up_post(v):
     #get referral
     ref_id = int(request.form.get("referred_by", 0))
     ref_id=None if not ref_id else ref_id
+
+    #upgrade user badge
+    ref_user=db.query(User).filter_by(id=ref_id).first()
+    if not ref_user:
+        ref_id=None
+        
+    
         
     #make new user
     try:
@@ -275,6 +282,38 @@ def sign_up_post(v):
 
     db.add(beta_badge)
     db.commit()
+
+    #upgrade referring user's recruitment badge
+    if ref_user:
+        if ref_user.referral_count >=100:
+            badge=db.query(Badge).filter(Badge.user_id==ref_user.id,
+                                         Badge.badge_id.in_([10,11])).first()
+            if badge:
+                badge.badge_id=12
+                db.add(badge)
+                db.commit()
+        elif ref_user.referral_count >=10:
+            badge=db.query(Badge).filter_by(user_id=ref_user.id,
+                                            badge_id=10).first()
+            if badge:
+                badge.badge_id=11
+                db.add(badge)
+                db.commit()
+
+        else:
+            badge=db.query(Badge).filter_by(user_id=ref_user.id,
+                                            badge_id=10).first()
+            if not badge:
+                new_badge=Badge(user_id=ref_user.id,
+                                badge_id=10
+                                created_utc=int(time.time())
+                                )
+                db.add(new_badge)
+                db.commit()
+                
+                                      
+
+    #check alts
 
     check_for_alts(new_user.id)
 
