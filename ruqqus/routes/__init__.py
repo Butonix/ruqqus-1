@@ -6,7 +6,6 @@ from .flagging import *
 from .front import *
 from .login import *
 from .posts import *
-from .reddit_api import *
 from .search import *
 from .settings import *
 from .static import *
