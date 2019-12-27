@@ -60,7 +60,7 @@ class User(Base):
 
     @property
     def age(self):
-        return int(time.time())-self.created_utc
+        return int(time())-self.created_utc
 
     @property
     @cache.memoize(timeout=60)
