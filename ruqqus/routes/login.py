@@ -305,7 +305,7 @@ def sign_up_post(v):
                                             badge_id=10).first()
             if not badge:
                 new_badge=Badge(user_id=ref_user.id,
-                                badge_id=10
+                                badge_id=10,
                                 created_utc=int(time.time())
                                 )
                 db.add(new_badge)
