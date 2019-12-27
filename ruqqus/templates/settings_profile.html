@@ -88,63 +88,7 @@
             </div>
 
             {% endif %}
-
-            <h2 class="h5">Social Integrations</h2>
-
-            <p class="text-small text-muted">Manage 3rd-party apps connected to your Ruqqus profile.</p>
-
-            <div class="settings-section rounded">
-
-                <div class="d-lg-flex">
-
-                    {% if v.reddit_username %}
-
-                    <div class="title w-lg-25">
-                        <label for="usernameVerification">Reddit</label>
-                    </div>
-
-                    <div class="body w-lg-75">
-                       <form id="removeReddit" action="/api/del_reddit_name" method="post">
-
-                        <input type="hidden" name="formkey" value="{{ v.formkey }}">
-
-                        <button form="removeReddit" class="btn btn-light border ml-auto" id="usernameVerification" value="">
-                            <i class="fab fa-reddit-alien text-reddit align-middle mr-2"
-                            style="font-size: 16px"></i>
-                            <span class="align-middle">Unlink Reddit</span>
-                        </button>
-
-                    </form>
-
-                    <div class="text-small-extra text-muted mt-3">You are linked with Reddit profile <a target="blank"
-                        href="https://reddit.com/user/{{ v.reddit_username }}">/u/{{ v.reddit_username }}</a>.</div>
-
-                    </div>
-
-                    {% else %}
-
-                    <div class="title w-lg-25">
-                        <label for="usernameVerification">Reddit</label>
-                    </div>
-
-                    <div class="body w-lg-75">
-
-                       <a href="/api/get_reddit_auth">
-                        <button class="btn btn-secondary ml-auto" id="usernameVerification">
-                            <i class="fab fa-reddit-alien align-middle mr-2"
-                            style="font-size: 16px"></i>
-                            <span class="align-middle">Link Reddit</span>
-                        </button>
-                    </a>
-                    <div class="text-small-extra text-muted mt-3">You are not linked to a Reddit profile.</div>
-
-                </div>
-
-                {% endif %}
-
-            </div>
-
-        </div>
+            
 
         <form  id="profile-settings" action="/settings/profile" method="post">
 
