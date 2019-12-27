@@ -88,7 +88,7 @@ def login_post():
 
     #check self-setting badges
     badge_types = db.query(BadgeDef).filter(BadgeDef.qualification_expr.isnot(None)).all()
-    for badge in badges_types:
+    for badge in badge_types:
         if eval(badge.qualification_expr, {}, {'v':account}):
             if not account.has_badge(badge.id):
                 new_badge=Badge(user_id=account_id,
