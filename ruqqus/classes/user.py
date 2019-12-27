@@ -59,6 +59,10 @@ class User(Base):
         super().__init__(**kwargs)
 
     @property
+    def age(self):
+        return int(time.time())-self.created_utc
+
+    @property
     @cache.memoize(timeout=60)
     def karma(self):
         return self.energy
