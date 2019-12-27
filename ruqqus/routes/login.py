@@ -91,7 +91,7 @@ def login_post():
     for badge in badge_types:
         if eval(badge.qualification_expr, {}, {'v':account}):
             if not account.has_badge(badge.id):
-                new_badge=Badge(user_id=account_id,
+                new_badge=Badge(user_id=account.id,
                                 badge_id=badge.id,
                                 created_utc=int(time.time())
                                 )
