@@ -282,5 +282,50 @@ class User(Base):
         alts2=db.query(User).join(Alt, Alt.user1==User.id).filter(Alt.user2==self.id).all()
 
         return list(set([x for x in alts1]+[y for y in alts2]))
+    
+        def set_profile(self, file):
+
+        aws.upload_file(name=f"user/{self.username}/profile.png",
+                        file=file)
+        self.has_profile=True
+        db.add(self)
+        db.commit()
         
-        
+    def set_banner(self, file):
+
+        aws.upload_file(name=f"user/{self.username}/banner.png",
+                        file=file)
+
+        self.has_banner=True
+        db.add(self)
+        db.commit()
+
+    def del_profile(self):
+
+        aws.delete_file(name=f"user/{self.username}/profile.png")
+        self.has_profile=False
+        db.add(self)
+        db.commit()
+
+    def del_banner(self):
+
+        aws.delete_file(name=f"user/{self.username}/banner.png")
+        self.has_banner=False
+        db.add(self)
+        db.commit()
+
+    @property
+    def banner_url(self):
+
+        if self.has_banner:
+            return f"https://s3.us-east-2.amazonaws.com/i.ruqqus.com/user/{self.name}/banner.png"
+        else:
+            return "/assets/images/users/default-user-banner.jpg"
+
+    @property
+    def profile_url(self):
+
+        if self.has_profile:
+            return f"https://s3.us-east-2.amazonaws.com/i.ruqqus.com/user/{self.name}/profile.png"
+        else:
+            return "/assets/images/users/default-user-icon.png"
