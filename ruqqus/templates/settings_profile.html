@@ -61,11 +61,9 @@
 
         <div class="settings">
 
-            {% if v and v.referral_count==0 %}
-
             <h2 class="h5" name="referral">Referrals</h2>
 
-            <p class="text-small text-muted">Invite a friend to make a Ruqqus. Unlock dark mode!</p>
+            <p class="text-small text-muted">Invite a friend to make a Ruqqus.{% if v.referral_count==0 %} Unlock dark mode!{% endif %}</p>
 
             <div class="settings-section rounded">
 
@@ -86,8 +84,6 @@
                 </div>
 
             </div>
-
-            {% endif %}
             
 
         <form  id="profile-settings" action="/settings/profile" method="post">
