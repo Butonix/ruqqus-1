@@ -320,7 +320,7 @@ class User(Base):
         if self.has_banner:
             return f"https://s3.us-east-2.amazonaws.com/i.ruqqus.com/user/{self.name}/banner.png"
         else:
-            return "/assets/images/users/default-user-banner.jpg"
+            return "/assets/images/profiles/default-user-banner.jpg"
 
     @property
     def profile_url(self):
@@ -328,4 +328,4 @@ class User(Base):
         if self.has_profile:
             return f"https://s3.us-east-2.amazonaws.com/i.ruqqus.com/user/{self.name}/profile.png"
         else:
-            return "/assets/images/users/default-user-icon.png"
+            return "/assets/images/profiles/default-profile-pic.png"
