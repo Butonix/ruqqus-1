@@ -40,8 +40,6 @@ class User(Base):
     referred_by=Column(Integer, default=None)
     is_banned=Column(Integer, default=0)
     ban_reason=Column(String, default="")
-    has_profile=Column(Boolean, default=False)
-    has_banner=Column(Boolean, default=False)
 
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
