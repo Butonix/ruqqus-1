@@ -2798,30 +2798,36 @@ span.green {
 
 div.banned {
   background-color: $banned;
-}	  
+}
 
 div.deleted {
     background-color: $deleted;
-}  
-  
+}
+
 div.deleted.banned {
     background-color: $deletedandbanned
 }
-			
-.distinguish-admin .user-name, .distinguish-mod   .user-name {		
-  color: white;		
-  padding: 0px 3px 2px 3px;		
-  border-radius: 3px;		
-}		
-.distinguish-admin .user-name {		
-  background-color: $admin;		
-}		
-.distinguish-mod .user-name {		
-  background-color: $mod;		
-}		
-.distinguish-admin .user-name::before {		
- content: "[A] "		
-}		
-.distinguish-mod .user-name::before {		
- content: "[M] "		
+
+.distinguish-admin .user-name, .distinguish-mod   .user-name {
+  color: white;
+  padding: 0px 3px 2px 3px;
+  border-radius: 3px;
+}
+.distinguish-admin .user-name {
+  background-color: $admin;
+}
+.distinguish-mod .user-name {
+  background-color: $mod;
+}
+.distinguish-admin .user-name::before {
+ content: "[A] "
+}
+.distinguish-mod .user-name::before {
+ content: "[M] "
+}
+
+//Easter Egg additions
+.ruckus {
+  transition:182s;
+  transform:translateY(-50%) rotate(36000deg);
 }
