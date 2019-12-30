@@ -72,7 +72,7 @@ def before_request():
         abort(403)
 
     #check useragent ban
-    if db.query(ruqqus.classes.Agent).filter(ruqqus.classes.Agent.kwd.in_(request.headers.get('User-Agent').split())).first():
+    if db.query(ruqqus.classes.Agent).filter(ruqqus.classes.Agent.kwd.in_(request.headers.get('User-Agent','No Agent').split())).first():
         abort(403)
         
     if request.url.startswith('http://') and "localhost" not in app.config["SERVER_NAME"]:
