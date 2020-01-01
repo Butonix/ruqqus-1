@@ -3,3 +3,6 @@ Disallow: /api/*
 Disallow: /mod/*
 Disallow: /submit
 Disallow: /settings
+
+User-Agent: DotBot
+Disallow: *
