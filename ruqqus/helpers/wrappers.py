@@ -59,7 +59,10 @@ def get_logged_in_user():
             joinedload(User.moderates).joinedload(ModRelationship.board), #joinedload(Board.reports),
             joinedload(User.subscriptions).joinedload(Subscription.board)
         #    joinedload(User.notifications)
-            ).filter_by(id=uid).first()
+            ).filter_by(
+            id=uid,
+            is_deleted=False
+            ).first()
 
         if app.config["SERVER_NAME"]=="dev.ruqqus.com" and v.admin_level < 2 and not v.has_premium:
             x= (None, None)
