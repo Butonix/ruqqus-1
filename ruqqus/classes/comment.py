@@ -23,7 +23,7 @@ class Comment(Base):
     parent_submission = Column(BigInteger, ForeignKey(Submission.id))
     parent_fullname = Column(BigInteger) #this column is foreignkeyed to comment(id) but we can't do that yet as "comment" class isn't yet defined
     created_utc = Column(BigInteger, default=0)
-    edited_timestamp = Column(BigInteger, default=0)
+    edited_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
     body_html = Column(String)
     distinguish_level=Column(Integer, default=0)
@@ -184,10 +184,10 @@ class Comment(Base):
     @property
     def edited_string(self):
 
-        if not self.edited_timestamp:
+        if not self.edited_utc:
             return None
 
-        age=int(time.time()-self.edited_timestamp)
+        age=int(time.time()-self.edited_utc)
 
         if age<60:
             return "just now"
