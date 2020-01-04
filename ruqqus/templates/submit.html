@@ -8,9 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-{% block title %}
-    <title>Ruqqus - the open, free-speech social platform</title>
-{% endblock %}
+    <title>ruqqus - the open, free-speech social platform</title>
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
@@ -65,13 +63,27 @@
         <div class="col-12 col-md-7 h-100">
 
             <div class="mt-3 mt-md-0">
-                <h1 class="h3">{% block pagetitle %}Create a post{% endblock %}</h1>
+                <h1 class="h3">Create a post</h1>
             </div>
 
-            <p class="text-muted">{% block subtitle %}The first step to making a quality post is choosing an interesting title!{% endblock %}</p>
-
+            <p class="text-muted d-none d-md-block">The first step to making a quality post is choosing an interesting title!</p>
 
             <div class="bg-white border-md rounded">
+
+                <!-- Submission type toggle -->
+
+                <div class="flex-row tab-bar sticky d-none">
+
+                    <ul class="nav post-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">Text Post</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Link</a>
+                        </li>
+                    </ul>
+
+                </div>
 
 
                 <div class="row no-gutters">
@@ -79,8 +91,7 @@
                     <div class="col-12">
 
                         <div class="submission">
-			
-			{% block form %}
+
                             <form id="submitform" action="/submit" method="post">
 
                                 <div class="body">
@@ -90,9 +101,8 @@
                                     <label for="title">Post Title</label>
 
                                     <input class="form-control" id="title-register"
-                          aria-describedby="titleHelpRegister" type="text" name="title" placeholder="Required" value="{{ title if title else request.args.get('title','') }}" required>
-
-                                    <small class="form-text text-muted">Title must be at least 10 characters long</small>
+                                    aria-describedby="titleHelpRegister" type="text" name="title" value="{{ title if title else request.args.get('title','') }}" required>
+                                    <small class="form-text text-muted">Title must be at least 5 characters long</small>
                                     <small id="titleHelpRegister"
                                     class="form-text font-weight-bold text-muted d-none mt-1">Minimum of 10
                                     characters
@@ -105,7 +115,6 @@
                                 <label for="URL" class="mt-3">URL</label>
 
                                 <input class="form-control" id="URL" aria-describedby="URLHelp" type="url"
-
                                 name="url" id="URL" placeholder="Optional if you have text" value="{{ url if url else request.args.get('url','') }}">
 
                                 <small class="form-text text-muted">If posting an image, please include .jpg, .png, etc at the end of the URL</small>
@@ -114,8 +123,7 @@
 
                                 <div class="input-group">
                                     <textarea form="submitform" class="form-control rounded" aria-label="With textarea"
-
-                                    placeholder="Optional if you have a link. 2000 character maximum." rows="7" name="body">{{ text if text else request.args.get('text','') }}</textarea>
+                                    placeholder="Optional if you have a link" rows="7" name="body">{{ text if text else request.args.get('text','') }}</textarea>
                                     <div class="bg-light text-format d-none">
                                         <small class="format"><i class="fas fa-bold"></i></small>
                                         <small class="format"><i class="fas fa-italic"></i></small>
@@ -123,15 +131,10 @@
                                         <small class="format"><i class="fas fa-link"></i></small>
                                     </div>
                                 </div>
-				<label for="board" class="mt-3">Post in guild</label>
-				<input class="form-control" name="board" placeholder="+general" value="{{ request.args.get('guild','') }}">
 				{% if v.admin_level >=2 %}
 				<label for="username" class="mt-3">Post as</label>
-				<input type="text" class="form-control" name="username">
+				<input class="form-control" name="username">
 				{% endif %}
-
-				<label for="over_18" class="mt-3">NSFW?</label><br>
-				<input type="checkbox" name="over_18" value="true"> This post contains adult material.<br>
                             </div>
 
                             <div class="footer">
@@ -151,7 +154,6 @@
                             </div>
 
                         </form>
-			{% endblock %}
 
                     </div>
 

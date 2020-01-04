@@ -9,7 +9,7 @@ from ruqqus.helpers.wrappers import *
 from ruqqus.classes import *
 from ruqqus.__main__ import app, db
 
-def send_mail(to_address, subject, html, plaintext=None, files={}, from_address="Ruqqus <noreply@mail.ruqqus.com>"):
+def send_mail(to_address, subject, html, plaintext=None, from_address="Ruqqus <noreply@mail.ruqqus.com>"):
 
     url="https://api.mailgun.net/v3/mail.ruqqus.com/messages"
 
@@ -17,13 +17,12 @@ def send_mail(to_address, subject, html, plaintext=None, files={}, from_address=
           "to": [to_address],
           "subject": subject,
           "text": plaintext,
-          "html": html,
+          "html": html
           }
         
     return requests.post(url,
                          auth=("api",environ.get("MAILGUN_KEY")),
-                         data=data,
-                         files=[("attachment", (k, files[k])) for k in files]
+                         data=data
                          )
 
 

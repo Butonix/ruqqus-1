@@ -12,10 +12,8 @@ class BadgeDef(Base):
     name=Column(String(64))
     description=Column(String(64))
     icon=Column(String(64))
-    kind=Column(Integer, default=1)
-    rank=Column(Integer, default=1)
     qualification_expr=Column(String(128), default=None)
-    
+
     def __repr__(self):
 
         return f"<BadgeDef(badge_id={self.id})>"

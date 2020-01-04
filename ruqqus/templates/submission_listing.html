@@ -14,23 +14,20 @@
 
 <div id="post-{{ p.base36id }}" class="card{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
   <div class="d-flex flex-row-reverse flex-nowrap justify-content-end">
-    <div class="card-header bg-transparent border-0 d-none d-md-flex flex-row flex-nowrap p-0 {% if p.body_html %}mt-4 mb-auto {% elif p.embed_url %} mt-4 mb-auto {% elif p.thumb_url %} my-auto {% else %} my-auto {% endif %} pl-3 ml-auto">
-
-      {% if p.thumb_url %}
+    <div class="card-header bg-transparent border-0 d-flex flex-row flex-nowrap p-0 my-md-auto pl-3 ml-auto">
+      {% if p.url.endswith((".jpg",".png")) and p.domain_obj and p.domain_obj.show_thumbnail %}
       <div class="position-relative d-none d-md-block" style="z-index: 3;">
         <a href="{{ p.url }}">
           <div class="thumb-img-link-overlay">
             <i class="fas fa-external-link-alt text-lg d-block mb-1"></i>View full
           </div>
-          <img src="{{ p.thumb_url }}" class="post-img" alt="">
+          <img src="{{ p.url }}" class="post-img" alt="">
         </a>
       </div>
       <div class="d-block d-md-none" style="z-index: 3;">
-        <img src="{{ p.thumb_url }}" class="post-img" alt="" onclick="enlarge_thumb('post-{{ p.base36id }}')">
+        <img src="{{ p.url }}" class="post-img" alt="" onclick="enlarge_thumb('post-{{ p.base36id }}')">
       </div>
-
       {% endif %}
-
       <div class="dropdown show my-auto post-actions ml-4 d-none d-md-block">
         <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true"
         aria-expanded="false">
@@ -39,7 +36,7 @@
 
       <div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2"
       aria-labelledby="dropdownMoreLink">
-      <a href="javascript:void(0);" role="button" class="dropdown-item copy-link" data-clipboard-text="{{ p.permalink | full_link }}"><i class="fas fa-link"></i>Copy link</a>
+      <a href="javascript:void(0);" role="button" class="dropdown-item copy-link" data-clipboard-text="https://www.ruqqus.com{{ p.permalink }}"><i class="fas fa-link"></i>Copy link</a>
       <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
       {% if v and not v.id==p.author_id %}
       <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportPostModal" onclick="report_postModal('{{ p.base36id }}')"><i class="fas fa-flag"></i>Flag</a>
@@ -57,12 +54,11 @@
     </div>
   </div>
 </div>
-<div class="card-block text-left x-scroll-parent my-md-auto w-100">
-  <div class="post-meta text-left x-scroll d-block d-md-none mb-2">{% if p.board_id %}<span class="post-meta-guild"><a href="{{ p.board.permalink }}">+{{ p.board.name }}</a> <span>&#183;</span> </span> {% endif %}{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}{% if p.over_18 %}<span class="badge badge-danger">NSFW</span> &#183; {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by {% if p.author.title and p.author.title.is_before %}<span style="color:#{{ p.author.title.color }}">{{ p.author.title.text }}</span> {% endif %}<a href="{{ p.author.permalink }}" class="user-name">{{ p.author.username }}</a>{% if p.author.title and not p.author.title.is_before %}<span style="color:#{{ p.author.title.color }}">{{ p.author.title.text }}</span>{% endif %} {% if p.distinguish_level %}</span> <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>{% endif %}<span> &#183;</span> ({{ p.domain }}){% if v and v.admin_level >=3 and p.active_flags %} &#183; <span class="text-danger">{{ p.active_flags }} Flags</span>{% endif %}
+<div class="card-block text-left my-md-auto">
+  <div class="post-meta text-left d-block d-md-none mb-2">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {% if p.distinguish_level %}</span> <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>{% endif %} <span>&#183;</span> ({{ p.domain }}){% if v and v.admin_level >=3 and p.active_flags %} &#183; <span class="text-danger">{{ p.active_flags }} Flags</span>{% endif %}
   </div>
   <h5 class="card-title post-title text-left mb-0 mb-md-2"><a href="{{ p.permalink }}" class="stretched-link" onclick="">{{ p.title | safe }}</a></h5>
-  <div class="post-meta text-left d-none d-md-block">{% if p.board_id %}<span class="post-meta-guild font-weight-bold"><a href="{{ p.board.permalink }}" class="text-black"><img src="{{ p.board.profile_url }}" class="profile-pic-20 align-top mr-1">+{{ p.board.name }}
-  </a> <span>&#183;</span> </span>{% endif %}{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}{% if p.over_18 %}<span class="badge badge-danger">NSFW</span> &#183; {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by {% if p.author.title and p.author.title.is_before %}<span style="color:#{{ p.author.title.color }}">{{ p.author.title.text }}</span> {% endif %}<a href="{{ p.author.permalink }}" class="user-name">{{ p.author.username }}</a>{% if p.author.title and not p.author.title.is_before %}<span style="color:#{{ p.author.title.color }}">{{ p.author.title.text }}</span>{% endif %} {% if p.distinguish_level %}<i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>{% endif %}<span> &#183; </span>{{ p.comment_count }} comment{{ '' if p.comment_count==1 else 's' }}  <span>&#183;</span> ({{ p.domain }}){% if v and v.admin_level >=3 and p.active_flags %} &#183; <span class="text-danger">{{ p.active_flags }} Flags</span>{% endif %}
+  <div class="post-meta text-left d-none d-md-block">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a> {% if p.distinguish_level %}<i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>{% endif %}<span> &#183; </span>{{ p.comment_count }} comment{{ '' if p.comment_count==1 else 's' }}  <span>&#183;</span> ({{ p.domain }}){% if v and v.admin_level >=3 and p.active_flags %} &#183; <span class="text-danger">{{ p.active_flags }} Flags</span>{% endif %}
   </div>
 
   {% if p.body_html %}
@@ -73,21 +69,11 @@
   </div>
   {% endif %}
 
-  {% if p.embed_url %}
-  <div class="row justify-content-center embed-lg mt-3">
-    <div class="col">
-      <div class="embed-responsive embed-responsive-16by9">
-        <iframe src="{{ p.embed_url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
-    </div>
-  </div>
-  {% endif %}
-
 </div>
 
 <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
 
-<div class="voting d-none d-md-block {% if p.body_html %} mb-auto {% elif p.embed_url %} mb-auto {% else %} my-auto {% endif %} mr-3">
+<div class="voting d-none d-md-block mb-auto mr-3">
 
   {% if v %}
 
@@ -117,10 +103,20 @@
 
 </div>
 
-{% if p.thumb_url %}
+{% if p.url.endswith((".jpg",".png")) and p.domain_obj and p.domain_obj.show_thumbnail %}
 <div class="row post-img-lg mt-3">
   <div class="col px-0">
-    <a target="_blank" href="{{ p.permalink }}" rel="nofollow"><img src="{{ p.thumb_url }}" class="img-fluid" alt="post image"></a>
+    <a target="_blank" href="{{ p.permalink }}" rel="nofollow"><img src="{{ p.url }}" class="img-fluid" alt="post image"></a>
+  </div>
+</div>
+{% endif %}
+
+{% if p.embed_url %}
+<div class="row justify-content-center embed-lg mt-3">
+  <div class="col col-md-10 px-0 px-md-3">
+    <div class="embed-responsive embed-responsive-16by9">
+      <iframe src="{{ p.embed_url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
   </div>
 </div>
 {% endif %}
@@ -130,7 +126,7 @@
     <ul class="list-inline text-right d-flex">
       <li class="list-inline-item mr-auto"><a href="{{ p.permalink }}"><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
 
-      <li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link}}"><i class="fas fa-link"></i>Share</a></li>
+      <li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="https://www.ruqqus.com{{ p.permalink }}"><i class="fas fa-link"></i>Share</a></li>
       {% if v %}
       <li class="list-inline-item">
         <a href="#" data-toggle="modal" data-target="#actionsModal-{{ p.base36id }}">

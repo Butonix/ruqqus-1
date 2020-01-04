@@ -10,7 +10,6 @@ from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
-from ruqqus.helpers.alerts import *
 from ruqqus.mail import send_verification_email
 from secrets import token_hex
 
@@ -76,12 +75,7 @@ def login_post():
         time.sleep(random.uniform(0,2))
         return render_template("login.html", failed=True, i=random_image())
 
-    #check for reserved username
-    if account.reserved:
-        return redirect(account.permalink)
-
     #test password
-
     if not account.verifyPass(request.form.get("password")):
         time.sleep(random.uniform(0,2))
         return render_template("login.html", failed=True, i=random_image())
@@ -259,11 +253,8 @@ def sign_up_post(v):
     if not email:
         email=None
 
-    existing_account=db.query(User).filter(User.username.ilike(request.form.get("username"))).first()
-    if existing_account and existing_account.reserved:
-        return redirect(existing_account.permalink)
-
-    if existing_account or (email and db.query(User).filter(User.email.ilike(email)).first()):
+    if (db.query(User).filter(User.username.ilike(request.form.get("username"))).first()
+        or (email and db.query(User).filter(User.email.ilike(email)).first())):
         print(f"signup fail - {username } - email already exists")
         return new_signup("An account with that username or email already exists.")
     
@@ -290,8 +281,7 @@ def sign_up_post(v):
                       email=email,
                       created_utc=int(time.time()),
                       creation_ip=request.remote_addr,
-                      referred_by=ref_id,
-                      tos_agreed_utc=int(time.time())
+                      referred_by=ref_id
                  )
 
     except Exception as e:
@@ -303,30 +293,47 @@ def sign_up_post(v):
 
     #give a beta badge
     beta_badge=Badge(user_id=new_user.id,
-                        badge_id=6)
+                        badge_id=1)
 
     db.add(beta_badge)
     db.commit()
+
+    #upgrade referring user's recruitment badge
+    if ref_user:
+        if ref_user.referral_count >=100:
+            badge=db.query(Badge).filter(Badge.user_id==ref_user.id,
+                                         Badge.badge_id.in_([10,11])).first()
+            if badge:
+                badge.badge_id=12
+                db.add(badge)
+                db.commit()
+        elif ref_user.referral_count >=10:
+            badge=db.query(Badge).filter_by(user_id=ref_user.id,
+                                            badge_id=10).first()
+            if badge:
+                badge.badge_id=11
+                db.add(badge)
+                db.commit()
+
+        else:
+            badge=db.query(Badge).filter_by(user_id=ref_user.id,
+                                            badge_id=10).first()
+            if not badge:
+                new_badge=Badge(user_id=ref_user.id,
+                                badge_id=10,
+                                created_utc=int(time.time())
+                                )
+                db.add(new_badge)
+                db.commit()
                 
+                                      
+
     #check alts
 
     check_for_alts(new_user.id)
 
-    #send welcome/verify email
     if email:
         send_verification_email(new_user)
-
-    #send welcome message
-    text=f"""Welcome to Ruqqus, {new_user.username}.
-        \n\nWelcome to the next free-speech-first social platform. We're glad to have you here.
-        \n\nNow that you have an account, you can [join your favorite guilds](/browse), and follow your favorite users.
-        You're also welcome to say anything protected by the First Amendment here - even if you don't live in the United States.
-        And since we're committed to [open-source](https://github.com/ruqqus/ruqqus) transparency, your front page (and your posted content) won't be artificially manipulated.
-        \n\nReally, it's what social media should have been doing all along.
-        \n\nNow, go enjoy your digital freedom.
-        \n\n-The Ruqqus Team
-        """
-    send_notification(new_user, text)
 
     session["user_id"]=new_user.id
     session["session_id"]=token_hex(16)

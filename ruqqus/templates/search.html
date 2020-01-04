@@ -22,22 +22,20 @@
     var currentScrollPos = window.pageYOffset;
     if (prevScrollpos > currentScrollPos) {
       document.getElementById("fixed-bar-mobile").style.top = "49px";
-      document.getElementById("navbar").classList.remove("shadow");
     } 
     else if (currentScrollPos <= 125) {
       document.getElementById("fixed-bar-mobile").style.top = "49px";
-      document.getElementById("navbar").classList.remove("shadow");
     }
     else {
       document.getElementById("fixed-bar-mobile").style.top = "-49px";
       document.getElementById("dropdownMenuSortBy").classList.remove('show');
       document.getElementById("dropdownMenuFrom").classList.remove('show');
-      document.getElementById("navbar").classList.add("shadow");
     }
     prevScrollpos = currentScrollPos;
   }
 </script>
 {% endblock %}
+
 
 {% block content %}
 <!-- Search text -->
@@ -116,7 +114,7 @@
       <a class="nav-link{% if sort_method=="top" %} active{% endif %}" href="?sort=top&q={{ query | urlencode }}"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link{% if sort_method=="new" %} active{% endif %}" href="?sort=new&q={{ query | urlencode }}"><i class="fas fa-sparkles"></i>New</a> 
+      <a class="nav-link{% if sort_method=="new" %} active{% endif %}" href="?sort=new&q={{ query | urlencode }}"><i class="fas fa-asterisk"></i>New</a> 
     </li>
     <li class="nav-item">
       <a class="nav-link{% if sort_method=="fiery" %} active{% endif %}" href="?sort=fiery&q={{ query | urlencode }}"><i class="fas fa-bullhorn"></i>Disputed</a>

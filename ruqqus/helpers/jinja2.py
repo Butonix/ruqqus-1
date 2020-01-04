@@ -19,8 +19,3 @@ def total_users(x):
 def source_code(file_name):
 
     return open("/app/"+file_name, mode="r+").read()
-
-@app.template_filter("full_link")
-def full_link(url):
-
-    return f"https://{app.config['SERVER_NAME']}{url}"

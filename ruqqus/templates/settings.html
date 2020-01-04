@@ -28,11 +28,20 @@
   <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 
   <script>
+    function post(url, callback, errortext) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", url, true);
+      var form = new FormData()
+      form.append("formkey", "{{ v.formkey }}");
+      xhr.withCredentials=true;
+      xhr.onload=callback
+      xhr.onerror=function(){alert(errortext)}
+      xhr.send(form);
+    }
     function formkey() {
       return '{{ v.formkey }}';
     }
   </script>
-  <script src="/assets/js/post.js">
 
 </head>
 

@@ -1,1 +1,0 @@
-heroku pg:backups:url -a ruqqus | curl --url "$(</dev/stdin)" > ~/desktop/ruqqus_backup.txt

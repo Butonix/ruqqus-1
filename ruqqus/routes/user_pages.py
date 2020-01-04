@@ -9,10 +9,9 @@ from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.filters import *
 from ruqqus.helpers.embed import *
 from ruqqus.helpers.markdown import *
-from ruqqus.helpers.get import *
 from ruqqus.classes import *
 from flask import *
-from ruqqus.__main__ import app, db, cache
+from ruqqus.__main__ import app, db
 
 BAN_REASONS=['',
             "URL shorteners are not permitted."
@@ -77,58 +76,3 @@ def u_username_comments(username, v=None):
         return redirect(result.url)
         
     return result.rendered_comments_page(v=v)
-
-@app.route("/api/follow/<username>", methods=["POST"])
-@auth_required
-def follow_user(username, v):
-
-    target=get_user(username)
-
-    #check for existing follow
-    if db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first():
-        abort(409)
-
-    new_follow=Follow(user_id=v.id,
-                      target_id=target.id)
-
-    db.add(new_follow)
-    db.commit()
-
-    cache.delete_memoized(User.idlist, v, kind="user")
-
-    return "", 204
-
-
-@app.route("/api/unfollow/<username>", methods=["POST"])
-@auth_required
-def unfollow_user(username, v):
-
-    target=get_user(username)
-
-    #check for existing follow
-    follow= db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first()
-
-    if not follow:
-        abort(409)
-
-    db.delete(follow)
-    db.commit()
-
-    cache.delete_memoized(User.idlist, v, kind="user")
-
-    return "", 204
-
-
-@app.route("/api/agree_tos", methods=["POST"])
-@auth_required
-def api_agree_tos(v):
-
-    v.tos_agree_utc=int(time.time())
-
-    db.add(v)
-    db.commit()
-
-    return redirect("/help/terms")
-
-    
-

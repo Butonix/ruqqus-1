@@ -5,23 +5,21 @@ from sqlalchemy.orm import relationship, deferred
 import math
 from urllib.parse import urlparse
 import random
-from os import environ
-import requests
-from .mix_ins import *
+
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.lazy import lazy
-import ruqqus.helpers.aws as aws
 from ruqqus.__main__ import Base, db, cache
+from .user import User
 from .votes import Vote
 from .domains import Domain
 from .flags import Flag
 
-class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
- 
+class Submission(Base):
+
     __tablename__="submissions"
 
     id = Column(BigInteger, primary_key=True)
-    author_id = Column(BigInteger, ForeignKey("users.id"))
+    author_id = Column(BigInteger, ForeignKey(User.id))
     title = Column(String(500), default=None)
     url = Column(String(500), default=None)
     edited_utc = Column(BigInteger, default=0)
@@ -37,30 +35,20 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     embed_url=Column(String(256), default="")
     domain_ref=Column(Integer, ForeignKey("domains.id"))
     flags=relationship("Flag", lazy="dynamic", backref="submission")
-    is_approved=Column(Integer, ForeignKey("users.id"), default=0)
+    is_approved=Column(Integer, default=0)
     approved_utc=Column(Integer, default=0)
-    board_id=Column(Integer, ForeignKey("boards.id"), default=None)
-    original_board_id=Column(Integer, ForeignKey("boards.id"), default=None)
-    over_18=Column(Boolean, default=False)
-    original_board=relationship("Board", uselist=False, primaryjoin="Board.id==Submission.original_board_id")
-    ban_reason=Column(String(128), default="")
-    creation_ip=Column(String(64), default="")
-    mod_approved=Column(Integer, default=None)
-    is_image=Column(Boolean, default=False)
-    has_thumb=Column(Boolean, default=False)    
-
-    approved_by=relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id")
+    board_id=Column(Integer, default=1)
+    original_board_id=Column(Integer, default=1)
 
 
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
-
-    ups = deferred(Column(Integer, server_default=FetchedValue()))
-    downs=deferred(Column(Integer, server_default=FetchedValue()))
-    age=deferred(Column(Integer, server_default=FetchedValue()))
+    #appts = db.session.query(Appointment).from_statement(func.getopenappointments(current_user.id))
+    ups = Column(Integer, server_default=FetchedValue())
+    downs=Column(Integer, server_default=FetchedValue())
+    age=Column(Integer, server_default=FetchedValue())
     comment_count=Column(Integer, server_default=FetchedValue())
     flag_count=deferred(Column(Integer, server_default=FetchedValue()))
-    report_count=deferred(Column(Integer, server_default=FetchedValue()))
     score=Column(Float, server_default=FetchedValue())
     
 
@@ -70,7 +58,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             kwargs["created_utc"]=int(time.time())
             kwargs["created_str"]=time.strftime("%I:%M %p on %d %b %Y", time.gmtime(kwargs["created_utc"]))
 
-        kwargs["creation_ip"]=request.remote_addr
 
         super().__init__(*args, **kwargs)
         
@@ -95,6 +82,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         except ZeroDivisionError:
             return 0
 
+    @property
+    def base36id(self):
+        return base36encode(self.id)
 
     @property
     def fullname(self):
@@ -104,10 +94,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def permalink(self):
         return f"/post/{self.base36id}"
                                       
-    def rendered_page(self, comment=None, comment_info=None, v=None):
+    def rendered_page(self, comment=None, v=None):
 
         #check for banned
-        if self.is_banned or self.is_deleted:
+        if self.is_banned:
             if v and v.admin_level>=3:
                 template="submission.html"
             else:
@@ -120,17 +110,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         self.tree_comments(comment=comment)
         
         #return template
-        return render_template(template,
-                               v=v,
-                               p=self,
-                               sort_method=request.args.get("sort","Hot").capitalize(),
-                               linked_comment=comment,
-                               comment_info=comment_info)
+        return render_template(template, v=v, p=self, sort_method=request.args.get("sort","Hot").capitalize(), linked_comment=comment)
 
     @property
     @lazy
     def author(self):
-        return self.author_rel
+        return db.query(User).filter_by(id=self.author_id).first()
 
 
     @property
@@ -143,6 +128,13 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         if domain.startswith("www."):
             domain=domain.split("www.")[1]
         return domain
+    
+    @property
+    def score_fuzzed(self, k=0.01):
+        real=self.score
+        a=math.floor(real*(1-k))
+        b=math.ceil(real*(1+k))
+        return random.randint(a,b)        
 
     def tree_comments(self, comment=None):
 
@@ -195,6 +187,69 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
         
 
+        
+    @property
+    def age_string(self):
+
+        age=self.age
+
+        if age<60:
+            return "just now"
+        elif age<3600:
+            minutes=int(age/60)
+            return f"{minutes} minute{'s' if minutes>1 else ''} ago"
+        elif age<86400:
+            hours=int(age/3600)
+            return f"{hours} hour{'s' if hours>1 else ''} ago"
+        elif age<2592000:
+            days=int(age/86400)
+            return f"{days} day{'s' if days>1 else ''} ago"
+
+        now=time.gmtime()
+        ctd=time.gmtime(self.created_utc)
+        months=now.tm_mon-ctd.tm_mon+12*(now.tm_year-ctd.tm_year)
+
+        if months < 12:
+            return f"{months} month{'s' if months>1 else ''} ago"
+        else:
+            years=now.tm_year-ctd.tm_year
+            return f"{years} year{'s' if years>1 else ''} ago"
+
+    @property
+    def edited_string(self):
+
+        age=int(time.time())-self.edited_utc
+
+        if age<60:
+            return "just now"
+        elif age<3600:
+            minutes=int(age/60)
+            return f"{minutes} minute{'s' if minutes>1 else ''} ago"
+        elif age<86400:
+            hours=int(age/3600)
+            return f"{hours} hour{'s' if hours>1 else ''} ago"
+        elif age<2592000:
+            days=int(age/86400)
+            return f"{days} day{'s' if days>1 else ''} ago"
+
+        now=time.gmtime()
+        ctd=time.gmtime(self.created_utc)
+        months=now.tm_mon-ctd.tm_mon+12*(now.tm_year-ctd.tm_year)
+
+        if months < 12:
+            return f"{months} month{'s' if months>1 else ''} ago"
+        else:
+            years=now.tm_year-ctd.tm_year
+            return f"{years} year{'s' if years>1 else ''} ago"
+        
+
+    @property
+    def created_date(self):
+        return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
+
+    @property
+    def edited_date(self):
+        return time.strftime("%d %B %Y", time.gmtime(self.edited_utc))
 
     @property
     def active_flags(self):
@@ -203,44 +258,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         else:
             return self.flags.filter(Flag.created_utc>self.approved_utc).count()
 
-    def save_thumb(self):
-
-        url=f"https://api.apiflash.com/v1/urltoimage"
-        params={'access_key':environ.get("APIFLASH_KEY"),
-                'format':'png',
-                'height':1280,
-                'width':720,
-                'response_type':'image',
-                'thumbnail_width':300,
-                'url':self.url
-                }
-        x=requests.get(url, params=params)
-        print("have thumb from apiflash")
-
-        name=f"posts/{self.base36id}/thumb.png"
-        tempname=name.replace("/","_")
-
-        with open(tempname, "wb") as file:
-            for chunk in x.iter_content(1024):
-                file.write(chunk)
-
-        print("thumb saved")
-
-        aws.upload_from_file(name, tempname)
-        self.has_thumb=True
-        db.add(self)
-        db.commit()
-
-        print("thumb all success")
-        
-
     @property
-    #@lazy
-    def thumb_url(self):
-    
-        if self.has_thumb:
-            return f"https://s3.us-east-2.amazonaws.com/i.ruqqus.com/posts/{self.base36id}/thumb.png"
-        elif self.is_image:
-            return self.url
-        else:
-            return None
+    def approved_by(self):
+        return db.query(User).filter_by(id=self.is_approved).first()

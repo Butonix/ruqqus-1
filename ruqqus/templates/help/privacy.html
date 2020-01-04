@@ -1,34 +1,10 @@
-{% extends "docs_default.html" %}
+{% extends "default.html" %}
 
 {% block title %}
 <title>Ruqqus - The independent social platform</title>
 <meta name="description" content="Privacy Policy.">
 {% endblock %}
 
-<!-- Left Sidebar -->
-
-	{% block sidebarLeftblock %}
-
-	<div class="col sidebar d-none d-lg-block p-3">
-
-	<div class="sidebar-section">
-			<div class="title">Related articles</div>
-			<ul class="no-bullets pl-0 mb-0">
-				<li class="list-item">
-					<a href="/help/privacy">Privacy policy</a>
-				</li>
-				<li class="list-item">
-					<a href="/help/terms">Terms</a>
-				</li>
-				<li class="list-item">
-					<a href="/legal">Legal request</a> 
-				</li>
-			</ul>
-	</div>
-
-	</div>
-
-	{% endblock %}
 
 {% block content %}
 {% filter markdown %}

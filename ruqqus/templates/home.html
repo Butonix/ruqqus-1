@@ -22,55 +22,18 @@
     var currentScrollPos = window.pageYOffset;
     if (prevScrollpos > currentScrollPos) {
       document.getElementById("fixed-bar-mobile").style.top = "49px";
-      document.getElementById("navbar").classList.remove("shadow");
     } 
     else if (currentScrollPos <= 125) {
       document.getElementById("fixed-bar-mobile").style.top = "49px";
-      document.getElementById("navbar").classList.remove("shadow");
     }
     else {
       document.getElementById("fixed-bar-mobile").style.top = "-49px";
       document.getElementById("dropdownMenuSortBy").classList.remove('show');
       document.getElementById("dropdownMenuFrom").classList.remove('show');
-      document.getElementById("navbar").classList.add("shadow");
     }
     prevScrollpos = currentScrollPos;
   }
 </script>
-{% endblock %}
-
-{% block postNav %}
-<div class="container-fluid bg-white sticky">
-  <div class="row box-shadow-bottom">
-    <div class="col">
-      <div class="container">
-        <div class="row box-shadow-bottom bg-white">
-          <div class="col">
-            <div class="d-flex">
-              <ul class="nav post-nav mr-auto">
-                <li class="nav-item">
-                  <a class="nav-link{% if sort_method=="hot" %} active{% endif %}" href="?sort=hot"><i class="fas fa-fire"></i>Hot</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link{% if sort_method=="top" %} active{% endif %}" href="?sort=top"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link{% if sort_method=="new" %} active{% endif %}" href="?sort=new"><i class="fas fa-sparkles"></i>New</a> 
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link{% if sort_method=="disputed" %} active{% endif %}" href="?sort=disputed"><i class="fas fa-bullhorn"></i>Disputed</a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link {% if sort_method=="activity" %} active{% endif %}" href="?sort=activity"><i class="fas fa-comments"></i>Activity</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 {% endblock %}
 
 {% block PseudoSubmitForm %}
@@ -108,225 +71,246 @@
 </div>
 {% endblock %}
 
-<!-- Right Sidebar (hidden on devices smaller than "large") -->
+{% block sidebarLeftblock %}
 
-<div class="col sidebar text-left d-none d-lg-block pt-3">
-  {% block sidebarblock %}
-  <div class="sidebar-section sidebar-about">
-    <div class="body">
-      <div class="title">About Ruqqus</div>
-      <p>The best of Ruqqus, served from the most active guilds. Here you'll find the top posts across all of Ruqqus.</p>
-      <small><a href="/help/about">Learn more →</a></small>
-      {% if v and not v.is_banned %}
-      <div class="mt-3"><a class="btn btn-primary btn-block" href="/submit">Create post</a></div>
-      {% endif %}
-      {% if not v %}
-      <div class="mt-3"><a class="btn btn-primary btn-block" href="/login">Create post</a></div>
-      {% endif %}
-      {% if v and v.is_activated and v.karma >=100 %}
-      <div class="mt-3"><a href="/create_guild" class="btn btn-secondary btn-block">Start a Guild</a></div>
-      {% endif %}
-    </div>
+{% if not v %}
+<div class="sidebar-section sidebar-alert">
+<div class="body">
+    <img src="/assets/images/illustrations/ruckus.png" class="empty-state-img mb-3" alt="empty state">
+    <h5>Join the discourse.</h5>
+    <p class="text-small">Internet freedom of speech has a new home. Use your voice. Make a Ruqqus.</p>
+    <a href="/signup" class="btn btn-primary btn-block">Sign up</a>
   </div>
-  {% if trending_boards %}
-  <div class="sidebar-section sidebar-trending">
-    <div class="body">
-      <div class="title">Rising Guilds</div>
-      {% for entry in trending_boards[0:5] %}
-      <div class="d-flex justify-content-start trending-guild">
-        <div>
-          <a href="{{ entry[0].permalink }}">+{{ entry[0].name }}</a>
-          <div class="text-muted text-small font-weight-normal">{{ entry[1] }} Member{{ '' if entry[1]==1 else 's' }}</div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
+</div>
+{% endif %}
+
+{% if v %}
+
+<div class="sidebar-section sidebar-dashboard">
+  <div class="title">Dashboard</div>
+  <div class="body">
+    <ul class="no-bullets dashboard-list pl-0">
+      <li class="dashboard-item">
+        <a class="dashboard-link " href="{{ v.permalink }}"><i class="fas fa-feather-alt fa-width-rem"></i>Your posts</a>
+      </li>
+      <li class="dashboard-item">
+        <a class="dashboard-link " href="{{ v.permalink }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Your comments</a> 
+      </li>
+      <li class="dashboard-item">
+        <a class="dashboard-link " href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
+      </li>
+    </ul>
   </div>
-  {% endif %}
-  {% endblock %}
+</div>
 
+{% endif %}
 
-  {% block content %}
+<div class="sidebar-section sidebar-filters sticky-63">
+  <div class="title">Filter posts</div>
+  <div class="body">
+    <ul class="no-bullets filter-list pl-0">
+      <li class="filter-item">
+        <a class="filter-link {% if sort_method=="hot" %} active{% endif %}" href="/"><i class="fas fa-fire fa-width-rem"></i>Hot</a>
+      </li>
+      <li class="filter-item">
+        <a class="filter-link {% if sort_method=="top" %} active{% endif %}" href="/?sort=top"><i class="fas fa-arrow-alt-circle-up fa-width-rem"></i>Top</a>
+      </li>
+      <li class="filter-item">
+        <a class="filter-link {% if sort_method=="new" %} active{% endif %}" href="/?sort=new"><i class="fas fa-asterisk fa-width-rem"></i>New</a> 
+      </li>
+      <li class="filter-item">
+        <a class="filter-link {% if sort_method=="disputed" %} active{% endif %}" href="/?sort=disputed"><i class="fas fa-bullhorn fa-width-rem"></i>Disputed</a>
+      </li>
+      <li class="filter-item">
+        <a class="filter-link {% if sort_method=="activity" %} active{% endif %}" href="/?sort=activity"><i class="fas fa-comments fa-width-rem"></i>Activity</a>
+      </li>
+    </ul>
+  </div>
+</div>
 
-  <!-- View toggle visible only on large devices or larger -->
+{% endblock %}
 
-  <div class="flex-row p-3 justify-content-end d-none d-lg-flex">
+{% block content %}
 
-    <div>
-      <ul class="nav toggle-view">
-        <li class="nav-item">
-          <button class="btn nav-link pr-3 active" id="toggle-list-view-btn" onclick="toggle_list_view()">
-            <i class="fas fa-list"></i>List</button>
+<!-- View toggle visible only on large devices or larger -->
+
+<div class="flex-row p-3 justify-content-end d-none d-lg-flex">
+
+  <div>
+    <ul class="nav toggle-view">
+      <li class="nav-item">
+        <button class="btn nav-link pr-3 active" id="toggle-list-view-btn" onclick="toggle_list_view()">
+          <i class="fas fa-list"></i>List</button>
+        </li>
+        <li class="nav-item" style="">
+          <button class="btn nav-link" id="toggle-card-view-btn" onclick="toggle_card_view()">
+            <i class="fas fa-th-large"></i>Card</button>
           </li>
-          <li class="nav-item" style="">
-            <button class="btn nav-link" id="toggle-card-view-btn" onclick="toggle_card_view()">
-              <i class="fas fa-th-large"></i>Card</button>
-            </li>
-          </ul>
-        </div>
+        </ul>
+      </div>
 
-        <div class="post-filter pb-2 d-none">
+      <div class="post-filter pb-2 d-none">
+        <span>Sort By:</span>
+        <span class="dropdown">
+          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Time
+        </a>
+
+        <span class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="#">Day</a>
+          <a class="dropdown-item" href="#">Month</a>
+          <a class="dropdown-item" href="#">Year</a>
+          <a class="dropdown-item" href="#">All Time</a>
+        </span>
+      </span>
+
+    </div>
+
+  </div>
+
+<!-- Post filters bar visible only on medium devices or larger-->
+
+<div class="flex-row tab-bar sticky d-none">
+
+  <ul class="nav post-nav mr-auto">
+    <li class="nav-item">
+      <a class="nav-link{% if sort_method=="hot" %} active{% endif %}" href="/"><i class="fas fa-fire"></i>Hot</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link{% if sort_method=="top" %} active{% endif %}" href="/?sort=top"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link{% if sort_method=="new" %} active{% endif %}" href="/?sort=new"><i class="fas fa-asterisk"></i>New</a> 
+    </li>
+    <li class="nav-item">
+      <a class="nav-link{% if sort_method=="disputed" %} active{% endif %}" href="/?sort=disputed"><i class="fas fa-bullhorn"></i>Disputed</a>
+    </li>
+    <li class="nav-item ">
+      <a class="nav-link {% if sort_method=="activity" %} active{% endif %}" href="/?sort=activity"><i class="fas fa-comments"></i>Activity</a>
+    </li>
+  </ul>
+
+  <div>
+    <ul class="nav toggle-view ml-auto">
+      <li class="nav-item" style="">
+        <button class="btn nav-link active pr-3 pb-0 pl-0" id="toggle-list-view-btn" style="box-shadow: none;" onclick="toggle_list_view()">
+          <i class="fas fa-list"></i>List</button>
+        </li>
+        <li class="nav-item" style="">
+          <button class="btn nav-link p-0" style="box-shadow: none;" id="toggle-card-view-btn" onclick="toggle_card_view()">
+            <i class="fas fa-th-large"></i>Card</button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="post-filter pb-2 d-none">
+        <span>Sort By:</span>
+        <span class="dropdown">
+          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          Time
+        </a>
+
+        <span class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="#">Day</a>
+          <a class="dropdown-item" href="#">Month</a>
+          <a class="dropdown-item" href="#">Year</a>
+          <a class="dropdown-item" href="#">All Time</a>
+        </span>
+      </span>
+
+    </div>
+
+  </div>
+
+  <div class="row no-gutters">
+
+    <div class="col-12">
+
+      <div class="posts" id="posts">
+
+        {% include "submission_listing.html" %}
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row fixed-top bg-white border-md d-inline-flex d-lg-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 49px; transition: top 0.3s;">
+
+    <div class="col">
+
+      <div class="d-flex flex-row flex-nowrap justify-content-between">
+
+        <div class="post-filter">
           <span>Sort By:</span>
           <span class="dropdown">
-            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Time
-            </a>
+            <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">{{ sort_method.capitalize() }}</a>
 
-            <span class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMenuLink">
-              <a class="dropdown-item" href="#">Day</a>
-              <a class="dropdown-item" href="#">Month</a>
-              <a class="dropdown-item" href="#">Year</a>
-              <a class="dropdown-item" href="#">All Time</a>
+            <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
+              <a class="dropdown-item" href="?sort=top">Top</a>
+              <a class="dropdown-item" href="?sort=new">New</a>
+              <a class="dropdown-item" href="?sort=disputed">Disputed</a>
+              <a class="dropdown-item" href="?sort=activity">Activity</a>
             </span>
           </span>
 
         </div>
 
-      </div>
-
-      <!-- Post filters bar visible only on medium devices or larger-->
-
-      <div class="flex-row tab-bar sticky d-none">
-
-        <ul class="nav post-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link{% if sort_method=="hot" %} active{% endif %}" href="?sort=hot"><i class="fas fa-fire"></i>Hot</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link{% if sort_method=="top" %} active{% endif %}" href="?sort=top"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link{% if sort_method=="new" %} active{% endif %}" href="?sort=new"><i class="fas fa-sparkles"></i>New</a> 
-          </li>
-          <li class="nav-item">
-            <a class="nav-link{% if sort_method=="disputed" %} active{% endif %}" href="?sort=disputed"><i class="fas fa-bullhorn"></i>Disputed</a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link {% if sort_method=="activity" %} active{% endif %}" href="?sort=activity"><i class="fas fa-comments"></i>Activity</a>
-          </li>
-        </ul>
-
         <div>
           <ul class="nav toggle-view ml-auto">
             <li class="nav-item" style="">
-              <button class="btn nav-link active pr-3 pb-0 pl-0" id="toggle-list-view-btn" style="box-shadow: none;" onclick="toggle_list_view()">
-                <i class="fas fa-list"></i>List</button>
+              <button class="btn nav-link active pr-3 pb-0 pl-0" id="toggle-list-view-btn-sm" style="box-shadow: none;" onclick="toggle_list_view_sm()">
+                <i class="fas fa-list" data-toggle="tooltip"></i>List</button>
               </li>
               <li class="nav-item" style="">
-                <button class="btn nav-link p-0" style="box-shadow: none;" id="toggle-card-view-btn" onclick="toggle_card_view()">
+                <button class="btn nav-link p-0" id="toggle-card-view-btn-sm" style="box-shadow: none;" onclick="toggle_card_view_sm()">
                   <i class="fas fa-th-large"></i>Card</button>
                 </li>
               </ul>
             </div>
 
-            <div class="post-filter pb-2 d-none">
-              <span>Sort By:</span>
+            <div class="post-filter d-none">
+              <span>From:</span>
               <span class="dropdown">
-                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                Time
-              </a>
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">Time</a>
 
-              <span class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="#">Day</a>
-                <a class="dropdown-item" href="#">Month</a>
-                <a class="dropdown-item" href="#">Year</a>
-                <a class="dropdown-item" href="#">All Time</a>
-              </span>
-            </span>
-
-          </div>
-
-        </div>
-
-        <div class="row no-gutters">
-
-          <div class="col-12">
-
-            <div class="posts" id="posts">
-
-              {% include "submission_listing.html" %}
-
-            </div>
-          </div>
-        </div>
-
-        <div class="row fixed-top bg-white border-top d-inline-flex d-lg-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 49px; transition: top 0.3s;">
-
-          <div class="col">
-
-            <div class="d-flex flex-row flex-nowrap justify-content-between">
-
-              <div class="post-filter">
-                <span>Sort By:</span>
-                <span class="dropdown">
-                  <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false">{{ sort_method.capitalize() }}</a>
-
-                  <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
-                    <a class="dropdown-item" href="?sort=top">Top</a>
-                    <a class="dropdown-item" href="?sort=new">New</a>
-                    <a class="dropdown-item" href="?sort=disputed">Disputed</a>
-                    <a class="dropdown-item" href="?sort=activity">Activity</a>
-                  </span>
+                <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
+                  <a class="dropdown-item" href="#">Past Day</a>
+                  <a class="dropdown-item" href="#">Past Month</a>
+                  <a class="dropdown-item" href="#">Past Year</a>
+                  <a class="dropdown-item" href="#">All Time</a>
                 </span>
-
-              </div>
-
-              <div>
-                <ul class="nav toggle-view ml-auto">
-                  <li class="nav-item" style="">
-                    <button class="btn nav-link active pr-3 pb-0 pl-0" id="toggle-list-view-btn-sm" style="box-shadow: none;" onclick="toggle_list_view_sm()">
-                      <i class="fas fa-list" data-toggle="tooltip"></i>List</button>
-                    </li>
-                    <li class="nav-item" style="">
-                      <button class="btn nav-link p-0" id="toggle-card-view-btn-sm" style="box-shadow: none;" onclick="toggle_card_view_sm()">
-                        <i class="fas fa-th-large"></i>Card</button>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div class="post-filter d-none">
-                    <span>From:</span>
-                    <span class="dropdown">
-                      <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false">Time</a>
-
-                      <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
-                        <a class="dropdown-item" href="#">Past Day</a>
-                        <a class="dropdown-item" href="#">Past Month</a>
-                        <a class="dropdown-item" href="#">Past Year</a>
-                        <a class="dropdown-item" href="#">All Time</a>
-                      </span>
-                    </span>
-
-                  </div>
-
-                </div>
-
-              </div>
+              </span>
 
             </div>
 
-            {% endblock %}
+          </div>
 
-            {% block pagenav %}
-            <nav aria-label="Page navigation">
-              <ul class="pagination pagination-sm mb-0">
-                {% if page>1 %}
-                <li class="page-item">
-                  <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page-1 }}" tabindex="-1">Prev</a></small>
-                </li>
-                {% else %}
-                <li class="page-item disabled"><span class="page-link">Prev</span></li>
-                {% endif %}
-                {% if next_exists %}
-                <li class="page-item">
-                  <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page+1 }}">Next</a></small>
-                </li>
-                {% else %}
-                <li class="page-item disabled"><span class="page-link">Next</span></li>
-                {% endif %}
-              </ul>
-            </nav>
-            {% endblock %}
+        </div>
+
+      </div>
+
+      {% endblock %}
+
+      {% block pagenav %}
+      <nav aria-label="Page navigation">
+        <ul class="pagination pagination-sm mb-0">
+          {% if page>1 %}
+          <li class="page-item">
+            <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page-1 }}" tabindex="-1">Prev</a></small>
+          </li>
+          {% else %}
+          <li class="page-item disabled"><span class="page-link">Prev</span></li>
+          {% endif %}
+          {% if next_exists %}
+          <li class="page-item">
+            <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page+1 }}">Next</a></small>
+          </li>
+          {% else %}
+          <li class="page-item disabled"><span class="page-link">Next</span></li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endblock %}

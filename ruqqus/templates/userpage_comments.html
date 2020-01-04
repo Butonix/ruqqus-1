@@ -17,83 +17,63 @@
 </div>
 {% endif %}
 
-{% if v %}
+{% if v and v.id == u.id %}
 
 <div class="sidebar-section sidebar-dashboard">
   <div class="title">Dashboard</div>
   <div class="body">
-    <ul class="no-bullets dashboard-list pl-0">
-      <li class="dashboard-item">
-        <a class="dashboard-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem"></i>Profile</a>
+    <ul class="no-bullets filter-list pl-0">
+      <li class="filter-item">
+        <a class="filter-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem"></i>Profile</a>
       </li>
-      <li class="dashboard-item">
-        <a class="dashboard-link" href="{{ v.permalink }}/posts"><i class="fas fa-feather-alt fa-width-rem"></i>Your posts</a>
+      <li class="filter-item">
+        <a class="filter-link " href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
       </li>
-      <li class="dashboard-item">
-        <a class="dashboard-link" href="{{ v.permalink }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Your comments</a> 
-      </li>
-      <li class="dashboard-item">
-        <a class="dashboard-link" href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
-      </li>
-	<li class="dashboard-item">
-	<a class="dashboard-link" href="/guilds"><i class="fas fa-university fa-width-rem"></i>Your guilds</a>
-	</li>
-	<li class="dashboard-item">
-	<a class="dashboard-link" href="/subscriptions"><i class="fas fa-user-friends fa-width-rem"></i>Your subscriptions</a>
-	</li>
     </ul>
   </div>
 </div>
 
 {% endif %}
 
-{% if not(v and v.id==u.id) %}
+{% if v and v.id != u.id %}
+
+<div class="sidebar-section sidebar-dashboard">
+  <div class="title">Dashboard</div>
+  <div class="body">
+    <ul class="no-bullets filter-list pl-0">
+      <li class="filter-item">
+        <a class="filter-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem"></i>Profile</a>
+      </li>
+      <li class="filter-item">
+        <a class="filter-link " href="{{ v.permalink }}/posts"><i class="fas fa-feather-alt fa-width-rem"></i>Your posts</a>
+      </li>
+      <li class="filter-item">
+        <a class="filter-link " href="{{ v.permalink }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Your comments</a> 
+      </li>
+      <li class="filter-item">
+        <a class="filter-link " href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{% endif %}
+
 <div class="sidebar-section sidebar-filters sticky-63">
   <div class="title">Viewing</div>
   <div class="body">
     <ul class="no-bullets filter-list pl-0">
       <li class="filter-item">
-        <a class="filter-link" href="{{ u.permalink }}"><i class="fas fa-feather-alt fa-width-rem"></i>Posts</a>
+        <a class="filter-link" href="/u/{{ u.username }}"><i class="fas fa-feather-alt fa-width-rem"></i>Posts</a>
       </li>
       <li class="filter-item">
-        <a class="filter-link active" href="{{ u.permalink }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Comments</a>
+        <a class="filter-link active" href="/u/{{ u.username }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Comments</a>
       </li>
     </ul>
   </div>
 </div>
-{% endif %}
-{% endblock %}
 
-  {% block postNav %}
-  <div class="container-fluid bg-white sticky">
-    <div class="row border-bottom">
-      <div class="col">
-        <div class="container">
-          <div class="row bg-white">
-            <div class="col">
-              <div class="d-flex">
-                <ul class="nav post-nav mr-auto">
-                  <li class="nav-item">
-                    <a class="nav-link text-center" href="/u/{{ u.username}}">
-                      <div class="text-small text-muted">Posts</div>
-                      <span class="h5 font-weight-bold">{{ u.post_count }}</span>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link text-center active" href="/u/{{ u.username}}/comments">
-                      <div class="text-small text-muted">Comments</div>
-                      <span class="h5 font-weight-bold">{{ u.comment_count }}</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  {% endblock %}
+{% endblock %}
 
 {% block content %}
 
@@ -221,16 +201,26 @@
   </div>
 </div>
 
+
+<div class="flex-row tab-bar sticky d-none">
+
+  <ul class="nav post-nav mr-auto">
+    <li class="nav-item">
+      <a class="nav-link" href="/u/{{ u.username}}"><i class="fas fa-feather-alt" aria-hidden="true"></i>Posts</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="/u/{{ u.username}}/comments"><i class="fas fa-comment-dots" aria-hidden="true"></i>Comments</a>
+    </li>
+
+  </ul>
+
+</div>
+
 <div class="row no-gutters">
 
   <div class="col">
 
     {% if u.comment_count>=1 %}
-    <div class="posts p-3">
-     {% for c in listing %}
-     {{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
-     {% endfor%}
-   </div>
     {% else %}
     <div class="text-center py-5">
 
@@ -246,6 +236,13 @@
       {% endif %}
     </div>
     {% endif %}
+
+    <div class="posts p-3">
+     {% for c in listing %}
+     {{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
+     {% endfor%}
+
+   </div>
  </div>
 </div>
 {% endblock %}
