@@ -1,52 +1,85 @@
-{% extends "default.html" %}
+{% extends "docs_default.html" %}
 
 {% block title %}
 <title>Ruqqus - The independent social platform</title>
 <meta name="description" content="Terms of Service.">
 {% endblock %}
 
+<!-- Left Sidebar -->
+
+	{% block sidebarLeftblock %}
+
+	<div class="col sidebar d-none d-lg-block p-3">
+
+	<div class="sidebar-section">
+			<div class="title">Related articles</div>
+			<ul class="no-bullets pl-0 mb-0">
+				<li class="list-item">
+					<a href="/help/privacy">Privacy policy</a>
+				</li>
+				<li class="list-item">
+					<a href="/help/rules">Ruqqus content Policy</a>
+				</li>
+				<li class="list-item">
+					<a href="/legal">Legal request</a> 
+				</li>
+			</ul>
+	</div>
+
+	</div>
+
+{% endblock %}
+
+
+
+
 {% block content %}
+<h1 class="article-title">Terms of Service</h1>
 {% filter markdown %}
 
-# Terms of Service
-
-By using Ruqqus you agree to these terms of service.
+These terms of service are between Ruqqus LLC ("Ruqqus") and you, regarding the use of the social platform ruqqus.com and its associated image hosting service i.ruqqus.com.
 
 Content on this page displayed in blockquotes is not officially part of the terms of service.
 
 ## Conduct and content
 
-You will follow the content policy [here](/about/rules). 
+You agree to follow the content policy [here](/help/rules). 
 
 ## Legal
 
 You warrant that you are at least 13 years old. You warrant that you are at least 18 years old, if you indicate as such in your user settings.
 
-You will not hold Ruqqus liable for damages arising from: the use of Ruqqus, the failure of Ruqqus, administrative actions by Ruqqus staff, or the unauthorized access of a third party to your account.
+You will not hold Ruqqus liable for damages arising from: the use of ruqqus.com, the failure of ruqqus.com, administrative actions by Ruqqus staff, or the unauthorized access of a third party to your ruqqus.com account.
 
-You will not hold Ruqqus liable for damages arising from a loss or breach of Ruqqus data.
+You will not hold Ruqqus liable for damages arising from a loss or breach of ruqqus.com data.
 
-You accept full liability for all content you upload to, or embed within, Ruqqus, and indemnify Ruqqus from all such liability.
+You accept full liability for all content you upload to, or embed within, ruqqus.com, and indemnify Ruqqus from all such liability.
 
-> You are responsible for everything you do with your Ruqqus account. Don't use Ruqqus to store important data, and don't let anyone else into your Ruqqus account.
+> You are responsible for everything you do with your ruqqus.com account. Don't use ruqqus.com to store important data, and don't let anyone else into your ruqqus.com account.
+
+## Account access
+
+You will not permit third parties to access ruqqus.com with your account.
 
 ## Intellectual Property
 
-You grant Ruqqus a permanent, transferrable, and irrevocable license to store, modify, copy, and distribute all content that you submit to Ruqqus.
+You grant Ruqqus a permanent, worldwide, and irrevocable license to store, modify, copy, and distribute all content that you submit to Ruqqus. Additionally, you grant Ruqqus a permanent, worldwide, and irrevocable license to sublicense these rights to Ruqqus's service providers.
 
 You retain all other intellectual property rights, including ownership.
 
-> We need to be able to store, copy, and distribute your content, because that's just how websites work. We also need to be able to modify it for security purposes (Usually, though, we won't).
+> We need to be able to store, copy, and distribute your content, because that's just how websites like ruqqus.com work. We also need to be able to modify it for security and formatting purposes.
 
 ## Enforcement
 
-Ruqqus retains sole discretion in all determinations regarding content policy violations.
+Ruqqus retains sole discretion in all determinations regarding content policy and terms of service violations.
 
-Ruqqus reserves the right to remove content that violates content policy, and to deactivate accounts responsible for such violations.
-
-##GDPR
-
-Ruqqus is operated entirely within the United States and is not subject to European law. That said, you can see the data associated with your user account [here](/my_info).
+Ruqqus reserves the right to remove content that we deem to violate content policy or the terms of service, and to deactivate accounts responsible for such violations.
 
 {% endfilter %}
+
+{% if v and v.tos_agreed_utc < cutoff %}
+<a id="agreebox" href="javascript:void(0)" class="btn btn-primary" onclick="post('/api/agree_tos', callback=function(){window.history.back()})">I agree.</a>
+
+{% endif %}
 {% endblock %}
+

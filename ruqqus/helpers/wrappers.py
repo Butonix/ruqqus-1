@@ -4,6 +4,7 @@ import requests
 
 from ruqqus.__main__ import Base, db
 from ruqqus.classes import *
+from .get import *
 
 
 #Wrappers
@@ -14,6 +15,9 @@ def auth_desired(f):
 
         if "user_id" in session:
             v=db.query(User).filter_by(id=session["user_id"]).first()
+            nonce=session.get("login_nonce",0)
+            if nonce<v.login_nonce:
+                v=None
             #if v:
                 #v.update_ip(request.remote_addr)
         else:
@@ -31,6 +35,9 @@ def auth_required(f):
 
         if "user_id" in session:
             v=db.query(User).filter_by(id=session["user_id"]).first()
+            nonce=session.get("login_nonce",0)
+            if nonce<v.login_nonce:
+                abort(401)
             
             if not v:
                 abort(401)
@@ -51,6 +58,9 @@ def is_not_banned(f):
 
         if "user_id" in session:
             v=db.query(User).filter_by(id=session["user_id"]).first()
+            nonce=session.get("login_nonce",0)
+            if nonce<v.login_nonce:
+                abort(401)
             
             if not v:
                 abort(401)
@@ -67,11 +77,53 @@ def is_not_banned(f):
 
     wrapper.__name__=f.__name__
     return wrapper
-    
+
+#Require tos agreement
+def tos_agreed(f):
+
+    def wrapper(*args, **kwargs):
+
+        v=kwargs['v']
+
+        cutoff=int(environ.get("tos_cutoff",0))
+
+        if v.tos_agreed_utc > cutoff:
+            return f(*args, **kwargs)
+        else:
+            return redirect("/help/terms#agreebox")
+
+    wrapper.__name__=f.__name__
+    return wrapper
+
+        
+
+def is_guildmaster(f):
+    #decorator that enforces guildmaster status
+    #use under auth_required
+
+    def wrapper(*args, **kwargs):
+
+        v=kwargs["v"]
+        boardname=kwargs.get("boardname")
+        board_id=kwargs.get("bid")
+
+        if boardname:
+            board=get_guild(boardname)
+        else:
+            board=get_board(board_id)
+
+        if not board.has_mod(v):
+            abort(403)
+
+        if v.is_banned:
+            abort(403)
+
+        return f(*args, board=board, **kwargs)
+
+    wrapper.__name__=f.__name__
+    return wrapper
 
 #this wrapper takes args and is a bit more complicated
-
-
 def admin_level_required(x):
 
     def wrapper_maker(f):
@@ -82,6 +134,9 @@ def admin_level_required(x):
             if "user_id" in session:
                 v=db.query(User).filter_by(id=session["user_id"]).first()
                 if not v:
+                    abort(401)
+                nonce=session.get("login_nonce",0)
+                if nonce<v.login_nonce:
                     abort(401)
                 
                 if v.is_banned:

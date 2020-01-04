@@ -7,24 +7,27 @@
 {% endblock %}
 
 {% block fixedMobileBarJS %}
-    <script>
-    var prevScrollpos = window.pageYOffset;
-    window.onscroll = function () {
-      var currentScrollPos = window.pageYOffset;
-      if (prevScrollpos > currentScrollPos) {
-        document.getElementById("filter-bar-mobile").style.top = "48px";
-      } 
-      else if (currentScrollPos <= 125) {
-        document.getElementById("filter-bar-mobile").style.top = "48px";
-      }
-      else {
-        document.getElementById("filter-bar-mobile").style.top = "-98px";
-        document.getElementById("dropdownMenuSortBy").classList.remove('show');
-        document.getElementById("dropdownMenuFrom").classList.remove('show');
-      }
-      prevScrollpos = currentScrollPos;
+<script>
+  var prevScrollpos = window.pageYOffset;
+  window.onscroll = function () {
+    var currentScrollPos = window.pageYOffset;
+    if (prevScrollpos > currentScrollPos) {
+      document.getElementById("fixed-bar-mobile").style.top = "49px";
+      document.getElementById("navbar").classList.remove("shadow");
+    } 
+    else if (currentScrollPos <= 125) {
+      document.getElementById("fixed-bar-mobile").style.top = "49px";
+      document.getElementById("navbar").classList.remove("shadow");
     }
-  </script>
+    else {
+      document.getElementById("fixed-bar-mobile").style.top = "-49px";
+      document.getElementById("dropdownMenuSortBy").classList.remove('show');
+      document.getElementById("dropdownMenuFrom").classList.remove('show');
+      document.getElementById("navbar").classList.add("shadow");
+    }
+    prevScrollpos = currentScrollPos;
+  }
+</script>
 {% endblock %}
 
 {% block title %}
@@ -32,13 +35,7 @@
 <meta name="description" content="[banned]">
 {% endblock %}
 
-{% block sidebarblock %}
-<div class="sidebar-section sidebar-profile-basic">
-  <div class="body">
-    <h1 class="h6 d-inline-block mb-0 mr-2">@{{ u.username }}</h1>
-  </div>
-</div>
-{% endblock %}
+{% block sidebarblock %}{% endblock %}
 
 {% block adminpanel %}
 {% if v.admin_level >=3 and v.admin_level > u.admin_level %}
@@ -77,7 +74,7 @@
 
     <div class="text-center py-7 py-md-8">
 
-      <i class="fad fa-gavel text-muted mb-5" style="font-size: 5rem;"></i>
+      <i class="fad fa-user-slash text-muted mb-5" style="font-size: 5rem;"></i>
 
 
       <div class="font-weight-bold text-muted">Banned!</div>

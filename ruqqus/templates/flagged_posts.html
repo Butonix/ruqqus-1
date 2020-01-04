@@ -4,6 +4,8 @@
 
 {% block pagetype %}userpage{% endblock %}
 
+{% block banner %}{% endblock %}
+
 {% block sidebarLeftblock %}
 <div class="sidebar-section sidebar-filters sticky-63">
   <div class="title">Viewing</div>
@@ -32,15 +34,18 @@
   window.onscroll = function () {
     var currentScrollPos = window.pageYOffset;
     if (prevScrollpos > currentScrollPos) {
-      document.getElementById("filter-bar-mobile").style.top = "48px";
+      document.getElementById("fixed-bar-mobile").style.top = "49px";
+      document.getElementById("navbar").classList.remove("shadow");
     } 
     else if (currentScrollPos <= 125) {
-      document.getElementById("filter-bar-mobile").style.top = "48px";
+      document.getElementById("fixed-bar-mobile").style.top = "49px";
+      document.getElementById("navbar").classList.remove("shadow");
     }
     else {
-      document.getElementById("filter-bar-mobile").style.top = "-98px";
+      document.getElementById("fixed-bar-mobile").style.top = "-49px";
       document.getElementById("dropdownMenuSortBy").classList.remove('show');
       document.getElementById("dropdownMenuFrom").classList.remove('show');
+      document.getElementById("navbar").classList.add("shadow");
     }
     prevScrollpos = currentScrollPos;
   }

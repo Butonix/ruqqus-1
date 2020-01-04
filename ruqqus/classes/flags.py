@@ -1,8 +1,9 @@
 from sqlalchemy import *
 from ruqqus.__main__ import Base, db, cache
+from .mix_ins import *
 
 
-class Flag(Base):
+class Flag(Base, Stndrd):
 
     __tablename__="flags"
 
@@ -15,7 +16,7 @@ class Flag(Base):
 
         return f"<Flag(id={self.id})>"
 
-class CommentFlag(Base):
+class CommentFlag(Base, Stndrd):
 
     __tablename__="commentflags"
 
@@ -27,3 +28,19 @@ class CommentFlag(Base):
     def __repr__(self):
 
         return f"<CommentFlag(id={self.id})>"
+
+
+class Report(Base):
+
+    __tablename__="reports"
+
+    id=Column(Integer, primary_key=True)
+    post_id=Column(Integer, ForeignKey("submissions.id"))
+    user_id=Column(Integer, ForeignKey("users.id"))
+    created_utc=Column(Integer)
+
+    board_id=Column(Integer, server_default=FetchedValue())
+
+    def __repr__(self):
+
+        return f"<Report(id={self.id})>"

@@ -8,16 +8,32 @@ from ruqqus.__main__ import app, db
 
 @app.route("/search", methods=["GET"])
 @auth_desired
-def search(v):
+def search(v, search_type="posts"):
 
     query=request.args.get("q")
     sort=request.args.get("sort", "hot").lower()
-    
+
     page=max(1, int(request.args.get("page", 1)))
 
-    
 
-    posts = db.query(Submission).filter_by(is_banned=False, is_deleted=False).filter(func.lower(Submission.title).contains(query.lower()))
+    if search_type == "posts":
+        columns = [Submission.title, Submission.body]
+    elif search_type == "users":
+        columns = [User.username]
+    elif search_type == "guilds":
+        columns = [Board.description, Board.name, Board.submissions]
+
+    keywords = query.split()
+    conditions = [column.contains(word) for word in keywords for column in columns]
+    conditions = tuple(conditions)
+    posts = db.query(Submission).filter(or_(*conditions))
+
+
+    if not (v and v.over_18):
+        posts=posts.filter_by(over_18=False)
+
+    if not(v and v.admin_level>=3):
+        posts=posts.filter_by(is_deleted=False, is_banned=False)
 
     if sort=="hot":
         posts=posts.order_by(text("submissions.rank_hot desc"))

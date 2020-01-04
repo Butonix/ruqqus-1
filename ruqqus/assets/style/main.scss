@@ -6,8 +6,9 @@ $secondary: #EAEAEA;
 $danger: #F05D5E;
 $white: #ffffff;
 $black: #1F1F1F;
-$light: #F6F6F6;
+$light: #E6E9F0;
 $success: #23CE6B;
+$muted: #7F7F8A;
 
 
 $purple: #603abb;
@@ -15,7 +16,7 @@ $red:  #F05D5E;
 $gray: #5F5F5F;
 $green: #23CE6B;
 
-$gray-100: #F2F2F2;
+$gray-100: #F5F6FA;
 $gray-200: #EBE9EF;
 $gray-300: #E0E4E9;
 $gray-400: #C2C2C2;
@@ -42,6 +43,7 @@ $theme-colors: (
   "black": $black,
   "light": $light,
   "success": $success,
+  "muted": $muted,
   "downvote": $downvote,
   "upvote": $upvote,
   "gold": $gold,
@@ -57,18 +59,18 @@ $theme-colors: (
 // Borders
 
 $input-border-color: #ECECEC;
-$border-color: #E1E1E1;
+$border-color: #E6E6E6;
 
 $border-radius: .35rem;
 $border-radius-sm: .25rem;
 
 // Text styling
 
-$text-muted: #7D7D7D;
+$text-muted: #7F7F8A;
 
 // Fonts
 
-$font-family-sans-serif: 'Helvetica Neue', sans-serif;
+$font-family-sans-serif: 'Roboto', 'Helvetica Neue', sans-serif;
 
 // Font size
 
@@ -86,9 +88,7 @@ $lead-font-size: $font-size-base * 1.325 !default;
 
 // Font weight
 
-$font-weight-medium: 500;
-
-$font-weight-bold: 600;
+$font-weight-bold: 500;
 $font-weight-bolder: 700;
 $headings-font-weight: $font-weight-bold;
 
@@ -134,6 +134,8 @@ $yiq-contrasted-threshold:  160 !default;
 
 @import "node_modules/bootstrap/scss/bootstrap";
 
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap');
+
 html {
     font-size: 14px;
 }
@@ -144,21 +146,55 @@ html {
 
 body {
     color: $black;
-    padding-top: 90px;
+    padding-top: 49px;
     background-color: $light;
+}
+
+@media (min-width: 1200px) {
+    .container{
+        max-width: 1190px;
+    }
 }
 
 p {
     font-size: 14px;
 }
 
+#settings, #notifications, #submit {
+    padding-top: 98px;
+}
+
 #page {
-    padding-top: 45px;
+    padding-top: 49px;
     background-color: $white;
 }
 
 #article {
+    padding-top: 0;
     background-color: $white;
+}
+
+// Docs
+
+#article .navbar-light .navbar-nav .nav-link {
+    color: $black;
+}
+
+#article .navbar-light .navbar-nav .nav-link:hover {
+    background-color: transparent;
+    color: $primary;
+}
+
+#article .navbar-light .navbar-nav .nav-link:focus {
+    background-color: transparent;
+    color: $primary;
+}
+
+.article-title {
+    margin-bottom: 3rem;
+    font-weight: $font-weight-bold;
+    line-height: 3rem;
+    margin-top: 2rem;
 }
 
 // Hide sidebar on all error pages
@@ -181,8 +217,8 @@ p {
 }
 
 .custom-gutters {
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 // Positioning
@@ -190,7 +226,7 @@ p {
 .sticky {
     position: -webkit-sticky;
     position: sticky;
-    top: 45px;
+    top: 49px;
     height: auto;
     overflow-y: auto;
     z-index: 4;
@@ -199,7 +235,7 @@ p {
 .sticky-63 {
     position: -webkit-sticky;
     position: sticky;
-    top: 56px;
+    top: 63px;
     height: auto;
     overflow-y: auto;
     z-index: 4;
@@ -260,19 +296,21 @@ ol > li {
 }
 
 ol > li::before {
-    content: counter(count) " ";
-    position: relative;
-    top: -1px;
-    display: inline-block;
-    font-size: 13px;
+    content: counter(count) ".";
     font-weight: $font-weight-bold;
-    color: $secondary;
-    text-align: center;
     margin-right: 0.5rem;
 }
 
 .footer .list-inline-item:not(:last-child) {
     margin-right: 1.5rem;
+}
+
+[data-toggle="collapse"] .fa:before {   
+    content: "\f139";
+  }
+  
+[data-toggle="collapse"].collapsed .fa:before {
+    content: "\f13a";
 }
 
 // Buttons
@@ -293,7 +331,7 @@ ol > li::before {
 
 .btn-tag {
     border-radius: 3rem;
-    font-size: 11px;
+    font-size: $small-font-size;
     padding: 0.25rem 0.5rem;
     line-height: 1;
 }
@@ -406,7 +444,7 @@ ol > li::before {
 }
 
 .navbar-brand, .navbar-light .navbar-brand {
-    color: $black;
+    color: $purple;
     font-weight: $font-weight-bold;
 }
 
@@ -450,7 +488,7 @@ ol > li::before {
 }
 
 .navbar-light .navbar-nav .nav-link .fa, .navbar-light .navbar-nav .nav-link .fas, .navbar-light .navbar-nav .nav-link .far, .navbar-light .navbar-nav .nav-link .fab {
-    color: $primary;
+    color: $black;
     text-align: center;
     font-size: $font-size-lg;
 }
@@ -502,28 +540,27 @@ ol > li::before {
     background-color: $danger;
     position: absolute;
     color: $white;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: $font-weight-normal;
     top: -6px;
     left: 14px;
     line-height: 1.25rem;
-    border: 2px solid $primary;
-    padding: 0px 4px 2px 3px;
+    border: 2px solid $white;
+    padding: 0 2px 2px 2px;
 }
 
 .post-nav .nav-link {
-    color: $gray;
-    font-size: $extra-small-font-size;
+    color: $muted;
+    font-size: $font-size-base;
     font-weight: $font-weight-bold;
-    padding-top: 0;
-    padding-bottom: 0.75rem;
+    padding: 0.75rem 1rem;
 }
 
 .settings-nav .nav-link {
     color: $gray;
-    font-size: $extra-small-font-size;
-    font-weight: $font-weight-bold;
-    padding-top: 0;
+    font-size: $font-size-base;
+    font-weight: $font-weight-normal;
+    padding: 0.75rem 1rem;
 }
 
 .post-nav > .nav-item > .nav-link.active {
@@ -551,8 +588,50 @@ ol > li::before {
 .post-nav .fa, .post-nav .fas, .post-nav .far, .post-nav .fab, .post-nav .fal {
     font-size: $small-font-size;
     margin-right: .5rem;
-    color: $gray-600;
+    color: $muted;
 }
+
+// Settings navigation
+
+.settings-nav > .nav-item > .nav-link.active {
+    color: $primary;
+    box-shadow: inset 0 -2px 0 $primary;
+}
+
+.settings-nav > .nav-item > .nav-link.active .fa, .settings-nav > .nav-item > .nav-link.active .fas, .settings-nav > .nav-item > .nav-link.active .far, .settings-nav > .nav-item > .nav-link.active .fab {
+    color: $primary;
+}
+
+.settings-nav .fa, .settings-nav .fas, .settings-nav .far, .settings-nav .fab, .settings-nav .fal {
+    font-size: $small-font-size;
+    margin-right: .5rem;
+    color: $muted;
+}
+
+// Color Picker
+
+.color-picker input[type="radio"] {
+    display: none;
+}
+
+label.color-radio {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    margin-right: 1rem;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+label.color-radio span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    text-align: center;
+    line-height: 2.25;
+}
+
 
 // Nav pills
 
@@ -586,7 +665,7 @@ ol > li::before {
 // Navbar icons and search box
 
 .form-inline.search .form-control:hover, .form-inline.search .form-control:active, .form-inline.search .form-control:focus {
-    border-color: $white;
+    border-color: $primary;
 }
 
 .form-inline.search .form-control:active, .form-inline.search .form-control:focus {
@@ -594,27 +673,27 @@ ol > li::before {
 }
 
 .form-inline.search .form-control {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: $light;
     font-size: $font-size-base;
 }
 
 .form-inline.search .input-group-append .input-group-text .fa.fa-search {
-    color: $white;
+    color: $black;
     opacity: .25;
 }
 
 .form-inline.search .form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: $white;
+  color: $black;
   opacity: .25; /* Firefox */
 }
 
 .form-inline.search .form-control::-ms-input-placeholder { /* Internet Explorer 10-11 */
-  color: $white;
+  color: $black;
   opacity: .25;
 }
 
 .form-inline.search .form-control::-ms-input-placeholder { /* Microsoft Edge */
-  color: $white;
+  color: $black;
   opacity: .25;
 }
 
@@ -655,6 +734,10 @@ ol > li::before {
 
 .home-submission .input-group-prepend .fa, .home-submission .input-group-prepend .fas, .home-submission .input-group-append .fa, .home-submission .input-group-append .fas {
     color: $gray-300;
+}
+
+.input-group-append-focus {
+    margin-left: -1px;
 }
 
 .form-control:hover {
@@ -722,6 +805,12 @@ label.terms {
     color: $black;
 }
 
+// Tables
+
+th {
+    font-weight: $font-weight-bold;
+}
+
 // Font Awesome
 
 .fa-rotate-45 {
@@ -742,6 +831,10 @@ label.terms {
 
 .sidebar-section .fa, .sidebar-section .fas, .sidebar-section .far, .sidebar-section .fab, .sidebar-section .fal, .sidebar-section .fad {
     font-size: $small-font-size;
+}
+
+.sidebar-section .title .fa, .sidebar-section .title .fas, .sidebar-section .title .far, .sidebar-section .title .fab, .sidebar-section .title .fal, .sidebar-section .title .fad {
+    font-size: $extra-small-font-size;
 }
 
 .icon::before {
@@ -804,6 +897,11 @@ label.terms {
 
 }
 
+.arrow-up:hover::before {
+    color: $upvote;
+    opacity: 0.5;
+}
+
 .arrow-down::before {
     cursor: pointer;
     font-size: $font-size-base;
@@ -813,12 +911,25 @@ label.terms {
     content: "\f354";
 }
 
+.arrow-down:hover::before {
+    color: $downvote;
+    opacity: 0.5;
+}
+
 .upvoted .arrow-up::before {
     color: $upvote;
 }
 
+.upvoted .arrow-up:hover::before {
+    opacity: 1;
+}
+
 .downvoted .arrow-down::before {
     color: $downvote;
+}
+
+.downvoted .arrow-down:hover::before {
+    opacity: 1;
 }
 
 .comment-actions .arrow-up {
@@ -913,23 +1024,27 @@ color: $dark;
 
 // Main Content
 
-#frontpage .pseudo-submit-form.card, #search .search-results.card {
+#frontpage .pseudo-submit-form.card, #search .search-results.card, #guild .pseudo-submit-form.card {
     background-color: $white;
     border-radius: $border-radius;
-    border: 1px solid $border-color;
+    border: none;
     //box-shadow: $box-shadow-sm;
 }
 
-#frontpage .pseudo-submit-form.card .card-body, #search .search-results.card .card-body {
+#frontpage .pseudo-submit-form.card .card-body, #search .search-results.card .card-body, #guild .pseudo-submit-form.card .card-body {
     padding-left: 15px;
     padding-right: 15px;
 }
 
-#frontpage .pseudo-submit-form.card .card-body .form-control {
+#frontpage .pseudo-submit-form.card .card-body .form-control, #guild .pseudo-submit-form.card .card-body .form-control {
     background-color: $gray-100;
 }
 
 #frontpage .pseudo-submit-form.card .card-body .form-control:hover, #frontpage .pseudo-submit-form.card .card-body .form-control:active, #frontpage .pseudo-submit-form.card .card-body .form-control:focus {
+    background-color: $white;
+}
+
+#guild .pseudo-submit-form.card .card-body .form-control:hover, #guild .pseudo-submit-form.card .card-body .form-control:active, #guild .pseudo-submit-form.card .card-body .form-control:focus {
     background-color: $white;
 }
 
@@ -950,9 +1065,13 @@ color: $dark;
 
 .posts, #thread #main-content-col {
     background-color: $white;
-    border: 1px solid $border-color;
+    //border: 1px solid $border-color;
     //box-shadow: $box-shadow-sm;
     border-radius: $border-radius;
+}
+
+#thread #main-content-col {
+    margin: 0 15px;
 }
 
 // Left Sidebar (Terms pages)
@@ -972,7 +1091,7 @@ color: $dark;
     display: block;
     background-color: transparent;
     font-size: $font-size-base;
-    font-weight: 600;
+    font-weight: $font-weight-bold;
     color: $text-muted;
     padding: 0.5rem 1rem;
     border: none;
@@ -997,10 +1116,9 @@ color: $dark;
 // Sidebar content
 
 .sidebar {
-    -ms-flex: 0 0 250px;
-    flex: 0 0 250px;
-    padding-left: 0rem;
-    padding-right: 0rem;
+    -ms-flex: 0 0 290px;
+    flex: 0 0 290px;
+    padding-left: 0;
 }
 
 .sidebar h1, h2, h3, h4, h5, h6 {
@@ -1008,11 +1126,12 @@ color: $dark;
 }
 
 .sidebar .sidebar-section .title {
-    font-size: $small-font-size;
+    font-size: $extra-small-font-size;
     font-weight: $font-weight-bold;
-    color: $gray;
+    color: $white;
+    background-color: $primary;
     padding: 0.5rem 1rem;
-    border-bottom: 1px solid $input-border-color;
+    text-transform: uppercase;
 }
 
 .sidebar .sidebar-section .body {
@@ -1021,17 +1140,25 @@ color: $dark;
 
 .sidebar-section {
     margin-bottom: 1rem;
-    background-color: #fff;
-    border: 1px solid $border-color;
+    background-color: $gray-100;
+    //border: 1px solid $border-color;
     //box-shadow: $box-shadow-sm;
     border-radius: 0.35rem;
+    overflow: hidden;
 }
 
-.sidebar-section.sidebar-trending .hashtag {
-    margin-bottom: .5rem;
+.sidebar-section.sidebar-trending .trending-hashtag, .sidebar-section.sidebar-trending .trending-guild {
+    margin-bottom: .25rem;
     padding-bottom: .25rem;
     color: $text-muted;
     font-weight: $font-weight-bold;
+    border-bottom: 1px solid rgba(225, 225, 225, 0.25);
+}
+
+.sidebar-section.sidebar-trending .trending-hashtag:last-child, .sidebar-section.sidebar-trending .trending-guild:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
 }
 
 .sidebar-section.sidebar-alert {
@@ -1058,16 +1185,9 @@ color: $dark;
     box-shadow: none;
 }
 
-.sidebar-section.sidebar-alert {
-    border: 1px solid $border-color;
-    //box-shadow: $box-shadow-sm;
-}
-
 .sidebar.sidebar-left {
     -ms-flex: 0 0 200px;
     flex: 0 0 200px;
-    padding-left: 0rem;
-    padding-right: 0rem;
 }
 
 .sidebar-left .sidebar-section.sidebar-filters {
@@ -1079,6 +1199,7 @@ color: $dark;
 
 .sidebar.sidebar-left .sidebar-section .title {
     border-bottom: none;
+    background-color: transparent;
 }
 
 .sidebar-section.sidebar-filters .body {
@@ -1099,7 +1220,7 @@ color: $dark;
     padding: 0.5rem 1rem;
     color: $text-muted;
     font-size: $small-font-size;
-    font-weight: 600;
+    font-weight: $font-weight-bold;
     margin-bottom: 0.25rem;
     text-decoration: none;
 }
@@ -1112,7 +1233,7 @@ color: $dark;
     color: $black;
     background-color: $white;
     border-radius: $border-radius;
-    border: 1px solid $border-color;
+    //border: 1px solid $border-color;
 }
 
 .filter-list .filter-item .fa, .filter-list .filter-item .fas, .filter-list .filter-item .far, .filter-list .filter-item .fab, .filter-list .filter-item .fal {
@@ -1132,6 +1253,71 @@ color: $dark;
 
 .filter-link:hover, .filter-link:focus {
     color: $primary;
+}
+
+// Guild recommendations section
+
+.sidebar-left .sidebar-section.sidebar-guild-recommendations {
+    margin-bottom: 1rem;
+    background-color: transparent;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+.sidebar-guild-recommendations .guild-recommendations-list {
+    list-style: none;
+}
+
+.guild-recommendations-list .guild-recommendations-item {
+    color: $text-muted;
+    text-decoration: none;
+    margin-top: 1rem;
+}
+
+.guild-recommendations-list .guild-recommendations-item:first-child {
+    margin-top: 0;
+}
+
+.guild-recommendations-list .guild-recommendations-link {
+    text-decoration: none;
+}
+
+.guild-recommendations-list .guild-recommendations-link:hover, .guild-recommendations-list .guild-recommendations-link:focus {
+    color: $black;
+}
+
+.guild-recommendations-list > .guild-recommendations-item > .guild-recommendations-link.active {
+    color: $black;
+    background-color: $white;
+    border-radius: $border-radius;
+    //border: 1px solid $border-color;
+}
+
+.guild-recommendations-list .guild-recommendations-item .fa, .guild-recommendations-list .guild-recommendations-item .fas, .guild-recommendations-list .guild-recommendations-item .far, .guild-recommendations-list .guild-recommendations-item .fab, .guild-recommendations-list .guild-recommendations-item .fal {
+    font-size: $small-font-size;
+    margin-right: 0.5rem;
+    color: $gray-600;
+    text-align: center;
+}
+
+.guild-recommendations-list .guild-recommendations-link:hover .fa , .guild-recommendations-list .guild-recommendations-link:focus .fa, .guild-recommendations-list .guild-recommendations-link:hover .fas, .guild-recommendations-list .guild-recommendations-link:focus .fas, .guild-recommendations-list .guild-recommendations-link:hover .far, .guild-recommendations-list .guild-recommendations-link:focus .far, .guild-recommendations-list .guild-recommendations-link:hover .fab , .guild-recommendations-list .guild-recommendations-link:focus .fab {
+    color: $primary;
+}
+
+.guild-recommendations-list > .guild-recommendations-item > .guild-recommendations-link.active .fa, .guild-recommendations-list > .guild-recommendations-item > .guild-recommendations-link.active .fas, .guild-recommendations-list > .guild-recommendations-item > .guild-recommendations-link.active .far, .guild-recommendations-list > .guild-recommendations-item > .guild-recommendations-link.active .fab {
+    color: $primary;
+}
+
+.guild-recommendations-link:hover, .guild-recommendations-link:focus {
+    color: $primary;
+}
+
+.guild-icon-square-35 {
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow-sm;
 }
 
 // Sidebar Left Dashboard Section
@@ -1154,10 +1340,10 @@ color: $dark;
 
 .dashboard-list .dashboard-link {
     display: block;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0;
     color: $text-muted;
-    font-size: $small-font-size;
-    font-weight: 600;
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
     margin-bottom: 0.25rem;
     text-decoration: none;
 }
@@ -1168,8 +1354,6 @@ color: $dark;
 
 .dashboard-list > .dashboard-item > .dashboard-link.active {
     color: $primary;
-    background-color: $gray-100;
-    border-radius: $border-radius;
 }
 
 .dashboard-list .dashboard-item .fa, .dashboard-list .dashboard-item .fas, .dashboard-list .dashboard-item .far, .dashboard-list .dashboard-item .fab, .dashboard-list .dashboard-item .fal {
@@ -1216,6 +1400,17 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 // User and Profile
 
+.user-name {
+    color: inherit;
+}
+
+.banner-pic-135 {
+    object-fit: cover;
+    height: 135px;
+    max-width: 425px;
+    width: 425px;
+}
+
 .profile-pic {
     width: 50px;
     height: 50px;
@@ -1232,8 +1427,16 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     text-transform: uppercase;
 }
 
+.profile-pic-30 .letter {
+    line-height: 1.75;
+}
+
+.profile-pic-35 .letter {
+    line-height: 2;
+}
+
 .profile-pic-75 .letter {
-    line-height: 5.5rem;
+    line-height: 2.75;
     font-size: 2rem;
 }
 
@@ -1248,65 +1451,105 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     font-size: $small-font-size;
 }
 
+.profile-pic-20 {
+    width: 20px;
+    height: 20px;
+    border-radius: 50rem;
+    text-align: center;
+    object-fit: cover;
+}
+
 .profile-pic-25 {
     width: 25px;
     height: 25px;
     border-radius: 50rem;
+    text-align: center;
+    object-fit: cover;
+}
+
+.profile-pic-30 {
+    width: 30px;
+    height: 30px;
+    border-radius: 50rem;
+    text-align: center;
+    object-fit: cover;
 }
 
 .profile-pic-35 {
     width: 35px;
     height: 35px;
     border-radius: 50rem;
+    text-align: center;
+    object-fit: cover;
 }
 
 .profile-pic-40 {
     width: 40px;
     height: 40px;
     border-radius: 50rem;
+    text-align: center;
+    object-fit: cover;
+}
+
+.profile-pic-50 {
+    width: 50px;
+    height: 50px;
+    border-radius: 50rem;
+    text-align: center;
+    object-fit: cover;
 }
 
 .profile-pic-75 {
     width: 75px;
     height: 75px;
     border-radius: 50rem;
+    text-align: center;
+    object-fit: cover;
+}
+
+.profile-pic-overlap {
+    margin-left: -1rem;
+}
+
+.profile-pic-overlap:first-child {
+    margin-left: 0;
 }
 
 // Thread Card View
 
-#frontpage.toggle-card-view .tab-bar, #userpage.toggle-card-view .tab-bar, #search.toggle-card-view .tab-bar {
+#frontpage.toggle-card-view .tab-bar, #userpage.toggle-card-view .tab-bar, #search.toggle-card-view .tab-bar, #guild.toggle-card-view .tab-bar {
     border-radius: 0;
 }
 
-#frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card {
-    border: 1px solid $border-color;
+#frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card, #guild.toggle-card-view .posts .card {
+    border: none;
     border-radius: $border-radius;
     padding: 15px;
     margin-top: 1rem;
     //box-shadow: $box-shadow-sm;
 }
 
-#frontpage.toggle-card-view .posts .card:last-of-type, #userpage.toggle-card-view .posts .card:last-of-type, #search.toggle-card-view .posts .card:last-of-type {
+#frontpage.toggle-card-view .posts .card:last-of-type, #userpage.toggle-card-view .posts .card:last-of-type, #search.toggle-card-view .posts .card:last-of-type, #guild.toggle-card-view .posts .card:last-of-type {
     border-bottom-left-radius: $border-radius;
     border-bottom-right-radius: $border-radius;
-    border: 1px solid $border-color;
+    //border: 1px solid $border-color;
     border-radius: $border-radius;
 }
 
-#frontpage.toggle-card-view .posts .card:first-of-type, #userpage.toggle-card-view .posts .card:first-of-type, #search.toggle-card-view .posts .card:first-of-type {
+#frontpage.toggle-card-view .posts .card:first-of-type, #userpage.toggle-card-view .posts .card:first-of-type, #search.toggle-card-view .posts .card:first-of-type, #guild.toggle-card-view .posts .card:first-of-type {
     margin-top: 0;
 }
 
-#frontpage.toggle-card-view .posts .card .post-img, #userpage.toggle-card-view .posts .card .post-img, #search.toggle-card-view .posts .card .post-img { 
+#frontpage.toggle-card-view .posts .card .post-img, #userpage.toggle-card-view .posts .card .post-img, #search.toggle-card-view .posts .card .post-img, #guild.toggle-card-view .posts .card .post-img { 
     display: none;
 }
 
-#frontpage.toggle-card-view .posts .card .post-img-lg, #userpage.toggle-card-view .posts .card .post-img-lg, #search.toggle-card-view .posts .card .post-img-lg { 
+#frontpage.toggle-card-view .posts .card .post-img-lg, #userpage.toggle-card-view .posts .card .post-img-lg, #search.toggle-card-view .posts .card .post-img-lg, #guild.toggle-card-view .posts .card .post-img-lg { 
     display: block;
     text-align: center;
 }
 
-#frontpage.toggle-card-view .posts .card .post-img-lg img, #userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img { 
+#frontpage.toggle-card-view .posts .card .post-img-lg img, #userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img, #guild.toggle-card-view .posts .card .post-img-lg img { 
     max-width: 55%;
     height: auto;
 }
@@ -1316,11 +1559,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     z-index: 2;
 }
 
-#frontpage.toggle-card-view .posts .card .post-preview-lg, #userpage.toggle-card-view .posts .card .post-preview-lg, #search.toggle-card-view .posts .card .post-preview-lg { 
+#frontpage.toggle-card-view .posts .card .post-preview-lg, #userpage.toggle-card-view .posts .card .post-preview-lg, #search.toggle-card-view .posts .card .post-preview-lg, #guild.toggle-card-view .posts .card .post-preview-lg { 
     display: block;
 }
 
-#frontpage.toggle-card-view .posts .card .post-preview-lg .post-body, #userpage.toggle-card-view .posts .card .post-preview-lg .post-body, #search.toggle-card-view .posts .card .post-preview-lg .post-body { 
+#frontpage.toggle-card-view .posts .card .post-preview-lg .post-body, #userpage.toggle-card-view .posts .card .post-preview-lg .post-body, #search.toggle-card-view .posts .card .post-preview-lg .post-body, #guild.toggle-card-view .posts .card .post-preview-lg .post-body { 
     -webkit-mask-image: linear-gradient(180deg,#000 40%,transparent);
     mask-image: linear-gradient(180deg,#000 40%,transparent);
     overflow: hidden;
@@ -1328,7 +1571,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .toggle-view .nav-link {
     color: $gray;
-    font-size: $extra-small-font-size;
+    font-size: $small-font-size;
     font-weight: $font-weight-bold;
     padding: 0;
     line-height: 1;
@@ -1375,18 +1618,18 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-bottom: 1px solid $input-border-color;
 }
 
-#frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type {
+#frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type, #guild .posts .card:first-of-type {
     border-top-left-radius: $border-radius;
     border-top-right-radius: $border-radius;
 }
 
-#frontpage .posts .card:last-of-type, #userpage .posts .card:last-of-type, #search .posts .card:last-of-type {
+#frontpage .posts .card:last-of-type, #userpage .posts .card:last-of-type, #search .posts .card:last-of-type, #guild .posts .card:last-of-type  {
     border-bottom-left-radius: $border-radius;
     border-bottom-right-radius: $border-radius;
     border-bottom: 0;
 }
 
-#frontpage .posts .card, #userpage .posts .card, #search .posts .card {
+#frontpage .posts .card, #userpage .posts .card, #search .posts .card, #guild .posts .card{
     border-width: 0 0 1px 0;
     border-color: $border-color;
     border-style: solid;
@@ -1394,26 +1637,27 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     padding: 15px;
 }
 
-#frontpage .posts .card:hover, #userpage .posts .card:hover, #search .posts .card:hover {
+#frontpage .posts .card:hover, #userpage .posts .card:hover, #search .posts .card:hover, #guild .posts .card:hover {
     background-color: $gray-100;
 }
 
-#frontpage .posts .card.enlarged .post-img-lg, #userpage .posts .card.enlarged .post-img-lg, #search .posts .card.enlarged .post-img-lg {
+#frontpage .posts .card.enlarged .post-img-lg, #userpage .posts .card.enlarged .post-img-lg, #search .posts .card.enlarged .post-img-lg, #guild .posts .card.enlarged .post-img-lg {
     display: block;
 }
 
 .post-title {
     font-size: 16px;
-    font-weight: $font-weight-medium;
+    font-weight: $font-weight-bold;
     word-break: break-word;
 }
 
 .post-title a {
-    color: $black;
+    color: $primary;
 }
 
 .post-title a:hover, .post-title a:active, .post-title a:focus  {
     text-decoration: none;
+    color: $primary;
 }
 
 .stretched-link a:hover {
@@ -1526,7 +1770,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     color: $black;
 }
 
-.post-actions .fas.fa-ellipsis-h {
+.post-actions .fas.fa-ellipsis-h, .post-actions .far.fa-ellipsis-h {
     font-size: $font-size-lg;
     vertical-align: middle;
 }
@@ -1569,6 +1813,52 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     font-size: 1.25rem;
 }
 
+// Guilds
+
+#guild .post-meta-guild {
+    display: none;
+}
+
+.jumbotron-guild {
+    position: relative;
+    height: 225px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border-radius: 0;
+    overflow: hidden;
+    margin-bottom: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.jumbotron-guild .guild-banner-contents {
+    display: none;
+}
+
+.jumbotron-guild .jumbotron-overlay {
+    background-color: transparent;
+    background-image: linear-gradient(180deg, #fff0 0%, rgba(0, 0, 0, 0.75) 50%);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    left: 0;
+}
+
+.jumbotron-guild .guild-icon-square-lg {
+    height: 125px;
+    width: 125px;
+    object-fit: cover;
+    border-radius: $border-radius;
+    border: 5px solid $white;
+}
+
+.guild-description p {
+    margin-bottom: 0.5rem;
+}
+
 // Pagination
 
 .page-link {
@@ -1587,7 +1877,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .post-actions .list-inline .list-inline-item .dropdown-item {
-    font-size: $small-font-size;
+    font-size: $font-size-base;
 }
 
 .post-actions .list-inline .list-inline-item .dropdown-item:active {
@@ -1597,7 +1887,8 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .post-actions a {
     color: $gray;
     text-decoration: none;
-    font-size: $small-font-size;
+    text-transform: none;
+    font-size: $font-size-base;
 }
 
 .post-actions a:hover {
@@ -1699,13 +1990,13 @@ div:hover .thumb-img-link-overlay {
 .comment {
     display: flex;
     position: relative;
-    margin-top: 1.5rem;
+    margin-top: 2rem;
     word-break: break-word;
 }
 
 #notifications .comment, #userpage .comment {
     margin-top: 0.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 #notifications .comment:last-child, #userpage .comment:last-child {
@@ -1725,6 +2016,11 @@ div:hover .thumb-img-link-overlay {
     font-size: $small-font-size;
     color: $text-muted;
     margin-bottom: .25rem;
+    margin-top: -0.25rem;
+}
+
+.comment .comment-body .user-name {
+    color: $primary;
 }
 
 .comment .comment-body p.text {
@@ -1736,8 +2032,8 @@ blockquote {
     border-left: 4px solid $primary;
     color: $primary;
     font-size: $font-size-base;
-    font-weight: $font-weight-medium;
-    background-color: #f4effa;
+    font-weight: $font-weight-bold;
+    background-color: rgba($primary, 0.15);
     padding: 0.5rem 1rem;
     margin: 0.5rem 0rem 1rem 0.5rem;
 }
@@ -1930,12 +2226,12 @@ ul.comment-section {
 }
 
 .comment.collapsed .comment-collapse::before {
-    content: "\f138";
+    content: "\f055";
     font-family: "Font Awesome 5 Pro";
     font-weight: 900;
     border-left: none;
     color: $gray-500;
-    top: 3px;
+    top: -1px;
     left: -3px;
     font-size: 10px;
 }
@@ -1951,6 +2247,10 @@ ul.comment-section {
 
 .comment.collapsed .user-info {
     margin-bottom: 0;
+}
+
+.comment.collapsed .profile-pic-25 {
+    opacity: .5;
 }
 
 .comment.collapsed .comment-body {
@@ -2082,14 +2382,33 @@ ul.comment-section {
     padding: 1rem 0;
 }
 
+// Tables
+
+.table .thead-dark th {
+    color: $muted;
+    background-color: $light;
+    border: none;
+}
+
+// Guild Settings Page
+
+#settings-guild {
+    background-color: $white;
+}
+
+#settings-guild .settings .settings-section {
+    border: 1px solid $border-color;
+}
+
 // Settings Page
 
 .settings .settings-section {
     margin-bottom: 3rem;
     background: $white;
-    border: 1px solid $border-color;
+    //border: 1px solid $border-color;
     //box-shadow: $box-shadow-sm;
     border-radius: 0.35rem;
+    overflow: hidden;
 }
 
 .settings .settings-section .title, .settings .settings-section .body, .settings .settings-section .footer {
@@ -2102,8 +2421,6 @@ ul.comment-section {
 
 .settings .settings-section .footer {
     background-color: $gray-200;
-    border-bottom-left-radius: $border-radius;
-    border-bottom-right-radius: $border-radius;
 }
 
 // Modal Profile Actions
@@ -2171,12 +2488,7 @@ ul.comment-section {
 }
 
 #page .footer a, #article .footer a {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.5);
-}
-
-#page .footer a:hover, #page .footer a:focus, #page .footer a:active, #article .footer a:hover, #article .footer a:focus, #article .footer a:active {
-    color: $white;
+    color: $primary;
 }
 
 #page .footer li, #article .footer li {
@@ -2273,6 +2585,14 @@ ul.comment-section {
 
   }
 }
+
+// Responsive Shadow
+
+@media (min-width: 768px) {
+    .shadow-md {
+      box-shadow: $box-shadow;
+    }
+  }
 
 // Responsive Sizing
 
@@ -2591,8 +2911,13 @@ html {
     max-width: none;
 }
 
-body {
-    padding-top: 45px;
+body, #settings, #notifications, #submit {
+    padding-top: 49px;
+}
+
+.custom-gutters {
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .shadow-sm-0 {
@@ -2619,6 +2944,10 @@ body {
 }
 
 .navbar-dark .navbar-nav .nav-link .fa, .navbar-dark .navbar-nav .nav-link .fas, .navbar-dark .navbar-nav .nav-link .far, .navbar-dark .navbar-nav .nav-link .fab {
+    font-size: $font-size-base;
+}
+
+.navbar-light .navbar-nav .nav-link .fa, .navbar-light .navbar-nav .nav-link .fas, .navbar-light .navbar-nav .nav-link .far, .navbar-light .navbar-nav .nav-link .fab {
     font-size: $font-size-base;
 }
 
@@ -2661,7 +2990,7 @@ body {
     z-index: 3;
 }
 
-#frontpage .posts .card.enlarged .post-img-lg, #userpage .posts .card.enlarged .post-img-lg, #frontpage .posts .card.enlarged .post-img-lg, #search .posts .card.enlarged .post-img-lg {
+#frontpage .posts .card.enlarged .post-img-lg, #userpage .posts .card.enlarged .post-img-lg, #search .posts .card.enlarged .post-img-lg, #guild .posts .card.enlarged .post-img-lg {
     display: block;
 }
 
@@ -2669,7 +2998,7 @@ body {
     padding-top: 2px;
 }
 
-#frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card {
+#frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card, #guild.toggle-card-view .posts .card {
     border-width: 0 0 1px 0;
     border-color: $border-color;
     border-style: solid;
@@ -2678,7 +3007,7 @@ body {
     box-shadow: none;
 }
 
-#frontpage.toggle-card-view .posts .card .post-img-lg img, #userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img { 
+#frontpage.toggle-card-view .posts .card .post-img-lg img, #userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img, #guild.toggle-card-view .posts .card .post-img-lg img { 
     max-width: 100%;
     height: auto;
 }
@@ -2689,8 +3018,16 @@ body {
     border: none;
 }
 
+#thread #main-content-col {
+    margin: 0;
+}
+
 .thumb-img-link-overlay {
     display: none;
+}
+
+.post-title a {
+    color: $black;
 }
 
 .post-title a:hover, .post-title a:active, .post-title a:focus {
@@ -2699,7 +3036,7 @@ body {
 
 .voting {
     font-weight: $font-weight-normal;
-    min-width: length;
+    font-size: $font-size-base;
 }
 
 .post-title {
@@ -2708,9 +3045,89 @@ body {
     line-height: normal;
 }
 
+.post-meta {
+    font-size: 1rem;
+    color: $gray-600;
+}
+
+.post-actions a {
+    color: $gray-600;
+    font-size: $font-size-base;
+}
+
+.post-actions .fa, .post-actions .fas, .post-actions .far {
+    font-size: $font-size-base;
+    color: $gray-400;
+}
+
+.btn-tag {
+    font-size: $small-font-size;
+}
+
+// Comments
+
+.comment-section > .comment {
+    padding-left: 0;
+  }
+
+.comment {
+    margin-top: 1.5rem;
+    padding-left: 15px;
+}
+
+.comment .comment-collapse {
+    padding-right: 0;
+}
+
+.comment.collapsed .user-info {
+    padding-top: 0.5rem;
+}
+
+.comment .comment-collapse::before {
+    content: "\f056";
+    position: static;
+    font-size: 10px;
+    font-weight: 900;
+    border: none;
+    margin-left: 0.25rem;
+}
+
+.comment.collapsed .comment-body:hover {
+    opacity: 0.5;
+}
+
+// User and Profile (mobile)
+
+.banner-pic-135 {
+    max-width: 100%
+}
+
+// Horizontal scroll
+
+.x-scroll-parent {
+    overflow: hidden;
+}
+
+.x-scroll {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+}
+
+.x-scroll::-webkit-scrollbar {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: transparent; /* Chrome/Safari/Webkit */
+}
+
 #thread .post-title {
     font-size: 16px;
-    font-weight: $font-weight-medium;
+    font-weight: $font-weight-bold;
 }
 
 #submit .submission .body {
@@ -2728,6 +3145,11 @@ body {
 
 .comments-count .total {
     font-weight: $font-weight-normal;
+    font-size: $font-size-base;
+}
+
+.comment-actions {
+    font-size: $font-size-base;
 }
 
 .comment-write .comment-format .format {
@@ -2736,6 +3158,7 @@ body {
 
 .post-filter {
     font-weight: $font-weight-normal;
+    font-size: $font-size-base;
 }
 
 .post-filter .dropdown-item {
@@ -2744,7 +3167,12 @@ body {
 }
 
 .user-name {
-    color: $text-muted;
+    font-weight: $font-weight-normal;
+}
+
+.comment .comment-body .user-name {
+    color: $black;
+    font-weight: $font-weight-bold;
 }
 
 .pagination {
@@ -2798,36 +3226,30 @@ span.green {
 
 div.banned {
   background-color: $banned;
-}
+}	  
 
 div.deleted {
     background-color: $deleted;
-}
-
+}  
+  
 div.deleted.banned {
     background-color: $deletedandbanned
 }
-
-.distinguish-admin .user-name, .distinguish-mod   .user-name {
-  color: white;
-  padding: 0px 3px 2px 3px;
-  border-radius: 3px;
-}
-.distinguish-admin .user-name {
-  background-color: $admin;
-}
-.distinguish-mod .user-name {
-  background-color: $mod;
-}
-.distinguish-admin .user-name::before {
- content: "[A] "
-}
-.distinguish-mod .user-name::before {
- content: "[M] "
-}
-
-//Easter Egg additions
-.ruckus {
-  transition:182s;
-  transform:translateY(-50%) rotate(36000deg);
+			
+.distinguish-admin .user-name, .distinguish-mod   .user-name {		
+  color: white;		
+  padding: 0px 3px 2px 3px;		
+  border-radius: 3px;		
+}		
+.distinguish-admin .user-name {		
+  background-color: $admin;		
+}		
+.distinguish-mod .user-name {		
+  background-color: $mod;		
+}		
+.distinguish-admin .user-name::before {		
+ content: "[A] "		
+}		
+.distinguish-mod .user-name::before {		
+ content: "[M] "		
 }

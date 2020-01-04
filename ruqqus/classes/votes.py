@@ -1,4 +1,4 @@
-from flask import render_template, session
+from flask import *
 from time import time, strftime, gmtime
 from sqlalchemy import *
 

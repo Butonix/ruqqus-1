@@ -1,9 +1,9 @@
 // Toggle comment collapse
 
-$(".comment-collapse").click(function (event) {
-    event.preventDefault();
+collapse_comment = function(comment_id) {
 
-    var id = $(this).parent().attr("id");
+	var comment = "comment-" + comment_id;
 
-    document.getElementById(id).classList.toggle("collapsed");
-});
+	document.getElementById(comment).classList.toggle("collapsed");
+
+};

@@ -1,6 +1,6 @@
 <!-- Navigation -->
-<nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
-  <div class="container-fluid">
+<nav class="navbar navbar-expand-md navbar-light bg-white shadow shadow-md fixed-top" id="navbar">
+  <div class="container">
     <div class="flex-grow-1"><a href="/" class="navbar-brand">ruqqus</a></div>
     <div class="flex-grow-1 d-fl d-none d-md-block">
       <form class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search" method="get">
@@ -13,20 +13,32 @@
       </form>
     </div>
     {% if v %}
-    <a class="mobile-nav-icon text-white text-lg d-block d-md-none" href="/submit"><i class="far fa-feather-alt align-middle"></i></a>
+    <a class="mobile-nav-icon text-lg d-block d-md-none" href="/submit{{ '?guild='+b.name if b else '' }}"><i class="far fa-feather-alt align-middle"></i></a>
     {% else %}
-    <a class="mobile-nav-icon text-white text-lg d-block d-md-none" href="/login"><i class="far fa-feather-alt align-middle"></i></a>
+    <a class="mobile-nav-icon text-lg d-block d-md-none" href="/login"><i class="far fa-feather-alt align-middle"></i></a>
     {% endif %}
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
     aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"><i class="fal fa-bars text-white" style="font-size: 2rem;"></i></span>
+    <span class="navbar-toggler-icon"><i class="fal fa-bars text-primary" style="font-size: 2rem;"></i></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarResponsive">
     <ul class="navbar-nav ml-auto d-none d-md-flex">
 
       {% if v %}
       <li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-        <a class="nav-link" href="/submit" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Create post"><i class="far fa-feather-alt"></i></a>
+      <a class="nav-link" role="button" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Announcements"><i class="far fa-sparkles text-primary"></i></a>
+      </li>
+      {% endif %}
+
+      {% if v and v.mods_anything %}
+      <li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
+        <a class="nav-link" href="/mod/queue" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Guildmaster tools"><i class="far fa-crown{% if v.has_report_queue %} text-success{% endif %}"></i></a>
+      </li>
+      {% endif %}
+
+      {% if v %}
+      <li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
+        <a class="nav-link" href="/submit{{ '?guild='+b.name if b else '' }}" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Create post"><i class="far fa-feather-alt"></i></a>
       </li>
 
       {% if v.notifications_count %}
@@ -51,12 +63,12 @@
 
       <li class="nav-item d-flex align-items-center justify-content-center text-center">
         <div class="dropdown">
-          <a class="nav-link bg-transparent py-0" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+          <a class="nav-link bg-transparent py-0 pr-0" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
-          <div class="d-inline-block my-auto text-right pr-2">
-            <span class="text-white text-small-extra font-weight-bold">Hi, {{ v.username }}</span>
+          <div class="d-inline-block"><img src="{{ v.profile_url }}" class="profile-pic-30"></div>
+          <div class="d-inline-block my-auto text-right pl-2">
+            <span class="text-small font-weight-bold">Hi, {{ v.username }}</span>
           </div>
-          <div class="profile-pic" style="background-color:#{{ v.color }}"><span class="letter">{{ v.username[0] }}</span></div>
         </a>
         <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left border-0 shadow fade px-0 mt-2"
         aria-labelledby="dropdownMenuButton">
@@ -68,36 +80,41 @@
         </div>
         <hr class="my-2">
         <div class="px-2">
-          <a class="dropdown-item" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem text-left mr-3"></i>My
-            profile</a>
+          <a class="dropdown-item" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem text-left align-middle mr-3"></i><span class="align-middle">My
+            profile</span></a>
             {% if v.notifications_count %}
-            <a class="dropdown-item" href="/notifications"><i class="fas fa-inbox fa-width-rem text-left mr-3"></i>Inbox<span
+            <a class="dropdown-item" href="/notifications"><i class="fas fa-inbox fa-width-rem text-left align-middle mr-3"></i><span class="align-middle">Inbox</span><span
               class="badge badge-danger align-top ml-1">{{ v.notifications_count }}</span></a>
               {% else %}
               <a class="dropdown-item" href="/notifications?all=true"><i class="fas fa-inbox fa-width-rem text-left mr-3"></i>Inbox</a>
               {% endif %}
-              <a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-width-rem text-left mr-3"></i>Settings</a>
+              <a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-width-rem text-left align-middle mr-3"></i><span class="align-middle">Settings</span></a>
+
+{% block darkswitch %}
               {% if v and v.referral_count and session.get("dark_mode_enabled")%}
-              <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem text-left mr-3" id="dark-switch"></i>Dark mode</a>
+              <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem text-left align-middle mr-3" id="dark-switch"></i><span class="align-middle">Dark mode</span></a>
               {% elif v and v.referral_count %}
-              <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem text-left mr-3" id="dark-switch"></i>Dark mode</a>
+              <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem text-left align-middle mr-3" id="dark-switch"></i><span class="align-middle">Dark mode</span></a>
               {% else %}
-              <a class="dropdown-item" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem text-left mr-3"></i>Dark mode</a>
+              <a class="dropdown-item" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem text-left align-middle mr-3"></i><span class="align-middle">Dark mode</span></a>
               {% endif %}
+{% endblock %}
+
+
             </div>
             <hr class="my-2">
             <div class="px-2">
-              <a class="dropdown-item" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})">Log out</a>
+              <a class="dropdown-item" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})"><span class="align-middle">Log out</span></a>
             </div>
           </div>
         </div>
       </li>
       {% else %}
       <li class="nav-item d-flex align-items-center justify-content-center mx-1">
-       <a class="btn btn-primary" href="/login?redirect={{ request.path | urlencode}}">Sign In</a>
+       <a class="btn btn-outline-primary" href="/login?redirect={{ request.path | urlencode}}">Sign In</a>
      </li>
      <li class="nav-item d-flex align-items-center justify-content-center mx-1">
-       <a class="btn btn-white" href="/signup?redirect={{ request.path | urlencode}}">Sign Up</a>
+       <a class="btn btn-primary" href="/signup?redirect={{ request.path | urlencode}}">Sign Up</a>
      </li>
      {% endif %}
    </ul>
@@ -116,32 +133,35 @@
     </li>
     {% if v %}
     <li class="nav-item">
-      <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem mr-3"></i>@{{ v.username }}</a>
+      <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem align-middle mr-3"></i><span class="align-middle">@{{ v.username }}</span></a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/notifications?all=true"><i class="fas fa-envelope fa-width-rem mr-3"></i>Inbox</a>
+      <a class="nav-link" href="/notifications?all=true"><i class="fas fa-envelope fa-width-rem align-middle mr-3"></i><span class="align-middle">Inbox</span></a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/settings"><i class="fas fa-cog fa-width-rem mr-3"></i>Settings</a>
+      <a class="nav-link" href="/subscriptions"><i class="fas fa-crown fa-width-rem align-middle mr-3"></i><span class="align-middle">My guilds</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/settings"><i class="fas fa-cog fa-width-rem align-middle mr-3"></i><span class="align-middle">Settings</span></a>
     </li>
     {% if v and v.referral_count and session.get("dark_mode_enabled")%}
-    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem mr-3" id="dark-switch"></i>Dark mode</a></li>
+    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem align-middle mr-3" id="dark-switch"></i><span class="align-middle">Dark mode</span></a></li>
     {% elif v and v.referral_count %}
-    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem mr-3" id="dark-switch"></i>Dark mode</a></li>
+    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem align-middle mr-3" id="dark-switch"></i><span class="align-middle">Dark mode</span></a></li>
     {% else %}
-    <li class="nav-item"><a class="nav-link" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem mr-3"></i>Dark mode</a></li>
+    <li class="nav-item"><a class="nav-link" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem align-middle mr-3"></i><span class="align-middle">Dark mode</span></a></li>
     {% endif %}
     <li class="nav-item nav-item border-top mt-2 pt-2">
-      <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})">Log out</a>
+      <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})"><span class="align-middle">Log out</span></a>
     </li>
     <li class="nav-item nav-item border-top mt-2 pt-2">
-      <a class="nav-link text-small-extra" href="/about">About</a>
+      <a class="nav-link text-small-extra" href="/help/about">About</a>
     </li>
     <li class="nav-item nav-item">
       <a class="nav-link text-small-extra" href="/help/conduct">Terms</a>
     </li>
     <li class="nav-item nav-item">
-      <a class="nav-link text-small-extra" href="/about/privacy">Privacy</a>
+      <a class="nav-link text-small-extra" href="/help/privacy">Privacy</a>
     </li>
     <li class="nav-item nav-item">
       <a class="nav-link text-small-extra" href="#">Contact</a>
@@ -151,19 +171,19 @@
     </li>
     {% else %}
     <li class="nav-item d-flex align-items-center justify-content-center pb-3">
-      <a class="btn btn-outline-white btn-block" href="/login?redirect={{ request.path | urlencode}}">Sign in</a>
+      <a class="btn btn-outline-primary btn-block" href="/login?redirect={{ request.path | urlencode}}">Sign in</a>
     </li>
     <li class="nav-item d-flex align-items-center justify-content-center">
-      <a class="btn btn-white btn-block" href="/signup?redirect={{ request.path | urlencode}}">Sign up</a>
+      <a class="btn btn-primary btn-block" href="/signup?redirect={{ request.path | urlencode}}">Sign up</a>
     </li>
     <li class="nav-item nav-item mt-2">
-      <a class="nav-link text-small-extra" href="/about">About</a>
+      <a class="nav-link text-small-extra" href="/help/about">About</a>
     </li>
     <li class="nav-item nav-item">
       <a class="nav-link text-small-extra" href="/help/conduct">Terms</a>
     </li>
     <li class="nav-item nav-item">
-      <a class="nav-link text-small-extra" href="/about/privacy">Privacy</a>
+      <a class="nav-link text-small-extra" href="/help/privacy">Privacy</a>
     </li>
     <li class="nav-item nav-item">
       <a class="nav-link text-small-extra" href="#">Contact</a>

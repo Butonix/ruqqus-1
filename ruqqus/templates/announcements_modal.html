@@ -1,0 +1,49 @@
+<!-- Announcements Modal -->
+
+<div id="announcementsModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">What's new</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true"><i class="far fa-times"></i></span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+
+        <div class="tab-content mt-2">
+          <div class="tab-pane fade show active" id="guildPanel" role="tabpanel">
+            <h4>Introducing topic-specific boards, called Guilds</h4>
+          </div>
+          <div class="tab-pane fade" id="profilePanel" role="tabpanel">
+            <h4>Profile pics for everyone!</h4>
+          </div>
+          <div class="tab-pane fade" id="commentsPanel" role="tabpanel">
+            <h4>"Automagically" embedded images in comments</h4>
+          </div>
+      </div>
+    </div>
+    <div class="modal-footer justify-content-between bg-white">
+
+      <button type="button" class="btn btn-secondary disabled" id="backButton" data-dismiss="modal">Back</button><!--Disable back button until next tab -->
+
+      <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#guilds" role="tab" aria-expanded="false"><i class="fas fa-circle" style="font-size:8px"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#profile-pics" role="tab" aria-expanded="true"><i class="fas fa-circle" style="font-size:8px"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#embedded-images" role="tab" aria-expanded="false"><i class="fas fa-circle" style="font-size:8px"></i></a>
+        </li>
+      </ul>
+
+      <button type="button" class="btn btn-primary">Next</button>
+
+      <button type="button" class="btn btn-primary d-none" id="doneButton">Okay, got it</button>
+
+    </div>
+  </div>
+</div>
+</div>

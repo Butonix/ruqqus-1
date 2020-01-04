@@ -13,7 +13,7 @@ from sqlalchemy import *
 import threading
 import requests
 
-from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 _version = "0.5.0"
 
@@ -21,13 +21,15 @@ app = Flask(__name__,
             template_folder='./templates',
             static_folder='./static'
            )
-app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
+app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
 app.config["SERVER_NAME"]=environ.get("domain", None)
 app.config["VERSION"]="0.1.0"
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config["UserAgent"]="Ruqqus webserver ruqqus.com"
 
 if "localhost" in app.config["SERVER_NAME"]:
     app.config["CACHE_TYPE"]="null"
@@ -88,7 +90,7 @@ def before_request():
 
 def log_event(name, link):
 
-    sleep(10)
+    sleep(5)
 
     x=requests.get(link)
 
@@ -112,15 +114,16 @@ def log_event(name, link):
 
 @app.after_request
 def after_request(response):
+
+    #db.expire_all()
+    
     response.headers.add('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, x-auth"
                          )
 
+    #signups - hit discord webhook
     if request.method=="POST" and response.status_code in [301, 302] and request.path=="/signup":
         link=f'https://{app.config["SERVER_NAME"]}/@{request.form.get("username")}'
         thread=threading.Thread(target=lambda:log_event(name="Account Signup", link=link))
         thread.start()
             
     return response
-
-    
-    

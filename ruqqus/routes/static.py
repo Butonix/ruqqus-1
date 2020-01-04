@@ -1,9 +1,11 @@
 import time
-from ruqqus.helpers.wrappers import *
+import jinja2
 from flask import *
 
+from ruqqus.helpers.wrappers import *
+import ruqqus.classes
 from ruqqus.classes import *
-from ruqqus.__main__ import app, limiter
+from ruqqus.__main__ import app, db, limiter
 
 #take care of misc pages that never really change (much)
 @app.route('/assets/<path:path>')
@@ -23,7 +25,34 @@ def settings(v):
 @app.route("/settings/profile", methods=["GET"])
 @auth_required
 def settings_profile(v):
-    return render_template("settings_profile.html", v=v)
+    return render_template("settings_profile.html",
+                           v=v)
+
+@app.route("/help/titles", methods=["GET"])
+@auth_desired
+def titles(v):
+    titles = [x for x in db.query(Title).order_by(text("id asc")).all()]
+    return render_template("/help/titles.html",
+                           v=v,
+                           titles=titles)
+
+@app.route("/help/terms", methods=["GET"])
+@auth_desired
+def help_terms(v):
+    
+    cutoff=int(environ.get("tos_cutoff",0))
+
+    return render_template("/help/terms.html",
+                           v=v,
+                           cutoff=cutoff)
+
+@app.route("/badges", methods=["GET"])
+@auth_desired
+def badges(v):
+    badges=[x for x in db.query(BadgeDef).order_by(text("rank asc, id asc")).all()]
+    return render_template("badges.html",
+                           v=v,
+                           badges=badges)
 
 @app.route("/settings/security", methods=["GET"])
 @auth_required
@@ -49,11 +78,6 @@ def my_info(v):
 def notifications(v):
     return v.notifications_page(page=request.args.get("page","1"),
                                    include_read=request.args.get("all",False))
-
-@app.route("/submit", methods=["GET"])
-@is_not_banned
-def submit_get(v):
-    return render_template("submit.html", v=v)
 
 @app.route("/about/<path:path>")
 def about_path(path):

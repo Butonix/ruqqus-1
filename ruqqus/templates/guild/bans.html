@@ -1,0 +1,50 @@
+{% extends "guild/guild_settings.html" %}
+
+{% block title %}<title>+{{ b.name }} Exiles</title>{% endblock %}
+
+{% block pagetitle %}<a href="{{ b.permalink }}">+{{ b.name }}</a> Exiles{% endblock %}
+{% block subtitle %}Exile or pardon users from +{{ b.name }}{% endblock %}
+
+{% block content %}
+
+
+                                <div class="body">
+
+
+                                <label for="title">Exiles</label>
+                                <div class="form-text">Users who are exiled from +{{ b.name }}</div>
+
+				<form action="/+{{ b.name }}/mod/exiled" method="get">
+				<input class="form-input" name="user" type="text" value="{{ request.args.get('user','') }}">
+				<input type="submit" class="btn btn-primary" value="Find Users">
+				</form>
+
+				{% for user in users %}
+				<div class="body"><a href="{{ user.permalink }}">@{{ user.username }}</a> - {% if b.has_ban(user) %}exiled - <a href="javascript:void(0)" class="btn btn-primary" onclick="post('/mod/unban/{{ b.base36id }}/{{ user.username }}', callback=function(){window.location.reload(true)})">Pardon User</a>{% else %}<a href="javascript:void(0)" class="btn btn-primary{% if b.has_mod(user) %} disabled{% endif %}" onclick="post('/mod/ban/{{ b.base36id }}/{{ user.username }}', callback=function(){window.location.reload(true)})">Exile User</a>{% endif %}
+				</div>
+				{% else %}
+				<div class="body">Search for a user to see if they are banned.</div>
+				{% endfor %}
+
+				
+				</div>
+
+
+                            </div>
+
+                            <div class="footer">
+
+                                <div class="d-flex">
+
+                                    {% if error %}
+                                    <p class="mb-0">
+                                        <span class="text-danger text-small" style="vertical-align: sub;">{{ error }}</span>
+                                    </p>
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+{% endblock %}

@@ -1,5 +1,25 @@
 {% extends "default.html" %}
 
+{% block stylesheets %}
+
+{% if v and v.referral_count and session.get("dark_mode_enabled") %}
+<link id="css-link" rel="stylesheet" href="/+{{ p.board.name }}/dark.css">
+{% else %}
+<link id="css-link" rel="stylesheet" href="/+{{ p.board.name }}/main.css">
+{% endif %}
+
+{% endblock %}
+
+{% block darkswitch %}
+{% if v and v.referral_count and session.get("dark_mode_enabled")%}
+<a class="dropdown-item" href="javascript:void(0)" onclick="switch_css_board('{{ p.board.name }}')"><i class="fad fa-toggle-on fa-width-rem text-left align-middle mr-3" id="dark-switch"></i><span class="align-middle">Dark mode</span></a>
+{% elif v and v.referral_count %}
+<a class="dropdown-item" href="javascript:void(0)" onclick="switch_css_board('{{ p.board.name }}')"><i class="fad fa-toggle-off fa-width-rem text-left align-middle mr-3" id="dark-switch"></i><span class="align-middle">Dark mode</span></a>
+{% else %}
+<a class="dropdown-item" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem text-left align-middle mr-3"></i><span class="align-middle">Dark mode</span></a>
+{% endif %}
+{% endblock %}
+
 {% set score=p.score_fuzzed %}
 {% if v %}
 {% set voted=v.vote_status_on_post(p) %}
@@ -10,40 +30,66 @@
 {% endif %}
 
 {% block title %}
-{% if linked_comment and not linked_comment.is_banned and not linked_comment.is_deleted %}
-<title>@{{ linked_comment.author.username }} comments on "{{ p.title }}"</title>
-<meta name="description" content="{{ linked_comment.body }}">
+{% if comment_info and not comment_info.is_banned and not linked_comment.is_deleted %}
+<title>@{{ comment_info.author.username }} comments in +{{ p.board.name }} on "{{ p.title }}"</title>
+<meta name="description" content="{{ comment_info.body }}">
 {% else %}
 <title>{{ p.title | safe}}</title>
-<meta name="description" content="submitted by @{{ p.author.username }}">
+<meta name="description" content="posted by @{{ p.author.username }} in +{{ p.board.name }}">
 {% endif %}
 {% endblock %}
 
 {% block pagetype %}thread{% endblock %}
 
+{% block banner %}
+{% if p.board_id %}
+<div class="jumbotron jumbotron-fluid jumbotron-guild text-white" style="background-image: url({{ p.board.banner_url }})">
+  <div class="w-100 p-3" style="bottom: 0;">
+    <div class="container">
+      <div class="d-md-flex align-items-center">
+        <div>
+          <a href="{{ p.board.permalink }}"><img src="{{ p.board.profile_url }}" class="profile-pic-75"></a>
+        </div>
+        <div class="ml-3 w-100">
+        <a href="{{ p.board.permalink }}" class="text-white">
+          <h1 class="h3 d-inline-block mr-2">+{{ p.board.name }}
+           {% if p.board.over_18 %}
+           <span class="badge badge-danger text-small align-middle">NSFW</span>
+           {% endif %}
+         </h1>
+         </a>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+</div>
+{% endif %}
+{% endblock %}
+
 {% block adminpanel %}
 {% if v.admin_level >=3 %}
 <form action="/api/sticky/{{ p.base36id }}" method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
-  <input type="submit" value="{% if p.stickied %}Un-sticky{% else %}Sticky{% endif %}">
+  <input type="submit" class="form-control" value="{% if p.stickied %}Un-sticky{% else %}Sticky{% endif %}">
 </form>
 {% endif %}
 {% if v.admin_level >=3 and v.id==p.author_id %}
 <form action="/api/distinguish/{{ p.base36id }}" method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
-  <input type="submit" value="{% if p.distinguish_level %}Un-distinguish{% else %}Distinguish{% endif %}">
+  <input type="submit" class="form-control" value="{% if p.distinguish_level %}Un-distinguish{% else %}Distinguish{% endif %}">
 </form>
 {% endif %}
 {% if v.admin_level >=1 and v.admin_level > p.author.admin_level %}
 {% if p.is_banned %}
 <form action="/api/unban_post/{{ p.base36id }}" method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
-  <input type="submit" value="Approve Post">
+  <input type="submit" class="form-control" value="Approve Post">
 </form>
 {% else %}
 <form action="/api/ban_post/{{ p.base36id }}", method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
-  <input type="submit" value="Remove Post">
+  <input type="submit" class="form-control" value="Remove Post">
 </form>
 {% endif %}
 {% endif %}
@@ -99,167 +145,281 @@
 </div>
 {% endblock %}
 
-{% block sidebarLeftblock %}
+  {% block sidebarblock %}
+  <div class="sidebar-section sidebar-post-meta">
+    <div class="body">
+      <div class="score">{{ score }} point{{ 's' if score !=1 else '' }}<span class="score-percent ml-2" id="score-percent"></span></div>
+      <div class="progress mt-1" style="height: 6px;">
+        <div class="d-none" id="progressbar-value">{{ p.score_percent }}</div>
+        <div class="progress-bar bg-upvote transition-15" role="progressbar" id="progressbar" style=""
+        aria-valuenow="{{ p.score_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <div class="submission-date mt-3">Submitted on:<span class="date"> {{ p.created_date }}</span></div>
+      <div class="shortlink mt-2">
+        <input type="text" class="form-control form-control-sm copy-link d-md-inline-block" readonly="" value="https://ruqq.us/{{ p.base36id }}" data-clipboard-text="https://ruqq.us/{{ p.base36id }}">
+      </div>
+      {% if p.board_id %}
+      <div class="mt-3">
+        {% if p.board_id and p.board_id != p.original_board_id %}<a class="btn btn-secondary btn-tag font-weight-bold" href="{{ p.original_board.permalink }}">+{{ p.original_board.name }}</a> <i class="fal fa-long-arrow-right px-2" data-toggle="tooltip" data-placement="bottom" title="Moved from +{{ p.original_board.name }} to +{{ p.board.name }}"></i>
+        {% endif %}  
+      </div>
+      {% endif %}  
+    </div>
 
-{% if v %}
+    <div class="sidebar-section sidebar-info-basic">
+  <div class="title">
+    <span style="vertical-align: sub;"><i class="fas fa-info-circle mr-2"></i>Guild details</span>
+    <div class="dropdown my-auto post-actions float-right d-inline-block">
+      <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="line-height: 0;
+      ">
+      <i class="far fa-ellipsis-h text-white"></i>
+    </a>
+    <div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
+      {% if v and not p.board.has_mod(v) %}
+      <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportGuildModal" onclick="report_guildModal('')"><i class="fas fa-flag"></i>Report guild</a>
+      {% endif %}
+      {% if v and p.board.has_mod(v) %}
+      <a class="dropdown-item" href="{{ p.board.permalink }}/mod/settings"><i class="fas fa-cog"></i>Guild settings</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<div class="body pb-0">
+ <div class="d-flex">
+   {% if p.board.has_profile %}
+   <div>
+     <a href="{{ p.board.permalink }}"><img src="{{ p.board.profile_url }}" class="profile-pic-50 mr-2"></a>
+   </div>
+   {% elif not p.board.has_profile and v and p.board.has_mod(v) %}
+   <a href="{{ p.board.permalink}}/mod/settings" class="profile-pic-50 btn btn-outline-primary border-3 btn-rounded mr-2" style="border-style: dotted;">
+     <div class="letter" style="line-height: 3;"><i class="fas fa-plus"></i></div>
+   </a>
+   {% endif %}
+   <div class="my-auto"><h1 class="h5 mb-0">+{{ p.board.name }} {% if p.board.over_18 %}<span class="badge badge-danger text-small align-middle">NSFW</span>{% endif %} {% if p.board.is_banned %} <span class="badge badge-danger">Banned</span>{% endif %}</h1>
+    <div class="text-small mt-1"><span class="font-weight-bold">{{ p.board.subscriber_count }}</span> member{{ 's' if p.board.subscriber_count != 1 else '' }}<span> · </span>
+     <span class="font-weight-bold" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ p.board.created_date }}">{{ p.board.age_string }}</span> est.
+   </div>
+ </div>
+</div>
+</div>
+<div class="body">
+ <div>{{ p.board.description_html | safe }}</div>
+ {% if v %}
+ <div id="button-sub" {% if is_subscribed %}class="d-none"{% endif %}><a class="btn btn-primary btn-block" href="javascript:void(0)" onclick="post('/api/subscribe/{{ p.board.name }}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Join guild</a></div>
+ <div id="button-unsub" {% if not is_subscribed %}class="d-none"{% endif %}><a class="btn btn-secondary btn-block" href="javascript:void(0)" onclick="post('/api/unsubscribe/{{ p.board.name }}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Leave</a></div>
+ {% elif not v %}
+ <a class="btn btn-primary btn-block" href="/signup">Join guild</a>
+ {% endif %}
+ {% if v and not p.board.has_ban(v) %}
+ <a href="/submit?guild={{ p.board.name | urlencode }}" class="btn {% if is_subscribed %}btn-primary{% else %}btn-secondary{% endif %} btn-block mt-2">Create post</a>
+ {% elif not v %}
+ <a href="/signup" class="btn btn-secondary btn-block mt-3">Create post</a>
+ {% endif %}
+</div>
+</div>
 
-<div class="sidebar-section sidebar-dashboard">
-  <div class="title">Dashboard</div>
+<div class="sidebar-section sidebar-rules">
+  <div class="title"><span style="vertical-align: sub;"><i class="fas fa-scroll-old mr-2"></i>Rules and guidelines</span></div>
   <div class="body">
-    <ul class="no-bullets filter-list pl-0">
-      <li class="filter-item">
-        <a class="filter-link " href="{{ v.permalink }}"><i class="fas fa-feather-alt fa-width-rem"></i>Your posts</a>
+    <ol class="pl-0 mb-0">   
+      <li><a class="text-black font-weight-bold collapsed" data-toggle="collapse" href="#ruleCollapse1" role="button" aria-expanded="false" aria-controls="ruleCollapse1">Follow Ruqqus rules<span class="float-right"><i class="fa"></i></span></a></li>
+      <div id="ruleCollapse1" class="collapse">
+        <p style="padding: 0 0 0 20px;">Anything you post to this guild, including comments, must follow the site-wide rules of Ruqqus.</p>
+      </div>
+    </ol>
+  </div>
+</div>
+
+<div class="sidebar-section sidebar-mods">
+  <div class="title"><span style="vertical-align: sub;"><i class="fas fa-crown mr-2"></i>Guildmasters</span></div>
+  <div class="body">
+    <ul class="no-bullets pl-0">
+      {% for mod in p.board.mods %}
+      <li class="mb-2">
+      <a href="{{ mod.permalink }}" class="font-weight-bold"><img src="{{ mod.profile_url }}" class="profile-pic-20 mr-2">
+      <span class="align-middle">{{ mod.username }}</span>
+      </a>
       </li>
-      <li class="filter-item">
-        <a class="filter-link " href="{{ v.permalink }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Your comments</a> 
+      {% else %}
+      <li>
+        <div class="text-center mb-2" style=""><i class="fad fa-ghost text-muted" style="font-size: 2.5rem"></i></div>
+        <p class="text-center text-small text-muted mb-0">+{{ p.board.name }} has no guildmasters</p>
       </li>
-      <li class="filter-item">
-        <a class="filter-link " href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
-      </li>
+      {% endfor %}
     </ul>
   </div>
 </div>
 
-{% endif %}
-
-{% if not v %}
-<div class="sidebar-section sidebar-alert">
-<div class="body">
-    <img src="/assets/images/illustrations/ruckus.png" class="empty-state-img mb-3" alt="empty state">
-    <h5>Join the discourse.</h5>
-    <p class="text-small">Internet freedom of speech has a new home. Use your voice. Make a Ruqqus.</p>
-    <a href="/signup" class="btn btn-primary btn-block">Sign up</a>
+{% if v and p.board.has_mod(v) %}
+<div class="sidebar-section sidebar-guild-tools">
+  <div class="title"><span style="vertical-align: sub;"><i class="fas fa-tools mr-2"></i>Guildmaster Tools</span></div>
+  <div class="body">
+    <div><a href="{{ p.board.permalink}}/mod/settings"><i class="fad fa-cog fa-width-rem"></i>Settings</a></div>
+    <div><a href="{{ p.board.permalink}}/mod/mods"><i class="fad fa-user-crown fa-width-rem"></i>Guildmasters</a></div>
+    <div><a href="{{ p.board.permalink}}/mod/exiled"><i class="fad fa-gavel fa-width-rem"></i>Exiles</a></div>
+    <div><a href="{{ p.board.permalink}}/mod/queue"><i class="fad fa-flag fa-width-rem"></i>Reports</a></div>
   </div>
 </div>
 {% endif %}
 
-
-{% endblock %}
-
-{% block sidebarblock %}
-<div class="sidebar-section sidebar-post-meta">
+{% if not v and trending_boards %}
+<div class="sidebar-section sidebar-guild-recommendations">
+  <div class="title"><span style="vertical-align: sub;"><i class="fas fa-university mr-2"></i>Rising guilds</span></div>
   <div class="body">
-    <div class="score">{{ score }} point{{ 's' if score !=1 else '' }}<span class="score-percent ml-2" id="score-percent"></span></div>
-    <div class="progress mt-1" style="height: 6px;">
-      <div class="d-none" id="p-ups">{{ p.ups }}</div>
-      <div class="d-none" id="p-downs">{{ p.downs }}</div>
-      <div class="d-none" id="progressbar-value">{{ p.score_percent }}</div>
-      <div class="progress-bar bg-upvote transition-15" role="progressbar" id="progressbar" style=""
-      aria-valuenow="{{ p.score_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+    <ul class="no-bullets guild-recommendations-list pl-0">
+     {% for entry in trending_boards[0:5] %}
+     <li class="guild-recommendations-item">
+      <a href="{{ entry[0].permalink }}">
+        <div class="d-flex">
+          <div class="mr-2">
+            <img src="{{ entry.profile_url }}" class="guild-icon-square-35"></div>
+            <div>
+              <div class="text-black font-weight-normal">+{{ entry[0].name }}</div>
+              <div class="text-muted text-small font-weight-normal">{{ entry[1] }} Member{{ '' if entry[1]==1 else 's' }}</div>
+            </div>
+          </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="text-center">
+      <a href="#" class="btn btn-link">View more</a>
     </div>
-    <div class="submission-date mt-3">Submitted on:<span class="date"> {{ p.created_date }}</span></div>
-    <div class="shortlink mt-1">Shortlink:<span class="link"></span> <input type="text" class="form-control form-control-sm copy-link d-md-inline-block" readonly value="https://ruqq.us/{{ p.base36id }}" data-clipboard-text="https://ruqq.us/{{ p.base36id }}"></input></div>
   </div>
 </div>
-
-<div class="sidebar-section sidebar-about">
-  <div class="title">About Ruqqus</div>
+{% elif v and v.subscriptions.filter_by(is_active=True).count() %}
+<div class="sidebar-section sidebar-guild-recommendations">
+  <div class="title"><span style="vertical-align: sub;"><i class="fas fa-university mr-2"></i>My guilds</span></div>
   <div class="body">
-    <p>Ruqqus lets you share and discover content from around the web in one place. Vote on what you like or dislike and engage in uncensored discussion with the community.</p>
-    <small><a href="/help/about">Learn more →</a></small>
-    {% if v and not v.is_banned %}
-    <div class="mt-3"><a class="btn btn-primary btn-block" href="/submit">Create post</a></div>
-    {% endif %}
-    {% if not v %}
-    <div class="mt-3"><a class="btn btn-primary btn-block" href="/login">Create post</a></div>
-    {% endif %}
-  </div>
-</div>
-{% endblock %}
-
-{% block content %}
-<div class="row mb-3">
-
-  <div class="col-12">
-
-    <div id="post-{{ p.base36id }}" class="card border-0 mt-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-      <div class="d-flex flex-row-reverse flex-nowrap justify-content-end">
-        <div class="card-header bg-transparent border-0 d-flex flex-row flex-nowrap p-0 {% if p.body_html %} mt-4 mb-auto {% else %} my-auto {% endif %} pl-3 ml-auto">
-          {% if p.url.endswith((".jpg",".png")) and p.domain_obj and p.domain_obj.show_thumbnail %}<a href="{{ p.url }}" rel="nofollow"><img src="{{ p.url }}" class="post-img d-none d-md-block" alt="Unable to anonymously load image"></a>{% endif %}
-          <div class="dropdown show my-auto post-actions ml-4 d-none d-md-block">
-            <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">
-            <i class="fas fa-ellipsis-v"></i>
+    <ul class="no-bullets guild-recommendations-list pl-0">
+      {% for board in v.boards_subscribed[0:8] %}
+      <li class="guild-recommendations-item">
+        <a href="{{ board.permalink }}">
+          <div class="d-flex">
+            <div class="mr-2">
+              <img src="{{ board.profile_url }}" class="guild-icon-square-35"></div>
+              <div class="my-auto">
+                <div class="text-black font-weight-normal">+{{ board.name }}</div>
+              </div>
+            </div>
           </a>
-
-          <div class="dropdown-menu border-0 shadow dropdown-menu-right dropdown-menu-lg-left mt-2"
-          aria-labelledby="dropdownMoreLink">
-          <a href="javascript:void(0);" role="button" class="dropdown-item copy-link" data-clipboard-text="https://www.ruqqus.com{{ p.permalink }}"><i class="fas fa-link"></i>Copy link</a>
-          <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
-          {% if v and not v.id==p.author_id %}
-          <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportPostModal" onclick="report_postModal('{{ p.base36id }}')"><i class="fas fa-flag"></i>Flag</a>
-          {% endif %}
-          {% if v %}
-{% if v.id==p.author_id and not v.is_banned %}
-	<a class="dropdown-item" href="javascript:void(0)" onclick="togglePostEdit()"><i class="fas fa-edit"></i>Edit</a>
-{% endif %}
-          {% if v.admin_level >=1 %}
-          {% if p.is_banned %}
-          <a class="dropdown-item approveDropdownItem" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="fas fa-clipboard-check"></i>Approve</a>
-          {% else %}
-          <a class="dropdown-item removeDropdownItem" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a>
-          {% endif %}
-          {% endif %}
-          {% endif %}
-        </div>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="text-center">
+        <a href="#" class="btn btn-link">View all</a>
       </div>
     </div>
-    <div class="card-block my-md-auto">
-      <div class="post-meta text-left d-block d-md-none mb-2">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a>{% if p.distinguish_level %} <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>{% endif %} <span>&#183;</span> ({{ p.domain }}){% if p.edited_utc %} &#183; Edited <span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ edited_date }}">{{ p.edited_string }}</span>{% endif %}</div>
-      <h1 class="card-title post-title text-left mb-2"><a target="_blank" href="{{ p.url }}">{{ p.title | safe }}</a></h1>
-      <div class="post-meta text-left d-none d-md-block">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by <a href="{{ p.author.permalink }}">{{ p.author.username }}</a>{% if p.distinguish_level %} <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>{% endif %} <span>&#183;</span> ({{ p.domain }}){% if p.edited_utc %} &#183; Edited <span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ edited_date }}">{{ p.edited_string }}</span>{% endif %}</div>
-
-      <div id="post-body" {% if p.body_html %}class="post-body mt-3"{% endif %}> 
-        {{ p.body_html | safe }}
-      </div>
-      
-	{% if v and v.id==p.author_id and not v.is_banned %}
-	<div id="edit-post-body" class="d-none comment-write collapsed child">
-<form id="post-edit-form-{{ p.base36id }}" action="/edit_post/{{ p.base36id }}" method="post" class="input-group">
-				<input type="hidden" name="formkey" value="{{ v.formkey }}">
-				<input type="hidden" name="current_page" value="{{ request.path }}">
-				<textarea name="body" id="post-edit-box" form="post-edit-form-{{ p.base36id }}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{ p.body }}</textarea> 
-				<div class="comment-format"> 
-					<small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeReplyBold()" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> 
-					<small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeReplyItalics()" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> 
-					<small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeReplyQuote()" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small> 
-					<small class="format"><i class="fas fa-link" aria-hidden="true"></i></small> 
-					<a href="javascript:void(0)" onclick="togglePostEdit()" class="btn btn-secondary ml-auto cancel-form">Cancel</a> 
-					<button form="post-edit-form-{{ p.base36id }}" class="btn btn-primary ml-2">Save Edit</button> </div> </form>
-	</div>
-	{% endif %}
-
-    </div>
-
-    <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
-
-    {% if v %}
-
-    <div id="voting" class="voting d-none d-md-block {% if p.body_html %} mb-auto {% else %} my-auto {% endif %} mr-3">
-      <div id="post-{{ p.base36id }}-up" class="arrow-up mx-auto" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
-      </div>
-      <span id="post-{{ p.base36id }}-score-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">{{ score+1-adjust }}</span>
-      <span id="post-{{ p.base36id }}-score-none" class="score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">{{ score-adjust }}</span>
-      <span id="post-{{ p.base36id }}-score-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">{{ score-1-adjust }}</span>
-      <div id="post-{{ p.base36id }}-down" class="arrow-down mx-auto" {% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}>
-      </div>
-    </div>
-
-    {% else %}
-
-    <div id="voting" class="voting d-none d-md-block {% if p.body_html %} mb-auto {% else %} my-auto {% endif %} mr-3">
-      <div id="post-{{ p.base36id }}-up" class="arrow-up mx-auto" onclick="location.href='/login';">
-      </div>
-      <span id="post-{{ p.base36id }}-score-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">{{ score+1-adjust }}</span>
-      <span id="post-{{ p.base36id }}-score-none" class="score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">{{ score-adjust }}</span>
-      <span id="post-{{ p.base36id }}-score-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">{{ score-1-adjust }}</span>
-      <div id="post-{{ p.base36id }}-down" class="arrow-down mx-auto" onclick="location.href='/login';">
-      </div>
-    </div>
-
-    {% endif %}
-
   </div>
+  {% elif v and not v.subscriptions.filter_by(is_active=True).count() %}
+  <div class="sidebar-section sidebar-guild-recommendations sticky-63">
+    <div class="title"><span style="vertical-align: sub;"><i class="fas fa-university mr-2"></i>My guilds</span></div>
+    <div class="body">
+      <div class="my-3" style="">
+        <i class="fad fa-telescope text-primary" style="font-size:3rem"></i>
+      </div>
+      <h5>Discover amazing communities across Ruqqus.</h5>
+      <p class="text-small">You are not a member of any guilds. Guilds you are a member of will be displayed here.</p>
+      <a href="/browse" class="btn btn-primary btn-block">Discover guilds</a>
+    </div>
+  </div>
+  {% endif %}
+    {% endblock %}
+
+    {% block content %}
+    <div class="row mb-3">
+
+      <div class="col-12">
+
+        <div id="post-{{ p.base36id }}" class="card border-0 mt-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+          <div class="d-flex flex-row-reverse flex-nowrap justify-content-end">
+            <div class="card-header bg-transparent border-0 d-none d-md-flex flex-row flex-nowrap p-0 {% if p.body_html %} mt-4 mb-auto {% else %} my-auto {% endif %} pl-3 ml-auto">
+
+              {% if p.thumb_url %}
+
+              <a href="{{ p.url }}" rel="nofollow"><img src="{{ p.thumb_url }}" class="post-img d-none d-md-block" alt="Unable to anonymously load image"></a>
+
+              {% endif %}
+
+              <div class="dropdown show my-auto post-actions ml-4 d-none d-md-block">
+                <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <i class="fas fa-ellipsis-v"></i>
+              </a>
+
+              <div class="dropdown-menu border-0 shadow dropdown-menu-right dropdown-menu-lg-left mt-2"
+              aria-labelledby="dropdownMoreLink">
+              <a href="javascript:void(0);" role="button" class="dropdown-item copy-link" data-clipboard-text="{{ p.permalink | full_link }}"><i class="fas fa-link"></i>Copy link</a>
+              <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
+              {% if v and not v.id==p.author_id %}
+              <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportPostModal" onclick="report_postModal('{{ p.base36id }}')"><i class="fas fa-flag"></i>Flag</a>
+              {% endif %}
+
+              {% if v %}
+              {% if v.id==p.author_id and not v.is_banned and not p.board.has_ban(v) %}
+              <a class="dropdown-item" href="javascript:void(0)" onclick="togglePostEdit()"><i class="fas fa-edit"></i>Edit</a>
+              {% endif %}
+              {% if v.admin_level >=1 %}
+
+              {% if p.is_banned %}
+              <a class="dropdown-item approveDropdownItem" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="fas fa-clipboard-check"></i>Approve</a>
+              {% else %}
+              <a class="dropdown-item removeDropdownItem" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a>
+              {% endif %}
+              {% endif %}
+              {% if v and p.board.has_mod(v) %}
+              <a class="dropdown-item removeDropdownItem" href="javascript:void(0)" data-toggle="modal" data-target="#kickPostModal" onclick="kick_postModal('{{ p.base36id }}')"><i class="fas fa-boot" data-fa-transform="flip-h"></i>Kick</a>
+              {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="card-block my-md-auto">
+
+          <div class="post-meta text-left d-block d-md-none mb-2">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by {% if p.author.title and p.author.title.is_before %}<span style="color:#{{ p.author.title.color }}">{{ p.author.title.text }}</span> {% endif %}<a href="{{ p.author.permalink }}" class="user-name">{{ p.author.username }}</a>{% if p.author.title and not p.author.title.is_before %}<span style="color:#{{ p.author.title.color }}">{{ p.author.title.text }}</span>{% endif %}{% if p.distinguish_level %} <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>{% endif %} <span>&#183;</span> ({{ p.domain }}){% if p.edited_utc %} &#183; Edited <span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ edited_date }}">{{ p.edited_string }}</span>{% endif %}</div>
+          {% if p.url %}
+          <h1 class="card-title post-title text-left mb-2"><a target="_blank" href="{{ p.url }}">{{ p.title | safe }}</a></h1>
+          {% else %}
+          <h1 class="card-title post-title text-left mb-2">{{ p.title | safe }}</h1>
+          {% endif %}
+          <div class="post-meta text-left d-none d-md-block">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by {% if p.author.title and p.author.title.is_before %}<span style="color:#{{ p.author.title.color }}">{{ p.author.title.text }}</span> {% endif %}<a href="{{ p.author.permalink }}" class="user-name">{{ p.author.username }}</a>{% if p.author.title and not p.author.title.is_before %}<span style="color:#{{ p.author.title.color }}">{{ p.author.title.text }}</span>{% endif %}{% if p.distinguish_level %} <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>{% endif %} <span>&#183;</span> ({{ p.domain }}){% if p.edited_utc %} &#183; Edited <span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ edited_date }}">{{ p.edited_string }}</span>{% endif %}</div>
+
+
+          <div id="post-body" {% if p.body_html %}class="post-body mt-3"{% endif %}> 
+            {{ p.body_html | safe }}
+          </div>
+
+        </div>
+
+        <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
+
+        {% if v %}
+
+        <div id="voting" class="voting d-none d-md-block {% if p.body_html %} mb-auto {% else %} my-auto {% endif %} mr-3">
+          <div id="post-{{ p.base36id }}-up" class="arrow-up mx-auto" {% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}>
+          </div>
+          <span id="post-{{ p.base36id }}-score-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">{{ score+1-adjust }}</span>
+          <span id="post-{{ p.base36id }}-score-none" class="score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">{{ score-adjust }}</span>
+          <span id="post-{{ p.base36id }}-score-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">{{ score-1-adjust }}</span>
+          <div id="post-{{ p.base36id }}-down" class="arrow-down mx-auto" {% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}>
+          </div>
+        </div>
+
+        {% else %}
+
+        <div id="voting" class="voting d-none d-md-block {% if p.body_html %} mb-auto {% else %} my-auto {% endif %} mr-3">
+          <div id="post-{{ p.base36id }}-up" class="arrow-up mx-auto" onclick="location.href='/login';">
+          </div>
+          <span id="post-{{ p.base36id }}-score-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">{{ score+1-adjust }}</span>
+          <span id="post-{{ p.base36id }}-score-none" class="score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">{{ score-adjust }}</span>
+          <span id="post-{{ p.base36id }}-score-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">{{ score-1-adjust }}</span>
+          <div id="post-{{ p.base36id }}-down" class="arrow-down mx-auto" onclick="location.href='/login';">
+          </div>
+        </div>
+
+        {% endif %}
+
+      </div>
 
 <!-- Disable card-footer for now
                                             <div class="card-footer d-none">
@@ -294,18 +454,22 @@
                           <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
                             <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
                             <a class="dropdown-item d-none" href="#"><i class="fas fa-flag"></i>Flag</a>
+
                             {% if v %}
-{% if v.id==p.author_id and not v.is_banned %}
+{% if v.id==p.author_id and not v.is_banned and not p.board.has_ban(v) %}
 	<a class="dropdown-item" href="javascript:void(0)" onclick="togglePostEdit()"><i class="fas fa-edit"></i>Edit</a>
 {% endif %}
 {% if v.admin_level >=1 %}
     {% if p.is_banned %}
                             <a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="fas fa-clipboard-check"></i>Approve</a>
                             {% else %}
-                            <a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a>
+                            <a href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a>
                                 {% endif %}
 {% endif %}
+{% if v and p.board.has_mod(v) %}
+	<a class="dropdown-item removeDropdownItem text-danger" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board.base36id }}/{{ p.base36id }}')"><i class="fas fa-boot" data-fa-transform="flip-h"></i>Kick Post</a>
 
+{% endif %}
 {% endif %}
                           </div>
                         </div>
@@ -318,139 +482,155 @@
 
             </div>
 
-            {% if p.embed_url %}
-            <div class="post-body mt-3"> 
-              <div class="embed-responsive embed-responsive-16by9">
-                <iframe src="{{ p.embed_url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            {% if v and v.id==p.author_id and not v.is_banned %}
+            <div id="edit-post-body" class="d-none comment-write collapsed child">
+              <form id="post-edit-form-{{ p.base36id }}" action="/edit_post/{{ p.base36id }}" method="post" class="input-group">
+                <input type="hidden" name="formkey" value="{{ v.formkey }}">
+                <input type="hidden" name="current_page" value="{{ request.path }}">
+                <textarea name="body" id="post-edit-box" form="post-edit-form-{{ p.base36id }}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="3">{{ p.body }}</textarea> 
+                <div class="comment-format"> 
+                  <small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeReplyBold()" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> 
+                  <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeReplyItalics()" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> 
+                  <small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeReplyQuote()" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small> 
+                  <small class="format"><i class="fas fa-link" aria-hidden="true"></i></small> 
+                  <a href="javascript:void(0)" onclick="togglePostEdit()" class="btn btn-secondary ml-auto cancel-form">Cancel</a> 
+                  <button form="post-edit-form-{{ p.base36id }}" class="btn btn-primary ml-2">Save Edit</button> </div> </form>
+                </div>
+                {% endif %}
+
+                {% if p.embed_url %}
+                <div class="post-body mt-3"> 
+                  <div class="embed-responsive embed-responsive-16by9">
+                    <iframe src="{{ p.embed_url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  </div>
+                </div>
+                {% endif %}
+
+              </div>
+
+              <div class="row no-gutters mt-3 d-block d-md-none">
+                <div class="col">
+                 <a target="_blank" href="{{ p.url }}">{% if p.is_image and p.domain_obj and p.domain_obj.show_thumbnail %}<img src="{{ p.url }}" class="img-fluid" alt="Unable to anonymously load image">
+                   <div class="post-img-overlay d-block d-md-none">{{ p.domain|truncate(30, True) }}<i class="fas fa-external-link-alt text-small ml-2"></i></div>
+                   {% endif %}
+                 </a>
+               </div>
+             </div>
+
+           </div>
+
+           <div class="row mb-3 d-block d-md-none">
+            <div class="col-12">
+
+              <div class="post-actions">
+                <ul class="list-inline text-right d-flex">
+
+                  <li class="list-inline-item mr-auto"><a href="{{ p.permalink }}"><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
+
+                  <li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link }}"><i class="fas fa-link"></i>Share</a></li>
+                  {% if v %}
+                  <li class="list-inline-item">
+                    <a href="#" data-toggle="modal" data-target="#actionsModal">
+                      <i class="fas fa-ellipsis-h"></i>
+                    </a>
+                  </li>
+                  {% endif %}
+                  <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none">
+                    {% if v %}
+                    <span id="arrow-{{ p.base36id }}-mobile-up" class="mr-2 arrow-mobile-up" onclick="vote('{{ p.base36id }}','0')">
+                      <i class="fas fa-arrow-alt-up mx-0" aria-hidden="true"></i>
+                    </span>
+                    {% else %}
+                    <span id="arrow-{{ p.base36id }}-mobile-up" class="mr-2 arrow-mobile-up" onclick="location.href='/login';">
+                      <i class="fas fa-arrow-alt-up mx-0" aria-hidden="true"></i>
+                    </span>
+                    {% endif %}
+
+
+
+                    <span id="post-{{ p.base36id }}-score-mobile-up" class="score-up text-muted d-none">{{ score+1 }}</span>
+                    <span id="post-{{ p.base36id }}-score-mobile-none" class="score text-muted">{{ score }}</span>
+                    <span id="post-{{ p.base36id }}-score-mobile-down" class="score-down text-muted d-none">{{ score-1 }}</span>
+
+                    {% if v %}
+                    <span id="arrow-{{ p.base36id }}-mobile-down" class="arrow-mobile-down ml-2 my-0" onclick="vote('{{ p.base36id }}','-1')">
+                      <i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
+                    </span>
+                    {% else %}
+                    <span id="arrow-{{ p.base36id }}-mobile-down" class="arrow-mobile-down ml-2 my-0" onclick="location.href='/login';">
+                      <i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
+                    </span>
+                    {% endif %}
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+
+          </div>
+          <div class="row border-md-0 pb-3">
+            <div class="col border-top">
+              <div class="comments-count py-3">
+                <div class="total"><a href="{{ p.permalink }}">Comments <span class="d-none d-md-inline-block">({{ p.comment_count }})</span></a></div>
+                <div class="post-filter ml-auto"><span>Sort By:</span>
+                  <span class="dropdown">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                  </a>
+                  <span class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="?sort=new">New</a>
+                    <a class="dropdown-item" href="?sort=top">Top</a>
+                    <a class="dropdown-item" href="?sort=disputed">Disputed</a>
+                    <a class="dropdown-item d-none" href="#">Based</a>
+                  </span>
+                </span>
+              </div>
+            </div>
+
+            {% if not p.is_banned and not p.board.has_ban(v) %}
+            <div class="comment-write mb-3">
+              <form id="reply-to-{{ p.fullname }}" class="input-group" action="/api/comment" method="post">
+                <input type="hidden" name="formkey" value="{{ v.formkey }}">
+                <input type="hidden" name="parent_fullname" value="t2_{{ p.base36id }}">
+                <input type="hidden" name="submission" value="{{ p.base36id }}">
+                {% if v %}
+                <textarea class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{ p.fullname }}" aria-label="With textarea" placeholder="Add your comment..." rows="1"></textarea>
+                {% else %}
+                <textarea class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="1" onclick="location.href='/login';"></textarea>
+                {% endif %}
+                <div class="comment-format">
+                  <small class="format pl-0"><i class="fas fa-bold" onclick="makeBold()" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Bold"></i></small>
+                  <small class="format"><i class="fas fa-italic" onclick="makeItalics()" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Italicize"></i></small>
+                  <small class="format"><i class="fas fa-quote-right" onclick="makeQuote()" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Quote"></i></small>
+                  <small class="format"><i class="fas fa-link"></i></small>
+                  <button form="reply-to-{{ p.fullname }}" class="btn btn-primary btn ml-auto">Comment</button>
+                </div>
+              </form>
+            </div>
+            {% endif %}
+
+            {% if not v and p.comment_count >= 2 %}
+            <div class="card border-0 bg-light mt-4">
+              <div class="card-body">
+                <h5 class="card-title">Jump in the discussion.</h5>
+                <p class="card-text">Become part of the community, no email address required. Make a Ruqqus.</p>
+                <div>
+                  <a href="/signup" class="btn btn-primary">Sign up</a>
+                  <a href="/login" class="btn btn-link text-muted">Sign in</a>
+                </div>
               </div>
             </div>
             {% endif %}
 
-          </div>
-
-          <div class="row no-gutters mt-3 d-block d-md-none">
-            <div class="col">
-             <a target="_blank" href="{{ p.url }}">{% if p.url.endswith((".jpg",".png")) and p.domain_obj and p.domain_obj.show_thumbnail %}<img src="{{ p.url }}" class="img-fluid" alt="Unable to anonymously load image">
-               <div class="post-img-overlay d-block d-md-none">{{ p.domain|truncate(30, True) }}<i class="fas fa-external-link-alt text-small ml-2"></i></div>
-               {% endif %}
-             </a>
+            <div class="comment-section">
+             {% for c in p.replies %}
+             {{ c.rendered_comment(v=v) | safe }}
+             {% endfor %}
            </div>
+
          </div>
 
        </div>
 
-       <div class="row mb-3 d-block d-md-none">
-        <div class="col-12">
-
-          <div class="post-actions">
-            <ul class="list-inline text-right d-flex">
-
-              <li class="list-inline-item mr-auto"><a href="{{ p.permalink }}"><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
-
-              <li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="https://www.ruqqus.com{{ p.permalink }}"><i class="fas fa-link"></i>Share</a></li>
-              {% if v %}
-              <li class="list-inline-item">
-                <a href="#" data-toggle="modal" data-target="#actionsModal">
-                  <i class="fas fa-ellipsis-h"></i>
-                </a>
-              </li>
-              {% endif %}
-              <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none">
-                {% if v %}
-                <span id="arrow-{{ p.base36id }}-mobile-up" class="mr-2 arrow-mobile-up" onclick="vote('{{ p.base36id }}','0')">
-                  <i class="fas fa-arrow-alt-up mx-0" aria-hidden="true"></i>
-                </span>
-                {% else %}
-                <span id="arrow-{{ p.base36id }}-mobile-up" class="mr-2 arrow-mobile-up" onclick="location.href='/login';">
-                  <i class="fas fa-arrow-alt-up mx-0" aria-hidden="true"></i>
-                </span>
-                {% endif %}
-
-
-
-                <span id="post-{{ p.base36id }}-score-mobile-up" class="score-up text-muted d-none">{{ score+1 }}</span>
-                <span id="post-{{ p.base36id }}-score-mobile-none" class="score text-muted">{{ score }}</span>
-                <span id="post-{{ p.base36id }}-score-mobile-down" class="score-down text-muted d-none">{{ score-1 }}</span>
-
-                {% if v %}
-                <span id="arrow-{{ p.base36id }}-mobile-down" class="arrow-mobile-down ml-2 my-0" onclick="vote('{{ p.base36id }}','-1')">
-                  <i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
-                </span>
-                {% else %}
-                <span id="arrow-{{ p.base36id }}-mobile-down" class="arrow-mobile-down ml-2 my-0" onclick="location.href='/login';">
-                  <i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
-                </span>
-                {% endif %}
-              </li>
-            </ul>
-          </div>
-
-        </div>
-
-      </div>
-      <div class="row border-md-0 pb-3">
-        <div class="col border-top">
-          <div class="comments-count py-3">
-            <div class="total"><a href="{{ p.permalink }}">Comments <span class="d-none d-md-inline-block">({{ p.comment_count }})</span></a></div>
-            <div class="post-filter ml-auto"><span>Sort By:</span>
-              <span class="dropdown">
-                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
-              </a>
-              <span class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="?sort=new">New</a>
-                <a class="dropdown-item" href="?sort=top">Top</a>
-                <a class="dropdown-item" href="?sort=disputed">Disputed</a>
-                <a class="dropdown-item d-none" href="#">Based</a>
-              </span>
-            </span>
-          </div>
-        </div>
-
-        {% if not p.is_banned %}
-        <div class="comment-write mb-3">
-          <form id="reply-to-{{ p.fullname }}" class="input-group" action="/api/comment" method="post">
-            <input type="hidden" name="formkey" value="{{ v.formkey }}">
-            <input type="hidden" name="parent_fullname" value="t2_{{ p.base36id }}">
-            <input type="hidden" name="submission" value="{{ p.base36id }}">
-            {% if v %}
-            <textarea class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{ p.fullname }}" aria-label="With textarea" placeholder="Add your comment..." rows="1"></textarea>
-            {% else %}
-            <textarea class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="1" onclick="location.href='/login';"></textarea>
-            {% endif %}
-            <div class="comment-format">
-              <small class="format pl-0"><i class="fas fa-bold" onclick="makeBold()" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Bold"></i></small>
-              <small class="format"><i class="fas fa-italic" onclick="makeItalics()" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Italicize"></i></small>
-              <small class="format"><i class="fas fa-quote-right" onclick="makeQuote()" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Quote"></i></small>
-              <small class="format"><i class="fas fa-link"></i></small>
-              <button form="reply-to-{{ p.fullname }}" class="btn btn-primary btn ml-auto">Comment</button>
-            </div>
-          </form>
-        </div>
-        {% endif %}
-
-        {% if not v and p.comment_count >= 2 %}
-        <div class="card border-0 bg-light mt-4">
-          <div class="card-body">
-            <h5 class="card-title">Jump in the discussion.</h5>
-            <p class="card-text">Become part of the community, no email address required. Make a Ruqqus.</p>
-            <div>
-              <a href="/signup" class="btn btn-primary">Sign up</a>
-              <a href="/login" class="btn btn-link text-muted">Sign in</a>
-            </div>
-          </div>
-        </div>
-        {% endif %}
-
-        <div class="comment-section">
-         {% for c in p.replies %}
-         {{ c.rendered_comment(v=v) | safe }}
-         {% endfor %}
-       </div>
-
-     </div>
-
-   </div>
-
-   {% endblock %}
+       {% endblock %}

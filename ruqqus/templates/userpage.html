@@ -13,14 +13,17 @@
     var currentScrollPos = window.pageYOffset;
     if (prevScrollpos > currentScrollPos) {
       document.getElementById("fixed-bar-mobile").style.top = "49px";
+      document.getElementById("navbar").classList.remove("shadow");
     } 
     else if (currentScrollPos <= 125) {
       document.getElementById("fixed-bar-mobile").style.top = "49px";
+      document.getElementById("navbar").classList.remove("shadow");
     }
     else {
       document.getElementById("fixed-bar-mobile").style.top = "-49px";
       document.getElementById("dropdownMenuSortBy").classList.remove('show');
       document.getElementById("dropdownMenuFrom").classList.remove('show');
+      document.getElementById("navbar").classList.add("shadow");
     }
     prevScrollpos = currentScrollPos;
   }
@@ -28,8 +31,86 @@
 {% endblock %}
 
 {% block title %}
-<title>{{ u.username }}</title>
+<title>{{ u.username }}'s profile</title>
 <meta name="description" content="on Ruqqus">
+{% endblock %}
+
+{% block banner %}
+<div class="jumbotron jumbotron-fluid jumbotron-guild text-white" style="background-image: url({{ u.banner_url }})">
+  <div class="jumbotron-overlay"></div>
+  <div class="position-absolute w-100 p-3" style="bottom: 0;">
+    <div class="container">
+      <div class="d-md-flex text-center text-md-left">
+        <div>
+          <img src="{{ u.profile_url }}" class="guild-icon-square-lg">
+        </div>
+        <div class="ml-3 w-100">
+          <h1 class="h3 align-middle d-inline-block m-0">{{ u.username }}
+               <!--{% if u.over_18 %}
+               <span class="badge badge-danger">NSFW</span>
+               {% endif %}-->
+             </h1>
+             <span>
+              {% if u.admin_level %}
+              <i class="fad fa-shield text-admin align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Admin"></i>
+              {% endif %}
+              {% if u.real_id %}<span class="badge badge-pill text-white badge-info">{{ u.real_id }}</span>
+              {% endif %}
+            </span>
+            <div class="profile-actions d-inline-block float-right">
+             {% if v and v.id != u.id %}
+             <div class="dropdown show">
+              <a href="#" role="button" id="dropdownProfileActionsLink" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-ellipsis-h"></i>
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-right border-0 shadow" aria-labelledby="dropdownMoreLink">
+              <a class="dropdown-item" href="#"><i class="fas fa-paper-plane"></i>Message</a>
+              <a class="dropdown-item" href="#"><i class="fas fa-flag"></i>Report</a>
+            </div>
+          </div>
+          {% endif %}
+          {% if v and v.id == u.id %}
+          <div class="dropdown show">
+            <a href="#" role="button" id="dropdownProfileActionsLink" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-ellipsis-h"></i>
+          </a>
+
+          <div class="dropdown-menu dropdown-menu-right border-0 shadow" aria-labelledby="dropdownMoreLink">
+            <a class="dropdown-item" href="/settings/profile#bio"><i class="fas fa-edit"></i>Edit profile</a>
+            <a class="dropdown-item" href="/settings/security"><i class="fas fa-cog"></i>Account details</a>
+          </div>
+        </div>
+        {% endif %}   
+      </div>
+      <div><span class="font-weight-bold">{{ u.follower_count }}</span> subscriber{{ 's' if u.follower_count != 1 else '' }}<span> · </span>
+       <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ u.created_date }}" class="font-weight-bold">{{ u.created_date }}</span> joined
+     </div>
+     <div class="mt-1">
+      {% if u.bio_html %}
+      <p>{{ u.bio_html | safe }}</p>
+      {% endif %}
+      {% if v %}
+      {% if v.id == u.id %}
+      <div><a class="btn btn-secondary btn-sm" href="/settings/profile#bio">Update bio</a></div>
+      {% endif %}
+      {% endif %}
+    </div>
+    <div class="d-flex">
+     <div class="justify-content-end">
+       {% if v and v.id != u.id %}
+       <div id="button-unsub" {% if not is_following %}class="d-none"{% endif %}><a class="btn btn-secondary" href="javascript:void(0)" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Unsubscribe</a></div>
+       <div id="button-sub" {% if is_following %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Subscribe</a></div>
+       {% endif %}
+     </div>
+   </div>
+ </div>
+</div>
+</div>
+</div>
+</div>
 {% endblock %}
 
 {% block sidebarblock %}
@@ -74,24 +155,30 @@
  <div class="title">Profile</div>
  <div class="body">
    {% if u.bio_html %}
-   <p>
-    {{ u.bio_html | safe }}
-  </p>
-  {% if v and v.id == u.id %}
-  <div><a class="btn btn-secondary btn-block btn-sm mb-3" href="/settings/profile#bio">Update bio</a></div>
-  {% endif %}
-  {% endif %}
-  <div class="text-muted text-small"><i class="fas fa-medal fa-width-rem text-muted mr-2"></i>{{ u.karma }} Rep</div>
-  <div class="text-muted text-small mt-2"><i class="fas fa-feather-alt fa-width-rem text-muted mr-2"></i>{{ u.post_count }} Post{{ 's' if u.post_count!=1 else '' }}
-  </div>
-  <div class="text-muted text-small mt-2"><i class="fas fa-comment-dots fa-width-rem text-muted mr-2"></i>{{ u.comment_count }} Comment{{ 's' if u.comment_count !=1 else '' }}
-  </div>
-  <div class="text-muted text-small mt-2"><i class="fas fa-birthday-cake fa-width-rem text-muted mr-2"></i>User
+   {{ u.bio_html | safe }}
+   {% endif %}
+   {% if v %}
+   {% if v.id == u.id %}
+   <div><a class="btn btn-secondary btn-sm mb-3" href="/settings/profile#bio">Update bio</a></div>
+   {% endif %}
+   {% endif %}
+   <div class="text-muted text-small"><i class="fas fa-medal fa-width-rem text-muted mr-2"></i>{{ u.karma }} Rep</div>
+   <div class="text-muted text-small mt-2"><i class="fas fa-feather-alt fa-width-rem text-muted mr-2"></i>{{ u.post_count }} Post{{ 's' if u.post_count!=1 else '' }}
+   </div>
+   <div class="text-muted text-small mt-2"><i class="fas fa-comment-dots fa-width-rem text-muted mr-2"></i>{{ u.comment_count }} Comment{{ 's' if u.comment_count !=1 else '' }}
+   </div>
+   <div class="text-muted text-small mt-2"><i class="fas fa-user-friends fa-width-rem text-muted mr-2"></i>{{ u.follower_count }} Subscriber{{ 's' if u.follower_count !=1 else '' }}
+   </div>
+   <div class="text-muted text-small mt-2"><i class="fas fa-birthday-cake fa-width-rem text-muted mr-2"></i>User
     since {{ u.created_date }}
   </div>
-</div>
-</div>
 
+  {% if v and v.id != u.id %}
+  <div id="button-unsub" {% if not is_following %}class="d-none"{% endif %}><a class="btn btn-secondary" href="javascript:void(0)" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Unsubscribe from @{{ u.username }}</a></div>
+  <div id="button-sub" {% if is_following %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Subscribe to @{{ u.username }}</a></div>
+  {% endif %}
+</div>
+</div>
 
 {% if u.badges %}
 <div class="sidebar-section sidebar-profile-badges">
@@ -143,7 +230,7 @@
 
 {% if not v %}
 <div class="sidebar-section sidebar-alert">
-<div class="body">
+  <div class="body">
     <img src="/assets/images/illustrations/ruckus.png" class="empty-state-img mb-3" alt="empty state">
     <h5>Join the discourse.</h5>
     <p class="text-small">Internet freedom of speech has a new home. Use your voice. Make a Ruqqus.</p>
@@ -152,247 +239,291 @@
 </div>
 {% endif %}
 
-{% if v and v.id == u.id %}
+{% if v %}
 
 <div class="sidebar-section sidebar-dashboard">
-  <div class="title">Dashboard</div>
   <div class="body">
-    <ul class="no-bullets dashboard-list pl-0">
+    <div class="title">Dashboard</div>
+    <ul class="no-bullets dashboard-list pl-0 mb-0">
       <li class="dashboard-item">
-        <a class="dashboard-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem"></i>Profile</a>
+        <a class="dashboard-link" href="/"><i class="fas fa-home-alt fa-width-rem"></i>Home</a>
       </li>
       <li class="dashboard-item">
-        <a class="dashboard-link " href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
-      </li>
-    </ul>
-  </div>
+       <a class="dashboard-link" href="/guilds"><i class="fas fa-university fa-width-rem"></i>Guilds</a>
+     </li>
+     <li class="dashboard-item">
+       <a class="dashboard-link" href="/subscriptions"><i class="fas fa-heart fa-width-rem"></i>Subscriptions</a>
+     </li>
+     <li class="dashboard-item">
+      <a class="dashboard-link" href="/browse"><i class="fas fa-binoculars fa-width-rem"></i>Browse</a>
+    </li>
+  </ul>
+</div>
 </div>
 
 {% endif %}
 
-{% if v and v.id != u.id %}
-
-<div class="sidebar-section sidebar-dashboard">
-  <div class="title">Dashboard</div>
+{% if not v and trending_boards %}
+<div class="sidebar-section sidebar-guild-recommendations sticky-63">
   <div class="body">
-    <ul class="no-bullets filter-list pl-0">
-      <li class="filter-item">
-        <a class="filter-link " href="{{ v.permalink }}"><i class="fas fa-feather-alt fa-width-rem"></i>Your posts</a>
+    <div class="title">Rising Guilds</div>
+    <ul class="no-bullets guild-recommendations-list pl-0">
+     {% for entry in trending_boards[0:5] %}
+     <li class="guild-recommendations-item">
+      <a href="{{ entry[0].permalink }}">
+        <div class="d-flex">
+          <div class="mr-2">
+            <img src="{{ entry.profile_url }}" class="guild-icon-square-35"></div>
+            <div>
+              <div class="text-black font-weight-normal">+{{ entry[0].name }}</div>
+              <div class="text-muted text-small font-weight-normal">{{ entry[1] }} Member{{ '' if entry[1]==1 else 's' }}</div>
+            </div>
+          </div>
+        </a>
       </li>
-      <li class="filter-item">
-        <a class="filter-link " href="{{ v.permalink }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Your comments</a> 
-      </li>
-      <li class="filter-item">
-        <a class="filter-link " href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
-      </li>
+      {% endfor %}
     </ul>
   </div>
 </div>
-
-{% endif %}
-
-<div class="sidebar-section sidebar-filters sticky-63">
-  <div class="title">Viewing</div>
+{% elif v and v.subscriptions.filter_by(is_active=True).count() %}
+<div class="sidebar-section sidebar-guild-recommendations sticky-63">
   <div class="body">
-    <ul class="no-bullets filter-list pl-0">
-      <li class="filter-item">
-        <a class="filter-link active" href="{{ u.permalink }}"><i class="fas fa-feather-alt fa-width-rem"></i>Posts</a>
-      </li>
-      <li class="filter-item">
-        <a class="filter-link" href="{{ u.permalink }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Comments</a>
-      </li>
-    </ul>
-  </div>
-</div>
-
-{% endblock %}
-
-{% block content %}
-
-<!-- Post filters bar visible only on small devices-->
-
-<div class="row fixed-top bg-white border-md d-inline-flex d-lg-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 49px; transition: top 0.3s ease 0s;">
-
-  <div class="col">
-
-    <div class="d-flex flex-row flex-nowrap justify-content-between">
-
-      <div class="post-filter">
-        <span>Show:</span>
-        <span class="dropdown">
-          <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Posts</a>
-
-          <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
-            <a class="dropdown-item" href="/u/{{ u.username }}">Posts</a>
-            <a class="dropdown-item" href="/u/{{ u.username }}/comments">Comments</a>
-          </span>
-        </span>
-
-      </div>
-
-      <div class="post-filter d-none">
-        <span>Sort By:</span>
-        <span class="dropdown">
-          <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">New</a>
-
-          <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
-            <a class="dropdown-item" href="#">Top</a>
-            <a class="dropdown-item" href="#">Disputed</a>
-            <a class="dropdown-item" href="#">Based</a>
-          </span>
-        </span>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-<div class="row justify-content-around mx-lg-5 d-block d-lg-none no-gutters">
-  <div class="col border-bottom rounded-md p-3">
-    <div class="profile-details">
-      <div class="media">
-       <div class="profile-pic profile-pic-75 mr-3 mt-0" style="background-color:#{{ u.color }}">
-        <span class="letter">{{ u.username[0] }}</span>
-      </div>
-      <div class="media-body">
-        <h1 class="h6 d-inline-block">@{{ u.username }}</h1>
-
-        <span>
-          {% if u.admin_level %}<i class="fad fa-shield text-admin ml-1" data-toggle="tooltip" data-placement="bottom" title="Admin"></i>{% endif %}
-          {% if u.real_id %}<span class="badge badge-pill text-white badge-info">{{ u.real_id }}</span>{% endif %}
-        </span>
-
-        {% if v and v.id != u.id %}
-        <div class="profile-actions d-inline-block">
-          <!-- Modal -->
-          <a href="#"><i class="fas fa-ellipsis-h ml-2" data-toggle="modal" data-target="#profileModal"></i></a>
-
-        </div>
-
-        <div class="modal fade text-left" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="Profile Actions" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title h6">More options</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true"><i class="far fa-times"></i></span>
-                </button>
+    <div class="title">My Guilds</div>
+    <ul class="no-bullets guild-recommendations-list pl-0">
+      {% for board in v.boards_subscribed[0:8] %}
+      <li class="guild-recommendations-item">
+        <a href="{{ board.permalink }}">
+          <div class="d-flex">
+            <div class="mr-2">
+              <img src="{{ board.profile_url }}" class="guild-icon-square-35"></div>
+              <div class="my-auto">
+                <div class="text-black font-weight-normal">+{{ board.name }}</div>
               </div>
-              <div class="modal-body">
-                <div class="list-group profile-actions">
-                  <li class="list-group-item"><a href="/settings/profile#bio" class="d-block"><i class="fas fa-paper-plane mr-2"></i>Message</a></li>
-                  <li class="list-group-item"><a href="/settings/security" class="d-block"><i class="fas fa-flag mr-2"></i>Flag</a></li>
-                </div>
+            </div>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% elif v and not v.subscriptions.filter_by(is_active=True).count() %}
+  <div class="sidebar-section sidebar-guild-recommendations sticky-63">
+    <div class="body">
+      <div class="title">Guilds</div>
+      <div class="my-3" style="">
+        <i class="fad fa-telescope text-primary" style="font-size:3rem"></i>
+      </div>
+      <h5>Discover amazing communities across Ruqqus.</h5>
+      <p class="text-small">You are not a member of any guilds. Guilds you are a member of will be displayed here.</p>
+      <a href="/browse" class="btn btn-primary btn-block">Discover guilds</a>
+    </div>
+  </div>
+  {% endif %}
+
+  {% endblock %}
+
+  {% block postNav %}
+  <div class="container-fluid bg-white sticky">
+    <div class="row border-bottom">
+      <div class="col">
+        <div class="container">
+          <div class="row bg-white">
+            <div class="col">
+              <div class="d-flex">
+                <ul class="nav post-nav mr-auto">
+                  <li class="nav-item">
+                    <a class="nav-link text-center active" href="/u/{{ u.username}}">
+                      <div class="text-small text-muted">Posts</div>
+                      <span class="h5 font-weight-bold">{{ u.post_count }}</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-center" href="/u/{{ u.username}}/comments">
+                      <div class="text-small text-muted">Comments</div>
+                      <span class="h5 font-weight-bold">{{ u.comment_count }}</span>
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
-        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endblock %}
 
-        {% if u.bio_html %}
-        <p>
-          {{ u.bio_html | safe }}
-        </p>
-        {% endif %}
+  {% block content %}
 
-        {% if v and v.id == u.id %}
+  <!-- Post filters bar visible only on small devices-->
 
-        <div>
-          <a href="/settings/profile#bio" class="btn btn-secondary btn-sm"><i class="fas fa-pen mr-2"></i>Edit profile</a>
+  <div class="row fixed-top bg-white border-top d-inline-flex d-lg-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 49px; transition: top 0.3s ease 0s;">
+
+    <div class="col">
+
+      <div class="d-flex flex-row flex-nowrap justify-content-between">
+
+        <div class="post-filter">
+          <span>Show:</span>
+          <span class="dropdown">
+            <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Posts</a>
+
+            <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
+              <a class="dropdown-item" href="/u/{{ u.username }}">Posts</a>
+              <a class="dropdown-item" href="/u/{{ u.username }}/comments">Comments</a>
+            </span>
+          </span>
+
         </div>
 
-        {% endif %}
+        <div class="post-filter d-none">
+          <span>Sort By:</span>
+          <span class="dropdown">
+            <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">New</a>
+
+            <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
+              <a class="dropdown-item" href="#">Top</a>
+              <a class="dropdown-item" href="#">Disputed</a>
+              <a class="dropdown-item" href="#">Based</a>
+            </span>
+          </span>
+
+        </div>
 
       </div>
 
     </div>
 
   </div>
-</div>
-</div>
 
-<div class="row border-bottom border-md-0 d-block d-lg-none no-gutters">
-  <div class="col">
-    <ul class="list-inline d-flex justify-content-around text-center py-2 mb-0">
-      <li class="list-inline-item">
-        <span class="text-small font-weight-bold">{{ u.karma }}</span>
-        <div class="text-small text-muted">Rep</div>
-      </li>
-      <li class="list-inline-item">
-        <span class="font-weight-bold">{{ u.comment_count }}</span>
-        <div class="text-small text-muted">Comment{{ 's' if u.comment_count!=1 else '' }}</div>
-      </li>
-      <li class="list-inline-item">
-        <span class="text-small font-weight-bold">{{ u.post_count }}</span>
-        <div class="text-small text-muted">Post{{ 's' if u.post_count!=1 else '' }}</div>
-      </li>
-    </ul>
+  <div class="row justify-content-around mx-lg-5 d-block d-lg-none no-gutters">
+    <div class="col border-bottom rounded-md p-3">
+      <div class="profile-details">
+        <div class="media">
+          <div>
+            <img src="{{ u.profile_url }}" class="profile-pic-75">
+          </div>
+          <div class="media-body">
+            <h1 class="h6 d-inline-block">@{{ u.username }}</h1>
+
+            <span>
+              {% if u.admin_level %}<i class="fad fa-shield text-admin ml-1" data-toggle="tooltip" data-placement="bottom" title="Admin"></i>{% endif %}
+              {% if u.real_id %}<span class="badge badge-pill text-white badge-info">{{ u.real_id }}</span>{% endif %}
+            </span>
+
+            {% if v and v.id != u.id %}
+            <div class="profile-actions d-inline-block">
+              <!-- Modal -->
+              <a href="#"><i class="fas fa-ellipsis-h ml-2" data-toggle="modal" data-target="#profileModal"></i></a>
+
+            </div>
+
+            <div class="modal fade text-left" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="Profile Actions" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title h6">More options</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true"><i class="far fa-times"></i></span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="list-group profile-actions">
+                      <li class="list-group-item"><a href="/settings/profile#bio" class="d-block"><i class="fas fa-paper-plane mr-2"></i>Message</a></li>
+                      <li class="list-group-item"><a href="/settings/security" class="d-block"><i class="fas fa-flag mr-2"></i>Flag</a></li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+
+            {% if u.bio_html %}
+            <p>
+              {{ u.bio_html | safe }}
+            </p>
+            {% endif %}
+
+            {% if v and v.id == u.id %}
+
+            <div>
+              <a href="/settings/profile#bio" class="btn btn-secondary btn-sm"><i class="fas fa-pen mr-2"></i>Edit profile</a>
+            </div>
+
+            {% endif %}
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
   </div>
-</div>
 
-<div class="flex-row tab-bar sticky d-none">
+  <div class="row border-bottom border-md-0 d-block d-lg-none no-gutters">
+    <div class="col">
+      <ul class="list-inline d-flex justify-content-around text-center py-2 mb-0">
+        <li class="list-inline-item">
+          <span class="text-small font-weight-bold">{{ u.karma }}</span>
+          <div class="text-small text-muted">Rep</div>
+        </li>
+        <li class="list-inline-item">
+          <span class="font-weight-bold">{{ u.comment_count }}</span>
+          <div class="text-small text-muted">Comment{{ 's' if u.comment_count!=1 else '' }}</div>
+        </li>
+        <li class="list-inline-item">
+          <span class="text-small font-weight-bold">{{ u.post_count }}</span>
+          <div class="text-small text-muted">Post{{ 's' if u.post_count!=1 else '' }}</div>
+        </li>
+      </ul>
+    </div>
+  </div>
 
-  <ul class="nav post-nav mr-auto">
-    <li class="nav-item">
-      <a class="nav-link active" href="/u/{{ u.username}}"><i class="fas fa-feather-alt"></i>Posts</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/u/{{ u.username}}/comments"><i class="fas fa-comment-dots" aria-hidden="true"></i>Comments</a>
-    </li>
+  <div class="row no-gutters">
 
-  </ul>
+    <div class="col">
 
-</div>
-
-<div class="row no-gutters">
-
-  <div class="col">
-
-    {% if u.post_count>=1 %}
-    {% else %}
-    <div class="text-center py-5">
-
-      <img src="/assets/images/illustrations/searching.png" class="empty-state-img mb-3" alt="empty state">
-
-      {% if v and v.id == u.id %}
-      <div class="font-weight-bold text-muted">You haven't made a ruckus.</div>
-      <div class="text-small text-muted mb-3">Your posts will show up here.</div>
-      <a href="/submit" class="btn btn-primary">Create post now</a>
+      {% if u.post_count>=1 %}
+      <div class="posts">
+        {% include "submission_listing.html" %}
+      </div>
       {% else %}
-      <div class="font-weight-bold text-muted">No posts here...</div>
-      <div class="text-small text-muted">@{{ u.username }} hasn't made a ruckus yet.</div>
+      <div class="text-center py-5">
+
+        <img src="/assets/images/illustrations/searching.png" class="empty-state-img mb-3" alt="empty state">
+
+        {% if v and v.id == u.id %}
+        <div class="font-weight-bold text-muted">You haven't made a ruckus.</div>
+        <div class="text-small text-muted mb-3">Your posts will show up here.</div>
+        <a href="/submit" class="btn btn-primary">Create post now</a>
+        {% else %}
+        <div class="font-weight-bold text-muted">No posts here...</div>
+        <div class="text-small text-muted">@{{ u.username }} hasn't made a ruckus yet.</div>
+        {% endif %}
+      </div>
       {% endif %}
     </div>
-    {% endif %}
-
-    <div class="posts">
-      {% include "submission_listing.html" %}
-    </div>
   </div>
-</div>
-{% endblock %}
+  {% endblock %}
 
 
-{% block pagenav %}
-<nav aria-label="Page navigation">
-  <ul class="pagination pagination-sm mb-0">
-    {% if page>1 %}
-    <li class="page-item">
-      <small><a class="page-link" href="?page={{ page-1 }}" tabindex="-1">Prev</a></small>
-    </li>
-    {% else %}
-    <li class="page-item disabled"><span class="page-link">Prev</span></li>
-    {% endif %}
-    {% if next_exists %}
-    <li class="page-item">
-      <small><a class="page-link" href="?page={{ page+1 }}">Next</a></small>
-    </li>
-    {% else %}
-    <li class="page-item disabled"><span class="page-link">Next</span></li>
-    {% endif %}
-  </ul>
-</nav>
-{% endblock %}
+  {% block pagenav %}
+  <nav aria-label="Page navigation">
+    <ul class="pagination pagination-sm mb-0">
+      {% if page>1 %}
+      <li class="page-item">
+        <small><a class="page-link" href="?page={{ page-1 }}" tabindex="-1">Prev</a></small>
+      </li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">Prev</span></li>
+      {% endif %}
+      {% if next_exists %}
+      <li class="page-item">
+        <small><a class="page-link" href="?page={{ page+1 }}">Next</a></small>
+      </li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">Next</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endblock %}

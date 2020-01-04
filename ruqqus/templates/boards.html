@@ -1,0 +1,314 @@
+{% extends "default.html" %}
+
+{% block adminpanel %}
+<div>
+  <p><a href="/flagged/posts">Reported Posts</a></p>
+  <p><a href="/flagged/comments">Reported Comments</a></p>
+</div>
+{% endblock %}
+
+{% block enlargeThumbJS %}
+<script src="/assets/js/enlarge_thumb.js"></script>
+{% endblock %}
+
+{% block toggleView %}
+<script src="/assets/js/toggle_view.js"></script>
+{% endblock %}
+
+{% block fixedMobileBarJS %}
+<script>
+  var prevScrollpos = window.pageYOffset;
+  window.onscroll = function () {
+    var currentScrollPos = window.pageYOffset;
+    if (prevScrollpos > currentScrollPos) {
+      document.getElementById("fixed-bar-mobile").style.top = "49px";
+      document.getElementById("navbar").classList.remove("shadow");
+    } 
+    else if (currentScrollPos <= 125) {
+      document.getElementById("fixed-bar-mobile").style.top = "49px";
+      document.getElementById("navbar").classList.remove("shadow");
+    }
+    else {
+      document.getElementById("fixed-bar-mobile").style.top = "-49px";
+      document.getElementById("dropdownMenuSortBy").classList.remove('show');
+      document.getElementById("dropdownMenuFrom").classList.remove('show');
+      document.getElementById("navbar").classList.add("shadow");
+    }
+    prevScrollpos = currentScrollPos;
+  }
+</script>
+{% endblock %}
+
+{% block postNav %}
+<div class="flex-row bg-light sticky d-none d-lg-flex pt-3 mb-3">
+  <ul class="nav post-nav mr-auto">
+    <li class="nav-item">
+      <a class="nav-link{% if sort_method=="subs" %} active{% endif %}" href="/browse"><i class="fas fa-fire"></i>Members</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link{% if sort_method=="new" %} active{% endif %}" href="/browse?sort=new"><i class="fas fa-arrow-alt-circle-up"></i>New</a>
+    </li>
+  </ul>
+</div>
+{% endblock %}
+
+{% block PseudoSubmitForm %}
+<!-- Link to submission page from homepage, only visible on home -->
+
+<div class="row no-gutters d-none d-lg-flex">
+
+  <div class="col">
+    <div class="card pseudo-submit-form">
+      <div class="card-header bg-white">
+        <div class="text-small text-gray mb-0">Create post</div>
+        <ul class="list-inline no-bullets mb-0 d-none">
+          <li class="list-inline-item active mr-4"><i class="fas fa-align-left text-gray-400"></i></li>
+          <li class="list-inline-item"><i class="fas fa-link text-gray-400"></i></li>
+        </ul>
+      </div>
+      <div class="card-body">
+        {% if v %}
+        <a href="/submit">
+          <input type="text" class="form-control"
+          placeholder="Share something with the Ruqqus commmunity..." aria-label="Username"
+          aria-describedby="basic-addon1">
+        </a>
+        {% else %}
+        <a href="/signup">
+          <input type="text" class="form-control"
+          placeholder="Share something with the Ruqqus commmunity..." aria-label="Username"
+          aria-describedby="basic-addon1">
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+<!-- Right Sidebar (hidden on devices smaller than "large") -->
+
+<div class="col sidebar text-left d-none d-lg-block pt-3">
+  {% block sidebarblock %}
+  <div class="sidebar-section sidebar-about">
+    <div class="body">
+    <div class="title">About Ruqqus</div>
+      <p>Here you'll find the different Guilds across all of Ruqqus.</p>
+      <small><a href="/help/about">Learn more →</a></small>
+      {% if v and not v.is_banned %}
+      <div class="mt-3"><a class="btn btn-primary btn-block" href="/submit">Create post</a></div>
+      {% endif %}
+      {% if not v %}
+      <div class="mt-3"><a class="btn btn-primary btn-block" href="/login">Create post</a></div>
+      {% endif %}
+      {% if v and v.is_activated and v.karma >=100 %}
+      <div class="mt-3"><a href="/create_guild" class="btn btn-secondary btn-block">Start a Guild</a></div>
+      {% endif %}
+    </div>
+  </div>
+  {% if trending_boards %}
+  <div class="sidebar-section sidebar-trending">
+    <div class="body">
+    <div class="title">Rising Guilds</div>
+     {% for entry in trending_boards[0:5] %}
+     <div class="d-flex justify-content-start trending-guild">
+      <div>
+        <a href="{{ entry[0].permalink }}">+{{ entry[0].name }}</a>
+        <div class="text-muted text-small font-weight-normal">{{ entry[1] }} Member{{ '' if entry[1]==1 else 's' }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+<!-- View toggle visible only on large devices or larger -->
+
+<div class="flex-row p-3 justify-content-end d-none d-lg-flex">
+
+  <div>
+    <ul class="nav toggle-view">
+      <li class="nav-item">
+        <button class="btn nav-link pr-3 active" id="toggle-list-view-btn" onclick="toggle_list_view()">
+          <i class="fas fa-list"></i>List</button>
+        </li>
+        <li class="nav-item" style="">
+          <button class="btn nav-link" id="toggle-card-view-btn" onclick="toggle_card_view()">
+            <i class="fas fa-th-large"></i>Card</button>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Post filters bar visible only on medium devices or larger-->
+
+    <div class="flex-row tab-bar sticky d-none">
+
+      <ul class="nav post-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link{% if sort_method=="subs" %} active{% endif %}" href="/browse"><i class="fas fa-users"></i>Members</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if sort_method=="new" %} active{% endif %}" href="/browse?sort=new"><i class="fas fa-sparkles"></i>New</a>
+        </li>
+      </ul>
+
+      <div>
+        <ul class="nav toggle-view ml-auto">
+          <li class="nav-item" style="">
+            <button class="btn nav-link active pr-3 pb-0 pl-0" id="toggle-list-view-btn" style="box-shadow: none;" onclick="toggle_list_view()">
+              <i class="fas fa-list"></i>List</button>
+            </li>
+            <li class="nav-item" style="">
+              <button class="btn nav-link p-0" style="box-shadow: none;" id="toggle-card-view-btn" onclick="toggle_card_view()">
+                <i class="fas fa-th-large"></i>Card</button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="post-filter pb-2 d-none">
+            <span>Sort By:</span>
+            <span class="dropdown">
+              <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Time
+            </a>
+
+            <span class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMenuLink">
+              <a class="dropdown-item" href="#">Day</a>
+              <a class="dropdown-item" href="#">Month</a>
+              <a class="dropdown-item" href="#">Year</a>
+              <a class="dropdown-item" href="#">All Time</a>
+            </span>
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="row no-gutters">
+
+        <div class="col-12">
+
+          <div class="posts" id="posts">
+
+{% for b in boards %}
+
+
+
+
+<div id="board-{{ b.base36id }}" class="card">
+  <div class="d-flex flex-row-reverse flex-nowrap justify-content-end">
+    <div class="card-header bg-transparent border-0 d-flex flex-row flex-nowrap p-0 my-md-auto pl-3 ml-auto">
+
+           <div id="button-sub-{{ b.base36id }}" style="z-index: 2" class="{% if b.has_subscriber(v) %}d-none{% endif %}"><a class="btn btn-primary btn-block" href="javascript:void(0)" onclick="post('/api/subscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ b.base36id }}').classList.toggle('d-none');})">Join</a></div>
+           <div id="button-unsub-{{ b.base36id }}" style="z-index: 2" class="{% if not b.has_subscriber(v) %} d-none{% endif %}"><a class="btn btn-secondary btn-block" href="javascript:void(0)" onclick="post('/api/unsubscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ b.base36id }}').classList.toggle('d-none');})">Leave</a></div>
+
+
+    </div>
+
+<div class="card-block text-left x-scroll-parent my-md-auto">
+  <div class="post-meta text-left x-scroll d-block d-md-none mb-2">{% if b.over_18 %}<span class="badge badge-danger">NSFW</span> &#183; {% endif %}{{ b.subscriber_count }} Member{{ 's' if b.subscriber_count != 1 else '' }}
+  </div>
+  <h5 class="card-title post-title text-left mb-0 mb-md-2"><a href="{{ b.permalink }}" class="stretched-link text-primary">+{{ b.name | safe }}</a></h5>
+  <div class="post-meta text-left d-none d-md-block">{% if b.over_18 %}<span class="badge badge-danger">NSFW</span> &#183; {% endif %}{{ b.subscriber_count }} Member{{ 's' if b.subscriber_count != 1 else '' }}
+  
+  </div>
+<div class="body text-left">{{ b.description }}</div>
+</div>
+<div class="card-block bg-transparent border-0 d-flex flex-nowrap p-0 my-md-auto pr-3">
+    <img src="{{ b.profile_url }}" height="75px" width="75px" class="rounded">
+   </div>
+
+</div>
+</div>
+
+{% endfor %}
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row fixed-top bg-white border-top d-inline-flex d-lg-none p-3" id="fixed-bar-mobile" style="z-index: 100; top: 49px; transition: top 0.3s;">
+
+        <div class="col">
+
+          <div class="d-flex flex-row flex-nowrap justify-content-between">
+
+            <div class="post-filter">
+              <span>Sort By:</span>
+              <span class="dropdown">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">{{ sort_method.capitalize() }}</a>
+
+                <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
+                  <a class="dropdown-item" href="?sort=subs">Members</a>
+                  <a class="dropdown-item" href="?sort=new">New</a>
+                </span>
+              </span>
+
+            </div>
+
+            <div>
+              <ul class="nav toggle-view ml-auto">
+                <li class="nav-item" style="">
+                  <button class="btn nav-link active pr-3 pb-0 pl-0" id="toggle-list-view-btn-sm" style="box-shadow: none;" onclick="toggle_list_view_sm()">
+                    <i class="fas fa-list" data-toggle="tooltip"></i>List</button>
+                  </li>
+                  <li class="nav-item" style="">
+                    <button class="btn nav-link p-0" id="toggle-card-view-btn-sm" style="box-shadow: none;" onclick="toggle_card_view_sm()">
+                      <i class="fas fa-th-large"></i>Card</button>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="post-filter d-none">
+                  <span>From:</span>
+                  <span class="dropdown">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">Time</a>
+
+                    <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
+                      <a class="dropdown-item" href="#">Past Day</a>
+                      <a class="dropdown-item" href="#">Past Month</a>
+                      <a class="dropdown-item" href="#">Past Year</a>
+                      <a class="dropdown-item" href="#">All Time</a>
+                    </span>
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+ {% endblock %}
+
+          {% block pagenav %}
+          <nav aria-label="Page navigation">
+            <ul class="pagination pagination-sm mb-0">
+              {% if page>1 %}
+              <li class="page-item">
+                <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page-1 }}" tabindex="-1">Prev</a></small>
+              </li>
+              {% else %}
+              <li class="page-item disabled"><span class="page-link">Prev</span></li>
+              {% endif %}
+              {% if next_exists %}
+              <li class="page-item">
+                <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page+1 }}">Next</a></small>
+              </li>
+              {% else %}
+              <li class="page-item disabled"><span class="page-link">Next</span></li>
+              {% endif %}
+            </ul>
+          </nav>
+          {% endblock %}

@@ -106,7 +106,7 @@ venv.bak/
 #custom
 .DS_Store
 teedee/.DS_Store
-node_modules/
+#node_modules/
 package-lock.json
 .css.map
 *.map
