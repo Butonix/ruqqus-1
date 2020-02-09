@@ -36,13 +36,13 @@ def search(v, search_type="posts"):
         posts=posts.filter_by(is_deleted=False, is_banned=False)
 
     if sort=="hot":
-        posts=posts.order_by(text("submissions.rank_hot desc"))
+        posts=posts.order_by(Submission.rank_hot.desc())
     elif sort=="new":
         posts=posts.order_by(Submission.created_utc.desc())
     elif sort=="fiery":
-        posts=posts.order_by(text("submissions.rank_fiery desc"))
+        posts=posts.order_by(Submission.rank_fiery.desc())
     elif sort=="top":
-        posts=posts.order_by(text("submissions.score desc"))
+        posts=posts.order_by(Submission.score.desc())
         
     total=posts.count()
     posts=[x for x in posts.offset(25*(page-1)).limit(26).all()]
