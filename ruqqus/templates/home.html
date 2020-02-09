@@ -247,12 +247,13 @@
     {% endblock %}
 
 {% block sidebarblock %}
+{% if v %}
    <div class="sidebar-section sidebar-guildmake">
     <div class="title"><i class="fas fa-university mr-2"></i>Guilds</div>
     <div class="body">
 Create a community for something you love.
 <a href="/create_guild" class="btn btn-primary btn-block{% if not v.can_make_guild %} disabled{% endif %}">{% if v.can_make_guild %}Create Guild{% else %}100 Rep and cooldown needed.{% endif %}</a>
-
+{% endif %}
 </div>
   </div>
 {% endblock %}
