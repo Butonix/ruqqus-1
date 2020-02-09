@@ -86,7 +86,7 @@
         </div>
       </div>
       <div class="border-right py-3 px-3">
-        Guildmasters<span class="text-primary"> {{ p.board.mods_count }}</span>
+      <a href="{{ b.permalink+"/mod/mods" }}" class="text-black" style="text-decoration: none;">Guildmasters<span class="text-primary"> {{ p.board.mods_count }}</span></a>
       </div>
       <div class="border-right p-3">
         Member{{ 's' if p.board.subscriber_count != 1 else '' }}<span class="text-primary"> {{ p.board.subscriber_count }}</span>
