@@ -1,0 +1,108 @@
+{% extends "docs_default.html" %}
+
+{% block title %}
+<title>Ruqqus - Press</title>
+<meta name="description" content="Ruqqus Press Resources">
+<script src="/assets/js/comment_replies.js"></script>
+{% endblock %}
+
+<!-- Left Sidebar -->
+
+	
+{% block content %}
+
+    {% if request.args.get('error') or error %}
+    <div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+      <i class="fas fa-exclamation-circle my-auto"></i>
+      <span>
+        {{ error if error else request.args.get('error') }}
+      </span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true"><i class="far fa-times"></i></span>
+      </button>
+    </div>
+    {% endif %}
+    {% if request.args.get('msg') or msg %}
+    <div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+      <i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
+      <span>
+        {{ msg if msg else request.args.get('msg') }}
+      </span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true"><i class="far fa-times"></i></span>
+      </button>
+    </div>
+    {% endif %}
+
+<h1 class="article-title">Press</h1>
+
+{% filter markdown %}
+
+Welcome to the Ruqqus press portal.
+
+## Press Releases
+
+Official Ruqqus press releases are posted in [+RuqqusPress](/+RuqqusPress?sort=new).
+
+## Assets
+
+The primary Ruqqus logo for use on light backgrounds is available [here](/assets/images/logo/ruqqus_logo_square_white_fill.png). It may be uniformly resized, but should not be redrawn, rotated, distorted, or otherwise altered.
+
+Against a dark background, the [alternate Ruqqus logo](/assets/images/logo/ruqqus_logo_white.png) should be used. The "r" character is deliberately transparent, in order to make it match the surrounding background. As with the primary logo, it may be uniformly resized, but not redrawn, rotated, or distorted.
+
+Both of these images are released under [Creative Commons Attribution-NoDerivatives 4.0 International License](http://creativecommons.org/licenses/by-nd/4.0/)
+
+## Naming
+
+When referring to the Ruqqus social media platform, use "Ruqqus" or "ruqqus.com".
+
+When referring to the business which owns and operates the Ruqqus platform, use "Ruqqus LLC".
+
+When referring to the owners, staff, or other elements of Ruqqus LLC, use "Ruqqus staff", "Ruqqus owners", or similar phrasing.
+
+## Contact
+
+{% endfilter %}
+
+{% if v and v.is_activated and not v.is_banned %}
+
+<p>Use this form to submit a press inquiry. You must have a press email address set on your account. If you have a generic, non-press email address, please <a target="_blank" href="/settings/security">update it</a> before submitting this form.</p>
+
+<label class="mt-3">Your Email</label>
+<input class="form-control" value="{{ v.email }}" readonly="readonly" disabled>
+
+<form id="pressform" action="/help/press" method="post">
+<input type="hidden" name="formkey" value="{{ v.formkey }}">
+
+<label for="input-name" class="mt-3">Your name</label>
+<input type="text" id="input-name" class="form-control" name="name" required>
+
+<label for="input-org" class="mt-3">Your organization</label>
+<input type="text" id="input-org" class="form-control" name="organization" required>
+
+<label for="input-title" class="mt-3">Your title</label>
+<input type="text" id="input-title" class="form-control" name="title" required>
+
+<label for="input-inquiry" class="mt-3">Your inquiry</label>
+<textarea id="input-inquiry" for="pressform" name="inquiry" class="form-control" required></textarea>
+
+<input type="submit" value="Submit Inquiry" class="btn btn-primary mt-3">
+
+</form>
+
+{% elif v and v.is_banned %}
+
+<p>Your Ruqqus account has been suspended. You are not permitted to submit press inquiries at this time.</p>
+
+
+{% elif v %}
+
+<p>Please <a target="_blank" href="/settings/security">verify your press email address</a> in order to ensure we can respond to your inquiry. Then, refresh this page.</p>
+
+{% else %}
+
+<p>In order to ensure that we can respond to your inquiry, please first <a href="/signup" target="_blank">sign up</a> or <a href="/login" target="_blank">log in</a> and make sure you have <a target="_blank" href="/settings/security">verified your press email address</a>. Then, refresh this page.</p>
+
+{% endif %}
+
+{% endblock %}

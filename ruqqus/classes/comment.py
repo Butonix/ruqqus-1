@@ -1,77 +1,78 @@
-from flask import render_template
+from flask import *
 import time
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
 from random import randint
 import math
-
+from .mix_ins import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.lazy import lazy
 from ruqqus.__main__ import Base, db, cache
-from .user import User
 from .submission import Submission
 from .votes import CommentVote
 from .flags import CommentFlag
+from .boards import Board
 
-class Comment(Base):
+class Comment(Base, Age_times, Scores, Stndrd):
 
     __tablename__="comments"
 
-    id = Column(BigInteger, primary_key=True)
-    author_id = Column(BigInteger, ForeignKey(User.id))
+    id = Column(Integer, primary_key=True)
+    author_id = Column(Integer, ForeignKey("users.id"))
     body = Column(String(2000), default=None)
-    parent_submission = Column(BigInteger, ForeignKey(Submission.id))
-    parent_fullname = Column(BigInteger) #this column is foreignkeyed to comment(id) but we can't do that yet as "comment" class isn't yet defined
-    created_utc = Column(BigInteger, default=0)
-    edited_utc = Column(BigInteger, default=0)
+    parent_submission = Column(Integer, ForeignKey("submissions.id"))
+    parent_fullname = Column(Integer) #this column is foreignkeyed to comment(id) but we can't do that yet as "comment" class isn't yet defined
+    created_utc = Column(Integer, default=0)
+    edited_utc = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
     body_html = Column(String)
     distinguish_level=Column(Integer, default=0)
     is_deleted = Column(Boolean, default=False)
     is_approved = Column(Integer, default=0)
     approved_utc=Column(Integer, default=0)
+    ban_reason=Column(String(256), default='')
+    creation_ip=Column(String(64), default='')
+    score_disputed=Column(Float, default=0)
+    score_hot=Column(Float, default=0)
+    score_top=Column(Integer, default=0)
+
+    post=relationship("Submission", lazy="subquery")
+    flags=relationship("CommentFlag", lazy="dynamic", backref="comment")
+    author=relationship("User", lazy="subquery", primaryjoin="User.id==Comment.author_id")
 
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
-    ups = Column(Integer, server_default=FetchedValue())
-    downs=Column(Integer, server_default=FetchedValue())
+    ups = deferred(Column(Integer, server_default=FetchedValue()))
+    downs=deferred(Column(Integer, server_default=FetchedValue()))
     age=Column(Integer, server_default=FetchedValue())
-    flags=relationship("CommentFlag", lazy="dynamic", backref="comment")
-    flag_count=Column(Integer, server_default=FetchedValue())
+    is_public=Column(Boolean, server_default=FetchedValue())
+
+    score=deferred(Column(Integer, server_default=FetchedValue()))
+    
+
+    rank_fiery=deferred(Column(Float, server_default=FetchedValue()))
+    rank_hot=deferred(Column(Float, server_default=FetchedValue()))
+
+    flag_count=deferred(Column(Integer, server_default=FetchedValue()))
+    over_18=Column(Boolean, server_default=FetchedValue())
+
+    board_id=Column(Integer, server_default=FetchedValue())
+    
+    
 
     def __init__(self, *args, **kwargs):
                    
 
         if "created_utc" not in kwargs:
             kwargs["created_utc"]=int(time.time())
+
+        kwargs["creation_ip"]=request.remote_addr
             
-        for x in kwargs:
-            if x not in ["ups","downs","score","rank_hot","rank_fiery","age","comment_count"]:
-                self.__dict__[x]=kwargs[x]
+        super().__init__(*args, **kwargs)
                 
     def __repr__(self):
+
         return f"<Comment(id={self.id})"
-        
-
-    @property
-    @cache.memoize(timeout=60)
-    def rank_hot(self):
-        return (self.ups-self.down)/(((self.age+100000)/6)**(1/3))
-
-    @property
-    @cache.memoize(timeout=60)
-    def rank_fiery(self):
-        return (math.sqrt(self.ups * self.downs))/(((self.age+100000)/6)**(1/3))
-
-    @property
-    @cache.memoize(timeout=60)
-    def score(self):
-        return self.ups-self.downs
-                
-
-    @property
-    def base36id(self):
-        return base36encode(self.id)
 
     @property
     def fullname(self):
@@ -81,20 +82,23 @@ class Comment(Base):
     def is_top_level(self):
         return self.parent_fullname.startswith("t2_")
 
-    @property
-    @lazy
-    def author(self):
-        return db.query(User).filter_by(id=self.author_id).first()
+
 
     @property
     @lazy
-    def post(self):
+    def board(self):
 
-        return db.query(Submission).filter_by(id=self.parent_submission).first()
+        if self.post:
+            return self.post.board
+        else:
+            return None
     
     @property
     @lazy
     def parent(self):
+
+        if not self.parent_submission:
+            return None
 
         if self.is_top_level:
             return db.query(Submission).filter_by(id=self.parent_submission).first()
@@ -145,71 +149,6 @@ class Comment(Base):
                 return ""
 
         return render_template("single_comment.html", v=v, c=self, replies=self.replies, render_replies=render_replies, standalone=standalone, level=level)
-    
-    @property
-    @cache.memoize(timeout=60)
-    def score_fuzzed(self, k=0.01):
-        real=self.score
-        a=math.floor(real*(1-k))
-        b=math.ceil(real*(1+k))
-        return randint(a,b)
-    
-    @property
-    def age_string(self):
-
-        age=self.age
-
-        if age<60:
-            return "just now"
-        elif age<3600:
-            minutes=int(age/60)
-            return f"{minutes} minute{'s' if minutes>1 else ''} ago"
-        elif age<86400:
-            hours=int(age/3600)
-            return f"{hours} hour{'s' if hours>1 else ''} ago"
-        elif age<2592000:
-            days=int(age/86400)
-            return f"{days} day{'s' if days>1 else ''} ago"
-
-        now=time.gmtime()
-        ctd=time.gmtime(self.created_utc)
-        months=now.tm_mon-ctd.tm_mon+12*(now.tm_year-ctd.tm_year)
-
-        if months < 12:
-            return f"{months} month{'s' if months>1 else ''} ago"
-        else:
-            years=now.tm_year-ctd.tm_year
-            return f"{years} year{'s' if years>1 else ''} ago"
-
-    @property
-    def edited_string(self):
-
-        if not self.edited_utc:
-            return None
-
-        age=int(time.time()-self.edited_utc)
-
-        if age<60:
-            return "just now"
-        elif age<3600:
-            minutes=int(age/60)
-            return f"{minutes} minute{'s' if minutes>1 else ''} ago"
-        elif age<86400:
-            hours=int(age/3600)
-            return f"{hours} hour{'s' if hours>1 else ''} ago"
-        elif age<2592000:
-            days=int(age/86400)
-            return f"{days} day{'s' if days>1 else ''} ago"
-
-        now=time.gmtime()
-        ctd=time.gmtime(self.created_utc)
-        months=now.tm_mon-ctd.tm_mon+12*(now.tm_year-ctd.tm_year)
-
-        if months < 12:
-            return f"{months} month{'s' if months>1 else ''} ago"
-        else:
-            years=now.tm_year-ctd.tm_year
-            return f"{years} year{'s' if years>1 else ''} ago"
 
     @property
     def active_flags(self):
@@ -217,6 +156,28 @@ class Comment(Base):
             return 0
         else:
             return self.flag_count
+
+    def visibility_reason(self, v):
+        if self.author_id==v.id:
+            return "this is your content."
+        elif self.board.has_mod(v):
+            return f"you are a guildmaster of +{self.board.name}."
+        elif self.board.has_contributor(v):
+            return f"you are an approved contributor in +{self.board.name}."
+        elif self.parent.author_id==v.id:
+            return "this is a reply to your content."
+        elif v.admin_level >= 4:
+            return "you are a Ruqqus admin."
+
+    @property
+    @cache.memoize(timeout=60)
+    def score_fuzzed(self):
+        
+        k=0.01
+        real = self.score_top
+        a = math.floor(real * (1 - k))
+        b = math.ceil(real * (1 + k))
+        return random.randint(a, b)
         
 class Notification(Base):
 
@@ -240,3 +201,8 @@ class Notification(Base):
     def comment(self):
 
         return db.query(Comment).filter_by(id=self.comment_id).first()
+
+    @property
+    def board(self):
+
+        return db.query(Board).filter_by(id=self.board_id).first()

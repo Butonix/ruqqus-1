@@ -1,0 +1,30 @@
+{% extends "errors/default.html" %}
+
+{% block title %}
+<title>451 Unavailable For Legal Reasons</title>
+{% endblock %}
+
+{% block pagetype %}error-451{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+	<div class="col-10 col-md-5">
+	<div class="text-center px-3 my-8">
+			<i class="fad fa-balance-scale text-muted mb-5" style="font-size: 5rem;"></i>
+			<h1 class="h5">451 Unavailable For Legal Reasons</h1>
+
+			<p class="text-muted mb-5">By royal decree, we are unable to show this to you right now.</p>
+
+
+			{% if v %}
+				<p class="text-muted mb-5">If you are looking for NSFW content, you need to be at least 18 years old and indicate as such in your settings.</p>
+				<div><a href="/settings/profile" class="btn btn-primary mb-2"><i class="fas fa-cog mr-2"></i>My settings</a></div>
+			{% else %}
+				<p class="text-muted mb-5">If you are looking for NSFW content, you need to sign in and be at least 18 years old.</p>
+				<div><a href="/signup" class="btn btn-primary mb-2">Create an account</a></div>
+				<div><a href="/login" class="text-muted text-small">Or sign in</a></div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}

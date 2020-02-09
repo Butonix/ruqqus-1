@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>{% block pagetitle %}Guild management - Ruqqus{% endblock %}</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <!-- Ruqqus CSS -->
+
+  {% if v and v.referral_count and session.get("dark_mode_enabled") %}
+  <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css">
+  {% else %}
+  <link id="css-link" rel="stylesheet" href="/assets/style/main.css">
+  {% endif %}
+
+  <!-- Font Awesome -->
+  <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+
+  <script src="/assets/js/post.js"></script>
+  <script>
+    function formkey() {
+      return '{{ v.formkey }}';
+    }
+  </script>
+
+</head>
+
+<body id="settings-guild">
+
+  {% include "header.html" %}
+
+  <!-- sub-header container -->
+
+  {% block subHeader %}
+  <div class="container-fluid bg-light">
+    <div class="row py-3">
+      <div class="col">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <span class="post-meta-guild font-weight-bold">
+              {% if b %}
+                <a href="/+{{ b.name }}" class="text-black"><img src="{{ b.profile_url }}" class="profile-pic-20 align-top mr-1">+{{ b.name }}</a>
+              {% else %}
+              Moderation
+              {% endif %}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+
+  <!-- tabs container -->
+  {% block subNav %}
+{% if b.has_mod(v) %}
+  <!-- Desktop -->
+  <div class="container-fluid bg-white sticky d-none d-md-block">
+    <div class="row box-shadow-bottom">
+      <div class="col">
+        <div class="container">
+          <div class="row box-shadow-bottom bg-white">
+            <div class="col">
+              <div class="d-flex flex-row-reverse justify-content-end">
+                <ul class="nav settings-nav" style="margin-left: -15px;">
+                  <li class="nav-item">
+                    <a class="nav-link{% if request.path.endswith("/mod/settings") %} active{% endif %}" href="/+{{ b.name }}/mod/settings"><i class="fas fa-cog"></i>Settings</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link{% if request.path.endswith("/mod/appearance") %} active{% endif %}" href="/+{{ b.name }}/mod/appearance"><i class="fas fa-palette"></i>Appearance</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link{% if request.path.endswith("/mod/mods") %} active{% endif %}" href="/+{{ b.name }}/mod/mods"><i class="fas fa-crown"></i>Guildmasters</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link{% if request.path.endswith("/mod/exiled") %} active{% endif %}" href="/+{{ b.name }}/mod/exiled"><i class="fas fa-user-slash"></i>Exiled Users</a> 
+                  </li>
+
+{% if b.restricted_posting or b.is_private %}
+                  <li class="nav-item">
+                    <a class="nav-link{% if request.path.endswith("/mod/contributors") %} active{% endif %}" href="/+{{ b.name }}/mod/contributors"><i class="fas fa-user-check"></i>Approved Contributors</a> 
+                  </li>
+{% endif %}
+                  <li class="nav-item">
+                    <a class="nav-link{% if request.path.endswith("/mod/queue") %} active{% endif %}" href="/+{{ b.name }}/mod/queue"><i class="fas fa-flag"></i>Reports</a> 
+                  </li>
+
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Mobile -->
+  <div class="container-fluid bg-white sticky d-block d-md-none">
+    <div class="row box-shadow-bottom">
+      <div class="col">
+        <div class="d
+        -flex flex-row-reverse justify-content-end">
+          <ul class="nav settings-nav x-scroll">
+            <li class="nav-item">
+              <a class="nav-link{% if request.path.endswith("/mod/settings") %} active{% endif %}" href="/+{{ b.name }}/mod/settings"><i class="fas fa-cog"></i>Settings</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{% if request.path.endswith("/mod/mods") %} active{% endif %}" href="/+{{ b.name }}/mod/mods"><i class="fas fa-crown"></i>Guildmasters</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{% if request.path.endswith("/mod/exiled") %} active{% endif %}" href="/+{{ b.name }}/mod/exiled"><i class="fas fa-user-slash"></i>Exiled Users</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+  {% endblock %}
+
+  <!-- Settings content -->
+  <div class="container mt-5">
+
+   {% block content %}
+   {% endblock %}
+
+ </div>
+
+ {% include "footer.html" %}
+
+ <!-- Clipboard Toast -->
+
+ <div class="toast clipboard" id="toast-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-success text-center text-white">
+    <i class="fas fa-check-circle mr-2"></i>Link copied to clipboard
+  </div>
+</div>
+
+<div class="toast clipboard" id="toast-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-danger text-center text-white">
+    <i class="fas fa-exclamation-circle mr-2"></i>Unable to copy link
+  </div>
+</div>
+
+{% block invitationModal %}
+{% endblock %}
+
+{% include "announcements_modal.html" %}
+
+{% include "bootstrap.html" %}
+
+<script src="/assets/js/change_email.js"></script>
+<script src="/assets/js/email_verify_text.js"></script>
+
+<!-- Initialize BS 4 tool tips -->
+
+<script src="/assets/js/tooltips.js"></script>
+
+<!-- Search bar icon JS -->
+
+<script src="/assets/js/search_icon.js"></script>
+
+<!-- ClipboardJS -->
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+
+<!-- Instantiate clipboard by passing a string selector -->
+<script type="text/javascript">
+  var clipboard = new ClipboardJS('.copy-link');
+  clipboard.on('success', function(e) {
+
+    jQuery(function($) {
+      $('#toast-success').toast('show');
+    })
+    console.log(e);
+  });
+  clipboard.on('error', function(e) {
+
+    jQuery(function($) {
+      $('#toast-error').toast('show');
+    })
+    console.log(e);
+  });
+</script>
+
+{% if v and v.referral_count %}
+
+<!-- Ruqqus Dark Mode Toggle -->
+
+<script src="/assets/js/dark_mode.js"></script>
+
+{% endif %}
+
+{% block scripts %}
+{% endblock %}
+
+</body>
+
+</html>

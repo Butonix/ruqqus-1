@@ -1,5 +1,5 @@
 /*!
- * Font Awesome Pro 5.11.2 by @fontawesome - https://fontawesome.com
+ * Font Awesome Pro 5.12.0 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license (Commercial License)
  */
 @font-face {
@@ -67,6 +67,9 @@
 .fad.fa-adjust:after {
   content: "\10f042"; }
 
+.fad.fa-air-conditioner:after {
+  content: "\10f8f4"; }
+
 .fad.fa-air-freshener:after {
   content: "\10f5d0"; }
 
@@ -90,6 +93,12 @@
 
 .fad.fa-alicorn:after {
   content: "\10f6b0"; }
+
+.fad.fa-alien:after {
+  content: "\10f8f5"; }
+
+.fad.fa-alien-monster:after {
+  content: "\10f8f6"; }
 
 .fad.fa-align-center:after {
   content: "\10f037"; }
@@ -376,6 +385,9 @@
 .fad.fa-bags-shopping:after {
   content: "\10f847"; }
 
+.fad.fa-bahai:after {
+  content: "\10f666"; }
+
 .fad.fa-balance-scale:after {
   content: "\10f24e"; }
 
@@ -460,6 +472,15 @@
 .fad.fa-bed:after {
   content: "\10f236"; }
 
+.fad.fa-bed-alt:after {
+  content: "\10f8f7"; }
+
+.fad.fa-bed-bunk:after {
+  content: "\10f8f8"; }
+
+.fad.fa-bed-empty:after {
+  content: "\10f8f9"; }
+
 .fad.fa-beer:after {
   content: "\10f0fc"; }
 
@@ -468,6 +489,9 @@
 
 .fad.fa-bell-exclamation:after {
   content: "\10f848"; }
+
+.fad.fa-bell-on:after {
+  content: "\10f8fa"; }
 
 .fad.fa-bell-plus:after {
   content: "\10f849"; }
@@ -522,6 +546,15 @@
 
 .fad.fa-blind:after {
   content: "\10f29d"; }
+
+.fad.fa-blinds:after {
+  content: "\10f8fb"; }
+
+.fad.fa-blinds-open:after {
+  content: "\10f8fc"; }
+
+.fad.fa-blinds-raised:after {
+  content: "\10f8fd"; }
 
 .fad.fa-blog:after {
   content: "\10f781"; }
@@ -808,6 +841,9 @@
 .fad.fa-camera-alt:after {
   content: "\10f332"; }
 
+.fad.fa-camera-home:after {
+  content: "\10f8fe"; }
+
 .fad.fa-camera-movie:after {
   content: "\10f8a9"; }
 
@@ -874,6 +910,12 @@
 .fad.fa-car-wash:after {
   content: "\10f5e6"; }
 
+.fad.fa-caravan:after {
+  content: "\10f8ff"; }
+
+.fad.fa-caravan-alt:after {
+  content: "\10f900"; }
+
 .fad.fa-caret-circle-down:after {
   content: "\10f32d"; }
 
@@ -930,6 +972,9 @@
 
 .fad.fa-cat:after {
   content: "\10f6be"; }
+
+.fad.fa-cat-space:after {
+  content: "\10f901"; }
 
 .fad.fa-cauldron:after {
   content: "\10f6bf"; }
@@ -1240,6 +1285,9 @@
 .fad.fa-coffee:after {
   content: "\10f0f4"; }
 
+.fad.fa-coffee-pot:after {
+  content: "\10f902"; }
+
 .fad.fa-coffee-togo:after {
   content: "\10f6c5"; }
 
@@ -1260,6 +1308,9 @@
 
 .fad.fa-columns:after {
   content: "\10f0db"; }
+
+.fad.fa-comet:after {
+  content: "\10f903"; }
 
 .fad.fa-comment:after {
   content: "\10f075"; }
@@ -1816,6 +1867,9 @@
 .fad.fa-fan:after {
   content: "\10f863"; }
 
+.fad.fa-fan-table:after {
+  content: "\10f904"; }
+
 .fad.fa-farm:after {
   content: "\10f864"; }
 
@@ -1824,6 +1878,12 @@
 
 .fad.fa-fast-forward:after {
   content: "\10f050"; }
+
+.fad.fa-faucet:after {
+  content: "\10f905"; }
+
+.fad.fa-faucet-drip:after {
+  content: "\10f906"; }
 
 .fad.fa-fax:after {
   content: "\10f1ac"; }
@@ -2119,6 +2179,9 @@
 .fad.fa-futbol:after {
   content: "\10f1e3"; }
 
+.fad.fa-galaxy:after {
+  content: "\10f908"; }
+
 .fad.fa-game-board:after {
   content: "\10f867"; }
 
@@ -2133,6 +2196,15 @@
 
 .fad.fa-gamepad-alt:after {
   content: "\10f8bc"; }
+
+.fad.fa-garage:after {
+  content: "\10f909"; }
+
+.fad.fa-garage-car:after {
+  content: "\10f90a"; }
+
+.fad.fa-garage-open:after {
+  content: "\10f90b"; }
 
 .fad.fa-gas-pump:after {
   content: "\10f52f"; }
@@ -2437,9 +2509,6 @@
 .fad.fa-hat-wizard:after {
   content: "\10f6e8"; }
 
-.fad.fa-haykal:after {
-  content: "\10f666"; }
-
 .fad.fa-hdd:after {
   content: "\10f0a0"; }
 
@@ -2487,6 +2556,9 @@
 
 .fad.fa-heartbeat:after {
   content: "\10f21e"; }
+
+.fad.fa-heat:after {
+  content: "\10f90c"; }
 
 .fad.fa-helicopter:after {
   content: "\10f533"; }
@@ -2587,11 +2659,29 @@
 .fad.fa-hourglass-start:after {
   content: "\10f251"; }
 
+.fad.fa-house:after {
+  content: "\10f90d"; }
+
 .fad.fa-house-damage:after {
   content: "\10f6f1"; }
 
+.fad.fa-house-day:after {
+  content: "\10f90e"; }
+
 .fad.fa-house-flood:after {
   content: "\10f74f"; }
+
+.fad.fa-house-leave:after {
+  content: "\10f90f"; }
+
+.fad.fa-house-night:after {
+  content: "\10f910"; }
+
+.fad.fa-house-return:after {
+  content: "\10f911"; }
+
+.fad.fa-house-signal:after {
+  content: "\10f912"; }
 
 .fad.fa-hryvnia:after {
   content: "\10f6f2"; }
@@ -2758,6 +2848,12 @@
 .fad.fa-lamp:after {
   content: "\10f4ca"; }
 
+.fad.fa-lamp-desk:after {
+  content: "\10f914"; }
+
+.fad.fa-lamp-floor:after {
+  content: "\10f915"; }
+
 .fad.fa-landmark:after {
   content: "\10f66f"; }
 
@@ -2835,6 +2931,18 @@
 
 .fad.fa-life-ring:after {
   content: "\10f1cd"; }
+
+.fad.fa-light-ceiling:after {
+  content: "\10f916"; }
+
+.fad.fa-light-switch:after {
+  content: "\10f917"; }
+
+.fad.fa-light-switch-off:after {
+  content: "\10f918"; }
+
+.fad.fa-light-switch-on:after {
+  content: "\10f919"; }
 
 .fad.fa-lightbulb:after {
   content: "\10f0eb"; }
@@ -3094,6 +3202,9 @@
 .fad.fa-microscope:after {
   content: "\10f610"; }
 
+.fad.fa-microwave:after {
+  content: "\10f91b"; }
+
 .fad.fa-mind-share:after {
   content: "\10f677"; }
 
@@ -3270,6 +3381,12 @@
 
 .fad.fa-outdent:after {
   content: "\10f03b"; }
+
+.fad.fa-outlet:after {
+  content: "\10f91c"; }
+
+.fad.fa-oven:after {
+  content: "\10f91d"; }
 
 .fad.fa-overline:after {
   content: "\10f876"; }
@@ -3487,6 +3604,12 @@
 .fad.fa-plane-departure:after {
   content: "\10f5b0"; }
 
+.fad.fa-planet-moon:after {
+  content: "\10f91f"; }
+
+.fad.fa-planet-ringed:after {
+  content: "\10f920"; }
+
 .fad.fa-play:after {
   content: "\10f04b"; }
 
@@ -3520,6 +3643,9 @@
 .fad.fa-podium-star:after {
   content: "\10f758"; }
 
+.fad.fa-police-box:after {
+  content: "\10f921"; }
+
 .fad.fa-poll:after {
   content: "\10f681"; }
 
@@ -3540,6 +3666,12 @@
 
 .fad.fa-popcorn:after {
   content: "\10f819"; }
+
+.fad.fa-portal-enter:after {
+  content: "\10f922"; }
+
+.fad.fa-portal-exit:after {
+  content: "\10f923"; }
 
 .fad.fa-portrait:after {
   content: "\10f3e0"; }
@@ -3625,6 +3757,9 @@
 .fad.fa-racquet:after {
   content: "\10f45a"; }
 
+.fad.fa-radar:after {
+  content: "\10f924"; }
+
 .fad.fa-radiation:after {
   content: "\10f7b9"; }
 
@@ -3652,6 +3787,9 @@
 .fad.fa-random:after {
   content: "\10f074"; }
 
+.fad.fa-raygun:after {
+  content: "\10f925"; }
+
 .fad.fa-receipt:after {
   content: "\10f543"; }
 
@@ -3675,6 +3813,9 @@
 
 .fad.fa-redo-alt:after {
   content: "\10f2f9"; }
+
+.fad.fa-refrigerator:after {
+  content: "\10f926"; }
 
 .fad.fa-registered:after {
   content: "\10f25d"; }
@@ -3729,6 +3870,9 @@
 
 .fad.fa-rocket:after {
   content: "\10f135"; }
+
+.fad.fa-rocket-launch:after {
+  content: "\10f927"; }
 
 .fad.fa-route:after {
   content: "\10f4d7"; }
@@ -3880,6 +4024,21 @@
 .fad.fa-send-backward:after {
   content: "\10f87f"; }
 
+.fad.fa-sensor:after {
+  content: "\10f928"; }
+
+.fad.fa-sensor-alert:after {
+  content: "\10f929"; }
+
+.fad.fa-sensor-fire:after {
+  content: "\10f92a"; }
+
+.fad.fa-sensor-on:after {
+  content: "\10f92b"; }
+
+.fad.fa-sensor-smoke:after {
+  content: "\10f92c"; }
+
 .fad.fa-server:after {
   content: "\10f233"; }
 
@@ -4027,6 +4186,12 @@
 .fad.fa-sim-card:after {
   content: "\10f7c4"; }
 
+.fad.fa-siren:after {
+  content: "\10f92d"; }
+
+.fad.fa-siren-on:after {
+  content: "\10f92e"; }
+
 .fad.fa-sitemap:after {
   content: "\10f0e8"; }
 
@@ -4138,6 +4303,9 @@
 .fad.fa-solar-panel:after {
   content: "\10f5ba"; }
 
+.fad.fa-solar-system:after {
+  content: "\10f92f"; }
+
 .fad.fa-sort:after {
   content: "\10f0dc"; }
 
@@ -4167,6 +4335,15 @@
 
 .fad.fa-sort-amount-up-alt:after {
   content: "\10f885"; }
+
+.fad.fa-sort-circle:after {
+  content: "\10f930"; }
+
+.fad.fa-sort-circle-down:after {
+  content: "\10f931"; }
+
+.fad.fa-sort-circle-up:after {
+  content: "\10f932"; }
 
 .fad.fa-sort-down:after {
   content: "\10f0dd"; }
@@ -4219,6 +4396,12 @@
 .fad.fa-space-shuttle:after {
   content: "\10f197"; }
 
+.fad.fa-space-station-moon:after {
+  content: "\10f933"; }
+
+.fad.fa-space-station-moon-alt:after {
+  content: "\10f934"; }
+
 .fad.fa-spade:after {
   content: "\10f2f4"; }
 
@@ -4254,6 +4437,9 @@
 
 .fad.fa-spray-can:after {
   content: "\10f5bd"; }
+
+.fad.fa-sprinkler:after {
+  content: "\10f935"; }
 
 .fad.fa-square:after {
   content: "\10f0c8"; }
@@ -4300,8 +4486,23 @@
 .fad.fa-star-of-life:after {
   content: "\10f621"; }
 
+.fad.fa-star-shooting:after {
+  content: "\10f936"; }
+
+.fad.fa-starfighter:after {
+  content: "\10f937"; }
+
+.fad.fa-starfighter-alt:after {
+  content: "\10f938"; }
+
 .fad.fa-stars:after {
   content: "\10f762"; }
+
+.fad.fa-starship:after {
+  content: "\10f939"; }
+
+.fad.fa-starship-freighter:after {
+  content: "\10f93a"; }
 
 .fad.fa-steak:after {
   content: "\10f824"; }
@@ -4408,8 +4609,17 @@
 .fad.fa-sword:after {
   content: "\10f71c"; }
 
+.fad.fa-sword-laser:after {
+  content: "\10f93b"; }
+
+.fad.fa-sword-laser-alt:after {
+  content: "\10f93c"; }
+
 .fad.fa-swords:after {
   content: "\10f71d"; }
+
+.fad.fa-swords-laser:after {
+  content: "\10f93d"; }
 
 .fad.fa-synagogue:after {
   content: "\10f69b"; }
@@ -4516,6 +4726,12 @@
 .fad.fa-teeth-open:after {
   content: "\10f62f"; }
 
+.fad.fa-telescope:after {
+  content: "\10f93e"; }
+
+.fad.fa-temperature-down:after {
+  content: "\10f93f"; }
+
 .fad.fa-temperature-frigid:after {
   content: "\10f768"; }
 
@@ -4527,6 +4743,9 @@
 
 .fad.fa-temperature-low:after {
   content: "\10f76b"; }
+
+.fad.fa-temperature-up:after {
+  content: "\10f940"; }
 
 .fad.fa-tenge:after {
   content: "\10f7d7"; }
@@ -4708,6 +4927,9 @@
 .fad.fa-traffic-light-stop:after {
   content: "\10f63a"; }
 
+.fad.fa-trailer:after {
+  content: "\10f941"; }
+
 .fad.fa-train:after {
   content: "\10f238"; }
 
@@ -4719,6 +4941,21 @@
 
 .fad.fa-transgender-alt:after {
   content: "\10f225"; }
+
+.fad.fa-transporter:after {
+  content: "\10f942"; }
+
+.fad.fa-transporter-1:after {
+  content: "\10f943"; }
+
+.fad.fa-transporter-2:after {
+  content: "\10f944"; }
+
+.fad.fa-transporter-3:after {
+  content: "\10f945"; }
+
+.fad.fa-transporter-empty:after {
+  content: "\10f946"; }
 
 .fad.fa-trash:after {
   content: "\10f1f8"; }
@@ -4834,6 +5071,12 @@
 .fad.fa-typewriter:after {
   content: "\10f8e7"; }
 
+.fad.fa-ufo:after {
+  content: "\10f947"; }
+
+.fad.fa-ufo-beam:after {
+  content: "\10f948"; }
+
 .fad.fa-umbrella:after {
   content: "\10f0e9"; }
 
@@ -4884,6 +5127,9 @@
 
 .fad.fa-user:after {
   content: "\10f007"; }
+
+.fad.fa-user-alien:after {
+  content: "\10f94a"; }
 
 .fad.fa-user-alt:after {
   content: "\10f406"; }
@@ -4957,6 +5203,9 @@
 .fad.fa-user-plus:after {
   content: "\10f234"; }
 
+.fad.fa-user-robot:after {
+  content: "\10f94b"; }
+
 .fad.fa-user-secret:after {
   content: "\10f21b"; }
 
@@ -4974,6 +5223,9 @@
 
 .fad.fa-user-times:after {
   content: "\10f235"; }
+
+.fad.fa-user-visor:after {
+  content: "\10f94c"; }
 
 .fad.fa-users:after {
   content: "\10f0c0"; }
@@ -5004,6 +5256,12 @@
 
 .fad.fa-utensils-alt:after {
   content: "\10f2e6"; }
+
+.fad.fa-vacuum:after {
+  content: "\10f94d"; }
+
+.fad.fa-vacuum-robot:after {
+  content: "\10f94e"; }
 
 .fad.fa-value-absolute:after {
   content: "\10f6a6"; }
@@ -5196,6 +5454,12 @@
 
 .fad.fa-window-close:after {
   content: "\10f410"; }
+
+.fad.fa-window-frame:after {
+  content: "\10f94f"; }
+
+.fad.fa-window-frame-open:after {
+  content: "\10f950"; }
 
 .fad.fa-window-maximize:after {
   content: "\10f2d0"; }

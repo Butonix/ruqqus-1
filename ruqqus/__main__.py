@@ -13,21 +13,26 @@ from sqlalchemy import *
 import threading
 import requests
 
-from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.middleware.proxy_fix import ProxyFix
 
-_version = "0.5.0"
+_version = "1.0.0"
 
 app = Flask(__name__,
             template_folder='./templates',
             static_folder='./static'
            )
-app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
+app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
 app.config["SERVER_NAME"]=environ.get("domain", None)
 app.config["VERSION"]="0.1.0"
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config["SESSION_COOKIE_SECURE"]=True
+app.config["SESSION_COOKIE_SAMESITE"]="Lax"
+
+app.config["UserAgent"]="Ruqqus webserver ruqqus.com"
 
 if "localhost" in app.config["SERVER_NAME"]:
     app.config["CACHE_TYPE"]="null"
@@ -40,7 +45,7 @@ app.config["CACHE_DEFAULT_TIMEOUT"]=60
 Markdown(app)
 cache=Cache(app)
 
-limit_url=environ.get("HEROKU_REDIS_PURPLE_URL", environ.get("HEROKU_REDIS_ORANGE_URL"))
+limit_url=environ.get("HEROKU_REDIS_PURPLE_URL", environ.get("HEROKU_REDIS_CRIMSON_URL"))
 
 limiter = Limiter(
     app,
@@ -69,11 +74,15 @@ def before_request():
     
     #check ip ban
     if db.query(ruqqus.classes.IP).filter_by(addr=request.remote_addr).first():
-        abort(403)
+        return '', 403
 
     #check useragent ban
-    if db.query(ruqqus.classes.Agent).filter(ruqqus.classes.Agent.kwd.in_(request.headers.get('User-Agent','No Agent').split())).first():
-        abort(403)
+    # Banned crawler useragents are deliberately mocked
+    x=db.query(ruqqus.classes.Agent).filter(ruqqus.classes.Agent.kwd.in_(request.headers.get('User-Agent','NoAgent').split())).first()
+    if x and request.path != "/robots.txt":
+        text=x.mock if x.mock else "Follow the robots.txt, dumbass"
+        status=x.status_code if x.status_code else 418
+        return text, status
         
     if request.url.startswith('http://') and "localhost" not in app.config["SERVER_NAME"]:
         url = request.url.replace('http://', 'https://', 1)
@@ -88,7 +97,7 @@ def before_request():
 
 def log_event(name, link):
 
-    sleep(10)
+    sleep(5)
 
     x=requests.get(link)
 
@@ -112,15 +121,19 @@ def log_event(name, link):
 
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, x-auth"
-                         )
 
+    #db.expire_all()
+    
+    response.headers.add('Access-Control-Allow-Headers',
+                         "Origin, X-Requested-With, Content-Type, Accept, x-auth"
+                         )
+    response.headers.add("Cache-Control",
+                         "maxage=120")
+
+    #signups - hit discord webhook
     if request.method=="POST" and response.status_code in [301, 302] and request.path=="/signup":
         link=f'https://{app.config["SERVER_NAME"]}/@{request.form.get("username")}'
         thread=threading.Thread(target=lambda:log_event(name="Account Signup", link=link))
         thread.start()
             
     return response
-
-    
-    

@@ -2,8 +2,10 @@ from flask import *
 from os import environ
 import requests
 
-from ruqqus.__main__ import Base, db
+
 from ruqqus.classes import *
+from .get import *
+from ruqqus.__main__ import Base, db, app
 
 
 #Wrappers
@@ -14,12 +16,17 @@ def auth_desired(f):
 
         if "user_id" in session:
             v=db.query(User).filter_by(id=session["user_id"]).first()
-            #if v:
-                #v.update_ip(request.remote_addr)
+            nonce=session.get("login_nonce",0)
+            if nonce<v.login_nonce:
+                v=None
+
         else:
             v=None
             
-        return f(*args, v=v, **kwargs)
+        resp=make_response( f(*args, v=v, **kwargs))
+        if v:
+            resp.headers.add("Cache-Control", "private")
+        return resp
 
     wrapper.__name__=f.__name__
     return wrapper
@@ -31,16 +38,20 @@ def auth_required(f):
 
         if "user_id" in session:
             v=db.query(User).filter_by(id=session["user_id"]).first()
+            nonce=session.get("login_nonce",0)
+            if nonce<v.login_nonce:
+                abort(401)
             
             if not v:
                 abort(401)
-            #v.update_ip(request.remote_addr)
 
         else:
             abort(401)
 
-        return f(*args, v=v, **kwargs)
-
+        resp = make_response( f(*args, v=v, **kwargs))
+        resp.headers.add("Cache-Control","private")
+        return resp
+    
     wrapper.__name__=f.__name__
     return wrapper
 
@@ -51,11 +62,12 @@ def is_not_banned(f):
 
         if "user_id" in session:
             v=db.query(User).filter_by(id=session["user_id"]).first()
+            nonce=session.get("login_nonce",0)
+            if nonce<v.login_nonce:
+                abort(401)
             
             if not v:
                 abort(401)
-
-            #v.update_ip(request.remote_addr)
 
             if v.is_banned:
                 abort(403)
@@ -63,15 +75,59 @@ def is_not_banned(f):
         else:
             abort(401)
 
-        return f(*args, v=v, **kwargs)
+        resp=make_response(f(*args, v=v, **kwargs))
+        resp.headers.add("Cache-Control","private")
+        return resp
 
     wrapper.__name__=f.__name__
     return wrapper
-    
+
+#Require tos agreement
+def tos_agreed(f):
+
+    def wrapper(*args, **kwargs):
+
+        v=kwargs['v']
+
+        cutoff=int(environ.get("tos_cutoff",0))
+
+        if v.tos_agreed_utc > cutoff:
+            return f(*args, **kwargs)
+        else:
+            return redirect("/help/terms#agreebox")
+
+    wrapper.__name__=f.__name__
+    return wrapper
+
+        
+
+def is_guildmaster(f):
+    #decorator that enforces guildmaster status
+    #use under auth_required
+
+    def wrapper(*args, **kwargs):
+
+        v=kwargs["v"]
+        boardname=kwargs.get("boardname")
+        board_id=kwargs.get("bid")
+
+        if boardname:
+            board=get_guild(boardname)
+        else:
+            board=get_board(board_id)
+
+        if not board.has_mod(v):
+            abort(403)
+
+        if v.is_banned:
+            abort(403)
+
+        return f(*args, board=board, **kwargs)
+
+    wrapper.__name__=f.__name__
+    return wrapper
 
 #this wrapper takes args and is a bit more complicated
-
-
 def admin_level_required(x):
 
     def wrapper_maker(f):
@@ -82,6 +138,9 @@ def admin_level_required(x):
             if "user_id" in session:
                 v=db.query(User).filter_by(id=session["user_id"]).first()
                 if not v:
+                    abort(401)
+                nonce=session.get("login_nonce",0)
+                if nonce<v.login_nonce:
                     abort(401)
                 
                 if v.is_banned:
@@ -98,9 +157,12 @@ def admin_level_required(x):
             response= f(*args, v=v, **kwargs)
 
             if isinstance(response, tuple):
-                return response[0]
+                resp=make_response(response[0])
             else:
-                return response
+                resp=make_response(response)
+            
+            resp.headers.add("Cache-Control","private")
+            return resp
 
         wrapper.__name__=f.__name__
         return wrapper
@@ -123,6 +185,31 @@ def validate_formkey(f):
             abort(401)
 
         return f(*args, v=v, **kwargs)
+
+    wrapper.__name__=f.__name__
+    return wrapper
+
+def no_cors(f):
+
+    """
+    Decorator prevents content being iframe'd
+    """
+
+    def wrapper(*args, **kwargs):
+
+        origin = request.headers.get("Origin",None)
+
+        if origin and origin != app.config["SERVER_NAME"]:
+
+            return "This page may not be embedded in other webpages.", 403
+
+        resp = make_response(f(*args, **kwargs))
+        resp.headers.add("Access-Control-Allow-Origin",
+                         app.config["SERVER_NAME"]
+                         )
+        resp.headers.add("X-Frame-Options",
+                         "deny")
+        return resp
 
     wrapper.__name__=f.__name__
     return wrapper

@@ -1,0 +1,25 @@
+{% extends "docs_default.html" %}
+
+{% block sidebarblock %}{% endblock %}
+{% block sidebarLeftblock %}{% endblock %}
+
+{% block title %}
+<title>Ruqqus - Help</title>
+<meta name="description" content="Ruqqus Help">
+{% endblock %}
+
+{% block content %}
+{% filter markdown %}
+# Help
+
+## Content
+
+* [Flagged Posts](/admin/flagged/posts)
+* [Flagged Comments](/admin/flagged/comments)
+
+## Account Cosmetics
+
+* [Badges](/admin/badge_grant)
+
+{% endfilter %}
+{% endblock %}

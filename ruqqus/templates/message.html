@@ -4,14 +4,21 @@
 <title>{{ title }}</title>
 {% endblock %}
 
+{% block sidebar %}{% endblock %}
+
 {% block pagetype %}message{% endblock %}
 
 {% block content %}
-<div class="text-center py-7 py-md-8">
+<div class="row justify-content-center">
+	<div class="col-10 col-md-5">
+	<div class="text-center px-3 my-8">
 
-	<img src="/assets/images/illustrations/time.png" class="empty-state-img mb-3" alt="empty state">
-	<div class="font-weight-bold text-muted mb-4">{{ title }}</div>
-	<p class="text-muted">{{ text }}</p>
-
+			{% if message %}<i class="fad fa-envelope-open-text text-muted mb-5" style="font-size: 5rem;"></i>
+			{% elif error %}<i class="fad fa-exclamation-triangle text-muted mb-5" style="font-size: 5rem;"></i>
+{% endif %}
+			<h1 class="h5">{{ title }}</h1>
+			<p class="text-muted mb-5">{{ message if message else error }}</p>
+		</div>
+	</div>
 </div>
 {% endblock %}

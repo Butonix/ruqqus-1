@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<meta name="author" content="">
+
+	{% block title %}
+	<title>Ruqqus - The social platform for uncensored discourse</title>
+	<meta name="description" content="The independent social platform">
+	{% endblock %}
+
+	<!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+	<!-- Ruqqus CSS -->
+	
+	{% block stylesheets %}
+	<link id="css-link" rel="stylesheet" href="/assets/style/main.css">
+	{% endblock %}
+
+	<!-- Font Awesome -->
+	<link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+
+
+
+</head>
+
+<body id="{% block pagetype %}frontpage{% endblock %}" class="p-1">
+
+
+	<div class="container">
+		<div class="row justify-content-around" id="main-content-row">
+
+			<div class="col h-100 custom-gutters" id="main-content-col">
+
+
+				{% block content %}
+				{% endblock %}
+
+
+			</div>
+
+			
+<!-- Clipboard Toast -->
+
+<div class="toast clipboard" id="toast-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+	<div class="toast-body bg-success text-center text-white">
+		<i class="fas fa-check-circle mr-2"></i>Link copied to clipboard
+	</div>
+</div>
+
+<div class="toast clipboard" id="toast-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+	<div class="toast-body bg-danger text-center text-white">
+		<i class="fas fa-exclamation-circle mr-2"></i>Unable to copy link
+	</div>
+</div>
+
+{% include "bootstrap.html" %}
+
+<script src="/assets/js/collapse.js"></script>
+<script src="/assets/js/comment_form.js"></script>
+
+
+<!-- ClipboardJS -->
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+
+<!-- Instantiate clipboard by passing a string selector -->
+<script type="text/javascript">
+	var clipboard = new ClipboardJS('.copy-link');
+	clipboard.on('success', function(e) {
+
+		jQuery(function($) {
+			$('#toast-success').toast('show');
+		})
+		console.log(e);
+	});
+	clipboard.on('error', function(e) {
+
+		jQuery(function($) {
+			$('#toast-error').toast('show');
+		})
+		console.log(e);
+	});
+</script>
+
+<!-- Initialize BS 4 tool tips -->
+
+<script src="/assets/js/tooltips.js"></script>
+
+<!-- Search bar icon JS -->
+
+<script src="/assets/js/search_icon.js"></script>
+
+<!-- BS Spinner JS -->
+
+<script src="/assets/js/spinner.js"></script>
+
+<!-- Activate K-Code -->
+<script src="/assets/js/kc.js"></script>
+
+{% block enlargeThumbJS %}
+{% endblock %}
+
+{% block toggleView %}
+{% endblock %}
+
+{% block embedJS %}
+{% endblock %}
+
+{% block formatJS %}
+{% endblock %}
+
+</body>
+
+</html>

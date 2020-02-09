@@ -1,10 +1,11 @@
 import bleach
+from bs4 import BeautifulSoup
 from bleach.linkifier import LinkifyFilter
 from urllib.parse import urlparse, ParseResult, urlunparse
 from functools import partial
+from .get import *
 
-_allowed_tags=tags=['a',
-                    'b',
+_allowed_tags=tags=['b',
                     'blockquote',
                     'code',
                     'del',
@@ -21,17 +22,21 @@ _allowed_tags=tags=['a',
                     'p',
                     'pre',
                     'strong',
-                    'ul',
+                    'ul'
                    ]
 
-_allowed_tags_with_links=_allowed_tags+["a"]
+_allowed_tags_with_links=_allowed_tags+["a", "hr", "img"]
 
-_allowed_attributes={'a': ['href', 'title', "rel"]}
+_allowed_attributes={'a': ['href', 'title', "rel"],
+                     #"i": ["class"],
+                     'img':['src', 'class']
+                     }
 
 _allowed_protocols=['http', 'https']
 
 #filter to make all links show domain on hover
 def nofollow(attrs, new=False):
+
 
     parsed_url=urlparse(attrs[(None, "href")])
     domain=parsed_url.netloc
@@ -56,7 +61,7 @@ _clean_wo_links = bleach.Cleaner(tags=_allowed_tags,
                                  attributes=_allowed_attributes,
                                  protocols=_allowed_protocols,
                                  )
-_clean_w_links = bleach.Cleaner(tags=_allowed_tags,
+_clean_w_links = bleach.Cleaner(tags=_allowed_tags_with_links,
                                 attributes=_allowed_attributes,
                                 protocols=_allowed_protocols,
                                 filters=[partial(LinkifyFilter,
@@ -71,8 +76,43 @@ _clean_w_links = bleach.Cleaner(tags=_allowed_tags,
 def sanitize(text, linkgen=False):
 
     if linkgen:
-        return _clean_w_links.clean(text)
+        sanitized= _clean_w_links.clean(text)
+
+        soup=BeautifulSoup(sanitized, features="html.parser")
+
+        for tag in soup.find_all("img"):
+
+            netloc=urlparse(tag["src"]).netloc
+
+
+            domain=get_domain(netloc)
+            if not(netloc) or (domain and domain.show_thumbnail):
+
+                if "profile-pic-20" not in tag.get("class",""):
+                    #set classes and wrap in link
+                    
+                    tag["rel"]="nofollow"
+                    tag["style"]="max-height: 150px; max-width: 100%;"
+                    tag["class"]="in-comment-image"
+                            
+                    link=soup.new_tag("a")
+                    link["href"]=tag["src"]
+                    link["rel"]="nofollow"
+                    link["target"]="_blank"
+                    tag.wrap(link)
+            else:
+                #non-whitelisted images get replaced with links
+                new_tag=soup.new_tag("a")
+                new_tag.string=tag["src"]
+                new_tag["href"]=tag["src"]
+                new_tag["rel"]="nofollow"
+                tag.replace_with(new_tag)
+
+
+        sanitized=str(soup)
     else:
-        return _clean_wo_links.clean(text)
+        sanitized= _clean_wo_links.clean(text)
+
+    return sanitized
     
 

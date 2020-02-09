@@ -28,20 +28,11 @@
   <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 
   <script>
-    function post(url, callback, errortext) {
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", url, true);
-      var form = new FormData()
-      form.append("formkey", "{{ v.formkey }}");
-      xhr.withCredentials=true;
-      xhr.onload=callback
-      xhr.onerror=function(){alert(errortext)}
-      xhr.send(form);
-    }
     function formkey() {
       return '{{ v.formkey }}';
     }
   </script>
+  <script src="/assets/js/post.js"></script>
 
 </head>
 
@@ -55,6 +46,10 @@
    {% endblock %}
 
  </div>
+
+ {% if v %}
+ {% include "2fa_modal.html" %}
+ {% endif %}
 
  {% include "footer.html" %}
 
@@ -72,6 +67,7 @@
   </div>
 </div>
 
+{% include "announcements_modal.html" %}
 {% include "bootstrap.html" %}
 
 <script src="/assets/js/change_email.js"></script>
@@ -114,6 +110,12 @@
 
 <script src="/assets/js/dark_mode.js"></script>
 
+{% endif %}
+
+{% if v %}
+<!-- Toggle 2FA Custom Switch -->
+
+<script src="/assets/js/2fa_toggle.js"></script>
 {% endif %}
 
 </body>

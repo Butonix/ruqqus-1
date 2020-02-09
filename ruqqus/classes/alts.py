@@ -2,8 +2,7 @@ from sqlalchemy import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import lazy
-from .votes import Vote
-from ruqqus.__main__ import Base, db, cache
+from ruqqus.__main__ import Base
 
 #The alt class is for admin tracking of users across multiple accounts.
 #The information provided by this is not available to regular users.

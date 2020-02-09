@@ -18,10 +18,8 @@ The purpose of this document is to clearly identify:
 
 ### General
 
-1. To the greatest extent possible, mimic reddit functionality as it applies to /r/the_donald (Quarantine/ban status notwithstanding)
-2. Use reddit oauth to verify reddit name if desired
-3. Use email verification to increase account permissions
-4. No advertising, donations only (to avoid contractual obligations to advertisers)
+1. To the greatest extent possible, mimic reddit functionality without allowing board moderators to censor users
+2. No advertising, donations only (to avoid contractual obligations to advertisers)
 
 ### UX
 
@@ -40,12 +38,12 @@ Several layers of administrative privilege will be implemented
 Integer|Name|Suggested permissions|Type of user
 -|-|-|-
 0|User|None|Everyone and anyone
-1|Junior Mod|Remove content. Flag accounts for higher review.|Helpful users
-2|Senior Mod|Issue 24hr bans|Particularly helpful users with a good track record 
-3|Junior Admin|Issue permanent bans. Promote/demote users up to level 2 | New admins. Signed volunteer agreement required.
-4|Senior Admin|See IP/tech info not visible to lower ranks.|Trust+Safety
-5|Deputy Owner|Promote/demote users up to level 4|Active contributors and developers
-6|Owner|Direct Heroku/database access|captainmeta4. Maybe a select few others.
+1|Admin Emeritus|Distinguish comments|Former employees
+2|Admin|Distinguish comments. Basic, non-T&S features|Non-tech staff (ex. legal). NDA/agreement required.
+3|Junior Dev|Remove content| Vetted contributors
+4|Senior Dev|Issue bans|Trust+Safety
+5|Deputy Owner|Add/remove lower ranks|Part owners
+6|Owner|Direct Heroku/database access|Majority owners only.
 
 ## Specifications
 

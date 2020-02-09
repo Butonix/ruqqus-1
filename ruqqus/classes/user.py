@@ -1,49 +1,81 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import render_template, session, request
-from time import strftime, time, gmtime
+from flask import *
+import time
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
 from os import environ
 from secrets import token_hex
 import random
+import pyotp
 
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import lazy
+import ruqqus.helpers.aws as aws
 from .votes import Vote
 from .alts import Alt
+from .titles import Title
+from .submission import Submission
+from .comment import Comment
+from .boards import Board
+from .board_relationships import *
+from .mix_ins import *
 from ruqqus.__main__ import Base, db, cache
 
-class User(Base):
+class User(Base, Stndrd):
 
     __tablename__="users"
     id = Column(Integer, primary_key=True)
     username = Column(String, default=None)
     email = Column(String, default=None)
     passhash = Column(String, default=None)
-    created_utc = Column(BigInteger, default=0)
+    created_utc = Column(Integer, default=0)
     admin_level = Column(Integer, default=0)
     is_activated = Column(Boolean, default=False)
-    reddit_username = Column(String, default=None)
     over_18=Column(Boolean, default=False)
     creation_ip=Column(String, default=None)
     most_recent_ip=Column(String, default=None)
-    submissions=relationship("Submission", lazy="dynamic", backref="users")
+    submissions=relationship("Submission", lazy="dynamic", primaryjoin="Submission.author_id==User.id", backref="author_rel")
     comments=relationship("Comment", lazy="dynamic", primaryjoin="Comment.author_id==User.id")
     votes=relationship("Vote", lazy="dynamic", backref="users")
     commentvotes=relationship("CommentVote", lazy="dynamic", backref="users")
-    bio=deferred(Column(String, default=""))
-    bio_html=deferred(Column(String, default=""))
+    bio=Column(String, default="")
+    bio_html=Column(String, default="")
     badges=relationship("Badge", lazy="dynamic", backref="user")
     real_id=Column(String, default=None)
     notifications=relationship("Notification", lazy="dynamic", backref="user")
     referred_by=Column(Integer, default=None)
     is_banned=Column(Integer, default=0)
     ban_reason=Column(String, default="")
+    login_nonce=Column(Integer, default=0)
+    title_id=Column(Integer, ForeignKey("titles.id"), default=None)
+    title=relationship("Title")
+    has_profile=Column(Boolean, default=False)
+    has_banner=Column(Boolean, default=False)
+    reserved=Column(String(256), default=None)
+    is_nsfw=Column(Boolean, default=False)
+    tos_agreed_utc=Column(Integer, default=None)
+    profile_nonce=Column(Integer, default=0)
+    banner_nonce=Column(Integer, default=0)
+    last_siege_utc=Column(Integer, default=0)
+    mfa_secret=Column(String(16), default=None)
 
+    moderates=relationship("ModRelationship", lazy="dynamic")
+    banned_from=relationship("BanRelationship", lazy="dynamic", primaryjoin="BanRelationship.user_id==User.id")
+    subscriptions=relationship("Subscription", lazy="dynamic")
+    boards_created=relationship("Board", lazy="dynamic")
+    contributes=relationship("ContributorRelationship", lazy="dynamic")
+
+    following=relationship("Follow", lazy="dynamic", primaryjoin="Follow.user_id==User.id")
+    followers=relationship("Follow", lazy="dynamic", primaryjoin="Follow.target_id==User.id")
+
+
+    
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
+    comment_energy = deferred(Column(Integer, server_default=FetchedValue()))
     referral_count=deferred(Column(Integer, server_default=FetchedValue()))
+    follower_count=deferred(Column(Integer, server_default=FetchedValue()))
 
 
 
@@ -54,18 +86,183 @@ class User(Base):
             kwargs["passhash"]=self.hash_password(kwargs["password"])
             kwargs.pop("password")
 
-        kwargs["created_utc"]=int(time())
+        kwargs["created_utc"]=int(time.time())
 
         super().__init__(**kwargs)
 
+        
+    def validate_2fa(self, token):
+        
+        x=pyotp.TOTP(self.mfa_secret)
+        return x.verify(token, valid_window=1)
+    
     @property
-    def age(self):
-        return int(time())-self.created_utc
+    def boards_subscribed(self):
+
+        boards= [x.board for x in self.subscriptions if x.is_active]
+        return boards
 
     @property
+    def age(self):
+        return int(time.time())-self.created_utc
+        
     @cache.memoize(timeout=60)
+    def idlist(self, sort="hot", page=1, only=None, t=None):
+
+        
+
+        posts=db.query(Submission).filter_by(is_banned=False,
+                                             is_deleted=False,
+                                             stickied=False
+                                             )
+
+
+        if not self.over_18:
+            posts=posts.filter_by(over_18=False)
+
+        if only in [None, "none"]:
+            board_ids=[x.board_id for x in self.subscriptions.filter_by(is_active=True).all()]
+            user_ids=[x.target_id for x in self.following.all()]
+            user_ids.append(self.id)
+            posts=posts.filter(or_(Submission.board_id.in_(board_ids), Submission.author_id.in_(user_ids)))
+        elif only=="guilds":
+            board_ids=[x.board_id for x in self.subscriptions.filter_by(is_active=True).all()]
+            posts=posts.filter(Submission.board_id.in_(board_ids))
+        elif only=="users":
+            user_ids=[x.target_id for x in self.following.all()]
+            user_ids.append(self.id)
+            posts=posts.filter(Submission.author_id.in_(user_ids))
+        else:
+            abort(422)
+
+        if not self.admin_level >=4:
+            #admins can see everything
+            m=self.moderates.filter_by(invite_rescinded=False).subquery()
+            c=self.contributes.subquery()
+            posts=posts.join(m,
+                             m.c.board_id==Submission.board_id,
+                             isouter=True
+                             ).join(c,
+                                    c.c.board_id==Submission.board_id,
+                                    isouter=True
+                                    )
+            posts=posts.filter(or_(Submission.author_id==self.id,
+                                   Submission.is_public==True,
+                                   m.c.board_id != None,
+                                   c.c.board_id !=None))
+
+        if t:
+            now=int(time.time())
+            if t=='day':
+                cutoff=now-86400
+            elif t=='week':
+                cutoff=now-604800
+            elif t=='month':
+                cutoff=now-2592000
+            elif t=='year':
+                cutoff=now-31536000
+            else:
+                cutoff=0
+                
+            posts=posts.filter(Submission.created_utc >= cutoff)
+                
+            
+
+        if sort=="hot":
+            posts=posts.order_by(Submission.score_hot.desc())
+        elif sort=="new":
+            posts=posts.order_by(Submission.created_utc.desc())
+        elif sort=="disputed":
+            posts=posts.order_by(Submission.score_disputed.desc())
+        elif sort=="top":
+            posts=posts.order_by(Submission.score_top.desc())
+        elif sort=="activity":
+            posts=posts.order_by(Submission.score_activity.desc())
+        else:
+            abort(422)
+
+        posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
+
+        return posts
+
+    def list_of_posts(self, ids):
+
+        next_exists=(len(ids)==26)
+        ids=ids[0:25]
+
+        if ids:
+
+            #assemble list of tuples
+            i=1
+            tups=[]
+            for x in ids:
+                tups.append((x,i))
+                i+=1
+
+            tups=str(tups).lstrip("[").rstrip("]")
+
+            #hit db for entries
+            posts=db.query(Submission
+                           ).from_statement(
+                               text(
+                               f"""
+                                select submissions.*, submissions.ups, submissions.downs
+                                from submissions
+                                join (values {tups}) as x(id, n) on submissions.id=x.id
+                                order by x.n"""
+                               )).all()
+        else:
+            posts=[]
+
+        return posts, next_exists
+
+    def rendered_subscription_page(self, sort="hot", page=1):
+
+        only=request.args.get("only",None)        
+
+        ids=self.idlist(sort=sort,
+                        page=page,
+                        only=only,
+                        t=request.args.get('t', None)
+                        )
+
+        posts, next_exists = self.list_of_posts(ids)
+        
+        #If page 1, check for sticky
+        if page==1:
+            sticky =[]
+            sticky=db.query(Submission).filter_by(stickied=True).first()
+            if sticky:
+                posts=[sticky]+posts
+
+        return render_template("subscriptions.html",
+                               v=self,
+                               listing=posts,
+                               next_exists=next_exists,
+                               sort_method=sort,
+                               page=page,
+                               only=only)        
+
+    @property
+    def mods_anything(self):
+
+        return bool(self.moderates.filter_by(accepted=True).first())
+
+
+    @property
+    def boards_modded(self):
+
+        return [x.board for x in self.moderates.filter_by(accepted=True).all()]
+
+    @property
+    @cache.memoize(timeout=3600) #1hr cache time for user rep
     def karma(self):
         return self.energy
+
+    @property
+    @cache.memoize(timeout=3600)
+    def comment_karma(self):
+        return self.comment_energy
 
 
     @property
@@ -75,6 +272,12 @@ class User(Base):
     @property
     def fullname(self):
         return f"t1_{self.base36id}"
+
+    @property
+    @cache.memoize(timeout=60)
+    def has_report_queue(self):
+        board_ids=[x.board_id for x in self.moderates.filter_by(accepted=True).all()]
+        return bool(db.query(Submission).filter(Submission.board_id.in_(board_ids), Submission.mod_approved==0, Submission.report_count>=1).first())
 
     @property
     def banned_by(self):
@@ -104,22 +307,6 @@ class User(Base):
         
         return vote.vote_type
     
-    def update_ip(self, remote_addr):
-        
-        if not remote_addr==self.most_recent_ip:
-            self.most_recent_ip = remote_addr
-            db.add(self)
-
-        existing=self.ips.filter_by(ip=remote_addr).first()
-
-        if existing:
-            existing.created_utc=time()
-            db.add(existing)
-            
-        else:
-            db.add(IP(user_id=self.id, ip=remote_addr))
-        
-        db.commit()
 
     def hash_password(self, password):
         return generate_password_hash(password, method='pbkdf2:sha512', salt_length=8)
@@ -129,47 +316,125 @@ class User(Base):
         
     def rendered_userpage(self, v=None):
 
+        if self.reserved:
+            return render_template("userpage_reserved.html", u=self, v=v)
+
         if self.is_banned and (not v or v.admin_level < 3):
             return render_template("userpage_banned.html", u=self, v=v)
 
         page=int(request.args.get("page","1"))
         page=max(page, 1)
 
-        
-        if v:
-            if v.admin_level or v.id==self.id:
-                listing=[p for p in self.submissions.order_by(text("created_utc desc")).offset(25*(page-1)).limit(26)]
-            else:
-                listing=[p for p in self.submissions.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(26)]
-        else:
-            listing=[p for p in self.submissions.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(26)]
+        submissions=self.submissions
 
+        if not (v and v.over_18):
+            submissions=submissions.filter_by(over_18=False)
+
+        if not (v and (v.admin_level >=3)):
+            submissions=submissions.filter_by(is_deleted=False)
+
+        if not (v and (v.admin_level >=3 or v.id==self.id)):
+            submissions=submissions.filter_by(is_banned=False)
+
+
+
+
+        if v and v.admin_level >=4:
+            pass
+        elif v:
+            m=v.moderates.filter_by(invite_rescinded=False).subquery()
+            c=v.contributes.subquery()
+            
+            submissions=submissions.join(m,
+                                         m.c.board_id==Submission.board_id,
+                                         isouter=True
+                                    ).join(c,
+                                           c.c.board_id==Submission.board_id,
+                                           isouter=True
+                                    )
+            submissions=submissions.filter(or_(Submission.author_id==v.id,
+                                   Submission.is_public==True,
+                               m.c.board_id != None,
+                               c.c.board_id !=None))
+        else:
+            submissions=submissions.filter_by(is_public=True)
+
+            
+
+        listing = [x for x in submissions.order_by(text("submissions.created_utc desc")).offset(25*(page-1)).limit(26)]
+        
         #we got 26 items just to see if a next page exists
         next_exists=(len(listing)==26)
         listing=listing[0:25]
 
-        return render_template("userpage.html", u=self, v=v, listing=listing, page=page, next_exists=next_exists)
+        is_following=(v and self.has_follower(v))
+
+        return render_template("userpage.html",
+                               u=self,
+                               v=v,
+                               listing=listing,
+                               page=page,
+                               next_exists=next_exists,
+                               is_following=is_following)
 
     def rendered_comments_page(self, v=None):
+        if self.reserved:
+            return render_template("userpage_reserved.html", u=self, v=v)
 
         if self.is_banned and (not v or v.admin_level < 3):
             return render_template("userpage_banned.html", u=self, v=v)
         
         page=int(request.args.get("page","1"))
 
-        if v:
-            if v.admin_level or v.id==self.id:
-                listing=[p for p in self.comments.order_by(text("created_utc desc")).offset(25*(page-1)).limit(26)]
-            else:
-                listing=[p for p in self.comments.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(26)]
-        else:
-            listing=[p for p in self.comments.filter_by(is_banned=False).order_by(text("created_utc desc")).offset(25*(page-1)).limit(26)]
+        comments=self.comments.filter(text("parent_submission is not null"))
 
+        if not (v and v.over_18):
+            comments=comments.filter_by(over_18=False)
+            
+        if not (v and (v.admin_level >=3)):
+            comments=comments.filter_by(is_deleted=False)
+            
+        if not (v and (v.admin_level >=3 or v.id==self.id)):
+            comments=comments.filter_by(is_banned=False)
+
+        if v and v.admin_level >= 4:
+            pass
+        elif v:
+            m=v.moderates.filter_by(invite_rescinded=False).subquery()
+            c=v.contributes.subquery()
+            
+            comments=comments.join(m,
+                                   m.c.board_id==Comment.board_id,
+                                   isouter=True
+                         ).join(c,
+                                c.c.board_id==Comment.board_id,
+                                isouter=True
+                                )
+            comments=comments.filter(or_(Comment.author_id==v.id,
+                                   Comment.is_public==True,
+                               m.c.board_id != None,
+                               c.c.board_id !=None))
+        else:
+            comments=comments.filter_by(is_public=True)
+
+        comments=comments.order_by(Comment.created_utc.desc())
+        comments=comments.offset(25*(page-1)).limit(26)
+        
+
+        listing=[c for c in comments]
         #we got 26 items just to see if a next page exists
         next_exists=(len(listing)==26)
         listing=listing[0:25]
+
+        is_following=(v and self.has_follower(v))
         
-        return render_template("userpage_comments.html", u=self, v=v, listing=listing, page=page, next_exists=next_exists)
+        return render_template("userpage_comments.html",
+                               u=self,
+                               v=v,
+                               listing=listing,
+                               page=page,
+                               next_exists=next_exists,
+                               is_following=is_following)
 
     @property
     def formkey(self):
@@ -177,13 +442,13 @@ class User(Base):
         if "session_id" not in session:
             session["session_id"]=token_hex(16)
 
-        msg=f"{session['session_id']}{self.id}"
+        msg=f"{session['session_id']}+{self.id}+{self.login_nonce}"
 
         return generate_hash(msg)
 
     def validate_formkey(self, formkey):
 
-        return validate_hash(f"{session['session_id']}{self.id}", formkey)
+        return validate_hash(f"{session['session_id']}+{self.id}+{self.login_nonce}", formkey)
     
     @property
     def url(self):
@@ -197,24 +462,10 @@ class User(Base):
     @lazy
     def created_date(self):
 
-        return strftime("%d %B %Y", gmtime(self.created_utc))
+        return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
 
     def __repr__(self):
         return f"<User(username={self.username})>"
-
-
-    @property
-    @lazy
-    def color(self):
-
-        random.seed(f"{self.id}+{self.username}")
-
-        R=random.randint(32, 223)
-        G=random.randint(32, 223)
-        B=random.randint(32, 223)
-        
-
-        return str(base_encode(R, 16))+str(base_encode(G, 16))+str(base_encode(B, 16))
 
     def notifications_page(self, page=1, include_read=False):
 
@@ -225,7 +476,7 @@ class User(Base):
         if not include_read:
             notifications=notifications.filter_by(read=False)
 
-        notifications = notifications.order_by(text("notifications.created_utc desc")).offset(25*(page-1)).limit(25)
+        notifications = notifications.order_by(text("id desc")).offset(25*(page-1)).limit(25)
 
         comments=[n.comment for n in notifications]
 
@@ -243,16 +494,14 @@ class User(Base):
         return self.notifications.filter_by(read=False, is_banned=False, is_deleted=False).count()
 
     @property
-    @cache.memoize(timeout=60)
     def post_count(self):
 
         return self.submissions.filter_by(is_banned=False).count()
 
     @property
-    @cache.memoize(timeout=60) 
     def comment_count(self):
 
-        return self.comments.filter_by(is_banned=False, is_deleted=False).count()
+        return self.comments.filter(text("parent_submission is not null")).filter_by(is_banned=False, is_deleted=False).count()
 
     @property
     #@cache.memoize(timeout=60)
@@ -281,4 +530,89 @@ class User(Base):
 
         return list(set([x for x in alts1]+[y for y in alts2]))
         
+
+    def has_follower(self, user):
+
+        return self.followers.filter_by(user_id=user.id).first()
+
+    def set_profile(self, file):
+
+        self.del_profile()
+        self.profile_nonce+=1
+
+        aws.upload_file(name=f"users/{self.username}/profile-{self.profile_nonce}.png",
+                        file=file)
+        self.has_profile=True
+        db.add(self)
+        db.commit()
         
+    def set_banner(self, file):
+
+        self.del_banner()
+        self.banner_nonce+=1
+
+        aws.upload_file(name=f"users/{self.username}/banner-{self.banner_nonce}.png",
+                        file=file)
+
+        self.has_banner=True
+        db.add(self)
+        db.commit()
+
+    def del_profile(self):
+
+        aws.delete_file(name=f"users/{self.username}/profile-{self.profile_nonce}.png")
+        self.has_profile=False
+        db.add(self)
+        db.commit()
+
+    def del_banner(self):
+
+        aws.delete_file(name=f"users/{self.username}/banner-{self.banner_nonce}.png")
+        self.has_banner=False
+        db.add(self)
+        db.commit()
+
+    @property
+    def banner_url(self):
+
+        if self.has_banner:
+            return f"https://i.ruqqus.com/users/{self.username}/banner-{self.banner_nonce}.png"
+        else:
+            return "/assets/images/profiles/default_bg.png"
+
+    @property
+    def profile_url(self):
+
+        if self.has_profile:
+            return f"https://i.ruqqus.com/users/{self.username}/profile-{self.profile_nonce}.png"
+        else:
+            return "/assets/images/profiles/default-profile-pic.png"
+
+    @property
+    def available_titles(self):
+
+        locs={"v":self,
+              "Board":Board,
+              "Submission":Submission
+              }
+
+        titles=[i for i in db.query(Title).order_by(text("id asc")).all() if eval(i.qualification_expr,{}, locs)]
+        return titles
+
+    @property
+    def can_make_guild(self):
+
+        if self.karma + self.comment_karma < 100:
+            return False
+
+        return True
+
+    @property
+    def can_siege(self):
+
+        if self.is_banned:
+            return False
+
+        now=int(time.time())
+
+        return now-self.last_siege_utc > 60*60*24*30

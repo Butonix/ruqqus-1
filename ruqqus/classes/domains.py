@@ -10,4 +10,5 @@ class Domain(Base):
     can_comment=Column(Boolean, default=False)
     reason=Column(String)
     show_thumbnail=Column(Boolean, default=False)
+    embed_function=Column(String(64), default=None)
     

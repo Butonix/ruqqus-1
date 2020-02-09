@@ -9,6 +9,8 @@ from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.filters import *
 from ruqqus.helpers.embed import *
 from ruqqus.helpers.markdown import *
+from ruqqus.helpers.get import *
+from ruqqus.helpers.session import *
 from ruqqus.classes import *
 from flask import *
 from ruqqus.__main__ import app, db, limiter
@@ -19,36 +21,46 @@ from datetime import datetime
 @admin_level_required(1)
 def comment_cid(cid, v):
 
-    comment=db.query(Comment).filter_by(id=base36decode(cid)).first()
-    if comment:
-        return redirect(comment.permalink)
-    else:
-        abort(404)
+    comment=get_comment(cid)
+    return redirect(comment.permalink)
 
 @app.route("/post/<p_id>/comment/<c_id>", methods=["GET"])
 @auth_desired
 def post_pid_comment_cid(p_id, c_id, v=None):
 
-    c_id = base36decode(c_id)
+    comment=get_comment(c_id)
 
-    comment=db.query(Comment).filter_by(id=c_id).first()
-    if not comment:
+    post=get_post(p_id)
+
+    if comment.parent_submission != post.id:
         abort(404)
 
-    p_id = base36decode(p_id)
-    
-    post=db.query(Submission).filter_by(id=p_id).first()
-    if not post:
-        abort(404)
+    if post.over_18 and not (v and v.over_18) and not session_over18(comment.board):
+        t=int(time.time())
+        return render_template("errors/nsfw.html",
+                               v=v,
+                               t=t,
+                               lo_formkey=make_logged_out_formkey(t),
+                               board=comment.board
+                               )
 
-    if comment.parent_submission != p_id:
-        abort(404)
+    #context improver
+    context=int(request.args.get("context", 0))
+    c=comment
+    while context > 0 and not c.is_top_level:
+
+        parent=c.parent
+        parent.__dict__["replies"]=[c]
+
+        c=parent
+        context -=1
         
-    return post.rendered_page(v=v, comment=comment)
+    return post.rendered_page(v=v, comment=c, comment_info=comment)
 
 @app.route("/api/comment", methods=["POST"])
 @limiter.limit("10/minute")
 @is_not_banned
+@tos_agreed
 @validate_formkey
 def api_comment(v):
 
@@ -57,7 +69,7 @@ def api_comment(v):
 
     #process and sanitize
     body=request.form.get("body","")[0:2000]
-    with UserRenderer() as renderer:
+    with CustomRenderer() as renderer:
         body_md=renderer.render(mistletoe.Document(body))
     body_html=sanitize(body_md, linkgen=True)
 
@@ -66,12 +78,13 @@ def api_comment(v):
 
     if bans:
         return render_template("comment_failed.html",
+                               action="/api/comment",
                                parent_submission=request.form.get("submission"),
                                parent_fullname=request.form.get("parent_fullname"),
                                badlinks=[x.domain for x in bans],
                                body=body,
                                v=v
-                               )
+                               ), 422
 
     #check existing
     existing=db.query(Comment).filter_by(author_id=v.id,
@@ -93,6 +106,11 @@ def api_comment(v):
     if parent.is_banned or parent.is_deleted:
         abort(403)
 
+    #check for ban state
+    post = get_post(request.form.get("submission"))
+    if not post.board.can_comment(v):
+        abort(403)
+        
     #create comment
     c=Comment(author_id=v.id,
               body=body,
@@ -112,17 +130,17 @@ def api_comment(v):
 
     #queue up notifications for username mentions
     soup=BeautifulSoup(c.body_html, features="html.parser")
-    mentions=soup.find_all("a", href=re.compile("/u/(\w+)"), limit=3)
+    mentions=soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3)
     for mention in mentions:
-        username=mention["href"].split("/u/")[1]
+        username=mention["href"].split("@")[1]
         user=db.query(User).filter_by(username=username).first()
         if user:
             notify_users.add(user.id)
 
 
-    for id in notify_users:
+    for x in notify_users:
         n=Notification(comment_id=c.id,
-                       user_id=id)
+                       user_id=x)
         db.add(n)
     db.commit()
                            
@@ -136,7 +154,7 @@ def api_comment(v):
     db.add(vote)
     db.commit()
 
-    return redirect(f"{c.post.permalink}#comment-{c.base36id}")
+    return redirect(f"{c.permalink}?context=1")
 
 
 @app.route("/edit_comment/<cid>", methods=["POST"])
@@ -144,25 +162,36 @@ def api_comment(v):
 @validate_formkey
 def edit_comment(cid, v):
 
-    c = db.query(Comment).filter_by(id=base36decode(cid)).first()
-
-    if not c:
-        abort(404)
+    c = get_comment(cid)
 
     if not c.author_id == v.id:
         abort(403)
 
     if c.is_banned or c.is_deleted:
         abort(403)
+
+    if c.board.has_ban(v):
+        abort(403)
         
     body = request.form.get("body", "")
-    with UserRenderer() as renderer:
+    with CustomRenderer() as renderer:
         body_md=renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
 
+    #Run safety filter
+    bans=filter_comment_html(body_html)
+
+    if bans:
+        return render_template("comment_failed.html",
+                               action=f"/edit_comment/{c.base36id}",
+                               badlinks=[x.domain for x in bans],
+                               body=body,
+                               v=v
+                               )
+
     c.body=body
     c.body_html=body_html
-    c.edited_timestamp = int(time.time())
+    c.edited_utc = int(time.time())
 
     db.add(c)
     db.commit()
@@ -224,3 +253,17 @@ def feeds(sort=None):
                  updated=datetime.fromtimestamp(post.created_utc),
                  published=datetime.fromtimestamp(post.created_utc))
     return feed.get_response()
+
+@app.route("/embed/comment/<cid>", methods=["GET"])
+@app.route("/embed/post/<pid>/comment/<cid>", methods=["GET"])
+def embed_comment_cid(cid, pid=None):
+
+    comment=get_comment(cid)
+
+    if not comment.parent:
+        abort(403)
+
+    if comment.is_banned or comment.is_deleted:
+        return render_template("embeds/comment_removed.html", c=comment)
+
+    return render_template("embeds/comment.html", c=comment)

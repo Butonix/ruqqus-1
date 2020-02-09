@@ -4,6 +4,7 @@ from time import time
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.sanitize import *
+from ruqqus.helpers.get import *
 from ruqqus.classes import *
 from flask import *
 from ruqqus.__main__ import app, db
@@ -18,24 +19,24 @@ def api_vote_post(post_id, x, v):
         abort(400)
 
     x=int(x)
-    post_id=base36decode(post_id)
 
-    post = db.query(Submission).filter_by(id=post_id).first()
-    if not post:
-        abort(404)
+    post = get_post(post_id)
 
-    if post.is_banned:
+    if post.is_banned or post.is_deleted:
+        abort(403)
+
+    if x==-1 and post.board.downvotes_disabled:
         abort(403)
 
     #check for existing vote
-    existing = db.query(Vote).filter_by(user_id=v.id, submission_id=post_id).first()
+    existing = db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
     if existing:
         existing.change_to(x)
         return "", 204
 
     vote=Vote(user_id=v.id,
               vote_type=x,
-              submission_id=post_id
+              submission_id=base36decode(post_id)
               )
 
     db.add(vote)
@@ -53,24 +54,24 @@ def api_vote_comment(comment_id, x, v):
         abort(400)
 
     x=int(x)
-    comment_id=base36decode(comment_id)
 
-    comment = db.query(Comment).filter_by(id=comment_id).first()
-    if not comment_id:
-        abort(404)
+    comment = get_comment(comment_id)
 
-    if comment.is_banned:
+    if comment.is_banned or comment.is_deleted:
+        abort(403)
+
+    if x==-1 and comment.board.downvotes_disabled:
         abort(403)
 
     #check for existing vote
-    existing = db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment_id).first()
+    existing = db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
     if existing:
         existing.change_to(x)
         return "", 204
 
     vote=CommentVote(user_id=v.id,
               vote_type=x,
-              comment_id=comment_id
+              comment_id=base36decode(comment_id)
               )
 
     db.add(vote)

@@ -9,7 +9,7 @@
     <style type="text/css" rel="stylesheet" media="all">
     /* Base ------------------------------ */
     
-    @import url('https://rsms.me/inter/inter.css');
+    @import url('https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap');
 
     html {
         font-size: 14px;
@@ -23,7 +23,7 @@
     }
     
     a {
-      color: #603ABB;
+      color: #805AD5!important;
     }
     
     a img {
@@ -50,12 +50,12 @@
     body,
     td,
     th {
-      font-family: "Inter", Helvetica, Arial, sans-serif;
+      font-family: "Roboto", Helvetica, Arial, sans-serif;
     }
     
     h1 {
       margin-top: 0;
-      color: #1E1E24;
+      color: #121213;
       font-size: 22px;
       font-weight: bold;
       text-align: left;
@@ -63,7 +63,7 @@
     
     h2 {
       margin-top: 0;
-      color: #1E1E24;
+      color: #121213;
       font-size: 1rem;
       font-weight: bold;
       text-align: left;
@@ -71,7 +71,7 @@
     
     h3 {
       margin-top: 0;
-      color: #1E1E24;
+      color: #121213;
       font-size: 14px;
       font-weight: bold;
       text-align: left;
@@ -110,13 +110,13 @@
     /* Buttons ------------------------------ */
     
     .button {
-      background-color: #603ABB;
-      border-top: 10px solid #603ABB;
-      border-right: 18px solid #603ABB;
-      border-bottom: 10px solid #603ABB;
-      border-left: 18px solid #603ABB;
+      background-color: #805AD5;
+      border-top: 10px solid #805AD5;
+      border-right: 18px solid #805AD5;
+      border-bottom: 10px solid #805AD5;
+      border-left: 18px solid #805AD5;
       display: inline-block;
-      color: #FFF;
+      color: #FFF!important;
       text-decoration: none;
       border-radius: .25rem;
       -webkit-text-size-adjust: none;
@@ -152,9 +152,9 @@
     }
     
     .attributes_content {
-      background-color: #F1F1F1;
+      background-color: #EDF2F7;
       padding: 1rem;
-      border-radius: 0.25rem;
+      border-radius: 0.35rem;
     }
     
     .attributes_item {
@@ -202,7 +202,7 @@
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      background-color: #F1F1F1;
+      background-color: #EDF2F7;
       border: 2px dashed #CBCCCF;
     }
     
@@ -252,7 +252,7 @@
     
     .purchase_item {
       padding: 10px 0;
-      color: #1E1E24;
+      color: #121213;
       font-size: 15px;
       line-height: 18px;
     }
@@ -277,7 +277,7 @@
       margin: 0;
       text-align: right;
       font-weight: bold;
-      color: #1E1E24;
+      color: #121213;
     }
     
     .purchase_total--label {
@@ -285,12 +285,12 @@
     }
     
     body {
-      background-color: #F1F1F1;
-      color: #1E1E24;
+      background-color: #EDF2F7;
+      color: #121213;
     }
     
     p {
-      color: #1E1E24;
+      color: #121213;
     }
     
     p.sub {
@@ -304,7 +304,7 @@
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      background-color: #F1F1F1;
+      background-color: #EDF2F7;
     }
     
     .email-content {
@@ -328,7 +328,7 @@
     .email-masthead_name {
       font-size: 1.25rem;
       font-weight: bold;
-      color: #1E1E24;
+      color: #121213;
       text-decoration: none;
     }
     /* Body ------------------------------ */
@@ -403,7 +403,7 @@
       .email-wrapper,
       .email-masthead,
       .email-footer {
-        background-color: #1E1E24 !important;
+        background-color: #121213 !important;
         color: #FFF !important;
       }
       p,
@@ -454,7 +454,7 @@
                     <td class="content-cell">
                       <div class="f-fallback">
                           <div style="text-align: center; margin-bottom: 3rem;">
-                        <img src="https://ruqqus.com/assets/images/email/{% block image %}email_verify.png{% endblock %}" style="height: 90px;">
+                        <img src="https://ruqqus.com/assets/images/email/{% block image %}verify.png{% endblock %}" style="height: 90px;">
                         </div>
                         <h1>{% block title %}Title Goes Here{% endblock %}</h1>
 
@@ -472,11 +472,12 @@
                 <table class="email-footer" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
                   <tr>
                     <td class="content-cell" align="center">
-                      <p class="f-fallback sub align-center">&copy; 2019 Ruqqus. All rights reserved.</p>
+                      <p class="f-fallback sub align-center">&copy; 2020 Ruqqus, LLC. All rights reserved.</p>
                       <p class="f-fallback sub align-center">
-                        [Ruqqus]
-                        <br>[Mordor, Middle Earth]
-                        <br>[Suite 1234]
+                        Ruqqus, LLC<br>
+                        300 Delaware Ave.<br>
+			Suite 210-A<br>
+			Wilmington, DE 19801
                       </p>
                     </td>
                   </tr>

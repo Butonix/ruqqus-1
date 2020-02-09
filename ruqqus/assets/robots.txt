@@ -5,4 +5,25 @@ Disallow: /submit
 Disallow: /settings
 
 User-Agent: DotBot
-Disallow: *
+Disallow: /
+
+User-Agent: TurnitinBot
+Disallow: /
+
+User-Agent: Huaweisymantecspider
+Disallow: /
+
+User-Agent: SiteSnagger
+Disallow: /
+
+User-Agent: TeleportPro
+Disallow: /
+
+User-Agent: Xaldon_WebSpider
+Disallow: /
+
+User-Agent: MJ12bot
+Disallow: /
+
+User-Agent: SEMrushBot
+Disallow: /

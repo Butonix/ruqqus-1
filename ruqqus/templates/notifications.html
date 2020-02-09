@@ -70,13 +70,13 @@
 
     <div class="row justify-content-around">
 
-      <div class="col-12 col-md-7 h-100">
+      <div class="col h-100">
 
         <div class="mt-3 mt-md-0">
-          <h1 class="h3">Inbox</h1>
+          <h1>Inbox</h1>
         </div>
 
-        <div class="bg-white border rounded">
+        <div class="bg-white border-md rounded">
 
           <!-- Inbox -->
 
@@ -93,7 +93,7 @@
 
           </div>
 
-          <div class="p-3">
+          <div class="p-md-3">
 
             {% for c in notifications %}
 
@@ -162,27 +162,12 @@
   </div>
 </div>
 
-<footer class="footer py-5">
-  <div class="container-fluid">
-    <div class="row justify-content-center">
-      <div class="col">
-        <ul class="list-inline text-center text-small text-muted font-weight-bold mb-0">
-          <li class="list-inline-item"><a href="/about">About</a></li>
-          <li class="list-inline-item"><a href="#">Contact</a></li>
-          <li class="list-inline-item"><a href="/terms">Terms</a></li>
-          <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-          <li class="list-inline-item"><a href="#">Donate</a></li>
-          <li class="list-inline-item"><a href="#">Press</a></li>
-          <li class="list-inline-item"><a href="#">Help</a></li>
-          <li class="list-inline-item"><a href="https://www.twitter.com/ruqqus">Twitter</a></li>
-          <li class="list-inline-item"><a href="https://ruqqus.org/contribute">Github</a></li>
-          <li class="list-inline-item">&copy; 2019 Ruqqus</li>
-        </ul>
-      </div>
-    </footer>
-
     {% include "flag_post_modal.html" %}
     {% include "flag_comment_modal.html" %}
+
+    {% include "footer.html" %}
+
+    {% include "announcements_modal.html" %}
 
     {% include "bootstrap.html" %}
 

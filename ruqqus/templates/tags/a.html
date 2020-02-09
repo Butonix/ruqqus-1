@@ -1,5 +1,0 @@
-{% if u.admin_level >= 3 %}
-<span class="red" title="Administrator"> [A] </span>
-{% elif u.admin_level >= 1 %}
-<span class="green" title="Community Moderator{% if post or comment %}, speaking officially{% endif %}"> [M] </span>
-{% endif %}

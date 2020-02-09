@@ -1,9 +1,13 @@
 import time
-from ruqqus.helpers.wrappers import *
+import jinja2
+import pyotp
 from flask import *
 
+from ruqqus.helpers.wrappers import *
+import ruqqus.classes
 from ruqqus.classes import *
-from ruqqus.__main__ import app, limiter
+from ruqqus.mail import *
+from ruqqus.__main__ import app, db, limiter
 
 #take care of misc pages that never really change (much)
 @app.route('/assets/<path:path>')
@@ -23,17 +27,44 @@ def settings(v):
 @app.route("/settings/profile", methods=["GET"])
 @auth_required
 def settings_profile(v):
-    return render_template("settings_profile.html", v=v)
+    return render_template("settings_profile.html",
+                           v=v)
+
+@app.route("/help/titles", methods=["GET"])
+@auth_desired
+def titles(v):
+    titles = [x for x in db.query(Title).order_by(text("id asc")).all()]
+    return render_template("/help/titles.html",
+                           v=v,
+                           titles=titles)
+
+@app.route("/help/terms", methods=["GET"])
+@auth_desired
+def help_terms(v):
+    
+    cutoff=int(environ.get("tos_cutoff",0))
+
+    return render_template("/help/terms.html",
+                           v=v,
+                           cutoff=cutoff)
+
+@app.route("/help/badges", methods=["GET"])
+@auth_desired
+def badges(v):
+    badges=[x for x in db.query(BadgeDef).order_by(text("rank asc, id asc")).all()]
+    return render_template("help/badges.html",
+                           v=v,
+                           badges=badges)
 
 @app.route("/settings/security", methods=["GET"])
 @auth_required
 def settings_security(v):
-    return render_template("settings_security.html", v=v)
-
-@app.route("/help", methods=["GET"])
-@auth_desired
-def help(v):
-    return redirect("/help/terms")
+    return render_template("settings_security.html",
+                           v=v,
+                           mfa_secret=pyotp.random_base32() if not v.mfa_secret else None,
+                           error=request.args.get("error") if request.args.get('error') else None,
+                           msg=request.args.get("msg") if request.args.get("msg") else None
+                          )
 
 @app.route("/favicon.ico", methods=["GET"])
 def favicon():
@@ -50,19 +81,49 @@ def notifications(v):
     return v.notifications_page(page=request.args.get("page","1"),
                                    include_read=request.args.get("all",False))
 
-@app.route("/submit", methods=["GET"])
-@is_not_banned
-def submit_get(v):
-    return render_template("submit.html", v=v)
-
 @app.route("/about/<path:path>")
 def about_path(path):
     return redirect(f"/help/{path}")
 
-@app.route("/help/<path:path>")
+@app.route("/help/<path:path>", methods=["GET"])
 @auth_desired
 def help_path(path, v):
     try:
         return render_template(safe_join("help", path+".html"), v=v)
     except jinja2.exceptions.TemplateNotFound:
         abort(404)
+
+@app.route("/help", methods=["GET"])
+@auth_desired
+def help_home(v):
+    return render_template("help.html", v=v)
+
+
+@app.route("/help/press", methods=["POST"])
+@is_not_banned
+@validate_formkey
+def press_inquiry(v):
+
+    data=[(x, request.form[x]) for x in request.form if x !="formkey"]
+    data.append(("username",v.username))
+    data.append(("email",v.email))
+
+    data=sorted(data, key=lambda x: x[0])
+
+    try:
+        send_mail(environ.get("admin_email"),
+              "Press Submission",
+              render_template("email/press.html",
+                              data=data
+                              ),
+                  plaintext=str(data)
+                
+              )
+    except:
+            return render_template("/help/press.html",
+                           error="Unable to save your inquiry. Please try again later.",
+                           v=v)
+
+    return render_template("/help/press.html",
+                           msg="Your inquiry has been saved.",
+                           v=v)

@@ -9,7 +9,7 @@ from ruqqus.__main__ import db, app
 def filter_comment_html(html_text):
 
     
-    soup = BeautifulSoup(html_text)
+    soup = BeautifulSoup(html_text, features="html.parser")
 
     links = soup.find_all("a")
 

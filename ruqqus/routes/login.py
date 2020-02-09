@@ -10,6 +10,7 @@ from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
+from ruqqus.helpers.alerts import *
 from ruqqus.mail import send_verification_email
 from secrets import token_hex
 
@@ -23,6 +24,7 @@ valid_password_regex=re.compile("^.{8,}$")
 
 #login form
 @app.route("/login", methods=["GET"])
+@no_cors
 @auth_desired
 def login_get(v):
 
@@ -60,6 +62,7 @@ def check_for_alts(current_id):
             db.commit()
 
 #login post procedure
+@no_cors
 @app.route("/login", methods=["POST"])
 @limiter.limit("6/minute")
 def login_post():
@@ -76,13 +79,53 @@ def login_post():
         return render_template("login.html", failed=True, i=random_image())
 
     #test password
-    if not account.verifyPass(request.form.get("password")):
-        time.sleep(random.uniform(0,2))
-        return render_template("login.html", failed=True, i=random_image())
+
+    if request.form.get("password"):
+        
+        if not account.verifyPass(request.form.get("password")):
+            time.sleep(random.uniform(0,2))
+            return render_template("login.html", failed=True, i=random_image())
+        
+        if account.mfa_secret:
+            now=int(time.time())
+            hash=generate_hash(f"{account.id}+{now}+2fachallenge")
+            return render_template("login_2fa.html",
+                                   v=account,
+                                   time=now,
+                                   hash=hash,
+                                   i=random_image(),
+                                   redirect=request.form.get("redirect","/")
+                                  )
+    elif request.form.get("2fa_token","x"):
+        now=int(time.time())
+        
+        if now - int(request.form.get("time")) > 600:
+            return redirect('/login')
+        
+        formhash=request.form.get("hash")
+        if not validate_hash(f"{account.id}+{request.form.get('time')}+2fachallenge",
+                             formhash
+                            ):
+            return redirect("/login")
+        
+        if not account.validate_2fa(request.form.get("2fa_token", "")):
+            hash=generate_hash(f"{account.id}+{time}+2fachallenge")
+            return render_template("login_2fa.html",
+                                   v=account,
+                                   time=now,
+                                   hash=hash,
+                                   failed=True,
+                                  i=random_image()
+                                  )
+                             
+    else:
+        abort(400)
+    
 
     #set session and user id
     session["user_id"]=account.id
     session["session_id"]=token_hex(16)
+    session["login_nonce"]=account.login_nonce
 
     check_for_alts(account.id)
 
@@ -129,6 +172,7 @@ def logout(v):
 
 #signing up
 @app.route("/signup", methods=["GET"])
+@no_cors
 @auth_desired
 def sign_up_get(v):
     if v:
@@ -183,6 +227,7 @@ def sign_up_get(v):
 
 #signup api
 @app.route("/signup", methods=["POST"])
+@no_cors
 @auth_desired
 def sign_up_post(v):
     if v:
@@ -253,8 +298,11 @@ def sign_up_post(v):
     if not email:
         email=None
 
-    if (db.query(User).filter(User.username.ilike(request.form.get("username"))).first()
-        or (email and db.query(User).filter(User.email.ilike(email)).first())):
+    existing_account=db.query(User).filter(User.username.ilike(request.form.get("username"))).first()
+    if existing_account and existing_account.reserved:
+        return redirect(existing_account.permalink)
+
+    if existing_account or (email and db.query(User).filter(User.email.ilike(email)).first()):
         print(f"signup fail - {username } - email already exists")
         return new_signup("An account with that username or email already exists.")
     
@@ -281,7 +329,8 @@ def sign_up_post(v):
                       email=email,
                       created_utc=int(time.time()),
                       creation_ip=request.remote_addr,
-                      referred_by=ref_id
+                      referred_by=ref_id,
+                      tos_agreed_utc=int(time.time())
                  )
 
     except Exception as e:
@@ -293,47 +342,30 @@ def sign_up_post(v):
 
     #give a beta badge
     beta_badge=Badge(user_id=new_user.id,
-                        badge_id=1)
+                        badge_id=6)
 
     db.add(beta_badge)
     db.commit()
-
-    #upgrade referring user's recruitment badge
-    if ref_user:
-        if ref_user.referral_count >=100:
-            badge=db.query(Badge).filter(Badge.user_id==ref_user.id,
-                                         Badge.badge_id.in_([10,11])).first()
-            if badge:
-                badge.badge_id=12
-                db.add(badge)
-                db.commit()
-        elif ref_user.referral_count >=10:
-            badge=db.query(Badge).filter_by(user_id=ref_user.id,
-                                            badge_id=10).first()
-            if badge:
-                badge.badge_id=11
-                db.add(badge)
-                db.commit()
-
-        else:
-            badge=db.query(Badge).filter_by(user_id=ref_user.id,
-                                            badge_id=10).first()
-            if not badge:
-                new_badge=Badge(user_id=ref_user.id,
-                                badge_id=10,
-                                created_utc=int(time.time())
-                                )
-                db.add(new_badge)
-                db.commit()
                 
-                                      
-
     #check alts
 
     check_for_alts(new_user.id)
 
+    #send welcome/verify email
     if email:
         send_verification_email(new_user)
+
+    #send welcome message
+    text=f"""Welcome to Ruqqus, {new_user.username}.
+        \n\nWelcome to the next free-speech-first social platform. We're glad to have you here.
+        \n\nNow that you have an account, you can [join your favorite guilds](/browse), and follow your favorite users.
+        You're also welcome to say anything protected by the First Amendment here - even if you don't live in the United States.
+        And since we're committed to [open-source](https://github.com/ruqqus/ruqqus) transparency, your front page (and your posted content) won't be artificially manipulated.
+        \n\nReally, it's what social media should have been doing all along.
+        \n\nNow, go enjoy your digital freedom.
+        \n\n-The Ruqqus Team
+        """
+    send_notification(new_user, text)
 
     session["user_id"]=new_user.id
     session["session_id"]=token_hex(16)

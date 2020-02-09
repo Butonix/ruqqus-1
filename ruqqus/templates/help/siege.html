@@ -1,0 +1,88 @@
+{% extends "docs_default.html" %}
+
+{% block title %}
+<title>Ruqqus - Siege Guild</title>
+<meta name="description" content="Lay siege to a Ruqqus guild">
+{% endblock %}
+
+	
+{% block content %}
+
+    {% if request.args.get('error') or error %}
+    <div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+      <i class="fas fa-exclamation-circle my-auto"></i>
+      <span>
+        {{ error if error else request.args.get('error') }}
+      </span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true"><i class="far fa-times"></i></span>
+      </button>
+    </div>
+    {% endif %}
+    {% if request.args.get('msg') or msg %}
+    <div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+      <i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
+      <span>
+        {{ msg if msg else request.args.get('msg') }}
+      </span>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true"><i class="far fa-times"></i></span>
+      </button>
+    </div>
+    {% endif %}
+
+{% filter markdown %}
+
+# Guild Siege
+
+In order to ensure that Ruqqus Guilds can be curated and managed, users may use this page to try to "lay siege" to, and take over, a guild with inactive Guildmasters.
+
+You may attempt to siege a guild once every 30 days. Any siege attempt - whether successful or not - will trigger this cool-down period.
+
+## Requirements
+
+In order to successfully siege a guild, no current Guildmaster (or no Guildmaster above you, if you are a Guildmaster already) may have done any of the following within the past 60 days:
+
+* Create a post
+* Create a comment
+* Create a Guild
+* Vote on a post or comment
+* Flag a post or comment
+* Exile a user from a guild
+
+Additionally, the siege will fail if made against [+general](/+general), or admin-controlled Guilds such as [+Ruqqus](/+Ruqqus) or [+RuqqusPress](/+RuqqusPress).
+
+Guildmasters with a Ruqqus site-wide ban cannot fend off a siege, even if they have recently been active.
+
+
+## Siege a Guild
+
+{% endfilter %}
+
+{% if v %}
+{% if v.can_siege %}
+
+<label>Your name:</label>
+<input class="form-control" type="text" name="username" value="{{ v.username }}" readonly="readonly">
+
+<form action="/siege_guild" method="post">
+  <input type="hidden" name="formkey" value="{{ v.formkey }}">
+
+  <label for="text-guild">Guild to siege:</label>
+  <input class="form-control" id="text-guild" type="text" name="guild">
+
+  <input class="btn btn-primary" type="submit" value="Siege Guild">
+</form>
+
+{% elif v.is_banned %}
+
+<p>You have been banned from Ruqqus. You cannot siege any guilds.</p>
+
+{% else %}
+
+<p>You cannot siege any Guilds right now. You can only make one siege attempt every 30 days.</p>
+{% endif %}
+{% else %}
+<p>You need to be logged in to siege a Guild.</p>
+{% endif %}
+{% endblock %}

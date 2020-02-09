@@ -28,3 +28,9 @@ button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
 
 post(url, callback, "Unable to approve post at this time. Please try again later.")
 }
+
+function deleteElement(eid) {
+	x=document.getElementById(eid)
+	x.parentElement.removeChild(x)
+
+}

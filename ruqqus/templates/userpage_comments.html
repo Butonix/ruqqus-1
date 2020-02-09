@@ -8,7 +8,7 @@
 
 {% if not v %}
 <div class="sidebar-section sidebar-alert">
-<div class="body">
+  <div class="body">
     <img src="/assets/images/illustrations/ruckus.png" class="empty-state-img mb-3" alt="empty state">
     <h5>Join the discourse.</h5>
     <p class="text-small">Internet freedom of speech has a new home. Use your voice. Make a Ruqqus.</p>
@@ -17,203 +17,68 @@
 </div>
 {% endif %}
 
-{% if v and v.id == u.id %}
+{% if v %}
 
 <div class="sidebar-section sidebar-dashboard">
   <div class="title">Dashboard</div>
   <div class="body">
-    <ul class="no-bullets filter-list pl-0">
-      <li class="filter-item">
-        <a class="filter-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem"></i>Profile</a>
+    <ul class="no-bullets dashboard-list pl-0">
+      <li class="dashboard-item">
+        <a class="dashboard-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem"></i>Profile</a>
       </li>
-      <li class="filter-item">
-        <a class="filter-link " href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
+      <li class="dashboard-item">
+        <a class="dashboard-link" href="{{ v.permalink }}/posts"><i class="fas fa-feather-alt fa-width-rem"></i>Your posts</a>
       </li>
-    </ul>
-  </div>
+      <li class="dashboard-item">
+        <a class="dashboard-link" href="{{ v.permalink }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Your comments</a> 
+      </li>
+      <li class="dashboard-item">
+        <a class="dashboard-link" href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
+      </li>
+      <li class="dashboard-item">
+       <a class="dashboard-link" href="/guilds"><i class="fas fa-university fa-width-rem"></i>Your guilds</a>
+     </li>
+     <li class="dashboard-item">
+       <a class="dashboard-link" href="/subscriptions"><i class="fas fa-user-friends fa-width-rem"></i>Your subscriptions</a>
+     </li>
+   </ul>
+ </div>
 </div>
 
 {% endif %}
 
-{% if v and v.id != u.id %}
-
-<div class="sidebar-section sidebar-dashboard">
-  <div class="title">Dashboard</div>
-  <div class="body">
-    <ul class="no-bullets filter-list pl-0">
-      <li class="filter-item">
-        <a class="filter-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem"></i>Profile</a>
-      </li>
-      <li class="filter-item">
-        <a class="filter-link " href="{{ v.permalink }}/posts"><i class="fas fa-feather-alt fa-width-rem"></i>Your posts</a>
-      </li>
-      <li class="filter-item">
-        <a class="filter-link " href="{{ v.permalink }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Your comments</a> 
-      </li>
-      <li class="filter-item">
-        <a class="filter-link " href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
-      </li>
-    </ul>
-  </div>
-</div>
-
-{% endif %}
-
+{% if not(v and v.id==u.id) %}
 <div class="sidebar-section sidebar-filters sticky-63">
   <div class="title">Viewing</div>
   <div class="body">
     <ul class="no-bullets filter-list pl-0">
       <li class="filter-item">
-        <a class="filter-link" href="/u/{{ u.username }}"><i class="fas fa-feather-alt fa-width-rem"></i>Posts</a>
+        <a class="filter-link" href="{{ u.permalink }}"><i class="fas fa-feather-alt fa-width-rem"></i>Posts</a>
       </li>
       <li class="filter-item">
-        <a class="filter-link active" href="/u/{{ u.username }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Comments</a>
+        <a class="filter-link active" href="{{ u.permalink }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Comments</a>
       </li>
     </ul>
   </div>
 </div>
-
+{% endif %}
 {% endblock %}
 
 {% block content %}
 
-<!-- Post filters bar visible only on small devices-->
-
-<div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="filter-bar-mobile" style="z-index: 3; top: 48px; transition: top 0.3s ease 0s;">
-
+<div class="row no-gutters">
   <div class="col">
-
-    <div class="d-flex flex-row flex-nowrap justify-content-between">
-
-      <div class="post-filter">
-        <span>Show:</span>
-        <span class="dropdown">
-          <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Comments</a>
-
-          <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
-            <a class="dropdown-item" href="/u/{{ u.username }}">Posts</a>
-            <a class="dropdown-item" href="/u/{{ u.username }}/comments">Comments</a>
-          </span>
-        </span>
-
-      </div>
-
-      <div class="post-filter">
-        <span>Sort By:</span>
-        <span class="dropdown">
-          <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">New</a>
-
-          <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
-            <a class="dropdown-item" href="#">Top</a>
-            <a class="dropdown-item" href="#">Disputed</a>
-            <a class="dropdown-item" href="#">Based</a>
-          </span>
-        </span>
-
-      </div>
-
+    <div class="flex-row box-shadow-bottom d-flex justify-content-between align-items-center">
+      <ul class="nav settings-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/u/{{ u.username}}">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/u/{{ u.username}}/comments">Comments</a>
+        </li>    
+      </ul>
     </div>
-
   </div>
-
-</div>
-
-<div class="row justify-content-around mx-lg-5 d-block d-lg-none no-gutters">
-  <div class="col border-bottom rounded-md p-3">
-    <div class="profile-details">
-      <div class="media">
-       <div class="profile-pic profile-pic-75 mr-3 mt-0" style="background-color:#{{ u.color }}">
-        <span class="letter">{{ u.username[0] }}</span>
-      </div>
-      <div class="media-body">
-        <h1 class="h6 d-inline-block">@{{ u.username }}</h1>
-
-        <span>
-          {% if u.admin_level>=3 %}<i class="fad fa-badge-check text-primary ml-1" data-toggle="tooltip" data-placement="bottom" title="Admin"></i>{% endif %}
-          {% if u.real_id %}<span class="badge badge-pill text-white badge-info">{{ u.real_id }}</span>{% endif %}
-        </span>
-
-        {% if v and v.id != u.id %}
-        <div class="profile-actions d-inline-block">
-          <!-- Modal -->
-          <a href="#"><i class="fas fa-ellipsis-h ml-2" data-toggle="modal" data-target="#profileModal"></i></a>
-
-        </div>
-
-        <div class="modal fade text-left" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="Profile Actions" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title h6">More options</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true"><i class="far fa-times"></i></span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="list-group profile-actions">
-                  <li class="list-group-item"><a href="/settings/profile#bio" class="d-block"><i class="fas fa-paper-plane mr-2"></i>Message</a></li>
-                  <li class="list-group-item"><a href="/settings/security" class="d-block"><i class="fas fa-flag mr-2"></i>Flag</a></li>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {% endif %}
-
-        {% if u.bio_html %}
-        <p>
-          {{ u.bio_html | safe }}
-        </p>
-        {% endif %}
-
-        {% if v and v.id == u.id %}
-
-        <div>
-          <a href="/settings/profile#bio" class="btn btn-secondary btn-sm"><i class="fas fa-pen mr-2"></i>Edit profile</a>
-        </div>
-
-        {% endif %}
-
-      </div>
-
-    </div>
-
-  </div>
-</div>
-</div>
-
-<div class="row border-bottom border-md-0 d-block d-lg-none no-gutters">
-  <div class="col">
-    <ul class="list-inline d-flex justify-content-around text-center py-2 mb-0">
-      <li class="list-inline-item">
-        <span class="text-small font-weight-bold">{{ u.karma }}</span>
-        <div class="text-small text-muted">Rep</div>
-      </li>
-      <li class="list-inline-item">
-        <span class="font-weight-bold">{{ u.comment_count }}</span>
-        <div class="text-small text-muted">Comment{{ 's' if u.comment_count!=1 else '' }}</div>
-      </li>
-      <li class="list-inline-item">
-        <span class="text-small font-weight-bold">{{ u.post_count }}</span>
-        <div class="text-small text-muted">Post{{ 's' if u.post_count!=1 else '' }}</div>
-      </li>
-    </ul>
-  </div>
-</div>
-
-
-<div class="flex-row tab-bar sticky d-none">
-
-  <ul class="nav post-nav mr-auto">
-    <li class="nav-item">
-      <a class="nav-link" href="/u/{{ u.username}}"><i class="fas fa-feather-alt" aria-hidden="true"></i>Posts</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link active" href="/u/{{ u.username}}/comments"><i class="fas fa-comment-dots" aria-hidden="true"></i>Comments</a>
-    </li>
-
-  </ul>
-
 </div>
 
 <div class="row no-gutters">
@@ -221,28 +86,26 @@
   <div class="col">
 
     {% if u.comment_count>=1 %}
-    {% else %}
-    <div class="text-center py-5">
-
-      <img src="/assets/images/illustrations/searching.png" class="empty-state-img mb-3" alt="empty state">
-
-      {% if v and v.id == u.id %}
-      <div class="font-weight-bold text-muted">You haven't made a ruckus.</div>
-      <div class="text-small text-muted mb-3">Your comments will show up here.</div>
-      <a href="/" class="btn btn-primary">Go to frontpage</a>
-      {% else %}
-      <div class="font-weight-bold text-muted">No comments here...</div>
-      <div class="text-small text-muted">@{{ u.username }} hasn't made a ruckus yet.</div>
-      {% endif %}
-    </div>
-    {% endif %}
-
     <div class="posts p-3">
      {% for c in listing %}
      {{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
      {% endfor%}
-
    </div>
- </div>
+   {% else %}
+   <div class="text-center py-5">
+
+    <img src="/assets/images/illustrations/searching.png" class="empty-state-img mb-3" alt="empty state">
+
+    {% if v and v.id == u.id %}
+    <div class="font-weight-bold text-muted">You haven't made a ruckus.</div>
+    <div class="text-small text-muted mb-3">Your comments will show up here.</div>
+    <a href="/" class="btn btn-primary">Go to frontpage</a>
+    {% else %}
+    <div class="font-weight-bold text-muted">No comments here...</div>
+    <div class="text-small text-muted">@{{ u.username }} hasn't made a ruckus yet.</div>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
 </div>
 {% endblock %}
