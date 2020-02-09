@@ -42,15 +42,15 @@
       {% endif %}
 
       </div>
-      <div class="p-3 border-bottom">
+      <div class="p-3">
 
         <div class="h6">About</div>
 
-        <p class="mb-0">{{ board.description_html | safe }}</p>
+        {{ board.description_html | safe }}
 
       </div>
 
-<!---- hide rules thingy
+<!-- hide rules thingy
       <div class="p-3">
 
         <div class="h6 text-danger">Guild rules</div>
@@ -83,7 +83,7 @@
 
       </div>
 
----->
+-->
 
     </div>
 
