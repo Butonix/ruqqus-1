@@ -42,7 +42,7 @@
 
 {% block sidebarblock %}
    <div class="sidebar-section sidebar-info">
-    <div class="title"><i class="fas fa-info mr-2"></i>Post Info</div>
+    <div class="title"><i class="fas fa-info-circle mr-2"></i>Post Info</div>
     <div class="body"><span class="text-small">Shortlink:</span><input readonly="readonly" value="https://ruqq.us/{{ p.base36id }}" data-clipboard-text="https://ruqq.us/{{ p.base36id }}" role="button" class="copy-link form-control">
   {% if p.board_id != p.original_board_id %}
   <div class="text-small">Originally posted in <a href="{{ p.original_board.permalink }}">+{{ p.original_board.name }}</a></div>
