@@ -182,7 +182,7 @@ def guild_ids(sort="subs", page=1, nsfw=False):
     if sort=="subs":
         guilds=guilds.order_by(Board.subscriber_count.desc())
     elif sort=="new":
-        guilds=guilds.order_by(Board.created_utc,desc())
+        guilds=guilds.order_by(Board.created_utc.desc())
     elif sort=="trending":
         guilds=guilds.order_by(Board.trending_rank.desc())
 
