@@ -129,6 +129,7 @@ def after_request(response):
                          )
     response.headers.add("Cache-Control",
                          "maxage=120")
+    response.headers.add("Strict-Transport-Security","max-age=31536000")
 
     #signups - hit discord webhook
     if request.method=="POST" and response.status_code in [301, 302] and request.path=="/signup":
