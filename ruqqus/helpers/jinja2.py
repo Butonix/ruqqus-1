@@ -29,4 +29,6 @@ def full_link(url):
 @app.template_filter("js_str_escape")
 def js_str_escape(s):
     
-    return json.dumps(s)
+    s=s.replace("'", "\'")
+
+    return s
