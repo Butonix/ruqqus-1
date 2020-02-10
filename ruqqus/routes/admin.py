@@ -111,5 +111,5 @@ def badge_grant_post(v):
 
     badge_types=db.query(BadgeDef).filter_by(kind=3).order_by(BadgeDef.rank).all()
 
-    return redirect("/badge_grant?msg=success")
+    return redirect("/admin/badge_grant?msg=success")
                  
