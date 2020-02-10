@@ -106,7 +106,7 @@ def submit_post(v):
     if len(title)<10:
         return render_template("submit.html", v=v, error="Please enter a better title.", title=title, url=url, body=request.form.get("body",""), b=get_guild(request.form.get("board","")))
     elif len(title)>250:
-        return render_template("submit.html", v=v, error="Title capped at 250 characters" title=title[0:250], url=url, body=request.form.get("body",""), b=get_guild(request.form.get("board","")))
+        return render_template("submit.html", v=v, error="250 character limit for titles.", title=title[0:250], url=url, body=request.form.get("body",""), b=get_guild(request.form.get("board","")))
 
     parsed_url=urlparse(url)
     if not (parsed_url.scheme and parsed_url.netloc) and not request.form.get("body"):
