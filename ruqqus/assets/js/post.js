@@ -12,8 +12,6 @@ function post(url, callback, errortext) {
 toggleSub=function(){
   document.getElementById('button-unsub').classList.toggle('d-none');
   document.getElementById('button-sub').classList.toggle('d-none');
-  document.getElementById('button-unsub-side').classList.toggle('d-none');
-  document.getElementById('button-sub-side').classList.toggle('d-none');
   document.getElementById('button-unsub-modal').classList.toggle('d-none');
   document.getElementById('button-sub-modal').classList.toggle('d-none');
   document.getElementById('button-unsub-mobile').classList.toggle('d-none');
