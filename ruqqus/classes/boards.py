@@ -116,9 +116,9 @@ class Board(Base, Stndrd, Age_times):
         elif sort=="disputed":
             posts=posts.order_by(Submission.score_disputed.desc())
         elif sort=="top":
-            posts=posts.order_by(Submissions.score_top.desc())
+            posts=posts.order_by(Submission.score_top.desc())
         elif sort=="activity":
-            posts=posts.order_by(Submissions.score_activity.desc())
+            posts=posts.order_by(Submission.score_activity.desc())
         else:
             abort(422)
 
