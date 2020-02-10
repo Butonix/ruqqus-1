@@ -698,7 +698,7 @@ def board_mod_queue(boardname, board, v):
     if not v.over_18:
         posts=posts.filter_by(over_18=False)
 
-    posts=posts.order_by(text('submissions.report_count desc')).offset((page-1)*25).limit(26)
+    posts=posts.order_by(Submission.report_count.desc()).offset((page-1)*25).limit(26)
 
     posts=[x for x in posts]
 
@@ -728,7 +728,7 @@ def all_mod_queue(v):
     if not v.over_18:
         posts=posts.filter_by(over_18=False)
 
-    posts=posts.order_by(text('submissions.report_count desc')).offset((page-1)*25).limit(26)
+    posts=posts.order_by(Submission.report_count.desc()).offset((page-1)*25).limit(26)
 
     posts=[x for x in posts]
 
