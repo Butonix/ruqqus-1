@@ -32,7 +32,7 @@ def thumbnail_thread(pid):
             'height':720,
             'width':1280,
             'response_type':'image',
-            'thumbnail_width':300,
+            'thumbnail_width':600,
             'url': post.embed_url if post.embed_url else post.url,
             'css':"iframe {display:none;}"
             }
