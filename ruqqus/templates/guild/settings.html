@@ -118,7 +118,7 @@
 
               <div class="body w-lg-100">
 
-                <input type="text" class="form-control copy-link" id="guild_name" value="{{ b.name }}">
+                <input type="text" class="form-control copy-link" id="guild_name" name="guild_name" value="{{ b.name }}">
 
                 <div class="text-small-extra text-muted mt-3">Only the guild name capitalization can be changed.</div>
 
@@ -135,7 +135,7 @@
                   <span class="text-danger text-small" style="vertical-align: sub;">{{ error }}</span>
                 </p>
                 {% endif %}
-                <button class="btn btn-primary ml-auto" id="save-guild-name" onclick="mod_post('/mod/{{ b.base36id }}/settings/name', 'guild_name', 'save-guild-name');">Save</button>
+                <input class="btn btn-primary ml-auto" id="save-guild-name" onclick="mod_post('/mod/{{ b.base36id }}/settings/name', 'guild_name', 'save-guild-name');" value="Save">
 
               </div>
 
