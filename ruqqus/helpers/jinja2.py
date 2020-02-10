@@ -1,4 +1,5 @@
 import time
+import json
 
 from sqlalchemy import text
 
@@ -24,3 +25,10 @@ def source_code(file_name):
 def full_link(url):
 
     return f"https://{app.config['SERVER_NAME']}{url}"
+
+@app.template_filter("js_str_escape")
+def js_str_escape(s):
+    
+    s=s.replace("'", r"\'")
+
+    return s

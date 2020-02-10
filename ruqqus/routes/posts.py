@@ -191,7 +191,7 @@ def submit_post(v):
                             user2=identity.id)
 
                 new_badge=Badge(user_id=identity.id,
-                                badge_id=1)
+                                badge_id=6)
                 db.add(new_alt)
                 db.add(new_badge)
                 db.commit()
