@@ -26,6 +26,8 @@ def auth_desired(f):
         resp=make_response( f(*args, v=v, **kwargs))
         if v:
             resp.headers.add("Cache-Control", "private")
+            resp.headers.add("Access-Control-Allow-Origin",app.config["SERVER_NAME"])
+
         return resp
 
     wrapper.__name__=f.__name__
@@ -50,6 +52,8 @@ def auth_required(f):
 
         resp = make_response( f(*args, v=v, **kwargs))
         resp.headers.add("Cache-Control","private")
+        resp.headers.add("Access-Control-Allow-Origin",app.config["SERVER_NAME"])
+
         return resp
     
     wrapper.__name__=f.__name__
@@ -77,6 +81,7 @@ def is_not_banned(f):
 
         resp=make_response(f(*args, v=v, **kwargs))
         resp.headers.add("Cache-Control","private")
+        resp.headers.add("Access-Control-Allow-Origin",app.config["SERVER_NAME"])
         return resp
 
     wrapper.__name__=f.__name__
@@ -162,6 +167,8 @@ def admin_level_required(x):
                 resp=make_response(response)
             
             resp.headers.add("Cache-Control","private")
+            resp.headers.add("Access-Control-Allow-Origin",app.config["SERVER_NAME"])
+
             return resp
 
         wrapper.__name__=f.__name__
