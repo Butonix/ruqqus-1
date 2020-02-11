@@ -22,8 +22,6 @@ valid_board_regex=re.compile("^\w{3,25}$")
 @app.route("/create_guild", methods=["GET"])
 @is_not_banned
 def create_board_get(v):
-    if not v.is_activated:
-        return render_template("message.html", title="Unable to make board", text="You need to verify your email adress first.")
     if v.karma+v.comment_karma<100:
         return render_template("message.html", title="Unable to make board", text="You need more rep to do that.")
 
