@@ -1,23 +1,12 @@
-// Mobile Safari in standalone mode
-if(("standalone" in window.navigator) && window.navigator.standalone){
+var eventHandler = function (event) {
+    // Only run for iOS full screen apps
+    if (('standalone' in window.navigator) && window.navigator.standalone) {
+        // Only run if link is an anchor and points to the current page
+        if ( event.target.tagName.toLowerCase() !== 'a' || event.target.hostname !== window.location.hostname || event.target.pathname !== window.location.pathname || !/#/.test(event.target.href) ) return;
 
-	// If you want to prevent remote links in standalone web apps opening Mobile Safari, change 'remotes' to true
-	var noddy, remotes = true;
-	
-	document.addEventListener('click', function(event) {
-		
-		noddy = event.target;
-		
-		// Bubble up until we hit link or top HTML element. Warning: BODY element is not compulsory so better to stop on HTML
-		while(noddy.nodeName !== "A" && noddy.nodeName !== "HTML") {
-	        noddy = noddy.parentNode;
-	    }
-		
-		if('href' in noddy && noddy.href.indexOf('http') !== -1 && (noddy.href.indexOf(document.location.host) !== -1 || remotes))
-		{
-			event.preventDefault();
-			document.location.href = noddy.href;
-		}
-	
-	},false);
+        // Open link in same tab
+        event.preventDefault();
+        window.location = event.target.href;
+    }
 }
+window.addEventListener('click', eventHandler, false);
