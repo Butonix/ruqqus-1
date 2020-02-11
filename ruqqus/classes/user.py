@@ -54,7 +54,7 @@ class User(Base, Stndrd):
     has_banner=Column(Boolean, default=False)
     reserved=Column(String(256), default=None)
     is_nsfw=Column(Boolean, default=False)
-    tos_agreed_utc=Column(Integer, default=None)
+    tos_agreed_utc=Column(Integer, default=0)
     profile_nonce=Column(Integer, default=0)
     banner_nonce=Column(Integer, default=0)
     last_siege_utc=Column(Integer, default=0)
