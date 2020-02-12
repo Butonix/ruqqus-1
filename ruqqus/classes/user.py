@@ -602,7 +602,7 @@ class User(Base, Stndrd):
     @property
     def can_make_guild(self):
 
-        if self.karma + self.comment_karma < 100:
+        if self.karma + self.comment_karma < 50:
             return False
 
         return True
