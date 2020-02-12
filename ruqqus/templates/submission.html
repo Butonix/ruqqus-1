@@ -186,6 +186,13 @@
 <script src="/assets/js/txt_formatting.js"></script>
 {% endblock %}
 
+{% block gifKeyboard %}
+{% if v }
+<script src="/assets/js/get-gif.js"></script>
+{% endif %}
+{% endblock %}
+
+
 {% block actionsModal %}
 <!-- Post Actions Modal -->
 <div class="modal fade d-md-none" id="actionsModal" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
