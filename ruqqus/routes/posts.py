@@ -225,7 +225,7 @@ def submit_post(v):
     body=request.form.get("body","")
 
     #catch too-long body
-    if len(body)>6000:
+    if len(body)>5000:
 
         return render_template("submit.html",
                                v=v,
