@@ -42,6 +42,8 @@ def api_vote_post(post_id, x, v):
     db.add(vote)
     db.commit()
 
+    print(f"Vote Event: @{v.username} vote {x} on comment {post_id}")
+
     return "", 204
                     
 @app.route("/api/vote/comment/<comment_id>/<x>", methods=["POST"])
@@ -76,5 +78,7 @@ def api_vote_comment(comment_id, x, v):
 
     db.add(vote)
     db.commit()
+
+    print(f"Vote Event: @{v.username} vote {x} on comment {comment_id}")
 
     return "", 204

@@ -291,6 +291,8 @@ def submit_post(v):
     cache.delete_memoized(frontlist, sort="new")
     cache.delete_memoized(Board.idlist, board, sort="new")
 
+    print(f"Content Event: @{v.username} post {new_post.base36id}")
+
     return redirect(new_post.permalink)
     
 @app.route("/api/nsfw/<pid>/<x>", methods=["POST"])
