@@ -32,7 +32,7 @@ def api_vote_post(post_id, x, v):
     existing = db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
     if existing:
         existing.change_to(x)
-        print(f"Re-vote Event: @{v.username} vote {x} on comment {post_id}")
+        print(f"Re-vote Event: @{v.username} vote {x} on post {post_id}")
         return "", 204
 
     vote=Vote(user_id=v.id,
@@ -43,7 +43,7 @@ def api_vote_post(post_id, x, v):
     db.add(vote)
     db.commit()
 
-    print(f"Vote Event: @{v.username} vote {x} on comment {post_id}")
+    print(f"Vote Event: @{v.username} vote {x} on post {post_id}")
 
     return "", 204
                     
