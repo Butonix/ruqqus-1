@@ -22,7 +22,7 @@ valid_board_regex=re.compile("^\w{3,25}$")
 @app.route("/create_guild", methods=["GET"])
 @is_not_banned
 def create_board_get(v):
-    if not v.can_make_guild
+    if not v.can_make_guild:
         return render_template("message.html", title="Unable to make board", text="You need more rep to do that.")
 
     #check # recent boards made by user
