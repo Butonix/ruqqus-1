@@ -1,0 +1,41 @@
+  function getGif(searchTerm) {
+
+    // categories var
+
+    var cats = document.getElementById('agree');
+
+    // container var
+
+    var container = document.getElementById('GIFs');
+
+    container.innerHTML = '';
+
+    if (searchTerm.length == 0) {
+      container.innerHTML = 'jinja template cats.html';
+    }
+
+    console.log('searchTerm is: ', searchTerm)
+    $.ajax({
+      url: "//api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=eOTkZX92KQM80g9NcBsq0heqZxZSVP86",
+      type: "GET",
+      success: function(response) {
+        console.log(response)
+        var max = response.data.length - 1 //length of response, minus 1 (cuz array starts at index 0)
+        console.log('response.data.length is ', max)
+        //var randomNumber = Math.round(Math.random() * max) //random number between 0 and max -1
+        var randomNumber = Math.round(Math.random() * 6) //random number between 0 and max -1
+        // GIF array
+        var gifURL = [];
+
+        // loop for fetching mutliple GIFs and creating the card divs
+        for (var i = 0; i <= 15; i++) {
+          gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
+          container.innerHTML += ('<div class="card bg-secondary"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+        }
+        console.log(container);
+      },
+      error: function(e) {
+        alert(e);
+      }
+    });
+  }
