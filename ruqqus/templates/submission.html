@@ -496,7 +496,7 @@
     </div>
     {% endif %}
 
-    {% if not v and p.comment_count >= 2 %}
+    {% if not v and p.comment_count >= 2 and not p.is_banned %}
     <div class="card border-0 bg-light mt-4">
       <div class="card-body">
         <h5 class="card-title">Jump in the discussion.</h5>
@@ -515,7 +515,7 @@
      {{ c.rendered_comment(v=v) | safe }}
      {% endfor %}
    </div>
-   {% else %}
+   {% elif not p.replies and not p.is_banned %}
    <div class="comment-section text-center py-7">
     <i class="fad fa-ghost text-gray-500 mb-4" style="
     font-size: 3.5rem;"></i>
