@@ -17,7 +17,7 @@ from flask import *
 
 from ruqqus.__main__ import app, db, limiter, cache
 
-valid_board_regex=re.compile("^\w{3,25}$")
+valid_board_regex=re.compile("^[a-zA-Z0-9]\w{3,24}$")
 
 @app.route("/create_guild", methods=["GET"])
 @is_not_banned
@@ -52,20 +52,33 @@ def api_board_available(name):
 @is_not_banned
 @validate_formkey
 def create_board_post(v):
+    if not v.can_make_guild:
+        return render_template("make_board.html",
+                               title="Unable to make board",
+                               error="You need more Reputation before you can make a Guild."
+                               )
 
     board_name=request.form.get("name")
     board_name=board_name.lstrip("+")
+    description = request.form.get("description")
 
     if not re.match(valid_board_regex, board_name):
-        return render_template("message.html", title="Unable to make board", message="Valid board names are 3-25 letters or numbers.")
+        return render_template("make_board.html",
+                               v=v,
+                               error="Guild names must be 3-25 letters or numbers.",
+                               description=description
+                               )
 
-    if not v.can_make_guild:
-        return render_template("message.html", title="Unable to make board", message="You need more rep to do that")
+
 
 
     #check name
     if db.query(Board).filter(Board.name.ilike(board_name)).first():
-        abort(409)
+        return render_template("make_board.html",
+                               v=v,
+                               error="That Guild already exists.",
+                               description=description
+                               )
 
     #check # recent boards made by user
     cutoff=int(time.time())-60*60*24
@@ -76,7 +89,7 @@ def create_board_post(v):
                                message="You can only create up to 2 guilds per day. Try again later."
                                ), 429
 
-    description = request.form.get("description")
+
 
     with CustomRenderer() as renderer:
         description_md=renderer.render(mistletoe.Document(description))
