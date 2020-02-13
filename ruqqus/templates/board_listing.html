@@ -14,7 +14,7 @@
           <div id="button-unsub-{{ b.base36id }}" style="z-index: 2" class="{% if not b.has_subscriber(v) %} d-none{% endif %}"><a class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="post('/api/unsubscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ b.base36id }}').classList.toggle('d-none');})">Leave</a></div>
 
         </div>
-        <p class="card-text">{{ b.description }}</p>
+        <p class="card-text">{{ b.description|truncate(100, True) }}</p>
       </div>
       <div class="card-footer bg-white border-0">
         <div class="text-small text-muted"><i class="fas fa-users text-gray-500 mr-2"></i>{{ b.subscriber_count }} Member{{ 's' if b.subscriber_count != 1 else '' }}</div>
