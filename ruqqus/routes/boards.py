@@ -23,7 +23,7 @@ valid_board_regex=re.compile("^\w{3,25}$")
 @is_not_banned
 def create_board_get(v):
     if not v.can_make_guild:
-        return render_template("message.html", title="Unable to make board", text="You need more rep to do that.")
+        return render_template("message.html", title="Unable to make board", message="You need more rep to do that.")
 
     #check # recent boards made by user
     cutoff=int(time.time())-60*60*24
@@ -53,10 +53,10 @@ def create_board_post(v):
     board_name=board_name.lstrip("+")
 
     if not re.match(valid_board_regex, board_name):
-        return render_template("message.html", title="Unable to make board", text="Valid board names are 3-25 letters or numbers.")
+        return render_template("message.html", title="Unable to make board", message="Valid board names are 3-25 letters or numbers.")
 
     if not v.can_make_guild:
-        return render_template("message.html", title="Unable to make board", text="You need more rep to do that")
+        return render_template("message.html", title="Unable to make board", message="You need more rep to do that")
 
 
     #check name
