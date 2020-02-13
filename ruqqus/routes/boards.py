@@ -55,7 +55,7 @@ def create_board_post(v):
     if not re.match(valid_board_regex, board_name):
         return render_template("message.html", title="Unable to make board", text="Valid board names are 3-25 letters or numbers.")
 
-    if v.karma+v.comment_karma<100:
+    if not v.can_make_guild:
         return render_template("message.html", title="Unable to make board", text="You need more rep to do that")
 
 
