@@ -23,13 +23,17 @@ valid_board_regex=re.compile("^\w{3,25}$")
 @is_not_banned
 def create_board_get(v):
     if not v.can_make_guild:
-        return render_template("message.html", title="Unable to make a guild. For now.", message="You need more rep to do that.")
+        return render_template("message.html",
+                               v=v,
+                               title="Unable to make a guild. For now.",
+                               message="You need more Reputation.")
 
     #check # recent boards made by user
     cutoff=int(time.time())-60*60*24
     recent=db.query(Board).filter(Board.creator_id==v.id, Board.created_utc >= cutoff).all()
     if len([x for x in recent])>=2:
         return render_template("message.html",
+                               v=v,
                                title="You need to wait a bit.",
                                message="You can only create up to 2 guilds per day. Try again later."
                                ), 429
