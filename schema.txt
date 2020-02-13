@@ -258,13 +258,46 @@ $_$;
 CREATE FUNCTION public.downs(public.comments) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT COUNT(*)
-      FROM commentvotes
-      LEFT JOIN users
-      ON commentvotes.user_id = users.id
-      WHERE users.is_banned=0
-        AND commentvotes.vote_type=-1
-        AND commentvotes.comment_id=$1.id
+
+select (
+
+(
+  SELECT count(*)
+  from (
+    select * from commentvotes
+    where comment_id=$1.id
+    and vote_type=-1
+  ) as v1
+  left join users
+    on users.id=v1.user_id
+  where users.is_banned=0
+)-(
+  SELECT count(distinct v1.id)
+  from (
+    select * from commentvotes
+    where comment_id=$1.id
+    and vote_type=-1
+  ) as v1
+  left join (select * from users) as u1
+    on u1.id=v1.user_id
+  left join (select * from alts) as a1
+    on a1.user1=v1.user_id
+  left join (select * from alts) as a2
+    on a2.user2=v1.user_id
+  left join (
+      select * from commentvotes
+      where comment_id=$1.id
+      and vote_type=-1
+  ) as v2
+    on (v2.user_id=a1.user2 or v2.user_id=a2.user1)
+  left join (select * from users) as u2
+    on u2.id=v2.user_id
+  where u1.is_banned=0
+  and u2.is_banned=0
+  and v1.id is not null
+  and v2.id is not null
+))
+
       $_$;
 
 
@@ -275,13 +308,46 @@ CREATE FUNCTION public.downs(public.comments) RETURNS bigint
 CREATE FUNCTION public.downs(public.submissions) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT COUNT(*)
-      FROM votes
-      LEFT JOIN users
-      ON votes.user_id = users.id
-      WHERE users.is_banned=0
-        AND votes.vote_type=-1
-        AND votes.submission_id=$1.id
+
+select (
+
+(
+  SELECT count(*)
+  from (
+    select * from votes
+    where submission_id=$1.id
+    and vote_type=-1
+  ) as v1
+  left join users
+    on users.id=v1.user_id
+  where users.is_banned=0
+)-(
+  SELECT count(distinct v1.id)
+  from (
+    select * from votes
+    where submission_id=$1.id
+    and vote_type=-1
+  ) as v1
+  left join (select * from users) as u1
+    on u1.id=v1.user_id
+  left join (select * from alts) as a1
+    on a1.user1=v1.user_id
+  left join (select * from alts) as a2
+    on a2.user2=v1.user_id
+  left join (
+      select * from votes
+      where submission_id=$1.id
+      and vote_type=-1
+  ) as v2
+    on (v2.user_id=a1.user2 or v2.user_id=a2.user1)
+  left join (select * from users) as u2
+    on u2.id=v2.user_id
+  where u1.is_banned=0
+  and u2.is_banned=0
+  and v1.id is not null
+  and v2.id is not null
+))
+
       $_$;
 
 
@@ -663,13 +729,46 @@ $_$;
 CREATE FUNCTION public.ups(public.comments) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT COUNT(*)
-      FROM commentvotes
-      LEFT JOIN users
-      ON commentvotes.user_id = users.id
-      WHERE users.is_banned=0
-        AND commentvotes.vote_type=1
-        AND commentvotes.comment_id=$1.id
+
+select (
+
+(
+  SELECT count(*)
+  from (
+    select * from commentvotes
+    where comment_id=$1.id
+    and vote_type=1
+  ) as v1
+  left join users
+    on users.id=v1.user_id
+  where users.is_banned=0
+)-(
+  SELECT count(distinct v1.id)
+  from (
+    select * from commentvotes
+    where comment_id=$1.id
+    and vote_type=1
+  ) as v1
+  left join (select * from users) as u1
+    on u1.id=v1.user_id
+  left join (select * from alts) as a1
+    on a1.user1=v1.user_id
+  left join (select * from alts) as a2
+    on a2.user2=v1.user_id
+  left join (
+      select * from commentvotes
+      where comment_id=$1.id
+      and vote_type=1
+  ) as v2
+    on (v2.user_id=a1.user2 or v2.user_id=a2.user1)
+  left join (select * from users) as u2
+    on u2.id=v2.user_id
+  where u1.is_banned=0
+  and u2.is_banned=0
+  and v1.id is not null
+  and v2.id is not null
+))
+
       $_$;
 
 
@@ -680,13 +779,47 @@ CREATE FUNCTION public.ups(public.comments) RETURNS bigint
 CREATE FUNCTION public.ups(public.submissions) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT COUNT(*)
-      FROM votes
-      LEFT JOIN users
-      ON votes.user_id = users.id
-      WHERE users.is_banned=0
-        AND votes.vote_type=1
-        AND votes.submission_id=$1.id
+
+
+select (
+
+(
+  SELECT count(*)
+  from (
+    select * from votes
+    where submission_id=$1.id
+    and vote_type=1
+  ) as v1
+  left join users
+    on users.id=v1.user_id
+  where users.is_banned=0
+)-(
+  SELECT count(distinct v1.id)
+  from (
+    select * from votes
+    where submission_id=$1.id
+    and vote_type=1
+  ) as v1
+  left join (select * from users) as u1
+    on u1.id=v1.user_id
+  left join (select * from alts) as a1
+    on a1.user1=v1.user_id
+  left join (select * from alts) as a2
+    on a2.user2=v1.user_id
+  left join (
+      select * from votes
+      where submission_id=$1.id
+      and vote_type=1
+  ) as v2
+    on (v2.user_id=a1.user2 or v2.user_id=a2.user1)
+  left join (select * from users) as u2
+    on u2.id=v2.user_id
+  where u1.is_banned=0
+  and u2.is_banned=0
+  and v1.id is not null
+  and v2.id is not null
+))
+
       $_$;
 
 
