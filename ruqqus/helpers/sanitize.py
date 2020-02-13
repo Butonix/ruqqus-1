@@ -93,7 +93,7 @@ def sanitize(text, linkgen=False):
                     
                     tag["rel"]="nofollow"
                     tag["style"]="max-height: 100px; max-width: 100%;"
-                    tag["class"]="in-comment-image my-2"
+                    tag["class"]="in-comment-image rounded-sm my-2"
                             
                     link=soup.new_tag("a")
                     link["href"]=tag["src"]
