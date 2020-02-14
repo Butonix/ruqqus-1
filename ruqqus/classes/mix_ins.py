@@ -115,7 +115,12 @@ class Fuzzing:
     @property
     @cache.memoize(timeout=60)
     def score_fuzzed(self, k=0.01):
+        
         real = self.score
+
+        if real <= 10:
+            return real
+        
         a = math.floor(real * (1 - k))
         b = math.ceil(real * (1 + k))
         return random.randint(a, b)
