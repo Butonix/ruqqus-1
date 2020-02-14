@@ -119,7 +119,7 @@ class Fuzzing:
         real = self.score
 
         if real <= 10:
-            return real
+            return int(real)
         
         a = math.floor(real * (1 - k))
         b = math.ceil(real * (1 + k))
