@@ -45,13 +45,13 @@
       {% if v.notifications_count %}
 
       <li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-        <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="{{ v.notifications_count }} notifications"></i><span class="badge-count">{{ v.notifications_count }}</span></a>
+        <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="{{ v.notifications_count }} notifications"></i><span class="badge-count">{{ v.notifications_count }}</span></a>
       </li>
 
       {% elif v.notifications_count > 9 %}
 
       <li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-        <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="9+ notifications"></i><span class="badge-count" style="width: 26px;">9+</span></a>
+        <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="9+ notifications"></i><span class="badge-count" style="width: 26px;">9+</span></a>
       </li>
 
       {% else %}
