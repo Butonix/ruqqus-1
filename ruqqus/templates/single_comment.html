@@ -193,11 +193,11 @@
 <div id="reply-to-{{ c.base36id }}"></div>
 
 {% if render_replies %}
-{% if level==8 and c.replies %}
+{% if level==6 and c.replies %}
 
 
 <div id="morecomment-{{ c.base36id }}" class="mt-2 more-comments text-small">
-    <a href="{{ c.permalink }}">More comments →</a>
+    <a href="{{ c.permalink }}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 </div>
 
 {% else %}

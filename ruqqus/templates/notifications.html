@@ -8,7 +8,7 @@
   <meta name="description" content="Sign into Ruqqus to view">
   <meta name="author" content="">
 
-  <title>Notifications - Ruqqus</title>
+  <title>Inbox - Ruqqus</title>
 
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -102,11 +102,11 @@
             {% else %}
             <div class="text-center py-7 py-md-8">
 
-              <img src="/assets/images/illustrations/messages.png" class="empty-state-img mb-3" alt="empty state">
+              <i class="fad fa-envelope-open text-muted mb-5" style="font-size: 5rem;"></i>
 
-              <div class="font-weight-bold text-muted">Nothing new in your inbox yet.</div>
+              <div class="font-weight-bold text-muted">No unread messages in your inbox.</div>
               <div class="text-small text-muted mb-3">When someone comments or replies, it will show up here.</div>
-              <a href="/" class="btn btn-primary">Go to frontpage</a>
+              <a href="/notifications?all=true" class="btn btn-primary">View all</a>
             </div>
 
             {% endfor %}
