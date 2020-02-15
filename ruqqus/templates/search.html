@@ -141,21 +141,28 @@
       <div class="d-flex flex-row flex-nowrap justify-content-between">
 
         <div class="post-filter">
-          <span>Sort By:</span>
-          <span class="dropdown">
-            <a class="dropdown-toggle" href="#" role="button" id="dropdownSortBy" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">{{ sort_method.capitalize() }}</a>
 
-            <span class="dropdown-menu border-0 shadow" id="dropdownMenuSortBy" aria-labelledby="dropdownSortBy">
+          <div class="d-flex align-items-center">
 
-              <a class="dropdown-item" href="?sort=hot">Hot</a>
-              <a class="dropdown-item" href="?sort=top">Top</a>
-              <a class="dropdown-item" href="?sort=new">New</a>
-              <a class="dropdown-item" href="?sort=fiery">Disputed</a>
-              <a class="dropdown-item" href="?sort=activity">Activity</a>
+            <div class="dropdown dropdown-actions">
+              <button class="btn btn-link text-capitalize text-muted font-weight-normal dropdown-toggle px-0" type="button" id="dropdownMenuButtonMobile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {% if sort_method=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
+                {% if sort_method=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
+                {% if sort_method=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+                {% if sort_method=="disputed" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
+                {% if sort_method=="activity" %}<i class="fas fa-comments mr-1"></i>{% endif %}
+                {{ sort_method }}
+              </button>
+              <div class="dropdown-menu" id="mobileSortDropdown" aria-labelledby="dropdownMenuButtonMobile" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+                {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot"><i class="fas fa-fire text-primary mr-3"></i>Hot</a>{% endif %}
+                {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top"><i class="fas fa-arrow-alt-circle-up text-primary mr-3"></i>Top</a>{% endif %}
+                {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles text-primary mr-3"></i>New</a>{% endif %}
+                {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed"><i class="fas fa-bullhorn text-primary mr-3"></i>Disputed</a>{% endif %}
+                {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity"><i class="fas fa-comments text-primary mr-3"></i>Activity</a>{% endif %}
+              </div>
+            </div>
 
-            </span>
-          </span>
+          </div>
 
         </div>
 
