@@ -1,6 +1,6 @@
   function getGif(searchTerm) {
 
-    document.getElementById('gifSearch');.value = searchTerm;
+    document.getElementById('gifSearch').value = searchTerm;
 
     // categories var
 
