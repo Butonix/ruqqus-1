@@ -1,6 +1,9 @@
   function getGif(searchTerm) {
 
-    document.getElementById('gifSearch').value = searchTerm;
+
+    if (searchTerm !== "undefined") {
+      document.getElementById('gifSearch').value = searchTerm;
+    }
 
     // categories var
 
@@ -18,7 +21,7 @@
 
     container.innerHTML = '';
 
-    if (searchTerm != null && searchTerm.length == 0 | searchTerm === undefined ) {
+    if (searchTerm != null && searchTerm.length == 0 | searchTerm === "undefined") {
       container.innerHTML = 'jinja template cats.html';
 
       backBtn.innerHTML = null;
