@@ -8,10 +8,19 @@
 
     var container = document.getElementById('GIFs');
 
+    // UI buttons
+
+    var backBtn = document.getElementById('gifs-back-btn');
+
+    var searchBtn = document.getElementById('gifs-search-btn');
+
     container.innerHTML = '';
 
     if (searchTerm.length == 0) {
       container.innerHTML = 'jinja template cats.html';
+    else {
+
+    }
     }
 
     console.log('searchTerm is: ', searchTerm)
