@@ -12,14 +12,16 @@
 
     var backBtn = document.getElementById('gifs-back-btn');
 
-    var searchBtn = document.getElementById('gifs-search-btn');
+    var cancelBtn = document.getElementById('gifs-cancel-btn');
 
     container.innerHTML = '';
 
     if (searchTerm.length == 0) {
       container.innerHTML = 'jinja template cats.html';
     else {
+      backBtn.innerHTML = '<i class="fas fa-long-arrow-left text-muted"></i>'
 
+      cancelBtn.innerHTML = '<i class="fas fa-times text-muted"></i>'
     }
     }
 
