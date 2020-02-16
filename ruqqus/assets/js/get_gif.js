@@ -48,7 +48,7 @@
         var gifURL = [];
 
         // loop for fetching mutliple GIFs and creating the card divs
-        if (response.data.length > 0) {
+        if (response.data.length !== 0) {
           for (var i = 0; i <= 15; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
             container.innerHTML = ('<div class="card bg-secondary" style="overflow: hidden"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
