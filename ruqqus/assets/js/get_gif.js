@@ -2,6 +2,9 @@
 
     if (searchTerm != null) {
       document.getElementById('gifSearch').value = searchTerm;
+    else {
+      document.getElementById('gifSearch').value = null;
+    }
     }
 
     // categories var
