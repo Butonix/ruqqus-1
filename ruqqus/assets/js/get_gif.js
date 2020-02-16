@@ -1,5 +1,7 @@
   function getGif(searchTerm) {
 
+    document.getElementById('gifSearch');.value = searchTerm;
+
     // categories var
 
     var cats = document.getElementById('GIFcats');
