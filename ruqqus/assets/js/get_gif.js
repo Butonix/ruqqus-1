@@ -48,15 +48,17 @@
         var gifURL = [];
 
         // loop for fetching mutliple GIFs and creating the card divs
-        if (response.data.length !== 0) {
           for (var i = 0; i <= 15; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
             container.innerHTML = ('<div class="card bg-secondary" style="overflow: hidden"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
           }
-          loadBtn.innerHTML = ('<a href="javascript.void(0)" class="btn btn-secondary" onclick="getMoreGif()">Load more</a>');
+
+        if (response.data.length !== 0) {
+          cancelBtn.innerHTML = '<a href="javascript.void(0)" class="btn btn-secondary" onclick="getMoreGif()">Load more</a>'
         }
         else {
-          container.innerHTML = null;
+          container.innerHTML = '<p class="text-muted">Aw shucks. No gifs found...</p>'
+          cancelBtn.innerHTML = null;
         }
         console.log(container);
       },
