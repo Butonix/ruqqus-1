@@ -18,8 +18,6 @@
 
     var cancelBtn = document.getElementById('gifs-cancel-btn');
 
-    var loadBtn = document.getElementById('gifs-load-more-btn');
-
     container.innerHTML = '';
 
     if (searchTerm == null) {
@@ -34,12 +32,12 @@
 
       cancelBtn.innerHTML = '<button class="btn btn-link py-3 pr-3 pl-0" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
 
-      console.log('searchTerm is: ', searchTerm)
-      $.ajax({
-        url: "//api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=eOTkZX92KQM80g9NcBsq0heqZxZSVP86",
-        type: "GET",
-        success: function(response) {
-          console.log(response)
+          console.log('searchTerm is: ', searchTerm)
+    $.ajax({
+      url: "//api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=eOTkZX92KQM80g9NcBsq0heqZxZSVP86",
+      type: "GET",
+      success: function(response) {
+        console.log(response)
         var max = response.data.length - 1 //length of response, minus 1 (cuz array starts at index 0)
         console.log('response.data.length is ', max)
         //var randomNumber = Math.round(Math.random() * max) //random number between 0 and max -1
@@ -48,17 +46,9 @@
         var gifURL = [];
 
         // loop for fetching mutliple GIFs and creating the card divs
-          for (var i = 0; i <= 15; i++) {
-            gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
-            container.innerHTML = ('<div class="card bg-secondary" style="overflow: hidden"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
-          }
-
-        if (response.data.length >= 0) {
-          cancelBtn.innerHTML = '<a href="javascript.void(0)" class="btn btn-secondary" onclick="getMoreGif()">Load more</a>'
-        }
-        else {
-          container.innerHTML = '<p class="text-muted">Aw shucks. No gifs found...</p>'
-          cancelBtn.innerHTML = null;
+        for (var i = 0; i <= 15; i++) {
+          gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
+          container.innerHTML += ('<div class="card bg-secondary" style="overflow: hidden"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
         }
         console.log(container);
       },
