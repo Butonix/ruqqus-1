@@ -112,7 +112,9 @@
                 </li>
                 {% endif %}
                 {% endif %}
-                <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-link"></i><span>Copy link</span></a>
+		<li class="lsit-inline-item text-muted><a href="{{ c.permalink | full_link }}"><i class="fas fa-link"></i>Permalink</a>
+		</li>
+                <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i><span>Copy link</span></a>
                 </li>
                 <li class="list-inline-item d-none d-md-inline-block">
                     <div class="dropdown show">
@@ -222,7 +224,8 @@
       </div>
       <div class="modal-body">
           <ul class="list-group comment-actions">
-            <li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-link"></i><span>Share</span></a>
+                <li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i><span>Copy Link</span></a></li>
+		<li class="list-group-item"><a href="{{ c.permalink | full_link }}"><i class="fas fa-link"></i>Permalink</a></li>
                 <li class="list-group-item"><a class="d-block" href="{{ c.parent.permalink }}"><i class="fas fa-dna"></i>Parent</a></li>
                 <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
 
