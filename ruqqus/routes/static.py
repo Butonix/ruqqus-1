@@ -114,7 +114,7 @@ def press_inquiry(v):
     if request.form.get("press"):
         email_template="email/press.html"
     else:
-        email-template="email/contactform.html"
+        email_template="email/contactform.html"
 
     try:
         send_mail(environ.get("admin_email"),
