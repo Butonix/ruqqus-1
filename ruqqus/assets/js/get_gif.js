@@ -1,7 +1,7 @@
   function getGif(searchTerm) {
 
 
-    if (searchTerm.length > 0) {
+    if (searchTerm != null) {
       document.getElementById('gifSearch').value = searchTerm;
     }
 
