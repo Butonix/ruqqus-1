@@ -2,7 +2,7 @@
 
     // categories var
 
-    var cats = document.getElementById('agree');
+    var cats = document.getElementById('GIFcats');
 
     // container var
 
@@ -20,9 +20,9 @@
       container.innerHTML = 'jinja template cats.html';
     }
     else {
-      backBtn.innerHTML = '<i class="fas fa-long-arrow-left text-muted"></i>'
+      backBtn.classList.toggle("d-none");
 
-      cancelBtn.innerHTML = '<i class="fas fa-times text-muted"></i>'
+      cancelBtn.classList.toggle("d-none");
     };
 
     console.log('searchTerm is: ', searchTerm)
