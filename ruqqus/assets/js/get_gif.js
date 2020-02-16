@@ -18,6 +18,8 @@
 
     var cancelBtn = document.getElementById('gifs-cancel-btn');
 
+    var loadBtn = document.getElementById('gifs-load-more-btn');
+
     container.innerHTML = '';
 
     if (searchTerm == null) {
@@ -51,9 +53,10 @@
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
             container.innerHTML = ('<div class="card bg-secondary" style="overflow: hidden"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
           }
+          loadBtn.innerHTML = ('<a href="javascript.void(0)" class="btn btn-secondary" onclick="getMoreGif()">Load more</a>');
         }
         else {
-          container.innerHTML = ('<div class="text-center py-3"><i class="fad fa-frown text-gray-500 mb-4" style="font-size: 3.5rem;"></i><div class="h6 text-gray-500">Aw shucks. No GIFs found...</div></div>');
+          container.innerHTML = null;
         }
         console.log(container);
       },
