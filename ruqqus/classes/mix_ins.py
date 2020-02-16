@@ -118,8 +118,8 @@ class Fuzzing:
 
 
         
-        real = int(self.score) if self.score else 0
-
+        real = self.score_top if self.score_top else self.score
+        real=int(real)
         if real <= 10:
             return real
 
