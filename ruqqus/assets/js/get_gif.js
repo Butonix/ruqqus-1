@@ -53,7 +53,7 @@
             container.innerHTML = ('<div class="card bg-secondary" style="overflow: hidden"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
           }
 
-        if (response.data.length !== 0) {
+        if (response.data.length >= 0) {
           cancelBtn.innerHTML = '<a href="javascript.void(0)" class="btn btn-secondary" onclick="getMoreGif()">Load more</a>'
         }
         else {
