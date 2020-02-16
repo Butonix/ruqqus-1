@@ -18,7 +18,7 @@
 
     container.innerHTML = '';
 
-    if (searchTerm.length == 0) {
+    if (searchTerm.length == 0 | searchTerm == null ) {
       container.innerHTML = 'jinja template cats.html';
 
       backBtn.innerHTML = null;
@@ -26,9 +26,9 @@
       cancelBtn.innerHTML = null;
     }
     else {
-      backBtn.innerHTML = '<button class="btn btn-link py-3 pl-3 pr-0" id="gifs-back-btn" onclick="getGif('');"><i class="fas fa-long-arrow-left text-muted"></i></button>';
+      backBtn.innerHTML = '<button class="btn btn-link py-3 pl-3 pr-0" id="gifs-back-btn" onclick="getGif(null);"><i class="fas fa-long-arrow-left text-muted"></i></button>';
 
-      cancelBtn.innerHTML = '<button class="btn btn-link py-3 pr-3 pl-0" id="gifs-cancel-btn" onclick="getGif('');"><i class="fas fa-times text-muted"></i></button>';
+      cancelBtn.innerHTML = '<button class="btn btn-link py-3 pr-3 pl-0" id="gifs-cancel-btn" onclick="getGif(null);"><i class="fas fa-times text-muted"></i></button>';
     };
 
     console.log('searchTerm is: ', searchTerm)
