@@ -18,7 +18,7 @@
 
     container.innerHTML = '';
 
-    if (searchTerm.length == 0 | searchTerm == undefined ) {
+    if (searchTerm != null && searchTerm.length == 0 | searchTerm == null ) {
       container.innerHTML = 'jinja template cats.html';
 
       backBtn.innerHTML = null;
