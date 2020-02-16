@@ -20,9 +20,9 @@
       container.innerHTML = 'jinja template cats.html';
     }
     else {
-      backBtn.classList.toggle("d-none");
+      backBtn.innerHTML = '<button class="btn btn-link p-3 d-none" id="gifs-back-btn"><i class="fas fa-long-arrow-left text-muted"></i></button>';
 
-      cancelBtn.classList.toggle("d-none");
+      cancelBtn.innerHTML = '<button class="btn btn-link p-3 d-none" id="gifs-cancel-btn"><i class="fas fa-times text-muted"></i></button>';
     };
 
     console.log('searchTerm is: ', searchTerm)
