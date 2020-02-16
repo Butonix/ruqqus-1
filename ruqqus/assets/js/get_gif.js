@@ -18,12 +18,12 @@
 
     if (searchTerm.length == 0) {
       container.innerHTML = 'jinja template cats.html';
+    }
     else {
       backBtn.innerHTML = '<i class="fas fa-long-arrow-left text-muted"></i>'
 
       cancelBtn.innerHTML = '<i class="fas fa-times text-muted"></i>'
-    }
-    }
+    };
 
     console.log('searchTerm is: ', searchTerm)
     $.ajax({
