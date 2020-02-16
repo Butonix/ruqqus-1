@@ -1,6 +1,6 @@
 <!-- GIF Selection Modal - Powered by GIPHY -->
 <div class="modal fade" id="gifModal" tabindex="-1" role="dialog" aria-labelledby="gifModalTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Add a GIF</h5>
@@ -8,17 +8,17 @@
           <span aria-hidden="true"><i class="far fa-times"></i></span>
         </button>
       </div>
-      <div>
-        <div class="modal-body p-0">
-          <div class="form-group d-flex align-items-center mt-3 mb-0">
-            <div id="gifs-back-btn"></div>
-            <input type="text" class="form-control mx-3" id="gifSearch" placeholder="Search GIPHY" onchange="getGif(this.value);">
-            <div id="gifs-cancel-btn"></div>
-          </div>
+      <div style="overflow-y: scroll;">
+      <div class="modal-body p-0">
+        <div class="form-group d-flex align-items-center mt-3 mb-0">
+          <div id="gifs-back-btn"></div>
+          <input type="text" class="form-control mx-3" id="gifSearch" placeholder="Search GIPHY" onchange="getGif(this.value);">
+          <div id="gifs-cancel-btn"></div>
+        </div>
 
-          <div class="card-columns p-3" id="GIFs">
-            <div class="card" onclick="getGif('agree');" style="overflow: hidden;">
-              <div class="position-absolute text-center h-100 w-100" style="background-color: rgba(0, 0, 0, 0.35);">
+        <div class="card-columns p-3" id="GIFs">
+          <div class="card" onclick="getGif('agree');" style="overflow: hidden;">
+            <div class="position-absolute text-center h-100 w-100" style="background-color: rgba(0, 0, 0, 0.35);">
               <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Agree</div>
             </div>
             <img class="img-fluid" src="https://media.giphy.com/media/wGhYz3FHaRJgk/giphy.gif">
@@ -35,5 +35,4 @@
       </div>
     </div>
   </div>
-</div>
 </div>
