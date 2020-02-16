@@ -18,6 +18,10 @@
 
     if (searchTerm.length == 0) {
       container.innerHTML = 'jinja template cats.html';
+
+      backBtn.innerHTML = null;
+
+      cancelBtn.innerHTML = null;
     }
     else {
       backBtn.innerHTML = '<button class="btn btn-link py-3 pl-3 pr-0" id="gifs-back-btn"><i class="fas fa-long-arrow-left text-muted"></i></button>';
