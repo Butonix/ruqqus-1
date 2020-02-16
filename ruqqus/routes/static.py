@@ -111,15 +111,19 @@ def press_inquiry(v):
 
     data=sorted(data, key=lambda x: x[0])
 
+    if request.form.get("press"):
+        email_template="email/press.html"
+    else:
+        email-template="email/contactform.html"
+
     try:
         send_mail(environ.get("admin_email"),
-              "Press Submission",
-              render_template("email/press.html",
-                              data=data
-                              ),
+                  "Press Submission",
+                  render_template(email_template,
+                                  data=data
+                                  ),
                   plaintext=str(data)
-                
-              )
+                  )
     except:
             return render_template("/help/press.html",
                            error="Unable to save your inquiry. Please try again later.",
