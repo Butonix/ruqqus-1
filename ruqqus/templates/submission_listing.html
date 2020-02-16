@@ -25,7 +25,9 @@
       <div id="post-{{ p.base36id }}-up" tabindex="0" class="mx-auto arrow-up" {% if not p.is_banned %}{% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}{% endif %}></div>
 
       <span id="post-{{ p.base36id }}-score-up" class="score-up{% if voted!=1 %} d-none{% endif %}">{% if p.is_banned %}✖{% else %}{{ score+1-adjust }}{% endif %}</span>
+
       <span id="post-{{ p.base36id }}-score-none" class="score{% if voted!=0 and voted!=-2 %} d-none{% endif %}">{% if p.is_banned %}✖{% else %}{{ score-adjust }}{% endif %}</span>
+
       <span id="post-{{ p.base36id }}-score-down" class="score-down{% if voted!=-1 %} d-none{% endif %}">{% if p.is_banned %}✖{% else %}{{ score-1-adjust }}{% endif %}</span>
 
       {% if not p.board.downvotes_disabled %}

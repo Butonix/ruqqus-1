@@ -118,10 +118,10 @@ class Fuzzing:
 
 
         
-        real = self.score
+        real = int(self.score)
 
         if real <= 10:
-            return int(real)
+            return real
 
         k=0.01
         
