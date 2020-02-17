@@ -15,7 +15,7 @@ import requests
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-_version = "2.1.7"
+_version = "2.1.8"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -34,7 +34,7 @@ app.config["SESSION_COOKIE_SECURE"]=True
 app.config["SESSION_COOKIE_SAMESITE"]="Lax"
 app.config["PERMANENT_SESSION_LIFETIME"]=60*60*24
 app.config["SESSION_REFRESH_EACH_REQUEST"]=True
-session.permanent=True
+#session.permanent=True
 
 
 app.config["UserAgent"]="Ruqqus webserver ruqqus.com"
