@@ -212,6 +212,9 @@
           <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#yankPostModal" onclick="yank_postModal('{{ p.base36id }}','{{ p.author.username }}','{{ p.comment_count }}','{{ p.score_percent }}','{{ p.thumb_url }}','{{ p.title | js_str_escape }}','{{ p.author.permalink }}','{{ p.domain | js_str_escape }}','{{ p.age_string }}')" class="d-block"><i class="fas fa-hand-lizard"></i>Yank</a></li>
           {% endif %}
           {% if v %}
+	  {% if v.id==p.author_id and p.board_id not in [1, p.original_board_id] %}
+          <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/user/kick/{{ p.base36id }}'); window.location.reload(true)"><i class="fas fa-university"></i>Remove from +{{ p.board.name }}</a></li>
+	  {% endif %}
           {% if p.board.has_mod(v) %}
           <li class="list-group-item"><a class="d-block text-danger" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board.base36id }}/{{ p.base36id }}', callback=function(){window.location.reload(true)})"><i class="fas fa-times text-danger"></i>Kick</a></li>
           {% endif %}
@@ -319,9 +322,12 @@
 
                     {% if v %}
 
-                    {% if v.mods_anything and p.board.name == 'general' %}
+                    {% if v.mods_anything and p.board_id == 1 %}
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#yankPostModal" onclick="yank_postModal('{{ p.base36id }}','{{ p.author.username }}','{{ p.comment_count }}','{{ p.score_percent }}','{{ p.title | js_str_escape }}','{{ p.author.permalink }}','{{ p.domain | js_str_escape }}','{{ p.age_string }}')" class="d-block"><i class="fas fa-hand-lizard"></i>Yank</a></li>
                     {% endif %}
+	  {% if v.id==p.author_id and p.board_id not in [1, p.original_board_id] %}
+          <li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/user/kick/{{ p.base36id }}'); window.location.reload(true)"><i class="fas fa-university"></i>Remove from +{{ p.board.name }}</a></li>
+	  {% endif %}
 
                     {% if p.board.has_mod(v) %}
                     <li class="list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board.base36id }}/{{ p.base36id }}', callback=function(){window.location.reload(true)})"><i class="fas fa-times text-danger"></i>Kick</a></li>
