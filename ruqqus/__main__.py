@@ -15,7 +15,7 @@ import requests
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-_version = "2.1.6"
+_version = "2.1.7"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -27,13 +27,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
 app.config["SERVER_NAME"]=environ.get("domain", None)
-app.config["VERSION"]="0.1.0"
+app.config["SESSION_COOKIE_NAME"]="session_ruqqus"
+app.config["VERSION"]=_version
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config['SESSION_PERMANENT']=True
 app.config["SESSION_COOKIE_SECURE"]=True
 app.config["SESSION_COOKIE_SAMESITE"]="Lax"
 app.config["PERMANENT_SESSION_LIFETIME"]=60*60*24
 app.config["SESSION_REFRESH_EACH_REQUEST"]=True
+session.permanent=True
 
 
 app.config["UserAgent"]="Ruqqus webserver ruqqus.com"
@@ -132,7 +133,7 @@ def after_request(response):
                          "Origin, X-Requested-With, Content-Type, Accept, x-auth"
                          )
     response.headers.add("Cache-Control",
-                         "maxage=120")
+                         "maxage=600")
     response.headers.add("Strict-Transport-Security","max-age=31536000")
 
     #signups - hit discord webhook
