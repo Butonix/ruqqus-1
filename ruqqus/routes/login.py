@@ -126,6 +126,7 @@ def login_post():
     session["user_id"]=account.id
     session["session_id"]=token_hex(16)
     session["login_nonce"]=account.login_nonce
+    session.permanent=True
 
     check_for_alts(account.id)
 
@@ -371,6 +372,9 @@ def sign_up_post(v):
     session["session_id"]=token_hex(16)
 
     redir=request.form.get("redirect", None)
+
+    print(f"Signup event: @{new_user.username}")
+    
     if redir:
         return redirect(redir)
     else:

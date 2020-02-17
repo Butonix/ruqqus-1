@@ -154,6 +154,8 @@ def api_comment(v):
     db.add(vote)
     db.commit()
 
+    print(f"Content Event: @{v.username} comment {c.base36id}")
+
     return redirect(f"{c.permalink}?context=1")
 
 

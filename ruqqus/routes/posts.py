@@ -146,8 +146,10 @@ def submit_post(v):
 
         #check for embeds
         if domain_obj.embed_function:
-
-            embed=eval(domain_obj.embed_function)(url)
+            try:
+                embed=eval(domain_obj.embed_function)(url)
+            except:
+                embed=""
         else:
             embed=""
     else:
@@ -225,7 +227,7 @@ def submit_post(v):
     body=request.form.get("body","")
 
     #catch too-long body
-    if len(body)>6000:
+    if len(body)>5000:
 
         return render_template("submit.html",
                                v=v,
@@ -290,6 +292,8 @@ def submit_post(v):
     #expire the relevant caches: front page new, board new
     cache.delete_memoized(frontlist, sort="new")
     cache.delete_memoized(Board.idlist, board, sort="new")
+
+    print(f"Content Event: @{new_post.author.username} post {new_post.base36id}")
 
     return redirect(new_post.permalink)
     

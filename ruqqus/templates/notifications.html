@@ -1,97 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "home.html" %}
 
-<head>
+{% block PseudoSubmitForm %}{% endblock %}
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Sign into Ruqqus to view">
-  <meta name="author" content="">
+{% block navbar %}
+<div class="font-weight-bold py-3">Inbox</div>
+{% endblock %}
 
-  <title>Notifications - Ruqqus</title>
-
-  <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-  <!-- Ruqqus CSS -->
-
-  {% if v and v.referral_count and session.get("dark_mode_enabled") %}
-  <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css">
-  {% else %}
-  <link id="css-link" rel="stylesheet" href="/assets/style/main.css">
-  {% endif %}
-
-  <!-- Font Awesome -->
-  <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
-
-  {% block adminscripts %}
-  <script src="/assets/js/comment_modding.js"></script>
-  {% endblock %}
-
-  {% if v %}
-
-  <script>
-    function post(url, callback, errortext) {
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", url, true);
-      var form = new FormData()
-      form.append("formkey", "{{ v.formkey }}");
-      xhr.withCredentials=true;
-      xhr.onload=callback
-      xhr.onerror=function(){alert(errortext)}
-      xhr.send(form);
-    }
-    function formkey() {
-      return '{{ v.formkey }}';
-    }
-  </script>
-
-  <script src="/assets/js/voting.js"></script>
-  <script src="/assets/js/comment_replies.js"></script>
-
-  {% if v.admin_level %}
-  <script src="/assets/js/comment_modding.js"></script>
-  <script src="/assets/js/post_modding.js"></script>
-  {% endif %}
-
-  {% endif %}
-
-</head>
-
-<body id="notifications">
-
-  <!-- Navigation -->
-  {% include "header.html" %}
-
-  <!-- Page Content -->
-
-  <div class="container">
-
-    <div class="row justify-content-around">
-
-      <div class="col h-100">
-
-        <div class="mt-3 mt-md-0">
-          <h1>Inbox</h1>
-        </div>
-
-        <div class="bg-white border-md rounded">
-
-          <!-- Inbox -->
-
-          <div class="flex-row tab-bar sticky d-none">
-
-            <ul class="nav post-nav mr-auto">
-              <li class="nav-item">
-                <a class="nav-link active" href="#">Text Post</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-              </li>
-            </ul>
-
-          </div>
+{% block content %}
 
           <div class="p-md-3">
 
@@ -102,123 +17,38 @@
             {% else %}
             <div class="text-center py-7 py-md-8">
 
-              <img src="/assets/images/illustrations/messages.png" class="empty-state-img mb-3" alt="empty state">
+              <i class="fad fa-envelope-open text-muted mb-5" style="font-size: 5rem;"></i>
 
-              <div class="font-weight-bold text-muted">Nothing new in your inbox yet.</div>
+              <div class="font-weight-bold text-muted">No unread messages in your inbox.</div>
               <div class="text-small text-muted mb-3">When someone comments or replies, it will show up here.</div>
-              <a href="/" class="btn btn-primary">Go to frontpage</a>
+              <a href="/notifications?all=true" class="btn btn-primary">View all</a>
             </div>
 
             {% endfor %}
 
           </div>
 
-        </div>
-      </div>
-    </div>
-  </div>
+{% endblock %}
 
-  <!-- Right Sidebar (hidden on devices smaller than "large") -->
-
-  <div class="col sidebar text-left d-none ml-3">
-    <div class="sidebar-section sidebar-rules">
-      <div class="title">Ruqqus Rules</div>
-      <div class="body">
-        <ol class="pl-0">
-          <li>No racism</li>
-          <li>No doxxing, threats, or calls to violence</li>
-          <li>No trolling</li>
-          <li>No solicitation</li>
-          <li>Patriots only</li>
-        </ol>
-      </div>
-    </div>
-    <div class="sidebar-section sidebar-stats">
-      <div class="title">Stats</div>
-      <div class="body">
-        <div class="d-inline-block w-25">
-          <span style="font-size: 13px;font-weight: bold;">{{ 1 | total_users }}</span>
-          <small style="display: block;">users</small>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-
-</div>
-
-<!-- Clipboard Toast -->
-
-<div class="toast clipboard" id="toast-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
-  <div class="toast-body bg-success text-center text-white">
-    <i class="fas fa-check-circle mr-2"></i>Link copied to clipboard
-  </div>
-</div>
-
-<div class="toast clipboard" id="toast-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
-  <div class="toast-body bg-danger text-center text-white">
-    <i class="fas fa-exclamation-circle mr-2"></i>Unable to copy link
-  </div>
-</div>
-
-    {% include "flag_post_modal.html" %}
-    {% include "flag_comment_modal.html" %}
-
-    {% include "footer.html" %}
-
-    {% include "announcements_modal.html" %}
-
-    {% include "bootstrap.html" %}
-
-    <script src="/assets/js/collapse.js"></script>
-
-    {% if v %}
-    <script src="/assets/js/comment_form.js"></script>
-
-    <!-- Ruqqus Flag Comment & Submission -->
-    <script src="/assets/js/flag.js"></script>
-    {% endif %}
-
-    <!-- Initialize BS 4 tool tips -->
-
-    <script src="/assets/js/tooltips.js"></script>
-
-    <!-- Search bar icon JS -->
-
-    <script src="/assets/js/search_icon.js"></script>
-
-    <!-- ClipboardJS -->
-
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
-
-    <!-- Instantiate clipboard by passing a string selector -->
-    <script type="text/javascript">
-      var clipboard = new ClipboardJS('.copy-link');
-      clipboard.on('success', function(e) {
-
-        jQuery(function($) {
-          $('#toast-success').toast('show');
-        })
-        console.log(e);
-      });
-      clipboard.on('error', function(e) {
-
-        jQuery(function($) {
-          $('#toast-error').toast('show');
-        })
-        console.log(e);
-      });
-    </script>
-
-    {% if v and v.referral_count %}
-
-    <!-- Ruqqus Dark Mode Toggle -->
-
-    <script src="/assets/js/dark_mode.js"></script>
-
-    {% endif %}
-
-  </body>
-
-  </html>
+{% block pagenav %}
+{% if notifications %}
+    <nav aria-label="Page navigation">
+      <ul class="pagination pagination-sm mb-0">
+        {% if page>1 %}
+        <li class="page-item">
+          <small><a class="page-link" href="?all={{ request.args.get('all', '') }}&page={{ page-1 }}" tabindex="-1">Prev</a></small>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">Prev</span></li>
+        {% endif %}
+        {% if next_exists %}
+        <li class="page-item">
+          <small><a class="page-link" href="?all={{ request.args.get('all', '') }}&page={{ page+1 }}">Next</a></small>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+      </ul>
+    </nav>
+{% endif %}
+ {% endblock %}

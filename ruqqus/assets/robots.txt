@@ -27,3 +27,6 @@ Disallow: /
 
 User-Agent: SEMrushBot
 Disallow: /
+
+User-Agent: AhrefsBot
+Disallow: /

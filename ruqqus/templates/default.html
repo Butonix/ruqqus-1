@@ -120,13 +120,13 @@
         {% if v.notifications_count %}
 
         <li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-          <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="{{ v.notifications_count }} notifications"></i><span class="badge-count">{{ v.notifications_count }}</span></a>
+          <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="{{ v.notifications_count }} notifications"></i><span class="badge-count font-weight-bolder">{{ v.notifications_count }}</span></a>
         </li>
 
         {% elif v.notifications_count > 9 %}
 
         <li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-          <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="9+ notifications"></i><span class="badge-count" style="width: 26px;">9+</span></a>
+          <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="9+ notifications"></i><span class="badge-count font-weight-bolder" style="width: 24px;">9+</span></a>
         </li>
 
         {% else %}
@@ -143,7 +143,7 @@
 
         <li class="nav-item d-flex align-items-center justify-content-center text-center">
           <div class="dropdown">
-            <a class="nav-link bg-transparent py-0 pr-0" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+            <a class="nav-link bg-transparent py-0 pr-0" href="{{ v.permalink }}" role="button" id="dropdownMenuLink" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
             <div class="d-flex">
               <div><img src="{{ v.profile_url }}" class="profile-pic-35"></div>
@@ -265,7 +265,7 @@
         <a class="nav-link text-small-extra" href="/help/privacy">Privacy</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-small-extra" href="mailto:hello@ruqqus.com">Contact</a>
+        <a class="nav-link text-small-extra" href="/help/contact">Contact</a>
       </li>
       <li class="nav-item">
         <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">Github</a>
@@ -392,7 +392,7 @@
   {% endif %}
 
       <div class="sticky-63">
-        <ul class="list-inline text-center text-small mb-0">
+        <ul class="list-inline text-small mb-0">
           <li class="list-inline-item"><a href="/help/about" class="text-gray-500">About</a></li>
           <li class="list-inline-item d-none"><a href="mailto:hello@ruqqus.com" class="text-gray-500">Contact</a></li>
           <li class="list-inline-item"><a href="/help/terms" class="text-gray-500">Terms</a></li>
@@ -401,9 +401,11 @@
           <li class="list-inline-item"><a href="/help/press" class="text-gray-500">Press</a></li>
           <li class="list-inline-item"><a href="/help" class="text-gray-500">Help</a></li>
           <li class="list-inline-item"><a href="https://www.twitter.com/ruqqus" class="text-gray-500">Twitter</a></li>
-          <li class="list-inline-item"><a href="https://ruqqus.org/contribute" class="text-gray-500">Github</a></li>
-          <li class="list-inline-item"><span class="text-muted">© 2020 Ruqqus, LLC</span></li>
+          <li class="list-inline-item"><a href="https://github.com/ruqqus/ruqqus" class="text-gray-500">Github</a></li>
+          <li class="list-inline-item"><a href="/discord" class="text-gray-500">Discord</a></li>
         </ul>
+
+        <span class="text-muted text-small-extra">© 2020 Ruqqus, LLC</span>
       </div>
 
 </div>

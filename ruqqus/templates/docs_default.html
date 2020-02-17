@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   {% block title %}
-  <title>Ruqqus - The social platform for uncensored discourse</title>
+  <title>Ruqqus - Awesome online communities, without censorship</title>
   <meta name="description" content="The independent social platform">
   {% endblock %}
 
@@ -69,19 +69,40 @@
 	<div class="col sidebar d-none d-lg-block p-3">
 
 	<div class="sidebar-section">
-			<div class="title">Related articles</div>
+			<div class="title">Help</div>
       <div class="body">
-			<ul class="no-bullets pl-0 mb-0">
-				<li class="list-item">
-					<a href="/help/privacy">Privacy policy</a>
-				</li>
-				<li class="list-item">
-					<a href="/help/terms">Terms</a>
-				</li>
-				<li class="list-item">
-					<a href="/legal">Legal request</a> 
-				</li>
-			</ul>
+{% filter markdown %}	
+**General Information**
+
+* [About](/help/about)	
+* [FAQ](/help/faq)	
+* [Our third-party service providers](/help/services)	
+* [Guild Siege](/help/siege)
+* [Contact](/help/contact)
+
+**Account Cosmetics**
+
+* [Badges](/help/badges)	
+* [Titles](/help/titles)	
+
+**Ruqqus Policies**	
+
+* [Terms of service](/help/terms)	
+* [Content Policy](/help/rules)	
+* [Privacy Policy](/help/privacy)	
+* [Legal Policies](/help/legal)	
+
+**Legal Requests**	
+
+* [Submit a Legal Request](/legal)	
+* [Submit a DMCA takedown request](/help/dmca)	
+* [Submit a DMCA counter-request](/help/counter_dmca)	
+
+**Press**
+
+* [Press Resources](/help/press)
+
+{% endfilter %}	
       </div>
 	</div>
 

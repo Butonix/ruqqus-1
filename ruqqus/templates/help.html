@@ -1,12 +1,25 @@
 {% extends "docs_default.html" %}	
 
-{% block sidebarblock %}{% endblock %}	
-{% block sidebarLeftblock %}{% endblock %}	
+{% block sidebarblock %}{% endblock %}
 
 {% block title %}	
 <title>Ruqqus - Help</title>	
 <meta name="description" content="Ruqqus Help">	
 {% endblock %}	
+
+{% block sidebarLeftblock %}
+<div class="col sidebar d-none d-lg-block p-3">
+
+	<div class="sidebar-section">
+			<div class="title">Help</div>
+      <div class="body">
+	<a href="/">Back to Ruqqus</a>
+      </div>
+	</div>
+
+	</div>
+
+{% endblock %}
 
 {% block content %}	
 {% filter markdown %}	
@@ -18,6 +31,7 @@
 * [FAQ](/help/faq)	
 * [Our third-party service providers](/help/services)	
 * [Guild Siege](/help/siege)
+* [Contact Ruqqus](/help/contact)
 
 ## Account Cosmetics	
 
@@ -39,7 +53,7 @@
 
 ## Press	
 
-* [Press Resources](/help/press)	
+* [Press Resources](/help/press)
 
 {% endfilter %}	
 {% endblock %}	

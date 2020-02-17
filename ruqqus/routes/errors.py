@@ -2,7 +2,7 @@ from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.session import *
 from flask import *
 import time
-from ruqqus.__main__ import app
+from ruqqus.__main__ import db, app
 
 #Errors
 @app.errorhandler(401)
@@ -53,6 +53,7 @@ def error_451(e, v):
 @app.errorhandler(500)
 @auth_desired
 def error_500(e, v):
+    db.rollback()
     return render_template('errors/500.html', e=e, v=v), 500
 
 

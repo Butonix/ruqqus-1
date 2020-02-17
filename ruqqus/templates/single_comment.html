@@ -8,7 +8,7 @@
 {% endif %}
 
 {% if standalone %}
-<div class="post-info">
+<div class="post-info mt-3">
 	{% if c.parent %}
     <span class="align-top"><span class="font-weight-bold"><a href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span> in <a href="{{ c.board.permalink }}">+{{ c.board.name }}</a></span>
     {% else %}
@@ -17,7 +17,7 @@
 </div>
 {% endif %}
 
-<div id="comment-{{ c.base36id }}" class="comment rounded">
+<div id="comment-{{ c.base36id }}" class="comment rounded{% if standalone %} mt-0{% endif %}">
 
     <span class="mr-2 d-block d-md-none"><a href="{{ c.author.permalink }}"><img src="{{ c.author.profile_url }}" class="profile-pic-25"></a></span>
 
@@ -113,7 +113,9 @@
                 </li>
                 {% endif %}
                 {% endif %}
-                <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-link"></i><span>Copy link</span></a>
+		<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ c.permalink | full_link }}"><i class="fas fa-link"></i>Permalink</a>
+		</li>
+                <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i><span>Copy link</span></a>
                 </li>
                 <li class="list-inline-item d-none d-md-inline-block">
                     <div class="dropdown show">
@@ -194,11 +196,11 @@
 <div id="reply-to-{{ c.base36id }}"></div>
 
 {% if render_replies %}
-{% if level==8 and c.replies %}
+{% if level==4 and c.replies %}
 
 
 <div id="morecomment-{{ c.base36id }}" class="mt-2 more-comments text-small">
-    <a href="{{ c.permalink }}">More comments →</a>
+    <a href="{{ c.permalink }}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 </div>
 
 {% else %}
@@ -223,7 +225,8 @@
       </div>
       <div class="modal-body">
           <ul class="list-group comment-actions">
-            <li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-link"></i><span>Share</span></a>
+                <li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i><span>Copy Link</span></a></li>
+		<li class="list-group-item"><a href="{{ c.permalink | full_link }}"><i class="fas fa-link"></i>Permalink</a></li>
                 <li class="list-group-item"><a class="d-block" href="{{ c.parent.permalink }}"><i class="fas fa-dna"></i>Parent</a></li>
                 <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
 
