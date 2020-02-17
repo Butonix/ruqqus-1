@@ -829,9 +829,11 @@ label.terms {
     display:none;
 }
 
+.dropdown-meta,
 .dropdown-item {
     padding: 0.5rem 1rem;
     border-radius: $border-radius;
+    color: $black;
 }
 
 .dropdown .dropdown-menu .dropdown-meta {
@@ -2694,7 +2696,6 @@ ul.comment-section {
 
 .profile-actions .dropdown-item {
     font-size: 13px;
-    color: $black;
 }
 
 .profile-actions .dropdown .dropdown-menu .dropdown-item .fa, .profile-actions .dropdown .dropdown-menu .dropdown-item .fas, .profile-actions .dropdown .dropdown-menu .dropdown-item .far {
