@@ -72,6 +72,12 @@
 
     var old  = commentBox.value;
 
-    commentBox.value = old + &#13;&#10; + gif;
+    commentBox.value = old + gif;
 
   }
+
+  // When GIF keyboard is hidden, hide all GIFs
+
+  $('#gifModal').on('hidden.bs.modal', function (e) {
+  
+})
