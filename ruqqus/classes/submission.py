@@ -52,7 +52,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     post_public=Column(Boolean, default=True)
     score_hot=Column(Float, default=0)
     score_disputed=Column(Float, default=0)
-    score_top=Column(Float, default=0)
+    score_top=Column(Float, default=1)
     score_activity=Column(Float, default=0)
 
     approved_by=relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id")
