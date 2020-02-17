@@ -42,7 +42,7 @@
       success: function(response) {
         console.log(response)
         var max = response.data.length - 1 //length of response, minus 1 (cuz array starts at index 0)
-        console.log('response.data.length is ', max)
+        console.log('response.data.length is ', max) 
         //var randomNumber = Math.round(Math.random() * max) //random number between 0 and max -1
         var randomNumber = Math.round(Math.random() * 6) //random number between 0 and max -1
         // GIF array
