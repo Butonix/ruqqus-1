@@ -146,8 +146,10 @@ def submit_post(v):
 
         #check for embeds
         if domain_obj.embed_function:
-
-            embed=eval(domain_obj.embed_function)(url)
+            try:
+                embed=eval(domain_obj.embed_function)(url)
+            except:
+                embed=""
         else:
             embed=""
     else:
