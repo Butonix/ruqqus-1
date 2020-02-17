@@ -7,6 +7,7 @@ from .get import *
 
 _allowed_tags=tags=['b',
                     'blockquote',
+                    'br',
                     'code',
                     'del',
                     'em',
