@@ -482,7 +482,7 @@ class User(Base, Stndrd):
         next_exists=(len(comments)==26)
         comments=comments[0:25]
 
-        for n in notifications:
+        for n in [x for x in notifications][0:25]:
             if not n.read:
                 n.read=True
                 db.add(n)
