@@ -72,6 +72,6 @@
 
     var old  = commentBox.value;
 
-    commentBox.value = old + gif;
+    commentBox.value = old + &#13;&#10; + gif;
 
   }
