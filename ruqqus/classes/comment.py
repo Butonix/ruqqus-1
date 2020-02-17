@@ -34,7 +34,7 @@ class Comment(Base, Age_times, Scores, Stndrd):
     creation_ip=Column(String(64), default='')
     score_disputed=Column(Float, default=0)
     score_hot=Column(Float, default=0)
-    score_top=Column(Integer, default=0)
+    score_top=Column(Integer, default=1)
 
     post=relationship("Submission", lazy="subquery")
     flags=relationship("CommentFlag", lazy="dynamic", backref="comment")
