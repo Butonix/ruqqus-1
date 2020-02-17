@@ -8,7 +8,7 @@
 {% endif %}
 
 {% if standalone %}
-<div class="post-info">
+<div class="post-info mt-3">
 	{% if c.parent %}
     <span class="align-top"><span class="font-weight-bold"><a href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span> in <a href="{{ c.board.permalink }}">+{{ c.board.name }}</a></span>
     {% else %}
@@ -17,7 +17,7 @@
 </div>
 {% endif %}
 
-<div id="comment-{{ c.base36id }}" class="comment rounded">
+<div id="comment-{{ c.base36id }}" class="comment rounded{% if standalone %} mt-0{% endif %}">
 
     <span class="mr-2 d-block d-md-none"><a href="{{ c.author.permalink }}"><img src="{{ c.author.profile_url }}" class="profile-pic-25"></a></span>
 
