@@ -83,6 +83,7 @@
                 <i class="fas fa-university text-muted mb-3" data-toggle="tooltip" data-placement="right" title="Your guilds" style="font-size: 1rem;"></i>
               </div>
               <ul class="no-bullets guild-recommendations-list pl-0 sidebar-collapsed-hidden">
+                {% if v and v.mods_anything %}
                 {% for board in v.boards_subscribed[0:5] %}
                 <li class="guild-recommendations-item">
                   <a href="{{ board.permalink }}">
@@ -97,6 +98,22 @@
                   </a>
                 </li>
                 {% endfor %}
+                {% elif v and not v.mods_anything %}
+                {% for board in v.boards_subscribed[0:8] %}
+                <li class="guild-recommendations-item">
+                  <a href="{{ board.permalink }}">
+                    <div class="d-flex">
+                      <div>
+                        <img src="{{ board.profile_url }}" class="profile-pic-30 mr-2">
+                      </div>
+                      <div class="my-auto">
+                        <div class="text-black font-weight-normal">+{{ board.name }}</div>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                {% endfor %}
+                {% endif %}
               </ul>
               <a class="btn btn-outline-gray-500 btn-block btn-sm text-small sidebar-collapsed-hidden" href="/browse">Discover more</a>
               <!-- Show this list when sidebar is collapsed -->
