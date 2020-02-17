@@ -1,4 +1,3 @@
-sass ruqqus/assets/style/main.scss ruqqus/assets/style/main.css
 bumpversion patch --allow-dirty
 git add .
 git commit -m "patch build"
