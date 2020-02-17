@@ -870,9 +870,12 @@ def mod_board_color(bid, board, v):
     db.add(board)
     db.commit()
 
-    cache.delete_memoized(board_css, board.name)
-    cache.delete_memoized(board_dark_css, board.name)
-
+    try:
+        cache.delete_memoized(board_css, board.name)
+        cache.delete_memoized(board_dark_css, board.name)
+    except:
+        pass
+    
     return redirect(f"/+{board.name}/mod/appearance?msg=Success")
 
 @app.route("/mod/approve/<bid>/<username>", methods=["POST"])
