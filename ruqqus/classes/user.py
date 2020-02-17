@@ -476,9 +476,11 @@ class User(Base, Stndrd):
         if not include_read:
             notifications=notifications.filter_by(read=False)
 
-        notifications = notifications.order_by(text("id desc")).offset(25*(page-1)).limit(25)
+        notifications = notifications.order_by(text("id desc")).offset(25*(page-1)).limit(26)
 
         comments=[n.comment for n in notifications]
+        next_exists=(len(comments)==26)
+        comments=comments[0:25]
 
         for n in notifications:
             if not n.read:
@@ -486,7 +488,11 @@ class User(Base, Stndrd):
                 db.add(n)
                 db.commit()
 
-        return render_template("notifications.html", v=self, notifications=comments)
+        return render_template("notifications.html",
+                               v=self,
+                               notifications=comments,
+                               next_exists=next_exists,
+                               page=page)
     
     @property
     def notifications_count(self):
