@@ -79,5 +79,13 @@
   // When GIF keyboard is hidden, hide all GIFs
 
   $('#gifModal').on('hidden.bs.modal', function (e) {
+
+    document.getElementById('gifSearch').value = null;
+
+    // container var
+
+    var container = document.getElementById('GIFs');
+
+    container.innerHTML = '';
   
 })
