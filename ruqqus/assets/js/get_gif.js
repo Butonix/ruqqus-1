@@ -37,7 +37,7 @@
 
           console.log('searchTerm is: ', searchTerm)
     $.ajax({
-      url: "//api.giphy.com/v1/gifs/search?q=" + searchTerm + "&limit=13" + "&api_key=eOTkZX92KQM80g9NcBsq0heqZxZSVP86",
+      url: "//api.giphy.com/v1/gifs/search?q=" + searchTerm + "&limit=16" + "&api_key=eOTkZX92KQM80g9NcBsq0heqZxZSVP86",
       type: "GET",
       success: function(response) {
         console.log(response)
@@ -49,7 +49,7 @@
         var gifURL = [];
 
         // loop for fetching mutliple GIFs and creating the card divs
-        for (var i = 0; i <= 12; i++) {
+        for (var i = 0; i <= 16; i++) {
           gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
           container.innerHTML += ('<div class="card bg-secondary gif-keyboard-option" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\')"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
         }
