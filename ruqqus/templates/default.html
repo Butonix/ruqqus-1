@@ -393,15 +393,14 @@
   </div>
   {% endif %}
 
-{% include "footer.html" %}
-
 </div>
 {% endblock %}
 </div>
 </div>
 
-</div>
-</div>
+{% block footer %}
+{% include "footer.html" %}
+{% endblock %}
 
 {% block actionsModal %}
 {% endblock %}
