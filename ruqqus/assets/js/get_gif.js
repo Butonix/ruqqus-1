@@ -37,7 +37,7 @@
 
           console.log('searchTerm is: ', searchTerm)
     $.ajax({
-      url: "//api.giphy.com/v1/gifs/search?q=" + searchTerm + "&limit=12" + "&api_key=eOTkZX92KQM80g9NcBsq0heqZxZSVP86",
+      url: "//api.giphy.com/v1/gifs/search?q=" + searchTerm + "&limit=13" + "&api_key=eOTkZX92KQM80g9NcBsq0heqZxZSVP86",
       type: "GET",
       success: function(response) {
         console.log(response)
