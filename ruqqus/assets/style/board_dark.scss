@@ -2408,13 +2408,12 @@ ul.comment-section {
     min-height: 84px;
 }
 
-.comment-write textarea,
-.form-control[readonly] {
-    background: $light;
+.comment-write textarea, {
+    background: $white;
 }
 
 .comment-write textarea:hover,
-.form-control[readonly] {
+.form-control[readonly]:hover {
     background: $gray-100
 }
 
