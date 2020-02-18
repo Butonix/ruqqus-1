@@ -9,7 +9,7 @@
 
     // categories var
 
-    var cats = document.getElementById('cats');
+    var cats = document.getElementById('GIFcats');
 
     // container var
 
@@ -24,20 +24,16 @@
     container.innerHTML = '';
 
     if (searchTerm == null) {
-      container.innerHTML = '';
+      container.innerHTML = 'jinja template cats.html';
 
       backBtn.innerHTML = null;
 
       cancelBtn.innerHTML = null;
-
-      cats.classList.toggle("d-none");
     }
     else {
       backBtn.innerHTML = '<button class="btn btn-link pl-3 pr-0" id="gifs-back-btn" onclick="getGif();"><i class="fas fa-long-arrow-left text-muted"></i></button>';
 
       cancelBtn.innerHTML = '<button class="btn btn-link pl-0 pr-3" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
-
-      cats.classList.toggle("d-none");
 
           console.log('searchTerm is: ', searchTerm)
     $.ajax({
@@ -86,20 +82,10 @@
 
     document.getElementById('gifSearch').value = null;
 
-    // cats div
-
-    var cats = document.getElementById('cats');
-
     // container var
 
     var container = document.getElementById('GIFs');
 
     container.innerHTML = '';
-
-    // if categories are hidden, remove d-none css selector
-
-    if (cats.classList.contains("d-none")) {
-      cats.classList.toggle("d-none");
-    }
   
 })
