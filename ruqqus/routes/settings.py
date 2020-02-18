@@ -173,6 +173,7 @@ def settings_dark_mode(x, v):
         session["dark_mode_enabled"]=False
         abort(403)
     else:
+        print(f"current cookie is {session.get('dark_mode_enabled')}")
         session["dark_mode_enabled"]=bool(x)
         print(f"set dark mode @{v.username} to {x}")
         return "",204
