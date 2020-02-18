@@ -23,7 +23,7 @@
 
     container.innerHTML = '';
 
-    if (searchTerm !== null && searchTerm !== '') {
+    if (searchTerm == null && searchTerm == '') {
       container.innerHTML = 'jinja template cats.html';
 
       backBtn.innerHTML = null;
