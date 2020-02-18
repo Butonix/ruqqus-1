@@ -2414,7 +2414,7 @@ ul.comment-section {
 }
 
 .comment-write textarea:hover,
-.form-control[readonly] {
+.form-control[readonly]:hover {
     background: $gray-100
 }
 
