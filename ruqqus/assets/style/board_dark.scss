@@ -7,7 +7,7 @@ $secondary: #b0b0aa;
 $danger: #E53E3E;
 $white: #3a3a3a;
 $black: #ffffff;
-$light: #23183E;
+$light: #232323;
 $success: #38A169;
 $muted: #6c6d74;
 $info: #168EEA;
@@ -2406,7 +2406,7 @@ ul.comment-section {
 }
 
 .comment-write textarea {
-    background: $white;
+    background: $light;
 }
 
 .comment-write textarea:hover {
