@@ -1,6 +1,8 @@
   function getGif(searchTerm) {
 
-    if (searchTerm.length >= 1 && searchTerm != null) {
+    var query = searchTerm;
+
+    if (query.length >= 1 && searchTerm != null) {
       document.getElementById('gifSearch').value = searchTerm;
     }
     else {
@@ -23,7 +25,7 @@
 
     container.innerHTML = '';
 
-    if (searchTerm.length >= 1 && searchTerm != null) {
+    if (query.length >= 1 && searchTerm != null) {
       container.innerHTML = 'jinja template cats.html';
 
       backBtn.innerHTML = null;
