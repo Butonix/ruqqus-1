@@ -35,12 +35,12 @@
 
       cancelBtn.innerHTML = '<button class="btn btn-link pl-0 pr-3" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
 
-      console.log('searchTerm is: ', searchTerm)
-      $.ajax({
-        url: "//api.giphy.com/v1/gifs/search?q=" + searchTerm + "&limit=16" + "&api_key=eOTkZX92KQM80g9NcBsq0heqZxZSVP86",
-        type: "GET",
-        success: function(response) {
-          console.log(response)
+          console.log('searchTerm is: ', searchTerm)
+    $.ajax({
+      url: "//api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=eOTkZX92KQM80g9NcBsq0heqZxZSVP86",
+      type: "GET",
+      success: function(response) {
+        console.log(response)
         var max = response.data.length - 1 //length of response, minus 1 (cuz array starts at index 0)
         console.log('response.data.length is ', max)
         //var randomNumber = Math.round(Math.random() * max) //random number between 0 and max -1
@@ -56,9 +56,7 @@
         console.log(container);
       },
       error: function(e) {
-        jQuery(function($) {
-          $('#toast-error-gif').toast('show');
-        })
+        alert(e);
       }
     });
     };
@@ -82,24 +80,12 @@
 
   $('#gifModal').on('hidden.bs.modal', function (e) {
 
-    // UI buttons
-
-    var backBtn = document.getElementById('gifs-back-btn');
-
-    var cancelBtn = document.getElementById('gifs-cancel-btn');
-
-    // Clear search value
-
     document.getElementById('gifSearch').value = null;
 
     // container var
 
     var container = document.getElementById('GIFs');
 
-    container.innerHTML = null;
-
-    backBtn.innerHTML = null;
-
-    cancelBtn.innerHTML = null;
-
-  })
+    container.innerHTML = '';
+  
+})
