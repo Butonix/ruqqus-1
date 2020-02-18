@@ -778,7 +778,7 @@ label.color-radio span {
 
 .form-control:hover {
     color: $black;
-    background-color: #ffffff;
+    background-color: $white;
     outline: 0;
     border-color: $primary;
     box-shadow: none;
@@ -2409,6 +2409,10 @@ ul.comment-section {
     background: $white;
 }
 
+.comment-write textarea:hover {
+    background: $gray-100
+}
+
 .comment-write .comment-format {
     display: none;
 }
@@ -3359,10 +3363,6 @@ body, #settings, #notifications, #submit{
 
 .comment-section {
     background-color: $white;
-}
-
-.comment-write textarea {
-    background-color: $gray-100;
 }
 
 .comment-section > .comment {
