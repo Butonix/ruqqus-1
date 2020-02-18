@@ -3,15 +3,21 @@ function switch_css() {
   dswitch = document.getElementById("dark-switch");
 
   if (css.href.endsWith("/assets/style/main.css")) {
-    css.href="/assets/style/main_dark.css";
-    post("/settings/dark_mode/1");
-    dswitch.classList.remove("fa-toggle-off");
-    dswitch.classList.add("fa-toggle-on");
+    post("/settings/dark_mode/1",
+      callback=function(){
+        css.href="/assets/style/main_dark.css";
+        dswitch.classList.remove("fa-toggle-off");
+        dswitch.classList.add("fa-toggle-on");
+      }
+    );
   }
   else {
-    css.href="/assets/style/main.css";
-    post("/settings/dark_mode/0");
-    dswitch.classList.remove("fa-toggle-on");
-    dswitch.classList.add("fa-toggle-off");
+    post("/settings/dark_mode/0",
+      callback=function(){
+        css.href="/assets/style/main.css";
+        dswitch.classList.remove("fa-toggle-on");
+        dswitch.classList.add("fa-toggle-off");
+      }
+    );
   }
 }
