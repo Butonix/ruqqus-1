@@ -148,9 +148,9 @@ html {
   }
 
 body {
-    color: $white;
+    color: $black;
     padding-top: 49px;
-    background-color: $gray-300;
+    background-color: $white;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -2414,7 +2414,7 @@ ul.comment-section {
 }
 
 .comment-write textarea:hover,
-.form-control[readonly]:hover {
+.form-control[readonly] {
     background: $gray-100
 }
 
