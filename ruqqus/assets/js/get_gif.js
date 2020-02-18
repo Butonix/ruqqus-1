@@ -80,12 +80,24 @@
 
   $('#gifModal').on('hidden.bs.modal', function (e) {
 
+    // UI buttons
+
+    var backBtn = document.getElementById('gifs-back-btn');
+
+    var cancelBtn = document.getElementById('gifs-cancel-btn');
+
+    // Clear search value
+
     document.getElementById('gifSearch').value = null;
 
     // container var
 
     var container = document.getElementById('GIFs');
 
-    container.innerHTML = '';
+    container.innerHTML = null;
+
+    backBtn.innerHTML = null;
+
+    cancelBtn.innerHTML = null;
   
 })
