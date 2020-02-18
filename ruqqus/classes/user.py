@@ -106,7 +106,7 @@ class User(Base, Stndrd):
     def age(self):
         return int(time.time())-self.created_utc
         
-    @cache.memoize(timeout=60)
+    @cache.memoize(timeout=300)
     def idlist(self, sort="hot", page=1, only=None, t=None):
 
         

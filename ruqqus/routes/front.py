@@ -26,7 +26,7 @@ def trending_boards(n=5):
 
     return [(x, x.subscriber_count) for x in boards]
 
-@cache.memoize(timeout=60)
+@cache.memoize(timeout=300)
 def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None):
 
     #cutoff=int(time.time())-(60*60*24*30)
