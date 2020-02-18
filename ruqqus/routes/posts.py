@@ -118,7 +118,8 @@ def submit_post(v):
     #check for duplicate
     dup = db.query(Submission).filter_by(title=title,
                                          author_id=v.id,
-                                         url=url
+                                         url=url,
+                                         is_deleted=False
                                          ).first()
 
     if dup:
@@ -233,7 +234,7 @@ def submit_post(v):
                                v=v,
                                error="2000 character limit for text body",
                                title=title,
-                               text=body[0:6000],
+                               text=body[0:5000],
                                url=url,
                                b=get_guild(request.form.get("board","general"))
                                ), 400
