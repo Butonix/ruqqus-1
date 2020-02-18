@@ -174,6 +174,7 @@ def settings_dark_mode(x, v):
         abort(403)
     else:
         session["dark_mode_enabled"]=bool(x)
+        print(f"set dark mode @{v.username} to {x}")
         return "",204
         
 @app.route("/settings/log_out_all_others", methods=["POST"])
