@@ -2407,11 +2407,13 @@ ul.comment-section {
     min-height: 84px;
 }
 
-.comment-write textarea {
+.comment-write textarea,
+.form-control[readonly] {
     background: $light;
 }
 
-.comment-write textarea:hover {
+.comment-write textarea:hover,
+.form-control[readonly] {
     background: $gray-100
 }
 
