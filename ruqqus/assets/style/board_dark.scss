@@ -706,12 +706,14 @@ label.color-radio span {
 
 .form-inline.search .form-control:active, .form-inline.search .form-control:focus {
     background-color: $white;
+    color: $black;
 }
 
 .form-inline.search .form-control,
 .form-control[readonly] {
     background-color: $white;
     font-size: $font-size-base;
+    color: $black;
 }
 
 .form-inline.search .input-group-append .input-group-text .fa.fa-search {
