@@ -708,7 +708,8 @@ label.color-radio span {
     background-color: $white;
 }
 
-.form-inline.search .form-control {
+.form-inline.search .form-control,
+.form-control[readonly] {
     background-color: $light;
     font-size: $font-size-base;
 }
