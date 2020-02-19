@@ -129,8 +129,13 @@
 									<label for="board" class="mt-3">Post in guild</label>
 									<input class="form-control" name="board" placeholder="+general" value="memes">
 									
+
+									{% if v.admin_level %}
+
 									<label for="username" class="mt-3">Post as</label>
 									<input type="text" class="form-control" name="username">
+
+									{% endif %}
 									
 
 
