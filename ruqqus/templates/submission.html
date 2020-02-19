@@ -202,6 +202,10 @@
 <script src="/assets/js/txt_formatting.js"></script>
 {% endblock %}
 
+{% block gifKeyboard %}
+<script src="/assets/js/get_gif.js"></script>
+{% endblock %}
+
 {% block actionsModal %}
 <!-- Post Actions Modal -->
 <div class="modal fade d-md-none" id="actionsModal" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
@@ -265,7 +269,7 @@
 
         {% if p.thumb_url and not p.embed_url %}
         <div class="card-header bg-transparent border-0 d-none d-md-flex flex-row flex-nowrap pl-3 p-0">
-          <a href="{{ p.url }}" target="_blank" rel="nofollow"><img src="{{ p.thumb_url }}" class="post-img d-none d-md-block" alt="Unable to anonymously load image"></a>
+          <a href="{{ p.url }}" target="_blank" rel="nofollow" data-toggle="modal" data-target="#expandImageModal"><img src="{{ p.thumb_url }}" class="post-img d-none d-md-block" alt="Unable to anonymously load image" onclick="expandDesktopImage('{{ p.thumb_url }}','{{ p.url }}')"></a>
         </div>
         {% endif %}
 
@@ -511,7 +515,8 @@
           <small class="format pl-0"><i class="fas fa-bold" onclick="makeBold()" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Bold"></i></small>
           <small class="format"><i class="fas fa-italic" onclick="makeItalics()" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Italicize"></i></small>
           <small class="format"><i class="fas fa-quote-right" onclick="makeQuote()" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Quote"></i></small>
-          <small class="format"><i class="fas fa-link"></i></small>
+          <small class="format"><i class="fas fa-image" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Add GIF"></i></small> 
+          <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
           <button form="reply-to-{{ p.fullname }}" class="btn btn-primary btn ml-auto">Comment</button>
         </div>
       </form>
@@ -563,4 +568,12 @@
 
 {% block guildModal %}
 {% include "guild_details_modal.html" %}
+{% endblock %}
+
+{% block GIFtoast %}
+  <div class="toast" id="toast-error-gif" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+    <div class="toast-body bg-danger text-center text-white">
+      <i class="fas fa-exclamation-circle mr-2"></i>Unable to snag gifs :(
+    </div>
+  </div>
 {% endblock %}

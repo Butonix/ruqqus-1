@@ -409,6 +409,9 @@
 {% block guildModal %}
 {% endblock %}
 
+{% block GIFtoast %}
+{% endblock %}
+
 <!-- Clipboard Toast -->
 
 <div class="toast clipboard" id="toast-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
@@ -426,12 +429,15 @@
 {% if v %}
 {% include "flag_post_modal.html" %}
 {% include "flag_comment_modal.html" %}
+{% include "gif_modal.html" %}
 {% endif %}
 
 {% if v and v.mods_anything %}
 {% include "kick_post_modal.html" %}
 {% include "yank_post_modal.html" %}
 {% endif %}
+
+{% include "expanded_image_modal.html" %}
 
 {% include "announcements_modal.html" %}
 {% include "bootstrap.html" %}
@@ -501,13 +507,23 @@
 <script src="/assets/js/yank.js"></script>
 {% endif %}
 
+<!-- Expand images on desktop via modal -->
+
+<script src="/assets/js/expand_desktop_image.js"></script>
+
 {% block enlargeThumbJS %}
+{% endblock %}
+
+{% block expandDesktopImageJS %}
 {% endblock %}
 
 {% block embedJS %}
 {% endblock %}
 
 {% block formatJS %}
+{% endblock %}
+
+{% block gifKeyboard %}
 {% endblock %}
 
 </body>
