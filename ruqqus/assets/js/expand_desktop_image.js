@@ -4,8 +4,6 @@ function expandDesktopImage(image) {
 
 var attribution = document.getElementById("modal-image-attribution");
 
-$("#expandImageModal").modal("show");
-
 document.getElementById("desktop-expanded-image").src = image;
 
 document.getElementById("desktop-expanded-image-link").href = image;
