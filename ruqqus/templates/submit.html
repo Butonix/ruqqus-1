@@ -112,7 +112,9 @@
               			<label for="" class="mt-3">Image Upload</label>
 <div class="text-muted text-small">Optional if you have text. Overrides link.</div>                 
 				         <div class="d-block">
-    <label class="btn btn-secondary" for="file-upload"><div id="filename-show">Select Image</div><input id="file-upload" type="file" name="file" class="" onchange=" document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerHTML=document.getElementById('file-upload').files[0].name" hidden=""></label></div>					<label for="body" class="mt-3">Text</label>
+    <label class="btn btn-secondary" for="file-upload"><div id="filename-show">Select Image</div><input id="file-upload" type="file" name="file" class="" onchange="if (!window.__cfRLUnblockHandlers) return false;  document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerHTML=document.getElementById('file-upload').files[0].name; document.getElementById('image-warning').classList.remove('d-none');" hidden=""></label></div>					<label for="body" class="mt-3">Text</label>
+
+<div id="image-warning" class="text-small text-danger">Your uploaded image will be public, but the URL will not be easily guessable. Anyone with the link will be able to view it.</div>
                                
 
 									<div class="input-group">
