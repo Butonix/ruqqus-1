@@ -116,21 +116,12 @@
     <div id="post-{{ p.base36id }}" class="card border-0 mt-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
       <div class="d-flex flex-row-reverse flex-nowrap justify-content-end">
 
-        {% if p.thumb_url and not p.embed_url %}
-        <div class="card-header bg-transparent border-0 d-none d-md-flex flex-row flex-nowrap p-0">
-          <a href="{{ p.url }}" target="_blank" rel="nofollow"><img src="{{ p.thumb_url }}" class="post-img d-none d-md-block" alt="Unable to anonymously load image"></a>
-        </div>
-        {% endif %}
-
         <div class="card-block w-100 my-md-auto">
 
           <div class="post-meta text-left d-none d-md-block mb-md-2"><span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by [deleted by user] · ({{ p.domain }}){% if not p.is_public %} · <i class="fas fa-eye-slash text-warning" data-toggle="tooltip" data-placement="bottom" title="Private post, visible because {{ p.visibility_reason(v) }}"></i>{% endif %}{% if p.edited_utc %} · Edited <span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ edited_date }}">{{ p.edited_string }}</span>{% endif %}{% if p.over_18 %} · <span class="badge badge-danger text-small-extra">nsfw</span>{% endif %}{% if p.thumb_url %} · <span id="score-percent">{{ p.score_percent }}% upvoted</span>{% endif %}</div>
 
-          {% if p.url %}
-          <h1 class="card-title post-title text-left mb-md-3"><a target="_blank" href="{{ p.url }}">{{ p.title | safe }}</a></h1>
-          {% else %}
           <h1 class="card-title post-title text-left mb-md-3">{{ p.title | safe }}</h1>
-          {% endif %}
+
 
           <div class="post-meta text-left d-block d-md-none mb-3">{% if p.over_18 %}<span class="text-danger"><i class="far fa-exclamation-triangle text-small mr-1"></i>nsfw</span> · {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by [deleted by user]{% if p.edited_utc %} · Edited <span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ edited_date }}">{{ p.edited_string }}</span>{% endif %}</div>
 
@@ -183,14 +174,6 @@
 
           </div>
 
-          <div class="row no-gutters d-block d-md-none">
-            <div class="col">
-             <a target="_blank" href="{{ p.url }}">{% if p.is_image and p.domain_obj and p.domain_obj.show_thumbnail %}<img src="{{ p.url }}" class="img-fluid" alt="Unable to anonymously load image">
-               <div class="post-img-overlay d-block d-md-none">{{ p.domain|truncate(30, True) }}<i class="fas fa-external-link-alt text-small ml-2"></i></div>
-               {% endif %}
-             </a>
-           </div>
-         </div>
 
        </div>
 
