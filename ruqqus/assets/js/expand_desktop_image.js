@@ -16,7 +16,7 @@ if (image.includes("i.ruqqus.com")) {
 }
 else if (image.includes("www.imgur.com")){
 	linkText.href = image;
-
+	linkText.textContent = 'View original';
 else {
 	linkText.href = image;
 	linkText.textContent = 'View original';
