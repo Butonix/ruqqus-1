@@ -55,6 +55,9 @@
             container.innerHTML += ('<div class="card bg-secondary gif-keyboard-option" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\')"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
           }
         }
+        else if (max <= 0) {
+            container.innerHTML = '<div class="d-flex justify-content-center"><button class="btn btn-sm btn-outline-gray-500 mr-2" onclick="getGif('agree');">Agree</button><button class="btn btn-sm btn-outline-gray-500 mr-2" onclick="getGif('disagree');">Disagree</button><button class="btn btn-sm btn-outline-gray-500" onclick="getGif('laugh');">Laugh</button></div>';
+        }
         else {
           for (var i = 0; i <= 15; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
@@ -95,5 +98,5 @@
     var container = document.getElementById('GIFs');
 
     container.innerHTML = '';
-    
+
   })
