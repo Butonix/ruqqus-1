@@ -97,6 +97,20 @@
 
     var container = document.getElementById('GIFs');
 
+    // UI buttons
+
+    var backBtn = document.getElementById('gifs-back-btn');
+
+    var cancelBtn = document.getElementById('gifs-cancel-btn');
+
+    // Remove inner HTML from container var
+
     container.innerHTML = '';
+
+    // Hide UI buttons
+
+    backBtn.innerHTML = null;
+
+    cancelBtn.innerHTML = null;
 
   })
