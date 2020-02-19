@@ -110,7 +110,7 @@ def submit_post(v):
         return render_template("submit.html", v=v, error="250 character limit for titles.", title=title[0:250], url=url, body=request.form.get("body",""), b=get_guild(request.form.get("board","")))
 
     parsed_url=urlparse(url)
-    if not (parsed_url.scheme and parsed_url.netloc) and not request.form.get("body"):
+    if not (parsed_url.scheme and parsed_url.netloc) and not request.form.get("body") and 'file' not in request.files:
         return render_template("submit.html", v=v, error="Please enter a URL or some text.", title=title, url=url, body=request.form.get("body",""), b=get_guild(request.form.get("board","")))
 
     #sanitize title
@@ -345,8 +345,15 @@ def delete_post_pid(pid, v):
         abort(403)
 
     post.is_deleted=True
+    
     db.add(post)
     db.commit()
+
+    #delete i.ruqqus.com
+    if post.domain=="i.ruqqus.com":
+        key=post.url.split("i.ruqqus.com/")[-1]
+        delete_file(key)
+        
 
     return "",204
 
