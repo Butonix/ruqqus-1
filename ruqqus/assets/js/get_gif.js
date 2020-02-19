@@ -61,7 +61,7 @@
         }
         else if (max <= 0) {
             container.innerHTML = '';
-            modalBody.innerHTML = '<div class="text-center"><div class="py-4"><i class="fad fa-frown text-muted" style="font-size: 3.5rem;"></i></div><p>Aw shucks. No GIFs found...</p></div><div class="d-flex justify-content-center"><button class="btn btn-sm btn-outline-gray-500 mr-2" onclick="getGif(\'agree\');">Agree</button><button class="btn btn-sm btn-outline-gray-500 mr-2" onclick="getGif(\'disagree\');">Disagree</button><button class="btn btn-sm btn-outline-gray-500" onclick="getGif(\'laugh\');">Laugh</button></div>';
+            modalBody.innerHTML = '<div class="p-3"><div class="text-center"><div class="py-4"><i class="fad fa-frown text-muted" style="font-size: 3.5rem;"></i></div><p>Aw shucks. No GIFs found...</p></div><div class="d-flex justify-content-center"><button class="btn btn-sm btn-outline-gray-500 mr-2" onclick="getGif(\'agree\');">Agree</button><button class="btn btn-sm btn-outline-gray-500 mr-2" onclick="getGif(\'disagree\');">Disagree</button><button class="btn btn-sm btn-outline-gray-500" onclick="getGif(\'laugh\');">Laugh</button></div></div>';
         }
         else {
           for (var i = 0; i <= 15; i++) {
