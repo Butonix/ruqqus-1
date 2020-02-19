@@ -14,6 +14,7 @@ from ruqqus.helpers.markdown import *
 from ruqqus.helpers.get import *
 from ruqqus.helpers.thumbs import *
 from ruqqus.helpers.session import *
+from ruqqus.helpers.aws import *
 from ruqqus.classes import *
 from .front import frontlist
 from flask import *
@@ -256,6 +257,8 @@ def submit_post(v):
     #check for embeddable video
     domain=parsed_url.netloc
 
+
+
     
     
     new_post=Submission(title=title,
@@ -281,6 +284,19 @@ def submit_post(v):
               )
     db.add(vote)
     db.commit()
+
+    #check for uploaded image
+    if 'file' in request.files:
+        file=request.files['file']
+
+        name=f'post/{new_post.base36id}/{secrets.token_urlsafe(16)}'
+
+        upload_file(name, file)
+        
+        #update post data
+        new_post.url=f'https://i.ruqqus.com/{name}'
+        db.add(new_post)
+        db.commit()
 
     
     #spin off thumbnail generation as  new thread
