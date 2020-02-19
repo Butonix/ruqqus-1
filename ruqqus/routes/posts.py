@@ -105,13 +105,36 @@ def submit_post(v):
     url=request.form.get("url","")
 
     if len(title)<10:
-        return render_template("submit.html", v=v, error="Please enter a better title.", title=title, url=url, body=request.form.get("body",""), b=get_guild(request.form.get("board","")))
+        return render_template("submit.html",
+                               v=v,
+                               error="Please enter a better title.",
+                               title=title, url=url,
+                               body=request.form.get("body",""),
+                               b=get_guild(request.form.get("board","")
+                                           )
+                               )
     elif len(title)>250:
-        return render_template("submit.html", v=v, error="250 character limit for titles.", title=title[0:250], url=url, body=request.form.get("body",""), b=get_guild(request.form.get("board","")))
+        return render_template("submit.html",
+                               v=v,
+                               error="250 character limit for titles.",
+                               title=title[0:250],
+                               url=url,
+                               body=request.form.get("body",""),
+                               b=get_guild(request.form.get("board","")
+                                           )
+                               )
 
     parsed_url=urlparse(url)
     if not (parsed_url.scheme and parsed_url.netloc) and not request.form.get("body") and 'file' not in request.files:
-        return render_template("submit.html", v=v, error="Please enter a URL or some text.", title=title, url=url, body=request.form.get("body",""), b=get_guild(request.form.get("board","")))
+        return render_template("submit.html",
+                               v=v,
+                               error="Please enter a URL or some text.",
+                               title=title,
+                               url=url,
+                               body=request.form.get("body",""),
+                               b=get_guild(request.form.get("board","")
+                                           )
+                               )
 
     #sanitize title
     title=sanitize(title, linkgen=False)
@@ -167,10 +190,24 @@ def submit_post(v):
         board=get_guild('general')
     
     if board.has_ban(v):
-        return render_template("submit.html",v=v, error=f"You are exiled from +{board.name}.", title=title, url=url, body=request.form.get("body",""), b=get_guild("general")), 403
+        return render_template("submit.html",
+                               v=v,
+                               error=f"You are exiled from +{board.name}.",
+                               title=title,
+                               url=url
+                               , body=request.form.get("body",""),
+                               b=get_guild("general")
+                               ), 403
 
     if (board.restricted_posting or board.is_private) and not (board.can_submit(v)):
-        return render_template("submit.html",v=v, error=f"You are not an approved contributor for +{board.name}.", title=title, url=url, body=request.form.get("body",""), b=get_guild(request.form.get("board","general")))
+        return render_template("submit.html",
+                               v=v,
+                               error=f"You are not an approved contributor for +{board.name}.",
+                               title=title,
+                               url=url,
+                               body=request.form.get("body",""),
+                               b=get_guild(request.form.get("board","general"))
+                               )
 
         
     #Huffman-Ohanian growth method
