@@ -296,7 +296,6 @@ def submit_post(v):
         #update post data
         url=f'https://i.ruqqus.com/{name}'
         new_post.url=url
-        new_post.embed_url=url
         db.add(new_post)
         db.commit()
 
