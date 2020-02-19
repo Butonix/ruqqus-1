@@ -1,14 +1,14 @@
 <!-- GIF Selection Modal - Powered by GIPHY -->
 <div class="modal fade" id="gifModal" tabindex="-1" role="dialog" aria-labelledby="gifModalTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
-    <div class="modal-content bg-black">
-      <div class="modal-header p-0 py-3">
+    <div class="modal-content">
+      <div class="modal-header">
         <div class="form-group d-flex align-items-center w-100 mb-0">
           <div id="gifs-back-btn"></div>
-          <input type="text" class="form-control mx-3" id="gifSearch" placeholder="Search GIPHY" onchange="getGif(this.value);">
+          <input type="text" class="form-control" id="gifSearch" placeholder="Search GIPHY" onchange="getGif(this.value);">
           <div id="gifs-cancel-btn"></div>
         </div>
-        <img src="/assets/images/icons/PoweredBy_200px-White_HorizLogo.png" class="mt-1" style="width: 150px;">
+        <img src="/assets/images/icons/PoweredBy_200px-White_HorizText.png" class="mt-3" style="width: 100px;">
       </div>
       <div style="overflow-y: scroll;">
         <div class="modal-body p-0" id="gif-modal-body">
