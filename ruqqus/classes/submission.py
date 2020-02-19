@@ -243,8 +243,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     #@lazy
     def thumb_url(self):
-    
-        if self.has_thumb:
+
+        elif self.domain=="i.ruqqus.com":
+            return self.url
+        elif self.has_thumb:
             return f"https://i.ruqqus.com/posts/{self.base36id}/thumb.png"
         elif self.is_image:
             return self.url
