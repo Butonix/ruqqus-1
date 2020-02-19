@@ -14,6 +14,9 @@ if (image.includes("i.ruqqus.com")) {
 	linkText.href = link;
 	linkText.textContent = 'Go to website';
 }
+else if (image.includes("www.imgur.com")){
+	linkText.href = image;
+
 else {
 	linkText.href = image;
 	linkText.textContent = 'View original';
