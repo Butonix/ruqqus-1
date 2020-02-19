@@ -34,4 +34,4 @@ $('#expandImageModal').on('hidden.bs.modal', function (e) {
 
 	document.getElementById("desktop-expanded-image-link").href = null;
 
-}
+})
