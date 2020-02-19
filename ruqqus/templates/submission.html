@@ -547,3 +547,11 @@
 {% block guildModal %}
 {% include "guild_details_modal.html" %}
 {% endblock %}
+
+{% block GIFtoast %}
+  <div class="toast" id="toast-error-gif" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+    <div class="toast-body bg-danger text-center text-white">
+      <i class="fas fa-exclamation-circle mr-2"></i>Unable to snag gifs :(
+    </div>
+  </div>
+{% endblock %}
