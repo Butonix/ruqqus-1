@@ -7,7 +7,11 @@
       document.getElementById('gifSearch').value = null;
     }
 
-    // categories var
+    // error message var
+
+    var noGIFs = document.getElementById('no-gifs-found');
+
+    // categories vars
 
     var cats = document.getElementById('GIFcats');
 
