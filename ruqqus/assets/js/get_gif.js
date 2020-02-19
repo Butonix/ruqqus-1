@@ -55,19 +55,15 @@
         // loop for fetching mutliple GIFs and creating the card divs
         if (max < 15 && max > 0) {
           for (var i = 0; i <= max; i++) {
-            modalBody.innerHTML = '';
-
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
             container.innerHTML += ('<div class="card bg-secondary gif-keyboard-option" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\')"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
           }
         }
         else if (max <= 0) {
-            container.innerHTML = '';
-            modalBody.innerHTML = '<div class="p-5"><div class="text-center"><div class="mb-3"><i class="fad fa-frown text-muted" style="font-size: 3.5rem;"></i></div><p>Aw shucks. No GIFs found...</p></div><div class="d-flex justify-content-center"><button class="btn btn-sm btn-outline-gray-500 mr-2" onclick="getGif(\'agree\');">Agree</button><button class="btn btn-sm btn-outline-gray-500 mr-2" onclick="getGif(\'disagree\');">Disagree</button><button class="btn btn-sm btn-outline-gray-500" onclick="getGif(\'laugh\');">Laugh</button></div></div>';
+            container.innerHTML = '<div class="p-5"><div class="text-center"><div class="mb-3"><i class="fad fa-frown text-muted" style="font-size: 3.5rem;"></i></div><p>Aw shucks. No GIFs found...</p></div><div class="d-flex justify-content-center"><button class="btn btn-sm btn-outline-gray-500 mr-2" onclick="getGif(\'agree\');">Agree</button><button class="btn btn-sm btn-outline-gray-500 mr-2" onclick="getGif(\'disagree\');">Disagree</button><button class="btn btn-sm btn-outline-gray-500" onclick="getGif(\'laugh\');">Laugh</button></div></div>';
         }
         else {
           for (var i = 0; i <= 15; i++) {
-            modalBody.innerHTML = '';
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
             container.innerHTML += ('<div class="card bg-secondary gif-keyboard-option" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\')"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
           }
@@ -105,21 +101,15 @@
 
     var container = document.getElementById('GIFs');
 
-    // modal body var
-
-    var modalBody = document.getElementById('gif-modal-body')
-
     // UI buttons
 
     var backBtn = document.getElementById('gifs-back-btn');
 
     var cancelBtn = document.getElementById('gifs-cancel-btn');
 
-    // Remove inner HTML from container and modal body vars
+    // Remove inner HTML from container var
 
     container.innerHTML = '';
-
-    modalBody.innerHTML = '';
 
     // Hide UI buttons
 
