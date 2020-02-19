@@ -29,7 +29,6 @@ _allowed_tags=tags=['b',
 _allowed_tags_with_links=_allowed_tags+["a", "hr", "img"]
 
 _allowed_attributes={'a': ['href', 'title', "rel"],
-                     #"i": ["class"],
                      'img':['src', 'class']
                      }
 
@@ -100,6 +99,11 @@ def sanitize(text, linkgen=False):
                     link["href"]=tag["src"]
                     link["rel"]="nofollow"
                     link["target"]="_blank"
+
+                    link["onclick"]=f"expandDesktopImage('{tag['src']}');"
+                    link["data-toggle"]="modal"
+                    link["data-target"]="#expandImageModal"
+                    
                     tag.wrap(link)
             else:
                 #non-whitelisted images get replaced with links
