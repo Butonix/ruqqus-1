@@ -43,7 +43,7 @@ def api_vote_post(post_id, x, v):
     db.add(vote)
     db.commit()
 
-    print(f"Vote Event: @{v.username} vote {x} on post {post_id}")
+    #print(f"Vote Event: @{v.username} vote {x} on post {post_id}")
 
     return "", 204
                     
@@ -81,6 +81,6 @@ def api_vote_comment(comment_id, x, v):
     db.add(vote)
     db.commit()
 
-    print(f"Vote Event: @{v.username} vote {x} on comment {comment_id}")
+    #print(f"Vote Event: @{v.username} vote {x} on comment {comment_id}")
 
     return "", 204
