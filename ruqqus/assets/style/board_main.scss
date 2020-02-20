@@ -63,7 +63,7 @@ $theme-colors: (
 // Borders
 
 $input-border-color: $gray-300;
-$border-color: $gray-400;
+$border-color: $gray-300;
 
 $border-radius: .35rem;
 $border-radius-sm: .25rem;
@@ -88,7 +88,7 @@ $lead-font-size: $font-size-base * 1.325 !default;
 
 // Font weight
 
-$font-weight-bold: 500;
+$font-weight-bold: 600;
 $font-weight-bolder: 700;
 $headings-font-weight: $font-weight-bold;
 
@@ -1168,7 +1168,7 @@ color: $dark;
 .scrollspy.sidebar-sticky .list-group .list-group-item.active {
     background-color: transparent;
     color: $primary;
-    font-weight: 500;
+    font-weight: $font-weight-bold;
     left: -1px;
     border-left: solid 2px $primary;
     z-index: 2;

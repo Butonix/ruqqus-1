@@ -130,7 +130,7 @@ ul ol {
 }
 
 dt {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 dd {
@@ -371,7 +371,7 @@ template {
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
   margin-bottom: 0.5rem;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.2;
 }
 
@@ -530,7 +530,7 @@ kbd {
 kbd kbd {
   padding: 0;
   font-size: 100%;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 pre {
@@ -5823,7 +5823,7 @@ input[type=button].btn-block {
   display: inline-block;
   padding: 0.25em 0.4em;
   font-size: 75%;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1;
   text-align: center;
   white-space: nowrap;
@@ -6198,7 +6198,7 @@ a.badge-reddit:focus, a.badge-reddit.focus {
 }
 
 .alert-link {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .alert-dismissible {
@@ -7084,7 +7084,7 @@ a.badge-reddit:focus, a.badge-reddit.focus {
 .close {
   float: right;
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1;
   color: #dadada;
   text-shadow: 0 1px 0 #FFFFFF;
@@ -12809,7 +12809,7 @@ button.bg-reddit:focus {
 }
 
 .font-weight-bold {
-  font-weight: 500 !important;
+  font-weight: 600 !important;
 }
 
 .font-weight-bolder {
@@ -13215,7 +13215,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 .article-title {
   margin-bottom: 3rem;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 3rem;
   margin-top: 2rem;
 }
@@ -13320,7 +13320,7 @@ ol > li {
 
 ol > li::before {
   content: counter(count) ".";
-  font-weight: 500;
+  font-weight: 600;
   margin-right: 0.5rem;
 }
 
@@ -13337,7 +13337,7 @@ ol > li::before {
 }
 
 .btn {
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1rem;
   border-radius: 0.2rem;
 }
@@ -13380,7 +13380,7 @@ ol > li::before {
 }
 
 .btn-integration {
-  font-weight: 500;
+  font-weight: 600;
   border-left: 1px solid #494a4e;
 }
 
@@ -13390,7 +13390,7 @@ ol > li::before {
 }
 
 .tooltip {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .tooltip-inner {
@@ -13469,7 +13469,7 @@ ol > li::before {
 
 .navbar-brand, .navbar-light .navbar-brand {
   color: #dadada;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .navbar-dark .navbar-brand {
@@ -13571,7 +13571,7 @@ ol > li::before {
   position: absolute;
   color: #FFFFFF;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 600;
   top: -4px;
   left: 12px;
   border: 2px solid #35363e;
@@ -13581,7 +13581,7 @@ ol > li::before {
 .post-nav .nav-link {
   color: #8c8d94;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   padding: 0.75rem 1rem;
 }
 
@@ -13658,7 +13658,7 @@ label.color-radio span {
 #page .nav-pills .nav-link {
   border-radius: 0;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #8c8d94;
   border-bottom: 2px solid transparent;
   padding: 1rem 1.5rem;
@@ -13791,7 +13791,7 @@ label.color-radio span {
 
 label {
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 12px;
   letter-spacing: 0.025rem;
   color: #dadada;
@@ -13842,7 +13842,7 @@ label.terms {
 }
 
 th {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .fa-rotate-45 {
@@ -13908,7 +13908,7 @@ th {
   position: relative;
   z-index: 2;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   text-align: center;
   min-width: 40px;
 }
@@ -14085,7 +14085,7 @@ a:hover .link-arrow {
 .post-filter {
   display: inline-block;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   color: #8c8d94;
 }
 
@@ -14113,7 +14113,7 @@ a:hover .link-arrow {
   display: block;
   background-color: transparent;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #8c8d94;
   padding: 0.5rem 1rem;
   border: none;
@@ -14129,7 +14129,7 @@ a:hover .link-arrow {
 .scrollspy.sidebar-sticky .list-group .list-group-item.active {
   background-color: transparent;
   color: #805AD5;
-  font-weight: 500;
+  font-weight: 600;
   left: -1px;
   border-left: solid 2px #805AD5;
   z-index: 2;
@@ -14146,7 +14146,7 @@ a:hover .link-arrow {
 
 .sidebar .sidebar-section .title {
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.025rem;
   color: #FFFFFF;
   background-color: #805AD5;
@@ -14175,7 +14175,7 @@ a:hover .link-arrow {
   margin-bottom: 1rem;
   padding-bottom: 1rem;
   color: #8c8d94;
-  font-weight: 500;
+  font-weight: 600;
   border-bottom: 1px solid #494a4e;
 }
 
@@ -14280,7 +14280,7 @@ a:hover .link-arrow {
   padding: 0.5rem 1rem;
   color: #8c8d94;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 0.25rem;
   text-decoration: none;
 }
@@ -14391,7 +14391,7 @@ a:hover .link-arrow {
   padding: 0.5rem 0;
   color: #8c8d94;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 0.25rem;
   text-decoration: none;
 }
@@ -14468,7 +14468,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic .letter {
   line-height: 3.6rem;
   font-size: 1.25rem;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
 }
 
@@ -14625,7 +14625,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .toggle-view .nav-link {
   color: #8c8d94;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   padding: 0;
   line-height: 1;
   box-shadow: none;
@@ -14663,7 +14663,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .card-header {
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #dadada;
   padding: 0.5rem 1rem;
   border-bottom: 1px solid #56575a;
@@ -14790,7 +14790,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .post-actions {
   position: relative;
   color: #8c8d94;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 12px;
   z-index: 3;
 }
@@ -14875,7 +14875,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .dropdown-actions {
   position: relative;
   color: #8c8d94;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 12px;
   z-index: 3;
 }
@@ -15000,7 +15000,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .page-link {
-  font-weight: 500;
+  font-weight: 600;
   background-color: #232327;
   border: 1px solid #232327;
 }
@@ -15010,7 +15010,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .page-item.disabled .page-link {
-  font-weight: 500;
+  font-weight: 600;
   background-color: #232327;
   border: 1px solid #232327;
   opacity: 0.5;
@@ -15125,7 +15125,7 @@ div:hover .thumb-img-link-overlay {
 }
 
 .comments-count .total {
-  font-weight: 500;
+  font-weight: 600;
   font-size: 12px;
   color: #8c8d94;
 }
@@ -15175,7 +15175,7 @@ blockquote {
   border-left: 4px solid #805AD5;
   color: #dadada;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   background-color: #46444a;
   padding: 0.5rem 1rem;
   margin: 0.5rem 0rem 1rem 0.5rem;
@@ -15216,7 +15216,7 @@ blockquote p {
 }
 
 .comment-actions {
-  font-weight: 500;
+  font-weight: 600;
   font-size: 12px;
   margin-bottom: 0;
 }
@@ -15425,7 +15425,7 @@ ul.comment-section {
 }
 
 .reactions-count .total {
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 0.5rem;
 }
 
@@ -15434,7 +15434,7 @@ ul.comment-section {
   background-color: #35363e;
   padding: 0.25rem 0.5rem;
   border-radius: 0.35rem;
-  font-weight: 500;
+  font-weight: 600;
   margin-right: 0.25rem;
 }
 
@@ -15454,7 +15454,7 @@ ul.comment-section {
 
 .sidebar-post-meta .score {
   font-size: 1.25rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .sidebar-post-meta .score-percent {
@@ -15615,7 +15615,7 @@ ul.comment-section {
 
 #page .footer h1, #page .footer h2, #page .footer h3, #page .footer h4, #page .footer h5, #page .footer h6,
 #article .footer h1, #article .footer h2, #article .footer h3, #article .footer h4, #article .footer h5, #article .footer h6 {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 #page .footer a, #article .footer a {
@@ -16473,7 +16473,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
 .post-title {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   word-break: break-word;
 }
 
@@ -16810,7 +16810,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
   .comment .comment-body .user-name {
     color: #dadada;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   .pagination {
