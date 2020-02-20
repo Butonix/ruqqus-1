@@ -1,4 +1,3 @@
-import yaml
 from bs4 import BeautifulSoup
 from flask import *
 from os import environ
