@@ -388,8 +388,13 @@ def delete_post_pid(pid, v):
 
     #delete i.ruqqus.com
     if post.domain=="i.ruqqus.com":
-        key=post.url.split("i.ruqqus.com/")[-1]
-        delete_file(key)
+        
+        segments=post.url.split("/")
+        pid=segments[2]
+        rand=segments[3]
+        if pid==post.base36id:
+            key=f"post/{pid}/{rand}"
+            delete_file(key)
         
 
     return "",204
