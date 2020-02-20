@@ -23,6 +23,8 @@ _allowed_tags=tags=['b',
                     'p',
                     'pre',
                     'strong',
+                    'sub',
+                    'sup',
                     'ul'
                    ]
 
