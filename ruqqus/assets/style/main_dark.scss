@@ -70,7 +70,7 @@ $text-white: $white;
 
 // Fonts
 
-$font-family-sans-serif: 'Roboto', 'Helvetica Neue', sans-serif;
+$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
 // Font size
 
@@ -133,8 +133,6 @@ $tooltip-opacity: 1;
 $yiq-contrasted-threshold:  160 !default;
 
 @import "node_modules/bootstrap/scss/bootstrap";
-
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap');
 
 html {
     font-size: 14px;
