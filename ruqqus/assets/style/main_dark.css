@@ -13342,6 +13342,11 @@ ol > li::before {
   border-radius: 0.2rem;
 }
 
+.btn-sm, .btn-group-sm > .btn {
+  padding: 0.375rem 0.75rem;
+  font-size: 12px;
+}
+
 .btn-lg, .btn-group-lg > .btn {
   font-size: 1rem;
 }

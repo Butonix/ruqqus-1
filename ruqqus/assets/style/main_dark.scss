@@ -342,6 +342,11 @@ ol > li::before {
     border-radius: $border-radius-sm;
 }
 
+.btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: $small-font-size;
+}
+
 .btn-lg {
     font-size: $font-size-base;
 }
