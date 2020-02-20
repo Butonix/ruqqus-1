@@ -347,7 +347,7 @@ def submit_post(v):
     cache.delete_memoized(frontlist, sort="new")
     cache.delete_memoized(Board.idlist, board, sort="new")
 
-    print(f"Content Event: @{new_post.author.username} post {new_post.base36id}")
+    #print(f"Content Event: @{new_post.author.username} post {new_post.base36id}")
 
     return redirect(new_post.permalink)
     
