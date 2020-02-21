@@ -15185,10 +15185,10 @@ div:hover .thumb-img-link-overlay {
 }
 
 blockquote {
-  border-left: 4px solid #805AD5;
+  border-left: 2px solid #805AD5;
   color: #dadada;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 400;
   background-color: #46444a;
   padding: 0.5rem 1rem;
   margin: 0.5rem 0rem 1rem 0.5rem;
