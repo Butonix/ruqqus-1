@@ -39,7 +39,7 @@ app.config["SESSION_COOKIE_SAMESITE"]="Lax"
 #app.config["SESSION_REFRESH_EACH_REQUEST"]=True
 #session.permanent=True
 
-
+app.jinja_env.cache = {}
 
 app.config["UserAgent"]="Ruqqus webserver ruqqus.com"
 
