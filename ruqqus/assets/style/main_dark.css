@@ -13245,7 +13245,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   top: 49px;
   height: auto;
   overflow-y: auto;
-  z-index: 4;
+  z-index: 3;
 }
 
 .sticky-63 {
@@ -13254,7 +13254,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   top: 63px;
   height: auto;
   overflow-y: auto;
-  z-index: 4;
+  z-index: 3;
 }
 
 .sticky-105 {
@@ -13263,7 +13263,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   top: 105px;
   height: auto;
   overflow-y: auto;
-  z-index: 4;
+  z-index: 3;
 }
 
 .bg-white {

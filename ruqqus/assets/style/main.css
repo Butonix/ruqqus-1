@@ -13249,7 +13249,7 @@ p {
   top: 49px;
   height: auto;
   overflow-y: auto;
-  z-index: 4;
+  z-index: 3;
 }
 
 .sticky-63 {
@@ -13258,7 +13258,7 @@ p {
   top: 63px;
   height: auto;
   overflow-y: auto;
-  z-index: 4;
+  z-index: 3;
 }
 
 .sticky-105 {
@@ -13267,7 +13267,7 @@ p {
   top: 105px;
   height: auto;
   overflow-y: auto;
-  z-index: 4;
+  z-index: 3;
 }
 
 .text-lg {
