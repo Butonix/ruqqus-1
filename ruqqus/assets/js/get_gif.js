@@ -1,11 +1,15 @@
-  function getGif(searchTerm) {
+// Get GIF for comment box  
 
-    if (searchTerm !== undefined) {
-      document.getElementById('gifSearch').value = searchTerm;
-    }
-    else {
-      document.getElementById('gifSearch').value = null;
-    }
+function getGif(searchTerm, comment) {
+
+  var form = comment;
+
+  if (searchTerm !== undefined) {
+    document.getElementById('gifSearch').value = searchTerm;
+  }
+  else {
+    document.getElementById('gifSearch').value = null;
+  }
 
     // error message var
 
@@ -80,21 +84,23 @@
       }
     });
     };
-  }
 
-  // Insert GIF markdown into comment box function
 
-  function insertGIF(url) {
+      // Insert GIF markdown into comment box function
 
-    var gif = "![](" + url +")";
+    function insertGIF(url) {
 
-    var commentBox = document.getElementById('comment-form');
+      var gif = "![](" + url +")";
 
-    var old  = commentBox.value;
+      var commentBox = document.getElementById(form);
 
-    commentBox.value = old + gif;
+      var old  = commentBox.value;
 
-  }
+      commentBox.value = old + gif;
+
+    }
+
+}
 
   // When GIF keyboard is hidden, hide all GIFs
 
