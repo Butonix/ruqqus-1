@@ -935,6 +935,7 @@ th {
     font-size: $small-font-size;
     font-weight: $font-weight-bold;
     text-align: center;
+    word-break: keep-all;
     min-width: 40px;
 }
 

@@ -13903,6 +13903,7 @@ th {
   font-size: 12px;
   font-weight: 600;
   text-align: center;
+  word-break: keep-all;
   min-width: 40px;
 }
 
