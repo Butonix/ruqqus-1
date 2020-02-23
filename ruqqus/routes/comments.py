@@ -67,6 +67,17 @@ def api_comment(v):
     parent_submission=base36decode(request.form.get("submission"))
     parent_fullname=request.form.get("parent_fullname")
 
+    #check comment length
+    if len(request.form.get("body", "")) > 2000:
+        return render_template("comment_failed.html",
+                               action="/api/comment",
+                               parent_submission=request.form.get("submission"),
+                               parent_fullname=request.form.get("parent_fullname"),
+                               message="Comment exceeds limit of 2000 characters",
+                               body=request.form.get("body",""),
+                               v=v
+                               ), 422
+
     #process and sanitize
     body=request.form.get("body","")[0:2000]
     with CustomRenderer() as renderer:
