@@ -104,6 +104,7 @@ def submit_post(v):
 
     url=request.form.get("url","")
 
+
     if len(title)<10:
         return render_template("submit.html",
                                v=v,
@@ -121,6 +122,17 @@ def submit_post(v):
                                url=url,
                                body=request.form.get("body",""),
                                b=get_guild(request.form.get("board","")
+                                           )
+                               )
+
+    elif len(url) > 500:
+        return render_template("submit.html",
+                               v=v,
+                               error="500 character limit for urls.",
+                               title=title,
+                               url=url[0:500],
+                               body=request.form.get("body", ""),
+                               b=get_guild(request.form.get("board", "")
                                            )
                                )
 
