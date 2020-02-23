@@ -6,7 +6,7 @@ $dark: #E6E9F0;
 $secondary: #b0b0aa;
 $danger: #E53E3E;
 $white: #3a3a3a;
-$black: #ffffff;
+$black: #cfcfcf;
 $light: #232323;
 $success: #38A169;
 $muted: #6c6d74;
@@ -714,7 +714,7 @@ label.color-radio span {
 
 .form-inline.search .form-control,
 .form-control[readonly] {
-    background-color: $white;
+    background-color: rgba(255, 255, 255, 0.1);
     font-size: $font-size-base;
     color: $black;
 }
@@ -792,7 +792,7 @@ label.color-radio span {
 
 .form-control:focus, .form-control:active {
     color: $black;
-    background-color: #ffffff;
+    background-color: $light;
     outline: 0;
     border-color: $primary;
     box-shadow: none;

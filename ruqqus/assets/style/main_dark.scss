@@ -4,8 +4,8 @@ $primary: #805AD5;
 $dark: #232327;
 $secondary: #3f404a;
 $danger: #E53E3E;
-$white: #FFFFFF;
-$black: #dadada;
+$white: #3a3a3a;
+$black: #cfcfcf;
 $light: #35363e;
 $success: #38A169;
 $muted: #8c8d94;
@@ -715,7 +715,7 @@ label.color-radio span {
 }
 
 .form-inline.search .form-control {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(255, 255, 255, 0.1);
     font-size: $font-size-base;
 }
 
@@ -796,7 +796,7 @@ label.color-radio span {
 
 .form-control:focus, .form-control:active {
     color: $black;
-    background-color: $dark;
+    background-color: $light;
     outline: 0;
     border-color: $primary;
     box-shadow: none;
