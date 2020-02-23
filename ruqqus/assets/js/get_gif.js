@@ -1,4 +1,12 @@
-  function getGif(searchTerm,form) {
+  // Indentify which comemnt form to insert GIF into
+
+  var commentFormID
+
+  function commentForm(form) {
+    commentFormID = form;
+  }
+
+  function getGif(searchTerm) {
 
     if (searchTerm !== undefined) {
       document.getElementById('gifSearch').value = searchTerm;
@@ -46,7 +54,7 @@
       cancelBtn.innerHTML = '<button class="btn btn-link pl-3 pr-0" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
 
       console.log('searchTerm is: ', searchTerm)
-      console.log('comment or reply form is: ', form)
+      console.log('comment or reply form is: ', commentFormID)
       $.ajax({
         url: "//api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=eOTkZX92KQM80g9NcBsq0heqZxZSVP86",
         type: "GET",
@@ -63,7 +71,7 @@
         if (max < 15 && max > 0) {
           for (var i = 0; i <= max; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
-            container.innerHTML += ('<div class="card bg-secondary gif-keyboard-option" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',\'' + form + '\')"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            container.innerHTML += ('<div class="card bg-secondary gif-keyboard-option" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',\'' + commentFormID + '\')"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
             noGIFs.innerHTML = null;
           }
         }
@@ -74,7 +82,7 @@
         else {
           for (var i = 0; i <= 15; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
-            container.innerHTML += ('<div class="card bg-secondary gif-keyboard-option" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',\'' + form + '\')"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            container.innerHTML += ('<div class="card bg-secondary gif-keyboard-option" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',\'' + commentFormID + '\')"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
             noGIFs.innerHTML = null;
           }
         }
