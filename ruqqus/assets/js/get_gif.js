@@ -46,6 +46,7 @@
       cancelBtn.innerHTML = '<button class="btn btn-link pl-3 pr-0" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
 
       console.log('searchTerm is: ', searchTerm)
+      console.log('comment or reply form is: ', form)
       $.ajax({
         url: "//api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=eOTkZX92KQM80g9NcBsq0heqZxZSVP86",
         type: "GET",
