@@ -59,6 +59,9 @@ $theme-colors: (
   "gray-400": $gray-400,
   "gray-500": $gray-500,
   "gray-600": $gray-600,
+  "gray-700": $gray-700,
+  "gray-800": $gray-800,
+  "gray-900": $gray-900,
   "reddit": $reddit
 );
 
@@ -258,13 +261,6 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     height: auto;
     overflow-y: auto;
     z-index: 4;
-}
-
-// BG Colors
-
-
-.bg-white {
-    background-color: #35363e!important;
 }
 
 // Type
