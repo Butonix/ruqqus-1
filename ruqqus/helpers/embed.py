@@ -2,7 +2,7 @@ import re
 from ruqqus.__main__ import app
 
 youtube_regex=re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*")
-bitchute_regex=re.compile("^.*(bitchute.com\/|embed\)([^#\&\?]*).*")
+bitchute_regex=re.compile("^.*(bitchute.com\/|embed\/)([^#\&\?]*).*")
 
 def youtube_embed(url):
 
