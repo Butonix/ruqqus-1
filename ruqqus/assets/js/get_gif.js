@@ -1,13 +1,11 @@
-// Get GIF for comment box  
+  function getGif(searchTerm) {
 
-function getGif(searchTerm,comment) {
-
-  if (searchTerm !== undefined) {
-    document.getElementById('gifSearch').value = searchTerm;
-  }
-  else {
-    document.getElementById('gifSearch').value = null;
-  }
+    if (searchTerm !== undefined) {
+      document.getElementById('gifSearch').value = searchTerm;
+    }
+    else {
+      document.getElementById('gifSearch').value = null;
+    }
 
     // error message var
 
@@ -62,7 +60,7 @@ function getGif(searchTerm,comment) {
         if (max < 15 && max > 0) {
           for (var i = 0; i <= max; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
-            container.innerHTML += ('<div class="card bg-secondary gif-keyboard-option" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',comment)"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            container.innerHTML += ('<div class="card bg-secondary gif-keyboard-option" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\')"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
           }
         }
         else if (max <= 0) {
@@ -72,7 +70,7 @@ function getGif(searchTerm,comment) {
         else {
           for (var i = 0; i <= 15; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
-            container.innerHTML += ('<div class="card bg-secondary gif-keyboard-option" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',comment)"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            container.innerHTML += ('<div class="card bg-secondary gif-keyboard-option" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\')"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
           }
         }
         console.log(container);
@@ -82,22 +80,21 @@ function getGif(searchTerm,comment) {
       }
     });
     };
-
   }
 
-      // Insert GIF markdown into comment box function
+  // Insert GIF markdown into comment box function
 
-      function insertGIF(url,form) {
+  function insertGIF(url) {
 
-        var gif = "![](" + url +")";
+    var gif = "![](" + url +")";
 
-        var commentBox = document.getElementById(form);
+    var commentBox = document.getElementById('comment-form');
 
-        var old  = commentBox.value;
+    var old  = commentBox.value;
 
-        commentBox.value = old + gif;
+    commentBox.value = old + gif;
 
-      }
+  }
 
   // When GIF keyboard is hidden, hide all GIFs
 
