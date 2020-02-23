@@ -7,19 +7,19 @@
       document.getElementById('gifSearch').value = null;
     }
 
-    // error message var
+    // error message div
 
     var noGIFs = document.getElementById('no-gifs-found');
 
-    // categories vars
+    // categories div
 
     var cats = document.getElementById('GIFcats');
 
-    // container var
+    // container div
 
     var container = document.getElementById('GIFs');
 
-    // modal body var
+    // modal body div
 
     var modalBody = document.getElementById('gif-modal-body')
 
@@ -106,7 +106,11 @@
 
     document.getElementById('gifSearch').value = null;
 
-    // container var
+    // no GIFs div
+
+    var noGIFs = document.getElementById('no-gifs-found');
+
+    // container div
 
     var container = document.getElementById('GIFs');
 
