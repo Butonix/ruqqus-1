@@ -1,6 +1,6 @@
 // Get GIF for comment box  
 
-function getGif(searchTerm, comment) {
+function getGif(searchTerm,comment) {
 
   var form = comment;
 
