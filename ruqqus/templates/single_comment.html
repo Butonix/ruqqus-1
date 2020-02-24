@@ -106,7 +106,7 @@
                 {% endif %}
 
                 {% if v %}
-                {% if c.board.can_comment(v) %}
+                {% if not c.author_id==v.id and c.board.can_comment(v) %}
                 <li class="list-inline-item text-muted"><a href="javascript:void(0)" onclick="addReplyForm('{{ c.base36id }}', '{{ c.post.base36id }}')"><i class="fas fa-reply"
                     aria-hidden="true"></i><span class="d-none d-md-inline-block">Reply</span></a>
                 </li>
