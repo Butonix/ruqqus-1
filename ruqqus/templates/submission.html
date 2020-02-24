@@ -307,17 +307,18 @@
           </div>
 
           {% if v and v.id==p.author_id and not v.is_banned %}
-          <div id="edit-post-body" class="d-none comment-write collapsed child">
+          <div id="edit-post-body-{{ p.base36id }}" class="d-none comment-write collapsed child">
             <form id="post-edit-form-{{ p.base36id }}" action="/edit_post/{{ p.base36id }}" method="post" class="input-group">
               <input type="hidden" name="formkey" value="{{ v.formkey }}">
               <input type="hidden" name="current_page" value="{{ request.path }}">
-              <textarea name="body" id="post-edit-box" form="post-edit-form-{{ p.base36id }}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="3">{{ p.body }}</textarea> 
+              <textarea name="body" id="post-edit-box-{{ p.base36id }}" form="post-edit-form-{{ p.base36id }}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="3">{{ p.body }}</textarea> 
               <div class="comment-format"> 
                 <small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeReplyBold()" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> 
                 <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeReplyItalics()" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> 
-                <small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeReplyQuote()" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small> 
-                <small class="format"><i class="fas fa-link" aria-hidden="true"></i></small> 
-                <a href="javascript:void(0)" onclick="togglePostEdit()" class="btn btn-secondary ml-auto cancel-form">Cancel</a> 
+                <small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeReplyQuote()" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small>
+                <small class="format"><i class="fas fa-image" onclick="getGif(),commentForm('post-edit-box-{{ p.base36id }}')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Add GIF"></i></small> 
+                <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
+                <a href="javascript:void(0)" onclick="togglePostEdit('{{ p.base36id }}')" class="btn btn-secondary ml-auto cancel-form">Cancel</a> 
                 <button form="post-edit-form-{{ p.base36id }}" class="btn btn-primary ml-2">Save Edit</button> </div> </form>
               </div>
               {% endif %}

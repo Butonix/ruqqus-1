@@ -30,11 +30,11 @@ toggleEdit=function(id){
     autoExpand(box);
 }
 
-togglePostEdit=function(){
+togglePostEdit=function(id){
 
-    body=document.getElementById("post-body");
-    form=document.getElementById("edit-post-body");
-    box=document.getElementById("post-edit-box");
+    body=document.getElementById("post-body"+id);
+    form=document.getElementById("edit-post-body"+id);
+    box=document.getElementById("post-edit-box"+id);
 
     body.classList.toggle("d-none");
     form.classList.toggle("d-none");
