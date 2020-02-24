@@ -1,4 +1,4 @@
-  // Indentify which comemnt form to insert GIF into
+  // Indentify which comment form to insert GIF into
 
   var commentFormID
 
