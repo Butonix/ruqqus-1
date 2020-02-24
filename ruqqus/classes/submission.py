@@ -50,7 +50,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     is_image=Column(Boolean, default=False)
     has_thumb=Column(Boolean, default=False)
     post_public=Column(Boolean, default=True)
-    score_hot=Column(Float, default=1)
+    score_hot=Column(Float, default=0)
     score_disputed=Column(Float, default=0)
     score_top=Column(Float, default=1)
     score_activity=Column(Float, default=0)
