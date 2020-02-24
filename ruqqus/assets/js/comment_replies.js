@@ -30,9 +30,7 @@ $(".toggle-collapse").click(function (event) {
 */
 // Reply to parent comment
 
-function addReplyForm(commentId, postId) {
-
-    var formID = "reply-form-" + commentId;
+function addReplyForm(commentId, postId, formId) {
 
     var id = "reply-to-" + commentId;
 
