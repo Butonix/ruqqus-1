@@ -16715,7 +16715,6 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .x-scroll {
-    height: 100%;
     width: 100%;
     overflow-x: scroll;
     white-space: nowrap;
@@ -16726,7 +16725,6 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .x-scroll::-webkit-scrollbar {
-    height: 100%;
     width: 100%;
     overflow-x: scroll;
     white-space: nowrap;
