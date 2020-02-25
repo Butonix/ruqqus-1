@@ -3411,7 +3411,6 @@ body, #settings, #notifications, #submit{
 }
 
 .x-scroll {
-    height: 100%;
     width: 100%;
     overflow-x: scroll;
     white-space: nowrap;
@@ -3420,7 +3419,6 @@ body, #settings, #notifications, #submit{
 }
 
 .x-scroll::-webkit-scrollbar {
-    height: 100%;
     width: 100%;
     overflow-x: scroll;
     white-space: nowrap;
