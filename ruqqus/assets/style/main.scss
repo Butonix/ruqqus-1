@@ -3411,10 +3411,10 @@ body, #settings, #notifications, #submit{
 }
 
 .x-scroll {
-    flex-wrap: nowrap;
+    height: 100%;
+    width: 100%;
+    overflow-x: scroll;
     white-space: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* IE 10+ */
 }
