@@ -16755,10 +16755,10 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .x-scroll {
-    height: 100%;
-    width: 100%;
-    overflow-x: scroll;
+    flex-wrap: nowrap;
     white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
     scrollbar-width: none;
     /* Firefox */
     -ms-overflow-style: none;
@@ -16766,10 +16766,10 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .x-scroll::-webkit-scrollbar {
-    height: 100%;
-    width: 100%;
-    overflow-x: scroll;
+    flex-wrap: nowrap;
     white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
     background: transparent;
     /* Chrome/Safari/Webkit */
   }
