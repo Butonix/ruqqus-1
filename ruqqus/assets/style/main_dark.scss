@@ -3455,14 +3455,6 @@ body {
     -ms-overflow-style: none;  /* IE 10+ */
 }
 
-.x-scroll::-webkit-scrollbar {
-    height: 100%;
-    width: 100%;
-    overflow-x: scroll;
-    white-space: nowrap;
-    background: transparent; /* Chrome/Safari/Webkit */
-}
-
 #thread .post-title {
     font-size: 16px;
 }
