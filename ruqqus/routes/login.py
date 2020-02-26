@@ -26,10 +26,12 @@ valid_password_regex=re.compile("^.{8,}$")
 @app.route("/login", methods=["GET"])
 @no_cors
 @auth_desired
-def login_get(v):
+def login_get(v, url=None):
 
+    redir = url
+    if not redir:
+        redir = request.args.get("redirect", "/")
 
-    redir=request.args.get("redirect","/")
     if v:
         return redirect(redir)
     
