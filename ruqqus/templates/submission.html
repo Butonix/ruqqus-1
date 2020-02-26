@@ -303,7 +303,7 @@
           </div>
 
           {% if v and v.id==p.author_id and not v.is_banned %}
-          <div id="edit-post-body" class="d-none comment-write collapsed child">
+          <div id="edit-post-body-{{ p.base36id }}" class="d-none comment-write collapsed child">
             <form id="post-edit-form-{{ p.base36id }}" action="/edit_post/{{ p.base36id }}" method="post" class="input-group">
               <input type="hidden" name="formkey" value="{{ v.formkey }}">
               <input type="hidden" name="current_page" value="{{ request.path }}">
