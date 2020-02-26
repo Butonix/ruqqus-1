@@ -28,6 +28,7 @@ valid_password_regex=re.compile("^.{8,}$")
 @auth_desired
 def login_get(v, url=None):
 
+    print(f"url : {url}")
     redir = url
     if not redir:
         redir = request.args.get("redirect", "/")
