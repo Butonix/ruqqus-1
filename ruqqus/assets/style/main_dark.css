@@ -13701,26 +13701,26 @@ label.color-radio span {
 }
 
 .form-inline.search .input-group-append .input-group-text .fa.fa-search {
-  color: #3a3a3a;
+  color: #cfcfcf;
   opacity: 0.25;
 }
 
 .form-inline.search .form-control::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: #3a3a3a;
+  color: #cfcfcf;
   opacity: 0.25;
   /* Firefox */
 }
 
 .form-inline.search .form-control::-ms-input-placeholder {
   /* Internet Explorer 10-11 */
-  color: #3a3a3a;
+  color: #cfcfcf;
   opacity: 0.25;
 }
 
 .form-inline.search .form-control::-ms-input-placeholder {
   /* Microsoft Edge */
-  color: #3a3a3a;
+  color: #cfcfcf;
   opacity: 0.25;
 }
 
@@ -13836,7 +13836,7 @@ label.terms {
 }
 
 .dropdown-item:hover, .dropdown-item:focus, .dropdown-item.active {
-  color: #3a3a3a;
+  color: #cfcfcf;
   text-decoration: none;
   background-color: #35363e;
 }

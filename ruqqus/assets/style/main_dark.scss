@@ -720,22 +720,22 @@ label.color-radio span {
 }
 
 .form-inline.search .input-group-append .input-group-text .fa.fa-search {
-    color: $white;
+    color: $black;
     opacity: .25;
 }
 
 .form-inline.search .form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: $white;
+  color: $black;
   opacity: .25; /* Firefox */
 }
 
 .form-inline.search .form-control::-ms-input-placeholder { /* Internet Explorer 10-11 */
-  color: $white;
+  color: $black;
   opacity: .25;
 }
 
 .form-inline.search .form-control::-ms-input-placeholder { /* Microsoft Edge */
-  color: $white;
+  color: $black;
   opacity: .25;
 }
 
@@ -852,7 +852,7 @@ label.terms {
 }
 
 .dropdown-item:hover, .dropdown-item:focus, .dropdown-item.active {
-    color: $white;
+    color: $black;
     text-decoration: none;
     background-color: $light;
 }
