@@ -37,10 +37,8 @@ togglePostEdit=function(id){
     body=document.getElementById("post-body"+id);
     form=document.getElementById("edit-post-body"+id);
     box=document.getElementById("post-edit-box"+id);
-    actions = document.getElementById('comment-' + id +'-actions');
 
     body.classList.toggle("d-none");
     form.classList.toggle("d-none");
-    actions.classList.toggle("d-none");
     autoExpand(box);
 }
