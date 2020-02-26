@@ -35,8 +35,8 @@ toggleEdit=function(id){
 togglePostEdit=function(id){
 
     body=document.getElementById("post-body");
-    form=document.getElementById("edit-post-body"+id);
-    box=document.getElementById("post-edit-box"+id);
+    form=document.getElementById("edit-post-body-"+id);
+    box=document.getElementById("post-edit-box-"+id);
 
     body.classList.toggle("d-none");
     form.classList.toggle("d-none");
