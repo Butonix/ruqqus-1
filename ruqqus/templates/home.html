@@ -46,27 +46,27 @@
       {% block navbar %}
       <div class="font-weight-bold py-3">Ruqqus Homepage</div>
 
-        <div class="d-flex align-items-center">
-          <div class="text-small font-weight-bold mr-2">Sort by</div>
-          <div class="dropdown dropdown-actions">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {% if sort_method=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
-              {% if sort_method=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
-              {% if sort_method=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
-              {% if sort_method=="disputed" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
-              {% if sort_method=="activity" %}<i class="fas fa-comments mr-1"></i>{% endif %}
-              {{ sort_method }}
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-              {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
-              {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
-              {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-              {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed"><i class="fas fa-bullhorn mr-2"></i>Disputed</a>{% endif %}
-              {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity"><i class="fas fa-comments mr-2"></i>Activity</a>{% endif %}
-            </div>
+      <div class="d-flex align-items-center">
+        <div class="text-small font-weight-bold mr-2">Sort by</div>
+        <div class="dropdown dropdown-actions">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {% if sort_method=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
+            {% if sort_method=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
+            {% if sort_method=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+            {% if sort_method=="disputed" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
+            {% if sort_method=="activity" %}<i class="fas fa-comments mr-1"></i>{% endif %}
+            {{ sort_method }}
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+            {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
+            {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
+            {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+            {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed"><i class="fas fa-bullhorn mr-2"></i>Disputed</a>{% endif %}
+            {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity"><i class="fas fa-comments mr-2"></i>Activity</a>{% endif %}
           </div>
         </div>
-  {% endblock %}
+      </div>
+      {% endblock %}
     </div>
   </div>
 </div>
@@ -120,7 +120,7 @@
 
 <div class="flex-row justify-content-end d-none">
 
-  
+
   {% block listcardBlock %}
   <div class="p-3">
     <ul class="nav toggle-view">
@@ -134,7 +134,7 @@
           </li>
         </ul>
       </div>
-  {% endblock %}
+      {% endblock %}
 
       <div class="post-filter pb-2 d-none">
         <span>Sort By:</span>
@@ -246,23 +246,31 @@
     {% endif %}
     {% endblock %}
 
-{% block sidebarblock %}
-{% if v and v.can_make_guild %}
-   <div class="sidebar-section sidebar-guildmake">
-    <div class="title"><i class="fas fa-university mr-2"></i>Guilds</div>
-    <div class="body">
-<p>Create a community for something you love.</p>
-<a href="/create_guild" class="btn btn-primary btn-block">Create Guild</a>
-</div>
-  </div>
-  {% else %}
-        <div class="text-center my-4">
-        <i class="fad fa-comment-alt-smile text-gray-400 mb-3" style="
-        font-size: 3.5rem;
-        "></i>
-        <div class="h5 text-gray-500">Cool features coming here soon!</div>
+    {% block sidebarblock %}
+    {% if v and v.can_make_guild %}
+    <div class="sidebar-section sidebar-guildmake">
+      <div class="title"><i class="fas fa-university mr-2"></i>Guilds</div>
+      <div class="body">
+        <p>Create a community for something you love.</p>
+        <a href="/create_guild" class="btn btn-primary btn-block">Create Guild</a>
       </div>
-  {% endif %}
+    </div>
+    {% elif v and not v.can_make_guild %}
+    <div class="sidebar-section sidebar-guildmake">
+      <div class="title"><i class="fas fa-university mr-2"></i>Guilds</div>
+      <div class="body">
+        <p class="text-muted">You need 50 rep to create a guild. Rep can be earned by commenting and posting.</p>
+        <a href="#" class="btn btn-primary btn-block disabled">Create Guild</a>
+      </div>
+    </div>
+    {% else %}
+    <div class="text-center my-4">
+      <i class="fad fa-comment-alt-smile text-gray-400 mb-3" style="
+      font-size: 3.5rem;
+      "></i>
+      <div class="h5 text-gray-500">Cool features coming here soon!</div>
+    </div>
+    {% endif %}
 
 
-{% endblock %}
+    {% endblock %}
