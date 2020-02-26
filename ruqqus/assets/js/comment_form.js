@@ -18,7 +18,7 @@ $('.comment-box').blur(function () {
 
 */
 
-//Comment edit form
+// Comment edit form
 
 toggleEdit=function(id){
     comment=document.getElementById("comment-text-"+id);
@@ -31,6 +31,8 @@ toggleEdit=function(id){
     actions.classList.toggle("d-none");
     autoExpand(box);
 }
+
+// Post edit form
 
 togglePostEdit=function(id){
 
