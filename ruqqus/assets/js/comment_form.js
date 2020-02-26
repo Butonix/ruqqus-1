@@ -34,7 +34,7 @@ toggleEdit=function(id){
 
 togglePostEdit=function(id){
 
-    body=document.getElementById("post-body"+id);
+    body=document.getElementById("post-body");
     form=document.getElementById("edit-post-body"+id);
     box=document.getElementById("post-edit-box"+id);
 
