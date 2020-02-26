@@ -163,6 +163,10 @@ p {
     font-size: 14px;
 }
 
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    color: $black;
+}
+
 #settings #submit {
     padding-top: 98px;
 }
