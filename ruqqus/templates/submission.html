@@ -318,7 +318,7 @@
                 <small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeReplyQuote()" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small>
                 <small class="format"><i class="fas fa-image" onclick="getGif();commentForm('post-edit-box-{{ p.base36id }}')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Add GIF"></i></small> 
                 <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
-                <a href="javascript:void(0)" onclick="togglePostEdit('{{ p.base36id }}')" class="btn btn-secondary ml-auto cancel-form">Cancel</a> 
+                <a href="javascript:void(0)" onclick="togglePostEdit('{{ p.base36id }}')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
                 <button form="post-edit-form-{{ p.base36id }}" class="btn btn-primary ml-2">Save Edit</button> </div> </form>
               </div>
               {% endif %}
