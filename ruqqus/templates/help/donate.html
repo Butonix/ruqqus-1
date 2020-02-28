@@ -503,6 +503,12 @@
     });
 </script>
 
+<!-- Bootstrap ClipboardJS Modal Bug Fix -->
+
+<script type="text/javascript">
+$.fn.modal.Constructor.prototype._enforceFocus = function() {};
+</script>
+
 <!-- Initialize BS 4 tool tips -->
 
 <script src="/assets/js/tooltips.js"></script>
