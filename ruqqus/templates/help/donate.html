@@ -506,7 +506,9 @@
 <!-- Bootstrap ClipboardJS Modal Bug Fix -->
 
 <script type="text/javascript">
-$.fn.modal.Constructor.prototype._enforceFocus = function() {};
+new Clipboard('.copy-link', {
+    container: document.getElementById('#donateCryptoModal')
+});
 </script>
 
 <!-- Initialize BS 4 tool tips -->
