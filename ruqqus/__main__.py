@@ -92,7 +92,7 @@ def before_request():
         text=x.mock if x.mock else "Follow the robots.txt, dumbass"
         status=x.status_code if x.status_code else 418
         return text, status
-        
+
     if request.url.startswith('http://') and "localhost" not in app.config["SERVER_NAME"]:
         url = request.url.replace('http://', 'https://', 1)
         return redirect(url, code=301)

@@ -8,7 +8,8 @@ from ruqqus.__main__ import db, app
 @app.errorhandler(401)
 @auth_desired
 def error_401(e, v):
-    return render_template('errors/401.html', v=v), 401
+    return redirect("/login")
+    #return render_template('errors/401.html', v=v), 401
 
 @app.errorhandler(403)
 @auth_desired
