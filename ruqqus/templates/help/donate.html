@@ -482,11 +482,15 @@
 
 <!-- ClipboardJS -->
 
-<script src="/assets/js/clipboard.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
 
 <!-- Instantiate clipboard by passing a string selector -->
 <script type="text/javascript">
-    var clipboard = new ClipboardJS('.copy-link');
+    
+    var clipboard = new ClipboardJS('.copy-link', {
+    container: document.getElementById('donateCryptoModal')
+    }); 
+
     clipboard.on('success', function(e) {
 
         jQuery(function($) {
