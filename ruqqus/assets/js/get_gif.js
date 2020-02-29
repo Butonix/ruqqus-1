@@ -74,7 +74,7 @@
         var gifURL = [];
 
         // loop for fetching mutliple GIFs and creating the card divs
-        if (max < 15 && max > 0) {
+        if (max < 24 && max > 0) {
           for (var i = 0; i <= max; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
             container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
@@ -88,7 +88,7 @@
           loadGIFs.innerHTML = null;
         }
         else {
-          for (var i = 0; i <= 15; i++) {
+          for (var i = 0; i <= 24; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
             container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
             noGIFs.innerHTML = null;
