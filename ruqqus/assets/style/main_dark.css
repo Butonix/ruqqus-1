@@ -16898,6 +16898,14 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   word-break: break-word;
 }
 
+.gif-categories .card {
+  overflow: hidden;
+}
+
+.gif-categories .card:hover {
+  border: 3px solid #805AD5;
+}
+
 @media (max-width: 991.98px) {
   #frontpage, #search {
     padding-top: 49px;

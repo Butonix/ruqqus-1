@@ -3157,6 +3157,16 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     color: #fff;
 }
 
+// GIF Keyboard
+
+.gif-categories .card {
+    overflow: hidden;
+}
+
+.gif-categories .card:hover {
+    border: 3px solid $primary;
+}
+
 // Responsive media queries
 
 // Medium devices (tablets, less than 992px)
