@@ -244,7 +244,7 @@
                 {% if v.admin_level>=1 and v.id==c.author_id %}
                 {% if c.distinguish_level %}
 
-                <li class="list-group-item"><a class="d-block id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Undistinguish</a></li>
+                <li class="list-group-item"><a class="d-block" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Undistinguish</a></li>
                 {% else %}
                 <li class="list-group-item"><a class="d-block" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="distinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Distinguish</a></li>
 
