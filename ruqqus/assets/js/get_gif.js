@@ -71,12 +71,12 @@
         if (max < 15 && max > 0) {
           for (var i = 0; i <= max; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
-            container.innerHTML += ('<div class="card bg-secondary gif-keyboard-option" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',\'' + commentFormID + '\')"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            container.innerHTML += ('<div class="card bg-gray-400" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',\'' + commentFormID + '\')"><img class="img-fluid" src="' + gifURL[i] + '"></div>');
             noGIFs.innerHTML = null;
           }
         }
         else if (max <= 0) {
-          noGIFs.innerHTML = `<div class="text-center py-5"><div class="mb-3"><i class="fad fa-frown text-muted" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Aw shucks. No GIFs found...</p></div>`
+          noGIFs.innerHTML = `<div class="text-center py-5"><div class="mb-3"><i class="fad fa-frown text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Aw shucks. No GIFs found...</p></div>`
           container.innerHTML = null;
         }
         else {
