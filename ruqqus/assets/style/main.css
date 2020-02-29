@@ -16457,6 +16457,9 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
 .gif-categories img {
   border-radius: 0.35rem;
+  height: 110px;
+  width: 100%;
+  object-fit: cover;
 }
 
 .gif-categories img:hover {
