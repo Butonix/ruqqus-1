@@ -83,7 +83,7 @@
           }
         }
         else if (max <= 0) {
-          noGIFs.innerHTML = `<div class="text-center py-5"><div class="mb-3"><i class="fad fa-frown text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Aw shucks. No GIFs found...</p></div>`
+          noGIFs.innerHTML = `<div class="text-center py-3 mt-3"><div class="mb-3"><i class="fad fa-frown text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Aw shucks. No GIFs found...</p></div>`
           container.innerHTML = null;
           loadGIFs.innerHTML = null;
         }
