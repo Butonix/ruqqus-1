@@ -13379,10 +13379,6 @@ ol > li::before {
   opacity: 0.5;
 }
 
-.btn-white {
-  color: #121213;
-}
-
 .btn-success, .btn-danger {
   color: #ffffff;
 }
