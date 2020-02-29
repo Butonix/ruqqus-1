@@ -36,6 +36,9 @@ class Board(Base, Stndrd, Age_times):
     is_private=Column(Boolean, default=False)
     color_nonce=Column(Integer, default=0)
 
+    # tags = Column(Integer, ForeignKey("tags.id"), default=0)
+    # flair = Column(Integer, ForeignKey("flairs.id"), default=0)
+
     moderators=relationship("ModRelationship", lazy="dynamic")
     subscribers=relationship("Subscription", lazy="dynamic")
     submissions=relationship("Submission", lazy="dynamic", backref="board", primaryjoin="Board.id==Submission.board_id")

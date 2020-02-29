@@ -55,6 +55,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     score_top=Column(Float, default=1)
     score_activity=Column(Float, default=0)
 
+    #tags = Column(Integer, ForeignKey("tags.id"), default=0)
+    #flair = Column(Integer, ForeignKey("flairs.id"), default=0)
+
     approved_by=relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id")
 
 
