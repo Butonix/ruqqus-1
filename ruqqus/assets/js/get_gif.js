@@ -62,7 +62,7 @@
       console.log('searchTerm is: ', searchTerm)
       console.log('comment or reply form is: ', commentFormID)
       $.ajax({
-        url: "//api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=eOTkZX92KQM80g9NcBsq0heqZxZSVP86",
+        url: "//api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=eOTkZX92KQM80g9NcBsq0heqZxZSVP86" + "&limit=45",
         type: "GET",
         success: function(response) {
           console.log(response)
@@ -74,7 +74,7 @@
         var gifURL = [];
 
         // loop for fetching mutliple GIFs and creating the card divs
-        if (max < 24 && max > 0) {
+        if (max < 45 && max > 0) {
           for (var i = 0; i <= max; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/200w_d.gif";
             container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
@@ -88,7 +88,7 @@
           loadGIFs.innerHTML = null;
         }
         else {
-          for (var i = 0; i <= 24; i++) {
+          for (var i = 0; i <= 45; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/200w_d.gif";
             container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
             noGIFs.innerHTML = null;
