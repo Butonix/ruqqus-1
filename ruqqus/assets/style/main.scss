@@ -3151,6 +3151,18 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     border: 3px solid $primary;
 }
 
+.gif-categories .card .gif-cat-overlay {
+    position: absolute;
+    text-align: text-center;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.gif-categories .card:hover .gif-cat-overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
 // Responsive media queries
 
 // Medium devices (tablets, less than 992px)
