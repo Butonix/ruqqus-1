@@ -16460,6 +16460,11 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   height: 110px;
   width: 100%;
   object-fit: cover;
+  -webkit-transition: all 0.15s ease;
+  -moz-transition: all 0.15s ease;
+  -o-transition: all 0.15s ease;
+  -ms-transition: all 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .gif-categories img:hover {
@@ -16472,6 +16477,11 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   height: 100%;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.4);
+  -webkit-transition: all 0.15s ease;
+  -moz-transition: all 0.15s ease;
+  -o-transition: all 0.15s ease;
+  -ms-transition: all 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .gif-categories .card:hover .gif-cat-overlay {
