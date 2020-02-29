@@ -7,7 +7,8 @@ class Flair(Base, Stndrd):
     id = Column(Integer, primary_key=True)
     board_id = Column(Integer, ForeignKey("boards.id"), default=0)
     post_id = Column(Integer, ForeignKey("submissions.id"), default=0)
-    name = Column(Sring, default="")
+    name = Column(String, default="")
+    icon = Column(String(64))
     description = Column(String, default="")
     created_utc = Column(Integer)
 
