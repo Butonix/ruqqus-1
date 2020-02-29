@@ -13212,7 +13212,7 @@ pre {
   background-color: #ffffff;
 }
 
-#thread {
+#thread, #userpage {
   background-color: #F5F7FA;
 }
 
@@ -16486,7 +16486,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     background-color: #ffffff;
   }
 
-  #thread {
+  #thread, #userpage {
     background-color: #ffffff;
   }
 
