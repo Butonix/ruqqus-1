@@ -16906,6 +16906,18 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   border: 3px solid #805AD5;
 }
 
+.gif-categories .card .gif-cat-overlay {
+  position: absolute;
+  text-align: text-center;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.gif-categories .card:hover .gif-cat-overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
 @media (max-width: 991.98px) {
   #frontpage, #search {
     padding-top: 49px;
