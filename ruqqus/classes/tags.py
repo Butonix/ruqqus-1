@@ -6,7 +6,6 @@ class Tag(Base, Stndrd):
     __tablename__ = "tags"
     id = Column(Integer, primary_key=True)
     board_id = Column(Integer, ForeignKey("boards.id"), default=0)
-    post_id = Column(Integer, ForeignKey("submissions.id"), default=0)
     name = Column(String, default="")
     description = Column(String, default="")
     created_utc = Column(Integer)
