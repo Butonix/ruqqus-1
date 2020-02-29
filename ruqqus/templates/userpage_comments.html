@@ -86,7 +86,7 @@
   <div class="col">
 
     {% if u.comment_count>=1 %}
-    <div class="posts p-3">
+    <div class="posts p-3 p-md-0">
      {% for c in listing %}
      {{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
      {% endfor%}
