@@ -3177,9 +3177,14 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
 .gif-categories .card {
     overflow: hidden;
+    border: none;
 }
 
-.gif-categories .card:hover {
+.gif-categories img {
+    border-radius: $border-radius;
+}
+
+.gif-categories img:hover {
     border: 3px solid $primary;
 }
 
@@ -3193,6 +3198,8 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
 .gif-categories .card:hover .gif-cat-overlay {
     background-color: rgba(0, 0, 0, 0.6);
+    border: 3px solid $primary;
+    border-radius: $border-radius;
 }
 
 // Responsive media queries
