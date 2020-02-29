@@ -17,7 +17,7 @@
 </div>
 {% endif %}
 
-<div id="comment-{{ c.base36id }}" class="comment rounded{% if standalone %} mt-0{% endif %}">
+<div id="comment-{{ c.base36id }}" class="comment rounded{% if standalone %} mt-0{% endif %}{% if c.is_banned %} banned py-2{% endif %}{% if c.is_deleted %} deleted py-2{% endif %}">
 
     <span class="mr-2 d-block d-md-none"><a href="{{ c.author.permalink }}"><img src="{{ c.author.profile_url }}" class="profile-pic-25"></a></span>
 
@@ -25,7 +25,7 @@
 
     <div class="comment-body">
 
-        <div id="comment-{{ c.base36id }}-only" class="{% if c.is_banned %} banned{% endif %}{% if c.is_deleted %} deleted{% endif %}">
+        <div id="comment-{{ c.base36id }}-only">
 
             <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %}{% if c.author.title and c.author.title.is_before %}<span style="color:#{{ c.author.title.color }}">{{ c.author.title.text }}</span> {% endif %}<a href="{{ c.author.permalink }}" class="user-name {% if c.post.author_id==c.author_id and not c.post.is_deleted %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.author.title and not c.author.title.is_before %}<span style="color:#{{ c.author.title.color }}">{{ c.author.title.text }}</span>{% endif %}
               {% if c.distinguish_level or c.author_id==c.post.author_id %}
