@@ -15,6 +15,10 @@
       document.getElementById('gifSearch').value = null;
     }
 
+    // load more gifs div
+
+    var loadGIFs = document.getElementById('gifs-load-more');
+
     // error message div
 
     var noGIFs = document.getElementById('no-gifs-found');
@@ -47,6 +51,8 @@
       cancelBtn.innerHTML = null;
 
       noGIFs.innerHTML = null;
+
+      loadMore.classList.toggle('d-none');
     }
     else {
       backBtn.innerHTML = '<button class="btn btn-link pl-0 pr-3" id="gifs-back-btn" onclick="getGif();"><i class="fas fa-long-arrow-left text-muted"></i></button>';
@@ -73,17 +79,20 @@
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
             container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
             noGIFs.innerHTML = null;
+            loadMore.classList.toggle('d-none');
           }
         }
         else if (max <= 0) {
           noGIFs.innerHTML = `<div class="text-center py-5"><div class="mb-3"><i class="fad fa-frown text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Aw shucks. No GIFs found...</p></div>`
           container.innerHTML = null;
+          loadMore.classList.add('d-none');
         }
         else {
           for (var i = 0; i <= 15; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
             container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
             noGIFs.innerHTML = null;
+            loadMore.classList.toggle('d-none');
           }
         }
         console.log(container);
@@ -115,6 +124,10 @@
 
     document.getElementById('gifSearch').value = null;
 
+    // load more gifs div
+
+    var loadGIFs = document.getElementById('gifs-load-more');
+
     // no GIFs div
 
     var noGIFs = document.getElementById('no-gifs-found');
@@ -139,8 +152,12 @@
 
     cancelBtn.innerHTML = null;
 
-    // REmove inner HTML from no gifs div
+    // Remove inner HTML from no gifs div
 
     noGIFs.innerHTML = null;
+
+    // Hide no more gifs div
+
+    loadMore.classList.add('d-none');
 
   })
