@@ -52,7 +52,7 @@
 
       noGIFs.innerHTML = null;
 
-      loadGIFs.classList.toggle('d-none');
+      loadGIFs.innerHTML = null;
     }
     else {
       backBtn.innerHTML = '<button class="btn btn-link pl-0 pr-3" id="gifs-back-btn" onclick="getGif();"><i class="fas fa-long-arrow-left text-muted"></i></button>';
