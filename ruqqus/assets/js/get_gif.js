@@ -79,7 +79,7 @@
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
             container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
             noGIFs.innerHTML = null;
-            loadGIFs.innerHTML = '<div class="text-center py-3" id="gifs-load-more"><div class="mb-3"><i class="fad fa-grin-beam-sweat text-gray-500" style="font-size: 3.5rem;"/></div><p class="text-gray-500 font-weight-bold">You have reached the end of the list. More to come soon!</p></div>';
+            loadGIFs.innerHTML = '<div class="text-center py-3"><div class="mb-3"><i class="fad fa-grin-beam-sweat text-gray-500" style="font-size: 3.5rem;"/></div><p class="text-gray-500 font-weight-bold">You have reached the end of the list. More to come soon!</p></div></div>';
           }
         }
         else if (max <= 0) {
@@ -92,7 +92,7 @@
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/giphy.gif";
             container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifURL[i] + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
             noGIFs.innerHTML = null;
-            loadGIFs.innerHTML = '<div class="text-center py-3" id="gifs-load-more"><div class="mb-3"><i class="fad fa-grin-beam-sweat text-gray-500" style="font-size: 3.5rem;"/></div><p class="text-gray-500 font-weight-bold">You have reached the end of the list. More to come soon!</p></div>';
+            loadGIFs.innerHTML = '<div class="text-center py-3"><div class="mb-3"><i class="fad fa-grin-beam-sweat text-gray-500" style="font-size: 3.5rem;"/></div><p class="text-gray-500 font-weight-bold">You have reached the end of the list. More to come soon!</p></div></div>';
           }
         }
         console.log(container);
