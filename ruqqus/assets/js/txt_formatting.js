@@ -1,7 +1,7 @@
 // Bold Text
 
-makeBold = function () {
-    var text = document.getElementById("comment-form");
+makeBold = function (form) {
+    var text = document.getElementById(form);
     var startIndex = text.selectionStart,
         endIndex = text.selectionEnd;
     var selectedText = text.value.substring(startIndex, endIndex);
@@ -22,8 +22,8 @@ makeBold = function () {
 
 // Italicize Comment Text
 
-makeItalics = function () {
-    var text = document.getElementById("comment-form");
+makeItalics = function (form) {
+    var text = document.getElementById(form);
     var startIndex = text.selectionStart,
         endIndex = text.selectionEnd;
     var selectedText = text.value.substring(startIndex, endIndex);
@@ -44,8 +44,8 @@ makeItalics = function () {
 
 // Quote Comment Text
 
-makeQuote = function () {
-    var text = document.getElementById("comment-form");
+makeQuote = function (form) {
+    var text = document.getElementById(form);
     var startIndex = text.selectionStart,
         endIndex = text.selectionEnd;
     var selectedText = text.value.substring(startIndex, endIndex);
@@ -66,8 +66,8 @@ makeQuote = function () {
 
 // Bold Reply Text
 
-makeReplyBold = function () {
-    var text = document.getElementById("reply-form");
+makeReplyBold = function (form) {
+    var text = document.getElementById(form);
     var startIndex = text.selectionStart,
         endIndex = text.selectionEnd;
     var selectedText = text.value.substring(startIndex, endIndex);
@@ -88,8 +88,8 @@ makeReplyBold = function () {
 
 // Italicize Reply Text
 
-makeReplyItalics = function () {
-    var text = document.getElementById("reply-form");
+makeReplyItalics = function (form) {
+    var text = document.getElementById(form);
     var startIndex = text.selectionStart,
         endIndex = text.selectionEnd;
     var selectedText = text.value.substring(startIndex, endIndex);
@@ -110,8 +110,8 @@ makeReplyItalics = function () {
 
 // Quote Reply Text
 
-makeReplyQuote = function () {
-    var text = document.getElementById("reply-form");
+makeReplyQuote = function (form) {
+    var text = document.getElementById(form);
     var startIndex = text.selectionStart,
         endIndex = text.selectionEnd;
     var selectedText = text.value.substring(startIndex, endIndex);
