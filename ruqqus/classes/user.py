@@ -437,7 +437,7 @@ class User(Base, Stndrd):
                                is_following=is_following)
     @property
     def feedkey(self):
-        feedkey_hashstr = "{self.username}{self.id}{self.created_utc}"
+        feedkey_hashstr = f"{self.username}{self.id}{self.created_utc}"
 
 
         return hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
