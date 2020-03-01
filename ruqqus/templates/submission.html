@@ -1,7 +1,7 @@
 {% extends "default.html" %}
 
 {% block stylesheets %}
-{% if v and session.get("dark_mode_enabled") %}
+{% if v and session.get("dark_mode_enabled") and v.referral_count %}
 <link id="css-link" rel="stylesheet" href="{{ p.board.css_dark_url }}">
 {% else %}
 <link id="css-link" rel="stylesheet" href="{{ p.board.css_url }}">
