@@ -96,16 +96,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         
         return db.query(Domain).filter_by(id=self.domain_ref).first()
 
-
-    @property
-    @cache.memoize(timeout=60)
-    def score_percent(self):
-        try:
-            return int((self.ups/(self.ups+self.downs))*100)
-        except ZeroDivisionError:
-            return 0
-
-
     @property
     def fullname(self):
         return f"t2_{self.base36id}"
