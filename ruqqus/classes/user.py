@@ -435,6 +435,15 @@ class User(Base, Stndrd):
                                page=page,
                                next_exists=next_exists,
                                is_following=is_following)
+    @property
+    def feedkey(self):
+        feedkey_hashstr = "{self.username}{self.id}{self.created_utc}"
+
+
+        return hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
+                           msg=bytes(feedkey_hashstr, "utf-16")
+                           ).hexdigest()
+
 
     @property
     def formkey(self):
