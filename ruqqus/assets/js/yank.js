@@ -4,7 +4,7 @@ yank_postModal = function(id, author, comments, points, title, author_link, doma
 
   // Passed data for modal
 
-  document.getElementById("post-author").innerText = author;
+  document.getElementById("post-author-url").innerText = author;
 
   document.getElementById("post-comments").textContent = comments;
 
