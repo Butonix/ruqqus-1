@@ -173,6 +173,30 @@
 
       </div>
 
+            <h2 class="h5" name="referral">RSS Feed</h2>
+
+      <p class="text-small text-muted">Invite a friend to make a Ruqqus.{% if v.referral_count==0 %} Unlock dark mode!{% endif %}</p>
+
+      <div class="settings-section rounded">
+
+        <div class="d-lg-flex">
+
+          <div class="title w-lg-25">
+            <label for="referral_code">Custom Feed</label>
+          </div>
+
+          <div class="body w-lg-100">
+
+            <input type="text" readonly="" class="form-control copy-link" id="rss_feed" value="https://ruqqus.com/feeds/@{{ v.username }}/{{ v.feedkey }}/top" data-clipboard-text="https://ruqqus.com/feeds/@{{ v.username }}/{{ v.feedkey }}/top">
+
+            <div class="text-small-extra text-muted mt-3">Subscribe to your own personal ruqqus rss feed</div>
+
+          </div>
+
+        </div>
+
+      </div>
+
       <form id="profile-settings" action="/settings/profile" method="post">
 
         <h2 class="h5">Content Filters</h2>
