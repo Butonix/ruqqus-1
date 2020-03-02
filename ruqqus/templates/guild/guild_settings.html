@@ -27,7 +27,6 @@
   <!-- Font Awesome -->
   <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 
-  <script src="/assets/js/post.js"></script>
   <script>
     function formkey() {
       return '{{ v.formkey }}';
@@ -161,17 +160,6 @@
 
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/change_email.js"></script>
-<script src="/assets/js/email_verify_text.js"></script>
-
-<!-- Initialize BS 4 tool tips -->
-
-<script src="/assets/js/tooltips.js"></script>
-
-<!-- Search bar icon JS -->
-
-<script src="/assets/js/search_icon.js"></script>
-
 <!-- ClipboardJS -->
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
@@ -199,12 +187,10 @@
 
 <!-- Ruqqus Dark Mode Toggle -->
 
-<script src="/assets/js/dark_mode.js"></script>
 
 {% endif %}
 
-{% block scripts %}
-{% endblock %}
+<script src="/assets/js/all_js.js"></script>
 
 </body>
 
