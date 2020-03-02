@@ -33,7 +33,7 @@ $('#new_email').on('input', function () {
 
 // Toggle comment collapse
 
-collapse_comment = function(comment_id) {
+function collapse_comment(comment_id) {
 
 	var comment = "comment-" + comment_id;
 
@@ -74,7 +74,7 @@ toggleEdit=function(id){
     form.classList.toggle("d-none");
     actions.classList.toggle("d-none");
     autoExpand(box);
-}
+};
 
 // Post edit form
 
@@ -87,7 +87,7 @@ togglePostEdit=function(id){
     body.classList.toggle("d-none");
     form.classList.toggle("d-none");
     autoExpand(box);
-}
+};
 
 //comment modding
 function removeComment(post_id) {
@@ -101,7 +101,7 @@ button.onclick=function(){approveComment(post_id)};
 button.innerHTML="approve"
 }
 post(url, callback, "Unable to remove post at this time. Please try again later.")
-}
+};
 
 function approveComment(post_id) {
 url="/api/unban_comment/"+post_id
@@ -129,7 +129,7 @@ button.innerHTML="undistinguish"
 }
 
 post(url, callback, "Unable to distinguish comment at this time. Please try again later.")
-}
+};
 
 function undistinguishModComment(post_id) {
 url="/api/undistinguish_comment/"+post_id
@@ -142,7 +142,7 @@ button.onclick=function(){distinguishModComment(post_id)};
 button.innerHTML="distinguish"
 }
 post(url, callback, "Unable to undistinguish comment at this time. Please try again later.")
-}
+};
 
 function distinguishAdminComment(post_id) {
 url="/api/distinguish_comment/"+post_id
@@ -155,7 +155,7 @@ button.onclick=function(){undistinguishAdminComment(post_id)};
 button.innerHTML="undistinguish"
 }
 post(url, callback, "Unable to distinguish comment at this time. Please try again later.")
-}
+};
 
 function undistinguishAdminComment(post_id) {
 url="/api/undistinguish_comment/"+post_id
@@ -224,7 +224,7 @@ function delReplyForm(commentId) {
 
 //Autoexpand textedit comments
 
-var autoExpand = function (field) {
+function autoExpand (field) {
 
 	// Reset field height
 	field.style.height = 'inherit';
@@ -277,7 +277,7 @@ function switch_css() {
 
 // Delete Post
 
-delete_postModal = function(id) {
+function delete_postModal(id) {
 
   // Passed data for modal
 
@@ -297,7 +297,7 @@ delete_postModal = function(id) {
 
 // Delete Comment
 
-delete_commentModal = function(id) {
+function delete_commentModal(id) {
 
   // Passed data for modal
 
@@ -535,11 +535,11 @@ function post(url, callback, errortext) {
   xhr.onload=callback
   xhr.onerror=function(){alert(errortext)}
   xhr.send(form);
-}
+};
 
 // sub/unsub
 
-toggleSub=function(){
+function toggleSub(){
   document.getElementById('button-unsub').classList.toggle('d-none');
   document.getElementById('button-sub').classList.toggle('d-none');
   document.getElementById('button-unsub-modal').classList.toggle('d-none');
@@ -707,18 +707,18 @@ if (localStorage.sidebar_pref == 'collapsed') {
 
 	document.getElementById('sidebar-left').classList.add('sidebar-collapsed');
   
-}
+};
 
-toggle_sidebar_collapse = function() {
+function toggle_sidebar_collapse() {
 
 	// Store Pref
 	localStorage.setItem('sidebar_pref', 'collapsed');
 
 	document.getElementById('sidebar-left').classList.toggle('sidebar-collapsed');
 
-}
+};
 
-toggle_sidebar_expand = function() {
+function toggle_sidebar_expand() {
 
 	// Remove Pref
 	localStorage.removeItem('sidebar_pref');
@@ -806,7 +806,7 @@ scoredown2.classList.add("d-none");
 }
 
 post(url, callback, "Unable to vote at this time. Please try again later.");
-}
+};
 
 
 function vote_comment(comment_id, direction) {
@@ -854,7 +854,7 @@ post(url, callback, "Unable to vote at this time. Please try again later.");
 
 // Yank Post
 
-yank_postModal = function(id, author, comments, points, title, author_link, domain, timestamp) {
+function yank_postModal(id, author, comments, points, title, author_link, domain, timestamp) {
 
   // Passed data for modal
 
@@ -901,3 +901,55 @@ var myUrl = $('#embedURL').text();
 myId = getId(myUrl);
 
 $('#ytEmbed').html('<iframe width="100%" height="475" src="//www.youtube.com/embed/' + myId + '" frameborder="0" allowfullscreen></iframe>');
+
+
+function expandDesktopImage(image, link) {
+
+// GIPHY attribution div
+
+var attribution = document.getElementById("modal-image-attribution");
+
+// Link text
+
+var linkText= document.getElementById("desktop-expanded-image-link")
+
+document.getElementById("desktop-expanded-image").src = image;
+
+if (image.includes("i.ruqqus.com")) {
+	linkText.href = link;
+	linkText.textContent = 'Go to website';
+}
+else if (image.includes("imgur.com") || image.includes("cdn.discordapp.com" || image.includes("i.ruqqus.com"))){
+	linkText.href = image;
+	linkText.textContent = 'View original';
+}
+else {
+	linkText.href = image;
+	linkText.textContent = 'View original';
+}
+
+if (image.includes("media.giphy.com")) {
+	attribution.innerHTML = '<img src="/assets/images/icons/PoweredBy_200px-Black_HorizLogo.png" style="width: 150px;">';
+}
+
+};
+
+// When image modal is closed
+
+$('#expandImageModal').on('hidden.bs.modal', function (e) {
+
+  	// GIPHY attribution div
+
+  	var attribution = document.getElementById("modal-image-attribution");
+
+  	// remove the attribution
+
+  	attribution.innerHTML = null;
+
+	// remove image src and link
+
+	document.getElementById("desktop-expanded-image").src = null;
+
+	document.getElementById("desktop-expanded-image-link").href = null;
+
+});
