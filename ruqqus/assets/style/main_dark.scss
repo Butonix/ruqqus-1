@@ -3243,17 +3243,13 @@ html {
     max-width: none;
 }
 
-body {
+body, #settings, #notifications, #submit{
     padding-top: 49px;
-    background-color: $dark;
+    background-color: $gray-700;
 }
 
-#settings, #notifications, #submit {
-    padding-top: 49px;
-}
-
-#notifications body, #settings body {
-    background-color: $dark!important;
+#thread, #userpage {
+    background-color: $gray-700;
 }
 
 .custom-gutters {

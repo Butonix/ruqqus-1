@@ -16960,17 +16960,13 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     max-width: none;
   }
 
-  body {
+  body, #settings, #notifications, #submit {
     padding-top: 49px;
-    background-color: #383838;
+    background-color: #181818;
   }
 
-  #settings, #notifications, #submit {
-    padding-top: 49px;
-  }
-
-  #notifications body, #settings body {
-    background-color: #383838 !important;
+  #thread, #userpage {
+    background-color: #181818;
   }
 
   .custom-gutters {
