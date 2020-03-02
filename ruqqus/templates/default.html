@@ -26,6 +26,7 @@
 	<meta name="format-detection" content="telephone=no">
 	<meta name="apple-mobile-web-app-title" content="Ruqqus">
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+	<script src="/assets/js/ios.js"></script>
 
 	<!-- Ruqqus CSS -->
 	
@@ -42,6 +43,8 @@
 	<!-- Font Awesome -->
 	<link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 
+  <script src="/assets/js/toggle_sidebar_collapse.js"></script>
+
   {% block fixedMobileBarJS %}
   {% endblock %}
 
@@ -52,7 +55,15 @@
      return '{{ v.formkey }}';
    }
  </script>
+ <script src="/assets/js/post.js"></script>
 
+ <script src="/assets/js/voting.js"></script>
+ <script src="/assets/js/comment_replies.js"></script>
+
+ {% if v.admin_level %}
+ <script src="/assets/js/comment_modding.js"></script>
+ <script src="/assets/js/post_modding.js"></script>
+ {% endif %}
 
  {% endif %}
 
@@ -427,7 +438,13 @@
 {% include "announcements_modal.html" %}
 {% include "bootstrap.html" %}
 
+<script src="/assets/js/collapse.js"></script>
+<script src="/assets/js/comment_form.js"></script>
 
+{% if v %}
+<script src="/assets/js/comment_form.js"></script>
+<script src="/assets/js/voting.js"></script>
+{% endif %}
 
 <!-- ClipboardJS -->
 
@@ -452,7 +469,39 @@
 	});
 </script>
 
+<!-- Initialize BS 4 tool tips -->
 
+<script src="/assets/js/tooltips.js"></script>
+
+<!-- Search bar icon JS -->
+
+<script src="/assets/js/search_icon.js"></script>
+
+<!-- BS Spinner JS -->
+
+<script src="/assets/js/spinner.js"></script>
+
+<!-- Activate K-Code -->
+<script src="/assets/js/kc.js"></script>
+
+{% if v and v.referral_count %}
+<!-- Ruqqus Dark Mode Toggle -->
+<script src="/assets/js/dark_mode.js"></script>
+{% endif %}
+
+{% if v %}
+<!-- Ruqqus Flag Comment & Submission -->
+<script src="/assets/js/flag.js"></script>
+<!-- Ruqqus Delete Comment & Submission -->
+<script src="/assets/js/delete.js"></script>
+{% endif %}
+
+{% if v and v.mods_anything %}
+<!-- Ruqqus Flag Comment & Submission -->
+<script src="/assets/js/kick.js"></script>
+<!-- Ruqqus Yank Submission -->
+<script src="/assets/js/yank.js"></script>
+{% endif %}
 
 {% block enlargeThumbJS %}
 {% endblock %}
@@ -462,8 +511,6 @@
 
 {% block formatJS %}
 {% endblock %}
-
-<script src="/assets/js/all_js.js"></script>
 
 </body>
 
