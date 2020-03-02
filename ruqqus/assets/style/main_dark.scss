@@ -176,22 +176,26 @@ pre {
     word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-    color: $white;
-}
-
 #settings, #notifications, #submit {
     padding-top: 98px;
 }
 
+#settings {
+    background-color: $white;
+}
+
 #page {
     padding-top: 49px;
-    background-color: $dark;
+    background-color: $white;
 }
 
 #article {
     padding-top: 0;
-    background-color: $light;
+    background-color: $white;
+}
+
+#thread, #userpage {
+    background-color: $gray-700;
 }
 
 // Docs

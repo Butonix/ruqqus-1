@@ -13606,12 +13606,12 @@ pre {
   /* Internet Explorer 5.5+ */
 }
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-  color: #383838;
-}
-
 #settings, #notifications, #submit {
   padding-top: 98px;
+}
+
+#settings {
+  background-color: #383838;
 }
 
 #page {
@@ -13621,7 +13621,11 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 #article {
   padding-top: 0;
-  background-color: #35363e;
+  background-color: #383838;
+}
+
+#thread, #userpage {
+  background-color: #181818;
 }
 
 #article .navbar-light .navbar-nav .nav-link {
