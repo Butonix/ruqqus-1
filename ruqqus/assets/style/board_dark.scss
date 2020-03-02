@@ -1198,6 +1198,7 @@ color: $dark;
 .sidebar {
     -ms-flex: 0 0 300px;
     flex: 0 0 300px;
+    background-color: $gray-600!important;
 }
 
 .sidebar h1, .sidebar h2, .sidebar h3, .sidebar h4, .sidebar h5, .sidebar h6 {
@@ -1319,7 +1320,7 @@ color: $dark;
     top: 49px;
     z-index: 1000;
     height: 100vh;
-    background-color: $gray-700!important;
+    background-color: $gray-600!important;
 }
 
 .sidebar-left .sidebar-section.sidebar-filters {

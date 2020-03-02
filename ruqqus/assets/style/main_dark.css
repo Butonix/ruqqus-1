@@ -14562,6 +14562,7 @@ a:hover .link-arrow {
 .sidebar {
   -ms-flex: 0 0 300px;
   flex: 0 0 300px;
+  background-color: #1f2023 !important;
 }
 
 .sidebar h1, .sidebar h2, .sidebar h3, .sidebar h4, .sidebar h5, .sidebar h6 {
@@ -14672,7 +14673,7 @@ a:hover .link-arrow {
   top: 49px;
   z-index: 1000;
   height: 100vh;
-  background-color: #181818 !important;
+  background-color: #1f2023 !important;
 }
 
 .sidebar-left .sidebar-section.sidebar-filters {
