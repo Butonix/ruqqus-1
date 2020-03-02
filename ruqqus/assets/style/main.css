@@ -7263,7 +7263,7 @@ a.close.disabled {
   align-items: flex-start;
   justify-content: space-between;
   padding: 1rem 1rem;
-  border-bottom: 1px solid #CBD5E0;
+  border-bottom: 1px solid #E2E8F0;
   border-top-left-radius: calc(0.3rem - 1px);
   border-top-right-radius: calc(0.3rem - 1px);
 }
@@ -7289,7 +7289,7 @@ a.close.disabled {
   align-items: center;
   justify-content: flex-end;
   padding: 0.75rem;
-  border-top: 1px solid #CBD5E0;
+  border-top: 1px solid #E2E8F0;
   border-bottom-right-radius: calc(0.3rem - 1px);
   border-bottom-left-radius: calc(0.3rem - 1px);
 }
@@ -13194,7 +13194,7 @@ pre {
   /* Internet Explorer 5.5+ */
 }
 
-#settings, #notifications, #submit {
+#settings, #submit {
   padding-top: 98px;
 }
 
