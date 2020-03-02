@@ -1,3 +1,0 @@
-bumpversion patch --allow-dirty
-git add .
-git commit -m "patch build"

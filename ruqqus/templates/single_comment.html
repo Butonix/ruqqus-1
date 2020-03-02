@@ -17,15 +17,15 @@
 </div>
 {% endif %}
 
-<div id="comment-{{ c.base36id }}" class="comment rounded{% if standalone %} mt-0{% endif %}">
+<div id="comment-{{ c.base36id }}" class="comment rounded{% if standalone %} mt-0{% endif %}{% if c.is_banned %} banned{% endif %}{% if c.is_deleted %} deleted{% endif %}">
 
     <span class="mr-2 d-block d-md-none"><a href="{{ c.author.permalink }}"><img src="{{ c.author.profile_url }}" class="profile-pic-25"></a></span>
 
     <span class="comment-collapse d-md-block d-none" onclick="collapse_comment('{{ c.base36id }}')"></span>
 
-    <div class="comment-body">
+    <div class="comment-body {% if c.is_banned %} banned py-2{% endif %}{% if c.is_deleted %} deleted py-2{% endif %}">
 
-        <div id="comment-{{ c.base36id }}-only" class="{% if c.is_banned %} banned{% endif %}{% if c.is_deleted %} deleted{% endif %}">
+        <div id="comment-{{ c.base36id }}-only">
 
             <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %}{% if c.author.title and c.author.title.is_before %}<span style="color:#{{ c.author.title.color }}">{{ c.author.title.text }}</span> {% endif %}<a href="{{ c.author.permalink }}" class="user-name {% if c.post.author_id==c.author_id and not c.post.is_deleted %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.author.title and not c.author.title.is_before %}<span style="color:#{{ c.author.title.color }}">{{ c.author.title.text }}</span>{% endif %}
               {% if c.distinguish_level or c.author_id==c.post.author_id %}
@@ -132,7 +132,7 @@
                     <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author.username }}','{{ c.board.name }}')"><i class="fas fa-flag"></i>Flag</a>
                     {% endif %}
 
-                    {% if v and c.post and c.author_id==v.id and not c.board.has_ban(v) %}
+                    {% if v and c.post and c.author_id==v.id and not c.board.has_ban(v) and not c.is_deleted %}
 
                     <a class="dropdown-item" href="javascript:void(0)" onclick="toggleEdit('{{ c.base36id }}')"><i class="fas fa-edit"></i>Edit</a>
 
@@ -196,7 +196,7 @@
 <div id="reply-to-{{ c.base36id }}"></div>
 
 {% if render_replies %}
-{% if level==4 and c.replies %}
+{% if level==5 and c.replies %}
 
 
 <div id="morecomment-{{ c.base36id }}" class="mt-2 more-comments text-small">
@@ -234,7 +234,7 @@
                 <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author.username }}','{{ c.board.name }}')" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
                 {% endif %}
 
-                {% if v and c.post and c.author_id==v.id and not c.board.has_ban(v) %}
+                {% if v and c.post and c.author_id==v.id and not c.board.has_ban(v) and not c.is_deleted %}
                 <li class="list-group-item"><a href="javascript:void(0)" data-dismiss="modal" onclick="toggleEdit('{{ c.base36id }}')" class="d-block"><i class="fas fa-edit"></i>Edit</a></li>
 
                 <li class="list-group-item"><a class="d-block" href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal('{{ c.base36id }}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
@@ -264,28 +264,5 @@
     </div>
 </div>
 </div>
-
-{% if v and v.id==c.author_id %}
-<!-- Delete Comment Modal -->
-<div class="modal fade" id="deleteModal-{{ c.base36id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-body text-center">
-        <div class="my-2" style="font-size: 4rem;">
-            <i class="fad fa-trash-alt text-muted"></i>
-        </div>
-        <div class="h5">Delete comment?</div>
-        <p class="text-muted text-small">Your comment will be removed everywhere on Ruqqus, including your profile. This action cannot be undone. </p>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
-        <a href="javascript:void(0)" class="btn btn-danger" onclick="post('/delete/comment/{{ c.base36id }}', callback=function(){window.location.reload(true)})">Yes, delete
-        </a>
-    </div>
-</div>
-</div>
-</div>
-
-{% endif %}
 
 </div>

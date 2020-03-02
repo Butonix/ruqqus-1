@@ -85,6 +85,8 @@ class Board(Base, Stndrd, Age_times):
         return f"/+{self.name}"
 
     def can_take(self, post):
+        if self.is_banned:
+            return False
         return not self.postrels.filter_by(post_id=post.id).first()
 
     @cache.memoize(timeout=60)
@@ -182,6 +184,9 @@ class Board(Base, Stndrd, Age_times):
 
         if user is None:
             return None
+
+        if self.is_banned:
+            return False
 
         return self.moderators.filter_by(user_id=user.id, accepted=True).first()
 

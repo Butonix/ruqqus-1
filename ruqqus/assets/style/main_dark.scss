@@ -94,7 +94,7 @@ $lead-font-size: $font-size-base * 1.325 !default;
 
 // Font weight
 
-$font-weight-bold: 500;
+$font-weight-bold: 600;
 $font-weight-bolder: 700;
 $headings-font-weight: $font-weight-bold;
 
@@ -140,8 +140,6 @@ $yiq-contrasted-threshold:  160 !default;
 
 @import "node_modules/bootstrap/scss/bootstrap";
 
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap');
-
 html {
     font-size: 14px;
 }
@@ -151,7 +149,7 @@ html {
   }
 
 body {
-    color: $white;
+    color: $black;
     padding-top: 49px;
     background-color: $dark;
     -webkit-font-smoothing: antialiased;
@@ -176,7 +174,7 @@ pre {
     word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
-#settings, #notifications, #submit {
+#settings, #submit {
     padding-top: 98px;
 }
 
@@ -353,6 +351,11 @@ ol > li::before {
     font-weight: $font-weight-bold;
     font-size: $font-size-base;
     border-radius: $border-radius-sm;
+}
+
+.btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: $small-font-size;
 }
 
 .btn-lg {
@@ -807,7 +810,7 @@ label.color-radio span {
 
 .form-control:focus, .form-control:active {
     color: $black;
-    background-color: $dark;
+    background-color: $light;
     outline: 0;
     border-color: $primary;
     box-shadow: none;
@@ -863,7 +866,7 @@ label.terms {
 }
 
 .dropdown-item:hover, .dropdown-item:focus, .dropdown-item.active {
-    color: $white;
+    color: $black;
     text-decoration: none;
     background-color: $light;
 }
@@ -946,6 +949,7 @@ th {
     font-size: $small-font-size;
     font-weight: $font-weight-bold;
     text-align: center;
+    word-break: keep-all;
     min-width: 40px;
 }
 
@@ -1191,7 +1195,7 @@ color: $dark;
 .scrollspy.sidebar-sticky .list-group .list-group-item.active {
     background-color: transparent;
     color: $primary;
-    font-weight: 500;
+    font-weight: $font-weight-bold;
     left: -1px;
     border-left: solid 2px $primary;
     z-index: 2;
@@ -1591,6 +1595,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50rem;
     text-align: center;
     object-fit: cover;
+    background-color: #FFFFFF;
 }
 
 .profile-pic-25 {
@@ -1599,6 +1604,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50rem;
     text-align: center;
     object-fit: cover;
+    background-color: #FFFFFF;
 }
 
 .profile-pic-30 {
@@ -1607,6 +1613,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50rem;
     text-align: center;
     object-fit: cover;
+    background-color: #FFFFFF;
 }
 
 .profile-pic-35 {
@@ -1615,6 +1622,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50rem;
     text-align: center;
     object-fit: cover;
+    background-color: #FFFFFF;
 }
 
 .profile-pic-40 {
@@ -1623,6 +1631,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50rem;
     text-align: center;
     object-fit: cover;
+    background-color: #FFFFFF;
 }
 
 .profile-pic-50 {
@@ -1631,6 +1640,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50rem;
     text-align: center;
     object-fit: cover;
+    background-color: #FFFFFF;
 }
 
 .profile-pic-65 {
@@ -1639,6 +1649,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50rem;
     text-align: center;
     object-fit: cover;
+    background-color: #FFFFFF;
 }
 
 .profile-pic-75 {
@@ -1647,6 +1658,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50rem;
     text-align: center;
     object-fit: cover;
+    background-color: #FFFFFF;
 }
 
 .profile-pic-overlap {
@@ -2282,10 +2294,10 @@ div:hover .thumb-img-link-overlay {
 }
 
 blockquote {
-    border-left: 4px solid $primary;
+    border-left: 2px solid $primary;
     color: $black;
     font-size: $font-size-base;
-    font-weight: $font-weight-bold;
+    font-weight: $font-weight-normal;
     background-color: #46444a;
     padding: 0.5rem 1rem;
     margin: 0.5rem 0rem 1rem 0.5rem;

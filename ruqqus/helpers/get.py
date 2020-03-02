@@ -45,17 +45,17 @@ def get_guild(name, graceful=False):
             return None
     return x
 
-def get_domain(domain):
+def get_domain(s):
 
     #parse domain into all possible subdomains
-    parts=domain.split(".")
+    parts=s.split(".")
     domain_list=set([])
     for i in range(len(parts)):
         new_domain=parts[i]
         for j in range(i+1, len(parts)):
             new_domain+="."+parts[j]
 
-            domain_list.add(new_domain)
+        domain_list.add(new_domain)
 
     domain_list=list(domain_list)
 

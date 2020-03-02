@@ -1,12 +1,11 @@
 from flask import *
 from sqlalchemy import func
-import ruqqus.classes
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.mail import *
-from ruqqus.__main__ import db, app
+from ruqqus.__main__ import db, app, cache
 
 @app.route("/settings/profile", methods=["POST"])
 @is_not_banned
@@ -23,13 +22,13 @@ def settings_profile_post(v):
             return render_template("settings.html", v=v, error="Incorrect password")
 
         v.passhash=v.hash_password(request.form.get("new_password"))
-        updated=True
-                                  
+        updated=True                                  
 
     if request.form.get("over18") != v.over_18:
         updated=True
         v.over_18=bool(request.form.get("over18", None))
-
+        cache.delete_memoized(User.idlist, v)
+        
     if request.form.get("bio") != v.bio:
         updated=True
         bio = request.form.get("bio")[0:256]
