@@ -1,114 +1,42 @@
-// Commnet Replies
+// 2FA toggle modal
 
-// Reply to parent comment
+$('#2faModal').on('hidden.bs.modal', function () {
 
-function addReplyForm(commentId, postId, formId) {
+  var box = document.getElementById("2faToggle");
+  
+  if (box.checked) {
+    box.checked = false;
+  } else {
+    box.checked = true;
+  }
 
-    var id = "reply-to-" + commentId;
+});
 
-    document.getElementById(id).innerHTML = '<div class="comment-write collapsed child"> <form id="reply-to-t3_'+commentId+'" action="/api/comment" method="post" class="input-group"> <input type="hidden" name="formkey" value="'+formkey()+'"> <input type="hidden" name="parent_fullname" value="t3_'+commentId+'"> <input type="hidden" name="submission" value="'+postId+'"> <textarea name="body" form="reply-to-t3_'+commentId+'" class="comment-box form-control rounded" id="reply-form-'+commentId+'" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> <div class="comment-format"> <small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> <small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small> <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> <small class="format"><i class="fas fa-image" onclick="getGif();commentForm(\''+formId+'\')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF"></i></small> <a href="javascript:void(0)" onclick="delReplyForm(\''+commentId+'\')" class="btn btn-secondary ml-auto cancel-form">Cancel</a> <button form="reply-to-t3_'+commentId+'" class="btn btn-primary ml-2">Comment</button> </div> </form> </div>';
+//email change
 
-}
+// Show confirm password field when user clicks email box
 
-// Removes reply form innerHTML on click
+$('#new_email').on('input', function () {
 
-function delReplyForm(commentId) {
+    var id = document.getElementById("email-password");
+    var id2 = document.getElementById("email-password-label");
+    var id3 = document.getElementById("emailpasswordRequired");
 
-    var id = "reply-to-" + commentId;
+    id.classList.remove("d-none");
+    id2.classList.remove("d-none");
+    id3.classList.remove("d-none");
 
-    document.getElementById(id).innerHTML = '';
+});
 
-};
+//GIFS
 
-// Autoexpand textedit comments
+  // Identify which comment form to insert GIF into
 
-var autoExpand = function (field) {
-
-	// Reset field height
-	field.style.height = 'inherit';
-
-	// Get the computed styles for the element
-	var computed = window.getComputedStyle(field);
-
-	// Calculate the height
-	var height = parseInt(computed.getPropertyValue('border-top-width'), 10)
-	             + parseInt(computed.getPropertyValue('padding-top'), 10)
-	             + field.scrollHeight
-	             + parseInt(computed.getPropertyValue('padding-bottom'), 10)
-	             + parseInt(computed.getPropertyValue('border-bottom-width'), 10)
-		     + 32;
-
-	field.style.height = height + 'px';
-
-};
-
-document.addEventListener('input', function (event) {
-	if (event.target.tagName.toLowerCase() !== 'textarea') return;
-	autoExpand(event.target);
-}, false);
-
-// Expand Desktop Image
-
-function expandDesktopImage(image, link) {
-
-// GIPHY attribution div
-
-var attribution = document.getElementById("modal-image-attribution");
-
-// Link text
-
-var linkText= document.getElementById("desktop-expanded-image-link")
-
-document.getElementById("desktop-expanded-image").src = image;
-
-if (image.includes("i.ruqqus.com")) {
-    linkText.href = link;
-    linkText.textContent = 'Go to website';
-}
-else if (image.includes("imgur.com") || image.includes("cdn.discordapp.com" || image.includes("i.ruqqus.com"))){
-    linkText.href = image;
-    linkText.textContent = 'View original';
-}
-else {
-    linkText.href = image;
-    linkText.textContent = 'View original';
-}
-
-if (image.includes("media.giphy.com")) {
-    attribution.innerHTML = '<img src="/assets/images/icons/PoweredBy_200px-Black_HorizLogo.png" style="width: 150px;">';
-}
-
-}
-
-// When image modal is closed
-
-$('#expandImageModal').on('hidden.bs.modal', function (e) {
-
-    // GIPHY attribution div
-
-    var attribution = document.getElementById("modal-image-attribution");
-
-    // remove the attribution
-
-    attribution.innerHTML = null;
-
-    // remove image src and link
-
-    document.getElementById("desktop-expanded-image").src = null;
-
-    document.getElementById("desktop-expanded-image-link").href = null;
-
-})
-
-// Get GIF
-
-  // Indentify which comment form to insert GIF into
-
-  var commentFormID
+  var commentFormID;
 
   function commentForm(form) {
     commentFormID = form;
-  }
+  };
 
   function getGif(searchTerm) {
 
@@ -264,126 +192,23 @@ $('#expandImageModal').on('hidden.bs.modal', function (e) {
 
     loadGIFs.innerHTML = null;
 
-  })
+  });
 
-// Text Formatting (txt formatting)
 
-// Bold Text
 
-makeBold = function (form) {
-    var text = document.getElementById(form);
-    var startIndex = text.selectionStart,
-        endIndex = text.selectionEnd;
-    var selectedText = text.value.substring(startIndex, endIndex);
-
-    var format = '**'
-    
-    if (selectedText.includes('**')) {
-    text.value = selectedText.replace(/\*/g, '');
-    
-    }
-    else if (selectedText.length == 0) {
-    text.value = text.value.substring(0, startIndex) + selectedText + text.value.substring(endIndex);
-    }
-    else {
-        text.value = text.value.substring(0, startIndex) + format + selectedText + format + text.value.substring(endIndex);
-    }
-}
-
-// Italicize Comment Text
-
-makeItalics = function (form) {
-    var text = document.getElementById(form);
-    var startIndex = text.selectionStart,
-        endIndex = text.selectionEnd;
-    var selectedText = text.value.substring(startIndex, endIndex);
-
-    var format = '*'
-    
-    if (selectedText.includes('*')) {
-    text.value = selectedText.replace(/\*/g, '');
-    
-    }
-    else if (selectedText.length == 0) {
-    text.value = text.value.substring(0, startIndex) + selectedText + text.value.substring(endIndex);
-    }
-    else {
-        text.value = text.value.substring(0, startIndex) + format + selectedText + format + text.value.substring(endIndex);
-    }
-}
-
-// Quote Comment Text
-
-makeQuote = function (form) {
-    var text = document.getElementById(form);
-    var startIndex = text.selectionStart,
-        endIndex = text.selectionEnd;
-    var selectedText = text.value.substring(startIndex, endIndex);
-
-    var format = '>'
-    
-    if (selectedText.includes('>')) {
-    text.value = selectedText.replace(/\>/g, '');
-    
-    }
-    else if (selectedText.length == 0) {
-    text.value = text.value.substring(0, startIndex) + selectedText + text.value.substring(endIndex);
-    }
-    else {
-        text.value = text.value.substring(0, startIndex) + format + selectedText + text.value.substring(endIndex);
-    }
-}
-
-// IOS javascript
-
-        (function(document,navigator,standalone) {
-            // prevents links from apps from oppening in mobile safari
-            // this javascript must be the first script in your <head>
-            if ((standalone in navigator) && navigator[standalone]) {
-                var curnode, location=document.location, stop=/^(a|html)$/i;
-                document.addEventListener('click', function(e) {
-                    curnode=e.target;
-                    while (!(stop).test(curnode.nodeName)) {
-                        curnode=curnode.parentNode;
-                    }
-                    // Condidions to do this only on links to your own app
-                    // if you want all links, use if('href' in curnode) instead.
-                    if('href' in curnode && ( curnode.href.indexOf('http') || ~curnode.href.indexOf(location.host) ) ) {
-                        e.preventDefault();
-                        location.href = curnode.href;
-                    }
-                },false);
-            }
-        })(document,window.navigator,'standalone');
-
-// 2FA Modal
-
-$('#2faModal').on('hidden.bs.modal', function () {
-
-  var box = document.getElementById("2faToggle");
-  
-  if (box.checked) {
-    box.checked = false;
-  } else {
-    box.checked = true;
-  }
-
-});
-
-// Collapse comment
+// comment collaps
 
 // Toggle comment collapse
 
-collapse_comment = function(comment_id) {
+function collapse_comment(comment_id) {
 
-    var comment = "comment-" + comment_id;
+	var comment = "comment-" + comment_id;
 
-    document.getElementById(comment).classList.toggle("collapsed");
+	document.getElementById(comment).classList.toggle("collapsed");
 
 };
 
-// Comment Form
-
+//Commenting form
 
 // Expand comment box on focus, hide otherwise
 
@@ -416,7 +241,7 @@ toggleEdit=function(id){
     form.classList.toggle("d-none");
     actions.classList.toggle("d-none");
     autoExpand(box);
-}
+};
 
 // Post edit form
 
@@ -429,10 +254,9 @@ togglePostEdit=function(id){
     body.classList.toggle("d-none");
     form.classList.toggle("d-none");
     autoExpand(box);
-}
+};
 
-// Commnet Modding
-
+//comment modding
 function removeComment(post_id) {
 url="/api/ban_comment/"+post_id
 
@@ -444,7 +268,7 @@ button.onclick=function(){approveComment(post_id)};
 button.innerHTML="approve"
 }
 post(url, callback, "Unable to remove post at this time. Please try again later.")
-}
+};
 
 function approveComment(post_id) {
 url="/api/unban_comment/"+post_id
@@ -472,7 +296,7 @@ button.innerHTML="undistinguish"
 }
 
 post(url, callback, "Unable to distinguish comment at this time. Please try again later.")
-}
+};
 
 function undistinguishModComment(post_id) {
 url="/api/undistinguish_comment/"+post_id
@@ -485,7 +309,7 @@ button.onclick=function(){distinguishModComment(post_id)};
 button.innerHTML="distinguish"
 }
 post(url, callback, "Unable to undistinguish comment at this time. Please try again later.")
-}
+};
 
 function distinguishAdminComment(post_id) {
 url="/api/distinguish_comment/"+post_id
@@ -498,7 +322,7 @@ button.onclick=function(){undistinguishAdminComment(post_id)};
 button.innerHTML="undistinguish"
 }
 post(url, callback, "Unable to distinguish comment at this time. Please try again later.")
-}
+};
 
 function undistinguishAdminComment(post_id) {
 url="/api/undistinguish_comment/"+post_id
@@ -513,7 +337,86 @@ button.innerHTML="distinguish"
 post(url, callback, "Unable to undistinguish post at this time. Please try again later.")
 }
 
-// Dark Mode
+//comment replies
+
+// https://stackoverflow.com/a/42183824/11724748
+
+/*
+function toggleDropdown(e) {
+    const _d = $(e.target).closest('.dropdown'),
+        _m = $('.dropdown-menu', _d);
+    setTimeout(function () {
+        const shouldOpen = e.type !== 'click' && _d.is(':hover');
+        _m.toggleClass('show', shouldOpen);
+        _d.toggleClass('show', shouldOpen);
+        $('[data-toggle="dropdown"]', _d).attr('aria-expanded', shouldOpen);
+    }, e.type === 'mouseleave' ? 150 : 0);
+}
+
+// Display profile card on hover
+
+$('body')
+    .on('mouseenter mouseleave', '.user-profile', toggleDropdown)
+    .on('click', '.dropdown-menu a', toggleDropdown);
+
+// Toggle comment collapse
+
+$(".toggle-collapse").click(function (event) {
+    event.preventDefault();
+
+    var id = $(this).parent().attr("id");
+
+    document.getElementById(id).classList.toggle("collapsed");
+});
+*/
+// Reply to parent comment
+
+function addReplyForm(commentId, postId, formId) {
+
+    var id = "reply-to-" + commentId;
+
+    document.getElementById(id).innerHTML = '<div class="comment-write collapsed child"> <form id="reply-to-t3_'+commentId+'" action="/api/comment" method="post" class="input-group"> <input type="hidden" name="formkey" value="'+formkey()+'"> <input type="hidden" name="parent_fullname" value="t3_'+commentId+'"> <input type="hidden" name="submission" value="'+postId+'"> <textarea name="body" form="reply-to-t3_'+commentId+'" class="comment-box form-control rounded" id="reply-form-'+commentId+'" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> <div class="comment-format"> <small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> <small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small> <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> <small class="format"><i class="fas fa-image" onclick="getGif();commentForm(\''+formId+'\')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF"></i></small> <a href="javascript:void(0)" onclick="delReplyForm(\''+commentId+'\')" class="btn btn-secondary ml-auto cancel-form">Cancel</a> <button form="reply-to-t3_'+commentId+'" class="btn btn-primary ml-2">Comment</button> </div> </form> </div>';
+
+}
+
+    // Removes reply form innerHTML on click
+
+function delReplyForm(commentId) {
+
+    var id = "reply-to-" + commentId;
+
+    document.getElementById(id).innerHTML = '';
+
+};
+
+//Autoexpand textedit comments
+
+function autoExpand (field) {
+
+	// Reset field height
+	field.style.height = 'inherit';
+
+	// Get the computed styles for the element
+	var computed = window.getComputedStyle(field);
+
+	// Calculate the height
+	var height = parseInt(computed.getPropertyValue('border-top-width'), 10)
+	             + parseInt(computed.getPropertyValue('padding-top'), 10)
+	             + field.scrollHeight
+	             + parseInt(computed.getPropertyValue('padding-bottom'), 10)
+	             + parseInt(computed.getPropertyValue('border-bottom-width'), 10)
+		     + 32;
+
+	field.style.height = height + 'px';
+
+};
+
+document.addEventListener('input', function (event) {
+	if (event.target.tagName.toLowerCase() !== 'textarea') return;
+	autoExpand(event.target);
+}, false);
+
+//dark mode
 
 function switch_css() {
   css = document.getElementById("css-link");
@@ -538,8 +441,6 @@ function switch_css() {
     );
   }
 }
-
-// Delete
 
 // Delete Post
 
@@ -581,7 +482,7 @@ function delete_commentModal(id) {
 
 };
 
-// Email Verify Text
+//Email verification text
 
 function emailVerifyText() {
 
@@ -589,18 +490,7 @@ function emailVerifyText() {
 
 }
 
-// Enlarge Thumb
-
-// Enlarge submissionlisting thumbnail
-
-enlarge_thumb = function(post_id) {
-
-    document.getElementById(post_id).classList.toggle("enlarged");
-
-};
-
-// Flag Submissions and Comments
-
+//flagging
 // Flag Comment
 
 report_commentModal = function(id, author, board) {
@@ -710,7 +600,39 @@ $('#reportPostModal').on('hidden.bs.modal', function () {
 
 });
 
-// Eggs (Since you've already found this, does this count as one?)
+//enlarge thumbs
+// Enlarge submissionlisting thumbnail
+
+enlarge_thumb = function(post_id) {
+
+	document.getElementById(post_id).classList.toggle("enlarged");
+
+};
+
+//iOS webapp stuff
+
+        (function(document,navigator,standalone) {
+            // prevents links from apps from oppening in mobile safari
+            // this javascript must be the first script in your <head>
+            if ((standalone in navigator) && navigator[standalone]) {
+                var curnode, location=document.location, stop=/^(a|html)$/i;
+                document.addEventListener('click', function(e) {
+                    curnode=e.target;
+                    while (!(stop).test(curnode.nodeName)) {
+                        curnode=curnode.parentNode;
+                    }
+                    // Condidions to do this only on links to your own app
+                    // if you want all links, use if('href' in curnode) instead.
+                    if('href' in curnode && ( curnode.href.indexOf('http') || ~curnode.href.indexOf(location.host) ) ) {
+                        e.preventDefault();
+                        location.href = curnode.href;
+                    }
+                },false);
+            }
+        })(document,window.navigator,'standalone');
+
+
+//KC easter egg
 
 $(function(){
     var kKeys = [];
@@ -734,9 +656,7 @@ function kExec(){
    $('input').addClass('ruckus');
 };
 
-// Kick submission
-
-// Flag Submission
+//Post kick
 
 kick_postModal = function(id) {
 
@@ -771,8 +691,32 @@ $('#kickPostModal').on('hidden.bs.modal', function () {
 
 });
 
-// Post modding (admin)
+//POST
 
+function post(url, callback, errortext) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  var form = new FormData()
+  form.append("formkey", formkey());
+  xhr.withCredentials=true;
+  xhr.onload=callback
+  xhr.onerror=function(){alert(errortext)}
+  xhr.send(form);
+};
+
+// sub/unsub
+
+function toggleSub(){
+  document.getElementById('button-unsub').classList.toggle('d-none');
+  document.getElementById('button-sub').classList.toggle('d-none');
+  document.getElementById('button-unsub-modal').classList.toggle('d-none');
+  document.getElementById('button-sub-modal').classList.toggle('d-none');
+  document.getElementById('button-unsub-mobile').classList.toggle('d-none');
+  document.getElementById('button-sub-mobile').classList.toggle('d-none');
+}
+
+
+//Admin post modding
 function removePost(post_id) {
 url="/api/ban_post/"+post_id
 
@@ -804,82 +748,16 @@ button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
 post(url, callback, "Unable to approve post at this time. Please try again later.")
 }
 
+//Element deleter
+
 function deleteElement(eid) {
-    x=document.getElementById(eid)
-    x.parentElement.removeChild(x)
+	x=document.getElementById(eid)
+	x.parentElement.removeChild(x)
 
 }
 
-// Post
 
-function post(url, callback, errortext) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
-  var form = new FormData()
-  form.append("formkey", formkey());
-  xhr.withCredentials=true;
-  xhr.onload=callback
-  xhr.onerror=function(){alert(errortext)}
-  xhr.send(form);
-}
-
-toggleSub=function(){
-  document.getElementById('button-unsub').classList.toggle('d-none');
-  document.getElementById('button-sub').classList.toggle('d-none');
-  document.getElementById('button-unsub-modal').classList.toggle('d-none');
-  document.getElementById('button-sub-modal').classList.toggle('d-none');
-  document.getElementById('button-unsub-mobile').classList.toggle('d-none');
-  document.getElementById('button-sub-mobile').classList.toggle('d-none');
-}
-
-// Progress Bar
-
-// Get score percentage and make width of progress bar
-
-window.onload = function() {
-
-    pBar = document.getElementById('progressbar');
-    score = document.getElementById('score-percent');
-
-    var upsNum = +document.getElementById('p-ups').innerHTML;
-    var downsNum = +document.getElementById('p-downs').innerHTML;
-
-    var sum = upsNum + downsNum;
-
-    var val = (Math.floor((upsNum / sum) * 100));
-
-    // console log var val for troubleshooting
-
-    console.log(val);
-
-    score.innerHTML = val + "% upvoted";
-
-    pBar.style.width = val + "%";
-
-    // Set background color of progress bar based on score
-
-    if (val < 50) {
-        pBar.classList.remove("bg-upvote");
-        pBar.classList.add("bg-downvote");
-    }
-}
-
-// Search bar icon
-
-// Change navbar search icon when form is in focus, active states
-
-$(".form-control").focus(function () {
-    $(this).prev('.input-group-append').removeClass().addClass('input-group-append-focus');
-    $(this).next('.input-group-append').removeClass().addClass('input-group-append-focus');
-});
-
-$(".form-control").focusout(function () {
-    $(this).prev('.input-group-append-focus').removeClass().addClass('input-group-append');
-    $(this).next('.input-group-append-focus').removeClass().addClass('input-group-append');
-});
-
-// Sign up
-
+//Signup js
 // Display username and password requirements on input
 
 $('#password-register').on('input', function () {
@@ -940,10 +818,23 @@ else {
 
 });
 
-// Spinner 
+// Search Icon
+// Change navbar search icon when form is in focus, active states
+
+$(".form-control").focus(function () {
+    $(this).prev('.input-group-append').removeClass().addClass('input-group-append-focus');
+    $(this).next('.input-group-append').removeClass().addClass('input-group-append-focus');
+});
+
+$(".form-control").focusout(function () {
+    $(this).prev('.input-group-append-focus').removeClass().addClass('input-group-append');
+    $(this).next('.input-group-append-focus').removeClass().addClass('input-group-append');
+});
+
+//spinner effect
 
 $(document).ready(function() {
-    $('#login').submit(function() {
+	$('#login').submit(function() {
       // disable button
       $("#login_button").prop("disabled", true);
       // add spinner to button
@@ -954,7 +845,7 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    $('#signup').submit(function() {
+	$('#signup').submit(function() {
       // disable button
       $("#register_button").prop("disabled", true);
       // add spinner to button
@@ -965,7 +856,7 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    $('#submitform').submit(function() {
+	$('#submitform').submit(function() {
       // disable button
       $("#create_button").prop("disabled", true);
       // add spinner to button
@@ -975,13 +866,38 @@ $(document).ready(function() {
     });
 });
 
-// Tooltips
+// Sidebar collapsing
 
-$(document).ready(function(){
-  $('[data-toggle="tooltip"]').tooltip(); 
-});
+// Desktop
 
-// Voting
+if (localStorage.sidebar_pref == 'collapsed') {
+
+	document.getElementById('sidebar-left').classList.add('sidebar-collapsed');
+  
+};
+
+function toggle_sidebar_collapse() {
+
+	// Store Pref
+	localStorage.setItem('sidebar_pref', 'collapsed');
+
+	document.getElementById('sidebar-left').classList.toggle('sidebar-collapsed');
+
+};
+
+function toggle_sidebar_expand() {
+
+	// Remove Pref
+	localStorage.removeItem('sidebar_pref');
+
+	document.getElementById('sidebar-left').classList.toggle('sidebar-collapsed');
+
+}
+
+
+//Voting
+
+
 
 function vote(post_id, direction) {
 url="/api/vote/post/"+post_id+"/"+direction;
@@ -1057,7 +973,7 @@ scoredown2.classList.add("d-none");
 }
 
 post(url, callback, "Unable to vote at this time. Please try again later.");
-}
+};
 
 
 function vote_comment(comment_id, direction) {
@@ -1103,9 +1019,9 @@ scoredown1.classList.add("d-none");
 post(url, callback, "Unable to vote at this time. Please try again later.");
 }
 
-// // Yank Post
+// Yank Post
 
-yank_postModal = function(id, author, comments, points, title, author_link, domain, timestamp) {
+function yank_postModal(id, author, comments, points, title, author_link, domain, timestamp) {
 
   // Passed data for modal
 
@@ -1134,7 +1050,7 @@ yank_postModal = function(id, author, comments, points, title, author_link, doma
 
 };
 
-// YT embed
+//yt embed
 
 function getId(url) {
     var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -1152,3 +1068,55 @@ var myUrl = $('#embedURL').text();
 myId = getId(myUrl);
 
 $('#ytEmbed').html('<iframe width="100%" height="475" src="//www.youtube.com/embed/' + myId + '" frameborder="0" allowfullscreen></iframe>');
+
+
+function expandDesktopImage(image, link) {
+
+// GIPHY attribution div
+
+var attribution = document.getElementById("modal-image-attribution");
+
+// Link text
+
+var linkText= document.getElementById("desktop-expanded-image-link")
+
+document.getElementById("desktop-expanded-image").src = image;
+
+if (image.includes("i.ruqqus.com")) {
+	linkText.href = link;
+	linkText.textContent = 'Go to website';
+}
+else if (image.includes("imgur.com") || image.includes("cdn.discordapp.com" || image.includes("i.ruqqus.com"))){
+	linkText.href = image;
+	linkText.textContent = 'View original';
+}
+else {
+	linkText.href = image;
+	linkText.textContent = 'View original';
+}
+
+if (image.includes("media.giphy.com")) {
+	attribution.innerHTML = '<img src="/assets/images/icons/PoweredBy_200px-Black_HorizLogo.png" style="width: 150px;">';
+}
+
+};
+
+// When image modal is closed
+
+$('#expandImageModal').on('hidden.bs.modal', function (e) {
+
+  	// GIPHY attribution div
+
+  	var attribution = document.getElementById("modal-image-attribution");
+
+  	// remove the attribution
+
+  	attribution.innerHTML = null;
+
+	// remove image src and link
+
+	document.getElementById("desktop-expanded-image").src = null;
+
+	document.getElementById("desktop-expanded-image-link").href = null;
+
+});
