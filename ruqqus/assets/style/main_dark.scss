@@ -2,18 +2,18 @@
 
 $primary: #805AD5;
 $dark: #383838;
-$secondary: #8c8d94;
+$secondary: #383838;
 $danger: #E53E3E;
 $white: #383838;
 $black: #CFCFCF;
 $light: #35363e;
 $success: #38A169;
-$muted: #8c8d94;
+$muted: #AAAAAA;
 $info: #168EEA;
 
 $purple: #805AD5;
 $red:  #E53E3E;
-$gray: #8c8d94;
+$gray: #383838;
 $green: #38A169;
 
 $gray-100: #AAAAAA;
@@ -1218,7 +1218,7 @@ color: $dark;
 .sidebar .sidebar-section .body {
     padding: 1rem;
     color: $black;
-    border: solid $border-color;
+    //border: solid $border-color;
     border-width: 0 1px 1px 1px;
     border-bottom-left-radius: .35rem;
     border-bottom-right-radius: .35rem;
@@ -1226,8 +1226,8 @@ color: $dark;
 
 .sidebar-section {
     margin-bottom: 1rem;
-    background-color: $light;
-    border: 1px solid $border-color;
+    background-color: $gray-700;
+    //border: 1px solid $border-color;
     //box-shadow: $box-shadow-sm;
     border-radius: $border-radius;
     overflow: hidden;
