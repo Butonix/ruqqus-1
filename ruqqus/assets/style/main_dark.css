@@ -17301,6 +17301,10 @@ textarea {
     appearance: none;
   }
 }
+.navbar {
+  background-color: #272727 !important;
+}
+
 .sidebar-adminpanel input[type=submit] {
   width: 100%;
 }

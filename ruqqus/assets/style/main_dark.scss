@@ -3596,6 +3596,12 @@ textarea, input[type=text] {
 
 }
 
+// Dark Mode
+
+.navbar {
+    background-color: $gray-600!important;
+}
+
 // Adam's additions
 
 .sidebar-adminpanel input[type="submit"] {
