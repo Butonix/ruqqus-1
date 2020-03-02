@@ -20,11 +20,11 @@ $green: #38A169;
 $gray-100: #AAAAAA;
 $gray-200: #8f8f90;
 $gray-300: #383838;
-$gray-400: #383838;
-$gray-500: #303030;
-$gray-600: #272727;
-$gray-700: #1f2023;
-$gray-800: #181818;
+$gray-400: #303030;
+$gray-500: #272727;
+$gray-600: #1f2023;
+$gray-700: #181818;
+$gray-800: #121212;
 $gray-900: #0f0f0f;
 
 $upvote: #805AD5;
@@ -241,7 +241,7 @@ pre {
 
 #thread .custom-gutters {
     padding: 0 15px;
-    background-color: $white;
+    background-color: $gray-900;
 }
 
 .custom-gutters {
@@ -725,9 +725,9 @@ label.color-radio span {
 
 .form-inline.search .form-control,
 .form-control[readonly] {
-    background-color: $white;
+    background-color: $gray-800;
     font-size: $font-size-base;
-    color: $black;
+    color: $white;
 }
 
 .form-inline.search .input-group-append .input-group-text .fa.fa-search {
@@ -1319,6 +1319,7 @@ color: $dark;
     top: 49px;
     z-index: 1000;
     height: 100vh;
+    background-color: $gray-700!important;
 }
 
 .sidebar-left .sidebar-section.sidebar-filters {
@@ -1760,6 +1761,10 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     color: $gray;
     padding: 0.5rem 1rem;
     border-bottom: 1px solid $input-border-color;
+}
+
+.card {
+    background-color: $gray-900;
 }
 
 #frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type, #guild .posts .card:first-of-type, #settings-guild .posts .card:first-of-type {
@@ -2312,7 +2317,7 @@ blockquote p {
 // Comments
 
 .comment-section {
-    background-color: $gray-100;
+    background-color: $gray-900;
 }
 
 .comment-actions {
