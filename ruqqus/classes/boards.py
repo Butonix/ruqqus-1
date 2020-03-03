@@ -159,9 +159,10 @@ class Board(Base, Stndrd, Age_times):
                            ).from_statement(
                                text(
                                f"""
-                                select submissions.*, submissions.ups, submissions.downs
+                                select submissions.*
                                 from submissions
                                 join (values {tups}) as x(id, n) on submissions.id=x.id
+                                where x.n is not null
                                 order by x.n"""
                                )).all()
         else:
