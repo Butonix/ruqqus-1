@@ -175,7 +175,7 @@ def edit_comment(cid, v):
     if c.board.has_ban(v):
         abort(403)
         
-    body = request.form.get("body", "")
+    body = request.form.get("body", "")[0:2000]
     with CustomRenderer() as renderer:
         body_md=renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
