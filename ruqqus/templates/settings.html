@@ -32,8 +32,6 @@
       return '{{ v.formkey }}';
     }
   </script>
-  <script src="/assets/js/post.js"></script>
-
 </head>
 
 <body id="settings">
@@ -70,16 +68,7 @@
 {% include "announcements_modal.html" %}
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/change_email.js"></script>
-<script src="/assets/js/email_verify_text.js"></script>
 
-<!-- Initialize BS 4 tool tips -->
-
-<script src="/assets/js/tooltips.js"></script>
-
-<!-- Search bar icon JS -->
-
-<script src="/assets/js/search_icon.js"></script>
 
 <!-- ClipboardJS -->
 
@@ -104,19 +93,7 @@
   });
 </script>
 
-{% if v and v.referral_count %}
-
-<!-- Ruqqus Dark Mode Toggle -->
-
-<script src="/assets/js/dark_mode.js"></script>
-
-{% endif %}
-
-{% if v %}
-<!-- Toggle 2FA Custom Switch -->
-
-<script src="/assets/js/2fa_toggle.js"></script>
-{% endif %}
+<script src="/assets/js/all_js.js"></script>
 
 </body>
 
