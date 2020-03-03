@@ -16,7 +16,7 @@ import requests
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.2.2.2"
+_version = "2.2.6"
 
 
 app = Flask(__name__,
