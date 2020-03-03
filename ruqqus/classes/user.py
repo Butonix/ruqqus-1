@@ -196,6 +196,7 @@ class User(Base, Stndrd):
                                 select submissions.*
                                 from submissions
                                 join (values {tups}) as x(id, n) on submissions.id=x.id
+                                where x.n is not null
                                 order by x.n"""
                                )).all()
         else:
