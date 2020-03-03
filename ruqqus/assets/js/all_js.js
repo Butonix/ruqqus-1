@@ -1214,6 +1214,6 @@ function charLimit(form, text, button) {
     button.disabled = false;
   }
 
-  text.innerText = maxLength - length
+  text.innerText = maxLength - length;
 
 }
