@@ -15,4 +15,5 @@ def giphy():
         url = f"https://api.giphy.com/v1/gifs/search?q={searchTerm}&api_key={environ.get('GIPHY_KEY')}&limit=48"
     else:
         url = f"https://api.giphy.com/v1/gifs?api_key={environ.get('GIPHY_KEY')}&limit=48"
-    return requests.get(url)
+    resp = make_response(requests.get(url).content)
+    
