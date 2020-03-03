@@ -1186,3 +1186,34 @@ makeQuote = function (form) {
         text.value = text.value.substring(0, startIndex) + format + selectedText + text.value.substring(endIndex);
     }
 }
+
+// Character Count
+
+function charLimit(form, text, button) {
+
+  var input = document.getElementById(form);
+
+  var text = document.getElementById(text);
+
+  var button = document.getElementById(button);
+
+  var length = input.length;
+
+  var maxLength = input.getAttribute("maxlength");
+
+  if (length >= maxLength) {
+    text.style.color = "#E53E3E";
+    button.disabled = true;
+  }
+  else if (length >= maxLength * .72){
+    text.style.color = "#FFC107";
+    button.disabled = false;
+  }
+  else {
+    text.style.color = null;
+    button.disabled = false;
+  }
+
+  text.innerText = maxLength - length;
+
+}
