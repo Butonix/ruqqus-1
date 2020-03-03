@@ -194,9 +194,7 @@ $('#new_email').on('input', function () {
 
   });
 
-
-
-// comment collaps
+// comment collapse
 
 // Toggle comment collapse
 
