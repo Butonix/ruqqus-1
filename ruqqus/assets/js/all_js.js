@@ -94,7 +94,7 @@ $('#new_email').on('input', function () {
       console.log('searchTerm is: ', searchTerm)
       console.log('comment or reply form is: ', commentFormID)
       $.ajax({
-        url: "//api.giphy.com/v1/gifs/search?q=" + searchTerm + "&api_key=eOTkZX92KQM80g9NcBsq0heqZxZSVP86" + "&limit=48",
+        url: "/giphy?searchTerm=" + searchTerm + "&limit=48",
         type: "GET",
         success: function(response) {
           console.log(response)
