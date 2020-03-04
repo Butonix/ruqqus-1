@@ -334,7 +334,10 @@ class Board(Base, Stndrd, Age_times):
         if self.has_profile:
             return f"https://i.ruqqus.com/board/{self.name.lower()}/profile-{self.profile_nonce}.png"
         else:
-            return "/assets/images/guilds/default-guild-icon.png"
+            if self.over_18:
+                return "/assets/images/icons/nsfw_guild_icon.png"
+            else:
+                return "/assets/images/guilds/default-guild-icon.png"
 
     @property
     def css_url(self):

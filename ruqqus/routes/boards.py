@@ -917,7 +917,12 @@ def mod_unapprove_bid_user(bid, username, board, v):
 @app.route("/+<guild>/pic/profile")
 def guild_profile(guild):
     x=get_guild(guild)
-    return redirect(x.profile_url)
+
+    if x.over_18:
+        return redirect("/assets/images/icons/nsfw_guild_icon.png")
+    else:
+        return redirect(x.profile_url)
+    
 
 @app.route("/siege_guild", methods=["POST"])
 @is_not_banned
