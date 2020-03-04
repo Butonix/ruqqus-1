@@ -19,13 +19,13 @@ class Comment(Base, Age_times, Scores, Stndrd):
 
     id = Column(Integer, primary_key=True)
     author_id = Column(Integer, ForeignKey("users.id"))
-    body = Column(String(2000), default=None)
+    body = Column(String(10000), default=None)
     parent_submission = Column(Integer, ForeignKey("submissions.id"))
     parent_fullname = Column(Integer) #this column is foreignkeyed to comment(id) but we can't do that yet as "comment" class isn't yet defined
     created_utc = Column(Integer, default=0)
     edited_utc = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
-    body_html = Column(String)
+    body_html = Column(String(20000))
     distinguish_level=Column(Integer, default=0)
     is_deleted = Column(Boolean, default=False)
     is_approved = Column(Integer, default=0)
