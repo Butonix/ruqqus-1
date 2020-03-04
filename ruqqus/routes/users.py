@@ -151,6 +151,7 @@ def api_agree_tos(v):
 
 
 @app.route("/@<username>/pic/profile")
+@limiter.exempt
 def user_profile(username):
     x=get_user(username)
     return redirect(x.profile_url)
