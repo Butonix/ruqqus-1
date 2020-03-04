@@ -39,6 +39,10 @@ def thumbnail_thread(pid):
     x=requests.get(url, params=params)
     print("have thumb from apiflash")
 
+    if x.status_code!=200:
+        print('no thumb')
+        return
+
     name=f"posts/{post.base36id}/thumb.png"
     tempname=name.replace("/","_")
 
