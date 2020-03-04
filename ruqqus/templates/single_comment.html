@@ -115,6 +115,7 @@
           {% if request.path=="/notifications" %}
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ c.permalink | full_link }}?context=1"><i class="fas fa-book-open"></i>Context</a>
           </li>
+          % endif %}
           {% endif %}
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ c.permalink | full_link }}"><i class="fas fa-link"></i>Permalink</a>
           </li>
