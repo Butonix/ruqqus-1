@@ -915,6 +915,7 @@ def mod_unapprove_bid_user(bid, username, board, v):
     return "", 204
 
 @app.route("/+<guild>/pic/profile")
+@limiter.exempt
 def guild_profile(guild):
     x=get_guild(guild)
 
