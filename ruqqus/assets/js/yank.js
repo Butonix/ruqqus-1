@@ -1,14 +1,12 @@
 // Yank Post
 
-yank_postModal = function(id, author, comments, points, title, author_link, domain, timestamp) {
+yank_postModal = function(id, author, comments, title, author_link, domain, timestamp) {
 
   // Passed data for modal
 
   document.getElementById("post-author-url").innerText = author;
 
   document.getElementById("post-comments").textContent = comments;
-
-  document.getElementById("post-points").textContent = points;
 
   document.getElementById("post-title").textContent = title;
 
