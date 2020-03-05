@@ -206,7 +206,7 @@ def browse_guilds(v):
     #prevent invalid paging
     page=max(page, 1)
 
-    sort_method=request.args.get("sort", "subs")
+    sort_method=request.args.get("sort", "trending")
 
     #get list of ids
     ids = guild_ids(sort=sort_method, page=page, nsfw=(v and v.over_18))
