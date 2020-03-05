@@ -4,6 +4,7 @@ from flask import *
 from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_compress import Compress
 from time import sleep
 
 from flaskext.markdown import Markdown
@@ -53,6 +54,8 @@ app.config["CACHE_DEFAULT_TIMEOUT"]=60
 
 Markdown(app)
 cache=Cache(app)
+Compress(app)
+
 
 limit_url=environ.get("HEROKU_REDIS_PURPLE_URL", environ.get("HEROKU_REDIS_AQUA_URL"))
 
