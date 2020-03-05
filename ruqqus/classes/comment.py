@@ -82,9 +82,7 @@ class Comment(Base, Age_times, Scores, Stndrd):
 
     @property
     def is_top_level(self):
-        return self.parent_fullname.startswith("t2_")
-
-
+        return self.parent_fullname and self.parent_fullname.startswith("t2_")
 
     @property
     @lazy
