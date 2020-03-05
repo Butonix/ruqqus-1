@@ -179,26 +179,30 @@ class User(Base, Stndrd):
 
         if ids:
 
-            #assemble list of tuples
-            i=1
-            tups=[]
+##            #assemble list of tuples
+##            i=1
+##            tups=[]
+##            for x in ids:
+##                tups.append((x,i))
+##                i+=1
+##
+##            tups=str(tups).lstrip("[").rstrip("]")
+##
+##            #hit db for entries
+##            posts=db.query(Submission
+##                           ).from_statement(
+##                               text(
+##                               f"""
+##                                select submissions.*
+##                                from submissions
+##                                join (values {tups}) as x(id, n) on submissions.id=x.id
+##                                where x.n is not null
+##                                order by x.n"""
+##                               )).all()
+            posts=[]
             for x in ids:
-                tups.append((x,i))
-                i+=1
-
-            tups=str(tups).lstrip("[").rstrip("]")
-
-            #hit db for entries
-            posts=db.query(Submission
-                           ).from_statement(
-                               text(
-                               f"""
-                                select submissions.*
-                                from submissions
-                                join (values {tups}) as x(id, n) on submissions.id=x.id
-                                where x.n is not null
-                                order by x.n"""
-                               )).all()
+                posts.append(db.query(Submission).filter_by(id=x).first())
+            
         else:
             posts=[]
 
