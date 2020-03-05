@@ -35,6 +35,8 @@ class Comment(Base, Age_times, Scores, Stndrd):
     score_disputed=Column(Float, default=0)
     score_hot=Column(Float, default=0)
     score_top=Column(Integer, default=1)
+    level=Column(Integer, default=0)
+    parent_comment_id=Column(Integer, ForeignKey("comments.id"))
 
     post=relationship("Submission", lazy="subquery")
     flags=relationship("CommentFlag", lazy="dynamic", backref="comment")
