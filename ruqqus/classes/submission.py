@@ -203,18 +203,18 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         sort_type = request.args.get("sort","hot")
 
 
-        comments=self.comments.filter(Comment.level<=5)
+        comments=self.comments.filter(ruqqus.classes.Comment.level<=5)
 
 
         #Treeing is done from the end because reasons, so these sort orders are reversed
         if sort_type=="hot":
-            comments=comments.order_by(text("comments.score_hot ASC")).all()
+            comments=comments.order_by(text("comments.score_hot ASC")).limit(100)
         elif sort_type=="top":
-            comments=comments.order_by(text("comments.score_top ASC")).all()
+            comments=comments.order_by(text("comments.score_top ASC")).limit(100)
         elif sort_type=="new":
-            comments=comments.order_by(text("comments.created_utc")).all()
+            comments=comments.order_by(text("comments.created_utc")).limit(100)
         elif sort_type=="disputed":
-            comments=comments.order_by(text("comments.score_disputed ASC")).all()
+            comments=comments.order_by(text("comments.score_disputed ASC")).limit(100)
         elif sort_type=="random":
             c=comments.all()
             comments=random.sample(c, k=len(c))
