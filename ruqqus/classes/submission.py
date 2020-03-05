@@ -203,7 +203,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         sort_type = request.args.get("sort","hot")
 
 
-        comments=self.comments.filter(ruqqus.classes.Comment.level<=5)
+        comments=self.comments.filter(text("comments.level<=5"))
 
 
         #Treeing is done from the end because reasons, so these sort orders are reversed
