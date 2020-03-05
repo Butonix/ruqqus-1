@@ -88,25 +88,17 @@ class Scores:
     @property
     @cache.memoize(timeout=60)
     def score_percent(self):
-        try:
-            return int((self.ups/(self.ups+self.downs))*100)
-        except ZeroDivisionError:
-            return 0
+##        try:
+##            return int((self.ups/(self.ups+self.downs))*100)
+##        except ZeroDivisionError:
+##            return 0
 
-    @property
-    @cache.memoize(timeout=60)
-    def rank_hot(self):
-        return (self.ups-self.down)/(((self.age+100000)/6)**(1/3))
-
-    @property
-    @cache.memoize(timeout=60)
-    def rank_fiery(self):
-        return (math.sqrt(self.ups * self.downs))/(((self.age+100000)/6)**(1/3))
+        return 101
 
     @property
     @cache.memoize(timeout=60)
     def score(self):
-        return self.ups-self.downs
+        return self.score_top
 
 
 
