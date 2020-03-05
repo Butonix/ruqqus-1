@@ -99,8 +99,12 @@ def api_comment(v):
     parent_id=int(parent_fullname.split("_")[1], 36)
     if parent_fullname.startswith("t2"):
         parent=db.query(Submission).filter_by(id=parent_id).first()
+        parent_comment_id=None
+        level=1
     elif parent_fullname.startswith("t3"):
         parent=db.query(Comment).filter_by(id=parent_id).first()
+        parent_comment_id=parent.id
+        level=parent.level+1
 
     #No commenting on deleted/removed things
     if parent.is_banned or parent.is_deleted:
@@ -110,6 +114,7 @@ def api_comment(v):
     post = get_post(request.form.get("submission"))
     if not post.board.can_comment(v):
         abort(403)
+
         
     #create comment
     c=Comment(author_id=v.id,
@@ -117,6 +122,8 @@ def api_comment(v):
               body_html=body_html,
               parent_submission=parent_submission,
               parent_fullname=parent_fullname,
+              parent_comment_id=parent_comment_id,
+              level=level
               )
 
     db.add(c)
