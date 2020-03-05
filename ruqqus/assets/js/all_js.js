@@ -1019,15 +1019,13 @@ post(url, callback, "Unable to vote at this time. Please try again later.");
 
 // Yank Post
 
-function yank_postModal(id, author, comments, points, title, author_link, domain, timestamp) {
+function yank_postModal(id, author, comments, title, author_link, domain, timestamp) {
 
   // Passed data for modal
 
   document.getElementById("post-author-url").innerText = author;
 
   document.getElementById("post-comments").textContent = comments;
-
-  document.getElementById("post-points").textContent = points;
 
   document.getElementById("post-title").textContent = title;
 
