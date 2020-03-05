@@ -187,7 +187,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
                 i-=1
                 
-            if layer <=8:
+            if layer <=5:
                 for reply in thing.replies:
                     tree_replies(reply, layer=layer+1)
                 
