@@ -159,9 +159,10 @@ class Board(Base, Stndrd, Age_times):
                            ).from_statement(
                                text(
                                f"""
-                                select submissions.*, submissions.ups, submissions.downs
+                                select submissions.*
                                 from submissions
                                 join (values {tups}) as x(id, n) on submissions.id=x.id
+                                where x.n is not null
                                 order by x.n"""
                                )).all()
         else:
@@ -333,7 +334,10 @@ class Board(Base, Stndrd, Age_times):
         if self.has_profile:
             return f"https://i.ruqqus.com/board/{self.name.lower()}/profile-{self.profile_nonce}.png"
         else:
-            return "/assets/images/guilds/default-guild-icon.png"
+            if self.over_18:
+                return "/assets/images/icons/nsfw_guild_icon.png"
+            else:
+                return "/assets/images/guilds/default-guild-icon.png"
 
     @property
     def css_url(self):

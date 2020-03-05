@@ -107,7 +107,7 @@ class User(Base, Stndrd):
         return int(time.time())-self.created_utc
         
     @cache.memoize(timeout=300)
-    def idlist(self, sort="hot", page=1, only=None, t=None):
+    def idlist(self, sort="hot", page=1, t=None, **kwargs):
 
         
 
@@ -116,24 +116,11 @@ class User(Base, Stndrd):
                                              stickied=False
                                              )
 
-
         if not self.over_18:
             posts=posts.filter_by(over_18=False)
 
-        if only in [None, "none"]:
-            board_ids=[x.board_id for x in self.subscriptions.filter_by(is_active=True).all()]
-            user_ids=[x.target_id for x in self.following.all()]
-            user_ids.append(self.id)
-            posts=posts.filter(or_(Submission.board_id.in_(board_ids), Submission.author_id.in_(user_ids)))
-        elif only=="guilds":
-            board_ids=[x.board_id for x in self.subscriptions.filter_by(is_active=True).all()]
-            posts=posts.filter(Submission.board_id.in_(board_ids))
-        elif only=="users":
-            user_ids=[x.target_id for x in self.following.all()]
-            user_ids.append(self.id)
-            posts=posts.filter(Submission.author_id.in_(user_ids))
-        else:
-            abort(422)
+        board_ids=[x.board_id for x in self.subscriptions.filter_by(is_active=True).all()]
+        posts=posts.filter(Submission.board_id.in_(board_ids))
 
         if not self.admin_level >=4:
             #admins can see everything
@@ -206,9 +193,10 @@ class User(Base, Stndrd):
                            ).from_statement(
                                text(
                                f"""
-                                select submissions.*, submissions.ups, submissions.downs
+                                select submissions.*
                                 from submissions
                                 join (values {tups}) as x(id, n) on submissions.id=x.id
+                                where x.n is not null
                                 order by x.n"""
                                )).all()
         else:
