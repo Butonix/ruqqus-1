@@ -1,4 +1,5 @@
 import re
+from urllib.parse import *
 from ruqqus.__main__ import app
 
 youtube_regex=re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*")
@@ -10,10 +11,19 @@ def youtube_embed(url):
     except AttributeError:
         return "error"
 
-    if yt_id and len(yt_id)==11:
-        return f"https://youtube.com/embed/{yt_id}"
-    else:
+    
+
+    if not yt_id or  len(yt_id)!=11:
         return "error"
+
+    x=urlparse(url)
+    params=parse_qs(x.query)
+    t=params.get('t',params.get('start', [0]))[0]
+    if t:
+        return f"https://youtube.com/embed/{yt_id}?start={t}"
+    else:
+        return f"https://youtube.com/embed/{yt_id}"
+
 
 
 ruqqus_regex=re.compile("^.*ruqqus.com/post/(\w+)(/comment/(\w+))?")
