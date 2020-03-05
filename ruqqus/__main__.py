@@ -54,7 +54,7 @@ app.config["CACHE_DEFAULT_TIMEOUT"]=60
 
 Markdown(app)
 cache=Cache(app)
-app=Compress(app)
+Compress(app)
 
 
 limit_url=environ.get("HEROKU_REDIS_PURPLE_URL", environ.get("HEROKU_REDIS_AQUA_URL"))
