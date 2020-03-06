@@ -156,7 +156,6 @@ class Comment(Base, Age_times, Scores, Stndrd):
                                        render_replies=render_replies,
                                        standalone=standalone,
                                        level=level,
-                                       post_base36id = kwargs.get("post_base36id", self.post.base36id if self.post else None),
                                        **kwargs)
                 
             elif self.any_descendants_live:
@@ -165,7 +164,6 @@ class Comment(Base, Age_times, Scores, Stndrd):
                                        render_replies=render_replies,
                                        standalone=standalone,
                                        level=level,
-                                       post_base36id = kwargs.get("post_base36id", self.post.base36id if self.post else None),
                                        **kwargs)
             else:
                 return ""
@@ -176,7 +174,6 @@ class Comment(Base, Age_times, Scores, Stndrd):
                                render_replies=render_replies,
                                standalone=standalone,
                                level=level,
-                               post_base36id = kwargs.get("post_base36id", self.post.base36id if self.post else None),
                                **kwargs)
 
     @property
