@@ -19,7 +19,7 @@
 
 <div id="comment-{{ c.base36id }}" class="comment rounded{% if standalone %} mt-0{% endif %}{% if c.is_banned %} banned{% endif %}{% if c.is_deleted %} deleted{% endif %}">
 
-  <span class="mr-2 d-block d-md-none"><a href="{{ c.author.permalink }}"><img src="{{ c.author.profile_url }}" class="profile-pic-25"></a></span>
+  <span class="mr-2 d-block d-md-none"><a href="{{ c.author.permalink }}"><img src="/@{{ c.author.username }}/pic/profile" class="profile-pic-25"></a></span>
 
   <span class="comment-collapse d-md-block d-none" onclick="collapse_comment('{{ c.base36id }}')"></span>
 
