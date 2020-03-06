@@ -38,13 +38,10 @@ class Comment(Base, Age_times, Scores, Stndrd):
     level=Column(Integer, default=0)
     parent_comment_id=Column(Integer, ForeignKey("comments.id"))
     author_name=Column(String(64), default="")
-<<<<<<< Updated upstream
-    title_id=Column(Integer, default=None)
-=======
+
     title_id=Column(Integer, ForeignKey("titles.id"), default=None)
     title=relationship("Title")
     over_18=Column(Boolean, default=False)
->>>>>>> Stashed changes
 
     post=relationship("Submission", lazy="subquery")
     flags=relationship("CommentFlag", lazy="dynamic", backref="comment")
