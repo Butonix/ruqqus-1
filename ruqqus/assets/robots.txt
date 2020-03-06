@@ -30,3 +30,6 @@ Disallow: /
 
 User-Agent: AhrefsBot
 Disallow: /
+
+User-agent: SBSearch
+Disallow: /
