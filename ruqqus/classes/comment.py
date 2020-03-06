@@ -149,7 +149,6 @@ class Comment(Base, Age_times, Scores, Stndrd):
                 return render_template("single_comment.html",
                                        v=v,
                                        c=self,
-                                       replies=self.replies,
                                        render_replies=render_replies,
                                        standalone=standalone,
                                        level=level,
@@ -158,7 +157,6 @@ class Comment(Base, Age_times, Scores, Stndrd):
             elif self.any_descendants_live:
                 return render_template("single_comment_removed.html",
                                        c=self,
-                                       replies=self.replies,
                                        render_replies=render_replies,
                                        standalone=standalone,
                                        level=level,
@@ -169,7 +167,6 @@ class Comment(Base, Age_times, Scores, Stndrd):
         return render_template("single_comment.html",
                                v=v,
                                c=self,
-                               replies=self.replies,
                                render_replies=render_replies,
                                standalone=standalone,
                                level=level,
