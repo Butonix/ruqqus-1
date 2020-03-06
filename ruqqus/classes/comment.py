@@ -42,6 +42,7 @@ class Comment(Base, Age_times, Scores, Stndrd):
     title_id=Column(Integer, ForeignKey("titles.id"), default=None)
     title=relationship("Title")
     over_18=Column(Boolean, default=False)
+    is_op=Column(Boolean, default=False)
 
     post=relationship("Submission", lazy="subquery")
     flags=relationship("CommentFlag", lazy="dynamic", backref="comment")
