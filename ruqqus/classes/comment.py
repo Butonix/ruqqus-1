@@ -37,6 +37,7 @@ class Comment(Base, Age_times, Scores, Stndrd):
     score_top=Column(Integer, default=1)
     level=Column(Integer, default=0)
     parent_comment_id=Column(Integer, ForeignKey("comments.id"))
+    author_name=Column(String(255), default="")
 
     post=relationship("Submission", lazy="subquery")
     flags=relationship("CommentFlag", lazy="dynamic", backref="comment")
