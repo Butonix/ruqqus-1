@@ -146,6 +146,8 @@ class Comment(Base, Age_times, Scores, Stndrd):
 
     def rendered_comment(self, v=None, render_replies=True, standalone=False, level=1, **kwargs):
 
+        kwargs["post_base36id"]=kwargs.get("post_base36id", self.post.base36id if self.post else None)
+
         if self.is_banned or self.is_deleted:
             if v and v.admin_level>1:
                 return render_template("single_comment.html",
