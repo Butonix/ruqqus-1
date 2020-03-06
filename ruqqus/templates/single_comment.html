@@ -47,7 +47,7 @@
 
       </div>
 
-      {% if v and v.admin_level > 3 and c.active_flags %}
+      {% if standalone and v and v.admin_level > 3 and c.active_flags %}
       <div class="text-small text-danger">{{ c.active_flags }} Flag{{ '' if c.active_flags==1 else 's' }}</div>
       {% endif %}
       {% if c.is_banned and c.ban_reason %}
@@ -241,7 +241,7 @@
           <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author_name }}')" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
           {% endif %}
 
-          {% if v and c.parent_submission and c.author_id==v.id and is_allowed_to_comment and not c.is_deleted %}
+          {% if v and is_allowed_to_comment and c.parent_submission and c.author_id==v.id and not c.is_deleted %}
           <li class="list-group-item"><a href="javascript:void(0)" data-dismiss="modal" onclick="toggleEdit('{{ c.base36id }}')" class="d-block"><i class="fas fa-edit"></i>Edit</a></li>
 
           <li class="list-group-item"><a class="d-block" href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal('{{ c.base36id }}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
