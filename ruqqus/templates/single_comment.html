@@ -105,7 +105,7 @@
           {% endif %}
 
           {% if v %}
-          {% if is_allowed_to_comment %}
+          {% if standalone or is_allowed_to_comment %}
           <li class="list-inline-item text-muted"><a href="javascript:void(0)" onclick="addReplyForm('{{ c.base36id }}','{{ post_base36id }}','reply-form-{{ c.base36id }}')"><i class="fas fa-reply"
             aria-hidden="true"></i><span class="d-none d-md-inline-block">Reply</span></a>
           </li>
