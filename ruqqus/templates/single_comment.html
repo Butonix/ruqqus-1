@@ -58,7 +58,7 @@
       </div>
 
       {% if c.parent %}
-      {% if v and v.id==c.author_id and is_allowed_to_comment %}
+      {% if v and v.id==c.author_id and (standalone or is_allowed_to_comment) %}
       <div id="comment-edit-{{ c.base36id }}" class="d-none comment-write collapsed child">
        <form id="comment-edit-form-{{ c.base36id }}" action="/edit_comment/{{ c.base36id }}" method="post" class="input-group">
         <input type="hidden" name="formkey" value="{{ v.formkey }}">
@@ -131,7 +131,7 @@
               <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
 
 
-              {% if v and c.parent_submission and not c.author_id==v.id and not is_allowed_to_comment %}
+              {% if v and c.parent_submission and not c.author_id==v.id and is_allowed_to_comment %}
               <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author_name }}',)"><i class="fas fa-flag"></i>Flag</a>
 
               {% endif %}
