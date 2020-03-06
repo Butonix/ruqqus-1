@@ -123,7 +123,8 @@ def api_comment(v):
               parent_submission=parent_submission,
               parent_fullname=parent_fullname,
               parent_comment_id=parent_comment_id,
-              level=level
+              level=level,
+              author_name=v.username
               )
 
     db.add(c)
