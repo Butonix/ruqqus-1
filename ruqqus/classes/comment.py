@@ -139,14 +139,27 @@ class Comment(Base, Age_times, Scores, Stndrd):
             return any([x.any_descendants_live for x in self.replies])
         
 
-    def rendered_comment(self, v=None, render_replies=True, standalone=False, level=1):
+    def rendered_comment(self, v=None, render_replies=True, standalone=False, level, **kwargs):
 
         if self.is_banned or self.is_deleted:
             if v and v.admin_level>1:
-                return render_template("single_comment.html", v=v, c=self, replies=self.replies, render_replies=render_replies, standalone=standalone, level=level)
+                return render_template("single_comment.html",
+                                       v=v,
+                                       c=self,
+                                       replies=self.replies,
+                                       render_replies=render_replies,
+                                       standalone=standalone,
+                                       level=level,
+                                       **kwargs)
                 
             elif self.any_descendants_live:
-                return render_template("single_comment_removed.html", c=self, replies=self.replies, render_replies=render_replies, standalone=standalone, level=level)
+                return render_template("single_comment_removed.html",
+                                       c=self,
+                                       replies=self.replies,
+                                       render_replies=render_replies,
+                                       standalone=standalone,
+                                       level=level,
+                                       **kwargs)
             else:
                 return ""
 

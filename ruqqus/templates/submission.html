@@ -479,7 +479,7 @@
       </div>
     </div>
 
-    {% if not p.is_banned and not p.board.has_ban(v) %}
+    {% if not p.is_banned and is_allowed_to_comment %}
     <div class="comment-write mb-3">
       <form id="reply-to-{{ p.fullname }}" class="input-group" action="/api/comment" method="post">
         <input type="hidden" name="formkey" value="{{ v.formkey }}">
@@ -518,7 +518,7 @@
     {% if p.replies %}
     <div class="comment-section">
      {% for c in p.replies %}
-     {{ c.rendered_comment(v=v) | safe }}
+     {{ c.rendered_comment(v=v, is_allowed_to_comment = is_allowed_to_comment) | safe }}
      {% endfor %}
    </div>
    {% elif not p.replies and not p.is_deleted %}
