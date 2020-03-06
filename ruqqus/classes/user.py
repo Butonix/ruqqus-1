@@ -526,7 +526,10 @@ class User(Base, Stndrd):
         alts1=db.query(User).join(Alt, Alt.user2==User.id).filter(Alt.user1==self.id).all()
         alts2=db.query(User).join(Alt, Alt.user1==User.id).filter(Alt.user2==self.id).all()
 
-        return list(set([x for x in alts1]+[y for y in alts2]))
+        output= list(set([x for x in alts1]+[y for y in alts2]))
+        output=sorted(output, key=lambda x: x.username)
+
+        return output
         
 
     def has_follower(self, user):
