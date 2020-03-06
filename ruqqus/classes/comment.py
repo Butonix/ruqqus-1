@@ -114,8 +114,10 @@ class Comment(Base, Age_times, Scores, Stndrd):
     def replies(self):
 
         if "replies" in self.__dict__:
+            print(f"{self.fullname} replies loaded from dict")
             return self.__dict__["replies"]
         else:
+            print(f"{self.fullname} replies searched from db")
             return db.query(Comment).filter_by(parent_fullname=self.fullname).all()
 
     @property
