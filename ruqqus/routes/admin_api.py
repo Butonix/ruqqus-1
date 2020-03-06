@@ -20,6 +20,12 @@ def ban_user(user_id, v):
     user.ban_reason=request.form.get("reason","")
 
     db.add(user)
+
+    for a in user.alts:
+        user.is_banned=v.id
+        user.ban_reason=request.form.get("reason","")
+        db.add(a)
+        
     db.commit()
     
     return (redirect(user.url), user)

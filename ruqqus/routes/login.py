@@ -306,6 +306,10 @@ def sign_up_post(v):
     if existing_account or (email and db.query(User).filter(User.email.ilike(email)).first()):
         print(f"signup fail - {username } - email already exists")
         return new_signup("An account with that username or email already exists.")
+
+    #check bans
+    if any([x.is_banned for x in [db.query(User).filter_by(id=y).first() for y in session.get("history",[])]]):
+        abort(403)
     
     #success
     
@@ -320,7 +324,8 @@ def sign_up_post(v):
     ref_user=db.query(User).filter_by(id=ref_id).first()
     if not ref_user:
         ref_id=None
-        
+
+    
     
         
     #make new user
