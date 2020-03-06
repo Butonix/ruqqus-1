@@ -126,7 +126,8 @@ def api_comment(v):
               level=level,
               author_name=v.username,
               title_id=v.title_id,
-              over_18=c.post.over_18
+              over_18=c.post.over_18,
+              is_op=(v.id==post.author_id)
               )
 
     db.add(c)
