@@ -28,7 +28,7 @@
 
     <div id="comment-{{ c.base36id }}-only">
 
-      <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %}{% if c.title and c.title.is_before %}<span style="color:#{{ c.title.color }}">{{ c.title.text }}</span> {% endif %}<a href="{{ c.author.permalink }}" class="user-name {% if c.post.author_id==c.author_id and not c.post.is_deleted %}text-info{% endif %}">{{ c.author_name }}</a>{% if c.title and not c.title.is_before %}<span style="color:#{{ c.title.color }}">{{ c.title.text }}</span>{% endif %}
+      <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %}}<a href="{{ c.author.permalink }}" class="user-name {% if c.post.author_id==c.author_id and not c.post.is_deleted %}text-info{% endif %}">{{ c.author_name }}</a>
         {% if c.distinguish_level or c.author_id==c.post.author_id %}
         {% if c.distinguish_level %}
         <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>
