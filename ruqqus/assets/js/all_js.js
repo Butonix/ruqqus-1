@@ -491,12 +491,10 @@ function emailVerifyText() {
 //flagging
 // Flag Comment
 
-report_commentModal = function(id, author, board) {
+report_commentModal = function(id, author) {
 
   document.getElementById("comment-author").textContent = author;
 
-  var offtopic = document.getElementById('report-comment-to-guild-dropdown-option')
-  offtopic.innerHTML= 'This comment is off-topic for +' + board;
   offtopic.disabled=true;
 
     document.getElementById("reportCommentButton").onclick = function() {

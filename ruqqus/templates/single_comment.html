@@ -93,7 +93,6 @@
             <span class="points"><span id="comment-{{ c.base36id }}-score-up"{% if voted!=1 %} class="d-none text-upvote"{% endif %}>{{ score+1-adjust }}</span><span id="comment-{{ c.base36id }}-score-none"{% if voted not in [-2,0] %} class="d-none text-black"{% endif %}>{{ score-adjust }}</span><span id="comment-{{ c.base36id }}-score-down"{% if voted!=-1 %} class="d-none text-downvote"{% endif %}>{{ score-1-adjust }}</span></span>
           </li>
 
-          {% if not c.board.downvotes_disabled %}
           {% if v %}
           <li id="comment-{{ c.base36id }}-down" class="list-inline-item arrow-down d-none d-md-inline-block" {% if voted==-1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted > -2 %}onclick="vote_comment('{{ c.base36id }}','-1')"{% endif %}>
           </li>
@@ -104,10 +103,9 @@
           </li>
 
           {% endif %}
-          {% endif %}
 
           {% if v %}
-          {% if not c.author_id==v.id and c.board.can_comment(v) %}
+          {% if is_allowed_to_comment %}
           <li class="list-inline-item text-muted"><a href="javascript:void(0)" onclick="addReplyForm('{{ c.base36id }}','{{ post_base36id }}','reply-form-{{ c.base36id }}')"><i class="fas fa-reply"
             aria-hidden="true"></i><span class="d-none d-md-inline-block">Reply</span></a>
           </li>
@@ -133,8 +131,8 @@
               <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
 
 
-              {% if v and c.parent_submission and not c.author_id==v.id and not c.board.has_ban(v) %}
-              <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author_name }}','{{ c.board.name }}')"><i class="fas fa-flag"></i>Flag</a>
+              {% if v and c.parent_submission and not c.author_id==v.id and not is_allowed_to_comment %}
+              <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author_name }}',)"><i class="fas fa-flag"></i>Flag</a>
 
               {% endif %}
 
@@ -240,7 +238,7 @@
           <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
 
           {% if v and not v.id==c.author_id %}
-          <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author_name }}','{{ c.board.name }}')" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
+          <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author_name }}')" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
           {% endif %}
 
           {% if v and c.parent_submission and c.author_id==v.id and is_allowed_to_comment and not c.is_deleted %}
