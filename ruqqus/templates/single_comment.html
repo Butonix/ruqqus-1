@@ -133,12 +133,12 @@
               <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
 
 
-              {% if v and c.post and not c.author_id==v.id and not c.board.has_ban(v) %}
+              {% if v and c.parent_submission and not c.author_id==v.id and not c.board.has_ban(v) %}
               <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author_name }}','{{ c.board.name }}')"><i class="fas fa-flag"></i>Flag</a>
 
               {% endif %}
 
-              {% if v and c.post and c.author_id==v.id and is_allowed_to_comment and not c.is_deleted %}
+              {% if v and c.parent_submission and c.author_id==v.id and is_allowed_to_comment and not c.is_deleted %}
 
               <a class="dropdown-item" href="javascript:void(0)" onclick="toggleEdit('{{ c.base36id }}')"><i class="fas fa-edit"></i>Edit</a>
 
@@ -243,7 +243,7 @@
           <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author_name }}','{{ c.board.name }}')" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
           {% endif %}
 
-          {% if v and c.post and c.author_id==v.id and is_allowed_to_comment and not c.is_deleted %}
+          {% if v and c.parent_submission and c.author_id==v.id and is_allowed_to_comment and not c.is_deleted %}
           <li class="list-group-item"><a href="javascript:void(0)" data-dismiss="modal" onclick="toggleEdit('{{ c.base36id }}')" class="d-block"><i class="fas fa-edit"></i>Edit</a></li>
 
           <li class="list-group-item"><a class="d-block" href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal('{{ c.base36id }}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
