@@ -33,3 +33,6 @@ Disallow: /
 
 User-Agent: CCBot
 Disallow: /
+
+User-agent: SBSearch
+Disallow: /
