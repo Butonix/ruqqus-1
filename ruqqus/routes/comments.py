@@ -124,7 +124,8 @@ def api_comment(v):
               parent_fullname=parent_fullname,
               parent_comment_id=parent_comment_id,
               level=level,
-              author_name=v.username
+              author_name=v.username,
+              title_id=v.author.title_id
               )
 
     db.add(c)
