@@ -33,7 +33,7 @@
         {% if c.distinguish_level %}
         <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>
         {% endif %}
-        {% if c.post.author_id==c.author_id and not c.post.is_deleted %}
+        {% if c.is_op and not c.post.is_deleted %}
         <i class="fas fa-microphone-stand text-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Submitter"></i>
         {% endif %}
         <span> </span>
@@ -108,7 +108,7 @@
 
           {% if v %}
           {% if not c.author_id==v.id and c.board.can_comment(v) %}
-          <li class="list-inline-item text-muted"><a href="javascript:void(0)" onclick="addReplyForm('{{ c.base36id }}','{{ c.post.base36id }}','reply-form-{{ c.base36id }}')"><i class="fas fa-reply"
+          <li class="list-inline-item text-muted"><a href="javascript:void(0)" onclick="addReplyForm('{{ c.base36id }}','{{ post_base36id }}','reply-form-{{ c.base36id }}')"><i class="fas fa-reply"
             aria-hidden="true"></i><span class="d-none d-md-inline-block">Reply</span></a>
           </li>
           {% endif %}
@@ -212,7 +212,7 @@
   {% else %}
   {% for reply in c.replies %}
   <div class="">
-    {{ reply.rendered_comment(v=v, level=level+1, is_allowed_to_comment=is_allowed_to_comment) | safe }}
+    {{ reply.rendered_comment(v=v, level=level+1, is_allowed_to_comment=is_allowed_to_comment, post_base36id=post_base36id) | safe }}
   </div>
   {% endfor %}
   {% endif %}
