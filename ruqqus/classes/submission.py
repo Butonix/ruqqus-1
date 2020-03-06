@@ -125,9 +125,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                                       
     def rendered_page(self, comment=None, comment_info=None, v=None):
 
-        print("beginning render")
-        print("selecting template")
-
         #check for banned
         if self.is_deleted:
             template="submission_deleted.html"
@@ -138,7 +135,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         else:
             template="submission.html"
 
-        print("template selected")
 
         private=not self.is_public and not self.board.can_view(v)
         
@@ -152,7 +148,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             self.tree_comments(comment=comment)
         
         #return template
-        print("rendering")
         return render_template(template,
                                v=v,
                                p=self,
@@ -183,7 +178,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     def tree_comments(self, comment=None):
 
-        print("treeing comments")
 
         def tree_replies(thing, layer=1):
 
@@ -193,7 +187,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             while i>=0:
                 if comments[i].parent_fullname==thing.fullname:
 
-                    print(f"treeing {comments[i].fullname}")
                     thing.__dict__["replies"].append(comments[i])
                     comments.pop(i)
 
