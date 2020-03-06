@@ -38,8 +38,10 @@ class Comment(Base, Age_times, Scores, Stndrd):
     level=Column(Integer, default=0)
     parent_comment_id=Column(Integer, ForeignKey("comments.id"))
     author_name=Column(String(64), default="")
+
     title_id=Column(Integer, ForeignKey("titles.id"), default=None)
     title=relationship("Title")
+    over_18=Column(Boolean, default=False)
 
     post=relationship("Submission", lazy="subquery")
     flags=relationship("CommentFlag", lazy="dynamic", backref="comment")
@@ -59,7 +61,6 @@ class Comment(Base, Age_times, Scores, Stndrd):
     rank_hot=deferred(Column(Float, server_default=FetchedValue()))
 
     flag_count=deferred(Column(Integer, server_default=FetchedValue()))
-    over_18=Column(Boolean, server_default=FetchedValue())
 
     board_id=Column(Integer, server_default=FetchedValue())
     
