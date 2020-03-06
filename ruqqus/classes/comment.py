@@ -42,6 +42,7 @@ class Comment(Base, Age_times, Scores, Stndrd):
     title_id=Column(Integer, ForeignKey("titles.id"), default=None)
     title=relationship("Title")
     over_18=Column(Boolean, default=False)
+    is_op=Column(Boolean, default=False)
 
     post=relationship("Submission", lazy="subquery")
     flags=relationship("CommentFlag", lazy="dynamic", backref="comment")
@@ -118,8 +119,10 @@ class Comment(Base, Age_times, Scores, Stndrd):
     def replies(self):
 
         if "replies" in self.__dict__:
+            print(f"{self.fullname} replies loaded from dict")
             return self.__dict__["replies"]
         else:
+            print(f"{self.fullname} replies searched from db")
             return db.query(Comment).filter_by(parent_fullname=self.fullname).all()
 
     @property
@@ -141,18 +144,35 @@ class Comment(Base, Age_times, Scores, Stndrd):
             return any([x.any_descendants_live for x in self.replies])
         
 
-    def rendered_comment(self, v=None, render_replies=True, standalone=False, level=1):
+    def rendered_comment(self, v=None, render_replies=True, standalone=False, level=1, **kwargs):
 
         if self.is_banned or self.is_deleted:
             if v and v.admin_level>1:
-                return render_template("single_comment.html", v=v, c=self, replies=self.replies, render_replies=render_replies, standalone=standalone, level=level)
+                return render_template("single_comment.html",
+                                       v=v,
+                                       c=self,
+                                       render_replies=render_replies,
+                                       standalone=standalone,
+                                       level=level,
+                                       **kwargs)
                 
             elif self.any_descendants_live:
-                return render_template("single_comment_removed.html", c=self, replies=self.replies, render_replies=render_replies, standalone=standalone, level=level)
+                return render_template("single_comment_removed.html",
+                                       c=self,
+                                       render_replies=render_replies,
+                                       standalone=standalone,
+                                       level=level,
+                                       **kwargs)
             else:
                 return ""
 
-        return render_template("single_comment.html", v=v, c=self, replies=self.replies, render_replies=render_replies, standalone=standalone, level=level)
+        return render_template("single_comment.html",
+                               v=v,
+                               c=self,
+                               render_replies=render_replies,
+                               standalone=standalone,
+                               level=level,
+                               **kwargs)
 
     @property
     def active_flags(self):
