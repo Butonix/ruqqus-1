@@ -89,6 +89,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def __repr__(self):
         return f"<Submission(id={self.id})>"
 
+    @property
+    def board_base36id(self):
+        return base36encode(self.board_id)
+
 
     @property
     #@cache.memoize(timeout=60)
@@ -137,7 +141,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         else:
             template="submission.html"
 
-
         private=not self.is_public and not self.board.can_view(v)
         
         if private and not self.author_id==v.id:
@@ -155,9 +158,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                                p=self,
                                sort_method=request.args.get("sort","Hot").capitalize(),
                                linked_comment=comment,
-                               comment_info=comment_info,
-                               is_allowed_to_comment= self.board.can_comment(v)
-                               )
+                               comment_info=comment_info)
 
     @property
     @lazy
@@ -180,7 +181,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     def tree_comments(self, comment=None):
 
-
         def tree_replies(thing, layer=1):
 
             thing.__dict__["replies"]=[]
@@ -188,13 +188,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         
             while i>=0:
                 if comments[i].parent_fullname==thing.fullname:
-
                     thing.__dict__["replies"].append(comments[i])
                     comments.pop(i)
 
                 i-=1
                 
-            if layer <=5:
+            if layer <=8:
                 for reply in thing.replies:
                     tree_replies(reply, layer=layer+1)
                 
@@ -210,20 +209,17 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         sort_type = request.args.get("sort","hot")
 
 
-        comments=self.comments.filter(text("comments.level<=6"))
-
-
         #Treeing is done from the end because reasons, so these sort orders are reversed
         if sort_type=="hot":
-            comments=comments.order_by(text("comments.score_hot ASC")).all()#limit(100)
+            comments=self.comments.order_by(text("comments.score_hot ASC")).all()
         elif sort_type=="top":
-            comments=comments.order_by(text("comments.score_top ASC")).all()#limit(100)
+            comments=self.comments.order_by(text("comments.score_top ASC")).all()
         elif sort_type=="new":
-            comments=comments.order_by(text("comments.created_utc")).all#limit(100)
+            comments=self.comments.order_by(text("comments.created_utc")).all()
         elif sort_type=="disputed":
-            comments=comments.order_by(text("comments.score_disputed ASC")).all()#limit(100)
+            comments=self.comments.order_by(text("comments.score_disputed ASC")).all()
         elif sort_type=="random":
-            c=comments.all()
+            c=self.comments.all()
             comments=random.sample(c, k=len(c))
         else:
             abort(422)
@@ -253,7 +249,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     #@lazy
     def thumb_url(self):
-
+    
         if self.domain=="i.ruqqus.com":
             return self.url
         elif self.has_thumb:
