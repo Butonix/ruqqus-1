@@ -1095,7 +1095,8 @@ else {
 
 if (image.includes("media.giphy.com")) {
 	attribution.innerHTML = '<img src="/assets/images/icons/PoweredBy_200px-Black_HorizLogo.png" style="width: 150px;">';
-  image = image.replace(/\b100w\b~?/g, 'giphy-downsized')
+  var GIPHYsrc = image.replace(/\b100w\b~?/g, 'giphy-downsized');
+  inlineImage.src = GIPHYsrc;
 }
 
 };
