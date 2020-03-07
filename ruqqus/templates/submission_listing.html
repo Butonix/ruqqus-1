@@ -30,9 +30,9 @@
 
       <span id="post-{{ p.base36id }}-score-down" class="score-down{% if voted!=-1 %} d-none{% endif %}">{% if p.is_banned %}✖{% else %}{{ score-1-adjust }}{% endif %}</span>
 
-      {% if not p.board.downvotes_disabled %}
+
       <div id="post-{{ p.base36id }}-down" tabindex="0" class="text-muted mx-auto arrow-down" {% if not p.is_banned %}{% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}{% endif %}></div>
-      {% endif %}
+
 
       {% else %}
 
@@ -40,9 +40,9 @@
 
       <span id="post-{{ p.base36id }}-score-none" class="score">{% if p.is_banned %}✖{% else %}{{ score-adjust }}{% endif %}</span>
 
-      {% if not p.board.downvotes_disabled %}
+
       <div id="post-{{ p.base36id }}-down" tabindex="0" class="text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
-      {% endif %}
+
 
       {% endif %}
 
@@ -201,11 +201,11 @@
           <span id="post-{{ p.base36id }}-score-mobile-none" class="score text-muted">{{ score }}</span>
           <span id="post-{{ p.base36id }}-score-mobile-down" class="score-down text-muted d-none">{{ score-1 }}</span>
 
-          {% if not p.board.downvotes_disabled %}
+
           <span id="arrow-{{ p.base36id }}-mobile-down" class="arrow-mobile-down ml-2 my-0" onclick="vote('{{ p.base36id }}','-1')">
             <i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
           </span>
-          {% endif %}
+
         </li>
         {% else %}
         <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none">
@@ -215,11 +215,11 @@
 
           <span id="post-{{ p.base36id }}-score-mobile-none" class="score text-muted">{{ score }}</span>
 
-          {% if not p.board.downvotes_disabled %}
+
           <span id="arrow-{{ p.base36id }}-mobile-down" class="arrow-mobile-down ml-2 my-0" onclick="location.href='/login';">
             <i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
           </span>
-          {% endif %}
+
 
         </li>
         {% endif %}
