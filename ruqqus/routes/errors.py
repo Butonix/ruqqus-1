@@ -1,6 +1,7 @@
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.session import *
 from flask import *
+from urllib.parse import quote, urlencode
 import time
 from ruqqus.__main__ import db, app
 
@@ -8,7 +9,13 @@ from ruqqus.__main__ import db, app
 @app.errorhandler(401)
 @auth_desired
 def error_401(e, v):
-    return render_template('errors/401.html', v=v), 401
+
+    path=request.path
+    qs=urlencode(dict(request.args))
+    argval=quote(f"{path}?{qs}", safe='')
+    output=f"/login?redirect={argval}"
+
+    return redirect(output)
 
 @app.errorhandler(403)
 @auth_desired
