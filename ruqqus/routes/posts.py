@@ -243,10 +243,13 @@ def submit_post(v):
                     abort(403)
 
             user_id=identity.id
+            user_name=identity.username
         else:
             user_id=v.id
+            user_name=v.username
     else:
         user_id=v.id
+        user_name=v.username
                 
                 
     #Force https for submitted urls
@@ -309,7 +312,7 @@ def submit_post(v):
                         original_board_id=board.id,
                         over_18=(bool(request.form.get("over_18","")) or board.over_18),
                         post_public=not board.is_private,
-                        author_name=user.username,
+                        author_name=user_name,
                         guild_name=board.name
                         )
 
