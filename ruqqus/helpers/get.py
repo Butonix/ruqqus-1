@@ -57,7 +57,7 @@ def get_domain(s):
 
         domain_list.add(new_domain)
 
-    domain_list=list(domain_list)
+    domain_list=tuple(list(domain_list))
 
     doms=[x for x in db.query(Domain).filter(Domain.domain.in_(domain_list)).all()]
 
