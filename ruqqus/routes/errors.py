@@ -12,7 +12,7 @@ def error_401(e, v):
 
     path=request.path
     qs=urlencode(dict(request.args))
-    argval=quote(f"{path}{qs}", safe='')
+    argval=quote(f"{path}?{qs}", safe='')
     output=f"/login?redirect={argval}"
 
     return redirect(output)
