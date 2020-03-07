@@ -87,6 +87,7 @@
     <div class="card-block text-left x-scroll-parent my-md-auto w-100">
 
     <div style="height: 21px" class="d-block d-md-none mb-1">
+      <div class="post-meta text-left x-scroll" style="overflow-x: scroll;"><span class="post-meta-guild"><a href="/+{{ p.board_name }}">+{{ p.board_name }}</a> · </span>{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> · {% endif %}{% if p.over_18 %}<span class="text-danger"><i class="far fa-exclamation-triangle text-small mr-1"></i>nsfw</span> · {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by <a href="/@{{ p.author_name }}" class="user-name">{{ p.author_name }}</a> {% if p.distinguish_level %}</span> <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>{% endif %} · ({{ p.domain }}){% if not p.is_public %} · <i class="fas fa-eye-slash text-warning" data-toggle="tooltip" data-placement="bottom" title="Private post, visible to you because {{ p.visibility_reason(v) }}"></i>{% endif %}{% if v and v.admin_level >=3 and p.active_flags %} · <span class="text-danger">{{ p.active_flags }} Flags</span>{% endif %}{% if p.board.has_mod(v) and p.active_reports %} · <span class="text-danger">{{ p.active_reports }} Reports</span>{% endif %}
       </div>
     </div>
 
