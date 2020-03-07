@@ -1074,7 +1074,7 @@ var attribution = document.getElementById("modal-image-attribution");
 
 // Link text
 
-var linkText= document.getElementById("desktop-expanded-image-link");
+var linkText = document.getElementById("desktop-expanded-image-link");
 
 var inlineImage = document.getElementById("desktop-expanded-image");
 
@@ -1095,8 +1095,11 @@ else {
 
 if (image.includes("media.giphy.com")) {
 	attribution.innerHTML = '<img src="/assets/images/icons/PoweredBy_200px-Black_HorizLogo.png" style="width: 150px;">';
+
   var GIPHYsrc = image.replace(/\b100w\b~?/g, 'giphy-downsized');
+  
   inlineImage.src = GIPHYsrc;
+  linkText.href = GIPHYsrc;
 }
 
 };
