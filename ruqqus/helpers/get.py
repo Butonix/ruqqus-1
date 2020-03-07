@@ -78,3 +78,13 @@ def get_title(x):
 
     else:
         return title
+
+
+def get_mod(uid, bid):
+
+    mod=db.query(ModRelationship).filter_by(board_id=bid,
+                                            user_id=uid,
+                                            accepted=True,
+                                            invite_rescinded=False).first()
+
+    return mod
