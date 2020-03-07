@@ -145,7 +145,7 @@
           <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#yankPostModal" onclick="yank_postModal('{{ p.base36id }}','{{ p.author_name }}','{{ p.comment_count }}','{{ p.title | js_str_escape }}', '/@{{ p.author_name }}','{{ p.domain | js_str_escape }}','{{ p.age_string }}')" class="d-block"><i class="fas fa-hand-lizard"></i>Yank</a></li>
           {% endif %}
 
-          {% if v.id | is_mod(p.board_id) and not p.is_deleted %}
+          {% if v.id | is_mod(p.board_id) %}
           <li class="list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}else{window.location.href='{{ p.permalink }}';}})"><i class="fas fa-times text-danger"></i>Kick</a></li>
           {% if p.report_count >= 1 %}
           <li class="list-inline-item"><a class="text-success" href="javascript:void(0)" onclick="post('/mod/accept/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}})"><i class="fas fa-check text-success"></i>Approve</a></li>
