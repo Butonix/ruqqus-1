@@ -54,7 +54,7 @@ class Board(Base, Stndrd, Age_times):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return f"Board(name={self.name})>"
+        return f"<Board(name={self.name})>"
     
     @property
     def mods_list(self):
