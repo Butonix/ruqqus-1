@@ -309,7 +309,7 @@ def submit_post(v):
                         original_board_id=board.id,
                         over_18=(bool(request.form.get("over_18","")) or board.over_18),
                         post_public=not board.is_private,
-                        author_name=v.username,
+                        author_name=user.username,
                         guild_name=board.name
                         )
 
