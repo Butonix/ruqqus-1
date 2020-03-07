@@ -35,6 +35,6 @@ def js_str_escape(s):
     return s
 
 @app.template_filter("is_mod")
-def jinja_is_mod(bid, uid):
+def jinja_is_mod(uid, bid):
 
     return bool(get_mod(uid, bid))
