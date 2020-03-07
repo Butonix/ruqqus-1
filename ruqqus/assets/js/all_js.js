@@ -1064,6 +1064,8 @@ myId = getId(myUrl);
 $('#ytEmbed').html('<iframe width="100%" height="475" src="//www.youtube.com/embed/' + myId + '" frameborder="0" allowfullscreen></iframe>');
 
 
+// Expand Images on Desktop
+
 function expandDesktopImage(image, link) {
 
 // GIPHY attribution div
@@ -1072,9 +1074,11 @@ var attribution = document.getElementById("modal-image-attribution");
 
 // Link text
 
-var linkText= document.getElementById("desktop-expanded-image-link")
+var linkText= document.getElementById("desktop-expanded-image-link");
 
-document.getElementById("desktop-expanded-image").src = image;
+var inlineImage = document.getElementById("desktop-expanded-image");
+
+inlineImage.src = image;
 
 if (image.includes("i.ruqqus.com")) {
 	linkText.href = link;
@@ -1091,6 +1095,7 @@ else {
 
 if (image.includes("media.giphy.com")) {
 	attribution.innerHTML = '<img src="/assets/images/icons/PoweredBy_200px-Black_HorizLogo.png" style="width: 150px;">';
+  image = image.replace(/\b100w\b~?/g, 'giphy-downsized')
 }
 
 };
