@@ -493,13 +493,14 @@ def mod_bid_settings_name(bid, board, v):
 
     if new_name.lower() == board.name.lower():
         board.name = new_name
+        db.add(board)
+        db.commit()
+        return "", 204
     else:
         return "", 422
 
-    db.add(board)
-    db.commit()
 
-    return "", 204
+
 
 @app.route("/mod/<bid>/settings/description", methods=["POST"])
 @auth_required
