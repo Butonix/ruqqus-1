@@ -158,7 +158,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                                p=self,
                                sort_method=request.args.get("sort","Hot").capitalize(),
                                linked_comment=comment,
-                               comment_info=comment_info)
+                               comment_info=comment_info,
+                               is_allowed_to_comment=self.board.can_comment(v)
+                               )
 
     @property
     @lazy
