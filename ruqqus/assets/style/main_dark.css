@@ -14488,7 +14488,7 @@ a:hover .link-arrow {
 }
 
 #frontpage .pseudo-submit-form.card, #search .search-results.card, #guild .pseudo-submit-form.card {
-  background-color: #35363e;
+  background-color: #1f2023;
   border-radius: 0.35rem;
   border: none;
 }
@@ -14499,7 +14499,7 @@ a:hover .link-arrow {
 }
 
 #frontpage .pseudo-submit-form.card .card-body .form-control, #guild .pseudo-submit-form.card .card-body .form-control {
-  background-color: #AAAAAA;
+  background-color: #35363e;
 }
 
 #frontpage .pseudo-submit-form.card .card-body .form-control:hover, #frontpage .pseudo-submit-form.card .card-body .form-control:active, #frontpage .pseudo-submit-form.card .card-body .form-control:focus {
@@ -15204,6 +15204,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   background-color: #1f2023;
   border-bottom-right-radius: 0.35rem;
   border-bottom-left-radius: 0.35rem;
+  background-image: linear-gradient(180deg, #ffffff00 25%, #1f2023 100%) !important;
 }
 
 .modal .post-actions .list-group-item {
@@ -17334,6 +17335,11 @@ textarea {
 
 .text-muted {
   color: #AAAAAA !important;
+}
+
+.white-overlay {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  background-image: linear-gradient(180deg, #ffffff00 25%, #1f2023 100%) !important;
 }
 
 .sidebar-adminpanel input[type=submit] {

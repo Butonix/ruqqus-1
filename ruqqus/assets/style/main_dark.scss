@@ -1113,7 +1113,7 @@ color: $dark;
 // Main Content
 
 #frontpage .pseudo-submit-form.card, #search .search-results.card, #guild .pseudo-submit-form.card {
-    background-color: $light;
+    background-color: $gray-600;
     border-radius: $border-radius;
     border: none;
     //box-shadow: $box-shadow-sm;
@@ -1125,7 +1125,7 @@ color: $dark;
 }
 
 #frontpage .pseudo-submit-form.card .card-body .form-control, #guild .pseudo-submit-form.card .card-body .form-control {
-    background-color: $gray-100;
+    background-color: $light;
 }
 
 #frontpage .pseudo-submit-form.card .card-body .form-control:hover, #frontpage .pseudo-submit-form.card .card-body .form-control:active, #frontpage .pseudo-submit-form.card .card-body .form-control:focus {
@@ -1876,6 +1876,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     background-color: $gray-600;
     border-bottom-right-radius: $border-radius;
     border-bottom-left-radius: $border-radius;
+    background-image: linear-gradient(180deg, #ffffff00 25%, $gray-600 100%)!important;
 }
 
 .modal .post-actions .list-group-item {
@@ -3637,6 +3638,11 @@ textarea, input[type=text] {
 
 .text-muted {
     color: $muted!important;
+}
+
+.white-overlay {
+    background-color: rgba(0, 0, 0, 0.5)!important;
+    background-image: linear-gradient(180deg, #ffffff00 25%, $gray-600 100%)!important;
 }
 
 // Adam's additions
