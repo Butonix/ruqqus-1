@@ -779,7 +779,7 @@ label.color-radio span {
     color: $muted;
     border-color: transparent;
     border-width: 2px;
-    background: $gray-100;
+    background: $light;
     transition: none;
 }
 
@@ -798,7 +798,7 @@ label.color-radio span {
 
 .form-control:hover {
     color: $black;
-    background-color: $white;
+    background-color: $gray-600;
     outline: 0;
     border-color: $primary;
     box-shadow: none;
@@ -806,7 +806,7 @@ label.color-radio span {
 
 .form-control:focus, .form-control:active {
     color: $black;
-    background-color: $light;
+    background-color: $gray-900;
     outline: 0;
     border-color: $primary;
     box-shadow: none;

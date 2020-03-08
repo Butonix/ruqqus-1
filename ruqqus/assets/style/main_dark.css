@@ -14176,7 +14176,7 @@ label.color-radio span {
   color: #AAAAAA;
   border-color: transparent;
   border-width: 2px;
-  background: #AAAAAA;
+  background: #35363e;
   transition: none;
 }
 
@@ -14199,7 +14199,7 @@ label.color-radio span {
 
 .form-control:hover {
   color: #CFCFCF;
-  background-color: #35363e;
+  background-color: #1f2023;
   outline: 0;
   border-color: #805AD5;
   box-shadow: none;
@@ -14207,7 +14207,7 @@ label.color-radio span {
 
 .form-control:focus, .form-control:active {
   color: #CFCFCF;
-  background-color: #35363e;
+  background-color: #0f0f0f;
   outline: 0;
   border-color: #805AD5;
   box-shadow: none;
