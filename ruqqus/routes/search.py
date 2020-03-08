@@ -16,18 +16,18 @@ def search(v, search_type="posts"):
     page=max(1, int(request.args.get("page", 1)))
 
 
-    if search_type == "posts":
-        columns = [Submission.title, Submission.body]
-    elif search_type == "users":
-        columns = [User.username]
-    elif search_type == "guilds":
-        columns = [Board.description, Board.name, Board.submissions]
+##    if search_type == "posts":
+##        columns = [Submission.title, Submission.body]
+##    elif search_type == "users":
+##        columns = [User.username]
+##    elif search_type == "guilds":
+##        columns = [Board.description, Board.name, Board.submissions]
 
-    keywords = query.lower().split()
-    conditions = [func.lower(column).contains(word) for word in keywords for column in columns]
-    conditions = tuple(conditions)
+##    keywords = query.lower().split()
+##    conditions = [func.lower(column).contains(word) for word in keywords for column in columns]
+##    conditions = tuple(conditions)
 
-    posts = db.query(Submission).filter(func.lower(Submission.title).contains(query))
+    posts = db.query(Submission).filter(func.lower(Submission.title).contains(query.lower()))
 
 
     if not (v and v.over_18):
@@ -51,4 +51,12 @@ def search(v, search_type="posts"):
     next_exists=(len(posts)==26)
     results=posts[0:25]
 
-    return render_template("search.html", v=v, query=query, total=total, page=page, listing=results, sort_method=sort, next_exists=next_exists)
+    return render_template("search.html",
+                           v=v,
+                           query=query,
+                           total=total,
+                           page=page,
+                           listing=results,
+                           sort_method=sort,
+                           next_exists=next_exists
+                           )
