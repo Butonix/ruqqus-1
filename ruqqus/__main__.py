@@ -147,7 +147,7 @@ def after_request(response):
     response.headers.add("Feature-Policy",
                          "geolocation 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'none'; fullscreen 'none'; payment")
     if not request.path.startswith("/embed/"):
-        resp.headers.add("X-Frame-Options",
+        response.headers.add("X-Frame-Options",
                          "deny")
 
     return response
