@@ -27,7 +27,7 @@ def auth_desired(f):
         if v:
             resp.headers.add("Cache-Control", "private")
             resp.headers.add("Access-Control-Allow-Origin",app.config["SERVER_NAME"])
-
+            resp.headers.add("X-Frame-Options","deny")
         return resp
 
     wrapper.__name__=f.__name__
@@ -53,7 +53,7 @@ def auth_required(f):
         resp = make_response( f(*args, v=v, **kwargs))
         resp.headers.add("Cache-Control","private")
         resp.headers.add("Access-Control-Allow-Origin",app.config["SERVER_NAME"])
-
+        resp.headers.add("X-Frame-Options","deny")
         return resp
     
     wrapper.__name__=f.__name__
@@ -82,6 +82,7 @@ def is_not_banned(f):
         resp=make_response(f(*args, v=v, **kwargs))
         resp.headers.add("Cache-Control","private")
         resp.headers.add("Access-Control-Allow-Origin",app.config["SERVER_NAME"])
+        resp.headers.add("X-Frame-Options","deny")
         return resp
 
     wrapper.__name__=f.__name__
@@ -168,7 +169,7 @@ def admin_level_required(x):
             
             resp.headers.add("Cache-Control","private")
             resp.headers.add("Access-Control-Allow-Origin",app.config["SERVER_NAME"])
-
+            resp.headers.add("X-Frame-Options","deny")
             return resp
 
         wrapper.__name__=f.__name__
