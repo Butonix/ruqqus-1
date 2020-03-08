@@ -3030,7 +3030,7 @@ ul.comment-section {
 }
 
 .submission .footer {
-    background-color: $gray-200;
+    background-color: transparent;
     padding: 1rem;
     border-bottom-left-radius: .25rem;
     border-bottom-right-radius: .25rem;
@@ -3601,6 +3601,10 @@ textarea, input[type=text] {
 
 .bg-white {
     background-color: $gray-600!important;
+}
+
+.text-muted {
+    color: $muted!important;
 }
 
 // Adam's additions

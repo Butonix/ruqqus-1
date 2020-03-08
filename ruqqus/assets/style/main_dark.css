@@ -16777,7 +16777,7 @@ ul.comment-section {
 }
 
 .submission .footer {
-  background-color: #383838;
+  background-color: transparent;
   padding: 1rem;
   border-bottom-left-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
@@ -17335,6 +17335,10 @@ textarea {
 
 .bg-white {
   background-color: #1f2023 !important;
+}
+
+.text-muted {
+  color: #AAAAAA !important;
 }
 
 .sidebar-adminpanel input[type=submit] {
