@@ -234,7 +234,7 @@ def api_undistinguish_comment(c_id, v):
 
 @app.route("/api/ban_guild/<bid>", methods=["POST"])
 @admin_level_required(4)
-def api_ban_guild(bid)
+def api_ban_guild(bid):
 
     board = get_board(bid)
 
@@ -248,7 +248,7 @@ def api_ban_guild(bid)
 
 @app.route("/api/unban_guild/<bid>", methods=["POST"])
 @admin_level_required(4)
-def api_unban_guild(bid)
+def api_unban_guild(bid):
 
     board = get_board(bid)
 
