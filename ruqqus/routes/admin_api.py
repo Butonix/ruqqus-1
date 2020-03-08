@@ -20,10 +20,14 @@ def ban_user(user_id, v):
     user.ban_reason=request.form.get("reason","")
 
     db.add(user)
+    user.del_profile()
+    user.del_banner()
 
     for a in user.alts:
         user.is_banned=v.id
         user.ban_reason=request.form.get("reason","")
+        user.del_profile()
+        user.del_banner()
         db.add(a)
         
     db.commit()
@@ -226,3 +230,32 @@ def api_undistinguish_comment(c_id, v):
     db.commit()
 
     return "", 204
+
+
+@app.route("/api/ban_guild/<bid>", methods=["POST"])
+@admin_level_required(4)
+def api_ban_guild(bid)
+
+    board = get_board(bid)
+
+    board.is_banned=True
+    board.ban_reason=request.form.get("reason","")
+    
+    db.add(board)
+    db.commit()
+
+    return "",204
+
+@app.route("/api/unban_guild/<bid>", methods=["POST"])
+@admin_level_required(4)
+def api_unban_guild(bid)
+
+    board = get_board(bid)
+
+    board.is_banned=False
+    board.ban_reason=""
+    
+    db.add(board)
+    db.commit()
+
+    return "",204
