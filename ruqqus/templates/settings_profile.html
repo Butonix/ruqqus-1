@@ -38,7 +38,9 @@
 
     <!-- Settings tabs -->
 
-    <div class="flex-row bg-white box-shadow-bottom sticky d-flex mt-3 mb-3 mb-md-5">
+     <!-- Desktop -->
+
+    <div class="flex-row bg-white box-shadow-bottom sticky d-none d-md-flex mt-3 mb-3 mb-md-5">
 
       <ul class="nav settings-nav mr-auto">
         <li class="nav-item">
@@ -54,6 +56,23 @@
 
     </div>
 
+     <!-- Mobile -->
+
+     <div class="flex-row bg-white box-shadow-bottom sticky justify-content-center d-flex d-md-none mt-3 mb-3 mb-md-5">
+
+      <ul class="nav settings-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="/settings/profile"><i class="fas fa-user text-lg mr-0"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/settings/security"><i class="fas fa-cog text-lg mr-0"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-none" href="/settings/notifications">Notifications</a>
+        </li>
+      </ul>
+
+    </div>
 
     <div class="row">
 
