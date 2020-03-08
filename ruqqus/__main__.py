@@ -143,7 +143,7 @@ def after_request(response):
                          "maxage=600")
     response.headers.add("Strict-Transport-Security","max-age=31536000")
     response.headers.add("Referrer-Policy","same-origin")
-    response.headers.add("X-Content-Type":"nosniff")
+    response.headers.add("X-Content-Type","nosniff")
     response.headers.add("Feature-Policy",
                          "geolocation 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'none'; fullscreen 'none'; payment")
     if not request.path.startswith("/embed/"):
