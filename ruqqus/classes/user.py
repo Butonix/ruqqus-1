@@ -120,7 +120,14 @@ class User(Base, Stndrd):
             posts=posts.filter_by(over_18=False)
 
         board_ids=[x.board_id for x in self.subscriptions.filter_by(is_active=True).all()]
-        posts=posts.filter(Submission.board_id.in_(board_ids))
+        user_ids =[x.target_id for x in self.following.all()]
+        
+        posts=posts.filter(
+            or_(
+                Submission.board_id.in_(board_ids),
+                Submission.author_id.in_(user_ids)
+                )
+            )
 
         if not self.admin_level >=4:
             #admins can see everything
