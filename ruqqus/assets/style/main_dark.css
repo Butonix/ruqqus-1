@@ -14245,7 +14245,7 @@ label.terms {
 .dropdown-menu {
   padding: 0.5rem;
   color: #FFFFFF;
-  background-color: #383838;
+  background-color: #1f2023;
 }
 
 .user-profile > .dropdown-toggle::after {
@@ -14265,7 +14265,7 @@ label.terms {
 .dropdown-item:hover, .dropdown-item:focus, .dropdown-item.active {
   color: #CFCFCF;
   text-decoration: none;
-  background-color: #35363e;
+  background-color: #383838;
 }
 
 .dropdown-item:hover .fas, .dropdown-item:focus .fas, .dropdown-item.active .fas, .dropdown-item:hover .far, .dropdown-item:focus .far, .dropdown-item.active .far .dropdown-item:hover .fa,
@@ -15134,7 +15134,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 #frontpage .posts .card:hover, #userpage .posts .card:hover, #search .posts .card:hover, #guild .posts .card:hover, #settings-guild .posts .card:hover {
-  background-color: #AAAAAA;
+  background-color: #1f2023;
 }
 
 .post-title a {
@@ -15323,7 +15323,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .dropdown-actions .fa, .dropdown-actions .fas, .dropdown-actions .far {
   font-size: 12px;
-  color: #383838;
+  color: #AAAAAA;
   margin-right: 0.5rem;
   width: 1rem;
   text-align: center;
@@ -15475,7 +15475,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .post-actions a {
-  color: #383838;
+  color: #AAAAAA;
   text-decoration: none;
   text-transform: none;
 }

@@ -843,7 +843,7 @@ label.terms {
 
 .dropdown-menu {
     padding: 0.5rem;
-    color: $black;
+    color: $gray-600;
 }
 
 .user-profile > .dropdown-toggle::after {
@@ -863,7 +863,7 @@ label.terms {
 .dropdown-item:hover, .dropdown-item:focus, .dropdown-item.active {
     color: $black;
     text-decoration: none;
-    background-color: $gray-200;
+    background-color: $gray-300;
 }
 
 .dropdown-item:hover .fas, .dropdown-item:focus .fas, .dropdown-item.active .fas, .dropdown-item:hover .far, .dropdown-item:focus .far, .dropdown-item.active .far
@@ -1800,7 +1800,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 #frontpage .posts .card:hover, #userpage .posts .card:hover, #search .posts .card:hover, #guild .posts .card:hover, #settings-guild .posts .card:hover {
-    background-color: $gray-200;
+    background-color: $gray-600;
 }
 
 .post-title {
@@ -2142,7 +2142,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .post-actions a {
-    color: $gray;
+    color: $gray-100;
     text-decoration: none;
     text-transform: none;
 }
@@ -3408,7 +3408,7 @@ body, #settings, #notifications, #submit{
 }
 
 .post-actions a {
-    color: $gray-500;
+    color: $gray-100;
     font-size: $font-size-base;
     font-weight: $font-weight-normal;
 }
