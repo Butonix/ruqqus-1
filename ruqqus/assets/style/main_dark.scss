@@ -722,7 +722,7 @@ label.color-radio span {
 }
 
 .form-inline.search .form-control:active, .form-inline.search .form-control:focus {
-    background-color: $white;
+    background-color: $gray-900;
     color: $black;
 }
 
@@ -1852,10 +1852,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .modal-header {
     border-bottom: none;
-    background-color: $light;
+    background-color: $gray-600;
     border-top-left-radius: $border-radius;
     border-top-right-radius: $border-radius;
     padding: 0.5rem 1rem;
+    box-shadow: $box-shadow;
 }
 
 .modal-header .close {
@@ -1864,6 +1865,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .modal-content {
     border: none;
+    background-color: $gray-600;
     border-radius: $border-radius;
     box-shadow: $box-shadow;
     background-color: $dark;
@@ -1871,7 +1873,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .modal-footer {
     border: none;
-    background-color: $gray-200;
+    background-color: $gray-600;
     border-bottom-right-radius: $border-radius;
     border-bottom-left-radius: $border-radius;
 }
