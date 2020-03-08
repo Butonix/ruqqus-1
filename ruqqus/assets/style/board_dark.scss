@@ -1113,6 +1113,10 @@ color: $dark;
 
 // Main Content
 
+.pseudo-submit-form .card-header {
+    background-color: $gray-600!important;
+}
+
 #frontpage .pseudo-submit-form.card, #search .search-results.card, #guild .pseudo-submit-form.card {
     background-color: $gray-600;
     border-radius: $border-radius;
@@ -1779,7 +1783,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     color: $gray;
     padding: 0.5rem 1rem;
     border-bottom: 1px solid $input-border-color;
-    background-color: $gray-600!important;
 }
 
 .card {

@@ -14492,6 +14492,10 @@ a:hover .link-arrow {
   opacity: 0.8;
 }
 
+.pseudo-submit-form .card-header {
+  background-color: #1f2023 !important;
+}
+
 #frontpage .pseudo-submit-form.card, #search .search-results.card, #guild .pseudo-submit-form.card {
   background-color: #1f2023;
   border-radius: 0.35rem;
@@ -15108,7 +15112,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   color: #CFCFCF;
   padding: 0.5rem 1rem;
   border-bottom: 1px solid #303030;
-  background-color: #1f2023 !important;
 }
 
 .card {
