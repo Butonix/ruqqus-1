@@ -3100,8 +3100,8 @@ ul.comment-section {
   width: 2.75rem;    // it was 1.75rem before. Sliding way is longer than before.
   pointer-events: all;
   border-radius: 1rem;
-  background-color: $gray-500;
-  border: $gray-500 solid 1px;
+  background-color: $gray-100;
+  border: $gray-100 solid 1px;
   opacity: .7;
 }
 
@@ -3612,7 +3612,7 @@ textarea, input[type=text] {
 
 // Dark Mode
 
-.navbar .bg-white {
+.navbar {
     background-color: $gray-500!important;
     box-shadow: 0 1px 2px rgba(0,0,0,.15),0 0 2px rgba(0,0,0,.1)!important;
 }
