@@ -13894,19 +13894,11 @@ th {
   width: 1.25rem;
 }
 
-.fa-bold:hover {
-  color: #718096;
-}
-
-.fa-italic:hover {
-  color: #718096;
-}
-
-.fa-quote-right:hover {
-  color: #718096;
-}
-
-.fa-link:hover {
+.format .fa-bold:hover,
+.format .fa-italic:hover,
+.format .fa-quote-right:hover,
+.format .fa-link:hover,
+.format .fa-image:hover {
   color: #718096;
 }
 
