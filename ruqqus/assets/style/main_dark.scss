@@ -1853,29 +1853,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 // Modals (post actions, delete confirmations, etc)
 
-// Image expander
-
-// Medium devices (tablets, 768px and up)
-@media (min-width: 768px) {
-    .desktop-expanded-image-modal .modal-dialog {
-        max-width: 700px;
-    }
-}
-
-// Large devices (desktops, 992px and up)
-@media (min-width: 992px) {
-    .desktop-expanded-image-modal .modal-dialog {
-        max-width: 900px;
-    }
-}
-
-// Extra large devices (large desktops, 1200px and up)
-@media (min-width: 1200px) {
-    .desktop-expanded-image-modal .modal-dialog {
-        max-width: 1000px;
-    }
-}
-
 .modal-backdrop.show {
     opacity: 1;
     background-color:rgba(30,30,30,0.9);
