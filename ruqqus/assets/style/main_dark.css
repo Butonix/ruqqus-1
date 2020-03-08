@@ -13578,7 +13578,7 @@ html {
 body {
   color: #CFCFCF;
   padding-top: 49px;
-  background-color: #383838;
+  background-color: #181818;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -15108,6 +15108,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   color: #CFCFCF;
   padding: 0.5rem 1rem;
   border-bottom: 1px solid #56575a;
+  background-color: #1f2023 !important;
 }
 
 .card {

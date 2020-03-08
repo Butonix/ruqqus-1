@@ -154,7 +154,7 @@ html {
 body {
     color: $black;
     padding-top: 49px;
-    background-color: $white;
+    background-color: $gray-700;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -1774,6 +1774,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     color: $gray;
     padding: 0.5rem 1rem;
     border-bottom: 1px solid $input-border-color;
+    background-color: $gray-600!important;
 }
 
 .card {
