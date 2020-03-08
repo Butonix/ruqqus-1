@@ -14129,26 +14129,21 @@ label.color-radio span {
 
 .form-inline.search .input-group-append .input-group-text .fa.fa-search {
   color: #CFCFCF;
-  opacity: 0.25;
 }
 
 .form-inline.search .form-control::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #CFCFCF;
-  opacity: 0.25;
-  /* Firefox */
 }
 
 .form-inline.search .form-control::-ms-input-placeholder {
   /* Internet Explorer 10-11 */
   color: #CFCFCF;
-  opacity: 0.25;
 }
 
 .form-inline.search .form-control::-ms-input-placeholder {
   /* Microsoft Edge */
   color: #CFCFCF;
-  opacity: 0.25;
 }
 
 .form-inline.search .form-control:active::placeholder, .form-inline.search .form-control:focus::placeholder {
