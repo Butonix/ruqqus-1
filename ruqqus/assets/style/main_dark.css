@@ -15760,7 +15760,7 @@ ul.comment-section {
 }
 
 .comment-write.collapsed textarea:focus, .comment-write.collapsed textarea:active {
-  background-color: #383838;
+  background-color: #0f0f0f;
 }
 
 .comment-write.collapsed textarea {
