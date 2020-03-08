@@ -17324,6 +17324,10 @@ textarea {
   color: #AAAAAA !important;
 }
 
+.text-gray-400, .text-gray-500 {
+  color: #8f8f90 !important;
+}
+
 .white-overlay {
   background-color: rgba(0, 0, 0, 0.5) !important;
   background-image: linear-gradient(180deg, #ffffff00 25%, #1f2023 100%) !important;
