@@ -2455,7 +2455,12 @@ ul.comment-section {
 }
 
 .comment-write textarea {
-    background: $gray-100;
+    background: $light;
+}
+
+.comment-write textarea:hover,
+.form-control[readonly]:hover {
+    background: $gray-600;
 }
 
 .comment-write .comment-format {
@@ -3621,6 +3626,10 @@ textarea, input[type=text] {
 
 .navbar {
     background-color: $gray-500!important;
+}
+
+.bg-white {
+    background-color: $gray-600!important;
 }
 
 // Adam's additions

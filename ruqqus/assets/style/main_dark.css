@@ -15770,7 +15770,12 @@ ul.comment-section {
 }
 
 .comment-write textarea {
-  background: #AAAAAA;
+  background: #35363e;
+}
+
+.comment-write textarea:hover,
+.form-control[readonly]:hover {
+  background: #1f2023;
 }
 
 .comment-write .comment-format {
@@ -17323,6 +17328,10 @@ textarea {
 }
 .navbar {
   background-color: #272727 !important;
+}
+
+.bg-white {
+  background-color: #1f2023 !important;
 }
 
 .sidebar-adminpanel input[type=submit] {

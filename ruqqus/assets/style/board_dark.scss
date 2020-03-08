@@ -2432,7 +2432,7 @@ ul.comment-section {
 }
 
 .comment-write.collapsed textarea:focus, .comment-write.collapsed textarea:active {
-    background-color: $white;
+    background-color: $dark;
 }
 
 .comment-write.collapsed textarea {
@@ -2443,12 +2443,12 @@ ul.comment-section {
 }
 
 .comment-write textarea {
-    background: $white;
+    background: $light;
 }
 
 .comment-write textarea:hover,
 .form-control[readonly]:hover {
-    background: $gray-100
+    background: $gray-600;
 }
 
 .comment-write .comment-format {
@@ -3593,6 +3593,10 @@ textarea, input[type=text] {
 
 .navbar {
     background-color: $gray-500!important;
+}
+
+.bg-white {
+    background-color: $gray-600!important;
 }
 
 // Adam's additions
