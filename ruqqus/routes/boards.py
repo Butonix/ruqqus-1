@@ -162,6 +162,7 @@ def mod_kick_bid_pid(bid,pid, board, v):
         abort(422)
 
     post.board_id=1
+    post.guild_name="general"
     db.add(post)
     db.commit()
 
@@ -273,6 +274,7 @@ def user_kick_pid(pid, v):
     db.add(new_rel)
 
     post.board_id=1
+    post.guild_name="general"
     
     db.add(post)
     db.commit()
@@ -308,6 +310,7 @@ def mod_take_pid(pid, v):
         abort(403)
 
     post.board_id=board.id
+    post.guild_name=board.name
     db.add(post)
     db.commit()
 
