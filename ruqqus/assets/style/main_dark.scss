@@ -464,6 +464,11 @@ ol > li::before {
 
 // Navbar and tab Bar
 
+.navbar-light {
+    background-color: $gray-500!important;
+    box-shadow: 0 1px 2px rgba(0,0,0,.15),0 0 2px rgba(0,0,0,.1)!important;
+}
+
 .navbar-toggler-icon {
     width: auto;
     height: auto;
@@ -3611,11 +3616,6 @@ textarea, input[type=text] {
 }
 
 // Dark Mode
-
-.navbar {
-    background-color: $gray-500!important;
-    box-shadow: 0 1px 2px rgba(0,0,0,.15),0 0 2px rgba(0,0,0,.1)!important;
-}
 
 .bg-white {
     background-color: $gray-600!important;

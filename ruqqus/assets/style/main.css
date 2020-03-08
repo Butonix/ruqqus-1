@@ -13457,6 +13457,10 @@ ol > li::before {
   font-size: 1rem;
 }
 
+.navbar-light {
+  background-color: #ffffff;
+}
+
 .navbar-toggler-icon {
   width: auto;
   height: auto;

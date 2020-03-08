@@ -460,11 +460,14 @@ ol > li::before {
 
 // Navbar and tab Bar
 
+.navbar-light {
+    background-color: $white;
+}
+
 .navbar-toggler-icon {
     width: auto;
     height: auto;
 }
-
 
 .navbar-toggler-icon, .navbar-dark .navbar-toggler-icon, .navbar-light .navbar-toggler-icon {
     background: transparent;
