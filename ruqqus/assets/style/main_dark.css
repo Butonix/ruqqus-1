@@ -15644,7 +15644,7 @@ blockquote p {
 }
 
 .modal .comment-actions a {
-  color: #CFCFCF;
+  color: #AAAAAA;
   font-size: 1rem;
 }
 
@@ -15670,7 +15670,7 @@ blockquote p {
 .comment-actions .fa, .comment-actions .fas, .comment-actions .far {
   font-size: 12px;
   margin-right: 0.5rem;
-  color: #383838;
+  color: #AAAAAA;
 }
 
 .comment-actions .dropdown-item:active .fa, .comment-actions .dropdown-item:active .fas, .comment-actions .dropdown-item:active .far {
@@ -15707,7 +15707,7 @@ blockquote p {
 }
 
 .comment-actions a {
-  color: #383838;
+  color: #AAAAAA;
   text-decoration: none;
 }
 
@@ -17216,7 +17216,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .comment-actions .fa, .comment-actions .fas, .comment-actions .far {
-    color: #303030;
+    color: #AAAAAA;
   }
 
   .banner-pic-135 {

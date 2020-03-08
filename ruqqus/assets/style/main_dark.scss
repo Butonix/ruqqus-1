@@ -2327,7 +2327,7 @@ blockquote p {
 }
 
 .modal .comment-actions a {
-    color: $black;
+    color: $gray-100;
     font-size: $font-size-base;
 }
 
@@ -2355,7 +2355,7 @@ blockquote p {
 .comment-actions .fa, .comment-actions .fas, .comment-actions .far {
     font-size: 12px;
     margin-right: .5rem;
-    color: $gray;
+    color: $gray-100;
 }
 
 .comment-actions .dropdown-item:active .fa, .comment-actions .dropdown-item:active .fas, .comment-actions .dropdown-item:active .far {
@@ -2392,7 +2392,7 @@ blockquote p {
 }
 
 .comment-actions a {
-    color: $gray;
+    color: $gray-100;
     text-decoration: none;
 }
 
@@ -3508,7 +3508,7 @@ body, #settings, #notifications, #submit {
 }
 
 .comment-actions .fa, .comment-actions .fas, .comment-actions .far {
-    color: $gray-400;
+    color: $gray-100;
 }
 
 // User and Profile (mobile)
