@@ -4,66 +4,6 @@
 <script src="/assets/js/comment_modding.js"></script>
 {% endblock %}
 
-{% block sidebarLeftblock %}
-
-{% if not v %}
-<div class="sidebar-section sidebar-alert">
-  <div class="body">
-    <img src="/assets/images/illustrations/ruckus.png" class="empty-state-img mb-3" alt="empty state">
-    <h5>Join the discourse.</h5>
-    <p class="text-small">Internet freedom of speech has a new home. Use your voice. Make a Ruqqus.</p>
-    <a href="/signup" class="btn btn-primary btn-block">Sign up</a>
-  </div>
-</div>
-{% endif %}
-
-{% if v %}
-
-<div class="sidebar-section sidebar-dashboard">
-  <div class="title">Dashboard</div>
-  <div class="body">
-    <ul class="no-bullets dashboard-list pl-0">
-      <li class="dashboard-item">
-        <a class="dashboard-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem"></i>Profile</a>
-      </li>
-      <li class="dashboard-item">
-        <a class="dashboard-link" href="{{ v.permalink }}/posts"><i class="fas fa-feather-alt fa-width-rem"></i>Your posts</a>
-      </li>
-      <li class="dashboard-item">
-        <a class="dashboard-link" href="{{ v.permalink }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Your comments</a> 
-      </li>
-      <li class="dashboard-item">
-        <a class="dashboard-link" href="/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a>
-      </li>
-      <li class="dashboard-item">
-       <a class="dashboard-link" href="/guilds"><i class="fas fa-university fa-width-rem"></i>Your guilds</a>
-     </li>
-     <li class="dashboard-item">
-       <a class="dashboard-link" href="/subscriptions"><i class="fas fa-user-friends fa-width-rem"></i>Your subscriptions</a>
-     </li>
-   </ul>
- </div>
-</div>
-
-{% endif %}
-
-{% if not(v and v.id==u.id) %}
-<div class="sidebar-section sidebar-filters sticky-63">
-  <div class="title">Viewing</div>
-  <div class="body">
-    <ul class="no-bullets filter-list pl-0">
-      <li class="filter-item">
-        <a class="filter-link" href="{{ u.permalink }}"><i class="fas fa-feather-alt fa-width-rem"></i>Posts</a>
-      </li>
-      <li class="filter-item">
-        <a class="filter-link active" href="{{ u.permalink }}/comments"><i class="fas fa-comment-dots fa-width-rem"></i>Comments</a>
-      </li>
-    </ul>
-  </div>
-</div>
-{% endif %}
-{% endblock %}
-
 {% block content %}
 
 <div class="row no-gutters">

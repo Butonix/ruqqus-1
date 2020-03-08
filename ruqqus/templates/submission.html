@@ -330,7 +330,7 @@
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#yankPostModal" onclick="yank_postModal('{{ p.base36id }}','{{ p.author.username }}','{{ p.comment_count }}','{{ p.title | js_str_escape }}','{{ p.author.permalink }}','{{ p.domain | js_str_escape }}','{{ p.age_string }}')" class="d-block"><i class="fas fa-hand-lizard"></i>Yank</a></li>
                     {% endif %}
 	  {% if v.id==p.author_id and p.board_id not in [1, p.original_board_id] %}
-          <li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/user/kick/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="fas fa-university"></i>Remove from +{{ p.board.name }}</a></li>
+          <li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/user/kick/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="fas fa-chess-rook"></i>Remove from +{{ p.board.name }}</a></li>
 	  {% endif %}
 
                     {% if p.board.has_mod(v) %}

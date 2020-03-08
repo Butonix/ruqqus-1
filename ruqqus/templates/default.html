@@ -198,23 +198,8 @@
           </span>
         </form>
       </li>
-      <li class="nav-item">
-        <a class="nav-link " href="/">
-          <i class="fas fa-home-alt fa-width-rem mr-3"></i>Homepage
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link " href="/all?sort=new">
-          <i class="fas fa-globe-americas fa-width-rem mr-3"></i>All
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link " href="/all?sort=hot">
-          <i class="fas fa-fire fa-width-rem mr-3"></i>Trending
-        </a>
-      </li>
       {% if v %}
-      <li class="nav-item border-top mt-2 pt-2">
+      <li class="nav-item">
         <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem mr-3"></i>@{{ v.username }}</a>
       </li>
       <li class="nav-item">
@@ -226,7 +211,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/mine"><i class="fas fa-university fa-width-rem mr-3"></i>My guilds</a>
+        <a class="nav-link" href="/settings"><i class="fas fa-cog fa-width-rem mr-3"></i>My account</a>
       </li>
 	{% block darkswitchMobile %}
       {% if v and v.referral_count and session.get("dark_mode_enabled")%}
@@ -238,9 +223,6 @@
       {% endif %}
 	{% endblock %}
       <li class="nav-item border-top mt-2 pt-2">
-        <a class="nav-link" href="/settings">Account settings</a>
-      </li>
-      <li class="nav-item">
         <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})">Log out</a>
       </li>
       <li class="nav-item border-top mt-2 pt-2">
@@ -385,6 +367,8 @@
 {% endblock %}
 </div>
 </div>
+
+{% include "mobile_navigation_bar.html" %}
 
 {% block actionsModal %}
 {% endblock %}
