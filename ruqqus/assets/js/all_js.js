@@ -1084,7 +1084,7 @@ if (image.includes("i.ruqqus.com")) {
 	linkText.href = link;
 	linkText.textContent = 'Go to website';
 }
-else if (image.includes("imgur.com") || image.includes("cdn.discordapp.com" || image.includes("i.ruqqus.com"))){
+else if (image.includes("imgur.com") || image.includes("cdn.discordapp.com")){
 	linkText.href = image;
 	linkText.textContent = 'View original';
 }
