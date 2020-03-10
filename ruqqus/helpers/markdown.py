@@ -34,7 +34,7 @@ class CustomRenderer(HTMLRenderer):
         target = token.target[1]
 
         user=get_user(target, graceful=True)
-        if not user or user.reserved:
+        if not user or user.is_banned:
             return f"{space}@{target}"
         
         return f'{space}<a class="d-inline-block" href="{user.permalink}"><img src="/@{user.username}/pic/profile" class="profile-pic-20 mr-1">@{user.username}</a>'
@@ -45,7 +45,7 @@ class CustomRenderer(HTMLRenderer):
 
         board=get_guild(target, graceful=True)
 
-        if not board:
+        if not board or board.is_banned:
             return f"{space}+{target}"
         else:
             return f'{space}<a class="d-inline-block" href="{board.permalink}"><img src="/+{board.name}/pic/profile" class="profile-pic-20 align-middle mr-1">+{board.name}</a>'
