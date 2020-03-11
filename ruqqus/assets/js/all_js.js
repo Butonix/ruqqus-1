@@ -1273,3 +1273,9 @@ window.onload = function () {
     prevScrollpos = currentScrollPos;
   }
 }
+
+// Tooltips
+
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip(); 
+});
