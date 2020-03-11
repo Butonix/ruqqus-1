@@ -427,4 +427,7 @@ def embed_post_pid(pid):
 
     post=get_post(pid)
 
+    if post.is_banned or post.board.is_banned:
+        abort(410)
+
     return render_template("embeds/submission.html", p=post)
