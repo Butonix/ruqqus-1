@@ -1306,7 +1306,9 @@ color: $dark;
     position: sticky;
     top: 49px;
     z-index: 1000;
-    height: 100vh;
+    height: calc(100vh - 49px);
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 @media (min-width: 1199.98px) {
