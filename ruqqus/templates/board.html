@@ -26,8 +26,7 @@
 {% endif %}
 {% endif %}
 {% if b.is_banned %}
-<p>Banned by: <a href="{{ u.banned_by.permalink}}">@{{ u.banned_by.username }}</a></p>
-<p>Reason: {{ u.ban_reason }}</p>
+<p>Reason: {{ b.ban_reason }}</p>
 {% endif %}
 {% endblock %}
 
