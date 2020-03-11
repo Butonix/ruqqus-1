@@ -8,12 +8,30 @@
 <link id="css-link" rel="stylesheet" href="{{ b.css_url }}">
 {% endif %}
 
-<script>
-
-
-</script>
-
 {% endblock %}
+
+{% block adminpanel %}
+{% if v.admin_level >=3 %}
+{% if b.is_banned %}
+<form action="/api/unban_guild/{{ b.base36id }}" method="post">
+  <input type="hidden" name="formkey", value="{{ v.formkey }}">
+  <input type="submit" class="btn btn-success" value="Unban guild">
+</form>
+{% else %}
+<form action="/api/ban_guild/{{ b.base36id }}", method="post">
+  <input type="hidden" name="formkey", value="{{ v.formkey }}">
+  <input id="user-ban-reason" type="text" class="form-control" name="reason" placeholder="Ban Reason">
+  <input type="submit" class="btn btn-warning" value="Ban guild">
+</form>
+{% endif %}
+{% endif %}
+{% if b.is_banned %}
+<p>Banned by: <a href="{{ u.banned_by.permalink}}">@{{ u.banned_by.username }}</a></p>
+<p>Reason: {{ u.ban_reason }}</p>
+{% endif %}
+{% endblock %}
+
+
 
 {% block darkswitch %}
 
