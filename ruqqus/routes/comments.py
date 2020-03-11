@@ -44,6 +44,13 @@ def post_pid_comment_cid(p_id, c_id, v=None):
                                board=comment.board
                                )
 
+    #check guild ban
+    board=post.board
+    if board.is_banned and v.admin_level<3:
+        return render_template("board_banned.html",
+                               v=v,
+                               b=board)        
+
     #context improver
     context=int(request.args.get("context", 0))
     c=comment

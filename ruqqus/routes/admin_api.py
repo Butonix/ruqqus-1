@@ -245,7 +245,7 @@ def api_ban_guild(v, bid):
     db.add(board)
     db.commit()
 
-    return "",204
+    return redirect(board.permalink)
 
 @app.route("/api/unban_guild/<bid>", methods=["POST"])
 @admin_level_required(4)
@@ -260,4 +260,4 @@ def api_unban_guild(v, bid):
     db.add(board)
     db.commit()
 
-    return "",204
+    return redirect(board.permalink)
