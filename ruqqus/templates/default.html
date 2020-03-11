@@ -65,7 +65,7 @@
       <div class="flex-grow-1"><a href="/" class="navbar-brand">ruqqus<span class="text-small-extra text-uppercase text-gray-400"> Beta</span></a></div>
       <div class="flex-grow-1 d-fl d-none d-md-block">
         <form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search" method="get">
-          <input class="form-control w-100" type="search" placeholder="Search" aria-label="Search" name="q">
+          <input class="form-control w-100" type="search" placeholder="Search posts" aria-label="Search posts" name="q">
           <span class="input-group-append">
             <span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;" onclick="document.getElementById('searchform').submit()">
               <i class="fa fa-search" aria-hidden="true"></i>
@@ -135,7 +135,7 @@
               <div><img src="{{ v.profile_url }}" class="profile-pic-35"></div>
               <div class="text-left pl-2">
                 <div class="text-small font-weight-bold">{{ v.username }}</div>
-                <div class="text-small-extra text-purple"><i class="fad fa-dice-d10 mr-1"></i>{{ v.karma + v.comment_karma }} Rep</div>
+                <div class="text-small-extra text-purple"><i class="fad fa-diamond mr-1"></i>{{ v.karma + v.comment_karma }} Rep</div>
               </div>
             </div>
           </a>
@@ -144,7 +144,7 @@
           <div class="px-2">
             <div class="dropdown-meta">
               <div class="font-weight-bold mb-2">{{ v.username }}</div>
-              <div class="text-small text-purple"><i class="fad fa-dice-d10 mr-1"></i>{{ v.karma + v.comment_karma }} Rep</div>
+              <div class="text-small text-purple"><i class="fad fa-diamond mr-1"></i>{{ v.karma + v.comment_karma }} Rep</div>
             </div>
           </div>
           <hr class="my-2">
@@ -190,7 +190,7 @@
      <ul class="navbar-nav ml-auto d-flex d-md-none mt-3">
        <li class="nav-item pb-3">
         <form class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search" method="get">
-          <input class="form-control form-control-sm w-100" type="search" placeholder="Search Ruqqus" aria-label="Search" name="q">
+          <input class="form-control form-control-sm w-100" type="search" placeholder="Search posts" aria-label="Search posts" name="q">
           <span class="input-group-append">
             <span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;">
               <i class="fa fa-search" aria-hidden="true"></i>
