@@ -188,6 +188,16 @@ def submit_post(v):
     board=get_guild(board_name, graceful=True)
     if not board:
         board=get_guild('general')
+
+    if board.is_banned:
+        return render_template("submit.html",
+                               v=v,
+                               error=f"+{board.name} has been demolished.",
+                               title=title,
+                               url=url
+                               , body=request.form.get("body",""),
+                               b=get_guild("general")
+                               ), 403       
     
     if board.has_ban(v):
         return render_template("submit.html",
