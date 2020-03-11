@@ -14677,7 +14677,9 @@ a:hover .link-arrow {
   position: sticky;
   top: 49px;
   z-index: 1000;
-  height: 100vh;
+  height: calc(100vh - 49px);
+  overflow-y: scroll;
+  overflow-x: hidden;
   background-color: #1f2023 !important;
 }
 

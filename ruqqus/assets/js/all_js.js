@@ -1242,7 +1242,7 @@ window.onload = function () {
     if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
       bottomBar.style.bottom = "0px";
     } 
-    else if (currentScrollPos <= 125) {
+    else if (currentScrollPos <= 125 && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
       bottomBar.style.bottom = "0px";
     }
     else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 65)) {
@@ -1273,3 +1273,9 @@ window.onload = function () {
     prevScrollpos = currentScrollPos;
   }
 }
+
+// Tooltips
+
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip(); 
+});
