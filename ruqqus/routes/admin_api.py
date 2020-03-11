@@ -237,7 +237,7 @@ def api_undistinguish_comment(c_id, v):
 @validate_formkey
 def api_ban_guild(bid):
 
-    board = get_board(bid)
+    board = get_board(v, bid)
 
     board.is_banned=True
     board.ban_reason=request.form.get("reason","")
@@ -250,7 +250,7 @@ def api_ban_guild(bid):
 @app.route("/api/unban_guild/<bid>", methods=["POST"])
 @admin_level_required(4)
 @validate_formkey
-def api_unban_guild(bid):
+def api_unban_guild(v, bid):
 
     board = get_board(bid)
 
