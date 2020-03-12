@@ -21,7 +21,7 @@
             <a href="/">
               <div class="d-flex">
                 <div>
-                  <img src="/assets/images/icons/house-alt.png" class="profile-pic-30"></div>
+                  <img src="/assets/images/icons/house-alt.png" class="profile-pic profile-pic-30 transition-square"></div>
                   <div class="my-auto ml-2">
                     <div class="text-black font-weight-normal">Home</div>
                   </div>
@@ -32,7 +32,7 @@
               <a href="/all?sort=new">
                 <div class="d-flex">
                   <div>
-                    <img src="/assets/images/icons/planet.png" class="profile-pic-30"></div>
+                    <img src="/assets/images/icons/planet.png" class="profile-pic profile-pic-30 transition-square"></div>
                     <div class="my-auto ml-2">
                       <div class="text-black font-weight-normal">All</div>
                     </div>
@@ -43,7 +43,7 @@
                 <a href="/all?sort=hot">
                   <div class="d-flex">
                     <div>
-                      <img src="/assets/images/icons/flame.png" class="profile-pic-30"></div>
+                      <img src="/assets/images/icons/flame.png" class="profile-pic profile-pic-30 transition-square"></div>
                       <div class="my-auto ml-2">
                         <div class="text-black font-weight-normal">Trending</div>
                       </div>
@@ -55,17 +55,17 @@
               <ul class="no-bullets guild-recommendations-list pl-0 sidebar-collapsed-visible">
                 <li class="guild-recommendations-item">
                   <a href="/">
-                    <img src="/assets/images/icons/house-alt.png" class="profile-pic-30">
+                    <img src="/assets/images/icons/house-alt.png" class="profile-pic profile-pic-30 transition-square">
                   </a>
                 </li>
                 <li class="guild-recommendations-item">
                   <a href="/all?sort=new">
-                    <img src="/assets/images/icons/planet.png" class="profile-pic-30">
+                    <img src="/assets/images/icons/planet.png" class="profile-pic profile-pic-30 transition-square">
                   </a>
                 </li>
                 <li class="guild-recommendations-item">
                   <a href="/all?sort=hot">
-                    <img src="/assets/images/icons/flame.png" class="profile-pic-30">
+                    <img src="/assets/images/icons/flame.png" class="profile-pic profile-pic-30 transition-square">
                   </a>
                 </li>
               </ul>
@@ -88,7 +88,7 @@
                   <a href="{{ board.permalink }}">
                     <div class="d-flex">
                       <div>
-                        <img src="{{ board.profile_url }}" class="profile-pic-30 mr-2">
+                        <img src="{{ board.profile_url }}" class="profile-pic profile-pic-30 transition-square mr-2">
                       </div>
                       <div class="my-auto">
                         <div class="text-black font-weight-normal">+{{ board.name }}</div>
@@ -104,7 +104,7 @@
                 {% for board in v.boards_subscribed[0:8] %}
                 <li class="guild-recommendations-item">
                   <a href="{{ board.permalink }}">
-                    <img src="{{ board.profile_url }}" class="profile-pic-30">
+                    <img src="{{ board.profile_url }}" class="profile-pic profile-pic-30 transition-square">
                   </a>
                 </li>
                 {% endfor %}
@@ -138,7 +138,7 @@
                 <a href="{{ board.permalink }}">
                   <div class="d-flex">
                     <div>
-                      <img src="{{ board.profile_url }}" class="profile-pic-30 mr-2">
+                      <img src="{{ board.profile_url }}" class="profile-pic profile-pic-30 transition-square mr-2">
                     </div>
                     <div class="my-auto">
                       <div class="text-black font-weight-normal">+{{ board.name }}</div>
@@ -153,7 +153,7 @@
               {% for board in v.boards_modded[0:8] %}
               <li class="guild-recommendations-item">
                 <a href="{{ board.permalink }}">
-                  <img src="{{ board.profile_url }}" class="profile-pic-30">
+                  <img src="{{ board.profile_url }}" class="profile-pic profile-pic-30 transition-square">
                 </a>
               </li>
               {% endfor %}
