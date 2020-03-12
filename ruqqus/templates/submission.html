@@ -180,7 +180,8 @@
 {% else %}
 <form action="/api/ban_post/{{ p.base36id }}", method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
-  <input type="submit" class="form-control" value="Remove Post">
+  <input id="post-ban-reason" type="text" class="form-control" name="reason" placeholder="Removal Reason">
+  <input type="submit" class="btn btn-warning" value="Remove Post">
 </form>
 {% endif %}
 {% endif %}
