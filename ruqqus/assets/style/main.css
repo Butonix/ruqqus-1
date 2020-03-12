@@ -14258,7 +14258,7 @@ a:hover .link-arrow {
   top: 49px;
   z-index: 1000;
   height: calc(100vh - 49px);
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
@@ -16883,6 +16883,11 @@ textarea {
     appearance: none;
   }
 }
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
 .sidebar-adminpanel input[type=submit] {
   width: 100%;
 }
