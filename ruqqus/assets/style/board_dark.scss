@@ -595,7 +595,7 @@ ol > li::before {
 .nav-link .badge-count {
     width: 20px;
     height: 20px;
-    border-radius: 50rem;
+    border-radius: 50%;
     background-color: $danger;
     position: absolute;
     color: $white;
@@ -1557,7 +1557,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 // Progress Bar
 
 .progress {
-    border-radius: 50rem;
+    border-radius: 50%;
 }
 
 // User and Profile
@@ -1573,10 +1573,18 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     width: 425px;
 }
 
+.profile-pic.transition-square {
+    transition: border-radius 0.25s;
+}
+
+.profile-pic.profile-pic.transition-square:hover {
+    border-radius: .35rem;
+}
+
 .profile-pic {
     width: 50px;
     height: 50px;
-    border-radius: 100%;
+    border-radius: 50%;
     margin: auto;
     text-align: center;
     color: $white;
@@ -1617,7 +1625,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-20 {
     width: 20px;
     height: 20px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: #FFFFFF;
@@ -1626,7 +1634,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-25 {
     width: 25px;
     height: 25px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: #FFFFFF;
@@ -1635,7 +1643,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-30 {
     width: 30px;
     height: 30px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: #FFFFFF;
@@ -1644,7 +1652,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-35 {
     width: 35px;
     height: 35px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: #FFFFFF;
@@ -1653,7 +1661,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-40 {
     width: 40px;
     height: 40px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: #FFFFFF;
@@ -1662,7 +1670,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-50 {
     width: 50px;
     height: 50px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: #FFFFFF;
@@ -1671,7 +1679,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-65 {
     width: 65px;
     height: 65px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: #FFFFFF;
@@ -1680,7 +1688,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-75 {
     width: 75px;
     height: 75px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: #FFFFFF;
