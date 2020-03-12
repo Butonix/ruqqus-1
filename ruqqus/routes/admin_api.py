@@ -65,7 +65,7 @@ def ban_post(post_id, v):
     post.is_approved=0
     post.approved_utc=0
     post.stickied=False
-    post.ban_reason=request.args.get("reason",None)
+    post.ban_reason=request.form.get("reason",None)
 
     db.add(post)
     db.commit()
