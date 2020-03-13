@@ -20,8 +20,8 @@
 {% else %}
 <form action="/api/ban_guild/{{ b.base36id }}", method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
-  <input id="user-ban-reason" type="text" class="form-control" name="reason" placeholder="Ban Reason">
-  <input type="submit" class="btn btn-warning" value="Ban guild">
+  <input id="guild-ban-reason" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('guild-ban-submit').disabled=false;">
+  <input id="guild-ban-submit" type="submit" class="btn btn-warning" value="Ban guild" disabled>
 </form>
 {% endif %}
 {% endif %}
