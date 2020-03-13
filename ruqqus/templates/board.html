@@ -25,6 +25,12 @@
 </form>
 {% endif %}
 {% endif %}
+{% if not b.has_mod(v) %}
+<form action="/api/mod_self/{{ b.base36id }}" method="post">
+  <input type="hidden" name="formkey", value="{{ v.formkey }}">
+  <input type="submit" class="btn btn-success" value="Mod Self">
+</form>
+{% endif %}
 {% if b.is_banned %}
 <p>Reason: {{ b.ban_reason }}</p>
 {% endif %}

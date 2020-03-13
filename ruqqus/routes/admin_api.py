@@ -262,3 +262,19 @@ def api_unban_guild(v, bid):
     db.commit()
 
     return redirect(board.permalink)
+
+@app.route("/api/mod_self/<bid>", methods=["POST"])
+@admin_level_required(4)
+@validate_formkey
+def mod_self_to_guild(v, bid):
+
+    board=get_board(bid)
+    if not board.has_mod(v):
+        mr = ModRelationship(user_id=v.id,
+                             board_id=board.id,
+                             accepted=True)
+        db.add(mr)
+        db.commit()
+
+    return redirect(f"/+{board.name}/mod/mods")
+        
