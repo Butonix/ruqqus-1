@@ -354,12 +354,13 @@ def submit_post(v):
         
         #update post data
         new_post.url=f'https://i.ruqqus.com/{name}'
+        new_post.is_image=True
         db.add(new_post)
         db.commit()
 
     
     #spin off thumbnail generation as  new thread
-    if new_post.url:
+    elif new_post.url:
         new_thread=threading.Thread(target=thumbnail_thread,
                                     args=(new_post.base36id,)
                                     )
