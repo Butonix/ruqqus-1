@@ -32,7 +32,7 @@ def ruqqus_embed(url):
     matches=re.match(ruqqus_regex, url)
 
     post_id=matches.group(1)
-    comment_id=matches.group(2)
+    comment_id=matches.group(3)
 
     if comment_id:
         return f"https://{app.config['SERVER_NAME']}/embed/comment/{comment_id}"
