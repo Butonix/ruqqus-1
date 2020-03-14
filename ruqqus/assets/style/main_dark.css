@@ -17202,6 +17202,10 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     font-size: 12px;
   }
 
+  .comment-section {
+    background-color: #0f0f0f;
+  }
+
   .comment-section > .comment {
     padding-left: 0;
   }

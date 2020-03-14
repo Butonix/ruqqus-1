@@ -3496,6 +3496,10 @@ body, #settings, #notifications, #submit {
 
 // Comments
 
+.comment-section {
+    background-color: $gray-900;
+}
+
 .comment-section > .comment {
     padding-left: 0;
   }
