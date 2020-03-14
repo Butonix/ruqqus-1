@@ -3,8 +3,8 @@
 {% block pagetype %}search{% endblock %}
 
 {% block title %}
-<title>Search Ruqqus</title> <!-- include dynamic jinja-generated text in title -->
-<meta name="description" content="">
+<title>Search Ruqqus for "{{ query }}"</title> <!-- include dynamic jinja-generated text in title -->
+<meta name="description" content="{{ total }} results">
 {% endblock %}
 
 {% block enlargeThumbJS %}
