@@ -215,9 +215,9 @@
       </li>
 	{% block darkswitchMobile %}
       {% if v and v.referral_count and session.get("dark_mode_enabled")%}
-      <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem mr-3" id="dark-switch"></i>Dark mode</a></li>
+      <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
       {% elif v and v.referral_count %}
-      <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem mr-3" id="dark-switch"></i>Dark mode</a></li>
+      <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
       {% else %}
       <li class="nav-item"><a class="nav-link" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem mr-3"></i>Dark mode</a></li>
       {% endif %}
