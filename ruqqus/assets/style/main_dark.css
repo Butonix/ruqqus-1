@@ -17393,11 +17393,11 @@ div.banned {
 }
 
 div.deleted {
-  background-color: #FEFCBF;
+  background-color: #969600;
 }
 
 div.deleted.banned {
-  background-color: #ffcc99;
+  background-color: #960000;
 }
 
 .text-admin {
