@@ -17388,8 +17388,12 @@ span.green {
 }
 
 div.banned {
-  background-color: #4c2b2b;
+  background-color: #FEB2B2;
   border-left: 3px solid #ff0000 !important;
+}
+
+div.deleted {
+  background-color: #FEFCBF;
 }
 
 div.deleted.banned {
