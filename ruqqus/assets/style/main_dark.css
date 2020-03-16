@@ -16884,6 +16884,10 @@ ul.comment-section {
   transform: translateX(1.25rem);
 }
 
+pre code {
+  color: #FFFFFF;
+}
+
 pre.prettyprint {
   padding: 0;
 }

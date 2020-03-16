@@ -3148,6 +3148,12 @@ ul.comment-section {
   transform: translateX(1.25rem); //translateX(0.75rem);
 }
 
+// Code
+
+pre code {
+    color: $white;
+}
+
 // Code Prettify
 
 pre.prettyprint {

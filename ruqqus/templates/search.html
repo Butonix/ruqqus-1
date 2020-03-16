@@ -50,19 +50,19 @@
   <ul class="nav post-nav mr-auto">
     <li class="nav-item">
 
-      <a class="nav-link{% if sort_method=="hot" %} active{% endif %}" href="?sort=hot&q={{ query | urlencode }}"><i class="fas fa-fire"></i>Hot</a>
+      <a class="nav-link{% if sort_method=='hot' %} active{% endif %}" href="?sort=hot&q={{ query | urlencode }}"><i class="fas fa-fire"></i>Hot</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link{% if sort_method=="top" %} active{% endif %}" href="?sort=top&q={{ query | urlencode }}"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
+      <a class="nav-link{% if sort_method=='top' %} active{% endif %}" href="?sort=top&q={{ query | urlencode }}"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link{% if sort_method=="new" %} active{% endif %}" href="?sort=new&q={{ query | urlencode }}"><i class="fas fa-sparkles"></i>New</a> 
+      <a class="nav-link{% if sort_method=='new' %} active{% endif %}" href="?sort=new&q={{ query | urlencode }}"><i class="fas fa-sparkles"></i>New</a> 
     </li>
     <li class="nav-item">
-      <a class="nav-link{% if sort_method=="fiery" %} active{% endif %}" href="?sort=fiery&q={{ query | urlencode }}"><i class="fas fa-bullhorn"></i>Disputed</a>
+      <a class="nav-link{% if sort_method=='fiery' %} active{% endif %}" href="?sort=fiery&q={{ query | urlencode }}"><i class="fas fa-bullhorn"></i>Disputed</a>
     </li>
     <li class="nav-item ">
-      <a class="nav-link {% if sort_method=="activity" %} active{% endif %}" href="/?sort=activity"><i class="fas fa-comments"></i>Activity</a>
+      <a class="nav-link {% if sort_method=='activity' %} active{% endif %}" href="/?sort=activity"><i class="fas fa-comments"></i>Activity</a>
     </li>
   </ul>
 
