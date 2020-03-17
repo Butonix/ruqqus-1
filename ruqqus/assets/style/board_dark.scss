@@ -30,9 +30,9 @@ $gray-900: #0f0f0f;
 $upvote: #805AD5;
 $downvote: #38B2AC;
 $admin: #E53E3E;
-$banned: #881111;
-$deleted: #888811;
-$deletedandbanned: #cc3300;
+$banned: #960000;
+$deleted: #969600;
+$deletedandbanned: #964000;
 $mod: #07c20c;
 
 $gold: #ECC94B;
@@ -3436,7 +3436,7 @@ body, #settings, #notifications, #submit{
 
 .post-meta {
     font-size: 1rem;
-    color: $gray-600;
+    color: $muted;
 }
 
 .post-actions {
