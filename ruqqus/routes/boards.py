@@ -186,13 +186,13 @@ def mod_accept_bid_pid(bid, pid, board, v):
     return "", 204
     
 
-@app.route("/mod/ban/<bid>/<username>", methods=["POST"])
+@app.route("/mod/exile/<bid>", methods=["POST"])
 @auth_required
 @is_guildmaster
 @validate_formkey
-def mod_ban_bid_user(bid, username, board, v):
+def mod_ban_bid_user(bid, board, v):
 
-    user=get_user(username)
+    user=get_user(request.form.get("username"))
 
     if not board.has_mod(v):
         abort(403)
@@ -229,13 +229,13 @@ def mod_ban_bid_user(bid, username, board, v):
 
     return "", 204
     
-@app.route("/mod/unban/<bid>/<username>", methods=["POST"])
+@app.route("/mod/unexile/<bid>/", methods=["POST"])
 @auth_required
 @is_guildmaster
 @validate_formkey
 def mod_unban_bid_user(bid, username, board, v):
 
-    user=get_user(username)
+    user=get_user(request.form.get("username"))
 
     x= board.has_ban(user)
     if not x:
