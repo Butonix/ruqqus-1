@@ -1,0 +1,42 @@
+{% extends "docs_default.html" %}
+
+{% block title %}
+<title>Ruqqus - Formatting</title>
+<meta name="description" content="Ruqqus Formatting">
+{% endblock %}
+
+{% block content %}
+{% filter markdown %}
+
+# Formatting
+
+On Ruqqus, you can use Markdown formatting.
+
+{% endfilter %}
+
+<table class="table table-striped mb-5">
+  <thead class="bg-primary text-white">
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Displays as</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>Italics</td>
+    <td>*text*</td>
+    <td><i>text</i></td>
+  </tr>
+  <tr>
+    <td>Bold</td>
+    <td>**text**</td>
+    <td><b>text</b></td>
+  </tr>
+  <tr>
+    <td>Links</td>
+    <td>[Ruqqus](https://ruqqus.com)</td>
+    <td><a href="https://ruqqus.com">Ruqqus</a></td>
+  </tr>
+</table>
+
+{% endblock %}
