@@ -149,9 +149,6 @@ def after_request(response):
     response.headers.add("X-Content-Type-Options","nosniff")
     response.headers.add("Feature-Policy",
                          "geolocation 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'none'; fullscreen 'none'; payment")
-    response.headers.add("Content-Security-Policy",
-                         "default-src https:")
-
     if not request.path.startswith("/embed/"):
         response.headers.add("X-Frame-Options",
                          "deny")
