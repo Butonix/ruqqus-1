@@ -411,7 +411,11 @@ def delete_post_pid(pid, v):
 
     #clear cache
     cache.delete_memoized(User.idlist, v, sort="new")
-    cache.delete_memoized(Board.idlist, post.board, sort="new")
+
+    if post.age >= 3600*6:
+        cache.delete_memoized(Board.idlist, post.board, sort="new")
+        cache.delete_memoized(frontlist, sort="new")
+    
 
     #delete i.ruqqus.com
     if post.domain=="i.ruqqus.com":
