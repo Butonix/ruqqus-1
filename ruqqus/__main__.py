@@ -84,7 +84,7 @@ import ruqqus.helpers.jinja2
 @app.before_request
 def before_request():
 
-    
+    session.permanent=True
     
     #check ip ban
     if db.query(ruqqus.classes.IP).filter_by(addr=request.remote_addr).first():
