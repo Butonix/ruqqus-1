@@ -38,7 +38,7 @@ app.config["SESSION_COOKIE_SECURE"]=True
 app.config["SESSION_COOKIE_SAMESITE"]="Lax"
 
 app.config["PERMANENT_SESSION_LIFETIME"]=60*60*24*365
-app.config["SESSION_REFRESH_EACH_REQUEST"]=True
+#app.config["SESSION_REFRESH_EACH_REQUEST"]=True
 
 app.jinja_env.cache = {}
 
