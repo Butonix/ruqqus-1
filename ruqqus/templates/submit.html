@@ -66,6 +66,8 @@
 	<!-- Navigation -->
 	{% include "header.html" %}
 
+	{% block form %}
+
 	<!-- Page Content -->
 
 	<form id="submitform" action="/submit" method="post" enctype="multipart/form-data">
@@ -79,8 +81,6 @@
 					<h1 class="d-none d-md-block">{% block pagetitle %}Create a post{% endblock %}</h1>
 
 					<h1 class="h3 d-md-none">Create a post</h1>
-
-					{% block form %}
 
 					<div class="body">
 
@@ -142,8 +142,6 @@
 
 
 					</div>
-
-					{% endblock %}
 
 				</div>
 
@@ -222,6 +220,8 @@
 		</div>
 
 	</form>
+
+	{% endblock %}
 
 	{% include "announcements_modal.html" %}
 
