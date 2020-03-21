@@ -13196,9 +13196,6 @@ pre {
 
 #settings, #submit {
   padding-top: 98px;
-}
-
-#settings {
   background-color: #ffffff;
 }
 
@@ -16894,6 +16891,10 @@ textarea {
 .hide-scrollbar::-webkit-scrollbar {
   width: 0px;
   background: transparent;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
 }
 
 .sidebar-adminpanel input[type=submit] {

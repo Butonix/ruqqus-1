@@ -179,9 +179,6 @@ pre {
 
 #settings, #submit {
     padding-top: 98px;
-}
-
-#settings {
     background-color: $gray-600;
 }
 
@@ -3656,6 +3653,12 @@ textarea, input[type=text] {
 .hide-scrollbar::-webkit-scrollbar {
     width: 0px;
     background: transparent;
+}
+
+// Hides scroll bar in FF
+
+.hide-scrollbar {
+    scrollbar-width: none;
 }
 
 // Adam's additions

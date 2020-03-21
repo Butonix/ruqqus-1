@@ -19,7 +19,7 @@ import requests
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-_version = "2.3.16"
+_version = "2.4.0"
 
 app = Flask(__name__,
             template_folder='./templates',

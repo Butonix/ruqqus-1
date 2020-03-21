@@ -4,6 +4,7 @@ from sqlalchemy import func
 from bs4 import BeautifulSoup
 import secrets
 import threading
+import requests
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -100,6 +101,39 @@ def edit_post(pid, v):
 
     return redirect(p.permalink)
 
+@app.route("/api/submit/title", methods=['GET'])
+@limiter.limit("6/minute")
+@is_not_banned
+#@tos_agreed
+#@validate_formkey
+def get_post_title(v):
+
+    url=request.args.get("url",None)
+    if not url:
+        return abort(400)
+
+    headers={"User-Agent":app.config["UserAgent"]}
+    try:
+        x=requests.get(url, headers=headers)
+    except:
+        return jsonify({"error": "Could not reach page"}), 400
+    
+    if not x.status_code==200:
+        return jsonify({"error":f"Page returned {x.status_code}"}), x.status_code
+
+    try:
+        soup = BeautifulSoup(x.content, 'html.parser')
+
+        data={"url":url,
+              "title":soup.find('title').string
+              }
+
+        return jsonify(data)
+    except:
+        return jsonify({"error":f"Could not find a title"}), 400
+
+
+
 @app.route("/submit", methods=['POST'])
 @limiter.limit("6/minute")
 @is_not_banned
@@ -115,9 +149,11 @@ def submit_post(v):
         return render_template("submit.html",
                                v=v,
                                error="Please enter a better title.",
-                               title=title, url=url,
+                               title=title,
+                               url=url,
                                body=request.form.get("body",""),
-                               b=get_guild(request.form.get("board","")
+                               b=get_guild(request.form.get("board",""),
+                                           graceful=True
                                            )
                                )
     elif len(title)>250:
@@ -127,7 +163,8 @@ def submit_post(v):
                                title=title[0:250],
                                url=url,
                                body=request.form.get("body",""),
-                               b=get_guild(request.form.get("board","")
+                               b=get_guild(request.form.get("board",""),
+                                           graceful=True
                                            )
                                )
 
@@ -173,7 +210,8 @@ def submit_post(v):
                                    title=title,
                                    url=url,
                                    body=request.form.get("body",""),
-                                   b=get_guild(request.form.get("board","general"))
+                                   b=get_guild(request.form.get("board","general"),
+                                           graceful=True)
                                    )
 
         #check for embeds
@@ -203,7 +241,8 @@ def submit_post(v):
                                title=title,
                                url=url
                                , body=request.form.get("body",""),
-                               b=get_guild("general")
+                               b=get_guild("general",
+                                           graceful=True)
                                ), 403       
     
     if board.has_ban(v):
@@ -223,7 +262,9 @@ def submit_post(v):
                                title=title,
                                url=url,
                                body=request.form.get("body",""),
-                               b=get_guild(request.form.get("board","general"))
+                               b=get_guild(request.form.get("board","general"),
+                                           graceful=True
+                                           )
                                )
 
         
@@ -294,7 +335,9 @@ def submit_post(v):
                                title=title,
                                text=body[0:10000],
                                url=url,
-                               b=get_guild(request.form.get("board","general"))
+                               b=get_guild(request.form.get("board","general"),
+                                           graceful=True
+                                           )
                                ), 400
 
     if len(url)>2048:
@@ -304,7 +347,8 @@ def submit_post(v):
                                error="URLs cannot be over 2048 characters",
                                title=title,
                                text=body[0:2000],
-                               b=get_guild(request.form.get("board","general"))
+                               b=get_guild(request.form.get("board","general"),
+                                           graceful=True)
                                ), 400
 
     with CustomRenderer() as renderer:

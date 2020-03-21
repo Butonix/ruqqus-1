@@ -18,13 +18,13 @@ $('#2faModal').on('hidden.bs.modal', function () {
 
 $('#new_email').on('input', function () {
 
-    var id = document.getElementById("email-password");
-    var id2 = document.getElementById("email-password-label");
-    var id3 = document.getElementById("emailpasswordRequired");
+  var id = document.getElementById("email-password");
+  var id2 = document.getElementById("email-password-label");
+  var id3 = document.getElementById("emailpasswordRequired");
 
-    id.classList.remove("d-none");
-    id2.classList.remove("d-none");
-    id3.classList.remove("d-none");
+  id.classList.remove("d-none");
+  id2.classList.remove("d-none");
+  id3.classList.remove("d-none");
 
 });
 
@@ -211,9 +211,9 @@ function collapse_comment(comment_id) {
 // Expand comment box on focus, hide otherwise
 
 $('.comment-box').focus(function (event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    $(this).parent().parent().addClass("collapsed");
+  $(this).parent().parent().addClass("collapsed");
 
 });
 
@@ -230,109 +230,109 @@ $('.comment-box').blur(function () {
 // Comment edit form
 
 toggleEdit=function(id){
-    comment=document.getElementById("comment-text-"+id);
-    form=document.getElementById("comment-edit-"+id);
-    box=document.getElementById('edit-box-comment-'+id);
-    actions = document.getElementById('comment-' + id +'-actions');
+  comment=document.getElementById("comment-text-"+id);
+  form=document.getElementById("comment-edit-"+id);
+  box=document.getElementById('edit-box-comment-'+id);
+  actions = document.getElementById('comment-' + id +'-actions');
 
-    comment.classList.toggle("d-none");
-    form.classList.toggle("d-none");
-    actions.classList.toggle("d-none");
-    autoExpand(box);
+  comment.classList.toggle("d-none");
+  form.classList.toggle("d-none");
+  actions.classList.toggle("d-none");
+  autoExpand(box);
 };
 
 // Post edit form
 
 togglePostEdit=function(id){
 
-    body=document.getElementById("post-body");
-    form=document.getElementById("edit-post-body-"+id);
-    box=document.getElementById("post-edit-box-"+id);
+  body=document.getElementById("post-body");
+  form=document.getElementById("edit-post-body-"+id);
+  box=document.getElementById("post-edit-box-"+id);
 
-    body.classList.toggle("d-none");
-    form.classList.toggle("d-none");
-    autoExpand(box);
+  body.classList.toggle("d-none");
+  form.classList.toggle("d-none");
+  autoExpand(box);
 };
 
 //comment modding
 function removeComment(post_id) {
-url="/api/ban_comment/"+post_id
+  url="/api/ban_comment/"+post_id
 
-callback=function(){
-document.getElementById("comment-"+post_id+"-only").classList.add("banned");
+  callback=function(){
+    document.getElementById("comment-"+post_id+"-only").classList.add("banned");
 
-button=document.getElementById("moderate-"+post_id);
-button.onclick=function(){approveComment(post_id)};
-button.innerHTML="approve"
-}
-post(url, callback, "Unable to remove post at this time. Please try again later.")
+    button=document.getElementById("moderate-"+post_id);
+    button.onclick=function(){approveComment(post_id)};
+    button.innerHTML="approve"
+  }
+  post(url, callback, "Unable to remove post at this time. Please try again later.")
 };
 
 function approveComment(post_id) {
-url="/api/unban_comment/"+post_id
+  url="/api/unban_comment/"+post_id
 
-callback=function(){
-document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
+  callback=function(){
+    document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
 
-button=document.getElementById("moderate-"+post_id);
-button.onclick=function(){removeComment(post_id)};
-button.innerHTML="remove"
-}
+    button=document.getElementById("moderate-"+post_id);
+    button.onclick=function(){removeComment(post_id)};
+    button.innerHTML="remove"
+  }
 
-post(url, callback, "Unable to approve post at this time. Please try again later.")
+  post(url, callback, "Unable to approve post at this time. Please try again later.")
 }
 
 function distinguishModComment(post_id) {
-url="/api/distinguish_comment/"+post_id
+  url="/api/distinguish_comment/"+post_id
 
-callback=function(){
-document.getElementById("comment-"+post_id+"-only").classList.add("distinguish-mod");
+  callback=function(){
+    document.getElementById("comment-"+post_id+"-only").classList.add("distinguish-mod");
 
-button=document.getElementById("distinguish-"+post_id);
-button.onclick=function(){undistinguishModComment(post_id)};
-button.innerHTML="undistinguish"
-}
+    button=document.getElementById("distinguish-"+post_id);
+    button.onclick=function(){undistinguishModComment(post_id)};
+    button.innerHTML="undistinguish"
+  }
 
-post(url, callback, "Unable to distinguish comment at this time. Please try again later.")
+  post(url, callback, "Unable to distinguish comment at this time. Please try again later.")
 };
 
 function undistinguishModComment(post_id) {
-url="/api/undistinguish_comment/"+post_id
+  url="/api/undistinguish_comment/"+post_id
 
-callback=function(){
-document.getElementById("comment-"+post_id+"-only").classList.remove("distinguish-mod");
+  callback=function(){
+    document.getElementById("comment-"+post_id+"-only").classList.remove("distinguish-mod");
 
-button=document.getElementById("distinguish-"+post_id);
-button.onclick=function(){distinguishModComment(post_id)};
-button.innerHTML="distinguish"
-}
-post(url, callback, "Unable to undistinguish comment at this time. Please try again later.")
+    button=document.getElementById("distinguish-"+post_id);
+    button.onclick=function(){distinguishModComment(post_id)};
+    button.innerHTML="distinguish"
+  }
+  post(url, callback, "Unable to undistinguish comment at this time. Please try again later.")
 };
 
 function distinguishAdminComment(post_id) {
-url="/api/distinguish_comment/"+post_id
+  url="/api/distinguish_comment/"+post_id
 
-callback=function(){
-document.getElementById("comment-"+post_id+"-only").classList.add("distinguish-admin");
+  callback=function(){
+    document.getElementById("comment-"+post_id+"-only").classList.add("distinguish-admin");
 
-button=document.getElementById("distinguish-"+post_id);
-button.onclick=function(){undistinguishAdminComment(post_id)};
-button.innerHTML="undistinguish"
-}
-post(url, callback, "Unable to distinguish comment at this time. Please try again later.")
+    button=document.getElementById("distinguish-"+post_id);
+    button.onclick=function(){undistinguishAdminComment(post_id)};
+    button.innerHTML="undistinguish"
+  }
+  post(url, callback, "Unable to distinguish comment at this time. Please try again later.")
 };
 
 function undistinguishAdminComment(post_id) {
-url="/api/undistinguish_comment/"+post_id
+  url="/api/undistinguish_comment/"+post_id
 
-callback=function(){
-document.getElementById("comment-"+post_id+"-only").classList.remove("distinguish-admin");
+  callback=function(){
+    document.getElementById("comment-"+post_id+"-only").classList.remove("distinguish-admin");
 
-button=document.getElementById("distinguish-"+post_id);
-button.onclick=function(){distinguishAdminComment(post_id)};
-button.innerHTML="distinguish"
-}
-post(url, callback, "Unable to undistinguish post at this time. Please try again later.")
+    button=document.getElementById("distinguish-"+post_id);
+    button.onclick=function(){distinguishAdminComment(post_id)};
+    button.innerHTML="distinguish"
+  }
+  post(url, callback, "Unable to undistinguish post at this time. Please try again later.")
 }
 
 //comment replies
@@ -371,25 +371,29 @@ $(".toggle-collapse").click(function (event) {
 
 function addReplyForm(commentId, postId, formId) {
 
-    var id = "reply-to-" + commentId;
+  var id = "reply-to-" + commentId;
 
-    document.getElementById(id).innerHTML = '<div class="comment-write collapsed child"> <form id="reply-to-t3_'+commentId+'" action="/api/comment" method="post" class="input-group"> <input type="hidden" name="formkey" value="'+formkey()+'"> <input type="hidden" name="parent_fullname" value="t3_'+commentId+'"> <input type="hidden" name="submission" value="'+postId+'"> <textarea name="body" form="reply-to-t3_'+commentId+'" class="comment-box form-control rounded" id="reply-form-'+commentId+'" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> <div class="comment-format"> <small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> <small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small> <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> <small class="format"><i class="fas fa-image" onclick="getGif();commentForm(\''+formId+'\')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF"></i></small> <a href="javascript:void(0)" onclick="delReplyForm(\''+commentId+'\')" class="btn btn-secondary ml-auto cancel-form">Cancel</a> <button form="reply-to-t3_'+commentId+'" class="btn btn-primary ml-2">Comment</button> </div> </form> </div>';
+  document.getElementById(id).innerHTML = '<div class="comment-write collapsed child"> <form id="reply-to-t3_'+commentId+'" action="/api/comment" method="post" class="input-group"> <input type="hidden" name="formkey" value="'+formkey()+'"> <input type="hidden" name="parent_fullname" value="t3_'+commentId+'"> <input type="hidden" name="submission" value="'+postId+'"> <textarea name="body" form="reply-to-t3_'+commentId+'" class="comment-box form-control rounded" id="reply-form-'+commentId+'" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> <div class="comment-format"> <small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> <small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small> <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> <small class="format"><i class="fas fa-image" onclick="getGif();commentForm(\''+formId+'\')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF"></i></small> <a href="javascript:void(0)" onclick="delReplyForm(\''+commentId+'\')" class="btn btn-secondary ml-auto cancel-form">Cancel</a> <button form="reply-to-t3_'+commentId+'" class="btn btn-primary ml-2">Comment</button> </div> </form> </div>';
 
 }
 
     // Removes reply form innerHTML on click
 
-function delReplyForm(commentId) {
+    function delReplyForm(commentId) {
 
-    var id = "reply-to-" + commentId;
+      var id = "reply-to-" + commentId;
 
-    document.getElementById(id).innerHTML = '';
+      document.getElementById(id).innerHTML = '';
 
-};
+    };
 
 //Autoexpand textedit comments
 
 function autoExpand (field) {
+
+	//get current scroll position
+	xpos=window.scrollX;
+	ypos=window.scrollY;
 
 	// Reset field height
 	field.style.height = 'inherit';
@@ -399,13 +403,16 @@ function autoExpand (field) {
 
 	// Calculate the height
 	var height = parseInt(computed.getPropertyValue('border-top-width'), 10)
-	             + parseInt(computed.getPropertyValue('padding-top'), 10)
-	             + field.scrollHeight
-	             + parseInt(computed.getPropertyValue('padding-bottom'), 10)
-	             + parseInt(computed.getPropertyValue('border-bottom-width'), 10)
-		     + 32;
+  + parseInt(computed.getPropertyValue('padding-top'), 10)
+  + field.scrollHeight
+  + parseInt(computed.getPropertyValue('padding-bottom'), 10)
+  + parseInt(computed.getPropertyValue('border-bottom-width'), 10)
+  + 32;
 
-	field.style.height = height + 'px';
+  field.style.height = height + 'px';
+
+	//keep window position from changing
+	window.scrollTo(xpos,ypos);
 
 };
 
@@ -430,7 +437,7 @@ function switch_css() {
         dswitchmobile.classList.remove("fa-toggle-off");
         dswitchmobile.classList.add("fa-toggle-on");
       }
-    );
+      );
   }
   else {
     post("/settings/dark_mode/0",
@@ -441,7 +448,7 @@ function switch_css() {
         dswitchmobile.classList.remove("fa-toggle-on");
         dswitchmobile.classList.add("fa-toggle-off");
       }
-    );
+      );
   }
 }
 
@@ -502,18 +509,18 @@ report_commentModal = function(id, author) {
 
   offtopic.disabled=true;
 
-    document.getElementById("reportCommentButton").onclick = function() {
+  document.getElementById("reportCommentButton").onclick = function() {
 
-      this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting comment';
-      this.disabled = true;
-      post('/api/flag/comment/' + id,
-        callback = function() {
+    this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting comment';
+    this.disabled = true;
+    post('/api/flag/comment/' + id,
+      callback = function() {
 
-          document.getElementById("reportCommentFormBefore").classList.add('d-none');
-          document.getElementById("reportCommentFormAfter").classList.remove('d-none');
-        }
-        )
-    }
+        document.getElementById("reportCommentFormBefore").classList.add('d-none');
+        document.getElementById("reportCommentFormAfter").classList.remove('d-none');
+      }
+      )
+  }
 
 };
 
@@ -557,30 +564,30 @@ report_postModal = function(id, author, board) {
   submitbutton=document.getElementById("reportPostButton");
   submitbutton.disabled=true;
 
-    submitbutton.onclick = function() {
+  submitbutton.onclick = function() {
 
-      this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting post';
-      this.disabled = true;
+    this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting post';
+    this.disabled = true;
 
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", '/api/flag/post/'+id, true);
-      var form = new FormData()
-      form.append("formkey", formkey());
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", '/api/flag/post/'+id, true);
+    var form = new FormData()
+    form.append("formkey", formkey());
 
-      dropdown=document.getElementById("report-type-dropdown");
-      form.append("report_type", dropdown.options[dropdown.selectedIndex].value);
+    dropdown=document.getElementById("report-type-dropdown");
+    form.append("report_type", dropdown.options[dropdown.selectedIndex].value);
 
-      xhr.withCredentials=true;
+    xhr.withCredentials=true;
 
-      xhr.onload=function() {
-        document.getElementById("reportPostFormBefore").classList.add('d-none');
-        document.getElementById("reportPostFormAfter").classList.remove('d-none');
-      };
+    xhr.onload=function() {
+      document.getElementById("reportPostFormBefore").classList.add('d-none');
+      document.getElementById("reportPostFormAfter").classList.remove('d-none');
+    };
 
-      xhr.onerror=function(){alert(errortext)};
-      xhr.send(form);
+    xhr.onerror=function(){alert(errortext)};
+    xhr.send(form);
 
-    }
+  }
 };
 
 $('#reportPostModal').on('hidden.bs.modal', function () {
@@ -612,49 +619,49 @@ enlarge_thumb = function(post_id) {
 
 //iOS webapp stuff
 
-        (function(document,navigator,standalone) {
+(function(document,navigator,standalone) {
             // prevents links from apps from oppening in mobile safari
             // this javascript must be the first script in your <head>
             if ((standalone in navigator) && navigator[standalone]) {
-                var curnode, location=document.location, stop=/^(a|html)$/i;
-                document.addEventListener('click', function(e) {
-                    curnode=e.target;
-                    while (!(stop).test(curnode.nodeName)) {
-                        curnode=curnode.parentNode;
-                    }
+              var curnode, location=document.location, stop=/^(a|html)$/i;
+              document.addEventListener('click', function(e) {
+                curnode=e.target;
+                while (!(stop).test(curnode.nodeName)) {
+                  curnode=curnode.parentNode;
+                }
                     // Condidions to do this only on links to your own app
                     // if you want all links, use if('href' in curnode) instead.
                     if('href' in curnode && ( curnode.href.indexOf('http') || ~curnode.href.indexOf(location.host) ) ) {
-                        e.preventDefault();
-                        location.href = curnode.href;
+                      e.preventDefault();
+                      location.href = curnode.href;
                     }
-                },false);
+                  },false);
             }
-        })(document,window.navigator,'standalone');
+          })(document,window.navigator,'standalone');
 
 
 //KC easter egg
 
 $(function(){
-    var kKeys = [];
-    function Kpress(e){
-        kKeys.push(e.keyCode);
-        if (kKeys.toString().indexOf("38,38,40,40,37,39,37,39,66,65") >= 0) {
-            $(this).unbind('keydown', Kpress);
-            kExec();
-        }
+  var kKeys = [];
+  function Kpress(e){
+    kKeys.push(e.keyCode);
+    if (kKeys.toString().indexOf("38,38,40,40,37,39,37,39,66,65") >= 0) {
+      $(this).unbind('keydown', Kpress);
+      kExec();
     }
-    $(document).keydown(Kpress);
+  }
+  $(document).keydown(Kpress);
 });
 function kExec(){
-   $('body').append ('<iframe width="0" height="0" src="https://www.youtube.com/embed/xoEEOrTctpA?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
-   $('a').addClass('ruckus');
-   $('p').addClass('ruckus');
-   $('img').addClass('ruckus');
-   $('span').addClass('ruckus');
-   $('button').addClass('ruckus');
-   $('i').addClass('ruckus');
-   $('input').addClass('ruckus');
+ $('body').append ('<iframe width="0" height="0" src="https://www.youtube.com/embed/xoEEOrTctpA?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+ $('a').addClass('ruckus');
+ $('p').addClass('ruckus');
+ $('img').addClass('ruckus');
+ $('span').addClass('ruckus');
+ $('button').addClass('ruckus');
+ $('i').addClass('ruckus');
+ $('input').addClass('ruckus');
 };
 
 //Post kick
@@ -719,34 +726,34 @@ function toggleSub(){
 
 //Admin post modding
 function removePost(post_id) {
-url="/api/ban_post/"+post_id
+  url="/api/ban_post/"+post_id
 
-callback=function(){
-document.getElementById("post-"+post_id).classList.add("banned");
+  callback=function(){
+    document.getElementById("post-"+post_id).classList.add("banned");
 
-var button=document.getElementById("moderate-post-"+post_id);
-button.onclick=function(){approvePost(post_id)};
-button.classList.remove("removeDropdownItem");
-button.classList.add("approveDropdownItem");
-button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
-}
-post(url, callback, "Unable to remove post at this time. Please try again later.")
+    var button=document.getElementById("moderate-post-"+post_id);
+    button.onclick=function(){approvePost(post_id)};
+    button.classList.remove("removeDropdownItem");
+    button.classList.add("approveDropdownItem");
+    button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
+  }
+  post(url, callback, "Unable to remove post at this time. Please try again later.")
 }
 
 function approvePost(post_id) {
-url="/api/unban_post/"+post_id
+  url="/api/unban_post/"+post_id
 
-callback=function(){
-document.getElementById("post-"+post_id).classList.remove("banned");
+  callback=function(){
+    document.getElementById("post-"+post_id).classList.remove("banned");
 
-var button=document.getElementById("moderate-post-"+post_id);
-button.onclick=function(){removePost(post_id)};
-button.classList.remove("approveDropdownItem");
-button.classList.add("removeDropdownItem");
-button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
-}
+    var button=document.getElementById("moderate-post-"+post_id);
+    button.onclick=function(){removePost(post_id)};
+    button.classList.remove("approveDropdownItem");
+    button.classList.add("removeDropdownItem");
+    button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
+  }
 
-post(url, callback, "Unable to approve post at this time. Please try again later.")
+  post(url, callback, "Unable to approve post at this time. Please try again later.")
 }
 
 //Element deleter
@@ -763,20 +770,20 @@ function deleteElement(eid) {
 
 $('#password-register').on('input', function () {
 
-    var charCount = document.getElementById("password-register").value;
-    var id = document.getElementById("passwordHelpRegister");
-    var successID = document.getElementById("passwordHelpSuccess");
+  var charCount = document.getElementById("password-register").value;
+  var id = document.getElementById("passwordHelpRegister");
+  var successID = document.getElementById("passwordHelpSuccess");
 
-    console.log(charCount.length);
+  console.log(charCount.length);
 
-    if (charCount.length >= 8) {
-        id.classList.add("d-none");
-        successID.classList.remove("d-none");
-    }
-    else {
-        id.classList.remove("d-none");
-        successID.classList.add("d-none");
-    };
+  if (charCount.length >= 8) {
+    id.classList.add("d-none");
+    successID.classList.remove("d-none");
+  }
+  else {
+    id.classList.remove("d-none");
+    successID.classList.add("d-none");
+  };
 
 });
 
@@ -784,38 +791,38 @@ $('#password-register').on('input', function () {
 
 $('#username-register').on('input', function () {
 
-    var charCount = document.getElementById("username-register").value;
-    var id = document.getElementById("usernameHelpRegister");
-    var successID = document.getElementById("usernameHelpSuccess");
+  var charCount = document.getElementById("username-register").value;
+  var id = document.getElementById("usernameHelpRegister");
+  var successID = document.getElementById("usernameHelpSuccess");
 
-    var ruqqusAPI = 'https://www.ruqqus.com/api/is_available/' + charCount;
+  var ruqqusAPI = 'https://www.ruqqus.com/api/is_available/' + charCount;
 
-    if (charCount.length >= 5) {
+  if (charCount.length >= 5) {
 
     $.getJSON(ruqqusAPI, function(result) {
-        $.each(result, function(i, field) {
-          if (field == false) {
-            id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">Username already taken :(';
+      $.each(result, function(i, field) {
+        if (field == false) {
+          id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">Username already taken :(';
         }
-    });
+      });
     });
 
-}
+  }
 
-    if (!/[^a-zA-Z0-9_$]/.test(charCount)) {
+  if (!/[^a-zA-Z0-9_$]/.test(charCount)) {
     // Change alert text
     id.innerHTML = '<span class="form-text font-weight-bold text-success mt-1">Username is a-okay!';
 
     if (charCount.length < 5) {
       id.innerHTML = '<span class="form-text font-weight-bold text-muted mt-1">Username must be at least 5 characters long.';
-  }
-  else if (charCount.length > 25) {
+    }
+    else if (charCount.length > 25) {
       id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">Username must be 25 characters or less.';
+    }
   }
-}
-else {
+  else {
     id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">No special characters or spaces allowed.</span>';
-};
+  };
 
 });
 
@@ -823,13 +830,13 @@ else {
 // Change navbar search icon when form is in focus, active states
 
 $(".form-control").focus(function () {
-    $(this).prev('.input-group-append').removeClass().addClass('input-group-append-focus');
-    $(this).next('.input-group-append').removeClass().addClass('input-group-append-focus');
+  $(this).prev('.input-group-append').removeClass().addClass('input-group-append-focus');
+  $(this).next('.input-group-append').removeClass().addClass('input-group-append-focus');
 });
 
 $(".form-control").focusout(function () {
-    $(this).prev('.input-group-append-focus').removeClass().addClass('input-group-append');
-    $(this).next('.input-group-append-focus').removeClass().addClass('input-group-append');
+  $(this).prev('.input-group-append-focus').removeClass().addClass('input-group-append');
+  $(this).next('.input-group-append-focus').removeClass().addClass('input-group-append');
 });
 
 //spinner effect
@@ -841,7 +848,7 @@ $(document).ready(function() {
       // add spinner to button
       $("#login_button").html(
         `<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Signing in`
-      );
+        );
     });
 });
 
@@ -852,7 +859,7 @@ $(document).ready(function() {
       // add spinner to button
       $("#register_button").html(
         `<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Registering`
-      );
+        );
     });
 });
 
@@ -863,7 +870,7 @@ $(document).ready(function() {
       // add spinner to button
       $("#create_button").html(
         `<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Creating post`
-      );
+        );
     });
 });
 
@@ -871,10 +878,10 @@ $(document).ready(function() {
 
 // Desktop
 
-if (localStorage.sidebar_pref == 'collapsed') {
+if (document.getElementById("sidebar-left") && localStorage.sidebar_pref == 'collapsed') {
 
 	document.getElementById('sidebar-left').classList.add('sidebar-collapsed');
-  
+
 };
 
 function toggle_sidebar_collapse() {
@@ -901,123 +908,123 @@ function toggle_sidebar_expand() {
 
 
 function vote(post_id, direction) {
-url="/api/vote/post/"+post_id+"/"+direction;
+  url="/api/vote/post/"+post_id+"/"+direction;
 
-callback=function(){
-thing = document.getElementById("post-"+post_id);
-uparrow1=document.getElementById("post-"+post_id+"-up");
-downarrow1=document.getElementById("post-"+post_id+"-down");
-scoreup1=document.getElementById("post-"+post_id+"-score-up");
-scorenone1=document.getElementById("post-"+post_id+"-score-none");
-scoredown1=document.getElementById("post-"+post_id+"-score-down");
+  callback=function(){
+    thing = document.getElementById("post-"+post_id);
+    uparrow1=document.getElementById("post-"+post_id+"-up");
+    downarrow1=document.getElementById("post-"+post_id+"-down");
+    scoreup1=document.getElementById("post-"+post_id+"-score-up");
+    scorenone1=document.getElementById("post-"+post_id+"-score-none");
+    scoredown1=document.getElementById("post-"+post_id+"-score-down");
 
-thing2=document.getElementById("voting-"+post_id+"-mobile")
-uparrow2=document.getElementById("arrow-"+post_id+"-mobile-up");
-downarrow2=document.getElementById("arrow-"+post_id+"-mobile-down");
-scoreup2=document.getElementById("post-"+post_id+"-score-mobile-up");
-scorenone2=document.getElementById("post-"+post_id+"-score-mobile-none");
-scoredown2=document.getElementById("post-"+post_id+"-score-mobile-down");
+    thing2=document.getElementById("voting-"+post_id+"-mobile")
+    uparrow2=document.getElementById("arrow-"+post_id+"-mobile-up");
+    downarrow2=document.getElementById("arrow-"+post_id+"-mobile-down");
+    scoreup2=document.getElementById("post-"+post_id+"-score-mobile-up");
+    scorenone2=document.getElementById("post-"+post_id+"-score-mobile-none");
+    scoredown2=document.getElementById("post-"+post_id+"-score-mobile-down");
 
-if (direction=="1") {
-thing.classList.add("upvoted");
-thing.classList.remove("downvoted");
-uparrow1.onclick=function(){vote(post_id, 0)};
-downarrow1.onclick=function(){vote(post_id, -1)};
-scoreup1.classList.remove("d-none");
-scorenone1.classList.add("d-none");
-scoredown1.classList.add("d-none");
+    if (direction=="1") {
+      thing.classList.add("upvoted");
+      thing.classList.remove("downvoted");
+      uparrow1.onclick=function(){vote(post_id, 0)};
+      downarrow1.onclick=function(){vote(post_id, -1)};
+      scoreup1.classList.remove("d-none");
+      scorenone1.classList.add("d-none");
+      scoredown1.classList.add("d-none");
 
-thing2.classList.add("upvoted");
-thing2.classList.remove("downvoted");
-uparrow2.onclick=function(){vote(post_id, 0)};
-downarrow2.onclick=function(){vote(post_id, -1)};
-scoreup2.classList.remove("d-none");
-scorenone2.classList.add("d-none");
-scoredown2.classList.add("d-none");
-}
-else if (direction=="-1"){
-thing.classList.remove("upvoted");
-thing.classList.add("downvoted");
-uparrow1.onclick=function(){vote(post_id, 1)};
-downarrow1.onclick=function(){vote(post_id, 0)};
-scoreup1.classList.add("d-none");
-scorenone1.classList.add("d-none");
-scoredown1.classList.remove("d-none");
+      thing2.classList.add("upvoted");
+      thing2.classList.remove("downvoted");
+      uparrow2.onclick=function(){vote(post_id, 0)};
+      downarrow2.onclick=function(){vote(post_id, -1)};
+      scoreup2.classList.remove("d-none");
+      scorenone2.classList.add("d-none");
+      scoredown2.classList.add("d-none");
+    }
+    else if (direction=="-1"){
+      thing.classList.remove("upvoted");
+      thing.classList.add("downvoted");
+      uparrow1.onclick=function(){vote(post_id, 1)};
+      downarrow1.onclick=function(){vote(post_id, 0)};
+      scoreup1.classList.add("d-none");
+      scorenone1.classList.add("d-none");
+      scoredown1.classList.remove("d-none");
 
-thing2.classList.remove("upvoted");
-thing2.classList.add("downvoted");
-uparrow2.onclick=function(){vote(post_id, 1)};
-downarrow2.onclick=function(){vote(post_id, 0)};
-scoreup2.classList.add("d-none");
-scorenone2.classList.add("d-none");
-scoredown2.classList.remove("d-none");
+      thing2.classList.remove("upvoted");
+      thing2.classList.add("downvoted");
+      uparrow2.onclick=function(){vote(post_id, 1)};
+      downarrow2.onclick=function(){vote(post_id, 0)};
+      scoreup2.classList.add("d-none");
+      scorenone2.classList.add("d-none");
+      scoredown2.classList.remove("d-none");
 
-}
-else if (direction=="0"){
-thing.classList.remove("upvoted");
-thing.classList.remove("downvoted");
-uparrow1.onclick=function(){vote(post_id, 1)};
-downarrow1.onclick=function(){vote(post_id, -1)};
-scoreup1.classList.add("d-none");
-scorenone1.classList.remove("d-none");
-scoredown1.classList.add("d-none");
+    }
+    else if (direction=="0"){
+      thing.classList.remove("upvoted");
+      thing.classList.remove("downvoted");
+      uparrow1.onclick=function(){vote(post_id, 1)};
+      downarrow1.onclick=function(){vote(post_id, -1)};
+      scoreup1.classList.add("d-none");
+      scorenone1.classList.remove("d-none");
+      scoredown1.classList.add("d-none");
 
-thing2.classList.remove("upvoted");
-thing2.classList.remove("downvoted");
-uparrow2.onclick=function(){vote(post_id, 1)};
-downarrow2.onclick=function(){vote(post_id, -1)};
-scoreup2.classList.add("d-none");
-scorenone2.classList.remove("d-none");
-scoredown2.classList.add("d-none");
+      thing2.classList.remove("upvoted");
+      thing2.classList.remove("downvoted");
+      uparrow2.onclick=function(){vote(post_id, 1)};
+      downarrow2.onclick=function(){vote(post_id, -1)};
+      scoreup2.classList.add("d-none");
+      scorenone2.classList.remove("d-none");
+      scoredown2.classList.add("d-none");
 
-}
-}
+    }
+  }
 
-post(url, callback, "Unable to vote at this time. Please try again later.");
+  post(url, callback, "Unable to vote at this time. Please try again later.");
 };
 
 
 function vote_comment(comment_id, direction) {
-url="/api/vote/comment/"+ comment_id +"/"+direction;
+  url="/api/vote/comment/"+ comment_id +"/"+direction;
 
-callback=function(){
-thing = document.getElementById("comment-"+ comment_id+"-actions");
-uparrow1=document.getElementById("comment-"+ comment_id +"-up");
-downarrow1=document.getElementById("comment-"+ comment_id +"-down");
-scoreup1=document.getElementById("comment-"+ comment_id +"-score-up");
-scorenone1=document.getElementById("comment-"+ comment_id +"-score-none");
-scoredown1=document.getElementById("comment-"+ comment_id +"-score-down");
+  callback=function(){
+    thing = document.getElementById("comment-"+ comment_id+"-actions");
+    uparrow1=document.getElementById("comment-"+ comment_id +"-up");
+    downarrow1=document.getElementById("comment-"+ comment_id +"-down");
+    scoreup1=document.getElementById("comment-"+ comment_id +"-score-up");
+    scorenone1=document.getElementById("comment-"+ comment_id +"-score-none");
+    scoredown1=document.getElementById("comment-"+ comment_id +"-score-down");
 
-if (direction=="1") {
-thing.classList.add("upvoted");
-thing.classList.remove("downvoted");
-uparrow1.onclick=function(){vote_comment(comment_id, 0)};
-downarrow1.onclick=function(){vote_comment(comment_id, -1)};
-scoreup1.classList.remove("d-none");
-scorenone1.classList.add("d-none");
-scoredown1.classList.add("d-none");
-}
-else if (direction=="-1"){
-thing.classList.remove("upvoted");
-thing.classList.add("downvoted");
-uparrow1.onclick=function(){vote_comment(comment_id, 1)};
-downarrow1.onclick=function(){vote_comment(comment_id, 0)};
-scoreup1.classList.add("d-none");
-scorenone1.classList.add("d-none");
-scoredown1.classList.remove("d-none");
-}
-else if (direction=="0"){
-thing.classList.remove("upvoted");
-thing.classList.remove("downvoted");
-uparrow1.onclick=function(){vote_comment(comment_id, 1)};
-downarrow1.onclick=function(){vote_comment(comment_id, -1)};
-scoreup1.classList.add("d-none");
-scorenone1.classList.remove("d-none");
-scoredown1.classList.add("d-none");
-}
-}
+    if (direction=="1") {
+      thing.classList.add("upvoted");
+      thing.classList.remove("downvoted");
+      uparrow1.onclick=function(){vote_comment(comment_id, 0)};
+      downarrow1.onclick=function(){vote_comment(comment_id, -1)};
+      scoreup1.classList.remove("d-none");
+      scorenone1.classList.add("d-none");
+      scoredown1.classList.add("d-none");
+    }
+    else if (direction=="-1"){
+      thing.classList.remove("upvoted");
+      thing.classList.add("downvoted");
+      uparrow1.onclick=function(){vote_comment(comment_id, 1)};
+      downarrow1.onclick=function(){vote_comment(comment_id, 0)};
+      scoreup1.classList.add("d-none");
+      scorenone1.classList.add("d-none");
+      scoredown1.classList.remove("d-none");
+    }
+    else if (direction=="0"){
+      thing.classList.remove("upvoted");
+      thing.classList.remove("downvoted");
+      uparrow1.onclick=function(){vote_comment(comment_id, 1)};
+      downarrow1.onclick=function(){vote_comment(comment_id, -1)};
+      scoreup1.classList.add("d-none");
+      scorenone1.classList.remove("d-none");
+      scoredown1.classList.add("d-none");
+    }
+  }
 
-post(url, callback, "Unable to vote at this time. Please try again later.");
+  post(url, callback, "Unable to vote at this time. Please try again later.");
 }
 
 // Yank Post
@@ -1052,14 +1059,14 @@ function yank_postModal(id, author, comments, title, author_link, domain, timest
 //yt embed
 
 function getId(url) {
-    var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    var match = url.match(regExp);
+  var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  var match = url.match(regExp);
 
-    if (match && match[2].length == 11) {
-        return match[2];
-    } else {
-        return 'error';
-    }
+  if (match && match[2].length == 11) {
+    return match[2];
+  } else {
+    return 'error';
+  }
 }
 
 var myUrl = $('#embedURL').text();
@@ -1134,94 +1141,89 @@ $('#expandImageModal').on('hidden.bs.modal', function (e) {
 // Bold Text
 
 makeBold = function (form) {
-    var text = document.getElementById(form);
-    var startIndex = text.selectionStart,
-        endIndex = text.selectionEnd;
-    var selectedText = text.value.substring(startIndex, endIndex);
+  var text = document.getElementById(form);
+  var startIndex = text.selectionStart,
+  endIndex = text.selectionEnd;
+  var selectedText = text.value.substring(startIndex, endIndex);
 
-    var format = '**'
-    
-    if (selectedText.includes('**')) {
+  var format = '**'
+
+  if (selectedText.includes('**')) {
     text.value = selectedText.replace(/\*/g, '');
     
-    }
-    else if (selectedText.length == 0) {
+  }
+  else if (selectedText.length == 0) {
     text.value = text.value.substring(0, startIndex) + selectedText + text.value.substring(endIndex);
-    }
-    else {
-        text.value = text.value.substring(0, startIndex) + format + selectedText + format + text.value.substring(endIndex);
-    }
+  }
+  else {
+    text.value = text.value.substring(0, startIndex) + format + selectedText + format + text.value.substring(endIndex);
+  }
 }
 
 // Italicize Comment Text
 
 makeItalics = function (form) {
-    var text = document.getElementById(form);
-    var startIndex = text.selectionStart,
-        endIndex = text.selectionEnd;
-    var selectedText = text.value.substring(startIndex, endIndex);
+  var text = document.getElementById(form);
+  var startIndex = text.selectionStart,
+  endIndex = text.selectionEnd;
+  var selectedText = text.value.substring(startIndex, endIndex);
 
-    var format = '*'
-    
-    if (selectedText.includes('*')) {
+  var format = '*'
+
+  if (selectedText.includes('*')) {
     text.value = selectedText.replace(/\*/g, '');
     
-    }
-    else if (selectedText.length == 0) {
+  }
+  else if (selectedText.length == 0) {
     text.value = text.value.substring(0, startIndex) + selectedText + text.value.substring(endIndex);
-    }
-    else {
-        text.value = text.value.substring(0, startIndex) + format + selectedText + format + text.value.substring(endIndex);
-    }
+  }
+  else {
+    text.value = text.value.substring(0, startIndex) + format + selectedText + format + text.value.substring(endIndex);
+  }
 }
 
 // Quote Comment Text
 
 makeQuote = function (form) {
-    var text = document.getElementById(form);
-    var startIndex = text.selectionStart,
-        endIndex = text.selectionEnd;
-    var selectedText = text.value.substring(startIndex, endIndex);
+  var text = document.getElementById(form);
+  var startIndex = text.selectionStart,
+  endIndex = text.selectionEnd;
+  var selectedText = text.value.substring(startIndex, endIndex);
 
-    var format = '>'
-    
-    if (selectedText.includes('>')) {
+  var format = '>'
+
+  if (selectedText.includes('>')) {
     text.value = selectedText.replace(/\>/g, '');
     
-    }
-    else if (selectedText.length == 0) {
+  }
+  else if (selectedText.length == 0) {
     text.value = text.value.substring(0, startIndex) + selectedText + text.value.substring(endIndex);
-    }
-    else {
-        text.value = text.value.substring(0, startIndex) + format + selectedText + text.value.substring(endIndex);
-    }
+  }
+  else {
+    text.value = text.value.substring(0, startIndex) + format + selectedText + text.value.substring(endIndex);
+  }
 }
 
 // Character Count
 
-function charLimit(form, text, button) {
+function charLimit(form, text) {
 
   var input = document.getElementById(form);
 
   var text = document.getElementById(text);
 
-  var button = document.getElementById(button);
-
-  var length = input.length;
+  var length = input.value.length;
 
   var maxLength = input.getAttribute("maxlength");
 
   if (length >= maxLength) {
     text.style.color = "#E53E3E";
-    button.disabled = true;
   }
   else if (length >= maxLength * .72){
     text.style.color = "#FFC107";
-    button.disabled = false;
   }
   else {
-    text.style.color = null;
-    button.disabled = false;
+    text.style.color = "#A0AEC0";
   }
 
   text.innerText = maxLength - length;
@@ -1244,19 +1246,19 @@ window.onload = function () {
     var navbar = document.getElementById("navbar");
 
     if (bottomBar != null) {
-    if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
-      bottomBar.style.bottom = "0px";
-    } 
-    else if (currentScrollPos <= 125 && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
-      bottomBar.style.bottom = "0px";
+      if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
+        bottomBar.style.bottom = "0px";
+      } 
+      else if (currentScrollPos <= 125 && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
+        bottomBar.style.bottom = "0px";
+      }
+      else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 65)) {
+        bottomBar.style.bottom = "-50px";
+      }
+      else {
+        bottomBar.style.bottom = "-50px";
+      }
     }
-    else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 65)) {
-      bottomBar.style.bottom = "-50px";
-    }
-    else {
-      bottomBar.style.bottom = "-50px";
-    }
-  }
 
   // Execute if bottomBar exists
 
@@ -1275,8 +1277,8 @@ window.onload = function () {
       navbar.classList.add("shadow");
     }
   }
-    prevScrollpos = currentScrollPos;
-  }
+  prevScrollpos = currentScrollPos;
+}
 }
 
 // Tooltips
@@ -1284,3 +1286,109 @@ window.onload = function () {
 $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip(); 
 });
+
+// Paste to create submission
+
+document.addEventListener('paste', function (event) {
+
+  var nothingFocused = document.activeElement === document.body;
+
+  if (nothingFocused) {
+
+    var clipText = event.clipboardData.getData('Text');
+
+    var url = new RegExp('^(?:[a-z]+:)?//', 'i');
+
+    if (url.test(clipText) && window.location.pathname !== '/submit') {
+      window.location.href = '/submit?url=' + clipText;
+    } else if (url.test(clipText) && window.location.pathname == '/submit') {
+
+      document.getElementById("post-URL").value = clipText;
+
+      autoSuggestTitle()
+
+    }
+  }
+});
+
+//  Submit Page Front-end Validation
+
+function checkForRequired() {
+
+// Divs
+
+var title = document.getElementById("post-title");
+
+var url = document.getElementById("post-URL");
+
+var text = document.getElementById("post-text");
+
+var button = document.getElementById("create_button");
+
+// Toggle reuqired attribute
+
+if (url.value.length > 0) {
+  text.required = false;
+} else if (text.value.length > 0) {
+  url.required = false;
+} else {
+  text.required = true;
+  url.required = true;
+}
+
+// Validity check
+
+var isValidTitle = title.checkValidity();
+
+var isValidURL = url.checkValidity();
+
+var isValidText = text.checkValidity();
+
+// Disable submit button if invalid inputs
+
+if (isValidTitle && isValidURL) {
+  button.disabled = false;
+} else if (isValidTitle && isValidText) {
+  button.disabled = false;
+} else {
+  button.disabled = true;
+}
+
+}
+
+// Auto-suggest title given URL
+
+function autoSuggestTitle()  {
+
+  var urlField = document.getElementById("post-URL");
+
+  var titleField = document.getElementById("post-title");
+
+  var isValidURL = urlField.checkValidity();
+
+  if (isValidURL && urlField.value.length > 0 && titleField.value === "") {
+
+    var x = new XMLHttpRequest();
+    x.withCredentials=true;
+    x.onreadystatechange = function() {
+      if (x.readyState == 4 && x.status == 200) {
+        console.log(x.responseText);
+
+        title=JSON.parse(x.responseText)["title"];
+        titleField.value=title;
+
+        checkForRequired()
+      }
+    }
+    x.open('get','/api/submit/title?url=' + urlField.value);
+    x.send(null);
+
+  };
+
+};
+
+// Run AutoSuggestTitle function on load
+
+if (window.location.pathname=='/submit') {
+  window.onload = autoSuggestTitle();
+}
