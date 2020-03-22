@@ -217,7 +217,7 @@
           {% endif %}
           {% if v %}
 	  {% if v.id==p.author_id and p.board_id not in [1, p.original_board_id] %}
-          <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/user/kick/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="fas fa-university"></i>Remove from +{{ p.board.name }}</a></li>
+          <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/user/kick/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="fas fa-chess-rook"></i>Remove from +{{ p.board.name }}</a></li>
 	  {% endif %}
           {% if p.board.has_mod(v) %}
           <li class="list-group-item"><a class="d-block text-danger" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board.base36id }}/{{ p.base36id }}', callback=function(){window.location.reload(true)})"><i class="fas fa-times text-danger"></i>Kick</a></li>
@@ -226,7 +226,7 @@
           {% if p.is_banned %}
           <li class="list-group-item"><a class="d-block text-success" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="fas fa-check text-success"></i>Approve</a></li>
           {% else %}
-          <li class="list-group-item"><a class="d-block" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a></li>
+          <li class="list-group-item"><a class="d-block" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="fas fa-ban"></i>Remove</a></li>
           {% endif %}
           {% endif %}
           {% endif %}
@@ -343,7 +343,7 @@
                     <li class="list-inline-item"><a class="text-success" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="fas fa-check text-success"></i>Approve</a></li>
                     {% endif %}
                     {% if not p.is_banned or p.active_flags %}
-                    <li class="list-inline-item"><a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a></li>
+                    <li class="list-inline-item"><a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="fas fa-ban"></i>Remove</a></li>
                     {% endif %}
                     {% endif %}
                     {% endif %}
