@@ -15997,6 +15997,8 @@ ul.comment-section {
 
 .table .thead-dark th {
   color: #AAAAAA;
+  font-size: 12px;
+  text-transform: uppercase;
   background-color: #35363e;
   border: none;
 }

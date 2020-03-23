@@ -15543,6 +15543,8 @@ ul.comment-section {
 
 .table .thead-dark th {
   color: #718096;
+  font-size: 12px;
+  text-transform: uppercase;
   background-color: #E6E9F0;
   border: none;
 }

@@ -2653,6 +2653,8 @@ ul.comment-section {
 
 .table .thead-dark th {
     color: $muted;
+    font-size: $small-font-size;
+    text-transform: uppercase;
     background-color: $light;
     border: none;
 }
