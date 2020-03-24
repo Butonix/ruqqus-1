@@ -58,6 +58,7 @@ class User(Base, Stndrd):
     banner_nonce=Column(Integer, default=0)
     last_siege_utc=Column(Integer, default=0)
     mfa_secret=Column(String(16), default=None)
+    has_earned_darkmode=Column(Boolean, default=False)
 
     moderates=relationship("ModRelationship", lazy="dynamic")
     banned_from=relationship("BanRelationship", lazy="dynamic", primaryjoin="BanRelationship.user_id==User.id")
@@ -623,3 +624,8 @@ class User(Base, Stndrd):
         now=int(time.time())
 
         return now-self.last_siege_utc > 60*60*24*30
+
+    @property
+    def can_use_darkmode(self):
+
+        return self.referral_count or self.has_earned_darkmode

@@ -22,13 +22,13 @@
 
 	{% block stylesheets %}
 	{% if b %}
-	{% if v and v.referral_count and session.get("dark_mode_enabled") %}
+	{% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
 	<link id="css-link" rel="stylesheet" href="{{ b.css_dark_url }}">
 	{% else %}
 	<link id="css-link" rel="stylesheet" href="{{ b.css_url }}">
 	{% endif %}
 	{% else %}
-	{% if v and v.referral_count and session.get("dark_mode_enabled") %}
+	{% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
 	<link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css">
 	{% else %}
 	<link id="css-link" rel="stylesheet" href="/assets/style/main.css">
