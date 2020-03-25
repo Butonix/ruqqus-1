@@ -14490,6 +14490,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-radius: 50%;
   margin: auto;
   text-align: center;
+  object-fit: cover;
   color: #ffffff;
   background-color: #FFFFFF;
 }
