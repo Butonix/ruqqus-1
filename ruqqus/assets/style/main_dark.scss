@@ -2199,6 +2199,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border: 1px solid $primary;
     border-radius: $border-radius;
     z-index: 2;
+    background-color: $gray-300;
 }
 
 .post-img-lg, .mobile-thumb-enlarged {
