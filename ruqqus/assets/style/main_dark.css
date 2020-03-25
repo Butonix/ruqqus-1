@@ -15023,6 +15023,15 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   background-color: #FFFFFF;
 }
 
+.profile-pic-100 {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  text-align: center;
+  object-fit: cover;
+  background-color: #FFFFFF;
+}
+
 .profile-pic-overlap {
   margin-left: -1rem;
 }
