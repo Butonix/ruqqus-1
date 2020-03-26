@@ -70,6 +70,7 @@ def thumbnail_thread(pid):
         src=f"https://{parsed_url.netloc}/{src.lstrip('/')}"
     else:
         src=f"{post.url}{'/' if not post.url.endswith('/') else ''}{src}"
+    
 
     
     x=requests.get(src, headers=headers)
@@ -77,6 +78,9 @@ def thumbnail_thread(pid):
 
     if x.status_code!=200:
         print('no image')
+        return
+
+    if not x.headers.get("Content-Type","").startswith("image/"):
         return
 
     name=f"posts/{post.base36id}/thumb.png"
