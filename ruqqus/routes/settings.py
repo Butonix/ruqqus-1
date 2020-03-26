@@ -168,7 +168,7 @@ def settings_dark_mode(x, v):
     if x not in [0,1]:
         abort(400)
 
-    if not v.referral_count:
+    if not v.can_use_darkmode:
         session["dark_mode_enabled"]=False
         abort(403)
     else:
