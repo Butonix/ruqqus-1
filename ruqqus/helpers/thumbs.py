@@ -1,7 +1,8 @@
 import requests
-from os import environ
+from os import environ, remove
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
+from PIL import Image
 
 from .get import *
 from ruqqus.__main__ import db, app
@@ -47,21 +48,7 @@ def thumbnail_thread(pid):
     
     if x.headers["Content-Type"].startswith("image/"):
         
-        name=f"posts/{post.base36id}/thumb.png"
-        tempname=name.replace("/","_")
-
-        with open(tempname, "wb") as file:
-            for chunk in x.iter_content(1024):
-                file.write(chunk)
-
-        print("thumb saved")
-
-        aws.upload_from_file(name, tempname)
-        post.has_thumb=True
-        db.add(post)
-        db.commit()
-        
-        return
+        pass
         
     elif x.headers["Content-Type"].startswith("text/html"):
 
@@ -93,15 +80,15 @@ def thumbnail_thread(pid):
     
 
     
-    x=requests.get(src, headers=headers)
-    print("have first image")
+        x=requests.get(src, headers=headers)
+        print("have first image")
 
-    if x.status_code!=200:
-        print('no image')
-        return
+        if x.status_code!=200:
+            print('no image')
+            return
 
-    if not x.headers.get("Content-Type","").startswith("image/"):
-        return
+        if not x.headers.get("Content-Type","").startswith("image/"):
+            return
 
     name=f"posts/{post.base36id}/thumb.png"
     tempname=name.replace("/","_")
@@ -110,11 +97,15 @@ def thumbnail_thread(pid):
         for chunk in x.iter_content(1024):
             file.write(chunk)
 
-    print("thumb saved")
+    i=Image.open(tempname)
+    i=i.resize((98,68))
+    i.save(tempname)
 
     aws.upload_from_file(name, tempname)
     post.has_thumb=True
     db.add(post)
     db.commit()
+    
+    remove(tempname)
 
     print("thumb all success")
