@@ -48,7 +48,8 @@ def thumbnail_thread(pid):
     
     if x.headers["Content-Type"].startswith("image/"):
         
-        pass
+        
+        print("submitted url is image")
         
     elif x.headers["Content-Type"].startswith("text/html"):
 
@@ -56,39 +57,49 @@ def thumbnail_thread(pid):
         img=soup.find('meta', attrs={"name": "thumbnail"})
         if img:
             src=img['content']
+            print("using thumbnail metadata")
         else:
 
-            img=soup.find('img', src=True)
-            if img:
-                src=img['src']
+            imgs=soup.find_all('img', src=True)
+            if imgs:
+                print("using first <img>")
             else:
                 print('no image in doc')
                 return
 
-        #convert src into full url
-        if src.startswith("https://"):
-            pass
-        elif src.startswith("http://"):
-            src=f"https://{src.split('http://')}"
-        elif src.startswith('//'):
-            src=f"https:{src}"
-        elif src.startswith('/'):
-            parsed_url=urlparse(post.url)
-            src=f"https://{parsed_url.netloc}/{src.lstrip('/')}"
-        else:
-            src=f"{post.url}{'/' if not post.url.endswith('/') else ''}{src}"
+            #Loop through all images in document until we find one that works (and isn't svg)
+            for img in imgs:
+                #convert src into full url
+                if src.startswith("https://"):
+                    pass
+                elif src.startswith("http://"):
+                    src=f"https://{src.split('http://')}"
+                elif src.startswith('//'):
+                    src=f"https:{src}"
+                elif src.startswith('/'):
+                    parsed_url=urlparse(post.url)
+                    src=f"https://{parsed_url.netloc}/{src.lstrip('/')}"
+                else:
+                    src=f"{post.url}{'/' if not post.url.endswith('/') else ''}{src}"
     
 
-    
-        x=requests.get(src, headers=headers)
-        print("have first image")
+                #load asset
+                x=requests.get(src, headers=headers)
+                print("have image")
 
-        if x.status_code!=200:
-            print('no image')
-            return
+                if x.status_code!=200:
+                    print('no image')
+                    continue
+                    
+                type=x.headers.get("Content-Type","")
 
-        if not x.headers.get("Content-Type","").startswith("image/"):
-            return
+                if not type.startswith("image/"):
+                    continue
+                
+                if type.startswith("image/svg"):
+                    continue
+                
+                break
 
     name=f"posts/{post.base36id}/thumb.png"
     tempname=name.replace("/","_")
