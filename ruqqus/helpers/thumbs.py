@@ -47,7 +47,21 @@ def thumbnail_thread(pid):
     
     if x.headers["Content-Type"].startswith("image/"):
         
-        src=post.url
+        name=f"posts/{post.base36id}/thumb.png"
+        tempname=name.replace("/","_")
+
+        with open(tempname, "wb") as file:
+            for chunk in x.iter_content(1024):
+                file.write(chunk)
+
+        print("thumb saved")
+
+        aws.upload_from_file(name, tempname)
+        post.has_thumb=True
+        db.add(post)
+        db.commit()
+        
+        return
         
     elif x.headers["Content-Type"].startswith("text/html"):
 
