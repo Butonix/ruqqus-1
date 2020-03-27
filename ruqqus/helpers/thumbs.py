@@ -106,6 +106,4 @@ def thumbnail_thread(pid):
     db.add(post)
     db.commit()
     
-    remove(tempname)
-
-    print("thumb all success")
+    #remove(tempname)
