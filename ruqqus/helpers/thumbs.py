@@ -69,6 +69,9 @@ def thumbnail_thread(pid):
 
             #Loop through all images in document until we find one that works (and isn't svg)
             for img in imgs:
+                
+                src=img["src"]
+                
                 #convert src into full url
                 if src.startswith("https://"):
                     pass
