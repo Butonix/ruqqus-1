@@ -2,7 +2,7 @@ import requests
 from os import environ, remove
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
-from PIL import Image
+from PIL import Image as PILimage
 
 from .get import *
 from ruqqus.__main__ import db, app
@@ -97,7 +97,7 @@ def thumbnail_thread(pid):
         for chunk in x.iter_content(1024):
             file.write(chunk)
 
-    i=Image.open(tempname)
+    i=PILimage.open(tempname)
     i=i.resize((98,68))
     i.save(tempname)
 
