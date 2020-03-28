@@ -54,10 +54,13 @@ def thumbnail_thread(pid):
     elif x.headers["Content-Type"].startswith("text/html"):
 
         soup=BeautifulSoup(x.content, 'html.parser')
-        img=soup.find('meta', attrs={"name": "thumbnail"})
+        img=soup.find('meta', attrs={"name": "ruqqus:thumbnail", "content":True})
+        if not img:
+            img=soup.find('meta', attrs={"name":"twitter:image", "content":True})
+        if not img:
+            img=soup.find('meta', attrs={"name": "thumbnail", "content":True})
         if img:
             src=img['content']
-            print("using thumbnail metadata")
         else:
 
             imgs=soup.find_all('img', src=True)
