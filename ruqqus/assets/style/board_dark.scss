@@ -417,19 +417,19 @@ ol > li::before {
 }
 
 .tooltip.bs-tooltip-right .arrow:before {
-    border-right-color: $black !important;
+    border-right-color: $white !important;
 }
 
 .tooltip.bs-tooltip-left .arrow:before {
-    border-left-color: $black !important;
+    border-left-color: $white !important;
 }
 
 .tooltip.bs-tooltip-bottom .arrow:before {
-    border-bottom-color: $black !important;
+    border-bottom-color: $white !important;
 }
 
 .tooltip.bs-tooltip-top .arrow:before {
-    border-top-color: $black !important;
+    border-top-color: $white !important;
 }
 
 // Alerts
