@@ -14206,6 +14206,21 @@ label.color-radio span {
   box-shadow: none;
 }
 
+.form-control::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #CFCFCF;
+}
+
+.form-control::-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #CFCFCF;
+}
+
+.form-control::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: #CFCFCF;
+}
+
 .form-check-label {
   margin-bottom: 0;
   text-transform: none;
@@ -14318,7 +14333,7 @@ th {
 .format .fa-quote-right:hover,
 .format .fa-link:hover,
 .format .fa-image:hover {
-  color: #383838;
+  color: #CFCFCF;
 }
 
 .voting {

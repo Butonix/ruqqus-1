@@ -809,6 +809,21 @@ label.color-radio span {
     box-shadow: none;
 }
 
+.form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: $black;
+    //opacity: .25; /* Firefox */
+}
+  
+.form-control::-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: $black;
+    //opacity: .25;
+}
+  
+.form-control::-ms-input-placeholder { /* Microsoft Edge */
+    color: $black;
+    //opacity: .25;
+}
+
 .form-check-label {
     margin-bottom: 0;
     text-transform: none;
@@ -925,7 +940,7 @@ th {
 .format .fa-quote-right:hover,
 .format .fa-link:hover,
 .format .fa-image:hover {
-    color: $gray;
+    color: $black;
 }
 
 // Voting
@@ -1806,7 +1821,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .card-header {
     font-size: $font-size-base;
     font-weight: $font-weight-bold;
-    color: $gray;
+    color: $black;
     padding: 0.5rem 1rem;
     border-bottom: 1px solid $input-border-color;
 }
@@ -2508,6 +2523,10 @@ ul.comment-section {
     padding: 0 .5rem;
     font-size: $font-size-base;
     color: $gray-500;
+}
+
+.comment-write .comment-format .format:hover {
+    color: $black;
 }
 
 .comment .comment-collapse {
