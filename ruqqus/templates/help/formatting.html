@@ -39,4 +39,30 @@ On Ruqqus, you can use Markdown formatting.
   </tr>
 </table>
 
+{% filter markdown %}
+
+We also have some custom hooks for mentioning users and guilds.
+
+{% endfilter %}
+
+<table class="table table-striped mb-5">
+  <thead class="bg-primary text-white">
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Displays as</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>Username Mention</td>
+    <td>@ruqqus</td>
+    <td><a class="d-inline-block" href="/@ruqqus}"><img src="/@/ruqqus/pic/profile" class="profile-pic-20 mr-1">@ruqqus</a></td>
+  </tr>
+  <tr>
+    <td>Guild Mention</td>
+    <td>+general</td>
+    <td><a class="d-inline-block" href="/+general"><img src="/+general/pic/profile" class="profile-pic-20 align-middle mr-1">+general</a></td>
+  </tr>
+</table>
+
 {% endblock %}
