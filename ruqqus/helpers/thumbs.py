@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 from PIL import Image as PILimage
 
 from .get import *
-from .log import log
 from ruqqus.__main__ import db, app
 
 def thumbnail_thread(pid):
