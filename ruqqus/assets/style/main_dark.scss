@@ -1916,7 +1916,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     background-color: $gray-400;
     border-radius: $border-radius;
     box-shadow: $box-shadow;
-    background-color: $dark;
 }
 
 .modal-footer {
@@ -1924,7 +1923,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     background-color: $gray-400;
     border-bottom-right-radius: $border-radius;
     border-bottom-left-radius: $border-radius;
-    background-image: linear-gradient(180deg, #ffffff00 25%, $gray-300 100%)!important;
+    background-image: linear-gradient(180deg, #ffffff00 25%, $gray-400 100%)!important;
 }
 
 .modal .post-actions .list-group-item {
