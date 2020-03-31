@@ -318,7 +318,7 @@ class User(Base, Stndrd):
     def verifyPass(self, password):
         return check_password_hash(self.passhash, password)
         
-    def rendered_userpage(self, v=None, hide_offensive=False):
+    def rendered_userpage(self, v=None):
 
         if self.reserved:
             return render_template("userpage_reserved.html", u=self, v=v)
@@ -334,7 +334,7 @@ class User(Base, Stndrd):
         if not (v and v.over_18):
             submissions=submissions.filter_by(over_18=False)
 
-        if hide_offensive:
+        if v and v.hide_offensive:
             submissions=submissions.filter_by(is_offensive=False)
 
         if not (v and (v.admin_level >=3)):

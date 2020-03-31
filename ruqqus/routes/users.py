@@ -74,9 +74,7 @@ def u_username(username, v=None):
     if username != result.username:
         return redirect(result.url)
         
-    return result.rendered_userpage(v=v,
-                                    hide_offensive=v and v.hide_offensive
-                                    )
+    return result.rendered_userpage(v=v)
 
 @app.route("/u/<username>/comments", methods=["GET"])
 @app.route("/@<username>/comments", methods=["GET"])
