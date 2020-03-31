@@ -17,9 +17,6 @@
         </div>
         <p class="card-text">{{ u.bio_html | safe }}</p>
       </div>
-      <div class="card-footer bg-white border-0">
-        <div class="text-small text-muted"><i class="fas fa-user-friends text-gray-500 mr-2"></i>{{ u.follower_count }} Follower{{ 's' if u.follower_count != 1 else '' }}</div>
-      </div>
     </div>
   </div>
   {% endfor %}

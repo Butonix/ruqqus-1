@@ -217,37 +217,6 @@
 
         </div>
 
-        <div id="downvotes">
-
-          <h2 class="h5">Disable Submission Downvoting</h2>
-
-          <p class="text-small text-muted">Disables user's ability to downvote submissions in +{{ b.name }}.</p>
-
-          <div class="settings-section rounded">
-
-            <div class="d-lg-flex">
-
-              <div class="title w-lg-25">
-                <label for="downdisable">Disable Downvotes</label>
-              </div>
-
-              <div class="body w-lg-100">
-
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="downdisable" name="downdisable"{% if b.downvotes_disabled %} checked{% endif %} onchange="mod_post('/mod/{{ b.base36id }}/settings/downdisable','downdisable')">
-                  <label class="custom-control-label" for="downdisable"></label>
-                </div>
-
-                <span class="text-small-extra text-muted">Activating this will not cancel preexisting downvotes.</span>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
         <div id="restricted">
 
           <h2 class="h5">Restricted Posting</h2>

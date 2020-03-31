@@ -27,7 +27,7 @@ def trending_boards(n=5):
     return [(x, x.subscriber_count) for x in boards]
 
 @cache.memoize(timeout=300)
-def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None):
+def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=False):
 
     #cutoff=int(time.time())-(60*60*24*30)
 
@@ -36,6 +36,9 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None):
                                            stickied=False)
     if not nsfw:
         posts=posts.filter_by(over_18=False)
+
+    if hide_offensive:
+        posts=posts.filter_by(is_offensive=False)
 
     if v and v.admin_level >= 4:
         pass
@@ -118,7 +121,8 @@ def front_all(v):
                     page=page,
                     nsfw=(v and v.over_18),
                     t=request.args.get('t',None),
-                    v=v
+                    v=v,
+                    hide_offensive= v and v.hide_offensive
                     )
 
     #check existence of next page
