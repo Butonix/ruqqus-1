@@ -59,6 +59,9 @@ def search(v, search_type="posts"):
         if not (v and v.over_18):
             posts=posts.filter_by(over_18=False)
 
+        if v and v.hide_offensive:
+            posts=posts.filter_by(is_offensive=False)
+
         if not(v and v.admin_level>=3):
             posts=posts.filter_by(is_deleted=False, is_banned=False)
 
