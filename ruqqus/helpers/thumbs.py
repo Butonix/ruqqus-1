@@ -46,10 +46,13 @@ def thumbnail_thread(pid):
         soup=BeautifulSoup(x.content, 'html.parser')
         img=soup.find('meta', attrs={"name": "ruqqus:thumbnail", "content":True})
         if not img:
+            log("no ruqqus:thumbnail")
             img=soup.find('meta', attrs={"name":"twitter:image", "content":True})
         if not img:
+            log("no twitter:image")
             img=soup.find('meta', attrs={"name": "thumbnail", "content":True})
         if img:
+            log("found meta thumbnail")
             src=img['content']
         else:
 
