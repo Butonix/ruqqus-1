@@ -730,7 +730,7 @@ label.color-radio span {
     color: $white;
 }
 
-.form-inline.search .input-group-append .input-group-text .fa.fa-search {
+.form-inline.search .input-group-append .input-group-text .fa.fa-search, .form-inline.search .input-group-append-focus .input-group-text .fa.fa-search {
     color: $black;
     //opacity: .25;
 }

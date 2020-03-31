@@ -780,7 +780,7 @@ label.color-radio span {
     transition: none;
 }
 
-.home-submission .form-control, .home-submission .input-group-text {
+.home-submission .form-control, .home-submission .input-group-text, .form-inline.search .input-group-append-focus .input-group-text .fa.fa-search {
     border-color: $border-color;
     background-color: $white;
 }
