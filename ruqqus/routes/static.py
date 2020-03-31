@@ -19,6 +19,10 @@ def static_service(path):
 def robots_txt():
     return send_file("./assets/robots.txt")
 
+@app.route("/slurs.txt", methods=["GET"])
+def slurs():
+    return send_file("./assets/slurs.txt")
+
 @app.route("/settings", methods=["GET"])
 @auth_required
 def settings(v):

@@ -113,12 +113,12 @@
             {% endif %}
 
             {% if v and not v.subscriptions.filter_by(is_active=True).count() %}
-            <div class="sidebar-collapsed-hidden rounded bg-gray-100 p-3">
-              <div class="mb-4">
+            <div class="sidebar-collapsed-hidden">
+              <div class="mb-3">
                 <div class="text-small font-weight-bold text-muted text-uppercase" style="letter-spacing: 0.025rem;">My guilds</div>
               </div>
-              <p>You are not a member of any guilds. Guilds you are a member of will be displayed here.</p>
-              <a href="/browse" class="btn btn-outline-gray-500 btn-block btn-sm text-small sidebar-collapsed-hidden">Discover guilds</a>
+              <p>You are not a member of any guilds. Guilds you participate in will be displayed here.</p>
+              <a href="/browse" class="btn btn-outline-gray-300 text-muted btn-block btn-sm text-small sidebar-collapsed-hidden">Discover guilds</a>
             </div>
             {% endif %}
 
