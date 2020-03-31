@@ -189,8 +189,8 @@
               <input type="text" readonly="" class="form-control copy-link" id="referral_code" value="https://ruqqus.com/signup?ref={{ v.username }}" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}">
 
               <span class="input-group-append" data-toggle="tooltip" data-placement="top" title="You have referred {{ v.referral_count }} user{{ 's' if v.referral_count != 1 else '' }} so far.{% if v.referral_count==0 %}¯\_(ツ)_/¯{% elif v.referral_count>10%}Wow!{% endif %}">
-                <span class="input-group-text border-0">
-                  <i class="far fa-user text-muted mr-1" aria-hidden="true"></i>{{ v.referral_count }}</span>
+                <span class="input-group-text text-muted border-0">
+                  <i class="far fa-user mr-1" aria-hidden="true"></i>{{ v.referral_count }}</span>
                 </span>
 
               </div>
