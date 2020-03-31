@@ -13656,7 +13656,6 @@ pre {
 
 #thread .custom-gutters {
   padding: 0 15px;
-  background-color: #181818;
 }
 
 .custom-gutters {
@@ -17112,8 +17111,8 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     border-bottom: 1px solid #303030;
   }
 
-  #frontpage .posts .card:hover, #search .posts .card:hover {
-    background-color: transparent;
+  #frontpage .posts .card:hover .post-title a, #search .posts .card:hover .post-title a {
+    color: #805AD5;
   }
 
   #frontpage .posts .card .post-img, #search .posts .card .post-img {

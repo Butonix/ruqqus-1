@@ -236,7 +236,6 @@ pre {
 
 #thread .custom-gutters {
     padding: 0 15px;
-    background-color: $gray-900;
 }
 
 .custom-gutters {
@@ -3380,8 +3379,8 @@ body, #settings, #notifications, #submit{
     border-bottom: 1px solid $border-color;
 }
 
-#frontpage .posts .card:hover, #search .posts .card:hover {
-    background-color: transparent;
+#frontpage .posts .card:hover .post-title a, #search .posts .card:hover .post-title a{
+    color: $primary;
 }
 
 #frontpage .posts .card .post-img, #search .posts .card .post-img {
