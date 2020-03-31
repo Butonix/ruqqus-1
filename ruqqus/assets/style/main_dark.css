@@ -13656,7 +13656,6 @@ pre {
 
 #thread .custom-gutters {
   padding: 0 15px;
-  background-color: #181818;
 }
 
 .custom-gutters {
@@ -15158,6 +15157,10 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .card {
   background-color: #0f0f0f;
+}
+
+#thread .card {
+  background-color: #181818;
 }
 
 #frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type, #guild .posts .card:first-of-type, #settings-guild .posts .card:first-of-type {
