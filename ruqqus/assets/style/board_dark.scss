@@ -193,7 +193,11 @@ pre {
 }
 
 #thread, #userpage {
+<<<<<<< Updated upstream
     background-color: $gray-900;
+=======
+    background-color: $gray-600;
+>>>>>>> Stashed changes
 }
 
 // Docs
@@ -236,7 +240,7 @@ pre {
 
 #thread .custom-gutters {
     padding: 0 15px;
-    background-color: $gray-900;
+    background-color: $gray-700;
 }
 
 .custom-gutters {
@@ -1828,7 +1832,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .card {
-    background-color: $gray-900;
+    background-color: $gray-600;
 }
 
 #frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type, #guild .posts .card:first-of-type, #settings-guild .posts .card:first-of-type {
@@ -3376,6 +3380,10 @@ body, #settings, #notifications, #submit{
     border-radius: 0;
 }
 
+#frontpage .posts .card, #userpage .posts .card, #search .posts .card, #userpage .posts .card {
+    background-color: $gray-600;
+}
+
 #frontpage .posts .card:last-of-type, #search .posts .card:last-of-type {
     border-bottom: 1px solid $border-color;
 }
@@ -3509,7 +3517,7 @@ body, #settings, #notifications, #submit{
 // Comments
 
 .comment-section {
-    background-color: $gray-900;
+    background-color: $gray-600;
 }
 
 .comment-section > .comment {

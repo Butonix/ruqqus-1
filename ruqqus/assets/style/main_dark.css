@@ -13656,7 +13656,7 @@ pre {
 
 #thread .custom-gutters {
   padding: 0 15px;
-  background-color: #0f0f0f;
+  background-color: #181818;
 }
 
 .custom-gutters {
@@ -15157,7 +15157,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .card {
-  background-color: #0f0f0f;
+  background-color: #1f2023;
 }
 
 #frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type, #guild .posts .card:first-of-type, #settings-guild .posts .card:first-of-type {
@@ -17029,7 +17029,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   #thread, #userpage {
-    background-color: #181818;
+    background-color: #1f2023;
   }
 
   .custom-gutters {
@@ -17105,7 +17105,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   #frontpage .posts .card, #userpage .posts .card, #search .posts .card, #userpage .posts .card {
-    background-color: #383838;
+    background-color: #1f2023;
   }
 
   #frontpage .posts .card:last-of-type, #search .posts .card:last-of-type {
@@ -17228,7 +17228,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .comment-section {
-    background-color: #0f0f0f;
+    background-color: #1f2023;
   }
 
   .comment-section > .comment {
