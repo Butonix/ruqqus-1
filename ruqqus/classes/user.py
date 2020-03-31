@@ -669,6 +669,6 @@ class User(Base, Stndrd):
 
         
     def can_use_darkmode(self):
-
-        return self.referral_count or self.has_earned_darkmode or self.has_badge(16) or self.has_badge(17)
+        return True
+        #return self.referral_count or self.has_earned_darkmode or self.has_badge(16) or self.has_badge(17)
 
