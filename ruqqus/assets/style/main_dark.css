@@ -15229,7 +15229,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .modal-header {
   border-bottom: none;
-  background-color: #383838;
+  background-color: #303030;
   border-top-left-radius: 0.35rem;
   border-top-right-radius: 0.35rem;
   padding: 0.5rem 1rem;
@@ -15242,7 +15242,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .modal-content {
   border: none;
-  background-color: #383838;
+  background-color: #303030;
   border-radius: 0.35rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
   background-color: #383838;
@@ -15250,7 +15250,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .modal-footer {
   border: none;
-  background-color: #383838;
+  background-color: #303030;
   border-bottom-right-radius: 0.35rem;
   border-bottom-left-radius: 0.35rem;
   background-image: linear-gradient(180deg, #ffffff00 25%, #383838 100%) !important;
@@ -15263,7 +15263,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .modal .post-actions .list-group-item:focus, .modal .post-actions .list-group-item:hover {
-  background-color: #35363e;
+  background-color: #303030;
 }
 
 .modal .post-actions a {
@@ -15688,7 +15688,7 @@ blockquote p {
 }
 
 .modal .comment-actions .list-group-item:focus, .modal .comment-actions .list-group-item:hover {
-  background-color: #35363e;
+  background-color: #383838;
 }
 
 .modal .comment-actions a {
