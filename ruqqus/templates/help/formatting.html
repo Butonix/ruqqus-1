@@ -12,6 +12,9 @@
 
 On Ruqqus, you can use Markdown formatting.
 
+
+## Inline formatting
+
 {% endfilter %}
 
 <table class="table table-striped mb-5">
@@ -33,9 +36,62 @@ On Ruqqus, you can use Markdown formatting.
     <td><b>text</b></td>
   </tr>
   <tr>
+    <td>Code</td>
+    <td>`text`</td>
+    <td><code>text</code></td>
+  </tr>
+  <tr>
     <td>Links</td>
     <td>[Ruqqus](https://ruqqus.com)</td>
     <td><a href="https://ruqqus.com">Ruqqus</a></td>
+  </tr>
+</table>
+
+{% filter markdown %}
+
+## Block formatting
+
+These Markdown tags format an entire paragraph of text at a time.
+
+<table class="table table-striped mb-5">
+  <thead class="bg-primary text-white">
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Displays as</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>Blockquote</td>
+    <td>&gt; text</td>
+    <td><blockquote>text</blockquote></td>
+  </tr>
+</table>
+
+
+## Custom Formatting
+
+We also have some custom hooks for mentioning users and guilds. Note that these only work if the mentioned user or guild actually exists.
+
+{% endfilter %}
+
+<table class="table table-striped mb-5">
+  <thead class="bg-primary text-white">
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Displays as</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>Username Mention</td>
+    <td>@ruqqus</td>
+    <td><a class="d-inline-block" href="/@ruqqus}"><img src="/@ruqqus/pic/profile" class="profile-pic-20 mr-1">@ruqqus</a></td>
+  </tr>
+  <tr>
+    <td>Guild Mention</td>
+    <td>+general</td>
+    <td><a class="d-inline-block" href="/+general"><img src="/+general/pic/profile" class="profile-pic-20 align-middle mr-1">+general</a></td>
   </tr>
 </table>
 
