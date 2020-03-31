@@ -1,5 +1,7 @@
 from os import environ
 
+log_level=int(environ.get("LOG_LEVEL",0))
+
 def log(text, level=1):
-    if int(environ.get("LOG_LEVEL",0)) >= level:
+    if log_level >= level:
         print(text)
