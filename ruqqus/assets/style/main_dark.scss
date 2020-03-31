@@ -1933,11 +1933,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .modal .post-actions .list-group-item {
     border: none;
     border-radius: $border-radius;
-    background-color: $gray-300;
+    background-color: $gray-400;
 }
 
 .modal .post-actions .list-group-item:focus, .modal .post-actions .list-group-item:hover {
-    background-color: $gray-400;
+    background-color: $gray-300;
 }
 
 .modal .post-actions a {
