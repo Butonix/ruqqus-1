@@ -77,6 +77,8 @@ _clean_w_links = bleach.Cleaner(tags=_allowed_tags_with_links,
 
 def sanitize(text, linkgen=False):
 
+    text=text.replace("\ufeff","")
+
     if linkgen:
         sanitized= _clean_w_links.clean(text)
 
