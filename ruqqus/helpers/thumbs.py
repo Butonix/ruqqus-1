@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from PIL import Image as PILimage
 
 from .get import *
+from .log import log
 from ruqqus.__main__ import db, app
 
 def thumbnail_thread(pid):
@@ -13,15 +14,16 @@ def thumbnail_thread(pid):
 
     #step 1: see if post is image
 
-    print("thumbnail thread")
+    #print("thumbnail thread")
 
     domain_obj=post.domain_obj
 
     if domain_obj and domain_obj.show_thumbnail:
-        #print("image post")
+
         x=requests.head(post.url)
 
         if x.headers.get("Content-Type","/").split("/")[0]=="image":
+            #print("image post, using submitted url")
             post.is_image=True
             db.add(post)
             db.commit()
@@ -43,17 +45,25 @@ def thumbnail_thread(pid):
 
         soup=BeautifulSoup(x.content, 'html.parser')
         img=soup.find('meta', attrs={"name": "ruqqus:thumbnail", "content":True})
+        
         if not img:
+            #print("no ruqqus:thumbnail")
             img=soup.find('meta', attrs={"name":"twitter:image", "content":True})
+            
         if not img:
+            #print("no twitter:image")
             img=soup.find('meta', attrs={"name": "thumbnail", "content":True})
+            
         if img:
+            #print("found meta thumbnail")
             src=img['content']
+            x=requests.get(src, headers=headers)
+            
         else:
 
             imgs=soup.find_all('img', src=True)
             if imgs:
-                #print("using first <img>")
+                #print("using <img> elements")
                 pass
             else:
                 #print('no image in doc')
@@ -63,6 +73,8 @@ def thumbnail_thread(pid):
             for img in imgs:
                 
                 src=img["src"]
+                
+                #print("raw src: "+src)
                 
                 #convert src into full url
                 if src.startswith("https://"):
@@ -76,6 +88,8 @@ def thumbnail_thread(pid):
                     src=f"https://{parsed_url.netloc}/{src.lstrip('/')}"
                 else:
                     src=f"{post.url}{'/' if not post.url.endswith('/') else ''}{src}"
+                    
+                #print("full src: "+src)
     
 
                 #load asset
@@ -83,15 +97,17 @@ def thumbnail_thread(pid):
 
 
                 if x.status_code!=200:
-                    #print('no image')
+                    #print('not 200, next')
                     continue
                     
                 type=x.headers.get("Content-Type","")
 
                 if not type.startswith("image/"):
+                    #print("not an image, next")
                     continue
                 
                 if type.startswith("image/svg"):
+                    #print("svg image, next")
                     continue
                 
                 break
