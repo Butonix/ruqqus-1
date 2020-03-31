@@ -186,7 +186,7 @@
 
             <input type="text" readonly="" class="form-control copy-link" id="referral_code" value="https://ruqqus.com/signup?ref={{ v.username }}" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}">
 
-            <div class="text-small-extra text-muted mt-3">Share this link with a friend. {% if v.referral_count==0 %} When they sign up, you'll get the bronze recruitment badge. (<a href="/help/badges">Learn more.</a>){% elif v.referral_count<10 %} When you refer 10 friends, you'll receive the silver recruitment badge. (<a href="/help/badges">Learn more.</a>){% elif v.referral_count<100 } When you refer 100 friends, you'll receive the gold recruitment badge. (<a href="/help/badges">Learn more.</a>){% endif %} You have referred {{ v.referral_count }} user{{ 's' if v.referral_count != 1 else '' }} so far.</div>
+            <div class="text-small-extra text-muted mt-3">Share this link with a friend. {% if v.referral_count==0 %} When they sign up, you'll get the bronze recruitment badge. <a href="/help/badges">Learn more.</a>{% elif v.referral_count<10 %} When you refer 10 friends, you'll receive the silver recruitment badge. <a href="/help/badges">Learn more.</a>{% elif v.referral_count<100 %} When you refer 100 friends, you'll receive the gold recruitment badge. <a href="/help/badges">Learn more.</a>{% endif %} You have referred {{ v.referral_count }} user{{ 's' if v.referral_count != 1 else '' }} so far.</div>
 
           </div>
 
