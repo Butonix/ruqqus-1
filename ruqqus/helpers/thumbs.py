@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 from PIL import Image as PILimage
 
 from .get import *
-from .log import log
 from ruqqus.__main__ import db, app
 
 def thumbnail_thread(pid):
@@ -14,7 +13,6 @@ def thumbnail_thread(pid):
 
     #step 1: see if post is image
 
-    log("thumbnail thread")
 
     domain_obj=post.domain_obj
 
@@ -23,7 +21,7 @@ def thumbnail_thread(pid):
         x=requests.head(post.url)
 
         if x.headers.get("Content-Type","/").split("/")[0]=="image":
-            log("image post, using submitted url")
+
             post.is_image=True
             db.add(post)
             db.commit()
@@ -34,7 +32,7 @@ def thumbnail_thread(pid):
     x=requests.get(post.url, headers=headers)
     
     if x.status_code != 200 or not x.headers["Content-Type"].startswith(("text/html", "image/")):
-        log(f'not html post, status {x.status_code}')
+
         return
     
     if x.headers["Content-Type"].startswith("image/"):
@@ -47,15 +45,13 @@ def thumbnail_thread(pid):
         img=soup.find('meta', attrs={"name": "ruqqus:thumbnail", "content":True})
         
         if not img:
-            log("no ruqqus:thumbnail")
             img=soup.find('meta', attrs={"name":"twitter:image", "content":True})
             
         if not img:
-            log("no twitter:image")
+            #print("no twitter:image")
             img=soup.find('meta', attrs={"name": "thumbnail", "content":True})
             
         if img:
-            log("found meta thumbnail")
             src=img['content']
             x=requests.get(src, headers=headers)
             
@@ -63,10 +59,9 @@ def thumbnail_thread(pid):
 
             imgs=soup.find_all('img', src=True)
             if imgs:
-                log("using <img> elements")
                 pass
             else:
-                log('no image in doc')
+                #print('no image in doc')
                 return
 
             #Loop through all images in document until we find one that works (and isn't svg)
@@ -74,7 +69,7 @@ def thumbnail_thread(pid):
                 
                 src=img["src"]
                 
-                log("raw src: "+src)
+                #print("raw src: "+src)
                 
                 #convert src into full url
                 if src.startswith("https://"):
@@ -89,7 +84,7 @@ def thumbnail_thread(pid):
                 else:
                     src=f"{post.url}{'/' if not post.url.endswith('/') else ''}{src}"
                     
-                log("full src: "+src)
+                #print("full src: "+src)
     
 
                 #load asset
@@ -97,17 +92,17 @@ def thumbnail_thread(pid):
 
 
                 if x.status_code!=200:
-                    log('not 200, next')
+                    #print('not 200, next')
                     continue
                     
                 type=x.headers.get("Content-Type","")
 
                 if not type.startswith("image/"):
-                    log("not an image, next")
+                    #print("not an image, next")
                     continue
                 
                 if type.startswith("image/svg"):
-                    log("svg image, next")
+                    #print("svg image, next")
                     continue
                 
                 break
