@@ -17151,6 +17151,10 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     height: 115px;
   }
 
+  #thread .card {
+    background-color: #1f2023;
+  }
+
   .card {
     background-color: #1f2023;
   }

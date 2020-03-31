@@ -3444,6 +3444,10 @@ body, #settings, #notifications, #submit {
 
 // Posts and thread
 
+#thread .card {
+    background-color: $gray-600;
+}
+
 .card {
     background-color: $gray-600;
 }
