@@ -28,6 +28,11 @@ def settings_profile_post(v):
         updated=True
         v.over_18=bool(request.form.get("over18", None))
         cache.delete_memoized(User.idlist, v)
+
+    if request.form.get("hide_offensive") != v.hide_offensive:
+        updated=True
+        v.hide_offensive=bool(request.form.get("hide_offensive", None))
+        cache.delete_memoized(User.idlist, v)
         
     if request.form.get("bio") != v.bio:
         updated=True
@@ -250,3 +255,4 @@ def settings_toggle_collapse(v):
 
     return "", 204
 
+    

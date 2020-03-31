@@ -132,13 +132,14 @@ def api_comment(v):
               parent_comment_id=parent_comment_id,
               level=level,
               author_name=v.username,
-              title_id=v.title_id,
               over_18=post.over_18,
               is_op=(v.id==post.author_id)
               )
 
     db.add(c)
     db.commit()
+
+    c.determine_offensive()
 
     notify_users=set()
 
@@ -215,6 +216,8 @@ def edit_comment(cid, v):
 
     db.add(c)
     db.commit()
+
+    c.determine_offensive()
 
     path=request.form.get("current_page","/")
 

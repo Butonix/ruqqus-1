@@ -18,7 +18,7 @@ def thumbnail_thread(pid):
     domain_obj=post.domain_obj
 
     if domain_obj and domain_obj.show_thumbnail:
-        print("image post")
+        #print("image post")
         x=requests.head(post.url)
 
         if x.headers.get("Content-Type","/").split("/")[0]=="image":
@@ -28,28 +28,16 @@ def thumbnail_thread(pid):
 
             return
 
-##    url=f"https://api.apiflash.com/v1/urltoimage"
-##    params={'access_key':environ.get("APIFLASH_KEY"),
-##            'format':'png',
-##            'height':720,
-##            'width':1280,
-##            'response_type':'image',
-##            'thumbnail_width':600,
-##            'url': post.embed_url if post.embed_url else post.url,
-##            'css':"iframe {display:none;}"
-##            }
-
     headers={"User-Agent":app.config['UserAgent']}
     x=requests.get(post.url, headers=headers)
     
     if x.status_code != 200 or not x.headers["Content-Type"].startswith(("text/html", "image/")):
-        print(f'not html post, status {x.status_code}')
+        #print(f'not html post, status {x.status_code}')
         return
     
     if x.headers["Content-Type"].startswith("image/"):
-        
-        
-        print("submitted url is image")
+        pass
+        #submitted url is image
         
     elif x.headers["Content-Type"].startswith("text/html"):
 
@@ -65,9 +53,10 @@ def thumbnail_thread(pid):
 
             imgs=soup.find_all('img', src=True)
             if imgs:
-                print("using first <img>")
+                #print("using first <img>")
+                pass
             else:
-                print('no image in doc')
+                #print('no image in doc')
                 return
 
             #Loop through all images in document until we find one that works (and isn't svg)
@@ -91,10 +80,10 @@ def thumbnail_thread(pid):
 
                 #load asset
                 x=requests.get(src, headers=headers)
-                print("have image")
+
 
                 if x.status_code!=200:
-                    print('no image')
+                    #print('no image')
                     continue
                     
                 type=x.headers.get("Content-Type","")

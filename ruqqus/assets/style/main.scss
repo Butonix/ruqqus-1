@@ -135,6 +135,14 @@ $tooltip-opacity: 1;
 
 $yiq-contrasted-threshold:  160 !default;
 
+// Callouts
+
+@each $color, $value in $theme-colors {
+    .bd-callout-#{$color} {
+      border-left-color: #{$value};
+    }
+  }
+
 @import "node_modules/bootstrap/scss/bootstrap";
 
 html {
@@ -419,6 +427,17 @@ ol > li::before {
 
 .tooltip.bs-tooltip-top .arrow:before {
     border-top-color: $black !important;
+}
+
+// Callouts
+
+.bd-callout {
+    padding: 1.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid $border-color;
+    border-left-width: .25rem;
+    border-radius: .25rem;
 }
 
 // Alerts

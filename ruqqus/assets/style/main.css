@@ -1,4 +1,92 @@
 @charset "UTF-8";
+.bd-callout-primary {
+  border-left-color: #805AD5;
+}
+
+.bd-callout-secondary {
+  border-left-color: #E2E8F0;
+}
+
+.bd-callout-danger {
+  border-left-color: #E53E3E;
+}
+
+.bd-callout-dark {
+  border-left-color: #23183E;
+}
+
+.bd-callout-white {
+  border-left-color: #ffffff;
+}
+
+.bd-callout-black {
+  border-left-color: #121213;
+}
+
+.bd-callout-light {
+  border-left-color: #E6E9F0;
+}
+
+.bd-callout-success {
+  border-left-color: #38A169;
+}
+
+.bd-callout-muted {
+  border-left-color: #718096;
+}
+
+.bd-callout-downvote {
+  border-left-color: #38B2AC;
+}
+
+.bd-callout-upvote {
+  border-left-color: #805AD5;
+}
+
+.bd-callout-purple {
+  border-left-color: #805AD5;
+}
+
+.bd-callout-gold {
+  border-left-color: #ECC94B;
+}
+
+.bd-callout-admin {
+  border-left-color: #E53E3E;
+}
+
+.bd-callout-gray {
+  border-left-color: #718096;
+}
+
+.bd-callout-gray-100 {
+  border-left-color: #F5F7FA;
+}
+
+.bd-callout-gray-200 {
+  border-left-color: #EDF2F7;
+}
+
+.bd-callout-gray-300 {
+  border-left-color: #E2E8F0;
+}
+
+.bd-callout-gray-400 {
+  border-left-color: #CBD5E0;
+}
+
+.bd-callout-gray-500 {
+  border-left-color: #A0AEC0;
+}
+
+.bd-callout-gray-600 {
+  border-left-color: #718096;
+}
+
+.bd-callout-reddit {
+  border-left-color: #ED4630;
+}
+
 /*!
  * Bootstrap v4.4.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 The Bootstrap Authors
@@ -13422,6 +13510,15 @@ ol > li::before {
 
 .tooltip.bs-tooltip-top .arrow:before, .tooltip.bs-tooltip-auto[x-placement^=top] .arrow:before {
   border-top-color: #121213 !important;
+}
+
+.bd-callout {
+  padding: 1.25rem;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid #E2E8F0;
+  border-left-width: 0.25rem;
+  border-radius: 0.25rem;
 }
 
 .alert {

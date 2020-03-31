@@ -33,7 +33,7 @@
       <div class="card-body">
         <div class="pl-md-3">
 
-          <div class="text-muted text-small mb-1">Showing {{ listing | length }} of {{ total }} result{{ 's' if total != 1 else '' }} for</div>
+          <div class="text-muted text-small mb-1">Showing {% block listinglength %}{{ listing | length }}{% endblock %} of {{ total }} result{{ 's' if total != 1 else '' }} for</div>
           <h1 class="h4 mb-0">{{ query }}</h1>
 
         </div>
@@ -105,7 +105,7 @@
 
       <div class="posts" id="posts">
 
-        {% include "submission_listing.html" %}
+        {% block listing_template %}{% include "submission_listing.html" %}{% endblock %}
 
       </div>
     </div>

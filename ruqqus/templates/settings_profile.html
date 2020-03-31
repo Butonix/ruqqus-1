@@ -222,6 +222,24 @@
             </div>
 
           </div>
+          <div class="d-lg-flex">
+
+            <div class="title w-lg-25">
+              <label for="hideoffensive">Hide offensive speech</label>
+            </div>
+
+            <div class="body w-lg-100">
+
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="hideoffensive" name="hide_offensive"{% if v.hide_offensive %} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
+                <label class="custom-control-label" for="hideoffensive"></label>
+              </div>
+
+              <span class="text-small-extra text-muted">Hide posts or collapse comments that include racial slurs. A full list of words can be found <a href="/assets/slurs.txt" target="_blank">here</a>.</span>
+
+            </div>
+
+          </div>
 
         </div>
 

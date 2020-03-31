@@ -25,9 +25,6 @@ def api_vote_post(post_id, x, v):
     if post.is_banned or post.is_deleted:
         abort(403)
 
-    if x==-1 and post.board.downvotes_disabled:
-        abort(403)
-
     #check for existing vote
     existing = db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
     if existing:
@@ -61,9 +58,6 @@ def api_vote_comment(comment_id, x, v):
     comment = get_comment(comment_id)
 
     if comment.is_banned or comment.is_deleted:
-        abort(403)
-
-    if x==-1 and comment.board.downvotes_disabled:
         abort(403)
 
     #check for existing vote

@@ -79,12 +79,54 @@
 {% endif %}
 
 {% block title %}
+
+<meta charset="utf-8" />
+<meta property="og:type" content="article" />
 {% if comment_info and not comment_info.is_banned and not linked_comment.is_deleted %}
 <title>@{{ comment_info.author.username }} comments in +{{ p.board.name }} on "{{ p.title }}"</title>
-<meta name="description" content="{{ comment_info.body }}">
+
+
+<meta property="og:article:author" content="@{{ comment_info.author.username }}" />
+<meta property="article:section" content="+{{ p.board.name }}" />
+<meta property="article:published_time" content="{{ comment_info.age_string }}" />
+<meta property="article:modified_time" content="{{ comment_info.edited_string }}" />
+<meta property="og:description" name="description" content="{{ comment_info.body_html }}" />
+<meta property="og:author" name="author" content="{{ comment_info.author.username }}" />
+<meta property="og:title" content="@{{ comment_info.author.username }} comments on {{ p.title }}" />
+<meta property="og:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}https://dev.ruqqus.com/assets/images/preview-images/ruqqus_og_image.png{% endif %}" />
+<meta property="og:url" content="https://ruqqus.com{{ comment_info.permalink }}" />
+<meta property="og:site_name" content="ruqqus.com" />
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@ruqqus">
+<meta name="twitter:title" content="@{{ comment_info.author.username }} comments on {{ p.title }}" />
+<meta name="twitter:creator" content="@{{ comment_info.author.username }}">
+<meta name="twitter:description" content="{{ comment_info.body_html }}" />
+<meta name="twitter:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}https://dev.ruqqus.com/assets/images/preview-images/ruqqus_og_image.png{% endif %}" />
+<meta name="twitter:url" content="https://ruqqus.com{{ p.permalink }}" />
+
 {% else %}
 <title>{{ p.title | safe}}</title>
-<meta name="description" content="posted {{ p.age_string }} by @{{ p.author.username }} in +{{ p.board.name }}">
+
+
+<meta property="og:article:author" content="@{{ p.author.username }}" />
+<meta propert="article:section" content="+{{ p.board.name }}" />
+<meta property="article:published_time" content="{{ p.age_string }}" />
+<meta property="article:modified_time" content="{{ p.edited_string }}" />
+<meta property="og:description" name="description" content="{{ p.body_html }}" />
+<meta property="og:author" name="author" content="{{ p.author.username }}" />
+<meta property="og:title" content="{{ p.title }}" />
+<meta property="og:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}https://dev.ruqqus.com/assets/images/preview-images/ruqqus_og_image.png{% endif %}" />
+<meta property="og:url" content="https://ruqqus.com{{ p.permalink }}" />
+<meta property="og:site_name" content="ruqqus.com" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:site" content="@ruqqus">
+<meta name="twitter:title" content="{{ p.title }}" />
+<meta name="twitter:creator" content="@{{ p.author.username }}">
+<meta name="twitter:description" content="{{ p.body_html }}" />
+<meta name="twitter:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb %}{{ p.thumb_url }}{% else %}https://dev.ruqqus.com/assets/images/preview-images/ruqqus_og_image.png{% endif %}" />
+<meta name="twitter:url" content="https://ruqqus.com{{ p.permalink }}" />
 {% endif %}
 {% endblock %}
 
@@ -211,6 +253,11 @@
           <li class="list-group-item"><a href="javascript:void(0)" onclick="togglePostEdit('{{ p.base36id }}')"><i class="fas fa-edit"></i>Edit</a></li>
 
           <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
+
+	{% if not p.board.over_18 %}
+	  <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/api/toggle_post_nsfw/{{ p.base36id }}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle NSFW</a></li>
+	{% endif %}
+
           {% endif %}
           {% if v and v.mods_anything and p.board.name == 'general' %}
           <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#yankPostModal" onclick="yank_postModal('{{ p.base36id }}','{{ p.author.username }}','{{ p.comment_count }}','{{ p.thumb_url }}','{{ p.title | js_str_escape }}','{{ p.author.permalink }}','{{ p.domain | js_str_escape }}','{{ p.age_string }}')" class="d-block"><i class="fas fa-hand-lizard"></i>Yank</a></li>
@@ -253,7 +300,8 @@
 
         {% if p.thumb_url and not p.embed_url %}
         <div class="card-header bg-transparent border-0 d-none d-md-flex flex-row flex-nowrap pl-3 p-0">
-          <a href="{{ p.url }}" target="_blank" rel="nofollow" {% if p.is_image %}data-toggle="modal" data-target="#expandImageModal"{% endif %}><img src="{{ p.thumb_url }}" class="post-img d-none d-md-block" alt="Unable to anonymously load image"{% if p.is_image %} onclick="expandDesktopImage('{{ p.thumb_url }}','{{ p.url }}')"{% endif %}></a>
+          <a href="{{ p.url }}" target="_blank" rel="nofollow"{% if p.is_image %} data-toggle="modal" data-target="#expandImageModal"{% endif %}><img src="{{ p.thumb_url }}" class="post-img d-none d-md-block" alt="Unable to load image"{% if p.is_image %} onclick="expandDesktopImage('{{ p.thumb_url }}','{{ p.url }}')"{% endif %}></a>
+
         </div>
         {% endif %}
 
@@ -323,6 +371,11 @@
                     <li class="list-inline-item"><a href="javascript:void(0)" onclick="togglePostEdit('{{ p.base36id }}')"><i class="fas fa-edit"></i>Edit</a></li>
 
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
+
+		{% if not p.board.over_18 %}
+		    <li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/toggle_post_nsfw/{{ p.base36id }}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle NSFW</a></li>
+		{% endif %}
+
                     {% endif %}
 
                     {% if v %}
@@ -366,10 +419,9 @@
               <span id="post-{{ p.base36id }}-score-none" class="score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">{{ score-adjust }}</span>
               <span id="post-{{ p.base36id }}-score-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">{{ score-1-adjust }}</span>
 
-              {% if not p.board.downvotes_disabled %}
+
               <div id="post-{{ p.base36id }}-down" class="arrow-down mx-auto" {% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}>
               </div>
-              {% endif %}
             </div>
 
             {% else %}
@@ -378,10 +430,8 @@
               <div id="post-{{ p.base36id }}-up" class="arrow-up mx-auto" onclick="location.href='/login';">
               </div>
               <span id="post-{{ p.base36id }}-score-none" class="score text-muted">{{ score-adjust }}</span>
-              {% if not p.board.downvotes_disabled %}
               <div id="post-{{ p.base36id }}-down" class="arrow-down mx-auto" onclick="location.href='/login';">
               </div>
-              {% endif %}
             </div>
 
             {% endif %}

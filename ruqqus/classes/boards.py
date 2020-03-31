@@ -28,7 +28,6 @@ class Board(Base, Stndrd, Age_times):
     creator_id=Column(Integer, ForeignKey("users.id"))
     ban_reason=Column(String(256), default=None)
     color=Column(String(8), default="603abb")
-    downvotes_disabled=Column(Boolean, default=False)
     restricted_posting=Column(Boolean, default=False)
     hide_banner_data=Column(Boolean, default=False)
     profile_nonce=Column(Integer, default=0)
@@ -38,7 +37,7 @@ class Board(Base, Stndrd, Age_times):
 
     moderators=relationship("ModRelationship", lazy="dynamic")
     subscribers=relationship("Subscription", lazy="dynamic")
-    submissions=relationship("Submission", lazy="dynamic", backref="board", primaryjoin="Board.id==Submission.board_id")
+    submissions=relationship("Submission", lazy="dynamic", primaryjoin="Board.id==Submission.board_id")
     contributors=relationship("ContributorRelationship", lazy="dynamic")
     bans=relationship("BanRelationship", lazy="dynamic")
     postrels=relationship("PostRelationship", lazy="dynamic")
@@ -90,7 +89,7 @@ class Board(Base, Stndrd, Age_times):
         return not self.postrels.filter_by(post_id=post.id).first()
 
     @cache.memoize(timeout=60)
-    def idlist(self, sort="hot", page=1, nsfw=False, v=None):
+    def idlist(self, sort="hot", page=1, nsfw=False, show_offensive=True, v=None):
 
         posts=self.submissions.filter_by(is_banned=False,
                                              is_deleted=False
@@ -98,6 +97,9 @@ class Board(Base, Stndrd, Age_times):
 
         if not nsfw:
             posts=posts.filter_by(over_18=False)
+
+        if not show_offensive:
+            posts = posts.filter_by(is_offensive=False)
 
         if self.is_private:
             if v and (self.can_view(v) or v.admin_level >= 4):
@@ -350,4 +352,35 @@ class Board(Base, Stndrd, Age_times):
     @property
     def css_dark_url(self):
         return f"{self.permalink}/dark/{self.color_nonce}.css"
+
+    @property
+    def json(self):
+
+        if self.is_banned:
+            return {'name':self.name,
+                    'permalink':self.permalink,
+                    'is_banned':True,
+                    'ban_reason':self.ban_reason,
+                    'id':self.base36id
+                    }
+        return {'name':self.name,
+                'profile_url':self.profile_url,
+                'banner_url':self.banner_url,
+                'created_utc':self.created_utc,
+                'mods_count':self.mods_count,
+                'subscriber_count':self.subscriber_count,
+                'permalink':self.permalink,
+                'description':self.description,
+                'description_html':self.description_html,
+                'over_18':self.over_18,
+                'is_banned':False,
+                'is_private':self.is_private,
+                'is_restricted':self.restricted_posting,
+                'id':self.base36id,
+                'banner_url':self.banner_url,
+                'profile_url':self.profile_url,
+                'color':self.color
+                }
+
+
     

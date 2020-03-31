@@ -1,4 +1,104 @@
 @charset "UTF-8";
+.bd-callout-primary {
+  border-left-color: #805AD5;
+}
+
+.bd-callout-secondary {
+  border-left-color: #383838;
+}
+
+.bd-callout-danger {
+  border-left-color: #E53E3E;
+}
+
+.bd-callout-dark {
+  border-left-color: #383838;
+}
+
+.bd-callout-white {
+  border-left-color: #FFFFFF;
+}
+
+.bd-callout-black {
+  border-left-color: #CFCFCF;
+}
+
+.bd-callout-light {
+  border-left-color: #35363e;
+}
+
+.bd-callout-success {
+  border-left-color: #38A169;
+}
+
+.bd-callout-muted {
+  border-left-color: #AAAAAA;
+}
+
+.bd-callout-downvote {
+  border-left-color: #38B2AC;
+}
+
+.bd-callout-upvote {
+  border-left-color: #805AD5;
+}
+
+.bd-callout-purple {
+  border-left-color: #805AD5;
+}
+
+.bd-callout-gold {
+  border-left-color: #ECC94B;
+}
+
+.bd-callout-admin {
+  border-left-color: #E53E3E;
+}
+
+.bd-callout-gray {
+  border-left-color: #383838;
+}
+
+.bd-callout-gray-100 {
+  border-left-color: #AAAAAA;
+}
+
+.bd-callout-gray-200 {
+  border-left-color: #8f8f90;
+}
+
+.bd-callout-gray-300 {
+  border-left-color: #383838;
+}
+
+.bd-callout-gray-400 {
+  border-left-color: #303030;
+}
+
+.bd-callout-gray-500 {
+  border-left-color: #272727;
+}
+
+.bd-callout-gray-600 {
+  border-left-color: #1f2023;
+}
+
+.bd-callout-gray-700 {
+  border-left-color: #181818;
+}
+
+.bd-callout-gray-800 {
+  border-left-color: #121212;
+}
+
+.bd-callout-gray-900 {
+  border-left-color: #0f0f0f;
+}
+
+.bd-callout-reddit {
+  border-left-color: #ED4630;
+}
+
 /*!
  * Bootstrap v4.4.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 The Bootstrap Authors

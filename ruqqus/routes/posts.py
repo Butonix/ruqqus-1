@@ -484,3 +484,22 @@ def embed_post_pid(pid):
         abort(410)
 
     return render_template("embeds/submission.html", p=post)
+
+@app.route("/api/toggle_post_nsfw/<pid>", methods=["POST"])
+@is_not_banned
+@validate_formkey
+def toggle_post_nsfw(pid, v):
+
+    post=get_post(pid)
+
+    if not post.author_id==v.id:
+        abort(403)
+
+    if post.board.over_18 and post.over_18:
+        abort(403)
+
+    post.over_18 = not post.over_18
+    db.add(post)
+    db.commit()
+
+    return "", 204

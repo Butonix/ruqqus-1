@@ -5,6 +5,8 @@ from .comments import *
 from .errors import *
 from .flagging import *
 from .front import *
+from .giphy import *
+from .json_api import *
 from .legal import *
 from .login import *
 from .posts import *
@@ -13,4 +15,3 @@ from .settings import *
 from .static import *
 from .users import *
 from .votes import *
-from .giphy import *
