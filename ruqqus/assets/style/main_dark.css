@@ -15156,7 +15156,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .card {
-  background-color: #1f2023;
+  background-color: #0f0f0f;
 }
 
 #frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type, #guild .posts .card:first-of-type, #settings-guild .posts .card:first-of-type {
@@ -15701,7 +15701,7 @@ blockquote p {
 }
 
 .comment-section {
-  background-color: #1f2023;
+  background-color: #0f0f0f;
 }
 
 .comment p {
@@ -17145,6 +17145,10 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   */
   .jumbotron-guild {
     height: 115px;
+  }
+
+  .card {
+    background-color: #1f2023;
   }
 
   .posts, #thread #main-content-col {

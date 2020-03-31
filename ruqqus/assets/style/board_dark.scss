@@ -1827,7 +1827,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .card {
-    background-color: $gray-600;
+    background-color: $gray-900;
 }
 
 #frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type, #guild .posts .card:first-of-type, #settings-guild .posts .card:first-of-type {
@@ -2385,7 +2385,7 @@ blockquote p {
 // Comments
 
 .comment-section {
-    background-color: $gray-600;
+    background-color: $gray-900;
 }
 
 .comment-actions {
@@ -3422,6 +3422,10 @@ body, #settings, #notifications, #submit{
 
 // Posts and thread
 
+.card {
+    background-color: $gray-600;
+}
+
 .posts, #thread #main-content-col {
     box-shadow: none;
     border-radius: 0;
@@ -3509,7 +3513,7 @@ body, #settings, #notifications, #submit{
 // Comments
 
 .comment-section {
-    background-color: $gray-900;
+    background-color: $gray-600;
 }
 
 .comment-section > .comment {
