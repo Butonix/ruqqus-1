@@ -14,15 +14,16 @@ def thumbnail_thread(pid):
 
     #step 1: see if post is image
 
-    print("thumbnail thread")
+    log("thumbnail thread")
 
     domain_obj=post.domain_obj
 
     if domain_obj and domain_obj.show_thumbnail:
-        #print("image post")
+
         x=requests.head(post.url)
 
         if x.headers.get("Content-Type","/").split("/")[0]=="image":
+            log("image post, using submitted url")
             post.is_image=True
             db.add(post)
             db.commit()
@@ -33,7 +34,7 @@ def thumbnail_thread(pid):
     x=requests.get(post.url, headers=headers)
     
     if x.status_code != 200 or not x.headers["Content-Type"].startswith(("text/html", "image/")):
-        #print(f'not html post, status {x.status_code}')
+        log(f'not html post, status {x.status_code}')
         return
     
     if x.headers["Content-Type"].startswith("image/"):
@@ -54,7 +55,7 @@ def thumbnail_thread(pid):
 
             imgs=soup.find_all('img', src=True)
             if imgs:
-                log("using first <img>")
+                log("using <img> elements")
                 pass
             else:
                 log('no image in doc')
