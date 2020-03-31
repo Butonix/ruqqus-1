@@ -381,6 +381,8 @@ def submit_post(v):
 
     db.commit()
 
+    new_post.determine_offensive()
+
     vote=Vote(user_id=user_id,
               vote_type=1,
               submission_id=new_post.id
