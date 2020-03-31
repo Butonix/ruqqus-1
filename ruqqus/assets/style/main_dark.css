@@ -13656,6 +13656,7 @@ pre {
 
 #thread .custom-gutters {
   padding: 0 15px;
+  background-color: #181818;
 }
 
 .custom-gutters {
@@ -15701,7 +15702,7 @@ blockquote p {
 }
 
 .comment-section {
-  background-color: #0f0f0f;
+  background-color: #181818;
 }
 
 .comment p {
