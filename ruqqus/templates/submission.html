@@ -93,7 +93,7 @@
 <meta property="og:description" name="description" content="{{ comment_info.body_html }}" />
 <meta property="og:author" name="author" content="{{ comment_info.author.username }}" />
 <meta property="og:title" content="@{{ comment_info.author.username }} comments on {{ p.title }}" />
-<meta property="og:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}https://dev.ruqqus.com/assets/images/preview-images/ruqqus_og_image.png{% endif %}" />
+<meta property="og:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}https://ruqqus.com/assets/images/preview-images/ruqqus_og_image.png{% endif %}" />
 <meta property="og:url" content="https://ruqqus.com{{ comment_info.permalink }}" />
 <meta property="og:site_name" content="ruqqus.com" />
 
@@ -102,7 +102,7 @@
 <meta name="twitter:title" content="@{{ comment_info.author.username }} comments on {{ p.title }}" />
 <meta name="twitter:creator" content="@{{ comment_info.author.username }}">
 <meta name="twitter:description" content="{{ comment_info.body_html }}" />
-<meta name="twitter:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}https://dev.ruqqus.com/assets/images/preview-images/ruqqus_og_image.png{% endif %}" />
+<meta name="twitter:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}https://ruqqus.com/assets/images/preview-images/ruqqus_og_image.png{% endif %}" />
 <meta name="twitter:url" content="https://ruqqus.com{{ p.permalink }}" />
 
 {% else %}
@@ -116,7 +116,7 @@
 <meta property="og:description" name="description" content="{{ p.body_html }}" />
 <meta property="og:author" name="author" content="{{ p.author.username }}" />
 <meta property="og:title" content="{{ p.title }}" />
-<meta property="og:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}https://dev.ruqqus.com/assets/images/preview-images/ruqqus_og_image.png{% endif %}" />
+<meta property="og:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}https://ruqqus.com/assets/images/preview-images/ruqqus_og_image.png{% endif %}" />
 <meta property="og:url" content="https://ruqqus.com{{ p.permalink }}" />
 <meta property="og:site_name" content="ruqqus.com" />
 
@@ -125,7 +125,7 @@
 <meta name="twitter:title" content="{{ p.title }}" />
 <meta name="twitter:creator" content="@{{ p.author.username }}">
 <meta name="twitter:description" content="{{ p.body_html }}" />
-<meta name="twitter:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb %}{{ p.thumb_url }}{% else %}https://dev.ruqqus.com/assets/images/preview-images/ruqqus_og_image.png{% endif %}" />
+<meta name="twitter:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb %}{{ p.thumb_url }}{% else %}https://ruqqus.com/assets/images/preview-images/ruqqus_og_image.png{% endif %}" />
 <meta name="twitter:url" content="https://ruqqus.com{{ p.permalink }}" />
 {% endif %}
 {% endblock %}
