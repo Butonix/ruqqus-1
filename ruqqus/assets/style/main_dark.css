@@ -15286,6 +15286,12 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   background-color: #1f2023;
 }
 
+.post-title {
+  font-size: 16px;
+  font-weight: 600;
+  word-break: break-word;
+}
+
 .post-title a {
   color: #CFCFCF;
 }
@@ -17498,12 +17504,6 @@ textarea {
 .white-overlay {
   background-color: rgba(0, 0, 0, 0.5) !important;
   background-image: linear-gradient(180deg, #ffffff00 25%, #1f2023 100%) !important;
-}
-
-.post-title {
-  font-size: 16px;
-  font-weight: 600;
-  word-break: break-word;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
