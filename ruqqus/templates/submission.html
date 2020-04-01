@@ -82,6 +82,7 @@
 
 <meta charset="utf-8" />
 <meta property="og:type" content="article" />
+
 {% if comment_info and not comment_info.is_banned and not linked_comment.is_deleted %}
 <title>@{{ comment_info.author.username }} comments in +{{ p.board.name }} on "{{ p.title }}"</title>
 
@@ -93,8 +94,8 @@
 <meta property="og:description" name="description" content="{{ comment_info.body_html }}" />
 <meta property="og:author" name="author" content="{{ comment_info.author.username }}" />
 <meta property="og:title" content="@{{ comment_info.author.username }} comments on {{ p.title }}" />
-<meta property="og:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}https://ruqqus.com/assets/images/preview-images/ruqqus_og_image.png{% endif %}" />
-<meta property="og:url" content="https://ruqqus.com{{ comment_info.permalink }}" />
+<meta property="og:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}{% endif %}" />
+<meta property="og:url" content="{{ comment_info.permalink | full_link }}" />
 <meta property="og:site_name" content="ruqqus.com" />
 
 <meta name="twitter:card" content="summary" />
@@ -102,8 +103,8 @@
 <meta name="twitter:title" content="@{{ comment_info.author.username }} comments on {{ p.title }}" />
 <meta name="twitter:creator" content="@{{ comment_info.author.username }}">
 <meta name="twitter:description" content="{{ comment_info.body_html }}" />
-<meta name="twitter:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}https://ruqqus.com/assets/images/preview-images/ruqqus_og_image.png{% endif %}" />
-<meta name="twitter:url" content="https://ruqqus.com{{ p.permalink }}" />
+<meta name="twitter:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}{% endif %}" />
+<meta name="twitter:url" content="{{ p.permalink | full_link }}" />
 
 {% else %}
 <title>{{ p.title | safe}}</title>
