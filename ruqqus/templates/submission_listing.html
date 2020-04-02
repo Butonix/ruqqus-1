@@ -59,7 +59,7 @@
 
         {% if p.embed_url %}
         <a href="{{ p.url }}" target="_blank" rel="nofollow">
-          <img src="/assets/images/icons/default_thumb_yt.png" class="post-img border-0" alt="generic youtube embed thumbnail">
+          <img src="{{ p.thumb_url if p.has_thumb else '/assets/images/icons/default_thumb_yt.png' }}" class="post-img border-0" alt="generic youtube embed thumbnail">
         </a>
         {% endif %}
 
