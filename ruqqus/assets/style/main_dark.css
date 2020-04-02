@@ -14448,6 +14448,7 @@ th {
 #thread .voting {
   min-width: 15px;
   margin-right: 15px;
+  overflow-wrap: normal;
 }
 
 #frontpage .voting, #search .voting, #userpage .voting, #guild .voting {
