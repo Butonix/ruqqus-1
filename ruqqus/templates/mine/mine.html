@@ -20,7 +20,7 @@
       {% if kind=="guilds" %}<i class="fas fa-university mr-1"></i>Guilds{% endif %}
       {% if kind=="users" %}<i class="fas fa-user mr-1"></i>Users{% endif %}
     </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
       {% if not kind=="guilds" %}<a class="dropdown-item" href="?kind=guilds"><i class="fas fa-university mr-2"></i>Guilds</a>{% endif %}
       {% if not kind=="users" %}<a class="dropdown-item" href="?kind=users"><i class="fas fa-user mr-2"></i>Users</a>{% endif %}
     </div>
@@ -32,7 +32,7 @@
 {% block content %}
 
 
-<div class="row row-cols-1 row-cols-md-3 mt-3">
+<div class="row row-cols-1 row-cols-md-3 mt-3 p-md-4">
 
   {% block maincontent %}
   {% endblock %}
