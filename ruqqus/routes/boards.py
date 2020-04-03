@@ -301,6 +301,9 @@ def mod_take_pid(pid, v):
 
     board=get_board(bid)
 
+    if board.is_banned:
+        abort(403)
+
     if not board.has_mod(v):
         abort(403)
 
