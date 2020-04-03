@@ -121,7 +121,7 @@ def thumbnail_thread(pid):
             file.write(chunk)
 
     i=PILimage.open(tempname)
-    i=i.resize((98,68))
+    i=i.resize((375,227))
     i.save(tempname)
 
     aws.upload_from_file(name, tempname)
