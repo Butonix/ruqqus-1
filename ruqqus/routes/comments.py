@@ -35,6 +35,13 @@ def post_pid_comment_cid(p_id, c_id, v=None):
     if comment.parent_submission != post.id:
         abort(404)
 
+    board=post.board
+
+    if board.is_banned and not (v and v.admin_level > 3):
+        return render_template("board_banned.html",
+                               v=v,
+                               b=board)
+
     if post.over_18 and not (v and v.over_18) and not session_over18(comment.board):
         t=int(time.time())
         return render_template("errors/nsfw.html",
