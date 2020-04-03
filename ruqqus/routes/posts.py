@@ -40,6 +40,11 @@ def post_base36id(base36id, v=None):
 
     board=post.board
 
+    if board.is_banned and not (v and v.admin_level > 3):
+        return render_template("board_banned.html",
+                               v=v,
+                               b=board)
+
     if post.over_18 and not (v and v.over_18) and not session_over18(board):
         t=int(time.time())
         return render_template("errors/nsfw.html",
@@ -48,11 +53,6 @@ def post_base36id(base36id, v=None):
                                lo_formkey=make_logged_out_formkey(t),
                                board=post.board
                                )
-
-    if board.is_banned and v.admin_level < 3:
-        return render_template("board_banned.html",
-                               v=v,
-                               b=board)
         
     return post.rendered_page(v=v)
 
