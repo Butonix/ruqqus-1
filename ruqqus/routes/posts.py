@@ -43,7 +43,8 @@ def post_base36id(base36id, v=None):
     if board.is_banned and not (v and v.admin_level > 3):
         return render_template("board_banned.html",
                                v=v,
-                               b=board)
+                               b=board,
+                               p=True)
 
     if post.over_18 and not (v and v.over_18) and not session_over18(board):
         t=int(time.time())

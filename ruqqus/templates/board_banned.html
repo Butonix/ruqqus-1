@@ -33,7 +33,8 @@
     <i class="fad fa-chess-rook fa-stack-1x"></i>
     <i class="fad text-danger fa-ban fa-stack-2x"></i>
 </span>
-			<h1 class="h5">+{{ b.name }} is banned</h1>
+			{% if p %}<h1 class="h5">That content is in the +{{ b.name }} guild.</h1>{% endif %}
+			<h1 class="h5">+{{ b.name }} is banned.</h1>
 			{% if b.ban_reason %}<p class="text-muted mb-5">{{ b.ban_reason }}</p>{% endif %}
 			<div><a href="/" class="btn btn-primary">Go to frontpage</a></div>
 		</div>
