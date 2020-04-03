@@ -17,11 +17,11 @@
   <div class="text-small font-weight-bold mr-2">Show</div>
   <div class="dropdown dropdown-actions">
     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      {% if kind=="guilds" %}<i class="fas fa-university mr-1"></i>Guilds{% endif %}
+      {% if kind=="guilds" %}<i class="fas fa-chess-rook mr-1"></i>Guilds{% endif %}
       {% if kind=="users" %}<i class="fas fa-user mr-1"></i>Users{% endif %}
     </button>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-      {% if not kind=="guilds" %}<a class="dropdown-item" href="?kind=guilds"><i class="fas fa-university mr-2"></i>Guilds</a>{% endif %}
+      {% if not kind=="guilds" %}<a class="dropdown-item" href="?kind=guilds"><i class="fas fa-chess-rook mr-2"></i>Guilds</a>{% endif %}
       {% if not kind=="users" %}<a class="dropdown-item" href="?kind=users"><i class="fas fa-user mr-2"></i>Users</a>{% endif %}
     </div>
   </div>
