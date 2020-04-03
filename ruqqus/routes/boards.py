@@ -331,7 +331,7 @@ def mod_take_pid(pid, v):
 @validate_formkey
 def mod_invite_username(bid, board, v):
 
-    username=request.form.get("username")
+    username=request.form.get("username",'').lstrip('@')
     user=get_user(username)
 
     if not board.can_invite_mod(user):
