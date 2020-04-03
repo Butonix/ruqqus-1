@@ -131,10 +131,6 @@ class Board(Base, Stndrd, Age_times):
         return posts
 
     def rendered_board_page(self, v, sort="hot", page=1):
-
-        if self.is_banned:
-            if not (v and v.admin_level>=3):
-                return render_template("board_banned.html", v=v, b=self)
         
         ids=self.idlist(sort=sort,
                         page=page,
