@@ -327,6 +327,9 @@ class User(Base, Stndrd):
         if self.is_banned and (not v or v.admin_level < 3):
             return render_template("userpage_banned.html", u=self, v=v)
 
+        if self.is_private and (not v or (v.id!=self.id and not v.admin_level<3)):
+            return render_template("userpage_private.html", u=self, v=v)
+
         page=int(request.args.get("page","1"))
         page=max(page, 1)
 
@@ -391,6 +394,9 @@ class User(Base, Stndrd):
 
         if self.is_banned and (not v or v.admin_level < 3):
             return render_template("userpage_banned.html", u=self, v=v)
+
+        if self.is_private and (not v or (v.id!=self.id and not v.admin_level<3)):
+            return render_template("userpage_private.html", u=self, v=v)
         
         page=int(request.args.get("page","1"))
 
