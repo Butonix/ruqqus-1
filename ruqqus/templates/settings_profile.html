@@ -213,7 +213,7 @@
 
               <input type="hidden" name="formkey" value="{{ v.formkey }}">
 
-              <div class="d-lg-flex">
+              <div class="d-lg-flex border-bottom">
 
                 <div class="title w-lg-25">
                   <label for="over18">View NSFW Content</label>
@@ -231,6 +231,7 @@
                 </div>
 
               </div>
+
               <div class="d-lg-flex">
 
                 <div class="title w-lg-25">
@@ -256,33 +257,11 @@
 
             <p class="text-small text-muted">Edit how others see you on Ruqqus.</p>
 
-            <div class="settings-section rounded">
-
-              <div class="d-lg-flex">
-
-                <div class="title w-lg-25">
-                  <label for="privateswitch">Private Mode</label>
-                </div>
-
-                <div class="body w-lg-100">
-
-                  <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
-                    <label class="custom-control-label" for="privateswitch"></label>
-                  </div>
-
-                  <span class="text-small-extra text-muted">This will hide your post and comment history from others.</span>
-
-                </div>
-
-              </div>
-	    </div>
-
             <div class="settings-section rounded mb-0">
 
               <input type="hidden" name="formkey" value="{{ v.formkey }}">
 
-              <div class="body d-lg-flex">
+              <div class="body d-lg-flex border-bottom">
 
                 <label for="bio" class="text-black w-lg-25">Bio</label>
 
@@ -301,7 +280,7 @@
 
               <hr>
 
-              <div class="body d-lg-flex">
+              <div class="body d-lg-flex border-bottom">
                 <label for="bio" class="text-black w-lg-25">Title</label>
 
                 <div class="w-lg-100">
@@ -320,7 +299,26 @@
 
              </div>
 
-             <div class="footer">
+             <div class="d-lg-flex">
+
+              <div class="title w-lg-25">
+                <label for="privateswitch">Private Mode</label>
+              </div>
+
+              <div class="body w-lg-100">
+
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
+                  <label class="custom-control-label" for="privateswitch"></label>
+                </div>
+
+                <span class="text-small-extra text-muted">This will hide your post and comment history from others. Posts and comments will not be hidden from Ruqqus search and threads.</span>
+
+              </div>
+
+            </div>
+
+            <div class="footer">
 
               <div class="d-flex">
 
