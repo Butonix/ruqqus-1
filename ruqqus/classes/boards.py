@@ -92,8 +92,9 @@ class Board(Base, Stndrd, Age_times):
     def idlist(self, sort="hot", page=1, nsfw=False, show_offensive=True, v=None):
 
         posts=self.submissions.filter_by(is_banned=False,
-                                             is_deleted=False
-                                             )
+                                         is_deleted=False,
+                                         is_pinned=False,
+                                        )
 
         if not nsfw:
             posts=posts.filter_by(over_18=False)
@@ -170,6 +171,14 @@ class Board(Base, Stndrd, Age_times):
         else:
             posts=[]
 
+        if page=1:
+            stickies=self.submissions(is_banned=False,
+                                      is_deleted=False,
+                                      is_pinned=True).order_by(Submission.id.asc()
+                                                               ).limit(4)
+            stickies=[x for x in stickies]
+            posts=stickies+posts
+
         
         is_subscribed=(v and self.has_subscriber(v))
 
@@ -180,7 +189,7 @@ class Board(Base, Stndrd, Age_times):
                                next_exists=next_exists,
                                sort_method=sort,
                                page=page,
-                               is_subscribed=is_subscribed)        
+                               is_subscribed=is_subscribed)
 
 
     def has_mod(self, user):
