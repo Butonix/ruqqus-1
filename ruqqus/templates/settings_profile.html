@@ -256,6 +256,25 @@
 
             <p class="text-small text-muted">Edit how others see you on Ruqqus.</p>
 
+              <div class="d-lg-flex">
+
+                <div class="title w-lg-25">
+                  <label for="over18">Private Mode</label>
+                </div>
+
+                <div class="body w-lg-100">
+
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="over18" name="private"{% if v.is_private%} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
+                    <label class="custom-control-label" for="private"></label>
+                  </div>
+
+                  <span class="text-small-extra text-muted">This will hide your post and comment history from others.</span>
+
+                </div>
+
+              </div>
+
             <div class="settings-section rounded mb-0">
 
               <input type="hidden" name="formkey" value="{{ v.formkey }}">

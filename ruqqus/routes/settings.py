@@ -34,6 +34,10 @@ def settings_profile_post(v):
         v.hide_offensive=bool(request.form.get("hide_offensive", None))
         cache.delete_memoized(User.idlist, v)
         
+    if request.form.get("private") != v.is_private:
+        updated=True
+        v.is_private=bool(request.form.get("private", None))
+        
     if request.form.get("bio") != v.bio:
         updated=True
         bio = request.form.get("bio")[0:256]
