@@ -47,6 +47,7 @@ class User(Base, Stndrd):
     referred_by=Column(Integer, default=None)
     is_banned=Column(Integer, default=0)
     ban_reason=Column(String, default="")
+    feed_nonce=Column(Integer, default=0)
     login_nonce=Column(Integer, default=0)
     title_id=Column(Integer, ForeignKey("titles.id"), default=None)
     title=relationship("Title")
@@ -437,12 +438,7 @@ class User(Base, Stndrd):
                                is_following=is_following)
     @property
     def feedkey(self):
-        feedkey_hashstr = f"{self.username}{self.id}{self.created_utc}"
-
-
-        return hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
-                           msg=bytes(feedkey_hashstr, "utf-16")
-                           ).hexdigest()
+        return generate_hash(f"{self.username}{self.id}{self.feed_nonce}{self.created_utc}")
 
 
     @property

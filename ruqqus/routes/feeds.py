@@ -3,7 +3,7 @@ from ruqqus.__main__ import app, db, limiter
 from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 from ruqqus.classes import *
-from ruqqus.helpers import *
+from ruqqus.helpers.security import *
 
 @app.route('/feeds/<sort>')
 def feeds(sort=None):
@@ -44,7 +44,7 @@ def feeds(sort=None, username=None, key=None):
 
     user = db.query(User).filter_by(username=username).first()
 
-    if not hmac.compare_digest(user.feedkey, key):
+    if not validate_hash(user.feedkey, key):
         ##invalid feedkey
         return abort(501)
 
