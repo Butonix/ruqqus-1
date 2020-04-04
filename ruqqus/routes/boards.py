@@ -1089,7 +1089,7 @@ def siege_guild(v):
 @auth_required
 @is_guildmaster
 @validate_formkey
-def mod_toggle_post_pin(bid, pid, board, v):
+def mod_toggle_post_pin(bid, pid, x, board, v):
 
     post=get_post(pid)
 
