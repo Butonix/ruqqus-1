@@ -349,7 +349,7 @@
                 <small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold('post-edit-box-{{ p.base36id }}')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> 
                 <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('post-edit-box-{{ p.base36id }}')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> 
                 <small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote('post-edit-box-{{ p.base36id }}')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small>
-                <small class="format"><span class="font-weight-bold text-uppercase" style="font-size: 16px;" onclick="getGif();commentForm('post-edit-box-{{ p.base36id }}')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Add GIF">GIF</span></small> 
+                <small class="format"><span class="font-weight-bolder text-uppercase" onclick="getGif();commentForm('post-edit-box-{{ p.base36id }}')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Add GIF">GIF</span></small> 
                 <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
                 <a href="javascript:void(0)" onclick="togglePostEdit('{{ p.base36id }}')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
                 <button form="post-edit-form-{{ p.base36id }}" class="btn btn-primary ml-2">Save Edit</button> </div> </form>
@@ -545,7 +545,7 @@
           <small class="format pl-0"><i class="fas fa-bold" onclick="makeBold('comment-form')" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Bold"></i></small>
           <small class="format"><i class="fas fa-italic" onclick="makeItalics('comment-form')" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Italicize"></i></small>
           <small class="format"><i class="fas fa-quote-right" onclick="makeQuote('comment-form')" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Quote"></i></small>
-          <small class="format"><span class="font-weight-bold text-uppercase" style="font-size:16px;" onclick="getGif();commentForm('comment-form')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Add GIF">GIF</span></small> 
+          <small class="format"><span class="font-weight-bolder text-uppercase" onclick="getGif();commentForm('comment-form')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Add GIF">GIF</span></small> 
           <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
           <button form="reply-to-{{ p.fullname }}" class="btn btn-primary btn ml-auto">Comment</button>
         </div>
