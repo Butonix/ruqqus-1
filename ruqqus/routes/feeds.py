@@ -14,13 +14,14 @@ def feeds(sort=None):
                                         Submission.is_deleted == False,
                                         Submission.stickied == False,
                                         Submission.is_public == True)
+    sort=sort.lower()
 
     if sort == "hot":
-        posts = posts.order_by(text("submissions.rank_hot desc"))
-    elif sort == "fiery":
-        posts = posts.order_by(text("submissions.rank_fiery desc"))
+        posts = posts.order_by(Submission.rank_hot.desc())
+    elif sort == "disputed":
+        posts = posts.order_by(Submission.rank_fiery.desc())
     elif sort == "top":
-        posts = posts.order_by(text("submissions.score desc"))
+        posts = posts.order_by(Submission.score.desc())
 
 
     feed = AtomFeed(title=f'Top 5 {sort} Posts from ruqqus',
@@ -43,6 +44,7 @@ def feeds(sort=None, username=None, key=None):
         return abort(501)
 
     user = db.query(User).filter_by(username=username).first()
+    sort = sort.lower()
 
     if not validate_hash(key, user.feedkey):
         ##invalid feedkey
@@ -58,11 +60,11 @@ def feeds(sort=None, username=None, key=None):
                                         Submission.is_public == True)
 
     if sort == "hot":
-        posts = posts.order_by(text("submissions.rank_hot desc"))
-    elif sort == "fiery":
-        posts = posts.order_by(text("submissions.rank_fiery desc"))
-    elif sort == "top" or sort == None:
-        posts = posts.order_by(text("submissions.score desc"))
+        posts = posts.order_by(Submission.rank_hot.desc())
+    elif sort == "disputed":
+        posts = posts.order_by(Submission.rank_fiery.desc())
+    elif sort == "top":
+        posts = posts.order_by(Submission.score.desc())
 
 
     feed = AtomFeed(title=f'Top 5 {sort} Posts from ruqqus',
