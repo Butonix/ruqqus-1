@@ -32,19 +32,13 @@
      {% endfor%}
    </div>
    {% else %}
-   <div class="text-center py-5">
-
-    <img src="/assets/images/illustrations/searching.png" class="empty-state-img mb-3" alt="empty state">
+   <div class="text-center py-7">
 
     {% if v and v.id == u.id %}
-    <div class="text-center py-7">
       <div class="h4 p-2">You haven't made a ruckus yet...</div>
       <div class="p-2"><a href="/submit" class="btn btn-primary">Go to frontpage</a></div>
-    </div>
     {% else %}
-    <div class="text-center py-7">
       <div class="h4 p-2">@{{ u.username }} hasn't made a ruckus yet...</div>
-    </div>  
     {% endif %}
   </div>
   {% endif %}
