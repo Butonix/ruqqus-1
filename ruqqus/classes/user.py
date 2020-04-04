@@ -257,7 +257,7 @@ class User(Base, Stndrd):
     @property
     def boards_modded(self):
 
-        return [x.board for x in self.moderates.filter_by(accepted=True).all()]
+        return [x.board for x in self.moderates.filter_by(accepted=True).order_by(Board.name.asc()).all()]
 
     @property
     @cache.memoize(timeout=3600) #1hr cache time for user rep
