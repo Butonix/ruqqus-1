@@ -15481,6 +15481,10 @@ ul.comment-section {
   color: #A0AEC0;
 }
 
+.comment-write .comment-format .format:hover {
+  color: #718096;
+}
+
 .comment .comment-collapse {
   padding-right: 15px;
 }
