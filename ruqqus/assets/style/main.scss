@@ -2495,6 +2495,10 @@ ul.comment-section {
     color: $gray-500;
 }
 
+.comment-write .comment-format .format:hover {
+    color: $muted;
+}
+
 .comment .comment-collapse {
     padding-right: 15px;
 }
