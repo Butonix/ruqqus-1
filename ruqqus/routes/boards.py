@@ -1089,7 +1089,7 @@ def siege_guild(v):
 @auth_required
 @is_guildmaster
 @validate_formkey
-def mod_toggle_post_pin(bid, pid, x, board, v):
+def mod_toggle_post_pin(bid, pid, board, v):
 
     post=get_post(pid)
 
@@ -1100,6 +1100,8 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
         post.is_pinned=bool(int(x))
     except:
         abort(422)
+
+    cache.delete_memoized(Board.idlist, post.board)
 
     db.add(post)
     db.commit()
