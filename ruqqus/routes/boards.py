@@ -1097,9 +1097,16 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
         abort(422)
 
     try:
-        post.is_pinned=bool(int(x))
+        x=bool(int(x))
     except:
         abort(422)
+
+    if x and board.submissions.filter_by(is_pinned=True).count()>=4:
+        return jsonify({"error":f"+{board.name} already has the maximum number of pinned posts."}), 409
+
+
+    post.is_pinned=x
+
 
     cache.delete_memoized(Board.idlist, post.board)
 
