@@ -9,6 +9,9 @@
 {% block title %}
 <title>{{ u.username }}'s profile</title>
 <meta name="description" content="on Ruqqus">
+{% if u.is_private %}
+<meta name="robots" content="noindex">
+{% endif %}
 {% endblock %}
 
 <!-- Left Sidebar (navigation-purposes, hidden on devices smaller than "large") -->
@@ -200,6 +203,9 @@
 {% endblock %}
 
 {% block adminpanel %}
+{% if u.is_private %}
+<p>User has private mode enabled.</p>
+{% endif %}
 <p>user id: {{ u.base36id }}</p>
 {% if v.admin_level >=3 and v.admin_level > u.admin_level %}
 {% if u.is_banned %}

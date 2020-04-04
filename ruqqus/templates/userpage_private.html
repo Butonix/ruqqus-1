@@ -1,35 +1,5 @@
 {% extends "userpage.html" %}
 
-{% block adminpanel %}
-<p>User has private mode enabled.</p>
-<p>user id: {{ u.base36id }}</p>
-{% if v.admin_level >=3 and v.admin_level > u.admin_level %}
-{% if u.is_banned %}
-<form action="/api/unban_user/{{ u.id }}" method="post">
-  <input type="hidden" name="formkey", value="{{ v.formkey }}">
-  <input type="submit" class="btn btn-success" value="Unban user">
-</form>
-{% else %}
-<form action="/api/ban_user/{{ u.id }}", method="post">
-  <input type="hidden" name="formkey", value="{{ v.formkey }}">
-  <input id="user-ban-reason" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit').disabled=false">
-  <input id="user-ban-submit" type="submit" class="btn btn-warning" value="Ban user" disabled>
-</form>
-{% endif %}
-{% endif %}
-{% if u.is_banned %}
-<p>Banned by: <a href="{{ u.banned_by.permalink}}">@{{ u.banned_by.username }}</a></p>
-<p>Reason: {{ u.ban_reason }}</p>
-{% endif %}
-{% if v.admin_level >=4 %}
-<p>Alts:</p>
-<ul>
-  {% for account in u.alts %}
-  <li><a href="{{ account.permalink }}">@{{ account.username }}</a></li>
-  {% endfor %}
-</ul>
-{% endif %}
-{% endblock %}
 
 {% block content %}
 
