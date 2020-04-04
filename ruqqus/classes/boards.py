@@ -172,7 +172,7 @@ class Board(Base, Stndrd, Age_times):
             posts=[]
 
         if page==1:
-            stickies=self.submissions(is_banned=False,
+            stickies=self.submissions.filter_by(is_banned=False,
                                       is_deleted=False,
                                       is_pinned=True).order_by(Submission.id.asc()
                                                                ).limit(4)
