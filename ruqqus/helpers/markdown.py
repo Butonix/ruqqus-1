@@ -8,7 +8,7 @@ import re
 
 class UserMention(SpanToken):
 
-    pattern=re.compile("(^|\s)@(\w{3,25})")
+    pattern=re.compile("(^|\W)@(\w{3,25})")
     parse_inner=False
     
     def __init__(self, match_obj):
