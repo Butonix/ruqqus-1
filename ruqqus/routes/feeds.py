@@ -72,4 +72,5 @@ def feeds(sort=None, username=None, key=None):
                  updated=datetime.fromtimestamp(post.created_utc),
                  published=datetime.fromtimestamp(post.created_utc))
         count += 1
+
     return feed.get_response()

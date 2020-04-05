@@ -182,14 +182,20 @@
         <div class="d-lg-flex">
 
           <div class="title w-lg-25">
-            <label for="referral_code">Custom Feed</label>
+            <label for="referral_code">Custom User Feed</label>
           </div>
 
           <div class="body w-lg-100">
 
             <input type="text" readonly="" class="form-control copy-link" id="rss_feed" value="https://ruqqus.com/feeds/@{{ v.username }}/{{ v.feedkey }}/top" data-clipboard-text="https://ruqqus.com/feeds/@{{ v.username }}/{{ v.feedkey }}/top">
+              <form action="{{ '/settings/new_feedkey' | full_link }}" method="post" enctype="multipart/form-data">
+                  <input type="hidden" name="formkey" value="{{ v.formkey }}">
+                  <label class="btn btn-secondary text-capitalize mr-2 mb-0">
+                    Generate New Form Key<input type="file" hidden name="banner" onchange="form.submit()">
+                  </label>
+                </form>
 
-            <div class="text-small-extra text-muted mt-3">You can change the feed by replacing "top" with either hot, or fiery.</div>
+            <div class="text-small-extra text-muted mt-3">You can change the feed by replacing "top" with either hot, or disputed.</div>
 
           </div>
 
