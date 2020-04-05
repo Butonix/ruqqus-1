@@ -23,7 +23,7 @@
           dswitch.classList.remove("fa-toggle-off");
           dswitch.classList.add("fa-toggle-on");
         }
-      );
+        );
     }
     else {
       post("/settings/dark_mode/0",
@@ -32,7 +32,7 @@
           dswitch.classList.remove("fa-toggle-on");
           dswitch.classList.add("fa-toggle-off");
         }
-      );
+        );
 
     }
   }
@@ -47,13 +47,13 @@
 {% endblock %}
 
 {% block darkswitchMobile %}
-      {% if v and v.can_use_darkmode and session.get("dark_mode_enabled")%}
-      <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css_board()"><i class="fad fa-toggle-on fa-width-rem mr-3" id="dark-switch"></i>Dark mode</a></li>
-      {% elif v and v.can_use_darkmode %}
-      <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css_board()"><i class="fad fa-toggle-off fa-width-rem mr-3" id="dark-switch"></i>Dark mode</a></li>
-      {% else %}
-      <li class="nav-item"><a class="nav-link" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem mr-3"></i>Dark mode</a></li>
-      {% endif %}
+{% if v and v.can_use_darkmode and session.get("dark_mode_enabled")%}
+<li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css_board()"><i class="fad fa-toggle-on fa-width-rem mr-3" id="dark-switch"></i>Dark mode</a></li>
+{% elif v and v.can_use_darkmode %}
+<li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css_board()"><i class="fad fa-toggle-off fa-width-rem mr-3" id="dark-switch"></i>Dark mode</a></li>
+{% else %}
+<li class="nav-item"><a class="nav-link" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem mr-3"></i>Dark mode</a></li>
+{% endif %}
 {% endblock %}
 
 {% block sidebarblock %}
@@ -255,25 +255,25 @@
 
           <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
 
-	{% if not p.board.over_18 %}
-	  <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/api/toggle_post_nsfw/{{ p.base36id }}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle NSFW</a></li>
-	{% endif %}
+          {% if not p.board.over_18 %}
+          <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/api/toggle_post_nsfw/{{ p.base36id }}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle NSFW</a></li>
+          {% endif %}
 
           {% endif %}
           {% if v and v.mods_anything and p.board.name == 'general' %}
           <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#yankPostModal" onclick="yank_postModal('{{ p.base36id }}','{{ p.author.username }}','{{ p.comment_count }}','{{ p.thumb_url }}','{{ p.title | js_str_escape }}','{{ p.author.permalink }}','{{ p.domain | js_str_escape }}','{{ p.age_string }}')" class="d-block"><i class="fas fa-hand-lizard"></i>Yank</a></li>
           {% endif %}
           {% if v %}
-	  {% if v.id==p.author_id and p.board_id not in [1, p.original_board_id] %}
+          {% if v.id==p.author_id and p.board_id not in [1, p.original_board_id] %}
           <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/user/kick/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="fas fa-chess-rook"></i>Remove from +{{ p.board.name }}</a></li>
-	  {% endif %}
+          {% endif %}
           {% if p.board.has_mod(v) %}
 
-		{% if p.is_pinned %}
+          {% if p.is_pinned %}
           <li class="list-group-item"><a class="d-block text-info" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack text-info fa-rotate--45"></i>Unpin</a></li>
-		{% elif p.board.can_pin_another %}
+          {% elif p.board.can_pin_another %}
           <li class="list-group-item"><a class="d-block text-info" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack text-info fa-rotate--45"></i>Pin</a></li>
-		{% endif %}
+          {% endif %}
 
           <li class="list-group-item"><a class="d-block text-danger" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board.base36id }}/{{ p.base36id }}', callback=function(){window.location.reload(true)})"><i class="fas fa-times text-danger"></i>Kick</a></li>
           {% endif %}
@@ -380,9 +380,9 @@
 
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
 
-		{% if not p.board.over_18 %}
-		    <li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/toggle_post_nsfw/{{ p.base36id }}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle NSFW</a></li>
-		{% endif %}
+                    {% if not p.board.over_18 %}
+                    <li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/toggle_post_nsfw/{{ p.base36id }}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle NSFW</a></li>
+                    {% endif %}
 
                     {% endif %}
 
@@ -391,17 +391,17 @@
                     {% if v.mods_anything and p.board_id == 1 %}
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#yankPostModal" onclick="yank_postModal('{{ p.base36id }}','{{ p.author.username }}','{{ p.comment_count }}','{{ p.title | js_str_escape }}','{{ p.author.permalink }}','{{ p.domain | js_str_escape }}','{{ p.age_string }}')" class="d-block"><i class="fas fa-hand-lizard"></i>Yank</a></li>
                     {% endif %}
-	  {% if v.id==p.author_id and p.board_id not in [1, p.original_board_id] %}
-          <li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/user/kick/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="fas fa-chess-rook"></i>Remove from +{{ p.board.name }}</a></li>
-	  {% endif %}
+                    {% if v.id==p.author_id and p.board_id not in [1, p.original_board_id] %}
+                    <li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/user/kick/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="fas fa-chess-rook"></i>Remove from +{{ p.board.name }}</a></li>
+                    {% endif %}
 
                     {% if p.board.has_mod(v) %}
 
-		{% if p.is_pinned %}
-          <li class="list-inline-item"><a class="d-block text-info" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack text-info fa-rotate--45"></i>Unpin</a></li>
-		{% elif p.board.can_pin_another %}
-          <li class="list-inline-item"><a class="d-block text-info" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack text-info fa-rotate--45"></i>Pin</a></li>
-		{% endif %}
+                    {% if p.is_pinned %}
+                    <li class="list-inline-item"><a class="d-block text-info" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack text-info fa-rotate--45"></i>Unpin</a></li>
+                    {% elif p.board.can_pin_another %}
+                    <li class="list-inline-item"><a class="d-block text-info" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack text-info fa-rotate--45"></i>Pin</a></li>
+                    {% endif %}
 
 
                     <li class="list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board.base36id }}/{{ p.base36id }}', callback=function(){window.location.reload(true)})"><i class="fas fa-times text-danger"></i>Kick</a></li>
@@ -616,9 +616,9 @@
 {% endblock %}
 
 {% block GIFtoast %}
-  <div class="toast" id="toast-error-gif" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
-    <div class="toast-body bg-danger text-center text-white">
-      <i class="fas fa-exclamation-circle mr-2"></i>Unable to snag gifs :(
-    </div>
+<div class="toast" id="toast-error-gif" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-danger text-center text-white">
+    <i class="fas fa-exclamation-circle mr-2"></i>Unable to snag gifs :(
   </div>
+</div>
 {% endblock %}
