@@ -4,6 +4,7 @@ from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 from ruqqus.classes import *
 from ruqqus.helpers.security import *
+from ruqqus.helpers.jinja2 import full_link
 
 @app.route('/feeds/<sort>')
 def feeds(sort=None):
@@ -19,7 +20,7 @@ def feeds(sort=None):
     if sort == "hot":
         posts = posts.order_by(Submission.rank_hot.desc())
     elif sort == "disputed":
-        posts = posts.order_by(Submission.rank_fiery.desc())
+        posts = posts.order_by(Submission.score_disputed.desc())
     elif sort == "top":
         posts = posts.order_by(Submission.score.desc())
 
@@ -62,7 +63,7 @@ def feeds(sort=None, username=None, key=None):
     if sort == "hot":
         posts = posts.order_by(Submission.rank_hot.desc())
     elif sort == "disputed":
-        posts = posts.order_by(Submission.rank_fiery.desc())
+        posts = posts.order_by(Submission.score_disputed.desc())
     elif sort == "top":
         posts = posts.order_by(Submission.score.desc())
 
