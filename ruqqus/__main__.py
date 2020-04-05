@@ -23,8 +23,7 @@ _version = "2.6.2"
 
 app = Flask(__name__,
             template_folder='./templates',
-            static_folder='./static',
-            host_matching=True
+            static_folder='./static'
            )
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 
