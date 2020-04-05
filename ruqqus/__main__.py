@@ -43,7 +43,6 @@ app.config["PERMANENT_SESSION_LIFETIME"]=60*60*24*365
 app.jinja_env.cache = {}
 
 app.config["UserAgent"]="Ruqqus webserver ruqqus.com"
-app.url_map.host_matching = True
 
 if "localhost" in app.config["SERVER_NAME"]:
     app.config["CACHE_TYPE"]="null"
