@@ -173,7 +173,7 @@ def shortlink_redirect(pid, cid=None):
 
         comment=get_comment(cid)
         if comment.post.base36id != pid:
-            abort 404
+            abort(404)
         return redirect(comment.permalink)
 
     post=get_post(pid)
