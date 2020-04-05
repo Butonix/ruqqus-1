@@ -265,23 +265,23 @@
           {% endif %}
           {% if v %}
           {% if v.id==p.author_id and p.board_id not in [1, p.original_board_id] %}
-          <button class="btn btn-white btn-block btn-lg text-lg text-left" onclick="post('/user/kick/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="fas fa-chess-rook text-center text-muted mr-3"></i>Remove from +{{ p.board.name }}</button>
+          <button class="btn btn-white btn-block btn-lg text-danger text-lg text-left" onclick="post('/user/kick/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="fas fa-chess-rook text-center text-muted mr-3"></i>Remove from +{{ p.board.name }}</button>
           {% endif %}
           {% if p.board.has_mod(v) %}
 
           {% if p.is_pinned %}
-          <button class="btn btn-white btn-block btn-lg text-lg text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-center text-info mr-3"></i>Unpin</button>
+          <button class="btn btn-white btn-block btn-lg text-info text-lg text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-center text-info mr-3"></i>Unpin</button>
           {% elif p.board.can_pin_another %}
-          <button class="btn btn-white btn-block btn-lg text-lg text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-center text-info mr-3"></i>Pin</button>
+          <button class="btn btn-white btn-block btn-lg text-info text-lg text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-center text-info mr-3"></i>Pin</button>
           {% endif %}
 
-          <button class="btn btn-white btn-block btn-lg text-lg text-left" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board.base36id }}/{{ p.base36id }}', callback=function(){window.location.reload(true)})"><i class="fas fa-times text-center text-danger mr-3"></i>Kick</button>
+          <button class="btn btn-white btn-block btn-lg text-danger text-lg text-left" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board.base36id }}/{{ p.base36id }}', callback=function(){window.location.reload(true)})"><i class="fas fa-times text-center text-danger mr-3"></i>Kick</button>
           {% endif %}
           {% if v.admin_level >=3 %}
           {% if p.is_banned %}
-          <button class="btn btn-white btn-block btn-lg text-lg text-left" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="far fa-check text-center text-success mr-3"></i>Approve</button>
+          <button class="btn btn-white btn-block btn-lg text-success text-lg text-left" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="far fa-check text-center text-success mr-3"></i>Approve</button>
           {% else %}
-          <button class="btn btn-white btn-block btn-lg text-lg text-left" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="far fa-ban text-center text-danger mr-3"></i>Remove</button>
+          <button class="btn btn-white btn-block btn-lg text-danger text-lg text-left" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="far fa-ban text-center text-danger mr-3"></i>Remove</button>
           {% endif %}
           {% endif %}
           {% endif %}
