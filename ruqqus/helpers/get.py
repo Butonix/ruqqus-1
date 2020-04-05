@@ -45,19 +45,19 @@ def get_guild(name, graceful=False):
             return None
     return x
 
-def get_domain(domain):
+def get_domain(s):
 
     #parse domain into all possible subdomains
-    parts=domain.split(".")
+    parts=s.split(".")
     domain_list=set([])
     for i in range(len(parts)):
         new_domain=parts[i]
         for j in range(i+1, len(parts)):
             new_domain+="."+parts[j]
 
-            domain_list.add(new_domain)
+        domain_list.add(new_domain)
 
-    domain_list=list(domain_list)
+    domain_list=tuple(list(domain_list))
 
     doms=[x for x in db.query(Domain).filter(Domain.domain.in_(domain_list)).all()]
 
@@ -78,3 +78,13 @@ def get_title(x):
 
     else:
         return title
+
+
+def get_mod(uid, bid):
+
+    mod=db.query(ModRelationship).filter_by(board_id=bid,
+                                            user_id=uid,
+                                            accepted=True,
+                                            invite_rescinded=False).first()
+
+    return mod

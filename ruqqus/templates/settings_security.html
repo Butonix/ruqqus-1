@@ -33,20 +33,42 @@
 
     <div class="mt-3">
 
-      <h1>Settings</h1>
+      <h1 class="d-none d-md-block">Settings</h1>
+
+      <h2 class="h3 d-md-none">Settings</h2>
 
     </div>
 
     <!-- Settings tabs -->
 
-    <div class="flex-row bg-white box-shadow-bottom sticky d-flex mt-3 mb-3 mb-md-5">
+         <!-- Desktop -->
 
-      <ul class="nav settings-nav mr-auto">
+    <div class="flex-row bg-white box-shadow-bottom sticky d-none d-sm-flex mt-3 mb-3 mb-sm-5">
+
+      <ul class="nav settings-nav">
         <li class="nav-item">
           <a class="nav-link" href="/settings/profile">Profile</a>
         </li>
         <li class="nav-item">
           <a class="nav-link active" href="/settings/security">Security</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-none" href="/settings/notifications">Notifications</a>
+        </li>
+      </ul>
+
+    </div>
+
+     <!-- Mobile -->
+
+     <div class="flex-row bg-white box-shadow-bottom sticky justify-content-center d-flex d-sm-none mt-3 mb-3 mb-sm-5">
+
+      <ul class="nav settings-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/settings/profile"><i class="fas fa-user text-lg mr-0"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/settings/security"><i class="fas fa-cog text-lg mr-0"></i></a>
         </li>
         <li class="nav-item">
           <a class="nav-link d-none" href="/settings/notifications">Notifications</a>

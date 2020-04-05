@@ -4,6 +4,7 @@ from sqlalchemy import func
 from bs4 import BeautifulSoup
 import secrets
 import threading
+import requests
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -37,7 +38,15 @@ def post_base36id(base36id, v=None):
     
     post=get_post(base36id)
 
-    if post.over_18 and not (v and v.over_18) and not session_over18(post.board):
+    board=post.board
+
+    if board.is_banned and not (v and v.admin_level > 3):
+        return render_template("board_banned.html",
+                               v=v,
+                               b=board,
+                               p=True)
+
+    if post.over_18 and not (v and v.over_18) and not session_over18(board):
         t=int(time.time())
         return render_template("errors/nsfw.html",
                                v=v,
@@ -93,6 +102,39 @@ def edit_post(pid, v):
 
     return redirect(p.permalink)
 
+@app.route("/api/submit/title", methods=['GET'])
+@limiter.limit("6/minute")
+@is_not_banned
+#@tos_agreed
+#@validate_formkey
+def get_post_title(v):
+
+    url=request.args.get("url",None)
+    if not url:
+        return abort(400)
+
+    headers={"User-Agent":app.config["UserAgent"]}
+    try:
+        x=requests.get(url, headers=headers)
+    except:
+        return jsonify({"error": "Could not reach page"}), 400
+    
+    if not x.status_code==200:
+        return jsonify({"error":f"Page returned {x.status_code}"}), x.status_code
+
+    try:
+        soup = BeautifulSoup(x.content, 'html.parser')
+
+        data={"url":url,
+              "title":soup.find('title').string
+              }
+
+        return jsonify(data)
+    except:
+        return jsonify({"error":f"Could not find a title"}), 400
+
+
+
 @app.route("/submit", methods=['POST'])
 @limiter.limit("6/minute")
 @is_not_banned
@@ -108,9 +150,11 @@ def submit_post(v):
         return render_template("submit.html",
                                v=v,
                                error="Please enter a better title.",
-                               title=title, url=url,
+                               title=title,
+                               url=url,
                                body=request.form.get("body",""),
-                               b=get_guild(request.form.get("board","")
+                               b=get_guild(request.form.get("board",""),
+                                           graceful=True
                                            )
                                )
     elif len(title)>250:
@@ -120,12 +164,13 @@ def submit_post(v):
                                title=title[0:250],
                                url=url,
                                body=request.form.get("body",""),
-                               b=get_guild(request.form.get("board","")
+                               b=get_guild(request.form.get("board",""),
+                                           graceful=True
                                            )
                                )
 
     parsed_url=urlparse(url)
-    if not (parsed_url.scheme and parsed_url.netloc) and not request.form.get("body") and 'file' not in request.files:
+    if not (parsed_url.scheme and parsed_url.netloc) and not request.form.get("body") and not request.files.get("file",None):
         return render_template("submit.html",
                                v=v,
                                error="Please enter a URL or some text.",
@@ -166,7 +211,8 @@ def submit_post(v):
                                    title=title,
                                    url=url,
                                    body=request.form.get("body",""),
-                                   b=get_guild(request.form.get("board","general"))
+                                   b=get_guild(request.form.get("board","general"),
+                                           graceful=True)
                                    )
 
         #check for embeds
@@ -188,6 +234,17 @@ def submit_post(v):
     board=get_guild(board_name, graceful=True)
     if not board:
         board=get_guild('general')
+
+    if board.is_banned:
+        return render_template("submit.html",
+                               v=v,
+                               error=f"+{board.name} has been demolished.",
+                               title=title,
+                               url=url
+                               , body=request.form.get("body",""),
+                               b=get_guild("general",
+                                           graceful=True)
+                               ), 403       
     
     if board.has_ban(v):
         return render_template("submit.html",
@@ -206,7 +263,9 @@ def submit_post(v):
                                title=title,
                                url=url,
                                body=request.form.get("body",""),
-                               b=get_guild(request.form.get("board","general"))
+                               b=get_guild(request.form.get("board","general"),
+                                           graceful=True
+                                           )
                                )
 
         
@@ -243,10 +302,13 @@ def submit_post(v):
                     abort(403)
 
             user_id=identity.id
+            user_name=identity.username
         else:
             user_id=v.id
+            user_name=v.username
     else:
         user_id=v.id
+        user_name=v.username
                 
                 
     #Force https for submitted urls
@@ -266,15 +328,17 @@ def submit_post(v):
     body=request.form.get("body","")
 
     #catch too-long body
-    if len(body)>5000:
+    if len(body)>10000:
 
         return render_template("submit.html",
                                v=v,
-                               error="2000 character limit for text body",
+                               error="10000 character limit for text body",
                                title=title,
-                               text=body[0:5000],
+                               text=body[0:10000],
                                url=url,
-                               b=get_guild(request.form.get("board","general"))
+                               b=get_guild(request.form.get("board","general"),
+                                           graceful=True
+                                           )
                                ), 400
 
     if len(url)>2048:
@@ -284,7 +348,8 @@ def submit_post(v):
                                error="URLs cannot be over 2048 characters",
                                title=title,
                                text=body[0:2000],
-                               b=get_guild(request.form.get("board","general"))
+                               b=get_guild(request.form.get("board","general"),
+                                           graceful=True)
                                ), 400
 
     with CustomRenderer() as renderer:
@@ -308,12 +373,16 @@ def submit_post(v):
                         board_id=board.id,
                         original_board_id=board.id,
                         over_18=(bool(request.form.get("over_18","")) or board.over_18),
-                        post_public=not board.is_private
+                        post_public=not board.is_private,
+                        author_name=user_name,
+                        guild_name=board.name
                         )
 
     db.add(new_post)
 
     db.commit()
+
+    new_post.determine_offensive()
 
     vote=Vote(user_id=user_id,
               vote_type=1,
@@ -332,12 +401,13 @@ def submit_post(v):
         
         #update post data
         new_post.url=f'https://i.ruqqus.com/{name}'
+        new_post.is_image=True
         db.add(new_post)
         db.commit()
 
     
     #spin off thumbnail generation as  new thread
-    if new_post.url:
+    elif new_post.url:
         new_thread=threading.Thread(target=thumbnail_thread,
                                     args=(new_post.base36id,)
                                     )
@@ -386,6 +456,14 @@ def delete_post_pid(pid, v):
     db.add(post)
     db.commit()
 
+    #clear cache
+    cache.delete_memoized(User.idlist, v, sort="new")
+
+    if post.age >= 3600*6:
+        cache.delete_memoized(Board.idlist, post.board, sort="new")
+        cache.delete_memoized(frontlist, sort="new")
+    
+
     #delete i.ruqqus.com
     if post.domain=="i.ruqqus.com":
         
@@ -405,4 +483,26 @@ def embed_post_pid(pid):
 
     post=get_post(pid)
 
+    if post.is_banned or post.board.is_banned:
+        abort(410)
+
     return render_template("embeds/submission.html", p=post)
+
+@app.route("/api/toggle_post_nsfw/<pid>", methods=["POST"])
+@is_not_banned
+@validate_formkey
+def toggle_post_nsfw(pid, v):
+
+    post=get_post(pid)
+
+    if not post.author_id==v.id:
+        abort(403)
+
+    if post.board.over_18 and post.over_18:
+        abort(403)
+
+    post.over_18 = not post.over_18
+    db.add(post)
+    db.commit()
+
+    return "", 204

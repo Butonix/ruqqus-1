@@ -8,7 +8,7 @@ import re
 
 class UserMention(SpanToken):
 
-    pattern=re.compile("(^|\s)@(\w{3,25})")
+    pattern=re.compile("(^|\W)@(\w{3,25})")
     parse_inner=False
     
     def __init__(self, match_obj):
@@ -34,10 +34,10 @@ class CustomRenderer(HTMLRenderer):
         target = token.target[1]
 
         user=get_user(target, graceful=True)
-        if not user or user.reserved:
+        if not user or user.is_banned:
             return f"{space}@{target}"
         
-        return f'{space}<a href="{user.permalink}"><img src="/@{user.username}/pic/profile" class="profile-pic-20 mr-1">@{user.username}</a>'
+        return f'{space}<a href="{user.permalink}" class="d-inline-block"><img src="/@{user.username}/pic/profile" class="profile-pic-20 mr-1">@{user.username}</a>'
 
     def render_board_mention(self, token):
         space=token.target[0]
@@ -45,8 +45,8 @@ class CustomRenderer(HTMLRenderer):
 
         board=get_guild(target, graceful=True)
 
-        if not board:
+        if not board or board.is_banned:
             return f"{space}+{target}"
         else:
-            return f'{space}<a href="{board.permalink}"><img src="/+{board.name}/pic/profile" class="profile-pic-20 align-middle mr-1">+{board.name}</a>'
+            return f'{space}<a href="{board.permalink}" class="d-inline-block"><img src="/+{board.name}/pic/profile" class="profile-pic-20 align-middle mr-1">+{board.name}</a>'
         

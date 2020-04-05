@@ -72,6 +72,7 @@ $border-radius-sm: .25rem;
 
 $font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
+
 // Font size
 
 $font-size-base: 1rem;
@@ -134,6 +135,14 @@ $tooltip-opacity: 1;
 
 $yiq-contrasted-threshold:  160 !default;
 
+// Callouts
+
+@each $color, $value in $theme-colors {
+    .bd-callout-#{$color} {
+      border-left-color: #{$value};
+    }
+  }
+
 @import "node_modules/bootstrap/scss/bootstrap";
 
 html {
@@ -172,9 +181,6 @@ pre {
 
 #settings, #submit {
     padding-top: 98px;
-}
-
-#settings {
     background-color: $white;
 }
 
@@ -313,10 +319,6 @@ ul.no-bullets {
     list-style-type: none;
 }
 
-.comment-section li {
-    list-style-type: none;
-}
-
 ol > li {
     list-style-type: none;
     counter-increment: count;
@@ -377,10 +379,6 @@ ol > li::before {
     opacity: .5;
 }
 
-.btn-white {
-    color: $black;
-}
-
 .btn-success, .btn-danger {
     color: $white;
 }
@@ -431,6 +429,17 @@ ol > li::before {
     border-top-color: $black !important;
 }
 
+// Callouts
+
+.bd-callout {
+    padding: 1.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid $border-color;
+    border-left-width: .25rem;
+    border-radius: .25rem;
+}
+
 // Alerts
 
 .alert {
@@ -463,11 +472,14 @@ ol > li::before {
 
 // Navbar and tab Bar
 
+.navbar-light {
+    background-color: $white;
+}
+
 .navbar-toggler-icon {
     width: auto;
     height: auto;
 }
-
 
 .navbar-toggler-icon, .navbar-dark .navbar-toggler-icon, .navbar-light .navbar-toggler-icon {
     background: transparent;
@@ -584,7 +596,7 @@ ol > li::before {
 .nav-link .badge-count {
     width: 20px;
     height: 20px;
-    border-radius: 50rem;
+    border-radius: 50%;
     background-color: $danger;
     position: absolute;
     color: $white;
@@ -910,19 +922,11 @@ th {
     width: 1.25rem;
 }
 
-.fa-bold:hover {
-    color: $gray;
-}
-
-.fa-italic:hover {
-    color: $gray;
-}
-
-.fa-quote-right:hover {
-    color: $gray;
-}
-
-.fa-link:hover {
+.format .fa-bold:hover,
+.format .fa-italic:hover,
+.format .fa-quote-right:hover,
+.format .fa-link:hover,
+.format .fa-image:hover {
     color: $gray;
 }
 
@@ -941,6 +945,7 @@ th {
 #thread .voting {
     min-width: 15px;
     margin-right: 15px;
+    overflow-wrap: normal;
 }
 
 #frontpage .voting, #search .voting, #userpage .voting, #guild .voting {
@@ -1291,7 +1296,40 @@ color: $dark;
     content: "\f347";
 }
 
+@media (max-width: 1199.98px) {
+    .sidebar-left .sidebar-collapsed-hidden {
+        display: none;
+    }
+    .sidebar-left .sidebar-collapsed-visible {
+        display: block;
+    }
+    .sidebar.sidebar-left {
+        flex: 0 0 65px;
+        text-align: center;
+    }
+    .sidebar-left .collapsed-toggle-parent {
+        display: none!important;
+    }
+}
+
 // Sidebar Left
+
+.sidebar.sidebar-left {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 49px;
+    z-index: 1000;
+    height: calc(100vh - 49px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+@media (min-width: 1199.98px) {
+    .sidebar.sidebar-left {
+        -ms-flex: 0 0 240px;
+        flex: 0 0 240px;
+    }
+}
 
 .sidebar-left .sidebar-section {
     border: 0;
@@ -1301,16 +1339,6 @@ color: $dark;
 
 .sidebar.sidebar-left .sidebar-section .body {
     border: 0;
-}
-
-.sidebar.sidebar-left {
-    -ms-flex: 0 0 240px;
-    flex: 0 0 240px;
-    position: -webkit-sticky;
-    position: sticky;
-    top: 49px;
-    z-index: 1000;
-    height: 100vh;
 }
 
 .sidebar-left .sidebar-section.sidebar-filters {
@@ -1519,7 +1547,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 // Progress Bar
 
 .progress {
-    border-radius: 50rem;
+    border-radius: 50%;
 }
 
 // User and Profile
@@ -1535,12 +1563,21 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     width: 425px;
 }
 
+.profile-pic.transition-square {
+    transition: border-radius 0.25s;
+}
+
+.profile-pic.profile-pic.transition-square:hover {
+    border-radius: .35rem;
+}
+
 .profile-pic {
     width: 50px;
     height: 50px;
-    border-radius: 100%;
+    border-radius: 50%;
     margin: auto;
     text-align: center;
+    object-fit: cover;
     color: $white;
     background-color: #FFFFFF;
 }
@@ -1579,7 +1616,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-20 {
     width: 20px;
     height: 20px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: $white;
@@ -1588,7 +1625,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-25 {
     width: 25px;
     height: 25px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: $white;
@@ -1597,7 +1634,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-30 {
     width: 30px;
     height: 30px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: $white;
@@ -1606,7 +1643,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-35 {
     width: 35px;
     height: 35px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: $white;
@@ -1615,7 +1652,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-40 {
     width: 40px;
     height: 40px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: $white;
@@ -1624,7 +1661,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-50 {
     width: 50px;
     height: 50px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: $white;
@@ -1633,7 +1670,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-65 {
     width: 65px;
     height: 65px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: $white;
@@ -1642,10 +1679,19 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-75 {
     width: 75px;
     height: 75px;
-    border-radius: 50rem;
+    border-radius: 50%;
     text-align: center;
     object-fit: cover;
     background-color: $white;
+}
+
+.profile-pic-100 {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    text-align: center;
+    object-fit: cover;
+    background-color: #FFFFFF;
 }
 
 .profile-pic-overlap {
@@ -1967,6 +2013,31 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     font-size: 1.25rem;
 }
 
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 767.98px) {
+    .modal.modal.modal-sm-bottom .modal-dialog {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1030;
+    }
+
+    .modal.modal-sm-bottom .modal-content {
+        position: absolute;
+        bottom: 0;
+        border-radius: 1rem;
+    }
+
+    .modal.fade.modal-sm-bottom .modal-dialog {
+        transform: translate3d(0, 100vh, 0);
+    }
+
+    .modal.show.modal-sm-bottom .modal-dialog {
+        transform: translate3d(0, 0, 0);
+    }
+} 
+
 // Dropdown actions
 
 .dropdown-actions {
@@ -2144,6 +2215,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border: 1px solid $primary;
     border-radius: $border-radius;
     z-index: 2;
+    background-color: $gray-300;
 }
 
 .post-img-lg, .mobile-thumb-enlarged {
@@ -2259,7 +2331,7 @@ div:hover .thumb-img-link-overlay {
 }
 
 .comment .comment-body .user-name {
-    color: $primary;
+    color: $black;
 }
 
 .comment .comment-body .comment-text {
@@ -2448,6 +2520,10 @@ ul.comment-section {
     color: $gray-500;
 }
 
+.comment-write .comment-format .format:hover {
+    color: $muted;
+}
+
 .comment .comment-collapse {
     padding-right: 15px;
 }
@@ -2630,6 +2706,8 @@ ul.comment-section {
 
 .table .thead-dark th {
     color: $muted;
+    font-size: $small-font-size;
+    text-transform: uppercase;
     background-color: $light;
     border: none;
 }
@@ -3094,6 +3172,12 @@ ul.comment-section {
   transform: translateX(1.25rem); //translateX(0.75rem);
 }
 
+// Code
+
+pre code {
+    color: $black;
+}
+
 // Code Prettify
 
 pre.prettyprint {
@@ -3150,6 +3234,48 @@ pre .typ, code .typ {
 
 pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     color: #fff;
+}
+
+// GIF Keyboard
+
+.gif-categories .card {
+    overflow: hidden;
+    border: none;
+}
+
+.gif-categories img {
+    border-radius: $border-radius;
+    height: 110px;
+    width: 100%;
+    object-fit: cover;
+    -webkit-transition:  all .15s ease;
+    -moz-transition:  all .15s ease;
+    -o-transition:  all .15s ease;
+    -ms-transition: all .15s ease;
+    transition: all .15s ease;
+}
+
+.gif-categories img:hover {
+    border: 3px solid $primary;
+}
+
+.gif-categories .card .gif-cat-overlay {
+    position: absolute;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    -webkit-transition:  all .15s ease;
+    -moz-transition:  all .15s ease;
+    -o-transition:  all .15s ease;
+    -ms-transition: all .15s ease;
+    transition: all .15s ease;
+}
+
+.gif-categories .card:hover .gif-cat-overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 3px solid $primary;
+    border-radius: $border-radius;
 }
 
 // Responsive media queries
@@ -3526,6 +3652,19 @@ textarea, input[type=text] {
     appearance: none;
 }
 
+}
+
+// Scroll bar
+
+.hide-scrollbar::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+// Hides scroll bar in FF
+
+.hide-scrollbar {
+    scrollbar-width: none;
 }
 
 // Adam's additions

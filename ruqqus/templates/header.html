@@ -1,10 +1,10 @@
 <!-- Navigation -->
-<nav class="navbar navbar-expand-md navbar-light bg-white shadow shadow-md fixed-top" id="navbar">
+<nav class="navbar navbar-expand-md navbar-light shadow shadow-md fixed-top" id="navbar">
   <div class="container-fluid">
     <div class="flex-grow-1"><a href="/" class="navbar-brand">ruqqus<span class="text-small-extra text-uppercase text-gray-400"> Beta</span></a></div>
     <div class="flex-grow-1 d-fl d-none d-md-block">
       <form class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search" method="get">
-        <input class="form-control w-100" type="search" placeholder="Search" aria-label="Search" name="q">
+        <input class="form-control w-100" type="search" placeholder="Search posts" aria-label="Search posts" name="q">
         <span class="input-group-append">
           <span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;">
             <i class="fa fa-search" aria-hidden="true"></i>
@@ -74,7 +74,7 @@
             <div><img src="{{ v.profile_url }}" class="profile-pic-35"></div>
             <div class="text-left pl-2">
               <div class="text-small font-weight-bold">{{ v.username }}</div>
-              <div class="text-small-extra text-purple"><i class="fad fa-dice-d10 mr-1"></i>{{ v.karma + v.comment_karma }} Rep</div>
+              <div class="text-small-extra text-purple"><i class="fad fa-diamond mr-1"></i>{{ v.karma + v.comment_karma }} Rep</div>
             </div>
           </div>
         </a>
@@ -83,7 +83,7 @@
         <div class="px-2">
           <div class="dropdown-meta">
             <div class="font-weight-bold mb-2">{{ v.username }}</div>
-            <div class="text-small text-purple"><i class="fad fa-dice-d10 mr-1"></i>{{ v.karma + v.comment_karma }} Rep</div>
+            <div class="text-small text-purple"><i class="fad fa-diamond mr-1"></i>{{ v.karma + v.comment_karma }} Rep</div>
           </div>
         </div>
         <hr class="my-2">
@@ -99,9 +99,9 @@
               <a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-width-rem text-left mr-3"></i>Settings</a>
 
               {% block darkswitch %}
-              {% if v and v.referral_count and session.get("dark_mode_enabled")%}
+              {% if v and v.can_use_darkmode and session.get("dark_mode_enabled")%}
               <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem text-left mr-3" id="dark-switch"></i>Dark mode</a>
-              {% elif v and v.referral_count %}
+              {% elif v and v.can_use_darkmode %}
               <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem text-left mr-3" id="dark-switch"></i>Dark mode</a>
               {% else %}
               <a class="dropdown-item" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem text-left mr-3"></i>Dark mode</a>
@@ -129,7 +129,7 @@
    <ul class="navbar-nav ml-auto d-flex d-md-none mt-3">
      <li class="nav-item pb-3">
       <form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search" method="get">
-        <input class="form-control form-control-sm w-100" type="search" placeholder="Search Ruqqus" aria-label="Search" name="q">
+        <input class="form-control form-control-sm w-100" type="search" placeholder="Search posts" aria-label="Search posts" name="q">
         <span class="input-group-append">
           <span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;" onclick="document.getElementById('searchform').submit()">
             <i class="fa fa-search" aria-hidden="true"></i>
@@ -137,23 +137,8 @@
         </span>
       </form>
     </li>
-    <li class="nav-item">
-      <a class="nav-link " href="/">
-        <i class="fas fa-home-alt fa-width-rem mr-3"></i>Homepage
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link " href="/all?sort=new">
-        <i class="fas fa-globe-americas fa-width-rem mr-3"></i>All
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link " href="/all?sort=hot">
-        <i class="fas fa-fire fa-width-rem mr-3"></i>Trending
-      </a>
-    </li>
     {% if v %}
-    <li class="nav-item border-top mt-2 pt-2">
+    <li class="nav-item">
       <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem mr-3"></i>@{{ v.username }}</a>
     </li>
     <li class="nav-item">
@@ -165,19 +150,16 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/mine"><i class="fas fa-university fa-width-rem mr-3"></i>My guilds</a>
+      <a class="nav-link" href="/settings"><i class="fas fa-cog fa-width-rem mr-3"></i>My account</a>
     </li>
-    {% if v and v.referral_count and session.get("dark_mode_enabled")%}
+    {% if v and v.can_use_darkmode and session.get("dark_mode_enabled")%}
     <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem mr-3" id="dark-switch"></i>Dark mode</a></li>
-    {% elif v and v.referral_count %}
+    {% elif v and v.can_use_darkmode %}
     <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem mr-3" id="dark-switch"></i>Dark mode</a></li>
     {% else %}
     <li class="nav-item"><a class="nav-link" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem mr-3"></i>Dark mode</a></li>
     {% endif %}
     <li class="nav-item border-top mt-2 pt-2">
-      <a class="nav-link" href="/settings">Account settings</a>
-    </li>
-    <li class="nav-item">
       <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})">Log out</a>
     </li>
     <li class="nav-item border-top mt-2 pt-2">
@@ -190,7 +172,7 @@
       <a class="nav-link text-small-extra" href="/help/privacy">Privacy</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-small-extra" href="mailto:hello@ruqqus.com">Contact</a>
+      <a class="nav-link text-small-extra" href="mailto:info@ruqqus.com">Contact</a>
     </li>
     <li class="nav-item">
       <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">Github</a>
@@ -212,7 +194,7 @@
       <a class="nav-link text-small-extra" href="/help/privacy">Privacy</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-small-extra" href="mailto:hello@ruqqus.com">Contact</a>
+      <a class="nav-link text-small-extra" href="mailto:info@ruqqus.com">Contact</a>
     </li>
     <li class="nav-item">
       <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">Github</a>

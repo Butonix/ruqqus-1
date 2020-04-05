@@ -1,28 +1,53 @@
 {% for b in boards %}
 
-<div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+<div class="col col-md-6 col-lg-4 col-xl-3 d-none d-md-block" style="margin-bottom: 28px;">
   <div id="board-{{ b.base36id }}" class="card h-100">
-    <div style="position: relative;"><img src="{{ b.banner_url }}" class="card-img-top" alt="+{{ b.name }} guild banner" style="height: 175px; object-fit: cover">
+    <img src="{{ b.banner_url }}" class="card-img-top" alt="+{{ b.name }} banner" style="height: 100px; object-fit: cover;">
+    <div class="card-body" style="word-wrap: break-word;">
+      <div class="d-flex flex-wrap align-items-center mb-2">
+        <img src="{{ b.profile_url }}" class="profile-pic-40 mr-2">
 
-      <img src="{{ b.profile_url }}" class="profile-pic-50 border-3 border-white" style="position: absolute; left: 15px; bottom: 15px; box-sizing: content-box;"></div>
-      <div class="card-body" style="word-wrap: break-word;">
-        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+        <a class="card-title stretched-link h5 mb-0" href="{{ b.permalink }}">+{{ b.name }} {% if b.over_18 %}<span class="badge badge-danger">NSFW</span>{% endif %}</a>
 
-          <a class="card-title stretched-link h5 mb-0" href="{{ b.permalink }}">+{{ b.name }} {% if b.over_18 %}<span class="badge badge-danger">NSFW</span>{% endif %}</a>
-
-          <div id="button-sub-{{ b.base36id }}" style="z-index: 2" class="{% if b.has_subscriber(v) %}d-none{% endif %}"><a class="btn btn-primary btn-sm" href="javascript:void(0)" onclick="post('/api/subscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ b.base36id }}').classList.toggle('d-none');})">Join</a></div>
-          <div id="button-unsub-{{ b.base36id }}" style="z-index: 2" class="{% if not b.has_subscriber(v) %} d-none{% endif %}"><a class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="post('/api/unsubscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ b.base36id }}').classList.toggle('d-none');})">Leave</a></div>
-
-        </div>
-        <p class="card-text">{{ b.description|truncate(100, True) }}</p>
       </div>
-      <div class="card-footer bg-white border-0">
-        <div class="text-small text-muted"><i class="fas fa-users text-gray-500 mr-2"></i>{{ b.subscriber_count }} Member{{ 's' if b.subscriber_count != 1 else '' }}</div>
-      </div>
+      <p class="card-text text-small text-muted">{{ b.description|truncate(72, True) }}</p>
+    </div>
+    <div class="card-footer bg-transparent d-flex align-items-center justify-content-between p-3">
+      <div class="text-small text-muted"><i class="fas fa-users text-gray-500 mr-2"></i>{{ b.subscriber_count }} Member{{ 's' if b.subscriber_count != 1 else '' }}</div>
+
+      <div id="button-sub-{{ b.base36id }}" style="z-index: 2" class="{% if b.has_subscriber(v) %}d-none{% endif %}"><a class="btn btn-primary" href="javascript:void(0)" onclick="post('/api/subscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ b.base36id }}').classList.toggle('d-none');})">Join</a></div>
+      <div id="button-unsub-{{ b.base36id }}" style="z-index: 2" class="{% if not b.has_subscriber(v) %} d-none{% endif %}"><a class="btn btn-secondary" href="javascript:void(0)" onclick="post('/api/unsubscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ b.base36id }}').classList.toggle('d-none');})">Leave</a></div>
     </div>
   </div>
-  {% endfor %}
+</div>
 
+<div class="col mb-3 d-md-none">
 
+  <div class="d-flex flex-wrap justify-content-between align-items-center">
 
+    <a class="card-title stretched-link mb-0" href="{{ b.permalink }}">
 
+     <div class="d-flex align-items-center">
+        <img src="{{ b.profile_url }}" class="profile-pic-50 mr-2">
+
+        <div>
+         <div class="text-black" style="font-size: 16px;">+{{ b.name }} {% if b.over_18 %}<span class="badge badge-danger">NSFW</span>{% endif %}</div>
+         {% if request.path=="/browse" %}<div class="text-small text-muted">{{ b.description|truncate(24, True) }}</div>{% endif %}
+       </div>
+
+      </div>
+
+    </a>
+
+    {% if v and request.path=="/browse" %}
+    <div id="button-sub-mobile-{{ b.base36id }}" style="z-index: 2" class="{% if b.has_subscriber(v) %}d-none{% endif %}"><a class="btn btn-primary btn-sm" href="javascript:void(0)" onclick="post('/api/subscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-mobile-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-mobile-{{ b.base36id }}').classList.toggle('d-none');})">Join</a></div>
+    <div id="button-unsub-mobile-{{ b.base36id }}" style="z-index: 2" class="{% if not b.has_subscriber(v) %} d-none{% endif %}"><a class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="post('/api/unsubscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-mobile-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-mobile-{{ b.base36id }}').classList.toggle('d-none');})">Leave</a></div>
+    {% elif not v and request.path=="/browse" %}
+    <a class="btn btn-primary btn-sm" style="z-index: 2" href="/signup">Join</a>
+    {% endif %}
+
+  </div>
+
+</div>
+
+{% endfor %}

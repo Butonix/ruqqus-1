@@ -25,14 +25,11 @@ def api_vote_post(post_id, x, v):
     if post.is_banned or post.is_deleted:
         abort(403)
 
-    if x==-1 and post.board.downvotes_disabled:
-        abort(403)
-
     #check for existing vote
     existing = db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
     if existing:
         existing.change_to(x)
-        print(f"Re-vote Event: @{v.username} vote {x} on post {post_id}")
+        #print(f"Re-vote Event: @{v.username} vote {x} on post {post_id}")
         return "", 204
 
     vote=Vote(user_id=v.id,
@@ -63,14 +60,11 @@ def api_vote_comment(comment_id, x, v):
     if comment.is_banned or comment.is_deleted:
         abort(403)
 
-    if x==-1 and comment.board.downvotes_disabled:
-        abort(403)
-
     #check for existing vote
     existing = db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
     if existing:
         existing.change_to(x)
-        print(f"Re-vote Event: @{v.username} vote {x} on comment {comment_id}")
+        #print(f"Re-vote Event: @{v.username} vote {x} on comment {comment_id}")
         return "", 204
 
     vote=CommentVote(user_id=v.id,

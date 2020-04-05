@@ -6,7 +6,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.get import *
 from ruqqus.classes import *
-
+from ruqqus.routes.admin_api import create_plot, user_stat_data
 from flask import *
 from ruqqus.__main__ import app, db
 
@@ -113,3 +113,31 @@ def badge_grant_post(v):
 
     return redirect("/admin/badge_grant?msg=success")
                  
+
+@app.route("/admin/users", methods=["GET"])
+@admin_level_required(2)
+def users_list(v):
+
+    page=int(request.args.get("page",1))
+
+    users = db.query(User).filter_by(is_banned=0
+                                     ).order_by(User.created_utc.desc()
+                                                ).offset(25*(page-1)).limit(26)
+
+    users=[x for x in users]
+
+    next_exists = (len(users)==26)
+    users=users[0:25]
+
+    data = user_stat_data().get_json()
+
+
+
+    return render_template("admin/new_users.html",
+                           v=v,
+                           users=users,
+                           next_exists=next_exists,
+                           page=page,
+                           single_plot=data['single_plot'],
+                           multi_plot=data['multi_plot']
+                           )

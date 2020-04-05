@@ -15,7 +15,7 @@ from ruqqus.helpers.markdown import *
 from ruqqus.helpers.get import *
 from ruqqus.classes import *
 from flask import *
-from ruqqus.__main__ import app, db, cache
+from ruqqus.__main__ import app, db, cache, limiter
 
 BAN_REASONS=['',
             "URL shorteners are not permitted."
@@ -151,6 +151,7 @@ def api_agree_tos(v):
 
 
 @app.route("/@<username>/pic/profile")
+@limiter.exempt
 def user_profile(username):
     x=get_user(username)
     return redirect(x.profile_url)

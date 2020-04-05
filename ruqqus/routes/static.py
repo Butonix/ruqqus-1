@@ -19,6 +19,10 @@ def static_service(path):
 def robots_txt():
     return send_file("./assets/robots.txt")
 
+@app.route("/slurs.txt", methods=["GET"])
+def slurs():
+    return send_file("./assets/slurs.txt")
+
 @app.route("/settings", methods=["GET"])
 @auth_required
 def settings(v):
@@ -100,7 +104,7 @@ def help_home(v):
     return render_template("help.html", v=v)
 
 
-@app.route("/help/press", methods=["POST"])
+@app.route("/help/submit_contact", methods=["POST"])
 @is_not_banned
 @validate_formkey
 def press_inquiry(v):

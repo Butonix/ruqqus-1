@@ -219,11 +219,11 @@
         <div class="modal-body">
         	<p>Users invited to moderate a guild will need to accept their invite. They will receive a notification shortly after you invite them.</p>
           <input type="hidden" name="formkey" value="{{ v.formkey }}">
-          <input type="text" name="username" placeholder="enter username" class="form-control">
+          <input type="text" name="username" placeholder="enter username" class="form-control" oninput="document.getElementById('inviteUserButton').disabled=false;" required>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Invite user</button>
+          <button type="submit" class="btn btn-primary" id="inviteUserButton" disabled>Invite user</button>
         </div>
       </div>
     </form>

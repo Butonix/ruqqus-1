@@ -15,6 +15,8 @@ from ruqqus.__main__ import Base, db, cache
 from .votes import Vote
 from .domains import Domain
 from .flags import Flag
+from .badwords import *
+from .comment import Comment
 
 class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
  
@@ -31,9 +33,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     distinguish_level=Column(Integer, default=0)
     created_str=Column(String(255), default=None)
     stickied=Column(Boolean, default=False)
-    comments=relationship("Comment", lazy="dynamic", backref="submissions")
-    body=Column(String(5000), default="")
-    body_html=Column(String(6000), default="")
+    comments=relationship("Comment", lazy="dynamic", primaryjoin="Comment.parent_submission==Submission.id", backref="submissions")
+    body=Column(String(10000), default="")
+    body_html=Column(String(20000), default="")
     embed_url=Column(String(256), default="")
     domain_ref=Column(Integer, ForeignKey("domains.id"))
     flags=relationship("Flag", lazy="dynamic", backref="submission")
@@ -54,6 +56,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     score_disputed=Column(Float, default=0)
     score_top=Column(Float, default=1)
     score_activity=Column(Float, default=0)
+    author_name=Column(String(64), default="")
+    guild_name=Column(String(64), default="")
+    is_offensive=Column(Boolean, default=False)
+    board=relationship("Board", lazy="joined", innerjoin=True, primaryjoin="Submission.board_id==Board.id")
+    author=relationship("User", lazy="joined", innerjoin=True, primaryjoin="Submission.author_id==User.id")
+    is_pinned=Column(Boolean, default=False)
 
     approved_by=relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id")
 
@@ -86,6 +94,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         
     def __repr__(self):
         return f"<Submission(id={self.id})>"
+
+    @property
+    def board_base36id(self):
+        return base36encode(self.board_id)
 
 
     @property
@@ -126,11 +138,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             template="submission.html"
 
         private=not self.is_public and not self.board.can_view(v)
+
         
         if private and not self.author_id==v.id:
             abort(403)
         elif private:
-            self.comments=[]
+            self.__dict__["replies"]=[]
         else:
             #load and tree comments
             #calling this function with a comment object will do a comment permalink thing
@@ -142,12 +155,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                                p=self,
                                sort_method=request.args.get("sort","Hot").capitalize(),
                                linked_comment=comment,
-                               comment_info=comment_info)
-
-    @property
-    @lazy
-    def author(self):
-        return self.author_rel
+                               comment_info=comment_info,
+                               is_allowed_to_comment=self.board.can_comment(v)
+                               )
 
 
     @property
@@ -173,6 +183,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             while i>=0:
                 if comments[i].parent_fullname==thing.fullname:
                     thing.__dict__["replies"].append(comments[i])
+                    comments[i].__dict__["parent"]=thing
+                    #print(" "*layer+"-"+comments[i].base36id)
                     comments.pop(i)
 
                 i-=1
@@ -195,13 +207,13 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
         #Treeing is done from the end because reasons, so these sort orders are reversed
         if sort_type=="hot":
-            comments=self.comments.order_by(text("comments.score_hot ASC")).all()
+            comments=self.comments.order_by(Comment.score_hot.asc()).all()
         elif sort_type=="top":
-            comments=self.comments.order_by(text("comments.score_top ASC")).all()
+            comments=self.comments.order_by(Comment.score_top.asc()).all()
         elif sort_type=="new":
-            comments=self.comments.order_by(text("comments.created_utc")).all()
+            comments=self.comments.order_by(Comment.created_utc.desc()).all()
         elif sort_type=="disputed":
-            comments=self.comments.order_by(text("comments.score_disputed ASC")).all()
+            comments=self.comments.order_by(Comment.score_disputed.asc()).all()
         elif sort_type=="random":
             c=self.comments.all()
             comments=random.sample(c, k=len(c))
@@ -209,7 +221,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             abort(422)
 
 
-
+        #print(f'treeing {len(comments)} comments')
         tree_replies(self)
 
         
@@ -254,4 +266,56 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         elif v.admin_level >= 4:
             return "you are a Ruqqus admin."
 
-        
+
+    def determine_offensive(self):
+
+        for x in db.query(BadWord).all():
+            if (self.body and x.check(self.body)) or x.check(self.title):
+                self.is_offensive=True
+                db.commit()
+                break
+        else:
+            self.is_offensive=False
+            db.commit()
+
+
+    @property
+    def json(self):
+
+        if self.is_banned:
+            return {'is_banned':True,
+                    'is_deleted':self.is_deleted,
+                    'ban_reason': self.ban_reason,
+                    'id':self.base36id,
+                    'title':self.title,
+                    'permalink':self.permalink,
+                    'guild_name':self.guild_name
+                    }
+        elif self.is_deleted:
+            return {'is_banned':bool(self.is_banned),
+                    'is_deleted':True,
+                    'id':self.base36id,
+                    'title':self.title,
+                    'permalink':self.permalink,
+                    'guild_name':self.guild_name
+                    }
+        return {'author':self.author_name,
+                'permalink':self.permalink,
+                'is_banned':False,
+                'is_deleted':False,
+                'created_utc':self.created_utc,
+                'id':self.base36id,
+                'title':self.title,
+                'is_nsfw':self.over_18,
+                'is_offensive':self.is_offensive,
+                'thumb_url':self.thumb_url,
+                'domain':self.domain,
+                'is_archived':self.is_archived,
+                'url':self.url,
+                'body':self.body,
+                'body_html':self.body_html,
+                'created_utc':self.created_utc,
+                'edited_utc':self.edited_utc,
+                'guild_name':self.guild_name,
+                'embed_url':self.embed_url
+                }

@@ -17,7 +17,7 @@ from flask import *
 
 from ruqqus.__main__ import app, db, limiter, cache
 
-valid_board_regex=re.compile("^[a-zA-Z0-9]\w{3,24}$")
+valid_board_regex=re.compile("^[a-zA-Z0-9]\w{2,24}$")
 
 @app.route("/create_guild", methods=["GET"])
 @is_not_banned
@@ -124,7 +124,6 @@ def create_board_post(v):
 
     return redirect(new_board.permalink)
 
-@app.route("/board/<name>", methods=["GET"])
 @app.route("/+<name>", methods=["GET"])
 @auth_desired
 def board_name(name, v):
@@ -133,6 +132,13 @@ def board_name(name, v):
 
     if not board.name==name:
         return redirect(board.permalink)
+
+    if board.is_banned and not (v and v.admin_level>=3):
+        return render_template("board_banned.html",
+                               v=v,
+                               b=board,
+                               p=True
+                               )
 
     if board.over_18 and not (v and v.over_18) and not session_over18(board):
         t=int(time.time())
@@ -162,6 +168,8 @@ def mod_kick_bid_pid(bid,pid, board, v):
         abort(422)
 
     post.board_id=1
+    post.guild_name="general"
+    post.is_pinned=False
     db.add(post)
     db.commit()
 
@@ -185,13 +193,13 @@ def mod_accept_bid_pid(bid, pid, board, v):
     return "", 204
     
 
-@app.route("/mod/ban/<bid>/<username>", methods=["POST"])
+@app.route("/mod/exile/<bid>", methods=["POST"])
 @auth_required
 @is_guildmaster
 @validate_formkey
-def mod_ban_bid_user(bid, username, board, v):
+def mod_ban_bid_user(bid, board, v):
 
-    user=get_user(username)
+    user=get_user(request.form.get("username"))
 
     if not board.has_mod(v):
         abort(403)
@@ -228,13 +236,13 @@ def mod_ban_bid_user(bid, username, board, v):
 
     return "", 204
     
-@app.route("/mod/unban/<bid>/<username>", methods=["POST"])
+@app.route("/mod/unexile/<bid>/", methods=["POST"])
 @auth_required
 @is_guildmaster
 @validate_formkey
 def mod_unban_bid_user(bid, username, board, v):
 
-    user=get_user(username)
+    user=get_user(request.form.get("username"))
 
     x= board.has_ban(user)
     if not x:
@@ -273,6 +281,8 @@ def user_kick_pid(pid, v):
     db.add(new_rel)
 
     post.board_id=1
+    post.guild_name="general"
+    post.is_pinned=False
     
     db.add(post)
     db.commit()
@@ -293,6 +303,9 @@ def mod_take_pid(pid, v):
 
     board=get_board(bid)
 
+    if board.is_banned:
+        abort(403)
+
     if not board.has_mod(v):
         abort(403)
 
@@ -308,6 +321,7 @@ def mod_take_pid(pid, v):
         abort(403)
 
     post.board_id=board.id
+    post.guild_name=board.name
     db.add(post)
     db.commit()
 
@@ -322,7 +336,7 @@ def mod_take_pid(pid, v):
 @validate_formkey
 def mod_invite_username(bid, board, v):
 
-    username=request.form.get("username")
+    username=request.form.get("username",'').lstrip('@')
     user=get_user(username)
 
     if not board.can_invite_mod(user):
@@ -493,13 +507,14 @@ def mod_bid_settings_name(bid, board, v):
 
     if new_name.lower() == board.name.lower():
         board.name = new_name
+        db.add(board)
+        db.commit()
+        return "", 204
     else:
         return "", 422
 
-    db.add(board)
-    db.commit()
 
-    return "", 204
+
 
 @app.route("/mod/<bid>/settings/description", methods=["POST"])
 @auth_required
@@ -915,9 +930,15 @@ def mod_unapprove_bid_user(bid, username, board, v):
     return "", 204
 
 @app.route("/+<guild>/pic/profile")
+@limiter.exempt
 def guild_profile(guild):
     x=get_guild(guild)
-    return redirect(x.profile_url)
+
+    if x.over_18:
+        return redirect("/assets/images/icons/nsfw_guild_icon.png")
+    else:
+        return redirect(x.profile_url)
+    
 
 @app.route("/siege_guild", methods=["POST"])
 @is_not_banned
@@ -1063,4 +1084,33 @@ def siege_guild(v):
         db.commit()
 
     return redirect(f"/+{guild.name}/mod/mods")
+    
+@app.route("/mod/post_pin/<bid>/<pid>/<x>", methods=["POST"])
+@auth_required
+@is_guildmaster
+@validate_formkey
+def mod_toggle_post_pin(bid, pid, x, board, v):
+
+    post=get_post(pid)
+
+    if post.board_id != board.id:
+        abort(422)
+
+    try:
+        x=bool(int(x))
+    except:
+        abort(422)
+
+    if x and board.submissions.filter_by(is_pinned=True).count()>=4:
+        return jsonify({"error":f"+{board.name} already has the maximum number of pinned posts."}), 409
+
+
+    post.is_pinned=x
+
+
+    cache.delete_memoized(Board.idlist, post.board)
+
+    db.add(post)
+    db.commit()
+
     

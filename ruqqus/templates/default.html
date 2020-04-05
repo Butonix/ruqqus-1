@@ -5,20 +5,34 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<meta name="author" content="">
+	<meta name="thumbnail" content="https://ruqqus.com/assets/images/preview-images/ruqqus_og_image.png">
+
 	<link rel="icon" type="image/png" href="/favicon.ico">
 
 	{% block title %}
 	<title>Ruqqus - Awesome Online Communities, Without Censorship</title>
-	<meta name="description" content="Ruqqus is an open-source web app that lets you enjoy online communities focused around topics you love, without censorship and moderator abuse.">
+
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Ruqqus - Awesome Online Communities, Without Censorship" />
+    <meta property="og:site_name" content="ruqqus.com" />
+    <meta property="og:image" content="{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}" />
+    <meta property="og:url" content="{{ request.path | full_link }}">
+    <meta property="og:description" name="description" content="Ruqqus is an open-source platform for online communities, free of censorship and moderator abuse by design.">
+    <meta property="og:author" name="author" content="@ruqqus" />
+    <meta property="og:site_name" content="ruqqus.com" />
+
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:site" content="@ruqqus">
+    <meta name="twitter:title" content="Ruqqus - Awesome Online Communities, Without Censorship" />
+    <meta name="twitter:creator" content="@ruqqus">
+    <meta name="twitter:description" content="Ruqqus is an open-source platform for online communities, free of censorship and moderator abuse by design." />
+    <meta name="twitter:image" content="/assets/images/preview-images/ruqqus_og_image.png" />
+    <meta name="twitter:url" content="{{ request.path | full_link }}" />
 	{% endblock %}
-
-
 
 	<!-- Bootstrap core CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
 
 	<!-- iOS webapp -->
 	<link rel="apple-touch-icon" href="/favicon.ico">
@@ -26,13 +40,12 @@
 	<meta name="format-detection" content="telephone=no">
 	<meta name="apple-mobile-web-app-title" content="Ruqqus">
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-	<script src="/assets/js/ios.js"></script>
 
 	<!-- Ruqqus CSS -->
 	
 	{% block stylesheets %}
 
-	{% if v and v.referral_count and session.get("dark_mode_enabled") %}
+	{% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
 	<link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css">
 	{% else %}
 	<link id="css-link" rel="stylesheet" href="/assets/style/main.css">
@@ -42,8 +55,6 @@
 
 	<!-- Font Awesome -->
 	<link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
-
-  <script src="/assets/js/toggle_sidebar_collapse.js"></script>
 
   {% block fixedMobileBarJS %}
   {% endblock %}
@@ -55,15 +66,7 @@
      return '{{ v.formkey }}';
    }
  </script>
- <script src="/assets/js/post.js"></script>
 
- <script src="/assets/js/voting.js"></script>
- <script src="/assets/js/comment_replies.js"></script>
-
- {% if v.admin_level %}
- <script src="/assets/js/comment_modding.js"></script>
- <script src="/assets/js/post_modding.js"></script>
- {% endif %}
 
  {% endif %}
 
@@ -74,12 +77,12 @@
 
   <!--Header -->
   <!-- Navigation -->
-  <nav class="navbar navbar-expand-md navbar-light bg-white shadow shadow-md fixed-top" id="navbar">
+  <nav class="navbar navbar-expand-md navbar-light shadow shadow-md fixed-top" id="navbar">
     <div class="container-fluid">
       <div class="flex-grow-1"><a href="/" class="navbar-brand">ruqqus<span class="text-small-extra text-uppercase text-gray-400"> Beta</span></a></div>
       <div class="flex-grow-1 d-fl d-none d-md-block">
         <form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search" method="get">
-          <input class="form-control w-100" type="search" placeholder="Search" aria-label="Search" name="q">
+          <input class="form-control w-100" type="search" placeholder="Search posts" aria-label="Search posts" name="q">
           <span class="input-group-append">
             <span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;" onclick="document.getElementById('searchform').submit()">
               <i class="fa fa-search" aria-hidden="true"></i>
@@ -149,7 +152,7 @@
               <div><img src="{{ v.profile_url }}" class="profile-pic-35"></div>
               <div class="text-left pl-2">
                 <div class="text-small font-weight-bold">{{ v.username }}</div>
-                <div class="text-small-extra text-purple"><i class="fad fa-dice-d10 mr-1"></i>{{ v.karma + v.comment_karma }} Rep</div>
+                <div class="text-small-extra text-purple"><i class="fad fa-diamond mr-1"></i>{{ v.karma + v.comment_karma }} Rep</div>
               </div>
             </div>
           </a>
@@ -158,7 +161,7 @@
           <div class="px-2">
             <div class="dropdown-meta">
               <div class="font-weight-bold mb-2">{{ v.username }}</div>
-              <div class="text-small text-purple"><i class="fad fa-dice-d10 mr-1"></i>{{ v.karma + v.comment_karma }} Rep</div>
+              <div class="text-small text-purple"><i class="fad fa-diamond mr-1"></i>{{ v.karma + v.comment_karma }} Rep</div>
             </div>
           </div>
           <hr class="my-2">
@@ -174,9 +177,9 @@
                 <a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-width-rem text-left mr-3"></i>Settings</a>
 
                 {% block darkswitch %}
-                {% if v and v.referral_count and session.get("dark_mode_enabled")%}
+                {% if v and v.can_use_darkmode and session.get("dark_mode_enabled")%}
                 <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem text-left mr-3" id="dark-switch"></i>Dark mode</a>
-                {% elif v and v.referral_count %}
+                {% elif v and v.can_use_darkmode %}
                 <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem text-left mr-3" id="dark-switch"></i>Dark mode</a>
                 {% else %}
                 <a class="dropdown-item" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem text-left mr-3"></i>Dark mode</a>
@@ -204,7 +207,7 @@
      <ul class="navbar-nav ml-auto d-flex d-md-none mt-3">
        <li class="nav-item pb-3">
         <form class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search" method="get">
-          <input class="form-control form-control-sm w-100" type="search" placeholder="Search Ruqqus" aria-label="Search" name="q">
+          <input class="form-control form-control-sm w-100" type="search" placeholder="Search posts" aria-label="Search posts" name="q">
           <span class="input-group-append">
             <span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;">
               <i class="fa fa-search" aria-hidden="true"></i>
@@ -212,23 +215,8 @@
           </span>
         </form>
       </li>
-      <li class="nav-item">
-        <a class="nav-link " href="/">
-          <i class="fas fa-home-alt fa-width-rem mr-3"></i>Homepage
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link " href="/all?sort=new">
-          <i class="fas fa-globe-americas fa-width-rem mr-3"></i>All
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link " href="/all?sort=hot">
-          <i class="fas fa-fire fa-width-rem mr-3"></i>Trending
-        </a>
-      </li>
       {% if v %}
-      <li class="nav-item border-top mt-2 pt-2">
+      <li class="nav-item">
         <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem mr-3"></i>@{{ v.username }}</a>
       </li>
       <li class="nav-item">
@@ -240,21 +228,18 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/mine"><i class="fas fa-university fa-width-rem mr-3"></i>My guilds</a>
+        <a class="nav-link" href="/settings"><i class="fas fa-cog fa-width-rem mr-3"></i>My account</a>
       </li>
 	{% block darkswitchMobile %}
-      {% if v and v.referral_count and session.get("dark_mode_enabled")%}
-      <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem mr-3" id="dark-switch"></i>Dark mode</a></li>
-      {% elif v and v.referral_count %}
-      <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem mr-3" id="dark-switch"></i>Dark mode</a></li>
+      {% if v and v.can_use_darkmode and session.get("dark_mode_enabled")%}
+      <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
+      {% elif v and v.can_use_darkmode %}
+      <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
       {% else %}
       <li class="nav-item"><a class="nav-link" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem mr-3"></i>Dark mode</a></li>
       {% endif %}
 	{% endblock %}
       <li class="nav-item border-top mt-2 pt-2">
-        <a class="nav-link" href="/settings">Account settings</a>
-      </li>
-      <li class="nav-item">
         <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})">Log out</a>
       </li>
       <li class="nav-item border-top mt-2 pt-2">
@@ -289,7 +274,7 @@
         <a class="nav-link text-small-extra" href="/help/privacy">Privacy</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-small-extra" href="mailto:hello@ruqqus.com">Contact</a>
+        <a class="nav-link text-small-extra" href="mailto:info@ruqqus.com">Contact</a>
       </li>
       <li class="nav-item">
         <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">Github</a>
@@ -357,7 +342,7 @@
       </div>
       {% endblock %}
 
-      {% if v and v.referral_count==0 %}
+      {% if v and v.can_use_darkmode==0 %}
       <div class="sidebar-section sidebar-dark-promo text-white bg-black d-none">
        <div class="body">
         <div class="title" style="
@@ -400,6 +385,8 @@
 </div>
 </div>
 
+{% include "mobile_navigation_bar.html" %}
+
 {% block actionsModal %}
 {% endblock %}
 
@@ -407,6 +394,9 @@
 {% endblock %}
 
 {% block guildModal %}
+{% endblock %}
+
+{% block GIFtoast %}
 {% endblock %}
 
 <!-- Clipboard Toast -->
@@ -426,6 +416,7 @@
 {% if v %}
 {% include "flag_post_modal.html" %}
 {% include "flag_comment_modal.html" %}
+{% include "gif_modal.html" %}
 {% include "delete_comment_modal.html" %}
 {% include "delete_post_modal.html" %}
 {% endif %}
@@ -435,16 +426,12 @@
 {% include "yank_post_modal.html" %}
 {% endif %}
 
+{% include "expanded_image_modal.html" %}
+
 {% include "announcements_modal.html" %}
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/collapse.js"></script>
-<script src="/assets/js/comment_form.js"></script>
-
-{% if v %}
-<script src="/assets/js/comment_form.js"></script>
-<script src="/assets/js/voting.js"></script>
-{% endif %}
+<script src="/assets/js/all_js.js"></script>
 
 <!-- ClipboardJS -->
 
@@ -468,49 +455,6 @@
 		console.log(e);
 	});
 </script>
-
-<!-- Initialize BS 4 tool tips -->
-
-<script src="/assets/js/tooltips.js"></script>
-
-<!-- Search bar icon JS -->
-
-<script src="/assets/js/search_icon.js"></script>
-
-<!-- BS Spinner JS -->
-
-<script src="/assets/js/spinner.js"></script>
-
-<!-- Activate K-Code -->
-<script src="/assets/js/kc.js"></script>
-
-{% if v and v.referral_count %}
-<!-- Ruqqus Dark Mode Toggle -->
-<script src="/assets/js/dark_mode.js"></script>
-{% endif %}
-
-{% if v %}
-<!-- Ruqqus Flag Comment & Submission -->
-<script src="/assets/js/flag.js"></script>
-<!-- Ruqqus Delete Comment & Submission -->
-<script src="/assets/js/delete.js"></script>
-{% endif %}
-
-{% if v and v.mods_anything %}
-<!-- Ruqqus Flag Comment & Submission -->
-<script src="/assets/js/kick.js"></script>
-<!-- Ruqqus Yank Submission -->
-<script src="/assets/js/yank.js"></script>
-{% endif %}
-
-{% block enlargeThumbJS %}
-{% endblock %}
-
-{% block embedJS %}
-{% endblock %}
-
-{% block formatJS %}
-{% endblock %}
 
 </body>
 

@@ -22,25 +22,6 @@
   <!-- Font Awesome -->
   <script src="https://kit.fontawesome.com/e76eba0350.js"></script>
 
-<script>
-  var prevScrollpos = window.pageYOffset;
-  window.onscroll = function () {
-    var currentScrollPos = window.pageYOffset;
-    if (prevScrollpos > currentScrollPos) {
-      document.getElementById("fixed-bar-mobile").style.top = "49px";
-    } 
-    else if (currentScrollPos <= 125) {
-      document.getElementById("fixed-bar-mobile").style.top = "49px";
-    }
-    else {
-      document.getElementById("fixed-bar-mobile").style.top = "-49px";
-      document.getElementById("dropdownMenuSortBy").classList.remove('show');
-      document.getElementById("dropdownMenuFrom").classList.remove('show');
-    }
-    prevScrollpos = currentScrollPos;
-  }
-</script>
-
 </head>
 
 <body>
@@ -85,7 +66,7 @@
     </div>
 
     <div class="row fixed-top bg-white border-0 shadow d-inline-flex d-md-none p-3" id="filter-bar-mobile"
-      style="z-index: 3; top: 0; transition: top 0.3s;">
+      style="z-index: 3; top: 0; transition: top cubic-bezier(0, 0, 0.2, 1) 220ms;">
 
       <div class="col">
 
@@ -144,9 +125,7 @@
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
 
-<script src="https://ruqqus.com/assets/js/collapse.js"></script>
-
-<script src="/assets/js/collapse.js"></script>
+<script src="/assets/js/all_js.js"></script>
 
 </body>
 

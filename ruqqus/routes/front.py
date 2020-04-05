@@ -27,7 +27,7 @@ def trending_boards(n=5):
     return [(x, x.subscriber_count) for x in boards]
 
 @cache.memoize(timeout=300)
-def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None):
+def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=False):
 
     #cutoff=int(time.time())-(60*60*24*30)
 
@@ -36,6 +36,9 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None):
                                            stickied=False)
     if not nsfw:
         posts=posts.filter_by(over_18=False)
+
+    if hide_offensive:
+        posts=posts.filter_by(is_offensive=False)
 
     if v and v.admin_level >= 4:
         pass
@@ -118,7 +121,8 @@ def front_all(v):
                     page=page,
                     nsfw=(v and v.over_18),
                     t=request.args.get('t',None),
-                    v=v
+                    v=v,
+                    hide_offensive= v and v.hide_offensive
                     )
 
     #check existence of next page
@@ -127,26 +131,34 @@ def front_all(v):
 
     #check if ids exist
     if ids:
-        #assemble list of tuples
-        i=1
-        tups=[]
+##        #assemble list of tuples
+##        i=1
+##        tups=[]
+##        for x in ids:
+##            tups.append((x, i))
+##            i+=1
+##
+##        #tuple string
+##        tups = str(tups).lstrip("[").rstrip("]")
+##            
+##
+##        #hit db for entries
+##        
+##        posts=db.query(Submission
+##                       ).from_statement(
+##                           text(f"""
+##                            select submissions.*
+##                            from submissions
+##                            join (values {tups}) as x(id, n) on submissions.id=x.id
+##                            where x.n is not null
+##                            order by x.n
+##                            """
+##                                )).all()
+
+        posts=[]
         for x in ids:
-            tups.append((x, i))
-            i+=1
-
-        #tuple string
-        tups = str(tups).lstrip("[").rstrip("]")
-            
-
-        #hit db for entries
+            posts.append(db.query(Submission).filter_by(id=x).first())
         
-        posts=db.query(Submission
-                       ).from_statement(
-                           text(f"""
-                            select submissions.*, submissions.ups, submissions.downs
-                            from submissions
-                            join (values {tups}) as x(id, n) on submissions.id=x.id order by x.n"""
-                                )).all()
     else:
         posts=[]
 
@@ -203,7 +215,7 @@ def browse_guilds(v):
     #prevent invalid paging
     page=max(page, 1)
 
-    sort_method=request.args.get("sort", "subs")
+    sort_method=request.args.get("sort", "trending")
 
     #get list of ids
     ids = guild_ids(sort=sort_method, page=page, nsfw=(v and v.over_18))
@@ -232,7 +244,10 @@ def browse_guilds(v):
                            text(f"""
                             select *
                             from boards
-                            join (values {tups}) as x(id, n) on boards.id=x.id order by x.n"""
+                            join (values {tups}) as x(id, n)
+                            on boards.id=x.id
+                            where x.n is not null
+                            order by x.n"""
                                 )).all()
     else:
         boards=[]

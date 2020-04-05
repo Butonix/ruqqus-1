@@ -2,18 +2,41 @@
 
 {% block stylesheets %}
 
-{% if v and v.referral_count and session.get("dark_mode_enabled") %}
+{% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
 <link id="css-link" rel="stylesheet" href="{{ b.css_dark_url }}">
 {% else %}
 <link id="css-link" rel="stylesheet" href="{{ b.css_url }}">
 {% endif %}
 
-<script>
-
-
-</script>
-
 {% endblock %}
+
+{% block adminpanel %}
+{% if v.admin_level >=3 %}
+{% if b.is_banned %}
+<form action="/api/unban_guild/{{ b.base36id }}" method="post">
+  <input type="hidden" name="formkey", value="{{ v.formkey }}">
+  <input type="submit" class="btn btn-success" value="Unban guild">
+</form>
+{% else %}
+<form action="/api/ban_guild/{{ b.base36id }}", method="post">
+  <input type="hidden" name="formkey", value="{{ v.formkey }}">
+  <input id="guild-ban-reason" type="text" class="form-control bg-white" name="reason" placeholder="Ban Reason" onchange="document.getElementById('guild-ban-submit').disabled=false;">
+  <input id="guild-ban-submit" type="submit" class="btn btn-warning mt-3" value="Ban guild" disabled>
+</form>
+{% endif %}
+{% endif %}
+{% if not b.has_mod(v) %}
+<form action="/api/mod_self/{{ b.base36id }}" method="post">
+  <input type="hidden" name="formkey", value="{{ v.formkey }}">
+  <input type="submit" class="btn btn-success mt-3" value="Mod Self">
+</form>
+{% endif %}
+{% if b.is_banned %}
+<p>Reason: {{ b.ban_reason }}</p>
+{% endif %}
+{% endblock %}
+
+
 
 {% block darkswitch %}
 
@@ -44,9 +67,9 @@
     }
   }
 </script>
-{% if v and v.referral_count and session.get("dark_mode_enabled")%}
+{% if v and v.can_use_darkmode and session.get("dark_mode_enabled")%}
 <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css_board()"><i class="fad fa-toggle-on fa-width-rem text-left mr-3" id="dark-switch"></i>Dark mode</a>
-{% elif v and v.referral_count %}
+{% elif v and v.can_use_darkmode %}
 <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css_board()"><i class="fad fa-toggle-off fa-width-rem text-left mr-3" id="dark-switch"></i>Dark mode</a>
 {% else %}
 <a class="dropdown-item" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem text-left mr-3"></i>Dark mode</a>
@@ -127,7 +150,7 @@
         <div class="dropdown dropdown-actions">
           <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="line-height: 0;
           ">
-          <i class="far fa-ellipsis-h text-muted" style="font-size: 1rem"></i>
+          <i class="far fa-ellipsis-h text-lg text-muted"></i>
         </a>
         <div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end"
         style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">

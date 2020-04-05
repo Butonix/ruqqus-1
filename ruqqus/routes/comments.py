@@ -35,6 +35,13 @@ def post_pid_comment_cid(p_id, c_id, v=None):
     if comment.parent_submission != post.id:
         abort(404)
 
+    board=post.board
+
+    if board.is_banned and not (v and v.admin_level > 3):
+        return render_template("board_banned.html",
+                               v=v,
+                               b=board)
+
     if post.over_18 and not (v and v.over_18) and not session_over18(comment.board):
         t=int(time.time())
         return render_template("errors/nsfw.html",
@@ -43,6 +50,13 @@ def post_pid_comment_cid(p_id, c_id, v=None):
                                lo_formkey=make_logged_out_formkey(t),
                                board=comment.board
                                )
+
+    #check guild ban
+    board=post.board
+    if board.is_banned and v.admin_level<3:
+        return render_template("board_banned.html",
+                               v=v,
+                               b=board)        
 
     #context improver
     context=int(request.args.get("context", 0))
@@ -68,7 +82,7 @@ def api_comment(v):
     parent_fullname=request.form.get("parent_fullname")
 
     #process and sanitize
-    body=request.form.get("body","")[0:2000]
+    body=request.form.get("body","")[0:10000]
     with CustomRenderer() as renderer:
         body_md=renderer.render(mistletoe.Document(body))
     body_html=sanitize(body_md, linkgen=True)
@@ -99,8 +113,12 @@ def api_comment(v):
     parent_id=int(parent_fullname.split("_")[1], 36)
     if parent_fullname.startswith("t2"):
         parent=db.query(Submission).filter_by(id=parent_id).first()
+        parent_comment_id=None
+        level=1
     elif parent_fullname.startswith("t3"):
         parent=db.query(Comment).filter_by(id=parent_id).first()
+        parent_comment_id=parent.id
+        level=parent.level+1
 
     #No commenting on deleted/removed things
     if parent.is_banned or parent.is_deleted:
@@ -110,6 +128,7 @@ def api_comment(v):
     post = get_post(request.form.get("submission"))
     if not post.board.can_comment(v):
         abort(403)
+
         
     #create comment
     c=Comment(author_id=v.id,
@@ -117,10 +136,17 @@ def api_comment(v):
               body_html=body_html,
               parent_submission=parent_submission,
               parent_fullname=parent_fullname,
+              parent_comment_id=parent_comment_id,
+              level=level,
+              author_name=v.username,
+              over_18=post.over_18,
+              is_op=(v.id==post.author_id)
               )
 
     db.add(c)
     db.commit()
+
+    c.determine_offensive()
 
     notify_users=set()
 
@@ -175,7 +201,7 @@ def edit_comment(cid, v):
     if c.board.has_ban(v):
         abort(403)
         
-    body = request.form.get("body", "")
+    body = request.form.get("body", "")[0:10000]
     with CustomRenderer() as renderer:
         body_md=renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
@@ -197,6 +223,8 @@ def edit_comment(cid, v):
 
     db.add(c)
     db.commit()
+
+    c.determine_offensive()
 
     path=request.form.get("current_page","/")
 
@@ -238,5 +266,8 @@ def embed_comment_cid(cid, pid=None):
 
     if comment.is_banned or comment.is_deleted:
         return render_template("embeds/comment_removed.html", c=comment)
+
+    if comment.board.is_banned:
+        abort(410)
 
     return render_template("embeds/comment.html", c=comment)

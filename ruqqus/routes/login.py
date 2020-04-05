@@ -306,6 +306,10 @@ def sign_up_post(v):
     if existing_account or (email and db.query(User).filter(User.email.ilike(email)).first()):
         print(f"signup fail - {username } - email already exists")
         return new_signup("An account with that username or email already exists.")
+
+    #check bans
+    if any([x.is_banned for x in [db.query(User).filter_by(id=y).first() for y in session.get("history",[])]]):
+        abort(403)
     
     #success
     
@@ -320,7 +324,8 @@ def sign_up_post(v):
     ref_user=db.query(User).filter_by(id=ref_id).first()
     if not ref_user:
         ref_id=None
-        
+
+    
     
         
     #make new user
@@ -358,13 +363,13 @@ def sign_up_post(v):
 
     #send welcome message
     text=f"""Welcome to Ruqqus, {new_user.username}.
-        \n\nWelcome to the next free-speech-first social platform. We're glad to have you here.
-        \n\nNow that you have an account, you can [join your favorite guilds](/browse), and follow your favorite users.
-        You're also welcome to say anything protected by the First Amendment here - even if you don't live in the United States.
-        And since we're committed to [open-source](https://github.com/ruqqus/ruqqus) transparency, your front page (and your posted content) won't be artificially manipulated.
-        \n\nReally, it's what social media should have been doing all along.
-        \n\nNow, go enjoy your digital freedom.
-        \n\n-The Ruqqus Team
+\n\nWelcome to the next free-speech-first social platform. We're glad to have you here.
+\n\nNow that you have an account, you can [join your favorite guilds](/browse), and follow your favorite users.
+You're also welcome to say anything protected by the First Amendment here - even if you don't live in the United States.
+And since we're committed to [open-source](https://github.com/ruqqus/ruqqus) transparency, your front page (and your posted content) won't be artificially manipulated.
+\n\nReally, it's what social media should have been doing all along.
+\n\nNow, go enjoy your digital freedom.
+\n\n-The Ruqqus Team
         """
     send_notification(new_user, text)
 

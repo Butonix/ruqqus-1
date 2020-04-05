@@ -8,24 +8,23 @@ from .mix_ins import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.lazy import lazy
 from ruqqus.__main__ import Base, db, cache
-from .submission import Submission
 from .votes import CommentVote
 from .flags import CommentFlag
-from .boards import Board
+from .badwords import *
 
-class Comment(Base, Age_times, Scores, Stndrd):
+class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     __tablename__="comments"
 
     id = Column(Integer, primary_key=True)
     author_id = Column(Integer, ForeignKey("users.id"))
-    body = Column(String(2000), default=None)
+    body = Column(String(10000), default=None)
     parent_submission = Column(Integer, ForeignKey("submissions.id"))
     parent_fullname = Column(Integer) #this column is foreignkeyed to comment(id) but we can't do that yet as "comment" class isn't yet defined
     created_utc = Column(Integer, default=0)
     edited_utc = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
-    body_html = Column(String)
+    body_html = Column(String(20000))
     distinguish_level=Column(Integer, default=0)
     is_deleted = Column(Boolean, default=False)
     is_approved = Column(Integer, default=0)
@@ -35,10 +34,17 @@ class Comment(Base, Age_times, Scores, Stndrd):
     score_disputed=Column(Float, default=0)
     score_hot=Column(Float, default=0)
     score_top=Column(Integer, default=1)
+    level=Column(Integer, default=0)
+    parent_comment_id=Column(Integer, ForeignKey("comments.id"))
+    author_name=Column(String(64), default="")
 
-    post=relationship("Submission", lazy="subquery")
+    over_18=Column(Boolean, default=False)
+    is_op=Column(Boolean, default=False)
+    is_offensive=Column(Boolean, default=False)
+
+    post=relationship("Submission", lazy="joined")
     flags=relationship("CommentFlag", lazy="dynamic", backref="comment")
-    author=relationship("User", lazy="subquery", primaryjoin="User.id==Comment.author_id")
+    author=relationship("User", lazy="joined", innerjoin=True, primaryjoin="User.id==Comment.author_id")
 
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
@@ -54,7 +60,6 @@ class Comment(Base, Age_times, Scores, Stndrd):
     rank_hot=deferred(Column(Float, server_default=FetchedValue()))
 
     flag_count=deferred(Column(Integer, server_default=FetchedValue()))
-    over_18=Column(Boolean, server_default=FetchedValue())
 
     board_id=Column(Integer, server_default=FetchedValue())
     
@@ -72,7 +77,7 @@ class Comment(Base, Age_times, Scores, Stndrd):
                 
     def __repr__(self):
 
-        return f"<Comment(id={self.id})"
+        return f"<Comment(id={self.id})>"
 
     @property
     def fullname(self):
@@ -80,9 +85,7 @@ class Comment(Base, Age_times, Scores, Stndrd):
 
     @property
     def is_top_level(self):
-        return self.parent_fullname.startswith("t2_")
-
-
+        return self.parent_fullname and self.parent_fullname.startswith("t2_")
 
     @property
     @lazy
@@ -101,9 +104,12 @@ class Comment(Base, Age_times, Scores, Stndrd):
             return None
 
         if self.is_top_level:
-            return db.query(Submission).filter_by(id=self.parent_submission).first()
+            return self.post
+
         else:
-            return db.query(Comment).filter_by(id=base36decode(self.parent_fullname.split(sep="_")[1])).first()
+            return self.__dict__.get("parent",
+                                     db.query(Comment).filter_by(id=base36decode(self.parent_fullname.split(sep="_")[1])).first()
+                                     )
 
     @property
     def children(self):
@@ -119,6 +125,7 @@ class Comment(Base, Age_times, Scores, Stndrd):
             return db.query(Comment).filter_by(parent_fullname=self.fullname).all()
 
     @property
+    @lazy
     def permalink(self):
 
         return f"/post/{self.post.base36id}/comment/{self.base36id}"
@@ -137,18 +144,37 @@ class Comment(Base, Age_times, Scores, Stndrd):
             return any([x.any_descendants_live for x in self.replies])
         
 
-    def rendered_comment(self, v=None, render_replies=True, standalone=False, level=1):
+    def rendered_comment(self, v=None, render_replies=True, standalone=False, level=1, **kwargs):
+
+        kwargs["post_base36id"]=kwargs.get("post_base36id", self.post.base36id if self.post else None)
 
         if self.is_banned or self.is_deleted:
             if v and v.admin_level>1:
-                return render_template("single_comment.html", v=v, c=self, replies=self.replies, render_replies=render_replies, standalone=standalone, level=level)
+                return render_template("single_comment.html",
+                                       v=v,
+                                       c=self,
+                                       render_replies=render_replies,
+                                       standalone=standalone,
+                                       level=level,
+                                       **kwargs)
                 
             elif self.any_descendants_live:
-                return render_template("single_comment_removed.html", c=self, replies=self.replies, render_replies=render_replies, standalone=standalone, level=level)
+                return render_template("single_comment_removed.html",
+                                       c=self,
+                                       render_replies=render_replies,
+                                       standalone=standalone,
+                                       level=level,
+                                       **kwargs)
             else:
                 return ""
 
-        return render_template("single_comment.html", v=v, c=self, replies=self.replies, render_replies=render_replies, standalone=standalone, level=level)
+        return render_template("single_comment.html",
+                               v=v,
+                               c=self,
+                               render_replies=render_replies,
+                               standalone=standalone,
+                               level=level,
+                               **kwargs)
 
     @property
     def active_flags(self):
@@ -169,15 +195,45 @@ class Comment(Base, Age_times, Scores, Stndrd):
         elif v.admin_level >= 4:
             return "you are a Ruqqus admin."
 
+
+    def determine_offensive(self):
+
+        for x in db.query(BadWord).all():
+            if x.check(self.body):
+                self.is_offensive=True
+                db.commit()
+                break
+        else:
+            self.is_offensive=False
+            db.commit()
+
     @property
-    @cache.memoize(timeout=60)
-    def score_fuzzed(self):
+    def json(self):
+        if self.is_banned:
+            return {'is_banned':True,
+                    'ban_reason':self.ban_reason,
+                    'id':self.base36id,
+                    'post':self.post.base36id,
+                    'level':self.level,
+                    'parent':self.parent_fullname
+                    }
+        elif self.is_deleted:
+            return {'is_deleted':True,
+                    'id':self.base36id,
+                    'post':self.post.base36id,
+                    'level':self.level,
+                    'parent':self.parent_fullname
+                    }
+        return {'id':self.base36id,
+                'post':self.post.base36id,
+                'level':self.level,
+                'parent':self.parent_fullname,
+                'author':self.author_name,
+                'body':self.body,
+                'body_html':self.body_html
+                }
+            
         
-        k=0.01
-        real = self.score_top
-        a = math.floor(real * (1 - k))
-        b = math.ceil(real * (1 + k))
-        return random.randint(a, b)
         
 class Notification(Base):
 
@@ -187,6 +243,8 @@ class Notification(Base):
     user_id=Column(Integer, ForeignKey("users.id"))
     comment_id=Column(Integer, ForeignKey("comments.id"))
     read=Column(Boolean, default=False)
+
+    comment=relationship("Comment", lazy="joined", innerjoin=True)
 
     #Server side computed values (copied from corresponding comment)
     created_utc=Column(Integer, server_default=FetchedValue())
@@ -198,11 +256,6 @@ class Notification(Base):
         return f"<Notification(id={self.id})"
 
     @property
-    def comment(self):
-
-        return db.query(Comment).filter_by(id=self.comment_id).first()
-
-    @property
     def board(self):
 
-        return db.query(Board).filter_by(id=self.board_id).first()
+        return self.post.board

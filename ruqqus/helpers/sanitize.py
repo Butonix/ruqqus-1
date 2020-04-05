@@ -31,7 +31,6 @@ _allowed_tags=tags=['b',
 _allowed_tags_with_links=_allowed_tags+["a", "hr", "img"]
 
 _allowed_attributes={'a': ['href', 'title', "rel"],
-                     #"i": ["class"],
                      'img':['src', 'class']
                      }
 
@@ -78,6 +77,8 @@ _clean_w_links = bleach.Cleaner(tags=_allowed_tags_with_links,
 
 def sanitize(text, linkgen=False):
 
+    text=text.replace("\ufeff","")
+
     if linkgen:
         sanitized= _clean_w_links.clean(text)
 
@@ -102,6 +103,11 @@ def sanitize(text, linkgen=False):
                     link["href"]=tag["src"]
                     link["rel"]="nofollow"
                     link["target"]="_blank"
+
+                    link["onclick"]=f"expandDesktopImage('{tag['src']}');"
+                    link["data-toggle"]="modal"
+                    link["data-target"]="#expandImageModal"
+                    
                     tag.wrap(link)
             else:
                 #non-whitelisted images get replaced with links

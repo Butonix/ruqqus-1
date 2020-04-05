@@ -1,9 +1,13 @@
+import gevent.monkey
+gevent.monkey.patch_all()
+
 from os import environ
 import secrets
 from flask import *
 from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_compress import Compress
 from time import sleep
 
 from flaskext.markdown import Markdown
@@ -15,9 +19,7 @@ import requests
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-
-_version = "2.2.2.2"
-
+_version = "2.6.1"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -35,11 +37,10 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config["SESSION_COOKIE_SECURE"]=True
 app.config["SESSION_COOKIE_SAMESITE"]="Lax"
 
-#app.config["PERMANENT_SESSION_LIFETIME"]=60*60*24
+app.config["PERMANENT_SESSION_LIFETIME"]=60*60*24*365
 #app.config["SESSION_REFRESH_EACH_REQUEST"]=True
-#session.permanent=True
 
-
+app.jinja_env.cache = {}
 
 app.config["UserAgent"]="Ruqqus webserver ruqqus.com"
 
@@ -53,6 +54,8 @@ app.config["CACHE_DEFAULT_TIMEOUT"]=60
 
 Markdown(app)
 cache=Cache(app)
+Compress(app)
+
 
 limit_url=environ.get("HEROKU_REDIS_PURPLE_URL", environ.get("HEROKU_REDIS_AQUA_URL"))
 
@@ -80,6 +83,8 @@ import ruqqus.helpers.jinja2
 #enforce https
 @app.before_request
 def before_request():
+
+    session.permanent=True
     
     #check ip ban
     if db.query(ruqqus.classes.IP).filter_by(addr=request.remote_addr).first():
@@ -139,11 +144,18 @@ def after_request(response):
     response.headers.add("Cache-Control",
                          "maxage=600")
     response.headers.add("Strict-Transport-Security","max-age=31536000")
+    response.headers.add("Referrer-Policy","same-origin")
+    response.headers.add("X-Content-Type-Options","nosniff")
+    response.headers.add("Feature-Policy",
+                         "geolocation 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'none'; fullscreen 'none'; payment")
+    if not request.path.startswith("/embed/"):
+        response.headers.add("X-Frame-Options",
+                         "deny")
 
     #signups - hit discord webhook
     if request.method=="POST" and response.status_code in [301, 302] and request.path=="/signup":
         link=f'https://{app.config["SERVER_NAME"]}/@{request.form.get("username")}'
         thread=threading.Thread(target=lambda:log_event(name="Account Signup", link=link))
         thread.start()
-            
+
     return response

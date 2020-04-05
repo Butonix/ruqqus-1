@@ -32,15 +32,19 @@
 
     <div class="mt-3">
 
-      <h1>Settings</h1>
+      <h1 class="d-none d-md-block">Settings</h1>
+
+      <h2 class="h3 d-md-none">Settings</h2>
 
     </div>
 
     <!-- Settings tabs -->
 
-    <div class="flex-row bg-white box-shadow-bottom sticky d-flex mt-3 mb-3 mb-md-5">
+    <!-- Desktop -->
 
-      <ul class="nav settings-nav mr-auto">
+    <div class="flex-row bg-white box-shadow-bottom sticky d-none d-sm-flex mt-3 mb-3 mb-sm-5">
+
+      <ul class="nav settings-nav">
         <li class="nav-item">
           <a class="nav-link active" href="/settings/profile">Profile</a>
         </li>
@@ -54,6 +58,23 @@
 
     </div>
 
+    <!-- Mobile -->
+
+    <div class="flex-row bg-white box-shadow-bottom sticky justify-content-center d-flex d-sm-none mt-3 mb-3 mb-sm-5">
+
+      <ul class="nav settings-nav">
+        <li class="nav-item">
+          <a class="nav-link active" href="/settings/profile"><i class="fas fa-user text-lg mr-0"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/settings/security"><i class="fas fa-cog text-lg mr-0"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-none" href="/settings/notifications">Notifications</a>
+        </li>
+      </ul>
+
+    </div>
 
     <div class="row">
 
@@ -61,7 +82,7 @@
 
         <div class="settings">
 
-          <h2 class="h5" id="referral">Profile Picture</h2>
+          <h2 class="h5">Profile Picture</h2>
 
           <div class="settings-section rounded">
 
@@ -86,14 +107,14 @@
 
                 </div>
 
-                  {% if v.has_profile %}
-                  <div>
+                {% if v.has_profile %}
+                <div>
                   <form action="/settings/delete/profile" method="post">
                     <input type="hidden" name="formkey" value="{{ v.formkey }}">
                     <button type="submit" value="Delete" class="btn btn-link fa-lg"><i class="far fa-trash-alt text-danger"></i></button>
                   </form>
-                  </div>
-                  {% endif %}
+                </div>
+                {% endif %}
 
               </div>
 
@@ -104,7 +125,7 @@
           </div>
 
         </div>
-        <h2 class="h5" name="referral">Profile Banner</h2>
+        <h2 class="h5">Profile Banner</h2>
 
         <div class="settings-section rounded">
 
@@ -149,9 +170,9 @@
 
       </div>
 
-      <h2 class="h5" name="referral">Referrals</h2>
+      <h2 class="h5" id="referral" name="referral">Referrals</h2>
 
-      <p class="text-small text-muted">Invite a friend to make a Ruqqus.{% if v.referral_count==0 %} Unlock dark mode!{% endif %}</p>
+      <p class="text-small text-muted">Invite a friend to make a Ruqqus.</p>
 
       <div class="settings-section rounded">
 
@@ -163,17 +184,26 @@
 
           <div class="body w-lg-100">
 
-            <input type="text" readonly="" class="form-control copy-link" id="referral_code" value="https://ruqqus.com/signup?ref={{ v.username }}" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}">
+            <div class="input-group">
 
-            <div class="text-small-extra text-muted mt-3">Share this link with a friend.{% if v.referral_count==0 %} When they sign up, you'll be able to use dark mode.{% else %} When you refer 10 friends, you'll receive the <a href="/help/titles">"Expert Recruiter"</a> title.{% endif %}</div>
+              <input type="text" readonly="" class="form-control copy-link" id="referral_code" value="https://ruqqus.com/signup?ref={{ v.username }}" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}">
+
+              <span class="input-group-append" data-toggle="tooltip" data-placement="top" title="You have referred {{ v.referral_count }} user{{ 's' if v.referral_count != 1 else '' }} so far.{% if v.referral_count==0 %}¯\_(ツ)_/¯{% elif v.referral_count>10%}Wow!{% endif %}">
+                <span class="input-group-text text-muted border-0">
+                  <i class="far fa-user mr-1" aria-hidden="true"></i>{{ v.referral_count }}</span>
+                </span>
+
+              </div>
+
+              <div class="text-small-extra text-muted mt-3">Share this link with a friend. {% if v.referral_count==0 %} When they sign up, you'll get the bronze recruitment badge. <a href="/help/badges">Learn more.</a>{% elif v.referral_count<10 %} When you refer 10 friends, you'll receive the silver recruitment badge. <a href="/help/badges">Learn more.</a>{% elif v.referral_count<100 %} When you refer 100 friends, you'll receive the gold recruitment badge. <a href="/help/badges">Learn more</a>.{% endif %}</div>
+
+              </div>
+
+            </div>
 
           </div>
-
-        </div>
-
-      </div>
-
-            <h2 class="h5" name="referral">RSS Feed</h2>
+        
+      <h2 class="h5" name="referral">RSS Feed</h2>
 
       <p class="text-small text-muted">Subscribe to your own personal ruqqus rss feed.</p>
 
@@ -203,103 +233,141 @@
 
       </div>
 
-      <form id="profile-settings" action="/settings/profile" method="post">
 
-        <h2 class="h5">Content Filters</h2>
+          <form id="profile-settings" action="/settings/profile" method="post">
 
-        <p class="text-small text-muted">Manage what type of content you can see across Ruqqus.</p>
+            <h2 class="h5">Content Filters</h2>
 
-        <div class="settings-section rounded">
+            <p class="text-small text-muted">Manage what type of content you can see across Ruqqus.</p>
 
-          <input type="hidden" name="formkey" value="{{ v.formkey }}">
 
-          <div class="d-lg-flex">
+            <div class="settings-section rounded">
 
-            <div class="title w-lg-25">
-              <label for="over18">View NSFW Content</label>
-            </div>
+              <input type="hidden" name="formkey" value="{{ v.formkey }}">
 
-            <div class="body w-lg-100">
+              <div class="d-lg-flex border-bottom">
 
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="over18" name="over18"{% if v.over_18 %} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
-                <label class="custom-control-label" for="over18"></label>
+                <div class="title w-lg-25">
+                  <label for="over18">View NSFW Content</label>
+                </div>
+
+                <div class="body w-lg-100">
+
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="over18" name="over18"{% if v.over_18 %} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
+                    <label class="custom-control-label" for="over18"></label>
+                  </div>
+
+                  <span class="text-small-extra text-muted">Enable if you are 18+ and are ok with viewing NSFW content.</span>
+
+                </div>
+
               </div>
 
-              <span class="text-small-extra text-muted">Enable if you are 18+ and are ok with viewing NSFW content.</span>
+              <div class="d-lg-flex">
 
-            </div>
+                <div class="title w-lg-25">
+                  <label for="hideoffensive">Hide offensive speech</label>
+                </div>
 
-          </div>
+                <div class="body w-lg-100">
 
-        </div>
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="hideoffensive" name="hide_offensive"{% if v.hide_offensive %} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
+                    <label class="custom-control-label" for="hideoffensive"></label>
+                  </div>
 
-        <h2 class="h5" id="bio" name="bio">Your Profile</h2>
+                  <span class="text-small-extra text-muted">Hide posts or collapse comments that include racial slurs. A full list of words can be found <a href="/slurs.txt" target="_blank">here</a>.</span>
 
-        <p class="text-small text-muted">Edit how others see you on Ruqqus.</p>
+                </div>
 
-        <div class="settings-section rounded mb-0">
-
-          <input type="hidden" name="formkey" value="{{ v.formkey }}">
-
-          <div class="body d-lg-flex">
-
-            <label for="bio" class="text-black w-lg-25">Bio</label>
-
-            <div class="w-lg-100">
-              <div class="input-group mb-2">
-                <textarea class="form-control rounded" id="bio" aria-label="With textarea"
-                placeholder="Tell the Ruqqus community a bit about yourself."
-                rows="3" name="bio" form="profile-settings">{{ v.bio }}</textarea>
               </div>
 
-              <small>Limit of 280 characters</small>
-
             </div>
 
-          </div>
+            <h2 class="h5" id="bio" name="bio">Your Profile</h2>
 
-          <hr>
+            <p class="text-small text-muted">Edit how others see you on Ruqqus.</p>
 
-          <div class="body d-lg-flex">
-            <label for="bio" class="text-black w-lg-25">Title</label>
+            <div class="settings-section rounded mb-0">
 
-            <div class="w-lg-100">
-              <p>Titles change the way your name is displayed across Ruqqus, allowing you to show off a site achievement.</p>
-              <div class="input-group mb2">
-                <select class="form-control" form="profile-settings" name="title_id">
-                 <option value="0"{{ ' selected' if v.title_id==0 else '' }}>No title</option>
-                 {% for entry in v.available_titles %}
-                 <option value="{{ entry.id }}"{{ ' selected' if v.title_id==entry.id else '' }}>{{ entry.text }}</option>
-                 {% endfor %}
-               </select>
+              <input type="hidden" name="formkey" value="{{ v.formkey }}">
+
+              <div class="body d-lg-flex border-bottom">
+
+                <label for="bio" class="text-black w-lg-25">Bio</label>
+
+                <div class="w-lg-100">
+                  <div class="input-group mb-2">
+                    <textarea class="form-control rounded" id="bio" aria-label="With textarea"
+                    placeholder="Tell the Ruqqus community a bit about yourself."
+                    rows="3" name="bio" form="profile-settings">{{ v.bio }}</textarea>
+                  </div>
+
+                  <small>Limit of 280 characters</small>
+
+                </div>
+
+              </div>
+
+              <div class="body d-lg-flex border-bottom">
+                <label for="bio" class="text-black w-lg-25">Title</label>
+
+                <div class="w-lg-100">
+                  <p>Titles change the way your name is displayed across Ruqqus, allowing you to show off a site achievement.</p>
+                  <div class="input-group mb2">
+                    <select class="form-control" form="profile-settings" name="title_id">
+                     <option value="0"{{ ' selected' if v.title_id==0 else '' }}>No title</option>
+                     {% for entry in v.available_titles %}
+                     <option value="{{ entry.id }}"{{ ' selected' if v.title_id==entry.id else '' }}>{{ entry.text }}</option>
+                     {% endfor %}
+                   </select>
+                 </div>
+                 <div class="text-small-extra text-muted mt-3"><a href="/help/titles">Click here</a> to see all titles and the requirements to unlock them.</div>
+
+               </div>
+
              </div>
-             <div class="text-small-extra text-muted mt-3"><a href="/help/titles">Click here</a> to see all titles and the requirements to unlock them.</div>
 
-           </div>
+             <div class="d-lg-flex">
 
-         </div>
+              <div class="title w-lg-25">
+                <label for="privateswitch">Private Mode</label>
+              </div>
 
-       <div class="footer">
+              <div class="body w-lg-100">
 
-        <div class="d-flex">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
+                  <label class="custom-control-label" for="privateswitch"></label>
+                </div>
 
-          <input class="btn btn-primary ml-auto" id="bioSave"
-          type="submit" value="Save Changes">
+                <span class="text-small-extra text-muted">This will hide your post and comment history from others. We will also ask search engines to not index your profile page. (Your content will still be accessible via direct link.)</span>
+
+              </div>
+
+            </div>
+
+            <div class="footer">
+
+              <div class="d-flex">
+
+                <input class="btn btn-primary ml-auto" id="bioSave"
+                type="submit" value="Save Changes">
+
+              </div>
+
+            </div>
+
+          </div>
 
         </div>
 
-      </div>
-
-       </div>
+      </form>
 
     </div>
 
-  </form>
-
-</div>
-
-</div>
+  </div>
 
 </div>
 

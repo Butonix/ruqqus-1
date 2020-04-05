@@ -16,7 +16,7 @@ from .votes import Vote
 from .alts import Alt
 from .titles import Title
 from .submission import Submission
-from .comment import Comment
+from .comment import Comment, Notification
 from .boards import Board
 from .board_relationships import *
 from .mix_ins import *
@@ -34,7 +34,6 @@ class User(Base, Stndrd):
     is_activated = Column(Boolean, default=False)
     over_18=Column(Boolean, default=False)
     creation_ip=Column(String, default=None)
-    most_recent_ip=Column(String, default=None)
     submissions=relationship("Submission", lazy="dynamic", primaryjoin="Submission.author_id==User.id", backref="author_rel")
     comments=relationship("Comment", lazy="dynamic", primaryjoin="Comment.author_id==User.id")
     votes=relationship("Vote", lazy="dynamic", backref="users")
@@ -50,7 +49,7 @@ class User(Base, Stndrd):
     feed_nonce=Column(Integer, default=0)
     login_nonce=Column(Integer, default=0)
     title_id=Column(Integer, ForeignKey("titles.id"), default=None)
-    title=relationship("Title")
+    title=relationship("Title", lazy="joined")
     has_profile=Column(Boolean, default=False)
     has_banner=Column(Boolean, default=False)
     reserved=Column(String(256), default=None)
@@ -60,6 +59,9 @@ class User(Base, Stndrd):
     banner_nonce=Column(Integer, default=0)
     last_siege_utc=Column(Integer, default=0)
     mfa_secret=Column(String(16), default=None)
+    hide_offensive=Column(String(16), default=False)
+    is_private=Column(Boolean, default=False)
+    
 
     moderates=relationship("ModRelationship", lazy="dynamic")
     banned_from=relationship("BanRelationship", lazy="dynamic", primaryjoin="BanRelationship.user_id==User.id")
@@ -108,7 +110,7 @@ class User(Base, Stndrd):
         return int(time.time())-self.created_utc
         
     @cache.memoize(timeout=300)
-    def idlist(self, sort="hot", page=1, only=None, t=None):
+    def idlist(self, sort="hot", page=1, t=None, hide_offensive = False, **kwargs):
 
         
 
@@ -117,24 +119,21 @@ class User(Base, Stndrd):
                                              stickied=False
                                              )
 
-
         if not self.over_18:
             posts=posts.filter_by(over_18=False)
 
-        if only in [None, "none"]:
-            board_ids=[x.board_id for x in self.subscriptions.filter_by(is_active=True).all()]
-            user_ids=[x.target_id for x in self.following.all()]
-            user_ids.append(self.id)
-            posts=posts.filter(or_(Submission.board_id.in_(board_ids), Submission.author_id.in_(user_ids)))
-        elif only=="guilds":
-            board_ids=[x.board_id for x in self.subscriptions.filter_by(is_active=True).all()]
-            posts=posts.filter(Submission.board_id.in_(board_ids))
-        elif only=="users":
-            user_ids=[x.target_id for x in self.following.all()]
-            user_ids.append(self.id)
-            posts=posts.filter(Submission.author_id.in_(user_ids))
-        else:
-            abort(422)
+        if hide_offensive:
+            posts = posts.filter_by(is_offensive=False)
+
+        board_ids=[x.board_id for x in self.subscriptions.filter_by(is_active=True).all()]
+        user_ids =[x.target_id for x in self.following.all()]
+        
+        posts=posts.filter(
+            or_(
+                Submission.board_id.in_(board_ids),
+                Submission.author_id.in_(user_ids)
+                )
+            )
 
         if not self.admin_level >=4:
             #admins can see everything
@@ -193,25 +192,30 @@ class User(Base, Stndrd):
 
         if ids:
 
-            #assemble list of tuples
-            i=1
-            tups=[]
+##            #assemble list of tuples
+##            i=1
+##            tups=[]
+##            for x in ids:
+##                tups.append((x,i))
+##                i+=1
+##
+##            tups=str(tups).lstrip("[").rstrip("]")
+##
+##            #hit db for entries
+##            posts=db.query(Submission
+##                           ).from_statement(
+##                               text(
+##                               f"""
+##                                select submissions.*
+##                                from submissions
+##                                join (values {tups}) as x(id, n) on submissions.id=x.id
+##                                where x.n is not null
+##                                order by x.n"""
+##                               )).all()
+            posts=[]
             for x in ids:
-                tups.append((x,i))
-                i+=1
-
-            tups=str(tups).lstrip("[").rstrip("]")
-
-            #hit db for entries
-            posts=db.query(Submission
-                           ).from_statement(
-                               text(
-                               f"""
-                                select submissions.*, submissions.ups, submissions.downs
-                                from submissions
-                                join (values {tups}) as x(id, n) on submissions.id=x.id
-                                order by x.n"""
-                               )).all()
+                posts.append(db.query(Submission).filter_by(id=x).first())
+            
         else:
             posts=[]
 
@@ -224,7 +228,8 @@ class User(Base, Stndrd):
         ids=self.idlist(sort=sort,
                         page=page,
                         only=only,
-                        t=request.args.get('t', None)
+                        t=request.args.get('t', None),
+                        hide_offensive = self.hide_offensive
                         )
 
         posts, next_exists = self.list_of_posts(ids)
@@ -258,12 +263,12 @@ class User(Base, Stndrd):
     @property
     @cache.memoize(timeout=3600) #1hr cache time for user rep
     def karma(self):
-        return self.energy
+        return int(self.energy)
 
     @property
     @cache.memoize(timeout=3600)
     def comment_karma(self):
-        return self.comment_energy
+        return int(self.comment_energy)
 
 
     @property
@@ -323,6 +328,9 @@ class User(Base, Stndrd):
         if self.is_banned and (not v or v.admin_level < 3):
             return render_template("userpage_banned.html", u=self, v=v)
 
+        if self.is_private and (not v or (v.id!=self.id and v.admin_level<3)):
+            return render_template("userpage_private.html", u=self, v=v)
+
         page=int(request.args.get("page","1"))
         page=max(page, 1)
 
@@ -330,6 +338,9 @@ class User(Base, Stndrd):
 
         if not (v and v.over_18):
             submissions=submissions.filter_by(over_18=False)
+
+        if v and v.hide_offensive:
+            submissions=submissions.filter_by(is_offensive=False)
 
         if not (v and (v.admin_level >=3)):
             submissions=submissions.filter_by(is_deleted=False)
@@ -384,6 +395,9 @@ class User(Base, Stndrd):
 
         if self.is_banned and (not v or v.admin_level < 3):
             return render_template("userpage_banned.html", u=self, v=v)
+
+        if self.is_private and (not v or (v.id!=self.id and not v.admin_level<3)):
+            return render_template("userpage_private.html", u=self, v=v)
         
         page=int(request.args.get("page","1"))
 
@@ -391,7 +405,10 @@ class User(Base, Stndrd):
 
         if not (v and v.over_18):
             comments=comments.filter_by(over_18=False)
-            
+
+        if not (v and v.hide_offensive):
+            comments=comments.filter_by(is_offensive=False)
+
         if not (v and (v.admin_level >=3)):
             comments=comments.filter_by(is_deleted=False)
             
@@ -487,13 +504,14 @@ class User(Base, Stndrd):
         if not include_read:
             notifications=notifications.filter_by(read=False)
 
-        notifications = notifications.order_by(text("id desc")).offset(25*(page-1)).limit(26)
+        notifications = notifications.order_by(Notification.id.desc()).offset(25*(page-1)).limit(26)
 
         comments=[n.comment for n in notifications]
         next_exists=(len(comments)==26)
         comments=comments[0:25]
 
         for n in [x for x in notifications][0:25]:
+            #print(f"{n.id} - {n.comment.id}")
             if not n.read:
                 n.read=True
                 db.add(n)
@@ -545,7 +563,10 @@ class User(Base, Stndrd):
         alts1=db.query(User).join(Alt, Alt.user2==User.id).filter(Alt.user1==self.id).all()
         alts2=db.query(User).join(Alt, Alt.user1==User.id).filter(Alt.user2==self.id).all()
 
-        return list(set([x for x in alts1]+[y for y in alts2]))
+        output= list(set([x for x in alts1]+[y for y in alts2]))
+        output=sorted(output, key=lambda x: x.username)
+
+        return output
         
 
     def has_follower(self, user):
@@ -633,3 +654,39 @@ class User(Base, Stndrd):
         now=int(time.time())
 
         return now-self.last_siege_utc > 60*60*24*30
+
+    @property
+    def json(self):
+
+        if self.is_banned:
+            return {'username':self.username,
+                    'permalink':self.permalink,
+                    'is_banned':True,
+                    'ban_reason':self.ban_reason,
+                    'id':self.base36id
+                    }
+
+        return {'username':self.username,
+                'permalink':self.permalink,
+                'is_banned':False,
+                'created_utc':self.created_utc,
+                'post_rep':int(self.karma),
+                'comment_rep':int(self.comment_karma),
+                'badges':[x.json for x in self.badges],
+                'id':self.base36id,
+                'profile_url':self.profile_url,
+                'banner_url':self.banner_url,
+                'post_count':self.post_count,
+                'comment_count':self.comment_count
+                }
+
+    @property
+    def total_karma(self):
+
+        return  max(self.karma+self.comment_karma, -5)
+
+        
+    def can_use_darkmode(self):
+        return True
+        #return self.referral_count or self.has_earned_darkmode or self.has_badge(16) or self.has_badge(17)
+

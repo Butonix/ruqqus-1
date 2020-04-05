@@ -27,7 +27,6 @@
   <!-- Font Awesome -->
   <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 
-  <script src="/assets/js/post.js"></script>
   <script>
     function formkey() {
       return '{{ v.formkey }}';
@@ -110,17 +109,22 @@
   <div class="container-fluid bg-white sticky d-block d-md-none">
     <div class="row box-shadow-bottom">
       <div class="col">
-        <div class="d
-        -flex flex-row-reverse justify-content-end">
-          <ul class="nav settings-nav x-scroll">
+        <div class="d-flex flex-row-reverse justify-content-center">
+          <ul class="nav settings-nav">
             <li class="nav-item">
-              <a class="nav-link{% if request.path.endswith("/mod/settings") %} active{% endif %}" href="/+{{ b.name }}/mod/settings"><i class="fas fa-cog"></i>Settings</a>
+              <a class="nav-link{% if request.path.endswith('/mod/settings') %} active{% endif %}" href="/+{{ b.name }}/mod/settings"><i class="fas fa-cog text-lg mr-0"></i></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link{% if request.path.endswith("/mod/mods") %} active{% endif %}" href="/+{{ b.name }}/mod/mods"><i class="fas fa-crown"></i>Guildmasters</a>
+              <a class="nav-link{% if request.path.endswith('/mod/appearance') %} active{% endif %}" href="/+{{ b.name }}/mod/appearance"><i class="fas fa-palette text-lg mr-0"></i></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link{% if request.path.endswith("/mod/exiled") %} active{% endif %}" href="/+{{ b.name }}/mod/exiled"><i class="fas fa-user-slash"></i>Exiled Users</a>
+              <a class="nav-link{% if request.path.endswith('/mod/mods') %} active{% endif %}" href="/+{{ b.name }}/mod/mods"><i class="fas fa-crown text-lg mr-0"></i></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{% if request.path.endswith('/mod/exiled') %} active{% endif %}" href="/+{{ b.name }}/mod/exiled"><i class="fas fa-user-slash text-lg mr-0"></i></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{% if request.path.endswith('/mod/queue') %} active{% endif %}" href="/+{{ b.name }}/mod/queue"><i class="fas fa-flag text-lg mr-0"></i></a>
             </li>
           </ul>
         </div>
@@ -161,17 +165,6 @@
 
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/change_email.js"></script>
-<script src="/assets/js/email_verify_text.js"></script>
-
-<!-- Initialize BS 4 tool tips -->
-
-<script src="/assets/js/tooltips.js"></script>
-
-<!-- Search bar icon JS -->
-
-<script src="/assets/js/search_icon.js"></script>
-
 <!-- ClipboardJS -->
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
@@ -199,12 +192,13 @@
 
 <!-- Ruqqus Dark Mode Toggle -->
 
-<script src="/assets/js/dark_mode.js"></script>
 
 {% endif %}
 
-{% block scripts %}
-{% endblock %}
+<script src="/assets/js/all_js.js"></script>
+
+  {% block scripts %}
+  {% endblock %}
 
 </body>
 

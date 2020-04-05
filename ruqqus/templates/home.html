@@ -6,37 +6,6 @@
 </div>
 {% endblock %}
 
-{% block enlargeThumbJS %}
-<script src="/assets/js/enlarge_thumb.js"></script>
-{% endblock %}
-
-{% block toggleView %}
-<script src="/assets/js/toggle_view.js"></script>
-{% endblock %}
-
-{% block fixedMobileBarJS %}
-<script>
-  var prevScrollpos = window.pageYOffset;
-  window.onscroll = function () {
-    var currentScrollPos = window.pageYOffset;
-    if (prevScrollpos > currentScrollPos) {
-      document.getElementById("fixed-bar-mobile").style.top = "49px";
-      document.getElementById("navbar").classList.remove("shadow");
-    } 
-    else if (currentScrollPos <= 125) {
-      document.getElementById("fixed-bar-mobile").style.top = "49px";
-      document.getElementById("navbar").classList.remove("shadow");
-    }
-    else {
-      document.getElementById("fixed-bar-mobile").style.top = "-49px";
-      document.getElementById("mobileSortDropdown").classList.remove('show');
-      document.getElementById("navbar").classList.add("shadow");
-    }
-    prevScrollpos = currentScrollPos;
-  }
-</script>
-{% endblock %}
-
 {% block desktopBanner %}
 
 <div class="row border-bottom bg-white sticky d-none d-md-block guild-border-top" style="overflow: visible;">
@@ -44,7 +13,7 @@
     <div class="d-flex justify-content-between align-items-center">
 
       {% block navbar %}
-      <div class="font-weight-bold py-3">Ruqqus Homepage</div>
+      <div class="font-weight-bold py-3">Ruqqus {% if request.path=="/all" %}All{% else %}Homepage{% endif %}</div>
 
       <div class="d-flex align-items-center">
         <div class="text-small font-weight-bold mr-2">Sort by</div>
@@ -167,7 +136,7 @@
       </div>
     </div>
 
-    <div class="row fixed-top bg-white border-top d-inline-flex d-md-none py-2 px-3" id="fixed-bar-mobile" style="z-index: 100; top: 49px; transition: top 0.3s;">
+    <div class="row fixed-top bg-white border-top d-inline-flex d-md-none py-2 px-3" id="fixed-bar-mobile" style="z-index: 100; top: 49px; transition: top 220ms cubic-bezier(0, 0, 0.2, 1);">
 
       <div class="col">
 
@@ -249,7 +218,7 @@
     {% block sidebarblock %}
     {% if v and v.can_make_guild %}
     <div class="sidebar-section sidebar-guildmake">
-      <div class="title"><i class="fas fa-university mr-2"></i>Guilds</div>
+      <div class="title"><i class="fas fa-chess-rook mr-2"></i>Guilds</div>
       <div class="body">
         <p>Create a community for something you love.</p>
         <a href="/create_guild" class="btn btn-primary btn-block">Create Guild</a>
@@ -257,7 +226,7 @@
     </div>
     {% elif v and not v.can_make_guild %}
     <div class="sidebar-section sidebar-guildmake">
-      <div class="title"><i class="fas fa-university mr-2"></i>Guilds</div>
+      <div class="title"><i class="fas fa-chess-rook mr-2"></i>Guilds</div>
       <div class="body">
         <p class="text-muted">You need 50 rep to create a guild. Rep can be earned by commenting and posting.</p>
         <a href="#" class="btn btn-primary btn-block disabled">Create Guild</a>
