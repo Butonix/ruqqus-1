@@ -1101,7 +1101,7 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
     except:
         abort(422)
 
-    if x and board.submissions.filter_by(is_pinned=True).count()>=4:
+    if x and not board.can_pin_another:
         return jsonify({"error":f"+{board.name} already has the maximum number of pinned posts."}), 409
 
 
