@@ -251,7 +251,7 @@
             {% endif %}
             {% if v %}
             {% if v.id | is_mod(p.board_id) %}
-            <button class="btn btn-white btn-block btn-lg text-lg text-left" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}})"><i class="far fa-times text-center text-danger mr-4"></i>Kick</button>
+            <button class="btn btn-white btn-block btn-lg text-lg text-left" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}})"><i class="far fa-times text-center text-danger mr-4"></i>Remove from +{{ p.board.name }}</button>
             {% if p.report_count >= 1 %}
             <button class="btn btn-white btn-block btn-lg text-lg text-left" onclick="post('/mod/accept/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}})"><i class="far fa-check text-center text-success mr-4"></i>Approve</button>
             {% endif %}
