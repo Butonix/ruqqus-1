@@ -52,20 +52,7 @@ def feeds(sort=None, username=None, key=None):
         return abort(501)
 
 
-    cutoff = int(time.time()) - (60 * 60 * 24) # 1 day
-
-    posts = db.query(Submission).filter(Submission.created_utc>=cutoff,
-                                        Submission.is_banned == False,
-                                        Submission.is_deleted == False,
-                                        Submission.stickied == False,
-                                        Submission.is_public == True)
-
-    if sort == "hot":
-        posts = posts.order_by(Submission.rank_hot.desc())
-    elif sort == "disputed":
-        posts = posts.order_by(Submission.score_disputed.desc())
-    elif sort == "top":
-        posts = posts.order_by(Submission.score.desc())
+    posts = user.idlist(sort=sort, t="day")
 
 
     feed = AtomFeed(title=f'Top 5 {sort} Posts from ruqqus',
@@ -73,11 +60,16 @@ def feeds(sort=None, username=None, key=None):
 
     posts = posts.limit(5).all()
 
+    count = 0
     for post in posts:
+        if count >=5:
+            break
+
         feed.add(post.title, post.body_html,
                  content_type='html',
                  author=post.author.username,
                  url=full_link(post.permalink),
                  updated=datetime.fromtimestamp(post.created_utc),
                  published=datetime.fromtimestamp(post.created_utc))
+        count += 1
     return feed.get_response()
