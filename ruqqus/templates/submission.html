@@ -270,9 +270,9 @@
           {% if p.board.has_mod(v) %}
 
           {% if p.is_pinned %}
-          <button class="btn btn-white btn-block btn-lg text-info text-lg text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-center text-info mr-4"></i>Unpin</button>
+          <button class="btn btn-white btn-block btn-lg text-success text-lg text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-center text-success mr-4"></i>Unpin</button>
           {% elif p.board.can_pin_another %}
-          <button class="btn btn-white btn-block btn-lg text-info text-lg text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-center text-info mr-4"></i>Pin</button>
+          <button class="btn btn-white btn-block btn-lg text-success text-lg text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-center text-success mr-4"></i>Pin</button>
           {% endif %}
 
           <button class="btn btn-white btn-block btn-lg text-danger text-lg text-left" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board.base36id }}/{{ p.base36id }}', callback=function(){window.location.reload(true)})"><i class="fas fa-times text-center text-danger mr-4"></i>Kick</button>
