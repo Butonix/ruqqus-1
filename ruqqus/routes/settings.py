@@ -1,5 +1,6 @@
 from flask import *
 from sqlalchemy import func
+import time
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
@@ -259,4 +260,14 @@ def settings_toggle_collapse(v):
 
     return "", 204
 
-    
+
+
+@app.route("/settings/read_announcement", methods=["POST"])
+@auth_required
+@validate_formkey
+def update_announcement(v):
+
+    v.read_announcement_utc=int(time.time())
+    db.add(v)
+    db.commit()
+    return "", 204
