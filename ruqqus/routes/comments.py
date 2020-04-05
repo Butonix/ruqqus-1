@@ -18,7 +18,7 @@ from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 
 @app.route("/comment/<cid>", methods=["GET"])
-def comment_cid(cid, v):
+def comment_cid(cid):
 
     comment=get_comment(cid)
     return redirect(comment.permalink)
