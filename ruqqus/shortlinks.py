@@ -76,7 +76,7 @@ Base = declarative_base()
 #import and bind all routing functions
 import ruqqus.classes
 #from ruqqus.routes import *
-#import ruqqus.helpers.jinja2
+import ruqqus.helpers.get import *
 
 @app.route("/<pid>", host="ruqq.us")
 @app.route("/<pid>/<cid>", host="ruqq.us")
