@@ -251,7 +251,7 @@
           <button class="btn btn-white btn-block btn-lg text-lg text-left" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{ p.base36id }}','{{ p.author.username }}','{{ p.board.name }}')" class="d-block"><i class="far fa-flag text-center text-muted mr-3"></i>Flag</button>
           {% endif %}
           {% if v and v.id==p.author_id %}
-          <button class="btn btn-white btn-block btn-lg text-lg text-left" onclick="togglePostEdit('{{ p.base36id }}')"><i class="far fa-edit text-center text-muted mr-3"></i>Edit</button>
+          <button class="btn btn-white btn-block btn-lg text-lg text-left" data-dismiss="modal" onclick="togglePostEdit('{{ p.base36id }}')"><i class="far fa-edit text-center text-muted mr-3"></i>Edit</button>
 
           <button class="btn btn-white btn-block btn-lg text-lg text-left" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{ p.base36id }}')"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Delete</button>
 
