@@ -159,3 +159,22 @@ def after_request(response):
         thread.start()
 
     return response
+
+@app.route("/<path:path>", host="www.ruqqus.com")
+def www_redirect(path):
+
+    return redirect(f"https://ruqqus.com/{path}")
+
+@app.route("/<pid>", host="ruqq.us")
+@app.route("/<pid>/<cid>", host="ruqq.us")
+def shortlink_redirect(pid, cid=None):
+
+    if cid:
+
+        comment=get_comment(cid)
+        if comment.post.base36id != pid:
+            abort 404
+        return redirect(comment.permalink)
+
+    post=get_post(pid)
+    return redirect(post.permalink)
