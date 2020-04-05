@@ -437,8 +437,14 @@ class User(Base, Stndrd):
                                next_exists=next_exists,
                                is_following=is_following)
     @property
-    def feedkey(self):
+    def feedkey(self, new=False):
+        if new:
+            self.feed_nonce+=1
+            db.commit()
         return generate_hash(f"{self.username}{self.id}{self.feed_nonce}{self.created_utc}")
+
+
+
 
 
     @property
