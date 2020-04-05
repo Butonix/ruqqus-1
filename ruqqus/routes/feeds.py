@@ -34,7 +34,7 @@ def feeds(sort=None):
         feed.add(post.title, post.body_html,
                  content_type='html',
                  author=post.author.username,
-                 url=f"https://ruqqus.com{post.permalink}",
+                 url=full_link(post.permalink),
                  updated=datetime.fromtimestamp(post.created_utc),
                  published=datetime.fromtimestamp(post.created_utc))
     return feed.get_response()
@@ -77,7 +77,7 @@ def feeds(sort=None, username=None, key=None):
         feed.add(post.title, post.body_html,
                  content_type='html',
                  author=post.author.username,
-                 url=f"https://ruqqus.com{post.permalink}",
+                 url=full_link(post.permalink),
                  updated=datetime.fromtimestamp(post.created_utc),
                  published=datetime.fromtimestamp(post.created_utc))
     return feed.get_response()
