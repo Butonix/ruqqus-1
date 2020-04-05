@@ -401,7 +401,7 @@ class User(Base, Stndrd):
         
         page=int(request.args.get("page","1"))
 
-        comments=self.comments.filter(text("parent_submission is not null"))
+        comments=self.comments.filter(Comment.parent_submission is not None)
 
         if not (v and v.over_18):
             comments=comments.filter_by(over_18=False)

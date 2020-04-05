@@ -178,3 +178,8 @@ def shortlink_redirect(pid, cid=None):
 
     post=get_post(pid)
     return redirect(post.permalink)
+
+@app.route("/", host="ruqq.us")
+def shortlink_home():
+    
+    return redirect("https://ruqqus.com")

@@ -13,7 +13,9 @@ def send_notification(user, text):
                         body=text,
                         body_html=text_html,
                         parent_submission=None,
-                        distinguish_level=6)
+                        distinguish_level=6,
+                        is_offensive=False
+                        )
     db.add(new_comment)
     db.commit()
     notif=Notification(comment_id=new_comment.id,
