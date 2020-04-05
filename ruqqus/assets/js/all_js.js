@@ -458,7 +458,11 @@ function delete_postModal(id) {
 
   // Passed data for modal
 
-  document.getElementById("deletePostButton").onclick = function() {  
+  document.getElementById("deletePostButton-mobile").addEventListener("click", delete_post);
+
+  document.getElementById("deletePostButton").addEventListener("click", delete_post);
+
+  function delete_post(){  
 
     this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting post';  
     this.disabled = true; 
