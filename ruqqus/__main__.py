@@ -23,7 +23,8 @@ _version = "2.6.2"
 
 app = Flask(__name__,
             template_folder='./templates',
-            static_folder='./static'
+            static_folder='./static',
+            host_matching=True
            )
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 
@@ -160,7 +161,7 @@ def after_request(response):
 
     return response
 
-@app.route("/<path:path>", host="www.ruqqus.com")
+@app.route("/<path:path>", subdomain="www")
 def www_redirect(path):
 
     return redirect(f"https://ruqqus.com/{path}")
