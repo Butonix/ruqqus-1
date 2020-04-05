@@ -2075,6 +2075,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     .modal.show.modal-sm-bottom .modal-dialog {
         transform: translate3d(0, 0, 0);
     }
+
+    .modal.modal-sm-bottom .modal-header {
+        border-top-right-radius: 1rem;
+        border-top-left-radius: 1rem;
+    }
 } 
 
 // Dropdown actions
