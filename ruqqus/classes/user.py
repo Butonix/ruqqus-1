@@ -406,7 +406,7 @@ class User(Base, Stndrd):
         if not (v and v.over_18):
             comments=comments.filter_by(over_18=False)
 
-        if not (v and v.hide_offensive):
+        if v and v.hide_offensive:
             comments=comments.filter_by(is_offensive=False)
 
         if not (v and (v.admin_level >=3)):
