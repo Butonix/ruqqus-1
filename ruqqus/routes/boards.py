@@ -1113,4 +1113,6 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
     db.add(post)
     db.commit()
 
+    return "", 204
+
     
