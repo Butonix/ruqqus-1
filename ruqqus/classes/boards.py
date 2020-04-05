@@ -359,6 +359,15 @@ class Board(Base, Stndrd, Age_times):
         return f"{self.permalink}/dark/{self.color_nonce}.css"
 
     @property
+    def n_pins(self):
+        return self.submissions.filter_by(is_pinned=True).count()
+
+    @property
+    def can_pin_another(self):
+
+        return self.n_pins < 4
+
+    @property
     def json(self):
 
         if self.is_banned:

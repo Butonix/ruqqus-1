@@ -271,7 +271,7 @@
 
 		{% if p.is_pinned %}
           <li class="list-group-item"><a class="d-block text-info" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack text-info fa-rotate--45"></i>Unpin</a></li>
-		{% else %}
+		{% elif p.board.can_pin_another %}
           <li class="list-group-item"><a class="d-block text-info" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack text-info fa-rotate--45"></i>Pin</a></li>
 		{% endif %}
 
@@ -399,7 +399,7 @@
 
 		{% if p.is_pinned %}
           <li class="list-inline-item"><a class="d-block text-info" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack text-info fa-rotate--45"></i>Unpin</a></li>
-		{% else %}
+		{% elif p.board.can_pin_another %}
           <li class="list-inline-item"><a class="d-block text-info" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack text-info fa-rotate--45"></i>Pin</a></li>
 		{% endif %}
 
