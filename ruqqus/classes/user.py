@@ -125,7 +125,7 @@ class User(Base, Stndrd):
             posts = posts.filter_by(is_offensive=False)
 
         board_ids=[x.board_id for x in self.subscriptions.filter_by(is_active=True).all()]
-        user_ids =[x.target_id for x in self.following.all()]
+        user_ids =[x.target.id for x in self.following.all() if x.target.is_private==False]
         
         posts=posts.filter(
             or_(
