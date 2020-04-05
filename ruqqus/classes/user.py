@@ -60,7 +60,7 @@ class User(Base, Stndrd):
     mfa_secret=Column(String(16), default=None)
     hide_offensive=Column(String(16), default=False)
     is_private=Column(Boolean, default=False)
-    has_read_announcement=Column(Boolean, default=False)
+    read_announcement_utc=Column(Integer, default=0)
     
 
     moderates=relationship("ModRelationship", lazy="dynamic")
