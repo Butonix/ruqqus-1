@@ -23,8 +23,7 @@ _version = "2.6.2"
 
 app = Flask(__name__,
             template_folder='./templates',
-            static_folder='./static',
-            host_matching=True
+            static_folder='./static'
            )
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 
@@ -44,6 +43,7 @@ app.config["PERMANENT_SESSION_LIFETIME"]=60*60*24*365
 app.jinja_env.cache = {}
 
 app.config["UserAgent"]="Ruqqus webserver ruqqus.com"
+app.url_map.host_matching = True
 
 if "localhost" in app.config["SERVER_NAME"]:
     app.config["CACHE_TYPE"]="null"
