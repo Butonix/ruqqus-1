@@ -125,7 +125,7 @@ def create_board_post(v):
     return redirect(new_board.permalink)
 
 @app.route("/+<name>", methods=["GET"])
-@app.route("/api/v1/guild/<name>", methods=["GET"])
+@app.route("/api/v1/guild/<name>/listing", methods=["GET"])
 @auth_desired
 @api
 def board_name(name, v):
@@ -133,7 +133,7 @@ def board_name(name, v):
     board=get_guild(name)
 
     if not board.name==name:
-        return redirect(board.permalink)
+        return redirect(request.path.replace(name, board.name))
 
     if board.is_banned and not (v and v.admin_level>=3):
         return render_template("board_banned.html",
