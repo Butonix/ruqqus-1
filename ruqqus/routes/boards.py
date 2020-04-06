@@ -136,20 +136,23 @@ def board_name(name, v):
         return redirect(request.path.replace(name, board.name))
 
     if board.is_banned and not (v and v.admin_level>=3):
-        return render_template("board_banned.html",
+        return {'html':lambda:render_template("board_banned.html",
                                v=v,
                                b=board,
                                p=True
-                               ), 410
-
+                               ),
+                'api':lambda:{'error':f'+{board.name} is banned.'}
+                }
     if board.over_18 and not (v and v.over_18) and not session_over18(board):
         t=int(time.time())
-        return render_template("errors/nsfw.html",
+        return {'html':lambda:render_template("errors/nsfw.html",
                                v=v,
                                t=t,
                                lo_formkey=make_logged_out_formkey(t),
                                board=board
-                               )
+                               ),
+                'api':lambda:{'error':f'+{board.name} is NSFW.'}
+                }
 
     sort=request.args.get("sort","hot")
     page=int(request.args.get("page", 1))
