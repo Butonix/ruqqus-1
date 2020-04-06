@@ -125,6 +125,7 @@ def create_board_post(v):
     return redirect(new_board.permalink)
 
 @app.route("/+<name>", methods=["GET"])
+@app.route("/api/v1/guild/<name>", methods=["GET"])
 @auth_desired
 def board_name(name, v):
 
@@ -138,7 +139,7 @@ def board_name(name, v):
                                v=v,
                                b=board,
                                p=True
-                               )
+                               ), 410
 
     if board.over_18 and not (v and v.over_18) and not session_over18(board):
         t=int(time.time())

@@ -7,6 +7,7 @@ from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import *
 from ruqqus.helpers.session import *
 import ruqqus.helpers.aws as aws
+from ruqqus.helpers.api import *
 from .submission import *
 from .board_relationships import *
 from .mix_ins import *
@@ -142,34 +143,8 @@ class Board(Base, Stndrd, Age_times):
         next_exists=(len(ids)==26)
         ids=ids[0:25]
 
-        if ids:
+        posts=[db.query(Submission).filter_by(id=x).first() for x in ids]
 
-##            #assemble list of tuples
-##            i=1
-##            tups=[]
-##            for x in ids:
-##                tups.append((x,i))
-##                i+=1
-##
-##            tups=str(tups).lstrip("[").rstrip("]")
-##
-##            #hit db for entries
-##            posts=db.query(Submission
-##                           ).from_statement(
-##                               text(
-##                               f"""
-##                                select submissions.*
-##                                from submissions
-##                                join (values {tups}) as x(id, n) on submissions.id=x.id
-##                                where x.n is not null
-##                                order by x.n"""
-##                               )).all()
-            posts=[]
-            for x in ids:
-                posts.append(db.query(Submission).filter_by(id=x).first())
-            
-        else:
-            posts=[]
 
         if page==1:
             stickies=self.submissions.filter_by(is_banned=False,
@@ -179,17 +154,16 @@ class Board(Base, Stndrd, Age_times):
             stickies=[x for x in stickies]
             posts=stickies+posts
 
-        
-        is_subscribed=(v and self.has_subscriber(v))
-
-        return render_template("board.html",
+        return {'html':lambda:render_template("board.html",
                                b=self,
                                v=v,
                                listing=posts,
                                next_exists=next_exists,
                                sort_method=sort,
                                page=page,
-                               is_subscribed=is_subscribed)
+                               is_subscribed=(v and self.has_subscriber(v))),
+                'api':lambda:[x.json for x in posts]
+                }
 
 
     def has_mod(self, user):
