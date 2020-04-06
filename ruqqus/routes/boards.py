@@ -127,6 +127,7 @@ def create_board_post(v):
 @app.route("/+<name>", methods=["GET"])
 @app.route("/api/v1/guild/<name>", methods=["GET"])
 @auth_desired
+@api
 def board_name(name, v):
 
     board=get_guild(name)
@@ -153,9 +154,40 @@ def board_name(name, v):
     sort=request.args.get("sort","hot")
     page=int(request.args.get("page", 1))
              
-    return board.rendered_board_page(v=v,
-                                     sort=sort,
-                                     page=page)
+   
+    ids=board.idlist(sort=sort,
+                    page=page,
+                    nsfw=(v and v.over_18) or session_over18(self),
+                    v=v
+                    )
+
+    next_exists=(len(ids)==26)
+    ids=ids[0:25]
+
+    posts=[db.query(Submission).filter_by(id=x).first() for x in ids]
+
+
+    if page==1:
+        stickies=board.submissions.filter_by(is_banned=False,
+                                  is_deleted=False,
+                                  is_pinned=True).order_by(Submission.id.asc()
+                                                           ).limit(4)
+        stickies=[x for x in stickies]
+        posts=stickies+posts
+
+    return {'html':lambda:render_template("board.html",
+                           b=self,
+                           v=v,
+                           listing=posts,
+                           next_exists=next_exists,
+                           sort_method=sort,
+                           page=page,
+                           is_subscribed=(v and board.has_subscriber(v)
+                                          )
+                                          ),
+            'api':lambda:[x.json for x in posts]
+            }
+
 
 @app.route("/mod/kick/<bid>/<pid>", methods=["POST"])
 @auth_required
