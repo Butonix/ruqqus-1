@@ -17552,21 +17552,21 @@ div.deleted.banned {
 
 /* scrollbar */
 
-::-webkit-scrollbar {
+body::-webkit-scrollbar {
     width: 12px;
     background-color: #0c0c0c;
 }
 
-::-webkit-scrollbar-button {
+body::-webkit-scrollbar-button {
     height: 56px;
     background: #282828;
 }
 
-::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-thumb {
     background: #dadbe233;
 }
 
-::-webkit-scrollbar-button:vertical:increment {
+body::-webkit-scrollbar-button:vertical:increment {
     height: 0px;
 }
 
