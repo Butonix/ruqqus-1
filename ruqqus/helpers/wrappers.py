@@ -227,7 +227,7 @@ def api(f):
 
         x=f(*args, **kwargs)
 
-        if requests.path.startswith('/api/v1'):
+        if request.path.startswith('/api/v1'):
             return jsonify(x['api']())
         else:
             return x['html']()
