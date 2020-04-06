@@ -7,7 +7,6 @@ from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import *
 from ruqqus.helpers.session import *
 import ruqqus.helpers.aws as aws
-from ruqqus.helpers.api import *
 from .submission import *
 from .board_relationships import *
 from .mix_ins import *
@@ -131,40 +130,6 @@ class Board(Base, Stndrd, Age_times):
         posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
 
         return posts
-
-    def rendered_board_page(self, v, sort="hot", page=1):
-        
-        ids=self.idlist(sort=sort,
-                        page=page,
-                        nsfw=(v and v.over_18) or session_over18(self),
-                        v=v
-                        )
-
-        next_exists=(len(ids)==26)
-        ids=ids[0:25]
-
-        posts=[db.query(Submission).filter_by(id=x).first() for x in ids]
-
-
-        if page==1:
-            stickies=self.submissions.filter_by(is_banned=False,
-                                      is_deleted=False,
-                                      is_pinned=True).order_by(Submission.id.asc()
-                                                               ).limit(4)
-            stickies=[x for x in stickies]
-            posts=stickies+posts
-
-        return {'html':lambda:render_template("board.html",
-                               b=self,
-                               v=v,
-                               listing=posts,
-                               next_exists=next_exists,
-                               sort_method=sort,
-                               page=page,
-                               is_subscribed=(v and self.has_subscriber(v))),
-                'api':lambda:[x.json for x in posts]
-                }
-
 
     def has_mod(self, user):
 
