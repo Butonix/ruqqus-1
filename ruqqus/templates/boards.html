@@ -10,32 +10,36 @@
 {% block listcardBlock %}{% endblock %}
 {% block sidebar %}{% endblock %}
 
-      {% block navbar %}
-      <div class="font-weight-bold py-3">Browse Guilds</div>
 
-        <div class="d-flex align-items-center">
-          <div class="text-small font-weight-bold mr-2">Sort by</div>
-          <div class="dropdown dropdown-actions">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {% if sort_method=="subs" %}<i class="fas fa-users mr-1"></i>Members{% endif %}
-              {% if sort_method=="new" %}<i class="fas fa-sparkles mr-1"></i>New{% endif %}
-              {% if sort_method=="trending" %}<i class="fas fa-fire mr-1"></i>Trending{% endif %}
-            </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-              {% if not sort_method=="subs" %}<a class="dropdown-item" href="?sort=subs"><i class="fas fa-users mr-2"></i>Members</a>{% endif %}
-              {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-              {% if not sort_method=="trending" %}<a class="dropdown-item" href="?sort=trending"><i class="fas fa-fire mr-2"></i>Trending</a>{% endif %}
-            </div>
-          </div>
-        </div>
-  {% endblock %}
+<!-- Custom Padding for main-content col -->
+
+{% block customPadding %}{% endblock %}
+
+{% block navbar %}
+<div class="font-weight-bold py-3">Browse Guilds</div>
+
+<div class="d-flex align-items-center">
+  <div class="text-small font-weight-bold mr-2">Sort by</div>
+  <div class="dropdown dropdown-actions">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      {% if sort_method=="subs" %}<i class="fas fa-users mr-1"></i>Members{% endif %}
+      {% if sort_method=="new" %}<i class="fas fa-sparkles mr-1"></i>New{% endif %}
+      {% if sort_method=="trending" %}<i class="fas fa-fire mr-1"></i>Trending{% endif %}
+    </button>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+      {% if not sort_method=="subs" %}<a class="dropdown-item" href="?sort=subs"><i class="fas fa-users mr-2"></i>Members</a>{% endif %}
+      {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+      {% if not sort_method=="trending" %}<a class="dropdown-item" href="?sort=trending"><i class="fas fa-fire mr-2"></i>Trending</a>{% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
 {% block content %}
 
 
-<div class="row row-cols-1 row-cols-md-3 mt-3">
+<div class="row row-cols-1 row-cols-md-3 mt-3 p-md-4">
 
-{% include "board_listing.html" %}
-
+  {% include "board_listing.html" %}
 
 </div>
 
@@ -50,7 +54,7 @@
         <div class="d-flex align-items-center">
 
           <div class="dropdown dropdown-actions">
-          <button class="btn btn-link text-capitalize dropdown-toggle px-0" type="button" id="dropdownMenuButtonMobile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-link text-capitalize text-muted font-weight-normal dropdown-toggle px-0" type="button" id="dropdownMenuButtonMobile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               {% if sort_method=="subs" %}<i class="fas fa-users mr-1"></i>Members{% endif %}
               {% if sort_method=="new" %}<i class="fas fa-sparkles mr-1"></i>New{% endif %}
               {% if sort_method=="trending" %}<i class="fas fa-fire mr-1"></i>Trending{% endif %}
@@ -73,23 +77,23 @@
 </div>
 {% endblock %}
 
-          {% block pagenav %}
-          <nav aria-label="Page navigation">
-            <ul class="pagination pagination-sm mb-0">
-              {% if page>1 %}
-              <li class="page-item">
-                <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page-1 }}" tabindex="-1">Prev</a></small>
-              </li>
-              {% else %}
-              <li class="page-item disabled"><span class="page-link">Prev</span></li>
-              {% endif %}
-              {% if next_exists %}
-              <li class="page-item">
-                <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page+1 }}">Next</a></small>
-              </li>
-              {% else %}
-              <li class="page-item disabled"><span class="page-link">Next</span></li>
-              {% endif %}
-            </ul>
-          </nav>
-          {% endblock %}
+{% block pagenav %}
+<nav aria-label="Page navigation">
+  <ul class="pagination pagination-sm mb-0">
+    {% if page>1 %}
+    <li class="page-item">
+      <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page-1 }}" tabindex="-1">Prev</a></small>
+    </li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link">Prev</span></li>
+    {% endif %}
+    {% if next_exists %}
+    <li class="page-item">
+      <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page+1 }}">Next</a></small>
+    </li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link">Next</span></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endblock %}

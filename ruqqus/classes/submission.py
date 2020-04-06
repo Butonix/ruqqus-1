@@ -61,6 +61,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     is_offensive=Column(Boolean, default=False)
     board=relationship("Board", lazy="joined", innerjoin=True, primaryjoin="Submission.board_id==Board.id")
     author=relationship("User", lazy="joined", innerjoin=True, primaryjoin="Submission.author_id==User.id")
+    is_pinned=Column(Boolean, default=False)
 
     approved_by=relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id")
 

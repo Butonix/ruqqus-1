@@ -169,6 +169,7 @@ def mod_kick_bid_pid(bid,pid, board, v):
 
     post.board_id=1
     post.guild_name="general"
+    post.is_pinned=False
     db.add(post)
     db.commit()
 
@@ -281,6 +282,7 @@ def user_kick_pid(pid, v):
 
     post.board_id=1
     post.guild_name="general"
+    post.is_pinned=False
     
     db.add(post)
     db.commit()
@@ -1082,4 +1084,35 @@ def siege_guild(v):
         db.commit()
 
     return redirect(f"/+{guild.name}/mod/mods")
+    
+@app.route("/mod/post_pin/<bid>/<pid>/<x>", methods=["POST"])
+@auth_required
+@is_guildmaster
+@validate_formkey
+def mod_toggle_post_pin(bid, pid, x, board, v):
+
+    post=get_post(pid)
+
+    if post.board_id != board.id:
+        abort(422)
+
+    try:
+        x=bool(int(x))
+    except:
+        abort(422)
+
+    if x and not board.can_pin_another:
+        return jsonify({"error":f"+{board.name} already has the maximum number of pinned posts."}), 409
+
+
+    post.is_pinned=x
+
+
+    cache.delete_memoized(Board.idlist, post.board)
+
+    db.add(post)
+    db.commit()
+
+    return "", 204
+
     

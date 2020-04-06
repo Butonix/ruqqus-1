@@ -2005,6 +2005,36 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     font-size: 1.25rem;
 }
 
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 767.98px) {
+    .modal.modal.modal-sm-bottom .modal-dialog {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1030;
+    }
+
+    .modal.modal-sm-bottom .modal-content {
+        position: absolute;
+        bottom: 0;
+        border-radius: 1rem;
+    }
+
+    .modal.fade.modal-sm-bottom .modal-dialog {
+        transform: translate3d(0, 100vh, 0);
+    }
+
+    .modal.show.modal-sm-bottom .modal-dialog {
+        transform: translate3d(0, 0, 0);
+    }
+
+    .modal.modal-sm-bottom .modal-header {
+        border-top-right-radius: 1rem;
+        border-top-left-radius: 1rem;
+    }
+} 
+
 // Dropdown actions
 
 .dropdown-actions {
@@ -2489,6 +2519,10 @@ ul.comment-section {
     padding: 0 .5rem;
     font-size: $font-size-base;
     color: $gray-500;
+}
+
+.comment-write .comment-format .format:hover {
+    color: $muted;
 }
 
 .comment .comment-collapse {

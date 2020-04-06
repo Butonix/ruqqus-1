@@ -21,7 +21,7 @@
   </div>
 </div>
 
-<div class="row no-gutters">
+<div class="row no-gutters my-md-3">
 
   <div class="col">
 
@@ -32,17 +32,13 @@
      {% endfor%}
    </div>
    {% else %}
-   <div class="text-center py-5">
-
-    <img src="/assets/images/illustrations/searching.png" class="empty-state-img mb-3" alt="empty state">
+   <div class="text-center py-7">
 
     {% if v and v.id == u.id %}
-    <div class="font-weight-bold text-muted">You haven't made a ruckus.</div>
-    <div class="text-small text-muted mb-3">Your comments will show up here.</div>
-    <a href="/" class="btn btn-primary">Go to frontpage</a>
+      <div class="h4 p-2">You haven't made a ruckus yet...</div>
+      <div class="p-2"><a href="/submit" class="btn btn-primary">Go to frontpage</a></div>
     {% else %}
-    <div class="font-weight-bold text-muted">No comments here...</div>
-    <div class="text-small text-muted">@{{ u.username }} hasn't made a ruckus yet.</div>
+      <div class="h4 p-2">@{{ u.username }} hasn't made a ruckus yet...</div>
     {% endif %}
   </div>
   {% endif %}

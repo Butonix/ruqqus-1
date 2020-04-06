@@ -1,5 +1,6 @@
 from flask import *
 from sqlalchemy import func
+import time
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
@@ -33,6 +34,10 @@ def settings_profile_post(v):
         updated=True
         v.hide_offensive=bool(request.form.get("hide_offensive", None))
         cache.delete_memoized(User.idlist, v)
+        
+    if request.form.get("private") != v.is_private:
+        updated=True
+        v.is_private=bool(request.form.get("private", None))
         
     if request.form.get("bio") != v.bio:
         updated=True
@@ -255,4 +260,14 @@ def settings_toggle_collapse(v):
 
     return "", 204
 
-    
+
+
+@app.route("/settings/read_announcement", methods=["POST"])
+@auth_required
+@validate_formkey
+def update_announcement(v):
+
+    v.read_announcement_utc=int(time.time())
+    db.add(v)
+    db.commit()
+    return "", 204

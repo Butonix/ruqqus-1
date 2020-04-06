@@ -1,6 +1,6 @@
 import time
 import json
-
+from os import environ
 from sqlalchemy import text
 
 from ruqqus.classes.user import User
@@ -27,6 +27,19 @@ def full_link(url):
 
     return f"https://{app.config['SERVER_NAME']}{url}"
 
+@app.template_filter("env")
+def env_var_filter(s):
+
+    x=environ.get(s, None)
+
+    try:
+        return int(x)
+    except:
+        try:
+            return float(x)
+        except:
+            return x
+        
 @app.template_filter("js_str_escape")
 def js_str_escape(s):
     

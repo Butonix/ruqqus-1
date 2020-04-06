@@ -59,6 +59,9 @@ class Age_times:
     @property
     def edited_string(self):
 
+        if not self.edited_utc:
+            return "never"
+
         age = int(time.time()) - self.edited_utc
 
         if age < 60:

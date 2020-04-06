@@ -59,7 +59,9 @@ class User(Base, Stndrd):
     last_siege_utc=Column(Integer, default=0)
     mfa_secret=Column(String(16), default=None)
     hide_offensive=Column(String(16), default=False)
-    has_earned_darkmode=Column(Boolean, default=False)
+    is_private=Column(Boolean, default=False)
+    read_announcement_utc=Column(Integer, default=0)
+    
 
     moderates=relationship("ModRelationship", lazy="dynamic")
     banned_from=relationship("BanRelationship", lazy="dynamic", primaryjoin="BanRelationship.user_id==User.id")
@@ -124,7 +126,7 @@ class User(Base, Stndrd):
             posts = posts.filter_by(is_offensive=False)
 
         board_ids=[x.board_id for x in self.subscriptions.filter_by(is_active=True).all()]
-        user_ids =[x.target_id for x in self.following.all()]
+        user_ids =[x.target.id for x in self.following.all() if x.target.is_private==False]
         
         posts=posts.filter(
             or_(
@@ -326,6 +328,9 @@ class User(Base, Stndrd):
         if self.is_banned and (not v or v.admin_level < 3):
             return render_template("userpage_banned.html", u=self, v=v)
 
+        if self.is_private and (not v or (v.id!=self.id and v.admin_level<3)):
+            return render_template("userpage_private.html", u=self, v=v)
+
         page=int(request.args.get("page","1"))
         page=max(page, 1)
 
@@ -390,15 +395,18 @@ class User(Base, Stndrd):
 
         if self.is_banned and (not v or v.admin_level < 3):
             return render_template("userpage_banned.html", u=self, v=v)
+
+        if self.is_private and (not v or (v.id!=self.id and not v.admin_level<3)):
+            return render_template("userpage_private.html", u=self, v=v)
         
         page=int(request.args.get("page","1"))
 
-        comments=self.comments.filter(text("parent_submission is not null"))
+        comments=self.comments.filter(Comment.parent_submission is not None)
 
         if not (v and v.over_18):
             comments=comments.filter_by(over_18=False)
 
-        if not (v and v.hide_offensive):
+        if v and v.hide_offensive:
             comments=comments.filter_by(is_offensive=False)
 
         if not (v and (v.admin_level >=3)):

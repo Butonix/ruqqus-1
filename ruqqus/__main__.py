@@ -19,7 +19,7 @@ import requests
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-_version = "2.5.5"
+_version = "2.6.2"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -159,3 +159,9 @@ def after_request(response):
         thread.start()
 
     return response
+
+@app.route("/<path:path>", subdomain="www")
+def www_redirect(path):
+
+    return redirect(f"https://ruqqus.com/{path}")
+

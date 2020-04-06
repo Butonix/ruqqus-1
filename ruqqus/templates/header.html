@@ -30,7 +30,7 @@
 
       {% if v %}
       <li class="nav-item d-flex align-items-center justify-content-center text-center mx-1" data-toggle="modal" data-target="#announcementsModalScrollable" >
-        <div class="nav-link" role="button" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Announcements"><i class="fas fa-sparkles text-purple"></i></div>
+        <div class="nav-link" onclick="post('/settings/read_announcement')" role="button" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Announcements"><i class="fas fa-sparkles{% if v and not v.read_announcement_utc %} text-purple{% endif %}"></i></div>
       </li>
       {% endif %}
 
