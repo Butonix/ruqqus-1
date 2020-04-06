@@ -157,7 +157,7 @@ def board_name(name, v):
    
     ids=board.idlist(sort=sort,
                     page=page,
-                    nsfw=(v and v.over_18) or session_over18(self),
+                    nsfw=(v and v.over_18) or session_over18(board),
                     v=v
                     )
 
@@ -176,7 +176,7 @@ def board_name(name, v):
         posts=stickies+posts
 
     return {'html':lambda:render_template("board.html",
-                           b=self,
+                           b=board,
                            v=v,
                            listing=posts,
                            next_exists=next_exists,
