@@ -103,7 +103,8 @@ def home(v):
     if v and v.subscriptions.filter_by(is_active=True).count():
 
         only=request.args.get("only",None)
-        sort=request.args.get("sort","hot"),
+        sort=request.args.get("sort","hot")
+        
         page=max(int(request.args.get("page",1)),0)
         
         ids=v.idlist(sort=sort,
