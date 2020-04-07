@@ -130,7 +130,7 @@ def home(v):
                                sort_method=sort,
                                page=page,
                                only=only),
-                'api':lambda:[x.json for x in listing]
+                'api':lambda:[x.json for x in posts]
                 }
     else:
         return front_all()
