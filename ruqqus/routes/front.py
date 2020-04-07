@@ -110,7 +110,7 @@ def home(v):
                      page=page,
                         only=only,
                         t=request.args.get('t', None),
-                        hide_offensive = self.hide_offensive
+                        hide_offensive = v.hide_offensive
                         )
 
         posts, next_exists = v.list_of_posts(ids)
