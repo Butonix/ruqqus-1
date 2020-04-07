@@ -102,10 +102,12 @@ def home(v):
 
     if v and v.subscriptions.filter_by(is_active=True).count():
 
-        only=request.args.get("only",None)        
-
+        only=request.args.get("only",None)
+        sort=request.args.get("sort","hot"),
+        page=max(int(request.args.get("page",1)),0)
+        
         ids=v.idlist(sort=sort,
-                        page=page,
+                     page=page
                         only=only,
                         t=request.args.get('t', None),
                         hide_offensive = self.hide_offensive
@@ -133,6 +135,7 @@ def home(v):
         return front_all()
 
 @app.route("/all", methods=["GET"])
+@app.route("/api/v1/front/listing", methods=["GET"])
 @auth_desired
 @api
 def front_all(v):
