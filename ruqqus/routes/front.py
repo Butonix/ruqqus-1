@@ -107,7 +107,7 @@ def home(v):
         page=max(int(request.args.get("page",1)),0)
         
         ids=v.idlist(sort=sort,
-                     page=page
+                     page=page,
                         only=only,
                         t=request.args.get('t', None),
                         hide_offensive = self.hide_offensive
