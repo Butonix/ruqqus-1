@@ -108,10 +108,10 @@ def home(v):
         
         ids=v.idlist(sort=sort,
                      page=page,
-                        only=only,
-                        t=request.args.get('t', None),
-                        hide_offensive = v.hide_offensive
-                        )
+                     only=only,
+                     t=request.args.get('t', None),
+                     hide_offensive = v.hide_offensive
+                     )
 
         posts, next_exists = v.list_of_posts(ids)
         
