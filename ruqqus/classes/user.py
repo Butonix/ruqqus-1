@@ -179,7 +179,7 @@ class User(Base, Stndrd):
         elif sort=="activity":
             posts=posts.order_by(Submission.score_activity.desc())
 ##        else:
-##            abort(418)
+##            abort(422)
 
         posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
 
