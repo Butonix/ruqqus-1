@@ -178,8 +178,8 @@ class User(Base, Stndrd):
             posts=posts.order_by(Submission.score_top.desc())
         elif sort=="activity":
             posts=posts.order_by(Submission.score_activity.desc())
-        else:
-            abort(418)
+##        else:
+##            abort(418)
 
         posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
 
