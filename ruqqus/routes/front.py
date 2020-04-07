@@ -95,18 +95,46 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=Fal
     return posts
 
 @app.route("/", methods=["GET"])
+@app.route("/api/v1/front", methods=["GET"])
 @auth_desired
+@api
 def home(v):
 
     if v and v.subscriptions.filter_by(is_active=True).count():
-        return v.rendered_subscription_page(sort=request.args.get("sort","hot"),
-                                            page=max(int(request.args.get("page",1)),0)
-                                        )
+
+        only=request.args.get("only",None)        
+
+        ids=v.idlist(sort=sort,
+                        page=page,
+                        only=only,
+                        t=request.args.get('t', None),
+                        hide_offensive = self.hide_offensive
+                        )
+
+        posts, next_exists = v.list_of_posts(ids)
+        
+        #If page 1, check for sticky
+        if page==1:
+            sticky =[]
+            sticky=db.query(Submission).filter_by(stickied=True).first()
+            if sticky:
+                posts=[sticky]+posts
+
+        return {'html':lambda:render_template("subscriptions.html",
+                               v=v,
+                               listing=posts,
+                               next_exists=next_exists,
+                               sort_method=sort,
+                               page=page,
+                               only=only),
+                'api':lambda:[x.json for x in listing]
+                }
     else:
         return front_all()
 
 @app.route("/all", methods=["GET"])
 @auth_desired
+@api
 def front_all(v):
 
     page=int(request.args.get("page",1))
@@ -130,39 +158,7 @@ def front_all(v):
     ids=ids[0:25]
 
     #check if ids exist
-    if ids:
-##        #assemble list of tuples
-##        i=1
-##        tups=[]
-##        for x in ids:
-##            tups.append((x, i))
-##            i+=1
-##
-##        #tuple string
-##        tups = str(tups).lstrip("[").rstrip("]")
-##            
-##
-##        #hit db for entries
-##        
-##        posts=db.query(Submission
-##                       ).from_statement(
-##                           text(f"""
-##                            select submissions.*
-##                            from submissions
-##                            join (values {tups}) as x(id, n) on submissions.id=x.id
-##                            where x.n is not null
-##                            order by x.n
-##                            """
-##                                )).all()
-
-        posts=[]
-        for x in ids:
-            posts.append(db.query(Submission).filter_by(id=x).first())
-        
-    else:
-        posts=[]
-
-    
+    posts=[db.query(Submission).filter_by(id=x).first() for x in ids]        
 
     #If page 1, check for sticky
     if page==1:
@@ -170,17 +166,17 @@ def front_all(v):
         sticky=db.query(Submission).filter_by(stickied=True).first()
         if sticky:
             posts=[sticky]+posts
-
-    boards_list=trending_boards(n=5)
     
-    return render_template("home.html",
+    return {'html':lambda:render_template("home.html",
                            v=v,
                            listing=posts,
                            next_exists=next_exists,
                            sort_method=sort_method,
                            page=page,
-                           trending_boards = boards_list
-                           )
+                           trending_boards = trending_boards(n=5)
+                           ),
+            'api':lambda:[x.json for x in posts]
+            }
 
 @cache.memoize(600)
 def guild_ids(sort="subs", page=1, nsfw=False):

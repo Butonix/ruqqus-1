@@ -221,34 +221,6 @@ class User(Base, Stndrd):
 
         return posts, next_exists
 
-    def rendered_subscription_page(self, sort="hot", page=1):
-
-        only=request.args.get("only",None)        
-
-        ids=self.idlist(sort=sort,
-                        page=page,
-                        only=only,
-                        t=request.args.get('t', None),
-                        hide_offensive = self.hide_offensive
-                        )
-
-        posts, next_exists = self.list_of_posts(ids)
-        
-        #If page 1, check for sticky
-        if page==1:
-            sticky =[]
-            sticky=db.query(Submission).filter_by(stickied=True).first()
-            if sticky:
-                posts=[sticky]+posts
-
-        return render_template("subscriptions.html",
-                               v=self,
-                               listing=posts,
-                               next_exists=next_exists,
-                               sort_method=sort,
-                               page=page,
-                               only=only)        
-
     @property
     def mods_anything(self):
 
