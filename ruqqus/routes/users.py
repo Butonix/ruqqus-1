@@ -139,7 +139,7 @@ def u_username(username, v=None):
     listing=listing[0:25]
 
     return {'html': lambda:render_template("userpage.html",
-                           u=self,
+                           u=u,
                            v=v,
                            listing=listing,
                            page=page,
