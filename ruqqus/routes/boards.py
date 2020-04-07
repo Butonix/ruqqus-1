@@ -133,11 +133,7 @@ def board_name(name, v):
     board=get_guild(name)
 
     if not board.name==name:
-        return {'html':lambda:redirect(request.path.replace(name, board.name)
-                                       ),
-                'api':lambda:redirect(request.path.replace(name, board.name)
-                                      )
-                }
+        return redirect(request.path.replace(name, board.name))
                                        
 
     if board.is_banned and not (v and v.admin_level>=3):

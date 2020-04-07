@@ -54,29 +54,100 @@ def user_uid(uid, v):
     else:
         abort(404)
 
-@app.route("/u/<username>", methods=["GET"])
-@app.route("/u/<username>/posts", methods=["GET"])
 @app.route("/@<username>", methods=["GET"])
+@app.route("/api/v1/user/<username>/listing", methods=["GET"])
 @auth_desired
+@api
 def u_username(username, v=None):
     
     #username is unique so at most this returns one result. Otherwise 404
     
     #case insensitive search
 
-    result = db.query(User).filter(User.username.ilike(username)).first()
-
-    if not result:
-        abort(404)
+    u = get_user(username)
 
     #check for wrong cases
 
-    if username != result.username:
-        return redirect(result.url)
+    if username != u.username:
+        return redirect(request.path.replace(username, u.username))
         
-    return result.rendered_userpage(v=v)
 
-@app.route("/u/<username>/comments", methods=["GET"])
+    if u.reserved:
+        return {'html': lambda:render_template("userpage_reserved.html",
+                                               u=self,
+                                               v=v),
+                'api': lambda:{"error":"That user is banned"}
+                }
+
+    if u.is_banned and (not v or v.admin_level < 3):
+        return {'html': lambda:render_template("userpage_banned.html",
+                                               u=self,
+                                               v=v),
+                'api': lambda:{"error":"That user is banned"}
+                }
+
+    if u.is_private and (not v or (v.id!=u.id and v.admin_level<3)):
+        return {'html': lambda:render_template("userpage_private.html",
+                                               u=self,
+                                               v=v),
+                'api': lambda:{"error":"That userpage is private"}
+                }
+
+    page=int(request.args.get("page","1"))
+    page=max(page, 1)
+
+    submissions=u.submissions
+
+    if not (v and v.over_18):
+        submissions=submissions.filter_by(over_18=False)
+
+    if v and v.hide_offensive:
+        submissions=submissions.filter_by(is_offensive=False)
+
+    if not (v and (v.admin_level >=3)):
+        submissions=submissions.filter_by(is_deleted=False)
+
+    if not (v and (v.admin_level >=3 or v.id==u.id)):
+        submissions=submissions.filter_by(is_banned=False)
+
+    if v and v.admin_level >=4:
+        pass
+    elif v:
+        m=v.moderates.filter_by(invite_rescinded=False).subquery()
+        c=v.contributes.subquery()
+        
+        submissions=submissions.join(m,
+                                     m.c.board_id==Submission.board_id,
+                                     isouter=True
+                                ).join(c,
+                                       c.c.board_id==Submission.board_id,
+                                       isouter=True
+                                )
+        submissions=submissions.filter(or_(Submission.author_id==v.id,
+                               Submission.is_public==True,
+                           m.c.board_id != None,
+                           c.c.board_id !=None))
+    else:
+        submissions=submissions.filter_by(is_public=True)
+
+            
+
+    listing = [x for x in submissions.order_by(Submission.created_utc.desc()).offset(25*(page-1)).limit(26)]
+    
+    #we got 26 items just to see if a next page exists
+    next_exists=(len(listing)==26)
+    listing=listing[0:25]
+
+    return {'html': lambda:render_template("userpage.html",
+                           u=self,
+                           v=v,
+                           listing=listing,
+                           page=page,
+                           next_exists=next_exists,
+                           is_following=(v and u.has_follower(v))),
+            'api': lambda:[x.json for x in listing]
+            }
+
 @app.route("/@<username>/comments", methods=["GET"])
 @auth_desired
 def u_username_comments(username, v=None):

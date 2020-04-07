@@ -1,7 +1,7 @@
 from flask import *
 from os import environ
 import requests
-
+from werkzeug.wrappers.response import Response
 
 from ruqqus.classes import *
 from .get import *
@@ -219,7 +219,7 @@ def no_cors(f):
 
 #wrapper for api-related things that discriminates between an api url
 #and an html url for the same content
-# f should return {'api': lambda:function(), 'html':lambda:function()}
+# f should return {'api':lambda:some_func(), 'html':lambda:other_func()}
 
 def api(f):
 
@@ -227,6 +227,9 @@ def api(f):
 
         x=f(*args, **kwargs)
 
+        if isinstance(x, Response):
+            return x
+        
         if request.path.startswith('/api/v1'):
             return jsonify(x['api']())
         else:
