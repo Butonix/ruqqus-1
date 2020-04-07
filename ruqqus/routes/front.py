@@ -183,7 +183,7 @@ def front_all(v):
             'inpage':lambda:render_template("submission_listing.html",
                                             v=v,
                                             listing=posts
-                                            )
+                                            ),
             'api':lambda:[x.json for x in posts]
             }
 
