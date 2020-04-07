@@ -95,7 +95,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=Fal
     return posts
 
 @app.route("/", methods=["GET"])
-@app.route("/api/v1/front", methods=["GET"])
+@app.route("/api/v1/front/listing", methods=["GET"])
 @auth_desired
 @api
 def home(v):
@@ -135,7 +135,7 @@ def home(v):
         return front_all()
 
 @app.route("/all", methods=["GET"])
-@app.route("/api/v1/front/listing", methods=["GET"])
+@app.route("/api/v1/all/listing", methods=["GET"])
 @auth_desired
 @api
 def front_all(v):
