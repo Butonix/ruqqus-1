@@ -1,7 +1,7 @@
 from flask import *
 from os import environ
 import requests
-from werkzeug.wrappers.response import Response
+from werkzeug.wrappers.response import Response as RespObj
 
 from ruqqus.classes import *
 from .get import *
@@ -227,7 +227,7 @@ def api(f):
 
         x=f(*args, **kwargs)
 
-        if isinstance(x, Response):
+        if isinstance(x, RespObj):
             return x
         
         if request.path.startswith('/api/v1'):
