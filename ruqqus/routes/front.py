@@ -137,6 +137,7 @@ def home(v):
 
 @app.route("/all", methods=["GET"])
 @app.route("/api/v1/all/listing", methods=["GET"])
+@app.route("/inpage/all")
 @auth_desired
 @api
 def front_all(v):
@@ -179,6 +180,10 @@ def front_all(v):
                            page=page,
                            trending_boards = trending_boards(n=5)
                            ),
+            'inpage':lambda:render_template("submission_listing.html",
+                                            v=v,
+                                            listing=posts
+                                            )
             'api':lambda:[x.json for x in posts]
             }
 

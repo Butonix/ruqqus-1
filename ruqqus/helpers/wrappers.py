@@ -230,8 +230,10 @@ def api(f):
         if isinstance(x, RespObj):
             return x
         
-        if request.path.startswith('/api/v1'):
+        if request.path.startswith('/api/v1/'):
             return jsonify(x['api']())
+        elif request.path.startswith('/inpage/'):
+            return x['inpage']()
         else:
             return x['html']()
 
