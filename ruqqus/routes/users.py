@@ -74,21 +74,21 @@ def u_username(username, v=None):
 
     if u.reserved:
         return {'html': lambda:render_template("userpage_reserved.html",
-                                               u=self,
+                                               u=u,
                                                v=v),
                 'api': lambda:{"error":"That user is banned"}
                 }
 
     if u.is_banned and (not v or v.admin_level < 3):
         return {'html': lambda:render_template("userpage_banned.html",
-                                               u=self,
+                                               u=u,
                                                v=v),
                 'api': lambda:{"error":"That user is banned"}
                 }
 
     if u.is_private and (not v or (v.id!=u.id and v.admin_level<3)):
         return {'html': lambda:render_template("userpage_private.html",
-                                               u=self,
+                                               u=u,
                                                v=v),
                 'api': lambda:{"error":"That userpage is private"}
                 }
