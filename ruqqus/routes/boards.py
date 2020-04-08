@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 import mistletoe
 import re
 import sass
+import threading
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -10,6 +11,7 @@ from ruqqus.helpers.markdown import *
 from ruqqus.helpers.get import *
 from ruqqus.helpers.alerts import *
 from ruqqus.helpers.session import *
+from ruqqus.helpers.aws import check_csam_url
 from ruqqus.classes import *
 from .front import guild_ids
 from ruqqus.classes.rules import *
@@ -820,6 +822,16 @@ def mod_board_images_profile(bid, board, v):
 
     board.set_profile(request.files["profile"])
 
+    #anti csam
+    new_thread=threading.thread(target=check_csam_url,
+                                args=(board.profile_url,
+                                      v,
+                                      lambda:board.del_profile()
+                                      )
+                                )
+    new_thread.start()
+    
+
     return redirect(f"/+{board.name}/mod/appearance?msg=Success#images")
 
 @app.route("/mod/<bid>/images/banner", methods=["POST"])
@@ -829,6 +841,15 @@ def mod_board_images_profile(bid, board, v):
 def mod_board_images_banner(bid, board, v):
 
     board.set_banner(request.files["banner"])
+
+    #anti csam
+    new_thread=threading.thread(target=check_csam_url,
+                                args=(board.banner_url,
+                                      v,
+                                      lambda:board.del_banner()
+                                      )
+                                )
+    new_thread.start()
     return redirect(f"/+{board.name}/mod/appearance?msg=Success#images")
 
 @app.route("/mod/<bid>/delete/profile", methods=["POST"])

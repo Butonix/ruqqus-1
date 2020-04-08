@@ -1,6 +1,7 @@
 from flask import *
 from sqlalchemy import func
 import time
+import threading
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
@@ -219,6 +220,15 @@ def settings_images_profile(v):
 
     v.set_profile(request.files["profile"])
 
+    #anti csam
+    new_thread=threading.thread(target=check_csam_url,
+                                args=(v.profile_url,
+                                      v,
+                                      lambda:board.del_profile()
+                                      )
+                                )
+    new_thread.start()
+
     return render_template("settings_profile.html", v=v, msg="Profile picture successfully updated.")
 
 @app.route("/settings/images/banner", methods=["POST"])
@@ -227,6 +237,15 @@ def settings_images_profile(v):
 def settings_images_banner(v):
 
     v.set_banner(request.files["banner"])
+
+    #anti csam
+    new_thread=threading.thread(target=check_csam_url,
+                                args=(v.banner,
+                                      v,
+                                      lambda:board.del_banner()
+                                      )
+                                )
+    new_thread.start()
 
     return render_template("settings_profile.html", v=v, msg="Banner successfully updated.")
 

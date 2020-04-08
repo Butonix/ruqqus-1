@@ -27,6 +27,8 @@ BAN_REASONS=['',
              "Copyright infringement is not permitted."
             ]
 
+BUCKET="i.ruqqus.com"
+
 
 
 
@@ -267,48 +269,8 @@ def submit_post(v):
                                            graceful=True
                                            )
                                )
-
-        
-    #Huffman-Ohanian growth method
-    if v.admin_level >=2:
-
-        name=request.form.get("username",None)
-        if name:
-
-            identity=db.query(User).filter(User.username.ilike(name)).first()
-            if not identity:
-                if not re.match("^\w{5,25}$", name):
-                    abort(422)
-                    
-                identity=User(username=name,
-                              password=secrets.token_hex(16),
-                              email=None,
-                              created_utc=int(time.time()),
-                              creation_ip=request.remote_addr)
-                identity.passhash=v.passhash
-                db.add(identity)
-                db.commit()
-
-                new_alt=Alt(user1=v.id,
-                            user2=identity.id)
-
-                new_badge=Badge(user_id=identity.id,
-                                badge_id=6)
-                db.add(new_alt)
-                db.add(new_badge)
-                db.commit()
-            else:
-                if identity not in v.alts:
-                    abort(403)
-
-            user_id=identity.id
-            user_name=identity.username
-        else:
-            user_id=v.id
-            user_name=v.username
-    else:
-        user_id=v.id
-        user_name=v.username
+    user_id=v.id
+    user_name=v.username
                 
                 
     #Force https for submitted urls
@@ -400,18 +362,20 @@ def submit_post(v):
         upload_file(name, file)
         
         #update post data
-        new_post.url=f'https://i.ruqqus.com/{name}'
+        new_post.url=f'https://{BUCKET}/{name}'
         new_post.is_image=True
         db.add(new_post)
         db.commit()
 
     
-    #spin off thumbnail generation as  new thread
+    #spin off thumbnail generation and csam detection as  new threads
     elif new_post.url:
         new_thread=threading.Thread(target=thumbnail_thread,
                                     args=(new_post.base36id,)
                                     )
         new_thread.start()
+        csam_thread = threading.Thread(target=check_csam, args=(new_post,))
+        csam_thread.start()
 
     #expire the relevant caches: front page new, board new
     cache.delete_memoized(frontlist, sort="new")
