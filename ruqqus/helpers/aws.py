@@ -106,7 +106,7 @@ def check_csam(post):
         else:
             time.sleep(20)
 
-    if x.status_code==200:
+    if x.status_code != 451:
         return
 
     #ban user and alts
@@ -123,10 +123,37 @@ def check_csam(post):
     #nuke aws
     delete_file(parsed_url.path.lstrip('/'))
     
-    
     db.commit()
 
     
+def check_csam_url(url, v, delete_content_function):
+
+    parsed_url=urlparse(url)
+
+    if parsed_url.netloc != BUCKET:
+        return
+
+    headers={"User-Agent":"Ruqqus webserver"}
+    for i in range(10):
+        x=requests.get(post.url, headers=headers)
+
+        if x.status_code in [200, 451]:
+            break
+        else:
+            time.sleep(20)
+
+    if x.status_code != 451:
+        return
+
+    v.is_banned=1
+    db.add(v)
+    for alt in v.alts:
+        alt.is_banned=1
+        db.add(alt)
+
+    db.commit()
+    
+    delete_content_function()
     
 
     
