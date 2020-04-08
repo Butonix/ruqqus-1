@@ -6,6 +6,7 @@ from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.sanitize import *
+from ruqqus.helpers.aws import check_csam_url
 from ruqqus.mail import *
 from ruqqus.__main__ import db, app, cache
 
