@@ -100,15 +100,14 @@
 
                         <input class="form-control" id="password" aria-describedby="passwordHelp"
                         type="password" name="password" required="">
-                        
+
 
                         <small><a href="/forgot">Forgot password?</a></small>
 
                         <button class="btn btn-primary login w-100 mt-3" id="login_button">Sign in</button>
 
-                        <div class="text-center mt-5 mb-3">
-                            <a href="/signup{{ '?redirect='+redirect if redirect else '' }}" class="text-muted text-small toggle-login">Don't have an
-                            account? Create one today!</a>
+                        <div class="text-center text-muted text-small mt-5 mb-3">
+                            Don't have an account? <a href="/signup{{ '?redirect='+redirect if redirect else '' }}" class="font-weight-bold toggle-login">Sign up.</a>
                         </div>
 
                     </form>
