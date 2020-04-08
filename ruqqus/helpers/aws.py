@@ -135,7 +135,7 @@ def check_csam_url(url, v, delete_content_function):
 
     headers={"User-Agent":"Ruqqus webserver"}
     for i in range(10):
-        x=requests.get(post.url, headers=headers)
+        x=requests.get(url, headers=headers)
 
         if x.status_code in [200, 451]:
             break
