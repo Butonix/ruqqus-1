@@ -6,6 +6,8 @@ import time
 from urllib.parse import urlparse
 
 BUCKET="i.ruqqus.com"
+CF_KEY=environ.get("CLOUDFLARE_KEY")
+CF_ZONE=environ.get("CLOUDFLARE_ZONE")
 
 #setup AWS connection
 S3=boto3.client("s3",
@@ -82,6 +84,15 @@ def delete_file(name):
 
     S3.delete_object(Bucket=BUCKET,
                      Key=name)
+
+    #After deleting a file from S3, dump CloudFlare cache
+
+    headers={"Authorization": f"Bearer {CF_KEY}",
+             "Content-Type": "application/json"}
+    data={'files':[f"https://{BUCKET}/{name}"]}
+    url=f"https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache"
+
+    x=requests.post(url, headers=headers, json=data)
 
 def check_csam(post):
     
