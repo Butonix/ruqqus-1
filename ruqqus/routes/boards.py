@@ -823,7 +823,7 @@ def mod_board_images_profile(bid, board, v):
     board.set_profile(request.files["profile"])
 
     #anti csam
-    new_thread=threading.thread(target=check_csam_url,
+    new_thread=threading.Thread(target=check_csam_url,
                                 args=(board.profile_url,
                                       v,
                                       lambda:board.del_profile()
@@ -843,7 +843,7 @@ def mod_board_images_banner(bid, board, v):
     board.set_banner(request.files["banner"])
 
     #anti csam
-    new_thread=threading.thread(target=check_csam_url,
+    new_thread=threading.Thread(target=check_csam_url,
                                 args=(board.banner_url,
                                       v,
                                       lambda:board.del_banner()
