@@ -2,6 +2,8 @@ import boto3
 import requests
 from os import environ, remove
 import piexif
+import time
+from urllib.parse import urlparse
 
 BUCKET="i.ruqqus.com"
 
@@ -80,5 +82,51 @@ def delete_file(name):
 
     S3.delete_object(Bucket=BUCKET,
                      Key=name)
+
+def check_csam(post):
+    
+    #Relies on Cloudflare's photodna implementation
+    #451 returned by CF = positive match
+
+    #ignore non-link posts
+    if not post.url:
+        return
+
+    parsed_url=urlparse(post.url)
+
+    if parsed_url.netloc != BUCKET:
+        return
+
+    headers={"User-Agent":"Ruqqus webserver"}
+    for i in range(10):
+        x=requests.get(post.url, headers=headers)
+
+        if x.status_code in [200, 451]:
+            break
+        else:
+            time.sleep(20)
+
+    if x.status_code==200:
+        return
+
+    #ban user and alts
+    post.author.is_banned=1
+    db.add(v)
+    for alt in post.author.alts:
+        alt.is_banned=1
+        db.add(alt)
+
+    #remove content
+    post.is_banned=True
+    db.add(post)
+
+    #nuke aws
+    delete_file(parsed_url.path.lstrip('/'))
+    
+    
+    db.commit()
+
+    
+    
 
     
