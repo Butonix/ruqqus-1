@@ -59,11 +59,7 @@
             <a href="{{ ban.user.permalink }}">
               <img src="{{ ban.user.profile_url }}" class="profile-pic-20 align-top mr-2">@{{ ban.user.username }}</a>
             </td>
-            <td>{{ ban.created_utc }}</td>
-            <td>
-              <i class="fas fa-circle text-success text-small-extra mr-2"></i>
-              Active
-            </td>
+            <td>{{ ban.created_date }}</td>
             <td>
             <div class="dropdown float-right dropdown-actions">
                 <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="line-height: 0;">
