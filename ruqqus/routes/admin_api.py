@@ -3,9 +3,12 @@ import calendar
 from flask import *
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
+from ruqqus.helpers.aws import delete_file
 from ruqqus.helpers.base36 import *
+from urllib.parse import urlparse
 from secrets import token_hex
 import matplotlib.pyplot as plt
+import imagehash
 
 from ruqqus.__main__ import db, app
 from os import remove
@@ -94,33 +97,6 @@ def unban_post(post_id, v):
     
     return (redirect(post.permalink), post)
 
-
-##@app.route("/api/promote/<user_id>/<level>", methods=["POST"])
-##@admin_level_required(3)
-##@validate_formkey
-##def promote(user_id, level, v):
-##
-##    u = db.query(User).filter_by(id=user_id).first()
-##    if not u:
-##        abort(404)
-##
-##    max_level_involved = max(level, u.admin_level)
-##
-##    try:
-##        admin_level_needed={1:3, 2:3, 3:5, 4:5, 5:6}[max_level_involved]
-##    except KeyError:
-##        abort(400)
-##
-##    if v.admin_level < admin_level_needed:
-##        abort(403)
-##
-##    u.admin_level=level
-##
-##    db.add(u)
-##    db.commit()
-##
-##    return redirect(u.url)
-    
     
 @app.route("/api/distinguish/<post_id>", methods=["POST"])
 @admin_level_required(1)
@@ -463,3 +439,35 @@ def multiple_plots(**kwargs):
     #aws.delete_file(name)
     aws.upload_from_file(name, name)
     return name
+
+@app.route("/admin/csam_nuke/<pid>", methods=["POST"])
+@admin_level_required(4)
+@validate_formkey
+def admin_csam_nuke(pid, v):
+
+    post=get_post(pid)
+
+    post.is_banned=True
+    post.ban_reason="CSAM [1]"
+    db.add(post)
+
+    user=post.author
+    user.is_banned=v.id
+    db.add(user)
+    for alt in user.alts:
+        alt.is_banned=v.id
+        db.add(alt)
+
+    if post.domain=="i.ruqqus.com":
+
+        x=requests.get(url)
+        #load image into PIL
+        #take phash
+        #add phash to db
+
+        name=urlparse(post.url).path.lstrip('/')
+        delete_file(name) #this also dumps cloudflare
+        
+
+        
+    

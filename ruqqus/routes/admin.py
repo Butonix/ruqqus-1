@@ -27,6 +27,36 @@ def flagged_posts(v):
     return render_template("admin/flagged_posts.html", next_exists=next_exists, listing=listing, page=page, v=v)
 
 
+@app.route("/admin/image_posts", methods=["GET"])
+@admin_level_required(3)
+@api
+def image_posts_listing(v):
+
+    page=int(request.args.get('page',1))
+
+    posts=db.query(Submission).filter(Submission.url.ilike("https://i.ruqqus.com/post/%"
+                                                                )
+                                      ).order_by(Submission.id.desc()
+                                                 ).offset(25*(page-1)
+                                                          ).limit(26
+                                                                  )
+    
+    posts=[x for x in posts]
+    next_exists=(len(posts)==26)
+    posts=posts[0:25]
+
+    return {'html':lambda:render_template("admin/image_posts.html",
+                                          v=v,
+                                          listing=posts,
+                                          next_exists=next_exists,
+                                          page=page,
+                                          sort_method="new"
+                                          ),
+            'api':lambda:[x.json for x in posts]
+            }
+
+    
+
 @app.route("/admin/flagged/comments", methods=["GET"])
 @admin_level_required(3)
 def flagged_comments(v):

@@ -357,7 +357,7 @@ def submit_post(v):
     if request.files.get('file'):
         file=request.files['file']
 
-        name=f'post/{new_post.base36id}/{secrets.token_urlsafe(16)}'
+        name=f'post/{new_post.base36id}/{secrets.token_urlsafe(8)}'
 
         upload_file(name, file)
         

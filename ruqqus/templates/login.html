@@ -64,21 +64,23 @@
 
                 <div class="col-10 col-md-7">
 
-                    <div class="text-center mb-5">
+                    <div class="mb-5">
                         <a href="/" class="text-decoration-none"><span class="h3 text-primary">ruqqus</span></a>
                     </div>
 
                     <div id="login-form" class="">
 
-                        <h1 class="h4 font-weight-normal text-center mb-md-5">Welcome back.</h1>
+                        <h1 class="h2">Welcome back.</h1>
+
+                        <p class="text-muted mb-md-5">Glad to you have back. Make a ruckus!</p>
 
                         {% if failed %}
                         <div class="alert alert-danger alert-dismissible fade show d-flex my-3" role="alert">
                           <i class="fas fa-exclamation-circle my-auto"></i>
                           <div>
-                          Incorrect username, email address, or password.
-                          <br>
-                          <a href="/forgot" class="alert-link">Forgot password?</a>
+                              Incorrect username, email address, or password.
+                              <br>
+                              <a href="/forgot" class="alert-link">Forgot password?</a>
                           </div>
                           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -92,26 +94,23 @@
 
                         <input class="form-control" id="username" aria-describedby="usernameHelp"
                         type="text" name="username" required="">
-			<input type="hidden" name="redirect" value="{{ redirect }}">
+                        <input type="hidden" name="redirect" value="{{ redirect }}">
 
                         <label for="password" class="mt-3">Password</label>
 
                         <input class="form-control" id="password" aria-describedby="passwordHelp"
                         type="password" name="password" required="">
-			    
+
 
                         <small><a href="/forgot">Forgot password?</a></small>
 
                         <button class="btn btn-primary login w-100 mt-3" id="login_button">Sign in</button>
 
-                        <div class="text-center mt-5 mb-3">
-                            <a href="/signup{{ '?redirect='+redirect if redirect else '' }}" class="text-muted text-small toggle-login">Don't have an
-                                account? Create one today!</a>
-                            </div>
+                        <div class="text-center text-muted text-small mt-5 mb-3">
+                            Don't have an account? <a href="/signup{{ '?redirect='+redirect if redirect else '' }}" class="font-weight-bold toggle-login">Sign up</a>
+                        </div>
 
-                        </form>
-
-                    </div>
+                    </form>
 
                 </div>
 
@@ -119,22 +118,24 @@
 
         </div>
 
-        <div class="col-12 col-md-6 d-none d-md-block">
+    </div>
 
-            <div class="splash-wrapper">
+    <div class="col-12 col-md-6 d-none d-md-block">
 
-                <div class="splash-overlay"></div>
+        <div class="splash-wrapper">
 
-                <h6 class="splash-text">
-                    {{ i.text }}
-                </h6>
+            <div class="splash-overlay"></div>
 
-                <img class="splash-img" src="{{ i.path }}"></img>
-            </div>
+            <h6 class="splash-text">
+                {{ i.text }}
+            </h6>
 
+            <img class="splash-img" src="{{ i.path }}"></img>
         </div>
 
     </div>
+
+</div>
 </div>
 
 {% include "bootstrap.html" %}
