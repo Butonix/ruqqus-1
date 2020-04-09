@@ -34,7 +34,7 @@ def image_posts_listing(v):
 
     page=int(request.args.get('page',1))
 
-    posts=db.query(Submission).filter(Submission.url.startswith("https://i.ruqqus.com/post/"
+    posts=db.query(Submission).filter(Submission.url.ilike("https://i.ruqqus.com/post/%"
                                                                 )
                                       ).order_by(Submission.id.desc()
                                                  ).offset(25*(page-1)
@@ -50,7 +50,8 @@ def image_posts_listing(v):
                                           listing=posts,
                                           next_exists=next_exists,
                                           page=page,
-                                          sort_method="new"),
+                                          sort_method="new"
+                                          ),
             'api':lambda:[x.json for x in posts]
             }
 
