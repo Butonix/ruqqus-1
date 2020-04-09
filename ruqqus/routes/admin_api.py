@@ -440,7 +440,7 @@ def multiple_plots(**kwargs):
     aws.upload_from_file(name, name)
     return name
 
-@app.route("/admin/csam_nuke/<pid>", methods=["POST"]):
+@app.route("/admin/csam_nuke/<pid>", methods=["POST"])
 @admin_level_required(4)
 @validate_formkey
 def admin_csam_nuke(pid, v):
