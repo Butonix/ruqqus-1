@@ -45,7 +45,7 @@ def image_posts_listing(v):
     next_exists=(len(posts)==26)
     posts=posts[0:25]
 
-    return {'html':lambda:render_template("home.html",
+    return {'html':lambda:render_template("admin/image_posts.html",
                                           v=v,
                                           listing=posts,
                                           next_exists=next_exists,
