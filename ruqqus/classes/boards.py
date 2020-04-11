@@ -9,6 +9,7 @@ from ruqqus.helpers.session import *
 import ruqqus.helpers.aws as aws
 from .submission import *
 from .board_relationships import *
+from .comment import Comment
 from .mix_ins import *
 from ruqqus.__main__ import Base, db, cache
 
@@ -177,7 +178,7 @@ class Board(Base, Stndrd, Age_times):
         if user is None:
             return False
 
-        return self.contributors.filter_by(user_id=user.id).first()
+        return self.contributors.filter_by(user_id=user.id, is_active=True).first()
 
     def can_submit(self, user):
 
@@ -297,6 +298,11 @@ class Board(Base, Stndrd, Age_times):
     def css_dark_url(self):
         return f"{self.permalink}/dark/{self.color_nonce}.css"
 
+
+    def has_participant(self, user):
+        return (self.submissions.filter_by(author_id=user.id).first() or
+                db.query(Comment).filter_by(author_id=user.id, board_id=self.id).first()
+                )
     @property
     def n_pins(self):
         return self.submissions.filter_by(is_pinned=True).count()
@@ -335,5 +341,3 @@ class Board(Base, Stndrd, Age_times):
                 'color':self.color
                 }
 
-
-    
