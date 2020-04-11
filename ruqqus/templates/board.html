@@ -38,6 +38,9 @@
 <div class="sidebar-section sidebar-guildmake">
   <div class="title"><i class="fas fa-info-circle mr-2"></i>Guild Info</div>
   <div class="body">
+    <div class="text-small font-weight-bold text-muted text-uppercase" style="letter-spacing: 0.025rem;">Founded</div>
+    <p>{{ b.created_date }}
+    <div class="text-small font-weight-bold text-muted text-uppercase" style="letter-spacing: 0.025rem;">Description</div>
     {{ b.description_html | safe }}
   </div>
 </div>
