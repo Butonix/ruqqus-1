@@ -566,21 +566,22 @@
     </div>
     {% endif %}
 
-    {% if not v and p.comment_count >= 2 and not p.is_banned %}
+    {% if not v and not p.is_banned %}
     <div class="comment-write mb-3">
       <textarea class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="1" onclick="location.href='/login?redirect={{ request.path | urlencode}}';"></textarea>
     </div>
-
+    {% if p.comment_count >= 2 %}
     <div class="card border-0 bg-light mt-4">
       <div class="card-body">
         <h5 class="card-title">Jump in the discussion.</h5>
         <p class="card-text">Become part of the community, no email address required. Make a Ruqqus.</p>
         <div>
-          <a href="/signup" class="btn btn-primary">Sign up</a>
-          <a href="/login" class="btn btn-link text-muted">Sign in</a>
+          <a href="/signup?redirect={{ request.path | urlencode}}" class="btn btn-primary">Sign up</a>
+          <a href="/login?redirect={{ request.path | urlencode}}" class="btn btn-link text-muted">Sign in</a>
         </div>
       </div>
     </div>
+    {% endif %}
     {% endif %}
 
     {% if p.replies %}
