@@ -171,7 +171,7 @@
       <div id="button-sub" {% if p.board.has_subscriber(v) %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post('/api/subscribe/{{ p.board.name }}', callback=toggleSub)">Join guild</a></div>
       <div id="button-unsub" {% if not p.board.has_subscriber(v) %}class="d-none"{% endif %}><a class="btn btn-secondary" href="javascript:void(0)" onclick="post('/api/unsubscribe/{{ p.board.name }}', callback=toggleSub)">Leave</a></div>
       {% elif not v %}
-      <a class="btn btn-primary" href="/signup">Join guild</a>
+      <a class="btn btn-primary" href="/signup?redirect={{ request.path | urlencode}}">Join guild</a>
       {% endif %}
     </div>
   </div>
