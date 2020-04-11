@@ -41,8 +41,8 @@
     <div class="text-small font-weight-bold text-muted text-uppercase mb-1" style="letter-spacing: 0.025rem;">Founded</div>
     <p>{{ b.created_date }}
       <div class="text-small font-weight-bold text-muted text-uppercase mb-1" style="letter-spacing: 0.025rem;">Description</div>
-      {{ b.description_html | safe | truncate(72, True)}}
-      {% if b.description_html | length > 72 %}
+      {{ b.description_html | safe | truncate(140, True)}}
+      {% if b.description_html | length > 140 %}
       <a href="#" data-toggle="modal" data-target="#guildDetailsModal">Read more</a>
       {% endif %}
       <div class="text-small font-weight-bold text-muted text-uppercase mb-1" style="letter-spacing: 0.025rem;">Guildmasters</div>
