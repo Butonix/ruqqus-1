@@ -34,6 +34,15 @@
 {% endif %}
 {% endblock %}
 
+{% block sidebarblock %}
+<div class="sidebar-section sidebar-guildmake">
+  <div class="title"><i class="fas fa-info-circle mr-2"></i>Guild Info</div>
+  <div class="body">
+    {{ board.description_html | safe }}
+  </div>
+</div>
+{% endblock %}
+
 
 
 {% block darkswitch %}
