@@ -50,7 +50,13 @@
         <a href="{{ mod.user.permalink }}">
           <img src="{{ mod.user.profile_url }}" class="profile-pic-35 border-3 border-gray-100 rounded-circle {% if loop.first %}ml-n1{% else %}ml-n3{% endif %}">
         </a>
-        <div class="text-small text-primary">+{{ b.mods_count - loop.index }} more guildmaster{% if b.mods_count - loop.index > 1 %}s{% endif %}</div>
+        {% if loop.last %}
+        <div class="text-small text-primary">
+          {% if b.mods_count - loop.index > 0 %}
+          +{{ b.mods_count - loop.index }} more guildmaster{% if b.mods_count - loop.index > 1 %}s{% endif %}
+          {% endif %}
+        </div>
+        {% endif %}
         {% else %}
         <small class="text-muted">No guildmasters</small>
         {% endfor %}
