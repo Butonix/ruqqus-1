@@ -553,8 +553,6 @@
         <input type="hidden" name="submission" value="{{ p.base36id }}">
         {% if v %}
         <textarea class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{ p.fullname }}" aria-label="With textarea" placeholder="Add your comment..." rows="1"></textarea>
-        {% else %}
-        <textarea class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="1" onclick="location.href='/login';"></textarea>
         {% endif %}
         <div class="comment-format">
           <small class="format pl-0"><i class="fas fa-bold" onclick="makeBold('comment-form')" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Bold"></i></small>
@@ -565,6 +563,12 @@
           <button form="reply-to-{{ p.fullname }}" class="btn btn-primary btn ml-auto">Comment</button>
         </div>
       </form>
+    </div>
+    {% endif %}
+
+    {% if not v and not p.is_banned %}
+    <div class="comment-write mb-3">
+      <textarea class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="1" onclick="location.href='/login?redirect={{ request.path | urlencode}}';"></textarea>
     </div>
     {% endif %}
 
