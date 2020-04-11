@@ -46,7 +46,7 @@
       <a href="#" data-toggle="modal" data-target="#guildDetailsModal">Read more</a>
       {% endif %}
       <div class="text-small font-weight-bold text-muted text-uppercase mb-1" style="letter-spacing: 0.025rem;">Guildmasters</div>
-      <div class="d-flex align-items-center mb-3">
+      <div class="d-flex align-items-center">
         {% for mod in b.mods_list[0:3] %}
         <a href="{{ mod.user.permalink }}">
           <img src="{{ mod.user.profile_url }}" class="profile-pic-35 border-3 border-gray-100 rounded-circle {% if loop.first %}ml-n1{% elif loop.last %}ml-n3 mr-2{% else %}ml-n3{% endif %}">
@@ -169,7 +169,7 @@
         </div>
       </div>
       <div class="border-right py-3 px-3">
-        <a href="{{ b.permalink+"/mod/mods" }}" class="text-black" style="text-decoration: none;">Guildmasters<span class="text-primary"> {{ b.mods_count }}</span></a>
+        <a href="{{ b.permalink+'/mod/mods' }}" class="text-black" style="text-decoration: none;">Guildmasters<span class="text-primary"> {{ b.mods_count }}</span></a>
       </div>
       <div class="border-right p-3">
         Member{{ 's' if b.subscriber_count != 1 else '' }}<span class="text-primary"> {{ b.subscriber_count }}</span>
