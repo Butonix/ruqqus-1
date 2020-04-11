@@ -3,6 +3,7 @@ import mistletoe
 import re
 import sass
 import threading
+import time
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -238,26 +239,32 @@ def mod_accept_bid_pid(bid, pid, board, v):
 @validate_formkey
 def mod_ban_bid_user(bid, board, v):
 
-    user=get_user(request.form.get("username"))
+    user=get_user(request.form.get("username"), graceful=True)
 
-    if not board.has_mod(v):
-        abort(403)
+    if not user:
+        return jsonify({"error":"That user doesn't exist."}), 404
+
+    if user.id==v.id:
+        return jsonify({"error":"You can't exile yourself."}), 409
 
     if board.has_ban(user):
-        abort(409)
+        return jsonify({"error":f"@{user.username} is already exiled from +{board.name}."}), 409
+
+    if board.has_contributor(user):
+        return jsonify({"error":f"@{user.username} is an approved contributor to +{board.name} and can't currently be banned."}), 409
 
     if board.has_mod(user):
-        abort(409)
+        return jsonify({"error":"You can't exile other guildmasters."}), 409
 
     #you can only exile a user who has previously participated in the guild
-    if not (db.query(Submission).filter_by(author_id=user.id, board_id=board.id).first() or
-        db.query(Comment).filter(Comment.author_id==user.id, Comment.board_id==board.id).first()):
-        abort(400)
+    if not board.has_participant(user):
+        return jsonify({"error":f"@{user.username} hasn't participated in +{board.name}."}), 403
 
     #check for an existing deactivated ban
     existing_ban=db.query(BanRelationship).filter_by(user_id=user.id, board_id=board.id, is_active=False).first()
     if existing_ban:
         existing_ban.is_active=True
+        existing_ban.created_utc=int(time.time())
         existing_ban.banning_mod_id=v.id
         db.add(existing_ban)
     else:
@@ -275,13 +282,13 @@ def mod_ban_bid_user(bid, board, v):
 
     return "", 204
     
-@app.route("/mod/unexile/<bid>/", methods=["POST"])
+@app.route("/mod/unexile/<bid>", methods=["POST"])
 @auth_required
 @is_guildmaster
 @validate_formkey
-def mod_unban_bid_user(bid, username, board, v):
+def mod_unban_bid_user(bid, board, v):
 
-    user=get_user(request.form.get("username"))
+    user=get_user(request.values.get("username"))
 
     x= board.has_ban(user)
     if not x:
@@ -676,28 +683,30 @@ def board_about_mods(boardname, v):
 @is_guildmaster
 def board_about_exiled(boardname, board, v):
 
-    username=request.args.get("user","")
-    if username:
-        users=db.query(User).filter_by(is_banned=0).filter(func.lower(User.username).contains(username.lower())).limit(25)
-    else:
-        users=[]
+    page=int(request.args.get("page",1))
+
+    bans=board.bans.filter_by(is_active=True).order_by(BanRelationship.created_utc.desc()).offset(25*(page-1)).limit(26)
+
+    bans=[ban for ban in bans]
+    next_exists=(len(bans)==26)
+    bans=bans[0:25]
                                     
 
-    return render_template("guild/bans.html", v=v, b=board, users=users)
+    return render_template("guild/bans.html", v=v, b=board, bans=bans)
 
 @app.route("/+<boardname>/mod/contributors", methods=["GET"])
 @auth_required
 @is_guildmaster
 def board_about_contributors(boardname, board, v):
 
-    username=request.args.get("user","")
-    if username:
-        users=db.query(User).filter_by(is_banned=0).filter(func.lower(User.username).contains(username.lower())).limit(25)
-    else:
-        users=[]
-                                    
+    page=int(request.args.get("page",1))
+    contributors=board.contributors.filter_by(is_active=True).order_by(ContributorRelationship.created_utc.desc()).offset(25*(page-1)).limit(26)
 
-    return render_template("guild/contributors.html", v=v, b=board, users=users)
+    contributors=[x for x in contributors]
+    next_exists=(len(contributors)==26)
+    contributors=contributors[0:25]
+                                
+    return render_template("guild/contributors.html", v=v, b=board, contributors=contributors)
 
 @app.route("/api/subscribe/<boardname>", methods=["POST"])
 @auth_required
@@ -951,38 +960,60 @@ def mod_board_color(bid, board, v):
     
     return redirect(f"/+{board.name}/mod/appearance?msg=Success")
 
-@app.route("/mod/approve/<bid>/<username>", methods=["POST"])
+@app.route("/mod/approve/<bid>", methods=["POST"])
 @auth_required
 @is_guildmaster
 @validate_formkey
-def mod_approve_bid_user(bid, username, board, v):
+def mod_approve_bid_user(bid, board, v):
 
-    user=get_user(username)
+    user=get_user(request.form.get("username"), graceful=True)
 
+    if not user:
+        return jsonify({"error":"That user doesn't exist."}), 404
 
+    if board.has_ban(user):
+        return jsonify({"error":f"@{user.username} is exiled from +{board.name} and can't currently be approved."}), 409
     if board.has_contributor(user):
-        abort(409)
+        return jsonify({"error":f"@{user.username} is already an approved user."})        
 
-    new_contrib=ContributorRelationship(user_id=user.id,
-                                        board_id=board.id)
-    db.add(new_contrib)
+
+    #check for an existing deactivated approval
+    existing_contrib=db.query(ContributorRelationship).filter_by(user_id=user.id, board_id=board.id, is_active=False).first()
+    if existing_contrib:
+        existing_contrib.is_active=True
+        existing_contrib.created_utc=int(time.time())
+        existing_contrib.approving_mod_id=v.id
+        db.add(existing_contrib)
+    else:
+        new_contrib=ContributorRelationship(user_id=user.id,
+                                            board_id=board.id,
+                                            is_active=True,
+                                            approving_mod_id=v.id)
+        db.add(new_contrib)
+
+        if user.id != v.id:
+            text=f"You have added as an approved contributor to +{board.name}."
+            send_notification(user, text)
+            
     db.commit()
 
     return "", 204
     
-@app.route("/mod/unapprove/<bid>/<username>", methods=["POST"])
+@app.route("/mod/unapprove/<bid>", methods=["POST"])
 @auth_required
 @is_guildmaster
 @validate_formkey
-def mod_unapprove_bid_user(bid, username, board, v):
+def mod_unapprove_bid_user(bid, board, v):
 
-    user=get_user(username)
+    user=get_user(request.values.get("username"))
 
     x= board.has_contributor(user)
     if not x:
         abort(409)
 
-    db.delete(x)
+    x.is_active=False
+
+    db.add(x)
     db.commit()
     
     return "", 204
@@ -1142,7 +1173,7 @@ def siege_guild(v):
         db.commit()
 
     return redirect(f"/+{guild.name}/mod/mods")
-    
+
 @app.route("/mod/post_pin/<bid>/<pid>/<x>", methods=["POST"])
 @auth_required
 @is_guildmaster
@@ -1172,5 +1203,3 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
     db.commit()
 
     return "", 204
-
-    

@@ -234,6 +234,7 @@ def submit_post(v):
     board_name=board_name.lstrip("+")
     
     board=get_guild(board_name, graceful=True)
+    
     if not board:
         board=get_guild('general')
 

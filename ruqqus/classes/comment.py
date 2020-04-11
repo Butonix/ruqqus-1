@@ -12,6 +12,7 @@ from .votes import CommentVote
 from .flags import CommentFlag
 from .badwords import *
 
+
 class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     __tablename__="comments"
@@ -257,5 +258,4 @@ class Notification(Base):
 
     @property
     def board(self):
-
         return self.post.board

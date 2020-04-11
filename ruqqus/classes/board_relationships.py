@@ -3,6 +3,7 @@ from ruqqus.helpers.security import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from ruqqus.__main__ import Base, db, cache
+from .mix_ins import *
 import time
 
 class ModRelationship(Base):
@@ -27,7 +28,7 @@ class ModRelationship(Base):
         return f"<Mod(id={self.id}, uid={self.uid}, board_id={self.board_id})>"
 
 
-class BanRelationship(Base):
+class BanRelationship(Base, Stndrd, Age_times):
 
     __tablename__="bans"
     id = Column(BigInteger, primary_key=True)
@@ -36,10 +37,11 @@ class BanRelationship(Base):
     created_utc = Column(BigInteger, default=0)
     banning_mod_id=Column(Integer, ForeignKey("users.id"))
     is_active=Column(Boolean, default=False)
+    mod_note=Column(String(128), default="")
 
-    user=relationship("User", uselist=False, primaryjoin="User.id==BanRelationship.user_id")
-    banning_mod=relationship("User", uselist=False, primaryjoin="User.id==BanRelationship.banning_mod_id")
-    board=relationship("Board", uselist=False)
+    user=relationship("User", lazy="joined", primaryjoin="User.id==BanRelationship.user_id")
+    banning_mod=relationship("User", lazy="joined", primaryjoin="User.id==BanRelationship.banning_mod_id")
+    board=relationship("Board")
 
     def __init__(self, *args, **kwargs):
         if "created_utc" not in kwargs:
@@ -50,15 +52,18 @@ class BanRelationship(Base):
     def __repr__(self):
         return f"<Ban(id={self.id}, uid={self.uid}, board_id={self.board_id})>"
 
-class ContributorRelationship(Base):
+class ContributorRelationship(Base, Stndrd, Age_times):
 
     __tablename__="contributors"
     id = Column(BigInteger, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     board_id = Column(Integer, ForeignKey("boards.id"))
     created_utc = Column(BigInteger, default=0)
+    is_active=Column(Boolean, default=True)
+    approving_mod_id=Column(Integer, ForeignKey("users.id"))
 
-    user=relationship("User", lazy="subquery")
+    user=relationship("User", lazy="joined", primaryjoin="User.id==ContributorRelationship.user_id")
+    approving_mod=relationship("User", lazy='joined', primaryjoin="User.id==ContributorRelationship.approving_mod_id")
     board=relationship("Board", lazy="subquery")
 
     def __init__(self, *args, **kwargs):

@@ -1,24 +1,23 @@
 {% for b in boards %}
 
 <div class="col col-md-6 col-lg-4 col-xl-3 d-none d-md-block" style="margin-bottom: 28px;">
-  <div id="board-{{ b.base36id }}" class="card h-100">
-    <img src="{{ b.banner_url }}" class="card-img-top" alt="+{{ b.name }} banner" style="height: 100px; object-fit: cover;">
-    <div class="card-body" style="word-wrap: break-word;">
-      <div class="d-flex flex-wrap align-items-center mb-2">
-        <img src="{{ b.profile_url }}" class="profile-pic-40 mr-2">
+	<div id="board-{{ b.base36id }}" class="card h-100">
+		<div class="card-body" style="word-wrap: break-word;">
+			<div class="d-flex flex-wrap align-items-center mb-2">
+				<img src="{{ b.profile_url }}" class="profile-pic-40 mr-2">
 
-        <a class="card-title stretched-link h5 mb-0" href="{{ b.permalink }}">+{{ b.name }} {% if b.over_18 %}<span class="badge badge-danger">NSFW</span>{% endif %}</a>
+				<a class="card-title stretched-link h5 mb-0" href="{{ b.permalink }}">+{{ b.name }} {% if b.over_18 %}<span class="badge badge-danger">NSFW</span>{% endif %}</a>
 
-      </div>
-      <p class="card-text text-small text-muted">{{ b.description|truncate(72, True) }}</p>
-    </div>
-    <div class="card-footer bg-transparent d-flex align-items-center justify-content-between p-3">
-      <div class="text-small text-muted"><i class="fas fa-users text-gray-500 mr-2"></i>{{ b.subscriber_count }} Member{{ 's' if b.subscriber_count != 1 else '' }}</div>
+			</div>
+			<p class="card-text text-small text-muted">{{ b.description|truncate(72, True) }}</p>
+		</div>
+		<div class="card-footer bg-transparent d-flex align-items-center justify-content-between p-3">
+			<div class="text-small text-muted"><i class="fas fa-users text-gray-500 mr-2"></i>{{ b.subscriber_count }} Member{{ 's' if b.subscriber_count != 1 else '' }}</div>
 
-      <div id="button-sub-{{ b.base36id }}" style="z-index: 2" class="{% if b.has_subscriber(v) %}d-none{% endif %}"><a class="btn btn-primary" href="javascript:void(0)" onclick="post('/api/subscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ b.base36id }}').classList.toggle('d-none');})">Join</a></div>
-      <div id="button-unsub-{{ b.base36id }}" style="z-index: 2" class="{% if not b.has_subscriber(v) %} d-none{% endif %}"><a class="btn btn-secondary" href="javascript:void(0)" onclick="post('/api/unsubscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ b.base36id }}').classList.toggle('d-none');})">Leave</a></div>
-    </div>
-  </div>
+			<div id="button-sub-{{ b.base36id }}" style="z-index: 2" class="{% if b.has_subscriber(v) %}d-none{% endif %}"><a class="btn btn-primary" href="javascript:void(0)" onclick="post('/api/subscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ b.base36id }}').classList.toggle('d-none');})">Join</a></div>
+			<div id="button-unsub-{{ b.base36id }}" style="z-index: 2" class="{% if not b.has_subscriber(v) %} d-none{% endif %}"><a class="btn btn-secondary" href="javascript:void(0)" onclick="post('/api/unsubscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ b.base36id }}').classList.toggle('d-none');})">Leave</a></div>
+		</div>
+	</div>
 </div>
 
 <div class="col mb-3 d-md-none">
@@ -46,7 +45,7 @@
     <a class="btn btn-primary btn-sm" style="z-index: 2" href="/signup">Join</a>
     {% endif %}
 
-  </div>
+	</div>
 
 </div>
 

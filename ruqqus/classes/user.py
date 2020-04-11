@@ -67,7 +67,7 @@ class User(Base, Stndrd):
     banned_from=relationship("BanRelationship", lazy="dynamic", primaryjoin="BanRelationship.user_id==User.id")
     subscriptions=relationship("Subscription", lazy="dynamic")
     boards_created=relationship("Board", lazy="dynamic")
-    contributes=relationship("ContributorRelationship", lazy="dynamic")
+    contributes=relationship("ContributorRelationship", lazy="dynamic", primaryjoin="ContributorRelationship.user_id==User.id")
 
     following=relationship("Follow", lazy="dynamic", primaryjoin="Follow.user_id==User.id")
     followers=relationship("Follow", lazy="dynamic", primaryjoin="Follow.target_id==User.id")
@@ -138,7 +138,7 @@ class User(Base, Stndrd):
         if not self.admin_level >=4:
             #admins can see everything
             m=self.moderates.filter_by(invite_rescinded=False).subquery()
-            c=self.contributes.subquery()
+            c=self.contributes.filter_by(is_active=True).subquery()
             posts=posts.join(m,
                              m.c.board_id==Submission.board_id,
                              isouter=True
