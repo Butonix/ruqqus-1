@@ -566,7 +566,7 @@
     </div>
     {% endif %}
 
-    {% if not v and p.comment_count >= 2 and not p.is_banned %}
+    {% if not v and not p.is_banned %}
     {% if p.comment_count >= 2 %}
     <div class="card border-0 bg-light mt-4">
       <div class="card-body">
