@@ -53,7 +53,7 @@
         {% if loop.last %}
         <div class="text-small text-primary">
           {% if b.mods_count - loop.index > 0 %}
-          +{{ b.mods_count - loop.index }} more guildmaster{% if b.mods_count - loop.index > 1 %}s{% endif %}
+          <a href="{{ b.permalink+'/mod/mods' }}">{{ b.mods_count - loop.index }} more guildmaster{% if b.mods_count - loop.index > 1 %}s{% endif %}</a>
           {% endif %}
         </div>
         {% endif %}
