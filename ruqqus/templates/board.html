@@ -48,11 +48,11 @@
     <div class="d-flex align-items-center">
       {% for mod in b.mods_list[0:3] %}
       <a href="{{ mod.user.permalink }}">
-        <img src="{{ mod.user.profile_url }}" class="profile-pic-35 border-3 border-gray-100 rounded-circle {% if loop.first %}ml-n1{% elif loop.last %}ml-n3 mr-2{% else %}ml-n3{% endif %}">
+        <img src="{{ mod.user.profile_url }}" class="profile-pic-35 border-3 border-gray-100 rounded-circle {% if loop.first %}ml-n1{% else %}ml-n3{% endif %}">
       </a>
       {% if loop.last %}
       {% if b.mods_count - loop.index > 0 %}
-      <div class="text-small text-primary">
+      <div class="text-small text-primary ml-2">
         <a href="{{ b.permalink+'/mod/mods' }}">+{{ b.mods_count - loop.index }} more guildmaster{% if b.mods_count - loop.index > 1 %}s{% endif %}</a>
       </div>
       {% endif %}
