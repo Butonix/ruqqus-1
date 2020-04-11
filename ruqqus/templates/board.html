@@ -36,17 +36,35 @@
 
 {% block sidebarblock %}
 <div class="sidebar-section sidebar-guildmake">
-  <div class="title"><i class="fas fa-info-circle mr-2"></i>Guild Info</div>
+  <div class="title"><i class="fas fa-info-circle mr-2"></i>About Guild</div>
   <div class="body">
-    <div class="text-small font-weight-bold text-muted text-uppercase" style="letter-spacing: 0.025rem;">Founded</div>
+    <div class="text-small font-weight-bold text-muted text-uppercase mb-1" style="letter-spacing: 0.025rem;">Founded</div>
     <p>{{ b.created_date }}
-    <div class="text-small font-weight-bold text-muted text-uppercase" style="letter-spacing: 0.025rem;">Description</div>
-    {{ b.description_html | safe }}
+      <div class="text-small font-weight-bold text-muted text-uppercase mb-1" style="letter-spacing: 0.025rem;">Description</div>
+      {{ b.description_html | safe | truncate(72, True)}}
+      {% if b.description_html | length > 72 %}
+      <a href="#" data-toggle="modal" data-target="#guildDetailsModal">Read more</a>
+      {% endif %}
+      <div class="text-small font-weight-bold text-muted text-uppercase mb-1" style="letter-spacing: 0.025rem;">Guildmasters</div>
+      <div class="d-flex align-items-center mb-3">
+        {% for mod in b.mods_list[0:3] %}
+        <a href="{{ mod.user.permalink }}">
+          <img src="{{ mod.user.profile_url }}" class="profile-pic-35 border-3 border-gray-100 rounded-circle {% if loop.first %}ml-n1{% elif loop.last %}ml-n3 mr-2{% else %}ml-n3{% endif %}">
+        </a>
+        {% if loop.last %}
+        {% if b.mods_count - loop.index > 0 %}
+        <div class="text-small text-primary">
+          <a href="{{ b.permalink+'/mod/mods' }}">+{{ b.mods_count - loop.index }} more guildmaster{% if b.mods_count - loop.index > 1 %}s{% endif %}</a>
+        </div>
+        {% endif %}
+        {% endif %}
+        {% else %}
+        <small class="text-muted">No guildmasters</small>
+        {% endfor %}
+      </div>
+    </div>
   </div>
-</div>
-{% endblock %}
-
-
+  {% endblock %}
 
 {% block darkswitch %}
 
