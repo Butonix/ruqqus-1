@@ -568,6 +568,10 @@
 
     {% if not v and not p.is_banned %}
     {% if p.comment_count >= 2 %}
+    <div class="comment-write mb-3">
+      <textarea class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="1" onclick="location.href='/login?redirect={{ request.path | urlencode}}';"></textarea>
+    </div>
+
     <div class="card border-0 bg-light mt-4">
       <div class="card-body">
         <h5 class="card-title">Jump in the discussion.</h5>
