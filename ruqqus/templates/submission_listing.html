@@ -268,7 +268,7 @@
           <button class="btn btn-white btn-block btn-lg text-danger text-left" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="far fa-check text-success text-danger mr-3"></i>Approve</button>
           {% endif %}
           {% if not p.is_banned or p.active_flags %}
-          <button class="btn btn-white btn-block btn-lg text-danger text-left" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="far fa-ban text-center text-danger mr-3"></i>Remove</a></button>
+          <button class="btn btn-white btn-block btn-lg text-danger text-left" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="far fa-ban text-center text-danger mr-3"></i>Remove</button>
           {% endif %}
           {% endif %}
           {% endif %}
