@@ -38,12 +38,11 @@
         <i class="fas text-gray-500 fa-scroll-old fa-stack-1x text-lg"></i>
       </span>
       {% if v and v.id == u.id %}
-      <h2 class="h5">You haven't made a ruckus yet</h2>
-      <p class="text-muted mb-md-5">Your posting history will show here.</p>
-      <a href="/submit" class="btn btn-primary">Create a post</a>
+      <h2 class="h5">You haven't made any comments yet</h2>
+      <p class="text-muted mb-md-5">Your commenting history will show here.</p>
       {% else %}
-      <h2 class="h5">@{{ u.username }} hasn't made a ruckus yet</h2>
-      <p class="text-muted">Their posting history will show here.</p>
+      <h2 class="h5">@{{ u.username }} hasn't made any comments yet</h2>
+      <p class="text-muted">Their commenting history will show here.</p>
       {% endif %}
     </div>
 
