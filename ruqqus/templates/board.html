@@ -48,7 +48,7 @@
     <div class="d-flex align-items-center">
       {% for mod in b.mods_list[0:3] %}
       <a href="{{ mod.user.permalink }}">
-        <img src="{{ mod.user.profile_url }}" class="profile-pic-35 border-3 border-gray-100 rounded-circle {% if loop.first %}ml-n1{% else %}ml-n3{% endif %}">
+        <img src="{{ mod.user.profile_url }}" class="profile-pic profile-pic-30 profile-stacked rounded-circle {% if not loop.first %}ml-n3{% endif %}">
       </a>
       {% if loop.last %}
       {% if b.mods_count - loop.index > 0 %}
