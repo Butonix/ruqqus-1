@@ -241,7 +241,7 @@ def settings_images_banner(v):
 
     #anti csam
     new_thread=threading.Thread(target=check_csam_url,
-                                args=(v.banner,
+                                args=(v.banner_url,
                                       v,
                                       lambda:board.del_banner()
                                       )
