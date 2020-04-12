@@ -46,6 +46,7 @@ class User(Base, Stndrd):
     referred_by=Column(Integer, default=None)
     is_banned=Column(Integer, default=0)
     ban_reason=Column(String, default="")
+    feed_nonce=Column(Integer, default=0)
     login_nonce=Column(Integer, default=0)
     title_id=Column(Integer, ForeignKey("titles.id"), default=None)
     title=relationship("Title", lazy="joined")
@@ -356,6 +357,16 @@ class User(Base, Stndrd):
                                page=page,
                                next_exists=next_exists,
                                is_following=is_following)
+    @property
+    def feedkey(self, new=False):
+        if new:
+            self.feed_nonce+=1
+            db.commit()
+        return generate_hash(f"{self.username}{self.id}{self.feed_nonce}{self.created_utc}")
+
+
+
+
 
     @property
     def formkey(self):
