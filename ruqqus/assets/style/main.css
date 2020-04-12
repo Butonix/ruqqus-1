@@ -14258,6 +14258,9 @@ a:hover .link-arrow {
   border-radius: 0.35rem;
   overflow: hidden;
 }
+.sidebar-section .profile-pic.profile-stacked {
+  box-shadow: 0 0 0px 3px #F5F7FA;
+}
 
 .sidebar-section.sidebar-trending .trending-hashtag, .sidebar-section.sidebar-trending .trending-guild {
   margin-bottom: 1rem;
