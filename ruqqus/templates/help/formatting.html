@@ -52,7 +52,7 @@ On Ruqqus, you can use Markdown formatting.
   </tr>
 </table>
 
-<p class="text-small">* We have customized image embeds to add pop-overs and operate on a whitelist system. Embeds from known safe image hosts will use pop-overs. Attempted embeds to non-whitelisted sites will be converted into a link.</p>
+<p class="text-small">* We have customized image embeds to add pop-overs and operate on a whitelist system. Embeds from known safe image hosts will use a pop-up display as demonstrated here. Attempted embeds to non-whitelisted sites will be converted into a link.</p>
 
 {% filter markdown %}
 
@@ -87,6 +87,16 @@ These Markdown tags format an entire paragraph of text at a time.
     <td>Unordered list</td>
     <td>* First thing<br>* Second thing</td>
     <td><ul><li>First thing</li><li>Second thing</li></ul></td>
+  </tr>
+  <tr>
+    <td>Code Block</td>
+    <td>```<br>Use three backticks above and below.<br>Or, indent the lines with four spaces.<br>```</td>
+    <td>
+<pre>
+Use three backticks above and below.
+Or, indent the lines with four spaces.
+</pre>
+    </td>
   </tr>
 </table>
 
