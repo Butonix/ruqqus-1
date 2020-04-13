@@ -45,7 +45,14 @@ On Ruqqus, you can use Markdown formatting.
     <td>[Ruqqus](https://ruqqus.com)</td>
     <td><a href="https://ruqqus.com">Ruqqus</a></td>
   </tr>
+  <tr>
+    <td>Image embeds*</td>
+    <td>![](https://i.ruqqus.com/post/67x/EaNkUiAv7UQ)</td>
+    <td><img src="https://i.ruqqus.com/post/67x/EaNkUiAv7UQ" class="post-img" alt="" onclick="if (!window.__cfRLUnblockHandlers) return false; expandDesktopImage('https://i.ruqqus.com/post/67x/EaNkUiAv7UQ','https://i.ruqqus.com/post/67x/EaNkUiAv7UQ')"></td>
+  </tr>
 </table>
+
+<p class="text-small">* We have customized image embeds to add pop-overs and operate on a whitelist system. Embeds from known safe image hosts will use pop-overs. Attempted embeds to non-whitelisted sites will be converted into a link.</p>
 
 {% filter markdown %}
 
@@ -65,6 +72,21 @@ These Markdown tags format an entire paragraph of text at a time.
     <td>Blockquote</td>
     <td>&gt; text</td>
     <td><blockquote>text</blockquote></td>
+  </tr>
+  <tr>
+    <td>Headers 1-6</td>
+    <td># Header 1<br>## Header 2<br>### Header 3<br>#### Header 4<br>##### Header 5<br>###### Header 6</td>
+    <td><h1>Header 1</h1><h2>Header 2</h2><h3>Header 3</h3><h4>Header 4</h4><h5>Header 5</h5><h6>Header 6</h6></td>
+  </tr>
+  <tr>
+    <td>Ordered list</td>
+    <td>1. First thing<br>2. Second thing</td>
+    <td><ol><li>First thing</li><li>Second thing</li></ol></td>
+  </tr>
+  <tr>
+    <td>Unordered list</td>
+    <td>* First thing<br>* Second thing</td>
+    <td><ul><li>First thing</li><li>Second thing</li></ul></td>
   </tr>
 </table>
 
