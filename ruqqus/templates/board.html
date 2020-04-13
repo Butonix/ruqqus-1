@@ -66,14 +66,17 @@
 
 {% if b.has_mod(v) %}
 <div class="sidebar-section sidebar-info">
-  <div class="title"><i class="fas fa-crown mr-2"></i>Guild Tools</div>
+  <div class="title"><i class="fas fa-crown mr-2"></i>Guildmaster Tools</div>
   <div class="body">
-    <ul class="list-unstyled">
-      <li><a href="/+{{ b.name }}/mod/settings"><i class="fas fa-cog fa-width-rem"></i>Settings</a></li>
-      <li><a href="/+{{ b.name }}/mod/appearance"><i class="fas fa-palette fa-width-rem"></i>Appearance</a></li>
-      <li><a href="/+{{ b.name }}/mod/mods"><i class="fas fa-crown fa-width-rem"></i>Guildmasters</a></li>
-      <li><a href="/+{{ b.name }}/mod/exiles"><i class="fas fa-user-slash fa-width-rem"></i>Exiles</a></li>
-      <li><a href="/+{{ b.name }}/mod/queue"><i class="fas fa-flag fa-width-rem"></i>Reports</a></li>
+    <ul class="list-unstyled mb-0">
+      <li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/settings"><i class="fas fa-cog fa-width-rem text-center mr-2"></i>Settings</a></li>
+      <li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/appearance"><i class="fas fa-palette fa-width-rem text-center mr-2"></i>Appearance</a></li>
+      <li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/mods"><i class="fas fa-crown fa-width-rem text-center mr-2"></i>Guildmasters</a></li>
+      <li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/exiles"><i class="fas fa-user-slash fa-width-rem text-center mr-2"></i>Exiles</a></li>
+      <li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/queue"><i class="fas fa-flag fa-width-rem text-center mr-2"></i>Reports</a></li>
+      {% if b.restricted_posting or b.is_private %}
+      <li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/contributors"><i class="fas fa-user-check fa-width-rem text-center mr-2"></i>Approved users</a></li>
+      {% endif %}
     </ul>
   </div>
 </div>
