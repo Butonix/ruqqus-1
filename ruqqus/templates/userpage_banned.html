@@ -68,20 +68,17 @@
 {% block content %}
 
 <div class="row no-gutters">
-
   <div class="col-12">
-
     <div class="text-center py-7 py-md-8">
-
-      <i class="fad fa-user-slash text-muted mb-5" style="font-size: 5rem;"></i>
-
-
-      <div class="font-weight-bold text-muted">Banned!</div>
-      <div class="text-small text-muted">@{{ u.username }} was banned.</div>
-	{% if u.ban_reason %}
-	<div class="text-small text-muted">Reason: {{ u.ban_reason }}</div>
-	{% endif %}
-
+      <span class="fa-stack fa-2x text-muted mb-4">
+        <i class="fas fa-square text-danger opacity-25 fa-stack-2x"></i>
+        <i class="fas text-danger fa-user-slash fa-stack-1x text-lg"></i>
+      </span>
+      <h2 class="h5">@{{ u.username }} is banned</h2>
+      <p class="text-muted">This user is permanently banned from Ruqqus for violating the <a href="/help/terms">rules</a>.</p>
+      {% if u.ban_reason %}
+      <p class="text-small text-muted"><span class="font-weight-bold">Reason:</span> {{ u.ban_reason }}</p>
+      {% endif %}
     </div>
   </div>
 </div>
