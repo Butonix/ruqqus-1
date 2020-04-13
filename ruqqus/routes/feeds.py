@@ -1,10 +1,10 @@
-from flask import *
-from ruqqus.__main__ import app, db, limiter
 from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 from ruqqus.classes import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.jinja2 import full_link
+from flask import *
+from ruqqus.__main__ import app, db, limiter
 
 @app.route('/feeds/<sort>')
 def feeds(sort=None):
