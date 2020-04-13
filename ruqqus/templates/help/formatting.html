@@ -48,11 +48,11 @@ On Ruqqus, you can use Markdown formatting.
   <tr>
     <td>Image embeds*</td>
     <td>![](https://i.ruqqus.com/post/67x/EaNkUiAv7UQ)</td>
-    <td><img src="https://i.ruqqus.com/post/67x/EaNkUiAv7UQ" class="post-img" alt="" onclick="if (!window.__cfRLUnblockHandlers) return false; expandDesktopImage('https://i.ruqqus.com/post/67x/EaNkUiAv7UQ','https://i.ruqqus.com/post/67x/EaNkUiAv7UQ')"></td>
+    <td><a data-target="#expandImageModal" data-toggle="modal" href="https://i.ruqqus.com/post/67x/EaNkUiAv7UQ" onclick="expandDesktopImage('https://i.ruqqus.com/post/67x/EaNkUiAv7UQ');" rel="nofollow" target="_blank"><img class="in-comment-image rounded-sm my-2" rel="nofollow" src="https://i.ruqqus.com/post/67x/EaNkUiAv7UQ" style="max-height: 100px; max-width: 100%;"></a></td>
   </tr>
 </table>
 
-<p class="text-small">* We have customized image embeds to add pop-overs and operate on a whitelist system. Embeds from known safe image hosts will use pop-overs. Attempted embeds to non-whitelisted sites will be converted into a link.</p>
+<p class="text-small">* We have customized image embeds to add pop-overs and operate on a whitelist system. Embeds from known safe image hosts will use a pop-up display as demonstrated here. Attempted embeds to non-whitelisted sites will be converted into a link.</p>
 
 {% filter markdown %}
 
@@ -88,6 +88,16 @@ These Markdown tags format an entire paragraph of text at a time.
     <td>* First thing<br>* Second thing</td>
     <td><ul><li>First thing</li><li>Second thing</li></ul></td>
   </tr>
+  <tr>
+    <td>Code Block</td>
+    <td>```<br>Use three backticks above and below.<br>Or, indent the lines with four spaces.<br>```</td>
+    <td>
+<pre>
+Use three backticks above and below.
+Or, indent the lines with four spaces.
+</pre>
+    </td>
+  </tr>
 </table>
 
 
@@ -108,7 +118,7 @@ We also have some custom hooks for mentioning users and guilds. Note that these 
   <tr>
     <td>Username Mention</td>
     <td>@ruqqus</td>
-    <td><a class="d-inline-block" href="/@ruqqus}"><img src="/@ruqqus/pic/profile" class="profile-pic-20 mr-1">@ruqqus</a></td>
+    <td><a class="d-inline-block" href="/@ruqqus"><img src="/@ruqqus/pic/profile" class="profile-pic-20 mr-1">@ruqqus</a></td>
   </tr>
   <tr>
     <td>Guild Mention</td>
@@ -116,5 +126,9 @@ We also have some custom hooks for mentioning users and guilds. Note that these 
     <td><a class="d-inline-block" href="/+general"><img src="/+general/pic/profile" class="profile-pic-20 align-middle mr-1">+general</a></td>
   </tr>
 </table>
+
+{% include "expanded_image_modal.html" %}
+
+<script src="/assets/js/all_js.js"></script>
 
 {% endblock %}
