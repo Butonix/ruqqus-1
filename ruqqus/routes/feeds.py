@@ -40,7 +40,7 @@ def feeds(sort=None):
     return feed.get_response()
 
 @app.route('/feeds/@<username>/<key>/<sort>')
-def feeds(sort=None, username=None, key=None):
+def feeds_user(sort=None, username=None, key=None):
     if not username and key:
         return abort(501)
 
