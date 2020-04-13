@@ -600,7 +600,7 @@
     {% if v %}
     <p class="text-muted">This comment section is a ghost town...</p>
     {% else %}
-    <p class="text-muted">This comment section is a ghost town. <a href="/login?redirect={{ request.path | urlencode}}">Sign in</a> to comment!</p>
+    <p class="text-muted">This comment section is a ghost town. <a href="/login?redirect={{ request.path | urlencode}}">Sign in</a></p>
     {% endif %}
   </div>
   {% endif %}
