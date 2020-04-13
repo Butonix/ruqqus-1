@@ -46,7 +46,7 @@ class User(Base, Stndrd):
     referred_by=Column(Integer, default=None)
     is_banned=Column(Integer, default=0)
     ban_reason=Column(String, default="")
-    #feed_nonce=Column(Integer, default=0)
+    feed_nonce=Column(Integer, default=1)
     login_nonce=Column(Integer, default=0)
     title_id=Column(Integer, ForeignKey("titles.id"), default=None)
     title=relationship("Title", lazy="joined")
