@@ -1226,6 +1226,10 @@ color: $dark;
     //box-shadow: $box-shadow-sm;
     border-radius: 0.35rem;
     overflow: hidden;
+
+    & .profile-pic.profile-stacked {
+        box-shadow: 0 0 0px 3px $gray-100;
+    }
 }
 
 .sidebar-section.sidebar-trending .trending-hashtag, .sidebar-section.sidebar-trending .trending-guild {
