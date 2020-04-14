@@ -47,7 +47,7 @@ def feeds_user(sort=None, username=None, key=None):
     user = db.query(User).filter_by(username=username).first()
     sort = sort.lower()
 
-    if not validate_hash(key, user.feedkey):
+    if not validate_hash(key, f'{user.username}{user.id}{user.feed_nonce}{user.created_utc}'):
         ##invalid feedkey
         return abort(501)
 
