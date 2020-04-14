@@ -22,7 +22,7 @@ from .board_relationships import *
 from .mix_ins import *
 from ruqqus.__main__ import Base, db, cache
 
-class User(Base, Stndrd):
+class User(Base, Age_times, Stndrd):
 
     __tablename__="users"
     id = Column(Integer, primary_key=True)
@@ -105,9 +105,6 @@ class User(Base, Stndrd):
         boards= [x.board for x in self.subscriptions if x.is_active and not x.board.is_banned]
         return boards
 
-    @property
-    def age(self):
-        return int(time.time())-self.created_utc
         
     @cache.memoize(timeout=300)
     def idlist(self, sort="hot", page=1, t=None, hide_offensive = False, **kwargs):
@@ -378,12 +375,6 @@ class User(Base, Stndrd):
     @property
     def permalink(self):
         return self.url
-
-    @property
-    @lazy
-    def created_date(self):
-
-        return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
 
     def __repr__(self):
         return f"<User(username={self.username})>"
