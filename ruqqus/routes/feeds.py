@@ -52,13 +52,11 @@ def feeds_user(sort=None, username=None, key=None):
         return abort(501)
 
 
-    posts = user.idlist(sort=sort, t="day")
-
 
     feed = AtomFeed(title=f'Top 5 {sort} Posts from ruqqus',
                     feed_url=request.url, url=request.url_root)
-
-    posts = posts.limit(5).all()
+    post_ids = user.idlist(sort=sort, t="day")
+    posts = [db.query(Submission).filter_by(id=x).first() for x in post_ids[0:5]]
 
     count = 0
     for post in posts:
