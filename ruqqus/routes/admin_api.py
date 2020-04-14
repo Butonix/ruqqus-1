@@ -5,6 +5,7 @@ from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.aws import delete_file
 from ruqqus.helpers.base36 import *
+from ruqqus.helpers.alerts import *
 from urllib.parse import urlparse
 from secrets import token_hex
 import matplotlib.pyplot as plt
@@ -23,7 +24,7 @@ def ban_user(user_id, v):
         abort(400)
 
     user.is_banned=v.id
-    user.ban_reason=request.form.get("reason","")
+
 
     db.add(user)
     user.del_profile()
@@ -35,7 +36,15 @@ def ban_user(user_id, v):
         user.del_profile()
         user.del_banner()
         db.add(a)
-        
+
+    reason=request.form.get("reason","")
+    if reason:
+        text=f"Your Ruqqus account has been permanently suspended for the following reason:\n\n{reason}"
+    else:
+        text="Your Ruqqus account has been permanently suspended due to a Terms of Service violation."
+
+    send_notification(user, text)
+    
     db.commit()
     
     return (redirect(user.url), user)
