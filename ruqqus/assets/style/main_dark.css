@@ -13953,12 +13953,19 @@ ol > li::before {
 }
 
 .toast {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #CFCFCF;
   border: 0;
   display: none;
-}
-
-.toast.clipboard {
-  font-size: 1rem;
+  position: fixed;
+  bottom: 1.5rem;
+  margin: 0;
+  left: 1.5rem;
+  right: 0;
+  width: 300px;
+  z-index: 1000;
+  background-color: #383838;
 }
 
 .navbar-light {
@@ -17266,6 +17273,13 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
   .toggle-view {
     padding-top: 2px;
+  }
+
+  .toast {
+    bottom: 1.5rem;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
   }
 
   /*
