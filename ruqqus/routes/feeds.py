@@ -40,7 +40,12 @@ def feeds(sort=None):
     return feed.get_response()
 
 @app.route('/feeds/@<username>/<key>/<sort>')
-def feeds_user(sort=None, username=None, key=None):
+@app.route('/feeds/@<username>/<key>/<sort>/<t>')
+def feeds_user(sort=None, username=None, key=None, t="day"):
+
+    if t not in ["day", "week", "month", "year"]:
+        abort(404)
+
     if not username or not key:
         return abort(501)
 
@@ -53,9 +58,9 @@ def feeds_user(sort=None, username=None, key=None):
 
 
 
-    feed = AtomFeed(title=f'Top 5 {sort} Posts from ruqqus',
+    feed = AtomFeed(title=f"{user.username}'s {sort} posts for the {t} on ruqqus",
                     feed_url=request.url, url=request.url_root)
-    post_ids = user.idlist(sort=sort, t="day")
+    post_ids = user.idlist(sort=sort, t=t)
     posts = [db.query(Submission).filter_by(id=x).first() for x in post_ids[0:5]]
 
     count = 0
