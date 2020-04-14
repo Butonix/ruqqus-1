@@ -41,7 +41,7 @@ def feeds(sort=None):
 
 @app.route('/feeds/@<username>/<key>/<sort>')
 def feeds_user(sort=None, username=None, key=None):
-    if not username and key:
+    if not username or not key:
         return abort(501)
 
     user = db.query(User).filter_by(username=username).first()
