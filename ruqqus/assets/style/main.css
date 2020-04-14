@@ -13541,6 +13541,7 @@ ol > li::before {
 .toast {
   font-size: 1rem;
   font-weight: 600;
+  color: #121213;
   border: 0;
   display: none;
   position: fixed;
