@@ -461,8 +461,19 @@ ol > li::before {
 // Toasts
 
 .toast {
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
     border: 0;
     display: none;
+    position: fixed;
+    bottom: 1rem;
+    margin: 0;
+    left: 1rem;
+    right: 0;
+    width: 300px;
+    z-index: 1000;
+    background-color: $dark;
+    border-radius: $border-radius;
 }
 
 .toast.clipboard {
@@ -3442,6 +3453,15 @@ body, #settings, #notifications, #submit{
 
 .toggle-view {
     padding-top: 2px;
+}
+
+// Toasts
+
+.toast {
+    bottom: 1.5rem;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
 }
 
 /*
