@@ -361,7 +361,7 @@ class User(Base, Age_times, Stndrd):
                                page=page,
                                next_exists=next_exists,
                                is_following=is_following)
-    @property
+
     def feedkey(self, new=False):
         if new:
             self.feed_nonce+=1

@@ -217,7 +217,7 @@
 
           <div class="body w-lg-100">
 
-            <input type="text" readonly="" class="form-control copy-link" id="rss_feed" value="{{ '' | full_link }}{{ '/feeds/@' + v.username + '/' + v.feedkey + '/top' }}" data-clipboard-text="{{ '' | full_link }}{{ '/feeds/@' + v.username + '/' + v.feedkey + '/top'}}">
+            <input type="text" readonly="" class="form-control copy-link" id="rss_feed" value="{{ '' | full_link }}{{ '/feeds/@' + v.username + '/' + v.feedkey() + '/top' }}" data-clipboard-text="{{ '' | full_link }}{{ '/feeds/@' + v.username + '/' + v.feedkey() + '/top'}}">
               <form action="{{ '/settings/new_feedkey' | full_link }}" method="post" enctype="multipart/form-data">
                   <input type="hidden" name="formkey" value="{{ v.formkey }}">
                   <input class="btn btn-secondary text-capitalize mr-2 mb-0" id="rss_feed_button"
