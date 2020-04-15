@@ -220,9 +220,8 @@
             <input type="text" readonly="" class="form-control copy-link" id="rss_feed" value="{{ '' | full_link }}{{ '/feeds/@' + v.username + '/' + v.feedkey + '/top' }}" data-clipboard-text="{{ '' | full_link }}{{ '/feeds/@' + v.username + '/' + v.feedkey + '/top'}}">
               <form action="{{ '/settings/new_feedkey' | full_link }}" method="post" enctype="multipart/form-data">
                   <input type="hidden" name="formkey" value="{{ v.formkey }}">
-                  <label class="btn btn-secondary text-capitalize mr-2 mb-0">
-                    Generate New URL<input type="file" hidden name="banner" onchange="form.submit()">
-                  </label>
+                  <input class="btn btn-secondary text-capitalize mr-2 mb-0" id="rss_feed_button"
+                type="submit" value="Generate New URL">
                 </form>
 
             <div class="text-small-extra text-muted mt-3">You can change the feed by replacing "top" with either "hot", or "disputed".</div>
