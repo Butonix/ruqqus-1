@@ -73,9 +73,9 @@
       <li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/appearance"><i class="fas fa-palette fa-width-rem text-center mr-2"></i>Appearance</a></li>
       <li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/mods"><i class="fas fa-crown fa-width-rem text-center mr-2"></i>Guildmasters</a></li>
       <li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/exiled"><i class="fas fa-user-slash fa-width-rem text-center mr-2"></i>Exiles</a></li>
-      <li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/queue"><i class="fas fa-flag fa-width-rem text-center mr-2"></i>Reports</a></li>
+      <li {% if b.restricted_posting or b.is_private %}class="mb-2"{% endif %}><a class="text-muted" href="/+{{ b.name }}/mod/queue"><i class="fas fa-flag fa-width-rem text-center mr-2"></i>Reports</a></li>
       {% if b.restricted_posting or b.is_private %}
-      <li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/contributors"><i class="fas fa-user-check fa-width-rem text-center mr-2"></i>Approved users</a></li>
+      <li><a class="text-muted" href="/+{{ b.name }}/mod/contributors"><i class="fas fa-user-check fa-width-rem text-center mr-2"></i>Approved users</a></li>
       {% endif %}
     </ul>
   </div>
