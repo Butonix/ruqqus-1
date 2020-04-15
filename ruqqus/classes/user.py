@@ -22,7 +22,7 @@ from .board_relationships import *
 from .mix_ins import *
 from ruqqus.__main__ import Base, db, cache
 
-class User(Base, Stndrd):
+class User(Base, Age_times, Stndrd):
 
     __tablename__="users"
     id = Column(Integer, primary_key=True)
@@ -107,8 +107,12 @@ class User(Base, Stndrd):
         return boards
 
     @property
-    def age(self):
-        return int(time.time())-self.created_utc
+    def can_create_guild(self):
+        if len(self.boards_created) >= 10:
+            return False
+        return True
+
+
         
     @cache.memoize(timeout=300)
     def idlist(self, sort="hot", page=1, t=None, hide_offensive = False, **kwargs):
@@ -390,12 +394,6 @@ class User(Base, Stndrd):
     def permalink(self):
         return self.url
 
-    @property
-    @lazy
-    def created_date(self):
-
-        return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
-
     def __repr__(self):
         return f"<User(username={self.username})>"
 
@@ -574,8 +572,11 @@ class User(Base, Stndrd):
                 'permalink':self.permalink,
                 'is_banned':False,
                 'created_utc':self.created_utc,
+                'created_date':self.created_date,
+                'guilds_created':self.boards_created,
                 'post_rep':int(self.karma),
                 'comment_rep':int(self.comment_karma),
+                'total_rep':int(self.total_karma),
                 'badges':[x.json for x in self.badges],
                 'id':self.base36id,
                 'profile_url':self.profile_url,
