@@ -573,7 +573,6 @@ class User(Base, Age_times, Stndrd):
                 'is_banned':False,
                 'created_utc':self.created_utc,
                 'created_date':self.created_date,
-                'guilds_created':[x.json for x in self.boards_created],
                 'post_rep':int(self.karma),
                 'comment_rep':int(self.comment_karma),
                 'total_rep':int(self.total_karma),
