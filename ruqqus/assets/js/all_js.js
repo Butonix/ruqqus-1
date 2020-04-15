@@ -799,7 +799,7 @@ $('#username-register').on('input', function () {
   var id = document.getElementById("usernameHelpRegister");
   var successID = document.getElementById("usernameHelpSuccess");
 
-  var ruqqusAPI = 'https://www.ruqqus.com/api/is_available/' + charCount;
+  var ruqqusAPI = '/api/is_available/' + charCount;
 
   if (charCount.length >= 5) {
 
