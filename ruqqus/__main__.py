@@ -78,8 +78,6 @@ import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
 
-
-
 #enforce https
 @app.before_request
 def before_request():

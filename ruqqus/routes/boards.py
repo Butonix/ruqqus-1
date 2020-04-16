@@ -1047,8 +1047,8 @@ def siege_guild(v):
         return render_template("message.html",
                                v=v,
                                title=f"Siege against +{guild.name} Failed",
-                                error="You need to wait 30 days between siege attempts."
-                                ), 403
+                               error="You need to wait 30 days between siege attempts."
+                               ), 403
 
     #update siege date
     v.last_siege_utc=now
@@ -1153,7 +1153,7 @@ def siege_guild(v):
     #Siege is successful
 
     #delete and notify mods
-    for x in mods:
+    for x in guild.moderators:
 
         send_notification(x.user,
                           f"You have been overthrown from +{guild.name}.")
