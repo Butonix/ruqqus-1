@@ -19,7 +19,7 @@ import requests
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-_version = "2.7.0"
+_version = "2.7.1"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -77,8 +77,6 @@ Base = declarative_base()
 import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
-
-
 
 #enforce https
 @app.before_request

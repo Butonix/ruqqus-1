@@ -4,6 +4,7 @@ from os import environ, remove
 import piexif
 import time
 from urllib.parse import urlparse
+from PIL import Image
 
 BUCKET="i.ruqqus.com"
 CF_KEY=environ.get("CLOUDFLARE_KEY")
@@ -43,7 +44,7 @@ def upload_from_url(name, url):
     remove(tempname)
     
 
-def upload_file(name, file):
+def upload_file(name, file, resize=None):
 
     #temp save for exif stripping
     tempname=name.replace("/","_")
@@ -52,6 +53,11 @@ def upload_file(name, file):
     
     if tempname.split('.')[-1] in ['jpg','jpeg']:
         piexif.remove(tempname)
+
+    if resize:
+        i=Image.open(tempname)
+        i.resize(resize)
+        i.save(tempname)
     
     S3.upload_file(tempname,
                       Bucket=BUCKET,
@@ -63,12 +69,17 @@ def upload_file(name, file):
 
     remove(tempname)
 
-def upload_from_file(name, filename):
+def upload_from_file(name, filename, resize=None):
 
     tempname=name.replace("/","_")
 
     if filename.split('.')[-1] in ['jpg','jpeg']:
         piexif.remove(tempname)
+
+    if resize:
+        i=Image.open(tempname)
+        i.resize(resize)
+        i.save(tempname)
     
     S3.upload_file(tempname,
                       Bucket=BUCKET,
