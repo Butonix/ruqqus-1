@@ -472,7 +472,9 @@ class User(Base, Stndrd):
         self.profile_nonce+=1
 
         aws.upload_file(name=f"users/{self.username}/profile-{self.profile_nonce}.png",
-                        file=file)
+                        file=file,
+                        resize=(100,100)
+                        )
         self.has_profile=True
         db.add(self)
         db.commit()

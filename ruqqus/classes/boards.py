@@ -240,7 +240,9 @@ class Board(Base, Stndrd, Age_times):
         self.profile_nonce+=1
 
         aws.upload_file(name=f"board/{self.name.lower()}/profile-{self.profile_nonce}.png",
-                        file=file)
+                        file=file,
+                        resize=(100,100)
+                        )
         self.has_profile=True
         db.add(self)
         db.commit()
