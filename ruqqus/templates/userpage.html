@@ -290,3 +290,9 @@
 </nav>
 {% endif %}
 {% endblock %}
+
+{% block GIFpicker %}
+{% if v %}
+{% include "gif_modal.html" %}
+{% endif %}
+{% endblock %}
