@@ -403,6 +403,9 @@
 {% block GIFtoast %}
 {% endblock %}
 
+{% block GIFpicker %}
+{% endblock %}
+
 <!-- Clipboard Toast -->
 
 <div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
@@ -420,7 +423,6 @@
 {% if v %}
 {% include "flag_post_modal.html" %}
 {% include "flag_comment_modal.html" %}
-{% include "gif_modal.html" %}
 {% include "delete_comment_modal.html" %}
 {% include "delete_post_modal.html" %}
 {% endif %}
