@@ -25,7 +25,7 @@ class ModRelationship(Base):
         super().__init__(*args, **kwargs)
 
     def __repr__(self):
-        return f"<Mod(id={self.id}, uid={self.uid}, board_id={self.board_id})>"
+        return f"<Mod(id={self.id}, uid={self.user_id}, board_id={self.board_id})>"
 
 
 class BanRelationship(Base, Stndrd, Age_times):
