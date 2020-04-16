@@ -419,7 +419,6 @@ def delete_post_pid(pid, v):
     post.is_deleted=True
     
     db.add(post)
-    db.commit()
 
     #clear cache
     cache.delete_memoized(User.idlist, v, sort="new")
@@ -438,6 +437,10 @@ def delete_post_pid(pid, v):
         if pid==post.base36id:
             key=f"post/{pid}/{rand}"
             delete_file(key)
+            post.is_image=False
+            db.add(post)
+            
+    db.commit()
         
 
     return "",204
