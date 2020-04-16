@@ -55,7 +55,7 @@ def upload_file(name, file, resize=None):
         piexif.remove(tempname)
 
     if resize:
-        i=Image(tempname)
+        i=Image.open(tempname)
         i.resize(resize)
         i.save(tempname)
     
@@ -77,7 +77,7 @@ def upload_from_file(name, filename, resize=None):
         piexif.remove(tempname)
 
     if resize:
-        i=Image(tempname)
+        i=Image.open(tempname)
         i.resize(resize)
         i.save(tempname)
     
