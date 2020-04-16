@@ -56,7 +56,7 @@ def upload_file(name, file, resize=None):
 
     if resize:
         i=Image.open(tempname)
-        i.resize(resize)
+        i=i.resize(resize)
         i.save(tempname)
     
     S3.upload_file(tempname,
@@ -78,7 +78,7 @@ def upload_from_file(name, filename, resize=None):
 
     if resize:
         i=Image.open(tempname)
-        i.resize(resize)
+        i=i.resize(resize)
         i.save(tempname)
     
     S3.upload_file(tempname,
