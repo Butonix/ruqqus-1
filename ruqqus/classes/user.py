@@ -12,7 +12,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import lazy
 import ruqqus.helpers.aws as aws
-from ruqqus.helpers.alerts import *
+from ruqqus.helpers.alerts import send_notification
 from .votes import Vote
 from .alts import Alt
 from .titles import Title
@@ -620,4 +620,3 @@ class User(Base, Stndrd):
 
         send_notification(self,
             "Your Ruqqus account has been reinstated. Please carefully review and abide by the [terms of service](/help/terms) and [content policy](/help/rules) to ensure that you don't get suspended again.")
-        
