@@ -12,6 +12,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import lazy
 import ruqqus.helpers.aws as aws
+from ruqqus.helpers.alerts import *
 from .votes import Vote
 from .alts import Alt
 from .titles import Title
@@ -61,6 +62,7 @@ class User(Base, Stndrd):
     hide_offensive=Column(Boolean, default=False)
     is_private=Column(Boolean, default=False)
     read_announcement_utc=Column(Integer, default=0)
+
     
 
     moderates=relationship("ModRelationship", lazy="dynamic")
@@ -580,8 +582,42 @@ class User(Base, Stndrd):
 
         return  max(self.karma+self.comment_karma, -5)
 
-        
+    @property        
     def can_use_darkmode(self):
         return True
         #return self.referral_count or self.has_earned_darkmode or self.has_badge(16) or self.has_badge(17)
 
+
+    def ban(self, admin, reason="", include_alts=True):
+
+        #Takes care of all functions needed for account termination
+
+        self.del_banner()
+        self.del_profile()
+        self.is_banned=admin.id
+        db.add(self)
+        db.commit()
+
+        if reason:
+            text=f"Your Ruqqus account has been permanently suspended for the following reason:\n\n{reason}"
+        else:
+            text="Your Ruqqus account has been permanently suspended due to a Terms of Service violation."
+
+        send_notification(self, text)
+
+        if include_alts:
+            for alt in self.alts:
+                alt.ban(admin=admin, reason=reason, include_alts=False)
+
+    def unban(self):
+
+        #Takes care of all functions needed for account reinstatement.
+
+        self.is_banned=0
+
+        db.add(self)
+        db.commit()
+
+        send_notification(self,
+            "Your Ruqqus account has been reinstated. Please carefully review and abide by the [terms of service](/help/terms) and [content policy](/help/rules) to ensure that you don't get suspended again.")
+        

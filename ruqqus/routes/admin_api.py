@@ -23,27 +23,9 @@ def ban_user(user_id, v):
     if not user:
         abort(400)
 
-    user.is_banned=v.id
-
-
-    db.add(user)
-    user.del_profile()
-    user.del_banner()
-
-    for a in user.alts:
-        user.is_banned=v.id
-        user.ban_reason=request.form.get("reason","")
-        user.del_profile()
-        user.del_banner()
-        db.add(a)
-
-    reason=request.form.get("reason","")
-    if reason:
-        text=f"Your Ruqqus account has been permanently suspended for the following reason:\n\n{reason}"
-    else:
-        text="Your Ruqqus account has been permanently suspended due to a Terms of Service violation."
-
-    send_notification(user, text)
+    user.ban(admin=v,
+        reason=request.form.get("reason","")
+        )
     
     db.commit()
     
