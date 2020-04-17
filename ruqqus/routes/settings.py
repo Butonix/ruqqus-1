@@ -108,7 +108,7 @@ def settings_security_post(v):
         
         new_email = request.form.get("new_email")
         if new_email == v.email:
-            return redirect("/settings/security?error="+escape("That's already your email."))
+            return redirect("/settings/security?error="+escape("That email is already yours!"))
 
         #check to see if email is in use
         existing=db.query(User).filter(User.id != v.id,

@@ -42,7 +42,26 @@ def upload_from_url(name, url):
                      )
 
     remove(tempname)
+
+def crop_and_resize(img, resize):
+
+    i=img
+
+    #get constraining dimension
+    org_ratio=i.width/i.height
+    new_ratio=resize[0]/resize[1]
+
+    if new_ratio>org_ratio:
+        crop_height=int(i.width/new_ratio)
+        box=(0, (i.height//2)-(crop_height//2), i.width, (i.height//2)+(crop_height//2))
+    else:
+        crop_width=int(new_ratio*i.height)
+        box=((i.width//2)-(crop_width//2), 0, (i.width//2)+(crop_width//2), i.height)
     
+    return i.resize(resize, box=box)
+
+
+
 
 def upload_file(name, file, resize=None):
 
@@ -56,7 +75,7 @@ def upload_file(name, file, resize=None):
 
     if resize:
         i=Image.open(tempname)
-        i.resize(resize)
+        i=crop_and_resize(i, resize)
         i.save(tempname)
     
     S3.upload_file(tempname,
@@ -78,7 +97,7 @@ def upload_from_file(name, filename, resize=None):
 
     if resize:
         i=Image.open(tempname)
-        i.resize(resize)
+        i=crop_and_resize(i, resize)
         i.save(tempname)
     
     S3.upload_file(tempname,
