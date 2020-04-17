@@ -120,11 +120,8 @@ def thumbnail_thread(pid):
         for chunk in x.iter_content(1024):
             file.write(chunk)
 
-    i=PILimage.open(tempname)
-    i=i.resize((375,227))
-    i.save(tempname)
 
-    aws.upload_from_file(name, tempname)
+    aws.upload_from_file(name, tempname, resize=(375,227))
     post.has_thumb=True
     db.add(post)
     db.commit()
