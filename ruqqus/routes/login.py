@@ -367,12 +367,11 @@ def sign_up_post(v):
 \n\nWhile you get settled in, here a couple things we recommend for newcomers:
 - Customize your user page by [adding profile and banner images](/settings/profile)
 - Personalize your front page by [joining some guilds](/browse)
-You're welcome to say anything protected by the First Amendment here - even if you don't live in the United States.
+\n\nYou're welcome to say anything protected by the First Amendment here - even if you don't live in the United States.
 And since we're committed to [open-source](https://github.com/ruqqus/ruqqus) transparency, your front page (and your posted content) won't be artificially manipulated.
 \n\nReally, it's what social media should have been doing all along.
 \n\nNow, go enjoy your digital freedom.
-\n\n- The Ruqqus Team
-        """
+\n\n-The Ruqqus Team"""
     send_notification(new_user, text)
 
     session["user_id"]=new_user.id
