@@ -1,4 +1,5 @@
 from ruqqus.classes import *
+from ruqqus.helpers.wrappers import *
 from ruqqus.__main__ import app, db
 
 @app.route("/discord_redirect")
