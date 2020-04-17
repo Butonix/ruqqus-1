@@ -55,6 +55,6 @@ def discord_verify(v):
 
 	session["state"]=state
 
-	url=f"https://discordapp.com/api/oauth2/authorize?client_id={SERVER_ID}&redirect_uri=https%3A%2F%2Fruqqus.com%2Fdiscord_redirect&response_type=code&scope=identify&state={state}"
+	url=f"https://discordapp.com/api/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri=https%3A%2F%2Fruqqus.com%2Fdiscord_redirect&response_type=code&scope=identify&state={state}"
 
 	return redirect(url)	
