@@ -62,6 +62,7 @@ class User(Base, Stndrd):
     hide_offensive=Column(Boolean, default=False)
     is_private=Column(Boolean, default=False)
     read_announcement_utc=Column(Integer, default=0)
+    discord_id=Column(Integer, default=None)
 
     
 
