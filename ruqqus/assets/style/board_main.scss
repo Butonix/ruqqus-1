@@ -65,7 +65,7 @@ $theme-colors: (
 $input-border-color: $gray-300;
 $border-color: $gray-300;
 
-$border-radius: .35rem;
+$border-radius: 3px;
 $border-radius-sm: .25rem;
 
 // Fonts
@@ -1578,7 +1578,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic {
     width: 50px;
     height: 50px;
-    border-radius: $border-radius;
+    border-radius: 50%;
     margin: auto;
     text-align: center;
     object-fit: cover;
