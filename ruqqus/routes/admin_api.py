@@ -41,10 +41,7 @@ def unban_user(user_id, v):
     if not user:
         abort(400)
 
-    user.is_banned=0
-
-    db.add(user)
-    db.commit()
+    user.unban()
     
     return (redirect(user.url), user)
 
