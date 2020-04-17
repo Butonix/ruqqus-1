@@ -23,9 +23,14 @@ def ban_user(user_id, v):
     if not user:
         abort(400)
 
-    user.ban(admin=v,
-        reason=request.form.get("reason","")
-        )
+    if reason:
+        text=f"Your Ruqqus account has been permanently suspended for the following reason:\n\n{reason}"
+    else:
+        text="Your Ruqqus account has been permanently suspended due to a Terms of Service violation."
+
+    send_notification(self, text)
+
+    user.ban(admin=v)
     
     db.commit()
     
@@ -42,6 +47,11 @@ def unban_user(user_id, v):
         abort(400)
 
     user.unban()
+
+
+    send_notification(self,
+        "Your Ruqqus account has been reinstated. Please carefully review and abide by the [terms of service](/help/terms) and [content policy](/help/rules) to ensure that you don't get suspended again.")
+
     
     return (redirect(user.url), user)
 

@@ -589,7 +589,7 @@ class User(Base, Stndrd):
         #return self.referral_count or self.has_earned_darkmode or self.has_badge(16) or self.has_badge(17)
 
 
-    def ban(self, admin, reason="", include_alts=True):
+    def ban(self, admin, include_alts=True):
 
         #Takes care of all functions needed for account termination
 
@@ -599,16 +599,9 @@ class User(Base, Stndrd):
         db.add(self)
         db.commit()
 
-        if reason:
-            text=f"Your Ruqqus account has been permanently suspended for the following reason:\n\n{reason}"
-        else:
-            text="Your Ruqqus account has been permanently suspended due to a Terms of Service violation."
-
-        #send_notification(self, text)
-
         if include_alts:
             for alt in self.alts:
-                alt.ban(admin=admin, reason=reason, include_alts=False)
+                alt.ban(admin=admin, include_alts=False)
 
     def unban(self):
 
@@ -618,6 +611,3 @@ class User(Base, Stndrd):
 
         db.add(self)
         db.commit()
-
-        #send_notification(self,
-        #    "Your Ruqqus account has been reinstated. Please carefully review and abide by the [terms of service](/help/terms) and [content policy](/help/rules) to ensure that you don't get suspended again.")
