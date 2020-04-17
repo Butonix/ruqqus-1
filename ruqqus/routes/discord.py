@@ -1,5 +1,5 @@
-from ruqqus.__main__ import app, db
 from ruqqus.classes import *
+from ruqqus.__main__ import app, db
 
 @app.route("/discord_redirect")
 @auth_required
