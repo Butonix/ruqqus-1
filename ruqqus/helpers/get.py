@@ -1,6 +1,6 @@
 from .base36 import *
 from ruqqus.__main__ import db
-from ruqqus.classes import User, Submission, Comment, Board, Domain, Title, ModRelationship
+from ruqqus.classes import *
 
 def get_user(username, graceful=False):
 
