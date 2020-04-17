@@ -18,7 +18,7 @@ DISCORD_ENDPOINT="https://discordapp.com/api/v6"
 def discord_redirect(v):
 
 	#verify state
-	s=f"{session['id']}+{v.login_nonce}+{v.id}"
+	s=f"{session['session_id']}+{v.login_nonce}+{v.id}"
 
 	url_state=request.args.get("state")
 	if url_state != session.get("state"):
@@ -49,7 +49,7 @@ def discord_redirect(v):
 @auth_required
 def discord_verify(v):
 
-	s=f"{session['id']}+{v.login_nonce}+{v.id}"
+	s=f"{session['session_id']}+{v.login_nonce}+{v.id}"
 
 	state=generate_hash(s)
 
