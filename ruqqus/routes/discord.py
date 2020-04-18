@@ -49,6 +49,7 @@ def discord_redirect(v):
 
 	#extract auth token from response
 	data=x.json()
+	print(data)
 
 	token=data["access_token"]
 
