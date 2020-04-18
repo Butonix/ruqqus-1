@@ -1,3 +1,5 @@
+from os import environ
+import requests
 from ruqqus.__main__ import cache
 
 SERVER_ID=environ.get("DISCORD_SERVER_ID")
@@ -14,10 +16,6 @@ def add_role(user, role_name):
 	url=f"/guilds/{SERVER_ID}/members/{v.discord_id}/roles/{role_id}"
 	headers={"Authorization": f"Bot {BOT_TOKEN}"}
 	requests.put(url)
-
-
-
-
 
 def delete_role(user, role_name):
 	role_id=ROLES[role_name]
