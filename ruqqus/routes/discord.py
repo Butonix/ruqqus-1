@@ -15,7 +15,7 @@ CLIENT_SECRET=environ.get("DISCORD_CLIENT_SECRET")
 BOT_TOKEN=environ.get("DISCORD_BOT_TOKEN")
 DISCORD_ENDPOINT="https://discordapp.com/api/v6"
 
-@app.route("/discord_verify", methods=["GET"])
+@app.route("/discord_redirect", methods=["GET"])
 @auth_required
 def discord_redirect(v):
 
