@@ -38,7 +38,7 @@ def discord_redirect(v):
 	data = {
 	    'client_id': CLIENT_ID,
 	    'client_secret': CLIENT_SECRET,
-	    'grant_type': 'authorization_code',
+	    'grant_type': '',
 	    'code': code,
 	    'redirect_uri': f"https://{app.config['SERVER_NAME']}{request.path}",
 	    'scope': 'identify guilds.join'
@@ -85,7 +85,7 @@ def discord_redirect(v):
 
 
 
-@app.route("/discord", methods=["GET"])
+@app.route("/discord_verify", methods=["GET"])
 @auth_required
 def discord(v):
 
@@ -98,3 +98,7 @@ def discord(v):
 	url=f"https://discordapp.com/api/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri=https%3A%2F%2Fruqqus.com%2Fdiscord_redirect&response_type=code&scope=identify%20guilds.join&state={state}"
 
 	return redirect(url)	
+
+@app.route("/discord", methods=["GET"])
+def discord_server():
+	return redirect("https://discord.gg/Kkesgy6")
