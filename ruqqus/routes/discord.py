@@ -52,7 +52,7 @@ def discord_redirect(v):
 
 	#remove existing discord account
 	if v.discord_id:
-		url=f{DISCORD_ENDPOINT}/guilds/{SERVER_ID}/members/{v.discord_id}
+		url=f"{DISCORD_ENDPOINT}/guilds/{SERVER_ID}/members/{v.discord_id}"
 		headers={"Authorization":f"Bot {BOT_TOKEN}"}
 		reqeusts.delete(url, headers=headers)
 
