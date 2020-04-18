@@ -57,7 +57,7 @@ def discord_redirect(v):
 	if v.discord_id:
 		url=f"{DISCORD_ENDPOINT}/guilds/{SERVER_ID}/members/{v.discord_id}"
 		headers={"Authorization":f"Bot {BOT_TOKEN}"}
-		reqeusts.delete(url, headers=headers)
+		requests.delete(url, headers=headers)
 
 	#get identity of discord account
 	url=f"{DISCORD_ENDPOINT}/users/@me"
