@@ -45,6 +45,8 @@ def discord_redirect(v):
 	}
 	headers={"Content-Type":"application/x-wwww-form-urlencoded"}
 
+	print(data)
+
 	x=requests.post(url, data=data, headers=headers)
 
 	#extract auth token from response
@@ -76,6 +78,8 @@ def discord_redirect(v):
 
 	if v.is_banned:
 		discord.add_role(v, "banned")
+	else:
+		discord.add_role(v, "ruqqie")
 
 	return redirect(f"https://discordapp.com/channels/{SERVER_ID}/599258778520518678")
 

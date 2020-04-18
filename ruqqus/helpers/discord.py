@@ -8,7 +8,9 @@ CLIENT_SECRET=environ.get("DISCORD_CLIENT_SECRET")
 DISCORD_ENDPOINT="https://discordapp.com/api/v6"
 BOT_TOKEN=environ.get("DISCORD_BOT_TOKEN")
 
-ROLES={"banned":700694275905814591}
+ROLES={"banned":700694275905814591,
+	   "ruqqie":701074500372004915
+	   }
 
 def add_role(user, role_name):
 
