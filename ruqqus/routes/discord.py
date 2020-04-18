@@ -40,7 +40,7 @@ def discord_redirect(v):
 	    'client_secret': CLIENT_SECRET,
 	    'grant_type': 'authorization_code',
 	    'code': code,
-	    'redirect_uri': REDIRECT_URI,
+	    'redirect_uri': f"https://{app.config['SERVER_NAME']}{request.path}",
 	    'scope': 'identify'
 	}
 
