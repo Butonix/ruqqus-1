@@ -43,11 +43,13 @@ def discord_redirect(v):
 	    'redirect_uri': f"https://{app.config['SERVER_NAME']}{request.path}",
 	    'scope': 'identify'
 	}
+	headers={"Content-Type":"application/x-wwww-form-urlencoded"}
 
-	x=requests.post(url)
+	x=requests.post(url, data=data, headers=headers)
 
 	#extract auth token from response
 	data=x.json()
+
 	token=data["access_token"]
 
 	#remove existing discord account
