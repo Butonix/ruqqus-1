@@ -40,8 +40,8 @@ def discord_redirect(v):
 	    'client_secret': CLIENT_SECRET,
 	    'grant_type': 'authorization_code',
 	    'code': code,
-	    'redirect_uri': f"https://ruqqus.com/discord_redirect",
-	    'scope': 'identify'
+	    'redirect_uri': f"https://{app.config['SERVER_NAME']}{request.path}",
+	    'scope': 'identify guilds.join'
 	}
 	headers={"Content-Type":"application/x-wwww-form-urlencoded"}
 
