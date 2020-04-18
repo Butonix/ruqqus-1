@@ -15,7 +15,7 @@ CLIENT_SECRET=environ.get("DISCORD_CLIENT_SECRET")
 BOT_TOKEN=environ.get("DISCORD_BOT_TOKEN")
 DISCORD_ENDPOINT="https://discordapp.com/api/v6"
 
-@app.route("/discord", methods=["GET"])
+@app.route("/discord_verify", methods=["GET"])
 @auth_required
 def discord_redirect(v):
 
@@ -79,7 +79,7 @@ def discord_redirect(v):
 
 @app.route("/discord", methods=["GET"])
 @auth_required
-def discord_verify(v):
+def discord(v):
 
 	s=f"{session['session_id']}+{v.login_nonce}+{v.id}"
 
