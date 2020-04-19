@@ -30,7 +30,7 @@ def create_board_get(v):
             return render_template("make_board.html",
                                    v=v,
                                    title="Unable to make board",
-                                   error="You can only Moderate a maximum 10 Guilds."
+                                   message="You can only Moderate a maximum 10 Guilds."
                                    )
         return render_template("message.html",
                                v=v,
