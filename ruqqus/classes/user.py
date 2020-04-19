@@ -543,10 +543,7 @@ class User(Base, Age_times, Stndrd):
         if self.karma + self.comment_karma < 50:
             return False
 
-        if len(self.boards_created) >= 10:
-            return False
-
-        if (len(self.boards_created) + len(self.moderates)) >= 15:
+        if (len(self.boards_created) + len(self.moderates)) >= 10:
             return False
 
         return True
