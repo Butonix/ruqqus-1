@@ -546,6 +546,9 @@ class User(Base, Age_times, Stndrd):
         if len(self.boards_created) >= 10:
             return False
 
+        if (len(self.boards_created) + len(self.moderates)) >= 15:
+            return False
+
         return True
 
     @property

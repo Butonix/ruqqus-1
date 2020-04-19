@@ -56,10 +56,17 @@ def api_board_available(name):
 @validate_formkey
 def create_board_post(v):
     if not v.can_make_guild:
-        if len(v.boards_created) >=10:
+
+        if len(v.boards_created) >= 10 and (len(v.boards_created) + len(v.moderates)) < 15:
             return render_template("make_board.html",
                                    title="Unable to make board",
-                                   error="You can only create a Maximum of 10 Guilds."
+                                   error="You can only create a maximum of 10 Guilds."
+                                   )
+
+        if (len(v.boards_created) + len(v.moderates)) >= 15:
+            return render_template("make_board.html",
+                                   title="Unable to make board",
+                                   error="You can only Moderate a maximum 15 Guilds."
                                    )
 
         return render_template("make_board.html",
@@ -392,6 +399,9 @@ def mod_invite_username(bid, board, v):
     user=get_user(username)
 
     if not board.can_invite_mod(user):
+        abort(409)
+
+    if (len(user.boards_created) + len(user.moderates)) >= 15:
         abort(409)
 
     if not board.has_rescinded_invite(user):
