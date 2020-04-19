@@ -109,13 +109,6 @@ class User(Base, Age_times, Stndrd):
         boards= [x.board for x in self.subscriptions if x.is_active and not x.board.is_banned]
         return boards
 
-    @property
-    def can_create_guild(self):
-        if len(self.boards_created) >= 10:
-            return False
-        return True
-
-
         
     @cache.memoize(timeout=300)
     def idlist(self, sort="hot", page=1, t=None, hide_offensive = False, **kwargs):
@@ -548,6 +541,9 @@ class User(Base, Age_times, Stndrd):
     def can_make_guild(self):
 
         if self.karma + self.comment_karma < 50:
+            return False
+
+        if len(self.boards_created) >= 10:
             return False
 
         return True
