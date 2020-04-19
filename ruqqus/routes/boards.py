@@ -56,15 +56,11 @@ def api_board_available(name):
 @validate_formkey
 def create_board_post(v):
     if not v.can_make_guild:
-        if v.boards_created >=10:
+        if len(v.boards_created) >=10:
             return render_template("make_board.html",
                                    title="Unable to make board",
                                    error="You can only create a Maximum of 10 Guilds."
                                    )
-        return render_template("make_board.html",
-                               title="Unable to make board",
-                               error="You need more Reputation before you can make a Guild."
-                               )
 
         return render_template("make_board.html",
                                title="Unable to make board",
