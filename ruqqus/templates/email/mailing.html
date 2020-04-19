@@ -1,11 +1,14 @@
 {% extends "email/default.html" %}
 
-{% block preheader %}{{ preheader }}{% endblock %}
+{% block preheader %}{% endblock %}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
 {% filter markdown %}
+
+Hey there, {{ user.username }}
+
 We hope you're enjoying your time on Ruqqus. To help keep Ruqqus operational into the future, we're making some terms of service changes, which will go into effect on $date. As a reminder, your continued use of the Ruqqus platform after that date constitutes agreement to these changes.
 
 Here's a summary of what we're adding.
@@ -14,7 +17,11 @@ Here's a summary of what we're adding.
 
 2. **Stronger anti-account-sharing language** - This is an important protection for you, against overly nosy third parties who want to snoop through your social media accounts. 
 
-3. **Rules clarification** - We've clarified a few points in our content policy to help reduce the "grey area" type cases. We recognize that many things can be open for interpretation and personal judgement, and we want to make sure you have a good idea of what to expect from us.
+3. **Rules clarifications** - We've elaborated on a few points in our content policy to help reduce the "grey area" type cases. We recognize the potential for edge cases that end up being open for interpretation and personal judgement, and we want to make sure you have a good idea of what to expect from us in those situations.
+
+Thanks for using Ruqqus!
+
+- the admins
 
 {% endfilter %}
 {% endblock %}
