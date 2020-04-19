@@ -16,7 +16,7 @@ content=input("content:")
 
 html=render_jinja_html(
         "/app/ruqqus/templates",
-        "email/mailing.html"
+        "email/mailing.html",
 	title=title,
 	preheader=content[0:100],
 	content=content
