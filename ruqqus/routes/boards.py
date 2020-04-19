@@ -26,6 +26,12 @@ valid_board_regex=re.compile("^[a-zA-Z0-9]\w{2,24}$")
 @is_not_banned
 def create_board_get(v):
     if not v.can_make_guild:
+        if (len(v.boards_created) + len(v.moderates)) >= 10:
+            return render_template("make_board.html",
+                                   v=v,
+                                   title="Unable to make board",
+                                   error="You can only Moderate a maximum 10 Guilds."
+                                   )
         return render_template("message.html",
                                v=v,
                                title="Unable to make a guild. For now.",
