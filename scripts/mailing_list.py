@@ -1,5 +1,5 @@
 import requests
-from ruqqus.__main__ import db
+from ruqqus.__main__ import *
 from flask import render_template
 
 from ruqqus.mail import send_mail
