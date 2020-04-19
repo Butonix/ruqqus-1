@@ -6,8 +6,6 @@ from flask import render_template
 title = input("Title: ")
 subject = input("Email subject: ")
 
-content=input("content:")
-
 
 with app.app_context():
     html=render_template(
