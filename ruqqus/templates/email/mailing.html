@@ -1,0 +1,11 @@
+{% extends "email/default.html" %}
+
+{% block preheader %}{{ preheader }}{% endblock %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+{% filter markdown %}
+{{ content }}
+{% endfilter %}
+{% endblock %}
