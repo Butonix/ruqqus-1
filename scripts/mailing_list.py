@@ -13,7 +13,6 @@ for user in db.query(classes.user.User).filter_by(id=7).all():
         html=render_template(
             "email/mailing.html",
             title=title,
-            content=content,
             user=user
             )
         
