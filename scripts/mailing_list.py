@@ -11,7 +11,6 @@ def render_jinja_html(template_loc,file_name,**context):
 
 title = input("Title: ")
 subject = input("Email subject: ")
-preheader= input("preheader text")
 
 content=input("content:")
 
