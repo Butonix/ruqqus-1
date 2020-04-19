@@ -27,7 +27,7 @@ valid_board_regex=re.compile("^[a-zA-Z0-9]\w{2,24}$")
 def create_board_get(v):
     if not v.can_make_guild:
         if (len(v.boards_created.all()) + len(v.moderates.all())) >= 10:
-            return render_template("make_board.html",
+            return render_template("message.html",
                                    v=v,
                                    title="Unable to make board",
                                    message="You can only Moderate a maximum 10 Guilds."
