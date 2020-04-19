@@ -1,6 +1,6 @@
-from flask import *
+from flask import render_template
 import requests
-from ruqqus.__main__ import *
+from ruqqus.__main__ import db
 from ruqqus.mail import send_mail
 
 title = input("Title: ")
