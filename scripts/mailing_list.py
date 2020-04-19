@@ -1,14 +1,7 @@
-import gevent.monkey
-gevent.monkey.patch_all()
-print('patched')
-
-import requests
-import jinja2
 from ruqqus.__main__ import db
 from ruqqus import classes
 from ruqqus.mail import send_mail
-
-
+import jinja2
 
 def render_jinja_html(template_loc,file_name,**context):
 
@@ -22,7 +15,9 @@ preheader= input("preheader text")
 
 content=input("content:")
 
-html=render_jinja_html("email/mailing.html",
+html=render_jinja_html(
+        "/app/ruqqus/templates",
+        "email/mailing.html"
 	title=title,
 	preheader=preheader,
 	content=content
