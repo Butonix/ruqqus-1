@@ -6,7 +6,7 @@ from flask import render_template
 title = input("Title: ")
 subject = input("Email subject: ")
 
-x=db.query(classes.user.User).filter_by(is_activated=True, is_banned=0, is_deleted=False)
+x=db.query(classes.user.User).filter_by(is_activated=True, is_banned=0)
 print(f"total mail to send: {x.count()}")
 
 for user in x.all():
