@@ -45,7 +45,9 @@ def discord_redirect(v):
 	}
 	headers={"Content-Type":"application/x-wwww-form-urlencoded"}
 
+	print(url)
 	print(data)
+	print(headers)
 
 	x=requests.post(url, data=data, headers=headers)
 
