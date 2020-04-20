@@ -38,7 +38,7 @@ def discord_redirect(v):
 	data = {
 	    'client_id': CLIENT_ID,
 	    'client_secret': CLIENT_SECRET,
-	    'grant_type': '',
+	    'grant_type': 'authorization_code',
 	    'code': code,
 	    'redirect_uri': f"https://{app.config['SERVER_NAME']}{request.path}",
 	    'scope': 'identify guilds.join'
