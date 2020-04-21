@@ -38,10 +38,12 @@
 <div class="sidebar-section sidebar-guildmake">
   <div class="title"><i class="fas fa-info-circle mr-2"></i>About Guild</div>
   <div class="body">
-    {{ b.description_html | safe | truncate(140, True)}}
+    {{ b.description_html | safe }}
+    <!-----commenting this bit out----
     {% if b.description_html | length > 140 %}
     <a href="#" data-toggle="modal" data-target="#guildDetailsModal">Read more</a>
     {% endif %}
+    ------>
     <div class="text-small font-weight-bold text-muted text-uppercase mb-1" style="letter-spacing: 0.025rem;">Founded</div>
     <p>{{ b.created_date }}</p>      
     <div class="text-small font-weight-bold text-muted text-uppercase mb-2" style="letter-spacing: 0.025rem;">Guildmasters</div>
@@ -164,6 +166,10 @@
 {% endblock %}
 
 {% block desktopBanner %}
+<!-- Guild reference -->
+
+<span id="guild-name-reference" class="d-none">{{ p.board.name }}</span>
+
 <!-- Desktop -->
 <div class="row d-none d-md-block">
   <div class="col px-0">

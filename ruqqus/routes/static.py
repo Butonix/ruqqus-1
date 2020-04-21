@@ -136,7 +136,3 @@ def press_inquiry(v):
     return render_template("/help/press.html",
                            msg="Your inquiry has been saved.",
                            v=v)
-
-@app.route("/discord")
-def discord():
-    return redirect("https://discord.gg/U57jqnn")
