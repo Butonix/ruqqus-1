@@ -1,9 +1,7 @@
-import time
-import threading
-
 from ruqqus.__main__ import db
-
 from ruqqus import classes
+
+import time
 
 def recompute():
 
@@ -60,7 +58,7 @@ def recompute():
 
         print(f"Scored {i} comments. Sleeping 1min")
 
-        time.sleep(60)
+        #time.sleep(60)
 
 
 recompute()
