@@ -22,7 +22,7 @@ def api_vote_post(post_id, x, v):
 
     post = get_post(post_id)
 
-    if post.is_banned or post.is_deleted:
+    if post.is_banned or post.is_deleted or post.is_archived:
         abort(403)
 
     #check for existing vote
@@ -57,7 +57,7 @@ def api_vote_comment(comment_id, x, v):
 
     comment = get_comment(comment_id)
 
-    if comment.is_banned or comment.is_deleted:
+    if comment.is_banned or comment.is_deleted or comment.post.is_archived:
         abort(403)
 
     #check for existing vote

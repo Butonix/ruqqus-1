@@ -1301,13 +1301,13 @@ document.addEventListener('paste', function (event) {
 
     var url = new RegExp('^(?:[a-z]+:)?//', 'i');
 
-    if (url.test(clipText) && window.location.pathname !== '/submit' && guild == '') {
+    if (url.test(clipText) && window.location.pathname !== '/submit' && guild == undefined) {
       window.location.href = '/submit?url=' + clipText;
     }
-    else if (url.test(clipText) && window.location.pathname !== '/submit' && guild !== '') {
+    else if (url.test(clipText) && window.location.pathname !== '/submit' && guild !== undefined) {
       window.location.href = '/submit?url=' + clipText + '&guild=' + guild;
     }
-    else if (url.test(clipText) && window.location.pathname == '/submit' && guild == '') {
+    else if (url.test(clipText) && window.location.pathname == '/submit' && guild == undefined) {
 
       document.getElementById("post-URL").value = clipText;
 

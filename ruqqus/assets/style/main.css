@@ -14265,6 +14265,7 @@ a:hover .link-arrow {
   background-color: #F5F7FA;
   border-radius: 0.35rem;
   overflow: hidden;
+  word-break: break-word;
 }
 .sidebar-section .profile-pic.profile-stacked {
   box-shadow: 0 0 0px 3px #F5F7FA;

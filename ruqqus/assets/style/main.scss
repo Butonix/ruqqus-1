@@ -1234,6 +1234,7 @@ color: $dark;
     //box-shadow: $box-shadow-sm;
     border-radius: 0.35rem;
     overflow: hidden;
+    word-break: break-word;
 
     & .profile-pic.profile-stacked {
         box-shadow: 0 0 0px 3px $gray-100;

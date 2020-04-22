@@ -89,6 +89,11 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         return self.parent_fullname and self.parent_fullname.startswith("t2_")
 
     @property
+    def is_archived(self):
+        return self.post.is_archived
+    
+
+    @property
     @lazy
     def board(self):
 
@@ -231,7 +236,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'parent':self.parent_fullname,
                 'author':self.author_name,
                 'body':self.body,
-                'body_html':self.body_html
+                'body_html':self.body_html,
+                'is_archived':self.is_archived
                 }
             
         

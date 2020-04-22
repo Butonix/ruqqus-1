@@ -1,9 +1,7 @@
-import time
-import threading
-
 from ruqqus.__main__ import db
-
 from ruqqus import classes
+
+import time
 
 def recompute():
 
@@ -20,7 +18,8 @@ def recompute():
         for post in db.query(classes.submission.Submission
                        ).filter_by(is_banned=False, is_deleted=False
                                    ).filter(classes.submission.Submission.created_utc>cutoff
-                                            ).all():
+                                            ).order_by(classes.submission.Submission.id.desc()
+                                                       ).all():
             i+=1
 
             post.score_hot = post.rank_hot
@@ -60,7 +59,7 @@ def recompute():
 
         print(f"Scored {i} comments. Sleeping 1min")
 
-        time.sleep(60)
+        #time.sleep(60)
 
 
 recompute()
