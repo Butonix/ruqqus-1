@@ -18,7 +18,8 @@ def recompute():
         for post in db.query(classes.submission.Submission
                        ).filter_by(is_banned=False, is_deleted=False
                                    ).filter(classes.submission.Submission.created_utc>cutoff
-                                            ).all():
+                                            ).order_by(classes.submission.Submission.id.desc()
+                                                       ).all():
             i+=1
 
             post.score_hot = post.rank_hot
