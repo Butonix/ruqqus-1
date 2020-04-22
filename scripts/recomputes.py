@@ -1,4 +1,4 @@
-from ruqqus.__main__ import *
+from ruqqus.__main__ import db
 from ruqqus import classes
 
 import time
