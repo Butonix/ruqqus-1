@@ -44,7 +44,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     is_offensive=Column(Boolean, default=False)
 
     post=relationship("Submission", lazy="joined")
-    flags=relationship("CommentFlag", lazy="dynamic", backref="comment")
+    flags=relationship("CommentFlag", lazy="joined", backref="comment")
     author=relationship("User", lazy="joined", innerjoin=True, primaryjoin="User.id==Comment.author_id")
 
     #These are virtual properties handled as postgres functions server-side
