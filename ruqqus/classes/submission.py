@@ -169,7 +169,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                                sort_method=request.args.get("sort","Hot").capitalize(),
                                linked_comment=comment,
                                comment_info=comment_info,
-                               is_allowed_to_comment=self.board.can_comment(v)
+                               is_allowed_to_comment=self.board.can_comment(v) and not self.is_archived
                                )
 
 
@@ -330,5 +330,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'created_utc':self.created_utc,
                 'edited_utc':self.edited_utc,
                 'guild_name':self.guild_name,
-                'embed_url':self.embed_url
+                'embed_url':self.embed_url,
+                'is_archived':self.is_archived
                 }
