@@ -99,6 +99,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def board_base36id(self):
         return base36encode(self.board_id)
 
+    @property
+    def is_archived(self):
+        return int(time.time()) > 60*60*24*180
 
     @property
     #@cache.memoize(timeout=60)
