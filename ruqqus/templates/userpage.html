@@ -145,7 +145,7 @@
         </a>
         <div class="text-small mb-2">{{ u.karma + u.comment_karma }} Rep</div>
         {% if u.bio_html %}
-        <p class="text-muted">{{ u.bio_html | safe }}</p>
+        <p class="text-muted text-break">{{ u.bio_html | safe }}</p>
         {% endif %}
         <p class="font-weight-bold">{{ u.follower_count }} subscriber{{ 's' if u.follower_count != 1 else '' }}</p>
         {% if v and v.id == u.id %}
