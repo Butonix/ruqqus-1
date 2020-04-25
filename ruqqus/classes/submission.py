@@ -131,7 +131,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
         now=int(time.time())
 
-        cutoff=now-(60860*24*180)
+        cutoff=now-(60*60*24*180)
 
         return self.created_utc < cutoff
                                       
