@@ -218,6 +218,7 @@
 					<a href="/" class="btn btn-secondary">Cancel</a>
 				</div>
 				<div class="col text-right">
+					{% if error %}<span class="text-danger mr-2">{{ error }}</span>{% endif %}
 					<button class="btn btn-purple" id="create_button" type="submit" disabled>Create post</button>
 				</div>
 			</div>

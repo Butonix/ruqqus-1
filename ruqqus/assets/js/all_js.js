@@ -1293,13 +1293,21 @@ document.addEventListener('paste', function (event) {
 
   if (nothingFocused) {
 
+    if (document.getElementById('guild-name-reference')) {
+        var guild = document.getElementById('guild-name-reference').innerText;
+    }
+
     var clipText = event.clipboardData.getData('Text');
 
     var url = new RegExp('^(?:[a-z]+:)?//', 'i');
 
-    if (url.test(clipText) && window.location.pathname !== '/submit') {
+    if (url.test(clipText) && window.location.pathname !== '/submit' && guild == undefined) {
       window.location.href = '/submit?url=' + clipText;
-    } else if (url.test(clipText) && window.location.pathname == '/submit') {
+    }
+    else if (url.test(clipText) && window.location.pathname !== '/submit' && guild !== undefined) {
+      window.location.href = '/submit?url=' + clipText + '&guild=' + guild;
+    }
+    else if (url.test(clipText) && window.location.pathname == '/submit' && guild == undefined) {
 
       document.getElementById("post-URL").value = clipText;
 

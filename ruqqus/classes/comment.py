@@ -44,14 +44,13 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     is_offensive=Column(Boolean, default=False)
 
     post=relationship("Submission", lazy="joined")
-    flags=relationship("CommentFlag", lazy="dynamic", backref="comment")
+    flags=relationship("CommentFlag", lazy="joined", backref="comment")
     author=relationship("User", lazy="joined", innerjoin=True, primaryjoin="User.id==Comment.author_id")
 
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
     ups = deferred(Column(Integer, server_default=FetchedValue()))
     downs=deferred(Column(Integer, server_default=FetchedValue()))
-    age=Column(Integer, server_default=FetchedValue())
     is_public=Column(Boolean, server_default=FetchedValue())
 
     score=deferred(Column(Integer, server_default=FetchedValue()))
@@ -87,6 +86,11 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def is_top_level(self):
         return self.parent_fullname and self.parent_fullname.startswith("t2_")
+
+    @property
+    def is_archived(self):
+        return self.post.is_archived
+    
 
     @property
     @lazy
@@ -231,7 +235,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'parent':self.parent_fullname,
                 'author':self.author_name,
                 'body':self.body,
-                'body_html':self.body_html
+                'body_html':self.body_html,
+                'is_archived':self.is_archived
                 }
             
         

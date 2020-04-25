@@ -19,6 +19,14 @@ class Stndrd:
     def created_date(self):
         return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
 
+    @property
+    @lazy
+    def created_iso(self):
+
+        t=time.gmtime(self.created_utc)
+        return time.strftime("%Y-%m-%dT%H:%M:%S+00:00",t)
+    
+
 
 class Age_times:
 
@@ -111,7 +119,7 @@ class Scores:
     @property
     @cache.memoize(timeout=60)
     def score(self):
-        return int(self.score_top)
+        return int(self.score_top) if self.score_top else 0
 
 
 

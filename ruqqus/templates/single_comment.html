@@ -47,11 +47,11 @@
 
       </div>
 
-      {% if standalone %}
+      <!---{% if standalone %}
 	{% if v and v.admin_level > 3 and c.active_flags %}
       <div class="text-small text-danger">{{ c.active_flags }} Flag{{ '' if c.active_flags==1 else 's' }}</div>
 	{% endif %}
-      {% endif %}
+      {% endif %}--->
       {% if c.is_banned and c.ban_reason %}
       <div id="comment-banned-warning" class="comment-text text-danger text-small">Reason: {{ c.ban_reason }}</div>
       {% endif %}
@@ -163,9 +163,9 @@
 		{% if not c.is_banned %}
               <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times"></i>Remove</a>
                 {% endif %}
-                {% if c.is_banned or (standalone and c.active_flags) %}
+                <!---{% if c.is_banned or (standalone and c.active_flags) %}
               <a class="dropdown-item approveDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-comment-check"></i>Approve</a>
-                {% endif %}
+                {% endif %}--->
               {% endif %}
 	      {% endif %}
 
@@ -263,9 +263,9 @@
           {% if not c.is_banned %}
           <li class="list-group-item"><a class="d-block" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a></li>
           {% endif %}
-          {% if c.is_banned or (standalone and c.flag_count) %}
+          <!---{% if c.is_banned or (standalone and c.flag_count) %}
           <li class="list-group-item"><a class="d-block" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-clipboard-check"></i>Approve</a></li>
-          {% endif %}
+          {% endif %}--->
           {% endif %}
           {% endif %}
         </ul>

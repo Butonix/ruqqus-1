@@ -36,18 +36,18 @@ def discord_redirect(v):
 	url=f"{DISCORD_ENDPOINT}/oauth2/token"
 
 	data = {
-	    'client_id': CLIENT_ID,
-	    'client_secret': CLIENT_SECRET,
-	    'grant_type': '',
+	    'grant_type': 'authorization_code',
 	    'code': code,
 	    'redirect_uri': f"https://{app.config['SERVER_NAME']}{request.path}",
 	    'scope': 'identify guilds.join'
 	}
 	headers={"Content-Type":"application/x-wwww-form-urlencoded"}
 
+	print(url)
 	print(data)
+	print(headers)
 
-	x=requests.post(url, data=data, headers=headers)
+	x=requests.post(url, json=data, headers=headers, auth=(CLIENT_ID, CLIENT_SECRET))
 
 	#extract auth token from response
 	data=x.json()

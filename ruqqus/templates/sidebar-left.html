@@ -83,7 +83,7 @@
                 <i class="fas fa-chess-rook text-muted mb-3" style="font-size: 1rem;"></i>
               </div>
               <ul class="no-bullets guild-recommendations-list pl-0 sidebar-collapsed-hidden">
-                {% for board in v.boards_subscribed[0:8] %}
+                {% for board in v.boards_subscribed[0:10] %}
                 <li class="guild-recommendations-item">
                   <a href="{{ board.permalink }}">
                     <div class="d-flex">
@@ -101,7 +101,7 @@
               <a class="btn btn-outline-gray-300 text-muted btn-block btn-sm text-small sidebar-collapsed-hidden" href="/browse">Discover more</a>
               <!-- Show this list when sidebar is collapsed -->
               <ul class="no-bullets guild-recommendations-list pl-0 sidebar-collapsed-visible">
-                {% for board in v.boards_subscribed[0:8] %}
+                {% for board in v.boards_subscribed[0:10] %}
                 <li class="guild-recommendations-item">
                   <a href="{{ board.permalink }}">
                     <img src="{{ board.profile_url }}" class="profile-pic profile-pic-30 transition-square">
@@ -133,7 +133,7 @@
               <i class="fas fa-crown text-warning mb-3" style="font-size: 1rem;"></i>
             </div>
             <ul class="no-bullets guild-recommendations-list pl-0 sidebar-collapsed-hidden">
-              {% for board in v.boards_modded[0:8] %}
+              {% for board in v.boards_modded[0:10] %}
               <li class="guild-recommendations-item">
                 <a href="{{ board.permalink }}">
                   <div class="d-flex">
@@ -150,7 +150,7 @@
             </ul>
             <!-- Show this list when sidebar is collapsed -->
             <ul class="no-bullets guild-recommendations-list pl-0 sidebar-collapsed-visible">
-              {% for board in v.boards_modded[0:8] %}
+              {% for board in v.boards_modded[0:10] %}
               <li class="guild-recommendations-item">
                 <a href="{{ board.permalink }}">
                   <img src="{{ board.profile_url }}" class="profile-pic profile-pic-30 transition-square">

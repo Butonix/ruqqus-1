@@ -71,7 +71,7 @@ def post_pid_comment_cid(p_id, c_id, v=None):
     return post.rendered_page(v=v, comment=c, comment_info=comment)
 
 @app.route("/api/comment", methods=["POST"])
-@limiter.limit("10/minute")
+@limiter.limit("4/minute")
 @is_not_banned
 @tos_agreed
 @validate_formkey
@@ -125,7 +125,7 @@ def api_comment(v):
 
     #check for ban state
     post = get_post(request.form.get("submission"))
-    if not post.board.can_comment(v):
+    if post.is_archived or not post.board.can_comment(v):
         abort(403)
 
         
