@@ -42,7 +42,7 @@ def post_pid_comment_cid(p_id, c_id, v=None):
         return {'html':lambda:render_template("board_banned.html",
                                v=v,
                                b=board),
-                'api':lambda:{'error':f'+{board.name} is banned.'}
+                'api':lambda:jsonify({'error':f'+{board.name} is banned.'})
                 }
 
     if post.over_18 and not (v and v.over_18) and not session_over18(comment.board):
@@ -53,7 +53,7 @@ def post_pid_comment_cid(p_id, c_id, v=None):
                                lo_formkey=make_logged_out_formkey(t),
                                board=comment.board
                                ),
-                'api':lambda:{'error':f'This content is not suitable for some users and situations.'}
+                'api':lambda:jsonify({'error':f'This content is not suitable for some users and situations.'})
                 }
 
     if post.is_nsfl and not (v and v.hide_nsfl) and not session_isnsfl(comment.board):
@@ -64,7 +64,7 @@ def post_pid_comment_cid(p_id, c_id, v=None):
                                lo_formkey=make_logged_out_formkey(t),
                                board=comment.board
                                ),
-                'api':lambda:{'error':f'This content is not suitable for some users and situations.'}
+                'api':lambda:jsonify({'error':f'This content is not suitable for some users and situations.'})
                 }
 
 
