@@ -182,7 +182,7 @@ def submit_post(v):
                                b=get_guild(request.form.get("board","")
                                            )
                                )
-
+over_18
     #sanitize title
     title=sanitize(title, linkgen=False)
 
@@ -322,10 +322,9 @@ def submit_post(v):
     #check for embeddable video
     domain=parsed_url.netloc
 
+    repost = db.query(Submission).filter(Submission.url.ilike(url)).filter_by(board_id=board.id).order_by(
+        Submission.id.asc()).first()
 
-
-    
-    
     new_post=Submission(title=title,
                         url=url,
                         author_id=user_id,
@@ -340,6 +339,9 @@ def submit_post(v):
                         author_name=user_name,
                         guild_name=board.name
                         )
+
+    if repost:
+        new_post.repost_id = repost.id
 
     db.add(new_post)
 
