@@ -182,7 +182,6 @@ def submit_post(v):
                                b=get_guild(request.form.get("board","")
                                            )
                                )
-over_18
     #sanitize title
     title=sanitize(title, linkgen=False)
 
