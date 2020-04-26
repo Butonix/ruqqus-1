@@ -74,8 +74,8 @@ def post_pid_comment_cid(p_id, c_id, v=None):
         return {'html':lambda:render_template("board_banned.html",
                                v=v,
                                b=board),
-                'api':lambda:{'error':f'+{board.name} is banned.'}
-        }
+                'api':lambda:jsonify({'error':f'+{board.name} is banned.'})
+                }
 
     #context improver
     context=int(request.args.get("context", 0))
@@ -88,7 +88,9 @@ def post_pid_comment_cid(p_id, c_id, v=None):
         c=parent
         context -=1
         
-    return post.rendered_page(v=v, comment=c, comment_info=comment)
+    return {'html':lambda:post.rendered_page(v=v, comment=c, comment_info=comment),
+            'api':lambda:jsonify(c.json)
+            }
 
 @app.route("/api/comment", methods=["POST"])
 @limiter.limit("4/minute")
