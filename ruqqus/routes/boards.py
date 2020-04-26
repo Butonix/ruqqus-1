@@ -28,8 +28,8 @@ def create_board_get(v):
     if not v.can_make_guild:
         return render_template("message.html",
                                v=v,
-                               title="Unable to make a guild. For now.",
-                               message="You need more Reputation.")
+                               title="You already lead 10 guilds." if not v.can_join_gms else "Unable to make a guild. For now.",
+                               message="You need to step down from a guild before you can make any more." if not v.can_join_gms else "You need more Reputation.")
 
     #check # recent boards made by user
     cutoff=int(time.time())-60*60*24
