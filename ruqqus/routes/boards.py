@@ -405,7 +405,7 @@ def mod_invite_username(bid, board, v):
     db.add(new_mod)
     db.commit()
     
-    return redirect(f"/+{board.name}/mod/mods")
+    return "", 204
 
 @app.route("/mod/<bid>/rescind/<username>", methods=["POST"])
 @auth_required
