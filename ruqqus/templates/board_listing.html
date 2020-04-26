@@ -1,6 +1,7 @@
 {% for b in boards %}
 
 <div class="col col-md-6 col-lg-4 col-xl-3 d-none d-md-block" style="margin-bottom: 28px;">
+
 	<div id="board-{{ b.base36id }}" class="card h-100">
 		<div class="card-body" style="word-wrap: break-word;">
 			<div class="d-flex flex-wrap align-items-center mb-2">
@@ -31,6 +32,7 @@
 
         <div>
          <div class="text-black" style="font-size: 16px;">+{{ b.name }} {% if b.over_18 %}<span class="badge badge-danger">NSFW</span>{% endif %}</div>
+        <div class="text-black" style="font-size: 16px;">+{{ b.name }} {% if b.is_nsfl %}<span class="badge badge-danger">NSFL</span>{% endif %}</div>
          {% if request.path=="/browse" %}<div class="text-small text-muted">{{ b.description|truncate(24, True) }}</div>{% endif %}
        </div>
 

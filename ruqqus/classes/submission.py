@@ -59,6 +59,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     author_name=Column(String(64), default="")
     guild_name=Column(String(64), default="")
     is_offensive=Column(Boolean, default=False)
+    is_nsfl=Column(Boolean, default=False)
     board=relationship("Board", lazy="joined", innerjoin=True, primaryjoin="Submission.board_id==Board.id")
     author=relationship("User", lazy="joined", innerjoin=True, primaryjoin="Submission.author_id==User.id")
     is_pinned=Column(Boolean, default=False)
@@ -321,6 +322,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'title':self.title,
                 'is_nsfw':self.over_18,
                 'is_offensive':self.is_offensive,
+                'is_nsfl':self.is_nsfl,
                 'thumb_url':self.thumb_url,
                 'domain':self.domain,
                 'is_archived':self.is_archived,

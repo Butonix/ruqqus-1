@@ -24,7 +24,9 @@ def comment_cid(cid):
     return redirect(comment.permalink)
 
 @app.route("/post/<p_id>/comment/<c_id>", methods=["GET"])
+@app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
 @auth_desired
+@api
 def post_pid_comment_cid(p_id, c_id, v=None):
 
     comment=get_comment(c_id)
@@ -37,25 +39,43 @@ def post_pid_comment_cid(p_id, c_id, v=None):
     board=post.board
 
     if board.is_banned and not (v and v.admin_level > 3):
-        return render_template("board_banned.html",
+        return {'html':lambda:render_template("board_banned.html",
                                v=v,
-                               b=board)
+                               b=board),
+                'api':lambda:{'error':f'+{board.name} is banned.'}
+                }
 
     if post.over_18 and not (v and v.over_18) and not session_over18(comment.board):
         t=int(time.time())
-        return render_template("errors/nsfw.html",
+        return {'html':lambda:render_template("errors/nsfw.html",
                                v=v,
                                t=t,
                                lo_formkey=make_logged_out_formkey(t),
                                board=comment.board
-                               )
+                               ),
+                'api':lambda:{'error':f'This content is not suitable for some users and situations.'}
+                }
+
+    if post.is_nsfl and not (v and v.hide_nsfl) and not session_isnsfl(comment.board):
+        t=int(time.time())
+        return {'html':lambda:render_template("errors/nsfl.html",
+                               v=v,
+                               t=t,
+                               lo_formkey=make_logged_out_formkey(t),
+                               board=comment.board
+                               ),
+                'api':lambda:{'error':f'This content is not suitable for some users and situations.'}
+                }
+
 
     #check guild ban
     board=post.board
     if board.is_banned and v.admin_level<3:
-        return render_template("board_banned.html",
+        return {'html':lambda:render_template("board_banned.html",
                                v=v,
-                               b=board)        
+                               b=board),
+                'api':lambda:{'error':f'+{board.name} is banned.'}
+        }
 
     #context improver
     context=int(request.args.get("context", 0))
@@ -140,6 +160,7 @@ def api_comment(v):
               level=level,
               author_name=v.username,
               over_18=post.over_18,
+              is_nsfl=post.is_nsfl,
               is_op=(v.id==post.author_id)
               )
 
@@ -188,6 +209,7 @@ def api_comment(v):
 @app.route("/edit_comment/<cid>", methods=["POST"])
 @is_not_banned
 @validate_formkey
+@api
 def edit_comment(cid, v):
 
     c = get_comment(cid)
@@ -210,12 +232,14 @@ def edit_comment(cid, v):
     bans=filter_comment_html(body_html)
 
     if bans:
-        return render_template("comment_failed.html",
+        return {'html':lambda:render_template("comment_failed.html",
                                action=f"/edit_comment/{c.base36id}",
                                badlinks=[x.domain for x in bans],
                                body=body,
                                v=v
-                               )
+                               ),
+                'api':lambda:{'error':f'A blacklist domain was used.'}
+                }
 
     c.body=body
     c.body_html=body_html
@@ -231,8 +255,10 @@ def edit_comment(cid, v):
     return redirect(f"{path}#comment-{c.base36id}")
 
 @app.route("/delete/comment/<cid>", methods=["POST"])
+@app.route("/api/v1/delete/comment/<cid>", methods=["POST"])
 @auth_required
 @validate_formkey
+@api
 def delete_comment(cid, v):
 
     c=db.query(Comment).filter_by(id=base36decode(cid)).first()
@@ -286,6 +312,9 @@ def feeds(sort=None):
 
 @app.route("/embed/comment/<cid>", methods=["GET"])
 @app.route("/embed/post/<pid>/comment/<cid>", methods=["GET"])
+@app.route("/api/vi/embed/comment/<cid>", methods=["GET"])
+@app.route("/api/vi/embed/post/<pid>/comment/<cid>", methods=["GET"])
+@api
 def embed_comment_cid(cid, pid=None):
 
     comment=get_comment(cid)
@@ -294,9 +323,12 @@ def embed_comment_cid(cid, pid=None):
         abort(403)
 
     if comment.is_banned or comment.is_deleted:
-        return render_template("embeds/comment_removed.html", c=comment)
+        return {'html':lambda:render_template("embeds/comment_removed.html", c=comment),
+                'api':lambda:{'error':f'Comment {cid} has been removed'}
+               }
 
     if comment.board.is_banned:
         abort(410)
 
     return render_template("embeds/comment.html", c=comment)
+

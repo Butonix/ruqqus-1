@@ -474,3 +474,22 @@ def toggle_post_nsfw(pid, v):
     db.commit()
 
     return "", 204
+
+@app.route("/api/toggle_post_nsfl/<pid>", methods=["POST"])
+@is_not_banned
+@validate_formkey
+def toggle_post_nsfl(pid, v):
+
+    post=get_post(pid)
+
+    if not post.author_id==v.id:
+        abort(403)
+
+    if post.board.is_nsfl and post.is_nsfl:
+        abort(403)
+
+    post.is_nsfl = not post.is_nsfl
+    db.add(post)
+    db.commit()
+
+    return "", 204

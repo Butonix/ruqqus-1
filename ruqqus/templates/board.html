@@ -188,6 +188,9 @@
             {% if b.over_18 %}
             <span class="badge badge-danger text-small ml-2" data-toggle="tooltip" data-placement="bottom" title="This guild contains adult content">nsfw</span>
             {% endif %}
+            {% if b.is_nsfl %}
+            <span class="badge badge-black text-small ml-2" data-toggle="tooltip" data-placement="bottom" title="This guild contains adult content">nsfl</span>
+            {% endif %}
           </a>
         </div>
       </div>
@@ -264,6 +267,9 @@
           <h1 class="h5 d-inline-block">+{{ b.name }}
             {% if b.over_18 %}
             <span class="badge badge-danger text-small align-top">nsfw</span>
+            {% endif %}
+          {% if b.is_nsfl %}
+            <span class="badge badge-black text-small align-top">nsfl</span>
             {% endif %}
           </h1>
         </a>

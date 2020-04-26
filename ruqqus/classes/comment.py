@@ -42,6 +42,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     over_18=Column(Boolean, default=False)
     is_op=Column(Boolean, default=False)
     is_offensive=Column(Boolean, default=False)
+    is_nsfl=Column(Boolean, default=False)
 
     post=relationship("Submission", lazy="joined")
     flags=relationship("CommentFlag", lazy="joined", backref="comment")
@@ -236,6 +237,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'author':self.author_name,
                 'body':self.body,
                 'body_html':self.body_html,
+            #   'replies': [x.json for x in self.replies]
                 'is_archived':self.is_archived
                 }
             
