@@ -95,7 +95,9 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=Fal
     return posts
 
 @app.route("/", methods=["GET"])
+@app.route("/subscriptions", methods=["GET"])
 @app.route("/api/v1/front/listing", methods=["GET"])
+@app.route("/api/v1/subscription/listing", methods=["GET"])
 @auth_desired
 @api
 def home(v):
@@ -104,18 +106,29 @@ def home(v):
 
         only=request.args.get("only",None)
         sort=request.args.get("sort","hot")
-        
+
         page=max(int(request.args.get("page",1)),0)
-        
-        ids=v.idlist(sort=sort,
-                     page=page,
-                     only=only,
-                     t=request.args.get('t', None),
-                     hide_offensive = v.hide_offensive
-                     )
+
+        if request.script_root == "/subscriptions" or request.script_root == "/api/v1/subscriptions/listing":
+            ids=v.idlist(subscription=True,
+                         sort=sort,
+                         page=page,
+                         only=only,
+                         t=request.args.get('t', None),
+                         hide_offensive = v.hide_offensive
+                         )
+        else:
+            ids = v.idlist(guild=True,
+                           sort=sort,
+                           page=page,
+                           only=only,
+                           t=request.args.get('t', None),
+                           hide_offensive=v.hide_offensive
+                           )
+
 
         posts, next_exists = v.list_of_posts(ids)
-        
+
         #If page 1, check for sticky
         if page==1:
             sticky =[]
