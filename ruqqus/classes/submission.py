@@ -68,7 +68,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     approved_by=relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id")
 
     # not sure if we need this
-    #reposts = relationship("Submission", lazy="joined", innerjoin=True, primaryjoin="Submission.repost_id==Submission.id")
+    reposts = relationship("Submission", lazy="joined", remote_side=[id])
 
 
     #These are virtual properties handled as postgres functions server-side
@@ -103,6 +103,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def board_base36id(self):
         return base36encode(self.board_id)
+
+    
 
     @property
     def is_repost(self):
