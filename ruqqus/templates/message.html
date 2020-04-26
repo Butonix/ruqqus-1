@@ -13,13 +13,16 @@
 {% block content %}
 <div class="row justify-content-center">
 	<div class="col-10 col-md-5">
-	<div class="text-center px-3 my-8">
+		<div class="text-center py-7 py-md-8">
 
-			{% if message %}<i class="fad fa-envelope-open-text text-muted mb-5" style="font-size: 5rem;"></i>
-			{% elif error %}<i class="fad fa-exclamation-triangle text-muted mb-5" style="font-size: 5rem;"></i>
-{% endif %}
+			<span class="fa-stack fa-2x text-muted mb-4">
+				<i class="fas fa-square text-gray-400 fa-stack-2x"></i>
+				<i class="fas text-gray-600 {% if message %}fa-envelope-open-text{% elif error %}fa-exclamation-triangle{% endif %} fa-stack-1x text-lg"></i>
+			</span>
+
 			<h1 class="h5">{{ title }}</h1>
-			<p class="text-muted mb-5">{{ message if message else error }}</p>
+			<div class="text-small text-muted mb-3">{{ message if message else error }}</div>
+			<a href="/" class="btn btn-primary btn-sm">Go to homepage</a>
 		</div>
 	</div>
 </div>
