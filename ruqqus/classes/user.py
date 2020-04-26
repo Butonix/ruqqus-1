@@ -114,9 +114,9 @@ class User(Base, Stndrd):
         return int(time.time())-self.created_utc
         
     @cache.memoize(timeout=300)
-    def idlist(self, sort="hot", page=1, t=None, hide_offensive=False, **kwargs):
+    def idlist(self, guild=False, subscription=False, sort="hot", page=1, t=None, hide_offensive=False, **kwargs):
 
-        
+
 
         posts=db.query(Submission).filter_by(is_banned=False,
                                              is_deleted=False,
@@ -132,15 +132,22 @@ class User(Base, Stndrd):
         if not self.show_nsfl:
             posts = posts.filter_by(is_nsfl=False)
 
-        board_ids=[x.board_id for x in self.subscriptions.filter_by(is_active=True).all()]
-        user_ids =[x.target.id for x in self.following.all() if x.target.is_private==False]
-        
-        posts=posts.filter(
-            or_(
-                Submission.board_id.in_(board_ids),
-                Submission.author_id.in_(user_ids)
+        if guild:
+            board_ids=[x.board_id for x in self.subscriptions.filter_by(is_active=True).all()]
+            posts = posts.filter(
+                or_(
+                    Submission.board_id.in_(board_ids)
                 )
             )
+        if subscription:
+            user_ids =[x.target.id for x in self.following.all() if x.target.is_private==False]
+            posts = posts.filter(
+                or_(
+                    Submission.author_id.in_(user_ids)
+                )
+            )
+        
+
 
         if not self.admin_level >=4:
             #admins can see everything
