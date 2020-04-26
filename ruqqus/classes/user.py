@@ -319,7 +319,7 @@ class User(Base, Stndrd):
         if v and v.hide_offensive:
             comments=comments.filter_by(is_offensive=False)
 
-        if v and v.hide_nsfl:
+        if v and not v.show_nsfl:
             comments=comments.filter_by(is_nsfl=False)
 
         if not (v and (v.admin_level >=3)):
