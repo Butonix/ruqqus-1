@@ -321,8 +321,8 @@ def submit_post(v):
     #check for embeddable video
     domain=parsed_url.netloc
 
-    repost = db.query(Submission).filter(Submission.url.ilike(url)).filter_by(board_id=board.id).order_by(
-        Submission.id.asc()).first()
+    if url:
+      repost = db.query(Submission).filter(Submission.url.ilike(url)).filter_by(board_id=board.id).order_by(Submission.id.asc()).first()
 
     new_post=Submission(title=title,
                         url=url,
