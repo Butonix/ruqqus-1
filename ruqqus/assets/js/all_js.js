@@ -1471,3 +1471,39 @@ function approve_from_guild(boardid) {
   }
 
 }
+
+// Approve user
+function invite_mod_to_guild(boardid) {
+
+  var inviteForm = document.getElementById("invite-form");
+
+  var inviteError = document.getElementById("toast-error-message");
+
+  var usernameField = document.getElementById("invite-username");
+
+  var isValidUsername = usernameField.checkValidity();
+
+  username = usernameField.value;
+
+  if (isValidUsername) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("post", "/mod/invite_mod/"+boardid);
+    xhr.withCredentials=true;
+    f=new FormData();
+    f.append("username", username);
+    f.append("formkey", formkey());
+    xhr.onload=function(){
+      if (xhr.status==204) {
+        window.location.reload(true);
+      }
+      else {
+        $('#toast-approve-error').toast('dispose');
+        $('#toast-approve-error').toast('show');
+        inviteError.textContent = JSON.parse(xhr.response)["error"];
+      }
+    }
+    xhr.send(f)
+  }
+
+}
