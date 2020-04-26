@@ -82,7 +82,8 @@ def api_comment(v):
 
     #process and sanitize
     body=request.form.get("body","")[0:10000]
-    with CustomRenderer() as renderer:
+
+    with CustomRenderer(post_id=request.form.get("submission")) as renderer:
         body_md=renderer.render(mistletoe.Document(body))
     body_html=sanitize(body_md, linkgen=True)
 
