@@ -66,13 +66,15 @@ class CustomRenderer(HTMLRenderer):
 
     def render_op_mention(self, token):
 
-        if "post_id" in self.__dict__:
-            user=get_submission(self.post_id).author
-
-        else:
-            return token
-
         space = token.target[0]
         target = token.target[1]
+
+        if "post_id" not in self.__dict__:
+            return f"@{target}"
+
+        post=get_submission(self.post_id)
+        user=post.author
+
+
 
         return f'{space}<a href="{user.permalink}" class="d-inline-block"><img src="/@{user.username}/pic/profile" class="profile-pic-20 mr-1">@{user.username}</a>'
