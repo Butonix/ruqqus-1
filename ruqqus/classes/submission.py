@@ -24,6 +24,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     id = Column(BigInteger, primary_key=True)
     author_id = Column(BigInteger, ForeignKey("users.id"))
+    repost_id = Column(BigInteger, ForeignKey("submissions.id"), default=0)
     title = Column(String(500), default=None)
     url = Column(String(500), default=None)
     edited_utc = Column(BigInteger, default=0)
@@ -66,6 +67,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     approved_by=relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id")
 
+    # not sure if we need this
+    #reposts = relationship("Submission", lazy="joined", innerjoin=True, primaryjoin="Submission.repost_id==Submission.id")
+
 
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
@@ -99,6 +103,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def board_base36id(self):
         return base36encode(self.board_id)
+
+    @property
+    def is_repost(self):
+        return bool(self.repost_id)
 
     @property
     def is_archived(self):
