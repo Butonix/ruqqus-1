@@ -388,6 +388,10 @@ def mod_invite_username(bid, board, v):
     if not board.can_invite_mod(user):
         abort(409)
 
+
+    if not user.can_join_gms:
+        return jsonify({"error":f"@{user.username} already leads enough guilds."}), 409
+
     if not board.has_rescinded_invite(user):
 
         #notification
@@ -435,6 +439,9 @@ def mod_accept_board(bid, v):
     x=board.has_invite(v)
     if not x:
         abort(404)
+
+    if not user.can_join_gms:
+        return jsonify({"error":f"You already lead enough guilds."}), 409
 
     x.accepted=True
     db.add(x)

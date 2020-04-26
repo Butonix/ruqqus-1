@@ -541,7 +541,15 @@ class User(Base, Stndrd):
         if self.karma + self.comment_karma < 50:
             return False
 
+        if len(self.boards_modded) >= 10:
+            return False
+
         return True
+    
+    @property
+    def can_join_gms(self):
+        return len(self.boards_modded) < 10
+    
 
     @property
     def can_siege(self):
