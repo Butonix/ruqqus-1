@@ -386,7 +386,7 @@ def mod_invite_username(bid, board, v):
     user=get_user(username)
 
     if not board.can_invite_mod(user):
-        abort(409)
+        return jsonify({"error":f"@{user.username} is already a mod or has already been invited."}), 409
 
 
     if not user.can_join_gms:
