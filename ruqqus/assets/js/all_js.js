@@ -1472,7 +1472,7 @@ function approve_from_guild(boardid) {
 
 }
 
-// Approve user
+// Invite user to mod
 function invite_mod_to_guild(boardid) {
 
   var inviteForm = document.getElementById("invite-form");
