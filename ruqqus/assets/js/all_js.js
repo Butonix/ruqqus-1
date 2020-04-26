@@ -1498,8 +1498,8 @@ function invite_mod_to_guild(boardid) {
         window.location.reload(true);
       }
       else {
-        $('#toast-approve-error').toast('dispose');
-        $('#toast-approve-error').toast('show');
+        $('#toast-invite-error').toast('dispose');
+        $('#toast-invite-error').toast('show');
         inviteError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
