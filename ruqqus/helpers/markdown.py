@@ -67,7 +67,7 @@ class CustomRenderer(HTMLRenderer):
     def render_op_mention(self, token):
 
         if "post_id" in self.__dict__:
-            user=get_submission(post_id).author
+            user=get_submission(self.post_id).author
 
         else:
             return token
