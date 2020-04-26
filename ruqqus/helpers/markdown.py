@@ -36,7 +36,7 @@ class CustomRenderer(HTMLRenderer):
     def __init__(self, **kwargs):
         super().__init__(UserMention,
                          BoardMention,
-                         OPMention)
+                         OpMention)
 
         for i in kwargs:
             self.__dict__[i]=kwargs[i]
