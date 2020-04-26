@@ -69,8 +69,10 @@ class CustomRenderer(HTMLRenderer):
         space = token.target[0]
         target = token.target[1]
 
+        print(self.__dict__)
+
         if "post_id" not in self.__dict__:
-            return f"[no op found]"
+            return "[no op found]"
 
         post=get_submission(self.post_id)
         user=post.author
