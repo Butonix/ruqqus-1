@@ -23,7 +23,7 @@ class BoardMention(SpanToken):
 
         self.target=(match_obj.group(1), match_obj.group(2))
 
-class OPMention(SpanToken):
+class OpMention(SpanToken):
 
     pattern=re.compile("(^|\W)@([Oo][Pp])\b")
     parse_inner=False
