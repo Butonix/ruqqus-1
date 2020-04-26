@@ -23,11 +23,24 @@ class BoardMention(SpanToken):
 
         self.target=(match_obj.group(1), match_obj.group(2))
 
+class OPMention(SpanToken):
+
+    pattern=re.compile("(^|\W)@([Oo][Pp])\b")
+    parse_inner=False
+
+    def __init__(self, match_obj):
+        self.target= (match_obj.group(1), match_obj.group(2))
+
 class CustomRenderer(HTMLRenderer):
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__(UserMention,
-                         BoardMention)
+                         BoardMention,
+                         OPMention)
+
+        for i in kwargs:
+            self.__dict__[i]=kwargs[i]
+
 
     def render_user_mention(self, token):
         space = token.target[0]
@@ -50,3 +63,16 @@ class CustomRenderer(HTMLRenderer):
         else:
             return f'{space}<a href="{board.permalink}" class="d-inline-block"><img src="/+{board.name}/pic/profile" class="profile-pic-20 align-middle mr-1">+{board.name}</a>'
         
+
+    def render_op_mention(self, token):
+
+        if "op" in self.__dict__:
+            user=self.op
+
+        else:
+            return token
+
+        space = token.target[0]
+        target = token.target[1]
+
+        return f'{space}<a href="{user.permalink}" class="d-inline-block"><img src="/@{user.username}/pic/profile" class="profile-pic-20 mr-1">@{user.username}</a>'
