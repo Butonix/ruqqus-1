@@ -323,6 +323,8 @@ def submit_post(v):
 
     if url:
       repost = db.query(Submission).filter(Submission.url.ilike(url)).filter_by(board_id=board.id).order_by(Submission.id.asc()).first()
+    else:
+      repost=None
 
     new_post=Submission(title=title,
                         url=url,
