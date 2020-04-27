@@ -1437,6 +1437,7 @@ function exile_from_guild(boardid) {
 }
 
 // Approve user
+
 function approve_from_guild(boardid) {
 
   var approvalForm = document.getElementById("approve-form");
@@ -1507,3 +1508,4 @@ function invite_mod_to_guild(boardid) {
   }
 
 }
+

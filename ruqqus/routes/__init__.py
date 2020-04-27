@@ -16,3 +16,4 @@ from .settings import *
 from .static import *
 from .users import *
 from .votes import *
+from .feeds import *

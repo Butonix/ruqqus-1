@@ -26,6 +26,12 @@ valid_board_regex=re.compile("^[a-zA-Z0-9]\w{2,24}$")
 @is_not_banned
 def create_board_get(v):
     if not v.can_make_guild:
+        if (len(v.boards_created.all()) + len(v.moderates.all())) >= 10:
+            return render_template("message.html",
+                                   v=v,
+                                   title="Unable to make board",
+                                   message="You can only Moderate a maximum 10 Guilds."
+                                   )
         return render_template("message.html",
                                v=v,
                                title="You already lead 10 guilds." if not v.can_join_gms else "Unable to make a guild. For now.",
@@ -56,6 +62,13 @@ def api_board_available(name):
 @validate_formkey
 def create_board_post(v):
     if not v.can_make_guild:
+
+        if (len(v.boards_created.all()) + len(v.moderates.all())) >= 10:
+            return render_template("make_board.html",
+                                   title="Unable to make board",
+                                   error="You can only Moderate a maximum 10 Guilds."
+                                   )
+
         return render_template("make_board.html",
                                title="Unable to make board",
                                error="You need more Reputation before you can make a Guild."
@@ -391,6 +404,9 @@ def mod_invite_username(bid, board, v):
 
     if not user.can_join_gms:
         return jsonify({"error":f"@{user.username} already leads enough guilds."}), 409
+
+    if not user.can_make_guild:
+        abort(409)
 
     if not board.has_rescinded_invite(user):
 

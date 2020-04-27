@@ -228,7 +228,11 @@
     <div class="sidebar-section sidebar-guildmake">
       <div class="title"><i class="fas fa-chess-rook mr-2"></i>Guilds</div>
       <div class="body">
-        <p class="text-muted">{% if not v.can_join_gms %}You already lead the maximum of 10 guilds.{% else %}You need 50 rep to create a guild. Rep can be earned by commenting and posting.{% endif %}</p>
+        {% if v.total_karma >= 50 %}
+            <p class="text-muted">You can only Moderate a maximum of 10 Guilds.</p>
+        {% else %}
+            <p class="text-muted">You need 50 rep to create a guild. Rep can be earned by commenting and posting.</p>
+        {% endif %}
         <a href="#" class="btn btn-primary btn-block disabled">Create Guild</a>
       </div>
     </div>
