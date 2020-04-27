@@ -109,7 +109,7 @@ def home(v):
 
         page=max(int(request.args.get("page",1)),0)
 
-        if request.script_root == "/subscriptions" or request.script_root == "/api/v1/subscriptions/listing":
+        if request.path == "/subscriptions" or request.path == "/api/v1/subscriptions/listing":
             ids=v.idlist(subscription=True,
                          sort=sort,
                          page=page,
