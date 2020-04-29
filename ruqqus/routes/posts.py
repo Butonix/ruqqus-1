@@ -342,10 +342,8 @@ def submit_post(v):
                         post_public=not board.is_private,
                         author_name=user_name,
                         guild_name=board.name
+                        repost_id=repost.id if repost else None
                         )
-
-    if repost:
-        new_post.repost_id = repost.id
 
     db.add(new_post)
 
