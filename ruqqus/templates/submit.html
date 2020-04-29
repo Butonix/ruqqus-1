@@ -96,7 +96,7 @@
 							<small class="form-text text-muted">To post an image, use a direct image link such as i.imgur.com</small>
 						</div>
 
-						{% if v.admin_level >=2 %}
+						{% if v.can_submit_image %}
 						<div id="image-upload-block">
 							<div><label class="mt-3">Image Upload</label></div>
 
@@ -105,7 +105,7 @@
 								<input id="file-upload" type="file" name="file" class="" onchange="document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerHTML=document.getElementById('file-upload').files[0].name;" hidden>
 							</label>
 
-							<small class="form-text text-muted">Images uploaded will be public. Optional if you have text or a URL above.</small>
+							<small class="form-text text-muted">Images uploaded will be public. Optional if you have text.</small>
 						</div>
 						{% endif %}
 
@@ -203,7 +203,7 @@
 							<li class="list-inline-item"><a href="https://github.com/ruqqus/ruqqus" class="text-gray-500">Github</a></li>
 							<li class="list-inline-item"><a href="/discord" class="text-gray-500">Discord</a></li>
 						</ul>
-						<div class="text-muted text-small-extra mt-1">v. 2.8.0, © 2020 Ruqqus, LLC</div>
+						<div class="text-muted text-small-extra mt-1">v. 2.8.1, © 2020 Ruqqus, LLC</div>
 					</div>
 
 				</div>
