@@ -1337,6 +1337,7 @@ var image = document.getElementById("file-upload");
 
 if (url.value.length > 0 || image.value.length > 0) {
   text.required = false;
+  url.required=false;
 } else if (text.value.length > 0 || image.value.length > 0) {
   url.required = false;
 } else {
