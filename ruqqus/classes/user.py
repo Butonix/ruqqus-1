@@ -569,6 +569,11 @@ class User(Base, Stndrd):
         return now-self.last_siege_utc > 60*60*24*30
 
     @property
+    def can_submit_image(self):
+
+        return self.karma + self.comment_karma >=500
+    
+    @property
     def json(self):
 
         if self.is_banned:

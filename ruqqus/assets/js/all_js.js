@@ -1331,9 +1331,11 @@ var text = document.getElementById("post-text");
 
 var button = document.getElementById("create_button");
 
+var image = document.getElementById("file-upload");
+
 // Toggle reuqired attribute
 
-if (url.value.length > 0) {
+if (url.value.length > 0 || image.value.length > 0) {
   text.required = false;
 } else if (text.value.length > 0) {
   url.required = false;
