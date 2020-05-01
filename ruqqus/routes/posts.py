@@ -322,7 +322,7 @@ def submit_post(v):
     domain=parsed_url.netloc
 
     if url:
-      repost = db.query(Submission).filter(Submission.url.ilike(url)).filter_by(board_id=board.id).order_by(Submission.id.asc()).first()
+      repost = db.query(Submission).filter(Submission.url.ilike(url)).filter_by(board_id=board.id, is_deleted=False, is_banned=False).order_by(Submission.id.asc()).first()
     else:
       repost=None
 
