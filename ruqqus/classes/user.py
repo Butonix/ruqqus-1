@@ -275,6 +275,7 @@ class User(Base, Stndrd):
     def has_badge(self, badgedef_id):
         return self.badges.filter_by(badge_id=badgedef_id).first()
     
+    @cache.memoize(3600*24*7)
     def vote_status_on_post(self, post):
 
         vote = self.votes.filter_by(submission_id=post.id).first()
@@ -283,7 +284,7 @@ class User(Base, Stndrd):
         
         return vote.vote_type
 
-
+    @cache.memoize(3600*24*7)
     def vote_status_on_comment(self, comment):
 
         vote = self.commentvotes.filter_by(comment_id=comment.id).first()
