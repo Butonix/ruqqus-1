@@ -7,7 +7,7 @@ from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.get import *
 from ruqqus.classes import *
 from flask import *
-from ruqqus.__main__ import app, db
+from ruqqus.__main__ import app, db, cache
 
 @app.route("/api/vote/post/<post_id>/<x>", methods=["POST"])
 @is_not_banned
@@ -40,7 +40,7 @@ def api_vote_post(post_id, x, v):
     db.add(vote)
     db.commit()
 
-    #print(f"Vote Event: @{v.username} vote {x} on post {post_id}")
+    cache.delete_memoized(User.vote_status_on_post, self=v, post=post)
 
     return "", 204
                     
@@ -74,6 +74,8 @@ def api_vote_comment(comment_id, x, v):
 
     db.add(vote)
     db.commit()
+
+    cache.delete_memoized(User.vote_status_on_comment, self=v, comment=comment)
 
     #print(f"Vote Event: @{v.username} vote {x} on comment {comment_id}")
 
