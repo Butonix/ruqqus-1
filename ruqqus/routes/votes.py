@@ -40,7 +40,7 @@ def api_vote_post(post_id, x, v):
     db.add(vote)
     db.commit()
 
-    cache.delete_memoized(User.vote_status_on_post, self=v, post=post)
+    cache.delete_memoized(User.vote_status_on_post, v, post)
 
     return "", 204
                     
@@ -75,7 +75,7 @@ def api_vote_comment(comment_id, x, v):
     db.add(vote)
     db.commit()
 
-    cache.delete_memoized(User.vote_status_on_comment, self=v, comment=comment)
+    cache.delete_memoized(User.vote_status_on_comment, v, comment)
 
     #print(f"Vote Event: @{v.username} vote {x} on comment {comment_id}")
 
