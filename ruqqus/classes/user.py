@@ -173,8 +173,7 @@ class User(Base, Stndrd):
                 cutoff=0
                 
             posts=posts.filter(Submission.created_utc >= cutoff)
-                
-            
+
 
         if sort=="hot":
             posts=posts.order_by(Submission.score_hot.desc())
