@@ -222,7 +222,7 @@
             <input type="text" readonly="" class="form-control copy-link" id="rss_feed" value="{{ ('/feeds/@' + v.username + '/' + v.feedkey + '/hot') | full_link }}" data-clipboard-text="{{ ('/feeds/@' + v.username + '/' + v.feedkey + '/hot') | full_link }}">
               <form action="/settings/new_feedkey" method="post">
                   <input type="hidden" name="formkey" value="{{ v.formkey }}">
-                  <input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Reroll Feed Key">
+                  <input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Generate new URL">
               </form>
 
             <div class="text-small-extra text-muted mt-3">You can change the feed by replacing "top" with either hot, or disputed.</div>
