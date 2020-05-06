@@ -37,7 +37,8 @@ def upload_from_url(name, url):
                       Bucket=BUCKET,
                       Key=name,
                       ExtraArgs={'ACL':'public-read',
-                                 "ContentType":"image/png"
+                                 "ContentType":"image/png",
+                                 "StorageClass":"INTELLIGENT_TIERING"
                       }
                      )
 
