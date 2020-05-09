@@ -164,7 +164,7 @@ def board_name(name, v):
              
    
     ids=board.idlist(sort=sort,
-                    t=t
+                    t=t,
                     page=page,
                     nsfw=(v and v.over_18) or session_over18(board),
                     v=v
