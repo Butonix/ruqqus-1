@@ -337,10 +337,10 @@ ol > li::before {
     margin-right: 1.5rem;
 }
 
-[data-toggle="collapse"] .fa:before {   
+[data-toggle="collapse"] .fa:before {
     content: "\f139";
   }
-  
+
 [data-toggle="collapse"].collapsed .fa:before {
     content: "\f13a";
 }
@@ -832,12 +832,12 @@ label.color-radio span {
     color: $black;
     //opacity: .25; /* Firefox */
 }
-  
+
 .form-control::-ms-input-placeholder { /* Internet Explorer 10-11 */
     color: $black;
     //opacity: .25;
 }
-  
+
 .form-control::-ms-input-placeholder { /* Microsoft Edge */
     color: $black;
     //opacity: .25;
@@ -1064,8 +1064,8 @@ th {
     color: $downvote !important;
 }
 
-.banned .score {		
-    color: $gray-300 !important;		
+.banned .score {
+    color: $gray-300 !important;
 }
 
 // Link Arrow Symbol
@@ -1765,30 +1765,30 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     margin-top: 0;
 }
 
-#frontpage.toggle-card-view .posts .card .post-img, #userpage.toggle-card-view .posts .card .post-img, #search.toggle-card-view .posts .card .post-img, #guild.toggle-card-view .posts .card .post-img { 
+#frontpage.toggle-card-view .posts .card .post-img, #userpage.toggle-card-view .posts .card .post-img, #search.toggle-card-view .posts .card .post-img, #guild.toggle-card-view .posts .card .post-img {
     display: none;
 }
 
-#frontpage.toggle-card-view .posts .card .post-img-lg, #userpage.toggle-card-view .posts .card .post-img-lg, #search.toggle-card-view .posts .card .post-img-lg, #guild.toggle-card-view .posts .card .post-img-lg { 
+#frontpage.toggle-card-view .posts .card .post-img-lg, #userpage.toggle-card-view .posts .card .post-img-lg, #search.toggle-card-view .posts .card .post-img-lg, #guild.toggle-card-view .posts .card .post-img-lg {
     display: block;
     text-align: center;
 }
 
-#frontpage.toggle-card-view .posts .card .post-img-lg img, #userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img, #guild.toggle-card-view .posts .card .post-img-lg img { 
+#frontpage.toggle-card-view .posts .card .post-img-lg img, #userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img, #guild.toggle-card-view .posts .card .post-img-lg img {
     max-width: 55%;
     height: auto;
 }
 
-#frontpage.toggle-card-view .posts .card .embed-lg, #userpage.toggle-card-view .posts .card .embed-lg, #search.toggle-card-view .posts .card .embed-lg, #guild.toggle-card-view .posts .card .embed-lg { 
+#frontpage.toggle-card-view .posts .card .embed-lg, #userpage.toggle-card-view .posts .card .embed-lg, #search.toggle-card-view .posts .card .embed-lg, #guild.toggle-card-view .posts .card .embed-lg {
     display: flex;
     z-index: 2;
 }
 
-#frontpage.toggle-card-view .posts .card .post-preview-lg, #userpage.toggle-card-view .posts .card .post-preview-lg, #search.toggle-card-view .posts .card .post-preview-lg, #guild.toggle-card-view .posts .card .post-preview-lg { 
+#frontpage.toggle-card-view .posts .card .post-preview-lg, #userpage.toggle-card-view .posts .card .post-preview-lg, #search.toggle-card-view .posts .card .post-preview-lg, #guild.toggle-card-view .posts .card .post-preview-lg {
     display: block;
 }
 
-#frontpage.toggle-card-view .posts .card .post-preview-lg .post-body, #userpage.toggle-card-view .posts .card .post-preview-lg .post-body, #search.toggle-card-view .posts .card .post-preview-lg .post-body, #guild.toggle-card-view .posts .card .post-preview-lg .post-body { 
+#frontpage.toggle-card-view .posts .card .post-preview-lg .post-body, #userpage.toggle-card-view .posts .card .post-preview-lg .post-body, #search.toggle-card-view .posts .card .post-preview-lg .post-body, #guild.toggle-card-view .posts .card .post-preview-lg .post-body {
     -webkit-mask-image: linear-gradient(180deg,#000 40%,transparent);
     mask-image: linear-gradient(180deg,#000 40%,transparent);
     overflow: hidden;
@@ -2090,7 +2090,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
         border-top-right-radius: 1rem;
         border-top-left-radius: 1rem;
     }
-} 
+    #frontpage, #search, #guild {
+        padding-top: 98px;
+        background-color: $gray-700;
+    }
+}
 
 // Dropdown actions
 
@@ -2308,7 +2312,7 @@ div:hover .thumb-img-link-overlay {
     position: absolute;
     background-color: rgba(0, 0, 0, 0.5);
     bottom: 0px;
-    padding: 1.5rem; 
+    padding: 1.5rem;
     text-align: center;
     width: 100%;
     height: 100%;
@@ -2327,7 +2331,7 @@ div:hover .thumb-img-link-overlay {
 }
 
 // Small devices (landscape phones, less than 768px)
-@media (max-width: 767.98px) { 
+@media (max-width: 767.98px) {
     .post-img {
     width: 80px;
     height: 60px;
@@ -2978,7 +2982,7 @@ ul.comment-section {
     }
 
 // Responsive Border Radius
- 
+
 	.rounded#{$infix}        { @include border-radius($border-radius); }
 	.rounded#{$infix}-top    { @include border-top-radius($border-radius); @include border-bottom-radius(0); }
 	.rounded#{$infix}-right  { @include border-right-radius($border-radius); @include border-left-radius(0); }
@@ -3024,7 +3028,7 @@ ul.comment-section {
       height: auto !important;
     }
   }
-  
+
   @media (min-width: 768px) {
     .w-md-25 {
       width: 25% !important;
@@ -3057,7 +3061,7 @@ ul.comment-section {
       height: auto !important;
     }
   }
-  
+
   @media (min-width: 992px) {
     .w-lg-25 {
       width: 25% !important;
@@ -3090,7 +3094,7 @@ ul.comment-section {
       height: auto !important;
     }
   }
-  
+
   @media (min-width: 1200px) {
     .w-xl-25 {
       width: 25% !important;
@@ -3159,7 +3163,7 @@ ul.comment-section {
     border-bottom-right-radius: .25rem;
 }
 
-// Transitions 
+// Transitions
 
 .transition-15 {
     -webkit-transition: width .15s;
@@ -3495,7 +3499,7 @@ body, #settings, #notifications, #submit {
     box-shadow: none;
 }
 
-#frontpage.toggle-card-view .posts .card .post-img-lg img, #userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img, #guild.toggle-card-view .posts .card .post-img-lg img { 
+#frontpage.toggle-card-view .posts .card .post-img-lg img, #userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img, #guild.toggle-card-view .posts .card .post-img-lg img {
     max-width: 100%;
     height: auto;
 }
@@ -3802,16 +3806,16 @@ span.green {
 div.banned {
     background-color: $banned;
     border-left: 3px solid #ff0000!important;
-}	  
+}
 
 div.deleted {
     background-color: $deleted;
 }
-			
+
 div.deleted.banned {
     background-color: $deletedandbanned
 }
-			
+
 .text-admin {
     color: $admin
 }
