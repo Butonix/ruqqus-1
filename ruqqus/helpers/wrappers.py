@@ -71,7 +71,7 @@ def is_not_banned(f):
             if not v:
                 abort(401)
 
-            if v.is_banned:
+            if v.is_suspended:
                 abort(403)
             
         else:
