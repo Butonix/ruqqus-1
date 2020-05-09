@@ -15,7 +15,7 @@
       {% block navbar %}
       <div class="font-weight-bold py-3">Ruqqus {% if request.path=="/all" %}All{% else %}Homepage{% endif %}</div>
 
-      <div class="d-flex align-items-center mr-3">
+      <div class="d-flex align-items-center">
         <div class="text-small font-weight-bold mr-2">Filter by</div>
         <div class="dropdown dropdown-actions">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -35,7 +35,7 @@
           </div>
         </div>
 
-        <div class="text-small font-weight-bold mr-2">Sort by</div>
+        <div class="text-small font-weight-bold ml-3 mr-2">Sort by</div>
         <div class="dropdown dropdown-actions">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {% if sort_method=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
