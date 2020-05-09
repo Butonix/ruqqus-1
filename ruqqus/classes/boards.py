@@ -91,7 +91,7 @@ class Board(Base, Stndrd, Age_times):
         return not self.postrels.filter_by(post_id=post.id).first()
 
     @cache.memoize(timeout=60)
-    def idlist(self, sort="hot", page=1, nsfw=False, nsfl=False, show_offensive=True, v=None):
+    def idlist(self, sort="hot", page=1, t=None, nsfw=False, nsfl=False, show_offensive=True, v=None):
 
         posts=self.submissions.filter_by(is_banned=False,
                                          is_deleted=False,
@@ -117,6 +117,20 @@ class Board(Base, Stndrd, Age_times):
                                    )
             else:
                 posts=posts.filter_by(is_public=True)
+
+        if t:
+            now=int(time.time())
+            if t=='day':
+                cutoff=now-86400
+            elif t=='week':
+                cutoff=now-604800
+            elif t=='month':
+                cutoff=now-2592000
+            elif t=='year':
+                cutoff=now-31536000
+            else:
+                cutoff=0
+            posts=posts.filter(Submission.created_utc >= cutoff)
             
 
         if sort=="hot":

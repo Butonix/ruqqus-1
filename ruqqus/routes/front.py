@@ -107,11 +107,12 @@ def home(v):
         sort=request.args.get("sort","hot")
         
         page=max(int(request.args.get("page",1)),0)
+        t=request.args.get('t', 'all')
         
         ids=v.idlist(sort=sort,
                      page=page,
                      only=only,
-                     t=request.args.get('t', None),
+                     t=t,
                      hide_offensive = v.hide_offensive
                      )
 
@@ -129,6 +130,7 @@ def home(v):
                                listing=posts,
                                next_exists=next_exists,
                                sort_method=sort,
+                               time_filter=t,
                                page=page,
                                only=only),
                 'api':lambda:[x.json for x in posts]
@@ -149,12 +151,13 @@ def front_all(v):
     page=max(page, 1)
 
     sort_method=request.args.get("sort", "hot")
+    t=request.args.get('t','all')
 
     #get list of ids
     ids = frontlist(sort=sort_method,
                     page=page,
                     nsfw=(v and v.over_18),
-                    t=request.args.get('t',None),
+                    t=t,
                     v=v,
                     hide_offensive= v and v.hide_offensive
                     )
@@ -178,6 +181,7 @@ def front_all(v):
                            listing=posts,
                            next_exists=next_exists,
                            sort_method=sort_method,
+                           time_filter=t
                            page=page,
                            trending_boards = trending_boards(n=5)
                            ),

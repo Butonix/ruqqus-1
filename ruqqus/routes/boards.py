@@ -160,9 +160,11 @@ def board_name(name, v):
 
     sort=request.args.get("sort","hot")
     page=int(request.args.get("page", 1))
+    t=request.args.get("t","all")
              
    
     ids=board.idlist(sort=sort,
+                    t=t
                     page=page,
                     nsfw=(v and v.over_18) or session_over18(board),
                     v=v
@@ -185,6 +187,7 @@ def board_name(name, v):
     return {'html':lambda:render_template("board.html",
                            b=board,
                            v=v,
+                           time_filter=t,
                            listing=posts,
                            next_exists=next_exists,
                            sort_method=sort,
