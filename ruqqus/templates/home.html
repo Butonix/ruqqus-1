@@ -24,7 +24,7 @@
             {% if time_filter=="month" %}<i class="fas fa-calendar-alt mr-1"></i>{% endif %}
             {% if time_filter=="year" %}<i class="fas fa-calendar mr-1"></i>{% endif %}
             {% if time_filter=="all" %}<i class="fas fa-infinity mr-1"></i>{% endif %}
-            {{ time_filter }}
+            {{ time_filter | capitalize }}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
             {% if not time_filter=="day" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=day"><i class="fas fa-calendar-day mr-2"></i>Day</a>{% endif %}
@@ -43,7 +43,7 @@
             {% if sort_method=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
             {% if sort_method=="disputed" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
             {% if sort_method=="activity" %}<i class="fas fa-comments mr-1"></i>{% endif %}
-            {{ sort_method }}
+            {{ sort_method | capitalize }}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
             {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
