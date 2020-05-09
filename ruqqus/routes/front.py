@@ -27,7 +27,7 @@ def trending_boards(n=5):
     return [(x, x.subscriber_count) for x in boards]
 
 @cache.memoize(timeout=300)
-def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=False):
+def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=False, ids_only=True):
 
     #cutoff=int(time.time())-(60*60*24*30)
 
@@ -89,10 +89,11 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=Fal
     else:
         abort(422)
 
-    posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
-    
-
-    return posts
+    if ids_only:
+        posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
+        return posts
+    else:
+        return [x for x in posts.offset(25*(page-1)).limit(25).all()]
 
 @app.route("/", methods=["GET"])
 @app.route("/subscriptions", methods=["GET"])

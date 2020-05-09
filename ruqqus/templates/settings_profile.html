@@ -233,11 +233,39 @@
       </div>
 
 
-          <form id="profile-settings" action="/settings/profile" method="post">
 
-            <h2 class="h5">Content Filters</h2>
 
-            <p class="text-small text-muted">Manage what type of content you can see across Ruqqus.</p>
+      <h2 class="h5" name="referral">RSS Feed</h2>
+
+      <p class="text-small text-muted">Subscribe to your own personal ruqqus rss feed.</p>
+
+      <div class="settings-section rounded">
+
+        <div class="d-lg-flex">
+
+          <div class="title w-lg-25">
+            <label for="referral_code">Custom User Feed</label>
+          </div>
+
+          <div class="body w-lg-100">
+
+            <input type="text" readonly="" class="form-control copy-link" id="rss_feed" value="{{ ('/feeds/@' + v.username + '/' + v.feedkey + '/hot') | full_link }}" data-clipboard-text="{{ ('/feeds/@' + v.username + '/' + v.feedkey + '/hot') | full_link }}">
+              <form action="/settings/new_feedkey" method="post">
+                  <input type="hidden" name="formkey" value="{{ v.formkey }}">
+                  <input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Generate new URL">
+              </form>
+
+            <div class="text-small-extra text-muted mt-3">You can change the feed by replacing "top" with either hot, or disputed.</div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <h2 class="h5">Content Filters</h2>
+
+      <form id="profile-settings" action="/settings/profile" method="post">
 
 
             <div class="settings-section rounded">
@@ -272,7 +300,7 @@
                 <div class="body w-lg-100">
 
                   <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="hidensfl" name="show_nsfl"{% if v.hide_nsfl %} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
+                    <input type="checkbox" class="custom-control-input" id="hidensfl" name="show_nsfl"{% if v.show_nsfl %} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
                     <label class="custom-control-label" for="hidensfl"></label>
                   </div>
 

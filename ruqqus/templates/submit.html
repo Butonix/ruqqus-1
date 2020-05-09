@@ -96,18 +96,17 @@
 							<small class="form-text text-muted">To post an image, use a direct image link such as i.imgur.com</small>
 						</div>
 
-						{% if v.admin_level >=2 %}
-						<div id="image-upload-block">
+						
+						<div id="image-upload-block"{% if not v.can_submit_image %} class="d-none"{% endif %}>
 							<div><label class="mt-3">Image Upload</label></div>
 
 							<label class="btn btn-secondary m-0" for="file-upload">
 								<div id="filename-show">Select Image</div>
-								<input id="file-upload" type="file" name="file" class="" onchange="document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerHTML=document.getElementById('file-upload').files[0].name;" hidden>
+								<input id="file-upload" type="file" name="file" class="" onchange="document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerHTML=document.getElementById('file-upload').files[0].name;checkForRequired()" hidden>
 							</label>
 
-							<small class="form-text text-muted">Images uploaded will be public. Optional if you have text or a URL above.</small>
+							<small class="form-text text-muted">Images uploaded will be public. Optional if you have text.</small>
 						</div>
-						{% endif %}
 
 						<label for="body" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Uses markdown. Limited to 5000 characters."></i></label>
 
@@ -203,7 +202,7 @@
 							<li class="list-inline-item"><a href="https://github.com/ruqqus/ruqqus" class="text-gray-500">Github</a></li>
 							<li class="list-inline-item"><a href="/discord" class="text-gray-500">Discord</a></li>
 						</ul>
-						<div class="text-muted text-small-extra mt-1">v. 2.8.0, © 2020 Ruqqus, LLC</div>
+						<div class="text-muted text-small-extra mt-1">v. 2.8.1, © 2020 Ruqqus, LLC</div>
 					</div>
 
 				</div>

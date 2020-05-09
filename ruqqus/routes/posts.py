@@ -290,13 +290,13 @@ def submit_post(v):
     body=request.form.get("body","")
 
     #catch too-long body
-    if len(body)>10000:
+    if len(str(body))>10000:
 
         return render_template("submit.html",
                                v=v,
                                error="10000 character limit for text body",
                                title=title,
-                               text=body[0:10000],
+                               text=str(body)[0:10000],
                                url=url,
                                b=get_guild(request.form.get("board","general"),
                                            graceful=True
@@ -322,7 +322,12 @@ def submit_post(v):
     domain=parsed_url.netloc
 
     if url:
-      repost = db.query(Submission).filter(Submission.url.ilike(url)).filter_by(board_id=board.id).order_by(Submission.id.asc()).first()
+      repost = db.query(Submission).filter(Submission.url.ilike(url)).filter_by(board_id=board.id, is_deleted=False, is_banned=False).order_by(Submission.id.asc()).first()
+    else:
+      repost=None
+
+    if request.files.get('file') and not v.can_submit_image:
+        abort(403)
 
     new_post=Submission(title=title,
                         url=url,
@@ -336,11 +341,9 @@ def submit_post(v):
                         over_18=(bool(request.form.get("over_18","")) or board.over_18),
                         post_public=not board.is_private,
                         author_name=user_name,
-                        guild_name=board.name
+                        guild_name=board.name,
+                        repost_id=repost.id if repost else None
                         )
-
-    if repost:
-        new_post.repost_id = repost.id
 
     db.add(new_post)
 
@@ -357,6 +360,7 @@ def submit_post(v):
 
     #check for uploaded image
     if request.files.get('file'):
+
         file=request.files['file']
 
         name=f'post/{new_post.base36id}/{secrets.token_urlsafe(8)}'

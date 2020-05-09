@@ -47,7 +47,7 @@ class User(Base, Age_times, Stndrd):
     referred_by=Column(Integer, default=None)
     is_banned=Column(Integer, default=0)
     ban_reason=Column(String, default="")
-    feed_nonce=Column(Integer, default=1)
+    feed_nonce=Column(Integer, default=0)
     login_nonce=Column(Integer, default=0)
     title_id=Column(Integer, ForeignKey("titles.id"), default=None)
     title=relationship("Title", lazy="joined")
@@ -66,8 +66,6 @@ class User(Base, Age_times, Stndrd):
     read_announcement_utc=Column(Integer, default=0)
     discord_id=Column(Integer, default=None)
 
-    
-
     moderates=relationship("ModRelationship", lazy="dynamic")
     banned_from=relationship("BanRelationship", lazy="dynamic", primaryjoin="BanRelationship.user_id==User.id")
     subscriptions=relationship("Subscription", lazy="dynamic")
@@ -77,15 +75,11 @@ class User(Base, Age_times, Stndrd):
     following=relationship("Follow", lazy="dynamic", primaryjoin="Follow.user_id==User.id")
     followers=relationship("Follow", lazy="dynamic", primaryjoin="Follow.target_id==User.id")
 
-
-    
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
     comment_energy = deferred(Column(Integer, server_default=FetchedValue()))
     referral_count=deferred(Column(Integer, server_default=FetchedValue()))
     follower_count=deferred(Column(Integer, server_default=FetchedValue()))
-
-
 
     def __init__(self, **kwargs):
 
@@ -130,20 +124,19 @@ class User(Base, Age_times, Stndrd):
         if not self.show_nsfl:
             posts = posts.filter_by(is_nsfl=False)
 
+
         if guild:
             board_ids=[x.board_id for x in self.subscriptions.filter_by(is_active=True).all()]
-            posts = posts.filter(
-                or_(
-                    Submission.board_id.in_(board_ids)
-                )
-            )
-        if subscription:
+        elif subscription:
             user_ids =[x.target.id for x in self.following.all() if x.target.is_private==False]
-            posts = posts.filter(
-                or_(
-                    Submission.author_id.in_(user_ids)
-                )
             )
+
+        if guild and subscription:
+            posts=posts.filter(or_(Submission.board_id.in_(board_ids), Submission.author_id.in_(user_ids)))
+        elif guild:
+            posts=posts.filter(Submission.board_id.in_(board_ids))
+        elif subscription:
+            posts=posts.filter(Submission.author_id.in_(user_ids))
         
 
 
@@ -193,9 +186,11 @@ class User(Base, Age_times, Stndrd):
         else:
             abort(422)
 
-        posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
-
-        return posts
+        if ids_only:
+            posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
+            return posts
+        else:
+            return [x for x in posts.offset(25*(page-1)).limit(25).all()]
 
     def list_of_posts(self, ids):
 
@@ -311,7 +306,7 @@ class User(Base, Age_times, Stndrd):
         if self.is_banned and (not v or v.admin_level < 3):
             return render_template("userpage_banned.html", u=self, v=v)
 
-        if self.is_private and (not v or (v.id!=self.id and not v.admin_level<3)):
+        if self.is_private and (not v or (v.id!=self.id and v.admin_level<3)):
             return render_template("userpage_private.html", u=self, v=v)
         
         page=int(request.args.get("page","1"))
@@ -371,6 +366,14 @@ class User(Base, Age_times, Stndrd):
                                page=page,
                                next_exists=next_exists,
                                is_following=is_following)
+    @property
+    def feedkey(self):
+
+        return generate_hash(f"{self.username}{self.id}{self.feed_nonce}{self.created_utc}")
+
+
+
+
 
     def feedkey(self, new=False):
         if new:
@@ -578,6 +581,11 @@ class User(Base, Age_times, Stndrd):
 
         return now-self.last_siege_utc > 60*60*24*30
 
+    @property
+    def can_submit_image(self):
+
+        return self.karma + self.comment_karma >=500
+    
     @property
     def json(self):
 

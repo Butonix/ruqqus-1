@@ -31,8 +31,7 @@
         <img src="{{ b.profile_url }}" class="profile-pic-50 mr-2">
 
         <div>
-         <div class="text-black" style="font-size: 16px;">+{{ b.name }} {% if b.over_18 %}<span class="badge badge-danger">NSFW</span>{% endif %}</div>
-        <div class="text-black" style="font-size: 16px;">+{{ b.name }} {% if b.is_nsfl %}<span class="badge badge-danger">NSFL</span>{% endif %}</div>
+         <div class="text-black" style="font-size: 16px;">+{{ b.name }} {% if b.over_18 %}<span class="badge badge-danger">NSFW</span>{% elif b.is_nsfl %}<span class="badge badge-danger">NSFL</span>{% endif %}</div>
          {% if request.path=="/browse" %}<div class="text-small text-muted">{{ b.description|truncate(24, True) }}</div>{% endif %}
        </div>
 

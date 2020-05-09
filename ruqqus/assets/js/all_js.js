@@ -1331,11 +1331,14 @@ var text = document.getElementById("post-text");
 
 var button = document.getElementById("create_button");
 
+var image = document.getElementById("file-upload");
+
 // Toggle reuqired attribute
 
-if (url.value.length > 0) {
+if (url.value.length > 0 || image.value.length > 0) {
   text.required = false;
-} else if (text.value.length > 0) {
+  url.required=false;
+} else if (text.value.length > 0 || image.value.length > 0) {
   url.required = false;
 } else {
   text.required = true;
@@ -1352,7 +1355,7 @@ var isValidText = text.checkValidity();
 
 // Disable submit button if invalid inputs
 
-if (isValidTitle && isValidURL) {
+if (isValidTitle && (isValidURL || image.value.length>0)) {
   button.disabled = false;
 } else if (isValidTitle && isValidText) {
   button.disabled = false;

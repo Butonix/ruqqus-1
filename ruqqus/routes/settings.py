@@ -270,9 +270,13 @@ def settings_delete_profile(v):
 @validate_formkey
 def settings_new_feedkey(v):
 
-    v.feedkey(new=True)
 
-    return render_template("settings_profile.html", v=v, msg="Your new custom RSS Feed URL has been generated.")
+    v.feed_nonce+=1
+    db.add(v)
+    db.commit()
+
+    return render_template("settings_profile.html", v=v, msg="Your new custom RSS Feed Token has been generated.")
+
 
 @app.route("/settings/delete/banner", methods=["POST"])
 @auth_required
