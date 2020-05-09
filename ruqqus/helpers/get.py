@@ -81,7 +81,7 @@ def get_posts(pids, sort="hot", v=None):
 
     return posts
 
-def get_post_with_comments(pid, sort_type="hot", v=None):
+def get_post_with_comments(pid, sort_type="top", v=None):
 
     post=get_post(pid, v=v)
 
