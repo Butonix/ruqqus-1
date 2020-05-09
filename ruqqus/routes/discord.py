@@ -101,4 +101,4 @@ def discord(v):
 
 @app.route("/discord", methods=["GET"])
 def discord_server():
-	return redirect("https://discord.gg/Kkesgy6")
+	return redirect("https://discord.gg/vzEhjFb")
