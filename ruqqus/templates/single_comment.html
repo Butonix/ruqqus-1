@@ -1,6 +1,6 @@
 {% set score=c.score_fuzzed %}
 {% if v %}
-{% set voted=v.vote_status_on_comment(c) %}
+{% set voted=c.voted %}
 {% set adjust = voted %}
 {% else %}
 {% set voted=-2 %}
@@ -9,8 +9,8 @@
 
 {% if standalone %}
 <div class="post-info mt-3 mb-1">
-	{% if c.parent %}
-  <span class="align-top"><span class="font-weight-bold"><a href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span> in <a href="{{ c.board.permalink }}">+{{ c.board.name }}</a></span>
+	{% if c.parent_submission %}
+  <span class="align-top"><span class="font-weight-bold"><a href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span>
   {% else %}
   <span class="align-top font-weight-bold">Notification</span>
   {% endif %}
@@ -28,7 +28,7 @@
 
     <div id="comment-{{ c.base36id }}-only">
 
-      <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %}<a href="/@{{ c.author.username }}" class="user-name {% if c.is_op and not c.post.is_deleted %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.author.title %}<span style="color: #{{ c.author.title.color }}">{{ c.author.title.text }}</span>{% endif %}
+      <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %}<a href="/@{{ c.author.username }}" class="user-name {% if c.is_op and not c.post.is_deleted %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.title %}<span style="color: #{{ c.title.color }}">{{ c.title.text }}</span>{% endif %}
         {% if c.distinguish_level or c.is_op %}
         {% if c.distinguish_level %}
         <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>
@@ -47,11 +47,6 @@
 
       </div>
 
-      <!---{% if standalone %}
-	{% if v and v.admin_level > 3 and c.active_flags %}
-      <div class="text-small text-danger">{{ c.active_flags }} Flag{{ '' if c.active_flags==1 else 's' }}</div>
-	{% endif %}
-      {% endif %}--->
       {% if c.is_banned and c.ban_reason %}
       <div id="comment-banned-warning" class="comment-text text-danger text-small">Reason: {{ c.ban_reason }}</div>
       {% endif %}
@@ -59,7 +54,7 @@
         {{ c.body_html | safe }}
       </div>
 
-      {% if c.parent %}
+      {% if c.parent_submission %}
       {% if v and v.id==c.author_id and (standalone or is_allowed_to_comment) %}
       <div id="comment-edit-{{ c.base36id }}" class="d-none comment-write collapsed child">
        <form id="comment-edit-form-{{ c.base36id }}" action="/edit_comment/{{ c.base36id }}" method="post" class="input-group">
@@ -129,7 +124,7 @@
             </a>
 
             <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
-              <a class="dropdown-item" href="{{ c.parent.permalink }}"><i class="fas fa-dna"></i>Parent</a>
+              <a class="dropdown-item" href="{{ c.permalink }}?context=3"><i class="fas fa-dna"></i>Context</a>
               <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
 
 
@@ -163,9 +158,6 @@
 		{% if not c.is_banned %}
               <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times"></i>Remove</a>
                 {% endif %}
-                <!---{% if c.is_banned or (standalone and c.active_flags) %}
-              <a class="dropdown-item approveDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-comment-check"></i>Approve</a>
-                {% endif %}--->
               {% endif %}
 	      {% endif %}
 
@@ -236,7 +228,7 @@
           <li class="list-group-item"><a href="{{ c.permalink | full_link }}?context=1"><i class="fas fa-book-open"></i>Context</a></li>
           {% endif %}
           <li class="list-group-item"><a href="{{ c.permalink | full_link }}"><i class="fas fa-link"></i>Permalink</a></li>
-          <li class="list-group-item"><a class="d-block" href="{{ c.parent.permalink }}"><i class="fas fa-dna"></i>Parent</a></li>
+          <li class="list-group-item"><a class="d-block" href="{{ c.permalink }}?context=3"><i class="fas fa-dna"></i>Context</a></li>
           <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
 
           {% if v and not v.id==c.author_id %}

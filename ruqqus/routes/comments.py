@@ -29,9 +29,9 @@ def comment_cid(cid):
 @api
 def post_pid_comment_cid(p_id, c_id, v=None):
 
-    comment=get_comment(c_id)
+    comment=get_comment(c_id, v=v)
 
-    post=get_post(p_id)
+    post=get_post(p_id, v=v)
 
     if comment.parent_submission != post.id:
         abort(404)
@@ -82,19 +82,100 @@ def post_pid_comment_cid(p_id, c_id, v=None):
                 'api':lambda:jsonify({'error':f'+{board.name} is banned.'})
                 }
 
+    post._preloaded_comments=[comment]
 
     #context improver
-    context=int(request.args.get("context", 0))
+    context=min(int(request.args.get("context", 0)), 5)
     c=comment
     while context > 0 and not c.is_top_level:
 
         parent=c.parent
-        parent.__dict__["replies"]=[c]
+        post._preloaded_comments+=[parent]
 
         c=parent
         context -=1
+    top_comment=c
+
+    sort_type=request.args.get("sort", "hot")
+    #children comments
+    current_ids=[comment.id]
+    for i in range(6-context):
+        if g.v:
+            votes=db.query(CommentVote).filter(CommentVote.user_id==g.v.id).subquery()
+
+            comms=db.query(
+                Comment,
+                User,
+                Title,
+                votes.c.vote_type
+                ).filter(
+                Comment.parent_comment_id.in_(current_ids)
+                ).join(Comment.author).join(
+                User.title
+                ).join(
+                votes,
+                votes.c.comment_id==Comment.id,
+                isouter=True
+                )
+
+            if sort_type=="hot":
+                comments=comms.order_by(Comment.score_hot.asc()).all()
+            elif sort_type=="top":
+                comments=comms.order_by(Comment.score_top.asc()).all()
+            elif sort_type=="new":
+                comments=comms.order_by(Comment.created_utc.desc()).all()
+            elif sort_type=="disputed":
+                comments=comms.order_by(Comment.score_disputed.asc()).all()
+            elif sort_type=="random":
+                c=comms.all()
+                comments=random.sample(c, k=len(c))
+            else:
+                abort(422)
+
+
+            output=[]
+            for c in comms:
+                com=c[0]
+                com._title=c[2]
+                com._voted=c[3] if c[3] else 0
+                output.append(com)
+        else:
+            comms=db.query(
+                Comment,
+                User,
+                Title
+                ).filter(
+                Comment.parent_comment_id.in_(current_ids)
+                ).join(Comment.author).join(
+                User.title
+                )
+
+            if sort_type=="hot":
+                comments=comms.order_by(Comment.score_hot.asc()).all()
+            elif sort_type=="top":
+                comments=comms.order_by(Comment.score_top.asc()).all()
+            elif sort_type=="new":
+                comments=comms.order_by(Comment.created_utc.desc()).all()
+            elif sort_type=="disputed":
+                comments=comms.order_by(Comment.score_disputed.asc()).all()
+            elif sort_type=="random":
+                c=comms.all()
+                comments=random.sample(c, k=len(c))
+            else:
+                abort(422)
+
+            output=[]
+            for c in comms:
+                com=c[0]
+                com._title=c[2]
+                output.append(com)
+
+        post._preloaded_comments+=output
+
+        current_ids=[x.id for x in output]
+
         
-    return {'html':lambda:post.rendered_page(v=v, comment=c, comment_info=comment),
+    return {'html':lambda:post.rendered_page(v=g.v, comment=top_comment, comment_info=comment),
             'api':lambda:jsonify(c.json)
             }
 
@@ -273,9 +354,6 @@ def delete_comment(cid, v):
 
     if not c:
         abort(404)
-
-    print(c.author_id)
-    print(v.id)
 
     if not c.author_id==v.id:
         abort(403)

@@ -96,47 +96,15 @@ def u_username(username, v=None):
     page=int(request.args.get("page","1"))
     page=max(page, 1)
 
-    submissions=u.submissions
+    ids=u.userpagelisting(v=v, page=page)
 
-    if not (v and v.over_18):
-        submissions=submissions.filter_by(over_18=False)
-
-    if v and v.hide_offensive:
-        submissions=submissions.filter_by(is_offensive=False)
-
-    if not (v and (v.admin_level >=3)):
-        submissions=submissions.filter_by(is_deleted=False)
-
-    if not (v and (v.admin_level >=3 or v.id==u.id)):
-        submissions=submissions.filter_by(is_banned=False)
-
-    if v and v.admin_level >=4:
-        pass
-    elif v:
-        m=v.moderates.filter_by(invite_rescinded=False).subquery()
-        c=v.contributes.subquery()
-        
-        submissions=submissions.join(m,
-                                     m.c.board_id==Submission.board_id,
-                                     isouter=True
-                                ).join(c,
-                                       c.c.board_id==Submission.board_id,
-                                       isouter=True
-                                )
-        submissions=submissions.filter(or_(Submission.author_id==v.id,
-                               Submission.is_public==True,
-                           m.c.board_id != None,
-                           c.c.board_id !=None))
-    else:
-        submissions=submissions.filter_by(is_public=True)
-
-            
-
-    listing = [x for x in submissions.order_by(Submission.created_utc.desc()).offset(25*(page-1)).limit(26)]
+    
     
     #we got 26 items just to see if a next page exists
-    next_exists=(len(listing)==26)
-    listing=listing[0:25]
+    next_exists=(len(ids)==26)
+    ids=ids[0:25]
+
+    listing=get_posts(ids, v=v, sort="new")
 
     return {'html': lambda:render_template("userpage.html",
                            u=u,
@@ -156,17 +124,42 @@ def u_username_comments(username, v=None):
     
     #case insensitive search
 
-    result = db.query(User).filter(User.username.ilike(username)).first()
-
-    if not result:
-        abort(404)
+    user=get_user(username)
 
     #check for wrong cases
 
-    if username != result.username:
-        return redirect(result.url)
+    if username != user.username:
+        return redirect(f'{user.url}/comments')
         
-    return result.rendered_comments_page(v=v)
+    if user.reserved:
+        return render_template("userpage_reserved.html", u=user, v=v)
+
+    if user.is_suspended and (not v or v.admin_level < 3):
+        return render_template("userpage_banned.html", u=user, v=v)
+
+    if user.is_private and (not v or (v.id!=user.id and v.admin_level<3)):
+        return render_template("userpage_private.html", u=user, v=v)
+    
+    page=int(request.args.get("page","1"))
+
+    ids=user.commentlisting(v=v, page=page)
+
+
+    #we got 26 items just to see if a next page exists
+    next_exists=(len(ids)==26)
+    ids=ids[0:25]
+
+    listing=get_comments(ids, v=v)
+
+    is_following=(v and user.has_follower(v))
+    
+    return render_template("userpage_comments.html",
+                           u=user,
+                           v=v,
+                           listing=listing,
+                           page=page,
+                           next_exists=next_exists,
+                           is_following=is_following)
 
 @app.route("/api/follow/<username>", methods=["POST"])
 @auth_required
