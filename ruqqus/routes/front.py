@@ -26,7 +26,7 @@ def notifications(v):
     next_exists=(len(cids)==26)
     cids=cids[0:25]
 
-    comments=get_comments(cids, v=v)
+    comments=get_comments(cids, v=v, sort_type="new")
 
     return render_template("notifications.html",
                            v=v,
