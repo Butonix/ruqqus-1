@@ -227,7 +227,7 @@
 {% endif %}
 <p>user id: {{ u.base36id }}</p>
 {% if v.admin_level >=3 and v.admin_level > u.admin_level %}
-{% if u.is_banned %}
+{% if u.is_suspended %}
 <form action="/api/unban_user/{{ u.id }}" method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input type="submit" class="btn btn-success" value="Unban user">
@@ -236,11 +236,12 @@
 <form action="/api/ban_user/{{ u.id }}", method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input id="user-ban-reason" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit').disabled=false">
+  <input id="user-ban-days" type="number" class="form-control" name="days" placeholder="Days (blank = permanent)">
   <input id="user-ban-submit" type="submit" class="btn btn-warning" value="Ban user" disabled>
 </form>
 {% endif %}
 {% endif %}
-{% if u.is_banned %}
+{% if u.is_suspended %}
 <p>Banned by: <a href="{{ u.banned_by.permalink}}">@{{ u.banned_by.username }}</a></p>
 <p>Reason: {{ u.ban_reason }}</p>
 {% endif %}

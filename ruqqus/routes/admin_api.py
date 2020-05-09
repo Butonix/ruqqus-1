@@ -20,17 +20,29 @@ def ban_user(user_id, v):
 
     user=db.query(User).filter_by(id=user_id).first()
 
+    # check for number of days for suspension
+    days = int(request.form.get("days", 0))
+    reason = request.form.get("reason", "")
+
     if not user:
         abort(400)
 
-    if reason:
-        text=f"Your Ruqqus account has been permanently suspended for the following reason:\n\n{reason}"
+    if days > 0:
+        if reason:
+            text = f"Your Ruqqus account has been suspended for {days} days. \n reason:\n\n{reason}"
+        else:
+            text = f"Your Ruqqus account has been suspended for {days} days due to a Terms of Service violation."
+        user.ban(admin=v, days=days)
+
     else:
-        text="Your Ruqqus account has been permanently suspended due to a Terms of Service violation."
+        if reason:
+            text = f"Your Ruqqus account has been permanently suspended for the following reason:\n\n{reason}"
+        else:
+            text = "Your Ruqqus account has been permanently suspended due to a Terms of Service violation."
 
-    send_notification(self, text)
+        user.ban(admin=v)
 
-    user.ban(admin=v)
+    send_notification(user, text)
     
     db.commit()
     
@@ -46,13 +58,13 @@ def unban_user(user_id, v):
     if not user:
         abort(400)
 
-    user.unban()
+    alts = request.form.get("alts", False)
+    user.unban(include_alts=alts)
 
 
-    send_notification(self,
+    send_notification(user,
         "Your Ruqqus account has been reinstated. Please carefully review and abide by the [terms of service](/help/terms) and [content policy](/help/rules) to ensure that you don't get suspended again.")
 
-    
     return (redirect(user.url), user)
 
 @app.route("/api/ban_post/<post_id>", methods=["POST"])

@@ -46,6 +46,7 @@ class User(Base, Stndrd):
     notifications=relationship("Notification", lazy="dynamic", backref="user")
     referred_by=Column(Integer, default=None)
     is_banned=Column(Integer, default=0)
+    unban_utc=Column(Integer, default=0)
     ban_reason=Column(String, default="")
     feed_nonce=Column(Integer, default=0)
     login_nonce=Column(Integer, default=0)
@@ -65,6 +66,7 @@ class User(Base, Stndrd):
     is_private=Column(Boolean, default=False)
     read_announcement_utc=Column(Integer, default=0)
     discord_id=Column(Integer, default=None)
+    unban_utc=Column(Integer, default=0)
 
     
 
@@ -306,7 +308,7 @@ class User(Base, Stndrd):
         if self.reserved:
             return render_template("userpage_reserved.html", u=self, v=v)
 
-        if self.is_banned and (not v or v.admin_level < 3):
+        if self.is_suspended and (not v or v.admin_level < 3):
             return render_template("userpage_banned.html", u=self, v=v)
 
         if self.is_private and (not v or (v.id!=self.id and v.admin_level<3)):
@@ -620,25 +622,49 @@ class User(Base, Stndrd):
         #return self.referral_count or self.has_earned_darkmode or self.has_badge(16) or self.has_badge(17)
 
 
-    def ban(self, admin, include_alts=True):
+    def ban(self, admin, include_alts=True, days=0):
 
-        #Takes care of all functions needed for account termination
+        if days > 0:
+            ban_time = int(time.time()) + (days * 86400)
+            self.unban_utc = ban_time
 
-        self.del_banner()
-        self.del_profile()
+        else:
+            #Takes care of all functions needed for account termination
+            self.unban_utc=0
+            self.del_banner()
+            self.del_profile()
+
         self.is_banned=admin.id
+
         db.add(self)
         db.commit()
 
         if include_alts:
             for alt in self.alts:
+
+                # suspend alts
+                if days > 0:
+                    alt.ban(admin=admin, include_alts=False, days=days)
+
+                # ban alts
                 alt.ban(admin=admin, include_alts=False)
 
-    def unban(self):
+    def unban(self, include_alts=False):
 
         #Takes care of all functions needed for account reinstatement.
 
         self.is_banned=0
+        self.unban_utc=0
 
         db.add(self)
         db.commit()
+
+        if include_alts:
+            for alt in self.alts:
+                # ban alts
+                alt.unban()
+
+    @property
+    def is_suspended(self):
+        return  (self.is_banned and (self.unban_utc == 0 or self.unban_utc > time.time()))
+
