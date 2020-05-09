@@ -22,6 +22,9 @@ class Vote(Base):
             kwargs["created_utc"]=int(time())
 
         super().__init__(*args, **kwargs)
+
+    def __repr__(self):
+        return f"<Vote(id={self.id})>"
             
 
     def change_to(self, x):
@@ -58,6 +61,9 @@ class CommentVote(Base):
             kwargs["created_utc"]=int(time())
 
         super().__init__(*args, **kwargs)
+
+    def __repr__(self):
+        return f"<CommentVote(id={self.id})>"
             
 
     def change_to(self, x):

@@ -3,6 +3,7 @@ from flask import *
 from sqlalchemy import *
 
 from ruqqus.helpers.wrappers import *
+from ruqqus.helpers.get import *
 
 from ruqqus.__main__ import app, db, cache
 from ruqqus.classes.submission import Submission
@@ -12,19 +13,26 @@ from ruqqus.classes.submission import Submission
 def slash_post():
     return redirect("/")
 
+@app.route("/notifications", methods=["GET"])
+@auth_required
+def notifications(v):
 
-@cache.memoize(timeout=3600)
-def trending_boards(n=5):
+    page=int(request.args.get('page',1))
+    all_=request.args.get('all', False)
 
-    now=int(time.time())
-    cutoff=now-60*60*24
+    cids=v.notification_commentlisting(page=page,
+        all_=all_
+        )
+    next_exists=(len(cids)==26)
+    cids=cids[0:25]
 
-    boards=db.query(Board).filter_by(is_banned=False,
-                                     over_18=False,
-                                     is_private=False).filter(
-                                     Board.created_utc<cutoff).order_by(Board.trending_rank.desc()).limit(n)
+    comments=get_comments(cids, v=v)
 
-    return [(x, x.subscriber_count) for x in boards]
+    return render_template("notifications.html",
+                           v=v,
+                           notifications=comments,
+                           next_exists=next_exists,
+                           page=page)
 
 @cache.memoize(timeout=300)
 def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=False, ids_only=True):
@@ -116,14 +124,19 @@ def home(v):
                      hide_offensive = v.hide_offensive
                      )
 
-        posts, next_exists = v.list_of_posts(ids)
-        
+        next_exists=(len(ids)==26)
+        ids=ids[0:25]
+
         #If page 1, check for sticky
         if page==1:
             sticky =[]
-            sticky=db.query(Submission).filter_by(stickied=True).first()
+            sticky=db.query(Submission.id).filter_by(stickied=True).first()
             if sticky:
-                posts=[sticky]+posts
+                ids=[sticky]+ids
+
+        posts=get_posts(ids, sort=sort, v=v)
+        
+
 
         return {'html':lambda:render_template("subscriptions.html",
                                v=v,
@@ -166,15 +179,14 @@ def front_all(v):
     next_exists=(len(ids)==26)
     ids=ids[0:25]
 
-    #check if ids exist
-    posts=[db.query(Submission).filter_by(id=x).first() for x in ids]        
-
-    #If page 1, check for sticky
+   #If page 1, check for sticky
     if page==1:
         sticky =[]
-        sticky=db.query(Submission).filter_by(stickied=True).first()
+        sticky=db.query(Submission.id).filter_by(stickied=True).first()
         if sticky:
-            posts=[sticky]+posts
+            ids=[sticky]+ids
+    #check if ids exist
+    posts=get_posts(ids, sort=sort_method, v=v)
     
     return {'html':lambda:render_template("home.html",
                            v=v,
@@ -182,8 +194,8 @@ def front_all(v):
                            next_exists=next_exists,
                            sort_method=sort_method,
                            time_filter=t,
-                           page=page,
-                           trending_boards = trending_boards(n=5)
+                           page=page #,
+                        #   trending_boards = trending_boards(n=5)
                            ),
             'inpage':lambda:render_template("submission_listing.html",
                                             v=v,
