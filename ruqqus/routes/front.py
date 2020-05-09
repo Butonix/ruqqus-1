@@ -181,7 +181,7 @@ def front_all(v):
                            listing=posts,
                            next_exists=next_exists,
                            sort_method=sort_method,
-                           time_filter=t
+                           time_filter=t,
                            page=page,
                            trending_boards = trending_boards(n=5)
                            ),
