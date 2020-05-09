@@ -217,7 +217,25 @@
   </div>
   <div class="ml-auto">
     <div class="d-flex align-items-center">
-      <div class="text-small font-weight-bold mr-2">Sort by</div>
+      <div class="text-small font-weight-bold mr-2">Filter by</div>
+      <div class="dropdown dropdown-actions">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {% if time_filter=="day" %}<i class="fas fa-calendar-day mr-1"></i>{% endif %}
+          {% if time_filter=="week" %}<i class="fas fa-calendar-week mr-1"></i>{% endif %}
+          {% if time_filter=="month" %}<i class="fas fa-calendar-alt mr-1"></i>{% endif %}
+          {% if time_filter=="year" %}<i class="fas fa-calendar mr-1"></i>{% endif %}
+          {% if time_filter=="all" %}<i class="fas fa-infinity mr-1"></i>{% endif %}
+          {{ time_filter | capitalize }}
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+          {% if not time_filter=="day" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=day"><i class="fas fa-calendar-day mr-2"></i>Day</a>{% endif %}
+          {% if not time_filter=="week" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
+          {% if not time_filter=="month" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
+          {% if not time_filter=="year" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
+          {% if not time_filter=="all" %}<a class="dropdown-item" href="?sort={{ sort_method }}"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
+        </div>
+      </div>
+      <div class="text-small font-weight-bold ml-3 mr-2">Sort by</div>
       <div class="dropdown dropdown-actions">
         <button class="btn btn-secondary dropdown-toggle mr-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {% if sort_method=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
