@@ -22,9 +22,7 @@ def auth_desired(f):
 
         else:
             v=None
-        
-        g.v=v
-
+            
         resp=make_response( f(*args, v=v, **kwargs))
         if v:
             resp.headers.add("Cache-Control", "private")
@@ -50,8 +48,6 @@ def auth_required(f):
 
         else:
             abort(401)
-
-        g.v=v
 
         resp = make_response( f(*args, v=v, **kwargs))
         resp.headers.add("Cache-Control","private")
@@ -80,8 +76,6 @@ def is_not_banned(f):
             
         else:
             abort(401)
-
-        g.v=v
 
         resp=make_response(f(*args, v=v, **kwargs))
         resp.headers.add("Cache-Control","private")
@@ -163,8 +157,6 @@ def admin_level_required(x):
             else:
                 abort(401)
 
-            g.v=v
-            
             response= f(*args, v=v, **kwargs)
 
             if isinstance(response, tuple):

@@ -12,12 +12,11 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.lazy import lazy
 import ruqqus.helpers.aws as aws
 from ruqqus.__main__ import Base, db, cache
-from .votes import Vote, CommentVote
+from .votes import Vote
 from .domains import Domain
 from .flags import Flag
 from .badwords import *
 from .comment import Comment
-from .titles import Title
 
 class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
  
@@ -35,7 +34,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     distinguish_level=Column(Integer, default=0)
     created_str=Column(String(255), default=None)
     stickied=Column(Boolean, default=False)
-    _comments=relationship("Comment", lazy="dynamic", primaryjoin="Comment.parent_submission==Submission.id", backref="submissions")
+    comments=relationship("Comment", lazy="dynamic", primaryjoin="Comment.parent_submission==Submission.id", backref="submissions")
     body=Column(String(10000), default="")
     body_html=Column(String(20000), default="")
     embed_url=Column(String(256), default="")
@@ -154,6 +153,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
         private=not self.is_public and not self.board.can_view(v)
 
+        
         if private and not self.author_id==v.id:
             abort(403)
         elif private:
@@ -162,7 +162,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             #load and tree comments
             #calling this function with a comment object will do a comment permalink thing
             self.tree_comments(comment=comment)
-
         
         #return template
         return render_template(template,
@@ -188,26 +187,57 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 
 
-    def tree_comments(self, comment=None, v=None):
+    def tree_comments(self, comment=None):
 
-                
+        def tree_replies(thing, layer=1):
+
+            thing.__dict__["replies"]=[]
+            i=len(comments)-1
         
-        comments=self._preloaded_comments
+            while i>=0:
+                if comments[i].parent_fullname==thing.fullname:
+                    thing.__dict__["replies"].append(comments[i])
+                    comments[i].__dict__["parent"]=thing
+                    #print(" "*layer+"-"+comments[i].base36id)
+                    comments.pop(i)
 
-        index={}
-        for c in comments:
-            if c.parent_fullname in index:
-                index[c.parent_fullname].append(c)
-            else:
-                index[c.parent_fullname]=[c]
-
-        for c in comments:
-            c.__dict__["replies"]=index.get(c.fullname, [])
-
+                i-=1
+                
+            if layer <=8:
+                for reply in thing.replies:
+                    tree_replies(reply, layer=layer+1)
+                
+        ######
+                
         if comment:
-            self.__dict__["replies"]=[comment]
+            self.replies=[comment]
+            return
+
+
+
+        #get sort type
+        sort_type = request.args.get("sort","hot")
+
+
+        #Treeing is done from the end because reasons, so these sort orders are reversed
+        if sort_type=="hot":
+            comments=self.comments.order_by(Comment.score_hot.asc()).all()
+        elif sort_type=="top":
+            comments=self.comments.order_by(Comment.score_top.asc()).all()
+        elif sort_type=="new":
+            comments=self.comments.order_by(Comment.created_utc.desc()).all()
+        elif sort_type=="disputed":
+            comments=self.comments.order_by(Comment.score_disputed.asc()).all()
+        elif sort_type=="random":
+            c=self.comments.all()
+            comments=random.sample(c, k=len(c))
         else:
-            self.__dict__["replies"]=index.get(self.fullname, [])
+            abort(422)
+
+
+        #print(f'treeing {len(comments)} comments')
+        tree_replies(self)
+
         
 
 
@@ -283,7 +313,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                     'permalink':self.permalink,
                     'guild_name':self.guild_name
                     }
-        data= {'author':self.author_name,
+        return {'author':self.author_name,
                 'permalink':self.permalink,
                 'is_banned':False,
                 'is_deleted':False,
@@ -305,12 +335,3 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'embed_url':self.embed_url,
                 'is_archived':self.is_archived
                 }
-
-        if "_voted" in self.__dict__:
-            data["voted"]=self._voted
-
-        return data
-
-    @property
-    def voted(self):
-        return self._voted if "_voted" in self.__dict__ else 0

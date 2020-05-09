@@ -197,92 +197,41 @@ class User(Base, Stndrd):
         else:
             return [x for x in posts.offset(25*(page-1)).limit(25).all()]
 
-    @cache.memoize(300)
-    def userpagelisting(self, v=None, page=1):
+    def list_of_posts(self, ids):
 
-        submissions=self.submissions
+        next_exists=(len(ids)==26)
+        ids=ids[0:25]
 
-        if not (v and v.over_18):
-            submissions=submissions.filter_by(over_18=False)
+        if ids:
 
-        if v and v.hide_offensive:
-            submissions=submissions.filter_by(is_offensive=False)
-
-        if not (v and (v.admin_level >=3)):
-            submissions=submissions.filter_by(is_deleted=False)
-
-        if not (v and (v.admin_level >=3 or v.id==self.id)):
-            submissions=submissions.filter_by(is_banned=False)
-
-        if v and v.admin_level >=4:
-            pass
-        elif v:
-            m=v.moderates.filter_by(invite_rescinded=False).subquery()
-            c=v.contributes.subquery()
+##            #assemble list of tuples
+##            i=1
+##            tups=[]
+##            for x in ids:
+##                tups.append((x,i))
+##                i+=1
+##
+##            tups=str(tups).lstrip("[").rstrip("]")
+##
+##            #hit db for entries
+##            posts=db.query(Submission
+##                           ).from_statement(
+##                               text(
+##                               f"""
+##                                select submissions.*
+##                                from submissions
+##                                join (values {tups}) as x(id, n) on submissions.id=x.id
+##                                where x.n is not null
+##                                order by x.n"""
+##                               )).all()
+            posts=[]
+            for x in ids:
+                posts.append(db.query(Submission).filter_by(id=x).first())
             
-            submissions=submissions.join(m,
-                                         m.c.board_id==Submission.board_id,
-                                         isouter=True
-                                    ).join(c,
-                                           c.c.board_id==Submission.board_id,
-                                           isouter=True
-                                    )
-            submissions=submissions.filter(or_(Submission.author_id==v.id,
-                                   Submission.is_public==True,
-                               m.c.board_id != None,
-                               c.c.board_id !=None))
         else:
-            submissions=submissions.filter_by(is_public=True)
+            posts=[]
 
-        listing = [x for x in submissions.order_by(Submission.created_utc.desc()).offset(25*(page-1)).limit(26)]
-
-        return [i.id for i in listing]
-
-    @cache.memoize(300)
-    def commentlisting(self, v=None, page=1):
-        comments=self.comments.filter(Comment.parent_submission is not None)
-
-        if not (v and v.over_18):
-            comments=comments.filter_by(over_18=False)
-
-        if v and v.hide_offensive:
-            comments=comments.filter_by(is_offensive=False)
-
-        if v and not v.show_nsfl:
-            comments=comments.filter_by(is_nsfl=False)
-
-        if not (v and (v.admin_level >=3)):
-            comments=comments.filter_by(is_deleted=False)
-            
-        if not (v and (v.admin_level >=3 or v.id==self.id)):
-            comments=comments.filter_by(is_banned=False)
-
-        if v and v.admin_level >= 4:
-            pass
-        elif v:
-            m=v.moderates.filter_by(invite_rescinded=False).subquery()
-            c=v.contributes.subquery()
-            
-            comments=comments.join(m,
-                                   m.c.board_id==Comment.board_id,
-                                   isouter=True
-                         ).join(c,
-                                c.c.board_id==Comment.board_id,
-                                isouter=True
-                                )
-            comments=comments.filter(or_(Comment.author_id==v.id,
-                                   Comment.is_public==True,
-                               m.c.board_id != None,
-                               c.c.board_id !=None))
-        else:
-            comments=comments.filter_by(is_public=True)
-
-        comments=comments.order_by(Comment.created_utc.desc())
-        comments=comments.offset(25*(page-1)).limit(26)
-        
-
-        listing=[c.id for c in comments]
-        return listing
+        return posts, next_exists
 
     @property
     def mods_anything(self):
@@ -333,12 +282,20 @@ class User(Base, Stndrd):
     
     def vote_status_on_post(self, post):
 
-        return post.voted
+        vote = self.votes.filter_by(submission_id=post.id).first()
+        if not vote:
+            return 0
+        
+        return vote.vote_type
 
 
     def vote_status_on_comment(self, comment):
 
-        return comment.voted
+        vote = self.commentvotes.filter_by(comment_id=comment.id).first()
+        if not vote:
+            return 0
+        
+        return vote.vote_type
     
 
     def hash_password(self, password):
@@ -347,6 +304,73 @@ class User(Base, Stndrd):
     def verifyPass(self, password):
         return check_password_hash(self.passhash, password)
 
+    def rendered_comments_page(self, v=None):
+        if self.reserved:
+            return render_template("userpage_reserved.html", u=self, v=v)
+
+        if self.is_suspended and (not v or v.admin_level < 3):
+            return render_template("userpage_banned.html", u=self, v=v)
+
+        if self.is_private and (not v or (v.id!=self.id and v.admin_level<3)):
+            return render_template("userpage_private.html", u=self, v=v)
+        
+        page=int(request.args.get("page","1"))
+
+        comments=self.comments.filter(Comment.parent_submission is not None)
+
+        if not (v and v.over_18):
+            comments=comments.filter_by(over_18=False)
+
+        if v and v.hide_offensive:
+            comments=comments.filter_by(is_offensive=False)
+
+        if v and not v.show_nsfl:
+            comments=comments.filter_by(is_nsfl=False)
+
+        if not (v and (v.admin_level >=3)):
+            comments=comments.filter_by(is_deleted=False)
+            
+        if not (v and (v.admin_level >=3 or v.id==self.id)):
+            comments=comments.filter_by(is_banned=False)
+
+        if v and v.admin_level >= 4:
+            pass
+        elif v:
+            m=v.moderates.filter_by(invite_rescinded=False).subquery()
+            c=v.contributes.subquery()
+            
+            comments=comments.join(m,
+                                   m.c.board_id==Comment.board_id,
+                                   isouter=True
+                         ).join(c,
+                                c.c.board_id==Comment.board_id,
+                                isouter=True
+                                )
+            comments=comments.filter(or_(Comment.author_id==v.id,
+                                   Comment.is_public==True,
+                               m.c.board_id != None,
+                               c.c.board_id !=None))
+        else:
+            comments=comments.filter_by(is_public=True)
+
+        comments=comments.order_by(Comment.created_utc.desc())
+        comments=comments.offset(25*(page-1)).limit(26)
+        
+
+        listing=[c for c in comments]
+        #we got 26 items just to see if a next page exists
+        next_exists=(len(listing)==26)
+        listing=listing[0:25]
+
+        is_following=(v and self.has_follower(v))
+        
+        return render_template("userpage_comments.html",
+                               u=self,
+                               v=v,
+                               listing=listing,
+                               page=page,
+                               next_exists=next_exists,
+                               is_following=is_following)
     @property
     def feedkey(self):
 
@@ -387,19 +411,33 @@ class User(Base, Stndrd):
     def __repr__(self):
         return f"<User(username={self.username})>"
 
+    def notifications_page(self, page=1, include_read=False):
 
-    def notification_commentlisting(self, page=1, all_=False):
+        page=int(page)
 
         notifications=self.notifications.filter_by(is_banned=False, is_deleted=False)
 
-        if not all_:
+        if not include_read:
             notifications=notifications.filter_by(read=False)
 
         notifications = notifications.order_by(Notification.id.desc()).offset(25*(page-1)).limit(26)
 
-        return [x.comment_id for x in notifications]
+        comments=[n.comment for n in notifications]
+        next_exists=(len(comments)==26)
+        comments=comments[0:25]
 
+        for n in [x for x in notifications][0:25]:
+            #print(f"{n.id} - {n.comment.id}")
+            if not n.read:
+                n.read=True
+                db.add(n)
+                db.commit()
 
+        return render_template("notifications.html",
+                               v=self,
+                               notifications=comments,
+                               next_exists=next_exists,
+                               page=page)
     
     @property
     def notifications_count(self):

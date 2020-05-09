@@ -2,7 +2,6 @@ from flask import *
 import time
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
-from sqlalchemy.ext.associationproxy import association_proxy
 from random import randint
 import math
 from .mix_ins import *
@@ -48,7 +47,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     post=relationship("Submission", lazy="joined")
     flags=relationship("CommentFlag", lazy="joined", backref="comment")
     author=relationship("User", lazy="joined", innerjoin=True, primaryjoin="User.id==Comment.author_id")
-    board=association_proxy("post", "boards")
 
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
@@ -94,6 +92,16 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     def is_archived(self):
         return self.post.is_archived
     
+
+    @property
+    @lazy
+    def board(self):
+
+        if self.post:
+            return self.post.board
+        else:
+            return None
+    
     @property
     @lazy
     def parent(self):
@@ -117,7 +125,10 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def replies(self):
 
-        return self.__dict__.get("replies", db.query(Comment).filter_by(parent_fullname=self.fullname).all())
+        if "replies" in self.__dict__:
+            return self.__dict__["replies"]
+        else:
+            return db.query(Comment).filter_by(parent_fullname=self.fullname).all()
 
     @property
     @lazy
@@ -163,7 +174,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             else:
                 return ""
 
-        
         return render_template("single_comment.html",
                                v=v,
                                c=self,
@@ -231,31 +241,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'is_archived':self.is_archived
                 }
             
-    @property
-    def voted(self):
         
-        x=self.__dict__.get("_voted")
-        if x != None:
-            return x
-
-        if g.v:
-            x=db.query(CommentVote).filter_by(
-                comment_id=self.id,
-                user_id=g.v.id
-                ).first()
-
-            if x:
-                x=x.vote_type
-            else:
-                x=0
-        else:
-            x=0
-        return x
-
-    @property
-    def title(self):
-        return self.__dict__.get("_title", self.author.title)
-    
         
 class Notification(Base):
 
@@ -278,6 +264,5 @@ class Notification(Base):
         return f"<Notification(id={self.id})"
 
     @property
-    def voted(self):
-        return 0
-    
+    def board(self):
+        return self.post.board
