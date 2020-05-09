@@ -443,7 +443,7 @@ def mod_accept_board(bid, v):
     if not x:
         abort(404)
 
-    if not user.can_join_gms:
+    if not v.can_join_gms:
         return jsonify({"error":f"You already lead enough guilds."}), 409
 
     x.accepted=True
