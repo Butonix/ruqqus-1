@@ -42,19 +42,6 @@ def get_posts(pids, sort="hot", v=None):
 
         posts= db.query(Submission, vt.c.vote_type).filter(Submission.id.in_(pids)).join(vt, isouter=True)
 
-        if sort=="hot":
-            posts=posts.order_by(Submission.score_hot.desc())
-        elif sort=="new":
-            posts=posts.order_by(Submission.created_utc.desc())
-        elif sort=="disputed":
-            posts=posts.order_by(Submission.score_disputed.desc())
-        elif sort=="top":
-            posts=posts.order_by(Submission.score_top.desc())
-        elif sort=="activity":
-            posts=posts.order_by(Submission.score_activity.desc())
-        else:
-            abort(422)
-
         items=[i for i in posts.all()]
         print(items)
         
@@ -64,24 +51,15 @@ def get_posts(pids, sort="hot", v=None):
             posts[i]._voted = vote
 
 
+
+
     else:
         posts=db.query(Submission).filter(Submission.id.in_(pids))
 
-        if sort=="hot":
-            posts=posts.order_by(Submission.score_hot.desc())
-        elif sort=="new":
-            posts=posts.order_by(Submission.created_utc.desc())
-        elif sort=="disputed":
-            posts=posts.order_by(Submission.score_disputed.desc())
-        elif sort=="top":
-            posts=posts.order_by(Submission.score_top.desc())
-        elif sort=="activity":
-            posts=posts.order_by(Submission.score_activity.desc())
-        else:
-            abort(422)
 
         posts=[i for i in posts.all()]
 
+    posts=sorted(posts, key= lambda x: pids.index(x.id))
     print(posts)
     return posts
 
