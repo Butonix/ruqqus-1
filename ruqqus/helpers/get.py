@@ -34,6 +34,8 @@ def get_post(pid, v=None):
 
 def get_posts(pids, sort="hot", v=None):
 
+    print(pids)
+
     if v:
         vt=db.query(Vote).filter(Vote.user_id==v.id, Vote.submission_id.in_(pids)).subquery()
 
@@ -54,6 +56,7 @@ def get_posts(pids, sort="hot", v=None):
             abort(422)
 
         items=[i for i in posts.all()]
+        print(items)
         
         posts=[n[0] for n in items]
         for i in range(len(posts)):
