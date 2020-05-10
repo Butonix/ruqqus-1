@@ -397,7 +397,15 @@ class User(Base, Stndrd):
 
         notifications = notifications.order_by(Notification.id.desc()).offset(25*(page-1)).limit(26)
 
-        return [x.comment_id for x in notifications]
+        output=[]
+        for x in notifications:
+            x.read=True
+            db.add(x)
+            output.append(x.comment_id)
+
+        db.commit()
+
+        return output
 
 
     
