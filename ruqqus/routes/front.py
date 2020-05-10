@@ -135,6 +135,8 @@ def home(v):
             if sticky:
                 ids=[sticky]+ids
 
+        print(ids)
+
         posts=get_posts(ids, sort=sort, v=v)
         
 
