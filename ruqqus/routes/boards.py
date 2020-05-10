@@ -174,9 +174,10 @@ def board_name(name, v):
     ids=ids[0:25]
 
     if page==1:
-        stickies=db.query(Submission.id).filter_by(is_banned=False,
-                                  is_deleted=False,
-                                  is_pinned=True).order_by(Submission.id.asc()
+        stickies=db.query(Submission.id).filter_by(board_id=board.id,
+                                    is_banned=False,
+                                    is_deleted=False,
+                                    is_pinned=True).order_by(Submission.id.asc()
                                                            ).limit(4)
         stickies=[x[0] for x in stickies]
         ids=stickies+ids
