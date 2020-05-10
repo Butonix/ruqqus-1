@@ -129,13 +129,11 @@ def home(v):
 
         #If page 1, check for sticky
         if page==1:
-            sticky =[]
             sticky=db.query(Submission.id).filter_by(stickied=True).first()[0]
             print(sticky)
             if sticky:
                 ids=[sticky]+ids
 
-        print(ids)
 
         posts=get_posts(ids, sort=sort, v=v)
         
@@ -185,7 +183,7 @@ def front_all(v):
    #If page 1, check for sticky
     if page==1:
         sticky =[]
-        sticky=db.query(Submission.id).filter_by(stickied=True).first()
+        sticky=db.query(Submission.id).filter_by(stickied=True).first()[0]
         if sticky:
             ids=[sticky]+ids
     #check if ids exist
