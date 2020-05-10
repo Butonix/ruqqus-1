@@ -79,6 +79,7 @@ def get_posts(pids, sort="hot", v=None):
 
         posts=[i for i in posts.all()]
 
+    print(posts)
     return posts
 
 def get_post_with_comments(pid, sort_type="top", v=None):
