@@ -174,11 +174,11 @@ def board_name(name, v):
     ids=ids[0:25]
 
     if page==1:
-        stickies=board.submissions.filter_by(is_banned=False,
+        stickies=db.query(Submission.id).filter_by(is_banned=False,
                                   is_deleted=False,
                                   is_pinned=True).order_by(Submission.id.asc()
                                                            ).limit(4)
-        stickies=[x.id for x in stickies]
+        stickies=[x[0] for x in stickies]
         ids=stickies+ids
 
     posts=get_posts(ids,
