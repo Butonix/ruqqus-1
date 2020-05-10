@@ -184,13 +184,14 @@ def get_comment(cid, v=None):
         abort(404)
     return x
 
-def get_comments(cids, v=None):
+def get_comments(cids, v=None, sort_type="new"):
 
     if v:
         vt=db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(cids)).subquery()
 
 
-        items= db.query(Comment, vt.c.vote_type).filter(Comment.id.in_(cids)).join(vt, isouter=True).all()
+        items= db.query(Comment, vt.c.vote_type).filter(Comment.id.in_(cids)).join(vt, isouter=True).order_by(Comment.created_utc.desc()).all()
+
 
         items=[i for i in items]
         output=[]
