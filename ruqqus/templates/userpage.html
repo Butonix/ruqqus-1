@@ -159,7 +159,7 @@
             {% endif %}
           </h1>
         </a>
-        <div class="text-small mb-2">{{ u.karma + u.comment_karma }} Rep</div>
+        <div class="text-small mb-2">{{ u.total_karma }} Rep</div>
         {% if u.bio_html %}
         <p class="text-muted text-break">{{ u.bio_html | safe }}</p>
         {% endif %}
