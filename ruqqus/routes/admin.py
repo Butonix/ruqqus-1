@@ -141,7 +141,7 @@ def badge_grant_post(v):
 
     badge_types=db.query(BadgeDef).filter_by(kind=3).order_by(BadgeDef.rank).all()
 
-    return redirect("/admin/badge_grant?msg=success")
+    return redirect(user.permalink)
                  
 
 @app.route("/admin/users", methods=["GET"])
