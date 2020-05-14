@@ -102,7 +102,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
 
 
         output=[]
-        for c in comms:
+        for c in comments:
             comment=c[0]
             comment._title=c[2]
             comment._voted=c[3] if c[3] else 0
@@ -136,7 +136,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             abort(422)
 
         output=[]
-        for c in comms:
+        for c in comments:
             comment=c[0]
             comment._title=c[2]
             output.append(comment)
