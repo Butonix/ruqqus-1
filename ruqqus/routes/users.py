@@ -144,8 +144,6 @@ def u_username_comments(username, v=None):
 
     ids=user.commentlisting(v=v, page=page)
 
-    print(ids)
-
 
     #we got 26 items just to see if a next page exists
     next_exists=(len(ids)==26)
