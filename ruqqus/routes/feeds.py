@@ -42,10 +42,12 @@ def feeds_user(sort=None, username=None, key=None):
         return abort(501)
 
     user = get_user(username)
+    if user.is_banned or user.is_deleted:
+        abort(403)
 
     if not hmac.compare_digest(key, user.feedkey):
         ##invalid feedkey
-        return abort(403)
+        abort(403)
 
     page=int(request.args.get("page", 1))
     t=request.args.get('t')

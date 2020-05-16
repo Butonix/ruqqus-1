@@ -70,9 +70,9 @@ def login_post():
     username=request.form.get("username")
 
     if "@" in username:
-        account=db.query(User).filter(User.email.ilike(username)).first()
+        account=db.query(User).filter(User.email.ilike(username), User.is_deleted==False).first()
     else:
-        account=db.query(User).filter(User.username.ilike(username)).first()
+        account=db.query(User).filter(User.username.ilike(username), User.is_deleted==False).first()
 
     if not account:
         time.sleep(random.uniform(0,2))

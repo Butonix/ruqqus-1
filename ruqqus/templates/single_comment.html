@@ -28,12 +28,12 @@
 
     <div id="comment-{{ c.base36id }}-only">
 
-      <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %}<a href="/@{{ c.author.username }}" class="user-name {% if c.is_op and not c.post.is_deleted %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.title %}<span style="color: #{{ c.title.color }}">{{ c.title.text }}</span>{% endif %}
+      <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %}{% if c.author.is_deleted %}[deleted account]{% else %}<a href="/@{{ c.author.username }}" class="user-name {% if c.is_op and not c.post.is_deleted %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.title %}<span style="color: #{{ c.title.color }}">{{ c.title.text }}</span>{% endif %}{% endif %}
         {% if c.distinguish_level or c.is_op %}
         {% if c.distinguish_level %}
         <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>
         {% endif %}
-        {% if c.is_op and not c.post.is_deleted %}
+        {% if c.author_id==c.post.author_id and not c.post.is_deleted and not c.author.is_deleted %}
         <i class="fas fa-microphone-stand text-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Submitter"></i>
         {% endif %}
         <span> </span>
@@ -129,7 +129,7 @@
 
 
               {% if v and c.parent_submission and not c.author_id==v.id and is_allowed_to_comment %}
-              <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author.username }}',)"><i class="fas fa-flag"></i>Flag</a>
+              <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author.username if not c.author.is_deleted else '[is_deleted]' }}',)"><i class="fas fa-flag"></i>Flag</a>
 
               {% endif %}
 
@@ -232,7 +232,7 @@
           <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
 
           {% if v and not v.id==c.author_id %}
-          <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author.username }}')" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
+          <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author.username if not c.author.is_deleted else '[is_deleted]' }}')" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
           {% endif %}
 
           {% if v and is_allowed_to_comment and c.parent_submission and c.author_id==v.id and not c.is_deleted %}

@@ -20,3 +20,12 @@ class Title(Base):
     def check_eligibility(self, v):
 
         return bool(eval(self.qualification_expr, {}, {"v":v}))
+
+    @property
+    def json(self):
+
+        return {'id': self.id,
+                'text':self.text,
+                'color':f'#{self.color}',
+                'kind':self.kind
+                }

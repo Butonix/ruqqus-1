@@ -228,7 +228,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'body':self.body,
                 'body_html':self.body_html,
             #   'replies': [x.json for x in self.replies]
-                'is_archived':self.is_archived
+                'is_archived':self.is_archived,
+                'title': self.title.json if self.title else None
                 }
             
     @property

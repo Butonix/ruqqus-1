@@ -1080,8 +1080,8 @@ def siege_guild(v):
                                ), 403
 
     #check user activity
-    karma=sum([x.score_top for x in v.submissions.filter_by(board_id=guild.id)])
-    karma+=sum([x.score_top for x in v.comments.filter_by(board_id=guild.id)])
+    # karma=sum([x.score_top for x in v.submissions.filter_by(board_id=guild.id)])
+    # karma+=sum([x.score_top for x in v.comments.filter_by(board_id=guild.id)])
 ##    if karma < 100:
 ##        return render_template("message.html",
 ##                               v=v,
@@ -1092,11 +1092,12 @@ def siege_guild(v):
 
     #Assemble list of mod ids to check
     #skip any user with a site-wide ban
+    #skip any deleted mod
     mods=[]
     for user in guild.mods:
         if user.id==v.id:
             break
-        if not user.is_banned:
+        if not user.is_banned and not user.is_deleted:
             mods.append(user)
 
     #if no mods, skip straight to success

@@ -303,7 +303,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'edited_utc':self.edited_utc,
                 'guild_name':self.guild_name,
                 'embed_url':self.embed_url,
-                'is_archived':self.is_archived
+                'is_archived':self.is_archived,
+                'title':self.title.json if self.title else None
                 }
 
         if "_voted" in self.__dict__:
@@ -314,3 +315,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def voted(self):
         return self._voted if "_voted" in self.__dict__ else 0
+
+    @property
+    def user_title(self):
+        return self._title if "_title" in self.__dict__ else self.author.title
+    
