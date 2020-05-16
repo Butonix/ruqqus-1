@@ -67,6 +67,8 @@ class User(Base, Stndrd):
     read_announcement_utc=Column(Integer, default=0)
     discord_id=Column(Integer, default=None)
     unban_utc=Column(Integer, default=0)
+    is_deleted=Column(Boolean, default=False)
+    delete_reason=Column(String(500), default='')
 
     
 
@@ -578,7 +580,8 @@ class User(Base, Stndrd):
                 'profile_url':self.profile_url,
                 'banner_url':self.banner_url,
                 'post_count':self.post_count,
-                'comment_count':self.comment_count
+                'comment_count':self.comment_count,
+                'title':self.title.json if self.title else None
                 }
 
     @property

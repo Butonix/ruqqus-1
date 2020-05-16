@@ -307,3 +307,25 @@ def update_announcement(v):
     db.add(v)
     db.commit()
     return "", 204
+
+
+@app.route("/settings/delete_account", methods=["POST"])
+@is_not_banned
+@validate_formkey
+def delete_account(v):
+
+    if not v.verifyPass(request.form.get("password","")) or not v.validate_2fa(request.form.get("twofactor","")):
+        return render_template("settings_security.html", v=v, error="Invalid password or token" if v.mfa_secret else "Invalid password")
+
+    v.is_deleted=True
+    v.login_nonce+=1
+    v.delete_reason=request.form.get("delete_reason","")
+    v.del_banner()
+    v.del_profile()
+    db.add(v)
+    db.commit()
+
+    session.pop("user_id", None)
+    session.pop("session_id", None)
+
+    return redirect('/')

@@ -259,7 +259,7 @@
 
   <p class="text-small text-muted">Log all other devices out of your Ruqqus account.</p>
 
-  <div class="settings-section rounded mb-0">
+  <div class="settings-section rounded">
 
     <form  action="/settings/log_out_all_others" method="post">
       <input type="hidden" name="formkey" value="{{ v.formkey }}">
@@ -297,30 +297,27 @@
 
 </div>
 
-<h2 class="h5 text-danger d-none">Danger Zone</h2>
+<h2 class="h5 text-danger ">Danger Zone</h2>
 
-<p class="text-small text-muted d-none">Delete your entire Ruqqus account from existence.</p>
-
-<div class="settings-section rounded d-none">
+<div class="settings-section rounded">
 
   <div class="body">
 
-    <label for="delete_account">Delete Account</label>
+    <label for="delete_account">Deactivate Account</label>
 
-    <p>This action cannot be undone.</p>
+    <p>This will permanently deactivate your Ruqqus Account.</p>
 
   </div>
 
   <div class="footer">
 
-    <input type="hidden" name="formkey" value="x">
+    <input type="hidden" name="formkey" value="{{ v.formkey }}">
 
     <div class="d-flex">
 
       <button class="btn btn-outline-danger ml-auto" id="delete_account_confirm"
-      data-toggle="modal" data-target="#exampleModalCenter"
-      value="Delete Account">Delete Account
-    </button>
+      data-toggle="modal" data-target="#deleteAccountModal"
+      value="Delete Account">Deactivate Account</button>
 
   </div>
 
@@ -336,6 +333,72 @@
 
 </div>
 
+</div>
+
+
+<!-- Account Deletion Modal -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccountModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Deactivate your Ruqqus account</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true"><i class="far fa-times"></i></span>
+        </button>
+      </div>
+      <div class="" id="deleteFormContainer">
+        <form id="deleteAccountForm" method="post" action="/settings/delete_account">
+          <input type="hidden" name="formkey" value="{{ v.formkey }}">
+          <div class="modal-body body">
+
+            <div class="d-lg-flex">
+
+              <label for="delete-password" class="w-lg-25" id="email-password-label">Password</label>
+
+              <div class="w-lg-100">
+
+                  <input autocomplete="new-password" type="password" class="form-control mb-2" id="delete-password" name="password" required>
+
+              </div>
+
+            </div>
+
+            {% if v.mfa_secret %}
+            <div class="d-lg-flex mt-3">
+
+              <label for="delete-mfa" class="w-lg-25" id="email-password-label">Two-Factor Code</label>
+
+              <div class="w-lg-100">
+
+                  <input autocomplete="new-password" type="text" class="form-control mb-2" id="delete-mfa" name="twofactor" required>
+
+              </div>
+
+            </div>
+            {% endif %}
+
+            <div class="d-lg-flex mt-3">
+
+              <label for="delete-reason" class="w-lg-25" id="email-password-label">Feedback</label>
+
+              <div class="w-lg-100">
+
+                  <textarea class="form-control mb-2" id="delete-reason" name="delete_reason" placeholder="Tell us why you're leaving Ruqqus. (Optional)"></textarea>
+
+              </div>
+
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
+            <input type="submit" id="deleteAccountBUtton" class="btn btn-danger" value="Deactivate my account"></button>
+          </div>
+        </form>
+      </div>
+      <!-- After report is made, show this -->
+    </div>
+  </div>
 </div>
 
 {% endblock %}
