@@ -146,6 +146,13 @@ def u_username_comments(username, v=None):
 
     if user.is_private and (not v or (v.id!=user.id and v.admin_level<3)):
         return render_template("userpage_private.html", u=user, v=v)
+
+    if user.is_deleted and (not v or (v.id!=user.id and v.admin_level<3)):
+        return {'html': lambda:render_template("userpage_deleted.html",
+                                               u=user,
+                                               v=v),
+                'api': lambda:{"error":"That user deactivated their account."}
+                }
     
     page=int(request.args.get("page","1"))
 
