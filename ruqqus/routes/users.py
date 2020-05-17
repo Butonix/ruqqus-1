@@ -45,7 +45,7 @@ def api_is_available(name):
         return jsonify({name:True})
 
 @app.route("/uid/<uid>", methods=["GET"])
-def user_uid(uid, v):
+def user_uid(uid):
 
     user=db.query(User).filter_by(id=base36decode(uid)).first()
     if user:
