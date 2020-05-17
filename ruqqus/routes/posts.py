@@ -101,7 +101,7 @@ def edit_post(pid, v):
     return redirect(p.permalink)
 
 @app.route("/api/submit/title", methods=['GET'])
-@limiter.limit("6/minute")
+@limiter.limit("3/minute")
 @is_not_banned
 #@tos_agreed
 #@validate_formkey
