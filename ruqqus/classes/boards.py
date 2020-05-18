@@ -60,7 +60,7 @@ class Board(Base, Stndrd, Age_times):
     @property
     def mods_list(self):
 
-        z= [x for x in self.moderators.filter_by(accepted=True).order_by(text("id asc")).all()]
+        z= [x for x in self.moderators.filter_by(accepted=True).order_by(text("id asc")).all() if not x.user.is_deleted]
         return z
 
     @property
