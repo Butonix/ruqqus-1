@@ -60,19 +60,19 @@ class Board(Base, Stndrd, Age_times):
     @property
     def mods_list(self):
 
-        z= [x for x in self.moderators.filter_by(accepted=True).order_by(text("id asc")).all() if not x.user.is_deleted]
+        z= [x for x in self.moderators.filter_by(accepted=True).order_by(ModRelationship.id.asc()).all() if not x.user.is_deleted]
         return z
 
     @property
     def mods(self):
 
-        z= [x.user for x in self.moderators.filter_by(accepted=True).order_by(text("id asc")).all()]
+        z= [x.user for x in self.moderators.filter_by(accepted=True).order_by(ModRelationship.id.asc()).all()]
         return z
 
     @property
     def invited_mods(self):
         
-        z=[x.user for x in self.moderators.filter_by(accepted=False, invite_rescinded=False).order_by(text("id")).all()]
+        z=[x.user for x in self.moderators.filter_by(accepted=False, invite_rescinded=False).order_by(ModRelationship.id.asc()).all()]
         return z
 
     @property
