@@ -300,12 +300,12 @@ class User(Base, Stndrd):
     @property
     @cache.memoize(timeout=3600) #1hr cache time for user rep
     def karma(self):
-        return int(self.energy)
+        return int(self.energy) if self.energy else 0
 
     @property
     @cache.memoize(timeout=3600)
     def comment_karma(self):
-        return int(self.comment_energy)
+        return int(self.comment_energy) if self.energy else 0
 
 
     @property
