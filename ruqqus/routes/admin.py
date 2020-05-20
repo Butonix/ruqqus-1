@@ -195,7 +195,11 @@ def participation_stats(v):
           "total_guilds":db.query(Board).count(),
           "listed_guilds":db.query(Board).filter_by(is_banned=False, is_private=False).count(),
           "private_guilds":db.query(Board).filter_by(is_banned=False, is_private=True).count(),
-          "banned_guilds":db.query(Board).filter_by(is_banned=True).count()
+          "banned_guilds":db.query(Board).filter_by(is_banned=True).count(),
+          "post_votes":db.query(Vote).count(),
+          "post_voting_users":db.query(User).join(Vote, primaryjoin="Vote.user_id==User.id").distinct().count(),
+          "comment_votes":db.query(CommentVote).count(),
+          "comment_voting_users":db.query(User).join(CommentVote, primaryjoin="CommentVote.user_id==User.id").distinct().count()
           }
 
     return render_template("admin/content_stats.html", v=v, data=data)
