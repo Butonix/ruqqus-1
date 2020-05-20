@@ -172,7 +172,7 @@ def users_list(v):
                            multi_plot=data['multi_plot']
                            )
 
-@app.route("/admin/content_stats", methods["GET"])
+@app.route("/admin/content_stats", methods=["GET"])
 @admin_level_required(2)
 def participation_stats(v):
 
