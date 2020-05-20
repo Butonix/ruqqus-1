@@ -420,7 +420,7 @@ def random_comment(v):
 
     comment=x.order_by(func.random()).first()
 
-    return redirect(x.permalink)
+    return redirect(comment.permalink)
 
 @app.route("/random/user", methods=["GET"])
 @auth_desired
