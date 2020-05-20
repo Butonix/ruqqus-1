@@ -427,7 +427,7 @@ def random_comment(v):
 def random_user(v):
     x=db.query(User).filter(or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc<int(time.time()))))
 
-    x=db.query.filter_by(is_private=False)
+    x=x.filter_by(is_private=False)
     x=x.join(User.submissions, isouter=True).join(User.comments, isouter=True)
     x=x.filter(or_(not_(Submission.id.is_(None)), not_(Comment.id.is_(None))))
     x=x.distinct()
