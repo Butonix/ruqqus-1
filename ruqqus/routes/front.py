@@ -425,7 +425,7 @@ def random_comment(v):
 @app.route("/random/user", methods=["GET"])
 @auth_desired
 def random_user(v):
-    x=db.query(User).filter_by(is_banned=0)
+    x=db.query(User).filter(or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc<int(time.time()))))
 
     x=db.query.filter_by(is_private=False)
     x=x.join(User.submissions, isouter=True).join(User.comments, isouter=True)
