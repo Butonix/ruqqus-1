@@ -353,10 +353,10 @@ def my_subs(v):
 @app.route("/random/post", methods=["GET"])
 def random_post():
 
-    return redirect(db.query(Submission).order_by(text("random()")).first().permalink)
+    return redirect(db.query(Submission).order_by(func.random()).first().permalink)
 
 @app.route("/random/guild", methods=["GET"])
 def random_guild():
 
-    return redirect(db.query(Board).order_by(text("random()")).first().permalink)
+    return redirect(db.query(Board).order_by(func.random()).first().permalink)
 
