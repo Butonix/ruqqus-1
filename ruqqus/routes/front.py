@@ -366,6 +366,9 @@ def random_post(v):
     if not (v and v.show_nsfl):
         x=x.filter_by(is_nsfl=False)
 
+    if v and v.hide_offensive:
+        x=x.filter_by(is_offensive=False)
+
     if v:
         bans=db.query(BanRelationship.id).filter_by(user_id=v.id).all()
         x=x.filter(Submission.board_id.notin_([i[0] for i in bans]))
@@ -394,5 +397,41 @@ def random_guild(v):
 
     return redirect(board.permalink)
 
+@app.route("/random/comment", methods=["GET"])
+@auth_desired
+def random_comment(v):
+
+    x=db.query(Comment).filter_by(is_banned=False)
 
 
+    if not (v and v.over_18):
+        x=x.filter_by(over_18=False)
+
+    if not (v and v.show_nsfl):
+        x=x.filter_by(is_nsfl=False)
+
+    if v and v.hide_offensive:
+        x=x.filter_by(is_offensive=False)
+
+    if v:
+        bans=db.query(BanRelationship.id).filter_by(user_id=v.id).all(0)
+        x=x.filter(Comment.board_id.notin_([i[0] for i in bans]))
+
+
+    comment=x.order_by(func.random()).first()
+
+    return redirect(x.permalink)
+
+@app.route("/random/user", methods=["GET"])
+@auth_desired
+def random_user(v):
+    x=db.query(User).filter(or_(User.is_banned=0, and_(User.is_banned>0, User.unban_utc<int(time.time()))))
+
+    x=db.query.filter_by(is_private=False)
+    x=x.join(User.submissions, isouter=True).join(User.comments, isouter=True)
+    x=x.filter(or_(not_(Submission.id.is_(None)), not_(Comment.id.is_(None))))
+    x=x.distinct()
+
+    user=db.query.order_by(func.random()).first(0)
+
+    return redirect(user.permalink)
