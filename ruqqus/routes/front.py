@@ -432,6 +432,6 @@ def random_user(v):
     x=x.filter(or_(not_(Submission.id.is_(None)), not_(Comment.id.is_(None))))
     x=x.distinct()
 
-    user=db.query.order_by(func.random()).first(0)
+    user=x.order_by(func.random()).first()
 
     return redirect(user.permalink)
