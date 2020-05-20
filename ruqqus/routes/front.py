@@ -353,10 +353,41 @@ def my_subs(v):
 @app.route("/random/post", methods=["GET"])
 def random_post():
 
-    return redirect(db.query(Submission).order_by(func.random()).first().permalink)
+    x=db.query(Submission).filter_by(is_banned=False, is_deleted=False)
+
+    if not (v and v.over_18):
+        x=x.filter_by(over_18=False)
+
+    if not (v and v.show_nsfl):
+        x=x.filter_by(is_nsfl=False)
+
+    if v:
+        bans=db.query(BanRelationship.id).filter_by(user_id=v.id).all()
+        x=x.filter(Submission.board_id.notin_([i[0] for i in bans]))
+
+    post = x.order_by(func.random()).first()
+    return redirect(post.permalink)
 
 @app.route("/random/guild", methods=["GET"])
-def random_guild():
+@auth_desired
+def random_guild(v):
 
-    return redirect(db.query(Board).order_by(func.random()).first().permalink)
+    x=db.query(Board).filter_by(is_banned=False, is_private=False)
+
+
+    if not (v and v.over_18):
+        x=x.filter_by(over_18=False)
+
+    if not (v and v.show_nsfl):
+        x=x.filter_by(is_nsfl=False)
+
+    if v:
+        bans=db.query(BanRelationship.id).filter_by(user_id=v.id).all()
+        x=x.filter(Board.id.notin_([i[0] for i in bans]))
+
+    board=x.order_by(func.random()).first()
+
+    return redirect(board.permalink)
+
+
 
