@@ -365,6 +365,8 @@ def delete_comment(cid, v):
     db.add(c)
     db.commit()
 
+    cache.delete_memoized(User.commentlisting, v)
+
     return "", 204
 
 

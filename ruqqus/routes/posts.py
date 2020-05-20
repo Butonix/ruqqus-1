@@ -422,7 +422,8 @@ def delete_post_pid(pid, v):
     db.add(post)
 
     #clear cache
-    cache.delete_memoized(User.idlist, v, sort="new")
+    cache.delete_memoized(User.userpagelisting, v, sort="new")
+    cache.delete_memoized(Board.idlist, post.board)
 
     if post.age >= 3600*6:
         cache.delete_memoized(Board.idlist, post.board, sort="new")
