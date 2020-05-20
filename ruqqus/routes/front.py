@@ -350,3 +350,13 @@ def my_subs(v):
     else:
         abort(422)
 
+@app.route("/random/post", methods=["GET"])
+def random_post():
+
+    return redirect(db.query(Submission).order_by(text("random()")).first().permalink)
+
+@app.route("/random/guild", methods=["GET"])
+def random_guild():
+
+    return redirect(db.query(Board).order_by(text("random()")).first().permalink)
+
