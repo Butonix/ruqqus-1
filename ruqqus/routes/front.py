@@ -351,9 +351,14 @@ def my_subs(v):
         abort(422)
 
 @app.route("/random/post", methods=["GET"])
-def random_post():
+@auth_desired
+def random_post(v):
 
     x=db.query(Submission).filter_by(is_banned=False, is_deleted=False)
+
+    now=int(time.time())
+    cutoff=now - (60*60*24*180)
+    x=x.filter(Submission.created_utc>=cutoff)
 
     if not (v and v.over_18):
         x=x.filter_by(over_18=False)
