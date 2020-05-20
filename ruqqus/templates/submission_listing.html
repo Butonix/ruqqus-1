@@ -1,7 +1,7 @@
 {% for p in listing %}
 
 
-{% set score=p.score_fuzzed %}
+{% set score=p.score_fuzzed if p.score_fuzzed else 0 %}
 
 {% if v %}
 {% set voted=p.voted %}
