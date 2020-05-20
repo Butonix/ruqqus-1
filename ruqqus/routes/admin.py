@@ -178,6 +178,8 @@ def users_list(v):
 
         now=int(time.time())
 
+        print("starting content stats")
+
         data={"banned_users":db.query(User).filter(User.is_banned>0, or_(User.unban_utc>now, User.unban_utc==0)).count(),
               "valid_accounts":db.query(User).filter_by(is_deleted=False).filter(or_(User.is_banned==0, and_(User.is_banned>0, User.unban_ut<now))).count(),
               "deleted_accounts":db.query(User).filter_by(is_deleted=True).count(),
