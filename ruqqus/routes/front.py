@@ -414,7 +414,7 @@ def random_comment(v):
         x=x.filter_by(is_offensive=False)
 
     if v:
-        bans=db.query(BanRelationship.id).filter_by(user_id=v.id).all(0)
+        bans=db.query(BanRelationship.id).filter_by(user_id=v.id).all()
         x=x.filter(Comment.board_id.notin_([i[0] for i in bans]))
 
 
