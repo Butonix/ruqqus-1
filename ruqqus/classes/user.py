@@ -298,14 +298,14 @@ class User(Base, Stndrd):
         return [x.board for x in self.moderates.filter_by(accepted=True).all() if not x.board.is_banned]
 
     @property
-    @cache.memoize(timeout=3600) #1hr cache time for user rep
+    @cache.memoize(timeout=60) #1hr cache time for user rep
     def karma(self):
-        return int(self.energy) if self.energy else 0
+        return int(self.energy)
 
     @property
-    @cache.memoize(timeout=3600)
+    @cache.memoize(timeout=60)
     def comment_karma(self):
-        return int(self.comment_energy) if self.energy else 0
+        return int(self.comment_energy)
 
 
     @property
