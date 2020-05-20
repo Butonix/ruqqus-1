@@ -178,8 +178,6 @@ def participation_stats(v):
 
     now=int(time.time())
 
-    print("starting content stats")
-
     data={"banned_users":db.query(User).filter(User.is_banned>0, or_(User.unban_utc>now, User.unban_utc==0)).count(),
           "valid_accounts":db.query(User).filter_by(is_deleted=False).filter(or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc<now))).count(),
           "deleted_accounts":db.query(User).filter_by(is_deleted=True).count(),
@@ -197,9 +195,9 @@ def participation_stats(v):
           "private_guilds":db.query(Board).filter_by(is_banned=False, is_private=True).count(),
           "banned_guilds":db.query(Board).filter_by(is_banned=True).count(),
           "post_votes":db.query(Vote).count(),
-          "post_voting_users":db.query(User).join(Vote, primaryjoin="Vote.user_id==User.id").distinct().count(),
+          "post_voting_users":db.query(User).join(Vote, Vote.user_id==User.id).distinct().count(),
           "comment_votes":db.query(CommentVote).count(),
-          "comment_voting_users":db.query(User).join(CommentVote, primaryjoin="CommentVote.user_id==User.id").distinct().count()
+          "comment_voting_users":db.query(User).join(CommentVote, CommentVote.user_id==User.id).distinct().count()
           }
 
     return render_template("admin/content_stats.html", v=v, data=data)
