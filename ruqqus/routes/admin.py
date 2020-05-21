@@ -34,9 +34,7 @@ def image_posts_listing(v):
 
     page=int(request.args.get('page',1))
 
-    posts=db.query(Submission).filter(Submission.url.ilike("https://i.ruqqus.com/post/%"
-                                                                )
-                                      ).order_by(Submission.id.desc()
+    posts=db.query(Submission).filter_by(domain_ref=1).order_by(Submission.id.desc()
                                                  ).offset(25*(page-1)
                                                           ).limit(26
                                                                   )
