@@ -366,6 +366,7 @@ def submit_post(v):
         #update post data
         new_post.url=f'https://{BUCKET}/{name}'
         new_post.is_image=True
+        new_post.domain_ref=1 #id of i.ruqqus.com domain
         db.add(new_post)
         db.commit()
 
