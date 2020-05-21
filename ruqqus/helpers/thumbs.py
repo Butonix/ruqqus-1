@@ -19,10 +19,22 @@ def thumbnail_thread(pid):
 
     if domain_obj and domain_obj.show_thumbnail:
 
-        x=requests.head(post.url)
+        x=requests.get(post.url)
 
         if x.headers.get("Content-Type","/").split("/")[0]=="image":
-            #print("image post, using submitted url")
+            #image post, using submitted url
+
+            name=f"posts/{post.base36id}/thumb.png"
+            tempname=name.replace("/","_")
+
+            with open(tempname, "wb") as file:
+                for chunk in x.iter_content(1024):
+                    file.write(chunk)
+
+
+            aws.upload_from_file(name, tempname, resize=(375,227))
+            post.has_thumb=True
+
             post.is_image=True
             db.add(post)
             db.commit()
