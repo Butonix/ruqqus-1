@@ -51,19 +51,21 @@ else:
     
 app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL")
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
+app.config["CACHE_KEY_PREFIX"]="flask_caching_"
+
 
 Markdown(app)
 cache=Cache(app)
 Compress(app)
 
 
-limit_url=environ.get("HEROKU_REDIS_PURPLE_URL", environ.get("HEROKU_REDIS_AQUA_URL"))
+app.config["RATELIMIT_STORAGE_URL"]=environ.get("REDIS_URL")
+app.config["RATELIMIT_KEY_PREFIX"]="flask_limiting_"
 
 limiter = Limiter(
     app,
     key_func=get_remote_address,
     default_limits=["100/minute"],
-    storage_uri=environ.get("HEROKU_REDIS_PURPLE_URL"),
     headers_enabled=True,
     strategy="fixed-window-elastic-expiry"
 )
