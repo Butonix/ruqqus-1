@@ -386,7 +386,7 @@ def random_guild(v):
         is_nsfl=False)
 
     if v and v.hide_offensive:
-        =x.filter_by(is_offensive=False)
+        x=x.filter_by(is_offensive=False)
 
     if v:
         bans=db.query(BanRelationship.id).filter_by(user_id=v.id).all()
