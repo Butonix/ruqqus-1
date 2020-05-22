@@ -1,7 +1,39 @@
 from ruqqus.__main__ import db
-from ruqqus import classes
+from ruqqus.classes import *
+
+from os import environ
 
 import time
+import threading
+
+def recompute_comments(k, comments):
+    print(f"starting comment thread{k}")
+
+    for comment in comments.all():
+        
+        comment.score_disputed=comment.rank_fiery
+        comment.score_hot=comment.rank_hot
+        comment.score_top=comment.score
+
+        db.add(comment)
+        db.commit()
+
+def recompute_posts(k, posts):
+
+    print(f"starting post thread {k}")
+
+    for post in posts.all():
+
+        post.score_hot = post.rank_hot
+        post.score_disputed=post.rank_fiery
+        post.score_top=post.score
+        post.score_activity=post.rank_activity
+
+        db.add(post)
+        db.commit()
+
+
+
 
 def recompute():
 
@@ -14,52 +46,47 @@ def recompute():
         cutoff=now-(60860*24*180)
 
         print("Beginning post recompute")
-        i=0
-        for post in db.query(classes.submission.Submission
+        
+        n_threads=int(environ.get('n_threads',3))
+        
+
+        thread_group=[]
+        for i in range(n_threads):
+            posts=db.query(Submission
                        ).filter_by(is_banned=False, is_deleted=False
-                                   ).filter(classes.submission.Submission.created_utc>cutoff
-                                            ).order_by(classes.submission.Submission.id.desc()
-                                                       ).all():
-            i+=1
+                                   ).filter(Submission.created_utc>cutoff, text(f"(submissions.id+{i})%{n_threads}=0")
+                                            ).order_by(Submission.id.desc()
+                                                       )
+            new_thread=threading.Thread(target=lambda:recompute_posts(i, posts))
+            thread_group.append(new_thread)
+            new_thread.start()
 
-            post.score_hot = post.rank_hot
-            post.score_disputed=post.rank_fiery
-            post.score_top=post.score
-            post.score_activity=post.rank_activity
-
-            db.add(post)
-            db.commit()
-
-            #print(f"{i}/{total} - {post.base36id}")
-
-        print(f"Scored {i} posts. Beginning comment recompute")
-
+        for thread in thread_group:
+            thread.join()
+        
 
         i=0
-        p=db.query(classes.submission.Submission
-                   ).filter(classes.submission.Submission.created_utc>cutoff
+        p=db.query(Submission
+                   ).filter(Submission.created_utc>cutoff
                             ).subquery()
         
-        for comment in db.query(classes.comment.Comment
+        thread_group=[]
+        for i in range(n_threads)
+            comments=db.query(classes.comment.Comment
                              ).join(p,
-                                    classes.comment.Comment.parent_submission==p.c.id
+                                    Comment.parent_submission==p.c.id
                                     ).filter(p.c.id != None,
-                                             classes.comment.Comment.is_deleted==False,
-                                             classes.comment.Comment.is_banned==False
-                                             ).all():
-            i+=1
+                                             Comment.is_deleted==False,
+                                             Comment.is_banned==False,
+                                             text(f"(comments.id+{i}%{n_threads})=0")
+                                             ):
             
-            comment.score_disputed=comment.rank_fiery
-            comment.score_hot=comment.rank_hot
-            comment.score_top=comment.score
+            new_thread=threading.Thread(target=lambda:recompute_comments(i, comments))
+            thread_group.append(new_thread)
+            new_thread.start()
 
-            db.add(comment)
-            db.commit()
-        
-
-        print(f"Scored {i} comments. Sleeping 1min")
-
-        #time.sleep(60)
+        for thread in thread_group:
+            thread.join()
 
 
 recompute()
