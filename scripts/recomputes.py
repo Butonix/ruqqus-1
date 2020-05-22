@@ -45,9 +45,9 @@ def recompute():
 
         cutoff=now-(60860*24*180)
 
-        print("Beginning post recompute")
+        print("Beginning thread forking")
         
-        n_threads=int(environ.get('n_threads',3))
+        n_threads=int(environ.get('n_threads',2))
         
 
         thread_group=[]
@@ -61,8 +61,7 @@ def recompute():
             thread_group.append(new_thread)
             new_thread.start()
 
-        for thread in thread_group:
-            thread.join()
+        
         
 
         i=0
@@ -70,7 +69,6 @@ def recompute():
                    ).filter(Submission.created_utc>cutoff
                             ).subquery()
         
-        thread_group=[]
         for i in range(n_threads)
             comments=db.query(classes.comment.Comment
                              ).join(p,
@@ -85,6 +83,7 @@ def recompute():
             thread_group.append(new_thread)
             new_thread.start()
 
+        print('threads started; master waiting')
         for thread in thread_group:
             thread.join()
 
