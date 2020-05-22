@@ -77,7 +77,7 @@ def recompute():
                                              Comment.is_deleted==False,
                                              Comment.is_banned==False,
                                              text(f"(comments.id+{i}%{n_threads})=0")
-                                             )
+                                             ):
             
             new_thread=threading.Thread(target=lambda:recompute_comments(i, comments))
             thread_group.append(new_thread)
