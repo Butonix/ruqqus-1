@@ -24,7 +24,7 @@ def recompute():
 
             post.score_hot = post.rank_hot
             post.score_disputed=post.rank_fiery
-            post.score_top=post.score
+            #post.score_top=post.score
             post.score_activity=post.rank_activity
 
             db.add(post)
@@ -51,7 +51,7 @@ def recompute():
             
             comment.score_disputed=comment.rank_fiery
             comment.score_hot=comment.rank_hot
-            comment.score_top=comment.score
+            #comment.score_top=comment.score
 
             db.add(comment)
             db.commit()
