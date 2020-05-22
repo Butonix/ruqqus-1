@@ -380,14 +380,13 @@ def random_post(v):
 @auth_desired
 def random_guild(v):
 
-    x=db.query(Board).filter_by(is_banned=False, is_private=False)
+    x=db.query(Board).filter_by(is_banned=False, 
+        is_private=False,
+        over_18=False,
+        is_nsfl=False)
 
-
-    if not (v and v.over_18):
-        x=x.filter_by(over_18=False)
-
-    if not (v and v.show_nsfl):
-        x=x.filter_by(is_nsfl=False)
+    if v and v.hide_offensive:
+        =x.filter_by(is_offensive=False)
 
     if v:
         bans=db.query(BanRelationship.id).filter_by(user_id=v.id).all()
@@ -401,14 +400,9 @@ def random_guild(v):
 @auth_desired
 def random_comment(v):
 
-    x=db.query(Comment).filter_by(is_banned=False)
-
-
-    if not (v and v.over_18):
-        x=x.filter_by(over_18=False)
-
-    if not (v and v.show_nsfl):
-        x=x.filter_by(is_nsfl=False)
+    x=db.query(Comment).filter_by(is_banned=False,
+        over_18=False,
+        is_nsfl=False)
 
     if v and v.hide_offensive:
         x=x.filter_by(is_offensive=False)
