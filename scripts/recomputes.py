@@ -44,6 +44,7 @@ def recompute():
                              ).join(p,
                                     classes.comment.Comment.parent_submission==p.c.id
                                     ).filter(p.c.id != None,
+                                             p.c.created_utc>cutoff,
                                              classes.comment.Comment.is_deleted==False,
                                              classes.comment.Comment.is_banned==False
                                              ).all():
