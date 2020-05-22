@@ -281,7 +281,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                     'permalink':self.permalink,
                     'guild_name':self.guild_name
                     }
-        data= {'author':self.author_name,
+        data= {'author':self.author_name if not self.author.is_deleted else None,
                 'permalink':self.permalink,
                 'is_banned':False,
                 'is_deleted':False,

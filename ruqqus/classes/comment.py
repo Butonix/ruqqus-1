@@ -224,7 +224,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'post':self.post.base36id,
                 'level':self.level,
                 'parent':self.parent_fullname,
-                'author':self.author_name,
+                'author':self.author_name if not self.author.is_deleted else None,
                 'body':self.body,
                 'body_html':self.body_html,
             #   'replies': [x.json for x in self.replies]
