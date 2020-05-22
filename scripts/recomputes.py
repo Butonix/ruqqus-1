@@ -69,7 +69,7 @@ def recompute():
                    ).filter(Submission.created_utc>cutoff
                             ).subquery()
         
-        for i in range(n_threads)
+        for i in range(n_threads):
             comments=db.query(classes.comment.Comment
                              ).join(p,
                                     Comment.parent_submission==p.c.id
