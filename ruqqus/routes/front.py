@@ -350,3 +350,78 @@ def my_subs(v):
     else:
         abort(422)
 
+@app.route("/random/post", methods=["GET"])
+@auth_desired
+def random_post(v):
+
+    x=db.query(Submission).filter_by(is_banned=False, is_deleted=False)
+
+    now=int(time.time())
+    cutoff=now - (60*60*24*180)
+    x=x.filter(Submission.created_utc>=cutoff)
+
+    if not (v and v.over_18):
+        x=x.filter_by(over_18=False)
+
+    if not (v and v.show_nsfl):
+        x=x.filter_by(is_nsfl=False)
+
+    if v and v.hide_offensive:
+        x=x.filter_by(is_offensive=False)
+
+    if v:
+        bans=db.query(BanRelationship.id).filter_by(user_id=v.id).all()
+        x=x.filter(Submission.board_id.notin_([i[0] for i in bans]))
+
+    post = x.order_by(func.random()).first()
+    return redirect(post.permalink)
+
+@app.route("/random/guild", methods=["GET"])
+@auth_desired
+def random_guild(v):
+
+    x=db.query(Board).filter_by(is_banned=False, 
+        is_private=False,
+        over_18=False,
+        is_nsfl=False)
+
+    if v and v.hide_offensive:
+        x=x.filter_by(is_offensive=False)
+
+    if v:
+        bans=db.query(BanRelationship.id).filter_by(user_id=v.id).all()
+        x=x.filter(Board.id.notin_([i[0] for i in bans]))
+
+    board=x.order_by(func.random()).first()
+
+    return redirect(board.permalink)
+
+@app.route("/random/comment", methods=["GET"])
+@auth_desired
+def random_comment(v):
+
+    x=db.query(Comment).filter_by(is_banned=False,
+        over_18=False,
+        is_nsfl=False)
+
+    if v and v.hide_offensive:
+        x=x.filter_by(is_offensive=False)
+
+    if v:
+        bans=db.query(BanRelationship.id).filter_by(user_id=v.id).all()
+        x=x.filter(Comment.board_id.notin_([i[0] for i in bans]))
+
+
+    comment=x.order_by(func.random()).first()
+
+    return redirect(comment.permalink)
+
+@app.route("/random/user", methods=["GET"])
+@auth_desired
+def random_user(v):
+    x=db.query(User).filter(or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc<int(time.time()))))
+
+    x=x.filter_by(is_private=False)
+    user=x.order_by(func.random()).first()
+
+    return redirect(user.permalink)

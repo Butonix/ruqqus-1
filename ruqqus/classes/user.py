@@ -569,6 +569,13 @@ class User(Base, Stndrd):
                     'id':self.base36id
                     }
 
+        elif self.is_deleted:
+            return {'username':self.username,
+                    'permalink':self.permalink,
+                    'is_deleted':True,
+                    'id':self.base36id
+                    }
+
         return {'username':self.username,
                 'permalink':self.permalink,
                 'is_banned':False,

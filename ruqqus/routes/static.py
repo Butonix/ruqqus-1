@@ -13,7 +13,9 @@ from ruqqus.__main__ import app, db, limiter
 @app.route('/assets/<path:path>')
 @limiter.exempt
 def static_service(path):
-    return send_from_directory('./assets', path)
+    resp = make_response(send_from_directory('./assets', path))
+    resp.headers.add("Cache-Control", "public")
+    return resp
 
 @app.route("/robots.txt", methods=["GET"])
 def robots_txt():

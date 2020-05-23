@@ -15,8 +15,8 @@ class ModRelationship(Base):
     accepted = Column(Boolean, default=False)
     invite_rescinded=Column(Boolean, default=False)
 
-    user=relationship("User", lazy="subquery")
-    board=relationship("Board", lazy="subquery")
+    user=relationship("User", lazy="joined")
+    board=relationship("Board", lazy="joined")
 
     def __init__(self, *args, **kwargs):
         if "created_utc" not in kwargs:

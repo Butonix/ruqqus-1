@@ -111,7 +111,8 @@ def post_pid_comment_cid(p_id, c_id, v=None):
                 ).filter(
                 Comment.parent_comment_id.in_(current_ids)
                 ).join(Comment.author).join(
-                User.title
+                User.title,
+                isouter=True
                 ).join(
                 votes,
                 votes.c.comment_id==Comment.id,
@@ -147,7 +148,8 @@ def post_pid_comment_cid(p_id, c_id, v=None):
                 ).filter(
                 Comment.parent_comment_id.in_(current_ids)
                 ).join(Comment.author).join(
-                User.title
+                User.title,
+                isouter=True
                 )
 
             if sort_type=="hot":
@@ -362,6 +364,8 @@ def delete_comment(cid, v):
 
     db.add(c)
     db.commit()
+
+    cache.delete_memoized(User.commentlisting, v)
 
     return "", 204
 

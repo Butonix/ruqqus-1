@@ -144,6 +144,10 @@ def submit_post(v):
 
     url=request.form.get("url","")
 
+    board=get_guild(request.form.get('board','general'), graceful=True)
+    if not board:
+        board=get_guild('general')
+
     if len(title)<10:
         return render_template("submit.html",
                                v=v,
@@ -151,9 +155,7 @@ def submit_post(v):
                                title=title,
                                url=url,
                                body=request.form.get("body",""),
-                               b=get_guild(request.form.get("board",""),
-                                           graceful=True
-                                           )
+                               b=board
                                )
     elif len(title)>250:
         return render_template("submit.html",
@@ -162,9 +164,7 @@ def submit_post(v):
                                title=title[0:250],
                                url=url,
                                body=request.form.get("body",""),
-                               b=get_guild(request.form.get("board",""),
-                                           graceful=True
-                                           )
+                               b=board
                                )
 
     parsed_url=urlparse(url)
@@ -175,8 +175,7 @@ def submit_post(v):
                                title=title,
                                url=url,
                                body=request.form.get("body",""),
-                               b=get_guild(request.form.get("board","")
-                                           )
+                               b=board
                                )
     #sanitize title
     title=sanitize(title, linkgen=False)
@@ -185,7 +184,8 @@ def submit_post(v):
     dup = db.query(Submission).filter_by(title=title,
                                          author_id=v.id,
                                          url=url,
-                                         is_deleted=False
+                                         is_deleted=False,
+                                         board_id=board.id
                                          ).first()
 
     if dup:
@@ -366,6 +366,7 @@ def submit_post(v):
         #update post data
         new_post.url=f'https://{BUCKET}/{name}'
         new_post.is_image=True
+        new_post.domain_ref=1 #id of i.ruqqus.com domain
         db.add(new_post)
         db.commit()
 
@@ -422,7 +423,8 @@ def delete_post_pid(pid, v):
     db.add(post)
 
     #clear cache
-    cache.delete_memoized(User.idlist, v, sort="new")
+    cache.delete_memoized(User.userpagelisting, v, sort="new")
+    cache.delete_memoized(Board.idlist, post.board)
 
     if post.age >= 3600*6:
         cache.delete_memoized(Board.idlist, post.board, sort="new")

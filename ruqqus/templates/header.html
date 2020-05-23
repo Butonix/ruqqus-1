@@ -66,6 +66,10 @@
         <a class="nav-link" href="/submit{{ '?guild='+b.name if b else '' }}" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Create post"><i class="fas fa-feather-alt"></i></a>
       </li>
 
+      <li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
+        <a class="nav-link" href="/random/post" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="View random post"><i class="fas fa-random"></i></a>
+      </li>
+
       <li class="nav-item d-flex align-items-center justify-content-center text-center">
         <div class="dropdown">
           <a class="nav-link bg-transparent py-0 pr-0" href="{{ v.permalink }}" role="button" id="dropdownMenuLink" data-toggle="dropdown"
@@ -120,6 +124,9 @@
         </div>
       </li>
       {% else %}
+      <li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
+        <a class="nav-link" href="/random/post" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="View random post"><i class="fas fa-random"></i></a>
+      </li>
       <li class="nav-item d-flex align-items-center justify-content-center mx-1">
        <a class="btn btn-outline-purple" href="/login?redirect={{ request.path | urlencode}}">Sign In</a>
      </li>
@@ -162,6 +169,11 @@
     <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem mr-3" id="dark-switch"></i>Dark mode</a></li>
     {% else %}
     <li class="nav-item"><a class="nav-link" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem mr-3"></i>Dark mode</a></li>
+    {% endif %}
+    {% if v and v.can_make_guild %}
+    <li class="nav-item">
+      <a class="nav-link" href="/create_guild"><i class="fas fa-chess-rook fa-width-rem mr-3"></i>Create Guild</a>
+    </li>
     {% endif %}
     <li class="nav-item border-top mt-2 pt-2">
       <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})">Log out</a>

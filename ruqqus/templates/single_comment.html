@@ -194,7 +194,7 @@
   <div id="reply-to-{{ c.base36id }}"></div>
  
   {% if render_replies %} 
-    {% if level<=5 %}
+    {% if level<5 %}
       {% for reply in c.replies %}
         <div class="">
           {{ reply.rendered_comment(v=v, level=level+1, is_allowed_to_comment=is_allowed_to_comment, post_base36id=post_base36id) | safe }}

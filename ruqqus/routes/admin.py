@@ -34,9 +34,7 @@ def image_posts_listing(v):
 
     page=int(request.args.get('page',1))
 
-    posts=db.query(Submission).filter(Submission.url.ilike("https://i.ruqqus.com/post/%"
-                                                                )
-                                      ).order_by(Submission.id.desc()
+    posts=db.query(Submission).filter_by(domain_ref=1).order_by(Submission.id.desc()
                                                  ).offset(25*(page-1)
                                                           ).limit(26
                                                                   )
@@ -171,3 +169,33 @@ def users_list(v):
                            single_plot=data['single_plot'],
                            multi_plot=data['multi_plot']
                            )
+
+@app.route("/admin/content_stats", methods=["GET"])
+@admin_level_required(2)
+def participation_stats(v):
+
+    now=int(time.time())
+
+    data={"banned_users":db.query(User).filter(User.is_banned>0, or_(User.unban_utc>now, User.unban_utc==0)).count(),
+          "valid_accounts":db.query(User).filter_by(is_deleted=False).filter(or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc<now))).count(),
+          "deleted_accounts":db.query(User).filter_by(is_deleted=True).count(),
+          "total_posts": db.query(Submission).count(),
+          "posting_users": db.query(User).join(Submission.author).distinct().count(),
+          "listed_posts": db.query(Submission).filter_by(is_banned=False, is_deleted=False).count(),
+          "removed_posts":db.query(Submission).filter_by(is_banned=True).count(),
+          "deleted_posts":db.query(Submission).filter_by(is_deleted=True).count(),
+          "total_comments":db.query(Comment).count(),
+          "commenting_users":db.query(User).join(Comment.author).distinct().count(),
+          "removed_comments":db.query(Comment).filter_by(is_banned=True).count(),
+          "deleted_comments":db.query(Comment).filter_by(is_deleted=True).count(),
+          "total_guilds":db.query(Board).count(),
+          "listed_guilds":db.query(Board).filter_by(is_banned=False, is_private=False).count(),
+          "private_guilds":db.query(Board).filter_by(is_banned=False, is_private=True).count(),
+          "banned_guilds":db.query(Board).filter_by(is_banned=True).count(),
+          "post_votes":db.query(Vote).count(),
+          "post_voting_users":db.query(User).join(Vote, Vote.user_id==User.id).distinct().count(),
+          "comment_votes":db.query(CommentVote).count(),
+          "comment_voting_users":db.query(User).join(CommentVote, CommentVote.user_id==User.id).distinct().count()
+          }
+
+    return render_template("admin/content_stats.html", v=v, data=data)
