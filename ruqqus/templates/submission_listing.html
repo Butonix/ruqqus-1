@@ -76,7 +76,7 @@
         {% endif %}
       </div>
 
-      {% if p.thumb_url and not p.is_image %}
+      {% if p.thumb_url and not p.embed_url and not p.is_image %}
       <div class="d-block d-md-none" style="z-index: 3;">
       	<a href="{{ p.permalink }}" rel="nofollow">
         	<img src="{{ p.thumb_url }}" class="post-img" alt="link post thumbnail">
@@ -84,7 +84,7 @@
       </div>
       {% endif %}
 
-      {% if p.thumb_url and p.is_image %}
+      {% if p.thumb_url and not p.embed_url and p.is_image %}
       <div class="d-block d-md-none" style="z-index: 3;">
         <img src="{{ p.thumb_url }}" class="post-img" alt="" onclick="enlarge_thumb('post-{{ p.base36id }}')">
       </div>
