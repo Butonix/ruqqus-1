@@ -78,7 +78,9 @@
 
       {% if p.thumb_url %}
       <div class="d-block d-md-none" style="z-index: 3;">
-        <img src="{{ p.thumb_url }}" class="post-img" alt="" onclick="enlarge_thumb('post-{{ p.base36id }}')">
+      	<a href="{{ p.permalink }}" target="_blank" rel="nofollow">
+        	<img src="{{ p.thumb_url }}" class="post-img" alt="link post thumbnail">
+    	</a>
       </div>
       {% endif %}
 
