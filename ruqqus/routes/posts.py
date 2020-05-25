@@ -157,11 +157,11 @@ def submit_post(v):
                                body=request.form.get("body",""),
                                b=board
                                )
-    elif len(title)>250:
+    elif len(title)>500:
         return render_template("submit.html",
                                v=v,
-                               error="250 character limit for titles.",
-                               title=title[0:250],
+                               error="500 character limit for titles.",
+                               title=title[0:500],
                                url=url,
                                body=request.form.get("body",""),
                                b=board
