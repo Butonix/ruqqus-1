@@ -168,7 +168,7 @@
 
 </div>
 
-{% if p.thumb_url %}
+{% if p.thumb_url and not p.embed_url %}
 <div class="row mobile-thumb-enlarged text-center mt-3">
   <div class="col px-0">
     <a target="_blank" href="{{ p.permalink }}" rel="nofollow"><img src="{{ p.url }}" class="img-fluid" alt="post image"></a>
