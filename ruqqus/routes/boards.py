@@ -915,7 +915,8 @@ def board_css(boardname, x):
     scss=raw.replace("{boardcolor}", board.color)
     
     resp=make_response(sass.compile(string=scss))
-    resp.headers["Content-Type"]="text/css"
+    resp.headers.add("Content-Type", "text/css")
+    resp.headers.add("Cache-Control", "public")
 
     return resp
 
@@ -936,8 +937,8 @@ def board_dark_css(boardname, x):
     scss=raw.replace("{boardcolor}", board.color)
     
     resp=make_response(sass.compile(string=scss))
-    resp.headers["Content-Type"]="text/css"
-
+    resp.headers.add("Cache-Control", "public")
+    resp.headers.add("Content-Type", "text/css")
     return resp
 
 @app.route("/mod/<bid>/color", methods=["POST"])
