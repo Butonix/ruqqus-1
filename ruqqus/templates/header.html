@@ -67,8 +67,20 @@
       </li>
 
       <li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-        <a class="nav-link" href="/random/post" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="View random post"><i class="fas fa-random"></i></a>
-      </li>
+          <div class="dropdown">
+            <a class="nav-link bg-transparent" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
+              <i class="fas fa-random"></i>
+            </a>
+            <div class="dropdown-menu border-0 shadow fade px-0 mt-2" aria-labelledby="dropdownMenuButton">
+              <h6 class="dropdown-header">View random</h6>
+              <div class="px-2">
+                <a class="dropdown-item" href="/random/guild"><i class="fas fa-chess-rook fa-width-rem text-center mr-3"></i>Guild</a>
+                <a class="dropdown-item" href="/random/post"><i class="fas fa-feather-alt fa-width-rem text-center mr-3"></i>Post</a>
+                <a class="dropdown-item" href="/random/comment"><i class="fas fa-comment fa-width-rem text-center mr-3"></i>Comment</a>
+              </div>
+            </div>
+          </div>
+        </li>
 
       <li class="nav-item d-flex align-items-center justify-content-center text-center">
         <div class="dropdown">
