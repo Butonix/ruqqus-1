@@ -54,7 +54,7 @@ Pull requests are welcome! For major changes, please open an issue to discuss wh
 
 ## Sponsors
 
-As an open-source project, we are supported by the community. If you would like to support the development of Ruqqus, please consider [making a donation](https://ruqqus.com/donate) :)
+As an open-source project, we are supported by the community. If you would like to support the development of Ruqqus, please consider [making a donation](https://ruqqus.com/help/donate) :)
 
 ## Stay in touch
 
