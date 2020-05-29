@@ -1,0 +1,25 @@
+{% extends "mine/mine.html" %}
+
+{% block maincontent %}
+{% with users=admins %}
+	<h1>Ruqqus Admins</h1>
+	{% include "user_listing.html" %}
+{% endwith %}
+{% with users=exadmins %}
+	<h1>Former Admins</h1>
+	{% include "user_listing.html" %}
+{% endwith %}
+{% endblock %}
+
+{% block sidebarblock %}
+  <div class="sidebar-section sidebar-about">
+    <div class="title">Ruqqus Admins</div>
+    <div class="body">
+      <p>These are the Ruqqus Admins.</p>
+    </div>
+  </div>
+{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block sidebar %}{% endblock %}
