@@ -66,7 +66,7 @@ def badges(v):
 @auth_desired
 def help_admins(v):
 
-    admins = db.query(User).filter(User.admin_level>1).order_by(User.id.asc()).all()
+    admins = db.query(User).filter(User.admin_level>1, User.id > 1).order_by(User.id.asc()).all()
     admins=[x for x in admins]
 
     exadmins = db.query(User).filter_by(admin_level=1).order_by(User.id.asc()).all()
