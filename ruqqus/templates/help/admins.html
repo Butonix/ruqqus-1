@@ -3,11 +3,15 @@
 {% block maincontent %}
 {% with users=admins %}
 	<h1>Ruqqus Admins</h1>
-	{% include "user_listing.html" %}
+	<div class="row">
+		{% include "user_listing.html" %}
+	</div>
 {% endwith %}
 {% with users=exadmins %}
 	<h1>Former Admins</h1>
-	{% include "user_listing.html" %}
+	<div class="row">
+		{% include "user_listing.html" %}
+	</div>
 {% endwith %}
 {% endblock %}
 
