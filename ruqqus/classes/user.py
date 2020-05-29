@@ -392,7 +392,7 @@ class User(Base, Stndrd):
 
     def notification_commentlisting(self, page=1, all_=False):
 
-        notifications=self.notifications.filter_by(is_banned=False, is_deleted=False)
+        notifications=self.notifications.filter(Notification.comment.is_banned==False, Notification.comment.is_deleted==False)
 
         if not all_:
             notifications=notifications.filter_by(read=False)
