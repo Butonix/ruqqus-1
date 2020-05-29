@@ -1,18 +1,17 @@
 {% extends "mine/mine.html" %}
 
 {% block maincontent %}
-{% with users=admins %}
-	<h1>Ruqqus Admins</h1>
-	<div class="row">
+
+<div class="col">
+	{% with users=admins %}
+		<h1>Ruqqus Admins</h1>
 		{% include "user_listing.html" %}
-	</div>
-{% endwith %}
-{% with users=exadmins %}
-	<h1>Former Admins</h1>
-	<div class="row">
+	{% endwith %}
+	{% with users=exadmins %}
+		<h1>Former Admins</h1>
 		{% include "user_listing.html" %}
-	</div>
-{% endwith %}
+	{% endwith %}
+</div>
 {% endblock %}
 
 {% block sidebarblock %}
