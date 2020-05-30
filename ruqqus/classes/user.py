@@ -129,7 +129,7 @@ class User(Base, Stndrd):
 
     def any_block_exists(self, other):
 
-        return db.query(UserBlock).filter(or_(and_(UserBlock.user_id==self.id, UserBlock.target_id==other.id),and_((UserBlock.user_id==target.id, UserBlock.target_id==self.id))).first()
+        return db.query(UserBlock).filter(or_(and_(UserBlock.user_id==self.id, UserBlock.target_id==other.id),and_(UserBlock.user_id==target.id, UserBlock.target_id==self.id))).first()
         
     def validate_2fa(self, token):
         
