@@ -32,8 +32,8 @@ class UserBlock(Base, Stndrd, Age_times):
     target_id=Column(Integer, ForeignKey("users.id"))
     created_utc=Column(Integer)
 
-    user=relationship("user", lazy="joined", primaryjoin="User.id==UserBlock.user_id")
-    target=relationship("user", lazy="joined", primaryjoin="User.id==UserBlock.target_id")
+    user=relationship("User", lazy="joined", primaryjoin="User.id==UserBlock.user_id")
+    target=relationship("User", lazy="joined", primaryjoin="User.id==UserBlock.target_id")
 
 
 class User(Base, Stndrd):
