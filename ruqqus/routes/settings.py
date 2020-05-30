@@ -329,3 +329,14 @@ def delete_account(v):
     session.pop("session_id", None)
 
     return redirect('/')
+
+
+@app.route("/settings/blocked", methods=["GET"])
+@auth_required
+def settings_blockedpage(v):
+
+    users=[x.target for x in v.blocked]
+
+    return render_tempalte("settings_blocked.html",
+        v=v,
+        users=users)
