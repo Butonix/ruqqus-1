@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 11.6 (Ubuntu 11.6-1.pgdg16.04+1)
+-- Dumped from database version 12.3 (Ubuntu 12.3-1.pgdg16.04+1)
 -- Dumped by pg_dump version 12.1
 
 SET statement_timeout = 0;
@@ -16,7 +16,51 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: fuzzystrmatch; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION fuzzystrmatch; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION fuzzystrmatch IS 'determine similarities and distance between strings';
+
+
+--
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
+--
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
+
+
 SET default_tablespace = '';
+
+SET default_table_access_method = heap;
 
 --
 -- Name: comments; Type: TABLE; Schema: public; Owner: -
@@ -28,20 +72,27 @@ CREATE TABLE public.comments (
     created_utc integer NOT NULL,
     parent_submission integer,
     is_banned boolean DEFAULT false,
-    body character varying(2000),
+    body character varying(10000),
     parent_fullname character varying(255),
-    body_html character varying(3000),
+    body_html character varying(20000),
     distinguish_level integer DEFAULT 0,
     edited_utc integer DEFAULT 0,
     is_deleted boolean DEFAULT false NOT NULL,
     is_approved integer DEFAULT 0 NOT NULL,
-    ip character varying(64),
+    author_name character varying(64),
     approved_utc integer DEFAULT 0,
     ban_reason character varying(128) DEFAULT ''::character varying,
     creation_ip character varying(64) DEFAULT ''::character varying NOT NULL,
     score_disputed double precision DEFAULT 0,
     score_hot double precision DEFAULT 0,
-    score_top integer DEFAULT 0
+    score_top integer DEFAULT 0,
+    level integer DEFAULT 0,
+    parent_comment_id integer,
+    title_id integer,
+    over_18 boolean DEFAULT false,
+    is_op boolean DEFAULT false,
+    is_offensive boolean,
+    is_nsfl boolean DEFAULT false
 );
 
 
@@ -63,7 +114,7 @@ CREATE FUNCTION public.age(public.comments) RETURNS integer
 CREATE TABLE public.submissions (
     id integer NOT NULL,
     author_id integer,
-    title character varying(255) NOT NULL,
+    title character varying(500) NOT NULL,
     url character varying(255),
     created_utc integer NOT NULL,
     is_banned boolean DEFAULT false,
@@ -71,14 +122,14 @@ CREATE TABLE public.submissions (
     distinguish_level integer DEFAULT 0,
     created_str character varying(255),
     stickied boolean DEFAULT false,
-    body character varying(5000) DEFAULT ''::character varying,
-    body_html character varying(6000) DEFAULT ''::character varying,
+    body character varying(10000) DEFAULT ''::character varying,
+    body_html character varying(20000) DEFAULT ''::character varying,
     board_id integer DEFAULT 1,
     embed_url character varying(256) DEFAULT ''::character varying,
     is_deleted boolean DEFAULT false NOT NULL,
     domain_ref integer,
     is_approved integer DEFAULT 0 NOT NULL,
-    ip character varying(64),
+    author_name character varying(64),
     approved_utc integer DEFAULT 0,
     original_board_id integer,
     edited_utc integer,
@@ -92,7 +143,12 @@ CREATE TABLE public.submissions (
     score_hot double precision DEFAULT 0,
     score_top integer DEFAULT 0,
     score_activity double precision DEFAULT 0,
-    score_disputed double precision DEFAULT 0
+    score_disputed double precision DEFAULT 0,
+    guild_name character varying(64),
+    is_offensive boolean,
+    is_pinned boolean DEFAULT false,
+    is_nsfl boolean DEFAULT false,
+    repost_id integer DEFAULT 0
 );
 
 
@@ -120,7 +176,7 @@ CREATE TABLE public.users (
     admin_level integer DEFAULT 0,
     over_18 boolean DEFAULT false,
     creation_ip character varying(255),
-    most_recent_ip character varying(255),
+    hide_offensive boolean DEFAULT false,
     is_activated boolean DEFAULT false,
     reddit_username character varying(64) DEFAULT NULL::character varying,
     bio character varying(256) DEFAULT ''::character varying,
@@ -140,7 +196,18 @@ CREATE TABLE public.users (
     profile_nonce integer DEFAULT 0 NOT NULL,
     banner_nonce integer DEFAULT 0 NOT NULL,
     last_siege_utc integer DEFAULT 0,
-    mfa_secret character varying(32) DEFAULT NULL::character varying
+    mfa_secret character varying(32) DEFAULT NULL::character varying,
+    has_earned_darkmode boolean,
+    is_private boolean DEFAULT false,
+    read_announcement_utc integer DEFAULT 0,
+    feed_nonce integer DEFAULT 1,
+    discord_id integer,
+    show_nsfl boolean DEFAULT false,
+    karma integer DEFAULT 0,
+    comment_karma integer DEFAULT 0,
+    unban_utc integer DEFAULT 0,
+    is_deleted boolean DEFAULT false,
+    delete_reason character varying(1000) DEFAULT ''::character varying
 );
 
 
@@ -478,19 +545,6 @@ select
 
 
 --
--- Name: over_18(public.comments); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.over_18(public.comments) RETURNS boolean
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT submissions.over_18
-      FROM submissions
-      WHERE submissions.id=$1.parent_submission
-      $_$;
-
-
---
 -- Name: rank_activity(public.submissions); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -568,7 +622,8 @@ CREATE TABLE public.boards (
     profile_nonce integer DEFAULT 0 NOT NULL,
     banner_nonce integer DEFAULT 0 NOT NULL,
     is_private boolean DEFAULT false,
-    color_nonce integer DEFAULT 0
+    color_nonce integer DEFAULT 0,
+    is_nsfl boolean DEFAULT false
 );
 
 
@@ -714,10 +769,12 @@ $_$;
 CREATE FUNCTION public.trending_rank(public.boards) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
+
+
 select
 	case 
-		when $1.subscriber_count=0 then 0
-		when $1.subscriber_count>0 then cast($1.recent_subscriptions as float) / (cast($1.subscriber_count as float)+10)
+		when $1.subscriber_count<10 then 0
+		when $1.subscriber_count>=9 then cast($1.recent_subscriptions as float) / log(cast($1.subscriber_count as float))
 	end
 $_$;
 
@@ -924,6 +981,68 @@ ALTER SEQUENCE public.badges_id_seq OWNED BY public.badges.id;
 
 
 --
+-- Name: badpics; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.badpics (
+    id integer NOT NULL,
+    description character varying(255) DEFAULT ''::character varying,
+    phash character varying(255)
+);
+
+
+--
+-- Name: badpics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.badpics_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: badpics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.badpics_id_seq OWNED BY public.badpics.id;
+
+
+--
+-- Name: badwords; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.badwords (
+    id integer NOT NULL,
+    keyword character varying(64),
+    regex character varying(256)
+);
+
+
+--
+-- Name: badwords_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.badwords_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: badwords_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.badwords_id_seq OWNED BY public.badwords.id;
+
+
+--
 -- Name: bans; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -933,7 +1052,8 @@ CREATE TABLE public.bans (
     board_id integer,
     created_utc integer,
     banning_mod_id integer,
-    is_active boolean DEFAULT true NOT NULL
+    is_active boolean DEFAULT true NOT NULL,
+    mod_note character varying(128)
 );
 
 
@@ -1070,7 +1190,9 @@ CREATE TABLE public.contributors (
     id integer NOT NULL,
     user_id integer,
     board_id integer,
-    created_utc integer
+    created_utc integer,
+    is_active boolean DEFAULT true,
+    approving_mod_id integer
 );
 
 
@@ -1507,6 +1629,38 @@ ALTER SEQUENCE public.useragents_id_seq OWNED BY public.useragents.id;
 
 
 --
+-- Name: userblocks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.userblocks (
+    id integer NOT NULL,
+    user_id integer,
+    target_id integer,
+    created_utc integer
+);
+
+
+--
+-- Name: userblocks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.userblocks_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: userblocks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.userblocks_id_seq OWNED BY public.userblocks.id;
+
+
+--
 -- Name: userflags; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1610,6 +1764,20 @@ ALTER TABLE ONLY public.badge_defs ALTER COLUMN id SET DEFAULT nextval('public.b
 --
 
 ALTER TABLE ONLY public.badges ALTER COLUMN id SET DEFAULT nextval('public.badges_id_seq'::regclass);
+
+
+--
+-- Name: badpics id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.badpics ALTER COLUMN id SET DEFAULT nextval('public.badpics_id_seq'::regclass);
+
+
+--
+-- Name: badwords id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.badwords ALTER COLUMN id SET DEFAULT nextval('public.badwords_id_seq'::regclass);
 
 
 --
@@ -1753,6 +1921,13 @@ ALTER TABLE ONLY public.useragents ALTER COLUMN id SET DEFAULT nextval('public.u
 
 
 --
+-- Name: userblocks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.userblocks ALTER COLUMN id SET DEFAULT nextval('public.userblocks_id_seq'::regclass);
+
+
+--
 -- Name: userflags id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1803,6 +1978,30 @@ ALTER TABLE ONLY public.badge_defs
 
 ALTER TABLE ONLY public.badges
     ADD CONSTRAINT badges_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: badpics badpics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.badpics
+    ADD CONSTRAINT badpics_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: badwords badwords_keyword_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.badwords
+    ADD CONSTRAINT badwords_keyword_key UNIQUE (keyword);
+
+
+--
+-- Name: badwords badwords_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.badwords
+    ADD CONSTRAINT badwords_pkey PRIMARY KEY (id);
 
 
 --
@@ -1883,6 +2082,14 @@ ALTER TABLE ONLY public.flags
 
 ALTER TABLE ONLY public.follows
     ADD CONSTRAINT follows_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: boards guild_names_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.boards
+    ADD CONSTRAINT guild_names_unique UNIQUE (name);
 
 
 --
@@ -1974,6 +2181,14 @@ ALTER TABLE ONLY public.useragents
 
 
 --
+-- Name: userblocks userblocks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.userblocks
+    ADD CONSTRAINT userblocks_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: userflags userflags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2019,6 +2234,370 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.votes
     ADD CONSTRAINT votes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: badges_user_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX badges_user_index ON public.badges USING btree (user_id);
+
+
+--
+-- Name: badpics_phash_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX badpics_phash_index ON public.badpics USING gin (phash public.gin_trgm_ops);
+
+
+--
+-- Name: ban_board_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ban_board_index ON public.bans USING btree (board_id);
+
+
+--
+-- Name: ban_user_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ban_user_index ON public.bans USING btree (user_id);
+
+
+--
+-- Name: block_target_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX block_target_idx ON public.userblocks USING btree (target_id);
+
+
+--
+-- Name: block_user_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX block_user_idx ON public.userblocks USING btree (user_id);
+
+
+--
+-- Name: cflag_user_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cflag_user_idx ON public.commentflags USING btree (user_id);
+
+
+--
+-- Name: comment_level_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX comment_level_index ON public.comments USING btree (level);
+
+
+--
+-- Name: comment_parent_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX comment_parent_index ON public.comments USING btree (parent_comment_id);
+
+
+--
+-- Name: comment_post_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX comment_post_id_index ON public.comments USING btree (parent_submission);
+
+
+--
+-- Name: commentflag_comment_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX commentflag_comment_index ON public.commentflags USING btree (comment_id);
+
+
+--
+-- Name: comments_user_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX comments_user_index ON public.comments USING btree (author_id);
+
+
+--
+-- Name: commentvotes_comments_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX commentvotes_comments_id_index ON public.commentvotes USING btree (comment_id);
+
+
+--
+-- Name: commentvotes_comments_type_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX commentvotes_comments_type_index ON public.commentvotes USING btree (vote_type);
+
+
+--
+-- Name: contrib_active_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX contrib_active_index ON public.contributors USING btree (is_active);
+
+
+--
+-- Name: contrib_board_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX contrib_board_index ON public.contributors USING btree (board_id);
+
+
+--
+-- Name: contributors_board_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX contributors_board_index ON public.contributors USING btree (board_id);
+
+
+--
+-- Name: contributors_user_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX contributors_user_index ON public.contributors USING btree (user_id);
+
+
+--
+-- Name: cvote_user_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cvote_user_index ON public.commentvotes USING btree (user_id);
+
+
+--
+-- Name: domain_ref_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX domain_ref_idx ON public.submissions USING btree (domain_ref);
+
+
+--
+-- Name: flag_user_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX flag_user_idx ON public.flags USING btree (user_id);
+
+
+--
+-- Name: flags_post_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX flags_post_index ON public.flags USING btree (post_id);
+
+
+--
+-- Name: follow_target_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX follow_target_id_index ON public.follows USING btree (target_id);
+
+
+--
+-- Name: follow_user_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX follow_user_id_index ON public.follows USING btree (user_id);
+
+
+--
+-- Name: iruqqus_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX iruqqus_idx ON public.submissions USING btree (url varchar_pattern_ops);
+
+
+--
+-- Name: mod_board_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX mod_board_index ON public.mods USING btree (board_id);
+
+
+--
+-- Name: mod_rescind_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX mod_rescind_index ON public.mods USING btree (invite_rescinded);
+
+
+--
+-- Name: mod_user_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX mod_user_index ON public.mods USING btree (user_id);
+
+
+--
+-- Name: notifications_user_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX notifications_user_index ON public.notifications USING btree (user_id);
+
+
+--
+-- Name: post_18_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX post_18_index ON public.submissions USING btree (over_18);
+
+
+--
+-- Name: post_author_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX post_author_index ON public.submissions USING btree (author_id);
+
+
+--
+-- Name: post_offensive_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX post_offensive_index ON public.submissions USING btree (is_offensive);
+
+
+--
+-- Name: post_title_trgm_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX post_title_trgm_index ON public.submissions USING gin (title public.gin_trgm_ops);
+
+
+--
+-- Name: reports_post_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX reports_post_index ON public.reports USING btree (post_id);
+
+
+--
+-- Name: sub_active_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX sub_active_index ON public.subscriptions USING btree (is_active);
+
+
+--
+-- Name: sub_user_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX sub_user_index ON public.subscriptions USING btree (user_id);
+
+
+--
+-- Name: submission_created_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submission_created_index ON public.submissions USING btree (created_utc);
+
+
+--
+-- Name: submission_domainref_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submission_domainref_index ON public.submissions USING btree (domain_ref);
+
+
+--
+-- Name: submission_pinned_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submission_pinned_idx ON public.submissions USING btree (is_pinned);
+
+
+--
+-- Name: submissions_author_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submissions_author_index ON public.submissions USING btree (author_id);
+
+
+--
+-- Name: submissions_board_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submissions_board_index ON public.submissions USING btree (board_id);
+
+
+--
+-- Name: submissions_offensive_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submissions_offensive_index ON public.submissions USING btree (is_offensive);
+
+
+--
+-- Name: submissions_over18_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submissions_over18_index ON public.submissions USING btree (over_18);
+
+
+--
+-- Name: submissions_sticky_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submissions_sticky_index ON public.submissions USING btree (stickied);
+
+
+--
+-- Name: submissions_url_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submissions_url_index ON public.submissions USING btree (url);
+
+
+--
+-- Name: subscription_board_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX subscription_board_index ON public.subscriptions USING btree (board_id);
+
+
+--
+-- Name: subscription_user_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX subscription_user_index ON public.subscriptions USING btree (user_id);
+
+
+--
+-- Name: user_del_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX user_del_idx ON public.users USING btree (is_deleted);
+
+
+--
+-- Name: users_created_utc_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX users_created_utc_index ON public.users USING btree (created_utc);
+
+
+--
+-- Name: vote_user_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX vote_user_index ON public.votes USING btree (user_id);
+
+
+--
+-- Name: votes_submission_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX votes_submission_id_index ON public.votes USING btree (submission_id);
+
+
+--
+-- Name: votes_type_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX votes_type_index ON public.votes USING btree (vote_type);
 
 
 --
@@ -2078,6 +2657,14 @@ ALTER TABLE ONLY public.bans
 
 
 --
+-- Name: contributors board_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contributors
+    ADD CONSTRAINT board_id_fkey FOREIGN KEY (board_id) REFERENCES public.boards(id);
+
+
+--
 -- Name: boards boards_creator_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2102,6 +2689,14 @@ ALTER TABLE ONLY public.commentflags
 
 
 --
+-- Name: comments comments_parent_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comments_parent_comment_id_fkey FOREIGN KEY (parent_comment_id) REFERENCES public.comments(id);
+
+
+--
 -- Name: comments comments_parent_post_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2123,6 +2718,14 @@ ALTER TABLE ONLY public.commentvotes
 
 ALTER TABLE ONLY public.commentvotes
     ADD CONSTRAINT commentvotes_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: contributors contributors_approving_mod_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contributors
+    ADD CONSTRAINT contributors_approving_mod_id_fkey FOREIGN KEY (approving_mod_id) REFERENCES public.users(id);
 
 
 --
@@ -2318,11 +2921,35 @@ ALTER TABLE ONLY public.subscriptions
 
 
 --
+-- Name: contributors user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contributors
+    ADD CONSTRAINT user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: useragents useragents_banned_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.useragents
     ADD CONSTRAINT useragents_banned_by_fkey FOREIGN KEY (banned_by) REFERENCES public.users(id);
+
+
+--
+-- Name: userblocks userblocks_target_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.userblocks
+    ADD CONSTRAINT userblocks_target_id_fkey FOREIGN KEY (target_id) REFERENCES public.users(id);
+
+
+--
+-- Name: userblocks userblocks_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.userblocks
+    ADD CONSTRAINT userblocks_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -2363,6 +2990,13 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.votes
     ADD CONSTRAINT votes_submission_id_fkey FOREIGN KEY (submission_id) REFERENCES public.submissions(id);
+
+
+--
+-- Name: FUNCTION pg_stat_statements_reset(userid oid, dbid oid, queryid bigint); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.pg_stat_statements_reset(userid oid, dbid oid, queryid bigint) TO ubnrebpk0sik48;
 
 
 --
