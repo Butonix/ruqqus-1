@@ -337,6 +337,6 @@ def settings_blockedpage(v):
 
     users=[x.target for x in v.blocked]
 
-    return render_template("settings_blocked.html",
+    return render_template("settings_blocks.html",
         v=v,
         users=users)
