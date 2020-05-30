@@ -235,7 +235,7 @@ def api_comment(v):
     if parent.is_banned or parent.is_deleted:
         abort(403)
 
-    if parent.author.has_block(v):
+    if parent.author.any_block_exists(v):
         abort(403)
 
     #check for archive and ban state

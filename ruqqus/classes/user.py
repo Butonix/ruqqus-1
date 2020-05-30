@@ -126,6 +126,10 @@ class User(Base, Stndrd):
     def is_blocked_by(self, user):
 
         return self.blocked.filter_by(user_id=user.id).first()
+
+    def any_block_exists(self, other):
+
+        return db.query(UserBlock).filter(or_(and_(UserBlock.user_id==self.id, UserBlock.target_id==other.id),and_((UserBlock.user_id==target.id, UserBlock.target_id==self.id))).first()
         
     def validate_2fa(self, token):
         
