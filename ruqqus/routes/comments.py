@@ -235,7 +235,10 @@ def api_comment(v):
     if parent.is_banned or parent.is_deleted:
         abort(403)
 
-    #check for ban state
+    if parent.author.has_block(v):
+        abort(403)
+
+    #check for archive and ban state
     post = get_post(request.form.get("submission"))
     if post.is_archived or not post.board.can_comment(v):
         abort(403)
