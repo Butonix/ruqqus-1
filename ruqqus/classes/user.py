@@ -395,7 +395,7 @@ class User(Base, Stndrd):
         notifications=self.notifications.join(Notification.comment).filter(Comment.is_banned==False, Comment.is_deleted==False)
 
         if not all_:
-            notifications=notifications.filter_by(read=False)
+            notifications=notifications.filter(Notification.read==False)
 
         notifications = notifications.order_by(Notification.id.desc()).offset(25*(page-1)).limit(26)
 
