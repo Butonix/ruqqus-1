@@ -2993,13 +2993,6 @@ ALTER TABLE ONLY public.votes
 
 
 --
--- Name: FUNCTION pg_stat_statements_reset(userid oid, dbid oid, queryid bigint); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.pg_stat_statements_reset(userid oid, dbid oid, queryid bigint) TO ubnrebpk0sik48;
-
-
---
 -- PostgreSQL database dump complete
 --
 
