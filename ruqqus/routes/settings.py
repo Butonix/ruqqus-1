@@ -331,12 +331,12 @@ def delete_account(v):
     return redirect('/')
 
 
-@app.route("/settings/blocked", methods=["GET"])
+@app.route("/settings/blocks", methods=["GET"])
 @auth_required
 def settings_blockedpage(v):
 
     users=[x.target for x in v.blocked]
 
-    return render_tempalte("settings_blocked.html",
+    return render_template("settings_blocked.html",
         v=v,
         users=users)
