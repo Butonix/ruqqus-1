@@ -274,8 +274,10 @@ def api_comment(v):
     mentions=soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3)
     for mention in mentions:
         username=mention["href"].split("@")[1]
-        user=db.query(User).filter_by(username=username).first()
+        user=get_user(username, graceful=True)
         if user:
+            if v.any_block_exists(user):
+                continue
             notify_users.add(user.id)
 
 
