@@ -76,7 +76,15 @@
         {% endif %}
       </div>
 
-      {% if p.thumb_url %}
+      {% if p.thumb_url and not p.is_image %}
+      <div class="d-block d-md-none" style="z-index: 3;">
+      	<a href="{{ p.permalink }}" rel="nofollow">
+        	<img src="{{ p.thumb_url }}" class="post-img" alt="link post thumbnail">
+   		</a>
+      </div>
+      {% endif %}
+
+      {% if p.thumb_url and p.is_image %}
       <div class="d-block d-md-none" style="z-index: 3;">
         <img src="{{ p.thumb_url }}" class="post-img" alt="" onclick="enlarge_thumb('post-{{ p.base36id }}')">
       </div>
@@ -168,10 +176,10 @@
 
 </div>
 
-{% if p.thumb_url %}
+{% if p.is_image and p.thumb_url and not p.embed_url %}
 <div class="row mobile-thumb-enlarged text-center mt-3">
   <div class="col px-0">
-    <a target="_blank" href="{{ p.permalink }}" rel="nofollow"><img src="{{ p.thumb_url }}" class="img-fluid" alt="post image"></a>
+    <a target="_blank" href="{{ p.permalink }}" rel="nofollow"><img src="{{ p.url }}" class="img-fluid" alt="post image"></a>
   </div>
 </div>
 {% endif %}

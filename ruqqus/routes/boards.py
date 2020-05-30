@@ -1072,12 +1072,12 @@ def siege_guild(v):
     db.commit()
 
 
-    #Cannot siege +general, +ruqqus, or +ruqquspress
-    if guild.id in [1,2,10]:
+    #Cannot siege +general, +ruqqus, +ruqquspress, +ruqqusdmca
+    if guild.id in [1,2,10,1000]:
         return render_template("message.html",
                                v=v,
                                title=f"Siege against +{guild.name} Failed",
-                               error="You are not allowed to siege +{guild.name}. You may try again in 30 days."
+                               error="+{guild.name} is an admin-controlled guild and is immune to siege. You may try again in 30 days."
                                ), 403
 
     #check user activity
