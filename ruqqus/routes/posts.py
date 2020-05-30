@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import secrets
 import threading
 import requests
+import re
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -147,6 +148,16 @@ def submit_post(v):
     board=get_guild(request.form.get('board','general'), graceful=True)
     if not board:
         board=get_guild('general')
+
+    if re.match('^\s*$', title):
+        return render_template("submit.html",
+                               v=v,
+                               error="Please enter a better title.",
+                               title=title,
+                               url=url,
+                               body=request.form.get("body",""),
+                               b=board
+                               )
 
     if len(title)<10:
         return render_template("submit.html",
