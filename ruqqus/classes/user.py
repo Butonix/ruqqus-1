@@ -27,7 +27,7 @@ from ruqqus.__main__ import Base, db, cache
 class UserBlock(Base, Stndrd, Age_times):
 
     __tablename__="userblocks"
-    id=Column(Integer, primary_key=True),
+    id=Column(Integer, primary_key=True)
     user_id=Column(Integer, ForeignKey("users.id"))
     target_id=Column(Integer, ForeignKey("users.id"))
     created_utc=Column(Integer)
