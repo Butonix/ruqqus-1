@@ -182,9 +182,9 @@ def front_all(v):
    #If page 1, check for sticky
     if page==1:
         sticky =[]
-        sticky=db.query(Submission.id).filter_by(stickied=True).first()[0]
+        sticky=db.query(Submission.id).filter_by(stickied=True).first()
         if sticky:
-            ids=[sticky]+ids
+            ids=[sticky.id]+ids
     #check if ids exist
     posts=get_posts(ids, sort=sort_method, v=v)
     
