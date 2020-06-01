@@ -7,7 +7,7 @@
 			<div class="d-flex flex-wrap align-items-center mb-2">
 				<img src="{{ b.profile_url }}" class="profile-pic-40 mr-2">
 
-				<a class="card-title stretched-link h5 mb-0" href="{{ b.permalink }}">+{{ b.name }} {% if b.over_18 %}<span class="badge badge-danger">NSFW</span>{% endif %}</a>
+				<a class="card-title text-break stretched-link h5 mb-0" href="{{ b.permalink }}">+{{ b.name }} {% if b.over_18 %}<span class="badge badge-danger">NSFW</span>{% endif %}</a>
 
 			</div>
 			<p class="card-text text-small text-muted">{{ b.description|truncate(72, True) }}</p>
