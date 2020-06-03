@@ -66,6 +66,8 @@ def thumbnail_thread(pid):
             
             img=soup.find('meta', attrs={"name": meta, "content":True})
             if not img:
+                img=soup.find('meta', attrs={'property':meta, 'content':True})
+            if not img:
                 continue
             try:
                 x=requests.get(img['content'], headers=headers)
