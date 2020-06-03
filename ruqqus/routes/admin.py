@@ -198,4 +198,6 @@ def participation_stats(v):
           "comment_voting_users":db.query(User).join(CommentVote, CommentVote.user_id==User.id).distinct().count()
           }
 
+    data={x:f"{data[x]:,}" for x in data}
+
     return render_template("admin/content_stats.html", v=v, data=data)
