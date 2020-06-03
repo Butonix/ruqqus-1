@@ -59,6 +59,7 @@ def thumbnail_thread(pid):
 
         metas = ["ruqqus:thumbnail",
                  "twitter:image",
+                 "og:image"
                  "thumbnail"
                  ]
 
