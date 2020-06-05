@@ -129,7 +129,15 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     @property
     def permalink(self):
-        return f"/post/{self.base36id}"
+
+        output=self.title.lower()
+
+        output=[re.sub('\W', '', word) for word in output.split()[0:6]]
+
+        output='-'.join(output)
+
+
+        return f"/post/{self.base36id}/{output}"
 
     @property
     def is_archived(self):

@@ -31,11 +31,11 @@ BAN_REASONS=['',
 BUCKET="i.ruqqus.com"
 
 @app.route("/post/<base36id>", methods=["GET"])
+@app.route("/post/<base36id>/<anything>", methods=["GET"])
 @auth_desired
 def post_base36id(base36id, v=None):
     
     post=get_post_with_comments(base36id, v=v, sort_type=request.args.get("sort","top"))
-
 
     board=post.board
 
