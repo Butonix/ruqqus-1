@@ -22,6 +22,9 @@ def get_post(pid, v=None):
 
         items= db.query(Submission, vt.c.vote_type).filter(Submission.id==i).join(vt, isouter=True).first()
         
+        if not items:
+            abort(404)
+        
         x=items[0]
         x._voted=items[1] if items[1] else 0
 
