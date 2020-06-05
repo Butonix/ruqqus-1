@@ -43,7 +43,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                                v=v,
                                b=board),
 
-                'api':lambda:jsonify({'error':f'+{board.name} is banned.'})
+                'api':lambda:{'error':f'+{board.name} is banned.'}
 
                 }
 
@@ -55,7 +55,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                                lo_formkey=make_logged_out_formkey(t),
                                board=comment.board
                                ),
-                'api':lambda:jsonify({'error':f'This content is not suitable for some users and situations.'})
+                'api':lambda:{'error':f'This content is not suitable for some users and situations.'}
 
                 }
 
@@ -68,7 +68,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                                board=comment.board
                                ),
 
-                'api':lambda:jsonify({'error':f'This content is not suitable for some users and situations.'})
+                'api':lambda:{'error':f'This content is not suitable for some users and situations.'}
 
                 }
 
@@ -79,7 +79,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
         return {'html':lambda:render_template("board_banned.html",
                                v=v,
                                b=board),
-                'api':lambda:jsonify({'error':f'+{board.name} is banned.'})
+                'api':lambda:{'error':f'+{board.name} is banned.'}
                 }
 
     post._preloaded_comments=[comment]
@@ -178,7 +178,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
 
         
     return {'html':lambda:post.rendered_page(v=g.v, comment=top_comment, comment_info=comment),
-            'api':lambda:jsonify(c.json)
+            'api':lambda:c.json
             }
 
 @app.route("/api/comment", methods=["POST"])
