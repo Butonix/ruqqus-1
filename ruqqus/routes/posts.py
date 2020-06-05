@@ -33,6 +33,9 @@ BUCKET="i.ruqqus.com"
 @app.route("/post_short/<base36id>", methods=["GET"])
 def incoming_post_shortlink(base36id):
 
+  if not base36id:
+    return redirect('/')
+
   post=get_post(base36id)
   return redirect(post.permalink)
 
