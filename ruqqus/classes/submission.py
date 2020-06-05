@@ -102,10 +102,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return f"<Submission(id={self.id})>"
 
     @property
+    @lazy
     def board_base36id(self):
         return base36encode(self.board_id)
-
-    
 
     @property
     def is_repost(self):
@@ -124,10 +123,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return db.query(Domain).filter_by(id=self.domain_ref).first()
 
     @property
+    @lazy
     def fullname(self):
         return f"t2_{self.base36id}"
 
     @property
+    @lazy
     def permalink(self):
 
         output=self.title.lower()

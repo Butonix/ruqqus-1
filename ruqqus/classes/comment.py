@@ -83,10 +83,12 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         return f"<Comment(id={self.id})>"
 
     @property
+    @lazy
     def fullname(self):
         return f"t3_{self.base36id}"
 
     @property
+    @lazy
     def is_top_level(self):
         return self.parent_fullname and self.parent_fullname.startswith("t2_")
 
