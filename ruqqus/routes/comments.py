@@ -23,11 +23,11 @@ def comment_cid(cid):
     comment=get_comment(cid)
     return redirect(comment.permalink)
 
-@app.route("/post/<p_id>/comment/<c_id>", methods=["GET"])
+@app.route("/post/<p_id>/<anything>/<c_id>", methods=["GET"])
 @app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
 @auth_desired
 @api
-def post_pid_comment_cid(p_id, c_id, v=None):
+def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
 
     comment=get_comment(c_id, v=v)
 
