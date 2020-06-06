@@ -1510,7 +1510,7 @@ function invite_mod_to_guild(boardid) {
 
 }
 
-function block_user() {
+block_user=function() {
 
   var exileForm = document.getElementById("exile-form");
 
@@ -1545,8 +1545,7 @@ function block_user() {
 
 }
 
-function post_comment(cid) {
-
+post_comment=function(){
   var commentForm = document.getElementById('reply-to-'+cid);
 
   var postError = document.getElementById("toast-error-message");
