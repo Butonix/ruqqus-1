@@ -32,7 +32,8 @@ def notifications(v):
                            v=v,
                            notifications=comments,
                            next_exists=next_exists,
-                           page=page)
+                           page=page,
+                           standalone=True)
 
 @cache.memoize(timeout=300)
 def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=False, ids_only=True):
