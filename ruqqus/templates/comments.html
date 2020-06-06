@@ -1,5 +1,14 @@
 {% macro single_comment(c, level=1) %}
 
+{% if (c.is_banned or c.is_deleted) and not (v and v.admin_level >=3) %}
+
+  {% if c.any_descendents_live %}
+    {% include "single_comment_removed.html"}
+  {% endif %}
+
+
+{% else %}
+
 {% set score=c.score_fuzzed %}
 {% if v %}
 {% set voted=c.voted %}
@@ -269,6 +278,9 @@
 </div>
 
 </div>
+
+{% endif %}
+
 {% endmacro %}
 
 {% for comment in comments %}
