@@ -68,7 +68,7 @@
                   <i class="fas fa-ellipsis-h text-muted"></i>
                 </a>
                 <div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
-                  <a class="dropdown-item" href="javascript:void(0)" onclick="post('/mod/unexile/{{ b.base36id }}?username={{ ban.user.username }}&formkey={{ v.formkey }}', callback=function(){window.location.reload(true)})"><i class="fas fa-check"></i>Unblock</a>
+                  <a class="dropdown-item" href="javascript:void(0)" onclick="post('/settings/unblock?username={{ ban.user.username }}&formkey={{ v.formkey }}', callback=function(){window.location.reload(true)})"><i class="fas fa-check"></i>Unblock</a>
                 </div>
               </div>
             </td>
@@ -110,7 +110,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" id="exileUserButton" onclick="exile_from_guild('{{ b.base36id }}')">Exile user</button>
+          <button type="button" class="btn btn-primary" id="exileUserButton" onclick="post('/settings/block?username={{ ban.user.username }}&formkey={{ v.formkey }}', callback=function(){window.location.reload(true)})">Exile user</button>
         </div>
       </div>
     </form>
