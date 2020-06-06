@@ -1510,3 +1510,38 @@ function invite_mod_to_guild(boardid) {
   }
 
 }
+
+function block_user() {
+
+  var exileForm = document.getElementById("exile-form");
+
+  var exileError = document.getElementById("toast-error-message");
+
+  var usernameField = document.getElementById("exile-username");
+
+  var isValidUsername = usernameField.checkValidity();
+
+  username = usernameField.value;
+
+  if (isValidUsername) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("post", "/settings/block");
+    xhr.withCredentials=true;
+    f=new FormData();
+    f.append("username", username);
+    f.append("formkey", formkey());
+    xhr.onload=function(){
+      if (xhr.status==204) {
+        window.location.reload(true);
+      }
+      else {
+      $('#toast-exile-error').toast('dispose');
+      $('#toast-exile-error').toast('show');
+      exileError.textContent = JSON.parse(xhr.response)["error"];
+      }
+    }
+    xhr.send(f)
+  }
+
+}
