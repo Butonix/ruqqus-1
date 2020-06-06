@@ -601,9 +601,9 @@
 
     {% if p.replies %}
     <div class="comment-section">
-     {% for c in p.replies %}
-     {{ c.rendered_comment(v=v, is_allowed_to_comment = is_allowed_to_comment, post_base36id=p.base36id) | safe }}
-     {% endfor %}
+     {% with comments=p.replies %}
+      {% include "comments.html" %}
+     {% endwith %}
    </div>
    {% elif not p.replies and not p.is_deleted %}
    <div class="comment-section text-center py-7">
