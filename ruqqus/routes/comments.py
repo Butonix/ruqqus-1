@@ -218,7 +218,7 @@ def api_comment(v):
                                          parent_submission=parent_submission
                                          ).first()
     if existing:
-        return redirect(existing.permalink)
+        return jsonify({"error":"You already made that comment."}), 409
 
     #get parent item info
     parent_id=int(parent_fullname.split("_")[1], 36)
@@ -233,15 +233,15 @@ def api_comment(v):
 
     #No commenting on deleted/removed things
     if parent.is_banned or parent.is_deleted:
-        abort(403)
+        return jsonify({"error":"You can't comment on things that have been deleted."}), 403
 
     if parent.author.any_block_exists(v):
-        abort(403)
+        return jsonify({"error":"You can't reply to users who have blocked you, or users you have blocked."}), 403
 
     #check for archive and ban state
     post = get_post(request.form.get("submission"))
     if post.is_archived or not post.board.can_comment(v):
-        abort(403)
+        return jsonify({"error":"You can't comment on this."}), 403
 
         
     #create comment
