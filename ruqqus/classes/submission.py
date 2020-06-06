@@ -180,7 +180,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                                sort_method=request.args.get("sort","Hot").capitalize(),
                                linked_comment=comment,
                                comment_info=comment_info,
-                               is_allowed_to_comment=self.board.can_comment(v) and not self.is_archived
+                               is_allowed_to_comment=self.board.can_comment(v) and not self.is_archived,
+                               render_replies=True
                                )
 
 
