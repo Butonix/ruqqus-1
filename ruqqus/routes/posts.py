@@ -169,15 +169,16 @@ def submit_post(v):
                                b=board
                                )
 
-    if len(title)<10:
-        return render_template("submit.html",
-                               v=v,
-                               error="Please enter a better title.",
-                               title=title,
-                               url=url,
-                               body=request.form.get("body",""),
-                               b=board
-                               )
+    # if len(title)<10:
+    #     return render_template("submit.html",
+    #                            v=v,
+    #                            error="Please enter a better title.",
+    #                            title=title,
+    #                            url=url,
+    #                            body=request.form.get("body",""),
+    #                            b=board
+    #                            )
+    
     elif len(title)>500:
         return render_template("submit.html",
                                v=v,
