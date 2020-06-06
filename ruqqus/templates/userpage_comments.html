@@ -27,9 +27,9 @@
 
     {% if listing %}
     <div class="posts p-3 p-md-0">
-     {% for c in listing %}
-     {{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
-     {% endfor%}
+     {% with comments=listing %}
+     {% include "comments.html" %}
+     {% endwith %}
    </div>
    {% else %}
    <div class="text-center px-3 my-3">

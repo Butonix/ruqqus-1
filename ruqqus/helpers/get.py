@@ -192,6 +192,7 @@ def get_comments(cids, v=None, sort_type="new"):
         x=db.query(Comment).filter(Comment.id.in_(cids)).all()
         output=[i for i in x]
 
+    output=sorted(output, key=lambda x:cids.index(x.id))
     
     return output
 
