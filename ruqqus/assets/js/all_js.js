@@ -373,8 +373,7 @@ function addReplyForm(commentId, postId, formId) {
 
   var id = "reply-to-" + commentId;
 
-  document.getElementById(id).innerHTML = '<div class="comment-write collapsed child"> <form id="reply-to-t3_'+commentId+'" action="/api/comment" method="post" class="input-group"> <input type="hidden" name="formkey" value="'+formkey()+'"> <input type="hidden" name="parent_fullname" value="t3_'+commentId+'"> <input type="hidden" name="submission" value="'+postId+'"> <textarea name="body" form="reply-to-t3_'+commentId+'" class="comment-box form-control rounded" id="reply-form-'+commentId+'" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> <div class="comment-format"> <small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> <small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small> <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> <small class="format"><span class="font-weight-bolder text-uppercase" onclick="getGif();commentForm(\''+formId+'\')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF">GIF</span></small> <a href="javascript:void(0)" onclick="delReplyForm(\''+commentId+'\')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> <button form="reply-to-t3_'+commentId+'" class="btn btn-primary ml-2">Comment</button> </div> </form> </div>';
-
+  document.getElementById(id).innerHTML = '
 }
 
     // Removes reply form innerHTML on click
@@ -1543,5 +1542,31 @@ function block_user() {
     }
     xhr.send(f)
   }
+
+}
+
+function post_comment(cid) {
+
+  var commentForm = document.getElementById('reply-to-'+cid);
+
+  var postError = document.getElementById("toast-error-message");
+
+  username = usernameField.value;
+
+  var xhr = new XMLHttpRequest();
+    xhr.open("post", "/settings/block");
+    xhr.withCredentials=true;
+    xhr.onload=function(){
+      if (xhr.status==204) {
+        document.getElementById('reply-form-'+cid).disabled=true;
+        document.getElementById('comment-format-bar-'+cid).classList.add('d-none');
+      }
+      else {
+      $('#toast-exile-error').toast('dispose');
+      $('#toast-exile-error').toast('show');
+      exileError.textContent = JSON.parse(xhr.response)["error"];
+      }
+    }
+    xhr.send(commentForm)
 
 }

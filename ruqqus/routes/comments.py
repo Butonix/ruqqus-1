@@ -299,7 +299,7 @@ def api_comment(v):
 
     #print(f"Content Event: @{v.username} comment {c.base36id}")
 
-    return redirect(f"{c.permalink}?context=1")
+    return "", 204
 
 
 @app.route("/edit_comment/<cid>", methods=["POST"])
