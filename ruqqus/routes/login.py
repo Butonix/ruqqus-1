@@ -220,6 +220,8 @@ def sign_up_get(v):
 
     error= request.args.get("error", None)
 
+    session.permanent=True
+
 
 
     return render_template("sign_up.html",
