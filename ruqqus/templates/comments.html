@@ -1,4 +1,4 @@
-{% macro single_comment(c) %}
+{% macro single_comment(c, level=1) %}
 
 {% set score=c.score_fuzzed %}
 {% if v %}
@@ -199,7 +199,7 @@
     {% if level<5 %}
       {% for reply in c.replies %}
         <div class="">
-          {{ single_comment(reply) }}
+          {{ single_comment(reply, level=level+1) }}
         </div>
       {% endfor %}
     {% else %}
