@@ -102,10 +102,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return f"<Submission(id={self.id})>"
 
     @property
+    @lazy
     def board_base36id(self):
         return base36encode(self.board_id)
-
-    
 
     @property
     def is_repost(self):
@@ -124,12 +123,22 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return db.query(Domain).filter_by(id=self.domain_ref).first()
 
     @property
+    @lazy
     def fullname(self):
         return f"t2_{self.base36id}"
 
     @property
+    @lazy
     def permalink(self):
-        return f"/post/{self.base36id}"
+
+        output=self.title.lower()
+
+        output=[re.sub('\W', '', word) for word in output.split()[0:6]]
+
+        output='-'.join(output)
+
+
+        return f"/post/{self.base36id}/{output}"
 
     @property
     def is_archived(self):
@@ -171,7 +180,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                                sort_method=request.args.get("sort","Hot").capitalize(),
                                linked_comment=comment,
                                comment_info=comment_info,
-                               is_allowed_to_comment=self.board.can_comment(v) and not self.is_archived
+                               is_allowed_to_comment=self.board.can_comment(v) and not self.is_archived,
+                               render_replies=True
                                )
 
 

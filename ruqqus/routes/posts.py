@@ -30,12 +30,22 @@ BAN_REASONS=['',
 
 BUCKET="i.ruqqus.com"
 
+@app.route("/post_short/", methods=["GET"])
+@app.route("/post_short/<base36id>", methods=["GET"])
+def incoming_post_shortlink(base36id=None):
+
+  if not base36id:
+    return redirect('/')
+
+  post=get_post(base36id)
+  return redirect(post.permalink)
+
 @app.route("/post/<base36id>", methods=["GET"])
+@app.route("/post/<base36id>/<anything>", methods=["GET"])
 @auth_desired
-def post_base36id(base36id, v=None):
+def post_base36id(base36id, anything=None, v=None):
     
     post=get_post_with_comments(base36id, v=v, sort_type=request.args.get("sort","top"))
-
 
     board=post.board
 

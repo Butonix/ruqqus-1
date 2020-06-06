@@ -83,10 +83,12 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         return f"<Comment(id={self.id})>"
 
     @property
+    @lazy
     def fullname(self):
         return f"t3_{self.base36id}"
 
     @property
+    @lazy
     def is_top_level(self):
         return self.parent_fullname and self.parent_fullname.startswith("t2_")
 
@@ -123,7 +125,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @lazy
     def permalink(self):
 
-        return f"/post/{self.post.base36id}/comment/{self.base36id}"
+        return f"{self.post.permalink}/{self.base36id}"
 
     @property
     @cache.memoize(timeout=60)

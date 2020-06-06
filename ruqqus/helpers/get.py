@@ -22,6 +22,9 @@ def get_post(pid, v=None):
 
         items= db.query(Submission, vt.c.vote_type).filter(Submission.id==i).join(vt, isouter=True).first()
         
+        if not items:
+            abort(404)
+        
         x=items[0]
         x._voted=items[1] if items[1] else 0
 
@@ -189,6 +192,7 @@ def get_comments(cids, v=None, sort_type="new"):
         x=db.query(Comment).filter(Comment.id.in_(cids)).all()
         output=[i for i in x]
 
+    output=sorted(output, key=lambda x:cids.index(x.id))
     
     return output
 

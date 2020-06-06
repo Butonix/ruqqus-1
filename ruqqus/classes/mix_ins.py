@@ -56,7 +56,7 @@ class Age_times:
         elif age < 86400:
             hours = int(age / 3600)
             return f"{hours} hour{'s' if hours > 1 else ''} ago"
-        elif age < 2592000:
+        elif age < 2678400:
             days = int(age / 86400)
             return f"{days} day{'s' if days > 1 else ''} ago"
 

@@ -9,7 +9,7 @@
       <div class="card-body" style="word-wrap: break-word;">
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
 
-          <a class="card-title stretched-link h5 mb-0" href="{{ u.permalink }}">@{{ u.username }}</a>
+          <a class="card-title text-break stretched-link h5 mb-0" href="{{ u.permalink }}">@{{ u.username }}</a>
 
           {% if v %}
           <div id="button-sub-{{ u.base36id }}" style="z-index: 2" class="{% if u.has_follower(v) %}d-none{% endif %}"><a class="btn btn-primary btn-sm" href="javascript:void(0)" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-{{ u.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ u.base36id }}').classList.toggle('d-none');})">Subscribe</a></div>

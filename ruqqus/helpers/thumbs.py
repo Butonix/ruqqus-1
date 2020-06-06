@@ -7,6 +7,8 @@ from PIL import Image as PILimage
 from .get import *
 from ruqqus.__main__ import db, app
 
+headers={"User-Agent":"Ruqqus thumbnail finder https://ruqqus.com"}
+
 def thumbnail_thread(pid):
 
     post=get_post(pid)
@@ -19,7 +21,7 @@ def thumbnail_thread(pid):
 
     if domain_obj and domain_obj.show_thumbnail:
 
-        x=requests.get(post.url)
+        x=requests.get(post.url, headers=headers)
 
         if x.headers.get("Content-Type","/").split("/")[0]=="image":
             #image post, using submitted url
@@ -41,7 +43,6 @@ def thumbnail_thread(pid):
 
             return
 
-    headers={"User-Agent":app.config['UserAgent']}
     x=requests.get(post.url, headers=headers)
     
     if x.status_code != 200 or not x.headers["Content-Type"].startswith(("text/html", "image/")):
@@ -58,12 +59,15 @@ def thumbnail_thread(pid):
 
         metas = ["ruqqus:thumbnail",
                  "twitter:image",
+                 "og:image"
                  "thumbnail"
                  ]
 
         for meta in metas:
             
             img=soup.find('meta', attrs={"name": meta, "content":True})
+            if not img:
+                img=soup.find('meta', attrs={'property':meta, 'content':True})
             if not img:
                 continue
             try:

@@ -32,7 +32,8 @@ def notifications(v):
                            v=v,
                            notifications=comments,
                            next_exists=next_exists,
-                           page=page)
+                           page=page,
+                           standalone=True)
 
 @cache.memoize(timeout=300)
 def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=False, ids_only=True):
@@ -129,9 +130,9 @@ def home(v):
 
         #If page 1, check for sticky
         if page==1:
-            sticky=db.query(Submission.id).filter_by(stickied=True).first()[0]
+            sticky=db.query(Submission.id).filter_by(stickied=True).first()
             if sticky:
-                ids=[sticky]+ids
+                ids=[sticky.id]+ids
 
 
         posts=get_posts(ids, sort=sort, v=v)
@@ -182,9 +183,9 @@ def front_all(v):
    #If page 1, check for sticky
     if page==1:
         sticky =[]
-        sticky=db.query(Submission.id).filter_by(stickied=True).first()[0]
+        sticky=db.query(Submission.id).filter_by(stickied=True).first()
         if sticky:
-            ids=[sticky]+ids
+            ids=[sticky.id]+ids
     #check if ids exist
     posts=get_posts(ids, sort=sort_method, v=v)
     

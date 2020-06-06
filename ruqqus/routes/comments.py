@@ -23,11 +23,11 @@ def comment_cid(cid):
     comment=get_comment(cid)
     return redirect(comment.permalink)
 
-@app.route("/post/<p_id>/comment/<c_id>", methods=["GET"])
+@app.route("/post/<p_id>/<anything>/<c_id>", methods=["GET"])
 @app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
 @auth_desired
 @api
-def post_pid_comment_cid(p_id, c_id, v=None):
+def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
 
     comment=get_comment(c_id, v=v)
 
@@ -43,7 +43,7 @@ def post_pid_comment_cid(p_id, c_id, v=None):
                                v=v,
                                b=board),
 
-                'api':lambda:jsonify({'error':f'+{board.name} is banned.'})
+                'api':lambda:{'error':f'+{board.name} is banned.'}
 
                 }
 
@@ -55,7 +55,7 @@ def post_pid_comment_cid(p_id, c_id, v=None):
                                lo_formkey=make_logged_out_formkey(t),
                                board=comment.board
                                ),
-                'api':lambda:jsonify({'error':f'This content is not suitable for some users and situations.'})
+                'api':lambda:{'error':f'This content is not suitable for some users and situations.'}
 
                 }
 
@@ -68,7 +68,7 @@ def post_pid_comment_cid(p_id, c_id, v=None):
                                board=comment.board
                                ),
 
-                'api':lambda:jsonify({'error':f'This content is not suitable for some users and situations.'})
+                'api':lambda:{'error':f'This content is not suitable for some users and situations.'}
 
                 }
 
@@ -79,7 +79,7 @@ def post_pid_comment_cid(p_id, c_id, v=None):
         return {'html':lambda:render_template("board_banned.html",
                                v=v,
                                b=board),
-                'api':lambda:jsonify({'error':f'+{board.name} is banned.'})
+                'api':lambda:{'error':f'+{board.name} is banned.'}
                 }
 
     post._preloaded_comments=[comment]
@@ -178,11 +178,11 @@ def post_pid_comment_cid(p_id, c_id, v=None):
 
         
     return {'html':lambda:post.rendered_page(v=g.v, comment=top_comment, comment_info=comment),
-            'api':lambda:jsonify(c.json)
+            'api':lambda:c.json
             }
 
 @app.route("/api/comment", methods=["POST"])
-@limiter.limit("4/minute")
+@limiter.limit("6/minute")
 @is_not_banned
 @tos_agreed
 @validate_formkey

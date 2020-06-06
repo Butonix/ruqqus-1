@@ -20,11 +20,12 @@
 
   <h1 class="h3 d-md-none">Inbox</h1>
 
-  {% for c in notifications %}
+  {% with comments=notifications %}
 
-  {{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
+    {% include "comments.html" %}
+  {% endwith %}
 
-  {% else %}
+  {% if not notifications %}
   <div class="text-center py-7 py-md-8">
 
     <span class="fa-stack fa-2x text-muted mb-4">
@@ -37,7 +38,7 @@
     <a href="/notifications?all=true" class="btn btn-primary btn-sm">View entire inbox</a>
   </div>
 
-  {% endfor %}
+  {% endif %}
 
 </div>
 
