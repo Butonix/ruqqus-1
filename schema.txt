@@ -1380,6 +1380,7 @@ CREATE TABLE public.ips (
     banned_by integer
 );
 
+CREATE UNIQUE INDEX ips_addr_uq ON public.ips (addr);
 
 --
 -- Name: ips_id_seq; Type: SEQUENCE; Schema: public; Owner: -
@@ -1607,6 +1608,7 @@ CREATE TABLE public.useragents (
     status_code integer DEFAULT 418
 );
 
+CREATE UNIQUE INDEX useragents_kwd_uq ON public.useragents (kwd);
 
 --
 -- Name: useragents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
