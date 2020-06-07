@@ -903,6 +903,14 @@ label.terms {
     color: $black;
 }
 
+// Typography
+
+small, .small {
+    font-size: $small-font-size;
+}
+
+// Tables
+
 th {
     font-weight: $font-weight-bold;
 }

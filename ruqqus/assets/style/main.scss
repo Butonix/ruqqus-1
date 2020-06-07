@@ -879,6 +879,12 @@ label.terms {
     color: $black;
 }
 
+// Typography
+
+small, .small {
+    font-size: $small-font-size;
+}
+
 // Tables
 
 th {

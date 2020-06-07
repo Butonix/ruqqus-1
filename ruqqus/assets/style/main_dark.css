@@ -14387,6 +14387,10 @@ label.terms {
   color: #CFCFCF;
 }
 
+small, .small {
+  font-size: 12px;
+}
+
 th {
   font-weight: 600;
 }
@@ -15508,6 +15512,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   .modal.modal-sm-bottom .modal-header {
     border-top-right-radius: 1rem;
     border-top-left-radius: 1rem;
+  }
+
+  #frontpage, #search, #guild {
+    padding-top: 98px;
+    background-color: #181818;
   }
 }
 .dropdown-actions {
@@ -17176,11 +17185,6 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     background-color: #181818;
   }
 
-  #frontpage, #search, #guild {
-      padding-top: 98px;
-      background-color: #181818;
-  }
-
   #thread, #userpage {
     background-color: #1f2023;
   }
@@ -17598,27 +17602,6 @@ div.deleted.banned {
 
 .text-admin {
   color: #E53E3E;
-}
-
-
-/* scrollbar */
-
-body::-webkit-scrollbar {
-    width: 12px;
-    background-color: #0c0c0c;
-}
-
-body::-webkit-scrollbar-button {
-    height: 56px;
-    background: #282828;
-}
-
-body::-webkit-scrollbar-thumb {
-    background: #dadbe233;
-}
-
-body::-webkit-scrollbar-button:vertical:increment {
-    height: 0px;
 }
 
 /*# sourceMappingURL=main_dark.css.map */
