@@ -80,34 +80,55 @@ import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
 
+
+from ruqqus.helpers.ttl_lru_cache import ttl_lru_cache
+IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 60))
+IP_BAN_CACHE_SIZE = int(environ.get("IP_BAN_CACHE_SIZE", 4096))
+UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 60))
+UA_BAN_CACHE_SIZE = int(environ.get("UA_BAN_CACHE_SIZE", 4096))
+
+
+@ttl_lru_cache(IP_BAN_CACHE_TTL, IP_BAN_CACHE_SIZE)
+def is_ip_banned(remote_addr: str) -> bool:
+    """
+    Given a remote address, returns whether or not user is banned
+    """
+    return bool(db.query(ruqqus.classes.IP).filter_by(addr=remote_addr).count())
+
+
+@ttl_lru_cache(UA_BAN_CACHE_TTL, UA_BAN_CACHE_SIZE)
+def get_useragent_ban_response(user_agent_str: str) -> tuple:
+    """
+    Given a user agent string, returns a tuple in the form of:
+    (is_user_agent_banned, (insult, status_code))
+    """
+    result = db.query(ruqqus.classes.Agent).filter(ruqqus.classes.Agent.kwd.in_(user_agent_str.split())).first()
+    if result:
+        return True, (result.mock or "Follow the robots.txt, dumbass", result.status_code or 418)
+    return False, (None, None)
+
+
 #enforce https
 @app.before_request
 def before_request():
+    session.permanent = True
 
-    session.permanent=True
-    
-    #check ip ban
-    if db.query(ruqqus.classes.IP).filter_by(addr=request.remote_addr).first():
-        return '', 403
+    if is_ip_banned(request.remote_addr):
+        return "", 403
 
-    #check useragent ban
-    # Banned crawler useragents are deliberately mocked
-    x=db.query(ruqqus.classes.Agent).filter(ruqqus.classes.Agent.kwd.in_(request.headers.get('User-Agent','NoAgent').split())).first()
-    if x and request.path != "/robots.txt":
-        text=x.mock if x.mock else "Follow the robots.txt, dumbass"
-        status=x.status_code if x.status_code else 418
-        return text, status
-        
-    if request.url.startswith('http://') and "localhost" not in app.config["SERVER_NAME"]:
-        url = request.url.replace('http://', 'https://', 1)
+    ua_banned, response_tuple = get_useragent_ban_response(request.headers.get("User-Agent", "NoAgent"))
+    if ua_banned and request.path != "/robots.txt":
+        return response_tuple
+
+    if request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
+        url = request.url.replace("http://", "https://", 1)
         return redirect(url, code=301)
 
     if not session.get("session_id"):
         session["session_id"]=secrets.token_hex(16)
 
-
-
     db.rollback()
+
 
 def log_event(name, link):
 
