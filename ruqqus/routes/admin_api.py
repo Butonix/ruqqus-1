@@ -21,7 +21,7 @@ def ban_user(user_id, v):
     user=db.query(User).filter_by(id=user_id).first()
 
     # check for number of days for suspension
-    days = int(request.form.get("days", 0))
+    days = int(request.form.get("days")) if request.form.get('days') else 0 
     reason = request.form.get("reason", "")
 
     if not user:
