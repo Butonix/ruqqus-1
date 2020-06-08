@@ -1043,15 +1043,34 @@ function yank_postModal(id, author, comments, title, author_link, domain, timest
 
   document.getElementById("post-timestamp").textContent = timestamp;
   
-  document.getElementById("yank-post-form").action="/mod/take/"+id;
 
   document.getElementById("yankPostButton").onclick = function() {  
 
     this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Yanking post';  
     this.disabled = true; 
     document.getElementById("yank-post-form").submit();
-  }
 
+    var yankForm = document.getElementById("yank-post-form");
+
+    var yankError = document.getElementById("toast-error-message");
+
+
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("post", "/mod/take/"+id);
+    xhr.withCredentials=true;
+    xhr.onload=function(){
+    if (xhr.status==204) {
+      window.location.reload(true);
+    }
+    else {
+      $('#toast-invite-error').toast('dispose');
+      $('#toast-invite-error').toast('show');
+      inviteError.textContent = JSON.parse(xhr.response)["error"];
+    }
+    xhr.send(yankForm);
+    }
+  }
 };
 
 //yt embed

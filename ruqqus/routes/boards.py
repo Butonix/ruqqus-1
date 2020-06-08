@@ -358,21 +358,21 @@ def mod_take_pid(pid, v):
     board=get_board(bid)
 
     if board.is_banned:
-        abort(403)
+        return jsonify({'error':f"+{board.name} is banned. You can't yank anything there."}), 403
 
     if not board.has_mod(v):
-        abort(403)
+        return jsonify({'error':f"You are no longer a guildmaster of +{board.name}"}), 403
 
     post = get_post(pid)
 
     if not post.board_id==1:
-        abort(422)
+        return jsonify({'error':f"This post is no longer in +general"}), 403
 
     if board.has_ban(post.author):
-        abort(403)
+        return jsonify({'error':f"@{post.author.username} is exiled from +{board.name}, so you can't yank their post there."}), 403
 
     if not board.can_take(post):
-        abort(403)
+        return jsonify({'error':f"You can't yank this particular post to +{board.name}."}), 403
 
     post.board_id=board.id
     post.guild_name=board.name
@@ -382,7 +382,7 @@ def mod_take_pid(pid, v):
     #clear board's listing caches
     cache.delete_memoized(Board.idlist, board)
     
-    return redirect(post.permalink)
+    return "", 204
 
 @app.route("/mod/invite_mod/<bid>", methods=["POST"])
 @auth_required
