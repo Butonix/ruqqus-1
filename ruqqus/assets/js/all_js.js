@@ -1049,7 +1049,6 @@ function yank_postModal(id, author, comments, title, author_link, domain, timest
 
   document.getElementById("yankPostButton").onclick = function() {  
 
-    var yankForm = document.getElementById("yank-post-form");
 
     var yankError = document.getElementById("toast-error-message");
 
@@ -1058,6 +1057,9 @@ function yank_postModal(id, author, comments, title, author_link, domain, timest
     var xhr = new XMLHttpRequest();
     xhr.open("post", "/mod/take/"+id);
     xhr.withCredentials=true;
+    f=new FormData();
+    f.append("formkey", formkey());
+    f.append("board_id", document.getElementById('yank-type-dropdown').value)
     xhr.onload=function(){
       if (xhr.status==204) {
         window.location.reload(true);
@@ -1068,7 +1070,7 @@ function yank_postModal(id, author, comments, title, author_link, domain, timest
         yankError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
-    xhr.send(yankForm);
+    xhr.send(f);
   }
 };
 
