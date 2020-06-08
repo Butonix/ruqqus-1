@@ -1050,7 +1050,7 @@ function yank_postModal(id, author, comments, title, author_link, domain, timest
   document.getElementById("yankPostButton").onclick = function() {  
 
 
-    var yankError = document.getElementById("toast-error");
+    var yankError = document.getElementById("toast-error-message");
 
 
 
@@ -1065,8 +1065,8 @@ function yank_postModal(id, author, comments, title, author_link, domain, timest
         window.location.reload(true);
       }
       else {
-        $('#toast-error').toast('dispose');
-        $('#toast-error').toast('show');
+        $('#toast-invite-error').toast('dispose');
+        $('#toast-invite-error').toast('show');
         yankError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
