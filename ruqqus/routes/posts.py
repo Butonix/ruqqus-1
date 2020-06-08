@@ -41,6 +41,7 @@ def incoming_post_shortlink(base36id=None):
   return redirect(post.permalink)
 
 @app.route("/post/<base36id>", methods=["GET"])
+@app.route("/post/<base36id>/", methods=["GET"])
 @app.route("/post/<base36id>/<anything>", methods=["GET"])
 @auth_desired
 def post_base36id(base36id, anything=None, v=None):
