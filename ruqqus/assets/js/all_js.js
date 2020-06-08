@@ -1059,16 +1059,16 @@ function yank_postModal(id, author, comments, title, author_link, domain, timest
     xhr.open("post", "/mod/take/"+id);
     xhr.withCredentials=true;
     xhr.onload=function(){
-    if (xhr.status==204) {
-      window.location.reload(true);
-    }
-    else {
-      $('#toast-invite-error').toast('dispose');
-      $('#toast-invite-error').toast('show');
-      inviteError.textContent = JSON.parse(xhr.response)["error"];
+      if (xhr.status==204) {
+        window.location.reload(true);
+      }
+      else {
+        $('#toast-invite-error').toast('dispose');
+        $('#toast-invite-error').toast('show');
+        yankError.textContent = JSON.parse(xhr.response)["error"];
+      }
     }
     xhr.send(yankForm);
-    }
   }
 };
 
