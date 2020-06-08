@@ -356,17 +356,16 @@ def mod_take_pid(pid, v):
         abort(400)
 
     board=get_board(bid)
+    post = get_post(pid)
 
     if board.is_banned:
         return jsonify({'error':f"+{board.name} is banned. You can't yank anything there."}), 403
 
-    if not board.has_mod(v):
-        return jsonify({'error':f"You are no longer a guildmaster of +{board.name}"}), 403
-
-    post = get_post(pid)
-
     if not post.board_id==1:
         return jsonify({'error':f"This post is no longer in +general"}), 403
+
+    if not board.has_mod(v):
+        return jsonify({'error':f"You are no longer a guildmaster of +{board.name}"}), 403
 
     if board.has_ban(post.author):
         return jsonify({'error':f"@{post.author.username} is exiled from +{board.name}, so you can't yank their post there."}), 403
