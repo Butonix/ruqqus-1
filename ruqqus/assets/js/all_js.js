@@ -1042,6 +1042,9 @@ function yank_postModal(id, author, comments, title, author_link, domain, timest
   document.getElementById("post-domain").textContent = domain;
 
   document.getElementById("post-timestamp").textContent = timestamp;
+
+
+  document.getElementById("yank-post-form").action="/mod/take/"+id;
   
 
   document.getElementById("yankPostButton").onclick = function() {  
