@@ -1049,10 +1049,6 @@ function yank_postModal(id, author, comments, title, author_link, domain, timest
 
   document.getElementById("yankPostButton").onclick = function() {  
 
-    this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Yanking post';  
-    this.disabled = true; 
-    document.getElementById("yank-post-form").submit();
-
     var yankForm = document.getElementById("yank-post-form");
 
     var yankError = document.getElementById("toast-error-message");
