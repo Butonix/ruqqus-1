@@ -13945,6 +13945,10 @@ label.terms {
   color: #121213;
 }
 
+small, .small {
+  font-size: 12px;
+}
+
 th {
   font-weight: 600;
 }

@@ -11,7 +11,7 @@ from secrets import token_hex
 import matplotlib.pyplot as plt
 import imagehash
 
-from ruqqus.__main__ import db, app
+from ruqqus.__main__ import db, app, cache
 from os import remove
 @app.route("/api/ban_user/<user_id>", methods=["POST"])
 @admin_level_required(3)
@@ -21,7 +21,7 @@ def ban_user(user_id, v):
     user=db.query(User).filter_by(id=user_id).first()
 
     # check for number of days for suspension
-    days = int(request.form.get("days", 0))
+    days = int(request.form.get("days")) if request.form.get('days') else 0 
     reason = request.form.get("reason", "")
 
     if not user:
@@ -85,6 +85,8 @@ def ban_post(post_id, v):
 
     db.add(post)
     db.commit()
+
+    cache.delete_memoized(Board.idlist, self=post.board)
     
     return (redirect(post.permalink), post)
 
