@@ -127,6 +127,10 @@ def create_board_post(v):
 
     return redirect(new_board.permalink)
 
+@app.route("/r/<name>")
+def reddit_moment_redirect(name):
+    return redirect(f"/+{name}")
+
 @app.route("/+<name>", methods=["GET"])
 @app.route("/api/v1/guild/<name>/listing", methods=["GET"])
 @auth_desired
