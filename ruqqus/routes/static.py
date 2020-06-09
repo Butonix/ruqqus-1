@@ -16,7 +16,7 @@ def static_service(path):
     resp = make_response(send_from_directory('./assets', path))
     resp.headers.add("Cache-Control", "public")
 
-    if request.path.endswith('css'):
+    if request.path.endswith('.css'):
         resp.headers.add("Content-Type", "text/css")
     return resp
 
