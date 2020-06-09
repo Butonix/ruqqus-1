@@ -81,12 +81,12 @@ from ruqqus.routes import *
 import ruqqus.helpers.jinja2
 
 
-IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 60))
-UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 60))
+IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
+UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
 
 
 @cache.memoize(IP_BAN_CACHE_TTL)
-def is_ip_banned(remote_addr: str) -> bool:
+def is_ip_banned(remote_addr):
     """
     Given a remote address, returns whether or not user is banned
     """
@@ -94,14 +94,14 @@ def is_ip_banned(remote_addr: str) -> bool:
 
 
 @cache.memoize(UA_BAN_CACHE_TTL)
-def get_useragent_ban_response(user_agent_str: str) -> tuple:
+def get_useragent_ban_response(user_agent_str):
     """
     Given a user agent string, returns a tuple in the form of:
     (is_user_agent_banned, (insult, status_code))
     """
     result = db.query(ruqqus.classes.Agent).filter(ruqqus.classes.Agent.kwd.in_(user_agent_str.split())).first()
     if result:
-        return True, (result.mock or "Follow the robots.txt, dumbass", result.status_code or 418)
+        return True, (result.mock if result.mock else "Follow the robots.txt, dumbass", result.status_code if result.status_code else 418)
     return False, (None, None)
 
 
