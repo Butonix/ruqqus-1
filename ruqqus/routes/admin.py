@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 import time
 
 from ruqqus.helpers.wrappers import *
+from ruqqus.helpers.alerts import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.get import *
@@ -136,8 +137,15 @@ def badge_grant_post(v):
     db.add(new_badge)
     db.commit()
 
+    text=f"""
+@{v.username} has given you the following profile badge:
+\n\n![]({new_badge.path})
+\n\n{new_badge.name}
+\n\n{new_badge.description}
+"""
+    
+    send_notification(user, text)
 
-    badge_types=db.query(BadgeDef).filter_by(kind=3).order_by(BadgeDef.rank).all()
 
     return redirect(user.permalink)
                  
