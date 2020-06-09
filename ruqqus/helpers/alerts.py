@@ -3,11 +3,14 @@ import mistletoe
 from ruqqus.classes import *
 from ruqqus.__main__ import db
 from .markdown import *
+from .sanitize import *
 
 def send_notification(user, text):
 
     with CustomRenderer() as renderer:
         text_html=renderer.render(mistletoe.Document(text))
+
+    text_html=sanitize(text_html, linkgen=True)
 
     new_comment=Comment(author_id=1,
                         body=text,
