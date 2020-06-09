@@ -141,7 +141,6 @@ def badge_grant_post(v):
 @{v.username} has given you the following profile badge:
 \n\n![]({new_badge.path})
 \n\n{new_badge.name}
-\n\n{new_badge.description}
 """
     
     send_notification(user, text)
