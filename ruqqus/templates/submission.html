@@ -69,9 +69,9 @@
 </div>
 {% endblock %}
 
-{% set score=p.score_fuzzed %}
+{% set score=p.score_fuzzed if p.score_fuzzed else 0 %}
 {% if v %}
-{% set voted=p.voted %}
+{% set voted=p.voted if p.voted else 0 %}
 {% set adjust=voted %}
 {% else %}
 {% set voted=-2 %}
