@@ -15,6 +15,7 @@ from ruqqus.__main__ import app, db, limiter
 def static_service(path):
     resp = make_response(send_from_directory('./assets', path))
     resp.headers.add("Cache-Control", "public")
+    resp.headers.pop("Set-Cookie")
     return resp
 
 @app.route("/robots.txt", methods=["GET"])
