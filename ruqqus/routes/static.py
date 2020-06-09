@@ -15,6 +15,9 @@ from ruqqus.__main__ import app, db, limiter
 def static_service(path):
     resp = make_response(send_from_directory('./assets', path))
     resp.headers.add("Cache-Control", "public")
+
+    if request.path.endswith('css'):
+        resp.headers.add("Content-Type", "text/css")
     return resp
 
 @app.route("/robots.txt", methods=["GET"])
