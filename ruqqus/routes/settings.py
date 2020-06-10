@@ -55,7 +55,7 @@ def settings_profile_post(v):
 
         with CustomRenderer() as renderer:
             v.bio_html=renderer.render(mistletoe.Document(bio))
-        v.bio_html=sanitize(v.bio_html)
+        v.bio_html=sanitize(v.bio_html, linkgen=True)
 
 
     x=int(request.form.get("title_id",0))
