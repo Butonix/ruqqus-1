@@ -53,9 +53,9 @@
 
   <span class="comment-collapse d-md-block d-none" onclick="collapse_comment('{{ c.base36id }}')"></span>
 
-  <div class="comment-body {% if c.is_banned %} banned py-2{% endif %}{% if c.is_deleted %} deleted py-2{% endif %}">
+  <div class="comment-body">
 
-    <div id="comment-{{ c.base36id }}-only">
+    <div id="comment-{{ c.base36id }}-only" class="{% if c.is_banned %} banned{% endif %}{% if c.is_deleted %} deleted{% endif %}">
 
       <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %}{% if c.author.is_deleted %}[deleted account]{% else %}<a href="/@{{ c.author.username }}" class="user-name {% if c.is_op and not c.post.is_deleted %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.title %}<span style="color: #{{ c.title.color }}">{{ c.title.text }}</span>{% endif %}{% endif %}
         {% if c.distinguish_level or c.is_op %}
@@ -79,7 +79,7 @@
       {% if c.is_banned and c.ban_reason %}
       <div id="comment-banned-warning" class="comment-text text-danger text-small">Reason: {{ c.ban_reason }}</div>
       {% endif %}
-      <div id="comment-text-{{ c.base36id }}" class="comment-text{% if c.is_banned %} banned{% endif %}{% if c.is_deleted %} deleted{% endif %}">
+      <div id="comment-text-{{ c.base36id }}" class="comment-text">
         {{ c.body_html | safe }}
       </div>
 
