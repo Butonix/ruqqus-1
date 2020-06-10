@@ -6,6 +6,7 @@ from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.sanitize import *
+from ruqqus.helpers.markdown import *
 from ruqqus.helpers.aws import check_csam_url
 from ruqqus.mail import *
 from ruqqus.__main__ import db, app, cache
@@ -51,7 +52,9 @@ def settings_profile_post(v):
         bio = request.form.get("bio")[0:256]
         v.bio=bio
 
-        v.bio_html=sanitize(bio)
+        with CustomRenderer() as renderer:
+            v.bio_html=renderer.render(mistletoe.Document(bio))
+        v.bio_html=sanitize(v.bio_html)
 
 
     x=int(request.form.get("title_id",0))
