@@ -53,6 +53,11 @@ def user_uid(uid):
     else:
         abort(404)
 
+@app.route("/u/<username>", methods=["GET"])
+def redditor_moment_redirect(username):
+
+    return redirect(f"/@{username}")
+
 @app.route("/@<username>", methods=["GET"])
 @app.route("/api/v1/user/<username>/listing", methods=["GET"])
 @auth_desired
