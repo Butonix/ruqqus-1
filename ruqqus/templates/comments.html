@@ -2,9 +2,27 @@
 
 {% if (c.is_banned or c.is_deleted) and not (v and v.admin_level >=3) %}
 
-  {% if c.any_descendents_live %}
-    {% include "single_comment_removed.html" %}
-  {% endif %}
+<div id="comment-{{ c.base36id }}" class="comment rounded">
+
+
+    <span class="comment-collapse"></span>
+
+    <div class="comment-body">
+
+        <div id="comment-{{ c.base36id }}-only" class="">
+
+            <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger">NSFW</span> {% endif %}
+                {% if c.is_banned %}[Removed by administrators]{% else %}[Deleted by author]{% endif %}
+            </div>
+
+
+            <div id="comment-banned-warning" class="comment-text text-danger text-small">
+                {% if c.is_banned and c.ban_reason %}Reason: {{ c.ban_reason }}{% endif %}
+            </div>
+
+  </div>
+
+  <div id="reply-to-{{ c.base36id }}"></div>
 
 
 {% else %}
@@ -28,7 +46,7 @@
 </div>
 {% endif %}
 
-<div id="comment-{{ c.base36id }}" class="comment rounded{% if standalone %} mt-0{% endif %}{% if c.is_banned %} banned{% endif %}{% if c.is_deleted %} deleted{% endif %}{% if c.is_offensive and not standalone and v and v.hide_offensive %} collapsed{% endif %}">
+<div id="comment-{{ c.base36id }}" class="comment rounded{% if standalone %} mt-0{% endif %}{% if c.is_offensive and not standalone and v and v.hide_offensive %} collapsed{% endif %}">
 
 
   <span class="mr-2 d-block d-md-none"><a href="{{ c.author.permalink }}"><img src="{{ c.author.profile_url }}" class="profile-pic-25"></a></span>
@@ -61,7 +79,7 @@
       {% if c.is_banned and c.ban_reason %}
       <div id="comment-banned-warning" class="comment-text text-danger text-small">Reason: {{ c.ban_reason }}</div>
       {% endif %}
-      <div id="comment-text-{{ c.base36id }}" class="comment-text">
+      <div id="comment-text-{{ c.base36id }}" class="comment-text{% if c.is_banned %} banned{% endif %}{% if c.is_deleted %} deleted{% endif %}">
         {{ c.body_html | safe }}
       </div>
 
