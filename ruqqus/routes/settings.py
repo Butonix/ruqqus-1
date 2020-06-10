@@ -2,6 +2,7 @@ from flask import *
 from sqlalchemy import func
 import time
 import threading
+import mistletoe
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
