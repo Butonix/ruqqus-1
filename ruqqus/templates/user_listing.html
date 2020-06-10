@@ -18,7 +18,7 @@
           <div id="button-sub-{{ u.base36id }}" style="z-index: 2" "><a class="btn btn-primary btn-sm" href="/signup?redirect={{ request.path }}">Subscribe</a></div>
           {% endif %}
         </div>
-        <p class="card-text">{{ u.bio_html | safe }}</p>
+        <div class="card-text">{{ u.bio_html | safe }}</div>
       </div>
     </div>
   </div>
