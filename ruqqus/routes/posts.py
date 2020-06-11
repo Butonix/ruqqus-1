@@ -250,6 +250,7 @@ def submit_post(v):
     #board
     board_name=request.form.get("board","general")
     board_name=board_name.lstrip("+")
+    board_name=board_name.rstrip()
     
     board=get_guild(board_name, graceful=True)
     
@@ -411,26 +412,26 @@ def submit_post(v):
 
     return redirect(new_post.permalink)
     
-@app.route("/api/nsfw/<pid>/<x>", methods=["POST"])
-@auth_required
-@validate_formkey
-def api_nsfw_pid(pid, x, v):
+# @app.route("/api/nsfw/<pid>/<x>", methods=["POST"])
+# @auth_required
+# @validate_formkey
+# def api_nsfw_pid(pid, x, v):
 
-    try:
-        x=bool(int(x))
-    except:
-        abort(400)
+#     try:
+#         x=bool(int(x))
+#     except:
+#         abort(400)
 
-    post=get_post(pid)
+#     post=get_post(pid)
 
-    if not v.admin_level >=3 and not post.author_id==v.id and not post.board.has_mod(v):
-        abort(403)
+#     if not v.admin_level >=3 and not post.author_id==v.id and not post.board.has_mod(v):
+#         abort(403)
         
-    post.over_18=x
-    db.add(post)
-    db.commit()
+#     post.over_18=x
+#     db.add(post)
+#     db.commit()
 
-    return "", 204
+#     return "", 204
 
 @app.route("/delete_post/<pid>", methods=["POST"])
 @auth_required
@@ -489,7 +490,7 @@ def toggle_post_nsfw(pid, v):
 
     post=get_post(pid)
 
-    if not post.author_id==v.id:
+    if not post.author_id==v.id and not post.board.has_mod(v):
         abort(403)
 
     if post.board.over_18 and post.over_18:
@@ -508,7 +509,7 @@ def toggle_post_nsfl(pid, v):
 
     post=get_post(pid)
 
-    if not post.author_id==v.id:
+    if not post.author_id==v.id and not post.board.has_mod(v):
         abort(403)
 
     if post.board.is_nsfl and post.is_nsfl:
