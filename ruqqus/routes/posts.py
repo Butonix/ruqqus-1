@@ -490,7 +490,7 @@ def toggle_post_nsfw(pid, v):
 
     post=get_post(pid)
 
-    if not post.author_id==v.id and not post.board.has_mod(v):
+    if not post.author_id==v.id and not v.admin_level>=3 and not post.board.has_mod(v):
         abort(403)
 
     if post.board.over_18 and post.over_18:
@@ -509,7 +509,7 @@ def toggle_post_nsfl(pid, v):
 
     post=get_post(pid)
 
-    if not post.author_id==v.id and not post.board.has_mod(v):
+    if not post.author_id==v.id and not v.admin_level>=3 and not post.board.has_mod(v):
         abort(403)
 
     if post.board.is_nsfl and post.is_nsfl:
