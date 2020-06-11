@@ -299,7 +299,8 @@ def user_stat_data(v):
     daily_signups = [{"date":time.strftime("%d %b %Y", time.gmtime(day_cutoffs[i+1])),
                       "day_start":day_cutoffs[i+1],
                       "signups": db.query(User).filter(User.created_utc<day_cutoffs[i],
-                                                       User.created_utc>day_cutoffs[i+1]
+                                                       User.created_utc>day_cutoffs[i+1],
+                                                       User.is_banned==0
                                                        ).count()
                       } for i in range(len(day_cutoffs)-1)
                       ]
