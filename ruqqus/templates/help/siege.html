@@ -62,7 +62,12 @@ Guildmasters who have deactivated their Ruqqus account will also always count as
 {% endfilter %}
 
 {% if v %}
-{% if v.can_siege %}
+
+{% if not v.can_join_gms %}
+
+<p>You already lead the maximum number of guilds. You cannot siege unless you lead 9 or fewer guilds.</p>
+
+{% elif v.can_siege %}
 
 <label>Your name:</label>
 <input class="form-control" type="text" name="username" value="{{ v.username }}" readonly="readonly">
