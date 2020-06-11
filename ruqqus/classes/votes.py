@@ -1,6 +1,7 @@
 from flask import *
 from time import time, strftime, gmtime
 from sqlalchemy import *
+from sqlalchemy.orm import relationship
 
 from ruqqus.helpers.base36 import *
 from ruqqus.__main__ import Base, db
