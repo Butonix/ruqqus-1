@@ -319,7 +319,7 @@ def user_stat_data(v):
                       "day_start":day_cutoffs[i+1],
                       "posts": db.query(Submission).filter(Submission.created_utc<day_cutoffs[i],
                                                            Submission.created_utc>day_cutoffs[i+1],
-                                                           Submission.is_banned=False
+                                                           Submission.is_banned==False
                                                            ).count()
                       } for i in range(len(day_cutoffs) - 1)
                       ]
