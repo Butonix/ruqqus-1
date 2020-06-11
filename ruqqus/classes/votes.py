@@ -15,6 +15,9 @@ class Vote(Base):
     submission_id=Column(Integer, ForeignKey("submissions.id"))
     created_utc=Column(Integer, default=0)
 
+    user=relationship("User")
+    post=relationship("Submission")
+
     
     def __init__(self, *args, **kwargs):
         
@@ -54,6 +57,9 @@ class CommentVote(Base):
     vote_type=Column(Integer)
     comment_id=Column(Integer, ForeignKey("comments.id"))
     created_utc=Column(Integer, default=0)
+
+    user=relationship("User")
+    comment=relationship("Comment")
 
     def __init__(self, *args, **kwargs):
         
