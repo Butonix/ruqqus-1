@@ -197,7 +197,7 @@
           {% if p.board.over_18 %}
           <span class="badge badge-danger text-small align-top">nsfw</span>
           {% endif %}
-        {% if p.board.is_nsfl %}
+          {% if p.board.is_nsfl %}
           <span class="badge badge-black text-small align-top">nsfl</span>
           {% endif %}
         </h1>
@@ -388,7 +388,7 @@
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{ p.base36id }}', '{{ p.author.username }}','{{ p.board.name }}')"><i class="fas fa-flag"></i>Flag</a></li>
                     {% endif %}
 
-                    {% if v and v.id==p.author_id %}
+                    {% if v and (v.id==p.author_id or v.admin_level>=3 or p.board.has_mod(v)) %}
                     <li class="list-inline-item"><a href="javascript:void(0)" onclick="togglePostEdit('{{ p.base36id }}')"><i class="fas fa-edit"></i>Edit</a></li>
 
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
