@@ -263,7 +263,7 @@
           <button class="btn btn-white btn-block btn-lg text-left" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{ p.base36id }}')"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Delete</button>
           {% endif %}
 
-          {% if v and (v.id==p.author_id or or v.admin_level>=3 p.board.has_mod(v)) %}
+          {% if v and (v.id==p.author_id or v.admin_level>=3 or p.board.has_mod(v)) %}
           {% if not p.board.over_18 %}
           <button class="btn btn-white btn-block btn-lg text-left" onclick="post('/api/toggle_post_nsfw/{{ p.base36id }}', function(){window.location.reload(true);})"><i class="far fa-eye-evil text-center text-muted mr-3"></i>Toggle NSFW</button>
           {% endif %}
