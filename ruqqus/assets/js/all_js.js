@@ -1537,9 +1537,9 @@ hide_image=function(){
     x=document.getElementById('image-upload-block');
     url=document.getElementById('post-URL').value;
     if (url.length>=1){
-        x.classList.add('d-none');
+        x.disabled=true;
     }
     else {
-        x.classList.remove('d-none');
+        x.disabled=false;
     }
 }
