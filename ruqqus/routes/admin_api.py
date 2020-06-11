@@ -336,7 +336,8 @@ def user_stat_data(v):
                    "day_start": day_cutoffs[i + 1],
                    "comments": db.query(Comment).filter(Comment.created_utc < day_cutoffs[i],
                                                         Comment.created_utc > day_cutoffs[i + 1],
-                                                        Comment.is_banned==False
+                                                        Comment.is_banned==False,
+                                                        Comment.author_id!=1
                                                         ).count()
                    } for i in range(len(day_cutoffs) - 1)
                   ]
@@ -364,8 +365,8 @@ def user_stat_data(v):
            "guild_data":guild_stats,
            "comment_data":comment_stats,
            "vote_data":vote_stats,
-           "single_plot":f"https://i.ruqqus.com/{x[0]}",
-           "multi_plot":f"https://i.ruqqus.com/{x[1]}"
+           "single_plot":f"https://i.ruqqus.com/{x[0]}/{now}",
+           "multi_plot":f"https://i.ruqqus.com/{x[1]}/{now}"
            }
     
     return jsonify(final)
@@ -406,7 +407,7 @@ def create_plot(**kwargs):
     plt.legend()
 
     now=int(time.time())
-    single_plot = f"single_plot.png"
+    single_plot = f"single_plot/{now}.png"
     plt.savefig(single_plot)
 
     #aws.delete_file(name)
@@ -447,7 +448,7 @@ def multiple_plots(**kwargs):
     votes_chart.legend(loc='upper left', frameon=True)
 
     now=int(time.time())
-    name = f"multi_plot.png"
+    name = f"multiplot/{now}.png"
 
     plt.savefig(name)
     plt.clf()
