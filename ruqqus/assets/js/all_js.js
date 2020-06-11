@@ -1530,3 +1530,16 @@ function invite_mod_to_guild(boardid) {
   }
 
 }
+
+//part of submit page js
+
+hide_image=function(){
+    x=document.getElementById('image-upload-block');
+    url=document.getElementById('post-URL').value;
+    if (url.length>=1){
+        x.classList.add('d-none');
+    }
+    else {
+        x.classList.remove('d-none');
+    }
+}
