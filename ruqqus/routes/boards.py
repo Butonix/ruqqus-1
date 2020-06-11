@@ -1072,8 +1072,14 @@ def siege_guild(v):
     #update siege date
     v.last_siege_utc=now
     db.add(v)
-    db.commit()
 
+    #check guild count
+    if not v.can_join_gms:
+        return render_template("message.html",
+                               v=v,
+                               title=f"Siege against +{guild.name} Failed",
+                               error="You already lead the maximum number of guilds."
+                               ), 403
 
     #Cannot siege +general, +ruqqus, +ruqquspress, +ruqqusdmca
     if guild.id in [1,2,10,1000]:
