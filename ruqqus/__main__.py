@@ -59,7 +59,7 @@ cache=Cache(app)
 Compress(app)
 
 
-app.config["RATELIMIT_STORAGE_URL"]=environ.get("REDIS_URL")
+app.config["RATELIMIT_STORAGE_URL"]=app.config["CACHE_REDIS_URL"]
 app.config["RATELIMIT_KEY_PREFIX"]="flask_limiting_"
 
 limiter = Limiter(
