@@ -177,7 +177,8 @@ def u_username_comments(username, v=None):
                            listing=listing,
                            page=page,
                            next_exists=next_exists,
-                           is_following=is_following)
+                           is_following=is_following,
+                           standalone=True)
 
 @app.route("/api/follow/<username>", methods=["POST"])
 @auth_required
