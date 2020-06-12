@@ -4,7 +4,7 @@ from ruqqus.classes import *
 
 def get_user(username, graceful=False):
 
-    x=db.query(User).filter(User.username.ilike(username)).first()
+    x=db.query(User).filter(User.username.ilike(username, escape='_')).first()
     if not x:
         if not graceful:
             abort(404)
@@ -207,7 +207,7 @@ def get_guild(name, graceful=False):
 
     name=name.lstrip('+')
 
-    x=db.query(Board).filter(Board.name.ilike(name)).first()
+    x=db.query(Board).filter(Board.name.ilike(name, escape='_')).first()
     if not x:
         if not graceful:
             abort(404)
