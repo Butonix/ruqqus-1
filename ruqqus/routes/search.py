@@ -21,6 +21,25 @@ def searchlisting(q, v=None, page=1, sort="hot"):
     if not(v and v.admin_level>=3):
         posts=posts.filter_by(is_deleted=False, is_banned=False)
 
+    if v and v.admin_level >= 4:
+        pass
+    elif v:
+        m=v.moderates.filter_by(invite_rescinded=False).subquery()
+        c=v.contributes.subquery()
+        posts=posts.join(m,
+                         m.c.board_id==Submission.board_id,
+                         isouter=True
+                         ).join(c,
+                                c.c.board_id==Submission.board_id,
+                                isouter=True
+                                )
+        posts=posts.filter(or_(Submission.author_id==v.id,
+                               Submission.is_public==True,
+                               m.c.board_id != None,
+                               c.c.board_id !=None))
+    else:
+        posts=posts.filter_by(is_public=True)
+
     if sort=="hot":
         posts=posts.order_by(Submission.score_hot.desc())
     elif sort=="new":
