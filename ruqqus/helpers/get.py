@@ -4,6 +4,7 @@ from ruqqus.classes import *
 
 def get_user(username, graceful=False):
 
+    username=username.replace('\\','')
     username=username.replace('_', '\_')
 
     x=db.query(User).filter(User.username.ilike(username)).first()
@@ -209,6 +210,7 @@ def get_guild(name, graceful=False):
 
     name=name.lstrip('+')
 
+    name=name.replace('\\', '')
     name=name.replace('_','\_')
 
     x=db.query(Board).filter(Board.name.ilike(name)).first()
