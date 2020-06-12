@@ -4,6 +4,8 @@ from ruqqus.classes import *
 
 def get_user(username, graceful=False):
 
+    username=username.replace('_', '\_')
+
     x=db.query(User).filter(User.username.ilike(username)).first()
     if not x:
         if not graceful:
@@ -206,6 +208,8 @@ def get_board(bid):
 def get_guild(name, graceful=False):
 
     name=name.lstrip('+')
+
+    name=name.replace('_','\_')
 
     x=db.query(Board).filter(Board.name.ilike(name)).first()
     if not x:
