@@ -17,7 +17,7 @@ def auth_desired(f):
         if "user_id" in session:
             v=db.query(User).filter_by(id=session["user_id"]).first()
             nonce=session.get("login_nonce",0)
-            if nonce<v.login_nonce:
+            if v and nonce<v.login_nonce:
                 v=None
 
         else:
@@ -44,7 +44,7 @@ def auth_required(f):
         if "user_id" in session:
             v=db.query(User).filter_by(id=session["user_id"]).first()
             nonce=session.get("login_nonce",0)
-            if nonce<v.login_nonce:
+            if v and nonce<v.login_nonce:
                 abort(401)
             
             if not v:
@@ -71,7 +71,7 @@ def is_not_banned(f):
         if "user_id" in session:
             v=db.query(User).filter_by(id=session["user_id"]).first()
             nonce=session.get("login_nonce",0)
-            if nonce<v.login_nonce:
+            if v and nonce<v.login_nonce:
                 abort(401)
             
             if not v:
