@@ -53,9 +53,9 @@ app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL", environ.get("REDISTOGO_UR
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 app.config["CACHE_KEY_PREFIX"]="flask_caching_"
 
-app.config["CACHE_MEMCACHED_SERVERS"]=environ.get("MEMCACHEDCLOUD_SERVERS")
-app.config["CACHE_MEMCACHED_USERNAME"]=environ.get("MEMCACHEDCLOUD_USERNAME")
-app.config["CACHE_MEMCACHED_PASSWORD"]=environ.get("MEMCACHEDCLOUD_PASSWORD")
+app.config["CACHE_MEMCACHED_SERVERS"]=environ.get("MEMCACHIER_SERVERS")
+app.config["CACHE_MEMCACHED_USERNAME"]=environ.get("MEMCACHIER_USERNAME")
+app.config["CACHE_MEMCACHED_PASSWORD"]=environ.get("MEMCACHIER_PASSWORD")
 
 
 Markdown(app)
