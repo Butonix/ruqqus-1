@@ -3,7 +3,7 @@ import pylibmc
 import flask_caching
 
 
-class Custom_Cache(pylibmc.Client, flask_caching.backends.base.BaseCache):
+class Custom_Cache(pylibmc.Client, flask_caching.backends.cache.BaseCache):
     pass
 
 def custom_memcache(app, config, *args, **kwargs):
