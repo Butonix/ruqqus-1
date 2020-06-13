@@ -1,6 +1,5 @@
 from os import environ
 import pylibmc
-import flask_caching
 import flask_caching.backends as backend
 
 
@@ -21,7 +20,7 @@ def custom_memcache(app, config, *args, **kwargs):
                       'tcp_keepalive': True,
 
                       # Timeout for set/get requests
-                      'connect_timeout': 30000, # ms
+                      'connect_timeout': 2000, # ms
                       'send_timeout': 750 * 1000, # us
                       'receive_timeout': 750 * 1000, # us
                       '_poll_timeout': 2000, # ms
