@@ -57,10 +57,13 @@ def check_for_alts(current_id):
 
         if not check1 and not check2:
 
-            new_alt=Alt(user1=past_id,
-                        user2=current_id)
-            db.add(new_alt)
-            db.commit()
+            try:
+                new_alt=Alt(user1=past_id,
+                            user2=current_id)
+                db.add(new_alt)
+                db.commit()
+            except:
+                pass
 
 #login post procedure
 @no_cors
