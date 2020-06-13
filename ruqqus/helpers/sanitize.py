@@ -51,7 +51,7 @@ def nofollow(attrs, new=False):
     parsed_url=urlparse(attrs[(None, "href")])
     domain=parsed_url.netloc
     if domain and not domain.endswith(("ruqqus.com","ruqq.us")):
-        attrs[(None, "rel")]="nofollow"
+        attrs[(None, "rel")]="nofollow noopener"
         attrs[(None, "target")]="_blank"
         
         #Force https for all external links in comments
@@ -109,7 +109,7 @@ def sanitize(text, linkgen=False):
                             
                     link=soup.new_tag("a")
                     link["href"]=tag["src"]
-                    link["rel"]="nofollow"
+                    link["rel"]="nofollow noopener"
                     link["target"]="_blank"
 
                     link["onclick"]=f"expandDesktopImage('{tag['src']}');"
@@ -122,7 +122,7 @@ def sanitize(text, linkgen=False):
                 new_tag=soup.new_tag("a")
                 new_tag.string=tag["src"]
                 new_tag["href"]=tag["src"]
-                new_tag["rel"]="nofollow"
+                new_tag["rel"]="nofollow noopener"
                 tag.replace_with(new_tag)
 
 
