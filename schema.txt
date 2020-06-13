@@ -1607,6 +1607,7 @@ CREATE TABLE public.useragents (
     status_code integer DEFAULT 418
 );
 
+
 --
 -- Name: useragents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
