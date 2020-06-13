@@ -1,4 +1,5 @@
 from os import environ
+import pylibmc
 
 custom_memcache = pylibmc.Client(
                     [environ.get("MEMCACHIER_SERVERS")],
