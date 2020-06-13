@@ -1,8 +1,9 @@
 from os import environ
+from flask_caching.backends.cache import BaseCache
 import pylibmc
 
 
-class Custom_Cache(pylibmc.Client, flask_caching.backends.cache.BaseCache):
+class Custom_Cache(pylibmc.Client, BaseCache):
     pass
 
 def custom_memcache(app, config, *args, **kwargs):
