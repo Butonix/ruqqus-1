@@ -33,8 +33,6 @@ app = Flask(__name__,
            )
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
 app.config["SERVER_NAME"]=environ.get("domain", None)
 app.config["SESSION_COOKIE_NAME"]="session_ruqqus"
@@ -81,9 +79,19 @@ limiter = Limiter(
 )
 
 #setup db
-_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-db = sessionmaker(bind=_engine)()
+from flask_sqlalchemy import SQLAlchemy
+import psycogreen.gevent
+psycogreen.gevent.patch_psycopg()
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'pool_size': int(environ.get('SQLALCHEMY_POOL_SIZE', 6)),
+    'max_overflow': int(environ.get('SQLALCHEMY_MAX_OVERFLOW', 6))
+}
+app.db = SQLAlchemy(app)
+db = app.db.session
 Base = declarative_base()
+
 
 #import and bind all routing functions
 import ruqqus.classes
