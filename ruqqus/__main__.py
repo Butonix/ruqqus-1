@@ -85,8 +85,8 @@ psycogreen.gevent.patch_psycopg()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-    'pool_size': int(environ.get('SQLALCHEMY_POOL_SIZE', 1)),
-    'max_overflow': int(environ.get('SQLALCHEMY_MAX_OVERFLOW', 0))
+    'pool_size': int(environ.get('SQLALCHEMY_POOL_SIZE', 6)),
+    'max_overflow': int(environ.get('SQLALCHEMY_MAX_OVERFLOW', 6))
 }
 app.db = SQLAlchemy(app)
 db = app.db.session
