@@ -89,9 +89,7 @@ limiter = Limiter(
 #     'max_overflow': int(environ.get('SQLALCHEMY_MAX_OVERFLOW', 0))
 # }
 # app.db = SQLAlchemy(app)
-
-_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-db = sessionmaker(bind=_engine)()
+db = app.db.session
 Base = declarative_base()
 
 
