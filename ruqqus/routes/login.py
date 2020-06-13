@@ -11,6 +11,7 @@ from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.alerts import *
+from ruqqus.helpers.get import *
 from ruqqus.mail import send_verification_email
 from secrets import token_hex
 
@@ -72,7 +73,7 @@ def login_post():
     if "@" in username:
         account=db.query(User).filter(User.email.ilike(username), User.is_deleted==False).first()
     else:
-        account=db.query(User).filter(User.username.ilike(username), User.is_deleted==False).first()
+        account=get_user(username)
 
     if not account:
         time.sleep(random.uniform(0,2))
