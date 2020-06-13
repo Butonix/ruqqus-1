@@ -23,9 +23,6 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from gevent.queue import Queue
 from redis import BlockingConnectionPool
 
-#from flask_sqlalchemy import SQLAlchemy
-#import psycogreen.gevent
-
 
 
 _version = "2.10.8"
@@ -82,7 +79,8 @@ limiter = Limiter(
 )
 
 #setup db
-
+# from flask_sqlalchemy import SQLAlchemy
+# import psycogreen.gevent
 # psycogreen.gevent.patch_psycopg()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
@@ -107,7 +105,7 @@ IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
 UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
 
 
-#@cache.memoize(IP_BAN_CACHE_TTL)
+@cache.memoize(IP_BAN_CACHE_TTL)
 def is_ip_banned(remote_addr):
     """
     Given a remote address, returns whether or not user is banned
@@ -115,7 +113,7 @@ def is_ip_banned(remote_addr):
     return bool(db.query(ruqqus.classes.IP).filter_by(addr=remote_addr).count())
 
 
-#@cache.memoize(UA_BAN_CACHE_TTL)
+@cache.memoize(UA_BAN_CACHE_TTL)
 def get_useragent_ban_response(user_agent_str):
     """
     Given a user agent string, returns a tuple in the form of:
