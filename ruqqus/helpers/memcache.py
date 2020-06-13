@@ -1,10 +1,10 @@
-from os import environ
+app.config["CACHE_MEMCACHED_SERVERS"]=[environ.get("MEMCACHIER_SERVERS")]
+app.config["CACHE_MEMCACHED_USERNAME"]=environ.get("MEMCACHIER_USERNAME")
+app.config["CACHE_MEMCACHED_PASSWORD"]=environ.get("MEMCACHIER_PASSWORD")
 
-custom_memcache = pylibmc.Client(
-                    [environ.get("MEMCACHIER_SERVERS")],
-                    binary=True,
-                    username=environ.get("MEMCACHIER_USERNAME"),
-                    password=environ.get("MEMCACHIER_PASSWORD"),
+custom_memcache = pylibmc.Client(servers, binary=True,
+                    username=app.config["CACHE_MEMCACHED_USERNAME"],
+                    password=app.config["CACHE_MEMCACHED_PASSWORD"],
                     behaviors={
                       # Faster IO
                       'tcp_nodelay': True,
@@ -24,7 +24,3 @@ custom_memcache = pylibmc.Client(
                       'retry_timeout': 2,
                       'dead_timeout': 30,
                     })
-
-
-#import string
-CACHE_TYPE = 'ruqqus.helpers.get.memcache.custom_memcache'
