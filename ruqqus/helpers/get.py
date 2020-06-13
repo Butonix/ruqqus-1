@@ -164,6 +164,8 @@ def get_comment(cid, v=None):
 
         items= db.query(Comment, vt.c.vote_type).filter(Comment.id==i).join(vt, isouter=True).first()
         
+        if not items:
+            abort(404)
         x=items[0]
         x._voted=items[1] if items[1] else 0
 
