@@ -1,8 +1,13 @@
 from os import environ
+from flask_caching.backends.cache import BaseCache
 import pylibmc
 
+
+class Custom_Cache(pylibmc.Client, BaseCache):
+    pass
+
 def custom_memcache(app, config, *args, **kwargs):
-  return pylibmc.Client(
+  return Custom_Cache(
                     [environ.get("MEMCACHIER_SERVERS")],
                     binary=True,
                     username=environ.get("MEMCACHIER_USERNAME"),
