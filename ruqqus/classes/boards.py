@@ -161,7 +161,6 @@ class Board(Base, Stndrd, Age_times):
         return self.moderators.filter_by(user_id=user.id, accepted=True).first()
 
 
-    @cache.memoize(timeout=60)
     def can_invite_mod(self, user):
 
         return user.id not in [x.user_id for x in self.moderators.filter_by(invite_rescinded=False).all()]

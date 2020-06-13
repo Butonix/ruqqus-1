@@ -128,7 +128,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         return f"{self.post.permalink}/{self.base36id}"
 
     @property
-    @cache.memoize(timeout=60)
     def any_descendants_live(self):
 
         if self.replies==[]:

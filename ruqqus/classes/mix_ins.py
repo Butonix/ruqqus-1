@@ -107,7 +107,7 @@ class Age_times:
 class Scores:
 
     @property
-    @cache.memoize(timeout=60)
+    #@cache.memoize(timeout=60)
     def score_percent(self):
 ##        try:
 ##            return int((self.ups/(self.ups+self.downs))*100)
@@ -117,7 +117,7 @@ class Scores:
         return 101
 
     @property
-    @cache.memoize(timeout=60)
+    #@cache.memoize(timeout=60)
     def score(self):
         return int(self.score_top) if self.score_top else 0
 
@@ -126,7 +126,7 @@ class Scores:
 class Fuzzing:
 
     @property
-    @cache.memoize(timeout=60)
+    #@cache.memoize(timeout=60)
     def score_fuzzed(self):
 
 
