@@ -20,8 +20,8 @@ import requests
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from gevent.queue import Queue
-from redis import BlockingConnectionPool
+#from gevent.queue import Queue
+#from redis import BlockingConnectionPool
 
 #from flask_sqlalchemy import SQLAlchemy
 #import psycogreen.gevent
@@ -56,14 +56,14 @@ if "localhost" in app.config["SERVER_NAME"]:
 else:
     app.config["CACHE_TYPE"]=environ.get("CACHE_TYPE", "redis")
     
-app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL", environ.get("REDIS_URL"))
+app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL", environ.get("REDISTOGO_URL"))
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 app.config["CACHE_KEY_PREFIX"]="flask_caching_"
 
 MAX_REDIS_CONNS = int(environ.get("MAX_REDIS_CONNS", 6))
 
-pool = BlockingConnectionPool(queue_class=Queue, max_connections=MAX_REDIS_CONNS)
-app.config['CACHE_OPTIONS'] = {'connection_pool': pool, 'max_connections': MAX_REDIS_CONNS}
+#pool = BlockingConnectionPool(queue_class=Queue, max_connections=MAX_REDIS_CONNS)
+#app.config['CACHE_OPTIONS'] = {'connection_pool': pool, 'max_connections': MAX_REDIS_CONNS}
 
 Markdown(app)
 cache=Cache(app)
@@ -103,8 +103,8 @@ from ruqqus.routes import *
 import ruqqus.helpers.jinja2
 
 
-IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
-UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
+#IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
+#UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
 
 
 #@cache.memoize(IP_BAN_CACHE_TTL)
