@@ -126,6 +126,7 @@ def before_request():
         session["session_id"]=secrets.token_hex(16)
 
     db.rollback()
+    db.begin()
 
 
 def log_event(name, link):
