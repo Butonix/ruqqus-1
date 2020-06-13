@@ -47,15 +47,11 @@ app.config["UserAgent"]=f"Ruqqus webserver tools for Ruqqus v{_version} develope
 if "localhost" in app.config["SERVER_NAME"]:
     app.config["CACHE_TYPE"]="null"
 else:
-    app.config["CACHE_TYPE"]=environ.get("CACHE_TYPE", "redis")
+    app.config["CACHE_TYPE"]="redis"
     
 app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL", environ.get("REDISTOGO_URL"))
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 app.config["CACHE_KEY_PREFIX"]="flask_caching_"
-
-app.config["CACHE_MEMCACHED_SERVERS"]=environ.get("MEMCACHEDCLOUD_SERVERS")
-app.config["CACHE_MEMCACHED_USERNAME"]=environ.get("MEMCACHEDCLOUD_USERNAME")
-app.config["CACHE_MEMCACHED_PASSWORD"]=environ.get("MEMCACHEDCLOUD_PASSWORD")
 
 
 Markdown(app)
