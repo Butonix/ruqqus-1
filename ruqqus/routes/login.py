@@ -314,7 +314,7 @@ def sign_up_post(v):
         return new_signup("An account with that username or email already exists.")
 
     #check bans
-    if any([x.is_banned for x in [db.query(User).filter_by(id=y).first() for y in session.get("history",[])]]):
+    if any([x.is_banned for x in [db.query(User).filter_by(id=y).first() for y in session.get("history",[])] if x]):
         abort(403)
     
     #success
