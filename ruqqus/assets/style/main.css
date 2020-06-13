@@ -16588,6 +16588,7 @@ ul.comment-section {
 }
 
 pre code {
+  white-space: normal;
   color: #121213;
 }
 
