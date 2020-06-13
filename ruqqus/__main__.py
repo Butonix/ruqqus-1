@@ -42,7 +42,7 @@ app.config["SESSION_REFRESH_EACH_REQUEST"]=False
 
 app.jinja_env.cache = {}
 
-app.config["UserAgent"]="Ruqqus webserver ruqqus.com"
+app.config["UserAgent"]=f"Ruqqus webserver tools for Ruqqus v{_version} developed by Ruqqus LLC for ruqqus.com."
 
 if "localhost" in app.config["SERVER_NAME"]:
     app.config["CACHE_TYPE"]="null"

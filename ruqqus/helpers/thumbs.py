@@ -7,7 +7,7 @@ from PIL import Image as PILimage
 from .get import *
 from ruqqus.__main__ import db, app
 
-headers={"User-Agent":"Ruqqus thumbnail finder https://ruqqus.com"}
+headers={"User-Agent":app.config["UserAgent"]}
 
 def thumbnail_thread(pid):
 
