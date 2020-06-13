@@ -9,7 +9,6 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_compress import Compress
 from time import sleep
-import pylibmc
 
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
@@ -53,6 +52,11 @@ else:
 app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL", environ.get("REDISTOGO_URL"))
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 app.config["CACHE_KEY_PREFIX"]="flask_caching_"
+
+app.config["CACHE_MEMCACHED_SERVERS"]=[environ.get("MEMCACHIER_SERVERS")]
+app.config["CACHE_MEMCACHED_USERNAME"]=environ.get("MEMCACHIER_USERNAME")
+app.config["CACHE_MEMCACHED_PASSWORD"]=environ.get("MEMCACHIER_PASSWORD")
+
 
 Markdown(app)
 cache=Cache(app)
