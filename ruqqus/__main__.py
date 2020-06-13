@@ -20,12 +20,12 @@ import requests
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from gevent.queue import FifoQueue
+from gevent.queue import Queue
 from redis import BlockingConnectionPool
 
 MAX_REDIS_CONNS = int(environ.get("MAX_REDIS_CONNS", 6))
 
-pool = BlockingConnectionPool(queue_class=FifoQueue, max_connections=MAX_REDIS_CONNS)
+pool = BlockingConnectionPool(queue_class=Queue, max_connections=MAX_REDIS_CONNS)
 app.config['CACHE_OPTIONS'] = {'connection_pool': pool}
 
 _version = "2.10.8"
