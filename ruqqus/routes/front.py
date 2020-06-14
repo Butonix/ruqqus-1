@@ -40,7 +40,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=Fal
 
     #cutoff=int(time.time())-(60*60*24*30)
 
-    posts = db.query(Submission).filter_by(is_banned=False,
+    posts = g.db.query(Submission).filter_by(is_banned=False,
                                            is_deleted=False,
                                            stickied=False)
     if not nsfw:
@@ -130,7 +130,7 @@ def home(v):
 
         #If page 1, check for sticky
         if page==1:
-            sticky=db.query(Submission.id).filter_by(stickied=True).first()
+            sticky=g.db.query(Submission.id).filter_by(stickied=True).first()
             if sticky:
                 ids=[sticky.id]+ids
 
@@ -183,7 +183,7 @@ def front_all(v):
    #If page 1, check for sticky
     if page==1:
         sticky =[]
-        sticky=db.query(Submission.id).filter_by(stickied=True).first()
+        sticky=g.db.query(Submission.id).filter_by(stickied=True).first()
         if sticky:
             ids=[sticky.id]+ids
     #check if ids exist
@@ -209,7 +209,7 @@ def front_all(v):
 def guild_ids(sort="subs", page=1, nsfw=False):
     #cutoff=int(time.time())-(60*60*24*30)
 
-    guilds = db.query(Board).filter_by(is_banned=False)
+    guilds = g.db.query(Board).filter_by(is_banned=False)
 
     if not nsfw:
         guilds=guilds.filter_by(over_18=False)
@@ -262,7 +262,7 @@ def browse_guilds(v):
 
         #hit db for entries
         
-        boards=db.query(Board
+        boards=g.db.query(Board
                        ).from_statement(
                            text(f"""
                             select *
@@ -292,7 +292,7 @@ def my_subs(v):
 
     if kind=="guilds":
 
-        b=db.query(Board)
+        b=g.db.query(Board)
         contribs=v.contributes.subquery()
         m=v.moderates.filter_by(accepted=True).subquery()
         s=v.subscriptions.filter_by(is_active=True).subquery()
@@ -328,7 +328,7 @@ def my_subs(v):
 
     elif kind=="users":
 
-        u=db.query(User)
+        u=g.db.query(User)
         follows=v.following.subquery()
 
         content=u.join(follows,
@@ -355,7 +355,7 @@ def my_subs(v):
 @auth_desired
 def random_post(v):
 
-    x=db.query(Submission).filter_by(is_banned=False, is_deleted=False)
+    x=g.db.query(Submission).filter_by(is_banned=False, is_deleted=False)
 
     now=int(time.time())
     cutoff=now - (60*60*24*180)
@@ -371,7 +371,7 @@ def random_post(v):
         x=x.filter_by(is_offensive=False)
 
     if v:
-        bans=db.query(BanRelationship.id).filter_by(user_id=v.id).all()
+        bans=g.db.query(BanRelationship.id).filter_by(user_id=v.id).all()
         x=x.filter(Submission.board_id.notin_([i[0] for i in bans]))
 
     post = x.order_by(func.random()).first()
@@ -381,7 +381,7 @@ def random_post(v):
 @auth_desired
 def random_guild(v):
 
-    x=db.query(Board).filter_by(is_banned=False, 
+    x=g.db.query(Board).filter_by(is_banned=False, 
         is_private=False,
         over_18=False,
         is_nsfl=False)
@@ -390,7 +390,7 @@ def random_guild(v):
         x=x.filter_by(is_offensive=False)
 
     if v:
-        bans=db.query(BanRelationship.id).filter_by(user_id=v.id).all()
+        bans=g.db.query(BanRelationship.id).filter_by(user_id=v.id).all()
         x=x.filter(Board.id.notin_([i[0] for i in bans]))
 
     board=x.order_by(func.random()).first()
@@ -401,7 +401,7 @@ def random_guild(v):
 @auth_desired
 def random_comment(v):
 
-    x=db.query(Comment).filter_by(is_banned=False,
+    x=g.db.query(Comment).filter_by(is_banned=False,
         over_18=False,
         is_nsfl=False)
 
@@ -409,7 +409,7 @@ def random_comment(v):
         x=x.filter_by(is_offensive=False)
 
     if v:
-        bans=db.query(BanRelationship.id).filter_by(user_id=v.id).all()
+        bans=g.db.query(BanRelationship.id).filter_by(user_id=v.id).all()
         x=x.filter(Comment.board_id.notin_([i[0] for i in bans]))
 
 
@@ -420,7 +420,7 @@ def random_comment(v):
 @app.route("/random/user", methods=["GET"])
 @auth_desired
 def random_user(v):
-    x=db.query(User).filter(or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc<int(time.time()))))
+    x=g.db.query(User).filter(or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc<int(time.time()))))
 
     x=x.filter_by(is_private=False)
     user=x.order_by(func.random()).first()
