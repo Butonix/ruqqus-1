@@ -95,7 +95,7 @@ def is_ip_banned(remote_addr):
     """
     Given a remote address, returns whether or not user is banned
     """
-    return bool(db.query(ruqqus.classes.IP).filter_by(addr=remote_addr).count())
+    return bool(g.db.query(ruqqus.classes.IP).filter_by(addr=remote_addr).count())
 
 
 #@cache.memoize(UA_BAN_CACHE_TTL)
@@ -104,7 +104,7 @@ def get_useragent_ban_response(user_agent_str):
     Given a user agent string, returns a tuple in the form of:
     (is_user_agent_banned, (insult, status_code))
     """
-    result = db.query(ruqqus.classes.Agent).filter(ruqqus.classes.Agent.kwd.in_(user_agent_str.split())).first()
+    result = g.db.query(ruqqus.classes.Agent).filter(ruqqus.classes.Agent.kwd.in_(user_agent_str.split())).first()
     if result:
         return True, (result.mock if result.mock else "Follow the robots.txt, dumbass", result.status_code if result.status_code else 418)
     return False, (None, None)
@@ -133,7 +133,7 @@ def before_request():
         session["session_id"]=secrets.token_hex(16)
 
    #db.rollback()
-    g.db.begin(subtransactions=True)
+    g.db.begin()
 
 
 def log_event(name, link):
