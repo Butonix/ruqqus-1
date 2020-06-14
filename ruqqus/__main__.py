@@ -74,8 +74,7 @@ limiter = Limiter(
 _engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 
 
-def make_session():
-    return sessionmaker(bind=_engine)()
+session = sessionmaker(bind=_engine)()
 
 
 Base = declarative_base()
@@ -114,7 +113,7 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
-    g.db = make_session()
+    g.db = session.begin()
 
     session.permanent = True
 
