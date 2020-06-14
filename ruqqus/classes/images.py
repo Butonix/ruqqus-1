@@ -1,6 +1,7 @@
 import time
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
+from flask import g
 
 from ruqqus.helpers.base36 import *
 from ruqqus.__main__ import Base
@@ -18,4 +19,4 @@ class Image(Base):
 
     
 def random_image():
-    return db.query(Image).order_by(text("random()")).limit(1).first()
+    return g.db.query(Image).order_by(text("random()")).limit(1).first()
