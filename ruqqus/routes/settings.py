@@ -10,7 +10,7 @@ from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.markdown import *
 from ruqqus.helpers.aws import check_csam_url
 from ruqqus.mail import *
-from ruqqus.__main__ import db, app, cache
+from ruqqus.__main__ import app, cache
 
 @app.route("/settings/profile", methods=["POST"])
 @is_not_banned

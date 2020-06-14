@@ -4,7 +4,7 @@ from ruqqus.helpers.wrappers import *
 from sqlalchemy import *
 
 from flask import *
-from ruqqus.__main__ import app, db, cache
+from ruqqus.__main__ import app, cache
 
 @cache.memoize(300)
 def searchlisting(q, v=None, page=1, sort="hot"):

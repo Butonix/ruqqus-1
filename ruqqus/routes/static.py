@@ -7,7 +7,7 @@ from ruqqus.helpers.wrappers import *
 import ruqqus.classes
 from ruqqus.classes import *
 from ruqqus.mail import *
-from ruqqus.__main__ import app, db, limiter
+from ruqqus.__main__ import app, limiter
 
 #take care of misc pages that never really change (much)
 @app.route('/assets/<path:path>')
