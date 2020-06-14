@@ -52,15 +52,15 @@ def check_for_alts(current_id):
         if past_id==current_id:
             continue
         
-        check1=db.query(Alt).filter_by(user1=current_id, user2=past_id).first()
-        check2=db.query(Alt).filter_by(user1=past_id, user2=current_id).first()
+        check1=g.db.query(Alt).filter_by(user1=current_id, user2=past_id).first()
+        check2=g.db.query(Alt).filter_by(user1=past_id, user2=current_id).first()
 
         if not check1 and not check2:
 
             try:
                 new_alt=Alt(user1=past_id,
                             user2=current_id)
-                db.add(new_alt)
+                g.db.add(new_alt)
                 
             except:
                 pass
@@ -74,7 +74,7 @@ def login_post():
     username=request.form.get("username")
 
     if "@" in username:
-        account=db.query(User).filter(User.email.ilike(username), User.is_deleted==False).first()
+        account=g.db.query(User).filter(User.email.ilike(username), User.is_deleted==False).first()
     else:
         account=get_user(username)
 
@@ -140,7 +140,7 @@ def login_post():
 
 
     #check self-setting badges
-    badge_types = db.query(BadgeDef).filter(BadgeDef.qualification_expr.isnot(None)).all()
+    badge_types = g.db.query(BadgeDef).filter(BadgeDef.qualification_expr.isnot(None)).all()
     for badge in badge_types:
         if eval(badge.qualification_expr, {}, {'v':account}):
             if not account.has_badge(badge.id):
@@ -148,12 +148,12 @@ def login_post():
                                 badge_id=badge.id,
                                 created_utc=int(time.time())
                                 )
-                db.add(new_badge)
+                g.db.add(new_badge)
                 
         else:
             bad_badge=account.has_badge(badge.id)
             if bad_badge:
-                db.delete(bad_badge)
+                g.db.delete(bad_badge)
                 
 
     #check for previous page
@@ -196,7 +196,7 @@ def sign_up_get(v):
     ref_id=None
     ref = request.args.get("ref",None)
     if ref:
-        ref_user = db.query(User).filter(User.username.ilike(ref)).first()
+        ref_user = g.db.query(User).filter(User.username.ilike(ref)).first()
 
     else:
         ref_user=None
@@ -267,7 +267,7 @@ def sign_up_post(v):
 
         args={"error":error}
         if request.form.get("referred_by"):
-            user=db.query(User).filter_by(id=request.form.get("referred_by")).first()
+            user=g.db.query(User).filter_by(id=request.form.get("referred_by")).first()
             if user:
                 args["ref"]=user.username
         
@@ -308,16 +308,16 @@ def sign_up_post(v):
     if not email:
         email=None
 
-    existing_account=db.query(User).filter(User.username.ilike(request.form.get("username"))).first()
+    existing_account=g.db.query(User).filter(User.username.ilike(request.form.get("username"))).first()
     if existing_account and existing_account.reserved:
         return redirect(existing_account.permalink)
 
-    if existing_account or (email and db.query(User).filter(User.email.ilike(email)).first()):
+    if existing_account or (email and g.db.query(User).filter(User.email.ilike(email)).first()):
         print(f"signup fail - {username } - email already exists")
         return new_signup("An account with that username or email already exists.")
 
     #check bans
-    if any([x.is_banned for x in [db.query(User).filter_by(id=y).first() for y in session.get("history",[])] if x]):
+    if any([x.is_banned for x in [g.db.query(User).filter_by(id=y).first() for y in session.get("history",[])] if x]):
         abort(403)
     
     #success
@@ -330,7 +330,7 @@ def sign_up_post(v):
     ref_id=None if not ref_id else ref_id
 
     #upgrade user badge
-    ref_user=db.query(User).filter_by(id=ref_id).first()
+    ref_user=g.db.query(User).filter_by(id=ref_id).first()
     if not ref_user:
         ref_id=None
 
@@ -352,14 +352,14 @@ def sign_up_post(v):
         print(e)
         return new_signup("Please enter a valid email")
     
-    db.add(new_user)
+    g.db.add(new_user)
     
 
     #give a beta badge
     beta_badge=Badge(user_id=new_user.id,
                         badge_id=6)
 
-    db.add(beta_badge)
+    g.db.add(beta_badge)
     
                 
     #check alts
@@ -410,7 +410,7 @@ def post_forgot():
     username = request.form.get("username")
     email = request.form.get("email")
 
-    user = db.query(User).filter(User.username.ilike(username), User.email.ilike(email), User.is_activated==True).first()
+    user = g.db.query(User).filter(User.username.ilike(username), User.email.ilike(email), User.is_activated==True).first()
 
     if user:
         #generate url
@@ -446,7 +446,7 @@ def get_reset():
     if not validate_hash(f"{user_id}+{timestamp}+forgot", token):
         abort(400)
                            
-    user=db.query(User).filter_by(id=user_id).first()
+    user=g.db.query(User).filter_by(id=user_id).first()
 
     if not user:
         abort(404)
@@ -481,7 +481,7 @@ def post_reset():
     if not validate_hash(f"{user_id}+{timestamp}+reset", token):
         abort(400)
 
-    user=db.query(User).filter_by(id=user_id).first()
+    user=g.db.query(User).filter_by(id=user_id).first()
     if not user:
         abort(404)
 
@@ -494,7 +494,7 @@ def post_reset():
                                error="Passwords didn't match.")
 
     user.passhash = hash_password(password)
-    db.add(user)
+    g.db.add(user)
     
 
     return render_template("message_success.html",
