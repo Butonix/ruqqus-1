@@ -103,7 +103,7 @@
 
 							<label class="btn btn-secondary m-0" for="file-upload">
 								<div id="filename-show">Select Image</div>
-								<input id="file-upload" type="file" name="file" class="" onchange="document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerHTML=document.getElementById('file-upload').files[0].name;checkForRequired()" hidden>
+								<input id="file-upload" type="file" name="file" accept="image/*" class="" onchange="document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerHTML=document.getElementById('file-upload').files[0].name;checkForRequired()" hidden>
 							</label>
 
 							<small class="form-text text-muted">Images uploaded will be public. Optional if you have text.</small>
