@@ -132,7 +132,7 @@ def before_request():
         session["session_id"]=secrets.token_hex(16)
 
    #db.rollback()
-    g.db.begin(subtransactions=True)
+    #g.db.begin(subtransactions=True)
 
 
 def log_event(name, link):
