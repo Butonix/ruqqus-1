@@ -11,7 +11,7 @@ from secrets import token_hex
 import matplotlib.pyplot as plt
 import imagehash
 
-from ruqqus.__main__ import db, app, cache
+from ruqqus.__main__ import app, cache
 from os import remove
 @app.route("/api/ban_user/<user_id>", methods=["POST"])
 @admin_level_required(3)
