@@ -405,7 +405,7 @@ def submit_post(v):
         csam_thread.start()
 
     #expire the relevant caches: front page new, board new
-    cache.delete_memoized(frontlist, sort="new")
+    #cache.delete_memoized(frontlist, sort="new")
     cache.delete_memoized(Board.idlist, board, sort="new")
 
     #print(f"Content Event: @{new_post.author.username} post {new_post.base36id}")
