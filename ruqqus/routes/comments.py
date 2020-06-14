@@ -13,7 +13,7 @@ from ruqqus.helpers.get import *
 from ruqqus.helpers.session import *
 from ruqqus.classes import *
 from flask import *
-from ruqqus.__main__ import app, db, limiter
+from ruqqus.__main__ import app, limiter
 from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 

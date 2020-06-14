@@ -3,7 +3,7 @@ from ruqqus.helpers.session import *
 from flask import *
 from urllib.parse import quote, urlencode
 import time
-from ruqqus.__main__ import db, app
+from ruqqus.__main__ import app
 
 #Errors
 @app.errorhandler(401)
