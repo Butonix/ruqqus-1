@@ -108,18 +108,18 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
         else:
             return self.__dict__.get("parent",
-                                     db.query(Comment).filter_by(id=base36decode(self.parent_fullname.split(sep="_")[1])).first()
+                                     g.db.query(Comment).filter_by(id=base36decode(self.parent_fullname.split(sep="_")[1])).first()
                                      )
 
     @property
     def children(self):
 
-        return db.query(Comment).filter_by(parent_comment=self.id).all()
+        return g.db.query(Comment).filter_by(parent_comment=self.id).all()
 
     @property
     def replies(self):
 
-        return self.__dict__.get("replies", db.query(Comment).filter_by(parent_fullname=self.fullname).all())
+        return self.__dict__.get("replies", g.db.query(Comment).filter_by(parent_fullname=self.fullname).all())
 
     @property
     @lazy
@@ -195,14 +195,14 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     def determine_offensive(self):
 
-        for x in db.query(BadWord).all():
+        for x in g.db.query(BadWord).all():
             if x.check(self.body):
                 self.is_offensive=True
-                db.commit()
+                
                 break
         else:
             self.is_offensive=False
-            db.commit()
+            
 
     @property
     def json(self):
@@ -241,7 +241,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             return x
 
         if g.v:
-            x=db.query(CommentVote).filter_by(
+            x=g.db.query(CommentVote).filter_by(
                 comment_id=self.id,
                 user_id=g.v.id
                 ).first()

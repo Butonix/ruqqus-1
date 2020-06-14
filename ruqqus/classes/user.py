@@ -123,7 +123,7 @@ class User(Base, Stndrd):
 
         
 
-        posts=db.query(Submission).filter_by(is_banned=False,
+        posts=g.db.query(Submission).filter_by(is_banned=False,
                                              is_deleted=False,
                                              stickied=False
                                              )
@@ -320,7 +320,7 @@ class User(Base, Stndrd):
     @cache.memoize(timeout=60)
     def has_report_queue(self):
         board_ids=[x.board_id for x in self.moderates.filter_by(accepted=True).all()]
-        return bool(db.query(Submission).filter(Submission.board_id.in_(board_ids), Submission.mod_approved==0, Submission.report_count>=1, Submission.is_banned==False).first())
+        return bool(g.db.query(Submission).filter(Submission.board_id.in_(board_ids), Submission.mod_approved==0, Submission.report_count>=1, Submission.is_banned==False).first())
 
     @property
     def banned_by(self):
@@ -328,7 +328,7 @@ class User(Base, Stndrd):
         if not self.is_banned:
             return None
 
-        return db.query(User).filter_by(id=self.is_banned).first()
+        return g.db.query(User).filter_by(id=self.is_banned).first()
 
     def has_badge(self, badgedef_id):
         return self.badges.filter_by(badge_id=badgedef_id).first()
@@ -402,10 +402,10 @@ class User(Base, Stndrd):
         output=[]
         for x in notifications:
             x.read=True
-            db.add(x)
+            g.db.add(x)
             output.append(x.comment_id)
 
-        db.commit()
+        
 
         return output
 
@@ -448,8 +448,8 @@ class User(Base, Stndrd):
     @property
     def alts(self):
 
-        alts1=db.query(User).join(Alt, Alt.user2==User.id).filter(Alt.user1==self.id).all()
-        alts2=db.query(User).join(Alt, Alt.user1==User.id).filter(Alt.user2==self.id).all()
+        alts1=g.db.query(User).join(Alt, Alt.user2==User.id).filter(Alt.user1==self.id).all()
+        alts2=g.db.query(User).join(Alt, Alt.user1==User.id).filter(Alt.user2==self.id).all()
 
         output= list(set([x for x in alts1]+[y for y in alts2]))
         output=sorted(output, key=lambda x: x.username)
@@ -471,8 +471,8 @@ class User(Base, Stndrd):
                         resize=(100,100)
                         )
         self.has_profile=True
-        db.add(self)
-        db.commit()
+        g.db.add(self)
+        
         
     def set_banner(self, file):
 
@@ -483,22 +483,22 @@ class User(Base, Stndrd):
                         file=file)
 
         self.has_banner=True
-        db.add(self)
-        db.commit()
+        g.db.add(self)
+        
 
     def del_profile(self):
 
         aws.delete_file(name=f"users/{self.username}/profile-{self.profile_nonce}.png")
         self.has_profile=False
-        db.add(self)
-        db.commit()
+        g.db.add(self)
+        
 
     def del_banner(self):
 
         aws.delete_file(name=f"users/{self.username}/banner-{self.banner_nonce}.png")
         self.has_banner=False
-        db.add(self)
-        db.commit()
+        g.db.add(self)
+        
 
     @property
     def banner_url(self):
@@ -524,7 +524,7 @@ class User(Base, Stndrd):
               "Submission":Submission
               }
 
-        titles=[i for i in db.query(Title).order_by(text("id asc")).all() if eval(i.qualification_expr,{}, locs)]
+        titles=[i for i in g.db.query(Title).order_by(text("id asc")).all() if eval(i.qualification_expr,{}, locs)]
         return titles
 
     @property
@@ -616,8 +616,8 @@ class User(Base, Stndrd):
 
         self.is_banned=admin.id
 
-        db.add(self)
-        db.commit()
+        g.db.add(self)
+        
 
         if include_alts:
             for alt in self.alts:
@@ -636,8 +636,8 @@ class User(Base, Stndrd):
         self.is_banned=0
         self.unban_utc=0
 
-        db.add(self)
-        db.commit()
+        g.db.add(self)
+        
 
         if include_alts:
             for alt in self.alts:
