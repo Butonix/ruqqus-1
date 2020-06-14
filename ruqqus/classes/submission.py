@@ -40,7 +40,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     body_html=Column(String(20000), default="")
     embed_url=Column(String(256), default="")
     domain_ref=Column(Integer, ForeignKey("domains.id"))
-    domain_obj=relationship("Domain", lazy=joined, innerjoin=False)
+    domain_obj=relationship("Domain", lazy="joined", innerjoin=False)
     flags=relationship("Flag", lazy="dynamic", backref="submission")
     is_approved=Column(Integer, ForeignKey("users.id"), default=0)
     approved_utc=Column(Integer, default=0)
