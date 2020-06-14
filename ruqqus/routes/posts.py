@@ -107,7 +107,7 @@ def edit_post(pid, v):
     p.body_html = body_html
     p.edited_utc = int(time.time())
 
-    db.add(p)
+    g.db.add(p)
     
 
     return redirect(p.permalink)
@@ -204,7 +204,7 @@ def submit_post(v):
     title=sanitize(title, linkgen=False)
 
     #check for duplicate
-    dup = db.query(Submission).filter_by(title=title,
+    dup = g.db.query(Submission).filter_by(title=title,
                                          author_id=v.id,
                                          url=url,
                                          is_deleted=False,
@@ -342,7 +342,7 @@ def submit_post(v):
     domain=parsed_url.netloc
 
     if url:
-      repost = db.query(Submission).filter(Submission.url.ilike(url)).filter_by(board_id=board.id, is_deleted=False, is_banned=False).order_by(Submission.id.asc()).first()
+      repost = g.db.query(Submission).filter(Submission.url.ilike(url)).filter_by(board_id=board.id, is_deleted=False, is_banned=False).order_by(Submission.id.asc()).first()
     else:
       repost=None
 
@@ -365,7 +365,7 @@ def submit_post(v):
                         repost_id=repost.id if repost else None
                         )
 
-    db.add(new_post)
+    g.db.add(new_post)
 
     
 
@@ -375,7 +375,7 @@ def submit_post(v):
               vote_type=1,
               submission_id=new_post.id
               )
-    db.add(vote)
+    g.db.add(vote)
     
 
     #check for uploaded image
@@ -391,7 +391,7 @@ def submit_post(v):
         new_post.url=f'https://{BUCKET}/{name}'
         new_post.is_image=True
         new_post.domain_ref=1 #id of i.ruqqus.com domain
-        db.add(new_post)
+        g.db.add(new_post)
         
 
     
@@ -428,7 +428,7 @@ def submit_post(v):
 #         abort(403)
         
 #     post.over_18=x
-#     db.add(post)
+#     g.db.add(post)
 #     
 
 #     return "", 204
@@ -444,7 +444,7 @@ def delete_post_pid(pid, v):
 
     post.is_deleted=True
     
-    db.add(post)
+    g.db.add(post)
 
     #clear cache
     cache.delete_memoized(User.userpagelisting, v, sort="new")
@@ -465,7 +465,7 @@ def delete_post_pid(pid, v):
             key=f"post/{pid}/{rand}"
             delete_file(key)
             post.is_image=False
-            db.add(post)
+            g.db.add(post)
             
     
         
@@ -497,7 +497,7 @@ def toggle_post_nsfw(pid, v):
         abort(403)
 
     post.over_18 = not post.over_18
-    db.add(post)
+    g.db.add(post)
     
 
     return "", 204
@@ -516,7 +516,7 @@ def toggle_post_nsfl(pid, v):
         abort(403)
 
     post.is_nsfl = not post.is_nsfl
-    db.add(post)
+    g.db.add(post)
     
 
     return "", 204
