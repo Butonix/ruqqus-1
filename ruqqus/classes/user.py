@@ -21,7 +21,7 @@ from .comment import Comment, Notification
 from .boards import Board
 from .board_relationships import *
 from .mix_ins import *
-from ruqqus.__main__ import Base, db, cache
+from ruqqus.__main__ import Base,cache
 
 class User(Base, Stndrd):
 

@@ -4,7 +4,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
 from ruqqus.helpers.base36 import *
-from ruqqus.__main__ import Base, db
+from ruqqus.__main__ import Base
 
 class Vote(Base):
 
@@ -46,8 +46,8 @@ class Vote(Base):
         self.vote_type=x
         self.created_utc=int(time())
 
-        db.add(self)
-        db.commit()
+        g.db.add(self)
+        
 
 class CommentVote(Base):
 
@@ -88,5 +88,5 @@ class CommentVote(Base):
         self.vote_type=x
         self.created_utc=int(time())
 
-        db.add(self)
-        db.commit()
+        g.db.add(self)
+        

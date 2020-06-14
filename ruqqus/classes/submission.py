@@ -11,7 +11,7 @@ from .mix_ins import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.lazy import lazy
 import ruqqus.helpers.aws as aws
-from ruqqus.__main__ import Base, db, cache
+from ruqqus.__main__ import Base, cache
 from .votes import Vote, CommentVote
 from .domains import Domain
 from .flags import Flag

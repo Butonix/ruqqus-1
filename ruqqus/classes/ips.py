@@ -1,6 +1,6 @@
 from flask import *
 from sqlalchemy import *
-from ruqqus.__main__ import Base, db
+from ruqqus.__main__ import Base
 
 class IP(Base):
 

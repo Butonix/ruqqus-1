@@ -3,8 +3,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
 from ruqqus.helpers.base36 import *
-from ruqqus.__main__ import Base, db
-
+from ruqqus.__main__ import Base
 class Image(Base):
     __tablename__ = "images"
     id = Column(BigInteger, primary_key=True)

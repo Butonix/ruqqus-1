@@ -19,9 +19,9 @@ def send_notification(user, text):
                         distinguish_level=6,
                         is_offensive=False
                         )
-    db.add(new_comment)
+    g.db.add(new_comment)
     
     notif=Notification(comment_id=new_comment.id,
                        user_id=user.id)
-    db.add(notif)
+    g.db.add(notif)
     

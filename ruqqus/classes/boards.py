@@ -11,7 +11,7 @@ from .submission import *
 from .board_relationships import *
 from .comment import Comment
 from .mix_ins import *
-from ruqqus.__main__ import Base, db, cache
+from ruqqus.__main__ import Base, cache
 
 class Board(Base, Stndrd, Age_times):
 
