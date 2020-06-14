@@ -77,7 +77,7 @@ def settings_profile_post(v):
         
     if updated:
         db.add(v)
-        db.commit()
+        
 
         return render_template("settings_profile.html",
                                v=v,
@@ -105,7 +105,7 @@ def settings_security_post(v):
         v.passhash=v.hash_password(request.form.get("new_password"))
 
         db.add(v)
-        db.commit()
+        
         
         return redirect("/settings/security?msg="+escape("Your password has been changed."))
 
@@ -155,7 +155,7 @@ def settings_security_post(v):
     
         v.mfa_secret=secret
         db.add(v)
-        db.commit()
+        
     
         return redirect("/settings/security?msg="+escape("Two-factor authentication enabled."))
     
@@ -171,7 +171,7 @@ def settings_security_post(v):
         
         v.mfa_secret=None
         db.add(v)
-        db.commit()
+        
         return redirect("/settings/security?msg="+escape("Two-factor authentication disabled."))
             
 
@@ -217,7 +217,7 @@ def settings_log_out_others(v):
     session["login_nonce"]=v.login_nonce
 
     db.add(v)
-    db.commit()
+    
 
     return render_template("settings_security.html", v=v, msg="All other devices have been logged out")
 
@@ -276,7 +276,7 @@ def settings_new_feedkey(v):
 
     v.feed_nonce+=1
     db.add(v)
-    db.commit()
+    
 
     return render_template("settings_profile.html", v=v, msg="Your new custom RSS Feed Token has been generated.")
 
@@ -309,7 +309,7 @@ def update_announcement(v):
 
     v.read_announcement_utc=int(time.time())
     db.add(v)
-    db.commit()
+    
     return "", 204
 
 
@@ -327,7 +327,7 @@ def delete_account(v):
     v.del_banner()
     v.del_profile()
     db.add(v)
-    db.commit()
+    
 
     session.pop("user_id", None)
     session.pop("session_id", None)

@@ -108,7 +108,7 @@ def edit_post(pid, v):
     p.edited_utc = int(time.time())
 
     db.add(p)
-    db.commit()
+    
 
     return redirect(p.permalink)
 
@@ -367,7 +367,7 @@ def submit_post(v):
 
     db.add(new_post)
 
-    db.commit()
+    
 
     new_post.determine_offensive()
 
@@ -376,7 +376,7 @@ def submit_post(v):
               submission_id=new_post.id
               )
     db.add(vote)
-    db.commit()
+    
 
     #check for uploaded image
     if request.files.get('file'):
@@ -392,7 +392,7 @@ def submit_post(v):
         new_post.is_image=True
         new_post.domain_ref=1 #id of i.ruqqus.com domain
         db.add(new_post)
-        db.commit()
+        
 
     
     #spin off thumbnail generation and csam detection as  new threads
@@ -429,7 +429,7 @@ def submit_post(v):
         
 #     post.over_18=x
 #     db.add(post)
-#     db.commit()
+#     
 
 #     return "", 204
 
@@ -467,7 +467,7 @@ def delete_post_pid(pid, v):
             post.is_image=False
             db.add(post)
             
-    db.commit()
+    
         
 
     return "",204
@@ -498,7 +498,7 @@ def toggle_post_nsfw(pid, v):
 
     post.over_18 = not post.over_18
     db.add(post)
-    db.commit()
+    
 
     return "", 204
 
@@ -517,6 +517,6 @@ def toggle_post_nsfl(pid, v):
 
     post.is_nsfl = not post.is_nsfl
     db.add(post)
-    db.commit()
+    
 
     return "", 204

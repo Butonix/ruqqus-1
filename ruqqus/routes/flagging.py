@@ -41,7 +41,7 @@ def api_flag_post(pid, v):
 
     db.add(flag)
 
-    db.commit()
+    
     return "", 204
 
 
@@ -63,6 +63,6 @@ def api_flag_comment(cid, v):
 
     db.add(flag)
 
-    db.commit()
+    
     return "", 204
 

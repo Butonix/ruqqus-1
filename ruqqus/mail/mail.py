@@ -89,5 +89,5 @@ def activate(v):
         db.add(mail_badge)
     
     db.add(user)
-    db.commit()
+    
     return render_template("message_success.html", v=v, title="Email verified.", message=f"Your email {email} has been verified. Thank you.")

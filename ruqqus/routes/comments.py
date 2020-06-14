@@ -256,7 +256,7 @@ def api_comment(v):
               )
 
     db.add(c)
-    db.commit()
+    
 
     c.determine_offensive()
 
@@ -280,7 +280,7 @@ def api_comment(v):
         n=Notification(comment_id=c.id,
                        user_id=x)
         db.add(n)
-    db.commit()
+    
                            
 
     #create auto upvote
@@ -290,7 +290,7 @@ def api_comment(v):
                      )
 
     db.add(vote)
-    db.commit()
+    
 
     #print(f"Content Event: @{v.username} comment {c.base36id}")
 
@@ -337,7 +337,7 @@ def edit_comment(cid, v):
     c.edited_utc = int(time.time())
 
     db.add(c)
-    db.commit()
+    
 
     c.determine_offensive()
 
@@ -363,7 +363,7 @@ def delete_comment(cid, v):
     c.is_deleted=True
 
     db.add(c)
-    db.commit()
+    
 
     cache.delete_memoized(User.commentlisting, v)
 

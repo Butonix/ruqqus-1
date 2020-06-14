@@ -135,7 +135,7 @@ def badge_grant_post(v):
         new_badge.url=url
 
     db.add(new_badge)
-    db.commit()
+    
 
     text=f"""
 @{v.username} has given you the following profile badge:

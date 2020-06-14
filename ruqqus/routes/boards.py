@@ -108,7 +108,7 @@ def create_board_post(v):
                     )
 
     db.add(new_board)
-    db.commit()
+    
 
     #add user as mod
     mod=ModRelationship(user_id=v.id,
@@ -120,7 +120,7 @@ def create_board_post(v):
     sub=Subscription(user_id=v.id,
                      board_id=new_board.id)
     db.add(sub)
-    db.commit()
+    
 
     #clear cache
     cache.delete_memoized(guild_ids, sort="new")
@@ -223,7 +223,7 @@ def mod_kick_bid_pid(bid,pid, board, v):
     post.guild_name="general"
     post.is_pinned=False
     db.add(post)
-    db.commit()
+    
 
     cache.delete_memoized(Board.idlist, board)
 
@@ -241,7 +241,7 @@ def mod_accept_bid_pid(bid, pid, board, v):
 
     post.mod_approved=v.id
     db.add(post)
-    db.commit()
+    
     return "", 204
     
 
@@ -290,7 +290,7 @@ def mod_ban_bid_user(bid, board, v):
         text=f"You have been exiled from +{board.name}.\n\nNone of your existing posts or comments have been removed, however, you will not be able to make any new posts or comments in +{board.name}."
         send_notification(user, text)
             
-    db.commit()
+    
 
     return "", 204
     
@@ -309,7 +309,7 @@ def mod_unban_bid_user(bid, board, v):
     x.is_active=False
 
     db.add(x)
-    db.commit()
+    
     
     return "", 204
 
@@ -343,7 +343,7 @@ def user_kick_pid(pid, v):
     post.is_pinned=False
     
     db.add(post)
-    db.commit()
+    
     
     #clear board's listing caches
     cache.delete_memoized(Board.idlist, current_board)
@@ -380,7 +380,7 @@ def mod_take_pid(pid, v):
     post.board_id=board.id
     post.guild_name=board.name
     db.add(post)
-    db.commit()
+    
 
     #clear board's listing caches
     cache.delete_memoized(Board.idlist, board)
@@ -414,7 +414,7 @@ def mod_invite_username(bid, board, v):
                             board_id=board.id,
                             accepted=False)
     db.add(new_mod)
-    db.commit()
+    
     
     return "", 204
 
@@ -435,7 +435,7 @@ def mod_rescind_bid_username(bid, username, board, v):
     invitation.invite_rescinded=True
 
     db.add(invitation)
-    db.commit()
+    
 
     return "", 204
     
@@ -456,7 +456,7 @@ def mod_accept_board(bid, v):
 
     x.accepted=True
     db.add(x)
-    db.commit() 
+     
     
     return "", 204
     
@@ -482,7 +482,7 @@ def mod_remove_username(bid, username, board, v):
         abort(403)
 
     db.delete(u_mod)
-    db.commit()
+    
     
     return "", 204
 
@@ -515,7 +515,7 @@ def mod_bid_settings_nsfw(bid,  board, v):
     board.over_18 = bool(request.form.get("over_18", False)=='true')
 
     db.add(board)
-    db.commit()
+    
 
     return "",204
 
@@ -529,7 +529,7 @@ def mod_bid_settings_downdisable(bid,  board, v):
     board.downvotes_disabled = bool(request.form.get("downdisable", False)=='true')
 
     db.add(board)
-    db.commit()
+    
 
     return "",204
 
@@ -543,7 +543,7 @@ def mod_bid_settings_restricted(bid, board, v):
     board.restricted_posting = bool(request.form.get("restrictswitch", False)=='true')
 
     db.add(board)
-    db.commit()
+    
 
     return "",204
 
@@ -557,7 +557,7 @@ def mod_bid_settings_private(bid, board, v):
     board.is_private = bool(request.form.get("guildprivacy", False)=='true')
 
     db.add(board)
-    db.commit()
+    
 
     return "",204
 
@@ -572,7 +572,7 @@ def mod_bid_settings_name(bid, board, v):
     if new_name.lower() == board.name.lower():
         board.name = new_name
         db.add(board)
-        db.commit()
+        
         return "", 204
     else:
         return "", 422
@@ -596,7 +596,7 @@ def mod_bid_settings_description(bid, board, v):
     board.description_html=description_html
 
     db.add(board)
-    db.commit()
+    
 
     return "", 204
 
@@ -609,7 +609,7 @@ def mod_settings_toggle_banner(bid, board, v):
     board.hide_banner_data = bool(request.form.get("hidebanner", False) == 'true')
 
     db.add(board)
-    db.commit()
+    
 
     return "", 204
 
@@ -629,7 +629,7 @@ def mod_add_rule(bid, board, v):
 
         new_rule = Rules(board_id=bid, rule_body=rule, rule_html=rule_html)
         db.add(new_rule)
-        db.commit()
+        
     else:
         """
         im guessing here we should 
@@ -668,7 +668,7 @@ def mod_edit_rule(bid, board, v):
     r.edited_utc = int(time.time())
 
     db.add(r)
-    db.commit()
+    
     return "", 204
 
 @app.route("/+<boardname>/mod/settings", methods=["GET"])
@@ -741,7 +741,7 @@ def subscribe_board(boardname, v):
             #reactivate canceled sub
             sub.is_active=True
             db.add(sub)
-            db.commit()
+            
             return "", 204
 
     
@@ -749,7 +749,7 @@ def subscribe_board(boardname, v):
                          board_id=board.id)
 
     db.add(new_sub)
-    db.commit()
+    
 
     #clear your cached guild listings
     cache.delete_memoized(User.idlist, v, kind="board")
@@ -774,7 +774,7 @@ def unsubscribe_board(boardname, v):
     sub.is_active=False
 
     db.add(sub)
-    db.commit()
+    
 
     #clear your cached guild listings
     cache.delete_memoized(User.idlist, v, kind="board")
@@ -970,7 +970,7 @@ def mod_board_color(bid, board, v):
     board.color_nonce+=1
     
     db.add(board)
-    db.commit()
+    
 
     try:
         cache.delete_memoized(board_css, board.name)
@@ -1015,7 +1015,7 @@ def mod_approve_bid_user(bid, board, v):
             text=f"You have added as an approved contributor to +{board.name}."
             send_notification(user, text)
             
-    db.commit()
+    
 
     return "", 204
     
@@ -1034,7 +1034,7 @@ def mod_unapprove_bid_user(bid, board, v):
     x.is_active=False
 
     db.add(x)
-    db.commit()
+    
     
     return "", 204
 
@@ -1186,7 +1186,7 @@ def siege_guild(v):
                           f"You have been overthrown from +{guild.name}.")
         db.delete(x)
         
-    db.commit()
+    
 
     #add new mod if user is not already
     if not guild.has_mod(v):
@@ -1197,7 +1197,7 @@ def siege_guild(v):
                                 )
 
         db.add(new_mod)
-        db.commit()
+        
 
     return redirect(f"/+{guild.name}/mod/mods")
 
@@ -1227,6 +1227,6 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
     cache.delete_memoized(Board.idlist, post.board)
 
     db.add(post)
-    db.commit()
+    
 
     return "", 204

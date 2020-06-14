@@ -70,7 +70,7 @@ def discord_redirect(v):
 	v.discord_id=discord_id
 
 	db.add(v)
-	db.commit()
+	
 
 	#add user to discord
 	url=f"{DISCORD_ENDPOINT}/guilds/{SERVER_ID}/members/{discord_id}"

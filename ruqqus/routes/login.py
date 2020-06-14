@@ -61,7 +61,7 @@ def check_for_alts(current_id):
                 new_alt=Alt(user1=past_id,
                             user2=current_id)
                 db.add(new_alt)
-                db.commit()
+                
             except:
                 pass
 
@@ -149,12 +149,12 @@ def login_post():
                                 created_utc=int(time.time())
                                 )
                 db.add(new_badge)
-                db.commit()
+                
         else:
             bad_badge=account.has_badge(badge.id)
             if bad_badge:
                 db.delete(bad_badge)
-                db.commit()
+                
 
     #check for previous page
 
@@ -353,14 +353,14 @@ def sign_up_post(v):
         return new_signup("Please enter a valid email")
     
     db.add(new_user)
-    db.commit()
+    
 
     #give a beta badge
     beta_badge=Badge(user_id=new_user.id,
                         badge_id=6)
 
     db.add(beta_badge)
-    db.commit()
+    
                 
     #check alts
 
@@ -495,7 +495,7 @@ def post_reset():
 
     user.passhash = hash_password(password)
     db.add(user)
-    db.commit()
+    
 
     return render_template("message_success.html",
                            title="Password reset successful!",

@@ -39,7 +39,7 @@ def thumbnail_thread(pid):
 
             post.is_image=True
             db.add(post)
-            db.commit()
+            
 
             return
 
@@ -140,6 +140,6 @@ def thumbnail_thread(pid):
     aws.upload_from_file(name, tempname, resize=(375,227))
     post.has_thumb=True
     db.add(post)
-    db.commit()
+    
     
     #remove(tempname)

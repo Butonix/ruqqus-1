@@ -44,7 +44,7 @@ def ban_user(user_id, v):
 
     send_notification(user, text)
     
-    db.commit()
+    
     
     return (redirect(user.url), user)
 
@@ -84,7 +84,7 @@ def ban_post(post_id, v):
     post.ban_reason=request.form.get("reason",None)
 
     db.add(post)
-    db.commit()
+    
 
     cache.delete_memoized(Board.idlist, self=post.board)
     
@@ -105,7 +105,7 @@ def unban_post(post_id, v):
     post.approved_utc=int(time.time())
 
     db.add(post)
-    db.commit()
+    
     
     return (redirect(post.permalink), post)
 
@@ -129,7 +129,7 @@ def api_distinguish_post(post_id, v):
         post.distinguish_level=v.admin_level
 
     db.add(post)
-    db.commit()
+    
 
     return (redirect(post.permalink), post)
 
@@ -143,7 +143,7 @@ def api_sticky_post(post_id, v):
         if post.stickied:
             post.stickied=False
             db.add(post)
-            db.commit()
+            
             return redirect(post.permalink)
 
     already_stickied=db.query(Submission).filter_by(stickied=True).first()
@@ -155,7 +155,7 @@ def api_sticky_post(post_id, v):
         db.add(already_stickied)
         
     db.add(post)
-    db.commit()
+    
 
     return (redirect(post.permalink), post)
 
@@ -172,7 +172,7 @@ def api_ban_comment(c_id, v):
     comment.approved_utc=0
 
     db.add(comment)
-    db.commit()
+    
 
     return "", 204
 
@@ -189,7 +189,7 @@ def api_unban_comment(c_id, v):
     comment.approved_utc=int(time.time())
 
     db.add(comment)
-    db.commit()
+    
 
     return "", 204
 
@@ -204,7 +204,7 @@ def api_distinguish_comment(c_id, v):
     comment.distinguish_level=v.admin_level
 
     db.add(comment)
-    db.commit()
+    
 
     return "", 204
 
@@ -219,7 +219,7 @@ def api_undistinguish_comment(c_id, v):
     comment.distinguish_level=0
 
     db.add(comment)
-    db.commit()
+    
 
     return "", 204
 
@@ -235,7 +235,7 @@ def api_ban_guild(v, bid):
     board.ban_reason=request.form.get("reason","")
     
     db.add(board)
-    db.commit()
+    
 
     return redirect(board.permalink)
 
@@ -250,7 +250,7 @@ def api_unban_guild(v, bid):
     board.ban_reason=""
     
     db.add(board)
-    db.commit()
+    
 
     return redirect(board.permalink)
 
@@ -265,7 +265,7 @@ def mod_self_to_guild(v, bid):
                              board_id=board.id,
                              accepted=True)
         db.add(mr)
-        db.commit()
+        
 
     return redirect(f"/+{board.name}/mod/mods")
         

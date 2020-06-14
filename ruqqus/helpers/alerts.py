@@ -20,8 +20,8 @@ def send_notification(user, text):
                         is_offensive=False
                         )
     db.add(new_comment)
-    db.commit()
+    
     notif=Notification(comment_id=new_comment.id,
                        user_id=user.id)
     db.add(notif)
-    db.commit()
+    

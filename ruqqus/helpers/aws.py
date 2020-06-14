@@ -165,7 +165,7 @@ def check_csam(post):
     #nuke aws
     delete_file(parsed_url.path.lstrip('/'))
     
-    db.commit()
+    
 
     
 def check_csam_url(url, v, delete_content_function):
@@ -193,7 +193,7 @@ def check_csam_url(url, v, delete_content_function):
         alt.is_banned=1
         db.add(alt)
 
-    db.commit()
+    
     
     delete_content_function()
     
