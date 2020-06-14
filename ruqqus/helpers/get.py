@@ -1,5 +1,6 @@
 from .base36 import *
 from ruqqus.classes import *
+from flask import g
 
 def get_user(username, graceful=False):
 
