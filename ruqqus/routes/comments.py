@@ -101,9 +101,9 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
     current_ids=[comment.id]
     for i in range(6-context):
         if g.v:
-            votes=db.query(CommentVote).filter(CommentVote.user_id==g.v.id).subquery()
+            votes=g.db.query(CommentVote).filter(CommentVote.user_id==g.v.id).subquery()
 
-            comms=db.query(
+            comms=g.db.query(
                 Comment,
                 User,
                 Title,
@@ -141,7 +141,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                 com._voted=c[3] if c[3] else 0
                 output.append(com)
         else:
-            comms=db.query(
+            comms=g.db.query(
                 Comment,
                 User,
                 Title
@@ -212,7 +212,7 @@ def api_comment(v):
                                ), 422
 
     #check existing
-    existing=db.query(Comment).filter_by(author_id=v.id,
+    existing=g.db.query(Comment).filter_by(author_id=v.id,
                                          body=body,
                                          parent_fullname=parent_fullname,
                                          parent_submission=parent_submission
@@ -223,11 +223,11 @@ def api_comment(v):
     #get parent item info
     parent_id=int(parent_fullname.split("_")[1], 36)
     if parent_fullname.startswith("t2"):
-        parent=db.query(Submission).filter_by(id=parent_id).first()
+        parent=g.db.query(Submission).filter_by(id=parent_id).first()
         parent_comment_id=None
         level=1
     elif parent_fullname.startswith("t3"):
-        parent=db.query(Comment).filter_by(id=parent_id).first()
+        parent=g.db.query(Comment).filter_by(id=parent_id).first()
         parent_comment_id=parent.id
         level=parent.level+1
 
@@ -255,7 +255,7 @@ def api_comment(v):
               is_op=(v.id==post.author_id)
               )
 
-    db.add(c)
+    g.db.add(c)
     
 
     c.determine_offensive()
@@ -271,7 +271,7 @@ def api_comment(v):
     mentions=soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3)
     for mention in mentions:
         username=mention["href"].split("@")[1]
-        user=db.query(User).filter_by(username=username).first()
+        user=g.db.query(User).filter_by(username=username).first()
         if user:
             notify_users.add(user.id)
 
@@ -279,7 +279,7 @@ def api_comment(v):
     for x in notify_users:
         n=Notification(comment_id=c.id,
                        user_id=x)
-        db.add(n)
+        g.db.add(n)
     
                            
 
@@ -289,7 +289,7 @@ def api_comment(v):
                      vote_type=1
                      )
 
-    db.add(vote)
+    g.db.add(vote)
     
 
     #print(f"Content Event: @{v.username} comment {c.base36id}")
@@ -336,7 +336,7 @@ def edit_comment(cid, v):
     c.body_html=body_html
     c.edited_utc = int(time.time())
 
-    db.add(c)
+    g.db.add(c)
     
 
     c.determine_offensive()
@@ -352,7 +352,7 @@ def edit_comment(cid, v):
 @api
 def delete_comment(cid, v):
 
-    c=db.query(Comment).filter_by(id=base36decode(cid)).first()
+    c=g.db.query(Comment).filter_by(id=base36decode(cid)).first()
 
     if not c:
         abort(404)
@@ -362,7 +362,7 @@ def delete_comment(cid, v):
 
     c.is_deleted=True
 
-    db.add(c)
+    g.db.add(c)
     
 
     cache.delete_memoized(User.commentlisting, v)
