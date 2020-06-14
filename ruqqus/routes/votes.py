@@ -7,7 +7,7 @@ from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.get import *
 from ruqqus.classes import *
 from flask import *
-from ruqqus.__main__ import app, db
+from ruqqus.__main__ import app
 
 @app.route("/api/vote/post/<post_id>/<x>", methods=["POST"])
 @is_not_banned
