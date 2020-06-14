@@ -7,7 +7,7 @@ from urllib.parse import quote
 from ruqqus.helpers.security import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.classes import *
-from ruqqus.__main__ import app, db
+from ruqqus.__main__ import app
 
 def send_mail(to_address, subject, html, plaintext=None, files={}, from_address="Ruqqus <noreply@mail.ruqqus.com>"):
 
