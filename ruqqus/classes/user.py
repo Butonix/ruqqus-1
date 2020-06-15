@@ -295,7 +295,7 @@ class User(Base, Stndrd):
     @property
     def boards_modded(self):
 
-        return [x.board for x in self.moderates.filter_by(accepted=True).all() if not x.board.is_banned]
+        return [x.board for x in self.moderates.filter_by(accepted=True).all() if x and not x.board.is_banned]
 
     @property
     @cache.memoize(timeout=3600) #1hr cache time for user rep
