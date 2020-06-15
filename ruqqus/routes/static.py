@@ -42,7 +42,7 @@ def settings_profile(v):
 @app.route("/help/titles", methods=["GET"])
 @auth_desired
 def titles(v):
-    titles = [x for x in db.query(Title).order_by(text("id asc")).all()]
+    titles = [x for x in g.db.query(Title).order_by(text("id asc")).all()]
     return render_template("/help/titles.html",
                            v=v,
                            titles=titles)
@@ -60,7 +60,7 @@ def help_terms(v):
 @app.route("/help/badges", methods=["GET"])
 @auth_desired
 def badges(v):
-    badges=[x for x in db.query(BadgeDef).order_by(text("rank asc, id asc")).all()]
+    badges=[x for x in g.db.query(BadgeDef).order_by(text("rank asc, id asc")).all()]
     return render_template("help/badges.html",
                            v=v,
                            badges=badges)
@@ -69,10 +69,10 @@ def badges(v):
 @auth_desired
 def help_admins(v):
 
-    admins = db.query(User).filter(User.admin_level>1, User.id > 1).order_by(User.id.asc()).all()
+    admins = g.db.query(User).filter(User.admin_level>1, User.id > 1).order_by(User.id.asc()).all()
     admins=[x for x in admins]
 
-    exadmins = db.query(User).filter_by(admin_level=1).order_by(User.id.asc()).all()
+    exadmins = g.db.query(User).filter_by(admin_level=1).order_by(User.id.asc()).all()
     exadmins=[x for x in exadmins]
 
     return render_template("help/admins.html",
