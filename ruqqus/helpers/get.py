@@ -44,7 +44,7 @@ def get_posts(pids, sort="hot", v=None):
         vt=g.db.query(Vote).filter(Vote.user_id==v.id, Vote.submission_id.in_(pids)).subquery()
 
 
-        posts= g.db.query(Submission, Title, vt.c.vote_type).filter(Submission.id.in_(pids)).join(Submission.author).join(User.title, isouter=True).join(vt, vt.c.submission_id==Submission.id, isouter=True)
+        posts= g.db.query(Submission, Title, vt.c.vote_type).filter(Submission.id.in_(pids)).join(Submission.author.title, isouter=True).join(vt, vt.c.submission_id==Submission.id, isouter=True)
 
         items=[i for i in posts.all()]
 
@@ -59,7 +59,7 @@ def get_posts(pids, sort="hot", v=None):
 
 
     else:
-        posts=g.db.query(Submission, Title).filter(Submission.id.in_(pids)).join(Submission.author).join(User.title, isouter=True)
+        posts=g.db.query(Submission, Title).filter(Submission.id.in_(pids)).join(Submission.author.title, isouter=True)
 
 
         items=[i for i in posts.all()]
