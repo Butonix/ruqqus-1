@@ -352,7 +352,7 @@ def edit_comment(cid, v):
 @app.route("/api/v1/delete/comment/<cid>", methods=["POST"])
 @auth_required
 @validate_formkey
-@api
+#@api
 def delete_comment(cid, v):
 
     c=g.db.query(Comment).filter_by(id=base36decode(cid)).first()
