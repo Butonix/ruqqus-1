@@ -918,7 +918,7 @@ def board_css(boardname, x):
     #of some odd behavior with css files
     scss=raw.replace("{boardcolor}", board.color)
     
-    resp=make_response(sass.compile(string=scss), mimetype='text/css')
+    resp=Response(make_response(sass.compile(string=scss)), mimetype='text/css')
     resp.headers.add("Cache-Control", "public")
 
     return resp
@@ -939,7 +939,7 @@ def board_dark_css(boardname, x):
     #of some odd behavior with css files
     scss=raw.replace("{boardcolor}", board.color)
     
-    resp=make_response(sass.compile(string=scss), mimetype='text/css')
+    resp=Response(make_response(sass.compile(string=scss)), mimetype='text/css')
     resp.headers.add("Cache-Control", "public")
     return resp
 
