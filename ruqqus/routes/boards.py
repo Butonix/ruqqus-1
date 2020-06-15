@@ -957,12 +957,12 @@ def mod_board_color(bid, board, v):
     if len(color) !=6:
         color="603abb"
 
-    r=color[0:1]
-    g=color[2:3]
-    b=color[4:5]
+    red=color[0:1]
+    green=color[2:3]
+    blue=color[4:5]
 
     try:
-        if any([int(x,16)>255 for x in [r,g,b]]):
+        if any([int(x,16)>255 for x in [red,green,blue]]):
             color="603abb"
     except ValueError:
         color="603abb"
