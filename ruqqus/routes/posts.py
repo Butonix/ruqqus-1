@@ -373,7 +373,8 @@ def submit_post(v):
               submission_id=new_post.id
               )
     g.db.add(vote)
-    
+    g.db.commit()
+    g.db.begin()
 
     #check for uploaded image
     if request.files.get('file'):
@@ -390,8 +391,6 @@ def submit_post(v):
         new_post.domain_ref=1 #id of i.ruqqus.com domain
         g.db.add(new_post)
         
-    g.db.commit()
-    g.db.begin()
         
 
     
