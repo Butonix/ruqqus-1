@@ -17,9 +17,11 @@ from sqlalchemy import *
 import threading
 import requests
 
+from redis import ConnectionPool
+
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-_version = "2.10.8"
+_version = "2.11.0"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -67,13 +69,17 @@ limiter = Limiter(
     key_func=get_remote_address,
     default_limits=["100/minute"],
     headers_enabled=True,
-    strategy="fixed-window-elastic-expiry"
+    strategy="fixed-window"
 )
 
 #setup db
 _engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 
-db=sessionmaker(bind=_engine)()
+
+def make_session():
+    return sessionmaker(bind=_engine, autocommit=True)()
+
+
 Base = declarative_base()
 
 #import and bind all routing functions
@@ -91,7 +97,7 @@ def is_ip_banned(remote_addr):
     """
     Given a remote address, returns whether or not user is banned
     """
-    return bool(db.query(ruqqus.classes.IP).filter_by(addr=remote_addr).count())
+    return bool(g.db.query(ruqqus.classes.IP).filter_by(addr=remote_addr).count())
 
 
 #@cache.memoize(UA_BAN_CACHE_TTL)
@@ -100,7 +106,7 @@ def get_useragent_ban_response(user_agent_str):
     Given a user agent string, returns a tuple in the form of:
     (is_user_agent_banned, (insult, status_code))
     """
-    result = db.query(ruqqus.classes.Agent).filter(ruqqus.classes.Agent.kwd.in_(user_agent_str.split())).first()
+    result = g.db.query(ruqqus.classes.Agent).filter(ruqqus.classes.Agent.kwd.in_(user_agent_str.split())).first()
     if result:
         return True, (result.mock if result.mock else "Follow the robots.txt, dumbass", result.status_code if result.status_code else 418)
     return False, (None, None)
@@ -109,6 +115,9 @@ def get_useragent_ban_response(user_agent_str):
 #enforce https
 @app.before_request
 def before_request():
+
+    g.db = make_session()
+
     session.permanent = True
 
     if is_ip_banned(request.remote_addr):
@@ -126,7 +135,7 @@ def before_request():
         session["session_id"]=secrets.token_hex(16)
 
    #db.rollback()
-    db.begin(subtransactions=True)
+    g.db.begin()
 
 
 def log_event(name, link):
@@ -156,7 +165,7 @@ def log_event(name, link):
 @app.after_request
 def after_request(response):
 
-    db.commit()
+    g.db.commit()
     
     response.headers.add('Access-Control-Allow-Headers',
                          "Origin, X-Requested-With, Content-Type, Accept, x-auth"
@@ -165,7 +174,7 @@ def after_request(response):
                          "maxage=600")
     response.headers.add("Strict-Transport-Security","max-age=31536000")
     response.headers.add("Referrer-Policy","same-origin")
-    response.headers.add("X-Content-Type-Options","nosniff")
+    #response.headers.add("X-Content-Type-Options","nosniff")
     response.headers.add("Feature-Policy",
                          "geolocation 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'none'; fullscreen 'none'; payment")
     if not request.path.startswith("/embed/"):

@@ -8,13 +8,15 @@
 <th>Key</th>
 <th>Value</th>
 </tr>
-{% for key in v.__dict__ %}
-{% if key not in ["passhash", "_lazy", "_sa_instance_state", "mfa_secret"] %}
+{% for key in v.__dict__ if key not in ["passhash", "_lazy", "_sa_instance_state", "mfa_secret", "title"] %}
 <tr>
 <td>{{ key }}</td>
 <td>{{ v.__dict__[key] }}</td>
 </tr>
-{% endif %}
 {% endfor %}
+<tr>
+<td>fullname</td>
+<td>{{ v.fullname }}</td>
+</tr>
 </table>
 {% endblock %}

@@ -15,7 +15,7 @@ from ruqqus.helpers.markdown import *
 from ruqqus.helpers.get import *
 from ruqqus.classes import *
 from flask import *
-from ruqqus.__main__ import app, db, cache, limiter
+from ruqqus.__main__ import app, cache, limiter
 
 BAN_REASONS=['',
             "URL shorteners are not permitted."
@@ -47,7 +47,7 @@ def api_is_available(name):
 @app.route("/uid/<uid>", methods=["GET"])
 def user_uid(uid):
 
-    user=db.query(User).filter_by(id=base36decode(uid)).first()
+    user=g.db.query(User).filter_by(id=base36decode(uid)).first()
     if user:
         return redirect(user.permalink)
     else:
@@ -187,14 +187,14 @@ def follow_user(username, v):
     target=get_user(username)
 
     #check for existing follow
-    if db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first():
+    if g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first():
         abort(409)
 
     new_follow=Follow(user_id=v.id,
                       target_id=target.id)
 
-    db.add(new_follow)
-    db.commit()
+    g.db.add(new_follow)
+    
 
     cache.delete_memoized(User.idlist, v, kind="user")
 
@@ -208,13 +208,13 @@ def unfollow_user(username, v):
     target=get_user(username)
 
     #check for existing follow
-    follow= db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first()
+    follow= g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first()
 
     if not follow:
         abort(409)
 
-    db.delete(follow)
-    db.commit()
+    g.db.delete(follow)
+    
 
     cache.delete_memoized(User.idlist, v, kind="user")
 
@@ -227,8 +227,8 @@ def api_agree_tos(v):
 
     v.tos_agreed_utc=int(time.time())
 
-    db.add(v)
-    db.commit()
+    g.db.add(v)
+    
 
     return redirect("/help/terms")
 

@@ -9,7 +9,7 @@ from ruqqus.helpers.get import *
 from ruqqus.classes import *
 from ruqqus.routes.admin_api import create_plot, user_stat_data
 from flask import *
-from ruqqus.__main__ import app, db
+from ruqqus.__main__ import app
 
 
 
@@ -19,7 +19,7 @@ def flagged_posts(v):
 
     page=max(1, int(request.args.get("page", 1)))
 
-    posts = db.query(Submission).filter_by(is_approved=0, is_banned=False).filter(Submission.flag_count>=1).order_by(Submission.flag_count.desc()).offset(25*(page-1)).limit(26)
+    posts = g.db.query(Submission).filter_by(is_approved=0, is_banned=False).filter(Submission.flag_count>=1).order_by(Submission.flag_count.desc()).offset(25*(page-1)).limit(26)
 
     listing=[p for p in posts]
     next_exists=(len(listing)==26)
@@ -35,7 +35,7 @@ def image_posts_listing(v):
 
     page=int(request.args.get('page',1))
 
-    posts=db.query(Submission).filter_by(domain_ref=1).order_by(Submission.id.desc()
+    posts=g.db.query(Submission).filter_by(domain_ref=1).order_by(Submission.id.desc()
                                                  ).offset(25*(page-1)
                                                           ).limit(26
                                                                   )
@@ -62,7 +62,7 @@ def flagged_comments(v):
 
     page=max(1, int(request.args.get("page", 1)))
 
-    posts = db.query(Comment).filter_by(is_approved=0, is_banned=False).filter(Comment.flag_count>=1).order_by(Comment.flag_count.desc()).offset(25*(page-1)).limit(26)
+    posts = g.db.query(Comment).filter_by(is_approved=0, is_banned=False).filter(Comment.flag_count>=1).order_by(Comment.flag_count.desc()).offset(25*(page-1)).limit(26)
 
     listing=[p for p in posts]
     next_exists=(len(listing)==26)
@@ -89,7 +89,7 @@ def admin_home(v):
 @admin_level_required(4)
 def badge_grant_get(v):
 
-    badge_types=db.query(BadgeDef).filter_by(kind=3).order_by(BadgeDef.rank).all()
+    badge_types=g.db.query(BadgeDef).filter_by(kind=3).order_by(BadgeDef.rank).all()
 
     errors={"already_owned":"That user already has that badge.",
             "no_user":"That user doesn't exist."
@@ -116,7 +116,7 @@ def badge_grant_post(v):
     if user.has_badge(badge_id):
         return redirect("/badge_grant?error=already_owned")
 
-    badge=db.query(BadgeDef).filter_by(id=badge_id).first()
+    badge=g.db.query(BadgeDef).filter_by(id=badge_id).first()
     if badge.kind != 3:
         abort(403)
 
@@ -134,8 +134,8 @@ def badge_grant_post(v):
     if url:
         new_badge.url=url
 
-    db.add(new_badge)
-    db.commit()
+    g.db.add(new_badge)
+    
 
     text=f"""
 @{v.username} has given you the following profile badge:
@@ -155,7 +155,7 @@ def users_list(v):
 
     page=int(request.args.get("page",1))
 
-    users = db.query(User).filter_by(is_banned=0
+    users = g.db.query(User).filter_by(is_banned=0
                                      ).order_by(User.created_utc.desc()
                                                 ).offset(25*(page-1)).limit(26)
 
@@ -183,26 +183,26 @@ def participation_stats(v):
 
     now=int(time.time())
 
-    data={"banned_users":db.query(User).filter(User.is_banned>0, or_(User.unban_utc>now, User.unban_utc==0)).count(),
-          "valid_accounts":db.query(User).filter_by(is_deleted=False).filter(or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc<now))).count(),
-          "deleted_accounts":db.query(User).filter_by(is_deleted=True).count(),
-          "total_posts": db.query(Submission).count(),
-          "posting_users": db.query(User).join(Submission.author).distinct().count(),
-          "listed_posts": db.query(Submission).filter_by(is_banned=False, is_deleted=False).count(),
-          "removed_posts":db.query(Submission).filter_by(is_banned=True).count(),
-          "deleted_posts":db.query(Submission).filter_by(is_deleted=True).count(),
-          "total_comments":db.query(Comment).count(),
-          "commenting_users":db.query(User).join(Comment.author).distinct().count(),
-          "removed_comments":db.query(Comment).filter_by(is_banned=True).count(),
-          "deleted_comments":db.query(Comment).filter_by(is_deleted=True).count(),
-          "total_guilds":db.query(Board).count(),
-          "listed_guilds":db.query(Board).filter_by(is_banned=False, is_private=False).count(),
-          "private_guilds":db.query(Board).filter_by(is_banned=False, is_private=True).count(),
-          "banned_guilds":db.query(Board).filter_by(is_banned=True).count(),
-          "post_votes":db.query(Vote).count(),
-          "post_voting_users":db.query(User).join(Vote, Vote.user_id==User.id).distinct().count(),
-          "comment_votes":db.query(CommentVote).count(),
-          "comment_voting_users":db.query(User).join(CommentVote, CommentVote.user_id==User.id).distinct().count()
+    data={"banned_users":g.db.query(User).filter(User.is_banned>0, or_(User.unban_utc>now, User.unban_utc==0)).count(),
+          "valid_accounts":g.db.query(User).filter_by(is_deleted=False).filter(or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc<now))).count(),
+          "deleted_accounts":g.db.query(User).filter_by(is_deleted=True).count(),
+          "total_posts": g.db.query(Submission).count(),
+          "posting_users": g.db.query(User).join(Submission.author).distinct().count(),
+          "listed_posts": g.db.query(Submission).filter_by(is_banned=False, is_deleted=False).count(),
+          "removed_posts":g.db.query(Submission).filter_by(is_banned=True).count(),
+          "deleted_posts":g.db.query(Submission).filter_by(is_deleted=True).count(),
+          "total_comments":g.db.query(Comment).count(),
+          "commenting_users":g.db.query(User).join(Comment.author).distinct().count(),
+          "removed_comments":g.db.query(Comment).filter_by(is_banned=True).count(),
+          "deleted_comments":g.db.query(Comment).filter_by(is_deleted=True).count(),
+          "total_guilds":g.db.query(Board).count(),
+          "listed_guilds":g.db.query(Board).filter_by(is_banned=False, is_private=False).count(),
+          "private_guilds":g.db.query(Board).filter_by(is_banned=False, is_private=True).count(),
+          "banned_guilds":g.db.query(Board).filter_by(is_banned=True).count(),
+          "post_votes":g.db.query(Vote).count(),
+          "post_voting_users":g.db.query(User).join(Vote, Vote.user_id==User.id).distinct().count(),
+          "comment_votes":g.db.query(CommentVote).count(),
+          "comment_voting_users":g.db.query(User).join(CommentVote, CommentVote.user_id==User.id).distinct().count()
           }
 
     data={x:f"{data[x]:,}" for x in data}

@@ -7,7 +7,7 @@ from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.get import *
 from ruqqus.classes import *
 from flask import *
-from ruqqus.__main__ import app, db
+from ruqqus.__main__ import app
 
 @app.route("/api/vote/post/<post_id>/<x>", methods=["POST"])
 @is_not_banned
@@ -26,7 +26,7 @@ def api_vote_post(post_id, x, v):
         abort(403)
 
     #check for existing vote
-    existing = db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
+    existing = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
     if existing:
         existing.change_to(x)
         #print(f"Re-vote Event: @{v.username} vote {x} on post {post_id}")
@@ -37,16 +37,16 @@ def api_vote_post(post_id, x, v):
               submission_id=base36decode(post_id)
               )
 
-    db.add(vote)
-    db.commit()
+    g.db.add(vote)
+    
 
     post.score_hot = post.rank_hot
     post.score_disputed=post.rank_fiery
     post.score_top=post.score
     post.score_activity=post.rank_activity
 
-    db.add(post)
-    db.commit()
+    g.db.add(post)
+    
 
     #print(f"Vote Event: @{v.username} vote {x} on post {post_id}")
 
@@ -69,7 +69,7 @@ def api_vote_comment(comment_id, x, v):
         abort(403)
 
     #check for existing vote
-    existing = db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
+    existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
     if existing:
         existing.change_to(x)
         #print(f"Re-vote Event: @{v.username} vote {x} on comment {comment_id}")
@@ -80,15 +80,15 @@ def api_vote_comment(comment_id, x, v):
               comment_id=base36decode(comment_id)
               )
 
-    db.add(vote)
-    db.commit()
+    g.db.add(vote)
+    
 
     comment.score_disputed=comment.rank_fiery
     comment.score_hot=comment.rank_hot
     comment.score_top=comment.score
 
-    db.add(comment)
-    db.commit()
+    g.db.add(comment)
+    
 
     #print(f"Vote Event: @{v.username} vote {x} on comment {comment_id}")
 
