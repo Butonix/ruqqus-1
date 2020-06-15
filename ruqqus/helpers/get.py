@@ -15,15 +15,18 @@ def get_user(username, graceful=False):
             return None
     return x
 
-def get_post(pid, v=None):
+def get_post(pid, v=None, session=None):
 
     i=base36decode(pid)
+    
+    if not session:
+        session=g.db
 
     if v:
-        vt=g.db.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
+        vt=session.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
 
 
-        items= g.db.query(Submission, vt.c.vote_type).filter(Submission.id==i).join(vt, isouter=True).first()
+        items= session.query(Submission, vt.c.vote_type).filter(Submission.id==i).join(vt, isouter=True).first()
         
         if not items:
             abort(404)
@@ -32,7 +35,7 @@ def get_post(pid, v=None):
         x._voted=items[1] if items[1] else 0
 
     else:
-        x=g.db.query(Submission).filter_by(id=i).first()
+        x=session.query(Submission).filter_by(id=i).first()
 
     if not x:
         abort(404)
