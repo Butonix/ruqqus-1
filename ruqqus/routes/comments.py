@@ -259,7 +259,8 @@ def api_comment(v):
     c.determine_offensive()
     g.db.add(c)
     
-
+    g.db.commit()
+    g.db.begin()   
 
 
     notify_users=set()
@@ -283,8 +284,7 @@ def api_comment(v):
                        user_id=x)
         g.db.add(n)
     
-    g.db.commit()
-    g.db.begin()   
+
 
     #create auto upvote
     vote=CommentVote(user_id=v.id,
