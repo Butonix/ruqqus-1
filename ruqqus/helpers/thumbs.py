@@ -6,15 +6,17 @@ from PIL import Image as PILimage
 from flask import g
 
 from .get import *
-from ruqqus.__main__ import app
+from ruqqus.__main__ import app, make_session
 
 headers={"User-Agent":app.config["UserAgent"]}
 
 def thumbnail_thread(pid):
     
-    g.db.begin(subtransactions=True)
+    db=make_session()
+    
+    db.begin()
 
-    post=get_post(pid)
+    post=get_post(pid, session=db)
 
     #step 1: see if post is image
 
@@ -142,8 +144,8 @@ def thumbnail_thread(pid):
 
     aws.upload_from_file(name, tempname, resize=(375,227))
     post.has_thumb=True
-    g.db.add(post)
+    db.add(post)
     
-    g.db.commit()
+    db.commit()
     
     #remove(tempname)
