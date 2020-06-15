@@ -142,5 +142,6 @@ def thumbnail_thread(pid):
     post.has_thumb=True
     g.db.add(post)
     
+    g.db.commit()
     
     #remove(tempname)
