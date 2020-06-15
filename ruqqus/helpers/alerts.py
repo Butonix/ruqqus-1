@@ -5,7 +5,13 @@ from flask import g
 from .markdown import *
 from .sanitize import *
 
+from ruqqus.__main__ import make_session
+
 def send_notification(user, text):
+
+    session=make_session()
+
+    session.begin()
 
     with CustomRenderer() as renderer:
         text_html=renderer.render(mistletoe.Document(text))
@@ -19,9 +25,10 @@ def send_notification(user, text):
                         distinguish_level=6,
                         is_offensive=False
                         )
-    g.db.add(new_comment)
+    session.add(new_comment)
     
     notif=Notification(comment_id=new_comment.id,
                        user_id=user.id)
-    g.db.add(notif)
+    session.add(notif)
     
+    session.commit()
