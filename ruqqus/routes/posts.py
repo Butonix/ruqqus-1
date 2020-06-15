@@ -365,11 +365,8 @@ def submit_post(v):
                         repost_id=repost.id if repost else None
                         )
 
-    g.db.add(new_post)
-
-    
-
     new_post.determine_offensive()
+    g.db.add(new_post)
 
     vote=Vote(user_id=user_id,
               vote_type=1,
@@ -392,6 +389,9 @@ def submit_post(v):
         new_post.is_image=True
         new_post.domain_ref=1 #id of i.ruqqus.com domain
         g.db.add(new_post)
+        
+    g.db.commit()
+    g.db.begin()
         
 
     
