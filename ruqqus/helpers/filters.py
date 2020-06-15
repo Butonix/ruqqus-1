@@ -3,7 +3,7 @@ from flask import *
 from os import environ
 from urllib.parse import urlparse
 from ruqqus.classes import Domain
-from ruqqus.__main__ import db, app
+from ruqqus.__main__ import app
 
 def filter_comment_html(html_text):
 
@@ -29,7 +29,7 @@ def filter_comment_html(html_text):
         
 
     #search db for domain rules that prohibit commenting
-    bans=[x for x in db.query(Domain).filter_by(can_comment=False).filter(Domain.domain.in_(list(domain_list))).all()]
+    bans=[x for x in g.db.query(Domain).filter_by(can_comment=False).filter(Domain.domain.in_(list(domain_list))).all()]
 
     if bans:
         return bans

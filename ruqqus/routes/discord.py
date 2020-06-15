@@ -7,7 +7,7 @@ from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
 import ruqqus.helpers.discord
-from ruqqus.__main__ import app, db
+from ruqqus.__main__ import app
 
 SERVER_ID=environ.get("DISCORD_SERVER_ID")
 CLIENT_ID=environ.get("DISCORD_CLIENT_ID")
@@ -70,7 +70,7 @@ def discord_redirect(v):
 	v.discord_id=discord_id
 
 	db.add(v)
-	db.commit()
+	
 
 	#add user to discord
 	url=f"{DISCORD_ENDPOINT}/guilds/{SERVER_ID}/members/{discord_id}"

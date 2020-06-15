@@ -3,7 +3,7 @@ from ruqqus.helpers.session import *
 from flask import *
 from urllib.parse import quote, urlencode
 import time
-from ruqqus.__main__ import db, app
+from ruqqus.__main__ import app
 
 #Errors
 @app.errorhandler(401)
@@ -60,7 +60,7 @@ def error_451(e, v):
 @app.errorhandler(500)
 @auth_desired
 def error_500(e, v):
-    db.rollback()
+    g.db.close()
     return render_template('errors/500.html', e=e, v=v), 500
 
 

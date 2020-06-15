@@ -1,7 +1,7 @@
 import mistletoe
 
 from ruqqus.classes import *
-from ruqqus.__main__ import db
+from flask import g
 from .markdown import *
 from .sanitize import *
 
@@ -19,9 +19,9 @@ def send_notification(user, text):
                         distinguish_level=6,
                         is_offensive=False
                         )
-    db.add(new_comment)
-    db.commit()
+    g.db.add(new_comment)
+    
     notif=Notification(comment_id=new_comment.id,
                        user_id=user.id)
-    db.add(notif)
-    db.commit()
+    g.db.add(notif)
+    

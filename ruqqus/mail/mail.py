@@ -7,7 +7,7 @@ from urllib.parse import quote
 from ruqqus.helpers.security import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.classes import *
-from ruqqus.__main__ import app, db
+from ruqqus.__main__ import app
 
 def send_mail(to_address, subject, html, plaintext=None, files={}, from_address="Ruqqus <noreply@mail.ruqqus.com>"):
 
@@ -89,5 +89,5 @@ def activate(v):
         db.add(mail_badge)
     
     db.add(user)
-    db.commit()
+    
     return render_template("message_success.html", v=v, title="Email verified.", message=f"Your email {email} has been verified. Thank you.")

@@ -2,7 +2,7 @@ from flask import render_template
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
-from ruqqus.__main__ import Base, db
+from ruqqus.__main__ import Base
 
 class BadgeDef(Base):
 

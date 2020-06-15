@@ -1,4 +1,4 @@
-from flask import render_template, request, abort
+from flask import render_template, request, abort, g
 import time
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
@@ -11,7 +11,7 @@ from .mix_ins import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.lazy import lazy
 import ruqqus.helpers.aws as aws
-from ruqqus.__main__ import Base, db, cache
+from ruqqus.__main__ import Base, cache
 from .votes import Vote, CommentVote
 from .domains import Domain
 from .flags import Flag
@@ -40,6 +40,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     body_html=Column(String(20000), default="")
     embed_url=Column(String(256), default="")
     domain_ref=Column(Integer, ForeignKey("domains.id"))
+    domain_obj=relationship("Domain", lazy="joined", innerjoin=False)
     flags=relationship("Flag", lazy="dynamic", backref="submission")
     is_approved=Column(Integer, ForeignKey("users.id"), default=0)
     approved_utc=Column(Integer, default=0)
@@ -113,14 +114,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def is_archived(self):
         return int(time.time()) - self.created_utc > 60*60*24*180
-
-    @property
-    #@cache.memoize(timeout=60)
-    def domain_obj(self):
-        if not self.domain_ref:
-            return None
-        
-        return db.query(Domain).filter_by(id=self.domain_ref).first()
 
     @property
     @lazy
@@ -266,14 +259,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     def determine_offensive(self):
 
-        for x in db.query(BadWord).all():
+        for x in g.db.query(BadWord).all():
             if (self.body and x.check(self.body)) or x.check(self.title):
                 self.is_offensive=True
-                db.commit()
                 break
         else:
             self.is_offensive=False
-            db.commit()
 
 
     @property

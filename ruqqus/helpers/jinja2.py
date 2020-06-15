@@ -5,7 +5,7 @@ from sqlalchemy import text
 
 from ruqqus.classes.user import User
 from .get import *
-from ruqqus.__main__ import app, db, cache
+from ruqqus.__main__ import app, cache
 
 
 

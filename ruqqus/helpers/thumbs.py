@@ -3,9 +3,10 @@ from os import environ, remove
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from PIL import Image as PILimage
+from flask import g
 
 from .get import *
-from ruqqus.__main__ import db, app
+from ruqqus.__main__ import app
 
 headers={"User-Agent":app.config["UserAgent"]}
 
@@ -38,8 +39,8 @@ def thumbnail_thread(pid):
             post.has_thumb=True
 
             post.is_image=True
-            db.add(post)
-            db.commit()
+            g.db.add(post)
+            
 
             return
 
@@ -139,7 +140,7 @@ def thumbnail_thread(pid):
 
     aws.upload_from_file(name, tempname, resize=(375,227))
     post.has_thumb=True
-    db.add(post)
-    db.commit()
+    g.db.add(post)
+    
     
     #remove(tempname)

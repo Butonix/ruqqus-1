@@ -15,7 +15,7 @@ from ruqqus.helpers.markdown import *
 from ruqqus.helpers.get import *
 from ruqqus.classes import *
 from flask import *
-from ruqqus.__main__ import app, db, cache, limiter
+from ruqqus.__main__ import app, cache, limiter
 
 BAN_REASONS=['',
             "URL shorteners are not permitted."
@@ -194,7 +194,7 @@ def follow_user(username, v):
                       target_id=target.id)
 
     db.add(new_follow)
-    db.commit()
+    
 
     cache.delete_memoized(User.idlist, v, kind="user")
 
@@ -214,7 +214,7 @@ def unfollow_user(username, v):
         abort(409)
 
     db.delete(follow)
-    db.commit()
+    
 
     cache.delete_memoized(User.idlist, v, kind="user")
 
@@ -228,7 +228,7 @@ def api_agree_tos(v):
     v.tos_agreed_utc=int(time.time())
 
     db.add(v)
-    db.commit()
+    
 
     return redirect("/help/terms")
 

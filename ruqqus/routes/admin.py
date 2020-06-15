@@ -9,7 +9,7 @@ from ruqqus.helpers.get import *
 from ruqqus.classes import *
 from ruqqus.routes.admin_api import create_plot, user_stat_data
 from flask import *
-from ruqqus.__main__ import app, db
+from ruqqus.__main__ import app
 
 
 
@@ -135,7 +135,7 @@ def badge_grant_post(v):
         new_badge.url=url
 
     db.add(new_badge)
-    db.commit()
+    
 
     text=f"""
 @{v.username} has given you the following profile badge:

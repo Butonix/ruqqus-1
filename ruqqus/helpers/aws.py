@@ -153,19 +153,19 @@ def check_csam(post):
 
     #ban user and alts
     post.author.is_banned=1
-    db.add(v)
+    g.db.add(v)
     for alt in post.author.alts:
         alt.is_banned=1
-        db.add(alt)
+        g.db.add(alt)
 
     #remove content
     post.is_banned=True
-    db.add(post)
+    g.db.add(post)
 
     #nuke aws
     delete_file(parsed_url.path.lstrip('/'))
     
-    db.commit()
+    
 
     
 def check_csam_url(url, v, delete_content_function):
@@ -188,12 +188,12 @@ def check_csam_url(url, v, delete_content_function):
         return
 
     v.is_banned=1
-    db.add(v)
+    g.db.add(v)
     for alt in v.alts:
         alt.is_banned=1
-        db.add(alt)
+        g.db.add(alt)
 
-    db.commit()
+    
     
     delete_content_function()
     

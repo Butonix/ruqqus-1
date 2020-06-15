@@ -4,7 +4,7 @@ from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
 from ruqqus.helpers.base36 import *
 
-from ruqqus.__main__ import app, db
+from ruqqus.__main__ import app
 
 @app.route("/api/flag/post/<pid>", methods=["POST"])
 @is_not_banned
@@ -41,7 +41,7 @@ def api_flag_post(pid, v):
 
     db.add(flag)
 
-    db.commit()
+    
     return "", 204
 
 
@@ -63,6 +63,6 @@ def api_flag_comment(cid, v):
 
     db.add(flag)
 
-    db.commit()
+    
     return "", 204
 

@@ -18,7 +18,7 @@ from .front import guild_ids
 from ruqqus.classes.rules import *
 from flask import *
 
-from ruqqus.__main__ import app, db, limiter, cache
+from ruqqus.__main__ import app, limiter, cache
 
 valid_board_regex=re.compile("^[a-zA-Z0-9]\w{2,24}$")
 
@@ -33,7 +33,7 @@ def create_board_get(v):
 
     #check # recent boards made by user
     cutoff=int(time.time())-60*60*24
-    recent=db.query(Board).filter(Board.creator_id==v.id, Board.created_utc >= cutoff).all()
+    recent=g.db.query(Board).filter(Board.creator_id==v.id, Board.created_utc >= cutoff).all()
     if len([x for x in recent])>=2:
         return render_template("message.html",
                                v=v,
@@ -46,7 +46,7 @@ def create_board_get(v):
 
 @app.route("/api/board_available/<name>", methods=["GET"])
 def api_board_available(name):
-    if db.query(Board).filter(Board.name.ilike(name)).first():
+    if g.db.query(Board).filter(Board.name.ilike(name)).first():
         return jsonify({"board":name, "available":False})
     else:
         return jsonify({"board":name, "available":True})
@@ -76,7 +76,7 @@ def create_board_post(v):
 
 
     #check name
-    if db.query(Board).filter(Board.name.ilike(board_name)).first():
+    if g.db.query(Board).filter(Board.name.ilike(board_name)).first():
         return render_template("make_board.html",
                                v=v,
                                error="That Guild already exists.",
@@ -85,7 +85,7 @@ def create_board_post(v):
 
     #check # recent boards made by user
     cutoff=int(time.time())-60*60*24
-    recent=db.query(Board).filter(Board.creator_id==v.id, Board.created_utc >= cutoff).all()
+    recent=g.db.query(Board).filter(Board.creator_id==v.id, Board.created_utc >= cutoff).all()
     if len([x for x in recent])>=2:
         return render_template("message.html",
                                title="You need to wait a bit.",
@@ -107,20 +107,20 @@ def create_board_post(v):
                     creator_id=v.id
                     )
 
-    db.add(new_board)
-    db.commit()
+    g.db.add(new_board)
+    
 
     #add user as mod
     mod=ModRelationship(user_id=v.id,
                         board_id=new_board.id,
                         accepted=True)
-    db.add(mod)
+    g.db.add(mod)
 
     #add subscription for user
     sub=Subscription(user_id=v.id,
                      board_id=new_board.id)
-    db.add(sub)
-    db.commit()
+    g.db.add(sub)
+    
 
     #clear cache
     cache.delete_memoized(guild_ids, sort="new")
@@ -178,7 +178,7 @@ def board_name(name, v):
     ids=ids[0:25]
 
     if page==1:
-        stickies=db.query(Submission.id).filter_by(board_id=board.id,
+        stickies=g.db.query(Submission.id).filter_by(board_id=board.id,
                                     is_banned=False,
                                     is_deleted=False,
                                     is_pinned=True).order_by(Submission.id.asc()
@@ -222,8 +222,8 @@ def mod_kick_bid_pid(bid,pid, board, v):
     post.board_id=1
     post.guild_name="general"
     post.is_pinned=False
-    db.add(post)
-    db.commit()
+    g.db.add(post)
+    
 
     cache.delete_memoized(Board.idlist, board)
 
@@ -240,8 +240,8 @@ def mod_accept_bid_pid(bid, pid, board, v):
         abort(422)
 
     post.mod_approved=v.id
-    db.add(post)
-    db.commit()
+    g.db.add(post)
+    
     return "", 204
     
 
@@ -273,24 +273,24 @@ def mod_ban_bid_user(bid, board, v):
         return jsonify({"error":f"@{user.username} hasn't participated in +{board.name}."}), 403
 
     #check for an existing deactivated ban
-    existing_ban=db.query(BanRelationship).filter_by(user_id=user.id, board_id=board.id, is_active=False).first()
+    existing_ban=g.db.query(BanRelationship).filter_by(user_id=user.id, board_id=board.id, is_active=False).first()
     if existing_ban:
         existing_ban.is_active=True
         existing_ban.created_utc=int(time.time())
         existing_ban.banning_mod_id=v.id
-        db.add(existing_ban)
+        g.db.add(existing_ban)
     else:
         new_ban=BanRelationship(user_id=user.id,
                                 board_id=board.id,
                                 banning_mod_id=v.id,
                                 is_active=True)
-        db.add(new_ban)
+        g.db.add(new_ban)
 
 
         text=f"You have been exiled from +{board.name}.\n\nNone of your existing posts or comments have been removed, however, you will not be able to make any new posts or comments in +{board.name}."
         send_notification(user, text)
             
-    db.commit()
+    
 
     return "", 204
     
@@ -308,8 +308,8 @@ def mod_unban_bid_user(bid, board, v):
 
     x.is_active=False
 
-    db.add(x)
-    db.commit()
+    g.db.add(x)
+    
     
     return "", 204
 
@@ -336,14 +336,14 @@ def user_kick_pid(pid, v):
     #block further yanks to the same board
     new_rel=PostRelationship(post_id=post.id,
                              board_id=post.board.id)
-    db.add(new_rel)
+    g.db.add(new_rel)
 
     post.board_id=1
     post.guild_name="general"
     post.is_pinned=False
     
-    db.add(post)
-    db.commit()
+    g.db.add(post)
+    
     
     #clear board's listing caches
     cache.delete_memoized(Board.idlist, current_board)
@@ -379,8 +379,8 @@ def mod_take_pid(pid, v):
 
     post.board_id=board.id
     post.guild_name=board.name
-    db.add(post)
-    db.commit()
+    g.db.add(post)
+    
 
     #clear board's listing caches
     cache.delete_memoized(Board.idlist, board)
@@ -413,8 +413,8 @@ def mod_invite_username(bid, board, v):
     new_mod=ModRelationship(user_id=user.id,
                             board_id=board.id,
                             accepted=False)
-    db.add(new_mod)
-    db.commit()
+    g.db.add(new_mod)
+    
     
     return "", 204
 
@@ -426,7 +426,7 @@ def mod_rescind_bid_username(bid, username, board, v):
         
     user=get_user(username)
 
-    invitation = db.query(ModRelationship).filter_by(board_id=board.id,
+    invitation = g.db.query(ModRelationship).filter_by(board_id=board.id,
                                                      user_id=user.id,
                                                      accepted=False).first()
     if not invitation:
@@ -434,8 +434,8 @@ def mod_rescind_bid_username(bid, username, board, v):
 
     invitation.invite_rescinded=True
 
-    db.add(invitation)
-    db.commit()
+    g.db.add(invitation)
+    
 
     return "", 204
     
@@ -455,8 +455,8 @@ def mod_accept_board(bid, v):
         return jsonify({"error":f"You already lead enough guilds."}), 409
 
     x.accepted=True
-    db.add(x)
-    db.commit() 
+    g.db.add(x)
+     
     
     return "", 204
     
@@ -481,8 +481,8 @@ def mod_remove_username(bid, username, board, v):
     if v_mod.id > u_mod.id:
         abort(403)
 
-    db.delete(u_mod)
-    db.commit()
+    g.db.delete(u_mod)
+    
     
     return "", 204
 
@@ -514,8 +514,8 @@ def mod_bid_settings_nsfw(bid,  board, v):
     # nsfw
     board.over_18 = bool(request.form.get("over_18", False)=='true')
 
-    db.add(board)
-    db.commit()
+    g.db.add(board)
+    
 
     return "",204
 
@@ -528,8 +528,8 @@ def mod_bid_settings_downdisable(bid,  board, v):
     # disable downvoting
     board.downvotes_disabled = bool(request.form.get("downdisable", False)=='true')
 
-    db.add(board)
-    db.commit()
+    g.db.add(board)
+    
 
     return "",204
 
@@ -542,8 +542,8 @@ def mod_bid_settings_restricted(bid, board, v):
     # toggle restricted setting
     board.restricted_posting = bool(request.form.get("restrictswitch", False)=='true')
 
-    db.add(board)
-    db.commit()
+    g.db.add(board)
+    
 
     return "",204
 
@@ -556,8 +556,8 @@ def mod_bid_settings_private(bid, board, v):
     # toggle privacy setting
     board.is_private = bool(request.form.get("guildprivacy", False)=='true')
 
-    db.add(board)
-    db.commit()
+    g.db.add(board)
+    
 
     return "",204
 
@@ -571,8 +571,8 @@ def mod_bid_settings_name(bid, board, v):
 
     if new_name.lower() == board.name.lower():
         board.name = new_name
-        db.add(board)
-        db.commit()
+        g.db.add(board)
+        
         return "", 204
     else:
         return "", 422
@@ -595,8 +595,8 @@ def mod_bid_settings_description(bid, board, v):
     board.description = description
     board.description_html=description_html
 
-    db.add(board)
-    db.commit()
+    g.db.add(board)
+    
 
     return "", 204
 
@@ -608,8 +608,8 @@ def mod_settings_toggle_banner(bid, board, v):
     #toggle show/hide banner
     board.hide_banner_data = bool(request.form.get("hidebanner", False) == 'true')
 
-    db.add(board)
-    db.commit()
+    g.db.add(board)
+    
 
     return "", 204
 
@@ -628,8 +628,8 @@ def mod_add_rule(bid, board, v):
 
 
         new_rule = Rules(board_id=bid, rule_body=rule, rule_html=rule_html)
-        db.add(new_rule)
-        db.commit()
+        g.db.add(new_rule)
+        
     else:
         """
         im guessing here we should 
@@ -646,7 +646,7 @@ def mod_add_rule(bid, board, v):
 @validate_formkey
 def mod_edit_rule(bid, board, v):
     r = base36decode(request.form.get("rid"))
-    r = db.query(Rules).filter_by(id=r)
+    r = g.db.query(Rules).filter_by(id=r)
 
     if not r:
         abort(500)
@@ -667,8 +667,8 @@ def mod_edit_rule(bid, board, v):
     r.rule_html = body_html
     r.edited_utc = int(time.time())
 
-    db.add(r)
-    db.commit()
+    g.db.add(r)
+    
     return "", 204
 
 @app.route("/+<boardname>/mod/settings", methods=["GET"])
@@ -733,23 +733,23 @@ def subscribe_board(boardname, v):
     board=get_guild(boardname)
 
     #check for existing subscription, canceled or otherwise
-    sub= db.query(Subscription).filter_by(user_id=v.id, board_id=board.id).first()
+    sub= g.db.query(Subscription).filter_by(user_id=v.id, board_id=board.id).first()
     if sub:
         if sub.is_active:
             abort(409)
         else:
             #reactivate canceled sub
             sub.is_active=True
-            db.add(sub)
-            db.commit()
+            g.db.add(sub)
+            
             return "", 204
 
     
     new_sub=Subscription(user_id=v.id,
                          board_id=board.id)
 
-    db.add(new_sub)
-    db.commit()
+    g.db.add(new_sub)
+    
 
     #clear your cached guild listings
     cache.delete_memoized(User.idlist, v, kind="board")
@@ -764,7 +764,7 @@ def unsubscribe_board(boardname, v):
     board=get_guild(boardname)
 
     #check for existing subscription
-    sub= db.query(Subscription).filter_by(user_id=v.id, board_id=board.id).first()
+    sub= g.db.query(Subscription).filter_by(user_id=v.id, board_id=board.id).first()
 
     if not sub:
         abort(409)
@@ -773,8 +773,8 @@ def unsubscribe_board(boardname, v):
 
     sub.is_active=False
 
-    db.add(sub)
-    db.commit()
+    g.db.add(sub)
+    
 
     #clear your cached guild listings
     cache.delete_memoized(User.idlist, v, kind="board")
@@ -788,7 +788,7 @@ def board_mod_queue(boardname, board, v):
 
     page=int(request.args.get("page",1))
 
-    posts = db.query(Submission).filter_by(board_id=board.id,
+    posts = g.db.query(Submission).filter_by(board_id=board.id,
                                            is_banned=False,
                                            mod_approved=None
                                            ).filter(Submission.report_count>=1)
@@ -819,7 +819,7 @@ def all_mod_queue(v):
 
     board_ids=[x.board_id for x in v.moderates.filter_by(accepted=True).all()]
 
-    posts = db.query(Submission).filter(Submission.board_id.in_(board_ids),
+    posts = g.db.query(Submission).filter(Submission.board_id.in_(board_ids),
                                         Submission.mod_approved==None,
                                         Submission.report_count >=1,
                                         Submission.is_banned==False)
@@ -918,8 +918,7 @@ def board_css(boardname, x):
     #of some odd behavior with css files
     scss=raw.replace("{boardcolor}", board.color)
     
-    resp=make_response(sass.compile(string=scss))
-    resp.headers.add("Content-Type", "text/css")
+    resp=Response(sass.compile(string=scss), mimetype='text/css')
     resp.headers.add("Cache-Control", "public")
 
     return resp
@@ -940,9 +939,8 @@ def board_dark_css(boardname, x):
     #of some odd behavior with css files
     scss=raw.replace("{boardcolor}", board.color)
     
-    resp=make_response(sass.compile(string=scss))
+    resp=Response(sass.compile(string=scss), mimetype='text/css')
     resp.headers.add("Cache-Control", "public")
-    resp.headers.add("Content-Type", "text/css")
     return resp
 
 @app.route("/mod/<bid>/color", methods=["POST"])
@@ -969,8 +967,8 @@ def mod_board_color(bid, board, v):
     board.color=color
     board.color_nonce+=1
     
-    db.add(board)
-    db.commit()
+    g.db.add(board)
+    
 
     try:
         cache.delete_memoized(board_css, board.name)
@@ -998,24 +996,24 @@ def mod_approve_bid_user(bid, board, v):
 
 
     #check for an existing deactivated approval
-    existing_contrib=db.query(ContributorRelationship).filter_by(user_id=user.id, board_id=board.id, is_active=False).first()
+    existing_contrib=g.db.query(ContributorRelationship).filter_by(user_id=user.id, board_id=board.id, is_active=False).first()
     if existing_contrib:
         existing_contrib.is_active=True
         existing_contrib.created_utc=int(time.time())
         existing_contrib.approving_mod_id=v.id
-        db.add(existing_contrib)
+        g.db.add(existing_contrib)
     else:
         new_contrib=ContributorRelationship(user_id=user.id,
                                             board_id=board.id,
                                             is_active=True,
                                             approving_mod_id=v.id)
-        db.add(new_contrib)
+        g.db.add(new_contrib)
 
         if user.id != v.id:
             text=f"You have added as an approved contributor to +{board.name}."
             send_notification(user, text)
             
-    db.commit()
+    
 
     return "", 204
     
@@ -1033,8 +1031,8 @@ def mod_unapprove_bid_user(bid, board, v):
 
     x.is_active=False
 
-    db.add(x)
-    db.commit()
+    g.db.add(x)
+    
     
     return "", 204
 
@@ -1072,7 +1070,7 @@ def siege_guild(v):
 
     #update siege date
     v.last_siege_utc=now
-    db.add(v)
+    g.db.add(v)
 
     #check guild count
     if not v.can_join_gms:
@@ -1121,7 +1119,7 @@ def siege_guild(v):
 
         #check submissions
 
-        if db.query(Submission).filter(Submission.author_id.in_(ids), Submission.created_utc>cutoff ).first():
+        if g.db.query(Submission).filter(Submission.author_id.in_(ids), Submission.created_utc>cutoff ).first():
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
@@ -1129,7 +1127,7 @@ def siege_guild(v):
                                    ), 403
 
         #check comments
-        if db.query(Comment).filter(Comment.author_id.in_(ids), Comment.created_utc>cutoff).first():
+        if g.db.query(Comment).filter(Comment.author_id.in_(ids), Comment.created_utc>cutoff).first():
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
@@ -1137,7 +1135,7 @@ def siege_guild(v):
                                    ), 403
 
         #check post votes
-        if db.query(Vote).filter(Vote.user_id.in_(ids), Vote.created_utc>cutoff).first():
+        if g.db.query(Vote).filter(Vote.user_id.in_(ids), Vote.created_utc>cutoff).first():
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
@@ -1145,7 +1143,7 @@ def siege_guild(v):
                                    ), 403
         
         #check comment votes
-        if db.query(CommentVote).filter(CommentVote.user_id.in_(ids), CommentVote.created_utc>cutoff).first():
+        if g.db.query(CommentVote).filter(CommentVote.user_id.in_(ids), CommentVote.created_utc>cutoff).first():
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
@@ -1154,14 +1152,14 @@ def siege_guild(v):
 
 
         #check flags
-        if db.query(Flag).filter(Flag.user_id.in_(ids), Flag.created_utc>cutoff).first():
+        if g.db.query(Flag).filter(Flag.user_id.in_(ids), Flag.created_utc>cutoff).first():
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
                                    error="Your siege failed. One of the guildmasters has private activity in the last 60 days. You may try again in 30 days."
                                    ), 403
         #check reports
-        if db.query(Report).filter(Report.user_id.in_(ids), Report.created_utc>cutoff).first():
+        if g.db.query(Report).filter(Report.user_id.in_(ids), Report.created_utc>cutoff).first():
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
@@ -1169,7 +1167,7 @@ def siege_guild(v):
                                    ), 403
 
         #check exiles
-        if db.query(BanRelationship).filter(BanRelationship.banning_mod_id.in_(ids), BanRelationship.created_utc>cutoff).first():
+        if g.db.query(BanRelationship).filter(BanRelationship.banning_mod_id.in_(ids), BanRelationship.created_utc>cutoff).first():
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
@@ -1184,9 +1182,9 @@ def siege_guild(v):
 
         send_notification(x.user,
                           f"You have been overthrown from +{guild.name}.")
-        db.delete(x)
+        g.db.delete(x)
         
-    db.commit()
+    
 
     #add new mod if user is not already
     if not guild.has_mod(v):
@@ -1196,8 +1194,8 @@ def siege_guild(v):
                                 accepted=True
                                 )
 
-        db.add(new_mod)
-        db.commit()
+        g.db.add(new_mod)
+        
 
     return redirect(f"/+{guild.name}/mod/mods")
 
@@ -1226,7 +1224,7 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
 
     cache.delete_memoized(Board.idlist, post.board)
 
-    db.add(post)
-    db.commit()
+    g.db.add(post)
+    
 
     return "", 204
