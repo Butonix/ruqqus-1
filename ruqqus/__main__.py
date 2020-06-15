@@ -17,6 +17,8 @@ from sqlalchemy import *
 import threading
 import requests
 
+from redis import ConnectionPool
+
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 _version = "2.11.0"
@@ -67,7 +69,7 @@ limiter = Limiter(
     key_func=get_remote_address,
     default_limits=["100/minute"],
     headers_enabled=True,
-    strategy="fixed-window-elastic-expiry"
+    strategy="fixed-window"
 )
 
 #setup db
