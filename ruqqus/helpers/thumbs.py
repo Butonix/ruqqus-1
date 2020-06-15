@@ -11,6 +11,8 @@ from ruqqus.__main__ import app
 headers={"User-Agent":app.config["UserAgent"]}
 
 def thumbnail_thread(pid):
+    
+    g.db.begin(subtransactions=True)
 
     post=get_post(pid)
 
