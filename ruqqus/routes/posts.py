@@ -368,13 +368,14 @@ def submit_post(v):
     new_post.determine_offensive()
     g.db.add(new_post)
 
+    g.db.commit()
+    g.db.begin()
+
     vote=Vote(user_id=user_id,
               vote_type=1,
               submission_id=new_post.id
               )
     g.db.add(vote)
-    g.db.commit()
-    g.db.begin()
 
     #check for uploaded image
     if request.files.get('file'):
