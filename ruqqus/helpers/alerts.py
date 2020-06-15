@@ -9,9 +9,6 @@ from ruqqus.__main__ import make_session
 
 def send_notification(user, text):
 
-    session=make_session()
-
-    session.begin()
 
     with CustomRenderer() as renderer:
         text_html=renderer.render(mistletoe.Document(text))
@@ -25,10 +22,11 @@ def send_notification(user, text):
                         distinguish_level=6,
                         is_offensive=False
                         )
-    session.add(new_comment)
+    g.db.add(new_comment)
+
+    g.db.commit()
+    g.db.begin()
     
     notif=Notification(comment_id=new_comment.id,
                        user_id=user.id)
-    session.add(notif)
-    
-    session.commit()
+    g.db.add(notif)
