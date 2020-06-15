@@ -108,6 +108,9 @@ def create_board_post(v):
                     )
 
     g.db.add(new_board)
+
+    g.db.commit()
+    g.db.begin()
     
 
     #add user as mod
