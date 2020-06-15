@@ -72,7 +72,7 @@ def activate(v):
     if not validate_hash(f"{email}+{id}+{timestamp}", token):
         abort(403)
 
-    user = db.query(User).filter_by(id=id).first()
+    user = g.db.query(User).filter_by(id=id).first()
     if not user:
         abort(404)
 
@@ -86,8 +86,8 @@ def activate(v):
         mail_badge = Badge(user_id=user.id,
                        badge_id=2,
                        created_utc=time.time())
-        db.add(mail_badge)
+        g.db.add(mail_badge)
     
-    db.add(user)
+    g.db.add(user)
     
     return render_template("message_success.html", v=v, title="Email verified.", message=f"Your email {email} has been verified. Thank you.")
