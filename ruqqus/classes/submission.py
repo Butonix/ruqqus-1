@@ -308,7 +308,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'guild_name':self.guild_name,
                 'embed_url':self.embed_url,
                 'is_archived':self.is_archived,
-                'title':self.title.json if self.title else None
+                'author_title':self.author.title.json if self.author.title else None
                 }
 
         if "_voted" in self.__dict__:
