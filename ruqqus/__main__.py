@@ -78,7 +78,8 @@ limiter = Limiter(
 )
 
 #setup db
-_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
+    pool_size=6)
 
 
 def make_session():
