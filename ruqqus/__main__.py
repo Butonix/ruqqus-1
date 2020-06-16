@@ -14,6 +14,7 @@ from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import *
+from sqlalchemy.pool import QueuePool
 import threading
 import requests
 
@@ -79,7 +80,8 @@ limiter = Limiter(
 
 #setup db
 _engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
-    pool_size=6)
+    pool_size=6,
+    pool=QueuePool)
 
 
 def make_session():
