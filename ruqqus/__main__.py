@@ -17,7 +17,7 @@ from sqlalchemy import *
 import threading
 import requests
 
-from redis import ConnectionPool
+from redis import BlockingConnectionPool
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -54,6 +54,11 @@ else:
 app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL", environ.get("REDIS_URL"))
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 app.config["CACHE_KEY_PREFIX"]="flask_caching_"
+
+MAX_REDIS_CONNS = int(environ.get("MAX_REDIS_CONNS", 6))
+
+pool = BlockingConnectionPool(queue_class=Queue, max_connections=MAX_REDIS_CONNS)
+app.config['CACHE_OPTIONS'] = {'connection_pool': pool, 'max_connections': MAX_REDIS_CONNS}
 
 
 Markdown(app)
