@@ -17067,7 +17067,7 @@ ul.comment-section {
 }
 
 pre code {
-  white-space: break-spaces;
+  white-space: break-word;
   color: #FFFFFF;
 }
 
