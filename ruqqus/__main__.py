@@ -51,13 +51,13 @@ if "localhost" in app.config["SERVER_NAME"]:
 else:
     app.config["CACHE_TYPE"]="redis"
     
-app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL", environ.get("REDIS_URL"))
-app.config["CACHE_DEFAULT_TIMEOUT"]=60
-app.config["CACHE_KEY_PREFIX"]="flask_caching_"
+#app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL", environ.get("REDIS_URL"))
+#app.config["CACHE_DEFAULT_TIMEOUT"]=60
+#app.config["CACHE_KEY_PREFIX"]="flask_caching_"
 
 
 Markdown(app)
-cache=Cache(app)
+#cache=Cache(app)
 Compress(app)
 
 
