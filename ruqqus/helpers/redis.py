@@ -50,8 +50,8 @@ class CustomCache(flask_caching.backends.rediscache.RedisCache):
 
 
 	def set(self, key, value, timeout=None):
-    	cache=self.key_to_cache(key)
-    	return cache.set(key, value, timeout=timeout)
+		cache=self.key_to_cache(key)
+		return cache.set(key, value, timeout=timeout)
 
     def add(self, key, value, timeout=None):
     	cache=self.key_to_cache(key)
