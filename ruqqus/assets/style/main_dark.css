@@ -15027,8 +15027,8 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .banner-pic-135 {
   object-fit: cover;
   height: 135px;
-  max-width: 425px;
-  width: 425px;
+  max-width: 572px;
+  width: 572px;
 }
 
 .profile-pic.transition-square {
@@ -15833,6 +15833,7 @@ blockquote > blockquote {
   padding: 0;
   margin: 0;
   border-left: none;
+  background-color: transparent;
 }
 
 blockquote p {
@@ -17067,7 +17068,8 @@ ul.comment-section {
 }
 
 pre code {
-  white-space: break-spaces;
+  word-break: break-word;
+  white-space: break-word;
   color: #FFFFFF;
 }
 

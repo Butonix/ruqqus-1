@@ -43,9 +43,9 @@ def thumbnail_thread(pid):
             post.has_thumb=True
 
             post.is_image=True
-            g.db.add(post)
+            db.add(post)
             
-
+            db.commit()
             return
 
     x=requests.get(post.url, headers=headers)

@@ -14,10 +14,11 @@ from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import *
+from sqlalchemy.pool import QueuePool
 import threading
 import requests
 
-from redis import ConnectionPool
+from redis import BlockingConnectionPool
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -55,6 +56,11 @@ else:
 #app.config["CACHE_DEFAULT_TIMEOUT"]=60
 #app.config["CACHE_KEY_PREFIX"]="flask_caching_"
 
+MAX_REDIS_CONNS = int(environ.get("MAX_REDIS_CONNS", 6))
+
+pool = BlockingConnectionPool(max_connections=MAX_REDIS_CONNS)
+app.config['CACHE_OPTIONS'] = {'connection_pool': pool, 'max_connections': MAX_REDIS_CONNS}
+
 
 Markdown(app)
 #cache=Cache(app)
@@ -73,7 +79,8 @@ limiter = Limiter(
 )
 
 #setup db
-_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
+    pool_size=6)
 
 
 def make_session():
