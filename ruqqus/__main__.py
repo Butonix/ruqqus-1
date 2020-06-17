@@ -115,7 +115,7 @@ def get_useragent_ban_response(user_agent_str):
     """
     result = g.db.query(ruqqus.classes.Agent).filter(ruqqus.classes.Agent.kwd.in_(user_agent_str.split())).first()
     if result:
-        return True, (result.mock if result.mock else "Follow the robots.txt, dumbass", result.status_code if result.status_code else 418)
+        return True, (result.mock or "Follow the robots.txt, dumbass", result.status_code or 418)
     return False, (None, None)
 
 
