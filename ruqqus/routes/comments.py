@@ -21,6 +21,8 @@ from datetime import datetime
 def comment_cid(cid):
 
     comment=get_comment(cid)
+    if not comment.parent_submission:
+        abort(403)
     return redirect(comment.permalink)
 
 @app.route("/post/<p_id>/<anything>/<c_id>", methods=["GET"])
