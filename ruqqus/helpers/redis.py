@@ -4,10 +4,10 @@ import redis
 from os import environ
 import hashlib
 
-class Custom_Cache(backends.rediscache.RedisCache):
+class CustomCache(backends.rediscache.RedisCache):
 
 
-	def __init__(self, app, redis_urls=[]):
+	def __init__(self, app, **kwargs):
 
 		self.caches = [
 			flask_caching.Cache(
@@ -15,10 +15,7 @@ class Custom_Cache(backends.rediscache.RedisCache):
 				config={
 					"REDIS_URL":url
 				}
-				) for url in [
-					environ.get("REDIS_URL"),
-					environ.get("HEROKU_REDIS_IVORY_URL")
-				]
+				) for url in kwargs['redis_urls']
 			]
 
 	def key_to_cache(self, key):
