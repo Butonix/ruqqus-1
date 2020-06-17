@@ -22,6 +22,8 @@ from redis import BlockingConnectionPool
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
+from ruqqus.classes.redis import CustomCache
+
 _version = "2.11.0"
 
 app = Flask(__name__,
@@ -64,6 +66,7 @@ app.config['CACHE_OPTIONS'] = {'connection_pool': pool, 'max_connections': MAX_R
 
 Markdown(app)
 #cache=Cache(app)
+cache=CustomCache(app)
 Compress(app)
 
 
