@@ -86,3 +86,36 @@ class CustomCache(flask_caching.backends.rediscache.RedisCache):
 			self.caches[i].delete_many(sharded_keys[i])
 
 		return True
+
+	def has(self, key):
+		cache=self.key_to_cache(key)
+		return cache.has(key)
+
+	def clear(self)
+
+		return any([i.clear() for i in self.caches])
+
+	def inc(self, key, delta=1):
+		cache=self.key_to_cache(key)
+		cache.inc(key, delta=delta)
+
+	def dec(self, key, delta=1:)
+		cache=self.key_to_cache(key)
+		cache.dec(key, delta=delta)
+
+	def unlink(self, *keys)
+
+		if not keys:
+			return
+
+		sharded_keys={i: [] for i in range(len(self.caches))}
+		for key in keys:
+			cache=self.key_to_cache_number(key)
+			sharded_keys[cache].append(key)
+
+		for i in sharded_keys:
+			self.caches[i].unlink(sharded_keys[i])
+
+		return True
+
+	
