@@ -135,6 +135,9 @@ def badge_grant_post(v):
         new_badge.url=url
 
     g.db.add(new_badge)
+
+    g.db.commit()
+    g.db.begin()
     
 
     text=f"""

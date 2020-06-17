@@ -3260,6 +3260,7 @@ ul.comment-section {
 // Code
 
 pre code {
+    word-break: break-word;
     white-space: break-word;
     color: $white;
 }
