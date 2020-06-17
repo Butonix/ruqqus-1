@@ -138,7 +138,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
             for c in comms:
                 com=c[0]
                 com._title=c[2]
-                com._voted=c[3] if c[3] else 0
+                com._voted=c[3] or 0
                 output.append(com)
         else:
             comms=g.db.query(

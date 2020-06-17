@@ -328,8 +328,7 @@ def sign_up_post(v):
     session.pop("signup_token")
 
     #get referral
-    ref_id = int(request.form.get("referred_by", 0))
-    ref_id=None if not ref_id else ref_id
+    ref_id = int(request.form.get("referred_by") or 0)
 
     #upgrade user badge
     ref_user=g.db.query(User).filter_by(id=ref_id).first()

@@ -159,7 +159,7 @@ def home(v):
 @api
 def front_all(v):
 
-    page=int(request.args.get("page") if request.args.get("page") else 1)
+    page=int(request.args.get("page") or 1)
 
     #prevent invalid paging
     page=max(page, 1)
