@@ -22,7 +22,7 @@ from redis import BlockingConnectionPool
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from ruqqus.classes.redis import CustomCache
+from ruqqus.helpers.redis import CustomCache
 
 _version = "2.11.0"
 
