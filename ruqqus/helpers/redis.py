@@ -98,7 +98,7 @@ class CustomCache(flask_caching.backends.rediscache.RedisCache):
 		cache=self.key_to_cache(key)
 		cache.inc(key, delta=delta)
 
-	def dec(self, key, delta=1:)
+	def dec(self, key, delta=1)
 		cache=self.key_to_cache(key)
 		cache.dec(key, delta=delta)
 
