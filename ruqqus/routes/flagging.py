@@ -3,7 +3,7 @@ from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
 from ruqqus.helpers.base36 import *
-
+from flask import g
 from ruqqus.__main__ import app
 
 @app.route("/api/flag/post/<pid>", methods=["POST"])
@@ -15,7 +15,7 @@ def api_flag_post(pid, v):
     kind = request.form.get("report_type")
     
     if kind=="admin":
-        existing=db.query(Flag).filter_by(user_id=v.id, post_id=post.id).filter(Flag.created_utc >= post.edited_utc).first()
+        existing=g.db.query(Flag).filter_by(user_id=v.id, post_id=post.id).filter(Flag.created_utc >= post.edited_utc).first()
 
         if existing:
             return "",409
@@ -26,7 +26,7 @@ def api_flag_post(pid, v):
                   )
         
     elif kind=="guild":
-        existing=db.query(Report).filter_by(user_id=v.id, post_id=post.id).filter(Report.created_utc >= post.edited_utc).first()
+        existing=g.db.query(Report).filter_by(user_id=v.id, post_id=post.id).filter(Report.created_utc >= post.edited_utc).first()
 
         if existing:
             return "",409
@@ -39,7 +39,7 @@ def api_flag_post(pid, v):
         return "",422
         
 
-    db.add(flag)
+    g.db.add(flag)
 
     
     return "", 204
@@ -51,7 +51,7 @@ def api_flag_comment(cid, v):
 
     comment=get_comment(cid)
 
-    existing=db.query(CommentFlag).filter_by(user_id=v.id, comment_id=comment.id).filter(CommentFlag.created_utc >= comment.edited_utc).first()
+    existing=g.db.query(CommentFlag).filter_by(user_id=v.id, comment_id=comment.id).filter(CommentFlag.created_utc >= comment.edited_utc).first()
 
     if existing:
         return "",409
@@ -61,7 +61,7 @@ def api_flag_comment(cid, v):
               created_utc=int(time.time())
               )
 
-    db.add(flag)
+    g.db.add(flag)
 
     
     return "", 204
