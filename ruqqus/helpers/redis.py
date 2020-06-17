@@ -53,23 +53,23 @@ class CustomCache(flask_caching.backends.rediscache.RedisCache):
 		cache=self.key_to_cache(key)
 		return cache.set(key, value, timeout=timeout)
 
-    def add(self, key, value, timeout=None):
-    	cache=self.key_to_cache(key)
-    	return cache.add(key, value, timeout=timeout)
+	def add(self, key, value, timeout=None):
+		cache=self.key_to_cache(key)
+		return cache.add(key, value, timeout=timeout)
 
-    def set_many(self, mapping, timeout=None):
+	def set_many(self, mapping, timeout=None):
 
-    	caches={i:{} for i in range(len(self.caches))}
-    	for key, value in mapping:
-    		caches[self.key_to_cache_number(key)][key]=value
+		caches={i:{} for i in range(len(self.caches))}
+		for key, value in mapping:
+			caches[self.key_to_cache_number(key)][key]=value
 
-    	for i in cache:
-    		self.caches[i].set_many(caches[i], timeout=timeout)
+		for i in cache:
+			self.caches[i].set_many(caches[i], timeout=timeout)
 
-    def delete(self, key)
+	def delete(self, key)
 
-    	cache=self.key_to_cache(key)
-    	return cache.delete(key)
+		cache=self.key_to_cache(key)
+		return cache.delete(key)
 
 	def delete_many(self, *keys):
 
