@@ -66,7 +66,12 @@ app.config['CACHE_OPTIONS'] = {'connection_pool': pool, 'max_connections': MAX_R
 
 Markdown(app)
 #cache=Cache(app)
-cache=CustomCache(app)
+cache=CustomCache(app,
+    redis_urls=[
+        environ.get("REDIS_URL"),
+        environ.get("HEROKU_REDIS_IVORY_URL")
+        ]
+    )
 Compress(app)
 
 

@@ -66,7 +66,7 @@ class CustomCache(flask_caching.backends.rediscache.RedisCache):
 		for i in cache:
 			self.caches[i].set_many(caches[i], timeout=timeout)
 
-	def delete(self, key)
+	def delete(self, key):
 
 		cache=self.key_to_cache(key)
 		return cache.delete(key)
@@ -90,7 +90,7 @@ class CustomCache(flask_caching.backends.rediscache.RedisCache):
 		cache=self.key_to_cache(key)
 		return cache.has(key)
 
-	def clear(self)
+	def clear(self):
 
 		return any([i.clear() for i in self.caches])
 
