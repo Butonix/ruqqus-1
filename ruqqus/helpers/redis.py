@@ -7,7 +7,7 @@ import hashlib
 class CustomCache(backends.rediscache.RedisCache):
 
 
-	def __init__(self, app, **kwargs):
+	def __init__(self, app, config, **kwargs):
 
 		self.caches = [
 			flask_caching.Cache(
@@ -15,7 +15,7 @@ class CustomCache(backends.rediscache.RedisCache):
 				config={
 					"REDIS_URL":url
 				}
-				) for url in kwargs['redis_urls']
+				) for url in config['redis_urls']
 			]
 
 	def key_to_cache(self, key):
