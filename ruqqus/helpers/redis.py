@@ -1,9 +1,10 @@
 import flask_caching
+from flask_caching import backends
 import redis
 from os import environ
 import hashlib
 
-class CustomCache(flask_caching.backends.rediscache.RedisCache):
+class CustomCache(backends.rediscache.RedisCache):
 
 
 	def __init__(self, app, redis_urls=[]):
