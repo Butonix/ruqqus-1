@@ -4,7 +4,7 @@ import redis
 from os import environ
 import hashlib
 
-class CustomCache(backends.rediscache.RedisCache):
+class Custom_Cache(backends.rediscache.RedisCache):
 
 
 	def __init__(self, app, redis_urls=[]):
@@ -15,7 +15,10 @@ class CustomCache(backends.rediscache.RedisCache):
 				config={
 					"REDIS_URL":url
 				}
-				) for url in redis_urls
+				) for url in [
+					environ.get("REDIS_URL"),
+					environ.get("HEROKU_REDIS_IVORY_URL")
+				]
 			]
 
 	def key_to_cache(self, key):
