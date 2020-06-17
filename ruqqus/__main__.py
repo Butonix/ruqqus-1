@@ -75,7 +75,7 @@ cache=CustomCache(app,
 Compress(app)
 
 
-app.config["RATELIMIT_STORAGE_URL"]=app.config["REDIS_URL"]
+app.config["RATELIMIT_STORAGE_URL"]=environ.get("REDIS_URL")
 app.config["RATELIMIT_KEY_PREFIX"]="flask_limiting_"
 
 limiter = Limiter(
