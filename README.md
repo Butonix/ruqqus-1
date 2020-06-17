@@ -107,7 +107,7 @@ Create environment variables
 
 Run Ruqqus
 
-`$ python3 ruqqus/__main__.py`
+`$ gunicorn ruqqus.__main__:app -w 3 -k gevent --worker-connections 6 --preload --max-requests 500 --max-requests-jitter 50`
 
 
 ## License
