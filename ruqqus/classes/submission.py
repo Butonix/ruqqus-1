@@ -173,7 +173,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         
         #return template
         is_allowed_to_comment = self.board.can_comment(v) and not self.is_archived
-        print(is_allowed_to_comment)
+
         return render_template(template,
                                v=v,
                                p=self,
