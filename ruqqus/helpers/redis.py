@@ -19,7 +19,7 @@ class CustomCache(backends.rediscache.RedisCache):
 
 	def key_to_cache(self, key):
 
-		return self.caches[self.key_to_cache_number]
+		return self.caches[self.key_to_cache_number(key)]
 
 	def key_to_cache_number(self, key):
 
