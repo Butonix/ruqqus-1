@@ -14,8 +14,7 @@ class CustomCache(backends.rediscache.RedisCache):
 				app,
 				config={
 					"REDIS_URL":url
-				},
-				*args
+				}
 				) for url in config['redis_urls']
 			]
 
