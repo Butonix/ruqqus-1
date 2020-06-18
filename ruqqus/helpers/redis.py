@@ -69,7 +69,7 @@ class CustomCache(backends.rediscache.RedisCache):
 	def set_many(self, mapping, timeout=None):
 
 		caches={i:{} for i in range(len(self.caches))}
-		for key in mapping.keys():
+		for key in mapping:
 			caches[self.key_to_cache_number(key)][key]=mapping[key]
 
 		for i in cache:
