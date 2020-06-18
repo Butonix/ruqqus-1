@@ -22,6 +22,7 @@ from redis import BlockingConnectionPool
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
+
 _version = "2.11.0"
 
 app = Flask(__name__,
@@ -50,16 +51,21 @@ app.config["UserAgent"]=f"Ruqqus webserver tools for Ruqqus v{_version} develope
 if "localhost" in app.config["SERVER_NAME"]:
     app.config["CACHE_TYPE"]="null"
 else:
-    app.config["CACHE_TYPE"]="redis"
+    app.config["CACHE_TYPE"]=environ.get("CACHE_TYPE", 'null')
     
-app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL", environ.get("REDIS_URL"))
-app.config["CACHE_DEFAULT_TIMEOUT"]=60
-app.config["CACHE_KEY_PREFIX"]="flask_caching_"
+#app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL", environ.get("REDIS_URL"))
+#app.config["CACHE_DEFAULT_TIMEOUT"]=60
+#app.config["CACHE_KEY_PREFIX"]="flask_caching_"
 
 MAX_REDIS_CONNS = int(environ.get("MAX_REDIS_CONNS", 6))
 
 pool = BlockingConnectionPool(max_connections=MAX_REDIS_CONNS)
 app.config['CACHE_OPTIONS'] = {'connection_pool': pool, 'max_connections': MAX_REDIS_CONNS}
+
+app.config['redis_urls']=[
+        environ.get('HEROKU_REDIS_AQUA_URL'),
+        environ.get('HEROKU_REDIS_GRAY_URL')
+        ]
 
 
 Markdown(app)
@@ -67,7 +73,7 @@ cache=Cache(app)
 Compress(app)
 
 
-app.config["RATELIMIT_STORAGE_URL"]=app.config["CACHE_REDIS_URL"]
+app.config["RATELIMIT_STORAGE_URL"]=environ.get("REDIS_URL")
 app.config["RATELIMIT_KEY_PREFIX"]="flask_limiting_"
 
 limiter = Limiter(
@@ -176,7 +182,7 @@ def after_request(response):
         g.db.commit()
     except:
         pass
-    
+
     response.headers.add('Access-Control-Allow-Headers',
                          "Origin, X-Requested-With, Content-Type, Accept, x-auth"
                          )
