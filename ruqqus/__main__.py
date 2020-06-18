@@ -62,15 +62,14 @@ MAX_REDIS_CONNS = int(environ.get("MAX_REDIS_CONNS", 6))
 pool = BlockingConnectionPool(max_connections=MAX_REDIS_CONNS)
 app.config['CACHE_OPTIONS'] = {'connection_pool': pool, 'max_connections': MAX_REDIS_CONNS}
 
-
-Markdown(app)
-cache=Cache(app,
-    config={'redis_urls':[
+app.config['redis_urls']=[
         environ.get('REDIS_URL'),
         environ.get('HEROKU_REDIS_IVORY_URL')
         ]
-    }
-)
+
+
+Markdown(app)
+cache=Cache(app)
 Compress(app)
 
 
