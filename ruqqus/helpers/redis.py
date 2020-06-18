@@ -44,7 +44,7 @@ class CustomCache(backends.rediscache.RedisCache):
 
 		sharded_keys=self.sharded_keys(keys)
 
-		objects={i: self.caches[i].get_many(sharded_keys[i]) for i in range(len(self.caches))}
+		objects={i: self.caches[i].get_many(*sharded_keys[i]) for i in range(len(self.caches))}
 
 		output=[]
 		for i in objects:
@@ -85,7 +85,7 @@ class CustomCache(backends.rediscache.RedisCache):
 		sharded_keys=self.sharded_keys(keys)
 
 		for i in sharded_keys:
-			self.caches[i].delete_many(sharded_keys[i])
+			self.caches[i].delete_many(*sharded_keys[i])
 
 		return True
 
@@ -113,7 +113,7 @@ class CustomCache(backends.rediscache.RedisCache):
 		sharded_keys=self.sharded_keys(keys)
 
 		for i in sharded_keys:
-			self.caches[i].unlink(sharded_keys[i])
+			self.caches[i].unlink(*sharded_keys[i])
 
 		return True
 
