@@ -11,8 +11,10 @@ class CustomCache(backends.rediscache.RedisCache):
 
 		self.caches = [
 			flask_caching.Cache(
-				app
-				) for url in config['redis_urls']
+				app,
+				config={"CACHE_TYPE":'redis',
+				"CACHE_REDIS_URL": url}
+				) for url in app.config['redis_urls']
 			]
 
 	def key_to_cache(self, key):
