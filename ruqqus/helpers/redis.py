@@ -25,6 +25,15 @@ class CustomCache(backends.rediscache.RedisCache):
 
 		return int(hashlib.md5(bytes(key, 'utf-8')).hexdigest()[-5:], 16) % len(self.caches)
 
+	def sharded_keys(self, keys):
+
+		sharded_keys={i: [] for i in range(len(self.caches))}
+		for key in keys:
+			cache=self.key_to_cache_number(key)
+			sharded_keys[cache].append(key)
+
+		return sharded_keys
+
 	def get(self, key):
 
 		cache=self.key_to_cache(key)
@@ -33,10 +42,7 @@ class CustomCache(backends.rediscache.RedisCache):
 
 	def get_many(self, *keys):
 
-		sharded_keys={i: [] for i in range(len(self.caches))}
-		for key in keys:
-			cache=self.key_to_cache_number(key)
-			sharded_keys[cache].append(key)
+		sharded_keys=self.sharded_keys(keys)
 
 		objects={i: self.caches[i].get_many[sharded_keys[i]] for i in range(len(self.caches))}
 
@@ -76,10 +82,7 @@ class CustomCache(backends.rediscache.RedisCache):
 		if not keys:
 			return
 
-		sharded_keys={i: [] for i in range(len(self.caches))}
-		for key in keys:
-			cache=self.key_to_cache_number(key)
-			sharded_keys[cache].append(key)
+		sharded_keys=self.sharded_keys(keys)
 
 		for i in sharded_keys:
 			self.caches[i].delete_many(sharded_keys[i])
@@ -107,10 +110,7 @@ class CustomCache(backends.rediscache.RedisCache):
 		if not keys:
 			return
 
-		sharded_keys={i: [] for i in range(len(self.caches))}
-		for key in keys:
-			cache=self.key_to_cache_number(key)
-			sharded_keys[cache].append(key)
+		sharded_keys=self.sharded_keys(keys)
 
 		for i in sharded_keys:
 			self.caches[i].unlink(sharded_keys[i])
