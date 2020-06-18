@@ -272,7 +272,7 @@ def mod_self_to_guild(v, bid):
 
 @app.route("/api/user_stat_data", methods=['GET'])
 @admin_level_required(2)
-@cache.memoize(timeout=1800)
+@cache.memoize(timeout=60)
 def user_stat_data(v):
 
     days=int(request.args.get("days",30))
@@ -365,8 +365,8 @@ def user_stat_data(v):
            "guild_data":guild_stats,
            "comment_data":comment_stats,
            "vote_data":vote_stats,
-           "single_plot":f"https://i.ruqqus.com/{x[0]}/{now}",
-           "multi_plot":f"https://i.ruqqus.com/{x[1]}/{now}"
+           "single_plot":f"https://i.ruqqus.com/{x[0]}",
+           "multi_plot":f"https://i.ruqqus.com/{x[1]}"
            }
     
     return jsonify(final)
@@ -407,10 +407,10 @@ def create_plot(**kwargs):
     plt.legend()
 
     now=int(time.time())
-    single_plot = f"single_plot/{now}.png"
+    single_plot = "single_plot.png"
     plt.savefig(single_plot)
 
-    #aws.delete_file(name)
+    aws.delete_file(single_plot)
     aws.upload_from_file(single_plot, single_plot)
 
     return [single_plot, multi_plots]
@@ -448,12 +448,12 @@ def multiple_plots(**kwargs):
     votes_chart.legend(loc='upper left', frameon=True)
 
     now=int(time.time())
-    name = f"multiplot/{now}.png"
+    name = "multiplot.png"
 
     plt.savefig(name)
     plt.clf()
 
-    #aws.delete_file(name)
+    aws.delete_file(name)
     aws.upload_from_file(name, name)
     return name
 
