@@ -72,7 +72,7 @@ class CustomCache(backends.rediscache.RedisCache):
 		for key in mapping:
 			caches[self.key_to_cache_number(key)][key]=mapping[key]
 
-		for i in cache:
+		for i in caches:
 			self.caches[i].set_many(caches[i], timeout=timeout)
 
 	def delete(self, key):
