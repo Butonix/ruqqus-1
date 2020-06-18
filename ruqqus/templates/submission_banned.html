@@ -106,11 +106,11 @@
 
                 </div>
 
-		<div class="p-3 comment-section">
-			{% for c in p.replies %}
-				{{ c.rendered_comment(v=v) | safe }}
-			{% endfor %}
-		</div>
+    <div class="comment-section">
+     {% with comments=p.replies %}
+      {% include "comments.html" %}
+     {% endwith %}
+   </div>
 
 {% endblock %}
 
