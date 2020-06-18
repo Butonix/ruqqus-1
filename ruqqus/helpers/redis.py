@@ -11,10 +11,7 @@ class CustomCache(backends.rediscache.RedisCache):
 
 		self.caches = [
 			flask_caching.Cache(
-				app,
-				config={
-					"REDIS_URL":url
-				}
+				app
 				) for url in config['redis_urls']
 			]
 
