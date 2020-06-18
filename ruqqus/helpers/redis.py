@@ -25,14 +25,21 @@ class CustomCache(backends.rediscache.RedisCache):
 
 		return int(hashlib.md5(bytes(key, 'utf-8')).hexdigest()[-5:], 16) % len(self.caches)
 
-	def sharded_keys(self, keys):
+	def sharded_keys(self, keys, return_index=False):
 
 		sharded_keys={i: [] for i in range(len(self.caches))}
+		idx={}
 		for key in keys:
 			cache=self.key_to_cache_number(key)
 			sharded_keys[cache].append(key)
+			idx[key]=[cache, len(sharded_keys[cache])-1]
 
-		return sharded_keys
+
+		if not return_index:
+			return sharded_keys
+		else:
+			return sharded_keys, idx
+
 
 	def get(self, key):
 
@@ -42,15 +49,11 @@ class CustomCache(backends.rediscache.RedisCache):
 
 	def get_many(self, *keys):
 
-		sharded_keys=self.sharded_keys(keys)
+		sharded_keys, idx =self.sharded_keys(keys, return_index=True)
 
 		objects={i: self.caches[i].get_many(*sharded_keys[i]) for i in range(len(self.caches))}
 
-		output=[]
-		for i in objects:
-			output+=objects[i]
-
-		output.sort(key=lambda x:keys.index(x))
+		output=[objects[idx[key][0]][idx[key][1]] for key in keys]
 
 		return output
 
