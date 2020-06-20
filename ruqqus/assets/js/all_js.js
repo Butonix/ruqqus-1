@@ -367,24 +367,7 @@ $(".toggle-collapse").click(function (event) {
     document.getElementById(id).classList.toggle("collapsed");
 });
 */
-// Reply to parent comment
 
-function addReplyForm(commentId, postId, formId) {
-
-  var id = "reply-to-" + commentId;
-
-  document.getElementById(id).innerHTML = '
-}
-
-    // Removes reply form innerHTML on click
-
-    function delReplyForm(commentId) {
-
-      var id = "reply-to-" + commentId;
-
-      document.getElementById(id).innerHTML = '';
-
-    };
 
 //Autoexpand textedit comments
 
