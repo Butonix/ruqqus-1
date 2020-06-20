@@ -1528,12 +1528,12 @@ block_user=function() {
 
 }
 
-post_comment=function(){
-  var commentForm = document.getElementById('reply-to-t3_'+cid);
+post_comment=function(cid, fullname){
+  var commentForm = document.getElementById('reply-to-'+cid);
 
   var commentError = document.getElementById("comment-error-text");
 
-  username = usernameField.value;
+  
 
   var xhr = new XMLHttpRequest();
     xhr.open("post", "/api/comment");
