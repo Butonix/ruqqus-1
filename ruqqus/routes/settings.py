@@ -333,3 +333,60 @@ def delete_account(v):
     session.pop("session_id", None)
 
     return redirect('/')
+
+
+@app.route("/settings/blocks", methods=["GET"])
+@auth_required
+def settings_blockedpage(v):
+
+    users=[x.target for x in v.blocked]
+
+    return render_template("settings_blocks.html",
+        v=v,
+        users=users)
+
+@app.route("/settings/block", methods=["POST"])
+@auth_required
+@validate_formkey
+def settings_block_user(v):
+
+    user=get_user(request.form.get("username"), graceful=True)
+
+    if not user:
+        return jsonify({"error":"That user doesn't exist."}), 404
+
+    if user.id==v.id:
+        return jsonify({"error":"You can't block yourself."}), 409
+
+    if v.has_block(user):
+        return jsonify({"error":f"You have already blocked @{user.username}."}), 409
+
+    if user.id==1:
+        return jsonify({"error":"You can't block @ruqqus."}), 409
+
+
+    new_block=UserBlock(user_id=v.id,
+                        target_id=user.id,
+                        created_utc=int(time.time())
+                        )
+    db.add(new_block)
+    db.commit()
+
+    return "", 204
+    
+@app.route("/settings/unblock", methods=["POST"])
+@auth_required
+@validate_formkey
+def settings_unblock_user(v):
+
+    user=get_user(request.values.get("username"))
+
+    x= v.has_block(user)
+    if not x:
+        abort(409)
+
+
+    db.delete(x)
+    db.commit()
+    
+    return "", 204

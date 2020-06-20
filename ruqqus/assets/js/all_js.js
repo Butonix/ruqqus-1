@@ -363,25 +363,7 @@ $(".toggle-collapse").click(function (event) {
     document.getElementById(id).classList.toggle("collapsed");
 });
 */
-// Reply to parent comment
 
-function addReplyForm(commentId, postId, formId) {
-
-  var id = "reply-to-" + commentId;
-
-  document.getElementById(id).innerHTML = '<div class="comment-write collapsed child"> <form id="reply-to-t3_'+commentId+'" action="/api/comment" method="post" class="input-group"> <input type="hidden" name="formkey" value="'+formkey()+'"> <input type="hidden" name="parent_fullname" value="t3_'+commentId+'"> <input type="hidden" name="submission" value="'+postId+'"> <textarea name="body" form="reply-to-t3_'+commentId+'" class="comment-box form-control rounded" id="reply-form-'+commentId+'" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> <div class="comment-format"> <small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> <small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small> <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> <small class="format"><span class="font-weight-bolder text-uppercase" onclick="getGif();commentForm(\''+formId+'\')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF">GIF</span></small> <a href="javascript:void(0)" onclick="delReplyForm(\''+commentId+'\')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> <button form="reply-to-t3_'+commentId+'" class="btn btn-primary ml-2">Comment</button> </div> </form> </div>';
-
-}
-
-    // Removes reply form innerHTML on click
-
-    function delReplyForm(commentId) {
-
-      var id = "reply-to-" + commentId;
-
-      document.getElementById(id).innerHTML = '';
-
-    };
 
 //Autoexpand textedit comments
 
@@ -1527,6 +1509,71 @@ function invite_mod_to_guild(boardid) {
 
 }
 
+block_user=function() {
+
+  var exileForm = document.getElementById("exile-form");
+
+  var exileError = document.getElementById("toast-error-message");
+
+  var usernameField = document.getElementById("exile-username");
+
+  var isValidUsername = usernameField.checkValidity();
+
+  username = usernameField.value;
+
+  if (isValidUsername) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("post", "/settings/block");
+    xhr.withCredentials=true;
+    f=new FormData();
+    f.append("username", username);
+    f.append("formkey", formkey());
+    xhr.onload=function(){
+      if (xhr.status==204) {
+        window.location.reload(true);
+      }
+      else {
+      $('#toast-exile-error').toast('dispose');
+      $('#toast-exile-error').toast('show');
+      exileError.textContent = JSON.parse(xhr.response)["error"];
+      }
+    }
+    xhr.send(f)
+  }
+
+}
+
+post_comment=function(fullname){
+
+  var commentError = document.getElementById("comment-error-text");
+
+  var form = new FormData();
+
+  form.append('formkey', formkey());
+  form.append('parent_fullname', fullname);
+  form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
+  form.append('body', document.getElementById('reply-form-body-'+fullname).value);
+
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("post", "/api/comment");
+  xhr.withCredentials=true;
+  xhr.onload=function(){
+    if (xhr.status==200) {
+      commentForm=document.getElementById('comment-form-space-'+fullname);
+      commentForm.innerHTML=JSON.parse(xhr.response)["html"];
+    }
+    else {
+      $('#toast-comment-success').toast('dispose');
+      $('#toast-comment-error').toast('dispose');
+      $('#toast-comment-success').toast('show');
+     commentError.textContent = JSON.parse(xhr.response)["error"];
+    }
+  }
+  xhr.send(form)
+
+}
 //part of submit page js
 
 hide_image=function(){

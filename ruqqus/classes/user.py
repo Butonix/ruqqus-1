@@ -23,6 +23,19 @@ from .board_relationships import *
 from .mix_ins import *
 from ruqqus.__main__ import Base,cache
 
+
+class UserBlock(Base, Stndrd, Age_times):
+
+    __tablename__="userblocks"
+    id=Column(Integer, primary_key=True)
+    user_id=Column(Integer, ForeignKey("users.id"))
+    target_id=Column(Integer, ForeignKey("users.id"))
+    created_utc=Column(Integer)
+
+    user=relationship("User", lazy="joined", primaryjoin="User.id==UserBlock.user_id")
+    target=relationship("User", lazy="joined", primaryjoin="User.id==UserBlock.target_id")
+
+
 class User(Base, Stndrd):
 
     __tablename__="users"
@@ -81,6 +94,9 @@ class User(Base, Stndrd):
     following=relationship("Follow", lazy="dynamic", primaryjoin="Follow.user_id==User.id")
     followers=relationship("Follow", lazy="dynamic", primaryjoin="Follow.target_id==User.id")
 
+    blocking=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id")
+    blocked=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id")
+
 
     
     #properties defined as SQL server-side functions
@@ -102,6 +118,18 @@ class User(Base, Stndrd):
 
         super().__init__(**kwargs)
 
+
+    def has_block(self, target):
+
+        return self.blocking.filter_by(target_id=target.id).first()
+
+    def is_blocked_by(self, user):
+
+        return self.blocked.filter_by(user_id=user.id).first()
+
+    def any_block_exists(self, other):
+
+        return db.query(UserBlock).filter(or_(and_(UserBlock.user_id==self.id, UserBlock.target_id==other.id),and_(UserBlock.user_id==other.id, UserBlock.target_id==self.id))).first()
         
     def validate_2fa(self, token):
         
@@ -647,4 +675,5 @@ class User(Base, Stndrd):
     @property
     def is_suspended(self):
         return  (self.is_banned and (self.unban_utc == 0 or self.unban_utc > time.time()))
+
 

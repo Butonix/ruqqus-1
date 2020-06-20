@@ -211,17 +211,19 @@ def api_comment(v):
                                parent_fullname=request.form.get("parent_fullname"),
                                badlinks=[x.domain for x in bans],
                                body=body,
+                               is_deleted=False,
                                v=v
                                ), 422
 
     #check existing
     existing=g.db.query(Comment).filter_by(author_id=v.id,
                                          body=body,
+                                         is_deleted=False,
                                          parent_fullname=parent_fullname,
                                          parent_submission=parent_submission
                                          ).first()
     if existing:
-        return redirect(existing.permalink)
+        return jsonify({"error":"You already made that comment."}), 409
 
     #get parent item info
     parent_id=int(parent_fullname.split("_")[1], 36)
@@ -236,12 +238,15 @@ def api_comment(v):
 
     #No commenting on deleted/removed things
     if parent.is_banned or parent.is_deleted:
-        abort(403)
+        return jsonify({"error":"You can't comment on things that have been deleted."}), 403
 
-    #check for ban state
+    if parent.author.any_block_exists(v):
+        return jsonify({"error":"You can't reply to users who have blocked you, or users you have blocked."}), 403
+
+    #check for archive and ban state
     post = get_post(request.form.get("submission"))
     if post.is_archived or not post.board.can_comment(v):
-        abort(403)
+        return jsonify({"error":"You can't comment on this."}), 403
 
         
     #create comment
@@ -276,8 +281,12 @@ def api_comment(v):
     mentions=soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3)
     for mention in mentions:
         username=mention["href"].split("@")[1]
+
         user=g.db.query(User).filter_by(username=username).first()
+
         if user:
+            if v.any_block_exists(user):
+                continue
             notify_users.add(user.id)
 
 
@@ -299,7 +308,7 @@ def api_comment(v):
 
     #print(f"Content Event: @{v.username} comment {c.base36id}")
 
-    return redirect(f"{c.permalink}?context=1")
+    return jsonify({"html":render_template("comments.html", v=v, comments=[c], render_replies=False)})
 
 
 @app.route("/edit_comment/<cid>", methods=["POST"])
@@ -334,7 +343,7 @@ def edit_comment(cid, v):
                                body=body,
                                v=v
                                ),
-                'api':lambda:{'error':f'A blacklist domain was used.'}
+                'api':lambda:({'error':f'A blacklisted domain was used.'}, 400)
                 }
 
     c.body=body

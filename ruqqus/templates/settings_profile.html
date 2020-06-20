@@ -3,78 +3,7 @@
 {% block pagetitle %}Profile Settings - Ruqqus{% endblock %}
 
 {% block content %}
-<div class="row justify-content-around">
 
-  <div class="col h-100">
-
-    {% if error %}
-    <div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
-      <i class="fas fa-exclamation-circle my-auto"></i>
-      <span>
-        {{ error }}
-      </span>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true"><i class="far fa-times"></i></span>
-      </button>
-    </div>
-    {% endif %}
-    {% if msg %}
-    <div class="alert alert-success alert-dismissible fade show my-3" role="alert">
-      <i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
-      <span>
-        {{ msg }}
-      </span>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true"><i class="far fa-times"></i></span>
-      </button>
-    </div>
-    {% endif %}
-
-    <div class="mt-3">
-
-      <h1 class="d-none d-md-block">Settings</h1>
-
-      <h2 class="h3 d-md-none">Settings</h2>
-
-    </div>
-
-    <!-- Settings tabs -->
-
-    <!-- Desktop -->
-
-    <div class="flex-row bg-white box-shadow-bottom sticky d-none d-sm-flex mt-3 mb-3 mb-sm-5">
-
-      <ul class="nav settings-nav">
-        <li class="nav-item">
-          <a class="nav-link active" href="/settings/profile">Profile</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/settings/security">Security</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link d-none" href="/settings/notifications">Notifications</a>
-        </li>
-      </ul>
-
-    </div>
-
-    <!-- Mobile -->
-
-    <div class="flex-row bg-white box-shadow-bottom sticky justify-content-center d-flex d-sm-none mt-3 mb-3 mb-sm-5">
-
-      <ul class="nav settings-nav">
-        <li class="nav-item">
-          <a class="nav-link active" href="/settings/profile"><i class="fas fa-user text-lg mr-0"></i></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/settings/security"><i class="fas fa-cog text-lg mr-0"></i></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link d-none" href="/settings/notifications">Notifications</a>
-        </li>
-      </ul>
-
-    </div>
 
     <div class="row">
 
@@ -390,7 +319,4 @@
 
 </div>
 
-</div>
-
-</div>
 {% endblock %}
