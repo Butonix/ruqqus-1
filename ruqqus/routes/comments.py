@@ -335,7 +335,7 @@ def edit_comment(cid, v):
                                body=body,
                                v=v
                                ),
-                'api':lambda:({'error':f'A blacklist domain was used.'}, 403)
+                'api':lambda:(jsonify({'error':f'A blacklist domain was used.'}), 403)
                 }
 
     c.body=body
