@@ -7,7 +7,7 @@ from ruqqus.helpers.wrappers import *
 import ruqqus.classes
 from ruqqus.classes import *
 from ruqqus.mail import *
-from ruqqus.__main__ import app, db, limiter
+from ruqqus.__main__ import app, limiter
 
 #take care of misc pages that never really change (much)
 @app.route('/assets/<path:path>')
@@ -15,6 +15,9 @@ from ruqqus.__main__ import app, db, limiter
 def static_service(path):
     resp = make_response(send_from_directory('./assets', path))
     resp.headers.add("Cache-Control", "public")
+
+    if request.path.endswith('.css'):
+        resp.headers.add("Content-Type", "text/css")
     return resp
 
 @app.route("/robots.txt", methods=["GET"])
@@ -39,7 +42,7 @@ def settings_profile(v):
 @app.route("/help/titles", methods=["GET"])
 @auth_desired
 def titles(v):
-    titles = [x for x in db.query(Title).order_by(text("id asc")).all()]
+    titles = [x for x in g.db.query(Title).order_by(text("id asc")).all()]
     return render_template("/help/titles.html",
                            v=v,
                            titles=titles)
@@ -57,7 +60,7 @@ def help_terms(v):
 @app.route("/help/badges", methods=["GET"])
 @auth_desired
 def badges(v):
-    badges=[x for x in db.query(BadgeDef).order_by(text("rank asc, id asc")).all()]
+    badges=[x for x in g.db.query(BadgeDef).order_by(text("rank asc, id asc")).all()]
     return render_template("help/badges.html",
                            v=v,
                            badges=badges)
@@ -66,10 +69,10 @@ def badges(v):
 @auth_desired
 def help_admins(v):
 
-    admins = db.query(User).filter(User.admin_level>1, User.id > 1).order_by(User.id.asc()).all()
+    admins = g.db.query(User).filter(User.admin_level>1, User.id > 1).order_by(User.id.asc()).all()
     admins=[x for x in admins]
 
-    exadmins = db.query(User).filter_by(admin_level=1).order_by(User.id.asc()).all()
+    exadmins = g.db.query(User).filter_by(admin_level=1).order_by(User.id.asc()).all()
     exadmins=[x for x in exadmins]
 
     return render_template("help/admins.html",
@@ -84,8 +87,8 @@ def settings_security(v):
     return render_template("settings_security.html",
                            v=v,
                            mfa_secret=pyotp.random_base32() if not v.mfa_secret else None,
-                           error=request.args.get("error") if request.args.get('error') else None,
-                           msg=request.args.get("msg") if request.args.get("msg") else None
+                           error=request.args.get("error") or None,
+                           msg=request.args.get("msg") or None
                           )
 
 @app.route("/favicon.ico", methods=["GET"])

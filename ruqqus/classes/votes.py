@@ -1,9 +1,10 @@
 from flask import *
 from time import time, strftime, gmtime
 from sqlalchemy import *
+from sqlalchemy.orm import relationship
 
 from ruqqus.helpers.base36 import *
-from ruqqus.__main__ import Base, db
+from ruqqus.__main__ import Base
 
 class Vote(Base):
 
@@ -14,6 +15,9 @@ class Vote(Base):
     vote_type=Column(Integer)
     submission_id=Column(Integer, ForeignKey("submissions.id"))
     created_utc=Column(Integer, default=0)
+
+    user=relationship("User")
+    post=relationship("Submission")
 
     
     def __init__(self, *args, **kwargs):
@@ -42,8 +46,8 @@ class Vote(Base):
         self.vote_type=x
         self.created_utc=int(time())
 
-        db.add(self)
-        db.commit()
+        g.db.add(self)
+        
 
 class CommentVote(Base):
 
@@ -54,6 +58,9 @@ class CommentVote(Base):
     vote_type=Column(Integer)
     comment_id=Column(Integer, ForeignKey("comments.id"))
     created_utc=Column(Integer, default=0)
+
+    user=relationship("User")
+    comment=relationship("Comment")
 
     def __init__(self, *args, **kwargs):
         
@@ -81,5 +88,5 @@ class CommentVote(Base):
         self.vote_type=x
         self.created_utc=int(time())
 
-        db.add(self)
-        db.commit()
+        g.db.add(self)
+        

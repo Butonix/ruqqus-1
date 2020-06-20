@@ -11,17 +11,17 @@ from secrets import token_hex
 import matplotlib.pyplot as plt
 import imagehash
 
-from ruqqus.__main__ import db, app
+from ruqqus.__main__ import app, cache
 from os import remove
 @app.route("/api/ban_user/<user_id>", methods=["POST"])
 @admin_level_required(3)
 @validate_formkey
 def ban_user(user_id, v):
 
-    user=db.query(User).filter_by(id=user_id).first()
+    user=g.db.query(User).filter_by(id=user_id).first()
 
     # check for number of days for suspension
-    days = int(request.form.get("days", 0))
+    days = int(request.form.get("days")) if request.form.get('days') else 0 
     reason = request.form.get("reason", "")
 
     if not user:
@@ -44,7 +44,7 @@ def ban_user(user_id, v):
 
     send_notification(user, text)
     
-    db.commit()
+    
     
     return (redirect(user.url), user)
 
@@ -53,7 +53,7 @@ def ban_user(user_id, v):
 @validate_formkey
 def unban_user(user_id, v):
 
-    user=db.query(User).filter_by(id=user_id).first()
+    user=g.db.query(User).filter_by(id=user_id).first()
 
     if not user:
         abort(400)
@@ -72,7 +72,7 @@ def unban_user(user_id, v):
 @validate_formkey
 def ban_post(post_id, v):
 
-    post=db.query(Submission).filter_by(id=base36decode(post_id)).first()
+    post=g.db.query(Submission).filter_by(id=base36decode(post_id)).first()
 
     if not post:
         abort(400)
@@ -83,8 +83,10 @@ def ban_post(post_id, v):
     post.stickied=False
     post.ban_reason=request.form.get("reason",None)
 
-    db.add(post)
-    db.commit()
+    g.db.add(post)
+    
+
+    cache.delete_memoized(Board.idlist, self=post.board)
     
     return (redirect(post.permalink), post)
 
@@ -93,7 +95,7 @@ def ban_post(post_id, v):
 @validate_formkey
 def unban_post(post_id, v):
 
-    post=db.query(Submission).filter_by(id=base36decode(post_id)).first()
+    post=g.db.query(Submission).filter_by(id=base36decode(post_id)).first()
 
     if not post:
         abort(400)
@@ -102,8 +104,8 @@ def unban_post(post_id, v):
     post.is_approved = v.id
     post.approved_utc=int(time.time())
 
-    db.add(post)
-    db.commit()
+    g.db.add(post)
+    
     
     return (redirect(post.permalink), post)
 
@@ -113,7 +115,7 @@ def unban_post(post_id, v):
 @validate_formkey
 def api_distinguish_post(post_id, v):
 
-    post=db.query(Submission).filter_by(id=base36decode(post_id)).first()
+    post=g.db.query(Submission).filter_by(id=base36decode(post_id)).first()
 
     if not post:
         abort(404)
@@ -126,8 +128,8 @@ def api_distinguish_post(post_id, v):
     else:
         post.distinguish_level=v.admin_level
 
-    db.add(post)
-    db.commit()
+    g.db.add(post)
+    
 
     return (redirect(post.permalink), post)
 
@@ -136,24 +138,24 @@ def api_distinguish_post(post_id, v):
 def api_sticky_post(post_id, v):
 
     
-    post=db.query(Submission).filter_by(id=base36decode(post_id)).first()
+    post=g.db.query(Submission).filter_by(id=base36decode(post_id)).first()
     if post:
         if post.stickied:
             post.stickied=False
-            db.add(post)
-            db.commit()
+            g.db.add(post)
+            
             return redirect(post.permalink)
 
-    already_stickied=db.query(Submission).filter_by(stickied=True).first()
+    already_stickied=g.db.query(Submission).filter_by(stickied=True).first()
 
     post.stickied=True
     
     if already_stickied:
         already_stickied.stickied=False
-        db.add(already_stickied)
+        g.db.add(already_stickied)
         
-    db.add(post)
-    db.commit()
+    g.db.add(post)
+    
 
     return (redirect(post.permalink), post)
 
@@ -161,7 +163,7 @@ def api_sticky_post(post_id, v):
 @admin_level_required(1)
 def api_ban_comment(c_id, v):
 
-    comment = db.query(Comment).filter_by(id=base36decode(c_id)).first()
+    comment = g.db.query(Comment).filter_by(id=base36decode(c_id)).first()
     if not comment:
         abort(404)
 
@@ -169,8 +171,8 @@ def api_ban_comment(c_id, v):
     comment.is_approved=0
     comment.approved_utc=0
 
-    db.add(comment)
-    db.commit()
+    g.db.add(comment)
+    
 
     return "", 204
 
@@ -178,7 +180,7 @@ def api_ban_comment(c_id, v):
 @admin_level_required(1)
 def api_unban_comment(c_id, v):
 
-    comment = db.query(Comment).filter_by(id=base36decode(c_id)).first()
+    comment = g.db.query(Comment).filter_by(id=base36decode(c_id)).first()
     if not comment:
         abort(404)
 
@@ -186,8 +188,8 @@ def api_unban_comment(c_id, v):
     comment.is_approved=v.id
     comment.approved_utc=int(time.time())
 
-    db.add(comment)
-    db.commit()
+    g.db.add(comment)
+    
 
     return "", 204
 
@@ -195,14 +197,14 @@ def api_unban_comment(c_id, v):
 @admin_level_required(1)
 def api_distinguish_comment(c_id, v):
 
-    comment = db.query(Comment).filter_by(id=base36decode(c_id)).first()
+    comment = g.db.query(Comment).filter_by(id=base36decode(c_id)).first()
     if not comment:
         abort(404)
 
     comment.distinguish_level=v.admin_level
 
-    db.add(comment)
-    db.commit()
+    g.db.add(comment)
+    
 
     return "", 204
 
@@ -210,14 +212,14 @@ def api_distinguish_comment(c_id, v):
 @admin_level_required(1)
 def api_undistinguish_comment(c_id, v):
 
-    comment = db.query(Comment).filter_by(id=base36decode(c_id)).first()
+    comment = g.db.query(Comment).filter_by(id=base36decode(c_id)).first()
     if not comment:
         abort(404)
 
     comment.distinguish_level=0
 
-    db.add(comment)
-    db.commit()
+    g.db.add(comment)
+    
 
     return "", 204
 
@@ -232,8 +234,8 @@ def api_ban_guild(v, bid):
     board.is_banned=True
     board.ban_reason=request.form.get("reason","")
     
-    db.add(board)
-    db.commit()
+    g.db.add(board)
+    
 
     return redirect(board.permalink)
 
@@ -247,8 +249,8 @@ def api_unban_guild(v, bid):
     board.is_banned=False
     board.ban_reason=""
     
-    db.add(board)
-    db.commit()
+    g.db.add(board)
+    
 
     return redirect(board.permalink)
 
@@ -262,15 +264,15 @@ def mod_self_to_guild(v, bid):
         mr = ModRelationship(user_id=v.id,
                              board_id=board.id,
                              accepted=True)
-        db.add(mr)
-        db.commit()
+        g.db.add(mr)
+        
 
     return redirect(f"/+{board.name}/mod/mods")
         
 
 @app.route("/api/user_stat_data", methods=['GET'])
 @admin_level_required(2)
-@cache.memoize(timeout=1800)
+@cache.memoize(timeout=60)
 def user_stat_data(v):
 
     days=int(request.args.get("days",30))
@@ -296,8 +298,9 @@ def user_stat_data(v):
 
     daily_signups = [{"date":time.strftime("%d %b %Y", time.gmtime(day_cutoffs[i+1])),
                       "day_start":day_cutoffs[i+1],
-                      "signups": db.query(User).filter(User.created_utc<day_cutoffs[i],
-                                                       User.created_utc>day_cutoffs[i+1]
+                      "signups": g.db.query(User).filter(User.created_utc<day_cutoffs[i],
+                                                       User.created_utc>day_cutoffs[i+1],
+                                                       User.is_banned==0
                                                        ).count()
                       } for i in range(len(day_cutoffs)-1)
                       ]
@@ -305,24 +308,25 @@ def user_stat_data(v):
     
 
     
-    user_stats = {'current_users':db.query(User).filter_by(is_banned=0, reserved=None).count(),
-                  'banned_users': db.query(User).filter(User.is_banned!=0).count(),
-                  'reserved_users':db.query(User).filter(User.reserved!=None).count(),
-                  'email_verified_users':db.query(User).filter_by(is_banned=0, is_activated=True).count(),
-                  'real_id_verified_users':db.query(User).filter(User.reserved!=None, User.real_id!=None).count()
+    user_stats = {'current_users':g.db.query(User).filter_by(is_banned=0, reserved=None).count(),
+                  'banned_users': g.db.query(User).filter(User.is_banned!=0).count(),
+                  'reserved_users':g.db.query(User).filter(User.reserved!=None).count(),
+                  'email_verified_users':g.db.query(User).filter_by(is_banned=0, is_activated=True).count(),
+                  'real_id_verified_users':g.db.query(User).filter(User.reserved!=None, User.real_id!=None).count()
                   }
 
     post_stats = [{"date":time.strftime("%d %b %Y", time.gmtime(day_cutoffs[i+1])),
                       "day_start":day_cutoffs[i+1],
-                      "posts": db.query(Submission).filter(Submission.created_utc<day_cutoffs[i],
-                                                           Submission.created_utc>day_cutoffs[i+1]
+                      "posts": g.db.query(Submission).filter(Submission.created_utc<day_cutoffs[i],
+                                                           Submission.created_utc>day_cutoffs[i+1],
+                                                           Submission.is_banned==False
                                                            ).count()
                       } for i in range(len(day_cutoffs) - 1)
                       ]
 
     guild_stats = [{"date": time.strftime("%d %b %Y", time.gmtime(day_cutoffs[i + 1])),
                    "day_start": day_cutoffs[i + 1],
-                   "members": db.query(Board).filter(Board.created_utc < day_cutoffs[i],
+                   "members": g.db.query(Board).filter(Board.created_utc < day_cutoffs[i],
                                                         Board.created_utc > day_cutoffs[i + 1]
                                                         ).count()
                    } for i in range(len(day_cutoffs) - 1)
@@ -330,16 +334,19 @@ def user_stat_data(v):
 
     comment_stats = [{"date": time.strftime("%d %b %Y", time.gmtime(day_cutoffs[i + 1])),
                    "day_start": day_cutoffs[i + 1],
-                   "comments": db.query(Comment).filter(Comment.created_utc < day_cutoffs[i],
-                                                        Comment.created_utc > day_cutoffs[i + 1]
+                   "comments": g.db.query(Comment).filter(Comment.created_utc < day_cutoffs[i],
+                                                        Comment.created_utc > day_cutoffs[i + 1],
+                                                        Comment.is_banned==False,
+                                                        Comment.author_id!=1
                                                         ).count()
                    } for i in range(len(day_cutoffs) - 1)
                   ]
 
     vote_stats = [{"date": time.strftime("%d %b %Y", time.gmtime(day_cutoffs[i + 1])),
                       "day_start": day_cutoffs[i + 1],
-                      "votes": db.query(Vote).filter(Vote.created_utc < day_cutoffs[i],
-                                                           Vote.created_utc > day_cutoffs[i + 1]
+                      "votes": g.db.query(Vote).join(Vote.user).filter(Vote.created_utc < day_cutoffs[i],
+                                                           Vote.created_utc > day_cutoffs[i + 1],
+                                                           User.is_banned==0
                                                            ).count()
                       } for i in range(len(day_cutoffs) - 1)
                      ]
@@ -400,10 +407,10 @@ def create_plot(**kwargs):
     plt.legend()
 
     now=int(time.time())
-    single_plot = f"single_plot.png"
+    single_plot = "single_plot.png"
     plt.savefig(single_plot)
 
-    #aws.delete_file(name)
+    aws.delete_file(single_plot)
     aws.upload_from_file(single_plot, single_plot)
 
     return [single_plot, multi_plots]
@@ -441,12 +448,12 @@ def multiple_plots(**kwargs):
     votes_chart.legend(loc='upper left', frameon=True)
 
     now=int(time.time())
-    name = f"multi_plot.png"
+    name = "multiplot.png"
 
     plt.savefig(name)
     plt.clf()
 
-    #aws.delete_file(name)
+    aws.delete_file(name)
     aws.upload_from_file(name, name)
     return name
 
@@ -459,14 +466,14 @@ def admin_csam_nuke(pid, v):
 
     post.is_banned=True
     post.ban_reason="CSAM [1]"
-    db.add(post)
+    g.db.add(post)
 
     user=post.author
     user.is_banned=v.id
-    db.add(user)
+    g.db.add(user)
     for alt in user.alts:
         alt.is_banned=v.id
-        db.add(alt)
+        g.db.add(alt)
 
     if post.domain=="i.ruqqus.com":
 

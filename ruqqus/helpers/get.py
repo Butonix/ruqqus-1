@@ -1,10 +1,13 @@
 from .base36 import *
-from ruqqus.__main__ import db
 from ruqqus.classes import *
+from flask import g
 
 def get_user(username, graceful=False):
 
-    x=db.query(User).filter(User.username.ilike(username)).first()
+    username=username.replace('\\','')
+    username=username.replace('_', '\_')
+
+    x=g.db.query(User).filter(User.username.ilike(username)).first()
     if not x:
         if not graceful:
             abort(404)
@@ -12,15 +15,18 @@ def get_user(username, graceful=False):
             return None
     return x
 
-def get_post(pid, v=None):
+def get_post(pid, v=None, session=None):
 
     i=base36decode(pid)
+    
+    if not session:
+        session=g.db
 
     if v:
-        vt=db.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
+        vt=session.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
 
 
-        items= db.query(Submission, vt.c.vote_type).filter(Submission.id==i).join(vt, isouter=True).first()
+        items= session.query(Submission, vt.c.vote_type).filter(Submission.id==i).join(vt, isouter=True).first()
         
         if not items:
             abort(404)
@@ -29,7 +35,7 @@ def get_post(pid, v=None):
         x._voted=items[1] if items[1] else 0
 
     else:
-        x=db.query(Submission).filter_by(id=i).first()
+        x=session.query(Submission).filter_by(id=i).first()
 
     if not x:
         abort(404)
@@ -38,10 +44,10 @@ def get_post(pid, v=None):
 def get_posts(pids, sort="hot", v=None):
 
     if v:
-        vt=db.query(Vote).filter(Vote.user_id==v.id, Vote.submission_id.in_(pids)).subquery()
+        vt=g.db.query(Vote).filter(Vote.user_id==v.id, Vote.submission_id.in_(pids)).subquery()
 
 
-        posts= db.query(Submission, Title, vt.c.vote_type).filter(Submission.id.in_(pids)).join(Submission.author).join(User.title, isouter=True).join(vt, vt.c.submission_id==Submission.id, isouter=True)
+        posts= g.db.query(Submission, Title, vt.c.vote_type).filter(Submission.id.in_(pids)).join(Submission.author).join(User.title, isouter=True).join(vt, vt.c.submission_id==Submission.id, isouter=True)
 
         items=[i for i in posts.all()]
 
@@ -56,7 +62,7 @@ def get_posts(pids, sort="hot", v=None):
 
 
     else:
-        posts=db.query(Submission, Title).filter(Submission.id.in_(pids)).join(Submission.author).join(User.title, isouter=True)
+        posts=g.db.query(Submission, Title).filter(Submission.id.in_(pids)).join(Submission.author).join(User.title, isouter=True)
 
 
         items=[i for i in posts.all()]
@@ -73,9 +79,9 @@ def get_post_with_comments(pid, sort_type="top", v=None):
     post=get_post(pid, v=v)
 
     if v:
-        votes=db.query(CommentVote).filter(CommentVote.user_id==v.id).subquery()
+        votes=g.db.query(CommentVote).filter(CommentVote.user_id==v.id).subquery()
 
-        comms=db.query(
+        comms=g.db.query(
             Comment,
             User,
             Title,
@@ -115,7 +121,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
         post._preloaded_comments=output
 
     else:
-        comms=db.query(
+        comms=g.db.query(
             Comment,
             User,
             Title
@@ -156,16 +162,18 @@ def get_comment(cid, v=None):
     i=base36decode(cid)
 
     if v:
-        vt=db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id==i).subquery()
+        vt=g.db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id==i).subquery()
 
 
-        items= db.query(Comment, vt.c.vote_type).filter(Comment.id==i).join(vt, isouter=True).first()
+        items= g.db.query(Comment, vt.c.vote_type).filter(Comment.id==i).join(vt, isouter=True).first()
         
+        if not items:
+            abort(404)
         x=items[0]
         x._voted=items[1] if items[1] else 0
 
     else:
-        x=db.query(Comment).filter_by(id=i).first()
+        x=g.db.query(Comment).filter_by(id=i).first()
 
     if not x:
         abort(404)
@@ -174,10 +182,10 @@ def get_comment(cid, v=None):
 def get_comments(cids, v=None, sort_type="new"):
 
     if v:
-        vt=db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(cids)).subquery()
+        vt=g.db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(cids)).subquery()
 
 
-        items= db.query(Comment, vt.c.vote_type).filter(Comment.id.in_(cids)).join(vt, isouter=True).order_by(Comment.created_utc.desc()).all()
+        items= g.db.query(Comment, vt.c.vote_type).filter(Comment.id.in_(cids)).join(vt, isouter=True).order_by(Comment.created_utc.desc()).all()
 
 
         items=[i for i in items]
@@ -189,7 +197,7 @@ def get_comments(cids, v=None, sort_type="new"):
             output.append(x)
 
     else:
-        x=db.query(Comment).filter(Comment.id.in_(cids)).all()
+        x=g.db.query(Comment).filter(Comment.id.in_(cids)).all()
         output=[i for i in x]
 
     output=sorted(output, key=lambda x:cids.index(x.id))
@@ -198,7 +206,7 @@ def get_comments(cids, v=None, sort_type="new"):
 
 def get_board(bid):
 
-    x=db.query(Board).filter_by(id=base36decode(bid)).first()
+    x=g.db.query(Board).filter_by(id=base36decode(bid)).first()
     if not x:
         abort(404)
     return x
@@ -207,7 +215,10 @@ def get_guild(name, graceful=False):
 
     name=name.lstrip('+')
 
-    x=db.query(Board).filter(Board.name.ilike(name)).first()
+    name=name.replace('\\', '')
+    name=name.replace('_','\_')
+
+    x=g.db.query(Board).filter(Board.name.ilike(name)).first()
     if not x:
         if not graceful:
             abort(404)
@@ -229,7 +240,7 @@ def get_domain(s):
 
     domain_list=tuple(list(domain_list))
 
-    doms=[x for x in db.query(Domain).filter(Domain.domain.in_(domain_list)).all()]
+    doms=[x for x in g.db.query(Domain).filter(Domain.domain.in_(domain_list)).all()]
 
     if not doms:
         return None
@@ -241,7 +252,7 @@ def get_domain(s):
 
 def get_title(x):
 
-    title=db.query(Title).filter_by(id=x).first()
+    title=g.db.query(Title).filter_by(id=x).first()
 
     if not title:
         abort(400)
@@ -252,7 +263,7 @@ def get_title(x):
 
 def get_mod(uid, bid):
 
-    mod=db.query(ModRelationship).filter_by(board_id=bid,
+    mod=g.db.query(ModRelationship).filter_by(board_id=bid,
                                             user_id=uid,
                                             accepted=True,
                                             invite_rescinded=False).first()

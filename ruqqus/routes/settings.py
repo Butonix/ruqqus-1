@@ -2,13 +2,15 @@ from flask import *
 from sqlalchemy import func
 import time
 import threading
+import mistletoe
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.sanitize import *
+from ruqqus.helpers.markdown import *
 from ruqqus.helpers.aws import check_csam_url
 from ruqqus.mail import *
-from ruqqus.__main__ import db, app, cache
+from ruqqus.__main__ import app, cache
 
 @app.route("/settings/profile", methods=["POST"])
 @is_not_banned
@@ -51,7 +53,9 @@ def settings_profile_post(v):
         bio = request.form.get("bio")[0:256]
         v.bio=bio
 
-        v.bio_html=sanitize(bio)
+        with CustomRenderer() as renderer:
+            v.bio_html=renderer.render(mistletoe.Document(bio))
+        v.bio_html=sanitize(v.bio_html, linkgen=True)
 
 
     x=int(request.form.get("title_id",0))
@@ -72,8 +76,8 @@ def settings_profile_post(v):
         abort(400)
         
     if updated:
-        db.add(v)
-        db.commit()
+        g.db.add(v)
+        
 
         return render_template("settings_profile.html",
                                v=v,
@@ -100,8 +104,8 @@ def settings_security_post(v):
 
         v.passhash=v.hash_password(request.form.get("new_password"))
 
-        db.add(v)
-        db.commit()
+        g.db.add(v)
+        
         
         return redirect("/settings/security?msg="+escape("Your password has been changed."))
 
@@ -116,7 +120,7 @@ def settings_security_post(v):
             return redirect("/settings/security?error="+escape("That email is already yours!"))
 
         #check to see if email is in use
-        existing=db.query(User).filter(User.id != v.id,
+        existing=g.db.query(User).filter(User.id != v.id,
                                        func.lower(User.email) == new_email.lower()).first()
         if existing:
             return redirect("/settings/security?error="+escape("That email address is already in use."))
@@ -150,8 +154,8 @@ def settings_security_post(v):
             return redirect("/settings/security?error="+escape("Invalid password or token."))
     
         v.mfa_secret=secret
-        db.add(v)
-        db.commit()
+        g.db.add(v)
+        
     
         return redirect("/settings/security?msg="+escape("Two-factor authentication enabled."))
     
@@ -166,8 +170,8 @@ def settings_security_post(v):
             return redirect("/settings/security?error="+escape("Invalid password or token."))
         
         v.mfa_secret=None
-        db.add(v)
-        db.commit()
+        g.db.add(v)
+        
         return redirect("/settings/security?msg="+escape("Two-factor authentication disabled."))
             
 
@@ -212,8 +216,8 @@ def settings_log_out_others(v):
     #update cookie accordingly
     session["login_nonce"]=v.login_nonce
 
-    db.add(v)
-    db.commit()
+    g.db.add(v)
+    
 
     return render_template("settings_security.html", v=v, msg="All other devices have been logged out")
 
@@ -271,8 +275,8 @@ def settings_delete_profile(v):
 def settings_new_feedkey(v):
 
     v.feed_nonce+=1
-    db.add(v)
-    db.commit()
+    g.db.add(v)
+    
 
     return render_template("settings_profile.html", v=v, msg="Your new custom RSS Feed Token has been generated.")
 
@@ -304,8 +308,8 @@ def settings_toggle_collapse(v):
 def update_announcement(v):
 
     v.read_announcement_utc=int(time.time())
-    db.add(v)
-    db.commit()
+    g.db.add(v)
+    
     return "", 204
 
 
@@ -322,8 +326,8 @@ def delete_account(v):
     v.delete_reason=request.form.get("delete_reason","")
     v.del_banner()
     v.del_profile()
-    db.add(v)
-    db.commit()
+    g.db.add(v)
+    
 
     session.pop("user_id", None)
     session.pop("session_id", None)

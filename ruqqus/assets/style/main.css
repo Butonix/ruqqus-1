@@ -13945,6 +13945,10 @@ label.terms {
   color: #121213;
 }
 
+small, .small {
+  font-size: 12px;
+}
+
 th {
   font-weight: 600;
 }
@@ -14582,8 +14586,8 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .banner-pic-135 {
   object-fit: cover;
   height: 135px;
-  max-width: 425px;
-  width: 425px;
+  max-width: 572px;
+  width: 572px;
 }
 
 .profile-pic.transition-square {
@@ -15359,6 +15363,7 @@ blockquote > blockquote {
   padding: 0;
   margin: 0;
   border-left: none;
+  background-color: transparent;
 }
 
 blockquote p {
@@ -16584,6 +16589,8 @@ ul.comment-section {
 }
 
 pre code {
+  word-break: break-word;
+  white-space: break-word;
   color: #121213;
 }
 
@@ -16619,7 +16626,7 @@ pre .pln, code .pln {
 }
 
 pre .lit, code .lit {
-  color: #23183E;
+  color: #d55a7c;
 }
 
 pre .kwd, code .kwd {

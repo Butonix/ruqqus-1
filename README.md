@@ -62,5 +62,54 @@ As an open-source project, we are supported by the community. If you would like 
 - [Discord](https://ruqqus.com/discord)
 - [Twitch.tv](https://twitch.tv/captainmeta4)
 
+## Local development
+
+### Mac
+
+Install dependencies
+
+`$ pip3 install -r requirements.txt`
+
+`$ brew install redis`
+
+`$ brew install postgres`
+
+
+Start services
+
+`$ redis-server /usr/local/etc/redis.conf`
+
+`$ psql postgres -a -f schema.txt`
+
+
+Add this line to `/etc/hosts`
+
+`127.0.0.1 ruqqus.localhost`
+
+
+Refresh DNS
+
+`$ sudo killall -HUP mDNSResponder`
+
+
+Create environment variables
+
+`$ export domain=ruqqus.localhost:8000`
+
+`$ export REDIS_URL=redis://localhost:6379`
+
+`$ export DATABASE_URL=postgres://localhost:5432`
+
+`$ export PYTHONPATH=$(/path/to/ruqqus/root)`
+
+`$ export MASTER_KEY=$(openssl rand -base64 32)`
+
+
+Run Ruqqus
+
+`$ gunicorn ruqqus.__main__:app -w 3 -k gevent --worker-connections 6 --preload --max-requests 500 --max-requests-jitter 50`
+
+
 ## License
 [MPL-2.0](https://github.com/ruqqus/ruqqus/blob/master/LICENSE)
+

@@ -11,7 +11,7 @@ from .submission import *
 from .board_relationships import *
 from .comment import Comment
 from .mix_ins import *
-from ruqqus.__main__ import Base, db, cache
+from ruqqus.__main__ import Base, cache
 
 class Board(Base, Stndrd, Age_times):
 
@@ -161,7 +161,6 @@ class Board(Base, Stndrd, Age_times):
         return self.moderators.filter_by(user_id=user.id, accepted=True).first()
 
 
-    @cache.memoize(timeout=60)
     def can_invite_mod(self, user):
 
         return user.id not in [x.user_id for x in self.moderators.filter_by(invite_rescinded=False).all()]
@@ -182,7 +181,7 @@ class Board(Base, Stndrd, Age_times):
         if user is None:
             return None
 
-        return db.query(BanRelationship).filter_by(board_id=self.id, user_id=user.id, is_active=True).first()
+        return g.db.query(BanRelationship).filter_by(board_id=self.id, user_id=user.id, is_active=True).first()
 
     def has_subscriber(self, user):
 
@@ -262,8 +261,8 @@ class Board(Base, Stndrd, Age_times):
                         resize=(100,100)
                         )
         self.has_profile=True
-        db.add(self)
-        db.commit()
+        g.db.add(self)
+        
         
     def set_banner(self, file):
 
@@ -274,22 +273,22 @@ class Board(Base, Stndrd, Age_times):
                         file=file)
 
         self.has_banner=True
-        db.add(self)
-        db.commit()
+        g.db.add(self)
+        
 
     def del_profile(self):
 
         aws.delete_file(name=f"board/{self.name.lower()}/profile-{self.profile_nonce}.png")
         self.has_profile=False
-        db.add(self)
-        db.commit()
+        g.db.add(self)
+        
 
     def del_banner(self):
 
         aws.delete_file(name=f"board/{self.name.lower()}/banner-{self.banner_nonce}.png")
         self.has_banner=False
-        db.add(self)
-        db.commit()
+        g.db.add(self)
+        
 
     @property
     def banner_url(self):
@@ -321,7 +320,7 @@ class Board(Base, Stndrd, Age_times):
 
     def has_participant(self, user):
         return (self.submissions.filter_by(author_id=user.id).first() or
-                db.query(Comment).filter_by(author_id=user.id, board_id=self.id).first()
+                g.db.query(Comment).filter_by(author_id=user.id, board_id=self.id).first()
                 )
     @property
     def n_pins(self):

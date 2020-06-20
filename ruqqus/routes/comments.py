@@ -13,7 +13,7 @@ from ruqqus.helpers.get import *
 from ruqqus.helpers.session import *
 from ruqqus.classes import *
 from flask import *
-from ruqqus.__main__ import app, db, limiter
+from ruqqus.__main__ import app, limiter
 from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 
@@ -21,6 +21,8 @@ from datetime import datetime
 def comment_cid(cid):
 
     comment=get_comment(cid)
+    if not comment.parent_submission:
+        abort(403)
     return redirect(comment.permalink)
 
 @app.route("/post/<p_id>/<anything>/<c_id>", methods=["GET"])
@@ -101,9 +103,9 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
     current_ids=[comment.id]
     for i in range(6-context):
         if g.v:
-            votes=db.query(CommentVote).filter(CommentVote.user_id==g.v.id).subquery()
+            votes=g.db.query(CommentVote).filter(CommentVote.user_id==g.v.id).subquery()
 
-            comms=db.query(
+            comms=g.db.query(
                 Comment,
                 User,
                 Title,
@@ -138,10 +140,10 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
             for c in comms:
                 com=c[0]
                 com._title=c[2]
-                com._voted=c[3] if c[3] else 0
+                com._voted=c[3] or 0
                 output.append(com)
         else:
-            comms=db.query(
+            comms=g.db.query(
                 Comment,
                 User,
                 Title
@@ -193,6 +195,7 @@ def api_comment(v):
 
     #process and sanitize
     body=request.form.get("body","")[0:10000]
+    body=body.lstrip().rstrip()
 
     with CustomRenderer(post_id=request.form.get("submission")) as renderer:
         body_md=renderer.render(mistletoe.Document(body))
@@ -213,7 +216,7 @@ def api_comment(v):
                                ), 422
 
     #check existing
-    existing=db.query(Comment).filter_by(author_id=v.id,
+    existing=g.db.query(Comment).filter_by(author_id=v.id,
                                          body=body,
                                          is_deleted=False,
                                          parent_fullname=parent_fullname,
@@ -225,11 +228,11 @@ def api_comment(v):
     #get parent item info
     parent_id=int(parent_fullname.split("_")[1], 36)
     if parent_fullname.startswith("t2"):
-        parent=db.query(Submission).filter_by(id=parent_id).first()
+        parent=g.db.query(Submission).filter_by(id=parent_id).first()
         parent_comment_id=None
         level=1
     elif parent_fullname.startswith("t3"):
-        parent=db.query(Comment).filter_by(id=parent_id).first()
+        parent=g.db.query(Comment).filter_by(id=parent_id).first()
         parent_comment_id=parent.id
         level=parent.level+1
 
@@ -260,10 +263,12 @@ def api_comment(v):
               is_op=(v.id==post.author_id)
               )
 
-    db.add(c)
-    db.commit()
-
     c.determine_offensive()
+    g.db.add(c)
+    
+    g.db.commit()
+    g.db.begin()   
+
 
     notify_users=set()
 
@@ -276,7 +281,9 @@ def api_comment(v):
     mentions=soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3)
     for mention in mentions:
         username=mention["href"].split("@")[1]
-        user=get_user(username, graceful=True)
+
+        user=g.db.query(User).filter_by(username=username).first()
+
         if user:
             if v.any_block_exists(user):
                 continue
@@ -286,9 +293,9 @@ def api_comment(v):
     for x in notify_users:
         n=Notification(comment_id=c.id,
                        user_id=x)
-        db.add(n)
-    db.commit()
-                           
+        g.db.add(n)
+    
+
 
     #create auto upvote
     vote=CommentVote(user_id=v.id,
@@ -296,8 +303,8 @@ def api_comment(v):
                      vote_type=1
                      )
 
-    db.add(vote)
-    db.commit()
+    g.db.add(vote)
+    
 
     #print(f"Content Event: @{v.username} comment {c.base36id}")
 
@@ -343,8 +350,8 @@ def edit_comment(cid, v):
     c.body_html=body_html
     c.edited_utc = int(time.time())
 
-    db.add(c)
-    db.commit()
+    g.db.add(c)
+    
 
     c.determine_offensive()
 
@@ -356,10 +363,10 @@ def edit_comment(cid, v):
 @app.route("/api/v1/delete/comment/<cid>", methods=["POST"])
 @auth_required
 @validate_formkey
-@api
+#@api
 def delete_comment(cid, v):
 
-    c=db.query(Comment).filter_by(id=base36decode(cid)).first()
+    c=g.db.query(Comment).filter_by(id=base36decode(cid)).first()
 
     if not c:
         abort(404)
@@ -369,8 +376,8 @@ def delete_comment(cid, v):
 
     c.is_deleted=True
 
-    db.add(c)
-    db.commit()
+    g.db.add(c)
+    
 
     cache.delete_memoized(User.commentlisting, v)
 

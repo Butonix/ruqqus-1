@@ -2,7 +2,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from ruqqus.__main__ import Base, db, cache
+from ruqqus.__main__ import Base, cache
 import time
 
 class Subscription(Base):

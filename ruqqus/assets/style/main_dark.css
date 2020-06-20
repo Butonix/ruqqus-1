@@ -14387,6 +14387,10 @@ label.terms {
   color: #CFCFCF;
 }
 
+small, .small {
+  font-size: 12px;
+}
+
 th {
   font-weight: 600;
 }
@@ -15023,8 +15027,8 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .banner-pic-135 {
   object-fit: cover;
   height: 135px;
-  max-width: 425px;
-  width: 425px;
+  max-width: 572px;
+  width: 572px;
 }
 
 .profile-pic.transition-square {
@@ -15509,6 +15513,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-top-right-radius: 1rem;
     border-top-left-radius: 1rem;
   }
+
+  #frontpage, #search, #guild {
+    padding-top: 98px;
+    background-color: #181818;
+  }
 }
 .dropdown-actions {
   position: relative;
@@ -15824,6 +15833,7 @@ blockquote > blockquote {
   padding: 0;
   margin: 0;
   border-left: none;
+  background-color: transparent;
 }
 
 blockquote p {
@@ -17058,6 +17068,8 @@ ul.comment-section {
 }
 
 pre code {
+  word-break: break-word;
+  white-space: break-word;
   color: #FFFFFF;
 }
 
@@ -17093,7 +17105,7 @@ pre .pln, code .pln {
 }
 
 pre .lit, code .lit {
-  color: #383838;
+  color: #d55a7c;
 }
 
 pre .kwd, code .kwd {
@@ -17174,11 +17186,6 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   body, #settings, #notifications, #submit {
     padding-top: 49px;
     background-color: #181818;
-  }
-
-  #frontpage, #search, #guild {
-      padding-top: 98px;
-      background-color: #181818;
   }
 
   #thread, #userpage {
@@ -17598,27 +17605,6 @@ div.deleted.banned {
 
 .text-admin {
   color: #E53E3E;
-}
-
-
-/* scrollbar */
-
-body::-webkit-scrollbar {
-    width: 12px;
-    background-color: #0c0c0c;
-}
-
-body::-webkit-scrollbar-button {
-    height: 56px;
-    background: #282828;
-}
-
-body::-webkit-scrollbar-thumb {
-    background: #dadbe233;
-}
-
-body::-webkit-scrollbar-button:vertical:increment {
-    height: 0px;
 }
 
 /*# sourceMappingURL=main_dark.css.map */

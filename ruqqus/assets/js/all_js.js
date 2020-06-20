@@ -4,11 +4,7 @@ $('#2faModal').on('hidden.bs.modal', function () {
 
   var box = document.getElementById("2faToggle");
   
-  if (box.checked) {
-    box.checked = false;
-  } else {
-    box.checked = true;
-  }
+  box.checked = !box.checked;
 
 });
 
@@ -1024,16 +1020,36 @@ function yank_postModal(id, author, comments, title, author_link, domain, timest
   document.getElementById("post-domain").textContent = domain;
 
   document.getElementById("post-timestamp").textContent = timestamp;
-  
+
+
   document.getElementById("yank-post-form").action="/mod/take/"+id;
+  
 
   document.getElementById("yankPostButton").onclick = function() {  
 
-    this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Yanking post';  
-    this.disabled = true; 
-    document.getElementById("yank-post-form").submit();
-  }
 
+    var yankError = document.getElementById("toast-error-message");
+
+
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("post", "/mod/take/"+id);
+    xhr.withCredentials=true;
+    f=new FormData();
+    f.append("formkey", formkey());
+    f.append("board_id", document.getElementById('yank-type-dropdown').value)
+    xhr.onload=function(){
+      if (xhr.status==204) {
+        window.location.reload(true);
+      }
+      else {
+        $('#toast-invite-error').toast('dispose');
+        $('#toast-invite-error').toast('show');
+        yankError.textContent = JSON.parse(xhr.response)["error"];
+      }
+    }
+    xhr.send(f);
+  }
 };
 
 //yt embed
@@ -1557,4 +1573,16 @@ post_comment=function(fullname){
   }
   xhr.send(form)
 
+}
+//part of submit page js
+
+hide_image=function(){
+    x=document.getElementById('image-upload-block');
+    url=document.getElementById('post-URL').value;
+    if (url.length>=1){
+        x.classList.add('d-none');
+    }
+    else {
+        x.classList.remove('d-none');
+    }
 }

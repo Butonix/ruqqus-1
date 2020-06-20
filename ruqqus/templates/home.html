@@ -79,13 +79,13 @@
         {% if v %}
         <a href="/submit">
           <input type="text" class="form-control"
-          placeholder="Share something with the Ruqqus commmunity..." aria-label="Username"
+          placeholder="Share something with the Ruqqus community..." aria-label="Username"
           aria-describedby="basic-addon1">
         </a>
         {% else %}
         <a href="/signup">
           <input type="text" class="form-control"
-          placeholder="Share something with the Ruqqus commmunity..." aria-label="Username"
+          placeholder="Share something with the Ruqqus community..." aria-label="Username"
           aria-describedby="basic-addon1">
         </a>
         {% endif %}
@@ -219,14 +219,14 @@
       <ul class="pagination pagination-sm mb-0">
         {% if page>1 %}
         <li class="page-item">
-          <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page-1 }}{% if only %}&only={{ only }}{% endif %}" tabindex="-1">Prev</a></small>
+          <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page-1 }}&t={{ time_filter }}{% if only %}&only={{ only }}{% endif %}" tabindex="-1">Prev</a></small>
         </li>
         {% else %}
         <li class="page-item disabled"><span class="page-link">Prev</span></li>
         {% endif %}
         {% if next_exists %}
         <li class="page-item">
-          <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page+1 }}{% if only %}&only={{ only }}{% endif %}">Next</a></small>
+          <small><a class="page-link" href="?sort={{ sort_method }}&page={{ page+1 }}&t={{ time_filter }}{% if only %}&only={{ only }}{% endif %}">Next</a></small>
         </li>
         {% else %}
         <li class="page-item disabled"><span class="page-link">Next</span></li>

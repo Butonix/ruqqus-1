@@ -3,7 +3,7 @@ from sqlalchemy import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import lazy
-from ruqqus.__main__ import Base, db, cache
+from ruqqus.__main__ import Base, cache
 
 class Title(Base):
 

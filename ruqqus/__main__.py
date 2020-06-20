@@ -14,12 +14,16 @@ from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import *
+from sqlalchemy.pool import QueuePool
 import threading
 import requests
 
+from redis import BlockingConnectionPool
+
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-_version = "2.10.5"
+
+_version = "2.11.0"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -38,20 +42,30 @@ app.config["SESSION_COOKIE_SECURE"]=True
 app.config["SESSION_COOKIE_SAMESITE"]="Lax"
 
 app.config["PERMANENT_SESSION_LIFETIME"]=60*60*24*365
-app.config["SESSION_REFRESH_EACH_REQUEST"]=True
+app.config["SESSION_REFRESH_EACH_REQUEST"]=False
 
 app.jinja_env.cache = {}
 
-app.config["UserAgent"]="Ruqqus webserver ruqqus.com"
+app.config["UserAgent"]=f"Ruqqus webserver tools for Ruqqus v{_version} developed by Ruqqus LLC for ruqqus.com."
 
 if "localhost" in app.config["SERVER_NAME"]:
     app.config["CACHE_TYPE"]="null"
 else:
-    app.config["CACHE_TYPE"]="redis"
+    app.config["CACHE_TYPE"]=environ.get("CACHE_TYPE", 'null')
     
-app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL")
+app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL", environ.get("REDIS_URL"))
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 app.config["CACHE_KEY_PREFIX"]="flask_caching_"
+
+MAX_REDIS_CONNS = int(environ.get("MAX_REDIS_CONNS", 6))
+
+pool = BlockingConnectionPool(max_connections=MAX_REDIS_CONNS)
+app.config['CACHE_OPTIONS'] = {'connection_pool': pool, 'max_connections': MAX_REDIS_CONNS}
+
+app.config['redis_urls']=[
+        environ.get('HEROKU_REDIS_AQUA_URL'),
+        environ.get('HEROKU_REDIS_GRAY_URL')
+        ]
 
 
 Markdown(app)
@@ -67,12 +81,18 @@ limiter = Limiter(
     key_func=get_remote_address,
     default_limits=["100/minute"],
     headers_enabled=True,
-    strategy="fixed-window-elastic-expiry"
+    strategy="fixed-window"
 )
 
 #setup db
-_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-db = sessionmaker(bind=_engine)()
+_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
+    pool_size=6)
+
+
+def make_session():
+    return sessionmaker(bind=_engine, autocommit=True)()
+
+
 Base = declarative_base()
 
 #import and bind all routing functions
@@ -80,34 +100,56 @@ import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
 
+
+IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
+UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
+
+
+@cache.memoize(IP_BAN_CACHE_TTL)
+def is_ip_banned(remote_addr):
+    """
+    Given a remote address, returns whether or not user is banned
+    """
+    return bool(g.db.query(ruqqus.classes.IP).filter_by(addr=remote_addr).count())
+
+
+@cache.memoize(UA_BAN_CACHE_TTL)
+def get_useragent_ban_response(user_agent_str):
+    """
+    Given a user agent string, returns a tuple in the form of:
+    (is_user_agent_banned, (insult, status_code))
+    """
+    result = g.db.query(ruqqus.classes.Agent).filter(ruqqus.classes.Agent.kwd.in_(user_agent_str.split())).first()
+    if result:
+        return True, (result.mock or "Follow the robots.txt, dumbass", result.status_code or 418)
+    return False, (None, None)
+
+
 #enforce https
 @app.before_request
 def before_request():
 
-    session.permanent=True
-    
-    #check ip ban
-    if db.query(ruqqus.classes.IP).filter_by(addr=request.remote_addr).first():
-        return '', 403
+    g.db = make_session()
 
-    #check useragent ban
-    # Banned crawler useragents are deliberately mocked
-    x=db.query(ruqqus.classes.Agent).filter(ruqqus.classes.Agent.kwd.in_(request.headers.get('User-Agent','NoAgent').split())).first()
-    if x and request.path != "/robots.txt":
-        text=x.mock if x.mock else "Follow the robots.txt, dumbass"
-        status=x.status_code if x.status_code else 418
-        return text, status
-        
-    if request.url.startswith('http://') and "localhost" not in app.config["SERVER_NAME"]:
-        url = request.url.replace('http://', 'https://', 1)
+    session.permanent = True
+
+    if is_ip_banned(request.remote_addr):
+        return "", 403
+
+    ua_banned, response_tuple = get_useragent_ban_response(request.headers.get("User-Agent", "NoAgent"))
+    if ua_banned and request.path != "/robots.txt":
+        return response_tuple
+
+    if request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
+        url = request.url.replace("http://", "https://", 1)
         return redirect(url, code=301)
 
     if not session.get("session_id"):
         session["session_id"]=secrets.token_hex(16)
 
+   #db.rollback()
+    g.db.begin()
 
-
-    db.rollback()
 
 def log_event(name, link):
 
@@ -136,8 +178,11 @@ def log_event(name, link):
 @app.after_request
 def after_request(response):
 
-    #db.expire_all()
-    
+    try:
+        g.db.commit()
+    except:
+        pass
+
     response.headers.add('Access-Control-Allow-Headers',
                          "Origin, X-Requested-With, Content-Type, Accept, x-auth"
                          )
