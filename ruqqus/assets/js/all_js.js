@@ -1529,7 +1529,7 @@ block_user=function() {
 }
 
 post_comment=function(){
-  var commentForm = document.getElementById('reply-to-'+cid);
+  var commentForm = document.getElementById('reply-to-t3_'+cid);
 
   var commentError = document.getElementById("comment-error-text");
 
