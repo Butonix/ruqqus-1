@@ -1548,22 +1548,26 @@ block_user=function() {
 post_comment=function(){
   var commentForm = document.getElementById('reply-to-'+cid);
 
-  var postError = document.getElementById("toast-error-message");
+  var commentError = document.getElementById("comment-error-text");
 
   username = usernameField.value;
 
   var xhr = new XMLHttpRequest();
-    xhr.open("post", "/settings/block");
+    xhr.open("post", "/api/comment");
     xhr.withCredentials=true;
     xhr.onload=function(){
       if (xhr.status==204) {
         document.getElementById('reply-form-'+cid).disabled=true;
         document.getElementById('comment-format-bar-'+cid).classList.add('d-none');
+        $('#toast-comment-success').toast('dispose');
+        $('#toast-comment-error').toast('dispose');
+        $('#toast-comment-success').toast('show');
       }
       else {
-      $('#toast-exile-error').toast('dispose');
-      $('#toast-exile-error').toast('show');
-      exileError.textContent = JSON.parse(xhr.response)["error"];
+        $('#toast-comment-success').toast('dispose');
+        $('#toast-comment-error').toast('dispose');
+        $('#toast-comment-success').toast('show');
+      commentError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
     xhr.send(commentForm)
