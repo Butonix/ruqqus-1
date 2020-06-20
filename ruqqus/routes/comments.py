@@ -299,7 +299,7 @@ def api_comment(v):
 
     #print(f"Content Event: @{v.username} comment {c.base36id}")
 
-    return jsonify({"html":render_template("comments.html", comments=[c], render_replies=False)})
+    return jsonify({"html":render_template("comments.html", v=v, comments=[c], render_replies=False)})
 
 
 @app.route("/edit_comment/<cid>", methods=["POST"])
@@ -334,7 +334,7 @@ def edit_comment(cid, v):
                                body=body,
                                v=v
                                ),
-                'api':lambda:{'error':f'A blacklist domain was used.'}
+                'api':lambda:{'error':f'A blacklist domain was used.'}, 403
                 }
 
     c.body=body
