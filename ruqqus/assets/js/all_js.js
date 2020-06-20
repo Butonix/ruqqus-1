@@ -1513,7 +1513,7 @@ block_user=function() {
 
   var exileForm = document.getElementById("exile-form");
 
-  var exileError = document.getElementById("toast-error-message");
+  var exileError = document.getElementById("toast-exile-error");
 
   var usernameField = document.getElementById("exile-username");
 
