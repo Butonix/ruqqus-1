@@ -369,8 +369,7 @@ def settings_block_user(v):
                         target_id=user.id,
                         created_utc=int(time.time())
                         )
-    db.add(new_block)
-    db.commit()
+    g.db.add(new_block)
 
     return "", 204
     
@@ -386,7 +385,6 @@ def settings_unblock_user(v):
         abort(409)
 
 
-    db.delete(x)
-    db.commit()
+    g.db.delete(x)
     
     return "", 204

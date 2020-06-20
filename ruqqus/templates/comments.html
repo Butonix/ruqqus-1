@@ -1,9 +1,67 @@
 {% macro single_comment(c, level=1) %}
+<!---beginning of comment {{ c.id }}--->
 
 {% if (c.is_banned or c.is_deleted) and not (v and v.admin_level >=3) %}
 
   {% if c.any_descendents_live %}
-    {% include "single_comment_removed.html" %}
+<div id="comment-{{ c.base36id }}" class="comment rounded">
+
+
+    <span class="comment-collapse"></span>
+
+    <div class="comment-body">
+
+        <div id="comment-{{ c.base36id }}-only" class="">
+
+            <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger">NSFW</span> {% endif %}
+                {% if c.is_banned %}[Removed by administrators]{% else %}[Deleted by author]{% endif %}
+            </div>
+
+
+            <div id="comment-banned-warning" class="comment-text text-danger text-small">
+                {% if c.is_banned and c.ban_reason %}Reason: {{ c.ban_reason }}{% endif %}
+            </div>
+
+         </div>
+
+      <div id="reply-to-{{ c.base36id }}"></div>
+
+      {% if render_replies %}
+      {% if level==8 and c.replies %}
+
+
+      <div id="morecomment-{{ c.base36id }}" class="mt-2 more-comments text-small">
+          <a href="{{ c.permalink }}">More comments →</a>
+      </div>
+
+      {% else %}
+      {% for comment in comments %}
+
+        {{ single_comment(comment, level=level+1) }}
+
+      {% endfor %}
+      {% endif %}
+      {% endif %}
+</div>
+
+
+</div>
+  {% endif %}
+
+    {% if render_replies %} 
+    {% if level<5 %}
+      {% for reply in c.replies %}
+        <div id="replies-of-{{ c.base36id }}" class="">
+          {{ single_comment(reply, level=level+1) }}
+        </div>
+      {% endfor %}
+    {% else %}
+      {% if c.replies %}
+        <div id="morecomment-{{ c.base36id }}" class="mt-2 more-comments text-small">
+          <a href="{{ c.permalink }}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+        </div>
+      {% endif %}
+    {% endif %}
   {% endif %}
 
 
@@ -70,8 +128,7 @@
       <div id="comment-edit-{{ c.base36id }}" class="d-none comment-write collapsed child">
        <form id="comment-edit-form-{{ c.base36id }}" action="/edit_comment/{{ c.base36id }}" method="post" class="input-group">
         <input type="hidden" name="formkey" value="{{ v.formkey }}">
-        <input type="hidden" name="current_page" value="{{ request.path }}">
-        <textarea name="body" form="comment-edit-form-{{ c.base36id }}" class="comment-box form-control rounded" id="edit-box-comment-{{ c.base36id }}" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{ c.body }}</textarea> 
+        <textarea id="comment-edit-body-{{ c.base36id }}" name="body" form="comment-edit-form-{{ c.base36id }}" class="comment-box form-control rounded" id="edit-box-comment-{{ c.base36id }}" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{ c.body }}</textarea> 
         <div class="comment-format"> 
          <small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold('edit-box-comment-{{ c.base36id }}')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> 
          <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('edit-box-comment-{{ c.base36id }}')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> 
@@ -79,7 +136,7 @@
          <small class="format"><span class="font-weight-bolder text-uppercase" aria-hidden="true" onclick="getGif();commentForm('edit-box-comment-{{ c.base36id }}')" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Add GIF">GIF</span></small> 
          <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
          <a href="javascript:void(0)" onclick="toggleEdit('{{ c.base36id }}')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-         <button form="comment-edit-form-{{ c.base36id }}" class="btn btn-primary ml-2">Save Edit</button> </div> </form>
+         <a href="javascript:void(0)" form="comment-edit-form-{{ c.base36id }}" class="btn btn-primary ml-2" onclick="comment_edit('{{ c.base36id }}')">Save Edit</a> </div> </form>
        </div>
        {% endif %}
 
@@ -144,7 +201,7 @@
 
               {% endif %}
 
-              {% if v and c.parent_submission and c.author_id==v.id and is_allowed_to_comment and not c.is_deleted %}
+              {% if v and c.parent_submission and c.author_id==v.id and not c.is_deleted %}
 
               <a class="dropdown-item" href="javascript:void(0)" onclick="toggleEdit('{{ c.base36id }}')"><i class="fas fa-edit"></i>Edit</a>
 
@@ -201,7 +258,6 @@
     {% endif %}
   </div>
 
-{% endif %}
 
   <div id="reply-to-{{ c.base36id }}" class="d-none">
     
@@ -218,7 +274,7 @@
           <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('reply-form-{{ c.base36id }}')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i>
           </small> 
           <small class="format">
-            <i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote('reply-form-{{ c.base36id }}'" data-toggle="tooltip" data-placement="bottom" title="Quote"></i>
+            <i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote('reply-form-{{ c.base36id }}')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i>
           </small> 
           <small class="format d-none">
             <i class="fas fa-link" aria-hidden="true"></i>
@@ -233,11 +289,14 @@
     </div>
 
   </div>
+
  
+
+
   {% if render_replies %} 
     {% if level<5 %}
       {% for reply in c.replies %}
-        <div class="">
+        <div id="replies-of-{{ c.base36id }}" class="">
           {{ single_comment(reply, level=level+1) }}
         </div>
       {% endfor %}
@@ -250,7 +309,8 @@
     {% endif %}
   {% endif %}
 
-  </div>
+</div>
+
 
 <!-- Comment Actions Modal -->
 <div class="modal fade d-md-none" id="actionsModal-{{ c.base36id }}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
@@ -276,7 +336,7 @@
           <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author.username if not c.author.is_deleted else '[is_deleted]' }}')" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
           {% endif %}
 
-          {% if v and is_allowed_to_comment and c.parent_submission and c.author_id==v.id and not c.is_deleted %}
+          {% if v and c.parent_submission and c.author_id==v.id and not c.is_deleted %}
           <li class="list-group-item"><a href="javascript:void(0)" data-dismiss="modal" onclick="toggleEdit('{{ c.base36id }}')" class="d-block"><i class="fas fa-edit"></i>Edit</a></li>
 
           <li class="list-group-item"><a class="d-block" href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal('{{ c.base36id }}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
@@ -309,6 +369,7 @@
 
 </div>
 
+{% endif %}
 
 {% endmacro %}
 

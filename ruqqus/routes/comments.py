@@ -308,13 +308,20 @@ def api_comment(v):
 
     #print(f"Content Event: @{v.username} comment {c.base36id}")
 
-    return jsonify({"html":render_template("comments.html", v=v, comments=[c], render_replies=False)})
+    return jsonify({"html":render_template("comments.html",
+                                           v=v, 
+                                           comments=[c], 
+                                           render_replies=False,
+                                           is_allowed_to_comment=True
+                                           )
+                    }
+    )
 
 
 @app.route("/edit_comment/<cid>", methods=["POST"])
 @is_not_banned
 @validate_formkey
-@api
+#@api
 def edit_comment(cid, v):
 
     c = get_comment(cid)
@@ -357,7 +364,14 @@ def edit_comment(cid, v):
 
     path=request.form.get("current_page","/")
 
-    return redirect(f"{path}#comment-{c.base36id}")
+    return jsonify({"html":render_template("comments.html",
+                                           v=v, 
+                                           comments=[c], 
+                                           render_replies=False,
+                                           is_allowed_to_comment=True
+                                           )
+                    }
+    )
 
 @app.route("/delete/comment/<cid>", methods=["POST"])
 @app.route("/api/v1/delete/comment/<cid>", methods=["POST"])

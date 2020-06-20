@@ -23,7 +23,7 @@ from redis import BlockingConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.11.0"
+_version = "2.12.0"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -64,7 +64,8 @@ app.config['CACHE_OPTIONS'] = {'connection_pool': pool, 'max_connections': MAX_R
 
 app.config['redis_urls']=[
         environ.get('HEROKU_REDIS_AQUA_URL'),
-        environ.get('HEROKU_REDIS_GRAY_URL')
+        environ.get('HEROKU_REDIS_GRAY_URL'),
+        environ.get('HEROKU_REDIS_BLACK_URL')
         ]
 
 
