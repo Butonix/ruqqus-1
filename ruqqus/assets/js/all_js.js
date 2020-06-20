@@ -1563,11 +1563,14 @@ post_comment=function(fullname){
     if (xhr.status==200) {
       commentForm=document.getElementById('comment-form-space-'+fullname);
       commentForm.innerHTML=JSON.parse(xhr.response)["html"];
+        $('#toast-comment-success').toast('dispose');
+      $('#toast-comment-error').toast('dispose');
+      $('#toast-comment-success').toast('show');
     }
     else {
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
-      $('#toast-comment-success').toast('show');
+      $('#toast-comment-error').toast('show');
      commentError.textContent = JSON.parse(xhr.response)["error"];
     }
   }
