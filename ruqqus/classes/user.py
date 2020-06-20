@@ -191,6 +191,17 @@ class User(Base, Stndrd):
                                    m.c.board_id != None,
                                    c.c.board_id !=None))
 
+        #blocks
+        blocking=self.blocking.subquery()
+        blocked=self.blocked.subquery()
+        posts=posts.join(blocking,
+            blocking.c.target_id==Submission.author_id,
+            isouter=True).join(blocked,
+                blocked.c.user_id==Submission.author_id,
+                isouter=True).filter(
+                    blocking.c.id==None,
+                    blocked.c.id==None)
+
         if t:
             now=int(time.time())
             if t=='day':
