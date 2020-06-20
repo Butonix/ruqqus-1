@@ -118,7 +118,7 @@ class Board(Base, Stndrd, Age_times):
             else:
                 posts=posts.filter_by(is_public=True)
 
-        if v:
+        if v and not self.has_mod(v) and v.admin_level<=3:
             #blocks
             blocking=v.blocking.subquery()
             blocked=v.blocked.subquery()
