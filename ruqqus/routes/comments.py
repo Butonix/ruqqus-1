@@ -215,6 +215,7 @@ def api_comment(v):
     #check existing
     existing=db.query(Comment).filter_by(author_id=v.id,
                                          body=body,
+                                         is_deleted=False,
                                          parent_fullname=parent_fullname,
                                          parent_submission=parent_submission
                                          ).first()
