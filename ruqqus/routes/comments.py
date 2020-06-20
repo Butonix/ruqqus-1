@@ -308,7 +308,14 @@ def api_comment(v):
 
     #print(f"Content Event: @{v.username} comment {c.base36id}")
 
-    return jsonify({"html":render_template("comments.html", v=v, comments=[c], render_replies=False)})
+    return jsonify({"html":render_template("comments.html",
+                                           v=v, 
+                                           comments=[c], 
+                                           render_replies=False,
+                                           is_allowed_to_comment=True
+                                           )
+                    }
+    )
 
 
 @app.route("/edit_comment/<cid>", methods=["POST"])
