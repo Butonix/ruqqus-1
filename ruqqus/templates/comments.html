@@ -48,6 +48,22 @@
 </div>
   {% endif %}
 
+    {% if render_replies %} 
+    {% if level<5 %}
+      {% for reply in c.replies %}
+        <div id="replies-of-{{ c.base36id }}" class="">
+          {{ single_comment(reply, level=level+1) }}
+        </div>
+      {% endfor %}
+    {% else %}
+      {% if c.replies %}
+        <div id="morecomment-{{ c.base36id }}" class="mt-2 more-comments text-small">
+          <a href="{{ c.permalink }}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+        </div>
+      {% endif %}
+    {% endif %}
+  {% endif %}
+
 
 {% else %}
 
@@ -273,8 +289,9 @@
     </div>
 
   </div>
+
  
-{% endif %}
+
 
   {% if render_replies %} 
     {% if level<5 %}
@@ -292,7 +309,8 @@
     {% endif %}
   {% endif %}
 
-  
+</div>
+
 
 <!-- Comment Actions Modal -->
 <div class="modal fade d-md-none" id="actionsModal-{{ c.base36id }}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
@@ -351,8 +369,7 @@
 
 </div>
 
-</div>
-
+{% endif %}
 
 {% endmacro %}
 
