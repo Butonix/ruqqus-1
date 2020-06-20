@@ -65,6 +65,16 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=Fal
                                Submission.is_public==True,
                                m.c.board_id != None,
                                c.c.board_id !=None))
+
+        blocking=v.blocking.subquery()
+        blocked=v.blocked.subquery()
+        posts=posts.join(blocking,
+            blocking.c.target_id==Submission.author_id,
+            isouter=True).join(blocked,
+                blocked.c.user_id==Submission.author_id,
+                isouter=True).filter(
+                    blocking.c.id==None,
+                    blocked.c.id==None)
     else:
         posts=posts.filter_by(is_public=True)
 

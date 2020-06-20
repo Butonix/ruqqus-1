@@ -10,6 +10,7 @@ from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.markdown import *
 from ruqqus.helpers.aws import check_csam_url
 from ruqqus.mail import *
+from .front import frontlist
 from ruqqus.__main__ import app, cache
 
 @app.route("/settings/profile", methods=["POST"])
@@ -371,6 +372,10 @@ def settings_block_user(v):
                         )
     g.db.add(new_block)
 
+    cache.delete_memoized(User.idlist, self=v)
+    cache.delete_memoized(Board.idlist, v=v)
+    cache.delete_memoized(frontlist, v=v)
+
     return "", 204
     
 @app.route("/settings/unblock", methods=["POST"])
@@ -384,7 +389,10 @@ def settings_unblock_user(v):
     if not x:
         abort(409)
 
-
     g.db.delete(x)
+
+    cache.delete_memoized(User.idlist, self=v)
+    cache.delete_memoized(Board.idlist, v=v)
+    cache.delete_memoized(frontlist, v=v)
     
     return "", 204
