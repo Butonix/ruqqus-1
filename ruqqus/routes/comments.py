@@ -208,6 +208,7 @@ def api_comment(v):
                                parent_fullname=request.form.get("parent_fullname"),
                                badlinks=[x.domain for x in bans],
                                body=body,
+                               is_deleted=False,
                                v=v
                                ), 422
 
