@@ -273,13 +273,13 @@
     </div>
 
   </div>
- 
+ </div>
 {% endif %}
 
   {% if render_replies %} 
     {% if level<5 %}
       {% for reply in c.replies %}
-        <div class="">
+        <div id="replies-of-{{ c.base36id }}" class="">
           {{ single_comment(reply, level=level+1) }}
         </div>
       {% endfor %}
@@ -292,7 +292,7 @@
     {% endif %}
   {% endif %}
 
-  </div>
+  
 
 <!-- Comment Actions Modal -->
 <div class="modal fade d-md-none" id="actionsModal-{{ c.base36id }}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
