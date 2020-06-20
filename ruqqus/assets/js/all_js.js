@@ -1538,22 +1538,23 @@ post_comment=function(fullname){
   form.append('parent_fullname', fullname);
   form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
   form.append('body', document.getElementById('reply-form-body-'+fullname).value);
-   
+
 
   var xhr = new XMLHttpRequest();
-    xhr.open("post", "/api/comment");
-    xhr.withCredentials=true;
-    xhr.onload=function(){
-      if (xhr.status==200) {
-        commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-      }
-      else {
-        $('#toast-comment-success').toast('dispose');
-        $('#toast-comment-error').toast('dispose');
-        $('#toast-comment-success').toast('show');
-      commentError.textContent = JSON.parse(xhr.response)["error"];
-      }
+  xhr.open("post", "/api/comment");
+  xhr.withCredentials=true;
+  xhr.onload=function(){
+    if (xhr.status==200) {
+      commentForm=document.getElementById('comment-=form-space-'+fullname);
+      commentForm.innerHTML=JSON.parse(xhr.response)["html"];
     }
-    xhr.send(form)
+    else {
+      $('#toast-comment-success').toast('dispose');
+      $('#toast-comment-error').toast('dispose');
+      $('#toast-comment-success').toast('show');
+     commentError.textContent = JSON.parse(xhr.response)["error"];
+    }
+  }
+  xhr.send(form)
 
 }
