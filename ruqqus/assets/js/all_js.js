@@ -1539,12 +1539,8 @@ post_comment=function(){
     xhr.open("post", "/api/comment");
     xhr.withCredentials=true;
     xhr.onload=function(){
-      if (xhr.status==204) {
-        document.getElementById('reply-form-'+cid).disabled=true;
-        document.getElementById('comment-format-bar-'+cid).classList.add('d-none');
-        $('#toast-comment-success').toast('dispose');
-        $('#toast-comment-error').toast('dispose');
-        $('#toast-comment-success').toast('show');
+      if (xhr.status==200) {
+        commentForm.innerHTML=JSON.parse(xhr.response)["html"];
       }
       else {
         $('#toast-comment-success').toast('dispose');
