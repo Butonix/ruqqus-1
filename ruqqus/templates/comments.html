@@ -207,7 +207,7 @@
     <div class="comment-write collapsed child">
       <form id="reply-to-t3_{{ c.base36id }}" action="/api/comment" method="post" class="input-group"> 
         <input type="hidden" name="formkey" value="{{ v.formkey }}"> 
-        <input type="hidden" name="parent_fullname" value="t3_'+commentId+'"> 
+        <input type="hidden" name="parent_fullname" value="{{ c.fullname }}"> 
         <input type="hidden" name="submission" value="{{ c.post.base36id }}"> 
         <textarea name="body" form="reply-to-t3_{{ c.base36id }}" class="comment-box form-control rounded" id="reply-form-{{ c.base36id }}" aria-label="With textarea" placeholder="Add your comment..." rows="3">
         </textarea> 
