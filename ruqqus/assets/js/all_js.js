@@ -1545,7 +1545,7 @@ post_comment=function(fullname){
   xhr.withCredentials=true;
   xhr.onload=function(){
     if (xhr.status==200) {
-      commentForm=document.getElementById('comment-=form-space-'+fullname);
+      commentForm=document.getElementById('comment-form-space-'+fullname);
       commentForm.innerHTML=JSON.parse(xhr.response)["html"];
     }
     else {
