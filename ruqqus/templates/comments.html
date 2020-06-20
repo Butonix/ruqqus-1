@@ -21,26 +21,26 @@
                 {% if c.is_banned and c.ban_reason %}Reason: {{ c.ban_reason }}{% endif %}
             </div>
 
-  </div>
+         </div>
 
-  <div id="reply-to-{{ c.base36id }}"></div>
+      <div id="reply-to-{{ c.base36id }}"></div>
 
-{% if render_replies %}
-{% if level==8 and c.replies %}
+      {% if render_replies %}
+      {% if level==8 and c.replies %}
 
 
-<div id="morecomment-{{ c.base36id }}" class="mt-2 more-comments text-small">
-    <a href="{{ c.permalink }}">More comments →</a>
-</div>
+      <div id="morecomment-{{ c.base36id }}" class="mt-2 more-comments text-small">
+          <a href="{{ c.permalink }}">More comments →</a>
+      </div>
 
-{% else %}
-{% for comment in comments %}
+      {% else %}
+      {% for comment in comments %}
 
-  {{ single_comment(comment) }}
+        {{ single_comment(comment, level=level+1) }}
 
-{% endfor %}
-{% endif %}
-{% endif %}
+      {% endfor %}
+      {% endif %}
+      {% endif %}
 </div>
 
 
@@ -241,7 +241,6 @@
     {% endif %}
   </div>
 
-{% endif %}
 
   <div id="reply-to-{{ c.base36id }}" class="d-none">
     
@@ -274,6 +273,7 @@
 
   </div>
  
+{% endif %}
   {% if render_replies %} 
     {% if level<5 %}
       {% for reply in c.replies %}
