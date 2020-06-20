@@ -98,7 +98,7 @@ Create environment variables
 
 `$ export REDIS_URL=redis://localhost:6379`
 
-`$ export DATABASE_URL=postgres://localhost:5432`
+`$ export DATABASE_URL=postgres://localhost:5432/postgres`
 
 `$ export PYTHONPATH=$(/path/to/ruqqus/root)`
 
