@@ -1,4 +1,5 @@
 {% macro single_comment(c, level=1) %}
+<!---beginning of comment {{ c.id }}--->
 
 {% if (c.is_banned or c.is_deleted) and not (v and v.admin_level >=3) %}
 
@@ -274,6 +275,7 @@
   </div>
  
 {% endif %}
+
   {% if render_replies %} 
     {% if level<5 %}
       {% for reply in c.replies %}
