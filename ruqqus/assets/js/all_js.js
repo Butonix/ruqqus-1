@@ -1528,12 +1528,17 @@ block_user=function() {
 
 }
 
-post_comment=function(cid, fullname){
-  var commentForm = document.getElementById('reply-to-'+cid);
+post_comment=function(fullname){
 
   var commentError = document.getElementById("comment-error-text");
 
-  
+  var form = new FormData();
+
+  form.append('formkey', formkey());
+  form.append('parent_fullname', fullname);
+  form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
+  form.append('body', document.getElementById('reply-form-body-'+fullname).value);
+   
 
   var xhr = new XMLHttpRequest();
     xhr.open("post", "/api/comment");
@@ -1549,6 +1554,6 @@ post_comment=function(cid, fullname){
       commentError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
-    xhr.send(commentForm)
+    xhr.send(form)
 
 }

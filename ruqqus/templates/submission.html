@@ -565,9 +565,9 @@
       <form id="reply-to-{{ p.fullname }}" class="input-group" action="/api/comment" method="post">
         <input type="hidden" name="formkey" value="{{ v.formkey }}">
         <input type="hidden" name="parent_fullname" value="t2_{{ p.base36id }}">
-        <input type="hidden" name="submission" value="{{ p.base36id }}">
+        <input id="reply-form-submission-{{ p.fullname }}" type="hidden" name="submission" value="{{ p.base36id }}">
         {% if v %}
-        <textarea class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{ p.fullname }}" aria-label="With textarea" placeholder="Add your comment..." rows="1"></textarea>
+        <textarea id="reply-form-body-{{ p.fullname }}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{ p.fullname }}" aria-label="With textarea" placeholder="Add your comment..." rows="1"></textarea>
         {% endif %}
         <div class="comment-format">
           <small class="format pl-0"><i class="fas fa-bold" onclick="makeBold('comment-form')" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Bold"></i></small>
@@ -575,7 +575,7 @@
           <small class="format"><i class="fas fa-quote-right" onclick="makeQuote('comment-form')" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Quote"></i></small>
           <small class="format"><span class="font-weight-bolder text-uppercase" onclick="getGif();commentForm('comment-form')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Add GIF">GIF</span></small> 
           <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
-          <button form="reply-to-{{ p.fullname }}" class="btn btn-primary btn ml-auto">Comment</button>
+          <a href="javascript:void(0)" form="reply-to-{{ p.fullname }}" class="btn btn-primary text-whitebtn ml-auto" onclick="post_comment('{{ p.fullname }}')">Comment</a>
         </div>
       </form>
     </div>
