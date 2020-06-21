@@ -6,5 +6,5 @@ phases:
     runtime-versions:
       python: 3.7
 artifacts:
-  files: **/*
-  
+  files: 
+    - '**/*'
