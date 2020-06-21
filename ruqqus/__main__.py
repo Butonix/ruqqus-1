@@ -65,7 +65,8 @@ app.config['CACHE_OPTIONS'] = {'connection_pool': pool, 'max_connections': MAX_R
 app.config['redis_urls']=[
         environ.get('HEROKU_REDIS_AQUA_URL'),
         environ.get('HEROKU_REDIS_GRAY_URL'),
-        environ.get('HEROKU_REDIS_BLACK_URL')
+        environ.get('HEROKU_REDIS_BLACK_URL'),
+        environ.get('HEROKU_REDIS_WHITE_URL')
         ]
 
 
