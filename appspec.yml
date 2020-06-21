@@ -6,3 +6,6 @@ files:
 permissions:
   - object: ~/ruqqus
     mode: 4755
+hooks:
+  ApplicationStart:
+    - location: scripts/start_ruqqus
