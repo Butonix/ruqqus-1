@@ -1,0 +1,8 @@
+version: 0.0
+os: linux
+files:
+  - source: ruqqus/
+    destination: ~/ruqqus
+permissions:
+  - object: ~/ruqqus
+    mode: 4755
