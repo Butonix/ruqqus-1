@@ -7,5 +7,7 @@ permissions:
   - object: ruqqus/*
     mode: 4755
 hooks:
+  AfterInstall:
+    - location: scripts/install_pip
   ApplicationStart:
     - location: scripts/start_ruqqus
