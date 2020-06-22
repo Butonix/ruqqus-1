@@ -448,7 +448,7 @@ class User(Base, Stndrd):
     @property
     def notifications_count(self):
 
-        return self.notifications.filter_by(read=False.filter(Comment.is_banned=False, Comment.is_deleted=False).count()
+        return self.notifications.filter_by(read=False).filter(Comment.is_banned=False, Comment.is_deleted=False).count()
 
     @property
     def post_count(self):
