@@ -270,7 +270,7 @@ class User(Base, Stndrd):
         else:
             submissions=submissions.filter_by(is_public=True)
 
-        listing = [x for x in submissions.order_by(Submission.created_utc.desc()).offset(25*(page-1)).limit(26)]
+        listing = [x[0] for x in submissions.order_by(Submission.created_utc.desc()).offset(25*(page-1)).limit(26)]
 
         return listing
 

@@ -159,7 +159,7 @@ class Board(Base, Stndrd, Age_times):
         else:
             abort(422)
 
-        posts=[x for x in posts.offset(25*(page-1)).limit(26).all()]
+        posts=[x[0] for x in posts.offset(25*(page-1)).limit(26).all()]
 
         return posts
 

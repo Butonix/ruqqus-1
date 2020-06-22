@@ -108,7 +108,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, **kwargs):
     else:
         abort(422)
 
-    posts=[x for x in posts.offset(25*(page-1)).limit(26).all()]
+    return [x[0] for x in posts.offset(25*(page-1)).limit(26).all()]
 
 @app.route("/", methods=["GET"])
 @app.route("/api/v1/front/listing", methods=["GET"])
