@@ -254,12 +254,12 @@
           {% if v and v.id==p.author_id and not p.is_deleted %}
           <button class="btn btn-white btn-block btn-lg text-left" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{ p.base36id }}')"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Delete</button>
           {% endif %}
-          {% if v and v.mods_anything and p.board.name == 'general' %}
+          {% if v and v.mods_anything and p.board_id == 1 %}
           <button class="btn btn-white btn-block btn-lg text-left" data-toggle="modal" data-dismiss="modal" data-target="#yankPostModal" onclick="yank_postModal('{{ p.base36id }}','{{ p.author.username }}','{{ p.comment_count }}','{{ p.title | js_str_escape}}', '/@{{ p.author.username }}','{{ p.domain | js_str_escape }}', '{{ p.age_string }}')" class="d-block"><i class="far fa-hand-lizard text-center text-muted mr-3"></i>Yank</button>
           {% endif %}
           {% if v %}
-          {% if v.id | is_mod(p.board_id) %}
-          <button class="btn btn-white btn-block btn-lg text-danger text-left" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}})"><i class="far fa-times text-center text-danger mr-3"></i>Remove from +{{ p.board.name }}</button>
+          {% if v.id == p.author_id and p.board_id not in [1, p.original_board_id] %}
+          <button class="btn btn-white btn-block btn-lg text-danger text-left" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/user/kick/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}})"><i class="far fa-times text-center text-danger mr-3"></i>Un-yank from +{{ p.board.name }}</button>
 
           {% if p.is_pinned %}
           <button class="btn btn-white btn-block btn-lg text-success text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-center text-success mr-3"></i>Unpin</button>
