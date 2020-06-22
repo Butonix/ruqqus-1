@@ -272,8 +272,6 @@ class Notification(Base):
 
     #Server side computed values (copied from corresponding comment)
     created_utc=Column(Integer, server_default=FetchedValue())
-    is_banned=Column(Boolean, server_default=FetchedValue())
-    is_deleted=Column(Boolean, server_default=FetchedValue())
 
     def __repr__(self):
 
