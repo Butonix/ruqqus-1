@@ -57,7 +57,7 @@ app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL")
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 app.config["CACHE_KEY_PREFIX"]="flask_caching_"
 
-MAX_REDIS_CONNS = int(environ.get("MAX_REDIS_CONNS", 6))
+#MAX_REDIS_CONNS = int(environ.get("MAX_REDIS_CONNS", 6))
 
 #pool = BlockingConnectionPool(max_connections=MAX_REDIS_CONNS)
 #app.config['CACHE_OPTIONS'] = {'connection_pool': pool, 'max_connections': MAX_REDIS_CONNS}
@@ -88,8 +88,8 @@ limiter = Limiter(
 )
 
 #setup db
-_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
-    pool_size=6)
+_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])#,
+  #  pool_size=6)
 
 
 def make_session():
