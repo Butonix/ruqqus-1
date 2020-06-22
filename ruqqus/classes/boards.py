@@ -93,9 +93,10 @@ class Board(Base, Stndrd, Age_times):
     @cache.memoize(timeout=60)
     def idlist(self, sort="hot", page=1, t=None, show_offensive=True, v=None, **kwargs):
 
-        posts=self.submissions.filter_by(is_banned=False,
+        posts=g.db.query(Submission.id).filter_by(is_banned=False,
                                          is_deleted=False,
                                          is_pinned=False,
+                                         board_id=self.id
                                         )
 
         if not (v and v.over_18):
@@ -158,7 +159,7 @@ class Board(Base, Stndrd, Age_times):
         else:
             abort(422)
 
-        posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
+        posts=[x[0] for x in posts.offset(25*(page-1)).limit(26).all()]
 
         return posts
 

@@ -36,11 +36,11 @@ def notifications(v):
                            standalone=True)
 
 @cache.memoize(timeout=300)
-def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=False, ids_only=True):
+def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None **kwargs):
 
     #cutoff=int(time.time())-(60*60*24*30)
 
-    posts = g.db.query(Submission).filter_by(is_banned=False,
+    posts = g.db.query(Submission.id).filter_by(is_banned=False,
                                            is_deleted=False,
                                            stickied=False)
     if not nsfw:
@@ -108,11 +108,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=Fal
     else:
         abort(422)
 
-    if ids_only:
-        posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
-        return posts
-    else:
-        return [x for x in posts.offset(25*(page-1)).limit(25).all()]
+    posts=[x[0] for x in posts.offset(25*(page-1)).limit(26).all()]
 
 @app.route("/", methods=["GET"])
 @app.route("/api/v1/front/listing", methods=["GET"])

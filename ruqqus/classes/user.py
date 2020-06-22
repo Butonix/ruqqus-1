@@ -147,11 +147,11 @@ class User(Base, Stndrd):
         return int(time.time())-self.created_utc
         
     @cache.memoize(timeout=300)
-    def idlist(self, sort="hot", page=1, t=None, hide_offensive=False, ids_only=True, **kwargs):
+    def idlist(self, sort="hot", page=1, t=None, hide_offensive=False, **kwargs):
 
         
 
-        posts=g.db.query(Submission).filter_by(is_banned=False,
+        posts=g.db.query(Submission.id).filter_by(is_banned=False,
                                              is_deleted=False,
                                              stickied=False
                                              )
@@ -231,11 +231,7 @@ class User(Base, Stndrd):
         else:
             abort(422)
 
-        if ids_only:
-            posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
-            return posts
-        else:
-            return [x for x in posts.offset(25*(page-1)).limit(25).all()]
+        posts=[x[0] for x in posts.offset(25*(page-1)).limit(26).all()]
 
     @cache.memoize(300)
     def userpagelisting(self, v=None, page=1):
