@@ -1,10 +1,10 @@
 version: 0.0
 os: linux
 files:
-  - source: ruqqus/
-    destination: ~/ruqqus
+  - source: '**/*'
+    destination: ruqqus
 permissions:
-  - object: ~/ruqqus
+  - object: ruqqus/*
     mode: 4755
 hooks:
   ApplicationStart:
