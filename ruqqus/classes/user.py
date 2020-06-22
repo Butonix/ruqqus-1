@@ -231,12 +231,12 @@ class User(Base, Stndrd):
         else:
             abort(422)
 
-        posts=[x[0] for x in posts.offset(25*(page-1)).limit(26).all()]
+        posts=[x for x in posts.offset(25*(page-1)).limit(26).all()]
 
     @cache.memoize(300)
     def userpagelisting(self, v=None, page=1):
 
-        submissions=self.submissions
+        submissions=g.db.query(Submission.id).filter_by(author_id=self.id)
 
         if not (v and v.over_18):
             submissions=submissions.filter_by(over_18=False)
@@ -272,7 +272,7 @@ class User(Base, Stndrd):
 
         listing = [x for x in submissions.order_by(Submission.created_utc.desc()).offset(25*(page-1)).limit(26)]
 
-        return [i.id for i in listing]
+        return listing
 
     @cache.memoize(300)
     def commentlisting(self, v=None, page=1):
