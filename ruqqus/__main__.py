@@ -92,7 +92,7 @@ _engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])#,
   #  pool_size=6)
 
 
-thread_session=sessionmaker(bind=_engine)()
+thread_session=sessionmaker(bind=_engine, autocommit=True)()
 
 
 
@@ -152,7 +152,7 @@ def before_request():
         session["session_id"]=secrets.token_hex(16)
 
    #db.rollback()
-    #g.db.begin()
+    g.db.begin()
 
 
 def log_event(name, link):
