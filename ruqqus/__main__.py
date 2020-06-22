@@ -92,8 +92,10 @@ _engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])#,
   #  pool_size=6)
 
 
-thread_session=sessionmaker(bind=_engine, autocommit=True)()
 
+def make_session():
+    return sessionmaker(bind=_engine, autocommit=True)()
+thread_session=make_session()
 
 
 
