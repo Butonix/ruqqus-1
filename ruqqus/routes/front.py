@@ -43,10 +43,10 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, **kwargs):
     posts = g.db.query(Submission.id).filter_by(is_banned=False,
                                            is_deleted=False,
                                            stickied=False)
-    if not nsfw:
+    if not (v and v.over_18):
         posts=posts.filter_by(over_18=False)
 
-    if hide_offensive:
+    if v and v.hide_offensive:
         posts=posts.filter_by(is_offensive=False)
 
     if v and v.admin_level >= 4:
