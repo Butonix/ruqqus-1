@@ -92,8 +92,9 @@ _engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])#,
   #  pool_size=6)
 
 
-def make_session():
-    return sessionmaker(bind=_engine, autocommit=True)()
+thread_session=sessionmaker(bind=_engine, autocommit=True)()
+
+
 
 
 Base = declarative_base()
@@ -132,7 +133,7 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
-    g.db = make_session()
+    g.db = thread_session
 
     session.permanent = True
 
