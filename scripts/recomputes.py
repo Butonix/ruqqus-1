@@ -1,13 +1,15 @@
-from ruqqus.__main__ import db
+from ruqqus.__main__ import make_session
 from ruqqus import classes
 
 import time
+
+db=make_session()
 
 def recompute():
 
     while True:
 
-        db.begin(subtransactions=True)
+        db.begin()
 
         now=int(time.time())
 
@@ -28,7 +30,7 @@ def recompute():
             post.score_activity=post.rank_activity
 
             db.add(post)
-            db.commit()
+            
 
             #print(f"{i}/{total} - {post.base36id}")
 
@@ -55,8 +57,8 @@ def recompute():
             #comment.score_top=comment.score
 
             db.add(comment)
-            db.commit()
-        
+            
+        db.commit()
 
         print(f"Scored {i} comments. Sleeping 1min")
 
