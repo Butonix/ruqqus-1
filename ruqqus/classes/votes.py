@@ -16,8 +16,8 @@ class Vote(Base):
     submission_id=Column(Integer, ForeignKey("submissions.id"))
     created_utc=Column(Integer, default=0)
 
-    user=relationship("User")
-    post=relationship("Submission")
+    user=relationship("User", lazy="subquery")
+    post=relationship("Submission", lazy="subquery")
 
     
     def __init__(self, *args, **kwargs):
@@ -59,8 +59,8 @@ class CommentVote(Base):
     comment_id=Column(Integer, ForeignKey("comments.id"))
     created_utc=Column(Integer, default=0)
 
-    user=relationship("User")
-    comment=relationship("Comment")
+    user=relationship("User", lazy="subquery")
+    comment=relationship("Comment", lazy="subquery")
 
     def __init__(self, *args, **kwargs):
         
