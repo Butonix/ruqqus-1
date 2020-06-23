@@ -38,7 +38,7 @@ app.config["SERVER_NAME"]=environ.get("domain", None)
 app.config["SESSION_COOKIE_NAME"]="session_ruqqus"
 app.config["VERSION"]=_version
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config["SESSION_COOKIE_SECURE"]=True
+app.config["SESSION_COOKIE_SECURE"] = environ.get("SESSION_COOKIE_SECURE", "true").lower() != "false"
 app.config["SESSION_COOKIE_SAMESITE"]="Lax"
 
 app.config["PERMANENT_SESSION_LIFETIME"]=60*60*24*365
