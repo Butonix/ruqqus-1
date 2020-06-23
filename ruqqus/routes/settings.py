@@ -372,7 +372,7 @@ def settings_block_user(v):
                         )
     g.db.add(new_block)
 
-    cache.delete_memoized(User.idlist, self=v)
+    cache.delete_memoized(v.idlist)
     cache.delete_memoized(Board.idlist, v=v)
     cache.delete_memoized(frontlist, v=v)
 
