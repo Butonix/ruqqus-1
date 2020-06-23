@@ -371,7 +371,7 @@ def submit_post(v):
     g.db.add(new_post)
 
     g.db.commit()
-    g.db.begin()
+    
 
     vote=Vote(user_id=user_id,
               vote_type=1,

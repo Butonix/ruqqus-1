@@ -267,7 +267,7 @@ def api_comment(v):
     g.db.add(c)
     
     g.db.commit()
-    g.db.begin()   
+       
 
 
     notify_users=set()
