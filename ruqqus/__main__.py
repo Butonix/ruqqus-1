@@ -57,19 +57,6 @@ app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL")
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 app.config["CACHE_KEY_PREFIX"]="flask_caching_"
 
-#MAX_REDIS_CONNS = int(environ.get("MAX_REDIS_CONNS", 6))
-
-#pool = BlockingConnectionPool(max_connections=MAX_REDIS_CONNS)
-#app.config['CACHE_OPTIONS'] = {'connection_pool': pool, 'max_connections': MAX_REDIS_CONNS}
-
-app.config['redis_urls']=[
-        environ.get('HEROKU_REDIS_AQUA_URL'),
-        environ.get('HEROKU_REDIS_GRAY_URL'),
-        environ.get('HEROKU_REDIS_BLACK_URL'),
-        environ.get('HEROKU_REDIS_WHITE_URL'),
-        environ.get('HEROKU_REDIS_NAVY_URL')
-        ]
-
 
 Markdown(app)
 cache=Cache(app)
