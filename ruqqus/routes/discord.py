@@ -102,3 +102,8 @@ def discord(v):
 @app.route("/discord", methods=["GET"])
 def discord_server():
 	return redirect("https://discord.gg/vzEhjFb")
+
+
+@app.route("/guilded", methods=["GET"])
+def guilded_server():
+	return redirect("https://www.guilded.gg/i/4ka34g9E")
