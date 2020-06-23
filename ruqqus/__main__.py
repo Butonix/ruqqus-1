@@ -57,19 +57,6 @@ app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL")
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 app.config["CACHE_KEY_PREFIX"]="flask_caching_"
 
-#MAX_REDIS_CONNS = int(environ.get("MAX_REDIS_CONNS", 6))
-
-#pool = BlockingConnectionPool(max_connections=MAX_REDIS_CONNS)
-#app.config['CACHE_OPTIONS'] = {'connection_pool': pool, 'max_connections': MAX_REDIS_CONNS}
-
-app.config['redis_urls']=[
-        environ.get('HEROKU_REDIS_AQUA_URL'),
-        environ.get('HEROKU_REDIS_GRAY_URL'),
-        environ.get('HEROKU_REDIS_BLACK_URL'),
-        environ.get('HEROKU_REDIS_WHITE_URL'),
-        environ.get('HEROKU_REDIS_NAVY_URL')
-        ]
-
 
 Markdown(app)
 cache=Cache(app)
@@ -88,12 +75,14 @@ limiter = Limiter(
 )
 
 #setup db
-_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])#,
-  #  pool_size=6)
+_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+
 
 
 def make_session():
     return sessionmaker(bind=_engine, autocommit=True)()
+thread_session=make_session()
+
 
 
 Base = declarative_base()
@@ -132,7 +121,7 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
-    g.db = make_session()
+    g.db = thread_session
 
     session.permanent = True
 
@@ -151,7 +140,7 @@ def before_request():
         session["session_id"]=secrets.token_hex(16)
 
    #db.rollback()
-    g.db.begin()
+    g.db.begin(subtransactions=True)
 
 
 def log_event(name, link):

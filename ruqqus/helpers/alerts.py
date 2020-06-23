@@ -5,8 +5,6 @@ from flask import g
 from .markdown import *
 from .sanitize import *
 
-from ruqqus.__main__ import make_session
-
 def send_notification(user, text):
 
 
