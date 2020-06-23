@@ -203,6 +203,18 @@ def submit_post(v):
     #sanitize title
     title=sanitize(title, linkgen=False)
 
+    #Force https for submitted urls
+    if request.form.get("url"):
+        new_url=ParseResult(scheme="https",
+                            netloc=parsed_url.netloc,
+                            path=parsed_url.path,
+                            params=parsed_url.params,
+                            query=parsed_url.query,
+                            fragment=parsed_url.fragment)
+        url=urlunparse(new_url)
+    else:
+        url=""
+
     #check for duplicate
     dup = g.db.query(Submission).filter_by(title=title,
                                          author_id=v.id,
@@ -293,17 +305,7 @@ def submit_post(v):
     user_name=v.username
                 
                 
-    #Force https for submitted urls
-    if request.form.get("url"):
-        new_url=ParseResult(scheme="https",
-                            netloc=parsed_url.netloc,
-                            path=parsed_url.path,
-                            params=parsed_url.params,
-                            query=parsed_url.query,
-                            fragment=parsed_url.fragment)
-        url=urlunparse(new_url)
-    else:
-        url=""
+
 
     #now make new post
 
