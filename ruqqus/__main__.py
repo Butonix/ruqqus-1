@@ -75,7 +75,7 @@ limiter = Limiter(
 )
 
 #setup db
-_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_size=4)
+_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_size=6)
 
 
 
