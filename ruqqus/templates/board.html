@@ -294,6 +294,9 @@
         <div class="text-muted text-break">{{ b.description_html | safe }}</div>
         <p class="font-weight-bold">{{ b.subscriber_count }} member{{ 's' if b.subscriber_count != 1 else '' }}
         </p>
+        {% if b.has_mod(v) %}
+        <a class="btn btn-outline-secondary btn-block text-muted mb-2" href="{{ b.permalink }}/mod/settings">Guild settings</a>
+        {% endif %}
         {% if v %}
         <div id="button-sub-mobile" {% if is_subscribed %}class="d-none"{% endif %}><a class="btn btn-primary btn-block" href="javascript:void(0)" onclick="post('/api/subscribe/{{ b.name }}', callback=toggleSub)">Join guild</a></div>
         <div id="button-unsub-mobile" {% if not is_subscribed %}class="d-none"{% endif %}><a class="btn btn-secondary btn-block" href="javascript:void(0)" onclick="post('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">Leave</a></div>
