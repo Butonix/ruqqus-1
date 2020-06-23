@@ -80,7 +80,7 @@ _engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 
 
 def make_session():
-    return sessionmaker(bind=_engine, autocommit=True)()
+    return sessionmaker(bind=_engine)()
 thread_session=make_session()
 
 
@@ -139,8 +139,8 @@ def before_request():
     if not session.get("session_id"):
         session["session_id"]=secrets.token_hex(16)
 
-   #db.rollback()
-    g.db.begin(subtransactions=True)
+    #db.rollback()
+    #g.db.begin(subtransactions=True)
 
 
 def log_event(name, link):
