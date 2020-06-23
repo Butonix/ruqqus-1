@@ -14,8 +14,6 @@ def thumbnail_thread(pid):
     
     db=make_session()
 
-    db.begin()
-
     post=get_post(pid, session=db)
 
     #step 1: see if post is image
