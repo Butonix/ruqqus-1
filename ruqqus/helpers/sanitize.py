@@ -17,6 +17,7 @@ _allowed_tags=tags=['b',
                     'h4',
                     'h5',
                     'h6',
+                    'hr',
                     'i',
                     'li',
                     'ol',
@@ -35,7 +36,6 @@ _allowed_tags=tags=['b',
                    ]
 
 _allowed_tags_with_links=_allowed_tags+["a", 
-                                        "hr", 
                                         "img",
                                         ]
 
