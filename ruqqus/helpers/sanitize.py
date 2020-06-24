@@ -31,7 +31,7 @@ _allowed_tags=tags=['b',
                     'th',
                     'thead',
                     'td',
-                    'tr'
+                    'tr',
                     'ul'
                    ]
 
