@@ -6,6 +6,7 @@ import secrets
 import threading
 import requests
 import re
+import bleach
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -201,7 +202,7 @@ def submit_post(v):
                                b=board
                                )
     #sanitize title
-    title=sanitize(title, linkgen=False)
+    title=bleach.clean(title)
 
     #Force https for submitted urls
     if request.form.get("url"):
