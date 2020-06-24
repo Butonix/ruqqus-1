@@ -332,6 +332,14 @@ def delete_account(v):
     mods=g.db.query(ModRelationship).filter_by(user_id=v.id).all()
     for mod in mods:
         g.db.delete(mod)
+
+    bans=g.db.query(BanRelationship).filter_by(target_id=v.id).all()
+    for ban in bans:
+        g.db.delete(ban)
+
+    blocks=g.db.query(UserBlock).filter_by(target_id=v.id).all()
+    for block in blocks:
+        g.db.delete(blocks)
     
 
     session.pop("user_id", None)
