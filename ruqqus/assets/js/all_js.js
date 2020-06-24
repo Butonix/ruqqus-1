@@ -1189,7 +1189,7 @@ makeQuote = function (form) {
   var format = '>'
 
   if (selectedText.includes('>')) {
-    text.value = selectedText.replace(/\>/g, '');
+    text.value = text.value.substring(0, startIndex) + selectedText.replace(/\>/g, '') + text.value.substring(endIndex);
     
   }
   else if (selectedText.length == 0) {
