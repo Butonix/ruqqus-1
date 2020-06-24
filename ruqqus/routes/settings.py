@@ -328,6 +328,10 @@ def delete_account(v):
     v.del_banner()
     v.del_profile()
     g.db.add(v)
+
+    mods=g.db.query(ModRelationship).filter_by(user_id=v.id).all()
+    for mod in mods:
+        g.db.delete(mod)
     
 
     session.pop("user_id", None)
