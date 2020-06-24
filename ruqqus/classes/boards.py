@@ -78,7 +78,7 @@ class Board(Base, Stndrd, Age_times):
     @property
     def mods_count(self):
 
-        return self.moderators.filter_by(accepted=True).filter(User.is_deleted==False).count()
+        return self.moderators.filter_by(accepted=True).join(ModRelationship.user).filter(User.is_deleted==False).count()
 
     @property
     def permalink(self):
