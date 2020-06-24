@@ -36,7 +36,7 @@ _allowed_tags=tags=['b',
                    ]
 
 _allowed_tags_with_links=_allowed_tags+["a", 
-                                        "img",
+                                        "img"
                                         ]
 
 _allowed_attributes={'a': ['href', 'title', "rel"],
