@@ -44,6 +44,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     is_op=Column(Boolean, default=False)
     is_offensive=Column(Boolean, default=False)
     is_nsfl=Column(Boolean, default=False)
+    is_parody = Column(Boolean, default=False)
 
     post=relationship("Submission", lazy="joined")
     flags=relationship("CommentFlag", lazy="joined", backref="comment")
@@ -225,6 +226,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'post':self.post.base36id,
                 'level':self.level,
                 'parent':self.parent_fullname,
+                'is_parody':self.is_parody,
                 'author':self.author_name if not self.author.is_deleted else None,
                 'body':self.body,
                 'body_html':self.body_html,

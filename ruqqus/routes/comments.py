@@ -260,6 +260,7 @@ def api_comment(v):
               author_name=v.username,
               over_18=post.over_18,
               is_nsfl=post.is_nsfl,
+              is_parody=v.is_parody,
               is_op=(v.id==post.author_id)
               )
 
