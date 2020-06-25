@@ -99,7 +99,7 @@ class Board(Base, Stndrd, Age_times):
                                          board_id=self.id
                                         )
 
-        if not (v and v.over_18):
+        if not (v and v.over_18) or session_over18(self):
             posts=posts.filter_by(over_18=False)
 
         if v and v.hide_offensive:
