@@ -58,6 +58,7 @@ class User(Base, Stndrd):
     real_id=Column(String, default=None)
     notifications=relationship("Notification", lazy="dynamic", backref="user")
     referred_by=Column(Integer, default=None)
+    is_parody=Column(Boolean, default=False)
     is_banned=Column(Integer, default=0)
     unban_utc=Column(Integer, default=0)
     ban_reason=Column(String, default="")
@@ -613,6 +614,7 @@ class User(Base, Stndrd):
         return {'username':self.username,
                 'permalink':self.permalink,
                 'is_banned':False,
+                'is_parody': self.is_parody,
                 'created_utc':self.created_utc,
                 'post_rep':int(self.karma),
                 'comment_rep':int(self.comment_karma),

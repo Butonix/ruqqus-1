@@ -151,6 +151,7 @@
       <div class="mt-n3 py-3">
         <a href="{{ u.permalink }}" class="text-black">
           <h1 class="h5 d-inline-block">{{ u.username }}
+              {% if u.is_parody %}<span class="badge badge-grey text-small align-middle mx-1">parody</span>{% endif %}
             <!--{% if u.over_18 %}
             <span class="badge badge-danger text-small align-middle mx-1">nsfw</span>
             {% endif %}-->
