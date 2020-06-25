@@ -227,25 +227,6 @@
 
               </div>
 
-                <div class="d-lg-flex border-bottom">
-
-                <div class="title w-lg-25">
-                  <label for="over18">Set Account as Parody</label>
-                </div>
-
-                <div class="body w-lg-100">
-
-                  <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="over18" name="isparody"{% if v.is_parody %} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
-                    <label class="custom-control-label" for="isparody"></label>
-                  </div>
-
-                  <span class="text-small-extra text-muted">Enable if the purpose of your account is parody</span>
-
-                </div>
-
-              </div>
-
             </div>
 
             <h2 class="h5" id="bio" name="bio">Your Profile</h2>
@@ -310,6 +291,25 @@
               </div>
 
             </div>
+
+            <div class="d-lg-flex border-bottom">
+
+            <div class="title w-lg-25">
+              <label for="over18">Set Account as Parody</label>
+            </div>
+
+            <div class="body w-lg-100">
+
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="over18" name="isparody"{% if v.is_parody %} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
+                <label class="custom-control-label" for="isparody"></label>
+              </div>
+
+              <span class="text-small-extra text-muted">Enable if the purpose of your account is parody</span>
+
+            </div>
+
+          </div>
 
             <div class="footer">
 
