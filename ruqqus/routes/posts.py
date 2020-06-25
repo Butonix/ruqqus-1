@@ -361,6 +361,7 @@ def submit_post(v):
                         domain_ref=domain_obj.id if domain_obj else None,
                         board_id=board.id,
                         original_board_id=board.id,
+                        is_parody=v.is_parody,
                         over_18=(bool(request.form.get("over_18","")) or board.over_18),
                         post_public=not board.is_private,
                         #author_name=user_name,
