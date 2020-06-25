@@ -76,11 +76,17 @@ def login_post():
     if "@" in username:
         account=g.db.query(User).filter(User.email.ilike(username), User.is_deleted==False).first()
     else:
-        account=get_user(username)
+        account=get_user(username, graceful=True)
+
 
     if not account:
         time.sleep(random.uniform(0,2))
         return render_template("login.html", failed=True, i=random_image())
+
+    if account.is_deleted:
+        time.sleep(random.uniform(0,2))
+        return render_template("login.html", failed=True, i=random_image())
+
 
     #test password
 
