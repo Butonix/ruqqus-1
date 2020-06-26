@@ -79,13 +79,19 @@ def get_post_with_comments(pid, sort_type="top", v=None):
     post=get_post(pid, v=v)
 
     if v:
-        votes=g.db.query(CommentVote).filter(CommentVote.user_id==v.id).subquery()
+        votes=g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
+
+        blocking=g.db.query(UserBlock).filter_by(user_id=v.id).subquery()
+
+        blocked=g.db.query(UserBlock).filter_by(target_id=v.id).subquery()
 
         comms=g.db.query(
             Comment,
             User,
             Title,
-            votes.c.vote_type
+            votes.c.vote_type,
+            blocking.c.id,
+            blocked.c.id
             ).filter(
             Comment.parent_submission==post.id,
             Comment.level<=6
@@ -95,6 +101,13 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             votes,
             votes.c.comment_id==Comment.id,
             isouter=True
+            ).join(
+            blocking,
+            blockng.c.target_id==Comment.author_id,
+            isouter=True
+            ).join(
+            blocked,
+            blocked.c.user_id==Comment.author_id
             )
 
         if sort_type=="hot":
@@ -116,7 +129,9 @@ def get_post_with_comments(pid, sort_type="top", v=None):
         for c in comments:
             comment=c[0]
             comment._title=c[2]
-            comment._voted=c[3] if c[3] else 0
+            comment._voted=c[3] or 0
+            comment._is_blocking=c[4] or 0
+            comment._is_blocked=c[5] or 0
             output.append(comment)
         post._preloaded_comments=output
 

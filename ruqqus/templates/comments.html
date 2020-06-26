@@ -1,7 +1,7 @@
 {% macro single_comment(c, level=1) %}
 <!---beginning of comment {{ c.id }}--->
 
-{% if (c.is_banned or c.is_deleted) and not (v and v.admin_level >=3) %}
+{% if ((c.is_banned or c.is_deleted) and not (v and v.admin_level >=3)) or ((c.is_blocking or c.is_blocked) and not c.distinguish_level and not (v and v.admin_level>=3)) %}
 
   {% if c.any_descendents_live %}
 <div id="comment-{{ c.base36id }}" class="comment rounded">
@@ -14,7 +14,7 @@
         <div id="comment-{{ c.base36id }}-only" class="">
 
             <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger">NSFW</span> {% endif %}
-                {% if c.is_banned %}[Removed by administrators]{% else %}[Deleted by author]{% endif %}
+                [{% if c.is_banned %}Removed by administrators{% elif c.is_deleted %}Deleted by author{% elif c.is_blocking %}You are blocking @{{ c.author.username }}{% elif c.is_blocked %}This user has blocked you{% endif %}]
             </div>
 
 
@@ -42,7 +42,7 @@
       {% endfor %}
       {% endif %}
       {% endif %}
-</div>
+    </div>
 
 
 </div>

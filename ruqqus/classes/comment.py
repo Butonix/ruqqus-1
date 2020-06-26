@@ -257,6 +257,15 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def title(self):
         return self.__dict__.get("_title", self.author.title)
+
+    @property
+    def is_blocking(self):
+        return self.__dict__.get('_is_blocking', 0)
+
+    @property
+    def is_blocked(self):
+        return self.__dict__.get('_is_blocked', 0)   
+    
     
         
 class Notification(Base):
