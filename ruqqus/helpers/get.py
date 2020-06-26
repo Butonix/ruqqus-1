@@ -271,8 +271,8 @@ def get_comments(cids, v=None, session=None, sort_type="new"):
         
             x=i[0]
             x._voted=i[1] or 0
-            x._is_blocking=items[2] or 0
-            x._is_blocked=items[3] or 0
+            x._is_blocking=i[2] or 0
+            x._is_blocked=i[3] or 0
             output.append(x)
 
     else:
