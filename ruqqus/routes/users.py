@@ -170,12 +170,12 @@ def u_username_comments(username, v=None):
                                                u=user,
                                                v=v)
 
-    if u.is_blocking and (not v or v.admin_level<3):
+    if user.is_blocking and (not v or v.admin_level<3):
         return render_template("userpage_blocking.html",
                                                u=u,
                                                v=v)
 
-    if u.is_blocked and (not v or v.admin_level<3):
+    if user.is_blocked and (not v or v.admin_level<3):
         return render_template("userpage_blocked.html",
                                                u=u,
                                                v=v)
