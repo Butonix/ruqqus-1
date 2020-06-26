@@ -35,7 +35,7 @@
       </div>
 
       {% else %}
-      {% for comment in comments %}
+      {% for comment in c.replies %}
 
         {{ single_comment(comment, level=level+1) }}
 
