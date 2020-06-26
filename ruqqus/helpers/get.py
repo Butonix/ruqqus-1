@@ -204,16 +204,34 @@ def get_comment(cid, v=None):
 
     i=base36decode(cid)
 
+
+
     if v:
+        blocking=v.blocking.subquery()
+        blocked=v.blocked.subquery()
         vt=g.db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id==i).subquery()
 
 
-        items= g.db.query(Comment, vt.c.vote_type).filter(Comment.id==i).join(vt, isouter=True).first()
+        items= g.db.query(Comment, vt.c.vote_type, blocking.c.id, blocked.c.id).filter(
+            Comment.id==i
+            ).join(
+            vt, isouter=True
+            ).join(
+            blocking,
+            blocking.c.target_id==Comment.author_id,
+            isouter=True
+            ).join(
+            blocked,
+            blocked.c.user_id==Comment.author_id,
+            isouter=True
+            ).first()
         
         if not items:
             abort(404)
         x=items[0]
-        x._voted=items[1] if items[1] else 0
+        x._voted=items[1] or 0
+        x._is_blocking=items[2] or 0
+        x._is_blocked=items[3] or 0
 
     else:
         x=g.db.query(Comment).filter_by(id=i).first()
@@ -225,10 +243,25 @@ def get_comment(cid, v=None):
 def get_comments(cids, v=None, sort_type="new"):
 
     if v:
+        blocking=v.blocking.subquery()
+        blocked=v.blocked.subquery()
         vt=g.db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(cids)).subquery()
 
 
-        items= g.db.query(Comment, vt.c.vote_type).filter(Comment.id.in_(cids)).join(vt, isouter=True).order_by(Comment.created_utc.desc()).all()
+        items= g.db.query(Comment, vt.c.vote_type, blocking.c.id, blocked.c.id).filter(
+            Comment.id.in_(cids)
+            ).join(
+            vt, 
+            isouter=True
+            )join(
+            blocking,
+            blocking.c.target_id==Comment.author_id,
+            isouter=True
+            ).join(
+            blocked,
+            blocked.c.user_id==Comment.author_id,
+            isouter=True
+            ).order_by(Comment.created_utc.desc()).all()
 
 
         items=[i for i in items]
@@ -236,7 +269,9 @@ def get_comments(cids, v=None, sort_type="new"):
         for i in items:
         
             x=i[0]
-            x._voted=i[1] if i[1] else 0
+            x._voted=i[1] or 0
+            x._is_blocking=items[2] or 0
+            x._is_blocked=items[3] or 0
             output.append(x)
 
     else:
