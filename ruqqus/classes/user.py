@@ -36,6 +36,10 @@ class UserBlock(Base, Stndrd, Age_times):
     target=relationship("User", lazy="joined", primaryjoin="User.id==UserBlock.target_id")
 
 
+    def __repr__(self):
+
+        return f"<UserBlock(user={user.username}, target={target.username})>"
+
 class User(Base, Stndrd):
 
     __tablename__="users"
