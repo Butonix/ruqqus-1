@@ -683,3 +683,10 @@ class User(Base, Stndrd):
         return  (self.is_banned and (self.unban_utc == 0 or self.unban_utc > time.time()))
 
 
+    @property
+    def is_blocking(self):
+        return self.__dict__.get('_is_blocking', 0)
+
+    @property
+    def is_blocked(self):
+        return self.__dict__.get('_is_blocked', 0)   

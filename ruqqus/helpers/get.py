@@ -2,17 +2,44 @@ from .base36 import *
 from ruqqus.classes import *
 from flask import g
 
-def get_user(username, graceful=False):
+def get_user(username, v=None, graceful=False):
 
     username=username.replace('\\','')
     username=username.replace('_', '\_')
 
-    x=g.db.query(User).filter(User.username.ilike(username)).first()
-    if not x:
-        if not graceful:
-            abort(404)
-        else:
-            return None
+
+
+    if v:
+        blocking=v.blocking.subquery()
+        blocked=v.blocking.subquery()
+
+        q=g.db=query(User).filter(User.username.ilike(username), blocking.c.id, blocked.c.id
+            ).join(
+            blocking,
+            blocking.c.target_id==User.id,
+            isouter=True
+            ).join(
+            blocked,
+            blocked.c.user_id==User.id,
+            isouter=True
+            ).first()
+
+        if not q:
+            if not graceful:
+                abort(404)
+            else:
+                return None
+
+        x=q[0]
+        x._is_blocking=q[1] or 0
+        x._is_blocked=q[2] or 0
+    else:
+        x=g.db.query(User).filter(User.username.ilike(username)).first()
+        if not x:
+            if not graceful:
+                abort(404)
+            else:
+                return None
     return x
 
 def get_post(pid, v=None, session=None):
