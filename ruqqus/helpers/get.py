@@ -13,7 +13,7 @@ def get_user(username, v=None, graceful=False):
         blocking=v.blocking.subquery()
         blocked=v.blocking.subquery()
 
-        q=g.db.query(User).filter(User.username.ilike(username), blocking.c.id, blocked.c.id
+        q=g.db.query(User, blocking.c.id, blocked.c.id).filter(User.username.ilike(username))
             ).join(
             blocking,
             blocking.c.target_id==User.id,
