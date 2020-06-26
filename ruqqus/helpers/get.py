@@ -240,15 +240,18 @@ def get_comment(cid, v=None):
         abort(404)
     return x
 
-def get_comments(cids, v=None, sort_type="new"):
+def get_comments(cids, v=None, session=None, sort_type="new"):
+
+    if not session:
+        session=g.db
 
     if v:
         blocking=v.blocking.subquery()
         blocked=v.blocked.subquery()
-        vt=g.db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(cids)).subquery()
+        vt=session.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(cids)).subquery()
 
 
-        items= g.db.query(Comment, vt.c.vote_type, blocking.c.id, blocked.c.id).filter(
+        items= session.query(Comment, vt.c.vote_type, blocking.c.id, blocked.c.id).filter(
             Comment.id.in_(cids)
             ).join(
             vt, 
@@ -273,7 +276,7 @@ def get_comments(cids, v=None, sort_type="new"):
             output.append(x)
 
     else:
-        x=g.db.query(Comment).filter(Comment.id.in_(cids)).all()
+        x=session.query(Comment).filter(Comment.id.in_(cids)).all()
         output=[i for i in x]
 
     output=sorted(output, key=lambda x:cids.index(x.id))
