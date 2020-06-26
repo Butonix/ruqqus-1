@@ -24,26 +24,6 @@
 
          </div>
 
-      <div id="reply-to-{{ c.base36id }}"></div>
-
-      {% if render_replies %}
-      {% if level==8 and c.replies %}
-
-
-      <div id="morecomment-{{ c.base36id }}" class="mt-2 more-comments text-small">
-          <a href="{{ c.permalink }}">More comments →</a>
-      </div>
-
-      {% else %}
-      {% for comment in c.replies %}
-
-        {{ single_comment(comment, level=level+1) }}
-
-      {% endfor %}
-      {% endif %}
-      {% endif %}
-    </div>
-
 
 </div>
   {% endif %}
