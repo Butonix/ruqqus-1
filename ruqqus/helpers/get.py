@@ -83,7 +83,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
 
         blocking=v.blocking.subquery()
 
-        blocked=v.blcked.subquery()
+        blocked=v.blocked.subquery()
 
         comms=g.db.query(
             Comment,
