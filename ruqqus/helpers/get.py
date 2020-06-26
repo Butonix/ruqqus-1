@@ -263,8 +263,6 @@ def get_comments(cids, v=None, sort_type="new"):
             isouter=True
             ).order_by(Comment.created_utc.desc()).all()
 
-
-        items=[i for i in items]
         output=[]
         for i in items:
         
