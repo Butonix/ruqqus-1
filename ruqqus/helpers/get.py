@@ -253,7 +253,7 @@ def get_comments(cids, v=None, sort_type="new"):
             ).join(
             vt, 
             isouter=True
-            )join(
+            ).join(
             blocking,
             blocking.c.target_id==Comment.author_id,
             isouter=True
