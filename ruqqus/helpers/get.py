@@ -103,7 +103,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             isouter=True
             ).join(
             blocking,
-            blocking.c.target_id==Comment.author_id,
+            blockng.c.target_id==Comment.author_id,
             isouter=True
             ).join(
             blocked,
