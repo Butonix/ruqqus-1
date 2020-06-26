@@ -107,7 +107,8 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             isouter=True
             ).join(
             blocked,
-            blocked.c.user_id==Comment.author_id
+            blocked.c.user_id==Comment.author_id,
+            isouter=True
             )
 
         if sort_type=="hot":
