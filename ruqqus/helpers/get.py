@@ -81,9 +81,9 @@ def get_post_with_comments(pid, sort_type="top", v=None):
     if v:
         votes=g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
-        blocking=g.db.query(UserBlock).filter_by(user_id=v.id).subquery()
+        blocking=v.blocking.subquery()
 
-        blocked=g.db.query(UserBlock).filter_by(target_id=v.id).subquery()
+        blocked=v.blcked.subquery()
 
         comms=g.db.query(
             Comment,
