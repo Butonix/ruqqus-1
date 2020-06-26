@@ -31,6 +31,7 @@ def get_user(username, v=None, session=None, graceful=False):
             else:
                 return None
 
+        print(q)
         x=q[0]
         x._is_blocking=q[1] or 0
         x._is_blocked=q[2] or 0
