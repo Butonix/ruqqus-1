@@ -129,7 +129,10 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
 
     posts_subquery=posts.subquery()
 
-    posts=g.db.query(posts_subquery).filter(posts_subquery.c.rn<=3)
+    if sort==hot:
+        posts=g.db.query(posts_subquery).filter(posts_subquery.c.rn<=2)
+    else:
+        posts=g.db.query(posts_subquery)
 
     if ids_only:
         posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
