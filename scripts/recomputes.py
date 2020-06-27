@@ -28,11 +28,15 @@ def recompute():
             post.score_disputed=post.rank_fiery
             #post.score_top=post.score
             post.score_activity=post.rank_activity
+            post.score_best=post.rank_best
 
             db.add(post)
             
 
             #print(f"{i}/{total} - {post.base36id}")
+
+        db.commit()
+        db.begin()
 
         print(f"Scored {i} posts. Beginning comment recompute")
 

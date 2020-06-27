@@ -66,6 +66,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     board=relationship("Board", lazy="joined", innerjoin=True, primaryjoin="Submission.board_id==Board.id")
     author=relationship("User", lazy="joined", innerjoin=True, primaryjoin="Submission.author_id==User.id")
     is_pinned=Column(Boolean, default=False)
+    score_best=Column(Float, default=0)
 
     approved_by=relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id")
 
@@ -87,7 +88,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     rank_hot=deferred(Column(Float, server_default=FetchedValue()))
     rank_fiery=deferred(Column(Float, server_default=FetchedValue()))
-    rank_activity=deferred(Column(Float, server_default=FetchedValue()))    
+    rank_activity=deferred(Column(Float, server_default=FetchedValue())) 
+    rank_best=deferred(Column(Float, server_default=FetchedValue()))  
 
     def __init__(self, *args, **kwargs):
 
