@@ -161,7 +161,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
         private=not self.is_public and not self.board.can_view(v)
 
-        if private and not self.author_id==v.id:
+        if private and (not v or not self.author_id==v.id):
             abort(403)
         elif private:
             self.__dict__["replies"]=[]

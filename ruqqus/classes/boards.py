@@ -91,14 +91,15 @@ class Board(Base, Stndrd, Age_times):
         return not self.postrels.filter_by(post_id=post.id).first()
 
     @cache.memoize(timeout=60)
-    def idlist(self, sort="hot", page=1, t=None, show_offensive=True, v=None, **kwargs):
+    def idlist(self, sort="hot", page=1, t=None, show_offensive=True, v=None, nsfw=False, **kwargs):
 
-        posts=self.submissions.filter_by(is_banned=False,
+        posts=g.db.query(Submission.id).filter_by(is_banned=False,
                                          is_deleted=False,
                                          is_pinned=False,
+                                         board_id=self.id
                                         )
 
-        if not (v and v.over_18):
+        if not nsfw:
             posts=posts.filter_by(over_18=False)
 
         if v and v.hide_offensive:
@@ -158,7 +159,7 @@ class Board(Base, Stndrd, Age_times):
         else:
             abort(422)
 
-        posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
+        posts=[x[0] for x in posts.offset(25*(page-1)).limit(26).all()]
 
         return posts
 

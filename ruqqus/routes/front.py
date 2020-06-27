@@ -36,9 +36,10 @@ def notifications(v):
                            standalone=True)
 
 @cache.memoize(timeout=300)
-def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=False, ids_only=True):
+def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, **kwargs):
 
     #cutoff=int(time.time())-(60*60*24*30)
+
 
     if sort=="hot":
         sort_func=Submission.score_hot.desc
@@ -59,12 +60,13 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=Fal
             order_by=sort_func()
             ).label("rn")
         ).filter_by(is_banned=False,
-                                           is_deleted=False,
-                                           stickied=False)
-    if not nsfw:
+        is_deleted=False,
+        stickied=False)
+        
+    if not (v and v.over_18):
         posts=posts.filter_by(over_18=False)
 
-    if hide_offensive:
+    if v and v.hide_offensive:
         posts=posts.filter_by(is_offensive=False)
 
     if v and v.admin_level >= 4:
@@ -127,7 +129,6 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=Fal
 
     posts_subquery=posts.subquery()
 
-
     posts=g.db(posts_subquery).filter(posts_subquery.c.rn<=3)
 
     if ids_only:
@@ -135,6 +136,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=Fal
         return posts
     else:
         return [x for x in posts.offset(25*(page-1)).limit(25).all()]
+
 
 @app.route("/", methods=["GET"])
 @app.route("/api/v1/front/listing", methods=["GET"])

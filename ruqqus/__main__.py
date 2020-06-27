@@ -23,7 +23,7 @@ from redis import BlockingConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.12.1"
+_version = "2.12.5"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -38,7 +38,7 @@ app.config["SERVER_NAME"]=environ.get("domain", None)
 app.config["SESSION_COOKIE_NAME"]="session_ruqqus"
 app.config["VERSION"]=_version
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config["SESSION_COOKIE_SECURE"]=True
+app.config["SESSION_COOKIE_SECURE"] = environ.get("SESSION_COOKIE_SECURE", "true").lower() != "false"
 app.config["SESSION_COOKIE_SAMESITE"]="Lax"
 
 app.config["PERMANENT_SESSION_LIFETIME"]=60*60*24*365
@@ -53,22 +53,9 @@ if "localhost" in app.config["SERVER_NAME"]:
 else:
     app.config["CACHE_TYPE"]=environ.get("CACHE_TYPE", 'null')
     
-app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL", environ.get("REDIS_URL"))
+app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL")
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 app.config["CACHE_KEY_PREFIX"]="flask_caching_"
-
-MAX_REDIS_CONNS = int(environ.get("MAX_REDIS_CONNS", 6))
-
-pool = BlockingConnectionPool(max_connections=MAX_REDIS_CONNS)
-app.config['CACHE_OPTIONS'] = {'connection_pool': pool, 'max_connections': MAX_REDIS_CONNS}
-
-app.config['redis_urls']=[
-        environ.get('HEROKU_REDIS_AQUA_URL'),
-        environ.get('HEROKU_REDIS_GRAY_URL'),
-        environ.get('HEROKU_REDIS_BLACK_URL'),
-        #environ.get('HEROKU_REDIS_WHITE_URL'),
-        environ.get('HEROKU_REDIS_NAVY_URL')
-        ]
 
 
 Markdown(app)
@@ -88,12 +75,14 @@ limiter = Limiter(
 )
 
 #setup db
-_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
-    pool_size=6)
+_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+
 
 
 def make_session():
-    return sessionmaker(bind=_engine, autocommit=True)()
+    return sessionmaker(bind=_engine)()
+thread_session=make_session()
+
 
 
 Base = declarative_base()
@@ -132,7 +121,7 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
-    g.db = make_session()
+    g.db = thread_session
 
     session.permanent = True
 
@@ -150,8 +139,8 @@ def before_request():
     if not session.get("session_id"):
         session["session_id"]=secrets.token_hex(16)
 
-   #db.rollback()
-    g.db.begin()
+    #db.rollback()
+    #g.db.begin(subtransactions=True)
 
 
 def log_event(name, link):

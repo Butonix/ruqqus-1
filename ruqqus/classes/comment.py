@@ -257,6 +257,15 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def title(self):
         return self.__dict__.get("_title", self.author.title)
+
+    @property
+    def is_blocking(self):
+        return self.__dict__.get('_is_blocking', 0)
+
+    @property
+    def is_blocked(self):
+        return self.__dict__.get('_is_blocked', 0)   
+    
     
         
 class Notification(Base):
@@ -272,8 +281,6 @@ class Notification(Base):
 
     #Server side computed values (copied from corresponding comment)
     created_utc=Column(Integer, server_default=FetchedValue())
-    is_banned=Column(Boolean, server_default=FetchedValue())
-    is_deleted=Column(Boolean, server_default=FetchedValue())
 
     def __repr__(self):
 

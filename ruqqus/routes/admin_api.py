@@ -86,7 +86,7 @@ def ban_post(post_id, v):
     g.db.add(post)
     
 
-    cache.delete_memoized(Board.idlist, self=post.board)
+    cache.delete_memoized(Board.idlist, post.board)
     
     return (redirect(post.permalink), post)
 

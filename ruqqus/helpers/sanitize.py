@@ -17,6 +17,7 @@ _allowed_tags=tags=['b',
                     'h4',
                     'h5',
                     'h6',
+                    'hr',
                     'i',
                     'li',
                     'ol',
@@ -25,17 +26,17 @@ _allowed_tags=tags=['b',
                     'strong',
                     'sub',
                     'sup',
+                    'table',
+                    'tbody',
+                    'th',
+                    'thead',
+                    'td',
+                    'tr',
                     'ul'
                    ]
 
 _allowed_tags_with_links=_allowed_tags+["a", 
-                                        "hr", 
-                                        "img",
-                                        'table',
-                                        'th',
-                                        'thead',
-                                        'td',
-                                        'tr'
+                                        "img"
                                         ]
 
 _allowed_attributes={'a': ['href', 'title', "rel"],

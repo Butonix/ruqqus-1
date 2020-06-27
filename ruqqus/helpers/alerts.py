@@ -5,8 +5,6 @@ from flask import g
 from .markdown import *
 from .sanitize import *
 
-from ruqqus.__main__ import make_session
-
 def send_notification(user, text):
 
 
@@ -25,7 +23,7 @@ def send_notification(user, text):
     g.db.add(new_comment)
 
     g.db.commit()
-    g.db.begin()
+    #g.db.begin()
     
     notif=Notification(comment_id=new_comment.id,
                        user_id=user.id)

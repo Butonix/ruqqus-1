@@ -36,13 +36,17 @@ class UserBlock(Base, Stndrd, Age_times):
     target=relationship("User", lazy="joined", primaryjoin="User.id==UserBlock.target_id")
 
 
+    def __repr__(self):
+
+        return f"<UserBlock(user={user.username}, target={target.username})>"
+
 class User(Base, Stndrd):
 
     __tablename__="users"
     id = Column(Integer, primary_key=True)
     username = Column(String, default=None)
     email = Column(String, default=None)
-    passhash = Column(String, default=None)
+    passhash = deferred(Column(String, default=None))
     created_utc = Column(Integer, default=0)
     admin_level = Column(Integer, default=0)
     is_activated = Column(Boolean, default=False)
@@ -73,7 +77,7 @@ class User(Base, Stndrd):
     profile_nonce=Column(Integer, default=0)
     banner_nonce=Column(Integer, default=0)
     last_siege_utc=Column(Integer, default=0)
-    mfa_secret=Column(String(16), default=None)
+    mfa_secret=deferred(Column(String(16), default=None))
     hide_offensive=Column(Boolean, default=False)
     show_nsfl=Column(Boolean, default=False)
     is_private=Column(Boolean, default=False)
@@ -147,11 +151,11 @@ class User(Base, Stndrd):
         return int(time.time())-self.created_utc
         
     @cache.memoize(timeout=300)
-    def idlist(self, sort="hot", page=1, t=None, hide_offensive=False, ids_only=True, **kwargs):
+    def idlist(self, sort="hot", page=1, t=None, hide_offensive=False, **kwargs):
 
         
 
-        posts=g.db.query(Submission).filter_by(is_banned=False,
+        posts=g.db.query(Submission.id).filter_by(is_banned=False,
                                              is_deleted=False,
                                              stickied=False
                                              )
@@ -231,16 +235,12 @@ class User(Base, Stndrd):
         else:
             abort(422)
 
-        if ids_only:
-            posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
-            return posts
-        else:
-            return [x for x in posts.offset(25*(page-1)).limit(25).all()]
+        return [x[0] for x in posts.offset(25*(page-1)).limit(26).all()]
 
     @cache.memoize(300)
     def userpagelisting(self, v=None, page=1):
 
-        submissions=self.submissions
+        submissions=g.db.query(Submission.id).filter_by(author_id=self.id)
 
         if not (v and v.over_18):
             submissions=submissions.filter_by(over_18=False)
@@ -274,9 +274,9 @@ class User(Base, Stndrd):
         else:
             submissions=submissions.filter_by(is_public=True)
 
-        listing = [x for x in submissions.order_by(Submission.created_utc.desc()).offset(25*(page-1)).limit(26)]
+        listing = [x[0] for x in submissions.order_by(Submission.created_utc.desc()).offset(25*(page-1)).limit(26)]
 
-        return [i.id for i in listing]
+        return listing
 
     @cache.memoize(300)
     def commentlisting(self, v=None, page=1):
@@ -452,7 +452,7 @@ class User(Base, Stndrd):
     @property
     def notifications_count(self):
 
-        return self.notifications.filter_by(read=False, is_banned=False, is_deleted=False).count()
+        return self.notifications.filter_by(read=False).join(Notification.comment).filter(Comment.is_banned==False, Comment.is_deleted==False).count()
 
     @property
     def post_count(self):
@@ -687,3 +687,10 @@ class User(Base, Stndrd):
         return  (self.is_banned and (self.unban_utc == 0 or self.unban_utc > time.time()))
 
 
+    @property
+    def is_blocking(self):
+        return self.__dict__.get('_is_blocking', 0)
+
+    @property
+    def is_blocked(self):
+        return self.__dict__.get('_is_blocked', 0)   

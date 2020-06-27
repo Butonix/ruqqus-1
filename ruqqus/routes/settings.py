@@ -328,6 +328,22 @@ def delete_account(v):
     v.del_banner()
     v.del_profile()
     g.db.add(v)
+
+    mods=g.db.query(ModRelationship).filter_by(user_id=v.id).all()
+    for mod in mods:
+        g.db.delete(mod)
+
+    bans=g.db.query(BanRelationship).filter_by(user_id=v.id).all()
+    for ban in bans:
+        g.db.delete(ban)
+
+    contribs=g.db.query(ContributorRelationship).filter_by(user_id=v.id).all()
+    for contrib in contribs:
+        g.db.delete(contrib)
+
+    blocks=g.db.query(UserBlock).filter_by(target_id=v.id).all()
+    for block in blocks:
+        g.db.delete(blocks)
     
 
     session.pop("user_id", None)
@@ -372,8 +388,8 @@ def settings_block_user(v):
                         )
     g.db.add(new_block)
 
-    cache.delete_memoized(User.idlist, self=v)
-    cache.delete_memoized(Board.idlist, v=v)
+    cache.delete_memoized(v.idlist)
+    #cache.delete_memoized(Board.idlist, v=v)
     cache.delete_memoized(frontlist, v=v)
 
     return "", 204
@@ -391,8 +407,8 @@ def settings_unblock_user(v):
 
     g.db.delete(x)
 
-    cache.delete_memoized(User.idlist, self=v)
-    cache.delete_memoized(Board.idlist, v=v)
+    cache.delete_memoized(v.idlist)
+    #cache.delete_memoized(Board.idlist, v=v)
     cache.delete_memoized(frontlist, v=v)
     
     return "", 204

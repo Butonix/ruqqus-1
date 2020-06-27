@@ -137,7 +137,7 @@ def badge_grant_post(v):
     g.db.add(new_badge)
 
     g.db.commit()
-    g.db.begin()
+    
     
 
     text=f"""

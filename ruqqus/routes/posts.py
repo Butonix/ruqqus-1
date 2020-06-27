@@ -6,6 +6,7 @@ import secrets
 import threading
 import requests
 import re
+import bleach
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -201,7 +202,19 @@ def submit_post(v):
                                b=board
                                )
     #sanitize title
-    title=sanitize(title, linkgen=False)
+    title=bleach.clean(title)
+
+    #Force https for submitted urls
+    if request.form.get("url"):
+        new_url=ParseResult(scheme="https",
+                            netloc=parsed_url.netloc,
+                            path=parsed_url.path,
+                            params=parsed_url.params,
+                            query=parsed_url.query,
+                            fragment=parsed_url.fragment)
+        url=urlunparse(new_url)
+    else:
+        url=""
 
     #check for duplicate
     dup = g.db.query(Submission).filter_by(title=title,
@@ -293,17 +306,7 @@ def submit_post(v):
     user_name=v.username
                 
                 
-    #Force https for submitted urls
-    if request.form.get("url"):
-        new_url=ParseResult(scheme="https",
-                            netloc=parsed_url.netloc,
-                            path=parsed_url.path,
-                            params=parsed_url.params,
-                            query=parsed_url.query,
-                            fragment=parsed_url.fragment)
-        url=urlunparse(new_url)
-    else:
-        url=""
+
 
     #now make new post
 
@@ -369,7 +372,7 @@ def submit_post(v):
     g.db.add(new_post)
 
     g.db.commit()
-    g.db.begin()
+    
 
     vote=Vote(user_id=user_id,
               vote_type=1,

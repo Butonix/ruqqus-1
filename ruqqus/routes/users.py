@@ -68,7 +68,7 @@ def u_username(username, v=None):
     
     #case insensitive search
 
-    u = get_user(username)
+    u = get_user(username, v=v)
 
     #check for wrong cases
 
@@ -104,6 +104,20 @@ def u_username(username, v=None):
                 'api': lambda:{"error":"That user deactivated their account."}
                 }
 
+    if u.is_blocking and (not v or v.admin_level<3):
+        return {'html': lambda:render_template("userpage_blocking.html",
+                                               u=u,
+                                               v=v),
+                'api': lambda:{"error":f"You are blocking @{u.username}."}
+                }
+
+    if u.is_blocked and (not v or v.admin_level<3):
+        return {'html': lambda:render_template("userpage_blocked.html",
+                                               u=u,
+                                               v=v),
+                'api': lambda:{"error":"This person is blocking you."}
+                }
+
     page=int(request.args.get("page","1"))
     page=max(page, 1)
 
@@ -135,7 +149,7 @@ def u_username_comments(username, v=None):
     
     #case insensitive search
 
-    user=get_user(username)
+    user=get_user(username, v=v)
 
     #check for wrong cases
 
@@ -152,11 +166,19 @@ def u_username_comments(username, v=None):
         return render_template("userpage_private.html", u=user, v=v)
 
     if user.is_deleted and (not v or (v.id!=user.id and v.admin_level<3)):
-        return {'html': lambda:render_template("userpage_deleted.html",
+        return render_template("userpage_deleted.html",
                                                u=user,
-                                               v=v),
-                'api': lambda:{"error":"That user deactivated their account."}
-                }
+                                               v=v)
+
+    if user.is_blocking and (not v or v.admin_level<3):
+        return render_template("userpage_blocking.html",
+                                               u=user,
+                                               v=v)
+
+    if user.is_blocked and (not v or v.admin_level<3):
+        return render_template("userpage_blocked.html",
+                                               u=user,
+                                               v=v)
     
     page=int(request.args.get("page","1"))
 
