@@ -9,7 +9,6 @@ def recompute():
 
     while True:
 
-        db.begin()
 
         now=int(time.time())
 
@@ -36,7 +35,6 @@ def recompute():
             #print(f"{i}/{total} - {post.base36id}")
 
         db.commit()
-        db.begin()
 
         print(f"Scored {i} posts. Beginning comment recompute")
 
