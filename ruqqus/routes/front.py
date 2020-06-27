@@ -62,7 +62,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, **kwargs):
         ).filter_by(is_banned=False,
         is_deleted=False,
         stickied=False)
-        
+
     if not (v and v.over_18):
         posts=posts.filter_by(over_18=False)
 
@@ -129,7 +129,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, **kwargs):
 
     posts_subquery=posts.subquery()
 
-    posts=g.db(posts_subquery).filter(posts_subquery.c.rn<=3)
+    posts=g.db.query(posts_subquery).filter(posts_subquery.c.rn<=3)
 
     if ids_only:
         posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
