@@ -44,6 +44,7 @@ def api_vote_post(post_id, x, v):
     post.score_disputed=post.rank_fiery
     post.score_top=post.score
     post.score_activity=post.rank_activity
+    post.score_best=post.rank_best
 
     g.db.add(post)
     
