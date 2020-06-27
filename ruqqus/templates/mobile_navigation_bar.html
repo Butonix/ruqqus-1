@@ -15,8 +15,16 @@
         <div class="col px-0">
             <a href="/all?sort=new" class="text-decoration-none" role="button">
                 <div class="text-center {% if request.path=='/all' %}text-purple{% else %}text-muted{% endif %}">
-                    <i class="fas fa-globe-americas text-lg d-block"></i>
-                    <div class="text-small">All</div>
+                    <i class="fas fa-sparkles text-lg d-block"></i>
+                    <div class="text-small">New</div>
+                </div>
+            </a>
+        </div>
+        <div class="col px-0">
+            <a href="/all?sort=new" class="text-decoration-none" role="button">
+                <div class="text-center {% if request.path=='/all' %}text-purple{% else %}text-muted{% endif %}">
+                    <i class="fas fa-fire text-lg d-block"></i>
+                    <div class="text-small">Trending</div>
                 </div>
             </a>
         </div>
