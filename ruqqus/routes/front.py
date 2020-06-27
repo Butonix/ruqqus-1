@@ -129,7 +129,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
 
     posts_subquery=posts.subquery()
 
-    if sort==hot:
+    if sort=="hot":
         posts=g.db.query(posts_subquery).filter(posts_subquery.c.rn<=2)
     else:
         posts=g.db.query(posts_subquery)
