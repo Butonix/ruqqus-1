@@ -40,7 +40,25 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=Fal
 
     #cutoff=int(time.time())-(60*60*24*30)
 
-    posts = g.db.query(Submission).filter_by(is_banned=False,
+    if sort=="hot":
+        sort_func=Submission.score_hot.desc
+    elif sort=="new":
+        sort_func=Submission.created_utc.desc
+    elif sort=="disputed":
+        sort_func=Submission.score_disputed.desc
+    elif sort=="top":
+        sort_func=Submission.score_top.desc
+    elif sort=="activity":
+        sort_func=Submission.score_activity.desc
+    else:
+        abort(422)
+
+    posts = g.db.query(Submission,
+        func.rank().over(
+            partition_by=Submission.board_id,
+            order_by=sort_func()
+            ).label("rn")
+        ).filter_by(is_banned=False,
                                            is_deleted=False,
                                            stickied=False)
     if not nsfw:
@@ -94,7 +112,6 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=Fal
             cutoff=0        
         posts=posts.filter(Submission.created_utc >= cutoff)
 
-        
     if sort=="hot":
         posts=posts.order_by(Submission.score_hot.desc())
     elif sort=="new":
@@ -107,6 +124,11 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, hide_offensive=Fal
         posts=posts.order_by(Submission.score_activity.desc())
     else:
         abort(422)
+
+    posts_subquery=posts.subquery()
+
+
+    posts=g.db(posts_subquery).filter(posts_subquery.c.rn<=3)
 
     if ids_only:
         posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
@@ -139,7 +161,7 @@ def home(v):
         ids=ids[0:25]
 
         #If page 1, check for sticky
-        if page==1:
+        if page==1 and sort != "new":
             sticky=g.db.query(Submission.id).filter_by(stickied=True).first()
             if sticky:
                 ids=[sticky.id]+ids

@@ -180,7 +180,7 @@ def board_name(name, v):
     next_exists=(len(ids)==26)
     ids=ids[0:25]
 
-    if page==1:
+    if page==1 and sort !="new":
         stickies=g.db.query(Submission.id).filter_by(board_id=board.id,
                                     is_banned=False,
                                     is_deleted=False,
