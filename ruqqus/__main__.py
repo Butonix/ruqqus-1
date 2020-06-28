@@ -120,7 +120,7 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
-    g.db = thread_session
+    g.db = make_session()
 
     session.permanent = True
 
@@ -193,6 +193,8 @@ def after_request(response):
         link=f'https://{app.config["SERVER_NAME"]}/@{request.form.get("username")}'
         thread=threading.Thread(target=lambda:log_event(name="Account Signup", link=link))
         thread.start()
+
+    db.close()
 
     return response
 
