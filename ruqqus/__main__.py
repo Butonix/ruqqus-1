@@ -81,7 +81,7 @@ _engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
     )
 
 Session=scoped_session(sessionmaker(bind=_engine))#, scopefunc=lambda:request)
-session=Session()
+db_session=Session()
 
 #a_session=Session()
 
@@ -121,7 +121,7 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
-    g.db = session
+    g.db = db_session
 
     session.permanent = True
 
