@@ -12,7 +12,7 @@ headers={"User-Agent":app.config["UserAgent"]}
 
 def thumbnail_thread(pid):
     
-    db=Session()
+    db=Session
 
     post=get_post(pid, session=db)
 
