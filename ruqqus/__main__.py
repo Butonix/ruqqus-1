@@ -58,8 +58,9 @@ app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL")
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 app.config["CACHE_KEY_PREFIX"]="flask_caching_"
 
-Session=SQLAlchemy(app)
+Session=SQLAlchemy()
 Base=Session.Modal
+Session.init_app(app)
 
 Markdown(app)
 cache=Cache(app)
