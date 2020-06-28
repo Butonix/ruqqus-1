@@ -52,19 +52,19 @@
 
       <div class="position-relative d-none d-md-block" style="z-index: 3;">
         {% if p.thumb_url and not p.embed_url %}
-        <a href="{{ p.url }}" target="_blank" rel="nofollow"{% if p.is_image %} data-toggle="modal" data-target="#expandImageModal"{% endif %}>
+        <a href="{{ p.url }}" target="_blank" rel="nofollow noopener"{% if p.is_image %} data-toggle="modal" data-target="#expandImageModal"{% endif %}>
           <img src="{{ p.thumb_url }}" class="post-img" alt=""{% if p.is_image %} onclick="expandDesktopImage('{{ p.url }}','{{ p.url }}')"{% endif %}>
         </a>
         {% endif %}
 
         {% if p.embed_url %}
-        <a href="{{ p.url }}" target="_blank" rel="nofollow">
+        <a href="{{ p.url }}" target="_blank" rel="nofollow noopener">
           <img src="{{ p.thumb_url if p.has_thumb else '/assets/images/icons/default_thumb_yt.png' }}" class="post-img border-0" alt="generic youtube embed thumbnail">
         </a>
         {% endif %}
 
         {% if not p.url %}
-        <a href="{{ p.permalink }}" target="_blank" rel="nofollow">
+        <a href="{{ p.permalink }}" target="_blank" rel="nofollow noopener">
           <img src="/assets/images/icons/default_thumb_text.png" class="post-img border-0" alt="text post thumbnail">
         </a>
         {% endif %}
@@ -78,7 +78,7 @@
 
       {% if p.thumb_url and not p.is_image %}
       <div class="d-block d-md-none" style="z-index: 3;">
-      	<a href="{{ p.permalink }}" rel="nofollow">
+      	<a href="{{ p.permalink }}" rel="nofollow noopener">
         	<img src="{{ p.thumb_url }}" class="post-img" alt="link post thumbnail">
    		</a>
       </div>
@@ -127,7 +127,7 @@
     {% if p.thumb_url %}
     <div class="row post-img-lg mb-3">
       <div class="col px-0">
-        <a target="_blank" href="{{ p.permalink }}" rel="nofollow"><img src="{{ p.thumb_url }}" class="img-fluid" alt="post image"></a>
+        <a target="_blank" href="{{ p.permalink }}" rel="nofollow noopener"><img src="{{ p.thumb_url }}" class="img-fluid" alt="post image"></a>
       </div>
     </div>
     {% endif %}
@@ -179,7 +179,7 @@
 {% if p.is_image and p.thumb_url and not p.embed_url %}
 <div class="row mobile-thumb-enlarged text-center mt-3">
   <div class="col px-0">
-    <a target="_blank" href="{{ p.permalink }}" rel="nofollow"><img src="{{ p.url }}" class="img-fluid" alt="post image"></a>
+    <a target="_blank" href="{{ p.permalink }}" rel="nofollow noopener"><img src="{{ p.url }}" class="img-fluid" alt="post image"></a>
   </div>
 </div>
 {% endif %}
