@@ -80,8 +80,10 @@ _engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
     pool_use_lifo=True
     )
 
-Session=scoped_session(sessionmaker(bind=_engine))#, scopefunc=lambda:request)
-db_session=Session()
+#Session=scoped_session(sessionmaker(bind=_engine))#, scopefunc=lambda:request)
+#db_session=Session()
+session_maker=sessionmaker(bind=_engine)
+db_session=session_maker()
 
 #a_session=Session()
 
@@ -139,8 +141,7 @@ def before_request():
     if not session.get("session_id"):
         session["session_id"]=secrets.token_hex(16)
 
-    #db.rollback()
-    #g.db.begin(subtransactions=True)
+    g.db.begin_nested()
 
 
 def log_event(name, link):
@@ -173,7 +174,7 @@ def after_request(response):
     try:
         g.db.commit()
     except:
-        pass
+        g.db.close()
 
     response.headers.add('Access-Control-Allow-Headers',
                          "Origin, X-Requested-With, Content-Type, Accept, x-auth"
