@@ -82,7 +82,7 @@ _engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
 
 Session=scoped_session(sessionmaker(bind=_engine))#, scopefunc=lambda:request)
 
-
+a_session=Session()
 
 Base = declarative_base()
 
@@ -120,7 +120,7 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
-    g.db = Session()
+    g.db = a_session
 
     session.permanent = True
 
@@ -194,7 +194,7 @@ def after_request(response):
         thread=threading.Thread(target=lambda:log_event(name="Account Signup", link=link))
         thread.start()
 
-    g.db.close()
+    #g.db.close()
 
     return response
 
