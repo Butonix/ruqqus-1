@@ -79,7 +79,7 @@ _engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 
 
 
-session=scoped_session(sessionmaker(bind=_engine))
+Session=scoped_session(sessionmaker(bind=_engine))
 
 
 
