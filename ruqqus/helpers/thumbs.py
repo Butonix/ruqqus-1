@@ -6,13 +6,13 @@ from PIL import Image as PILimage
 from flask import g
 
 from .get import *
-from ruqqus.__main__ import app, Session
+from ruqqus.__main__ import app, session_maker
 
 headers={"User-Agent":app.config["UserAgent"]}
 
 def thumbnail_thread(pid):
     
-    db=Session()
+    db=session_maker()
 
     post=get_post(pid, session=db)
 
