@@ -194,7 +194,7 @@ def after_request(response):
         thread=threading.Thread(target=lambda:log_event(name="Account Signup", link=link))
         thread.start()
 
-    db.close()
+    g.db.close()
 
     return response
 
