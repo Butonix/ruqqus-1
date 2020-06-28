@@ -324,11 +324,11 @@ class Board(Base, Stndrd, Age_times):
 
     @property
     def css_url(self):
-        return f"{self.permalink}/main/{self.color_nonce}.css"
+        return f"/assets/{self.name}/main/{self.color_nonce}.css"
 
     @property
     def css_dark_url(self):
-        return f"{self.permalink}/dark/{self.color_nonce}.css"
+        return f"/assets/{self.name}/dark/{self.color_nonce}.css"
 
 
     def has_participant(self, user):

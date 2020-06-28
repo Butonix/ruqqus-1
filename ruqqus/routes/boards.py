@@ -904,7 +904,7 @@ def mod_board_images_delete_banner(bid, board, v):
     return redirect(f"/+{board.name}/mod/appearance?msg=Success#images")
 
     
-@app.route("/+<boardname>/main/<x>.css", methods=["GET"])
+@app.route("/assets/<boardname>/main/<x>.css", methods=["GET"])
 #@cache.memoize(60*6*24)
 def board_css(boardname, x):
 
@@ -926,7 +926,7 @@ def board_css(boardname, x):
 
     return resp
 
-@app.route("/+<boardname>/dark/<x>.css", methods=["GET"])
+@app.route("/assets/<boardname>/dark/<x>.css", methods=["GET"])
 #@cache.memoize(60*60*24)
 def board_dark_css(boardname, x):
 
