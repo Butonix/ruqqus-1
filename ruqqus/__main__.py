@@ -77,12 +77,12 @@ limiter = Limiter(
 )
 
 #setup db
-_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
-    pool_size=4,
-    pool_use_lifo=True
-    )
+# _engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
+#     pool_size=4,
+#     pool_use_lifo=True
+#     )
 
-Session=scoped_session(sessionmaker(bind=_engine))#, scopefunc=lambda:request)
+# Session=scoped_session(sessionmaker(bind=_engine))#, scopefunc=lambda:request)
 
 #a_session=Session()
 
