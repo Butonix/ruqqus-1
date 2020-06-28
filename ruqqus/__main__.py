@@ -58,9 +58,8 @@ app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL")
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 app.config["CACHE_KEY_PREFIX"]="flask_caching_"
 
-db=SQLAlchemy(app)
-
-Base=db.Modal
+Session=SQLAlchemy(app)
+Base=Session.Modal
 
 Markdown(app)
 cache=Cache(app)
@@ -124,7 +123,7 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
-    g.db = Session
+    g.db = Session.session
 
     session.permanent = True
 
