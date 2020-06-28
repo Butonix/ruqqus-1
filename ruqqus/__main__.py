@@ -80,7 +80,7 @@ _engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 
 
 make_session=sessionmaker(bind=_engine)
-#thread_session=make_session()
+thread_session=make_session()
 
 
 
@@ -120,7 +120,7 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
-    g.db = make_session()
+    g.db = thread_session
 
     session.permanent = True
 
@@ -201,9 +201,9 @@ def www_redirect(path):
 
     return redirect(f"https://ruqqus.com/{path}")
 
-@app.teardown_appcontext
-def teardown(resp):
-
-    g.db.close()
-    return resp
+#@app.teardown_appcontext
+#def teardown(resp):
+#
+#    g.db.close()
+#    return resp
 
