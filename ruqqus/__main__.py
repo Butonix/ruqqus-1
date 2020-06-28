@@ -11,10 +11,11 @@ from flask_compress import Compress
 from time import sleep
 
 from flaskext.markdown import Markdown
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship, scoped_session
-from sqlalchemy import *
-from sqlalchemy.pool import QueuePool
+#from sqlalchemy.ext.declarative import declarative_base
+#from sqlalchemy.orm import sessionmaker, relationship, scoped_session
+#from sqlalchemy import *
+#from sqlalchemy.pool import QueuePool
+from flask_sqlalchemy import SQLAlchemy
 import threading
 import requests
 
@@ -57,6 +58,7 @@ app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL")
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 app.config["CACHE_KEY_PREFIX"]="flask_caching_"
 
+db=SQLAlchemy(app)
 
 Markdown(app)
 cache=Cache(app)
