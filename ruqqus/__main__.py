@@ -60,6 +60,8 @@ app.config["CACHE_KEY_PREFIX"]="flask_caching_"
 
 db=SQLAlchemy(app)
 
+Base=db.Modal
+
 Markdown(app)
 cache=Cache(app)
 Compress(app)
