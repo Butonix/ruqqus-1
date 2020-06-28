@@ -120,7 +120,7 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
-    g.db = Session
+    g.db = Session()
 
     session.permanent = True
 
@@ -203,8 +203,8 @@ def www_redirect(path):
 
     return redirect(f"https://ruqqus.com/{path}")
 
-@app.teardown_appcontext
-def teardown(resp):
+# @app.teardown_appcontext
+# def teardown(resp):
 
-    g.db.remove()
+#     g.db.close()
 
