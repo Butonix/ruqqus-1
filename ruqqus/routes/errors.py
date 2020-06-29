@@ -60,10 +60,7 @@ def error_451(e, v):
 @app.errorhandler(500)
 @auth_desired
 def error_500(e, v):
-    #try:
-     #   g.db.close()
-   # except:
-     #   pass
+    g.db.rollback()
     return render_template('errors/500.html', e=e, v=v), 500
 
 
