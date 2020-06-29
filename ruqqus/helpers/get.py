@@ -124,7 +124,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             ).filter(
             Comment.parent_submission==post.id,
             Comment.level<=6
-            ).join(Comment.author).join(
+            ).join(Comment._author).join(
             User.title, isouter=True
             ).join(
             votes,
@@ -158,6 +158,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
         output=[]
         for c in comments:
             comment=c[0]
+            comment.author=c[1]
             comment._title=c[2]
             comment._voted=c[3] or 0
             comment._is_blocking=c[4] or 0
@@ -173,7 +174,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             ).filter(
             Comment.parent_submission==post.id,
             Comment.level<=6
-            ).join(Comment.author).join(
+            ).join(Comment._author).join(
             User.title, isouter=True
             )
 
@@ -194,6 +195,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
         output=[]
         for c in comments:
             comment=c[0]
+            comment.author=c[1]
             comment._title=c[2]
             output.append(comment)
 
@@ -214,8 +216,10 @@ def get_comment(cid, v=None):
         vt=g.db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id==i).subquery()
 
 
-        items= g.db.query(Comment, vt.c.vote_type, blocking.c.id, blocked.c.id).filter(
+        items= g.db.query(Comment, User, vt.c.vote_type, blocking.c.id, blocked.c.id).filter(
             Comment.id==i
+            ).join(
+            Comment._author
             ).join(
             vt, isouter=True
             ).join(
@@ -231,12 +235,15 @@ def get_comment(cid, v=None):
         if not items:
             abort(404)
         x=items[0]
-        x._voted=items[1] or 0
-        x._is_blocking=items[2] or 0
-        x._is_blocked=items[3] or 0
+        x.author=items[1]
+        x._voted=items[2] or 0
+        x._is_blocking=items[3] or 0
+        x._is_blocked=items[4] or 0
 
     else:
-        x=g.db.query(Comment).filter_by(id=i).first()
+        items=g.db.query(Comment, User).join(Comment._author).filter_by(id=i).first()
+        x=items[0]
+        x.author=items[1]
 
     if not x:
         abort(404)
@@ -253,8 +260,10 @@ def get_comments(cids, v=None, session=None, sort_type="new"):
         vt=session.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(cids)).subquery()
 
 
-        items= session.query(Comment, vt.c.vote_type, blocking.c.id, blocked.c.id).filter(
+        items= session.query(Comment, User vt.c.vote_type, blocking.c.id, blocked.c.id).filter(
             Comment.id.in_(cids)
+            ).join(
+            Comment._author
             ).join(
             vt, 
             isouter=True
@@ -272,14 +281,19 @@ def get_comments(cids, v=None, session=None, sort_type="new"):
         for i in items:
         
             x=i[0]
-            x._voted=i[1] or 0
-            x._is_blocking=i[2] or 0
-            x._is_blocked=i[3] or 0
+            x.author=i[1]
+            x._voted=i[2] or 0
+            x._is_blocking=i[3] or 0
+            x._is_blocked=i[4] or 0
             output.append(x)
 
     else:
-        x=session.query(Comment).filter(Comment.id.in_(cids)).all()
-        output=[i for i in x]
+        entries=session.query(Comment, User).join(Comment._author).filter(Comment.id.in_(cids)).all()
+        output=[]
+        for row in entries:
+            comment=row[0]
+            comment.author=row[1]
+            output.append(comment)
 
     output=sorted(output, key=lambda x:cids.index(x.id))
     
