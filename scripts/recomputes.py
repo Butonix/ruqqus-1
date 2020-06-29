@@ -30,6 +30,9 @@ def recompute():
             post.score_best=post.rank_best
 
             db.add(post)
+
+            if not i%100:
+                db.commit()
             
 
             #print(f"{i}/{total} - {post.base36id}")
@@ -59,6 +62,8 @@ def recompute():
             #comment.score_top=comment.score
 
             db.add(comment)
+            if not i%100:
+                db.commit()
             
         db.commit()
 
