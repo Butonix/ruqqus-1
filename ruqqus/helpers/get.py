@@ -241,7 +241,7 @@ def get_comment(cid, v=None):
         x._is_blocked=items[4] or 0
 
     else:
-        items=g.db.query(Comment, User).join(Comment._author).filter_by(id=i).first()
+        items=g.db.query(Comment, User).filter(Comment.id=i).join(Comment._author).first()
         x=items[0]
         x.author=items[1]
 
