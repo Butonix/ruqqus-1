@@ -12,7 +12,7 @@ from time import sleep
 
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship, scoped_session
+from sqlalchemy.orm import Session, sessionmaker, scoped_session
 from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
 import threading
@@ -33,6 +33,9 @@ app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
+app.config['SQLALCHEMY_READ_URIS']=[
+    environ.get("HEROKU_POSTGRES_CRIMSON_URL")
+]
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
 app.config["SERVER_NAME"]=environ.get("domain", None)
 app.config["SESSION_COOKIE_NAME"]="session_ruqqus"
@@ -75,17 +78,18 @@ limiter = Limiter(
 )
 
 #setup db
-_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
-    pool_size=8,
-    pool_use_lifo=True
-    )
+engines={
+    "leader":create_engine(app.config['SQLALCHEMY_DATABASE_URI']),
+    "follower":create_engine(environ.get("HEROKU_POSTGRES_CRIMSON_URL"))
+}
 
-Session=scoped_session(sessionmaker(bind=_engine))#, scopefunc=lambda:request)
-db_session=Session()
-#session_maker=sessionmaker(bind=_engine)
-#db_session=session_maker()
-
-#a_session=Session()
+class RoutingSession(Session):
+    def get_bind(self, mapper=None, clause=None):
+        if self._flushing:
+            return engines['leader']
+        else:
+            return engines['follower']
+db_session=scoped_session(sessionmaker(class_=RoutingSession))
 
 Base = declarative_base()
 
@@ -123,7 +127,7 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
-    g.db = db_session
+    g.db = db_session()
 
     session.permanent = True
 
