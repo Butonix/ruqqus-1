@@ -13,54 +13,6 @@ from .votes import CommentVote
 from .flags import CommentFlag
 from .badwords import *
 
-def get_comment(cid, v=None):
-
-
-    if isinstance(cid, str):
-        i=base36decode(cid)
-    else: i=cid
-
-
-
-    if v:
-        blocking=v.blocking.subquery()
-        blocked=v.blocked.subquery()
-        vt=g.db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id==i).subquery()
-
-
-        items= g.db.query(Comment, User, vt.c.vote_type, blocking.c.id, blocked.c.id).filter(
-            Comment.id==i
-            ).join(
-            Comment._author
-            ).join(
-            vt, isouter=True
-            ).join(
-            blocking,
-            blocking.c.target_id==Comment.author_id,
-            isouter=True
-            ).join(
-            blocked,
-            blocked.c.user_id==Comment.author_id,
-            isouter=True
-            ).first()
-        
-        if not items:
-            abort(404)
-        x=items[0]
-        x.author=items[1]
-        x._voted=items[2] or 0
-        x._is_blocking=items[3] or 0
-        x._is_blocked=items[4] or 0
-
-    else:
-        items=g.db.query(Comment, User).filter(Comment.id==i).join(Comment._author).first()
-        x=items[0]
-        x.author=items[1]
-
-    if not x:
-        abort(404)
-    return x
-
 
 class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
