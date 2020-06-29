@@ -14,7 +14,9 @@ def get_user(username, v=None, session=None, graceful=False):
         blocking=v.blocking.subquery()
         blocked=v.blocked.subquery()
 
-        q=session.query(User, blocking.c.id, blocked.c.id).filter(User.username.ilike(username)
+        q=session.query(User, blocking.c.id, blocked.c.id
+            ).filter(
+            User.username.ilike(username)
             ).join(
             blocking,
             blocking.c.target_id==User.id,
@@ -55,16 +57,20 @@ def get_post(pid, v=None, session=None):
         vt=session.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
 
 
-        items= session.query(Submission, vt.c.vote_type).filter(Submission.id==i).join(vt, isouter=True).first()
+        items= session.query(Submission, User, vt.c.vote_type
+            ).filter(Submission.id==i).join(Submission._author).join(vt, isouter=True).first()
         
         if not items:
             abort(404)
         
         x=items[0]
-        x._voted=items[1] if items[1] else 0
+        x.author=items[1]
+        x._voted=items[2] or 0
 
     else:
-        x=session.query(Submission).filter_by(id=i).first()
+        row=session.query(Submission, User).join(Submission._author).filter(Submission.id==i).first()
+        x=row[0]
+        x.author=row[1]
 
     if not x:
         abort(404)
@@ -76,29 +82,44 @@ def get_posts(pids, sort="hot", v=None):
         vt=g.db.query(Vote).filter(Vote.user_id==v.id, Vote.submission_id.in_(pids)).subquery()
 
 
-        posts= g.db.query(Submission, Title, vt.c.vote_type).filter(Submission.id.in_(pids)).join(Submission.author).join(User.title, isouter=True).join(vt, vt.c.submission_id==Submission.id, isouter=True)
+        posts= g.db.query(Submission, User, Title, vt.c.vote_type).filter(
+            Submission.id.in_(pids)
+            ).join(
+            Submission._author
+            ).join(
+            User.title, isouter=True
+            ).join(
+            vt, vt.c.submission_id==Submission.id, isouter=True
+            )
 
         items=[i for i in posts.all()]
 
         
         posts=[n[0] for n in items]
         for i in range(len(posts)):
-            posts[i]._title=items[i][1]
-            vote = items[i][2] if items[i][2] else 0
-            posts[i]._voted = vote
+            posts[i].author=items[i][1]
+            posts[i]._title=items[i][2]
+            posts[i]._voted=items[i][3] or 0
 
 
 
 
     else:
-        posts=g.db.query(Submission, Title).filter(Submission.id.in_(pids)).join(Submission.author).join(User.title, isouter=True)
+        posts=g.db.query(Submission, User, Title).filter(
+            Submission.id.in_(pids)
+            ).join(
+            Submission._author
+            ).join(
+            User.title, isouter=True
+            )
 
 
         items=[i for i in posts.all()]
         
         posts=[n[0] for n in items]
         for i in range(len(posts)):
-            posts[i]._title=items[i][1]
+            posts[i].author=items[i][1]
+            posts[i]._title=items[i][2]
 
     posts=sorted(posts, key= lambda x: pids.index(x.id))
     return posts
@@ -241,7 +262,7 @@ def get_comment(cid, v=None):
         x._is_blocked=items[4] or 0
 
     else:
-        items=g.db.query(Comment, User).filter(Comment.id=i).join(Comment._author).first()
+        items=g.db.query(Comment, User).filter(Comment.id==i).join(Comment._author).first()
         x=items[0]
         x.author=items[1]
 
