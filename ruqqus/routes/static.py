@@ -91,7 +91,7 @@ def settings_security(v):
                            msg=request.args.get("msg") or None
                           )
 
-@app.route("/favicon.ico", methods=["GET"])
+@app.route("/assets/favicon.ico", methods=["GET"])
 def favicon():
     return send_file("./assets/images/logo/favicon.png")
 
