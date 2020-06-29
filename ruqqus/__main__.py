@@ -141,7 +141,7 @@ def before_request():
     if not session.get("session_id"):
         session["session_id"]=secrets.token_hex(16)
 
-    g.db.begin_nested()
+    #g.db.begin_nested()
 
 
 def log_event(name, link):
