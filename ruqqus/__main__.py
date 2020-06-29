@@ -33,9 +33,7 @@ app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
-app.config['SQLALCHEMY_READ_URIS']=[
-    environ.get("HEROKU_POSTGRES_CRIMSON_URL")
-]
+app.config['SQLALCHEMY_READ_URI']=environ.get("HEROKU_POSTGRES_CRIMSON_URL")
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
 app.config["SERVER_NAME"]=environ.get("domain", None)
 app.config["SESSION_COOKIE_NAME"]="session_ruqqus"
@@ -80,7 +78,7 @@ limiter = Limiter(
 #setup db
 engines={
     "leader":create_engine(app.config['SQLALCHEMY_DATABASE_URI']),
-    "follower":create_engine(environ.get("HEROKU_POSTGRES_CRIMSON_URL"))
+    "follower":create_engine(app.config['SQLALCHEMY_READ_URI'])
 }
 
 class RoutingSession(Session):
