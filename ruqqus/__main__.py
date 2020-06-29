@@ -83,8 +83,8 @@ limiter = Limiter(
 #setup db
 pool_size=environ.get("PG_POOL_SIZE", 10)
 engines={
-    "leader":create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_size=30, pool_use_lifo=True),
-    "followers":[create_engine(x, pool_size=30, pool_use_lifo=True) for x in app.config['SQLALCHEMY_READ_URIS']]
+    "leader":create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_size=pool_size, pool_use_lifo=True),
+    "followers":[create_engine(x, pool_size=pool_size, pool_use_lifo=True) for x in app.config['SQLALCHEMY_READ_URIS']]
 }
 
 class RoutingSession(Session):
