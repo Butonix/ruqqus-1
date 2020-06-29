@@ -191,7 +191,7 @@ class User(Base, Stndrd):
                                     isouter=True
                                     )
             posts=posts.filter(or_(Submission.author_id==self.id,
-                                   Submission.is_public==True,
+                                   Submission.post_public==True,
                                    m.c.board_id != None,
                                    c.c.board_id !=None))
 

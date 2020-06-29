@@ -112,12 +112,12 @@ class Board(Base, Stndrd, Age_times):
             if v and (self.can_view(v) or v.admin_level >= 4):
                 pass
             elif v:
-                posts=posts.filter(or_(Submission.is_public==True,
+                posts=posts.filter(or_(Submission.post_public==True,
                                        Submission.author_id==v.id
                                        )
                                    )
             else:
-                posts=posts.filter_by(is_public=True)
+                posts=posts.filter_by(post_public=True)
 
         if v and not self.has_mod(v) and v.admin_level<=3:
             #blocks

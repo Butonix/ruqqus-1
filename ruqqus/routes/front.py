@@ -95,7 +95,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
                     blocking.c.id==None,
                     blocked.c.id==None)
     else:
-        posts=posts.filter_by(is_public=True)
+        posts=posts.filter_by(post_public=True)
 
 
 
