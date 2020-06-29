@@ -92,7 +92,7 @@ class RoutingSession(Session):
             return engines['leader']
         else:
             return random.choice(engines['followers'])
-db_session=scoped_session(sessionmaker(class_=RoutingSession))
+#db_session=scoped_session(sessionmaker(class_=RoutingSession))
 
 Base = declarative_base()
 
@@ -100,6 +100,11 @@ Base = declarative_base()
 import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
+
+
+@app.before_first_request
+def app_setup():
+    app.config["databases"]=scoped_session(sessionmaker(class_=RoutingSession))
 
 
 IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
@@ -130,7 +135,7 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
-    g.db = db_session()
+    g.db = app.config["databases"]()
 
     session.permanent = True
 
