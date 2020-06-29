@@ -108,7 +108,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
         else:
             return self.__dict__.get("parent",
-                                     g.db.query(Comment).filter_by(id=base36decode(self.parent_fullname.split(sep="_")[1])).first()
+                                     get_comment(self.parent_comment_id, v=g.v)
                                      )
 
     @property

@@ -227,7 +227,10 @@ def get_post_with_comments(pid, sort_type="top", v=None):
 
 def get_comment(cid, v=None):
 
-    i=base36decode(cid)
+
+    if isinstance(cid, str):
+        i=base36decode(cid)
+    else: i=cid
 
 
 
