@@ -64,7 +64,7 @@ def recompute():
 
         print(f"Scored {i} comments. Sleeping 1min")
 
-        #time.sleep(60)
+        time.sleep(60)
 
 
 recompute()
