@@ -80,10 +80,10 @@ _engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
     pool_use_lifo=True
     )
 
-#Session=scoped_session(sessionmaker(bind=_engine))#, scopefunc=lambda:request)
-#db_session=Session()
-session_maker=sessionmaker(bind=_engine)
-db_session=session_maker()
+Session=scoped_session(sessionmaker(bind=_engine))#, scopefunc=lambda:request)
+db_session=Session()
+#session_maker=sessionmaker(bind=_engine)
+#db_session=session_maker()
 
 #a_session=Session()
 
