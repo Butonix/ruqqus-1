@@ -232,11 +232,11 @@ def api_comment(v):
     #get parent item info
     parent_id=int(parent_fullname.split("_")[1], 36)
     if parent_fullname.startswith("t2"):
-        parent=g.db.query(Submission).filter_by(id=parent_id).first()
+        parent=get_post(parent_id, v=v)
         parent_comment_id=None
         level=1
     elif parent_fullname.startswith("t3"):
-        parent=g.db.query(Comment).filter_by(id=parent_id).first()
+        parent=get_comment(parent_id, v=v)
         parent_comment_id=parent.id
         level=parent.level+1
 
