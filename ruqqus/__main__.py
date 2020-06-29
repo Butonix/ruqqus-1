@@ -196,7 +196,7 @@ def after_request(response):
         thread=threading.Thread(target=lambda:log_event(name="Account Signup", link=link))
         thread.start()
 
-    Session().remove()
+    Session.remove()
 
     return response
 
