@@ -56,6 +56,12 @@ Pull requests are welcome! For major changes, please open an issue to discuss wh
 
 As an open-source project, we are supported by the community. If you would like to support the development of Ruqqus, please consider [making a donation](https://ruqqus.com/help/donate) :)
 
+**BTC** - 16JFRF4sXQ9BvY3w73MD64yPUKehhUtste
+
+**LTC** - LNDKsNhHjiNBJ6YBWtE8io8H1W3Fv5mtEd
+
+**ETH** - 0x4301c31B81C2C66f5aaDFC1ec75861ad3d3cE0cC
+
 ## Stay in touch
 
 - [Twitter](https://twitter.com/ruqqus)
