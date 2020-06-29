@@ -123,7 +123,7 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
-    g.db = db_session
+    g.db = Session()
 
     session.permanent = True
 
