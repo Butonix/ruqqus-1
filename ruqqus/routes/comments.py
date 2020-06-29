@@ -112,7 +112,9 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                 votes.c.vote_type
                 ).filter(
                 Comment.parent_comment_id.in_(current_ids)
-                ).join(Comment.author).join(
+                ).join(Comment.
+                _author)
+                .join(
                 User.title,
                 isouter=True
                 ).join(
@@ -139,6 +141,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
             output=[]
             for c in comms:
                 com=c[0]
+                com.author=c[1]
                 com._title=c[2]
                 com._voted=c[3] or 0
                 output.append(com)
@@ -149,7 +152,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                 Title
                 ).filter(
                 Comment.parent_comment_id.in_(current_ids)
-                ).join(Comment.author).join(
+                ).join(Comment._author).join(
                 User.title,
                 isouter=True
                 )
@@ -171,6 +174,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
             output=[]
             for c in comms:
                 com=c[0]
+                com.author=c[1]
                 com._title=c[2]
                 output.append(com)
 
