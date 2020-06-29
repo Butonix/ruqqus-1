@@ -174,7 +174,7 @@ def after_request(response):
     try:
         g.db.commit()
     except:
-        g.db.close()
+        pass #g.db.close()
 
     response.headers.add('Access-Control-Allow-Headers',
                          "Origin, X-Requested-With, Content-Type, Accept, x-auth"
