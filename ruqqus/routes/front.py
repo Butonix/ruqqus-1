@@ -441,15 +441,9 @@ def random_comment(v):
     x=g.db.query(Comment).filter_by(is_banned=False,
         over_18=False,
         is_nsfl=False)
-
-    if v and v.hide_offensive:
-        x=x.filter_by(is_offensive=False)
-
     if v:
         bans=g.db.query(BanRelationship.id).filter_by(user_id=v.id).all()
         x=x.filter(Comment.board_id.notin_([i[0] for i in bans]))
-
-
     comment=x.order_by(func.random()).first()
 
     return redirect(comment.permalink)
