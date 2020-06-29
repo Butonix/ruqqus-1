@@ -146,6 +146,6 @@ def thumbnail_thread(pid):
     
     db.commit()
 
-    db.close()
+    #db.close()
     
     #remove(tempname)

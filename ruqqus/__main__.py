@@ -17,6 +17,7 @@ from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
 import threading
 import requests
+import random
 
 from redis import BlockingConnectionPool
 
@@ -33,7 +34,11 @@ app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
-app.config['SQLALCHEMY_READ_URI']=environ.get("HEROKU_POSTGRESQL_CRIMSON_URL")
+app.config['SQLALCHEMY_READ_URIs']=[
+    environ.get("HEROKU_POSTGRESQL_CRIMSON_URL"),
+    environ.get("Heroku_POSTGRESQL_CRIMSON_URL")
+    ]
+
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
 app.config["SERVER_NAME"]=environ.get("domain", None)
 app.config["SESSION_COOKIE_NAME"]="session_ruqqus"
@@ -78,7 +83,7 @@ limiter = Limiter(
 #setup db
 engines={
     "leader":create_engine(app.config['SQLALCHEMY_DATABASE_URI']),
-    "follower":create_engine(app.config['SQLALCHEMY_READ_URI'])
+    "followers":[create_engine(x) for x in app.config['SQLALCHEMY_READ_URIS'])]
 }
 
 class RoutingSession(Session):
@@ -86,7 +91,7 @@ class RoutingSession(Session):
         if self._flushing:
             return engines['leader']
         else:
-            return engines['follower']
+            return random.choice(engines['followers'])
 db_session=scoped_session(sessionmaker(class_=RoutingSession))
 
 Base = declarative_base()
