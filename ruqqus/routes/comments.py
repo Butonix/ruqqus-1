@@ -275,7 +275,10 @@ def api_comment(v):
       )
     g.db.add(c_aux)
     g.db.commit()
-    g.db.refresh(c)
+
+    #reload c
+    c=get_comment(c.base36id, v=v)
+
     c.determine_offensive()
     g.db.add(c)
     
