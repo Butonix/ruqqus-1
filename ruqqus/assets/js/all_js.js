@@ -1571,7 +1571,7 @@ post_comment=function(fullname){
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-error').toast('show');
-     commentError.textContent = JSON.parse(xhr.response)["error"];
+     commentError.textContent = 'Unable to save comment. Please try again later.';
     }
   }
   xhr.send(form)
