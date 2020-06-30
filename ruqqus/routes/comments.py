@@ -235,7 +235,7 @@ def api_comment(v):
                                          parent_submission=parent_submission
                                          ).filter(CommentAux.body==body).first()
     if existing:
-        return jsonify({"error":"You already made that comment."}), 409
+        return jsonify({"error":f"You already made that comment: {existing.permalink}"}), 409
 
     #No commenting on deleted/removed things
     if parent.is_banned or parent.is_deleted:
