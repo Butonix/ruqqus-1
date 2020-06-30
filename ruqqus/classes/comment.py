@@ -18,7 +18,7 @@ class CommentAux(Base):
     __tablename__="comments_aux"
 
     key_id=Column(Integer, primary_key=True)
-    id=Column(Integer)
+    id=Column(Integer, ForeignKey("Comment.id"))
     body = Column(String(10000), default=None)
     body_html = Column(String(20000))
     ban_reason=Column(String(256), default='')
@@ -28,7 +28,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     __tablename__="comments"
 
-    id = Column(Integer, ForeignKey("comments_aux.id"), primary_key=True)
+    id = Column(Integer, primary_key=True)
     comment_aux=relationship("CommentAux", lazy="joined", primaryjoin="Comment.id==CommentAux.id")
     author_id = Column(Integer, ForeignKey("users.id"))
     parent_submission = Column(Integer, ForeignKey("submissions.id"))
