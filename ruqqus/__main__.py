@@ -91,12 +91,12 @@ engines={
     #"followers":[create_engine(x, pool_size=pool_size, pool_use_lifo=True) for x in app.config['SQLALCHEMY_READ_URIS']] if any(i for i in app.config['SQLALCHEMY_READ_URIS']) else [create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_size=pool_size, pool_use_lifo=True)]
 }
 
-class RoutingSession(Session):
-    def get_bind(self, mapper=None, clause=None):
-        if self._flushing:
-            return engines['leader']
-        else:
-            return random.choice(engines['followers'])
+# class RoutingSession(Session):
+#     def get_bind(self, mapper=None, clause=None):
+#         if self._flushing:
+#             return engines['leader']
+#         else:
+#             return random.choice(engines['followers'])
 db_session=scoped_session(sessionmaker(bind=engines["leader"]))
 
 Base = declarative_base()
