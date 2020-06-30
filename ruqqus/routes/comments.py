@@ -209,15 +209,7 @@ def api_comment(v):
     bans=filter_comment_html(body_html)
 
     if bans:
-        return render_template("comment_failed.html",
-                               action="/api/comment",
-                               parent_submission=request.form.get("submission"),
-                               parent_fullname=request.form.get("parent_fullname"),
-                               badlinks=[x.domain for x in bans],
-                               body=body,
-                               is_deleted=False,
-                               v=v
-                               ), 422
+        return jsonify({"error": f"Remove the following link and try again: {bans[0]}"}), 401
 
     #check existing
     existing=g.db.query(Comment).filter_by(author_id=v.id,
