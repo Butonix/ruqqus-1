@@ -9,7 +9,7 @@ from ruqqus.__main__ import app, cache
 @cache.memoize(300)
 def searchlisting(q, v=None, page=1, sort="hot"):
 
-    posts = g.db.query(Submission).filter(func.lower(Submission.submission_aux.title).contains(q.lower()))
+    posts = g.db.query(Submission).filter(func.lower(SubmissionAux.title).contains(q.lower()))
 
 
     if not (v and v.over_18):
