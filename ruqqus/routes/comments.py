@@ -224,7 +224,7 @@ def api_comment(v):
                                          is_deleted=False,
                                          parent_fullname=parent_fullname,
                                          parent_submission=parent_submission
-                                         ).filter(Comment.comment_aux.body==body)first()
+                                         ).filter(Comment.comment_aux.body==body).first()
     if existing:
         return jsonify({"error":"You already made that comment."}), 409
 
