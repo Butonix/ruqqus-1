@@ -260,7 +260,6 @@ def api_comment(v):
               parent_fullname=parent_fullname,
               parent_comment_id=parent_comment_id,
               level=level,
-              author_name=v.username,
               over_18=post.over_18,
               is_nsfl=post.is_nsfl,
               is_op=(v.id==post.author_id)
