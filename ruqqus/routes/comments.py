@@ -229,7 +229,7 @@ def api_comment(v):
         return jsonify({"error":"You already made that comment."}), 409
 
     #get parent item info
-    parent_id=int(parent_fullname.split("_")[1], 36)
+    parent_id=parent_fullname.split("_")[1]
     if parent_fullname.startswith("t2"):
         parent=get_post(parent_id, v=v)
         parent_comment_id=None
