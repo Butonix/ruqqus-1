@@ -211,14 +211,7 @@ def api_comment(v):
     if bans:
         return jsonify({"error": f"Remove the following link and try again: {bans[0]}"}), 401
 
-    #check existing
-    existing=g.db.query(Comment).filter_by(author_id=v.id,
-                                         is_deleted=False,
-                                         parent_fullname=parent_fullname,
-                                         parent_submission=parent_submission
-                                         ).filter(CommentAux.body==body).first()
-    if existing:
-        return jsonify({"error":"You already made that comment."}), 409
+
 
     #get parent item info
     parent_id=parent_fullname.split("_")[1]
@@ -230,6 +223,15 @@ def api_comment(v):
         parent=get_comment(parent_id, v=v)
         parent_comment_id=parent.id
         level=parent.level+1
+
+    #check existing
+    existing=g.db.query(Comment).filter_by(author_id=v.id,
+                                         is_deleted=False,
+                                         parent_comment_id=parent_comment_id,
+                                         parent_submission=parent_submission
+                                         ).filter(CommentAux.body==body).first()
+    if existing:
+        return jsonify({"error":"You already made that comment."}), 409
 
     #No commenting on deleted/removed things
     if parent.is_banned or parent.is_deleted:
