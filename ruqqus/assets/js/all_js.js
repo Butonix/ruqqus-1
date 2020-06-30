@@ -1606,7 +1606,7 @@ comment_edit=function(id){
   xhr.withCredentials=true;
   xhr.onload=function(){
     if (xhr.status==200) {
-      commentForm=document.getElementById('comment-'+id);
+      commentForm=document.getElementById('comment-'+id+'-only');
       commentForm.innerHTML=JSON.parse(xhr.response)["html"];
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
