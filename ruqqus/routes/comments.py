@@ -337,7 +337,7 @@ def api_comment(v):
 #@api
 def edit_comment(cid, v):
 
-    c = get_comment(cid)
+    c = get_comment(cid, v=v)
 
     if not c.author_id == v.id:
         abort(403)
@@ -372,6 +372,8 @@ def edit_comment(cid, v):
 
     g.db.add(c)
     
+    g.db.commit()
+    g.db.refresh(c)
 
     c.determine_offensive()
 
