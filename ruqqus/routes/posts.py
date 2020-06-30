@@ -353,11 +353,11 @@ def submit_post(v):
         abort(403)
 
     new_post=Submission(title=title,
-                        url=url,
+          #              url=url,
                         author_id=user_id,
-                        body=body,
-                        body_html=body_html,
-                        embed_url=embed,
+          #              body=body,
+          #              body_html=body_html,
+          #              embed_url=embed,
                         domain_ref=domain_obj.id if domain_obj else None,
                         board_id=board.id,
                         original_board_id=board.id,
@@ -372,6 +372,15 @@ def submit_post(v):
     g.db.add(new_post)
 
     g.db.commit()
+
+    new_post_aux=SubmissionAux(id=new_post.id,
+                               url=url,
+                               body=body,
+                               body_html=body_html,
+                               embed_url=embed
+                               )
+
+    db.add(new_post_aux)
     
 
     vote=Vote(user_id=user_id,
