@@ -345,7 +345,7 @@ def submit_post(v):
     domain=parsed_url.netloc
 
     if url:
-      repost = g.db.query(Submission).filter(Submission.submission_aux.url.ilike(url)).filter_by(board_id=board.id, is_deleted=False, is_banned=False).order_by(Submission.id.asc()).first()
+      repost = g.db.query(Submission).filter(SubmissionAux.url.ilike(url)).filter_by(board_id=board.id, is_deleted=False, is_banned=False).order_by(Submission.id.asc()).first()
     else:
       repost=None
 
