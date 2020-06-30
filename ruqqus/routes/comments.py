@@ -17,6 +17,9 @@ from ruqqus.__main__ import app, limiter
 from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 
+
+
+
 @app.route("/comment/<cid>", methods=["GET"])
 def comment_cid(cid):
 
@@ -229,7 +232,7 @@ def api_comment(v):
         level=parent.level+1
 
     #check existing
-    existing=g.db.query(Comment).filter_by(author_id=v.id,
+    existing=g.db.query(Comment).join(CommentAux).filter_by(author_id=v.id,
                                          is_deleted=False,
                                          parent_comment_id=parent_comment_id,
                                          parent_submission=parent_submission
