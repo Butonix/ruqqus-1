@@ -341,21 +341,44 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def title(self):
         return self.submission_aux.title
-    
+
+    @title.setter
+    def title_set(self, x)
+        self.submission_aux.title=x
+        g.db.add(self.submission_aux)
+
     @property
     def url(self):
         return self.submission_aux.url
+
+    @url.setter
+    def url_set(self, x)
+        self.submission_aux.title=x
+        g.db.add(self.submission_aux)
     
     @property
     def body(self):
         return self.submission_aux.body
+
+    @body.setter
+    def body_set(self, x)
+        self.submission_aux.body=x
+        g.db.add(self.submission_aux)
     
     @property
     def body_html(self):
         return self.submission_aux.body_html
+
+    @body_html.setter
+    def body_html_set(self, x)
+        self.submission_aux.body_html=x
+        g.db.add(self.submission_aux)
     
     @property
     def ban_reason(self):
         return self.submission_aux.ban_reason
 
-    
+    @ban_reason.setter
+    def ban_reason_set(self, x)
+        self.submission_aux.ban_reason=x
+        g.db.add(self.submission_aux)
