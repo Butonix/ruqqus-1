@@ -27,12 +27,20 @@
 
                   <div>
 
+                  	{% if v.comment_karma > 300 %}
+
                    <form action="/settings/images/profile" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="formkey" value="{{ v.formkey }}">
                     <label class="btn btn-secondary text-capitalize mr-2 mb-0">
                       Update<input type="file" hidden name="profile" onchange="form.submit()">
                     </label>
                   </form>
+
+                  {% else %}
+
+                  <div class="text-muted">You can add a custom avatar after earning 300 comment karma.</div>
+
+                  {% endif %}
 
                 </div>
 
@@ -47,7 +55,11 @@
 
               </div>
 
+              {% if v.comment_karma > 300 %}
+
               <div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files supported. Max file size 16MB.</div>
+
+              {% endif %}
 
             </div>
 
@@ -68,6 +80,8 @@
 
               <div class="d-flex">
 
+              	{% if v.comment_karma > 300 %}
+
                 <div>
 
                  <form action="/settings/images/banner" method="post" enctype="multipart/form-data">
@@ -78,6 +92,12 @@
                 </form>
 
               </div>
+
+              {% else %}
+
+              <div class="text-muted">You can add a custom banner after earning 300 comment karma.</div>
+
+              {% endif %}
 
               <div>
 
@@ -91,7 +111,11 @@
 
             </div>
 
+            {% if v.comment_karma > 300 %}
+
             <div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files supported. Max file size 16MB. (Recommend 1400x250 pixels)</div>
+
+            {% endif %}
 
           </div>
 
