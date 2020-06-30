@@ -347,17 +347,19 @@ def submit_post(v):
     #check for embeddable video
     domain=parsed_url.netloc
 
-    if url:
-      repost = g.db.query(Submission).filter(
-        SubmissionAux.url.ilike(url),
-        Submission.board_id==board.id,
-        Submission.is_deleted==False, 
-        Submission.is_banned==False
-        ).order_by(
-        Submission.id.asc()
-        ).first()
-    else:
-      repost=None
+#not working quite right. Requires testing.
+    repost=None
+    # if url:
+    #   repost = g.db.query(Submission).filter(
+    #     SubmissionAux.url.ilike(url),
+    #     Submission.board_id==board.id,
+    #     Submission.is_deleted==False, 
+    #     Submission.is_banned==False
+    #     ).order_by(
+    #     Submission.id.asc()
+    #     ).first()
+    # else:
+    #   repost=None
 
     if request.files.get('file') and not v.can_submit_image:
         abort(403)
