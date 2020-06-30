@@ -13,7 +13,7 @@ def searchlisting(q, v=None, page=1, sort="hot"):
 
 
     if not (v and v.over_18):
-        posts=posts.filter(Submisison.over_18==False)
+        posts=posts.filter(Submission.over_18==False)
 
     if v and v.hide_offensive:
         posts=posts.filter(Submission.is_offensive==False)
