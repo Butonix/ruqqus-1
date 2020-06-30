@@ -273,9 +273,9 @@ def api_comment(v):
       body_html=body_html,
       body=body
       )
-    db.add(c_aux)
-    db.commit()
-    c.refresh()
+    g.db.add(c_aux)
+    g.db.commit()
+    g.db.refresh(c)
     c.determine_offensive()
     g.db.add(c)
     
