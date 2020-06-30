@@ -14,8 +14,8 @@ def send_notification(user, text):
     text_html=sanitize(text_html, linkgen=True)
 
     new_comment=Comment(author_id=1,
-                        body=text,
-                        body_html=text_html,
+                        #body=text,
+                        #body_html=text_html,
                         parent_submission=None,
                         distinguish_level=6,
                         is_offensive=False
@@ -23,6 +23,11 @@ def send_notification(user, text):
     g.db.add(new_comment)
 
     g.db.commit()
+
+    new_aux=CommentAux(id=new_comment.id,
+        body=text,
+        body_html=text_html
+        )
     #g.db.begin()
     
     notif=Notification(comment_id=new_comment.id,
