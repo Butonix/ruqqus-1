@@ -352,7 +352,7 @@ def submit_post(v):
     if request.files.get('file') and not v.can_submit_image:
         abort(403)
 
-    new_post=Submission(title=title,
+    new_post=Submission(#title=title,
           #              url=url,
                         author_id=user_id,
           #              body=body,
