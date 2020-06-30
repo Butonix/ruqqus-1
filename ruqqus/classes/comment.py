@@ -299,6 +299,13 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     def ban_reason(self, x):
         self.comment_aux.ban_reason=x
         g.db.add(self.comment_aux)
+
+
+    @property
+    @lazy
+    def author(self):
+        return self.__dict__.get('author') or self._author
+    
     
     
         
