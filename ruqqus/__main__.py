@@ -34,10 +34,10 @@ app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
-app.config['SQLALCHEMY_READ_URIS']=[
-    environ.get("HEROKU_POSTGRESQL_CRIMSON_URL"),
-    environ.get("HEROKU_POSTGRESQL_RED_URL")
-    ]
+# app.config['SQLALCHEMY_READ_URIS']=[
+#     environ.get("HEROKU_POSTGRESQL_CRIMSON_URL"),
+#     environ.get("HEROKU_POSTGRESQL_RED_URL")
+#     ]
 
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
 app.config["SERVER_NAME"]=environ.get("domain", None)
@@ -87,8 +87,8 @@ limiter = Limiter(
 #setup db
 pool_size=int(environ.get("PG_POOL_SIZE", 10))
 engines={
-    "leader":create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_size=pool_size, pool_use_lifo=True),
-    "followers":[create_engine(x, pool_size=pool_size, pool_use_lifo=True) for x in app.config['SQLALCHEMY_READ_URIS']] if any(i for i in app.config['SQLALCHEMY_READ_URIS']) else [create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_size=pool_size, pool_use_lifo=True)]
+    "leader":create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_size=pool_size, pool_use_lifo=True) #,
+    #"followers":[create_engine(x, pool_size=pool_size, pool_use_lifo=True) for x in app.config['SQLALCHEMY_READ_URIS']] if any(i for i in app.config['SQLALCHEMY_READ_URIS']) else [create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_size=pool_size, pool_use_lifo=True)]
 }
 
 class RoutingSession(Session):
@@ -97,7 +97,7 @@ class RoutingSession(Session):
             return engines['leader']
         else:
             return random.choice(engines['followers'])
-db_session=scoped_session(sessionmaker(class_=RoutingSession))
+db_session=scoped_session(sessionmaker(bind=engines["leader"]))
 
 Base = declarative_base()
 
