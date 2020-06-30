@@ -377,7 +377,8 @@ def submit_post(v):
                                url=url,
                                body=body,
                                body_html=body_html,
-                               embed_url=embed
+                               embed_url=embed,
+                               title=title
                                )
 
     db.add(new_post_aux)
