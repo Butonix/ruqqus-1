@@ -217,11 +217,14 @@ def submit_post(v):
         url=""
 
     #check for duplicate
-    dup = g.db.query(Submission).filter_by(title=title,
+    dup = g.db.query(Submission).filter_by(#title=title,
                                          author_id=v.id,
-                                         url=url,
+                                         #url=url,
                                          is_deleted=False,
                                          board_id=board.id
+                                         ).filter(
+                                         SubmissionAux.title==title, 
+                                         SubmisisonAux.url==url
                                          ).first()
 
     if dup:
@@ -345,7 +348,14 @@ def submit_post(v):
     domain=parsed_url.netloc
 
     if url:
-      repost = g.db.query(Submission).filter(SubmissionAux.url.ilike(url)).filter_by(board_id=board.id, is_deleted=False, is_banned=False).order_by(Submission.id.asc()).first()
+      repost = g.db.query(Submission).filter(
+        SubmissionAux.url.ilike(url),
+        Submission.board_id==board.id,
+        Submission.is_deleted==False, 
+        Submission.is_banned==False
+        ).order_by(
+        Submission.id.asc()
+        ).first()
     else:
       repost=None
 
