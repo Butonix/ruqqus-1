@@ -266,6 +266,9 @@ def api_comment(v):
               is_op=(v.id==post.author_id)
               )
 
+    g.db.add(c)
+    g.db.commit()
+
 
        
     c_aux=CommentAux(
@@ -277,7 +280,7 @@ def api_comment(v):
     g.db.commit()
 
     #reload c
-    c=get_comment(c.base36id, v=v)
+    g.db.refresh(c)
 
     c.determine_offensive()
     g.db.add(c)

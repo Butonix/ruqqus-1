@@ -368,6 +368,11 @@ def submit_post(v):
                         repost_id=repost.id if repost else None
                         )
 
+
+
+    g.db.add(new_post)
+    g.db.commit()
+
     new_post_aux=SubmissionAux(id=new_post.id,
                                url=url,
                                body=body,
@@ -375,12 +380,11 @@ def submit_post(v):
                                embed_url=embed,
                                title=title
                                )
-
     g.db.add(new_post_aux)
     g.db.commit()
 
     #refresh new post
-    new_post=get_post(new_post.base36id, v=v)
+    g.db.refresh(new_post)
 
     new_post.determine_offensive()
     g.db.add(new_post)
