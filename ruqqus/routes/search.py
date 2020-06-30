@@ -38,7 +38,7 @@ def searchlisting(q, v=None, page=1, sort="hot"):
                                m.c.board_id != None,
                                c.c.board_id !=None))
     else:
-        posts=posts.filter_by(is_public=True)
+        posts=posts.filter(Submission.is_public=True)
 
     if sort=="hot":
         posts=posts.order_by(Submission.score_hot.desc())
