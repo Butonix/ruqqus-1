@@ -45,7 +45,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     score_top=Column(Integer, default=1)
     level=Column(Integer, default=0)
     parent_comment_id=Column(Integer, ForeignKey("comments.id"))
-    author_name=Column(String(64), default="")
 
     over_18=Column(Boolean, default=False)
     is_op=Column(Boolean, default=False)
