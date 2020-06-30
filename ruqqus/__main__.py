@@ -33,7 +33,7 @@ app = Flask(__name__,
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_CONNECTION_POOL")
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_CONNECTION_POOL_URL")
 # app.config['SQLALCHEMY_READ_URIS']=[
 #     environ.get("HEROKU_POSTGRESQL_CRIMSON_URL"),
 #     environ.get("HEROKU_POSTGRESQL_RED_URL")
