@@ -362,7 +362,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return self.submission_aux.body
 
     @body.setter
-    def body_set(self, x):
+    def body(self, x):
         self.submission_aux.body=x
         g.db.add(self.submission_aux)
     
@@ -371,7 +371,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return self.submission_aux.body_html
 
     @body_html.setter
-    def body_html_set(self, x):
+    def body_html(self, x):
         self.submission_aux.body_html=x
         g.db.add(self.submission_aux)
     
@@ -380,7 +380,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return self.submission_aux.ban_reason
 
     @ban_reason.setter
-    def ban_reason_set(self, x):
+    def ban_reason(self, x):
         self.submission_aux.ban_reason=x
         g.db.add(self.submission_aux)
 
@@ -389,6 +389,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return self.submission_aux.embed_url
 
     @embed_url.setter
-    def embed_url_set(self, x):
+    def embed_url(self, x):
         self.submission_aux.embed_url=x
         g.db.add(self.submission_aux)

@@ -277,7 +277,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         return self.comment_aux.body
 
     @body.setter
-    def body_set(self, x):
+    def body(self, x):
         self.comment_aux.body=x
         g.db.add(self.comment_aux)
     
@@ -286,7 +286,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         return self.comment_aux.body_html
 
     @body_html.setter
-    def body_html_set(self, x):
+    def body_html(self, x):
         self.comment_aux.body_html=x
         g.db.add(self.comment_aux)
 
@@ -295,7 +295,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         return self.comment_aux.ban_reason
 
     @ban_reason.setter
-    def ban_reason_set(self, x):
+    def ban_reason(self, x):
         self.comment_aux.ban_reason=x
         g.db.add(self.comment_aux)
     
