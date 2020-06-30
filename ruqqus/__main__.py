@@ -106,6 +106,7 @@ import ruqqus.helpers.jinja2
 @app.before_first_request
 def app_setup():
     #app.config["databases"]=scoped_session(sessionmaker(class_=RoutingSession))
+    pass
 
 
 IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
