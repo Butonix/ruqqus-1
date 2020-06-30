@@ -28,6 +28,8 @@ def send_notification(user, text):
         body=text,
         body_html=text_html
         )
+    g.db.add(new_aux)
+    g.db.commit()
     #g.db.begin()
     
     notif=Notification(comment_id=new_comment.id,
