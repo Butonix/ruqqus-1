@@ -19,7 +19,7 @@ from .badwords import *
 from .comment import Comment
 from .titles import Title
 
-class SubmissionAux(Base)
+class SubmissionAux(Base):
 
     id=Column(BigIntiger, primary_key=True)
     title = Column(String(500), default=None)
