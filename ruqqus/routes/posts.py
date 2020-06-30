@@ -380,7 +380,7 @@ def submit_post(v):
     g.db.commit()
 
     #refresh new post
-    new_post=get_post(g.base36id, v=v)
+    new_post=get_post(new_post.base36id, v=v)
 
     new_post.determine_offensive()
     g.db.add(new_post)
