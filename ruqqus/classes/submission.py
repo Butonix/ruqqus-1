@@ -382,3 +382,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def ban_reason_set(self, x):
         self.submission_aux.ban_reason=x
         g.db.add(self.submission_aux)
+
+    @property
+    def embed_url(self):
+        return self.submission_aux.embed_url
+
+    @embed_url.setter
+    def embed_url_set(self, x):
+        self.submission_aux.embed_url=x
+        g.db.add(self.submission_aux)
