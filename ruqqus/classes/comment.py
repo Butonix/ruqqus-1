@@ -305,6 +305,10 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @lazy
     def author(self):
         return self.__dict__.get('author') or self._author
+
+    @author.setter
+    def author(self, x):
+        self.__dict__['author']=x
     
     
     
