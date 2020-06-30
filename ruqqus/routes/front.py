@@ -35,7 +35,7 @@ def notifications(v):
                            page=page,
                            standalone=True)
 
-@cache.memoize(timeout=300)
+@cache.memoize(timeout=900)
 def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **kwargs):
 
     #cutoff=int(time.time())-(60*60*24*30)
