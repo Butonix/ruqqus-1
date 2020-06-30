@@ -23,7 +23,7 @@ class SubmissionAux(Base):
 
     __tablename__="submissions_aux"
 
-    id=Column(BigInteger, primary_key=True)
+    id=Column(BigInteger, ForeignKey("submissions.id"), primary_key=True)
     title = Column(String(500), default=None)
     url = Column(String(500), default=None)
     body=Column(String(10000), default="")
