@@ -29,6 +29,7 @@ class SubmissionAux(Base):
     body=Column(String(10000), default="")
     body_html=Column(String(20000), default="")
     ban_reason=Column(String(128), default="")
+    embed_url=Column(String(256), default="")
 
 class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
  
@@ -38,8 +39,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     submission_aux=relationship("SubmissionAux", lazy="joined", primaryjoin="Submission.id==SubmissionAux.id")
     author_id = Column(BigInteger, ForeignKey("users.id"))
     repost_id = Column(BigInteger, ForeignKey("submissions.id"), default=0)
-    #title = Column(String(500), default=None)
-    #url = Column(String(500), default=None)
     edited_utc = Column(BigInteger, default=0)
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
@@ -48,9 +47,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     created_str=Column(String(255), default=None)
     stickied=Column(Boolean, default=False)
     _comments=relationship("Comment", lazy="dynamic", primaryjoin="Comment.parent_submission==Submission.id", backref="submissions")
-    #body=Column(String(10000), default="")
-    #body_html=Column(String(20000), default="")
-    embed_url=Column(String(256), default="")
     domain_ref=Column(Integer, ForeignKey("domains.id"))
     domain_obj=relationship("Domain", lazy="joined", innerjoin=False)
     flags=relationship("Flag", lazy="dynamic", backref="submission")
@@ -60,7 +56,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     original_board_id=Column(Integer, ForeignKey("boards.id"), default=None)
     over_18=Column(Boolean, default=False)
     original_board=relationship("Board", lazy="subquery", primaryjoin="Board.id==Submission.original_board_id")
-    #ban_reason=Column(String(128), default="")
     creation_ip=Column(String(64), default="")
     mod_approved=Column(Integer, default=None)
     accepted_utc=Column(Integer, default=0)
@@ -71,7 +66,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     score_disputed=Column(Float, default=0)
     score_top=Column(Float, default=1)
     score_activity=Column(Float, default=0)
-    #author_name=Column(String(64), default="")
     is_offensive=Column(Boolean, default=False)
     is_nsfl=Column(Boolean, default=False)
     board=relationship("Board", lazy="joined", innerjoin=True, primaryjoin="Submission.board_id==Board.id")
