@@ -114,9 +114,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             return self.post
 
         else:
-            return self.__dict__.get("parent",
-                                     get_comment(self.parent_comment_id, v=g.v)
-                                     )
+            return g.db.query(Comment).get(self.parent_comment_id)
 
     @property
     def children(self):
