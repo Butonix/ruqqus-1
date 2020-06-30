@@ -379,6 +379,8 @@ def submit_post(v):
     g.db.add(new_post_aux)
     g.db.commit()
 
+    new_post.refresh()
+
     new_post.determine_offensive()
     g.db.add(new_post)
 
