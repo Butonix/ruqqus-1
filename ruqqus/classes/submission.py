@@ -19,15 +19,25 @@ from .badwords import *
 from .comment import Comment
 from .titles import Title
 
+class SubmissionAux(Base)
+
+    id=Column(BigIntiger, primary_key=True)
+    title = Column(String(500), default=None)
+    url = Column(String(500), default=None)
+    body=Column(String(10000), default="")
+    body_html=Column(String(20000), default="")
+    ban_reason=Column(String(128), default="")
+
 class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
  
     __tablename__="submissions"
 
     id = Column(BigInteger, primary_key=True)
+    submission_aux=relationship("SubmissionAux", lazy="joined")
     author_id = Column(BigInteger, ForeignKey("users.id"))
     repost_id = Column(BigInteger, ForeignKey("submissions.id"), default=0)
-    title = Column(String(500), default=None)
-    url = Column(String(500), default=None)
+    #title = Column(String(500), default=None)
+    #url = Column(String(500), default=None)
     edited_utc = Column(BigInteger, default=0)
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
@@ -36,8 +46,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     created_str=Column(String(255), default=None)
     stickied=Column(Boolean, default=False)
     _comments=relationship("Comment", lazy="dynamic", primaryjoin="Comment.parent_submission==Submission.id", backref="submissions")
-    body=Column(String(10000), default="")
-    body_html=Column(String(20000), default="")
+    #body=Column(String(10000), default="")
+    #body_html=Column(String(20000), default="")
     embed_url=Column(String(256), default="")
     domain_ref=Column(Integer, ForeignKey("domains.id"))
     domain_obj=relationship("Domain", lazy="joined", innerjoin=False)
@@ -48,7 +58,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     original_board_id=Column(Integer, ForeignKey("boards.id"), default=None)
     over_18=Column(Boolean, default=False)
     original_board=relationship("Board", lazy="subquery", primaryjoin="Board.id==Submission.original_board_id")
-    ban_reason=Column(String(128), default="")
+    #ban_reason=Column(String(128), default="")
     creation_ip=Column(String(64), default="")
     mod_approved=Column(Integer, default=None)
     accepted_utc=Column(Integer, default=0)
@@ -327,4 +337,25 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def user_title(self):
         return self._title if "_title" in self.__dict__ else self.author.title
+    
+    @property
+    def title(self):
+        return self.submission_aux.title
+    
+    @property
+    def url(self):
+        return self.submission_aux.url
+    
+    @property
+    def body(self):
+        return self.submission_aux.body
+    
+    @property
+    def body_html(self):
+        return self.submission_aux.body_html
+    
+    @property
+    def ban_reason(self):
+        return self.submission_aux.ban_reason
+
     
