@@ -36,7 +36,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_URL")
 app.config['SQLALCHEMY_READ_URIS']=[
     environ.get("HEROKU_POSTGRESQL_CRIMSON_URL"),
-    environ.get("HEROKU_POSTGRESQL_WHITE_URL")
+    environ.get("HEROKU_POSTGRESQL_RED_URL")
     ]
 
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
