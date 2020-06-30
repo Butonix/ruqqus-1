@@ -217,15 +217,13 @@ def submit_post(v):
         url=""
 
     #check for duplicate
-    dup = g.db.query(Submission).filter_by(#title=title,
-                                         author_id=v.id,
-                                         #url=url,
-                                         is_deleted=False,
-                                         board_id=board.id
-                                         ).filter(
-                                         SubmissionAux.title==title, 
-                                         SubmisisonAux.url==url
-                                         ).first()
+    dup = g.db.query(Submission).filter(
+      Submission.author_id==v.id,
+      Submission.is_deleted==False,
+      Submission.board_id==board.id,
+      SubmissionAux.title==title, 
+      SubmisisonAux.url==url
+      ).first()
 
     if dup:
         return redirect(dup.permalink)
