@@ -13,25 +13,32 @@ from .votes import CommentVote
 from .flags import CommentFlag
 from .badwords import *
 
+class CommentAux(Base):
+
+    __tablename__="comments_aux"
+
+    id=Column(Integer, primary_key=True)
+    body = Column(String(10000), default=None)
+    body_html = Column(String(20000))
+    ban_reason=Column(String(256), default='')
+
 
 class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     __tablename__="comments"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, ForeignKey("comments_aux.id"), primary_key=True)
+    comment_aux=relationship("CommentAux", lazy=joined, primaryjoin="Comment.id==CommentAux.id")
     author_id = Column(Integer, ForeignKey("users.id"))
-    body = Column(String(10000), default=None)
     parent_submission = Column(Integer, ForeignKey("submissions.id"))
     parent_fullname = Column(Integer) #this column is foreignkeyed to comment(id) but we can't do that yet as "comment" class isn't yet defined
     created_utc = Column(Integer, default=0)
     edited_utc = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
-    body_html = Column(String(20000))
     distinguish_level=Column(Integer, default=0)
     is_deleted = Column(Boolean, default=False)
     is_approved = Column(Integer, default=0)
     approved_utc=Column(Integer, default=0)
-    ban_reason=Column(String(256), default='')
     creation_ip=Column(String(64), default='')
     score_disputed=Column(Float, default=0)
     score_hot=Column(Float, default=0)
@@ -265,6 +272,33 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def is_blocked(self):
         return self.__dict__.get('_is_blocked', 0)   
+
+    @property
+    def body(self):
+        return self.comment_aux.body
+
+    @body.setter
+    def body_set(self, x):
+        self.comment_aux.body=x
+        g.db.add(self.comment_aux)
+    
+    @property
+    def body_html(self):
+        return self.comment_aux.body_html
+
+    @body_html.setter
+    def body_html_set(self, x):
+        self.comment_aux.body_html=x
+        g.db.add(self.comment_aux)
+
+    @property
+    def ban_reason(self):
+        return self.comment_aux.ban_reason
+
+    @ban_reason.setter
+    def ban_reason_set(self, x):
+        self.comment_aux.ban_reason=x
+        g.db.add(self.comment_aux)
     
     
         
