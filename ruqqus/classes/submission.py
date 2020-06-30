@@ -21,7 +21,9 @@ from .titles import Title
 
 class SubmissionAux(Base):
 
-    id=Column(BigIntiger, primary_key=True)
+    __tablename__="submissions_aux"
+
+    id=Column(BigInteger, primary_key=True)
     title = Column(String(500), default=None)
     url = Column(String(500), default=None)
     body=Column(String(10000), default="")
