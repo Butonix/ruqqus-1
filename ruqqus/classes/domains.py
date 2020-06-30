@@ -17,5 +17,5 @@ class Domain(Base):
     show_thumbnail=Column(Boolean, default=False)
     embed_function=Column(String(64), default=None)
     
-    def reason_text:
+    def reason_text(self):
     	return reasons.get(self.reason)
