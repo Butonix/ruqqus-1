@@ -93,7 +93,7 @@ engines={
 
 class RoutingSession(Session):
     def get_bind(self, mapper=None, clause=None):
-        if self._flushing:
+        if self._flushing or request.method=="POST":
             return engines['leader']
         else:
             return random.choice(engines['followers'])
