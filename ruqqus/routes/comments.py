@@ -221,11 +221,10 @@ def api_comment(v):
 
     #check existing
     existing=g.db.query(Comment).filter_by(author_id=v.id,
-                                         body=body,
                                          is_deleted=False,
                                          parent_fullname=parent_fullname,
                                          parent_submission=parent_submission
-                                         ).first()
+                                         ).filter(Comment.comment_aux.body==body)first()
     if existing:
         return jsonify({"error":"You already made that comment."}), 409
 
