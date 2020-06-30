@@ -266,10 +266,7 @@ def api_comment(v):
               is_op=(v.id==post.author_id)
               )
 
-    c.determine_offensive()
-    g.db.add(c)
-    
-    g.db.commit()
+
        
     c_aux=CommentAux(
       id=c.id,
@@ -278,7 +275,10 @@ def api_comment(v):
       )
     db.add(c_aux)
     db.commit()
-
+    c.determine_offensive()
+    g.db.add(c)
+    
+    g.db.commit()
     notify_users=set()
 
     #queue up notification for parent author
