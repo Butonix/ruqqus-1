@@ -209,7 +209,11 @@ def api_comment(v):
     bans=filter_comment_html(body_html)
 
     if bans:
-        return jsonify({"error": f"Remove the following link and try again: {bans[0]}"}), 401
+        ban=bans[0]
+        reason=f"Remove the {ban.domain} link from your comment and try again."
+        if ban.reason:
+          reason += f" {ban.reason_text}"
+        return jsonify({"error": reason}), 401
 
 
 
