@@ -232,11 +232,12 @@ def api_comment(v):
         level=parent.level+1
 
     #check existing
-    existing=g.db.query(Comment).join(CommentAux).filter_by(author_id=v.id,
-                                         is_deleted=False,
-                                         parent_comment_id=parent_comment_id,
-                                         parent_submission=parent_submission
-                                         ).filter(CommentAux.body==body).first()
+    existing=g.db.query(Comment).join(CommentAux).filter(Comment.author_id==v.id,
+                                         Comment.is_deleted==False,
+                                         Comment.parent_comment_id==parent_comment_id,
+                                         Comment.parent_submission==parent_submission,
+                                         CommentAux.body==body
+                                         ).first()
     if existing:
         return jsonify({"error":f"You already made that comment: {existing.permalink}"}), 409
 
