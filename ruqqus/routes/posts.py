@@ -222,7 +222,7 @@ def submit_post(v):
       Submission.is_deleted==False,
       Submission.board_id==board.id,
       SubmissionAux.title==title, 
-      SubmisisonAux.url==url
+      SubmissionAux.url==url
       ).first()
 
     if dup:
