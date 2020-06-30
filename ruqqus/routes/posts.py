@@ -368,11 +368,6 @@ def submit_post(v):
                         repost_id=repost.id if repost else None
                         )
 
-    new_post.determine_offensive()
-    g.db.add(new_post)
-
-    g.db.commit()
-
     new_post_aux=SubmissionAux(id=new_post.id,
                                url=url,
                                body=body,
@@ -382,7 +377,10 @@ def submit_post(v):
                                )
 
     db.add(new_post_aux)
-    
+    db.commit()
+
+    new_post.determine_offensive()
+    g.db.add(new_post)
 
     vote=Vote(user_id=user_id,
               vote_type=1,
