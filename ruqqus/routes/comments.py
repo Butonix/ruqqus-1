@@ -253,6 +253,12 @@ def api_comment(v):
     if post.is_archived or not post.board.can_comment(v):
         return jsonify({"error":"You can't comment on this."}), 403
 
+    for x in g.db.query(BadWord).all():
+        if x.check(body):
+            is_offensive=True
+            break
+        else:
+            is_offensive=False
         
     #create comment
     c=Comment(author_id=v.id,
@@ -262,7 +268,8 @@ def api_comment(v):
               level=level,
               over_18=post.over_18,
               is_nsfl=post.is_nsfl,
-              is_op=(v.id==post.author_id)
+              is_op=(v.id==post.author_id),
+              is_offensive=is_offensive
               )
 
     g.db.add(c)
@@ -276,12 +283,6 @@ def api_comment(v):
       body=body
       )
     g.db.add(c_aux)
-    g.db.flush()
-
-    #reload c
-
-    c.determine_offensive()
-    g.db.add(c)
     g.db.flush()
 
     notify_users=set()
@@ -369,6 +370,13 @@ def edit_comment(cid, v):
                 'api':lambda:({'error':f'A blacklisted domain was used.'}, 400)
                 }
 
+    for x in g.db.query(BadWord).all():
+        if x.check(body):
+            c.is_offensive=True
+            break
+        else:
+            c.is_offensive=False
+
     c.body=body
     c.body_html=body_html
     c.edited_utc = int(time.time())
@@ -376,9 +384,6 @@ def edit_comment(cid, v):
     g.db.add(c)
     
     g.db.commit()
-    g.db.refresh(c)
-
-    c.determine_offensive()
 
     path=request.form.get("current_page","/")
 

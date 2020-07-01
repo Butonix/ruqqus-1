@@ -108,7 +108,13 @@ def edit_post(pid, v):
     p.body_html = body_html
     p.edited_utc = int(time.time())
 
-    g.db.add(p)
+    #offensive
+    for x in g.db.query(BadWord).all():
+        if (p.body and x.check(p.body)) or x.check(p.title):
+            p.is_offensive=True
+            break
+        else:
+            p.is_offensive=False
     
 
     return redirect(p.permalink)
@@ -360,6 +366,14 @@ def submit_post(v):
     if request.files.get('file') and not v.can_submit_image:
         abort(403)
 
+    #offensive
+    for x in g.db.query(BadWord).all():
+        if (body and x.check(body)) or x.check(title):
+            is_offensive=True
+            break
+        else:
+            is_offensive=False
+
     new_post=Submission(#title=title,
           #              url=url,
                         author_id=user_id,
@@ -373,7 +387,8 @@ def submit_post(v):
                         post_public=not board.is_private,
                         #author_name=user_name,
                         #guild_name=board.name,
-                        repost_id=repost.id if repost else None
+                        repost_id=repost.id if repost else None,
+                        is_offensive=is_offensive
                         )
 
 
@@ -389,11 +404,6 @@ def submit_post(v):
                                title=title
                                )
     g.db.add(new_post_aux)
-    g.db.flush()
-
-    #refresh new post
-
-    new_post.determine_offensive()
     g.db.flush(new_post)
 
     vote=Vote(user_id=user_id,
