@@ -253,6 +253,12 @@ def api_comment(v):
     if post.is_archived or not post.board.can_comment(v):
         return jsonify({"error":"You can't comment on this."}), 403
 
+    for x in g.db.query(BadWord).all():
+        if x.check(body):
+            is_offensive=True
+            break
+        else:
+            is_offensive=False
         
     #create comment
     c=Comment(author_id=v.id,
@@ -262,11 +268,12 @@ def api_comment(v):
               level=level,
               over_18=post.over_18,
               is_nsfl=post.is_nsfl,
-              is_op=(v.id==post.author_id)
+              is_op=(v.id==post.author_id),
+              is_offensive=is_offensive
               )
 
     g.db.add(c)
-    g.db.commit()
+    g.db.flush()
 
 
        
@@ -276,15 +283,8 @@ def api_comment(v):
       body=body
       )
     g.db.add(c_aux)
-    g.db.commit()
+    g.db.flush()
 
-    #reload c
-    g.db.refresh(c)
-
-    c.determine_offensive()
-    g.db.add(c)
-    
-    g.db.commit()
     notify_users=set()
 
     #queue up notification for parent author
@@ -292,7 +292,7 @@ def api_comment(v):
         notify_users.add(parent.author.id)
 
     #queue up notifications for username mentions
-    soup=BeautifulSoup(c.body_html, features="html.parser")
+    soup=BeautifulSoup(body_html, features="html.parser")
     mentions=soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3)
     for mention in mentions:
         username=mention["href"].split("@")[1]
@@ -319,6 +319,8 @@ def api_comment(v):
                      )
 
     g.db.add(vote)
+
+    g.db.commit()
     
 
     #print(f"Content Event: @{v.username} comment {c.base36id}")
@@ -368,6 +370,13 @@ def edit_comment(cid, v):
                 'api':lambda:({'error':f'A blacklisted domain was used.'}, 400)
                 }
 
+    for x in g.db.query(BadWord).all():
+        if x.check(body):
+            c.is_offensive=True
+            break
+        else:
+            c.is_offensive=False
+
     c.body=body
     c.body_html=body_html
     c.edited_utc = int(time.time())
@@ -375,9 +384,6 @@ def edit_comment(cid, v):
     g.db.add(c)
     
     g.db.commit()
-    g.db.refresh(c)
-
-    c.determine_offensive()
 
     path=request.form.get("current_page","/")
 

@@ -22,7 +22,7 @@ def send_notification(user, text):
                         )
     g.db.add(new_comment)
 
-    g.db.commit()
+    g.db.flush()
 
     new_aux=CommentAux(id=new_comment.id,
         body=text,

@@ -108,7 +108,13 @@ def edit_post(pid, v):
     p.body_html = body_html
     p.edited_utc = int(time.time())
 
-    g.db.add(p)
+    #offensive
+    for x in g.db.query(BadWord).all():
+        if (p.body and x.check(p.body)) or x.check(p.title):
+            p.is_offensive=True
+            break
+        else:
+            p.is_offensive=False
     
 
     return redirect(p.permalink)
@@ -360,6 +366,14 @@ def submit_post(v):
     if request.files.get('file') and not v.can_submit_image:
         abort(403)
 
+    #offensive
+    for x in g.db.query(BadWord).all():
+        if (body and x.check(body)) or x.check(title):
+            is_offensive=True
+            break
+        else:
+            is_offensive=False
+
     new_post=Submission(#title=title,
           #              url=url,
                         author_id=user_id,
@@ -373,13 +387,14 @@ def submit_post(v):
                         post_public=not board.is_private,
                         #author_name=user_name,
                         #guild_name=board.name,
-                        repost_id=repost.id if repost else None
+                        repost_id=repost.id if repost else None,
+                        is_offensive=is_offensive
                         )
 
 
 
     g.db.add(new_post)
-    g.db.commit()
+    g.db.flush()
 
     new_post_aux=SubmissionAux(id=new_post.id,
                                url=url,
@@ -389,19 +404,13 @@ def submit_post(v):
                                title=title
                                )
     g.db.add(new_post_aux)
-    g.db.commit()
-
-    #refresh new post
-    g.db.refresh(new_post)
-
-    new_post.determine_offensive()
-    g.db.add(new_post)
+    g.db.flush(new_post)
 
     vote=Vote(user_id=user_id,
               vote_type=1,
               submission_id=new_post.id
               )
-    g.db.add(vote)
+    g.db.flush(vote)
 
     #check for uploaded image
     if request.files.get('file'):
@@ -416,7 +425,7 @@ def submit_post(v):
         new_post.url=f'https://{BUCKET}/{name}'
         new_post.is_image=True
         new_post.domain_ref=1 #id of i.ruqqus.com domain
-        g.db.add(new_post)
+        g.db.flush(new_post)
         
         
 
@@ -432,6 +441,7 @@ def submit_post(v):
 
     #expire the relevant caches: front page new, board new
     #cache.delete_memoized(frontlist, sort="new")
+    g.db.commit()
     cache.delete_memoized(Board.idlist, board, sort="new")
 
     #print(f"Content Event: @{new_post.author.username} post {new_post.base36id}")

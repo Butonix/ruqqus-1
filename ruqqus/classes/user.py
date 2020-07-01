@@ -345,6 +345,11 @@ class User(Base, Stndrd):
     def comment_karma(self):
         return int(self.comment_energy)
 
+    @property
+    @cache.memoize(timeout=3600)
+    def true_score(self):
+        return (self.karma + self.comment_karma) - (self.post_count + self.comment_count)
+
 
     @property
     def base36id(self):
@@ -568,7 +573,7 @@ class User(Base, Stndrd):
     @property
     def can_make_guild(self):
 
-        if self.karma + self.comment_karma < 50:
+        if self.true_score < 250:
             return False
 
         if len(self.boards_modded) >= 10:
@@ -593,8 +598,7 @@ class User(Base, Stndrd):
 
     @property
     def can_submit_image(self):
-
-        return self.karma + self.comment_karma >=500
+        return self.true_score >= 1000 or (self.created_utc <= 1592974538 and self.true_score >= 500)
     
     @property
     def json(self):
@@ -632,7 +636,7 @@ class User(Base, Stndrd):
     @property
     def total_karma(self):
 
-        return  max(self.karma+self.comment_karma, -5)
+        return max(self.karma+self.comment_karma, -5)
 
     @property        
     def can_use_darkmode(self):
