@@ -354,7 +354,7 @@ def submit_post(v):
     domain=parsed_url.netloc
 
     if url:
-      repost = g.db.query(Submission).join(Submission.submission_aux).filter(
+        repost = g.db.query(Submission).join(Submission.submission_aux).filter(
         SubmissionAux.url.ilike(url),
         Submission.board_id==board.id,
         Submission.is_deleted==False, 
@@ -415,6 +415,9 @@ def submit_post(v):
     g.db.add(vote)
     g.db.flush()
 
+    g.db.commit()
+    g.db.refresh(new_post)
+
     #check for uploaded image
     if request.files.get('file'):
 
@@ -430,9 +433,6 @@ def submit_post(v):
         new_post.domain_ref=1 #id of i.ruqqus.com domain
         g.db.add(new_post)
         g.db.flush()
-        
-    g.db.refresh(new_post)
-    g.db.commit()
     
     #spin off thumbnail generation and csam detection as  new threads
     elif new_post.url:
