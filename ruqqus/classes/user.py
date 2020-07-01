@@ -61,7 +61,7 @@ class User(Base, Stndrd):
     bio_html=Column(String, default="")
     badges=relationship("Badge", lazy="dynamic", backref="user")
     real_id=Column(String, default=None)
-    notifications=relationship("Notification", lazy="select", backref="user")
+    notifications=relationship("Notification", lazy="dynamic", backref="user")
     referred_by=Column(Integer, default=None)
     is_banned=Column(Integer, default=0)
     unban_utc=Column(Integer, default=0)
@@ -90,17 +90,17 @@ class User(Base, Stndrd):
 
     
 
-    moderates=relationship("ModRelationship", lazy="select")
-    banned_from=relationship("BanRelationship", lazy="select", primaryjoin="BanRelationship.user_id==User.id")
-    subscriptions=relationship("Subscription", lazy="select")
-    boards_created=relationship("Board", lazy="select")
-    contributes=relationship("ContributorRelationship", lazy="select", primaryjoin="ContributorRelationship.user_id==User.id")
+    moderates=relationship("ModRelationship", lazy="dynamic")
+    banned_from=relationship("BanRelationship", lazy="dynamic", primaryjoin="BanRelationship.user_id==User.id")
+    subscriptions=relationship("Subscription", lazy="dynamic")
+    boards_created=relationship("Board", lazy="dynamic")
+    contributes=relationship("ContributorRelationship", lazy="dynamic", primaryjoin="ContributorRelationship.user_id==User.id")
 
-    following=relationship("Follow", lazy="select", primaryjoin="Follow.user_id==User.id")
-    followers=relationship("Follow", lazy="select", primaryjoin="Follow.target_id==User.id")
+    following=relationship("Follow", lazy="dynamic", primaryjoin="Follow.user_id==User.id")
+    followers=relationship("Follow", lazy="dynamic", primaryjoin="Follow.target_id==User.id")
 
-    blocking=relationship("UserBlock", lazy="select", primaryjoin="User.id==UserBlock.user_id")
-    blocked=relationship("UserBlock", lazy="select", primaryjoin="User.id==UserBlock.target_id")
+    blocking=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id")
+    blocked=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id")
 
 
     
