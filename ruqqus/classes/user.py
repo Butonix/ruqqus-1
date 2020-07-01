@@ -21,6 +21,7 @@ from .comment import Comment, Notification
 from .boards import Board
 from .board_relationships import *
 from .mix_ins import *
+from .subscriptions import *
 from ruqqus.__main__ import Base,cache
 
 
@@ -169,8 +170,8 @@ class User(Base, Stndrd):
         if not self.show_nsfl:
             posts = posts.filter_by(is_nsfl=False)
 
-        board_ids=[x.board_id for x in self.subscriptions.filter_by(is_active=True).all()]
-        user_ids =[x.target.id for x in self.following.all() if x.target.is_private==False]
+        board_ids=db.query(Subscription.board_id).filter_by(user_id=self.id, is_active=True).subquery()
+        user_ids =db.query(Follow.user_id).filter_by(user_id=self.id).join(Follow.target).filter(User.is_private==False).subquery
         
         posts=posts.filter(
             or_(
@@ -181,19 +182,17 @@ class User(Base, Stndrd):
 
         if not self.admin_level >=4:
             #admins can see everything
-            m=self.moderates.filter_by(invite_rescinded=False).subquery()
-            c=self.contributes.filter_by(is_active=True).subquery()
-            posts=posts.join(m,
-                             m.c.board_id==Submission.board_id,
-                             isouter=True
-                             ).join(c,
-                                    c.c.board_id==Submission.board_id,
-                                    isouter=True
-                                    )
-            posts=posts.filter(or_(Submission.author_id==self.id,
-                                   Submission.post_public==True,
-                                   m.c.board_id != None,
-                                   c.c.board_id !=None))
+
+            m=g.db.query(ModeratorRelationship.board_id).filter_by(user_id=v.id, invite_rescinded=False).subquery()
+            c=g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id).subquery()
+            posts=posts.filter(
+              or_(
+                Submission.author_id==v.id,
+                Submission.is_public==True,
+                Submission.board_id.in_(m),
+                Submission.board_id.in_(c)
+                )
+              )
 
             blocking=g.db.query(UserBlock.target_id).filter_by(user_id=self.id).subquery()
             blocked= g.db.query(UserBlock.user_id).filter_by(target_id=self.id).subquery()
