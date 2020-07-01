@@ -77,6 +77,7 @@ Compress(app)
 
 app.config["RATELIMIT_STORAGE_URL"]=environ.get("REDIS_URL")
 app.config["RATELIMIT_KEY_PREFIX"]="flask_limiting_"
+app.config["RATELIMIT_ENABLED"]=bool(int(environ.get("RATELIMIT_ENABLED", True)))
 
 limiter = Limiter(
     app,
