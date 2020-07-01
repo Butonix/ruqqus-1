@@ -7,11 +7,17 @@ db=db_session()
 
 def recompute():
 
+    x=0
+
     while True:
 
         print("beginning guild trend recompute")
-        i=0
-        for board in db.query(Board).filter(is_banned=False).order_by(Board.rank_trending.desc()).limit(1000).all():
+        x+=1
+        boards= db.query(Board).filter(is_banned=False).order_by(Board.rank_trending.desc())
+        if x%10:
+            boards=boards.limit(1000)
+
+        for board boards.all():
             i+=1
             board.rank_trending=board.trending_rank
             db.add(board)
