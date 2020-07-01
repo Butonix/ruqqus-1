@@ -81,15 +81,23 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
                                m.c.board_id != None,
                                c.c.board_id !=None))
 
-        blocking=v.blocking.subquery()
-        blocked=v.blocked.subquery()
-        posts=posts.join(blocking,
-            blocking.c.target_id==Submission.author_id,
-            isouter=True).join(blocked,
-                blocked.c.user_id==Submission.author_id,
-                isouter=True).filter(
-                    blocking.c.id==None,
-                    blocked.c.id==None)
+        blocking=g.db.query(UserBlock.target_id).filter_by(user_id=v.id).subquery()
+        blocked= g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
+
+        posts=posts.filter(
+            Submission.author_id.notin(blocking),
+            Submission.author_id.notin(blocked)
+            )
+
+        # blocking=v.blocking.subquery()
+        # blocked=v.blocked.subquery()
+        # posts=posts.join(blocking,
+        #     blocking.c.target_id==Submission.author_id,
+        #     isouter=True).join(blocked,
+        #         blocked.c.user_id==Submission.author_id,
+        #         isouter=True).filter(
+        #             blocking.c.id==None,
+        #             blocked.c.id==None)
     else:
         posts=posts.filter_by(post_public=True)
 

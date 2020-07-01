@@ -121,15 +121,14 @@ class Board(Base, Stndrd, Age_times):
 
         if v and not self.has_mod(v) and v.admin_level<=3:
             #blocks
-            blocking=v.blocking.subquery()
-            blocked=v.blocked.subquery()
-            posts=posts.join(blocking,
-                blocking.c.target_id==Submission.author_id,
-                isouter=True).join(blocked,
-                    blocked.c.user_id==Submission.author_id,
-                    isouter=True).filter(
-                        blocking.c.id==None,
-                        blocked.c.id==None)
+            blocking=g.db.query(UserBlock.target_id).filter_by(user_id=v.id).subquery()
+            blocked= g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
+
+            posts=posts.filter(
+                Submission.author_id.notin(blocking),
+                Submission.author_id.notin(blocked)
+                )
+
 
         if t:
             now=int(time.time())
