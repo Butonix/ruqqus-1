@@ -593,8 +593,8 @@ class User(Base, Stndrd):
 
     @property
     def can_submit_image(self):
-
-        return self.karma + self.comment_karma >=500
+        rep = self.karma + self.comment_karma
+        return rep >= 1000 or (self.created_utc <= 1592974538 and rep >= 500)
     
     @property
     def json(self):
