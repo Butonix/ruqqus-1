@@ -379,7 +379,7 @@ def submit_post(v):
 
 
     g.db.add(new_post)
-    g.db.commit()
+    g.db.flush()
 
     new_post_aux=SubmissionAux(id=new_post.id,
                                url=url,
