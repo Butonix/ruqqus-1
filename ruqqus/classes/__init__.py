@@ -7,6 +7,7 @@ from .comment import *
 from .domains import Domain
 from .flags import *
 from .user import *
+from .userblock import *
 from .submission import *
 from .votes import *
 from .images import *

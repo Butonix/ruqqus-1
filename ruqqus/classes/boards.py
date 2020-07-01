@@ -7,6 +7,7 @@ from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import *
 from ruqqus.helpers.session import *
 import ruqqus.helpers.aws as aws
+from .userblock import *
 from .submission import *
 from .board_relationships import *
 from .comment import Comment
