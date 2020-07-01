@@ -1,9 +1,9 @@
-from ruqqus.__main__ import make_session
+from ruqqus.__main__ import db_session
 from ruqqus import classes
 
 import time
 
-db=make_session()
+db=db_session()
 
 def recompute():
 
