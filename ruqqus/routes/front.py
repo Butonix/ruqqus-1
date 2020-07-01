@@ -67,7 +67,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
     if v and v.admin_level >= 4:
         pass
     elif v:
-        m=g.db.query(ModeratorRelationship.board_id).filter_by(user_id=v.id, invite_rescinded=False).subquery()
+        m=g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, invite_rescinded=False).subquery()
         c=g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id).subquery()
         posts=posts.filter(
           or_(
