@@ -25,6 +25,8 @@
 
                 <div class="d-flex">
 
+                  <div>
+
                   	{% if v.comment_karma > 300 %}
 
                    <form action="/settings/images/profile" method="post" enctype="multipart/form-data">
@@ -39,6 +41,8 @@
                   <div class="text-muted">You can add a custom avatar after earning 300 comment rep.</div>
 
                   {% endif %}
+
+                </div>
 
                 {% if v.has_profile %}
                 <div>
