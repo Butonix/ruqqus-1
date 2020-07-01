@@ -168,11 +168,11 @@ class User(Base, Stndrd):
         if not self.admin_level >=4:
             #admins can see everything
 
-            m=g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, invite_rescinded=False).subquery()
-            c=g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id).subquery()
+            m=g.db.query(ModRelationship.board_id).filter_by(user_id=self.id, invite_rescinded=False).subquery()
+            c=g.db.query(ContributorRelationship.board_id).filter_by(user_id=self.id).subquery()
             posts=posts.filter(
               or_(
-                Submission.author_id==v.id,
+                Submission.author_id==self.id,
                 Submission.post_public==True,
                 Submission.board_id.in_(m),
                 Submission.board_id.in_(c)
