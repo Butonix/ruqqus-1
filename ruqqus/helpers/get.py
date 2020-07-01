@@ -26,11 +26,11 @@ def get_user(username, v=None, session=None, graceful=False):
         block=session.query(UserBlock).filter_by(
             or_(
                 and_(
-                    user_id=v.id, 
-                    target_id=user.id
+                    UserBlock.user_id==v.id, 
+                    UserBlock.target_id==user.id
                     ),
-                and_(user_id=user.id,
-                    target_id=v.id
+                and_(UserBlock.user_id==user.id,
+                    UserBlock.target_id==v.id
                     )
                 )
             ).first()
@@ -257,11 +257,11 @@ def get_comment(cid, v=None):
         block=session.query(UserBlock).filter_by(
             or_(
                 and_(
-                    user_id=v.id, 
-                    target_id=user.id
+                    UserBlock.user_id==v.id, 
+                    UserBlock.target_id==user.id
                     ),
-                and_(user_id=user.id,
-                    target_id=v.id
+                and_(UserBlock.user_id==user.id,
+                    UserBlock.target_id==v.id
                     )
                 )
             ).first()
