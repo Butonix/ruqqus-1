@@ -96,7 +96,7 @@
         </div>
 
         <div class="font-weight-normal">
-          <span class="font-weight-bold">{{ u.total_karma }}</span> rep · {% if u.follower_count >=1 and not u.is_private %}<span class="font-weight-bold">{{ u.follower_count }}</span> subscriber{{ 's' if u.follower_count != 1 else '' }} · {% endif %}joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ u.created_date }}" class="font-weight-bold">{{ u.created_date }}</span>
+          <span class="font-weight-bold">{{ u.true_score }}</span> rep · {% if u.follower_count >=1 and not u.is_private %}<span class="font-weight-bold">{{ u.follower_count }}</span> subscriber{{ 's' if u.follower_count != 1 else '' }} · {% endif %}joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ u.created_date }}" class="font-weight-bold">{{ u.created_date }}</span>
 
         </div>
           {% if u.bio_html %}
