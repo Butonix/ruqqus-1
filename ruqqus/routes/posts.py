@@ -412,6 +412,7 @@ def submit_post(v):
               vote_type=1,
               submission_id=new_post.id
               )
+    g.db.add(vote)
     g.db.flush()
 
     #check for uploaded image
@@ -427,10 +428,11 @@ def submit_post(v):
         new_post.url=f'https://{BUCKET}/{name}'
         new_post.is_image=True
         new_post.domain_ref=1 #id of i.ruqqus.com domain
+        g.db.add(new_post)
         g.db.flush()
         
-        
-
+    g.db.refresh(new_post)
+    g.db.commit()
     
     #spin off thumbnail generation and csam detection as  new threads
     elif new_post.url:
