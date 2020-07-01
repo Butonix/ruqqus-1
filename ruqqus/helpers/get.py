@@ -23,7 +23,7 @@ def get_user(username, v=None, session=None, graceful=False):
             return None
 
     if v:
-        block=session.query(UserBlock).filter_by(
+        block=session.query(UserBlock).filter(
             or_(
                 and_(
                     UserBlock.user_id==v.id, 
@@ -254,7 +254,7 @@ def get_comment(cid, v=None):
         if not items:
             abort(404)
 
-        block=session.query(UserBlock).filter_by(
+        block=session.query(UserBlock).filter(
             or_(
                 and_(
                     UserBlock.user_id==v.id, 
