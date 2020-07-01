@@ -80,7 +80,7 @@
 
               <div class="d-flex">
 
-              	{% if v.comment_karma >500 %}
+              	{% if v.comment_karma > 300 %}
 
                 <div>
 
@@ -95,7 +95,7 @@
 
               {% else %}
 
-              <div class="text-muted">You can add a custom banner after earning 500 comment rep.</div>
+              <div class="text-muted">You can add a custom banner after earning 300 comment rep.</div>
 
               {% endif %}
 
@@ -111,7 +111,7 @@
 
             </div>
 
-            {% if v.comment_karma > 500 %}
+            {% if v.comment_karma > 300 %}
 
             <div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files supported. Max file size 16MB. (Recommend 1400x250 pixels)</div>
 
