@@ -276,15 +276,15 @@ def api_comment(v):
       body=body
       )
     g.db.add(c_aux)
-    g.db.commit()
+    g.db.flush()
 
     #reload c
     g.db.refresh(c)
 
     c.determine_offensive()
     g.db.add(c)
-    
-    g.db.commit()
+    g.db.flush()
+
     notify_users=set()
 
     #queue up notification for parent author
@@ -319,6 +319,8 @@ def api_comment(v):
                      )
 
     g.db.add(vote)
+
+    g.db.commit()
     
 
     #print(f"Content Event: @{v.username} comment {c.base36id}")

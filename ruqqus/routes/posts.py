@@ -389,19 +389,19 @@ def submit_post(v):
                                title=title
                                )
     g.db.add(new_post_aux)
-    g.db.commit()
+    g.db.flush()
 
     #refresh new post
     g.db.refresh(new_post)
 
     new_post.determine_offensive()
-    g.db.add(new_post)
+    g.db.flush(new_post)
 
     vote=Vote(user_id=user_id,
               vote_type=1,
               submission_id=new_post.id
               )
-    g.db.add(vote)
+    g.db.flush(vote)
 
     #check for uploaded image
     if request.files.get('file'):
@@ -416,7 +416,7 @@ def submit_post(v):
         new_post.url=f'https://{BUCKET}/{name}'
         new_post.is_image=True
         new_post.domain_ref=1 #id of i.ruqqus.com domain
-        g.db.add(new_post)
+        g.db.flush(new_post)
         
         
 
@@ -432,6 +432,7 @@ def submit_post(v):
 
     #expire the relevant caches: front page new, board new
     #cache.delete_memoized(frontlist, sort="new")
+    g.db.commit()
     cache.delete_memoized(Board.idlist, board, sort="new")
 
     #print(f"Content Event: @{new_post.author.username} post {new_post.base36id}")
