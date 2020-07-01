@@ -392,7 +392,6 @@ def submit_post(v):
     g.db.flush()
 
     #refresh new post
-    g.db.refresh(new_post)
 
     new_post.determine_offensive()
     g.db.flush(new_post)

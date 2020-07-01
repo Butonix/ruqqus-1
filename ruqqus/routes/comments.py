@@ -279,7 +279,6 @@ def api_comment(v):
     g.db.flush()
 
     #reload c
-    g.db.refresh(c)
 
     c.determine_offensive()
     g.db.add(c)
