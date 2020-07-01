@@ -243,29 +243,34 @@ def get_comment(cid, v=None):
         vt=g.db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id==i).subquery()
 
 
-        items= g.db.query(Comment, User, vt.c.vote_type, blocking.c.id, blocked.c.id).filter(
+        items= g.db.query(Comment, User, vt.c.vote_type).filter(
             Comment.id==i
             ).join(
             Comment._author
             ).join(
             vt, isouter=True
-            ).join(
-            blocking,
-            blocking.c.target_id==Comment.author_id,
-            isouter=True
-            ).join(
-            blocked,
-            blocked.c.user_id==Comment.author_id,
-            isouter=True
             ).first()
         
         if not items:
             abort(404)
+
+        block=session.query(UserBlock).filter_by(
+            or_(
+                and_(
+                    user_id=v.id, 
+                    target_id=user.id
+                    ),
+                and_(user_id=user.id,
+                    target_id=v.id
+                    )
+                )
+            ).first()
+
         x=items[0]
         x.author=items[1]
         x._voted=items[2] or 0
-        x._is_blocking=items[3] or 0
-        x._is_blocked=items[4] or 0
+        x._is_blocking=block and block.user_id==v.id
+        x._is_blocked=block and block.target_id==v.id
 
     else:
         items=g.db.query(Comment, User).filter(Comment.id==i).join(Comment._author).first()
