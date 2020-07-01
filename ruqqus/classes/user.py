@@ -33,8 +33,8 @@ class UserBlock(Base, Stndrd, Age_times):
     target_id=Column(Integer, ForeignKey("users.id"))
     created_utc=Column(Integer)
 
-    user=relationship("User", lazy="dynamic", innerjoin=True, primaryjoin="User.id==UserBlock.user_id")
-    target=relationship("User", lazy="dynamic", innerjoin=True, primaryjoin="User.id==UserBlock.target_id")
+    user=relationship("User", innerjoin=True, primaryjoin="User.id==UserBlock.user_id")
+    target=relationship("User", innerjoin=True, primaryjoin="User.id==UserBlock.target_id")
 
 
     def __repr__(self):
@@ -183,7 +183,7 @@ class User(Base, Stndrd):
         if not self.admin_level >=4:
             #admins can see everything
 
-            m=g.db.query(ModeratorRelationship.board_id).filter_by(user_id=v.id, invite_rescinded=False).subquery()
+            m=g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, invite_rescinded=False).subquery()
             c=g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id).subquery()
             posts=posts.filter(
               or_(

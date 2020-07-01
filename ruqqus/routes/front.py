@@ -240,7 +240,7 @@ def guild_ids(sort="subs", page=1, nsfw=False):
     elif sort=="new":
         guilds=guilds.order_by(Board.created_utc.desc())
     elif sort=="trending":
-        guilds=guilds.order_by(Board.trending_rank.desc())
+        guilds=guilds.order_by(Board.rank_trending.desc())
 
     else:
         abort(422)
