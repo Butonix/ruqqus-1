@@ -199,8 +199,8 @@ class User(Base, Stndrd):
             blocked= g.db.query(UserBlock.user_id).filter_by(target_id=self.id).subquery()
 
             posts=posts.filter(
-                Submission.author_id.notin(blocking),
-                Submission.author_id.notin(blocked)
+                Submission.author_id.notin_(blocking),
+                Submission.author_id.notin_(blocked)
                 )
 
 
