@@ -568,7 +568,7 @@ class User(Base, Stndrd):
     @property
     def can_make_guild(self):
 
-        if self.karma + self.comment_karma < 50:
+        if self.karma + self.comment_karma < 250:
             return False
 
         if len(self.boards_modded) >= 10:
