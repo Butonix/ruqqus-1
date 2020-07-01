@@ -222,13 +222,15 @@ def submit_post(v):
     else:
         url=""
 
+    body=request.form.get("body","")
     #check for duplicate
-    dup = g.db.query(Submission).filter(
+    dup = g.db.query(Submission).join(Submission.submission_aux).filter(
       Submission.author_id==v.id,
       Submission.is_deleted==False,
       Submission.board_id==board.id,
       SubmissionAux.title==title, 
-      SubmissionAux.url==url
+      SubmissionAux.url==url,
+      SubmissionAux.body==body
       ).first()
 
     if dup:
@@ -317,7 +319,7 @@ def submit_post(v):
 
     #now make new post
 
-    body=request.form.get("body","")
+   
 
     #catch too-long body
     if len(str(body))>10000:
