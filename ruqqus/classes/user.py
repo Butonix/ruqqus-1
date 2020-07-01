@@ -255,20 +255,16 @@ class User(Base, Stndrd):
         if v and v.admin_level >=4:
             pass
         elif v:
-            m=v.moderates.filter_by(invite_rescinded=False).subquery()
-            c=v.contributes.subquery()
-            
-            submissions=submissions.join(m,
-                                         m.c.board_id==Submission.board_id,
-                                         isouter=True
-                                    ).join(c,
-                                           c.c.board_id==Submission.board_id,
-                                           isouter=True
-                                    )
-            submissions=submissions.filter(or_(Submission.author_id==v.id,
-                                   Submission.is_public==True,
-                               m.c.board_id != None,
-                               c.c.board_id !=None))
+            m=g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, invite_rescinded=False).subquery()
+            c=g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id).subquery()
+            posts=posts.filter(
+              or_(
+                Submission.author_id==v.id,
+                Submission.post_public==True,
+                Submission.board_id.in_(m),
+                Submission.board_id.in_(c)
+                )
+              )
         else:
             submissions=submissions.filter_by(is_public=True)
 
