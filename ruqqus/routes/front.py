@@ -9,6 +9,7 @@ from ruqqus.__main__ import app, cache
 from ruqqus.classes.submission import Submission
 
 
+
 @app.route("/post/", methods=["GET"])
 def slash_post():
     return redirect("/")
