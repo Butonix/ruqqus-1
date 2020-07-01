@@ -35,12 +35,10 @@ def get_user(username, v=None, session=None, graceful=False):
                 )
             ).first()
 
-        #print(q)
-        x=q[0]
-        x._is_blocking=block and block.user_id==v.id
-        x._is_blocked=block and block.target_id==v.id
+        user._is_blocking=block and block.user_id==v.id
+        user._is_blocked=block and block.target_id==v.id
 
-    return x
+    return user
 
 def get_post(pid, v=None, session=None):
 
