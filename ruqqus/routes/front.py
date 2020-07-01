@@ -54,11 +54,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
     else:
         abort(422)
 
-    posts = g.db.query(Submission,
-        func.rank().over(
-            partition_by=Submission.board_id,
-            order_by=sort_func()
-            ).label("rn")
+    posts = g.db.query(Submission
         ).filter_by(is_banned=False,
         is_deleted=False,
         stickied=False)
@@ -114,7 +110,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
         posts=posts.filter(Submission.created_utc >= cutoff)
 
     if sort=="hot":
-        posts=posts.order_by(Submission.score_hot.desc())
+        posts=posts.order_by(Submission.score_best.desc())
     elif sort=="new":
         posts=posts.order_by(Submission.created_utc.desc())
     elif sort=="disputed":
@@ -125,13 +121,6 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
         posts=posts.order_by(Submission.score_activity.desc())
     else:
         abort(422)
-
-    posts_subquery=posts.subquery()
-
-    if sort=="hot":
-        posts=g.db.query(posts_subquery).filter(posts_subquery.c.rn<=2)
-    else:
-        posts=g.db.query(posts_subquery)
 
     if ids_only:
         posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
