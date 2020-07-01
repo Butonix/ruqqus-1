@@ -24,19 +24,24 @@ def searchlisting(q, v=None, page=1, sort="hot"):
     if v and v.admin_level >= 4:
         pass
     elif v:
-        m=v.moderates.filter_by(invite_rescinded=False).subquery()
-        c=v.contributes.subquery()
-        posts=posts.join(m,
-                         m.c.board_id==Submission.board_id,
-                         isouter=True
-                         ).join(c,
-                                c.c.board_id==Submission.board_id,
-                                isouter=True
-                                )
-        posts=posts.filter(or_(Submission.author_id==v.id,
-                               Submission.is_public==True,
-                               m.c.board_id != None,
-                               c.c.board_id !=None))
+        m=g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, invite_rescinded=False).subquery()
+        c=g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id).subquery()
+        posts=posts.filter(
+          or_(
+            Submission.author_id==v.id,
+            Submission.post_public==True,
+            Submission.board_id.in_(m),
+            Submission.board_id.in_(c)
+            )
+          )
+
+        blocking=g.db.query(UserBlock.target_id).filter_by(user_id=v.id).subquery()
+        blocked= g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
+
+        posts=posts.filter(
+            Submission.author_id.notin_(blocking),
+            Submission.author_id.notin_(blocked)
+            )
     else:
         posts=posts.filter(Submission.is_public==True)
 
