@@ -49,7 +49,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     stickied=Column(Boolean, default=False)
     _comments=relationship("Comment", lazy="dynamic", primaryjoin="Comment.parent_submission==Submission.id", backref="submissions")
     domain_ref=Column(Integer, ForeignKey("domains.id"))
-    domain_obj=relationship("Domain", lazy="dynamic", innerjoin=False)
+    domain_obj=relationship("Domain")
     flags=relationship("Flag", lazy="dynamic", backref="submission")
     is_approved=Column(Integer, ForeignKey("users.id"), default=0)
     approved_utc=Column(Integer, default=0)
