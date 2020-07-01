@@ -33,6 +33,7 @@ def recompute():
 
             if not i%100:
                 db.commit()
+                time.sleep(0.5)
             
 
             #print(f"{i}/{total} - {post.base36id}")
@@ -64,12 +65,13 @@ def recompute():
             db.add(comment)
             if not i%100:
                 db.commit()
+                time.sleep(0.5)
             
         db.commit()
 
         print(f"Scored {i} comments. Sleeping 1min")
 
-        time.sleep(60)
+        #time.sleep(60)
 
 
 recompute()
