@@ -9,6 +9,16 @@ def recompute():
 
     while True:
 
+        print("beginning guild trend recompute")
+        i=0
+        for board in db.query(Board).filter(is_banned=False).order_by(Board.rank_trending.desc()).limit(1000).all():
+            i+=1
+            board.rank_trending=board.trending_rank
+            db.add(board)
+
+            if not i%100:
+                db.commit()
+                time.sleep(0.5)
 
         now=int(time.time())
 
