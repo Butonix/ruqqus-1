@@ -90,7 +90,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     flag_count=deferred(Column(Integer, server_default=FetchedValue()))
     report_count=deferred(Column(Integer, server_default=FetchedValue()))
     score=Column(Float, server_default=FetchedValue())
-    is_public=Column(Boolean, server_default=FetchedValue())
+    is_public=deferred(Column(Boolean, server_default=FetchedValue()))
 
     rank_hot=deferred(Column(Float, server_default=FetchedValue()))
     rank_fiery=deferred(Column(Float, server_default=FetchedValue()))
