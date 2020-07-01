@@ -689,8 +689,14 @@ function post(url, callback, errortext) {
   var form = new FormData()
   form.append("formkey", formkey());
   xhr.withCredentials=true;
-  xhr.onload=callback
-  xhr.onerror=function(){alert(errortext)}
+  xhr.onerror=function() { alert(errortext); };
+  xhr.onload = function() {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      callback();
+    } else {
+      xhr.onerror();
+    }
+  };
   xhr.send(form);
 };
 
