@@ -89,17 +89,17 @@ limiter = Limiter(
 #setup db
 pool_size=int(environ.get("PG_POOL_SIZE", 10))
 engines={
-    "leader":create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_size=pool_size, pool_use_lifo=True) #,
-    #"followers":[create_engine(x, pool_size=pool_size, pool_use_lifo=True) for x in app.config['SQLALCHEMY_READ_URIS']] if any(i for i in app.config['SQLALCHEMY_READ_URIS']) else [create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_size=pool_size, pool_use_lifo=True)]
+    "leader":create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_size=pool_size, pool_use_lifo=True) ,
+    "followers":[create_engine(x, pool_size=pool_size, pool_use_lifo=True) for x in app.config['SQLALCHEMY_READ_URIS']] if any(i for i in app.config['SQLALCHEMY_READ_URIS']) else [create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_size=pool_size, pool_use_lifo=True)]
 }
 
-# class RoutingSession(Session):
-#     def get_bind(self, mapper=None, clause=None):
-#         if self._flushing:
-#             return engines['leader']
-#         else:
-#             return random.choice(engines['followers'])
-db_session=scoped_session(sessionmaker(bind=engines["leader"]))
+ class RoutingSession(Session):
+     def get_bind(self, mapper=None, clause=None):
+         if self._flushing:
+             return engines['leader']
+         else:
+             return random.choice(engines['followers'])
+db_session=scoped_session(sessionmaker(class_=RoutingSession))
 
 Base = declarative_base()
 
