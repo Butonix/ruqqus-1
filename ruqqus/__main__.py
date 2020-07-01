@@ -34,10 +34,9 @@ app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_CONNECTION_POOL_URL", environ.get("DATABASE_URL"))
-# app.config['SQLALCHEMY_READ_URIS']=[
-#     environ.get("HEROKU_POSTGRESQL_CRIMSON_URL"),
-#     environ.get("HEROKU_POSTGRESQL_RED_URL")
-#     ]
+app.config['SQLALCHEMY_READ_URIS']=[
+     environ.get("HEROKU_POSTGRESQL_JADE_URL")
+     ]
 
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
 app.config["SERVER_NAME"]=environ.get("domain", None)
