@@ -37,7 +37,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     __tablename__="submissions"
 
     id = Column(BigInteger, primary_key=True)
-    submission_aux=relationship("SubmissionAux", lazy="joined", uselist=False, primaryjoin="Submission.id==SubmissionAux.id")
+    submission_aux=relationship("SubmissionAux", lazy="joined", uselist=False, innerjoin=True, primaryjoin="Submission.id==SubmissionAux.id")
     author_id = Column(BigInteger, ForeignKey("users.id"))
     repost_id = Column(BigInteger, ForeignKey("submissions.id"), default=0)
     edited_utc = Column(BigInteger, default=0)
