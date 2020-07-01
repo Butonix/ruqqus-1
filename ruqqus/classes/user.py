@@ -33,8 +33,8 @@ class UserBlock(Base, Stndrd, Age_times):
     target_id=Column(Integer, ForeignKey("users.id"))
     created_utc=Column(Integer)
 
-    user=relationship("User", lazy="dynamic", innerjoin=True, primaryjoin="User.id==UserBlock.user_id")
-    target=relationship("User", lazy="dynamic", innerjoin=True, primaryjoin="User.id==UserBlock.target_id")
+    user=relationship("User", innerjoin=True, primaryjoin="User.id==UserBlock.user_id")
+    target=relationship("User", innerjoin=True, primaryjoin="User.id==UserBlock.target_id")
 
 
     def __repr__(self):
