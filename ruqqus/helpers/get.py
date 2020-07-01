@@ -9,22 +9,30 @@ def get_user(username, v=None, session=None, graceful=False):
 
     if not session:
         session=g.db
+        
+
+    user=session.query(User
+        ).filter(
+        User.username.ilike(username)
+        ).first()
+
+    if not user:
+        if not graceful:
+            abort(404)
+        else:
+            return None
 
     if v:
-        blocking=v.blocking.subquery()
-        blocked=v.blocked.subquery()
-
-        q=session.query(User, blocking.c.id, blocked.c.id
-            ).filter(
-            User.username.ilike(username)
-            ).join(
-            blocking,
-            blocking.c.target_id==User.id,
-            isouter=True
-            ).join(
-            blocked,
-            blocked.c.user_id==User.id,
-            isouter=True
+        block=session.query(UserBlock).filter_by(
+            or_(
+                and_(
+                    user_id=v.id, 
+                    target_id=user.id
+                    ),
+                and_(user_id=user.id,
+                    target_id=v.id
+                    )
+                )
             ).first()
 
         if not q:
@@ -35,15 +43,9 @@ def get_user(username, v=None, session=None, graceful=False):
 
         #print(q)
         x=q[0]
-        x._is_blocking=q[1] or 0
-        x._is_blocked=q[2] or 0
-    else:
-        x=session.query(User).filter(User.username.ilike(username)).first()
-        if not x:
-            if not graceful:
-                abort(404)
-            else:
-                return None
+        x._is_blocking=block and block.user_id==v.id
+        x._is_blocked=block and block.target_id==v.id
+
     return x
 
 def get_post(pid, v=None, session=None):
