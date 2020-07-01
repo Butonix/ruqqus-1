@@ -188,7 +188,7 @@ class User(Base, Stndrd):
             posts=posts.filter(
               or_(
                 Submission.author_id==v.id,
-                Submission.is_public==True,
+                Submission.post_public==True,
                 Submission.board_id.in_(m),
                 Submission.board_id.in_(c)
                 )
