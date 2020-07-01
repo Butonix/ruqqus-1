@@ -35,12 +35,6 @@ def get_user(username, v=None, session=None, graceful=False):
                 )
             ).first()
 
-        if not q:
-            if not graceful:
-                abort(404)
-            else:
-                return None
-
         #print(q)
         x=q[0]
         x._is_blocking=block and block.user_id==v.id
