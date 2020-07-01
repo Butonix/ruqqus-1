@@ -404,13 +404,13 @@ def submit_post(v):
                                title=title
                                )
     g.db.add(new_post_aux)
-    g.db.flush(new_post)
+    g.db.flush()
 
     vote=Vote(user_id=user_id,
               vote_type=1,
               submission_id=new_post.id
               )
-    g.db.flush(vote)
+    g.db.flush()
 
     #check for uploaded image
     if request.files.get('file'):
@@ -425,7 +425,7 @@ def submit_post(v):
         new_post.url=f'https://{BUCKET}/{name}'
         new_post.is_image=True
         new_post.domain_ref=1 #id of i.ruqqus.com domain
-        g.db.flush(new_post)
+        g.db.flush()
         
         
 
