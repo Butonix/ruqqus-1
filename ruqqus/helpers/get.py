@@ -54,7 +54,11 @@ def get_post(pid, v=None, nSession=None, **kwargs):
         items= nSession.query(Submission, User, vt.c.vote_type
             ).options(
             joinedload("author")
-            ).filter(Submission.id==i).join(vt, isouter=True).first()
+            ).filter(Submission.id==i).join(
+            vt, 
+            vt.c.submission_id==Submission.id, 
+            isouter=True
+            ).first()
         
         if not items:
             abort(404)
@@ -225,7 +229,7 @@ def get_comment(cid, nSession=None, v=None, **kwargs):
             ).filter(
             Comment.id==i
             ).join(
-            vt, isouter=True
+            vt, vt.c.comment_id==Comment.id, isouter=True
             ).first()
         
         if not items:
@@ -277,6 +281,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
             joinedload(User.title)
             ).join(
             vt, 
+            vt.c.comment_id==Comment.id,
             isouter=True
             ).join(
             blocking,
