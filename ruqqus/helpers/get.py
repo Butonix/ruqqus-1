@@ -44,7 +44,8 @@ def get_user(username, v=None, nSession=None, graceful=False):
 
 def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 
-    i=base36decode(pid)
+    if isinstance(pid, str):
+        pid=base36decode(pid)
     
     nSession=nSession or kwargs.get("session")or g.db
 
