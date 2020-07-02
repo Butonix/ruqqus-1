@@ -40,12 +40,11 @@ def get_user(username, v=None, nSession=None, graceful=False):
 
     return user
 
-def get_post(pid, v=None, nSession=None):
+def get_post(pid, v=None, nSession=None, **kwargs):
 
     i=base36decode(pid)
     
-    if not nSession:
-        nSession=g.db
+    nSession=nSession or kwargs["session"] or g.db
 
     if v:
         vt=nSession.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
