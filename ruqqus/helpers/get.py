@@ -248,10 +248,9 @@ def get_comment(cid, nSession=None, v=None, **kwargs):
         x._is_blocked=block and block.target_id==v.id
 
     else:
-        items=g.db.query(Comment).options(
+        x=g.db.query(Comment).options(
             joinedload(Comment.author).joinedload(User.title)
             ).filter(Comment.id==i).first()
-        x=items[0]
 
     if not x:
         abort(404)
