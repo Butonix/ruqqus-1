@@ -82,7 +82,7 @@ def get_posts(pids, sort="hot", v=None):
 
 
         posts= g.db.query(Submission, vt.c.vote_type).options(
-            joinedload(Submissions.author).joinedload(User.title)
+            joinedload(Submissions.author), joinedload(User.title)
             ).filter(
             Submission.id.in_(pids)
             ).join(
@@ -101,7 +101,7 @@ def get_posts(pids, sort="hot", v=None):
 
     else:
         posts=g.db.query(Submission).options(
-            joinedload(Submission.author).joinedload(User.title)
+            joinedload(Submission.author), joinedload(User.title)
             ).filter(
             Submission.id.in_(pids)
             )
