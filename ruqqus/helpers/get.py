@@ -2,16 +2,16 @@ from .base36 import *
 from ruqqus.classes import *
 from flask import g
 
-def get_user(username, v=None, session=None, graceful=False):
+def get_user(username, v=None, nSession=None, graceful=False):
 
     username=username.replace('\\','')
     username=username.replace('_', '\_')
 
-    if not session:
-        session=g.db
+    if not nSession:
+        nSession=g.db
         
 
-    user=session.query(User
+    user=nSession.query(User
         ).filter(
         User.username.ilike(username)
         ).first()
@@ -23,7 +23,7 @@ def get_user(username, v=None, session=None, graceful=False):
             return None
 
     if v:
-        block=session.query(UserBlock).filter(
+        block=nSession.query(UserBlock).filter(
             or_(
                 and_(
                     UserBlock.user_id==v.id, 
@@ -40,18 +40,18 @@ def get_user(username, v=None, session=None, graceful=False):
 
     return user
 
-def get_post(pid, v=None, session=None):
+def get_post(pid, v=None, nSession=None):
 
     i=base36decode(pid)
     
-    if not session:
-        session=g.db
+    if not nSession:
+        nSession=g.db
 
     if v:
-        vt=session.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
+        vt=nSession.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
 
 
-        items= session.query(Submission, User, vt.c.vote_type
+        items= nSession.query(Submission, User, vt.c.vote_type
             ).filter(Submission.id==i).join(Submission._author).join(vt, isouter=True).first()
         
         if not items:
@@ -62,7 +62,7 @@ def get_post(pid, v=None, session=None):
         x._voted=items[2] or 0
 
     else:
-        row=session.query(Submission, User).join(Submission._author).filter(Submission.id==i).first()
+        row=nSession.query(Submission, User).join(Submission._author).filter(Submission.id==i).first()
         x=row[0]
         x.author=row[1]
 
@@ -246,7 +246,7 @@ def get_comment(cid, v=None):
         if not items:
             abort(404)
 
-        block=session.query(UserBlock).filter(
+        block=nSession.query(UserBlock).filter(
             or_(
                 and_(
                     UserBlock.user_id==v.id, 
@@ -273,18 +273,18 @@ def get_comment(cid, v=None):
         abort(404)
     return x
 
-def get_comments(cids, v=None, session=None, sort_type="new"):
+def get_comments(cids, v=None, nSession=None, sort_type="new"):
 
-    if not session:
-        session=g.db
+    if not nSession:
+        nSession=g.db
 
     if v:
         blocking=v.blocking.subquery()
         blocked=v.blocked.subquery()
-        vt=session.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(cids)).subquery()
+        vt=nSession.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(cids)).subquery()
 
 
-        items= session.query(Comment, User, vt.c.vote_type, blocking.c.id, blocked.c.id).filter(
+        items= nSession.query(Comment, User, vt.c.vote_type, blocking.c.id, blocked.c.id).filter(
             Comment.id.in_(cids)
             ).join(
             Comment._author
@@ -312,7 +312,7 @@ def get_comments(cids, v=None, session=None, sort_type="new"):
             output.append(x)
 
     else:
-        entries=session.query(Comment, User).join(Comment._author).filter(Comment.id.in_(cids)).all()
+        entries=nSession.query(Comment, User).join(Comment._author).filter(Comment.id.in_(cids)).all()
         output=[]
         for row in entries:
             comment=row[0]
