@@ -266,11 +266,11 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
             query=nSession.query(Comment, vt.c.vote_type
                 ).options(joinedload(Comment.author).joinedload(User.title)
                 ).filter_by(id=cid
-                ).join(vt, vt.c.comment_id==Comment.id, isouter=True
                 )
             queries.append(subquery)
         queries=tuple(queries)
-        posts=nSession.query(Comment).union_all(*queries).order_by(None).all()
+        posts=nSession.query(Comment, vt.c.vote_type).union_all(*queries).join(vt, vt.c.comment_id==Comment.id, isouter=True
+                ).order_by(None).all()
 
         output=[posts[i][0] for i in posts]
         for i in output:
