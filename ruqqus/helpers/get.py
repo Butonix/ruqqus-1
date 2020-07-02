@@ -77,12 +77,11 @@ def get_posts(pids, sort="hot", v=None):
         vt=g.db.query(Vote).filter(Vote.user_id==v.id, Vote.submission_id.in_(pids)).subquery()
 
 
-        posts= g.db.query(Submission, User, Title, vt.c.vote_type).filter(
+        posts= g.db.query(Submission, vt.c.vote_type).options(
+            joinedload(Submission.author),
+            joinedload(User.title)
+            ).filter(
             Submission.id.in_(pids)
-            ).join(
-            Submission._author
-            ).join(
-            User.title, isouter=True
             ).join(
             vt, vt.c.submission_id==Submission.id, isouter=True
             )
@@ -92,29 +91,23 @@ def get_posts(pids, sort="hot", v=None):
         
         posts=[n[0] for n in items]
         for i in range(len(posts)):
-            posts[i].author=items[i][1]
-            posts[i]._title=items[i][2]
-            posts[i]._voted=items[i][3] or 0
+            posts[i]._voted=items[i][1] or 0
 
 
 
 
     else:
-        posts=g.db.query(Submission, User, Title).filter(
+        posts=g.db.query(Submission).options(
+            joinedload(Submission.author),
+            joinedload(User.title)
+            ).filter(
             Submission.id.in_(pids)
-            ).join(
-            Submission._author
-            ).join(
-            User.title, isouter=True
             )
 
 
         items=[i for i in posts.all()]
         
-        posts=[n[0] for n in items]
-        for i in range(len(posts)):
-            posts[i].author=items[i][1]
-            posts[i]._title=items[i][2]
+        posts=[n for n in items]
 
     posts=sorted(posts, key= lambda x: pids.index(x.id))
     return posts
@@ -132,17 +125,15 @@ def get_post_with_comments(pid, sort_type="top", v=None):
 
         comms=g.db.query(
             Comment,
-            User,
-            Title,
             votes.c.vote_type,
             blocking.c.id,
             blocked.c.id
+            ).options(
+            joinedload(Comment.author),
+            joinedload(User.title)
             ).filter(
             Comment.parent_submission==post.id,
             Comment.level<=6
-            ).join(Comment._author).join(
-            User.title,
-            isouter=True
             ).join(
             votes,
             votes.c.comment_id==Comment.id,
@@ -175,24 +166,21 @@ def get_post_with_comments(pid, sort_type="top", v=None):
         output=[]
         for c in comments:
             comment=c[0]
-            comment.author=c[1]
-            comment._title=c[2]
-            comment._voted=c[3] or 0
-            comment._is_blocking=c[4] or 0
-            comment._is_blocked=c[5] or 0
+            comment._voted=c[1] or 0
+            comment._is_blocking=c[2] or 0
+            comment._is_blocked=c[3] or 0
             output.append(comment)
         post._preloaded_comments=output
 
     else:
         comms=g.db.query(
-            Comment,
-            User,
-            Title
+            Comment
+            ).options(
+            joinedload(Comment.author),
+            joinedload(User.title)
             ).filter(
             Comment.parent_submission==post.id,
             Comment.level<=6
-            ).join(Comment._author).join(
-            User.title, isouter=True
             )
 
         if sort_type=="hot":
@@ -209,26 +197,21 @@ def get_post_with_comments(pid, sort_type="top", v=None):
         else:
             abort(422)
 
-        output=[]
-        for c in comments:
-            comment=c[0]
-            comment.author=c[1]
-            comment._title=c[2]
-            output.append(comment)
+        output=[c for c in comments]
 
         post._preloaded_comments=output
 
     return post
 
 
-def get_comment(cid, nSession=None, v=None):
+def get_comment(cid, nSession=None, v=None, **kwargs):
 
 
     if isinstance(cid, str):
         i=base36decode(cid)
     else: i=cid
 
-    nSession = nSession or g.db
+    nSession = nSession or kwargs.get('session') or g.db
 
     if v:
         blocking=v.blocking.subquery()
@@ -236,10 +219,11 @@ def get_comment(cid, nSession=None, v=None):
         vt=g.db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id==i).subquery()
 
 
-        items= g.db.query(Comment, User, vt.c.vote_type).filter(
+        items= g.db.query(Comment, vt.c.vote_type).options(
+            joinedload(Comment.author),
+            joinedload(User.title)
+            ).filter(
             Comment.id==i
-            ).join(
-            Comment._author
             ).join(
             vt, isouter=True
             ).first()
@@ -260,15 +244,16 @@ def get_comment(cid, nSession=None, v=None):
             ).first()
 
         x=items[0]
-        x.author=items[1]
         x._voted=items[2] or 0
         x._is_blocking=block and block.user_id==v.id
         x._is_blocked=block and block.target_id==v.id
 
     else:
-        items=g.db.query(Comment, User).filter(Comment.id==i).join(Comment._author).first()
+        items=g.db.query(Comment).options(
+            joinedload(Comment.author),
+            joinedload(User.title)
+            ).filter(Comment.id==i).first()
         x=items[0]
-        x.author=items[1]
 
     if not x:
         abort(404)
@@ -285,10 +270,11 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
         vt=nSession.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(cids)).subquery()
 
 
-        items= nSession.query(Comment, User, vt.c.vote_type, blocking.c.id, blocked.c.id).options(joinedload("Comment.post")).filter(
+        items= nSession.query(Comment, vt.c.vote_type, blocking.c.id, blocked.c.id).options(joinedload("Comment.post")).filter(
             Comment.id.in_(cids)
-            ).join(
-            Comment._author
+            ).options(
+            joinedload(Comment.author),
+            joinedload(User.title)
             ).join(
             vt, 
             isouter=True
@@ -300,24 +286,25 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
             blocked,
             blocked.c.user_id==Comment.author_id,
             isouter=True
-            ).order_by(Comment.created_utc.desc()).all()
+            ).all()
 
         output=[]
         for i in items:
         
             x=i[0]
-            x.author=i[1]
-            x._voted=i[2] or 0
-            x._is_blocking=i[3] or 0
-            x._is_blocked=i[4] or 0
+            x._voted=i[1] or 0
+            x._is_blocking=i[2] or 0
+            x._is_blocked=i[3] or 0
             output.append(x)
 
     else:
-        entries=nSession.query(Comment, User).join(Comment._author).filter(Comment.id.in_(cids)).all()
+        entries=nSession.query(Comment).options(
+            joinedload(Comment.author),
+            joinedload(User.title)
+            ).filter(Comment.id.in_(cids)).all()
         output=[]
         for row in entries:
             comment=row[0]
-            comment.author=row[1]
             output.append(comment)
 
     output=sorted(output, key=lambda x:cids.index(x.id))
