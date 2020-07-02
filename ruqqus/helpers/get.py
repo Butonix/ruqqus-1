@@ -267,7 +267,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
         vt=nSession.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(cids)).subquery()
 
 
-        items= nSession.query(Comment, vt.c.vote_type, blocking.c.id, blocked.c.id).options(joinedload("Comment.post")).filter(
+        items= nSession.query(Comment, vt.c.vote_type, blocking.c.id, blocked.c.id).options(joinedload(Comment.post)).filter(
             Comment.id.in_(cids)
             ).options(
             joinedload(Comment.author).joinedload(User.title)
