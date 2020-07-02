@@ -84,29 +84,29 @@ def get_posts(pids, sort="hot", v=None):
 
     if v:
         for pid in pids:
-            vt=db.query(Vote).filter_by(submission_id=pid, user_id=v.id).subquery()
-            query=db.query(Submission, vt.c.vote_type
+            vt=g.db.query(Vote).filter_by(submission_id=pid, user_id=v.id).subquery()
+            query=g.db.query(Submission, vt.c.vote_type
                 ).options(joinedload(Submission.author).joinedload(User.title)
                 ).filter_by(id=pid
                 ).join(vt, vt.c.submission_id==Submission.id, isouter=True
                 ).subquery()
             queries.append(subquery)
         queries=tuple(queries)
-        posts=db.query(Submission).union_all(*queries).order_by(None).all()
+        posts=g.db.query(Submission).union_all(*queries).order_by(None).all()
 
         output=[posts[i][0] for i in posts]
         for i in output:
             i._voted=posts[i][1]
     else:
         for pid in pids:
-            query=db.query(Submission
+            query=g.db.query(Submission
                 ).options(joinedload(Submission.author).joinedload(User.title)
                 ).filter_by(id=pid
                 ).subquery()
             queries.append(subquery)
 
         queries=tuple(queries)
-        output=db.query(Submission).union_all(*queries).order_by(None).all()
+        output=g.db.query(Submission).union_all(*queries).order_by(None).all()
 
     return output
 
@@ -254,7 +254,7 @@ def get_comment(cid, nSession=None, v=None, **kwargs):
 
 def get_comments(cids, v=None, nSession=None, sort_type="new"):
 
-    return [get_comment(cid, v=v, nSession=nSession) for cid in cids]
+    #return [get_comment(cid, v=v, nSession=nSession) for cid in cids]
 
     nSession=nSession or g.db
 
@@ -262,33 +262,32 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
 
     if v:
         for cid in cids:
-            vt=db.query(CommentVote).filter_by(comment_id=cid, user_id=v.id).subquery()
-            query=db.query(Comment, vt.c.vote_type
+            vt=nSession.query(CommentVote).filter_by(comment_id=cid, user_id=v.id).subquery()
+            query=nSession.query(Comment, vt.c.vote_type
                 ).options(joinedload(Comment.author).joinedload(User.title)
                 ).filter_by(id=pid
                 ).join(vt, vt.c.comment_id==Comment.id, isouter=True
                 ).subquery()
             queries.append(subquery)
         queries=tuple(queries)
-        posts=db.query(Comment).union_all(*queries).order_by(None).all()
+        posts=nSession.query(Comment).union_all(*queries).order_by(None).all()
 
         output=[posts[i][0] for i in posts]
         for i in output:
             i._voted=posts[i][1]
     else:
         for cid in cids:
-            query=db.query(Comment
+            query=nSession.query(Comment
                 ).options(joinedload(Comment.author).joinedload(User.title)
                 ).filter_by(id=pid
                 ).subquery()
             queries.append(subquery)
 
         queries=tuple(queries)
-        output=db.query(Comment).union_all(*queries).order_by(None).all()
+        output=nSession.query(Comment).union_all(*queries).order_by(None).all()
 
     return output
     
-    return output
 
 def get_board(bid):
 
