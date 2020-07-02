@@ -243,7 +243,7 @@ def get_comment(cid, nSession=None, v=None, **kwargs):
             ).first()
 
         x=items[0]
-        x._voted=items[2] or 0
+        x._voted=items[1] or 0
         x._is_blocking=block and block.user_id==v.id
         x._is_blocked=block and block.target_id==v.id
 
