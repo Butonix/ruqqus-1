@@ -53,7 +53,7 @@ def get_post(pid, v=None, nSession=None, **kwargs):
 
         items= nSession.query(Submission, User, vt.c.vote_type
             ).options(
-            joinedload("author")
+            joinedload("author").joinedload("title")
             ).filter(Submission.id==i).join(
             vt, 
             vt.c.submission_id==Submission.id, 
@@ -82,8 +82,7 @@ def get_posts(pids, sort="hot", v=None):
 
 
         posts= g.db.query(Submission, vt.c.vote_type).options(
-            joinedload(Submission.author),
-            joinedload(User.title)
+            joinedload("author").joinedload("title")
             ).filter(
             Submission.id.in_(pids)
             ).join(
@@ -102,8 +101,7 @@ def get_posts(pids, sort="hot", v=None):
 
     else:
         posts=g.db.query(Submission).options(
-            joinedload(Submission.author),
-            joinedload(User.title)
+            joinedload("author").joinedload("title")
             ).filter(
             Submission.id.in_(pids)
             )
@@ -133,8 +131,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             blocking.c.id,
             blocked.c.id
             ).options(
-            joinedload(Comment.author),
-            joinedload(User.title)
+            joinedload("author").joinedload("title")
             ).filter(
             Comment.parent_submission==post.id,
             Comment.level<=6
@@ -180,8 +177,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
         comms=g.db.query(
             Comment
             ).options(
-            joinedload(Comment.author),
-            joinedload(User.title)
+            joinedload("author").joinedload("title")
             ).filter(
             Comment.parent_submission==post.id,
             Comment.level<=6
@@ -224,8 +220,7 @@ def get_comment(cid, nSession=None, v=None, **kwargs):
 
 
         items= g.db.query(Comment, vt.c.vote_type).options(
-            joinedload(Comment.author),
-            joinedload(User.title)
+            joinedload("author").joinedload("title")
             ).filter(
             Comment.id==i
             ).join(
@@ -254,8 +249,7 @@ def get_comment(cid, nSession=None, v=None, **kwargs):
 
     else:
         items=g.db.query(Comment).options(
-            joinedload(Comment.author),
-            joinedload(User.title)
+            joinedload("author").joinedload("title")
             ).filter(Comment.id==i).first()
         x=items[0]
 
@@ -277,8 +271,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
         items= nSession.query(Comment, vt.c.vote_type, blocking.c.id, blocked.c.id).options(joinedload("Comment.post")).filter(
             Comment.id.in_(cids)
             ).options(
-            joinedload(Comment.author),
-            joinedload(User.title)
+            joinedload("author").joinedload("title")
             ).join(
             vt, 
             vt.c.comment_id==Comment.id,
@@ -304,8 +297,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
 
     else:
         entries=nSession.query(Comment).options(
-            joinedload(Comment.author),
-            joinedload(User.title)
+            joinedload("author").joinedload("title")
             ).filter(Comment.id.in_(cids)).all()
         output=[]
         for row in entries:
