@@ -42,7 +42,7 @@ def get_user(username, v=None, nSession=None, graceful=False):
 
     return user
 
-def get_post(pid, v=None, nSession=None, **kwargs):
+def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 
     i=base36decode(pid)
     
@@ -72,13 +72,14 @@ def get_post(pid, v=None, nSession=None, **kwargs):
             joinedload(Submission.author).joinedload(User.title)
             ).filter(Submission.id==i).filter(Submission.id==i).first()
 
-    if not x:
+    if not x and not graceful:
         abort(404)
     return x
 
 def get_posts(pids, sort="hot", v=None):
 
-    return [get_post(pid, v=v) for pid in pids]
+    output=[get_post(pid, graceful=True, v=v) for pid in pids]
+    return [i for i in output if i]
 
     queries=[]
 
@@ -200,7 +201,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
     return post
 
 
-def get_comment(cid, nSession=None, v=None, **kwargs):
+def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 
 
     if isinstance(cid, str):
@@ -248,13 +249,14 @@ def get_comment(cid, nSession=None, v=None, **kwargs):
             joinedload(Comment.author).joinedload(User.title)
             ).filter(Comment.id==i).first()
 
-    if not x:
+    if not x and not graceful:
         abort(404)
     return x
 
 def get_comments(cids, v=None, nSession=None, sort_type="new"):
 
-    return [get_comment(cid, v=v, nSession=nSession) for cid in cids]
+    output= [get_comment(cid, v=v, graceful=True, nSession=nSession) for cid in cids]
+    return [i for i in output if i]
 
     nSession=nSession or g.db
 
