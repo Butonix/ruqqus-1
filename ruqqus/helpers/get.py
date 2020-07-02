@@ -231,7 +231,7 @@ def get_comment(cid, nSession=None, v=None):
     if v:
         blocking=v.blocking.subquery()
         blocked=v.blocked.subquery()
-        vt=g.db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id==i).subquery()
+        vt=g.db.query(CommentVote).options(joinedload("post")).filter(CommentVote.user_id==v.id, CommentVote.comment_id==i).subquery()
 
 
         items= g.db.query(Comment, User, vt.c.vote_type).filter(

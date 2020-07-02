@@ -52,7 +52,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     is_offensive=Column(Boolean, default=False)
     is_nsfl=Column(Boolean, default=False)
 
-    post=relationship("Submission", lazy="joined")
+    post=relationship("Submission")
     flags=relationship("CommentFlag", lazy="subquery", backref="comment")
     _author=relationship("User", lazy="subquery", innerjoin=True, primaryjoin="User.id==Comment.author_id")
     board=association_proxy("post", "board")
