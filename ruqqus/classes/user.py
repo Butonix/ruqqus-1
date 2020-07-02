@@ -414,7 +414,7 @@ class User(Base, Stndrd):
 
     def notification_commentlisting(self, page=1, all_=False):
 
-        notifications=self.notifications.options(joinedload(Notification.comment)).filter(Comment.is_banned==False, Comment.is_deleted==False)
+        notifications=self.notifications.join(Notification.comment).filter(Comment.is_banned==False, Comment.is_deleted==False)
 
         if not all_:
             notifications=notifications.filter(Notification.read==False)
