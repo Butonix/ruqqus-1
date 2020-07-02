@@ -51,13 +51,14 @@ def get_post(pid, v=None, nSession=None, **kwargs):
 
 
         items= nSession.query(Submission, User, vt.c.vote_type
-            ).filter(Submission.id==i).join(Submission._author).join(vt, isouter=True).first()
+            ).options(
+            joinedload("author")
+            ).filter(Submission.id==i).join(vt, isouter=True).first()
         
         if not items:
             abort(404)
         
         x=items[0]
-        x.author=items[1]
         x._voted=items[2] or 0
 
     else:
@@ -231,7 +232,7 @@ def get_comment(cid, nSession=None, v=None):
     if v:
         blocking=v.blocking.subquery()
         blocked=v.blocked.subquery()
-        vt=g.db.query(CommentVote).options(joinedload("post")).filter(CommentVote.user_id==v.id, CommentVote.comment_id==i).subquery()
+        vt=g.db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id==i).subquery()
 
 
         items= g.db.query(Comment, User, vt.c.vote_type).filter(
@@ -283,7 +284,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
         vt=nSession.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(cids)).subquery()
 
 
-        items= nSession.query(Comment, User, vt.c.vote_type, blocking.c.id, blocked.c.id).filter(
+        items= nSession.query(Comment, User, vt.c.vote_type, blocking.c.id, blocked.c.id).options(joinedload("Comment.post")).filter(
             Comment.id.in_(cids)
             ).join(
             Comment._author

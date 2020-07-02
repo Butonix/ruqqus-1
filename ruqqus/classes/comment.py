@@ -54,7 +54,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     post=relationship("Submission")
     flags=relationship("CommentFlag", lazy="subquery", backref="comment")
-    _author=relationship("User", lazy="subquery", innerjoin=True, primaryjoin="User.id==Comment.author_id")
+    author=relationship("User", lazy="subquery", innerjoin=True, primaryjoin="User.id==Comment.author_id")
     board=association_proxy("post", "board")
 
     #These are virtual properties handled as postgres functions server-side

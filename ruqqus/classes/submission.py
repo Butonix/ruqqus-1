@@ -70,7 +70,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     is_offensive=Column(Boolean, default=False)
     is_nsfl=Column(Boolean, default=False)
     board=relationship("Board", lazy="joined", innerjoin=True, primaryjoin="Submission.board_id==Board.id")
-    _author=relationship("User", innerjoin=True, primaryjoin="Submission.author_id==User.id")
+    author=relationship("User", innerjoin=True, primaryjoin="Submission.author_id==User.id")
     is_pinned=Column(Boolean, default=False)
     score_best=Column(Float, default=0)
 
