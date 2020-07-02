@@ -45,7 +45,7 @@ def get_user(username, v=None, nSession=None, graceful=False):
 def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 
     if isinstance(pid, str):
-        i==base36decode(pid)
+        i=base36decode(pid)
     else:
         i=pid
         
