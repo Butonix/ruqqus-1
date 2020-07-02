@@ -2,7 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import *
 import time
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, deferred, joinedload, lazyload
+from sqlalchemy.orm import relationship, deferred, joinedload, lazyload, contains_eager
 from os import environ
 from secrets import token_hex
 import random
@@ -414,7 +414,7 @@ class User(Base, Stndrd):
 
     def notification_commentlisting(self, page=1, all_=False):
 
-        notifications=self.notifications.join(Notification.comment).filter(Comment.is_banned==False, Comment.is_deleted==False)
+        notifications=self.notifications.join(Notification.comment).options(contains_eager(Notification.comment)).filter(Comment.is_banned==False, Comment.is_deleted==False)
 
         if not all_:
             notifications=notifications.filter(Notification.read==False)
