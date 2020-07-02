@@ -82,7 +82,7 @@ def get_posts(pids, sort="hot", v=None):
     table=[]
     for id in pids:
         i+=1
-        table.append((0, id))
+        table.append((i, id))
     table=tuple(table)
 
     x = values([column("n", Integer), column("id", Integer)], *table, alias_name="x")
@@ -272,7 +272,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
     table=[]
     for id in cids:
         i+=1
-        table.append((0, id))
+        table.append((i, id))
     table=tuple(table)
 
     x = values([column("n", Integer), column("id", Integer)], *table, alias_name="x")
