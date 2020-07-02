@@ -45,8 +45,10 @@ def get_user(username, v=None, nSession=None, graceful=False):
 def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 
     if isinstance(pid, str):
-        pid=base36decode(pid)
-    
+        i==base36decode(pid)
+    else:
+        i=pid
+        
     nSession=nSession or kwargs.get("session")or g.db
 
     if v:
@@ -207,7 +209,8 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 
     if isinstance(cid, str):
         i=base36decode(cid)
-    else: i=cid
+    else:
+        i=cid
 
     nSession = nSession or kwargs.get('session') or g.db
 
