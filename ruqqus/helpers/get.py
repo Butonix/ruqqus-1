@@ -220,14 +220,14 @@ def get_post_with_comments(pid, sort_type="top", v=None):
     return post
 
 
-def get_comment(cid, v=None):
+def get_comment(cid, nSession=None, v=None):
 
 
     if isinstance(cid, str):
         i=base36decode(cid)
     else: i=cid
 
-
+    nSession = nSession or g.db
 
     if v:
         blocking=v.blocking.subquery()
