@@ -37,8 +37,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_CONNECTION_POOL_UR
 app.config['SQLALCHEMY_READ_URIS']=[
     environ.get("DATABASE_CONNECTION_POOL_READ_01_URL") or environ.get("HEROKU_POSTGRESQL_MAROON_URL"),
     environ.get("DATABASE_CONNECTION_POOL_READ_02_URL") or environ.get("HEROKU_POSTGRESQL_YELLOW_URL"),
-    environ.get("DATABASE_CONNECTION_POOL_READ_03_URL") or environ.get("HEROKU_POSTGRESQL_GREEN_URL"),
-    environ.get("DATABASE_CONNECTION_POOL_READ_04_URL") or environ.get("HEROKU_POSTGRESQL_GRAY_URL")
+    environ.get("DATABASE_CONNECTION_POOL_READ_03_URL") or environ.get("HEROKU_POSTGRESQL_CRIMSON_URL"),
      # environ.get("DATABASE_CONNECTION_POOL_READ_04_URL", environ.get("HEROKU_POSTGRESQL_TEAL_URL"))
      ]
 
@@ -96,6 +95,7 @@ engines={
     "leader":create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_size=pool_size, pool_use_lifo=True) ,
     "followers":[create_engine(x, pool_size=pool_size, pool_use_lifo=True) for x in app.config['SQLALCHEMY_READ_URIS'] if x] if any(i for i in app.config['SQLALCHEMY_READ_URIS']) else [create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_size=pool_size, pool_use_lifo=True)]
 }
+
 
 class RoutingSession(Session):
     def get_bind(self, mapper=None, clause=None):
