@@ -17,6 +17,7 @@ def recompute():
         if x%10:
             boards=boards.limit(1000)
 
+        i=0
         for board in boards.all():
             i+=1
             board.rank_trending=board.trending_rank
