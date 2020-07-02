@@ -1,6 +1,7 @@
 import time
 from flask import *
 from sqlalchemy import *
+from sqlalchemy.orm import lazyload
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *

@@ -1,5 +1,5 @@
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, deferred
+from sqlalchemy.orm import relationship, deferred, lazyload
 import time
 
 from ruqqus.helpers.base36 import *
