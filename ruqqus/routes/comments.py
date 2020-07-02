@@ -112,7 +112,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                 Comment,
                 votes.c.vote_type
                 ).options(
-                joinedload(Comment.author).joinedLoad(User.title)
+                joinedload(Comment.author).joinedload(User.title)
                 ).filter(
                 Comment.parent_comment_id.in_(current_ids)
                 ).join(
