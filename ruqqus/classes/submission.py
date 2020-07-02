@@ -348,8 +348,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return self.submission_aux.url
 
     @url.setter
-    def url_set(self, x):
-        self.submission_aux.title=x
+    def url(self, x):
+        self.submission_aux.url=x
         g.db.add(self.submission_aux)
     
     @property
