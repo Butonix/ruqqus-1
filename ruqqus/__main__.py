@@ -98,11 +98,18 @@ engines={
 }
 
 class RoutingSession(Session):
-     def get_bind(self, mapper=None, clause=None):
-         if self._flushing:
-             return engines['leader']
-         else:
-             return random.choice(engines['followers'])
+    def get_bind(self, mapper=None, clause=None):
+        try:
+            if self._flushing or request.method=="POST":
+                return engines['leader']
+            else:
+                return random.choice(engines['followers'])
+        except:
+            if self._flushing or request.method=="POST":
+                return engines['leader']
+            else:
+                return random.choice(engines['followers'])
+        
 db_session=scoped_session(sessionmaker(class_=RoutingSession))
 #db_session=scoped_session((sessionmaker(bind=engines["leader"]))
 
