@@ -80,49 +80,35 @@ def get_posts(pids, sort="hot", v=None):
 
     return [get_post(pid, v=v) for pid in pids]
 
-    i=0
-    table=[]
-    for id in pids:
-        i+=1
-        table.append((i, id))
-    table=tuple(table)
-
-    x = values([column("n", Integer), column("id", Integer)], (0,0), *table, alias_name="x")
+    queries=[]
 
     if v:
-        vt=g.db.query(Vote).filter(Vote.user_id==v.id, Vote.submission_id.in_(pids)).subquery()
+        for pid in pids:
+            vt=db.query(Vote).filter_by(post_id=pid, user_id=v.id).subquery()
+            query=db.query(Submission
+                ).options(joinedload(Submission.author).joinedload(User.title)
+                ).filter_by(id=pid
+                ).join(vt, vt.post_id==Submission.id, isouter=True
+                ).subquery()
+            queries.append(subquery)
+        queries=tuple(queries)
+        posts=db.query(Submission).union_all(*queries).order_by(None).all()
 
-
-        posts= g.db.query(Submission, vt.c.vote_type).options(
-            joinedload(Submission.author).joinedload(User.title)
-            ).select_from(x).join(
-            Submission, 
-            x.c.id==Submission.id
-            ).join(
-            vt, 
-            vt.c.submission_id==Submission.id, isouter=True
-            ).order_by(x.c.n.asc())
-
-        items=[i for i in posts.all()]
-
-        
-        posts=[n[0] for n in items]
-        for i in range(len(posts)):
-            posts[i]._voted=items[i][1] or 0
-
-
-
-
+        output=[posts[i][0] for i in posts]
+        for i in output:
+            i._voted=posts[i][1]
     else:
-        posts= g.db.query(Submission).options(
-            joinedload(Submission.author).joinedload(User.title)
-            ).select_from(x).join(
-            Submission, 
-            x.c.id==Submission.id
-            ).order_by(x.c.n.asc())
-        
-        posts=[n for n in posts.all()]
-    return posts
+        for pid in pids:
+            query=db.query(Submission
+                ).options(joinedload(Submission.author).joinedload(User.title)
+                ).filter_by(id=pid
+                ).subquery()
+            queries.append(subquery)
+
+        queries=tuple(queries)
+        output=db.query(Submission).union_all(*queries).order_by(None).all()
+
+    return output
 
 def get_post_with_comments(pid, sort_type="top", v=None):
 
