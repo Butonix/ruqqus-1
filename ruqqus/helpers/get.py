@@ -265,9 +265,9 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
             vt=nSession.query(CommentVote).filter_by(comment_id=cid, user_id=v.id).subquery()
             query=nSession.query(Comment, vt.c.vote_type
                 ).options(joinedload(Comment.author).joinedload(User.title)
-                ).filter_by(id=pid
+                ).filter_by(id=cid
                 ).join(vt, vt.c.comment_id==Comment.id, isouter=True
-                ).subquery()
+                )
             queries.append(subquery)
         queries=tuple(queries)
         posts=nSession.query(Comment).union_all(*queries).order_by(None).all()
@@ -279,8 +279,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
         for cid in cids:
             query=nSession.query(Comment
                 ).options(joinedload(Comment.author).joinedload(User.title)
-                ).filter_by(id=pid
-                ).subquery()
+                ).filter_by(id=cid
+                )
             queries.append(subquery)
 
         queries=tuple(queries)
