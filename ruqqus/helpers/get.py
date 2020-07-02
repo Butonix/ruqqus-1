@@ -1,6 +1,7 @@
 from .base36 import *
 from ruqqus.classes import *
 from flask import g
+from sqlalchemy.orm import joinedload
 
 def get_user(username, v=None, nSession=None, graceful=False):
 
