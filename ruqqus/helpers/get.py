@@ -93,8 +93,8 @@ def get_posts(pids, sort="hot", v=None):
 
         posts= g.db.query(Submission, vt.c.vote_type).options(
             joinedload(Submission.author).joinedload(User.title)
-            ).select_from(Submission).join(
-            x, 
+            ).select_from(x).join(
+            Submission, 
             x.c.id==Submission.id
             ).join(
             vt, 
@@ -114,7 +114,8 @@ def get_posts(pids, sort="hot", v=None):
     else:
         posts= g.db.query(Submission).options(
             joinedload(Submission.author).joinedload(User.title)
-            ).select_from(Submission).join(x, 
+            ).select_from(x).join(
+            Submission, 
             x.c.id==Submission.id
             ).order_by(x.c.n.asc())
         
@@ -286,8 +287,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
         items= nSession.query(Comment, vt.c.vote_type, blocking.c.id, blocked.c.id).options(joinedload(Comment.post)
             ).options(
             joinedload(Comment.author).joinedload(User.title)
-            ).select_from(Comment).join(
-            x,
+            ).select_from(x).join(
+            Comment,
             x.c.id==Comment.id
             ).join(
             vt, 
@@ -315,8 +316,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
     else:
         entries=nSession.query(Comment).options(
             joinedload(Comment.author).joinedload(User.title)
-            ).select_from(Comment).join(
-            x, x.c.id==Comment.id
+            ).select_from(x).join(
+            Comment, x.c.id==Comment.id
             ).order_by(x.c.n.asc()).all()
         output=[]
         for row in entries:
