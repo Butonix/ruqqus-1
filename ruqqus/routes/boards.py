@@ -752,10 +752,15 @@ def subscribe_board(boardname, v):
                          board_id=board.id)
 
     g.db.add(new_sub)
+    g.db.flush()
     
 
     #clear your cached guild listings
     cache.delete_memoized(User.idlist, v, kind="board")
+
+    #update board trending rank
+    board.rank_trending=board.trending_rank
+    g.db.add(board)
 
     return "", 204
 
@@ -777,10 +782,14 @@ def unsubscribe_board(boardname, v):
     sub.is_active=False
 
     g.db.add(sub)
+    g.db.flush()
     
 
     #clear your cached guild listings
     cache.delete_memoized(User.idlist, v, kind="board")
+
+    board.rank_trending=board.trending_rank
+    g.db.add(board)
 
     return "", 204
 
