@@ -376,7 +376,7 @@ def my_subs(v):
 @auth_desired
 def random_post(v):
 
-    x=g.db.query(Submission).filter_by(is_banned=False, is_deleted=False)
+    x=g.db.query(Submission).options(lazyload('board')).filter_by(is_banned=False, is_deleted=False)
 
     now=int(time.time())
     cutoff=now - (60*60*24*180)
@@ -402,7 +402,8 @@ def random_post(v):
 @auth_desired
 def random_guild(v):
 
-    x=g.db.query(Board).filter_by(is_banned=False, 
+    x=g.db.query(Board).filter_by(
+        is_banned=False, 
         is_private=False,
         over_18=False,
         is_nsfl=False)
