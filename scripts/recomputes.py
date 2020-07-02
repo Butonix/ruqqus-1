@@ -13,7 +13,7 @@ def recompute():
 
         print("beginning guild trend recompute")
         x+=1
-        boards= db.query(Board).filter(is_banned=False).order_by(Board.rank_trending.desc())
+        boards= db.query(classes.board.Board).filter(is_banned=False).order_by(Board.rank_trending.desc())
         if x%10:
             boards=boards.limit(1000)
 
