@@ -51,7 +51,7 @@ def get_post(pid, v=None, nSession=None, **kwargs):
         vt=nSession.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
 
 
-        items= nSession.query(Submission, User, vt.c.vote_type
+        items= nSession.query(Submission, vt.c.vote_type
             ).options(
             joinedload(Submission.author).joinedload(User.title)
             ).filter(Submission.id==i).join(
@@ -64,12 +64,12 @@ def get_post(pid, v=None, nSession=None, **kwargs):
             abort(404)
         
         x=items[0]
-        x._voted=items[2] or 0
+        x._voted=items[1] or 0
 
     else:
-        row=nSession.query(Submission, User).join(Submission._author).filter(Submission.id==i).first()
-        x=row[0]
-        x.author=row[1]
+        x=nSession.query(Submission).options(
+            joinedload(Submission.author).joinedload(User.title)
+            ).filter(Submission.id==i).filter(Submission.id==i).first()
 
     if not x:
         abort(404)
@@ -82,7 +82,7 @@ def get_posts(pids, sort="hot", v=None):
 
 
         posts= g.db.query(Submission, vt.c.vote_type).options(
-            joinedload(Submissions.author), joinedload(User.title)
+            joinedload(Submissions.author).joinedload(User.title)
             ).filter(
             Submission.id.in_(pids)
             ).join(
@@ -101,7 +101,7 @@ def get_posts(pids, sort="hot", v=None):
 
     else:
         posts=g.db.query(Submission).options(
-            joinedload(Submission.author), joinedload(User.title)
+            joinedload(Submission.author).joinedload(User.title)
             ).filter(
             Submission.id.in_(pids)
             )
@@ -131,7 +131,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             blocking.c.id,
             blocked.c.id
             ).options(
-            joinedload(Comment.author), joinedload(User.title)
+            joinedload(Comment.author).joinedload(User.title)
             ).filter(
             Comment.parent_submission==post.id,
             Comment.level<=6
