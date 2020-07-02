@@ -250,9 +250,9 @@ def get_comment(cid, nSession=None, v=None):
             or_(
                 and_(
                     UserBlock.user_id==v.id, 
-                    UserBlock.target_id==user.id
+                    UserBlock.target_id==User.id
                     ),
-                and_(UserBlock.user_id==user.id,
+                and_(UserBlock.user_id==User.id,
                     UserBlock.target_id==v.id
                     )
                 )
