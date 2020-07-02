@@ -110,13 +110,11 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
 
             comms=g.db.query(
                 Comment,
-                User,
-                Title,
                 votes.c.vote_type
+                ).options(
+                joinedload(Comment.author).joinedLoad(User.title)
                 ).filter(
                 Comment.parent_comment_id.in_(current_ids)
-                ).join(
-                Comment._author
                 ).join(
                 User.title,
                 isouter=True
@@ -144,9 +142,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
             output=[]
             for c in comms:
                 com=c[0]
-                com.author=c[1]
-                com._title=c[2]
-                com._voted=c[3] or 0
+                com._voted=c[1] or 0
                 output.append(com)
         else:
             comms=g.db.query(
@@ -155,10 +151,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                 Title
                 ).filter(
                 Comment.parent_comment_id.in_(current_ids)
-                ).join(Comment._author).join(
-                User.title,
-                isouter=True
-                )
+                ).options(joinedload(Comment.author).joinedload(User.title))
 
             if sort_type=="hot":
                 comments=comms.order_by(Comment.score_hot.asc()).all()
@@ -177,8 +170,6 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
             output=[]
             for c in comms:
                 com=c[0]
-                com.author=c[1]
-                com._title=c[2]
                 output.append(com)
 
         post._preloaded_comments+=output
