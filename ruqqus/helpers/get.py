@@ -258,7 +258,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
 
     nSession=nSession or g.db
 
-        queries=[]
+    queries=[]
 
     if v:
         for cid in cids:
