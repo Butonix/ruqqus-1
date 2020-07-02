@@ -56,7 +56,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
         abort(422)
 
     posts = g.db.query(Submission
-        ).filter_by(is_banned=False,
+        ).options(lazyload('*')).filter_by(is_banned=False,
         is_deleted=False,
         stickied=False)
 

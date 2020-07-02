@@ -95,7 +95,7 @@ class Board(Base, Stndrd, Age_times):
     @cache.memoize(timeout=60)
     def idlist(self, sort="hot", page=1, t=None, show_offensive=True, v=None, nsfw=False, **kwargs):
 
-        posts=g.db.query(Submission.id).filter_by(is_banned=False,
+        posts=g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
                                          is_deleted=False,
                                          is_pinned=False,
                                          board_id=self.id

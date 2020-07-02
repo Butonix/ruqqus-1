@@ -141,7 +141,7 @@ class User(Base, Stndrd):
 
         
 
-        posts=g.db.query(Submission.id).filter_by(is_banned=False,
+        posts=g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
                                              is_deleted=False,
                                              stickied=False
                                              )
@@ -223,7 +223,7 @@ class User(Base, Stndrd):
     @cache.memoize(300)
     def userpagelisting(self, v=None, page=1):
 
-        submissions=g.db.query(Submission.id).filter_by(author_id=self.id)
+        submissions=g.db.query(Submission.id).options(lazyload('*')).filter_by(author_id=self.id)
 
         if not (v and v.over_18):
             submissions=submissions.filter_by(over_18=False)

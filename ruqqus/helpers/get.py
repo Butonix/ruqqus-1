@@ -1,4 +1,5 @@
 from .base36 import *
+from .sqla_values import *
 from ruqqus.classes import *
 from flask import g
 from sqlalchemy.orm import joinedload
@@ -77,17 +78,28 @@ def get_post(pid, v=None, nSession=None, **kwargs):
 
 def get_posts(pids, sort="hot", v=None):
 
+    i=0
+    table=[]
+    for id in pids:
+        i+=1
+        table.append((0, id))
+    table=tuple(table)
+
+    x = values([column("n", Integer), column("id", Integer)], *table, alias_name="x")
+
     if v:
         vt=g.db.query(Vote).filter(Vote.user_id==v.id, Vote.submission_id.in_(pids)).subquery()
 
 
         posts= g.db.query(Submission, vt.c.vote_type).options(
             joinedload(Submission.author).joinedload(User.title)
-            ).filter(
-            Submission.id.in_(pids)
             ).join(
-            vt, vt.c.submission_id==Submission.id, isouter=True
-            )
+            x, 
+            x.c.id==Submission.id
+            ).join(
+            vt, 
+            vt.c.submission_id==Submission.id, isouter=True
+            ).order_by(x.c.n.asc())
 
         items=[i for i in posts.all()]
 
@@ -100,18 +112,13 @@ def get_posts(pids, sort="hot", v=None):
 
 
     else:
-        posts=g.db.query(Submission).options(
+        posts= g.db.query(Submission).options(
             joinedload(Submission.author).joinedload(User.title)
-            ).filter(
-            Submission.id.in_(pids)
-            )
-
-
-        items=[i for i in posts.all()]
+            ).join(x, 
+            x.c.id==Submission.id
+            ).order_by(x.c.n.asc())
         
-        posts=[n for n in items]
-
-    posts=sorted(posts, key= lambda x: pids.index(x.id))
+        posts=[n for n in posts.all()]
     return posts
 
 def get_post_with_comments(pid, sort_type="top", v=None):
@@ -261,16 +268,27 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
     if not nSession:
         nSession=g.db
 
+    i=0
+    table=[]
+    for id in cids:
+        i+=1
+        table.append((0, id))
+    table=tuple(table)
+
+    x = values([column("n", Integer), column("id", Integer)], *table, alias_name="x")
+
     if v:
         blocking=v.blocking.subquery()
         blocked=v.blocked.subquery()
         vt=nSession.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(cids)).subquery()
 
 
-        items= nSession.query(Comment, vt.c.vote_type, blocking.c.id, blocked.c.id).options(joinedload(Comment.post)).filter(
-            Comment.id.in_(cids)
+        items= nSession.query(Comment, vt.c.vote_type, blocking.c.id, blocked.c.id).options(joinedload(Comment.post)
             ).options(
             joinedload(Comment.author).joinedload(User.title)
+            ).join(
+            x,
+            x.c.id==Comment.id
             ).join(
             vt, 
             vt.c.comment_id==Comment.id,
@@ -283,7 +301,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
             blocked,
             blocked.c.user_id==Comment.author_id,
             isouter=True
-            ).all()
+            ).order_by(x.c.n.asc()).all()
 
         output=[]
         for i in items:
@@ -297,13 +315,12 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
     else:
         entries=nSession.query(Comment).options(
             joinedload(Comment.author).joinedload(User.title)
-            ).filter(Comment.id.in_(cids)).all()
+            ).join(x, x.c.id==Comment.id
+            ).order_by(x.c.n.asc()).all()
         output=[]
         for row in entries:
             comment=row[0]
             output.append(comment)
-
-    output=sorted(output, key=lambda x:cids.index(x.id))
     
     return output
 
