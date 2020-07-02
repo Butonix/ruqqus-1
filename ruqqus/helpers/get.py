@@ -85,7 +85,7 @@ def get_posts(pids, sort="hot", v=None):
         table.append((i, id))
     table=tuple(table)
 
-    x = values([column("n", Integer), column("id", Integer)], *table, alias_name="x")
+    x = values([column("n", Integer), column("id", Integer)], (0,0), *table, alias_name="x")
 
     if v:
         vt=g.db.query(Vote).filter(Vote.user_id==v.id, Vote.submission_id.in_(pids)).subquery()
@@ -276,7 +276,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
         table.append((i, id))
     table=tuple(table)
 
-    x = values([column("n", Integer), column("id", Integer)], *table, alias_name="x")
+    x = values([column("n", Integer), column("id", Integer)], (0,0), *table, alias_name="x")
 
     if v:
         blocking=v.blocking.subquery()
