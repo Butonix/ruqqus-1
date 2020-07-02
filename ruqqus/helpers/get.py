@@ -78,17 +78,17 @@ def get_post(pid, v=None, nSession=None, **kwargs):
 
 def get_posts(pids, sort="hot", v=None):
 
-    return [get_post(pid, v=v) for pid in pids]
+    #return [get_post(pid, v=v) for pid in pids]
 
     queries=[]
 
     if v:
         for pid in pids:
-            vt=db.query(Vote).filter_by(post_id=pid, user_id=v.id).subquery()
-            query=db.query(Submission
+            vt=db.query(Vote).filter_by(submission_id=pid, user_id=v.id).subquery()
+            query=db.query(Submission, vt.c.vote_type
                 ).options(joinedload(Submission.author).joinedload(User.title)
                 ).filter_by(id=pid
-                ).join(vt, vt.post_id==Submission.id, isouter=True
+                ).join(vt, vt.c.submission_id==Submission.id, isouter=True
                 ).subquery()
             queries.append(subquery)
         queries=tuple(queries)
@@ -256,65 +256,37 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
 
     return [get_comment(cid, v=v, nSession=nSession) for cid in cids]
 
-    if not nSession:
-        nSession=g.db
+    nSession=nSession or g.db
 
-    queries=[db.query(Comment).filter_by(id=x) for x in cids]
-
-    i=0
-    table=[]
-    for id in cids:
-        i+=1
-        table.append((i, id))
-    table=tuple(table)
-
-    x = values([column("n", Integer), column("id", Integer)], (0,0), *table, alias_name="x")
+        queries=[]
 
     if v:
-        blocking=v.blocking.subquery()
-        blocked=v.blocked.subquery()
-        vt=nSession.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(cids)).subquery()
+        for cid in cids:
+            vt=db.query(CommentVote).filter_by(comment_id=cid, user_id=v.id).subquery()
+            query=db.query(Comment, vt.c.vote_type
+                ).options(joinedload(Comment.author).joinedload(User.title)
+                ).filter_by(id=pid
+                ).join(vt, vt.c.comment_id==Comment.id, isouter=True
+                ).subquery()
+            queries.append(subquery)
+        queries=tuple(queries)
+        posts=db.query(Comment).union_all(*queries).order_by(None).all()
 
-
-        items= nSession.query(Comment, vt.c.vote_type, blocking.c.id, blocked.c.id).options(joinedload(Comment.post)
-            ).options(
-            joinedload(Comment.author).joinedload(User.title)
-            ).select_from(x).join(
-            Comment,
-            x.c.id==Comment.id
-            ).join(
-            vt, 
-            vt.c.comment_id==Comment.id,
-            isouter=True
-            ).join(
-            blocking,
-            blocking.c.target_id==Comment.author_id,
-            isouter=True
-            ).join(
-            blocked,
-            blocked.c.user_id==Comment.author_id,
-            isouter=True
-            ).order_by(x.c.n.asc()).all()
-
-        output=[]
-        for i in items:
-        
-            x=i[0]
-            x._voted=i[1] or 0
-            x._is_blocking=i[2] or 0
-            x._is_blocked=i[3] or 0
-            output.append(x)
-
+        output=[posts[i][0] for i in posts]
+        for i in output:
+            i._voted=posts[i][1]
     else:
-        entries=nSession.query(Comment).options(
-            joinedload(Comment.author).joinedload(User.title)
-            ).select_from(x).join(
-            Comment, x.c.id==Comment.id
-            ).order_by(x.c.n.asc()).all()
-        output=[]
-        for row in entries:
-            comment=row[0]
-            output.append(comment)
+        for cid in cids:
+            query=db.query(Comment
+                ).options(joinedload(Comment.author).joinedload(User.title)
+                ).filter_by(id=pid
+                ).subquery()
+            queries.append(subquery)
+
+        queries=tuple(queries)
+        output=db.query(Comment).union_all(*queries).order_by(None).all()
+
+    return output
     
     return output
 
