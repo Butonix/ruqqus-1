@@ -78,6 +78,8 @@ def get_post(pid, v=None, nSession=None, **kwargs):
 
 def get_posts(pids, sort="hot", v=None):
 
+    return [get_post(pid, v=v) for pid in pids]
+
     i=0
     table=[]
     for id in pids:
@@ -266,8 +268,12 @@ def get_comment(cid, nSession=None, v=None, **kwargs):
 
 def get_comments(cids, v=None, nSession=None, sort_type="new"):
 
+    return [get_comment(cid, v=v, nSession=nSession) for cid in cids]
+
     if not nSession:
         nSession=g.db
+
+    queries=[db.query(Comment).filter_by(id=x) for x in cids]
 
     i=0
     table=[]
