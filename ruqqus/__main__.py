@@ -39,6 +39,7 @@ app.config['SQLALCHEMY_READ_URIS']=[
     environ.get("DATABASE_CONNECTION_POOL_READ_02_URL") or environ.get("HEROKU_POSTGRESQL_OLIVE_URL")
     #environ.get("DATABASE_CONNECTION_POOL_READ_03_URL") or environ.get("HEROKU_POSTGRESQL_CRIMSON_URL"),
     #environ.get("DATABASE_CONNECTION_POOL_READ_04_URL", environ.get("HEROKU_POSTGRESQL_IVORY_URL"))
+
     ]
 
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
