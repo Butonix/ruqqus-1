@@ -418,7 +418,7 @@ def post_forgot():
     username = request.form.get("username")
     email = request.form.get("email")
 
-    user = g.db.query(User).filter(User.username.ilike(username), User.email.ilike(email), User.is_activated==True).first()
+    user = g.db.query(User).filter(User.username.ilike(username), User.email.ilike(email)).first()
 
     if user:
         #generate url
