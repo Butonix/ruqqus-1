@@ -29,6 +29,9 @@ def notifications(v):
     cids=cids[0:25]
 
     comments=get_comments(cids, v=v, sort_type="new")
+    for c in comments:
+        c._is_blocked=False
+        c._is_blocking=False
 
     return render_template("notifications.html",
                            v=v,

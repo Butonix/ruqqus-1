@@ -427,8 +427,7 @@ class User(Base, Stndrd):
             g.db.add(x)
             output.append(x.comment_id)
 
-        
-
+        g.db.commit()
         return output
 
 
