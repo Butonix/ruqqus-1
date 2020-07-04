@@ -113,7 +113,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                 votes.c.vote_type
                 ).options(
                 joinedload(Comment.author).joinedload(User.title)
-                ).filter(
+                ).select_from(Comment).filter(
                 Comment.parent_comment_id.in_(current_ids)
                 ).join(
                 User.title,
@@ -122,7 +122,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                 votes,
                 votes.c.comment_id==Comment.id,
                 isouter=True
-                )
+                ).
 
             if sort_type=="hot":
                 comments=comms.order_by(Comment.score_hot.asc()).all()
