@@ -231,20 +231,22 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
         if not items:
             abort(404)
 
+        x=items[0]
+        x._voted=items[1] or 0
+
         block=nSession.query(UserBlock).filter(
             or_(
                 and_(
                     UserBlock.user_id==v.id, 
-                    UserBlock.target_id==User.id
+                    UserBlock.target_id==x.author_id
                     ),
-                and_(UserBlock.user_id==User.id,
+                and_(UserBlock.user_id==x.author_id,
                     UserBlock.target_id==v.id
                     )
                 )
             ).first()
 
-        x=items[0]
-        x._voted=items[1] or 0
+
         x._is_blocking=block and block.user_id==v.id
         x._is_blocked=block and block.target_id==v.id
 
