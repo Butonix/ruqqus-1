@@ -20,7 +20,7 @@ from ruqqus.mail import *
 from ruqqus.__main__ import app, limiter
 
 valid_username_regex=re.compile("^\w{5,25}$")
-valid_password_regex=re.compile("^.{8,}$")
+valid_password_regex=re.compile("^.{8,60}$")
 #valid_email_regex=re.compile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
 #login form
@@ -306,7 +306,7 @@ def sign_up_post(v):
 
     if not re.match(valid_password_regex, request.form.get("password")):
         print(f"signup fail - {username } - invalid password")
-        return new_signup("Password must be 8 characters or longer")
+        return new_signup("Password must be between 8 and 60 characters.")
 
     #if not re.match(valid_email_regex, request.form.get("email")):
     #    return new_signup("That's not a valid email.")
@@ -418,7 +418,7 @@ def post_forgot():
     username = request.form.get("username")
     email = request.form.get("email")
 
-    user = g.db.query(User).filter(User.username.ilike(username), User.email.ilike(email), User.is_activated==True).first()
+    user = g.db.query(User).filter(User.username.ilike(username), User.email.ilike(email)).first()
 
     if user:
         #generate url
