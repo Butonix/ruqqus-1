@@ -493,8 +493,7 @@ class User(Base, Stndrd):
                         )
         self.has_profile=True
         g.db.add(self)
-        
-        
+
     def set_banner(self, file):
 
         self.del_banner()
@@ -577,7 +576,15 @@ class User(Base, Stndrd):
     @property
     def can_submit_image(self):
         return self.true_score >= 1000 or (self.created_utc <= 1592974538 and self.true_score >= 500)
-    
+
+    @property
+    def can_upload_avatar(self):
+        return self.true_score >= 300 or self.created_utc <= 1592974538
+
+    @property
+    def can_upload_banner(self):
+        return self.true_score >= 500 or self.created_utc <= 1592974538
+
     @property
     def json(self):
 

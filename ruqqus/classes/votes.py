@@ -63,7 +63,6 @@ class CommentVote(Base):
     comment=relationship("Comment", lazy="subquery")
 
     def __init__(self, *args, **kwargs):
-        
         if "created_utc" not in kwargs:
             kwargs["created_utc"]=int(time())
 
