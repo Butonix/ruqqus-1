@@ -228,37 +228,41 @@ def settings_log_out_others(v):
 @auth_required
 @validate_formkey
 def settings_images_profile(v):
+    if v.can_upload_avatar:
+        v.set_profile(request.files["profile"])
 
-    v.set_profile(request.files["profile"])
+        #anti csam
+        new_thread=threading.Thread(target=check_csam_url,
+                                    args=(v.profile_url,
+                                          v,
+                                          lambda:board.del_profile()
+                                          )
+                                    )
+        new_thread.start()
 
-    #anti csam
-    new_thread=threading.Thread(target=check_csam_url,
-                                args=(v.profile_url,
-                                      v,
-                                      lambda:board.del_profile()
-                                      )
-                                )
-    new_thread.start()
+        return render_template("settings_profile.html", v=v, msg="Profile picture successfully updated.")
 
-    return render_template("settings_profile.html", v=v, msg="Profile picture successfully updated.")
+    return render_template("settings_profile.html", v=v, msg="Avatars require 300 reputation.")
 
 @app.route("/settings/images/banner", methods=["POST"])
 @auth_required
 @validate_formkey
 def settings_images_banner(v):
+    if v.can_upload_banner:
+        v.set_banner(request.files["banner"])
 
-    v.set_banner(request.files["banner"])
+        #anti csam
+        new_thread=threading.Thread(target=check_csam_url,
+                                    args=(v.banner_url,
+                                          v,
+                                          lambda:board.del_banner()
+                                          )
+                                    )
+        new_thread.start()
 
-    #anti csam
-    new_thread=threading.Thread(target=check_csam_url,
-                                args=(v.banner_url,
-                                      v,
-                                      lambda:board.del_banner()
-                                      )
-                                )
-    new_thread.start()
+        return render_template("settings_profile.html", v=v, msg="Banner successfully updated.")
 
-    return render_template("settings_profile.html", v=v, msg="Banner successfully updated.")
+    return render_template("settings_profile.html", v=v, msg="Banners require 500 reputation.")
 
 
 @app.route("/settings/delete/profile", methods=["POST"])
