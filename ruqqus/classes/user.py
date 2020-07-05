@@ -549,14 +549,7 @@ class User(Base, Stndrd):
 
     @property
     def can_make_guild(self):
-
-        if self.true_score < 250:
-            return False
-
-        if len(self.boards_modded) >= 10:
-            return False
-
-        return True
+        return (self.true_score > 250 or self.created_utc <= 1592974538 and self.true_score > 50) and len(self.boards_modded) <= 10
     
     @property
     def can_join_gms(self):
