@@ -93,8 +93,8 @@ def get_posts(pids, sort="hot", v=None):
                 ).options(joinedload(Submission.author).joinedload(User.title)
                 ).filter_by(id=pid
                 ).join(vt, vt.c.submission_id==Submission.id, isouter=True
-                ).subquery()
-            queries.append(subquery)
+                )
+            queries.append(query)
 
         queries=tuple(queries)
         first_query=queries[0]
@@ -110,8 +110,8 @@ def get_posts(pids, sort="hot", v=None):
             query=g.db.query(Submission
                 ).options(joinedload(Submission.author).joinedload(User.title)
                 ).filter_by(id=pid
-                ).subquery()
-            queries.append(subquery)
+                )
+            queries.append(query)
 
         queries=tuple(queries)
         first_query=queries[0]
@@ -281,7 +281,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new", **kwargs):
                 ).options(joinedload(Comment.author).joinedload(User.title)
                 ).filter_by(id=cid
                 ).join(vt, vt.c.comment_id==Comment.id, isouter=True)
-            queries.append(subquery)
+            queries.append(query)
         queries=tuple(queries)
         first_query=queries[0]
         other_queries=queries[1:len(queries)]
@@ -296,7 +296,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new", **kwargs):
                 ).options(joinedload(Comment.author).joinedload(User.title)
                 ).filter_by(id=cid
                 )
-            queries.append(subquery)
+            queries.append(query)
 
         queries=tuple(queries)
         first_query=queries[0]
