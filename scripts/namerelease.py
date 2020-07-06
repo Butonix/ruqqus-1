@@ -26,20 +26,20 @@ displayed_comment_owners=db.query(Comment.author_id).filter_by(is_deleted=False,
 
 banned_accounts=db.query(User).filter_by(unban_utc=0).filter(User.is_banned>0, User.id.notin_(displayed_post_owners), User.id.notin_(displayed_comment_owners))
 
-names=[x.username for x in deleted_accounts]+[y.username for y in banned_accounts]
+accounts=[x for x in deleted_accounts]+[y for y in banned_accounts]
 
-names_to_release=[]
-names_to_hold=[]
+accounts_to_release=[]
+accounts_to_hold=[]
 print(f"{len(names)} account names are eligible")
 
-for name in names:
-    if any([x in name.lower() for x in protected_terms]):
-        names_to_hold.append(name)
+for u in accounts:
+    if any([x in u.username.lower() for x in protected_terms]):
+        accounts_to_hold.append(name)
     else:
-        names_to_release.append(name)
+        accounts_to_release.append(name)
 
-names_to_release.sort()
-names_to_hold.sort(0)
+names_to_release.sort(key=lambda x:x.username)
+names_to_hold.sort(key=lambda x:x.username)
 
 print(f"{len(names_to_release)} names to release")
 print(names_to_release)
@@ -47,3 +47,6 @@ print("")
 
 print(f"{len(names_to_hold)} names to hold")
 print(names_to_hold)
+
+for name in names_to_release:
+
