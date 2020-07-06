@@ -622,7 +622,7 @@ class User(Base, Stndrd):
         #return self.referral_count or self.has_earned_darkmode or self.has_badge(16) or self.has_badge(17)
 
 
-    def ban(self, admin, include_alts=True, days=0):
+    def ban(self, admin, reason=None, include_alts=True, days=0):
 
         if days > 0:
             ban_time = int(time.time()) + (days * 86400)
@@ -635,6 +635,8 @@ class User(Base, Stndrd):
             self.del_profile()
 
         self.is_banned=admin.id
+        if reason:
+            self.ban_reason=reason
 
         g.db.add(self)
         
@@ -644,10 +646,11 @@ class User(Base, Stndrd):
 
                 # suspend alts
                 if days > 0:
-                    alt.ban(admin=admin, include_alts=False, days=days)
+                    alt.ban(admin=admin, reason=reason, include_alts=False, days=days)
 
                 # ban alts
-                alt.ban(admin=admin, include_alts=False)
+                else:
+                    alt.ban(admin=admin, include_alts=False)
 
     def unban(self, include_alts=False):
 

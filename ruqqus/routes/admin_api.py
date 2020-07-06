@@ -23,24 +23,25 @@ def ban_user(user_id, v):
     # check for number of days for suspension
     days = int(request.form.get("days")) if request.form.get('days') else 0 
     reason = request.form.get("reason", "")
+    message= request.form.get("message", "")
 
     if not user:
         abort(400)
 
     if days > 0:
-        if reason:
-            text = f"Your Ruqqus account has been suspended for {days} days. \n reason:\n\n{reason}"
+        if message:
+            text = f"Your Ruqqus account has been suspended for {days} days forthe following reason:\n\n> {message}"
         else:
             text = f"Your Ruqqus account has been suspended for {days} days due to a Terms of Service violation."
         user.ban(admin=v, days=days)
 
     else:
-        if reason:
-            text = f"Your Ruqqus account has been permanently suspended for the following reason:\n\n{reason}"
+        if message:
+            text = f"Your Ruqqus account has been permanently suspended for the following reason:\n\n> {message}"
         else:
             text = "Your Ruqqus account has been permanently suspended due to a Terms of Service violation."
 
-        user.ban(admin=v)
+        user.ban(admin=v, reason=reason)
 
     send_notification(user, text)
     
