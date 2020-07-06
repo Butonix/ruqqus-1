@@ -33,7 +33,7 @@ def ban_user(user_id, v):
             text = f"Your Ruqqus account has been suspended for {days} days forthe following reason:\n\n> {message}"
         else:
             text = f"Your Ruqqus account has been suspended for {days} days due to a Terms of Service violation."
-        user.ban(admin=v, days=days)
+        user.ban(admin=v, reason=reason, days=days)
 
     else:
         if message:

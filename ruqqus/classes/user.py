@@ -646,6 +646,9 @@ class User(Base, Stndrd):
         if include_alts:
             for alt in self.alts:
 
+                if alt.is_banned:
+                    continue
+
                 # suspend alts
                 if days:
                     alt.ban(admin=admin, reason=reason, include_alts=False, days=days)
