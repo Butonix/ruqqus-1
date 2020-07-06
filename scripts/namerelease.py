@@ -6,7 +6,11 @@ db=db_session()
 
 protected_terms=[
     "ruqqus",
-    "meta4"
+    "captain",
+    "meta4",
+    "gabe",
+    "sublime",
+    "slime"
 ]
 
 protected_terms=[i.lower() for i in protected_terms]
