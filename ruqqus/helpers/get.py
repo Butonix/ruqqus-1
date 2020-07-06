@@ -101,7 +101,10 @@ def get_posts(pids, sort="hot", v=None):
 
         queries=tuple(queries)
         first_query=queries[0]
-        other_queries=queries[1:len(queries)]
+        if len(queries>1):
+            other_queries=queries[1:len(queries)]
+        else:
+            other_queries=tuple()
 
         posts=first_query.union_all(*other_queries).order_by(None).all()
 
@@ -118,7 +121,10 @@ def get_posts(pids, sort="hot", v=None):
 
         queries=tuple(queries)
         first_query=queries[0]
-        other_queries=queries[1:len(queries)]
+        if len(queries>1):
+            other_queries=queries[1:len(queries)]
+        else:
+            other_queries=tuple()
         output=first_query.union_all(*other_queries).order_by(None).all()
 
     return output
@@ -290,7 +296,10 @@ def get_comments(cids, v=None, nSession=None, sort_type="new", **kwargs):
             queries.append(query)
         queries=tuple(queries)
         first_query=queries[0]
-        other_queries=queries[1:len(queries)]
+        if len(queries>1):
+            other_queries=queries[1:len(queries)]
+        else:
+            other_queries=tuple()
         comments=first_query.union_all(*other_queries).order_by(None).all()
 
         output=[x[0] for x in comments]
@@ -306,7 +315,10 @@ def get_comments(cids, v=None, nSession=None, sort_type="new", **kwargs):
 
         queries=tuple(queries)
         first_query=queries[0]
-        other_queries=queries[1:len(queries)]
+        if len(queries>1):
+            other_queries=queries[1:len(queries)]
+        else:
+            other_queries=tuple()
         output=first_query.union_all(*other_queries).order_by(None).all()
 
     return output
