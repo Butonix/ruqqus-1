@@ -85,7 +85,7 @@ def get_posts(pids, sort="hot", v=None):
     #return [i for i in output if i]
 
     if not pids:
-        return []]
+        return []
 
     queries=[]
 
