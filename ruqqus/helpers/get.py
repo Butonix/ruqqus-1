@@ -101,7 +101,7 @@ def get_posts(pids, sort="hot", v=None):
 
         queries=tuple(queries)
         first_query=queries[0]
-        if len(queries>1):
+        if len(queries) > 1:
             other_queries=queries[1:len(queries)]
         else:
             other_queries=tuple()
@@ -121,7 +121,7 @@ def get_posts(pids, sort="hot", v=None):
 
         queries=tuple(queries)
         first_query=queries[0]
-        if len(queries>1):
+        if len(queries) > 1:
             other_queries=queries[1:len(queries)]
         else:
             other_queries=tuple()
@@ -296,7 +296,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new", **kwargs):
             queries.append(query)
         queries=tuple(queries)
         first_query=queries[0]
-        if len(queries>1):
+        if len(queries) > 1:
             other_queries=queries[1:len(queries)]
         else:
             other_queries=tuple()
@@ -315,7 +315,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new", **kwargs):
 
         queries=tuple(queries)
         first_query=queries[0]
-        if len(queries>1):
+        if len(queries) > 1:
             other_queries=queries[1:len(queries)]
         else:
             other_queries=tuple()
