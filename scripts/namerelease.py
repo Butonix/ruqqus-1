@@ -38,8 +38,8 @@ for u in accounts:
     else:
         accounts_to_release.append(u)
 
-names_to_release.sort(key=lambda x:x.username)
-names_to_hold.sort(key=lambda x:x.username)
+accounts_to_release.sort(key=lambda x:x.username)
+accounts_to_hold.sort(key=lambda x:x.username)
 
 print(f"{len(accounts_to_release)} names to release")
 print(accounts_to_release)
