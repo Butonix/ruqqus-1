@@ -47,6 +47,4 @@ print("")
 
 print(f"{len(names_to_hold)} names to hold")
 print(names_to_hold)
-
-for name in names_to_release:
-
+#for name in names_to_release:
