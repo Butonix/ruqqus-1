@@ -38,6 +38,9 @@ for name in names:
     else:
         names_to_release.append(name)
 
+names_to_release.sort()
+names_to_hold.sort(0)
+
 print(f"{len(names_to_release)} names to release")
 print(names_to_release)
 print("")
