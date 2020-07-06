@@ -30,7 +30,7 @@ accounts=[x for x in deleted_accounts]+[y for y in banned_accounts]
 
 accounts_to_release=[]
 accounts_to_hold=[]
-print(f"{len(names)} account names are eligible")
+print(f"{len(accounts)} account names are eligible")
 
 for u in accounts:
     if any([x in u.username.lower() for x in protected_terms]):
