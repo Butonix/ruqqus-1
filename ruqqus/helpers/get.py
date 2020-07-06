@@ -104,7 +104,7 @@ def get_posts(pids, sort="hot", v=None):
 
         output=[p[0] for p in posts]
         for i in range(len(output)):
-            output[i]._voted=posts[i][1]
+            output[i]._voted=posts[i][1] or 0
     else:
         for pid in pids:
             query=g.db.query(Submission
@@ -289,7 +289,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new", **kwargs):
 
         output=[x[0] for x in comments]
         for i in range(len(output)):
-            output[i]._voted=comments[i][1]
+            output[i]._voted=comments[i][1] or 0
     else:
         for cid in cids:
             query=nSession.query(Comment
