@@ -631,8 +631,10 @@ class User(Base, Stndrd):
         else:
             #Takes care of all functions needed for account termination
             self.unban_utc=0
-            self.del_banner()
-            self.del_profile()
+            if self.has_banner:
+                self.del_banner()
+            if self.has_profile:
+                self.del_profile()
 
         self.is_banned=admin.id
         if reason:
@@ -645,7 +647,7 @@ class User(Base, Stndrd):
             for alt in self.alts:
 
                 # suspend alts
-                if days > 0:
+                if days:
                     alt.ban(admin=admin, reason=reason, include_alts=False, days=days)
 
                 # ban alts
