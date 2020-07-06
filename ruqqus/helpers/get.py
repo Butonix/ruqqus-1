@@ -102,8 +102,8 @@ def get_posts(pids, sort="hot", v=None):
 
         posts=first_query.union_all(*other_queries).order_by(None).all()
 
-        output=[posts[i][0] for i in posts]
-        for i in output:
+        output=[p[0] for p in posts]
+        for i in range(len(output)):
             i._voted=posts[i][1]
     else:
         for pid in pids:
@@ -285,11 +285,11 @@ def get_comments(cids, v=None, nSession=None, sort_type="new", **kwargs):
         queries=tuple(queries)
         first_query=queries[0]
         other_queries=queries[1:len(queries)]
-        output=first_query.union_all(*other_queries).order_by(None).all()
+        comments=first_query.union_all(*other_queries).order_by(None).all()
 
-        output=[posts[i][0] for i in posts]
-        for i in output:
-            i._voted=posts[i][1]
+        output=[x[0] for x in comments]
+        for i in range(len(output)):
+            i._voted=comments[i][1]
     else:
         for cid in cids:
             query=nSession.query(Comment
