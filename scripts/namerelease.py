@@ -34,9 +34,9 @@ print(f"{len(names)} account names are eligible")
 
 for u in accounts:
     if any([x in u.username.lower() for x in protected_terms]):
-        accounts_to_hold.append(name)
+        accounts_to_hold.append(u)
     else:
-        accounts_to_release.append(name)
+        accounts_to_release.append(u)
 
 names_to_release.sort(key=lambda x:x.username)
 names_to_hold.sort(key=lambda x:x.username)
