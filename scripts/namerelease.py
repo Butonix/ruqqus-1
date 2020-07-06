@@ -9,6 +9,8 @@ protected_terms=[
     "meta4"
 ]
 
+protected_terms=[i.lower() for i in protected_terms]
+
 now=(int)
 
 deleted_accounts=db.query(User).filter_by(is_deleted=True)
@@ -27,7 +29,7 @@ names_to_hold=[]
 print(f"{len(names)} account names are eligible")
 
 for name in names:
-    if any([x in name for x in protected_terms]):
+    if any([x in name.lower() for x in protected_terms]):
         names_to_hold.append(name)
     else:
         names_to_release.append(name)
