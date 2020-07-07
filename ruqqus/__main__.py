@@ -35,7 +35,8 @@ app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_CONNECTION_POOL_URL", environ.get("DATABASE_URL"))
 app.config['SQLALCHEMY_READ_URIS']=[
-    environ.get("DATABASE_READ_01_URL")
+    environ.get("DATABASE_CONNECTION_POOL_READ_01_URL"),
+    environ.get("DATABASE_CONNECTION_POOL_READ_02_URL")
     ]
 
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
@@ -163,9 +164,9 @@ def before_request():
     if ua_banned and request.path != "/robots.txt":
         return response_tuple
 
-   # if request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
-   #     url = request.url.replace("http://", "https://", 1)
-   #     return redirect(url, code=301)
+    if request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
+        url = request.url.replace("http://", "https://", 1)
+        return redirect(url, code=301)
 
     if not session.get("session_id"):
         session["session_id"]=secrets.token_hex(16)
