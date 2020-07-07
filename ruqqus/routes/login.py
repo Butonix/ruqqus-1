@@ -223,7 +223,8 @@ def sign_up_get(v):
     
     #formkey is a hash of session token, timestamp, and IP address
     formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
-                       msg=bytes(formkey_hashstr, "utf-16")
+                       msg=bytes(formkey_hashstr, "utf-16"),
+                       digestmod='md5'
                        ).hexdigest()
 
     redir = request.args.get("redirect",None)
