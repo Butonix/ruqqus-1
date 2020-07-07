@@ -112,7 +112,7 @@ class RoutingSession(Session):
                 return random.choice(engines['followers'])
 
 #db_session=scoped_session(sessionmaker(class_=RoutingSession))
-db_session=scoped_session((sessionmaker(bind=engines["leader"]))
+db_session=scoped_session(sessionmaker(bind=engines["leader"]))
 
 Base = declarative_base()
 
