@@ -377,6 +377,9 @@ def mod_take_pid(pid, v):
     if board.has_ban(post.author):
         return jsonify({'error':f"@{post.author.username} is exiled from +{board.name}, so you can't yank their post there."}), 403
 
+    if post.author.any_block_exists(v):
+        return jsonify({'error':f"You can't yank @{post.author.username}'s content."}), 403
+
     if not board.can_take(post):
         return jsonify({'error':f"You can't yank this particular post to +{board.name}."}), 403
 
