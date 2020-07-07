@@ -83,7 +83,7 @@ def feeds_guild(sort=None, guildname=None):
     ids = guild.idlist(sort=sort, page=page, t=t)
     posts = get_posts(ids, sort=sort)
 
-    feed = AtomFeed(title=f'{sort.capitalize()} posts from +{guildname} on ruqqus',
+    feed = AtomFeed(title=f'{sort.capitalize()} posts from +{guild.name} on ruqqus',
                     feed_url=request.url, url=request.url_root)
 
     for post in posts:
