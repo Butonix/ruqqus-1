@@ -167,9 +167,9 @@ def before_request():
     if ua_banned and request.path != "/robots.txt":
         return response_tuple
 
-    if request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
-        url = request.url.replace("http://", "https://", 1)
-        return redirect(url, code=301)
+   # if request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
+   #     url = request.url.replace("http://", "https://", 1)
+   #     return redirect(url, code=301)
 
     if not session.get("session_id"):
         session["session_id"]=secrets.token_hex(16)
