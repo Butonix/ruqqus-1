@@ -81,8 +81,11 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 
 def get_posts(pids, sort="hot", v=None):
 
-    output=[get_post(pid, graceful=True, v=v) for pid in pids]
-    return [i for i in output if i]
+    #output=[get_post(pid, graceful=True, v=v) for pid in pids]
+    #return [i for i in output if i]
+
+    if not pids:
+        return []
 
     queries=[]
 
@@ -93,24 +96,36 @@ def get_posts(pids, sort="hot", v=None):
                 ).options(joinedload(Submission.author).joinedload(User.title)
                 ).filter_by(id=pid
                 ).join(vt, vt.c.submission_id==Submission.id, isouter=True
-                ).subquery()
-            queries.append(subquery)
-        queries=tuple(queries)
-        posts=g.db.query(Submission).union_all(*queries).order_by(None).all()
+                )
+            queries.append(query)
 
-        output=[posts[i][0] for i in posts]
-        for i in output:
-            i._voted=posts[i][1]
+        queries=tuple(queries)
+        first_query=queries[0]
+        if len(queries) > 1:
+            other_queries=queries[1:len(queries)]
+        else:
+            other_queries=tuple()
+
+        posts=first_query.union_all(*other_queries).order_by(None).all()
+
+        output=[p[0] for p in posts]
+        for i in range(len(output)):
+            output[i]._voted=posts[i][1] or 0
     else:
         for pid in pids:
             query=g.db.query(Submission
                 ).options(joinedload(Submission.author).joinedload(User.title)
                 ).filter_by(id=pid
-                ).subquery()
-            queries.append(subquery)
+                )
+            queries.append(query)
 
         queries=tuple(queries)
-        output=g.db.query(Submission).union_all(*queries).order_by(None).all()
+        first_query=queries[0]
+        if len(queries) > 1:
+            other_queries=queries[1:len(queries)]
+        else:
+            other_queries=tuple()
+        output=first_query.union_all(*other_queries).order_by(None).all()
 
     return output
 
@@ -259,12 +274,15 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
         abort(404)
     return x
 
-def get_comments(cids, v=None, nSession=None, sort_type="new"):
+def get_comments(cids, v=None, nSession=None, sort_type="new", **kwargs):
 
-    output= [get_comment(cid, v=v, graceful=True, nSession=nSession) for cid in cids]
-    return [i for i in output if i]
+    #output= [get_comment(cid, v=v, graceful=True, nSession=nSession) for cid in cids]
+    #return [i for i in output if i]
 
-    nSession=nSession or g.db
+    if not cids:
+        return []
+
+    nSession=nSession or kwargs.get('session') or g.db
 
     queries=[]
 
@@ -274,25 +292,34 @@ def get_comments(cids, v=None, nSession=None, sort_type="new"):
             query=nSession.query(Comment, vt.c.vote_type
                 ).options(joinedload(Comment.author).joinedload(User.title)
                 ).filter_by(id=cid
-                )
-            queries.append(subquery)
+                ).join(vt, vt.c.comment_id==Comment.id, isouter=True)
+            queries.append(query)
         queries=tuple(queries)
-        posts=nSession.query(Comment, vt.c.vote_type).union_all(*queries).join(vt, vt.c.comment_id==Comment.id, isouter=True
-                ).order_by(None).all()
+        first_query=queries[0]
+        if len(queries) > 1:
+            other_queries=queries[1:len(queries)]
+        else:
+            other_queries=tuple()
+        comments=first_query.union_all(*other_queries).order_by(None).all()
 
-        output=[posts[i][0] for i in posts]
-        for i in output:
-            i._voted=posts[i][1]
+        output=[x[0] for x in comments]
+        for i in range(len(output)):
+            output[i]._voted=comments[i][1] or 0
     else:
         for cid in cids:
             query=nSession.query(Comment
                 ).options(joinedload(Comment.author).joinedload(User.title)
                 ).filter_by(id=cid
                 )
-            queries.append(subquery)
+            queries.append(query)
 
         queries=tuple(queries)
-        output=nSession.query(Comment).union_all(*queries).order_by(None).all()
+        first_query=queries[0]
+        if len(queries) > 1:
+            other_queries=queries[1:len(queries)]
+        else:
+            other_queries=tuple()
+        output=first_query.union_all(*other_queries).order_by(None).all()
 
     return output
     

@@ -13824,6 +13824,10 @@ a.dropdown-toggle:hover {
   text-decoration: none;
 }
 
+.comment-text ul li ul {
+  padding-left: 0;
+}
+
 ul.no-bullets {
   list-style-type: none;
 }

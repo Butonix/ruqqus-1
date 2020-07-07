@@ -320,6 +320,10 @@ a.dropdown-toggle:hover {
 
 // list items
 
+.comment-text ul li ul {
+    padding-left: 0;
+}
+
 ul.no-bullets {
     list-style-type: none;
 }
