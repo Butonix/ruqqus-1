@@ -2188,11 +2188,27 @@ ALTER TABLE ONLY public.flags
 
 
 --
+-- Name: follows follow_membership_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.follows
+    ADD CONSTRAINT follow_membership_unique UNIQUE (user_id, target_id);
+
+
+--
 -- Name: follows follows_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.follows
     ADD CONSTRAINT follows_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: subscriptions guild_membership_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subscriptions
+    ADD CONSTRAINT guild_membership_unique UNIQUE (user_id, board_id);
 
 
 --
@@ -2241,6 +2257,14 @@ ALTER TABLE ONLY public.mods
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: postrels postrel_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.postrels
+    ADD CONSTRAINT postrel_unique UNIQUE (post_id, board_id);
 
 
 --
@@ -2834,6 +2858,13 @@ CREATE INDEX submissions_title_trgm_idx ON public.submissions_aux USING gin (tit
 
 
 --
+-- Name: submissions_url_trgm_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submissions_url_trgm_idx ON public.submissions_aux USING gin (url public.gin_trgm_ops);
+
+
+--
 -- Name: subscription_board_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2873,6 +2904,13 @@ CREATE INDEX userblocks_both_idx ON public.userblocks USING btree (user_id, targ
 --
 
 CREATE INDEX users_created_utc_index ON public.users USING btree (created_utc);
+
+
+--
+-- Name: users_title_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX users_title_idx ON public.users USING btree (title_id);
 
 
 --
