@@ -36,7 +36,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("DATABASE_CONNECTION_POOL_URL", environ.get("DATABASE_URL"))
 app.config['SQLALCHEMY_READ_URIS']=[
     environ.get("DATABASE_CONNECTION_POOL_READ_01_URL"),
-    environ.get("DATABASE_CONNECTION_POOL_READ_02_URL")
+    environ.get("DATABASE_CONNECTION_POOL_READ_02_URL")#,
+    #environ.get("DATABASE_CONNECTION_POOL_READ_03_URL")
     ]
 
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
@@ -108,8 +109,8 @@ class RoutingSession(Session):
             else:
                 return random.choice(engines['followers'])
 
-#db_session=scoped_session(sessionmaker(class_=RoutingSession))
-db_session=scoped_session(sessionmaker(bind=engines["leader"]))
+db_session=scoped_session(sessionmaker(class_=RoutingSession))
+#db_session=scoped_session(sessionmaker(bind=engines["leader"]))
 
 Base = declarative_base()
 
