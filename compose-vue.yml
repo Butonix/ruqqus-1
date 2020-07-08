@@ -1,6 +1,15 @@
 version: '2.3'
 
 services:
+  vue-frontend:
+    build:
+      context: ../ruqqus-vue
+    volumes:
+      - "../ruqqus-vue:/var/lib/www"
+    links:
+      - "ruqqus"
+    ports:
+      - "8080:8080"
   ruqqus:
     build:
       context: .
