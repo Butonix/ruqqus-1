@@ -3,6 +3,7 @@
     <div class="row fixed-bottom bg-white border-top p-2" id="mobile-bottom-navigation-bar"
     style="z-index: 100; bottom: 0px; transition: bottom cubic-bezier(0, 0, 0.2, 1) 220ms;">
 
+{% if v %}
         <div class="col px-0">
             <a href="/" class="text-decoration-none" role="button">
                 <div class="text-center {% if request.path=='/' %}text-purple{% else %}text-muted{% endif %}">
@@ -10,8 +11,8 @@
                     <div class="text-small">Home</div>
                 </div>
             </a>
-
         </div>
+{% endif %}
         <div class="col px-0">
             <a href="/all?sort=new" class="text-decoration-none" role="button">
                 <div class="text-center {% if request.path=='/all' and sort_method=='new' %}text-purple{% else %}text-muted{% endif %}">
