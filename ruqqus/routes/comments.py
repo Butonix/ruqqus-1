@@ -167,10 +167,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
             else:
                 abort(422)
 
-            output=[]
-            for c in comms:
-                com=c[0]
-                output.append(com)
+            output=[c for c in comms]
 
         post._preloaded_comments+=output
 
