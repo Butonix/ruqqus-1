@@ -3,7 +3,7 @@ FROM heroku/heroku:18
 COPY supervisord.conf /etc/supervisord.conf
 
 RUN apt update \
-    && apt install -y python3.7 python3-pip supervisor \
+    && apt install -y python3.7 python3-pip supervisor
 
 RUN mkdir -p /opt/ruqqus/service
 
