@@ -72,6 +72,13 @@ As an open-source project, we are supported by the community. If you would like 
 
 ### Docker Deployment
 
+In order to build your docs, you need to add the following to your hosts file:
+
+```
+127.0.0.1    ruqqus.localhost
+```
+
+
 To deploy the stack with docker, simply use:
 
 ```
