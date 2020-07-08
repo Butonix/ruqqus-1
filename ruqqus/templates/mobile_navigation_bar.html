@@ -29,7 +29,7 @@
                 </div>
             </a>
         </div>
-
+{% if v %}
         <div class="col px-0">
             <a href="{% if v %}/mine{% else %}/login{% endif %}" class="text-decoration-none" role="button">
                 <div class="text-center {% if request.path=='/mine' %}text-purple{% else %}text-muted{% endif %}">
@@ -38,6 +38,7 @@
                 </div>
             </a>
         </div>
+{% endif %}
         <div class="col px-0">
             <a href="/browse" class="text-decoration-none" role="button">
                 <div class="text-center {% if request.path=='/browse' %}text-purple{% else %}text-muted{% endif %}">
@@ -46,6 +47,16 @@
                 </div>
             </a>
         </div>
+{% if not v %}
+        <div class="col px-0">
+            <a href="/signup" class="text-decoration-none" role="button">
+                <div class="text-center">
+                    <i class="fas fa-user-plus text-lg d-block"></i>
+                    <div class="text-small">Sign Up</div>
+                </div>
+            </a>
+        </div>
+{% endif %}
 
     </div>
 
