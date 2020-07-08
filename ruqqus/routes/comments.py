@@ -146,13 +146,13 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                 output.append(com)
         else:
             comms=g.db.query(
-                Comment,
-                User,
-                Title
+                Comment
+                ).options(
+                joinedload(Comment.author).joinedload(User.title)
                 ).filter(
                 Comment.parent_comment_id.in_(current_ids)
-                ).options(joinedload(Comment.author).joinedload(User.title))
-
+                )
+                
             if sort_type=="hot":
                 comments=comms.order_by(Comment.score_hot.asc()).all()
             elif sort_type=="top":
