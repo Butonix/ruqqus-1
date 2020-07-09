@@ -19,7 +19,7 @@ PATREON_CLIENT_SECRET=environ.get("PATREON_CLIENT_SECRET")
 @auth_required
 def patreon_authorize(v):
 
-	redirect_uri=urllib.parse.quote(f"https://{app.config['domain']}/redirect/patreon", safe='')
+	redirect_uri=urllib.parse.quote(f"https://{app.config['SERVER_NAME']}/redirect/patreon", safe='')
 
 	state=generate_hash(f"{session.get('session_id')}+{v.id}")
 
@@ -49,7 +49,7 @@ def patreon_redirect(v):
 		'grant_type':authorization_code,
 		'client_id':PATREON_CLIENT_ID,
 		'client_secret':PATREON_CLIENT_SECRET,
-		'redirect_uri':f"https://{app.config['domain']}/redirect/patreon"
+		'redirect_uri':f"https://{app.config['SERVER_NAME']}/redirect/patreon"
 	}
 	headers={
 		'Content-Type':'applicatoin/x-www-form-urlencoded'
