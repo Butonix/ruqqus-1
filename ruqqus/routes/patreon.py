@@ -74,10 +74,12 @@ def patreon_redirect(v):
 
 	#parse response for data
 
+	print(data)
+
 
 	v.patreon_id=data["data"]["id"]
 
-	print(data)
+#	print(data)
 
 #	db.add(v)
 #	db.flush()
