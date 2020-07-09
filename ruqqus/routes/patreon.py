@@ -70,7 +70,7 @@ def patreon_redirect(v):
 	params={"include":"memberships"}
 	headers={"Authorization":f"Bearer {v.access_token}"}
 
-	print(headers)
+	#print(headers)
 
 	data=requests.get(url, params=params, headers=headers).json()
 
@@ -80,11 +80,15 @@ def patreon_redirect(v):
 
 
 	v.patreon_id=data["data"]["id"]
-
+	try:
+		v.patreon_pledge_cents=data["data"]["relationships"]["pledges"][0]["attributes"]["amount_cents"]
+	except Exception as e:
+		print(e)
+		v.patreon_pledge_cents=0
 #	print(data)
 
 	g.db.add(v)
-	g.db.flush()
+	g.db.commit()
 
 	v.refresh_selfset_badges()
 	g.db.add(v)
