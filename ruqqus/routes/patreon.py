@@ -52,7 +52,7 @@ def patreon_redirect(v):
 		'redirect_uri':f"https://{app.config['SERVER_NAME']}/redirect/patreon"
 	}
 	headers={
-		'Content-Type':'applicatoin/x-www-form-urlencoded'
+		'Content-Type':'application/x-www-form-urlencoded'
 	}
 
 	#exchange code for tokens
