@@ -23,8 +23,8 @@ def patreon_authorize(v):
 
 	state=generate_hash(f"{session.get('session_id')}+{v.id}")
 
-	url=f"www.patreon.com/oauth2/authorize?response_type=code&client_id={PATREON_CLIENT_ID}&redirect_uri={redirect_uri}&state={state}"
+	url=f"https://www.patreon.com/oauth2/authorize?response_type=code&client_id={PATREON_CLIENT_ID}&redirect_uri={redirect_uri}&state={state}"
 
 	return redirect(url)
 
-	
+
