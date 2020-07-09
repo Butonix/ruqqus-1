@@ -23,6 +23,7 @@ from .board_relationships import *
 from .mix_ins import *
 from .subscriptions import *
 from .userblock import *
+from .badges import *
 from ruqqus.__main__ import Base,cache
 
 
