@@ -85,12 +85,6 @@ To deploy the stack with docker, simply use:
 docker-compose up
 ```
 
-If you have access to the ruqqus-vue project, use:
-
-```
-docker-compose -f compose-vue.yml up
-```
-
 The database will automatically be seeded with an administrator account; user `ruqqie` and password `password`.
 
 ### Mac
