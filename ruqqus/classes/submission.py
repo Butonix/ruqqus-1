@@ -297,7 +297,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                     'permalink':self.permalink,
                     'guild_name':self.guild_name
                     }
-        data= {'author':self.author_name if not self.author.is_deleted else None,
+        data= {'author':self.author.name if not self.author.is_deleted else None,
                 'permalink':self.permalink,
                 'is_banned':False,
                 'is_deleted':False,
@@ -315,10 +315,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'body_html':self.body_html,
                 'created_utc':self.created_utc,
                 'edited_utc':self.edited_utc,
-                'guild_name':self.guild_name,
+                'guild_name':self.board.name,
                 'embed_url':self.embed_url,
                 'is_archived':self.is_archived,
-                'author_title':self.author.title.json if self.author.title else None
+                'author_title':self.author.title.json if self.author.title else None,
+                'original_guild_name':self.original_board.name
                 }
 
         if "_voted" in self.__dict__:
