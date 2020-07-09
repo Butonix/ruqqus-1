@@ -314,7 +314,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'body':self.body,
                 'body_html':self.body_html,
                 'created_utc':self.created_utc,
-                'edited_utc':self.edited_utc,
+                'edited_utc':self.edited_utc or 0,
                 'guild_name':self.board.name,
                 'embed_url':self.embed_url,
                 'is_archived':self.is_archived,
