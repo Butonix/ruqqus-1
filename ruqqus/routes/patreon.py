@@ -46,7 +46,7 @@ def patreon_redirect(v):
 	url="https://www.patreon.com/api/oauth2/token"
 	data={
 		'code':code,
-		'grant_type':authorization_code
+		'grant_type':authorization_code,
 		'client_id':PATREON_CLIENT_ID,
 		'client_secret':PATREON_CLIENT_SECRET,
 		'redirect_uri':f"https://{app.config['domain']}/redirect/patreon"
