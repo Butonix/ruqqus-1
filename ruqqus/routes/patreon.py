@@ -60,6 +60,8 @@ def patreon_redirect(v):
 
 	data=x.json()
 
+	print(data)
+
 	v.access_token=data["access_token"]
 	v.refresh_token=data["refresh_token"]
 
