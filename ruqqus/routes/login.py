@@ -145,21 +145,7 @@ def login_post():
 
 
 
-    #check self-setting badges
-    badge_types = g.db.query(BadgeDef).filter(BadgeDef.qualification_expr.isnot(None)).all()
-    for badge in badge_types:
-        if eval(badge.qualification_expr, {}, {'v':account}):
-            if not account.has_badge(badge.id):
-                new_badge=Badge(user_id=account.id,
-                                badge_id=badge.id,
-                                created_utc=int(time.time())
-                                )
-                g.db.add(new_badge)
-                
-        else:
-            bad_badge=account.has_badge(badge.id)
-            if bad_badge:
-                g.db.delete(bad_badge)
+    account.refresh_selfset_badges()
                 
 
     #check for previous page

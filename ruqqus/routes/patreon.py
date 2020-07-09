@@ -60,7 +60,7 @@ def patreon_redirect(v):
 
 	data=x.json()
 
-	print(data)
+	#print(data)
 
 	v.access_token=data["access_token"]
 	v.refresh_token=data["refresh_token"]
@@ -81,10 +81,12 @@ def patreon_redirect(v):
 
 #	print(data)
 
-#	db.add(v)
-#	db.flush()
+	g.db.add(v)
+	g.db.flush()
 
-	return '', 204
+	v.refresh_selfset_badges()
+	g.db.add(v)
 
+	g.db.commit()
 
-
+	return redirect("/settings/profile")
