@@ -70,6 +70,8 @@ def patreon_redirect(v):
 	params={"include":"memberships"}
 	headers={"Authorization":f"Bearer {v.access_token}"}
 
+	print(headers)
+
 	data=requests.get(url, params=params, headers=headers).json()
 
 	#parse response for data
