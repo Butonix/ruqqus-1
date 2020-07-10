@@ -122,6 +122,19 @@ import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
 
+from flask_graphql import GraphQLView
+from ruqqus.classes.schema import schema
+
+Base.query = db_session.query_property()
+
+app.add_url_rule(
+    '/graphql',
+    view_func=GraphQLView.as_view(
+        'graphql',
+        schema=schema,
+        graphiql=True # for having the GraphiQL interface
+    )
+)
 
 @app.before_first_request
 def app_setup():
