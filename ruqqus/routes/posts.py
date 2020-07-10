@@ -483,6 +483,8 @@ def delete_post_pid(pid, v):
         abort(403)
 
     post.is_deleted=True
+    post.is_pinned=False
+    post.stickied=False
     
     g.db.add(post)
 
