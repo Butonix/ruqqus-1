@@ -21,6 +21,7 @@ def recompute():
         for board in boards.all():
             i+=1
             board.rank_trending=board.trending_rank
+            board.stored_subscriber_count=board.subscriber_count
             db.add(board)
 
             if not i%100:
