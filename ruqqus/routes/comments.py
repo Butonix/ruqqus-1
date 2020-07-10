@@ -222,7 +222,7 @@ def api_comment(v):
                                          Comment.parent_comment_id==parent_comment_id,
                                          Comment.parent_submission==parent_submission,
                                          CommentAux.body==body
-                                         ).first()
+                                         ).options(contains_eager(Comment.comment_aux)).first()
     if existing:
         return jsonify({"error":f"You already made that comment: {existing.permalink}"}), 409
 
