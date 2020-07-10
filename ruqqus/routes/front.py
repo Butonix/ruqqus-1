@@ -240,7 +240,7 @@ def guild_ids(sort="subs", page=1, nsfw=False):
         guilds=guilds.filter_by(over_18=False)
 
     if sort=="subs":
-        guilds=guilds.order_by(Board.subscriber_count.desc())
+        guilds=guilds.order_by(Board.stored_subscriber_count.desc())
     elif sort=="new":
         guilds=guilds.order_by(Board.created_utc.desc())
     elif sort=="trending":
@@ -338,7 +338,7 @@ def my_subs(v):
                                    m.c.id != None
                                    )
                                )
-        content=content.order_by(Board.subscriber_count.desc())
+        content=content.order_by(Board.stored_subscriber_count.desc())
         
         content=[x for x in content.offset(25*(page-1)).limit(26)]
         next_exists=(len(content)==26)
