@@ -327,7 +327,7 @@ class User(Base, Stndrd):
     @property
     @cache.memoize(timeout=3600)
     def true_score(self):
-        return (self.karma + self.comment_karma) - (self.post_count + self.comment_count)
+        return max((self.karma + self.comment_karma) - (self.post_count + self.comment_count), -5)
 
 
     @property
