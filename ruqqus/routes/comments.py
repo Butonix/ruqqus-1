@@ -116,9 +116,6 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                 ).filter(
                 Comment.parent_comment_id.in_(current_ids)
                 ).join(
-                User.title,
-                isouter=True
-                ).join(
                 votes,
                 votes.c.comment_id==Comment.id,
                 isouter=True
