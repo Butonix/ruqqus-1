@@ -27,6 +27,15 @@ def patreon_authorize(v):
 
 	return redirect(url)
 
+@app.route("/patreon_unauthorize", methods=["POST"])
+@auth_required
+def patreon_unauthorize(v):
+
+	v.patreon_id=None
+	v.patreon_refresh_token=''
+	v.patreon_access_token=''
+	v.patreon_pledge_cents=0
+
 
 @app.route("/redirect/patreon", methods=["GET"])
 @auth_required
@@ -96,3 +105,8 @@ def patreon_redirect(v):
 	g.db.commit()
 
 	return redirect("/settings/profile")
+
+@app.route("/webhook/patreon", methods=["POST"])
+def webhook_patreon():
+
+	pass
