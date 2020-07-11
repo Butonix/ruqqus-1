@@ -38,6 +38,14 @@ def patreon_unauthorize(v):
 	v.patreon_access_token=''
 	v.patreon_pledge_cents=0
 
+	g.db.add(v)
+	g.db.commit()
+
+	return render_template("settings_profile.html",
+                                   v=v,
+                                   msg=f"Patreon account un-linked."
+                                   )
+
 
 @app.route("/redirect/patreon", methods=["GET"])
 @auth_required
@@ -107,7 +115,10 @@ def patreon_redirect(v):
 
 	g.db.commit()
 
-	return redirect("/settings/profile")
+	return  render_template("settings_profile.html",
+                                   v=v,
+                                   msg=f"Patreon account {v.patreon_name} linked successfully."
+                                   )
 
 @app.route("/webhook/patreon", methods=["POST"])
 def webhook_patreon():
