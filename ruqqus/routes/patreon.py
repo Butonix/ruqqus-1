@@ -88,7 +88,7 @@ def patreon_redirect(v):
     #get membership status
     url="https://www.patreon.com/api/oauth2/v2/identity"
     params={"include":"memberships",
-  		"fields[user]":"vanity",
+  		"fields[user]":"vanity, fullname",
   		"fields[member]":"currently_entitled_amount_cents"}
     headers={"Authorization":f"Bearer {v.access_token}"}
 
@@ -102,7 +102,7 @@ def patreon_redirect(v):
     print(data)
 
     v.patreon_id=data["data"]["id"]
-    v.patreon_name=data["data"]["attributes"]["vanity"]
+    v.patreon_name=data["data"]["attributes"]["vanity"] or data["data"]["attributes"]["full_name"] or f"ID: {data['data']['id']}"
 
 
     try:
