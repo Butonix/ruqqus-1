@@ -705,6 +705,8 @@ class User(Base, Stndrd):
                     g.db.add(new_badge)
                     
             else:
-                bad_badge=account.has_badge(badge.id)
+                bad_badge=self.has_badge(badge.id)
                 if bad_badge:
                     g.db.delete(bad_badge)
+
+        g.db.add(self)
