@@ -115,7 +115,7 @@ def webhook_patreon():
 		abort(400)
 
 	hash_= hmac.new(key=bytes(environ.get("PATREON_SECRET"), "utf-8"),
-					msg=bytes(str(request.json()), "utf-8"),
+					msg=str(request.json, "utf-8"),
 					digestmod='md5'
 					).hexdigest()
 
