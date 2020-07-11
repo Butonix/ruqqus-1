@@ -33,6 +33,7 @@ def patreon_authorize(v):
 def patreon_unauthorize(v):
 
 	v.patreon_id=None
+	v.patreon_name=None
 	v.patreon_refresh_token=''
 	v.patreon_access_token=''
 	v.patreon_pledge_cents=0
@@ -90,6 +91,7 @@ def patreon_redirect(v):
 
 
 	v.patreon_id=data["data"]["id"]
+	v.patreon_name=data["data"]["attributes"]["vanity"]
 	try:
 		v.patreon_pledge_cents=data["data"]["relationships"]["pledges"][0]["attributes"]["amount_cents"]
 	except Exception as e:
@@ -146,5 +148,5 @@ def webhook_patreon():
 
 	g.db.add(user)
 	g.db.commit()
-	
+
 	return "", 204
