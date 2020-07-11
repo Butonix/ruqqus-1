@@ -69,7 +69,7 @@ class User(Base, Stndrd):
     show_nsfl=Column(Boolean, default=False)
     is_private=Column(Boolean, default=False)
     read_announcement_utc=Column(Integer, default=0)
-    discord_id=Column(Integer, default=None)
+    #discord_id=Column(Integer, default=None)
     unban_utc=Column(Integer, default=0)
     is_deleted=Column(Boolean, default=False)
     delete_reason=Column(String(500), default='')
@@ -333,7 +333,7 @@ class User(Base, Stndrd):
     @property
     @cache.memoize(timeout=3600)
     def true_score(self):
-        return (self.karma + self.comment_karma) - (self.post_count + self.comment_count)
+        return max((self.karma + self.comment_karma) - (self.post_count + self.comments.filter(Comment.parent_submission!=None).filter_by(is_banned=False).count()), -5)
 
 
     @property
@@ -451,7 +451,7 @@ class User(Base, Stndrd):
     @property
     def comment_count(self):
 
-        return self.comments.filter(text("parent_submission is not null")).filter_by(is_banned=False, is_deleted=False).count()
+        return self.comments.filter(Comment.parent_submission!=None).filter_by(is_banned=False, is_deleted=True).count()
 
     @property
     #@cache.memoize(timeout=60)

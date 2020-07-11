@@ -116,9 +116,6 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                 ).filter(
                 Comment.parent_comment_id.in_(current_ids)
                 ).join(
-                User.title,
-                isouter=True
-                ).join(
                 votes,
                 votes.c.comment_id==Comment.id,
                 isouter=True
@@ -225,7 +222,7 @@ def api_comment(v):
                                          Comment.parent_comment_id==parent_comment_id,
                                          Comment.parent_submission==parent_submission,
                                          CommentAux.body==body
-                                         ).first()
+                                         ).options(contains_eager(Comment.comment_aux)).first()
     if existing:
         return jsonify({"error":f"You already made that comment: {existing.permalink}"}), 409
 

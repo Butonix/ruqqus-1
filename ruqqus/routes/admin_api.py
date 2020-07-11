@@ -82,6 +82,7 @@ def ban_post(post_id, v):
     post.is_approved=0
     post.approved_utc=0
     post.stickied=False
+    post.stickied=False
     post.ban_reason=request.form.get("reason",None)
 
     g.db.add(post)
