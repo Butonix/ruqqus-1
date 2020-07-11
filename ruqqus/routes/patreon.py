@@ -104,10 +104,8 @@ def patreon_redirect(v):
     v.patreon_name=data["data"]["attributes"]["full_name"]
 
 
-    #membership_id=data["data"]["attributes"]["relationships"]["memberships"]
-
     try:
-        v.patreon_pledge_cents=data["data"]["relationships"]["pledges"][0]["attributes"]["amount_cents"]
+        v.patreon_pledge_cents=data['included'][0]["attributes"]['currently_entitled_amount_cents']
     except Exception as e:
         print(e)
         v.patreon_pledge_cents=0
