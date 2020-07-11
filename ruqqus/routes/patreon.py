@@ -122,6 +122,6 @@ def webhook_patreon():
 	print(hash_)
 	print(sig)
 
-	print(request.data)
+	#print(request.data)
 
 	return "", 204
