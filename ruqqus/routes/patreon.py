@@ -99,7 +99,7 @@ def patreon_redirect(v):
 
 
     v.patreon_id=data["data"]["id"]
-    v.patreon_name=data["data"]["attributes"]["vanity"]
+    v.patreon_name=data["data"]["attributes"]["full_name"]
     try:
         v.patreon_pledge_cents=data["data"]["relationships"]["pledges"][0]["attributes"]["amount_cents"]
     except Exception as e:
