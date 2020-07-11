@@ -110,6 +110,8 @@ def patreon_redirect(v):
 @app.route("/webhook/patreon", methods=["POST"])
 def webhook_patreon():
 
+	
+	#validate that request is from patreon
 	sig = request.headers.get('X-Patreon-Signature')
 	if not sig:
 		abort(400)
@@ -119,9 +121,30 @@ def webhook_patreon():
 					digestmod='md5'
 					).hexdigest()
 
-	print(hash_)
-	print(sig)
+	if not hmac.compare_digest(sig, hash_):
+		abort(403)
 
-	#print(request.data)
+	#look up user by patreon id
 
+	data=request.json
+
+	print(data)
+
+	user = db.query(User).filter_by(patreon_id=data["data"]["id"]).first()
+	if not user:
+		return "", 204
+
+	if request.headers.get("X-Patreon-Event") in ["members:pledge:create","members:pledge:update"]:
+		user.patreon_pledge_cents=data["data"]["attributes"]["amount_cents"]
+	else:
+		user.patreon_pledge_cents=0
+
+	g.db.add(user)
+	g.db.flush()
+
+	user.refresh_selfset_badges()
+
+	g.db.add(user)
+	g.db.commit()
+	
 	return "", 204
