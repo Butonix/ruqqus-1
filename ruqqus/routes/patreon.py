@@ -114,7 +114,7 @@ def webhook_patreon():
 	if not sig:
 		abort(400)
 
-	hash=hmac.new(key=bytes(PATREON_SECRET, "utf-8"),
+	hash=hmac.new(key=bytes(PATREON_SECRET, "utf-16"),
 		msg=str(request.data),
 		digestmod='md5').hexdigest()
 
