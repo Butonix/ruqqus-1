@@ -86,7 +86,8 @@ def patreon_redirect(v):
 
     #get membership status
     url="https://www.patreon.com/api/oauth2/v2/identity"
-    params={"include":"memberships"}
+    params={"include":"memberships",
+  		"fields[user]":"full_name"}
     headers={"Authorization":f"Bearer {v.access_token}"}
 
     #print(headers)
