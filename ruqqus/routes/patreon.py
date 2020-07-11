@@ -87,7 +87,8 @@ def patreon_redirect(v):
     #get membership status
     url="https://www.patreon.com/api/oauth2/v2/identity"
     params={"include":"memberships",
-  		"fields[user]":"full_name"}
+  		"fields[user]":"full_name",
+  		"fields[member]":"currently_entitled_amount_cents"}
     headers={"Authorization":f"Bearer {v.access_token}"}
 
     #print(headers)
@@ -101,6 +102,10 @@ def patreon_redirect(v):
 
     v.patreon_id=data["data"]["id"]
     v.patreon_name=data["data"]["attributes"]["full_name"]
+
+
+    #membership_id=data["data"]["attributes"]["relationships"]["memberships"]
+
     try:
         v.patreon_pledge_cents=data["data"]["relationships"]["pledges"][0]["attributes"]["amount_cents"]
     except Exception as e:
