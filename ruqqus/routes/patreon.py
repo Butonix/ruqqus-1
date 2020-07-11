@@ -37,6 +37,7 @@ def patreon_unauthorize(v):
     v.patreon_refresh_token=''
     v.patreon_access_token=''
     v.patreon_pledge_cents=0
+    v.patreon_name=""
 
     g.db.add(v)
     g.db.commit()
