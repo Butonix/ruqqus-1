@@ -96,8 +96,8 @@ def patreon_redirect(v):
 
     #parse response for data
 
-    print(data)
 
+    print(data)
 
     v.patreon_id=data["data"]["id"]
     v.patreon_name=data["data"]["attributes"]["full_name"]
@@ -106,7 +106,7 @@ def patreon_redirect(v):
     except Exception as e:
         print(e)
         v.patreon_pledge_cents=0
-#    print(data)
+
 
     g.db.add(v)
     g.db.commit()
