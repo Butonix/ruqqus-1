@@ -1,6 +1,7 @@
 from os import environ
 import requests
 import urllib
+import hmac
 
 from flask import *
 
@@ -109,4 +110,13 @@ def patreon_redirect(v):
 @app.route("/webhook/patreon", methods=["POST"])
 def webhook_patreon():
 
-	pass
+	sig = request.headers.get('X-Patreon-Signature')
+	if not sig:
+		abort(400)
+
+	hash=hmac.new(key=bytes(environ.get(PATREON_SECRET, "utf-8"),
+		msg=request.body,
+		digestmod='md5').hexdigest()
+
+	print(hash)
+	print(sig)
