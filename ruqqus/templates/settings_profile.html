@@ -148,11 +148,15 @@
 
             {% if not v.patreon_id %}
 
-            <a href="/patreon_authorize"><button class="btn-secondary">Link Patreon</button></a>
+            <a href="/patreon_authorize"><button class="btn btn-secondary">Link Patreon</button></a>
 
             {% else %}
 
-            <p> unlink goes here </p>
+            <p class="text-muted">Connected as {{ v.patreon_name }}</p>
+            <form action="/patreon_unauthorize">
+                  <input type="hidden" name="formkey" value="{{ v.formkey }}">
+                  <input type="submit" class="btn btn-secondary text-capitalize" value="Unlink patreon">
+            </form>
             {% endif %}
 
             <div class="text-small-extra text-muted mt-3">Link your Patreon account to get profile badges for supporting Ruqqus.</div>
