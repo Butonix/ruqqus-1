@@ -5,77 +5,97 @@
 {% block content %}
 
 
-    <div class="row">
+<div class="row">
 
-      <div class="col col-md-8">
+  <div class="col col-md-8">
 
-        <div class="settings">
+    <div class="settings">
 
-          <h2 class="h5">Profile Picture</h2>
+      <h2 class="h5">Profile Picture</h2>
 
-          <div class="settings-section rounded">
+      <div class="settings-section rounded">
+
+        <div class="d-flex">
+
+          <div class="title w-lg-25 text-md-center">
+            <img src="{{ v.profile_url }}" class="profile-pic-75">
+          </div>
+
+          <div class="body w-lg-100 my-auto">
 
             <div class="d-flex">
 
-              <div class="title w-lg-25 text-md-center">
-                <img src="{{ v.profile_url }}" class="profile-pic-75">
-              </div>
+              <div>
 
-              <div class="body w-lg-100 my-auto">
+                {% if v.true_score > 300 %}
 
-                <div class="d-flex">
+                <form action="/settings/images/profile" method="post" enctype="multipart/form-data">
+                  <input type="hidden" name="formkey" value="{{ v.formkey }}">
+                  <label class="btn btn-secondary text-capitalize mr-2 mb-0">
+                    Update<input type="file" hidden name="profile" onchange="form.submit()">
+                  </label>
+                </form>
 
-                  <div>
+                {% else %}
 
-                   <form action="/settings/images/profile" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="formkey" value="{{ v.formkey }}">
-                    <label class="btn btn-secondary text-capitalize mr-2 mb-0">
-                      Update<input type="file" hidden name="profile" onchange="form.submit()">
-                    </label>
-                  </form>
+                <div class="text-muted">You can add a custom avatar after earning 300 Rep.</div>
 
-                </div>
-
-                {% if v.has_profile %}
-                <div>
-                  <form action="/settings/delete/profile" method="post">
-                    <input type="hidden" name="formkey" value="{{ v.formkey }}">
-                    <button type="submit" value="Delete" class="btn btn-link fa-lg"><i class="far fa-trash-alt text-danger"></i></button>
-                  </form>
-                </div>
                 {% endif %}
 
               </div>
 
-              <div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files supported. Max file size 16MB.</div>
+              {% if v.has_profile %}
+              <div>
+                <form action="/settings/delete/profile" method="post">
+                  <input type="hidden" name="formkey" value="{{ v.formkey }}">
+                  <button type="submit" value="Delete" class="btn btn-link fa-lg"><i class="far fa-trash-alt text-danger"></i></button>
+                </form>
+              </div>
+              {% endif %}
 
             </div>
+
+            {% if v.true_score > 300 %}
+
+            <div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files supported. Max file size 16MB.</div>
+
+            {% endif %}
 
           </div>
 
         </div>
-        <h2 class="h5">Profile Banner</h2>
 
-        <div class="settings-section rounded">
+      </div>
+      <h2 class="h5">Profile Banner</h2>
 
-          <div class="d-flex">
+      <div class="settings-section rounded">
 
-            <div class="title w-lg-75 text-md-center">
-              <img src="{{ v.banner_url }}" class="banner-pic-135">
-            </div>
+        <div class="d-flex">
 
-            <div class="body w-lg-100 my-auto">
+          <div class="title w-lg-75 text-md-center">
+            <img src="{{ v.banner_url }}" class="banner-pic-135">
+          </div>
 
-              <div class="d-flex">
+          <div class="body w-lg-100 my-auto">
 
-                <div>
+            <div class="d-flex">
 
-                 <form action="/settings/images/banner" method="post" enctype="multipart/form-data">
+              <div>
+
+                {% if v.true_score > 500 %}
+
+                <form action="/settings/images/banner" method="post" enctype="multipart/form-data">
                   <input type="hidden" name="formkey" value="{{ v.formkey }}">
                   <label class="btn btn-secondary text-capitalize mr-2 mb-0">
                     Update<input type="file" hidden name="banner" onchange="form.submit()">
                   </label>
                 </form>
+
+                {% else %}
+
+                <div class="text-muted">You can add a custom banner after earning 500 Rep.</div>
+
+                {% endif %}
 
               </div>
 
@@ -91,7 +111,11 @@
 
             </div>
 
+            {% if v.true_score > 500 %}
+
             <div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files supported. Max file size 16MB. (Recommend 1400x250 pixels)</div>
+
+            {% endif %}
 
           </div>
 
@@ -132,73 +156,73 @@
 
           </div>
 
-      <h2 class="h5" name="linkouts">Linked Accounts</h2>
+          <h2 class="h5" name="linkouts">Linked Accounts</h2>
 
-      <p class="text-small text-muted">Link other services to your Ruqqus account</p>
+          <p class="text-small text-muted">Link other services to your Ruqqus account</p>
 
-      <div class="settings-section rounded">
+          <div class="settings-section rounded">
 
-        <div class="d-lg-flex">
+            <div class="d-lg-flex">
 
-          <div class="title w-lg-25">
-            <label for="patreon_link">Patreon</label>
-          </div>
+              <div class="title w-lg-25">
+                <label for="patreon_link">Patreon</label>
+              </div>
 
-          <div class="body w-lg-100">
+              <div class="body w-lg-100">
 
-            {% if not v.patreon_id %}
+                {% if not v.patreon_id %}
 
-            <a href="/patreon_authorize"><button class="btn btn-secondary">Link Patreon</button></a>
+                <a href="/patreon_authorize"><button class="btn btn-secondary">Link Patreon</button></a>
 
-            {% else %}
+                {% else %}
 
-            <p class="text-muted">Connected as {{ v.patreon_name }}</p>
-            <form action="/patreon_unauthorize" method="post">
+                <p class="text-muted">Connected as {{ v.patreon_name }}</p>
+                <form action="/patreon_unauthorize" method="post">
                   <input type="hidden" name="formkey" value="{{ v.formkey }}">
                   <input type="submit" class="btn btn-secondary text-capitalize" value="Unlink patreon">
-            </form>
-            {% endif %}
+                </form>
+                {% endif %}
 
-            <div class="text-small-extra text-muted mt-3">Link your Patreon account to get profile badges for supporting Ruqqus.</div>
+                <div class="text-small-extra text-muted mt-3">Link your Patreon account to get profile badges for supporting Ruqqus.</div>
+
+              </div>
+
+            </div>
 
           </div>
 
-        </div>
 
-      </div>
+          <h2 class="h5" name="referral">RSS Feed</h2>
 
+          <p class="text-small text-muted">Subscribe to your own personal ruqqus rss feed.</p>
 
-      <h2 class="h5" name="referral">RSS Feed</h2>
+          <div class="settings-section rounded">
 
-      <p class="text-small text-muted">Subscribe to your own personal ruqqus rss feed.</p>
+            <div class="d-lg-flex">
 
-      <div class="settings-section rounded">
+              <div class="title w-lg-25">
+                <label for="referral_code">Custom User Feed</label>
+              </div>
 
-        <div class="d-lg-flex">
+              <div class="body w-lg-100">
 
-          <div class="title w-lg-25">
-            <label for="referral_code">Custom User Feed</label>
-          </div>
-
-          <div class="body w-lg-100">
-
-            <input type="text" readonly="" class="form-control copy-link" id="rss_feed" value="{{ ('/feeds/@' + v.username + '/' + v.feedkey + '/hot') | full_link }}" data-clipboard-text="{{ ('/feeds/@' + v.username + '/' + v.feedkey + '/hot') | full_link }}">
-              <form action="/settings/new_feedkey" method="post">
+                <input type="text" readonly="" class="form-control copy-link" id="rss_feed" value="{{ ('/feeds/@' + v.username + '/' + v.feedkey + '/hot') | full_link }}" data-clipboard-text="{{ ('/feeds/@' + v.username + '/' + v.feedkey + '/hot') | full_link }}">
+                <form action="/settings/new_feedkey" method="post">
                   <input type="hidden" name="formkey" value="{{ v.formkey }}">
                   <input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Generate new URL">
-              </form>
+                </form>
 
-            <div class="text-small-extra text-muted mt-3">You can change the feed by replacing "hot" with either top, or disputed.</div>
+                <div class="text-small-extra text-muted mt-3">You can change the feed by replacing "hot" with either top, or disputed.</div>
+
+              </div>
+
+            </div>
 
           </div>
 
-        </div>
+          <h2 class="h5">Content Filters</h2>
 
-      </div>
-
-      <h2 class="h5">Content Filters</h2>
-
-      <form id="profile-settings" action="/settings/profile" method="post">
+          <form id="profile-settings" action="/settings/profile" method="post">
 
             <div class="settings-section rounded">
 
@@ -223,7 +247,7 @@
 
               </div>
 
-            <div class="d-lg-flex border-bottom">
+              <div class="d-lg-flex border-bottom">
 
                 <div class="title w-lg-25">
                   <label for="hidensfl">View NSFL Content</label>
