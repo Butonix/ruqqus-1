@@ -1,6 +1,8 @@
 from ruqqus.__main__ import db_session
 from ruqqus import classes
 
+from sqlalchemy.orm import lazyload
+
 import time
 
 db=db_session()
