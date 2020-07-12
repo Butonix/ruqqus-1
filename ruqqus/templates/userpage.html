@@ -164,6 +164,12 @@
         <p class="text-muted text-break">{{ u.bio_html | safe }}</p>
         {% endif %}
         <p class="font-weight-bold">{{ u.follower_count }} subscriber{{ 's' if u.follower_count != 1 else '' }}</p>
+        <div class="mb-3">
+            {% for b in u.badges %}
+            {% include "badge.html" %}
+            {% else %}
+            {% endfor %}
+        </div>
         {% if v and v.id == u.id %}
            <a href="/settings/profile" class="btn btn-secondary btn-sm">Edit profile</a>
         {% endif %}
