@@ -146,8 +146,7 @@ def home(v):
         ids=v.idlist(sort=sort,
                      page=page,
                      only=only,
-                     t=t,
-                     hide_offensive = v.hide_offensive
+                     t=t
                      )
 
         next_exists=(len(ids)==26)
