@@ -13,7 +13,7 @@ def recompute():
 
         print("beginning guild trend recompute")
         x+=1
-        boards= db.query(classes.boards.Board).filter_by(is_banned=False).order_by(classes.boards.Board.rank_trending.desc())
+        boards= db.query(classes.boards.Board).options(lazyload('*')).filter_by(is_banned=False).order_by(classes.boards.Board.rank_trending.desc())
         if x%10:
             boards=boards.limit(1000)
 
@@ -35,7 +35,7 @@ def recompute():
         print("Beginning post recompute")
         i=0
         for post in db.query(classes.submission.Submission
-                       ).filter_by(is_banned=False, is_deleted=False
+                       ).options(lazyload('*')).filter_by(is_banned=False, is_deleted=False
                                    ).filter(classes.submission.Submission.created_utc>cutoff
                                             ).order_by(classes.submission.Submission.id.desc()
                                                        ).all():
@@ -63,7 +63,7 @@ def recompute():
 
         i=0
         p=db.query(classes.submission.Submission
-                   ).filter(classes.submission.Submission.created_utc>cutoff
+                   ).options(lazyload('*')).filter(classes.submission.Submission.created_utc>cutoff
                             ).subquery()
         
         for comment in db.query(classes.comment.Comment
