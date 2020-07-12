@@ -142,7 +142,7 @@ class User(Base, Stndrd):
         return int(time.time())-self.created_utc
         
     @cache.memoize(timeout=300)
-    def idlist(self, sort="hot", page=1, t=None, hide_offensive=False, **kwargs):
+    def idlist(self, sort="hot", page=1, t=None, **kwargs):
 
         
 
@@ -154,7 +154,7 @@ class User(Base, Stndrd):
         if not self.over_18:
             posts=posts.filter_by(over_18=False)
 
-        if hide_offensive:
+        if self.hide_offensive:
             posts = posts.filter_by(is_offensive=False)
 
         if not self.show_nsfl:
