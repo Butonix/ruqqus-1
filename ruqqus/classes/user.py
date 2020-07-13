@@ -78,6 +78,7 @@ class User(Base, Stndrd):
     patreon_access_token=Column(String(128), default='')
     patreon_refresh_token=Column(String(128), default='')
     patreon_pledge_cents=Column(Integer, default=0)
+    patreon_name=Column(String(64), default='')
     
 
     moderates=relationship("ModRelationship", lazy="dynamic")
