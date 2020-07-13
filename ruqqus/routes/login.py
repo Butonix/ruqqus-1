@@ -321,7 +321,7 @@ def sign_up_post(v):
     session.pop("signup_token")
 
     #get referral
-    ref_id = int(request.form.get("referred_by",0))
+    ref_id = int(request.form.get("referred_by",None))
 
     #upgrade user badge
     if ref_id:
