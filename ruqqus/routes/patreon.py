@@ -160,6 +160,9 @@ def webhook_patreon():
     else:
         user.patreon_pledge_cents=0
 
+    g.db.add(user)
+    g.db.flush()
+
     #Remove patron title if appropriate
     if user.patreon_pledge_cents==0 and v.title_id in [32, 33, 34, 35]:
         v.title_id=0
@@ -169,9 +172,6 @@ def webhook_patreon():
         v.title_id=33
     elif user.patreon_pledge_cents<5000 and v.title_id in [35]:
         v.title_id=34
-
-    g.db.add(user)
-    g.db.flush()
 
     user.refresh_selfset_badges()
 
