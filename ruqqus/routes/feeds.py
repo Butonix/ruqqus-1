@@ -52,8 +52,8 @@ def feeds_user(sort=None, username=None, key=None):
     page=int(request.args.get("page", 1))
     t=request.args.get('t')
 
-    posts = user.idlist(sort=sort, page=page, t=t, ids_only=False)
-
+    ids = user.idlist(sort=sort, page=page, t=t)
+    posts = get_posts(ids, sort=sort, v=user)
 
     feed = AtomFeed(title=f'Top 5 {sort} Posts from ruqqus',
                     feed_url=request.url, url=request.url_root)

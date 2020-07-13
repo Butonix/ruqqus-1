@@ -19,7 +19,7 @@ from secrets import token_hex
 from ruqqus.mail import *
 from ruqqus.__main__ import app, limiter
 
-valid_username_regex=re.compile("^\w{5,25}$")
+valid_username_regex=re.compile("^[a-zA-Z0-9_]{5,25}$")
 valid_password_regex=re.compile("^.{8,100}$")
 #valid_email_regex=re.compile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
@@ -145,21 +145,7 @@ def login_post():
 
 
 
-    #check self-setting badges
-    badge_types = g.db.query(BadgeDef).filter(BadgeDef.qualification_expr.isnot(None)).all()
-    for badge in badge_types:
-        if eval(badge.qualification_expr, {}, {'v':account}):
-            if not account.has_badge(badge.id):
-                new_badge=Badge(user_id=account.id,
-                                badge_id=badge.id,
-                                created_utc=int(time.time())
-                                )
-                g.db.add(new_badge)
-                
-        else:
-            bad_badge=account.has_badge(badge.id)
-            if bad_badge:
-                g.db.delete(bad_badge)
+    account.refresh_selfset_badges()
                 
 
     #check for previous page
@@ -223,7 +209,8 @@ def sign_up_get(v):
     
     #formkey is a hash of session token, timestamp, and IP address
     formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
-                       msg=bytes(formkey_hashstr, "utf-16")
+                       msg=bytes(formkey_hashstr, "utf-16"),
+                       digestmod='md5'
                        ).hexdigest()
 
     redir = request.args.get("redirect",None)
@@ -383,7 +370,6 @@ def sign_up_post(v):
 \n\nWelcome to Ruqqus, {new_user.username}. We're glad to have you here.
 \n\nWhile you get settled in, here a couple things we recommend for newcomers:
 - View the [quickstart guide](https://ruqqus.com/post/86i)
-- Customize your profile by [adding a custom avatar and banner](/settings/profile)
 - Personalize your front page by [joining some guilds](/browse)
 \n\nYou're welcome to say anything protected by the First Amendment here - even if you don't live in the United States.
 And since we're committed to [open-source](https://github.com/ruqqus/ruqqus) transparency, your front page (and your posted content) won't be artificially manipulated.

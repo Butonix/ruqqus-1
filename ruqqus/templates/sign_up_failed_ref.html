@@ -86,13 +86,12 @@
 
                     <div id="register-form" class="">
                         <h1 class="h4 font-weight-normal text-center">Whoops! You can't refer yourself!</h1>
-                        <p class="text-center text-muted mb-md-5">Send this link to a friend instead. When they sign up to make a Ruqqus, you'll be able to use dark mode.</p>
+                        <p class="text-center text-muted mb-md-5">Send this link to a friend instead :)</p>
                         <label>Referral code</label>
                         <input type="text" class="form-control copy-link" readonly value="https://ruqqus.com/signup?ref={{ request.args.get('ref') }}" data-clipboard-text="https://ruqqus.com/signup?ref={{ request.args.get('ref') }}">
 
                         <div class="text-center mt-5 mb-3">
-                            <a href="/login" class="text-muted text-small toggle-login">Already have an
-                                account? Log in.</a>
+                            Already have an account? <a href="/login" class="font-weight-bold text-small toggle-login">Log in.</a>
                             </div>
                         </div>
 

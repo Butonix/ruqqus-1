@@ -106,18 +106,15 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
     current_ids=[comment.id]
     for i in range(6-context):
         if g.v:
-            votes=g.db.query(CommentVote).filter(CommentVote.user_id==g.v.id).subquery()
+            votes=g.db.query(CommentVote).filter(CommentVote.user_id==g.v.id, CommentVote.comment_id.in_(current_ids)).subquery()
 
             comms=g.db.query(
                 Comment,
                 votes.c.vote_type
-                ).options(
+                ).select_from(Comment).options(
                 joinedload(Comment.author).joinedload(User.title)
-                ).select_from(Comment).filter(
+                ).filter(
                 Comment.parent_comment_id.in_(current_ids)
-                ).join(
-                User.title,
-                isouter=True
                 ).join(
                 votes,
                 votes.c.comment_id==Comment.id,
@@ -146,12 +143,12 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                 output.append(com)
         else:
             comms=g.db.query(
-                Comment,
-                User,
-                Title
+                Comment
+                ).options(
+                joinedload(Comment.author).joinedload(User.title)
                 ).filter(
                 Comment.parent_comment_id.in_(current_ids)
-                ).options(joinedload(Comment.author).joinedload(User.title))
+                )
 
             if sort_type=="hot":
                 comments=comms.order_by(Comment.score_hot.asc()).all()
@@ -167,10 +164,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
             else:
                 abort(422)
 
-            output=[]
-            for c in comms:
-                com=c[0]
-                output.append(com)
+            output=[c for c in comms]
 
         post._preloaded_comments+=output
 
@@ -228,7 +222,7 @@ def api_comment(v):
                                          Comment.parent_comment_id==parent_comment_id,
                                          Comment.parent_submission==parent_submission,
                                          CommentAux.body==body
-                                         ).first()
+                                         ).options(contains_eager(Comment.comment_aux)).first()
     if existing:
         return jsonify({"error":f"You already made that comment: {existing.permalink}"}), 409
 

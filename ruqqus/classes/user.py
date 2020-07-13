@@ -23,6 +23,7 @@ from .board_relationships import *
 from .mix_ins import *
 from .subscriptions import *
 from .userblock import *
+from .badges import *
 from ruqqus.__main__ import Base,cache
 
 
@@ -68,11 +69,15 @@ class User(Base, Stndrd):
     show_nsfl=Column(Boolean, default=False)
     is_private=Column(Boolean, default=False)
     read_announcement_utc=Column(Integer, default=0)
-    discord_id=Column(Integer, default=None)
+    #discord_id=Column(Integer, default=None)
     unban_utc=Column(Integer, default=0)
     is_deleted=Column(Boolean, default=False)
     delete_reason=Column(String(500), default='')
 
+    patreon_id=Column(String(64), default='')
+    patreon_access_token=Column(String(128), default='')
+    patreon_refresh_token=Column(String(128), default='')
+    patreon_pledge_cents=Column(Integer, default=0)
     
 
     moderates=relationship("ModRelationship", lazy="dynamic")
@@ -137,7 +142,7 @@ class User(Base, Stndrd):
         return int(time.time())-self.created_utc
         
     @cache.memoize(timeout=300)
-    def idlist(self, sort="hot", page=1, t=None, hide_offensive=False, **kwargs):
+    def idlist(self, sort="hot", page=1, t=None, **kwargs):
 
         
 
@@ -149,7 +154,7 @@ class User(Base, Stndrd):
         if not self.over_18:
             posts=posts.filter_by(over_18=False)
 
-        if hide_offensive:
+        if self.hide_offensive:
             posts = posts.filter_by(is_offensive=False)
 
         if not self.show_nsfl:
@@ -327,7 +332,7 @@ class User(Base, Stndrd):
     @property
     @cache.memoize(timeout=3600)
     def true_score(self):
-        return (self.karma + self.comment_karma) - (self.post_count + self.comment_count)
+        return max((self.karma + self.comment_karma) - (self.post_count + self.comments.filter(Comment.parent_submission!=None).filter_by(is_banned=False).count()), -5)
 
 
     @property
@@ -445,7 +450,7 @@ class User(Base, Stndrd):
     @property
     def comment_count(self):
 
-        return self.comments.filter(text("parent_submission is not null")).filter_by(is_banned=False, is_deleted=False).count()
+        return self.comments.filter(Comment.parent_submission!=None).filter_by(is_banned=False, is_deleted=True).count()
 
     @property
     #@cache.memoize(timeout=60)
@@ -549,7 +554,7 @@ class User(Base, Stndrd):
 
     @property
     def can_make_guild(self):
-        return (self.true_score > 250 or self.created_utc <= 1592974538 and self.true_score > 50) and len(self.boards_modded) <= 10
+        return (self.true_score > 250 or self.created_utc <= 1592974538 and self.true_score > 50 or (self.patreon_pledge_cents and self.patreon_pledge_cents>=500)) and len(self.boards_modded) < 10
     
     @property
     def can_join_gms(self):
@@ -568,15 +573,15 @@ class User(Base, Stndrd):
 
     @property
     def can_submit_image(self):
-        return self.true_score >= 1000 or (self.created_utc <= 1592974538 and self.true_score >= 500)
+        return (self.patreon_pledge_cents and self.patreon_pledge_cents>=500) or self.true_score >= 1000 or (self.created_utc <= 1592974538 and self.true_score >= 500)
 
     @property
     def can_upload_avatar(self):
-        return self.true_score >= 300 or self.created_utc <= 1592974538
+        return self.patreon_pledge_cents or self.true_score >= 300 or self.created_utc <= 1592974538
 
     @property
     def can_upload_banner(self):
-        return self.true_score >= 500 or self.created_utc <= 1592974538
+        return self.patreon_pledge_cents or self.true_score >= 500 or self.created_utc <= 1592974538
 
     @property
     def json(self):
@@ -684,3 +689,23 @@ class User(Base, Stndrd):
     @property
     def is_blocked(self):
         return self.__dict__.get('_is_blocked', 0)   
+
+    def refresh_selfset_badges(self):
+
+        #check self-setting badges
+        badge_types = g.db.query(BadgeDef).filter(BadgeDef.qualification_expr.isnot(None)).all()
+        for badge in badge_types:
+            if eval(badge.qualification_expr, {}, {'v':self}):
+                if not self.has_badge(badge.id):
+                    new_badge=Badge(user_id=self.id,
+                                    badge_id=badge.id,
+                                    created_utc=int(time.time())
+                                    )
+                    g.db.add(new_badge)
+                    
+            else:
+                bad_badge=self.has_badge(badge.id)
+                if bad_badge:
+                    g.db.delete(bad_badge)
+
+        g.db.add(self)

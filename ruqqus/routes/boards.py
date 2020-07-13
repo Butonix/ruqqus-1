@@ -20,7 +20,7 @@ from flask import *
 
 from ruqqus.__main__ import app, limiter, cache
 
-valid_board_regex=re.compile("^[a-zA-Z0-9]\w{2,24}$")
+valid_board_regex=re.compile("^[a-zA-Z0-9][a-zA-Z0-9_]{2,24}$")
 
 @app.route("/create_guild", methods=["GET"])
 @is_not_banned
@@ -763,6 +763,7 @@ def subscribe_board(boardname, v):
 
     #update board trending rank
     board.rank_trending=board.trending_rank
+    board.stored_subscriber_count=board.subscriber_count
     g.db.add(board)
 
     return "", 204
@@ -792,6 +793,7 @@ def unsubscribe_board(boardname, v):
     cache.delete_memoized(User.idlist, v, kind="board")
 
     board.rank_trending=board.trending_rank
+    board.stored_subscriber_count=board.subscriber_count
     g.db.add(board)
 
     return "", 204

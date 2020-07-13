@@ -17,7 +17,7 @@ DISCORD_ENDPOINT="https://discordapp.com/api/v6"
 
 @app.route("/discord", methods=["GET"])
 def discord_server():
-	return redirect("https://discord.gg/vzEhjFb")
+	return redirect("https://discord.gg/3Y5Dd4Y")
 
 
 @app.route("/guilded", methods=["GET"])

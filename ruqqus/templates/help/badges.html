@@ -23,6 +23,25 @@
 {% endfor %}
 </table>
 
+<h2 class="mt-3">Supporter Badges</h2>
+<div>These badges are automatically granted by financially supporting Ruqqus.</div>
+<table class="table table-striped mb-5">
+<thead class="bg-primary text-white">
+	<tr>
+		<th>Name</th>
+		<th>Image</th>
+		<th>Description</th>
+	</tr>
+</thead>
+{% for badge in badges if badge.kind==2 %}
+	<tr>
+		<td>{{ badge.name }}</td>
+		<td><img src="{{ badge.path }}" style="width:50px;height:50px">
+		<td>{{ badge.description }}</td>
+	</tr>
+{% endfor %}
+</table>
+
 <h2 class="mt-3">Granted Badges</h2>
 <div>These badges can be granted by staff.</div>
 <table class="table table-striped mb-5">
@@ -62,7 +81,7 @@
 </table>
 
 <h2 class="mt-3">Unique Badges</h2>
-<div>These badges were awarded to select users for notable contributions to Ruqqus.</div>
+<div>These badges were awarded to select users and are not generally available.</div>
 <table class="table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>

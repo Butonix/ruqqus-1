@@ -17,6 +17,7 @@ newrelic==5.8.0.136
 piexif==1.1.3
 Pillow==7.2.0
 psycopg2-binary==2.8.4
+psycogreen==1.0.2
 pyotp==2.3.0
 qrcode==6.1
 redis==3.3.6

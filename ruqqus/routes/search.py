@@ -9,7 +9,7 @@ from ruqqus.__main__ import app, cache
 @cache.memoize(300)
 def searchlisting(q, v=None, page=1, sort="hot"):
 
-    posts = g.db.query(Submission).join(Submission.submission_aux).filter(func.lower(SubmissionAux.title).contains(q.lower()))
+    posts = g.db.query(Submission).join(Submission.submission_aux).join(Submission.author).filter(func.lower(SubmissionAux.title).contains(q.lower())).options(contains_eager(Submission.submission_aux), contains_eager(Submission.author))
 
 
     if not (v and v.over_18):
@@ -19,7 +19,7 @@ def searchlisting(q, v=None, page=1, sort="hot"):
         posts=posts.filter(Submission.is_offensive==False)
 
     if not(v and v.admin_level>=3):
-        posts=posts.filter(Submission.is_deleted==False, Submission.is_banned==False)
+        posts=posts.filter(Submission.is_deleted==False, Submission.is_banned==False, User.is_private==False)
 
     if v and v.admin_level >= 4:
         pass
