@@ -27,7 +27,7 @@
 
               <div>
 
-                {% if v.true_score > 300 %}
+                {% if v.can_upload_avatar %}
 
                 <form action="/settings/images/profile" method="post" enctype="multipart/form-data">
                   <input type="hidden" name="formkey" value="{{ v.formkey }}">
@@ -55,7 +55,7 @@
 
             </div>
 
-            {% if v.true_score > 300 %}
+            {% if v.can_upload_avatar %}
 
             <div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files supported. Max file size 16MB.</div>
 
@@ -82,7 +82,7 @@
 
               <div>
 
-                {% if v.true_score > 500 %}
+                {% if v.can_upload_banner %}
 
                 <form action="/settings/images/banner" method="post" enctype="multipart/form-data">
                   <input type="hidden" name="formkey" value="{{ v.formkey }}">
@@ -111,7 +111,7 @@
 
             </div>
 
-            {% if v.true_score > 500 %}
+            {% if v.can_upload_banner %}
 
             <div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files supported. Max file size 16MB. (Recommend 1400x250 pixels)</div>
 
