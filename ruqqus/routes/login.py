@@ -19,7 +19,7 @@ from secrets import token_hex
 from ruqqus.mail import *
 from ruqqus.__main__ import app, limiter
 
-valid_username_regex=re.compile("^\w{5,25}$")
+valid_username_regex=re.compile("^[a-zA-Z0-9_]{5,25}$")
 valid_password_regex=re.compile("^.{8,100}$")
 #valid_email_regex=re.compile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
