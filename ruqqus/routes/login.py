@@ -325,7 +325,7 @@ def sign_up_post(v):
 
     #upgrade user badge
     if ref_id:
-        ref_user=g.db.query(User).get(ref_id)
+        ref_user=g.db.query(User).options(lazyload('*')).filter_by(id=ref_id).first()
         if ref_user:
             ref_user.refresh_selfset_badges()
             g.db.add(ref_user)
