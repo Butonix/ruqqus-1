@@ -70,3 +70,31 @@ def feeds_user(sort=None, username=None, key=None):
                  )
 
     return feed.get_response()
+
+@app.route('/feeds/+<guildname>/<sort>', methods=["GET"])
+def feeds_guild(sort=None, guildname=None):
+    if not guildname:
+      abort(404)
+    guild = get_guild(guildname)
+
+    page=int(request.args.get("page", 1))
+    t=request.args.get('t')
+
+    ids = guild.idlist(sort=sort, page=page, t=t)
+    posts = get_posts(ids, sort=sort)
+
+    feed = AtomFeed(title=f'{sort.capitalize()} posts from +{guild.name} on ruqqus',
+                    feed_url=request.url, url=request.url_root)
+
+    for post in posts:
+
+        feed.add(post.title, post.body_html, 
+                 content_type='html',
+                 author=post.author.username,
+                 url=full_link(post.permalink),
+                 updated=datetime.fromtimestamp(post.created_utc),
+                 published=datetime.fromtimestamp(post.created_utc),
+                 links=[{'href':post.url}]
+                 )
+
+    return feed.get_response()
