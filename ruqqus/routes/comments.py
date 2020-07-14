@@ -184,6 +184,7 @@ def api_comment(v):
 
     parent_submission=base36decode(request.form.get("submission"))
     parent_fullname=request.form.get("parent_fullname")
+    parent_post=get_post(request.form.get("submission"))
 
     #process and sanitize
     body=request.form.get("body","")[0:10000]
@@ -208,7 +209,7 @@ def api_comment(v):
     #get parent item info
     parent_id=parent_fullname.split("_")[1]
     if parent_fullname.startswith("t2"):
-        parent=get_post(parent_id, v=v)
+        parent=parent_post
         parent_comment_id=None
         level=1
     elif parent_fullname.startswith("t3"):
@@ -254,7 +255,8 @@ def api_comment(v):
               over_18=post.over_18,
               is_nsfl=post.is_nsfl,
               is_op=(v.id==post.author_id),
-              is_offensive=is_offensive
+              is_offensive=is_offensive,
+              original_board_id=parent_post.board_id
               )
 
     g.db.add(c)
