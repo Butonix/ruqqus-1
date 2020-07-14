@@ -335,7 +335,7 @@ class Board(Base, Stndrd, Age_times):
 
     def has_participant(self, user):
         return (self.submissions.filter_by(author_id=user.id).first() or
-                g.db.query(Comment).filter_by(author_id=user.id, board_id=self.id).first()
+                g.db.query(Comment).filter_by(author_id=user.id, original_board_id=self.id).first()
                 )
     @property
     def n_pins(self):
