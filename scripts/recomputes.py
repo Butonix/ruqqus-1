@@ -56,7 +56,7 @@ def recompute():
 
 
                 comment_count=0
-                for comment in post.comments.filter_by(is_banned=False, is_deleted=False).all():
+                for comment in post._comments.filter_by(is_banned=False, is_deleted=False).all():
 
 
 
