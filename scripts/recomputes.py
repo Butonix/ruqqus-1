@@ -29,7 +29,7 @@ def recompute():
 
         now=int(time.time())
 
-        cutoff=now-(60860*24*180)
+        cutoff=now-(60*60*24*180)
 
         print("Beginning post recompute")
         i=0
