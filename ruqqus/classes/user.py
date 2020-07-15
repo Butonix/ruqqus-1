@@ -74,7 +74,7 @@ class User(Base, Stndrd):
     is_deleted=Column(Boolean, default=False)
     delete_reason=Column(String(500), default='')
 
-    patreon_id=Column(String(64), default='')
+    patreon_id=Column(String(64), default=None)
     patreon_access_token=Column(String(128), default='')
     patreon_refresh_token=Column(String(128), default='')
     patreon_pledge_cents=Column(Integer, default=0)
