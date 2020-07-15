@@ -95,6 +95,7 @@ def recompute():
             
             
             db.commit()
+            page+=1
 
             print(f"re-scored {comment_count} comments")
         #time.sleep(60)
