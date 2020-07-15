@@ -41,7 +41,7 @@ def recompute():
                            ).options(lazyload('*')).filter_by(is_banned=False, is_deleted=False
                                        ).filter(Submission.created_utc>cutoff
                                                 ).order_by(Submission.id.asc()
-                                                           ).offset(1000*(page-1)).limit(1000).all():
+                                                           ).offset(1000*(page-1)).limit(1000).all()
             for post in posts:
                 i+=1
                 post_count+=1
@@ -80,7 +80,7 @@ def recompute():
                                 classes.comment.Comment.is_banned==False
                             ).options(
                                 contains_eager(Comment.post)
-                            ).offset(1000*(page-1)).limit(1000).all():
+                            ).offset(1000*(page-1)).limit(1000).all()
 
             for comment in comments:
 
