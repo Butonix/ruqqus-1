@@ -36,7 +36,7 @@ def recompute():
         page=1
         posts=True
         post_count=0
-        while posts
+        while posts:
             posts=db.query(Submission
                            ).options(lazyload('*')).filter_by(is_banned=False, is_deleted=False
                                        ).filter(Submission.created_utc>cutoff
