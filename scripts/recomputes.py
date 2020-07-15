@@ -54,6 +54,24 @@ def recompute():
 
                 db.add(post)
 
+
+                comment_count=0
+                for comment in post.comments.filter_by(is_banned=False, is_deleted=False).all():
+
+
+
+                    comment_count+=1
+            
+            
+                    comment.score_disputed=comment.rank_fiery
+                    comment.score_hot=comment.rank_hot
+                    #comment.score_top=comment.score
+
+                    db.add(comment)
+            
+            
+            db.commit()
+
             db.commit()
             page+=1
             print(f"re-scored {post_count} posts")
@@ -68,36 +86,36 @@ def recompute():
 
 
         
-        comments=True
-        page=1
-        comment_count=0
-        while comments:
-            comments=db.query(Comment
-                            ).options(lazyload('*'), joinedload(Comment.post)
-                            ).filter(
-                                Submission.created_utc>cutoff,
-                                classes.comment.Comment.is_deleted==False,
-                                classes.comment.Comment.is_banned==False
-                            ).options(
-                                contains_eager(Comment.post)
-                            ).offset(100*(page-1)).limit(100).all()
+        # comments=True
+        # page=1
+        # comment_count=0
+        # while comments:
+        #     comments=db.query(Comment
+        #                     ).options(lazyload('*'), joinedload(Comment.post)
+        #                     ).filter(
+        #                         Submission.created_utc>cutoff,
+        #                         classes.comment.Comment.is_deleted==False,
+        #                         classes.comment.Comment.is_banned==False
+        #                     ).options(
+        #                         contains_eager(Comment.post)
+        #                     ).offset(100*(page-1)).limit(100).all()
 
-            for comment in comments:
+        #     for comment in comments:
 
-                comment_count+=1
+        #         comment_count+=1
             
             
-                comment.score_disputed=comment.rank_fiery
-                comment.score_hot=comment.rank_hot
-                comment.score_top=comment.score
+        #         comment.score_disputed=comment.rank_fiery
+        #         comment.score_hot=comment.rank_hot
+        #         comment.score_top=comment.score
 
-                db.add(comment)
+        #         db.add(comment)
             
             
-            db.commit()
-            page+=1
+        #     db.commit()
+        #     page+=1
 
-            print(f"re-scored {comment_count} comments")
+        #     print(f"re-scored {comment_count} comments")
         #time.sleep(60)
 
 
