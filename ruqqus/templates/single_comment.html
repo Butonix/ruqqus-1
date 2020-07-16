@@ -38,9 +38,9 @@
         {% endif %}
         <span> </span>
         {% endif %}
-        <span class="time-stamp">· {{ c.age_string }}</span>{% if standalone and c.parent_submission and not c.is_public %} · <i class="fas fa-eye-slash text-muted" data-toggle="tooltip" data-placement="bottom" title="Private content, visible because {{ c.visibility_reason(v) }}"></i>{% endif %}
+        <span class="time-stamp" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_datetime }}">· {{ c.age_string }}</span>{% if standalone and c.parent_submission and not c.is_public %} · <i class="fas fa-eye-slash text-muted" data-toggle="tooltip" data-placement="bottom" title="Private content, visible because {{ c.visibility_reason(v) }}"></i>{% endif %}
         {% if c.edited_utc %}
-        <span class="time-edited"><span>&#183;</span> <span class="font-italic">Edited {{ c.edited_string }}</span></span>
+        <span class="time-edited" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.edited_datetime }}"><span>&#183;</span> <span class="font-italic">Edited {{ c.edited_string }}</span></span>
         {% endif %}
 
         <span class="comment-collapse d-md-none" onclick="collapse_comment('{{ c.base36id }}')"></span>
