@@ -408,12 +408,6 @@ class User(Base, Stndrd):
     def permalink(self):
         return self.url
 
-    @property
-    @lazy
-    def created_date(self):
-
-        return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
-
     def __repr__(self):
         return f"<User(username={self.username})>"
 
