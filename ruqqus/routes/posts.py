@@ -170,7 +170,7 @@ def submit_post(v):
     if not board:
         board=get_guild('general')
 
-    if not title):
+    if not title:
         return render_template("submit.html",
                                v=v,
                                error="Please enter a better title.",
