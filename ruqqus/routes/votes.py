@@ -40,11 +40,11 @@ def api_vote_post(post_id, x, v):
     g.db.add(vote)
     
 
-    post.score_hot = post.rank_hot
-    post.score_disputed=post.rank_fiery
+    #post.score_hot = post.rank_hot
+    #post.score_disputed=post.rank_fiery
     post.score_top=post.score
-    post.score_activity=post.rank_activity
-    post.score_best=post.rank_best
+    #post.score_activity=post.rank_activity
+    #post.score_best=post.rank_best
 
     g.db.add(post)
     
@@ -84,8 +84,8 @@ def api_vote_comment(comment_id, x, v):
     g.db.add(vote)
     
 
-    comment.score_disputed=comment.rank_fiery
-    comment.score_hot=comment.rank_hot
+    #comment.score_disputed=comment.rank_fiery
+    #comment.score_hot=comment.rank_hot
     comment.score_top=comment.score
 
     g.db.add(comment)
