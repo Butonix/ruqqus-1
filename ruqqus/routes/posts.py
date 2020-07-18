@@ -161,13 +161,16 @@ def submit_post(v):
 
     title=request.form.get("title","")
 
+    title=title.lstrip().rstrip()
+
+
     url=request.form.get("url","")
 
     board=get_guild(request.form.get('board','general'), graceful=True)
     if not board:
         board=get_guild('general')
 
-    if re.match('^\s*$', title):
+    if not title):
         return render_template("submit.html",
                                v=v,
                                error="Please enter a better title.",
