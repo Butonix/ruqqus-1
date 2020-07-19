@@ -315,7 +315,7 @@ def submit_post(v):
                                            )
                                )
     #check spam
-    similar_posts=g.db.query(Submission).filter(Submission.author_id==v.id, SubmissionAux.title.op('<->')(title)<0.5).options(contains_eager(Submission.submission_aux)).all()
+    similar_posts=g.db.query(Submission).filter(Submission.author_id==v.id, SubmissionAux.title.op('<->')(title)<app.config["SPAM_SIMILARITY_THRESHOLD"]).options(contains_eager(Submission.submission_aux)).count()
     print(similar_posts)
 
     #now make new post
