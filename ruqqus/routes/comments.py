@@ -240,7 +240,7 @@ def api_comment(v):
         return jsonify({"error":"You can't comment on this."}), 403
 
     #check spam
-    similar_comments=g.db.query(Comment).filter(CommentAux.body.op('<->')(0.5)).options(contains_eager(Comment.comment_aux)).all()
+    similar_comments=g.db.query(Comment).filter(CommentAux.body.op('<->')(body)).options(contains_eager(Comment.comment_aux)).all()
     print(similar_comments)
 
     for x in g.db.query(BadWord).all():
