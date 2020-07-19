@@ -314,11 +314,9 @@ def submit_post(v):
                                            graceful=True
                                            )
                                )
-    user_id=v.id
-    user_name=v.username
-                
-                
-
+    #check spam
+    similar_posts=g.db.query(Submission).filter(Submission.author_id==v.id, SubmissionAux.title.op('<->')(title)<0.5).options(contains_eager(Submission.submission_aux)).all()
+    print(similar_posts)
 
     #now make new post
 
@@ -379,19 +377,12 @@ def submit_post(v):
         else:
             is_offensive=False
 
-    new_post=Submission(#title=title,
-          #              url=url,
-                        author_id=user_id,
-          #              body=body,
-          #              body_html=body_html,
-          #              embed_url=embed,
+    new_post=Submission(author_id=v.id,
                         domain_ref=domain_obj.id if domain_obj else None,
                         board_id=board.id,
                         original_board_id=board.id,
                         over_18=(bool(request.form.get("over_18","")) or board.over_18),
                         post_public=not board.is_private,
-                        #author_name=user_name,
-                        #guild_name=board.name,
                         repost_id=repost.id if repost else None,
                         is_offensive=is_offensive
                         )
