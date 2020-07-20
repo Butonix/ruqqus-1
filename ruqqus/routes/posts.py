@@ -402,7 +402,7 @@ def submit_post(v):
     g.db.add(new_post_aux)
     g.db.flush()
 
-    vote=Vote(user_id=user_id,
+    vote=Vote(user_id=v.id,
               vote_type=1,
               submission_id=new_post.id
               )
