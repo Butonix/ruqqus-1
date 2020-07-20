@@ -27,7 +27,7 @@ from .badges import *
 from ruqqus.__main__ import Base,cache
 
 
-class User(Base, Stndrd):
+class User(Base, Stndrd, Age_times):
 
     __tablename__="users"
     id = Column(Integer, primary_key=True)
