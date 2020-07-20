@@ -62,7 +62,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     #There is no difference to SQLAlchemy, but they cannot be written to
     #ups = deferred(Column(Integer, server_default=FetchedValue()))
     #downs=deferred(Column(Integer, server_default=FetchedValue()))
-    is_public=Column(Boolean, server_default=FetchedValue())
+    is_public=deferred(Column(Boolean, server_default=FetchedValue()))
 
     score=deferred(Column(Integer, server_default=FetchedValue()))
     
@@ -72,7 +72,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     flag_count=deferred(Column(Integer, server_default=FetchedValue()))
 
-    board_id=Column(Integer, server_default=FetchedValue())
+    board_id=deferred(Column(Integer, server_default=FetchedValue()))
     
     
 
@@ -231,7 +231,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'post':self.post.base36id,
                 'level':self.level,
                 'parent':self.parent_fullname,
-                'author':self.author_name if not self.author.is_deleted else None,
+                'author':self.author.username if not self.author.is_deleted else None,
                 'body':self.body,
                 'body_html':self.body_html,
             #   'replies': [x.json for x in self.replies]

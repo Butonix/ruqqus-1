@@ -1,6 +1,7 @@
 from urllib.parse import urlparse, ParseResult, urlunparse, urlencode
 import mistletoe
 from sqlalchemy import func
+from sqlalchemy.orm import aliased
 from bs4 import BeautifulSoup
 import secrets
 import threading
@@ -18,6 +19,7 @@ from ruqqus.helpers.get import *
 from ruqqus.helpers.thumbs import *
 from ruqqus.helpers.session import *
 from ruqqus.helpers.aws import *
+from ruqqus.helpers.alerts import send_notification
 from ruqqus.classes import *
 from .front import frontlist
 from flask import *
@@ -25,7 +27,7 @@ from ruqqus.__main__ import app, limiter, cache
 
 BAN_REASONS=['',
              "URL shorteners are not permitted.",
-             "Pornographic material is not permitted.",
+             "Pornographic material is not permitted.",  #defunct
              "Copyright infringement is not permitted."
             ]
 
@@ -161,13 +163,16 @@ def submit_post(v):
 
     title=request.form.get("title","")
 
+    title=title.lstrip().rstrip()
+
+
     url=request.form.get("url","")
 
     board=get_guild(request.form.get('board','general'), graceful=True)
     if not board:
         board=get_guild('general')
 
-    if re.match('^\s*$', title):
+    if not title:
         return render_template("submit.html",
                                v=v,
                                error="Please enter a better title.",
@@ -311,11 +316,29 @@ def submit_post(v):
                                            graceful=True
                                            )
                                )
-    user_id=v.id
-    user_name=v.username
-                
-                
+    #check spam
 
+  #  comp=aliased(SubmissionAux.title.op('<->')(title))
+    similar_posts = g.db.query(SubmissionAux).select_from(Submission).join(Submission.submission_aux).filter(Submission.author_id==v.id, SubmissionAux.title.op('<->')(title)<app.config["SPAM_SIMILARITY_THRESHOLD"]).all()
+    print([i.title for i in similar_posts])
+    if len(similar_posts) >= app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]:
+
+        text="Your Ruqqus account has been suspended for 3 days for the following reason:\n\n> Too much spam!"
+        send_notification(v, text)
+
+        v.ban(reason="Spamming.",
+          include_alts=True,
+          days=3)
+
+        for post in similar_posts:
+            post.is_banned=True
+            g.db.add(post)
+
+        g.db.commit()
+        return redirect("/notifications")
+
+
+    #print(similar_posts)
 
     #now make new post
 
@@ -376,19 +399,12 @@ def submit_post(v):
         else:
             is_offensive=False
 
-    new_post=Submission(#title=title,
-          #              url=url,
-                        author_id=user_id,
-          #              body=body,
-          #              body_html=body_html,
-          #              embed_url=embed,
+    new_post=Submission(author_id=v.id,
                         domain_ref=domain_obj.id if domain_obj else None,
                         board_id=board.id,
                         original_board_id=board.id,
                         over_18=(bool(request.form.get("over_18","")) or board.over_18),
                         post_public=not board.is_private,
-                        #author_name=user_name,
-                        #guild_name=board.name,
                         repost_id=repost.id if repost else None,
                         is_offensive=is_offensive
                         )
@@ -408,7 +424,7 @@ def submit_post(v):
     g.db.add(new_post_aux)
     g.db.flush()
 
-    vote=Vote(user_id=user_id,
+    vote=Vote(user_id=v.id,
               vote_type=1,
               submission_id=new_post.id
               )
