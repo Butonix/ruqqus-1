@@ -20,8 +20,8 @@ class Title(Base):
     background_color_1=Column(String(6), default=None)
     background_color_2=Column(String(6), default=None)
     gradient_angle=Column(Integer, default=0)
-    box_shadow_color=Column(string(32), default=None)
-    text_shadow_color=Column(string(32), default=None)
+    box_shadow_color=Column(String(32), default=None)
+    text_shadow_color=Column(String(32), default=None)
 
     def check_eligibility(self, v):
 
