@@ -321,14 +321,23 @@ def submit_post(v):
   #  comp=aliased(SubmissionAux.title.op('<->')(title))
     similar_posts = g.db.query(SubmissionAux).select_from(Submission).join(Submission.submission_aux).filter(Submission.author_id==v.id, SubmissionAux.title.op('<->')(title)<app.config["SPAM_SIMILARITY_THRESHOLD"]).all()
     print([i.title for i in similar_posts])
-    if len(similar_posts) >= app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]:
 
-        text="Your Ruqqus account has been suspended for 3 days for the following reason:\n\n> Too much spam!"
+    threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
+    if v.age >= (60*60*24*30):
+        threshold *= 4
+    elif v.age >=(60*60*24*7):
+        threshold *= 3
+    elif v.age >=(60*60*24):
+        threshold *= 2
+
+    if len(similar_posts) >= threshold:
+
+        text="Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
         send_notification(v, text)
 
         v.ban(reason="Spamming.",
           include_alts=True,
-          days=3)
+          days=1)
 
         for post in similar_posts:
             post.is_banned=True
