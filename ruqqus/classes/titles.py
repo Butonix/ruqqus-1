@@ -17,6 +17,10 @@ class Title(Base):
     color=Column(String(6), default="888888")
     kind=Column(Integer, default=1)
 
+    background_color_1=Column(String(6), default=None)
+    background_color_2=Column(String(6), default=None)
+    gradient_angle=Column(Integer, default=0)
+
 
     def check_eligibility(self, v):
 
