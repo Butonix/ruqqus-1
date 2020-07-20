@@ -1,6 +1,7 @@
 from urllib.parse import urlparse, ParseResult, urlunparse, urlencode
 import mistletoe
 from sqlalchemy import func
+from sqlalchemy.orm import aliased
 from bs4 import BeautifulSoup
 import secrets
 import threading
@@ -318,7 +319,6 @@ def submit_post(v):
 
     comp=aliased(SubmissionAux.title.op('<->')(title))
     subq = g.db.query(SubmissionAux.id, comp).select_from(Submission).join(Submission.submission_aux).filter_by(Submission.author_id==v.id).subquery()
-
     similar_count=g.db.query(Submission).options(lazyload('*')).join(subq, subq.c.id==Submission.id).filter_by(subq.comp<0.5).count()
 
 
