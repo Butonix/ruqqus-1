@@ -318,14 +318,22 @@ def submit_post(v):
     #check spam
 
   #  comp=aliased(SubmissionAux.title.op('<->')(title))
-    similar_post_count = g.db.query(SubmissionAux).select_from(Submission).join(Submission.submission_aux).filter(Submission.author_id==v.id, SubmissionAux.title.op('<->')(title)<app.config["SPAM_SIMILARITY_THRESHOLD"]).count()
-    if similar_post_count >= app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]:
+    similar_posts = g.db.query(SubmissionAux).select_from(Submission).join(Submission.submission_aux).filter(Submission.author_id==v.id, SubmissionAux.title.op('<->')(title)<app.config["SPAM_SIMILARITY_THRESHOLD"]).all()
+
+    if len(similar_posts) >= app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]:
         v.ban(reason="Spamming.",
           include_alts=True,
           days=3)
 
+        for post in similar_posts:
+            post.is_banned=True
+            g.db.add(post)
 
-    print(similar_posts)
+        g.db.commit()
+        return redirect("/notifications")
+
+
+    #print(similar_posts)
 
     #now make new post
 
