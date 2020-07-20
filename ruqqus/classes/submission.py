@@ -259,6 +259,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
         if self.author_id==v.id:
             return "this is your content."
+        elif self.is_pinned:
+            return "a guildmaster has pinned it."
         elif self.board.has_mod(v):
             return f"you are a guildmaster of +{self.board.name}."
         elif self.board.has_contributor(v):
