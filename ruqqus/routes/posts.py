@@ -19,7 +19,7 @@ from ruqqus.helpers.get import *
 from ruqqus.helpers.thumbs import *
 from ruqqus.helpers.session import *
 from ruqqus.helpers.aws import *
-from ruqqus.helpers.alerts import *
+from ruqqus.helpers.alerts import send_notification
 from ruqqus.classes import *
 from .front import frontlist
 from flask import *
@@ -323,9 +323,9 @@ def submit_post(v):
     print([i.title for i in similar_posts])
     if len(similar_posts) >= app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]:
 
-        text
-
+        text="Your Ruqqus account has been suspended for 3 days for the following reason:\n\n> Too much spam!"
         send_notification(v, text)
+
         v.ban(reason="Spamming.",
           include_alts=True,
           days=3)
