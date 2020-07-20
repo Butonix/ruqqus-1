@@ -628,7 +628,7 @@ class User(Base, Stndrd):
         #return self.referral_count or self.has_earned_darkmode or self.has_badge(16) or self.has_badge(17)
 
 
-    def ban(self, admin, reason=None, include_alts=True, days=0):
+    def ban(self, admin=None, reason=None, include_alts=True, days=0):
 
         if days > 0:
             ban_time = int(time.time()) + (days * 86400)
@@ -642,7 +642,7 @@ class User(Base, Stndrd):
             if self.has_profile:
                 self.del_profile()
 
-        self.is_banned=admin.id
+        self.is_banned=admin.id if admin else 1
         if reason:
             self.ban_reason=reason
 
