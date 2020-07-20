@@ -1,4 +1,5 @@
 from sqlalchemy import *
+from flask import render_template
 
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
@@ -20,6 +21,11 @@ class Title(Base):
     def check_eligibility(self, v):
 
         return bool(eval(self.qualification_expr, {}, {"v":v}))
+
+    @property
+    def rendered(self):
+        return render_template('title.html', t=self)
+    
 
     @property
     def json(self):
