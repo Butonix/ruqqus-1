@@ -317,9 +317,15 @@ def submit_post(v):
                                            )
                                )
     #check spam
-
-  #  comp=aliased(SubmissionAux.title.op('<->')(title))
-    similar_posts = g.db.query(SubmissionAux).select_from(Submission).join(Submission.submission_aux).filter(Submission.author_id==v.id, SubmissionAux.title.op('<->')(title)<app.config["SPAM_SIMILARITY_THRESHOLD"]).all()
+    similar_posts = g.db.query(Submission).options(
+        lazyload('*'),
+        joinedload(Submission.submission_aux)
+        ).filter(
+        Submission.author_id==v.id, 
+        SubmissionAux.title.op('<->')(title)<app.config["SPAM_SIMILARITY_THRESHOLD"]
+        ).options(
+        contains_eager(Submission.submission_aux)
+        ).all()
     print([i.title for i in similar_posts])
 
     threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
