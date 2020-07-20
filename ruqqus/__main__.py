@@ -64,6 +64,11 @@ else:
     app.config["CACHE_TYPE"]=environ.get("CACHE_TYPE", 'null')
 
 app.config["CACHE_DIR"]=environ.get("CACHE_DIR")
+
+
+#antispam configs - low=strict for both
+app.config["SPAM_SIMILARITY_THRESHOLD"]=float(environ.get("SPAM_SIMILARITY_THRESHOLD", 0.5))
+app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]=int(environ.get("SPAM_SIMILAR_COUNT_THRESHOLD", 5))
     
 #app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL")
 #app.config["CACHE_DEFAULT_TIMEOUT"]=60

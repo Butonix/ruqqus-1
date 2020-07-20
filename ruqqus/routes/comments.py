@@ -239,6 +239,10 @@ def api_comment(v):
     if post.is_archived or not post.board.can_comment(v):
         return jsonify({"error":"You can't comment on this."}), 403
 
+    #check spam - this is stupid slow for now
+    #similar_comments=g.db.query(Comment).filter(Comment.author_id==v.id, CommentAux.body.op('<->')(body)<0.5).options(contains_eager(Comment.comment_aux)).all()
+    #print(similar_comments)
+
     for x in g.db.query(BadWord).all():
         if x.check(body):
             is_offensive=True

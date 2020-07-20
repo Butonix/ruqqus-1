@@ -27,7 +27,7 @@ from .badges import *
 from ruqqus.__main__ import Base,cache
 
 
-class User(Base, Stndrd):
+class User(Base, Stndrd, Age_times):
 
     __tablename__="users"
     id = Column(Integer, primary_key=True)
@@ -451,7 +451,7 @@ class User(Base, Stndrd):
     @property
     def comment_count(self):
 
-        return self.comments.filter(Comment.parent_submission!=None).filter_by(is_banned=False, is_deleted=True).count()
+        return self.comments.filter(Comment.parent_submission!=None).filter_by(is_banned=False, is_deleted=False).count()
 
     @property
     #@cache.memoize(timeout=60)
@@ -628,7 +628,7 @@ class User(Base, Stndrd):
         #return self.referral_count or self.has_earned_darkmode or self.has_badge(16) or self.has_badge(17)
 
 
-    def ban(self, admin, reason=None, include_alts=True, days=0):
+    def ban(self, admin=None, reason=None, include_alts=True, days=0):
 
         if days > 0:
             ban_time = int(time.time()) + (days * 86400)
@@ -642,7 +642,7 @@ class User(Base, Stndrd):
             if self.has_profile:
                 self.del_profile()
 
-        self.is_banned=admin.id
+        self.is_banned=admin.id if admin else 1
         if reason:
             self.ban_reason=reason
 
