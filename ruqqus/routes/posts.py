@@ -19,6 +19,7 @@ from ruqqus.helpers.get import *
 from ruqqus.helpers.thumbs import *
 from ruqqus.helpers.session import *
 from ruqqus.helpers.aws import *
+from ruqqus.helpers.alerts import *
 from ruqqus.classes import *
 from .front import frontlist
 from flask import *
@@ -319,8 +320,12 @@ def submit_post(v):
 
   #  comp=aliased(SubmissionAux.title.op('<->')(title))
     similar_posts = g.db.query(SubmissionAux).select_from(Submission).join(Submission.submission_aux).filter(Submission.author_id==v.id, SubmissionAux.title.op('<->')(title)<app.config["SPAM_SIMILARITY_THRESHOLD"]).all()
-
+    print([i.title for i in similar_posts])
     if len(similar_posts) >= app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]:
+
+        text
+
+        send_notification(v, text)
         v.ban(reason="Spamming.",
           include_alts=True,
           days=3)
