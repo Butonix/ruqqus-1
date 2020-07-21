@@ -90,6 +90,13 @@ def u_username(username, v=None):
                 'api': lambda:{"error":"That user is banned"}
                 }
 
+    if u.is_deleted and (not v or (v.id!=u.id and v.admin_level<3)):
+        return {'html': lambda:render_template("userpage_deleted.html",
+                                               u=u,
+                                               v=v),
+                'api': lambda:{"error":"That user deactivated their account."}
+                }
+
     if u.is_private and (not v or (v.id!=u.id and v.admin_level<3)):
         return {'html': lambda:render_template("userpage_private.html",
                                                u=u,
@@ -97,12 +104,7 @@ def u_username(username, v=None):
                 'api': lambda:{"error":"That userpage is private"}
                 }
 
-    if u.is_deleted and (not v or (v.id!=u.id and v.admin_level<3)):
-        return {'html': lambda:render_template("userpage_deleted.html",
-                                               u=u,
-                                               v=v),
-                'api': lambda:{"error":"That user deactivated their account."}
-                }
+
 
     if u.is_blocking and (not v or v.admin_level<3):
         return {'html': lambda:render_template("userpage_blocking.html",
