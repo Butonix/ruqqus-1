@@ -329,14 +329,17 @@ def submit_post(v):
         Submission.created_utc>cutoff
         ).all()
 
-    similar_urls=g.db.query(Submission).options(
-        lazyload('*')
-        ).join(Submission.submission_aux
-        ).filter(
-        Submission.author_id==v.id, 
-        SubmissionAux.url.op('<->')(title)<app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
-        Submission.created_utc>cutoff
-        ).all()
+    if url:
+        similar_urls=g.db.query(Submission).options(
+            lazyload('*')
+            ).join(Submission.submission_aux
+            ).filter(
+            Submission.author_id==v.id, 
+            SubmissionAux.url.op('<->')(url)<app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
+            Submission.created_utc>cutoff
+            ).all()
+    else:
+        similar_urls=[]
 
     threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
     if v.age >= (60*60*24*30):
