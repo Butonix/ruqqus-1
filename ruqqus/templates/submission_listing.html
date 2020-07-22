@@ -22,7 +22,7 @@
 
       {% if v %}
 
-      <div id="post-{{ p.base36id }}-up" tabindex="0" class="mx-auto arrow-up" {% if not p.is_banned %}{% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}{% endif %}></div>
+      <div id="post-{{ p.base36id }}-up" tabindex="0" class="mx-auto arrow-up upvote-button" {% if not p.is_banned %}{% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}{% endif %}></div>
 
       <span id="post-{{ p.base36id }}-score-up" class="score-up{% if voted!=1 %} d-none{% endif %}">{% if p.is_banned %}✖{% else %}{{ score+1-adjust }}{% endif %}</span>
 
@@ -30,9 +30,7 @@
 
       <span id="post-{{ p.base36id }}-score-down" class="score-down{% if voted!=-1 %} d-none{% endif %}">{% if p.is_banned %}✖{% else %}{{ score-1-adjust }}{% endif %}</span>
 
-
-      <div id="post-{{ p.base36id }}-down" tabindex="0" class="text-muted mx-auto arrow-down" {% if not p.is_banned %}{% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}{% endif %}></div>
-
+      <div id="post-{{ p.base36id }}-down" tabindex="0" data-comment-id="{{ p.base36id }}" class="text-muted mx-auto arrow-down downvote-button" {% if not p.is_banned %}{% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}{% endif %}></div>
 
       {% else %}
 
@@ -221,20 +219,17 @@
 //
 
         {% if v %}
-        <li id="comment-{{ c.base36id }}-up" class="list-inline-item arrow-up d-inline-block d-md-none mr-2" {% if voted==1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted > -2 %}onclick="vote_comment('{{ c.base36id }}','1')"{% endif %}>
+        <li id="comment-{{ c.base36id }}-up" class="list-inline-item arrow-up d-inline-block d-md-none mr-2" onclick="vote_comment('{{ c.base36id }}')">
         </li>
-        {% else %}
-        <li id="comment-{{ c.base36id }}-up" class="list-inline-item arrow-up d-inline-block d-md-none mr-2" onclick="location.href='/login';">
-        </li>
-        {% endif %}
+
         <li class="list-inline-item d-inline-block d-md-none mr-2">
-          <span class="points"><span id="comment-{{ c.base36id }}-score-up"{% if voted!=1 %} class="d-none text-upvote"{% endif %}>{{ score+1-adjust }}</span><span id="comment-{{ c.base36id }}-score-none"{% if voted not in [-2,0] %} class="d-none text-black"{% endif %}>{{ score-adjust }}</span><span id="comment-{{ c.base36id }}-score-down"{% if voted!=-1 %} class="d-none text-downvote"{% endif %}>{{ score-1-adjust }}</span></span>
+          <span id="comment-{{ c.base36id }}-score"></span>
         </li>
-        {% if v %}
+
+        <li id="comment-{{ c.base36id }}-down" class="list-inline-item arrow-down d-inline-block d-md-none mr-2" onclick="vote_comment('{{ c.base36id }}')">
+        </li>
+
         <li id="comment-{{ c.base36id }}-down" class="list-inline-item arrow-down d-inline-block d-md-none" {% if voted==-1 %}onclick="vote_comment('{{ c.base36id }}','0')"{% elif voted > -2 %}onclick="vote_comment('{{ c.base36id }}','-1')"{% endif %}>
-        </li>
-        {% else %}
-        <li id="comment-{{ c.base36id }}-down" class="list-inline-item arrow-down d-inline-block d-md-none" onclick="location.href='/login';">
         </li>
         {% endif %}
 

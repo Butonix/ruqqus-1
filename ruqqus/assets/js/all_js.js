@@ -885,8 +885,24 @@ function toggle_sidebar_expand() {
 }
 
 
-//Voting
+// Voting
 
+
+var upvoteButtons = document.getElementsByClassName('upvote-button')
+
+var downvoteButtons = document.getElementsByClassName('downvote-button')
+
+for (var i = 0; i < upvoteButtons.length; i++) {
+    upvoteButtons[i].addEventListener('click', function(event) {
+        console.log(event.target.dataset.commentId)
+    })
+};
+
+for (var i = 0; i < downvoteButtons.length; i++) {
+    downvoteButtons[i].addEventListener('click', function(event) {
+        console.log(event.target.dataset.commentId)
+    })
+};
 
 
 function vote(post_id, direction) {
@@ -964,7 +980,6 @@ function vote(post_id, direction) {
 
   post(url, callback, "Unable to vote at this time. Please try again later.");
 };
-
 
 function vote_comment(comment_id, direction) {
   url="/api/vote/comment/"+ comment_id +"/"+direction;
