@@ -87,4 +87,19 @@ class PostRelationship(Base):
     board=relationship("Board", lazy="subquery")
 
     def __repr__(self):
-        return f"<PostRel(id={self.id}, uid={self.uid}, board_id={self.board_id})>"
+        return f"<PostRel(id={self.id}, pid={self.post_id}, board_id={self.board_id})>"
+
+
+class BoardBlock(Base):
+
+    __tablename__="boardblocks"
+
+    id=Column(BigInteger, primary_key=True)
+    user_id=Column(Integer, ForeignKey("users.id"))
+    board_id=Column(Integer, ForeignKey("boards.id"))
+
+    user=Relationship("User")
+    board=relationship("Board")
+
+    def __repr__(self):
+        return f"<BoardBlock(id={self.id}, uid={self.user_id}, board_id={self.board_id})>"
