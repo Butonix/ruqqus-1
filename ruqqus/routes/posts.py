@@ -49,7 +49,7 @@ def incoming_post_shortlink(base36id=None):
 @app.route("/post/<base36id>/<anything>", methods=["GET"])
 @auth_desired
 def post_base36id(base36id, anything=None, v=None):
-    
+
     post=get_post_with_comments(base36id, v=v, sort_type=request.args.get("sort","top"))
 
     board=post.board
@@ -68,7 +68,7 @@ def post_base36id(base36id, anything=None, v=None):
                                lo_formkey=make_logged_out_formkey(t),
                                board=post.board
                                )
-        
+
     return post.rendered_page(v=v)
 
 @app.route("/submit", methods=["GET"])
@@ -79,7 +79,7 @@ def submit_get(v):
     b=get_guild(board, graceful=True)
     if not b:
         b=get_guild("general")
-    
+
     return render_template("submit.html",
                            v=v,
                            b=b
@@ -90,7 +90,7 @@ def submit_get(v):
 @is_not_banned
 @validate_formkey
 def edit_post(pid, v):
-    
+
     p = get_post(pid)
 
     if not p.author_id == v.id:
@@ -116,9 +116,7 @@ def edit_post(pid, v):
         if (p.body and x.check(p.body)) or x.check(p.title):
             p.is_offensive=True
             break
-        else:
-            p.is_offensive=False
-    
+
 
     return redirect(p.permalink)
 
@@ -138,7 +136,7 @@ def get_post_title(v):
         x=requests.get(url, headers=headers)
     except:
         return jsonify({"error": "Could not reach page"}), 400
-    
+
     if not x.status_code==200:
         return jsonify({"error":f"Page returned {x.status_code}"}), x.status_code
 
@@ -192,7 +190,7 @@ def submit_post(v):
     #                            body=request.form.get("body",""),
     #                            b=board
     #                            )
-    
+
     elif len(title)>500:
         return render_template("submit.html",
                                v=v,
@@ -234,7 +232,7 @@ def submit_post(v):
       Submission.author_id==v.id,
       Submission.is_deleted==False,
       Submission.board_id==board.id,
-      SubmissionAux.title==title, 
+      SubmissionAux.title==title,
       SubmissionAux.url==url,
       SubmissionAux.body==body
       ).first()
@@ -242,7 +240,7 @@ def submit_post(v):
     if dup:
         return redirect(dup.permalink)
 
-    
+
     #check for domain specific rules
 
     parsed_url=urlparse(url)
@@ -273,15 +271,15 @@ def submit_post(v):
             embed=""
     else:
         embed=""
-        
+
 
     #board
     board_name=request.form.get("board","general")
     board_name=board_name.lstrip("+")
     board_name=board_name.rstrip()
-    
+
     board=get_guild(board_name, graceful=True)
-    
+
     if not board:
         board=get_guild('general')
 
@@ -294,8 +292,8 @@ def submit_post(v):
                                , body=request.form.get("body",""),
                                b=get_guild("general",
                                            graceful=True)
-                               ), 403       
-    
+                               ), 403
+
     if board.has_ban(v):
         return render_template("submit.html",
                                v=v,
@@ -324,7 +322,7 @@ def submit_post(v):
         lazyload('*')
         ).join(Submission.submission_aux
         ).filter(
-        Submission.author_id==v.id, 
+        Submission.author_id==v.id,
         SubmissionAux.title.op('<->')(title)<app.config["SPAM_SIMILARITY_THRESHOLD"],
         Submission.created_utc>cutoff
         ).all()
@@ -334,7 +332,7 @@ def submit_post(v):
             lazyload('*')
             ).join(Submission.submission_aux
             ).filter(
-            Submission.author_id==v.id, 
+            Submission.author_id==v.id,
             SubmissionAux.url.op('<->')(url)<app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
             Submission.created_utc>cutoff
             ).all()
@@ -371,7 +369,7 @@ def submit_post(v):
 
     #now make new post
 
-   
+
 
     #catch too-long body
     if len(str(body))>10000:
@@ -409,7 +407,7 @@ def submit_post(v):
         repost = g.db.query(Submission).join(Submission.submission_aux).filter(
         SubmissionAux.url.ilike(url),
         Submission.board_id==board.id,
-        Submission.is_deleted==False, 
+        Submission.is_deleted==False,
         Submission.is_banned==False
         ).order_by(
         Submission.id.asc()
@@ -470,14 +468,14 @@ def submit_post(v):
         name=f'post/{new_post.base36id}/{secrets.token_urlsafe(8)}'
 
         upload_file(name, file)
-        
+
         #update post data
         new_post.url=f'https://{BUCKET}/{name}'
         new_post.is_image=True
         new_post.domain_ref=1 #id of i.ruqqus.com domain
         g.db.add(new_post)
         g.db.flush()
-    
+
     #spin off thumbnail generation and csam detection as  new threads
     elif new_post.url:
         new_thread=threading.Thread(target=thumbnail_thread,
@@ -495,7 +493,7 @@ def submit_post(v):
     #print(f"Content Event: @{new_post.author.username} post {new_post.base36id}")
 
     return redirect(new_post.permalink)
-    
+
 # @app.route("/api/nsfw/<pid>/<x>", methods=["POST"])
 # @auth_required
 # @validate_formkey
@@ -510,10 +508,10 @@ def submit_post(v):
 
 #     if not v.admin_level >=3 and not post.author_id==v.id and not post.board.has_mod(v):
 #         abort(403)
-        
+
 #     post.over_18=x
 #     g.db.add(post)
-#     
+#
 
 #     return "", 204
 
@@ -529,7 +527,7 @@ def delete_post_pid(pid, v):
     post.is_deleted=True
     post.is_pinned=False
     post.stickied=False
-    
+
     g.db.add(post)
 
     #clear cache
@@ -539,11 +537,11 @@ def delete_post_pid(pid, v):
     if post.age >= 3600*6:
         cache.delete_memoized(Board.idlist, post.board, sort="new")
         cache.delete_memoized(frontlist, sort="new")
-    
+
 
     #delete i.ruqqus.com
     if post.domain=="i.ruqqus.com":
-        
+
         segments=post.url.split("/")
         pid=segments[4]
         rand=segments[5]
@@ -552,9 +550,9 @@ def delete_post_pid(pid, v):
             delete_file(key)
             post.is_image=False
             g.db.add(post)
-            
-    
-        
+
+
+
 
     return "",204
 
@@ -584,7 +582,7 @@ def toggle_post_nsfw(pid, v):
 
     post.over_18 = not post.over_18
     g.db.add(post)
-    
+
 
     return "", 204
 
@@ -603,6 +601,6 @@ def toggle_post_nsfl(pid, v):
 
     post.is_nsfl = not post.is_nsfl
     g.db.add(post)
-    
+
 
     return "", 204
