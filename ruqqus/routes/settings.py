@@ -367,7 +367,7 @@ def settings_blockedpage(v):
 
 @app.route("/settings/filters", methods=["GET"])
 @auth_required
-def settings_blockedpage(v):
+def settings_blockedguilds(v):
 
     #users=[x.target for x in v.blocked]
 
