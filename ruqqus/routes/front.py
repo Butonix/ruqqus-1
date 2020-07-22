@@ -75,6 +75,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
     elif v:
         m=g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, invite_rescinded=False).subquery()
         c=g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id).subquery()
+
         posts=posts.filter(
           or_(
             Submission.author_id==v.id,
@@ -91,6 +92,10 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
             Submission.author_id.notin_(blocking),
             Submission.author_id.notin_(blocked)
             )
+
+        board_blocks = g.db.query(BoardBlock.board_id).filter_by(user_id=v.id).subquery()
+
+        posts=posts.filter(Submission.board_id.notin_(board_blocks))
     else:
         posts=posts.filter_by(post_public=True)
 
