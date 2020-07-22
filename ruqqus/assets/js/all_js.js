@@ -899,7 +899,9 @@ for (var i = 0; i < upvoteButtons.length; i++) {
 
         var upvoteButton = document.getElementById('post-' + id + '-up');
 
-        var score = Number(document.getElementById('post-score-' + id).textContent);
+        var scoreText = document.getElementById('post-score-' + id);
+
+        var score = Number(scoreText.textContent);
 
         if (upvoteButton.classList.contains('active')) {
         	upvoteButton.classList.remove('active')
@@ -923,7 +925,9 @@ for (var i = 0; i < downvoteButtons.length; i++) {
 
         var upvoteButton = document.getElementById('post-' + id + '-up');
 
-        var score = Number(document.getElementById('post-score-' + id).textContent);
+        var scoreText = document.getElementById('post-score-' + id);
+
+        var score = Number(scoreText.textContent);
 
         if (downvoteButton.classList.contains('active')) {
         	downvoteButton.classList.remove('active')
