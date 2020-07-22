@@ -416,3 +416,49 @@ def settings_unblock_user(v):
     cache.delete_memoized(frontlist, v=v)
     
     return "", 204
+
+
+@app.route("/settings/block_guild", methods=["POST"])
+@auth_required
+@validate_formkey
+def settings_block_guild(v):
+
+    board=get_board(request.form.get("board"), graceful=True)
+
+    if not board:
+        return jsonify({"error":"That guild doesn't exist."}), 404
+
+    if v.has_blocked_guild(boad):
+        return jsonify({"error":f"You have already blocked @{user.username}."}), 409
+
+
+    new_block=BoardBlock(user_id=v.id,
+                        target_id=user.id,
+                        created_utc=int(time.time())
+                        )
+    g.db.add(new_block)
+
+    cache.delete_memoized(v.idlist)
+    #cache.delete_memoized(Board.idlist, v=v)
+    cache.delete_memoized(frontlist, v=v)
+
+    return "", 204
+    
+@app.route("/settings/unblock_guild", methods=["POST"])
+@auth_required
+@validate_formkey
+def settings_unblock_guild(v):
+
+    board=get_board(request.values.get("board"), graceful=True)
+
+    x= v.has_blocked_guild(board)
+    if not x:
+        abort(409)
+
+    g.db.delete(x)
+
+    cache.delete_memoized(v.idlist)
+    #cache.delete_memoized(Board.idlist, v=v)
+    cache.delete_memoized(frontlist, v=v)
+    
+    return "", 204
