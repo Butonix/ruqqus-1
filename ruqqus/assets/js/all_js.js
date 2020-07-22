@@ -893,7 +893,7 @@ var downvoteButtons = document.getElementsByClassName('downvote-button')
 
 for (var i = 0; i < upvoteButtons.length; i++) {
     upvoteButtons[i].addEventListener('click', function(event) {
-        var id = event.target.dataset.postId
+        var id = event.target.dataset.postIdUp
 
         var upvoteButton = document.getElementById('post-' + id + '-up');
 
@@ -915,7 +915,7 @@ for (var i = 0; i < upvoteButtons.length; i++) {
 
 for (var i = 0; i < downvoteButtons.length; i++) {
     downvoteButtons[i].addEventListener('click', function(event) {
-        var id = event.target.dataset.postId;
+        var id = event.target.dataset.postIdDown;
 
         var downvoteButton = document.getElementById('post_' + id + '-down');
 
