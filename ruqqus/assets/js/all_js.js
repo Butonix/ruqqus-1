@@ -887,22 +887,90 @@ function toggle_sidebar_expand() {
 
 // Voting
 
-
 var upvoteButtons = document.getElementsByClassName('upvote-button')
 
 var downvoteButtons = document.getElementsByClassName('downvote-button')
 
 for (var i = 0; i < upvoteButtons.length; i++) {
     upvoteButtons[i].addEventListener('click', function(event) {
-        console.log(event.target.dataset.commentId)
+        var id = event.target.dataset.postId
+
+        var upvoteButton = document.getElementById('post-' + id + '-up');
+
+        var score = Number(document.getElementById('post-score-' + id).textContent);
+
+        if (upvoteButton.classList.contains('active')) {
+        	upvoteButton.classList.remove('active')
+        	upvoteButton.textContent = score - 1
+        } else if (downvoteButton.classList.contains('active')) {
+        	upvoteButton.classList.add('active')
+        	downButton.classList.add('active')
+        	scoreText.textContent = score + 2
+        } else {
+        	upvoteButton.classList.add('active')
+        	scoreText.textContent = score + 1
+        }
     })
 };
 
 for (var i = 0; i < downvoteButtons.length; i++) {
     downvoteButtons[i].addEventListener('click', function(event) {
-        console.log(event.target.dataset.commentId)
+        var id = event.target.dataset.postId;
+
+        var downvoteButton = document.getElementById('post_' + id + '-down');
+
+        var score = Number(document.getElementById('post-score-' + id).textContent);
+
+        if (downvoteButton.classList.contains('active')) {
+        	downvoteButton.classList.remove('active')
+        	downvoteButton.textContent = score + 1
+        } else if (upvoteButton.classList.contains('active')) {
+        	downvoteButton.classList.add('active')
+        	upvoteButton.classList.add('active')
+        	scoreText.textContent = score - 2
+        } else {
+        	downvoteButton.classList.add('active')
+        	scoreText.textContent = score - 1
+        }
     })
 };
+
+//
+
+const scoreText = document.querySelector('comment-'+ comment_id +'-score')
+
+const upvoteButton = document.querySelector("comment-"+ comment_id +"-upvote")
+
+const downvoteButton = document.querySelector("comment-"+ comment_id +"-downvote")
+
+
+const vote = type => {
+
+  let url = "/api/vote/post/"+ post_id +"/"+ direction;
+
+  const buttons = { '1': upvoteButton, '-1': downvoteButton }
+
+  const score = Number(scoreText.textContent)
+
+  if (buttons[type].classList.contains('active')) {
+    scoreText.textContent = score - type
+    buttons[type].classList.remove('active')
+    
+  } else if (buttons[-type].classList.contains('active')) {
+    scoreText.textcontent = score + 2 * type
+    buttons[type].classList.add('active')
+    buttons[-type].classList.remove('active')
+  } else {
+    scoreText.textContent = score + type
+    buttons[type].classList.add('active')
+  }
+}
+
+upvoteButton.addEventListener('click', () => vote(1))
+
+downvoteButton.addEventListener('click', () => vote(-1))
+
+//
 
 
 function vote(post_id, direction) {
