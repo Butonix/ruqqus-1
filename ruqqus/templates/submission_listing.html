@@ -22,11 +22,11 @@
 
       {% if v %}
 
-      <div id="post-{{ p.base36id }}-up" tabindex="0" data-post-id-up="{{ p.base36id }}" class="mx-auto arrow-up upvote-button" {% if not p.is_banned %}{% if voted==1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','1')"{% endif %}{% endif %}></div>
+      <div id="post-{{ p.base36id }}-up" tabindex="0" data-post-id-up="{{ p.base36id }}" class="mx-auto arrow-up upvote-button"></div>
 
       <span id="post-score-{{ p.base36id }}" class="score">{% if p.is_banned %}✖{% else %}{{ score-adjust }}{% endif %}</span>
 
-      <div id="post-{{ p.base36id }}-down" tabindex="0" data-post-id-down="{{ p.base36id }}" class="text-muted mx-auto arrow-down downvote-button" {% if not p.is_banned %}{% if voted==-1 %}onclick="vote('{{ p.base36id }}','0')"{% elif voted>-2 %}onclick="vote('{{ p.base36id }}','-1')"{% endif %}{% endif %}></div>
+      <div id="post-{{ p.base36id }}-down" tabindex="0" data-post-id-down="{{ p.base36id }}" class="text-muted mx-auto arrow-down downvote-button"></div>
 
       {% else %}
 
