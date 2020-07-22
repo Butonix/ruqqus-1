@@ -917,7 +917,7 @@ for (var i = 0; i < downvoteButtons.length; i++) {
     downvoteButtons[i].addEventListener('click', function(event) {
         var id = event.target.dataset.postIdDown;
 
-        var downvoteButton = document.getElementById('post_' + id + '-down');
+        var downvoteButton = document.getElementById('post-' + id + '-down');
 
         var score = Number(document.getElementById('post-score-' + id).textContent);
 
