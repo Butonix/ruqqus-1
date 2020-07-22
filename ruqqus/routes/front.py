@@ -41,7 +41,7 @@ def notifications(v):
                            standalone=True)
 
 @cache.memoize(timeout=900)
-def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **kwargs):
+def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **kwargs):
 
     #cutoff=int(time.time())-(60*60*24*30)
 
@@ -112,7 +112,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
         elif t=='year':
             cutoff=now-31536000
         else:
-            cutoff=0        
+            cutoff=0    
         posts=posts.filter(Submission.created_utc >= cutoff)
 
     if sort=="hot":
