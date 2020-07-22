@@ -908,7 +908,7 @@ for (var i = 0; i < upvoteButtons.length; i++) {
         	scoreText.textContent = score - 1
         } else if (downvoteButton.classList.contains('active')) {
         	upvoteButton.classList.add('active')
-        	downButton.classList.add('active')
+        	downvoteButton.classList.add('active')
         	scoreText.textContent = score + 2
         } else {
         	upvoteButton.classList.add('active')
