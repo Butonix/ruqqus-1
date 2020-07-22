@@ -99,7 +99,7 @@ class BoardBlock(Base, Stndrd, Age_times):
     board_id=Column(Integer, ForeignKey("boards.id"))
     created_utc=Column(Integer)
 
-    user=Relationship("User")
+    user=relationship("User")
     board=relationship("Board")
 
     def __repr__(self):
