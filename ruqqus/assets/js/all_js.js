@@ -943,6 +943,8 @@ for (var i = 0; i < downvoteButtons.length; i++) {
     })
 };
 
+/*
+
 function vote(post_id, direction) {
   url="/api/vote/post/"+post_id+"/"+direction;
 
@@ -1061,6 +1063,8 @@ function vote_comment(comment_id, direction) {
 
   post(url, callback, "Unable to vote at this time. Please try again later.");
 }
+
+*/
 
 // Yank Post
 
