@@ -441,7 +441,7 @@ def settings_block_guild(v):
 
 
     new_block=BoardBlock(user_id=v.id,
-                        target_id=user.id,
+                        board_id=board.id,
                         created_utc=int(time.time())
                         )
     g.db.add(new_block)
