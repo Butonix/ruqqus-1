@@ -431,12 +431,12 @@ def settings_unblock_user(v):
 @validate_formkey
 def settings_block_guild(v):
 
-    board=get_board(request.form.get("board"), graceful=True)
+    board=get_guild(request.form.get("board"), graceful=True)
 
     if not board:
         return jsonify({"error":"That guild doesn't exist."}), 404
 
-    if v.has_blocked_guild(boad):
+    if v.has_blocked_guild(board):
         return jsonify({"error":f"You have already blocked @{user.username}."}), 409
 
 
@@ -457,7 +457,7 @@ def settings_block_guild(v):
 @validate_formkey
 def settings_unblock_guild(v):
 
-    board=get_board(request.values.get("board"), graceful=True)
+    board=get_guild(request.values.get("board"), graceful=True)
 
     x= v.has_blocked_guild(board)
     if not x:
