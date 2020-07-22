@@ -90,13 +90,14 @@ class PostRelationship(Base):
         return f"<PostRel(id={self.id}, pid={self.post_id}, board_id={self.board_id})>"
 
 
-class BoardBlock(Base):
+class BoardBlock(Base, Stndrd, Age_times):
 
     __tablename__="boardblocks"
 
     id=Column(BigInteger, primary_key=True)
     user_id=Column(Integer, ForeignKey("users.id"))
     board_id=Column(Integer, ForeignKey("boards.id"))
+    created_utc=Column(Integer)
 
     user=Relationship("User")
     board=relationship("Board")

@@ -1,6 +1,6 @@
 {% extends "settings.html" %}
 
-{% block pagetitle %}Block Settings - Ruqqus{% endblock %}
+{% block pagetitle %}Guild Filter Settings - Ruqqus{% endblock %}
 
 {% block content %}
 
@@ -32,11 +32,11 @@
     <div class="d-md-flex justify-content-between mb-3">
 
       <div>
-        <h2 class="h5" name="guild_name">Users you block</h2>
-        <p class="text-small text-muted mb-md-0">You have blocked the following users. They cannot reply to your content or notify you with a username mention.</p>
+        <h2 class="h5" name="guild_name">Guilds you are filtering</h2>
+        <p class="text-small text-muted mb-md-0">You are filtering the following guilds. They will not be shown in your "Trending" or "All" pages.</p>
       </div>
       <div class="mt-auto">
-        <button class="btn btn-primary" data-toggle="modal" data-target="#guildmasterExileModal">Block user</button>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#guildmasterExileModal">Filter Guild</button>
       </div>
     </div>
 
@@ -48,16 +48,16 @@
       <thead class="thead-dark">
         <tr>
           <th scope="col">User</th>
-          <th scope="col">Blocked since</th>
+          <th scope="col">Filtered since</th>
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody class="text-muted">
-        {% for block in v.blocking %}
+        {% for block in v.blocked_guilds %}
         <tr>
           <td>
             <a href="{{ block.target.permalink }}">
-              <img src="{{ block.target.profile_url }}" class="profile-pic-20 align-top mr-2">@{{ block.target.username }}</a>
+              <img src="{{ block.board.profile_url }}" class="profile-pic-20 align-top mr-2">@{{ block.board.username }}</a>
           </td>
 
           <td>{{ block.created_date }}</td>
@@ -68,13 +68,13 @@
                   <i class="fas fa-ellipsis-h text-muted"></i>
                 </a>
                 <div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
-                  <a class="dropdown-item" href="javascript:void(0)" onclick="post('/settings/unblock?username={{ block.target.username }}&formkey={{ v.formkey }}', callback=function(){window.location.reload(true)})"><i class="fas fa-check"></i>Unblock</a>
+                  <a class="dropdown-item" href="javascript:void(0)" onclick="post('/settings/unblock_guild?board={{ block.target.username }}&formkey={{ v.formkey }}', callback=function(){window.location.reload(true)})"><i class="fas fa-check"></i>Unfilter</a>
                 </div>
               </div>
             </td>
           </tr>
           {% else %}
-          <td>There are no blocked users</td>
+          <td>There are no filtered gilds.</td>
           {% endfor %}
         </tbody>
       </table>
@@ -82,7 +82,7 @@
     {% else %}
     <div class="text-center border-md rounded py-7">
       <i class="fad fa-ghost text-gray-500 mb-3" style="font-size: 3.5rem;"></i>
-      <p class="font-weight-bold text-gray-500 mb-0">No blocked users</p>
+      <p class="font-weight-bold text-gray-500 mb-0">No filtered guilds</p>
     </div>
     {% endif %}
 
@@ -102,13 +102,12 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Users you block will not be told, but they may figure it out if they try to reply to your content.</p>
           <input type="hidden" name="formkey" value="{{ v.formkey }}">
           <input type="text" name="username" placeholder="enter username" id="exile-username" class="form-control" maxlength=25 required>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" id="exileUserButton" onclick="block_user()">Block user</button>
+          <button type="button" class="btn btn-primary" id="exileUserButton" onclick="filter_guild()">Filter Guild</button>
         </div>
       </div>
     </form>
