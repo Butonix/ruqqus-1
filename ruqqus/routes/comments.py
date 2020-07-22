@@ -170,7 +170,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
 
         current_ids=[x.id for x in output]
 
-        
+
     return {'html':lambda:post.rendered_page(v=g.v, comment=top_comment, comment_info=comment),
             'api':lambda:c.json
             }
@@ -243,13 +243,12 @@ def api_comment(v):
     #similar_comments=g.db.query(Comment).filter(Comment.author_id==v.id, CommentAux.body.op('<->')(body)<0.5).options(contains_eager(Comment.comment_aux)).all()
     #print(similar_comments)
 
+    is_offensive=False
     for x in g.db.query(BadWord).all():
         if x.check(body):
             is_offensive=True
             break
-        else:
-            is_offensive=False
-        
+
     #create comment
     c=Comment(author_id=v.id,
               parent_submission=parent_submission,
@@ -267,7 +266,7 @@ def api_comment(v):
     g.db.flush()
 
 
-       
+
     c_aux=CommentAux(
       id=c.id,
       body_html=body_html,
@@ -300,7 +299,7 @@ def api_comment(v):
         n=Notification(comment_id=c.id,
                        user_id=x)
         g.db.add(n)
-    
+
 
 
     #create auto upvote
@@ -312,13 +311,13 @@ def api_comment(v):
     g.db.add(vote)
 
     g.db.commit()
-    
+
 
     #print(f"Content Event: @{v.username} comment {c.base36id}")
 
     return jsonify({"html":render_template("comments.html",
-                                           v=v, 
-                                           comments=[c], 
+                                           v=v,
+                                           comments=[c],
                                            render_replies=False,
                                            is_allowed_to_comment=True
                                            )
@@ -342,7 +341,7 @@ def edit_comment(cid, v):
 
     if c.board.has_ban(v):
         abort(403)
-        
+
     body = request.form.get("body", "")[0:10000]
     with CustomRenderer(post_id=c.post.base36id) as renderer:
         body_md=renderer.render(mistletoe.Document(body))
@@ -365,15 +364,13 @@ def edit_comment(cid, v):
         if x.check(body):
             c.is_offensive=True
             break
-        else:
-            c.is_offensive=False
 
     c.body=body
     c.body_html=body_html
     c.edited_utc = int(time.time())
 
     g.db.add(c)
-    
+
     g.db.commit()
 
     path=request.form.get("current_page","/")
@@ -398,7 +395,7 @@ def delete_comment(cid, v):
     c.is_deleted=True
 
     g.db.add(c)
-    
+
 
     cache.delete_memoized(User.commentlisting, v)
 
