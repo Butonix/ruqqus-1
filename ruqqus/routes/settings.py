@@ -360,11 +360,19 @@ def delete_account(v):
 @auth_required
 def settings_blockedpage(v):
 
-    users=[x.target for x in v.blocked]
+    #users=[x.target for x in v.blocked]
 
     return render_template("settings_blocks.html",
-        v=v,
-        users=users)
+        v=v)
+
+@app.route("/settings/filters", methods=["GET"])
+@auth_required
+def settings_blockedpage(v):
+
+    #users=[x.target for x in v.blocked]
+
+    return render_template("settings_guildfilter.html",
+        v=v)
 
 @app.route("/settings/block", methods=["POST"])
 @auth_required
