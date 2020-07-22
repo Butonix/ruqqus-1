@@ -1641,7 +1641,7 @@ filter_guild=function() {
 
   var isValidUsername = boardField.checkValidity();
 
-  boardname = usernameField.value;
+  boardname = boardField.value;
 
   if (isValidUsername) {
 
