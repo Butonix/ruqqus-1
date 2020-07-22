@@ -421,12 +421,11 @@ def submit_post(v):
         abort(403)
 
     #offensive
+    is_offensive=False
     for x in g.db.query(BadWord).all():
         if (body and x.check(body)) or x.check(title):
             is_offensive=True
             break
-        else:
-            is_offensive=False
 
     new_post=Submission(author_id=v.id,
                         domain_ref=domain_obj.id if domain_obj else None,
