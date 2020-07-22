@@ -908,7 +908,7 @@ for (var i = 0; i < upvoteButtons.length; i++) {
         	scoreText.textContent = score - 1
         } else if (downvoteButton.classList.contains('active')) {
         	upvoteButton.classList.add('active')
-        	downvoteButton.classList.add('active')
+        	downvoteButton.classList.remove('active')
         	scoreText.textContent = score + 2
         } else {
         	upvoteButton.classList.add('active')
@@ -934,7 +934,7 @@ for (var i = 0; i < downvoteButtons.length; i++) {
         	scoreText.textContent = score + 1
         } else if (upvoteButton.classList.contains('active')) {
         	downvoteButton.classList.add('active')
-        	upvoteButton.classList.add('active')
+        	upvoteButton.classList.remove('active')
         	scoreText.textContent = score - 2
         } else {
         	downvoteButton.classList.add('active')
