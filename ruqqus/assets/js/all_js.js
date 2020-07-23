@@ -896,23 +896,40 @@ for (var i = 0; i < upvoteButtons.length; i++) {
         var id = event.target.dataset.postIdUp;
 
         var downvoteButton = document.getElementById('post-' + id + '-down');
+        var downvoteButtonMobile = document.getElementById('post-' + id + '-down-mobile');
 
         var upvoteButton = document.getElementById('post-' + id + '-up');
+        var upvoteButtonMobile = document.getElementById('post-' + id + '-up-mobile');
 
         var scoreText = document.getElementById('post-score-' + id);
+        var scoreTextMobile = document.getElementById('post-score' + id + '-mobile');
 
         var score = Number(scoreText.textContent);
+        var scoreMobile = Number(scoreTextMobile.textContent);
 
-        if (upvoteButton.classList.contains('active')) {
+        if (upvoteButton.classList.contains('active') || upvoteButtonMobile.classList.contains('active')) {
         	upvoteButton.classList.remove('active')
+          upvoteButtonMobile.classList.remove('active')
+
         	scoreText.textContent = score - 1
-        } else if (downvoteButton.classList.contains('active')) {
+          scoreTextMobile.textContent = scoreMobile - 1
+
+        } else if (downvoteButton.classList.contains('active') || downvoteButtonMobile.classList.contains('active')) {
         	upvoteButton.classList.add('active')
+          upvoteButtonMobile.classList.add('active')
+
         	downvoteButton.classList.remove('active')
+          downvoteButtonMobile.classList.remove('active')
+
         	scoreText.textContent = score + 2
+          scoreTextMobile.textContent = score + 2
+
         } else {
         	upvoteButton.classList.add('active')
+          upvoteButtonMobile.classList.add('active')
+
         	scoreText.textContent = score + 1
+          scoreTextMobile.textContent = score + 1
         }
     })
 };
