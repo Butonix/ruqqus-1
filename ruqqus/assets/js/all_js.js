@@ -927,6 +927,7 @@ for (var i = 0; i < upvoteButtons.length; i++) {
 
 for (var i = 0; i < downvoteButtons.length; i++) {
   downvoteButtons[i].addEventListener('click', callback=function(event) {
+
     var id = event.target.dataset.postIdDown;
 
     var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
@@ -943,7 +944,7 @@ for (var i = 0; i < downvoteButtons.length; i++) {
       if (thisDownvoteButton.classList.contains('active')) {
         thisDownvoteButton.classList.remove('active')
         thisScoreText.textContent = thisScore + 1
-        post("/api/vote/post/"+ id + "/1", callback, "Unable to vote at this time. Please try again later.")
+        post("/api/vote/post/"+ id + "/0", callback, "Unable to vote at this time. Please try again later.")
       } else if (thisUpvoteButton.classList.contains('active')) {
         thisDownvoteButton.classList.add('active')
         thisUpvoteButton.classList.remove('active')
