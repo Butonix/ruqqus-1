@@ -920,7 +920,7 @@ for (var i = 0; i < upvoteButtons.length; i++) {
       }
     }
 
-    post("/api/vote/post/"+ id + "/up", callback, "Unable to vote at this time. Please try again later.")
+    post("/api/vote/post/"+ id + "/+1", callback, "Unable to vote at this time. Please try again later.")
   })
 };
 
@@ -952,7 +952,7 @@ for (var i = 0; i < downvoteButtons.length; i++) {
       }
     }
 
-    post("/api/vote/post/"+ id + "/down", callback, "Unable to vote at this time. Please try again later.")
+    post("/api/vote/post/"+ id + "/-1", callback, "Unable to vote at this time. Please try again later.")
   })
 };
 
