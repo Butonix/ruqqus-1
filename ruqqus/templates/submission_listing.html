@@ -24,7 +24,7 @@
 
       <div id="post-{{ p.base36id }}-up" tabindex="0" data-post-id-up="{{ p.base36id }}" class="mx-auto arrow-up upvote-button"></div>
 
-      <span id="post-score-{{ p.base36id }}-desktop" class="score">{% if p.is_banned %}✖{% else %}{{ score-adjust }}{% endif %}</span>
+      <span id="post-score-{{ p.base36id }}" class="score">{% if p.is_banned %}✖{% else %}{{ score-adjust }}{% endif %}</span>
 
       <div id="post-{{ p.base36id }}-down" tabindex="0" data-post-id-down="{{ p.base36id }}" class="text-muted mx-auto arrow-down downvote-button"></div>
 
@@ -196,7 +196,7 @@
           <i class="fas fa-arrow-alt-up mx-0" aria-hidden="true"></i>
         </span>
 
-        <span id="post-score-{{ p.base36id }}" class="score">{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
+        <span id="post-score-{{ p.base36id }}-mobile" class="score">{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
 
         <span id="post-{{ p.base36id }}-down-mobile" data-post-id-down="{{ p.base36id }}" class="downvote-button ml-2 my-0">
           <i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
