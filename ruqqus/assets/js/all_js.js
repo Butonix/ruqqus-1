@@ -892,56 +892,77 @@ var upvoteButtons = document.getElementsByClassName('upvote-button')
 var downvoteButtons = document.getElementsByClassName('downvote-button')
 
 for (var i = 0; i < upvoteButtons.length; i++) {
-    upvoteButtons[i].addEventListener('click', function(event) {
-        var id = event.target.dataset.postIdUp;
+  upvoteButtons[i].addEventListener('click', function(event) {
+    var id = event.target.dataset.postIdUp;
 
-        var downvoteButton = document.getElementById('post-' + id + '-down');
+    var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
 
-        var upvoteButton = document.getElementById('post-' + id + '-up');
+    var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
 
-        var scoreText = document.getElementById('post-score-' + id);
+    var scoreText = document.getElementsByClassName('post-score-' + id);
 
-        var score = Number(scoreText.textContent);
+    var score = Number(scoreText.textContent);
 
-        if (upvoteButton.classList.contains('active')) {
-        	upvoteButton.classList.remove('active')
-        	scoreText.textContent = score - 1
-        } else if (downvoteButton.classList.contains('active')) {
-        	upvoteButton.classList.add('active')
-        	downvoteButton.classList.remove('active')
-        	scoreText.textContent = score + 2
-        } else {
-        	upvoteButton.classList.add('active')
-        	scoreText.textContent = score + 1
-        }
-    })
+    for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
+
+      var thisUpvoteButton = upvoteButton[j];
+      var thisDownvoteButton = downvoteButton[j];
+
+      var thisScoreText = scoreText[j];
+
+      var thisScore = Number(thisScoreText.textContent);
+
+      if (thisUpvoteButton.classList.contains('active')) {
+        thisUpvoteButton.classList.remove('active')
+        thisScoreText.textContent = thisScore - 1
+      } else if (thisDownvoteButton.classList.contains('active')) {
+        thisUpvoteButton.classList.add('active')
+        thisDownvoteButton.classList.remove('active')
+        thisScoreText.textContent = thisScore + 2
+      } else {
+        thisUpvoteButton.classList.add('active')
+        thisScoreText.textContent = thisScore + 1
+      }
+    }
+  })
 };
 
 for (var i = 0; i < downvoteButtons.length; i++) {
-    downvoteButtons[i].addEventListener('click', function(event) {
-        var id = event.target.dataset.postIdDown;
+  downvoteButtons[i].addEventListener('click', function(event) {
+    var id = event.target.dataset.postIdDown;
 
-        var downvoteButton = document.getElementById('post-' + id + '-down');
+    var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
 
-        var upvoteButton = document.getElementById('post-' + id + '-up');
+    var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
 
-        var scoreText = document.getElementById('post-score-' + id);
+    var scoreText = document.getElementsByClassName('post-score-' + id);
 
-        var score = Number(scoreText.textContent);
+    var score = Number(scoreText.textContent);
 
-        if (downvoteButton.classList.contains('active')) {
-        	downvoteButton.classList.remove('active')
-        	scoreText.textContent = score + 1
-        } else if (upvoteButton.classList.contains('active')) {
-        	downvoteButton.classList.add('active')
-        	upvoteButton.classList.remove('active')
-        	scoreText.textContent = score - 2
-        } else {
-        	downvoteButton.classList.add('active')
-        	scoreText.textContent = score - 1
-        }
-    })
+    for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
+
+      var thisUpvoteButton = upvoteButton[j];
+      var thisDownvoteButton = downvoteButton[j];
+
+      var thisScoreText = scoreText[j];
+
+      var thisScore = Number(thisScoreText.textContent);
+
+      if (thisDownvoteButton.classList.contains('active')) {
+        thisDownvoteButton.classList.remove('active')
+        thisScoreText.textContent = thisScore + 1
+      } else if (thisUpvoteButton.classList.contains('active')) {
+        thisDownvoteButton.classList.add('active')
+        thisUpvoteButton.classList.remove('active')
+        thisScoreText.textContent = thisScore - 2
+      } else {
+        thisDownvoteButton.classList.add('active')
+        thisScoreText.textContent = thisScore - 1
+      }
+    }
+  })
 };
+
 
 /*
 
