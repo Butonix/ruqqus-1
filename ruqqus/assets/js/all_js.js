@@ -896,7 +896,6 @@ function toggle_sidebar_expand() {
 
 }
 
-
 // Voting
 
 var upvoteButtons = document.getElementsByClassName('upvote-button')
@@ -906,9 +905,15 @@ var downvoteButtons = document.getElementsByClassName('downvote-button')
 var voteDirection = 0
 
 for (var i = 0; i < upvoteButtons.length; i++) {
-  upvoteButtons[i].addEventListener('click', function(event) {
+  upvoteButtons[i].addEventListener('click', upvotePost, false);
+};
 
-    var id = event.target.dataset.postIdUp;
+for (var i = 0; i < downvoteButtons.length; i++) {
+  downvoteButtons[i].addEventListener('click', downvotePost, false);
+};
+
+var upvotePost = function(event) {
+      var id = event.target.dataset.postIdUp;
 
     var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
     var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
@@ -939,9 +944,11 @@ for (var i = 0; i < upvoteButtons.length; i++) {
       if (thisUpvoteButton.classList.contains('active')) {
         thisScoreText.classList.add('score-up')
         thisScoreText.classList.remove('score-down')
+        thisScoreText.classList.remove('score')
       } else if (thisDownvoteButton.classList.contains('active')) {
         thisScoreText.classList.add('score-down')
         thisScoreText.classList.remove('score-up')
+        thisScoreText.classList.remove('score')
       } else {
         thisScoreText.classList.add('score')
       }
@@ -953,14 +960,10 @@ for (var i = 0; i < upvoteButtons.length; i++) {
       }
       post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
     }
+}
 
-  })
-};
-
-for (var i = 0; i < downvoteButtons.length; i++) {
-  downvoteButtons[i].addEventListener('click', function(event) {
-
-    var id = event.target.dataset.postIdDown;
+var downvotePost = function(event) {
+      var id = event.target.dataset.postIdDown;
 
     var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
     var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
@@ -991,9 +994,11 @@ for (var i = 0; i < downvoteButtons.length; i++) {
       if (thisUpvoteButton.classList.contains('active')) {
         thisScoreText.classList.add('score-up')
         thisScoreText.classList.remove('score-down')
+        thisScoreText.classList.remove('score')
       } else if (thisDownvoteButton.classList.contains('active')) {
         thisScoreText.classList.add('score-down')
         thisScoreText.classList.remove('score-up')
+        thisScoreText.classList.remove('score')
       } else {
         thisScoreText.classList.add('score')
       }
@@ -1005,9 +1010,7 @@ for (var i = 0; i < downvoteButtons.length; i++) {
       }
       post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
     }
-
-  })
-};
+}
 
 /*
 
