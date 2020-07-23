@@ -182,6 +182,10 @@ pre {
     word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
+body.using-mouse :focus {
+    outline: none;
+}
+
 #settings, #submit {
     padding-top: 98px;
     background-color: $gray-600;
