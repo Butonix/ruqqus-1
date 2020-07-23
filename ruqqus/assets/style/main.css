@@ -16904,10 +16904,15 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   .arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
     font-size: 1.25rem;
     color: #CBD5E0;
+    opacity: 1;
   }
 
-  .active.arrow-up::before, .active.arrow-down::before, .active.arrow-up:hover::before, .active.arrow-down:hover::before {
-    opacity: 1;
+  .active.arrow-up::before, .active.arrow-up:hover::before {
+    color: #805AD5;
+  }
+
+  .active.arrow-down::before, .active.arrow-down:hover::before {
+    color: #38B2AC;
   }
 
   .dropdown-actions a {

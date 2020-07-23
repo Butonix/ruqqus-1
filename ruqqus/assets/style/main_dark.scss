@@ -3612,10 +3612,15 @@ body, #settings, #notifications, #submit {
 .arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
     font-size: $font-size-lg;
     color: $gray-400;
+    opacity: 1;
 }
 
-.active.arrow-up::before, .active.arrow-down::before, .active.arrow-up:hover::before, .active.arrow-down:hover::before {
-    opacity: 1;
+.active.arrow-up::before, .active.arrow-up:hover::before {
+    color: $upvote;
+}
+
+.active.arrow-down::before, .active.arrow-down:hover::before {
+    color: $downvote;
 }
 
 .dropdown-actions a {
