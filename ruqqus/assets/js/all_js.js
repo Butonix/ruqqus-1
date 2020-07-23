@@ -892,7 +892,8 @@ var upvoteButtons = document.getElementsByClassName('upvote-button')
 var downvoteButtons = document.getElementsByClassName('downvote-button')
 
 for (var i = 0; i < upvoteButtons.length; i++) {
-  upvoteButtons[i].addEventListener('click', function(event) {
+  upvoteButtons[i].addEventListener('click', callback=function(event) {
+
     var id = event.target.dataset.postIdUp;
 
     var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
@@ -918,11 +919,13 @@ for (var i = 0; i < upvoteButtons.length; i++) {
         thisScoreText.textContent = thisScore + 1
       }
     }
+
+    post("/api/vote/post/"+ id + "/up", callback, "Unable to vote at this time. Please try again later.")
   })
 };
 
 for (var i = 0; i < downvoteButtons.length; i++) {
-  downvoteButtons[i].addEventListener('click', function(event) {
+  downvoteButtons[i].addEventListener('click', callback=function(event) {
     var id = event.target.dataset.postIdDown;
 
     var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
@@ -948,6 +951,8 @@ for (var i = 0; i < downvoteButtons.length; i++) {
         thisScoreText.textContent = thisScore - 1
       }
     }
+
+    post("/api/vote/post/"+ id + "/down", callback, "Unable to vote at this time. Please try again later.")
   })
 };
 
