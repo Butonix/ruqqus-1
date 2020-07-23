@@ -14477,10 +14477,9 @@ th {
 }
 
 */
-.voting div:focus {
-  outline: 0;
-}
-
+/* .voting div:focus {
+    outline: 0;
+} */
 .active.arrow-up::before {
   color: #805AD5;
 }
