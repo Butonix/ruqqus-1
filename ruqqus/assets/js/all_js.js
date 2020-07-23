@@ -924,11 +924,12 @@ for (var i = 0; i < upvoteButtons.length; i++) {
         voteDirection = "1"
       }
     }
-
-    for (var n = 0; n < 1; n++) {
-      post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
-    }
   })
+
+  for (var n = 0; n < 1; n++) {
+    //post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
+    console.log(voteDirection)
+  }
 };
 
 for (var i = 0; i < downvoteButtons.length; i++) {
@@ -962,11 +963,12 @@ for (var i = 0; i < downvoteButtons.length; i++) {
         voteDirection = "-1"
       }
     }
-
-    for (var n = 0; n < 1; n++) {
-      post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
-    }
   })
+
+  for (var n = 0; n < 1; n++) {
+    //post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
+    console.log(voteDirection)
+  }
 };
 
 /*
@@ -1381,7 +1383,7 @@ document.addEventListener('paste', function (event) {
   if (nothingFocused) {
 
     if (document.getElementById('guild-name-reference')) {
-        var guild = document.getElementById('guild-name-reference').innerText;
+      var guild = document.getElementById('guild-name-reference').innerText;
     }
 
     var clipText = event.clipboardData.getData('Text');
@@ -1516,9 +1518,9 @@ function exile_from_guild(boardid) {
         window.location.reload(true);
       }
       else {
-      $('#toast-exile-error').toast('dispose');
-      $('#toast-exile-error').toast('show');
-      exileError.textContent = JSON.parse(xhr.response)["error"];
+        $('#toast-exile-error').toast('dispose');
+        $('#toast-exile-error').toast('show');
+        exileError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
     xhr.send(f)
@@ -1623,9 +1625,9 @@ block_user=function() {
         window.location.reload(true);
       }
       else {
-      $('#toast-exile-error').toast('dispose');
-      $('#toast-exile-error').toast('show');
-      exileError.textContent = JSON.parse(xhr.response)["error"];
+        $('#toast-exile-error').toast('dispose');
+        $('#toast-exile-error').toast('show');
+        exileError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
     xhr.send(f)
@@ -1652,7 +1654,7 @@ post_comment=function(fullname){
     if (xhr.status==200) {
       commentForm=document.getElementById('comment-form-space-'+fullname);
       commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-        $('#toast-comment-success').toast('dispose');
+      $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-success').toast('show');
     }
@@ -1660,7 +1662,7 @@ post_comment=function(fullname){
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-error').toast('show');
-     commentError.textContent = JSON.parse(xhr.response)["error"];
+      commentError.textContent = JSON.parse(xhr.response)["error"];
     }
   }
   xhr.send(form)
@@ -1669,14 +1671,14 @@ post_comment=function(fullname){
 //part of submit page js
 
 hide_image=function(){
-    x=document.getElementById('image-upload-block');
-    url=document.getElementById('post-URL').value;
-    if (url.length>=1){
-        x.classList.add('d-none');
-    }
-    else {
-        x.classList.remove('d-none');
-    }
+  x=document.getElementById('image-upload-block');
+  url=document.getElementById('post-URL').value;
+  if (url.length>=1){
+    x.classList.add('d-none');
+  }
+  else {
+    x.classList.remove('d-none');
+  }
 }
 
 
@@ -1706,7 +1708,7 @@ comment_edit=function(id){
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-error').toast('show');
-     commentError.textContent = JSON.parse(xhr.response)["error"];
+      commentError.textContent = JSON.parse(xhr.response)["error"];
     }
   }
   xhr.send(form)
