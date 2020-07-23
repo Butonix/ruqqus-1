@@ -896,20 +896,14 @@ for (var i = 0; i < upvoteButtons.length; i++) {
     var id = event.target.dataset.postIdUp;
 
     var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
-
     var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
-
     var scoreText = document.getElementsByClassName('post-score-' + id);
-
-    var score = Number(scoreText.textContent);
 
     for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
 
       var thisUpvoteButton = upvoteButton[j];
       var thisDownvoteButton = downvoteButton[j];
-
       var thisScoreText = scoreText[j];
-
       var thisScore = Number(thisScoreText.textContent);
 
       if (thisUpvoteButton.classList.contains('active')) {
@@ -932,20 +926,14 @@ for (var i = 0; i < downvoteButtons.length; i++) {
     var id = event.target.dataset.postIdDown;
 
     var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
-
     var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
-
     var scoreText = document.getElementsByClassName('post-score-' + id);
-
-    var score = Number(scoreText.textContent);
 
     for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
 
       var thisUpvoteButton = upvoteButton[j];
       var thisDownvoteButton = downvoteButton[j];
-
       var thisScoreText = scoreText[j];
-
       var thisScore = Number(thisScoreText.textContent);
 
       if (thisDownvoteButton.classList.contains('active')) {
