@@ -895,11 +895,11 @@ for (var i = 0; i < upvoteButtons.length; i++) {
     upvoteButtons[i].addEventListener('click', function(event) {
         var id = event.target.dataset.postIdUp
 
-        var downvoteButton = document.getElementById('post-' + id + '-down');
+        var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
 
-        var upvoteButton = document.getElementById('post-' + id + '-up');
+        var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
 
-        var scoreText = document.getElementById('post-score-' + id);
+        var scoreText = document.getElementsByClassName('post-score-' + id);
 
         var score = Number(scoreText.textContent);
 
@@ -921,11 +921,11 @@ for (var i = 0; i < downvoteButtons.length; i++) {
     downvoteButtons[i].addEventListener('click', function(event) {
         var id = event.target.dataset.postIdDown;
 
-        var downvoteButton = document.getElementById('post-' + id + '-down');
+        var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
 
-        var upvoteButton = document.getElementById('post-' + id + '-up');
+        var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
 
-        var scoreText = document.getElementById('post-score-' + id);
+        var scoreText = document.getElementsByClassName('post-score-' + id);
 
         var score = Number(scoreText.textContent);
 
