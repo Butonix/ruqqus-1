@@ -891,7 +891,7 @@ var upvoteButtons = document.getElementsByClassName('upvote-button')
 
 var downvoteButtons = document.getElementsByClassName('downvote-button')
 
-var voteDirection = ''
+var voteDirection = undefined
 
 for (var i = 0; i < upvoteButtons.length; i++) {
   upvoteButtons[i].addEventListener('click', callback=function(event) {
@@ -923,6 +923,10 @@ for (var i = 0; i < upvoteButtons.length; i++) {
         thisScoreText.textContent = thisScore + 1
         voteDirection = "1"
       }
+    }
+
+    for (var n = 0; n < 1; n++) {
+      console.log('test upvote')
     }
   })
 };
@@ -957,6 +961,10 @@ for (var i = 0; i < downvoteButtons.length; i++) {
         thisScoreText.textContent = thisScore - 1
         voteDirection = "-1"
       }
+    }
+
+    for (var n = 0; n < 1; n++) {
+      console.log('test downvote')
     }
   })
 };
