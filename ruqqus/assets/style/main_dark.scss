@@ -1006,6 +1006,11 @@ th {
     outline: 0;
 }
 
+.active.arrow-up::before {
+    color: $upvote;
+}
+
+
 .arrow-up::before {
     cursor: pointer;
     font-size: $font-size-base;
@@ -1021,6 +1026,9 @@ th {
     opacity: 0.5;
 }
 
+.active.arrow-down::before {
+    color: $downvote;
+}
 
 .arrow-down::before {
     cursor: pointer;
@@ -3603,6 +3611,7 @@ body, #settings, #notifications, #submit {
 
 .arrow-up::before, .arrow-down::before {
     font-size: $font-size-lg;
+    opacity: 1;
 }
 
 .dropdown-actions a {

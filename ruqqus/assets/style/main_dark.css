@@ -14481,6 +14481,10 @@ th {
   outline: 0;
 }
 
+.active.arrow-up::before {
+  color: #805AD5;
+}
+
 .arrow-up::before {
   cursor: pointer;
   font-size: 1rem;
@@ -14493,6 +14497,10 @@ th {
 .arrow-up:hover::before {
   color: #805AD5;
   opacity: 0.5;
+}
+
+.active.arrow-down::before {
+  color: #38B2AC;
 }
 
 .arrow-down::before {
@@ -17393,6 +17401,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
   .arrow-up::before, .arrow-down::before {
     font-size: 1.25rem;
+    opacity: 1;
   }
 
   .dropdown-actions a {
