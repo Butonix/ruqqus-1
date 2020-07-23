@@ -926,7 +926,7 @@ for (var i = 0; i < upvoteButtons.length; i++) {
     }
 
     for (var n = 0; n < 1; n++) {
-      console.log('test upvote')
+      console.log(voteDirection)
     }
   })
 };
@@ -964,7 +964,7 @@ for (var i = 0; i < downvoteButtons.length; i++) {
     }
 
     for (var n = 0; n < 1; n++) {
-      console.log('test downvote')
+      console.log(voteDirection)
     }
   })
 };
