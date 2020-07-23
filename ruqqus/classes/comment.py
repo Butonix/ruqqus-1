@@ -234,9 +234,17 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'author':self.author.username if not self.author.is_deleted else None,
                 'body':self.body,
                 'body_html':self.body_html,
-            #   'replies': [x.json for x in self.replies]
                 'is_archived':self.is_archived,
-                'title': self.title.json if self.title else None
+                'title':self.title.json if self.title else None,
+                'guild_name':self.board.name,
+                'created_utc':self.created_utc,
+                'edited_utc':self.edited_utc or 0,
+                'is_banned':False,
+                'is_deleted':False,
+                'is_nsfw':self.over_18,
+                'is_offensive':self.is_offensive,
+                'is_nsfl':self.is_nsfl,
+                'permalink':self.permalink
                 }
             
     @property
