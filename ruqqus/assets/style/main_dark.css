@@ -14517,22 +14517,21 @@ th {
   opacity: 0.5;
 }
 
-.upvoted .arrow-up::before {
-  color: #805AD5;
+/* .upvoted .arrow-up::before {
+    color: $upvote;
 }
 
 .upvoted .arrow-up:hover::before {
-  opacity: 1;
+    opacity: 1;
 }
 
 .downvoted .arrow-down::before {
-  color: #38B2AC;
+    color: $downvote;
 }
 
 .downvoted .arrow-down:hover::before {
-  opacity: 1;
-}
-
+    opacity: 1;
+} */
 .comment-actions .arrow-up {
   top: 0;
 }
