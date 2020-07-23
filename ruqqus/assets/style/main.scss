@@ -1055,6 +1055,10 @@ th {
     color: $downvote!important;
 }
 
+.score {
+    color: $black;
+}
+
 .score-up {
     color: $upvote !important;
 }
@@ -3533,6 +3537,12 @@ body, #settings, #notifications, #submit{
 
 .post-actions .voting .fa, .post-actions .voting .fas, .post-actions .voting .far {
     font-size: $font-size-lg;
+}
+
+// Voting Mobile
+
+.score {
+    color: $gray-400;
 }
 
 .arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {

@@ -14109,6 +14109,10 @@ th {
   color: #38B2AC !important;
 }
 
+.score {
+  color: #121213;
+}
+
 .score-up {
   color: #805AD5 !important;
 }
@@ -16903,6 +16907,10 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
   .post-actions .voting .fa, .post-actions .voting .fas, .post-actions .voting .far {
     font-size: 1.25rem;
+  }
+
+  .score {
+    color: #CBD5E0;
   }
 
   .arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {

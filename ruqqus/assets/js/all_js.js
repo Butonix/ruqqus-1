@@ -935,6 +935,16 @@ for (var i = 0; i < upvoteButtons.length; i++) {
         thisScoreText.textContent = thisScore + 1
         voteDirection = "1"
       }
+
+      if (thisUpvoteButton.classList.contains('active')) {
+        thisScoreText.classList.add('score-up')
+        thisScoreText.classList.remove('score-down')
+      } else if (thisDownvoteButton.classList.contains('active')) {
+        thisScoreText.classList.add('score-down')
+        thisScoreText.classList.remove('score-up')
+      } else {
+        thisScoreText.classList.add('score')
+      }
     }
 
     for (var n = 0; n < 1; n++) {
@@ -976,6 +986,16 @@ for (var i = 0; i < downvoteButtons.length; i++) {
         thisDownvoteButton.classList.add('active')
         thisScoreText.textContent = thisScore - 1
         voteDirection = "-1"
+      }
+
+      if (thisUpvoteButton.classList.contains('active')) {
+        thisScoreText.classList.add('score-up')
+        thisScoreText.classList.remove('score-down')
+      } else if (thisDownvoteButton.classList.contains('active')) {
+        thisScoreText.classList.add('score-down')
+        thisScoreText.classList.remove('score-up')
+      } else {
+        thisScoreText.classList.add('score')
       }
     }
 
