@@ -943,6 +943,64 @@ for (var i = 0; i < downvoteButtons.length; i++) {
     })
 };
 
+// Voting Mobile
+
+var upvoteButtonsMobile = document.getElementsByClassName('upvote-button-mobile')
+
+var downvoteButtonsMobile = document.getElementsByClassName('downvote-button-mobile')
+
+for (var i = 0; i < upvoteButtonsMobile.length; i++) {
+    upvoteButtonsMobile[i].addEventListener('click', function(event) {
+        var id = event.target.dataset.postIdUp
+
+        var downvoteButton = document.getElementById('post-' + id + '-down-mobile');
+
+        var upvoteButton = document.getElementById('post-' + id + '-up-mobile');
+
+        var scoreText = document.getElementById('post-score-' + id + '-mobile');
+
+        var score = Number(scoreText.textContent);
+
+        if (upvoteButton.classList.contains('active')) {
+        	upvoteButton.classList.remove('active')
+        	scoreText.textContent = score - 1
+        } else if (downvoteButton.classList.contains('active')) {
+        	upvoteButton.classList.add('active')
+        	downvoteButton.classList.remove('active')
+        	scoreText.textContent = score + 2
+        } else {
+        	upvoteButton.classList.add('active')
+        	scoreText.textContent = score + 1
+        }
+    })
+};
+
+for (var i = 0; i < downvoteButtonsMobile.length; i++) {
+    downvoteButtonsMobile[i].addEventListener('click', function(event) {
+        var id = event.target.dataset.postIdDown;
+
+        var downvoteButton = document.getElementById('post-' + id + '-down-mobile');
+
+        var upvoteButton = document.getElementById('post-' + id + '-up-mobile');
+
+        var scoreText = document.getElementById('post-score-' + id + '-mobile');
+
+        var score = Number(scoreText.textContent);
+
+        if (downvoteButton.classList.contains('active')) {
+        	downvoteButton.classList.remove('active')
+        	scoreText.textContent = score + 1
+        } else if (upvoteButton.classList.contains('active')) {
+        	downvoteButton.classList.add('active')
+        	upvoteButton.classList.remove('active')
+        	scoreText.textContent = score - 2
+        } else {
+        	downvoteButton.classList.add('active')
+        	scoreText.textContent = score - 1
+        }
+    })
+};
+
 /*
 
 function vote(post_id, direction) {
