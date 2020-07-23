@@ -925,14 +925,18 @@ for (var i = 0; i < upvoteButtons.length; i++) {
           thisScoreText.textContent = thisScore + 1
           voteDirection = "1"
         }
+
+        vote(voteDirection)
       }
     }
 
     for (var n = 0; n < 1; n++) {
-    //post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
-    console.log(voteDirection)
-  }
-})
+      function vote(direction) {
+        //post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
+        console.log(direction)
+      }
+    }
+  })
 
 };
 
@@ -968,13 +972,17 @@ for (var i = 0; i < downvoteButtons.length; i++) {
           voteDirection = "-1"
         }
       }
+
+      vote(voteDirection)
     }
 
     for (var n = 0; n < 1; n++) {
-    //post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
-    console.log(voteDirection)
-  }
-})
+      function vote(direction) {
+        //post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
+        console.log(direction)
+      }
+    }
+  })
 };
 
 /*
