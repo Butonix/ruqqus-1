@@ -192,12 +192,12 @@
       {% endif %}
       {% if v %}
       <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none">
-        <span id="post-{{ p.base36id }}-up-mobile" data-post-id-up="{{ p.base36id }}" class="mr-2 arrow-up upvote-button">
+        <span id="post-{{ p.base36id }}-up-mobile" data-post-id-up="{{ p.base36id }}" class="mr-2 arrow-up upvote-button post-{{ p.base36id }}-up">
         </span>
 
-        <span id="post-score-{{ p.base36id }}-mobile" class="score">{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
+        <span id="post-score-{{ p.base36id }}-mobile" class="score post-score-{{ p.base36id }}">{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
 
-        <span id="post-{{ p.base36id }}-down-mobile" data-post-id-down="{{ p.base36id }}" class="ml-2 my-0 arrow-down downvote-button">
+        <span id="post-{{ p.base36id }}-down-mobile" data-post-id-down="{{ p.base36id }}" class="ml-2 my-0 arrow-down downvote-button post-{{ p.base36id }}-down">
         </span>
 
       </li>
