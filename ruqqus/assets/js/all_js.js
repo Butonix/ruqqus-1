@@ -910,17 +910,18 @@ for (var i = 0; i < upvoteButtons.length; i++) {
       if (thisUpvoteButton.classList.contains('active')) {
         thisUpvoteButton.classList.remove('active')
         thisScoreText.textContent = thisScore - 1
+        post("/api/vote/post/"+ id + "/0", callback, "Unable to vote at this time. Please try again later.")
       } else if (thisDownvoteButton.classList.contains('active')) {
         thisUpvoteButton.classList.add('active')
         thisDownvoteButton.classList.remove('active')
         thisScoreText.textContent = thisScore + 2
+        post("/api/vote/post/"+ id + "/1", callback, "Unable to vote at this time. Please try again later.")
       } else {
         thisUpvoteButton.classList.add('active')
         thisScoreText.textContent = thisScore + 1
+        post("/api/vote/post/"+ id + "/1", callback, "Unable to vote at this time. Please try again later.")
       }
     }
-
-    post("/api/vote/post/"+ id + "/+1", callback, "Unable to vote at this time. Please try again later.")
   })
 };
 
@@ -942,17 +943,18 @@ for (var i = 0; i < downvoteButtons.length; i++) {
       if (thisDownvoteButton.classList.contains('active')) {
         thisDownvoteButton.classList.remove('active')
         thisScoreText.textContent = thisScore + 1
+        post("/api/vote/post/"+ id + "/1", callback, "Unable to vote at this time. Please try again later.")
       } else if (thisUpvoteButton.classList.contains('active')) {
         thisDownvoteButton.classList.add('active')
         thisUpvoteButton.classList.remove('active')
         thisScoreText.textContent = thisScore - 2
+        post("/api/vote/post/"+ id + "/-1", callback, "Unable to vote at this time. Please try again later.")
       } else {
         thisDownvoteButton.classList.add('active')
         thisScoreText.textContent = thisScore - 1
+        post("/api/vote/post/"+ id + "/-1", callback, "Unable to vote at this time. Please try again later.")
       }
     }
-
-    post("/api/vote/post/"+ id + "/-1", callback, "Unable to vote at this time. Please try again later.")
   })
 };
 
