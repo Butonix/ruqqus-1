@@ -61,9 +61,9 @@ app.config["UserAgent"]=f"Ruqqus webserver tools for Ruqqus v{_version} develope
 if "localhost" in app.config["SERVER_NAME"]:
     app.config["CACHE_TYPE"]="null"
 else:
-    app.config["CACHE_TYPE"]=environ.get("CACHE_TYPE", 'null')
+    app.config["CACHE_TYPE"]=environ.get("CACHE_TYPE", 'filesystem')
 
-app.config["CACHE_DIR"]=environ.get("CACHE_DIR")
+app.config["CACHE_DIR"]=environ.get("CACHE_DIR", "ruqquscache")
 
 
 #antispam configs
