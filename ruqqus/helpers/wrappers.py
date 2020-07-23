@@ -231,51 +231,48 @@ def no_cors(f):
 #wrapper for api-related things that discriminates between an api url
 #and an html url for the same content
 # f should return {'api':lambda:some_func(), 'html':lambda:other_func()}
-
-def api(f):
-
-    def wrapper(*args, **kwargs):
-
-        x=f(*args, **kwargs)
-
-        if isinstance(x, RespObj):
-            return x
-        
-        if request.path.startswith('/api/v1/'):
-            return jsonify(x['api']())
-        elif request.path.startswith('/inpage/'):
-            return x['inpage']()
-        else:
-            return x['html']()
-
-    wrapper.__name__=f.__name__
-    return wrapper
-
-def scope(*scopes):
+def api(*scopes):
 
     def wrapper_maker(f):
 
         def wrapper(*args, **kwargs):
 
-            token=request.headers.get("Authorization", "Bearer: ")
+            if request.path.startswith('/api/v1'):
 
-            try:
-                token=token.split()[1]
-            except:
-                return jsonify({"error":"400 Bad Request: Authorization token not provided"}), 400
-            
-            client=g.db.query(ClientAuth).filter(
-                ClientAuth.access_token==token,
-                ClientAuth.access_token_expire_utc>int(time.time())
-                ).first()
+                token=request.headers.get("Authorization", "Bearer: ")
 
-            for scope in scopes:
+                try:
+                    token=token.split()[1]
+                except:
+                    return jsonify({"error":"400 Bad Request: Authorization token not provided"}), 400
+                
+                client=g.db.query(ClientAuth).filter(
+                    ClientAuth.access_token==token,
+                    ClientAuth.access_token_expire_utc>int(time.time())
+                    ).first()
 
+                if not client:
+                    return jsonify({"error":"401 Not Authorized: Invalid or Expired Token"}), 401
 
+                for scope in scopes:
 
+                    if not client.__dict__.get(f"scope_{scope}"):
+                        return jsonify({"error":f"401 Not Authorized: Scope {scope} is required."}), 403
+    
+                result = f(*args, v=client.user, **kwargs)
+                return jsonify(result["api"]())
 
-            return f(*args, v=client.user, **kwargs)
+            else:
 
+                result = f(*args, **kwargs)
+
+                if isinstance(result, RespObj):
+                    return result
+
+                if request.path.startswith('/inpage/'):
+                    return result['inpage']()
+                else:
+                    return resutl['html']()
 
         wrapper.__name__=f.__name__
         return wrapper
