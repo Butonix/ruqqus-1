@@ -22,11 +22,11 @@
 
       {% if v %}
 
-      <div id="post-{{ p.base36id }}-up" tabindex="0" data-post-id-up="{{ p.base36id }}" class="mx-auto arrow-up upvote-button post-{{ p.base36id }}-up"></div>
+      <div id="post-{{ p.base36id }}-up" tabindex="0" data-post-id-up="{{ p.base36id }}" class="mx-auto arrow-up upvote-button"></div>
 
-      <span id="post-score-{{ p.base36id }}" class="score post-score-{{ p.base36id }}">{% if p.is_banned %}✖{% else %}{{ score-adjust }}{% endif %}</span>
+      <span id="post-score-{{ p.base36id }}" class="score">{% if p.is_banned %}✖{% else %}{{ score-adjust }}{% endif %}</span>
 
-      <div id="post-{{ p.base36id }}-down" tabindex="0" data-post-id-down="{{ p.base36id }}" class="text-muted mx-auto arrow-down downvote-button post-{{ p.base36id }}-down"></div>
+      <div id="post-{{ p.base36id }}-down" tabindex="0" data-post-id-down="{{ p.base36id }}" class="text-muted mx-auto arrow-down downvote-button"></div>
 
       {% else %}
 
@@ -192,13 +192,13 @@
       {% endif %}
       {% if v %}
       <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none">
-        <span id="arrow-{{ p.base36id }}-mobile-up" class="mr-2 arrow-mobile-up post-{{ p.base36id }}-up">
+        <span id="post-{{ p.base36id }}-up-mobile" class="mr-2 arrow-mobile-up upvote-button">
           <i class="fas fa-arrow-alt-up mx-0" aria-hidden="true"></i>
         </span>
 
-        <span id="post-{{ p.base36id }}" class="score text-muted post-score-{{ p.base36id }}">{{ score }}</span>
+        <span id="post-score-{{ p.base36id }}-mobile" class="score text-muted">{{ score }}</span>
 
-        <span id="arrow-{{ p.base36id }}-mobile-down" class="arrow-mobile-down ml-2 my-0 post-{{ p.base36id }}-down">
+        <span id="post-{{ p.base36id }}-down-mobile" class="arrow-mobile-down ml-2 my-0 downvote-button">
           <i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
         </span>
 
