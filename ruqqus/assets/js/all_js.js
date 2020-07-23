@@ -893,7 +893,7 @@ var downvoteButtons = document.getElementsByClassName('downvote-button')
 
 for (var i = 0; i < upvoteButtons.length; i++) {
     upvoteButtons[i].addEventListener('click', function(event) {
-        var id = event.target.dataset.postIdUp
+        var id = event.target.dataset.postIdUp;
 
         var downvoteButton = document.getElementById('post-' + id + '-down');
 
@@ -951,7 +951,7 @@ var downvoteButtonsMobile = document.getElementsByClassName('downvote-button-mob
 
 for (var i = 0; i < upvoteButtonsMobile.length; i++) {
     upvoteButtonsMobile[i].addEventListener('click', function(event) {
-        var id = event.target.dataset.postIdUp
+        var id = event.target.dataset.postIdUpMobile;
 
         var downvoteButton = document.getElementById('post-' + id + '-down-mobile');
 
@@ -977,7 +977,7 @@ for (var i = 0; i < upvoteButtonsMobile.length; i++) {
 
 for (var i = 0; i < downvoteButtonsMobile.length; i++) {
     downvoteButtonsMobile[i].addEventListener('click', function(event) {
-        var id = event.target.dataset.postIdDown;
+        var id = event.target.dataset.postIdDownMobile;
 
         var downvoteButton = document.getElementById('post-' + id + '-down-mobile');
 
