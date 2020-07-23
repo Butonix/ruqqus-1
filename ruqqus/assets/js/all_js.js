@@ -891,7 +891,7 @@ var upvoteButtons = document.getElementsByClassName('upvote-button')
 
 var downvoteButtons = document.getElementsByClassName('downvote-button')
 
-var voteDirection = undefined
+var voteDirection = 0
 
 for (var i = 0; i < upvoteButtons.length; i++) {
   upvoteButtons[i].addEventListener('click', function(event) {
@@ -926,6 +926,9 @@ for (var i = 0; i < upvoteButtons.length; i++) {
     }
 
     for (var n = 0; n < 1; n++) {
+      callback=function() {
+        console.log('voted')
+      }
       post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
     }
 
@@ -965,6 +968,9 @@ for (var i = 0; i < downvoteButtons.length; i++) {
     }
 
     for (var n = 0; n < 1; n++) {
+      callback=function() {
+        console.log('voted')
+      }
       post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
     }
 
