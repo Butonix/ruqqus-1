@@ -3531,8 +3531,9 @@ body, #settings, #notifications, #submit{
     font-size: $font-size-lg;
 }
 
-.arrow-up::before, .arrow-down::before {
+.arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
     font-size: $font-size-lg;
+    color: $gray-400;
 }
 
 .active.arrow-up::before, .active.arrow-down::before, .active.arrow-up:hover::before, .active.arrow-down:hover::before {

@@ -17398,8 +17398,9 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     font-size: 1.25rem;
   }
 
-  .arrow-up::before, .arrow-down::before {
+  .arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
     font-size: 1.25rem;
+    color: #303030;
   }
 
   .active.arrow-up::before, .active.arrow-down::before, .active.arrow-up:hover::before, .active.arrow-down:hover::before {
