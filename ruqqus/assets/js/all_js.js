@@ -902,9 +902,9 @@ for (var i = 0; i < upvoteButtons.length; i++) {
     var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
     var scoreText = document.getElementsByClassName('post-score-' + id);
 
-    callback=function() {
+    for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
 
-      for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
+      callback=function() {
 
         var thisUpvoteButton = upvoteButton[j];
         var thisDownvoteButton = downvoteButton[j];
@@ -925,18 +925,14 @@ for (var i = 0; i < upvoteButtons.length; i++) {
           thisScoreText.textContent = thisScore + 1
           voteDirection = "1"
         }
-
-        vote(voteDirection)
       }
-    }
 
-    for (var n = 0; n < 1; n++) {
-      function vote(direction) {
-        //post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
-        console.log(direction)
-      }
-    }
-  })
+      for (var n = 0; n < 1; n++) {
+    //post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
+    console.log(voteDirection)
+  }
+}
+})
 
 };
 
@@ -949,8 +945,9 @@ for (var i = 0; i < downvoteButtons.length; i++) {
     var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
     var scoreText = document.getElementsByClassName('post-score-' + id);
 
-    callback=function() {
-      for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
+    for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
+
+      callback=function() {
 
         var thisUpvoteButton = upvoteButton[j];
         var thisDownvoteButton = downvoteButton[j];
@@ -972,17 +969,14 @@ for (var i = 0; i < downvoteButtons.length; i++) {
           voteDirection = "-1"
         }
       }
-
-      vote(voteDirection)
     }
 
     for (var n = 0; n < 1; n++) {
-      function vote(direction) {
-        //post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
-        console.log(direction)
-      }
-    }
-  })
+    //post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
+    console.log(voteDirection)
+  }
+
+})
 };
 
 /*
