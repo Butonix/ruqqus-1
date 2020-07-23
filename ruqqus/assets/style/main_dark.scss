@@ -3609,7 +3609,7 @@ body, #settings, #notifications, #submit {
     font-size: $font-size-lg;
 }
 
-.arrow-up::before, .arrow-down::before {
+.arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
     font-size: $font-size-lg;
     opacity: 1;
 }
