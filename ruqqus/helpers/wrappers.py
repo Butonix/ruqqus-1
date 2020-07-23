@@ -2,6 +2,7 @@ from flask import *
 from os import environ
 import requests
 from werkzeug.wrappers.response import Response as RespObj
+import time
 
 from ruqqus.classes import *
 from .get import *
@@ -249,3 +250,35 @@ def api(f):
 
     wrapper.__name__=f.__name__
     return wrapper
+
+def scope(*scopes):
+
+    def wrapper_maker(f):
+
+        def wrapper(*args, **kwargs):
+
+            token=request.headers.get("Authorization", "Bearer: ")
+
+            try:
+                token=token.split()[1]
+            except:
+                return jsonify({"error":"400 Bad Request: Authorization token not provided"}), 400
+            
+            client=g.db.query(ClientAuth).filter(
+                ClientAuth.access_token==token,
+                ClientAuth.access_token_expire_utc>int(time.time())
+                ).first()
+
+            for scope in scopes:
+
+
+
+
+            return f(*args, v=client.user, **kwargs)
+
+
+        wrapper.__name__=f.__name__
+        return wrapper
+
+    return wrapper_maker
+

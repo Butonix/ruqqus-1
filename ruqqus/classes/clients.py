@@ -1,4 +1,6 @@
 from flask import *
+from sqlalchemy import *
+from sqlalchemy.orm import relationship
 
 from ruqqus.__main__ import app, Base
 
@@ -32,3 +34,5 @@ class ClientAuth(Base):
 	access_token=Column(String(128))
 	refresh_token=Column(String(128))
 	access_token_expire_utc=Column(Integer)
+
+	user=relationship("User")
