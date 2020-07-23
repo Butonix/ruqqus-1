@@ -923,15 +923,15 @@ for (var i = 0; i < upvoteButtons.length; i++) {
         thisScoreText.textContent = thisScore + 1
         voteDirection = "1"
       }
+
+      post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
     }
   })
-
-  post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
 };
 
 for (var i = 0; i < downvoteButtons.length; i++) {
   downvoteButtons[i].addEventListener('click', callback=function(event) {
-    
+
     var id = event.target.dataset.postIdDown;
 
     var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
@@ -959,10 +959,10 @@ for (var i = 0; i < downvoteButtons.length; i++) {
         thisScoreText.textContent = thisScore - 1
         voteDirection = "-1"
       }
+
+      post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
     }
   })
-
-  post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
 };
 
 /*
