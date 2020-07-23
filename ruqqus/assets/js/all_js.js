@@ -926,7 +926,7 @@ for (var i = 0; i < upvoteButtons.length; i++) {
     }
 
     for (var n = 0; n < 1; n++) {
-      console.log(voteDirection)
+      post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
     }
   })
 };
@@ -964,12 +964,10 @@ for (var i = 0; i < downvoteButtons.length; i++) {
     }
 
     for (var n = 0; n < 1; n++) {
-      console.log(voteDirection)
+      post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
     }
   })
 };
-
-//post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
 
 /*
 
