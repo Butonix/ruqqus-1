@@ -887,8 +887,6 @@ function toggle_sidebar_expand() {
 
 // Voting
 
-// desktop post voting
-
 var upvoteButtons = document.getElementsByClassName('upvote-button')
 
 var downvoteButtons = document.getElementsByClassName('downvote-button')
@@ -897,38 +895,24 @@ for (var i = 0; i < upvoteButtons.length; i++) {
     upvoteButtons[i].addEventListener('click', function(event) {
         var id = event.target.dataset.postIdUp
 
-        var downvoteButton = document.getElementById('post-' + id + '-down');
-        var downvoteButtonMobile = document.getElementById('post-' + id + '-down-mobile')
+        var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
 
-        var upvoteButton = document.getElementById('post-' + id + '-up');
-        var upvoteButtonMobile = document.getElementById('post-' + id + '-up-mobile');
+        var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
 
-        var scoreText = document.getElementById('post-score-' + id);
-        var scoreTextMobile = document.getElementById('post-score-' + id + '-mobile');
+        var scoreText = document.getElementsByClassName('post-score-' + id);
 
         var score = Number(scoreText.textContent);
-        var scoreMobile = Number(scoreTextMobile.textContent);
 
-        if (upvoteButton.classList.contains('active') || upvoteButtonMobile.classList.contains('active')) {
+        if (upvoteButton.classList.contains('active')) {
         	upvoteButton.classList.remove('active')
-        	upvoteButtonMobile.classList.remove('active')
-
         	scoreText.textContent = score - 1
-        	scoreTextMobile.textContent = scoreMobile - 1
-        } else if (downvoteButton.classList.contains('active') || downvoteButtonMobile.classList.contains('active')) {
+        } else if (downvoteButton.classList.contains('active')) {
         	upvoteButton.classList.add('active')
-        	upvoteButtonMobile.classList.add('active')
-
         	downvoteButton.classList.remove('active')
-        	downvoteButtonMobile.classList.remove('active')
-
         	scoreText.textContent = score + 2
-        	scoreTextMobile.textContent = scoreMobile + 2
         } else {
         	upvoteButton.classList.add('active')
-        	upvoteButtonMobile.classList.add('active')
         	scoreText.textContent = score + 1
-        	scoreTextMobile.textContent = scoreMobile + 1
         }
     })
 };
@@ -937,36 +921,24 @@ for (var i = 0; i < downvoteButtons.length; i++) {
     downvoteButtons[i].addEventListener('click', function(event) {
         var id = event.target.dataset.postIdDown;
 
-        var downvoteButton = document.getElementById('post-' + id + '-down');
-        var downvoteButtonMobile = document.getElementById('post-' + id + '-down-mobile')
+        var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
 
-        var upvoteButton = document.getElementById('post-' + id + '-up');
-        var upvoteButtonMobile = document.getElementById('post-' + id + '-up-mobile');
+        var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
 
-        var scoreText = document.getElementById('post-score-' + id);
-        var scoreTextMobile = document.getElementById('post-score-' + id + '-mobile');
+        var scoreText = document.getElementsByClassName('post-score-' + id);
 
         var score = Number(scoreText.textContent);
-        var scoreMobile = Number(scoreTextMobile.textContent);
 
-        if (downvoteButton.classList.contains('active') || downvoteButtonMobile.classList.contains('active')) {
+        if (downvoteButton.classList.contains('active')) {
         	downvoteButton.classList.remove('active')
-
         	scoreText.textContent = score + 1
-        	scoreTextMobile.textContent = scoreMobile + 1
-        } else if (upvoteButton.classList.contains('active') || upvoteButtonMobile.classList.contains('active')) {
+        } else if (upvoteButton.classList.contains('active')) {
         	downvoteButton.classList.add('active')
-        	downvoteButtonMobile.classList.add('active')
-
         	upvoteButton.classList.remove('active')
-        	upvoteButtonMobile.classList.remove('active')
-
         	scoreText.textContent = score - 2
-        	scoreTextMobile.textContent = scoreMobile - 2
         } else {
         	downvoteButton.classList.add('active')
         	scoreText.textContent = score - 1
-        	scoreTextMobile.textContent = scoreMobile - 1
         }
     })
 };
