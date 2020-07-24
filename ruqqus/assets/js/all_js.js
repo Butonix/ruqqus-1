@@ -1011,7 +1011,7 @@ var voteDirection = 0
 for (var i = 0; i < upvoteButtons.length; i++) {
   upvoteButtons[i].addEventListener('click', upvotePost, false);
   upvoteButtons[i].addEventListener('keydown', function(event) {
-    if (event.key === 13) {
+    if (event.keyCode === 13) {
       upvotePost(event)
     }
   }, false)
@@ -1020,7 +1020,7 @@ for (var i = 0; i < upvoteButtons.length; i++) {
 for (var i = 0; i < downvoteButtons.length; i++) {
   downvoteButtons[i].addEventListener('click', downvotePost, false);
   downvoteButtons[i].addEventListener('keydown', function(event) {
-    if (event.key === 13) {
+    if (event.keyCode === 13) {
       downvotePost(event)
     }
   }, false)
