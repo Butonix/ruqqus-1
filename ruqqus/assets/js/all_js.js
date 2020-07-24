@@ -1014,7 +1014,7 @@ for (var i = 0; i < upvoteButtons.length; i++) {
   upvoteButtons[i].addEventListener('click', upvote, false);
   upvoteButtons[i].addEventListener('keydown', function(event) {
     if (event.keyCode === 13) {
-      upvotePost(event)
+      upvote(event)
     }
   }, false)
 };
@@ -1023,7 +1023,7 @@ for (var i = 0; i < downvoteButtons.length; i++) {
   downvoteButtons[i].addEventListener('click', downvote, false);
   downvoteButtons[i].addEventListener('keydown', function(event) {
     if (event.keyCode === 13) {
-      downvotePost(event)
+      downvote(event)
     }
   }, false)
 };
