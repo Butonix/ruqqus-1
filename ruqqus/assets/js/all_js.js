@@ -937,6 +937,8 @@ var upvotePost = function(event) {
       thisScoreText.classList.remove('score')
     } else {
       thisScoreText.classList.add('score')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score-down')
     }
   }
 
@@ -987,6 +989,8 @@ var downvotePost = function(event) {
       thisScoreText.classList.remove('score')
     } else {
       thisScoreText.classList.add('score')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score-down')
     }
   }
 
