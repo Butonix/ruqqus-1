@@ -898,6 +898,106 @@ function toggle_sidebar_expand() {
 
 // Voting
 
+var upvotePost = function(event) {
+  var id = event.target.dataset.postIdUp;
+
+  var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
+  var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
+  var scoreText = document.getElementsByClassName('post-score-' + id);
+
+  for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
+
+    var thisUpvoteButton = upvoteButton[j];
+    var thisDownvoteButton = downvoteButton[j];
+    var thisScoreText = scoreText[j];
+    var thisScore = Number(thisScoreText.textContent);
+
+    if (thisUpvoteButton.classList.contains('active')) {
+      thisUpvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore - 1
+      voteDirection = "0"
+    } else if (thisDownvoteButton.classList.contains('active')) {
+      thisUpvoteButton.classList.add('active')
+      thisDownvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore + 2
+      voteDirection = "1"
+    } else {
+      thisUpvoteButton.classList.add('active')
+      thisScoreText.textContent = thisScore + 1
+      voteDirection = "1"
+    }
+
+    if (thisUpvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-up')
+      thisScoreText.classList.remove('score-down')
+      thisScoreText.classList.remove('score')
+    } else if (thisDownvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-down')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score')
+    } else {
+      thisScoreText.classList.add('score')
+    }
+  }
+
+  for (var n = 0; n < 1; n++) {
+    callback=function() {
+      console.log('voted')
+    }
+    post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
+  }
+}
+
+var downvotePost = function(event) {
+  var id = event.target.dataset.postIdDown;
+
+  var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
+  var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
+  var scoreText = document.getElementsByClassName('post-score-' + id);
+
+  for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
+
+    var thisUpvoteButton = upvoteButton[j];
+    var thisDownvoteButton = downvoteButton[j];
+    var thisScoreText = scoreText[j];
+    var thisScore = Number(thisScoreText.textContent);
+
+    if (thisDownvoteButton.classList.contains('active')) {
+      thisDownvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore + 1
+      voteDirection = "0"
+    } else if (thisUpvoteButton.classList.contains('active')) {
+      thisDownvoteButton.classList.add('active')
+      thisUpvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore - 2
+      voteDirection = "-1"
+    } else {
+      thisDownvoteButton.classList.add('active')
+      thisScoreText.textContent = thisScore - 1
+      voteDirection = "-1"
+    }
+
+    if (thisUpvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-up')
+      thisScoreText.classList.remove('score-down')
+      thisScoreText.classList.remove('score')
+    } else if (thisDownvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-down')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score')
+    } else {
+      thisScoreText.classList.add('score')
+    }
+  }
+
+  for (var n = 0; n < 1; n++) {
+    callback=function() {
+      console.log('voted')
+    }
+    post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
+  }
+}
+
 var upvoteButtons = document.getElementsByClassName('upvote-button')
 
 var downvoteButtons = document.getElementsByClassName('downvote-button')
@@ -911,106 +1011,6 @@ for (var i = 0; i < upvoteButtons.length; i++) {
 for (var i = 0; i < downvoteButtons.length; i++) {
   downvoteButtons[i].addEventListener('click', downvotePost, false);
 };
-
-var upvotePost = function(event) {
-      var id = event.target.dataset.postIdUp;
-
-    var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
-    var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
-    var scoreText = document.getElementsByClassName('post-score-' + id);
-
-    for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
-
-      var thisUpvoteButton = upvoteButton[j];
-      var thisDownvoteButton = downvoteButton[j];
-      var thisScoreText = scoreText[j];
-      var thisScore = Number(thisScoreText.textContent);
-
-      if (thisUpvoteButton.classList.contains('active')) {
-        thisUpvoteButton.classList.remove('active')
-        thisScoreText.textContent = thisScore - 1
-        voteDirection = "0"
-      } else if (thisDownvoteButton.classList.contains('active')) {
-        thisUpvoteButton.classList.add('active')
-        thisDownvoteButton.classList.remove('active')
-        thisScoreText.textContent = thisScore + 2
-        voteDirection = "1"
-      } else {
-        thisUpvoteButton.classList.add('active')
-        thisScoreText.textContent = thisScore + 1
-        voteDirection = "1"
-      }
-
-      if (thisUpvoteButton.classList.contains('active')) {
-        thisScoreText.classList.add('score-up')
-        thisScoreText.classList.remove('score-down')
-        thisScoreText.classList.remove('score')
-      } else if (thisDownvoteButton.classList.contains('active')) {
-        thisScoreText.classList.add('score-down')
-        thisScoreText.classList.remove('score-up')
-        thisScoreText.classList.remove('score')
-      } else {
-        thisScoreText.classList.add('score')
-      }
-    }
-
-    for (var n = 0; n < 1; n++) {
-      callback=function() {
-        console.log('voted')
-      }
-      post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
-    }
-}
-
-var downvotePost = function(event) {
-      var id = event.target.dataset.postIdDown;
-
-    var downvoteButton = document.getElementsByClassName('post-' + id + '-down');
-    var upvoteButton = document.getElementsByClassName('post-' + id + '-up');
-    var scoreText = document.getElementsByClassName('post-score-' + id);
-
-    for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
-
-      var thisUpvoteButton = upvoteButton[j];
-      var thisDownvoteButton = downvoteButton[j];
-      var thisScoreText = scoreText[j];
-      var thisScore = Number(thisScoreText.textContent);
-
-      if (thisDownvoteButton.classList.contains('active')) {
-        thisDownvoteButton.classList.remove('active')
-        thisScoreText.textContent = thisScore + 1
-        voteDirection = "0"
-      } else if (thisUpvoteButton.classList.contains('active')) {
-        thisDownvoteButton.classList.add('active')
-        thisUpvoteButton.classList.remove('active')
-        thisScoreText.textContent = thisScore - 2
-        voteDirection = "-1"
-      } else {
-        thisDownvoteButton.classList.add('active')
-        thisScoreText.textContent = thisScore - 1
-        voteDirection = "-1"
-      }
-
-      if (thisUpvoteButton.classList.contains('active')) {
-        thisScoreText.classList.add('score-up')
-        thisScoreText.classList.remove('score-down')
-        thisScoreText.classList.remove('score')
-      } else if (thisDownvoteButton.classList.contains('active')) {
-        thisScoreText.classList.add('score-down')
-        thisScoreText.classList.remove('score-up')
-        thisScoreText.classList.remove('score')
-      } else {
-        thisScoreText.classList.add('score')
-      }
-    }
-
-    for (var n = 0; n < 1; n++) {
-      callback=function() {
-        console.log('voted')
-      }
-      post("/api/vote/post/"+ id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
-    }
-}
 
 /*
 
