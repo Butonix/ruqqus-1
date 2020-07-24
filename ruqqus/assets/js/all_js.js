@@ -1771,3 +1771,39 @@ comment_edit=function(id){
   xhr.send(form)
 
 }
+
+
+filter_guild=function() {
+
+  var exileForm = document.getElementById("exile-form");
+
+  var exileError = document.getElementById("toast-error-message");
+
+  var boardField = document.getElementById("exile-username");
+
+  var isValidUsername = boardField.checkValidity();
+
+  boardname = boardField.value;
+
+  if (isValidUsername) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("post", "/settings/block_guild");
+    xhr.withCredentials=true;
+    f=new FormData();
+    f.append("board", boardname);
+    f.append("formkey", formkey());
+    xhr.onload=function(){
+      if (xhr.status==204) {
+        window.location.reload(true);
+      }
+      else {
+      $('#toast-exile-error').toast('dispose');
+      $('#toast-exile-error').toast('show');
+      exileError.textContent = JSON.parse(xhr.response)["error"];
+      }
+    }
+    xhr.send(f)
+  }
+
+}

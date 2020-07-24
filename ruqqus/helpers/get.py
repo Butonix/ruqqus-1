@@ -324,11 +324,14 @@ def get_comments(cids, v=None, nSession=None, sort_type="new", **kwargs):
     return output
     
 
-def get_board(bid):
+def get_board(bid, graceful=False):
 
     x=g.db.query(Board).filter_by(id=base36decode(bid)).first()
     if not x:
-        abort(404)
+        if graceful:
+            return None
+        else:
+            abort(404)
     return x
 
 def get_guild(name, graceful=False):

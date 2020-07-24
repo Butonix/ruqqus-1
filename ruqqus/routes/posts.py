@@ -8,6 +8,7 @@ import threading
 import requests
 import re
 import bleach
+import time
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -317,16 +318,28 @@ def submit_post(v):
                                            )
                                )
     #check spam
+    now=int(time.time())
+    cutoff=now-60*60*24
     similar_posts = g.db.query(Submission).options(
-        lazyload('*'),
-        joinedload(Submission.submission_aux)
+        lazyload('*')
+        ).join(Submission.submission_aux
         ).filter(
         Submission.author_id==v.id, 
-        SubmissionAux.title.op('<->')(title)<app.config["SPAM_SIMILARITY_THRESHOLD"]
-        ).options(
-        contains_eager(Submission.submission_aux)
+        SubmissionAux.title.op('<->')(title)<app.config["SPAM_SIMILARITY_THRESHOLD"],
+        Submission.created_utc>cutoff
         ).all()
-    print([i.title for i in similar_posts])
+
+    if url:
+        similar_urls=g.db.query(Submission).options(
+            lazyload('*')
+            ).join(Submission.submission_aux
+            ).filter(
+            Submission.author_id==v.id, 
+            SubmissionAux.url.op('<->')(url)<app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
+            Submission.created_utc>cutoff
+            ).all()
+    else:
+        similar_urls=[]
 
     threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
     if v.age >= (60*60*24*30):
@@ -336,7 +349,8 @@ def submit_post(v):
     elif v.age >=(60*60*24):
         threshold *= 2
 
-    if len(similar_posts) >= threshold:
+
+    if max(len(similar_urls), len(similar_posts)) >= threshold:
 
         text="Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
         send_notification(v, text)
@@ -345,7 +359,7 @@ def submit_post(v):
           include_alts=True,
           days=1)
 
-        for post in similar_posts:
+        for post in similar_posts+similar_urls:
             post.is_banned=True
             g.db.add(post)
 

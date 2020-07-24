@@ -360,11 +360,19 @@ def delete_account(v):
 @auth_required
 def settings_blockedpage(v):
 
-    users=[x.target for x in v.blocked]
+    #users=[x.target for x in v.blocked]
 
     return render_template("settings_blocks.html",
-        v=v,
-        users=users)
+        v=v)
+
+@app.route("/settings/filters", methods=["GET"])
+@auth_required
+def settings_blockedguilds(v):
+
+    #users=[x.target for x in v.blocked]
+
+    return render_template("settings_guildfilter.html",
+        v=v)
 
 @app.route("/settings/block", methods=["POST"])
 @auth_required
@@ -406,6 +414,52 @@ def settings_unblock_user(v):
     user=get_user(request.values.get("username"))
 
     x= v.has_block(user)
+    if not x:
+        abort(409)
+
+    g.db.delete(x)
+
+    cache.delete_memoized(v.idlist)
+    #cache.delete_memoized(Board.idlist, v=v)
+    cache.delete_memoized(frontlist, v=v)
+    
+    return "", 204
+
+
+@app.route("/settings/block_guild", methods=["POST"])
+@auth_required
+@validate_formkey
+def settings_block_guild(v):
+
+    board=get_guild(request.form.get("board"), graceful=True)
+
+    if not board:
+        return jsonify({"error":"That guild doesn't exist."}), 404
+
+    if v.has_blocked_guild(board):
+        return jsonify({"error":f"You have already blocked @{user.username}."}), 409
+
+
+    new_block=BoardBlock(user_id=v.id,
+                        board_id=board.id,
+                        created_utc=int(time.time())
+                        )
+    g.db.add(new_block)
+
+    cache.delete_memoized(v.idlist)
+    #cache.delete_memoized(Board.idlist, v=v)
+    cache.delete_memoized(frontlist, v=v)
+
+    return "", 204
+    
+@app.route("/settings/unblock_guild", methods=["POST"])
+@auth_required
+@validate_formkey
+def settings_unblock_guild(v):
+
+    board=get_guild(request.values.get("board"), graceful=True)
+
+    x= v.has_blocked_guild(board)
     if not x:
         abort(409)
 

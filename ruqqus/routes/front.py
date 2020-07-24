@@ -41,7 +41,7 @@ def notifications(v):
                            standalone=True)
 
 @cache.memoize(timeout=900)
-def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **kwargs):
+def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **kwargs):
 
     #cutoff=int(time.time())-(60*60*24*30)
 
@@ -71,10 +71,13 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
         posts.filter_by(is_offensive=False)
 
     if v and v.admin_level >= 4:
-        pass
+        board_blocks = g.db.query(BoardBlock.board_id).filter_by(user_id=v.id).subquery()
+
+        posts=posts.filter(Submission.board_id.notin_(board_blocks))
     elif v:
         m=g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, invite_rescinded=False).subquery()
         c=g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id).subquery()
+
         posts=posts.filter(
           or_(
             Submission.author_id==v.id,
@@ -91,6 +94,10 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
             Submission.author_id.notin_(blocking),
             Submission.author_id.notin_(blocked)
             )
+
+        board_blocks = g.db.query(BoardBlock.board_id).filter_by(user_id=v.id).subquery()
+
+        posts=posts.filter(Submission.board_id.notin_(board_blocks))
     else:
         posts=posts.filter_by(post_public=True)
 
@@ -107,7 +114,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
         elif t=='year':
             cutoff=now-31536000
         else:
-            cutoff=0        
+            cutoff=0    
         posts=posts.filter(Submission.created_utc >= cutoff)
 
     if sort=="hot":

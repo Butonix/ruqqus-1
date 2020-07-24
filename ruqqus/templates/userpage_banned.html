@@ -75,7 +75,11 @@
         <i class="fas text-danger fa-user-slash fa-stack-1x text-lg"></i>
       </span>
       <h2 class="h5">@{{ u.username }} is banned</h2>
+      {% if u.unban_utc %}
+      <p class="text-muted">This account has been temporarily suspended from Ruqqus. Check back later.</p>
+      {% else %}
       <p class="text-muted">This account has been suspended from Ruqqus.</p>
+      {% endif %}
       {% if u.ban_reason %}
       <p class="text-small text-muted"><span class="font-weight-bold">Reason:</span> {{ u.ban_reason }}</p>
       {% endif %}
