@@ -239,8 +239,8 @@ def api(*scopes, no_ban=False):
 
             if request.path.startswith('/api/v1'):
 
+                #validate auth token
                 token=request.headers.get("Authorization", "Bearer: ")
-
                 try:
                     token=token.split()[1]
                 except:
@@ -254,13 +254,14 @@ def api(*scopes, no_ban=False):
                 if not client:
                     return jsonify({"error":"401 Not Authorized. Invalid or Expired Token"}), 401
 
+                #validate app associated with token
                 if client.application.is_banned:
                     return jsonify({"error":f"403 Forbidden. The application `{client.application.app_name}` is suspended."}), 403
 
+                #validate correct scopes for request
                 for scope in scopes:
-
                     if not client.__dict__.get(f"scope_{scope}"):
-                        return jsonify({"error":f"401 Not Authorized. Scope {scope} is required."}), 403
+                        return jsonify({"error":f"401 Not Authorized. Scope `{scope}` is required."}), 403
     
                 if no_ban and client.user.is_banned and (client.user.unban_utc==0 or client.user.unban_utc>time.time()):
                     return jsonify({"error":f"403 Forbidden"}), 403

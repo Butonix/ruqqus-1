@@ -113,7 +113,7 @@ def oauth_authorize_post(v):
     if not state:
         return jsonify({'oauth_error':'state argument required'}), 400
 
-    permanent=request.values.get("permanent", False)
+    permanent=request.values.get("permanent")
 
 
     new_auth=ClientAuth(
@@ -146,12 +146,14 @@ This endpoint takes the following parameters:
 '''
 
     code=request.values.get("code")
+    application = get_application(request.values.get("client_id"))
+
+    if not application or (request.values.get("client_secret") != application.client_secret):
+        return jsonify({"oauth_error":"Invalid client ID or secret"}), 401
+
 
     if request.values.get("grant_type")=="code":
-        application = get_application(request.values.get("client_id"))
 
-        if not application or (request.values.get("client_secret") != application.client_secret):
-            return jsonify({"oauth_error":"Invalid client ID or secret"}), 401
 
         auth=g.db.query(ClientAuth).filter_by(oauth_code=code).first()
 
@@ -165,6 +167,7 @@ This endpoint takes the following parameters:
         data = {
             "access_token":auth.access_token,
             "scopes": auth.scopelist,
+            "expires_at": auth.access_token_expire_utc
         }
 
         if auth.refresh_token:
@@ -172,3 +175,28 @@ This endpoint takes the following parameters:
 
         return jsonify(data)
 
+    elif request.values.get("grant_type")=="refresh"
+
+        auth=g.db.query(ClientAuth).filter_by(refresh_token=request.values.get("refresh_token")).first()
+
+        auth.access_token=secrets.token_urlsafe(128)[0:128]
+        auth.access_token_expire_utc = int(time.time())+60*60
+
+        g.db.add(auth)
+
+        data={
+            "access_token":auth.access_token, 
+            "expires_at": auth.access_token_expire_utc
+        }
+
+        return jsonify(data)
+
+    else:
+        return jsonify({"oauth_error":"Invalid grant type"})
+
+
+@app.route("/api/v1/identity")
+@api("identity")
+def api_v1_identity(v):
+
+    return jsonify(v.json)
