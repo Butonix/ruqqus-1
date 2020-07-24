@@ -474,7 +474,6 @@ def submit_post(v):
         #update post data
         new_post.url=f'https://{BUCKET}/{name}'
         new_post.is_image=True
-        new_post.has_thumb=True
         new_post.domain_ref=1 #id of i.ruqqus.com domain
         g.db.add(new_post)
         g.db.flush()
