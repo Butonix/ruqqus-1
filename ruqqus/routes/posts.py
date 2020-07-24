@@ -464,7 +464,7 @@ def submit_post(v):
     g.db.refresh(new_post)
 
     #check for uploaded image
-    if request.files.get('file') and v.can_submit_image:
+    if request.files.get('file'):
 
         file=request.files['file']
 
