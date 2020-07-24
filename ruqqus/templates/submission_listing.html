@@ -86,7 +86,7 @@
 
       {% if p.thumb_url and p.is_image %}
       <div class="d-block d-md-none" style="z-index: 3;">
-        <img src="{{ p.thumb_url }}" class="post-img" alt="" onclick="enlarge_thumb('post-{{ p.base36id }}')">
+        <img src="{{ p.thumb_url }}" class="post-img" alt="" onclick="expandDesktopImage('{{ p.url }}','{{ p.url }}')">
       </div>
       {% endif %}
 
@@ -176,6 +176,7 @@
 
 </div>
 
+<!--- try removing this block
 {% if p.is_image and p.thumb_url and not p.embed_url %}
 <div class="row mobile-thumb-enlarged text-center mt-3">
   <div class="col px-0">
@@ -183,6 +184,7 @@
   </div>
 </div>
 {% endif %}
+--->
 
 <div class="card-footer d-block d-md-none mt-2">
   <div class="post-actions">
