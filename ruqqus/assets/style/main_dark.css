@@ -14551,6 +14551,10 @@ th {
   color: #38B2AC !important;
 }
 
+.comment-actions .score {
+  color: #AAAAAA;
+}
+
 .score {
   color: #CFCFCF;
 }
