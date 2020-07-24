@@ -1,5 +1,6 @@
 from urllib.parse import urlparse
 from time import time
+import secrets
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -9,88 +10,165 @@ from ruqqus.classes import *
 from flask import *
 from ruqqus.__main__ import app
 
-@app.route("/api/vote/post/<post_id>/<x>", methods=["POST"])
-@is_not_banned
-@validate_formkey
-def api_vote_post(post_id, x, v):
+SCOPES={
+    'identity':'See your username',
+    'create':'Save posts and comments as you',
+    'read':'View Ruqqus as you, including private or restricted content',
+    'update':'Edit your posts and comments',
+    'delete':'Delete your posts and comments',
+    'vote':'Cast votes as you',
+    'guildmaster':'Perform Guildmaster actions'
+}
 
-    
-    if x not in ["-1", "0","1"]:
-        abort(400)
 
-    x=int(x)
 
-    post = get_post(post_id)
 
-    if post.is_banned or post.is_deleted or post.is_archived:
+@app.route("/oauth/authorize", methods=["GET"])
+@auth_required
+def oauth_authorize_prompt(v):
+
+
+'''
+This page takes the following URL parameters:
+* client_id - Your application client ID
+* scope - Comma-separated list of scopes. Scopes are described above
+* redirect_uri - Your redirect link
+'''
+
+    client_id=request.args.get("client_id")
+
+    application= get_application(client_id)
+    if not application:
+        abort(404)
+
+    if application.is_banned:
         abort(403)
 
-    #check for existing vote
-    existing = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
-    if existing:
-        existing.change_to(x)
-        #print(f"Re-vote Event: @{v.username} vote {x} on post {post_id}")
-        return "", 204
+    scopes_txt = request.args.get('scope')
+    scopes=scopes_txt.split(',')
+    if not scopes:
+        return jsonify({"oauth_error":"One or more scopes must be specified as a comma-separated list"}), 400
 
-    vote=Vote(user_id=v.id,
-              vote_type=x,
-              submission_id=base36decode(post_id)
-              )
+    for scope in scopes:
+        if scope not in SCOPES:
+            return jsonify({"oauth_error":f"The provided scope `{scope}` is not valid."}), 400
 
-    g.db.add(vote)
-    
 
-    #post.score_hot = post.rank_hot
-    #post.score_disputed=post.rank_fiery
-    post.score_top=post.score
-    #post.score_activity=post.rank_activity
-    #post.score_best=post.rank_best
+    redirect_uri = request.args.get("redirect_uri")
+    if not redirect_uri.startswith('https://'):
+        return jsonify({"oauth_error":"redirect_uri must use https."}), 400
 
-    g.db.add(post)
-    
 
-    #print(f"Vote Event: @{v.username} vote {x} on post {post_id}")
+    valid_redirect_uris = [x.lstrip().rstrip() for x in application.redirect_uri.split(",")]
 
-    return "", 204
-                    
-@app.route("/api/vote/comment/<comment_id>/<x>", methods=["POST"])
-@is_not_banned
+    if redirect_uri not in valid_redirect_uris:
+        return jsonify({"oauth_error":"Invalid redirect_uri"}), 400
+
+    state = request.args.get("state")
+    if not state:
+        return jsonify({'oauth_error':'state argument required'}), 400
+
+    permanent = request.args.get("permanent")=='true'
+
+    return render_template("oauth_authorize.html",
+        v=v,
+        application=application,
+        SCOPES=SCOPES,
+        state=state,
+        scopes=scopes,
+        scopes_txt=scopes_txt,
+        redirect_uri=redirect_uri,
+        permanent=permanent
+        )
+
+
+@app.route("/oauth/authorize", methods=["POST"])
+@auth_required
 @validate_formkey
-def api_vote_comment(comment_id, x, v):
+def oauth_authorize_post(v):
 
-    
-    if x not in ["-1", "0","1"]:
-        abort(400)
+    client_id=request.form.get("client_id")
+    scopes_txt=request.form.get("scopes")
+    state=request.form.get("state")
+    redirect_uri = request.form.get("redirect_uri")
 
-    x=int(x)
-
-    comment = get_comment(comment_id)
-
-    if comment.is_banned or comment.is_deleted or comment.post.is_archived:
+    application = get_application(client_id)
+    if not application:
+        abort(404)
+    if application.is_banned:
         abort(403)
 
-    #check for existing vote
-    existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
-    if existing:
-        existing.change_to(x)
-        #print(f"Re-vote Event: @{v.username} vote {x} on comment {comment_id}")
-        return "", 204
+    valid_redirect_uris = [x.lstrip().rstrip() for x in application.redirect_uri.split(",")]
+    if redirect_uri not in valid_redirect_uris:
+        return jsonify({"oauth_error":"Invalid redirect_uri"}), 400
 
-    vote=CommentVote(user_id=v.id,
-              vote_type=x,
-              comment_id=base36decode(comment_id)
-              )
+    scopes=scopes_txt.split(',')
+    if not scopes:
+        return jsonify({"oauth_error":"One or more scopes must be specified as a comma-separated list"}), 400
 
-    g.db.add(vote)
-    
+    for scope in scopes:
+        if scope not in SCOPES:
+            return jsonify({"oauth_error":f"The provided scope `{scope}` is not valid."}), 400
 
-    #comment.score_disputed=comment.rank_fiery
-    #comment.score_hot=comment.rank_hot
-    comment.score_top=comment.score
+    if not state:
+        return jsonify({'oauth_error':'state argument required'}), 400
 
-    g.db.add(comment)
-    
+    permanent=request.values.get("permanent", False)
 
-    #print(f"Vote Event: @{v.username} vote {x} on comment {comment_id}")
 
-    return "", 204
+    new_auth=ClientAuth(
+        oauth_client=application.id,
+        oauth_code=secrets.token_urlsafe(128)[0:128],
+        user_id=v.id,
+        scope_identity="identity" in scopes,
+        scope_create="create" in scopes,
+        scope_read="read" in scopes,
+        scope_update="update" in scopes,
+        scope_delete="delete" in scopes,
+        scope_vote = "vote" in scopes,
+        scope_guildmaster="guildmaster" in scopes,
+        refresh_token=secrets.token_urlsafe(128)[0:128] if permanent else None
+        )
+
+    g.db.add(new_auth)
+
+    return redirect(f"{redirect_uri}?code={new_auth.oauth_code}&scopes={scopes_txt}&state={state}")
+
+
+@app.route("/oauth/grant", methods=["post"])
+def oauth_grant():
+
+'''
+This endpoint takes the following parameters:
+* code - The code parameter provided in the redirect
+* client_id - Your client ID
+* client_secret - your client secret
+'''
+
+    code=request.values.get("code")
+
+    if request.values.get("grant_type")=="code":
+        application = get_application(request.values.get("client_id"))
+
+        if not application or (request.values.get("client_secret") != application.client_secret):
+            return jsonify({"oauth_error":"Invalid client ID or secret"}), 401
+
+        auth=g.db.query(ClientAuth).filter_by(oauth_code=code).first()
+
+        if not auth:
+            return jsonify({"oauth_error":"Invalid code"}), 40auth.code=None
+        auth.access_token=secrets.token_urlsafe(128)[0:128]
+        auth.access_token_expire_utc = int(time.time())+60*60
+
+        g.db.add(auth)
+
+        data = {
+            "access_token":auth.access_token,
+            "scopes": auth.scopelist,
+        }
+
+        if auth.refresh_token:
+            data["refresh_token"]= auth.refresh_token
+
+        return jsonify(data)
+

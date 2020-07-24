@@ -231,7 +231,7 @@ def no_cors(f):
 #wrapper for api-related things that discriminates between an api url
 #and an html url for the same content
 # f should return {'api':lambda:some_func(), 'html':lambda:other_func()}
-def api(*scopes):
+def api(*scopes, no_ban=False):
 
     def wrapper_maker(f):
 
@@ -244,7 +244,7 @@ def api(*scopes):
                 try:
                     token=token.split()[1]
                 except:
-                    return jsonify({"error":"400 Bad Request: Authorization token not provided"}), 400
+                    return jsonify({"error":"400 Bad Request. Authorization token not provided"}), 400
                 
                 client=g.db.query(ClientAuth).filter(
                     ClientAuth.access_token==token,
@@ -252,15 +252,25 @@ def api(*scopes):
                     ).first()
 
                 if not client:
-                    return jsonify({"error":"401 Not Authorized: Invalid or Expired Token"}), 401
+                    return jsonify({"error":"401 Not Authorized. Invalid or Expired Token"}), 401
+
+                if client.application.is_banned:
+                    return jsonify({"error":f"403 Forbidden. The application `{client.application.app_name}` is suspended."}), 403
 
                 for scope in scopes:
 
                     if not client.__dict__.get(f"scope_{scope}"):
-                        return jsonify({"error":f"401 Not Authorized: Scope {scope} is required."}), 403
+                        return jsonify({"error":f"401 Not Authorized. Scope {scope} is required."}), 403
     
+                if no_ban and client.user.is_banned and (client.user.unban_utc==0 or client.user.unban_utc>time.time()):
+                    return jsonify({"error":f"403 Forbidden"}), 403
+
                 result = f(*args, v=client.user, **kwargs)
-                return jsonify(result["api"]())
+                resp=make_response(jsonify(result["api"]()))
+                resp.headers.add("Cache-Control","private")
+                resp.headers.add("Access-Control-Allow-Origin",app.config["SERVER_NAME"])
+                return resp
+
 
             else:
 
@@ -272,7 +282,7 @@ def api(*scopes):
                 if request.path.startswith('/inpage/'):
                     return result['inpage']()
                 else:
-                    return resutl['html']()
+                    return result['html']()
 
         wrapper.__name__=f.__name__
         return wrapper

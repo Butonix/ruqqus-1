@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 
 from ruqqus.__main__ import app, Base
 
-class OauthClient(Base):
+class OauthApp(Base):
 
 	__tablename__="oauth_apps"
 
@@ -35,4 +35,21 @@ class ClientAuth(Base):
 	refresh_token=Column(String(128))
 	access_token_expire_utc=Column(Integer)
 
-	user=relationship("User")
+	user=relationship("User", lazy="joined")
+	application = relationship("OauthApp", lazy="joined")
+
+	@property
+	def scopelist:
+
+		output=""
+		output += "identity," if self.scope_identity else ""
+		output += "create," if self.scope_create else ""
+		output += "read," if self.scope_read else ""
+		output += "update," if self.scope_update else ""
+		output += "delete," if self.scope_delete else ""
+		output += "vote," if self.scope_vote else ""
+		output += "guildmaster," if self.guildmaster else ""
+
+		output=output.rstrip(',')
+
+		return output
