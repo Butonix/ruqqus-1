@@ -86,7 +86,9 @@
 
       {% if p.thumb_url and p.is_image %}
       <div class="d-block d-md-none" style="z-index: 3;">
-        <img src="{{ p.thumb_url }}" class="post-img" alt="" onclick="expandDesktopImage('{{ p.url }}','{{ p.url }}')">
+        <a href="{{ p.url }}" target="_blank" rel="nofollow noopener" data-toggle="modal" data-target="#expandImageModal">
+          <img src="{{ p.thumb_url }}" class="post-img" alt="" onclick="expandDesktopImage('{{ p.url }}','{{ p.url }}')">
+        <a>
       </div>
       {% endif %}
 
