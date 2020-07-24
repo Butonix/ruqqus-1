@@ -3538,6 +3538,10 @@ body, #settings, #notifications, #submit {
 
 // Voting Mobile
 
+.comment-actions .score {
+    color: $muted;
+}
+
 .score {
     color: $muted;
 }

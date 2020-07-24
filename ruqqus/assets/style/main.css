@@ -16909,6 +16909,10 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     font-size: 1.25rem;
   }
 
+  .comment-actions .score {
+    color: #718096;
+  }
+
   .score {
     color: #718096;
   }

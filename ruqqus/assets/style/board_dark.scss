@@ -3596,6 +3596,10 @@ body, #settings, #notifications, #submit{
 
 // Voting Mobile
 
+.comment-actions .score {
+    color: $gray-400;
+}
+
 .score {
     color: $gray-400;
 }

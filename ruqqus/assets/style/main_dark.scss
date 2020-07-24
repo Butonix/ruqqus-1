@@ -1014,7 +1014,6 @@ th {
     color: $upvote;
 }
 
-
 .arrow-up::before {
     cursor: pointer;
     font-size: $font-size-base;
@@ -3618,6 +3617,10 @@ body, #settings, #notifications, #submit {
 }
 
 // Voting Mobile
+
+.comment-actions .score {
+    color: $gray-400;
+}
 
 .score {
     color: $gray-400;
