@@ -449,11 +449,11 @@
             {% if v %}
 
             <div id="voting" class="voting d-none d-md-block mb-auto">
-              <div id="post-{{ p.base36id }}-up" tabindex="0" data-post-id-up="{{ p.base36id }}" data-content-type="post" class="mx-auto arrow-up upvote-button post-{{ p.base36id }}-up {% if voted==1 %}active{% endif %}"></div>
+              <div id="post-{{ p.base36id }}-up" tabindex="0" data-id-up="{{ p.base36id }}" data-content-type="post" class="mx-auto arrow-up upvote-button post-{{ p.base36id }}-up {% if voted==1 %}active{% endif %}"></div>
 
               <span id="post-score-{{ p.base36id }}" class="score post-score-{{ p.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{% if p.is_banned %}✖{% else %}{{ score-adjust }}{% endif %}</span>
 
-              <div id="post-{{ p.base36id }}-down" tabindex="0" data-post-id-down="{{ p.base36id }}" data-content-type="post" class="text-muted mx-auto arrow-down downvote-button post-{{ p.base36id }}-down {% if voted==-1 %}active{% endif %}"></div>
+              <div id="post-{{ p.base36id }}-down" tabindex="0" data-id-down="{{ p.base36id }}" data-content-type="post" class="text-muted mx-auto arrow-down downvote-button post-{{ p.base36id }}-down {% if voted==-1 %}active{% endif %}"></div>
             </div>
 
             {% else %}
@@ -506,7 +506,7 @@
           {% endif %}
           <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
             {% if v %}
-            <span id="post-{{ p.base36id }}-up-mobile" data-post-id-up="{{ p.base36id }}" data-content-type="post" class="mr-2 arrow-up upvote-button post-{{ p.base36id }}-up {% if voted==1 %}active{% endif %}">
+            <span id="post-{{ p.base36id }}-up-mobile" data-id-up="{{ p.base36id }}" data-content-type="post" class="mr-2 arrow-up upvote-button post-{{ p.base36id }}-up {% if voted==1 %}active{% endif %}">
             </span>
             {% else %}
             <span id="arrow-{{ p.base36id }}-mobile-up" class="mr-2 arrow-mobile-up" onclick="location.href='/login?redirect={{ request.path | urlencode}}';">
@@ -517,7 +517,7 @@
             <span id="post-score-{{ p.base36id }}" class="score post-score-{{ p.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
 
             {% if v %}
-            <span id="post-{{ p.base36id }}-down-mobile" data-post-id-down="{{ p.base36id }}" data-content-type="post" class="ml-2 my-0 arrow-down downvote-button post-{{ p.base36id }}-down {% if voted==-1 %}active{% endif %}">
+            <span id="post-{{ p.base36id }}-down-mobile" data-id-down="{{ p.base36id }}" data-content-type="post" class="ml-2 my-0 arrow-down downvote-button post-{{ p.base36id }}-down {% if voted==-1 %}active{% endif %}">
             </span>
             {% else %}
             <span id="arrow-{{ p.base36id }}-mobile-down" class="arrow-mobile-down ml-2 my-0" onclick="location.href='/login?redirect={{ request.path | urlencode}}';">

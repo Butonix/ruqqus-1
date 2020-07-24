@@ -900,7 +900,7 @@ function toggle_sidebar_expand() {
 
 var upvote = function(event) {
   var type = event.target.dataset.contentType;
-  var id = event.target.dataset.postIdUp;
+  var id = event.target.dataset.idUp;
 
   var downvoteButton = document.getElementsByClassName(type + '-' + id + '-down');
   var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
@@ -953,7 +953,7 @@ var upvote = function(event) {
 
 var downvote = function(event) {
   var type = event.target.dataset.contentType;
-  var id = event.target.dataset.postIdDown;
+  var id = event.target.dataset.idDown;
 
   var downvoteButton = document.getElementsByClassName(type + '-' + id + '-down');
   var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
