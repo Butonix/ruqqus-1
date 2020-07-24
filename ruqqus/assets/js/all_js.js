@@ -1104,6 +1104,8 @@ function vote(post_id, direction) {
   post(url, callback, "Unable to vote at this time. Please try again later.");
 };
 
+*/
+
 function vote_comment(comment_id, direction) {
   url="/api/vote/comment/"+ comment_id +"/"+direction;
 
@@ -1146,8 +1148,6 @@ function vote_comment(comment_id, direction) {
 
   post(url, callback, "Unable to vote at this time. Please try again later.");
 }
-
-*/
 
 // Yank Post
 
