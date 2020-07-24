@@ -1010,18 +1010,18 @@ var voteDirection = 0
 
 for (var i = 0; i < upvoteButtons.length; i++) {
   upvoteButtons[i].addEventListener('click', upvotePost, false);
-  upvoteButtons[i].addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      upvotePost()
+  upvoteButtons[i].addEventListener('keydown', function(event) {
+    if (event.key === 13) {
+      upvotePost(event)
     }
   }, false)
 };
 
 for (var i = 0; i < downvoteButtons.length; i++) {
   downvoteButtons[i].addEventListener('click', downvotePost, false);
-  downvoteButtons[i].addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      downvotePost()
+  downvoteButtons[i].addEventListener('keydown', function(event) {
+    if (event.key === 13) {
+      downvotePost(event)
     }
   }, false)
 };
