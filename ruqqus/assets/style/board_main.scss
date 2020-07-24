@@ -1046,6 +1046,10 @@ th {
     color: $downvote!important;
 }
 
+.comment-actions .score {
+    color: $muted;
+}
+
 .score {
     color: $black;
 }
