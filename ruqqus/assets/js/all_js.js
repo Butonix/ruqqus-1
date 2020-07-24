@@ -1014,7 +1014,7 @@ for (var i = 0; i < upvoteButtons.length; i++) {
     if (event.keyCode === 13) {
       upvotePost()
     }
-  })
+  }, false)
 };
 
 for (var i = 0; i < downvoteButtons.length; i++) {
@@ -1023,7 +1023,7 @@ for (var i = 0; i < downvoteButtons.length; i++) {
     if (event.keyCode === 13) {
       downvotePost()
     }
-  })
+  }, false)
 };
 
 /*
