@@ -469,12 +469,16 @@ def submit_post(v):
         file=request.files['file']
 
         name=f'post/{new_post.base36id}/{secrets.token_urlsafe(8)}'
-
         upload_file(name, file)
+
+        #upload thumb
+        name=f'posts/{new_post.base36id}/thumb.png'
+        upload_file(name, file, resize=(372,227))
         
         #update post data
         new_post.url=f'https://{BUCKET}/{name}'
         new_post.is_image=True
+        new_post.has_thumb=True
         new_post.domain_ref=1 #id of i.ruqqus.com domain
         g.db.add(new_post)
         g.db.flush()
