@@ -898,12 +898,6 @@ function toggle_sidebar_expand() {
 
 // Voting
 
-var upvoteButtons = document.getElementsByClassName('upvote-button')
-
-var downvoteButtons = document.getElementsByClassName('downvote-button')
-
-var voteDirection = 0
-
 var upvotePost = function(event) {
   var id = event.target.dataset.postIdUp;
 
@@ -1008,22 +1002,24 @@ var downvotePost = function(event) {
   }
 }
 
+var upvoteButtons = document.getElementsByClassName('upvote-button')
+
+var downvoteButtons = document.getElementsByClassName('downvote-button')
+
+var voteDirection = 0
+
 for (var i = 0; i < upvoteButtons.length; i++) {
   upvoteButtons[i].addEventListener('click', upvotePost, false);
-  upvoteButtons[i].addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      upvotePost()
-    }
-  }, false)
+  if (e.key === 'Enter') {
+    upvoteButtons[i].addEventListener('keydown', upvotePost, false);
+  }
 };
 
 for (var i = 0; i < downvoteButtons.length; i++) {
   downvoteButtons[i].addEventListener('click', downvotePost, false);
-  downvoteButtons[i].addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      downvotePost()
-    }
-  }, false)
+  if (e.key === 'Enter') {
+    downvoteButtons[i].addEventListener('keydown', downvotePost, false);
+  }
 };
 
 /*
