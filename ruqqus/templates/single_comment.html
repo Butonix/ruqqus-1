@@ -87,7 +87,7 @@
           {% endif %}
 
           <li class="list-inline-item d-none d-md-inline-block mr-2">
-            <span class="points"><span id="comment-score-{{ p.base36id }}" class="score comment-score-{{ c.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{{ score-adjust }}</span></span>
+            <span class="points"><span id="comment-score-{{ p.base36id }}" class="score comment-score-{{ c.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{{ score }}</span></span>
           </li>
 
           {% if v %}
