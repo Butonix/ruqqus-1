@@ -3601,16 +3601,16 @@ body, #settings, #notifications, #submit{
 // Voting Mobile
 
 .comment-actions .score {
-    color: $gray-400;
+    color: $gray-200;
 }
 
 .score {
-    color: $gray-400;
+    color: $gray-200;
 }
 
 .arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
     font-size: $font-size-lg;
-    color: $gray-400;
+    color: $gray-200;
     opacity: 1;
 }
 

@@ -17410,16 +17410,16 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .comment-actions .score {
-    color: #303030;
+    color: #8f8f90;
   }
 
   .score {
-    color: #303030;
+    color: #8f8f90;
   }
 
   .arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
     font-size: 1.25rem;
-    color: #303030;
+    color: #8f8f90;
     opacity: 1;
   }
 
