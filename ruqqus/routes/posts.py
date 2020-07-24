@@ -464,16 +464,12 @@ def submit_post(v):
     g.db.refresh(new_post)
 
     #check for uploaded image
-    if request.files.get('file'):
+    if request.files.get('file') and v.can_submit_image:
 
         file=request.files['file']
 
         name=f'post/{new_post.base36id}/{secrets.token_urlsafe(8)}'
         upload_file(name, file)
-
-        #upload thumb
-        name=f'posts/{new_post.base36id}/thumb.png'
-        upload_file(name, file, resize=(372,227))
         
         #update post data
         new_post.url=f'https://{BUCKET}/{name}'
@@ -484,7 +480,7 @@ def submit_post(v):
         g.db.flush()
     
     #spin off thumbnail generation and csam detection as  new threads
-    elif new_post.url:
+    if new_post.url:
         new_thread=threading.Thread(target=thumbnail_thread,
                                     args=(new_post.base36id,)
                                     )
