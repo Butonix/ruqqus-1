@@ -469,18 +469,20 @@ def submit_post(v):
         file=request.files['file']
 
         name=f'post/{new_post.base36id}/{secrets.token_urlsafe(8)}'
-
         upload_file(name, file)
+
+        #thumb_name=f'posts/{new_post.base36id}/thumb.png'
+        #upload_file(name, file, resize=(375,227))
         
         #update post data
         new_post.url=f'https://{BUCKET}/{name}'
         new_post.is_image=True
         new_post.domain_ref=1 #id of i.ruqqus.com domain
         g.db.add(new_post)
-        g.db.flush()
+        g.db.commit()
     
     #spin off thumbnail generation and csam detection as  new threads
-    elif new_post.url:
+    if new_post.url or request.files.get('file'):
         new_thread=threading.Thread(target=thumbnail_thread,
                                     args=(new_post.base36id,)
                                     )
