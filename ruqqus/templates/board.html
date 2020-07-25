@@ -211,9 +211,9 @@
         {% if b.has_mod(v) %}
         <a class="dropdown-item" href="{{ b.permalink }}/mod/settings"><i class="fas fa-cog"></i>Guild settings</a>
         {% endif %}
-        {% if v.has_blocked_guild(b) %}
+        {% if v and not v.has_blocked_guild(b) %}
         <a class="dropdown-item" href="javscript:void(0)" onclick="post_toast('/settings/block_guild?board={{ b.name }}')"><i class="fas fa-filter"></i>Filter from /all</a>
-        {% else %}
+        {% elif v %}
         <a class="dropdown-item" href="javscript:void(0)" onclick="post_toast('/settings/unblock_guild?board={{ b.name }}')"><i class="fas fa-filter"></i>Unfilter from /all</a>
         {% endif %}
       </div>
