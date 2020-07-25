@@ -13282,6 +13282,10 @@ pre {
   /* Internet Explorer 5.5+ */
 }
 
+body.using-mouse :focus {
+  outline: none;
+}
+
 #settings, #submit {
   padding-top: 98px;
   background-color: #ffffff;
@@ -14035,8 +14039,11 @@ th {
 }
 
 */
-.voting div:focus {
-  outline: 0;
+/* .voting div:focus {
+    outline: 0;
+} */
+.active.arrow-up::before {
+  color: #805AD5;
 }
 
 .arrow-up::before {
@@ -14053,6 +14060,10 @@ th {
   opacity: 0.5;
 }
 
+.active.arrow-down::before {
+  color: #38B2AC;
+}
+
 .arrow-down::before {
   cursor: pointer;
   font-size: 1rem;
@@ -14067,22 +14078,21 @@ th {
   opacity: 0.5;
 }
 
-.upvoted .arrow-up::before {
-  color: #805AD5;
+/* .upvoted .arrow-up::before {
+    color: $upvote;
 }
 
 .upvoted .arrow-up:hover::before {
-  opacity: 1;
+    opacity: 1;
 }
 
 .downvoted .arrow-down::before {
-  color: #38B2AC;
+    color: $downvote;
 }
 
 .downvoted .arrow-down:hover::before {
-  opacity: 1;
-}
-
+    opacity: 1;
+} */
 .comment-actions .arrow-up {
   top: 0;
 }
@@ -14097,6 +14107,14 @@ th {
 
 .downvoted .arrow-mobile-down {
   color: #38B2AC !important;
+}
+
+.comment-actions .score {
+  color: #718096;
+}
+
+.score {
+  color: #121213;
 }
 
 .score-up {
@@ -16895,8 +16913,26 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     font-size: 1.25rem;
   }
 
-  .arrow-up::before, .arrow-down::before {
+  .comment-actions .score {
+    color: #718096;
+  }
+
+  .score {
+    color: #718096;
+  }
+
+  .arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
     font-size: 1.25rem;
+    color: #CBD5E0;
+    opacity: 1;
+  }
+
+  .active.arrow-up::before, .active.arrow-up:hover::before {
+    color: #805AD5;
+  }
+
+  .active.arrow-down::before, .active.arrow-down:hover::before {
+    color: #38B2AC;
   }
 
   .dropdown-actions a {
