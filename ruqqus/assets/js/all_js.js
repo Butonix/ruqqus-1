@@ -1817,7 +1817,7 @@ filter_guild=function() {
     f.append("board", boardname);
     f.append("formkey", formkey());
     xhr.onload=function(){
-      if (xhr.status==204) {
+      if (xhr.status<300) {
         window.location.reload(true);
       }
       else {
