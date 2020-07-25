@@ -1,3 +1,15 @@
+// Using mouse
+
+document.body.addEventListener('mousedown', function() {
+  document.body.classList.add('using-mouse');
+});
+
+document.body.addEventListener('keydown', function(event) {
+  if (event.keyCode === 9) {
+    document.body.classList.remove('using-mouse');
+  }
+});
+
 // 2FA toggle modal
 
 $('#2faModal').on('hidden.bs.modal', function () {
@@ -711,6 +723,29 @@ function toggleSub(){
   document.getElementById('button-sub-mobile').classList.toggle('d-none');
 }
 
+function post_toast(url) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  var form = new FormData()
+  form.append("formkey", formkey());
+  xhr.withCredentials=true;
+
+  xhr.onload = function() {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      $('#toast-post-success').toast('dispose');
+      $('#toast-post-success').toast('show');
+      document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+    } else {
+      $('#toast-post-error').toast('dispose');
+      $('#toast-post-error').toast('show');
+      document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];
+    }
+  };
+
+  xhr.send(form);
+
+}
+
 
 //Admin post modding
 function removePost(post_id) {
@@ -884,10 +919,139 @@ function toggle_sidebar_expand() {
 
 }
 
+// Voting
 
-//Voting
+var upvote = function(event) {
+  var type = event.target.dataset.contentType;
+  var id = event.target.dataset.idUp;
 
+  var downvoteButton = document.getElementsByClassName(type + '-' + id + '-down');
+  var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
+  var scoreText = document.getElementsByClassName(type + '-score-' + id);
 
+  for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
+
+    var thisUpvoteButton = upvoteButton[j];
+    var thisDownvoteButton = downvoteButton[j];
+    var thisScoreText = scoreText[j];
+    var thisScore = Number(thisScoreText.textContent);
+
+    if (thisUpvoteButton.classList.contains('active')) {
+      thisUpvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore - 1
+      voteDirection = "0"
+    } else if (thisDownvoteButton.classList.contains('active')) {
+      thisUpvoteButton.classList.add('active')
+      thisDownvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore + 2
+      voteDirection = "1"
+    } else {
+      thisUpvoteButton.classList.add('active')
+      thisScoreText.textContent = thisScore + 1
+      voteDirection = "1"
+    }
+
+    if (thisUpvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-up')
+      thisScoreText.classList.remove('score-down')
+      thisScoreText.classList.remove('score')
+    } else if (thisDownvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-down')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score')
+    } else {
+      thisScoreText.classList.add('score')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score-down')
+    }
+  }
+
+  for (var n = 0; n < 1; n++) {
+    callback=function() {
+      console.log('voted')
+    }
+    post("/api/vote/" + type + "/" + id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
+  }
+}
+
+var downvote = function(event) {
+  var type = event.target.dataset.contentType;
+  var id = event.target.dataset.idDown;
+
+  var downvoteButton = document.getElementsByClassName(type + '-' + id + '-down');
+  var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
+  var scoreText = document.getElementsByClassName(type + '-score-' + id);
+
+  for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
+
+    var thisUpvoteButton = upvoteButton[j];
+    var thisDownvoteButton = downvoteButton[j];
+    var thisScoreText = scoreText[j];
+    var thisScore = Number(thisScoreText.textContent);
+
+    if (thisDownvoteButton.classList.contains('active')) {
+      thisDownvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore + 1
+      voteDirection = "0"
+    } else if (thisUpvoteButton.classList.contains('active')) {
+      thisDownvoteButton.classList.add('active')
+      thisUpvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore - 2
+      voteDirection = "-1"
+    } else {
+      thisDownvoteButton.classList.add('active')
+      thisScoreText.textContent = thisScore - 1
+      voteDirection = "-1"
+    }
+
+    if (thisUpvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-up')
+      thisScoreText.classList.remove('score-down')
+      thisScoreText.classList.remove('score')
+    } else if (thisDownvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-down')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score')
+    } else {
+      thisScoreText.classList.add('score')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score-down')
+    }
+  }
+
+  for (var n = 0; n < 1; n++) {
+    callback=function() {
+      console.log('voted')
+    }
+    post("/api/vote/" + type + "/" + id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
+  }
+}
+
+var upvoteButtons = document.getElementsByClassName('upvote-button')
+
+var downvoteButtons = document.getElementsByClassName('downvote-button')
+
+var voteDirection = 0
+
+for (var i = 0; i < upvoteButtons.length; i++) {
+  upvoteButtons[i].addEventListener('click', upvote, false);
+  upvoteButtons[i].addEventListener('keydown', function(event) {
+    if (event.keyCode === 13) {
+      upvote(event)
+    }
+  }, false)
+};
+
+for (var i = 0; i < downvoteButtons.length; i++) {
+  downvoteButtons[i].addEventListener('click', downvote, false);
+  downvoteButtons[i].addEventListener('keydown', function(event) {
+    if (event.keyCode === 13) {
+      downvote(event)
+    }
+  }, false)
+};
+
+/*
 
 function vote(post_id, direction) {
   url="/api/vote/post/"+post_id+"/"+direction;
@@ -965,6 +1129,7 @@ function vote(post_id, direction) {
   post(url, callback, "Unable to vote at this time. Please try again later.");
 };
 
+*/
 
 function vote_comment(comment_id, direction) {
   url="/api/vote/comment/"+ comment_id +"/"+direction;
@@ -1298,7 +1463,7 @@ document.addEventListener('paste', function (event) {
   if (nothingFocused) {
 
     if (document.getElementById('guild-name-reference')) {
-        var guild = document.getElementById('guild-name-reference').innerText;
+      var guild = document.getElementById('guild-name-reference').innerText;
     }
 
     var clipText = event.clipboardData.getData('Text');
@@ -1433,9 +1598,9 @@ function exile_from_guild(boardid) {
         window.location.reload(true);
       }
       else {
-      $('#toast-exile-error').toast('dispose');
-      $('#toast-exile-error').toast('show');
-      exileError.textContent = JSON.parse(xhr.response)["error"];
+        $('#toast-exile-error').toast('dispose');
+        $('#toast-exile-error').toast('show');
+        exileError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
     xhr.send(f)
@@ -1540,9 +1705,9 @@ block_user=function() {
         window.location.reload(true);
       }
       else {
-      $('#toast-exile-error').toast('dispose');
-      $('#toast-exile-error').toast('show');
-      exileError.textContent = JSON.parse(xhr.response)["error"];
+        $('#toast-exile-error').toast('dispose');
+        $('#toast-exile-error').toast('show');
+        exileError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
     xhr.send(f)
@@ -1569,7 +1734,7 @@ post_comment=function(fullname){
     if (xhr.status==200) {
       commentForm=document.getElementById('comment-form-space-'+fullname);
       commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-        $('#toast-comment-success').toast('dispose');
+      $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-success').toast('show');
     }
@@ -1577,7 +1742,7 @@ post_comment=function(fullname){
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-error').toast('show');
-     commentError.textContent = JSON.parse(xhr.response)["error"];
+      commentError.textContent = JSON.parse(xhr.response)["error"];
     }
   }
   xhr.send(form)
@@ -1586,14 +1751,14 @@ post_comment=function(fullname){
 //part of submit page js
 
 hide_image=function(){
-    x=document.getElementById('image-upload-block');
-    url=document.getElementById('post-URL').value;
-    if (url.length>=1){
-        x.classList.add('d-none');
-    }
-    else {
-        x.classList.remove('d-none');
-    }
+  x=document.getElementById('image-upload-block');
+  url=document.getElementById('post-URL').value;
+  if (url.length>=1){
+    x.classList.add('d-none');
+  }
+  else {
+    x.classList.remove('d-none');
+  }
 }
 
 
@@ -1623,7 +1788,7 @@ comment_edit=function(id){
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-error').toast('show');
-     commentError.textContent = JSON.parse(xhr.response)["error"];
+      commentError.textContent = JSON.parse(xhr.response)["error"];
     }
   }
   xhr.send(form)
