@@ -723,6 +723,29 @@ function toggleSub(){
   document.getElementById('button-sub-mobile').classList.toggle('d-none');
 }
 
+function post_toast(url) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  var form = new FormData()
+  form.append("formkey", formkey());
+  xhr.withCredentials=true;
+
+  xhr.onload = function() {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      $('#toast-post-success').toast('dispose');
+      $('#toast-post-success').toast('show');
+      document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+    } else {
+      $('#toast-post-error').toast('dispose');
+      $('#toast-post-error').toast('show');
+      document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];
+    }
+  };
+
+  xhr.send(form);
+
+}
+
 
 //Admin post modding
 function removePost(post_id) {
