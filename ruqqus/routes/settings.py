@@ -437,7 +437,7 @@ def settings_block_guild(v):
         return jsonify({"error":"That guild doesn't exist."}), 404
 
     if v.has_blocked_guild(board):
-        return jsonify({"error":f"You have already blocked @{user.username}."}), 409
+        return jsonify({"error":f"You have already blocked +{board.name}."}), 409
 
 
     new_block=BoardBlock(user_id=v.id,
@@ -450,7 +450,7 @@ def settings_block_guild(v):
     #cache.delete_memoized(Board.idlist, v=v)
     cache.delete_memoized(frontlist, v=v)
 
-    return "", 204
+    return jsonify({"message":f"+{board.name} added to filter"})
     
 @app.route("/settings/unblock_guild", methods=["POST"])
 @auth_required
@@ -469,4 +469,4 @@ def settings_unblock_guild(v):
     #cache.delete_memoized(Board.idlist, v=v)
     cache.delete_memoized(frontlist, v=v)
     
-    return "", 204
+    return jsonify({"message":f"+{board.name} removed from filter"})
