@@ -179,6 +179,10 @@ pre {
     word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
+body.using-mouse :focus {
+    outline: none;
+}
+
 #settings, #submit {
     padding-top: 98px;
     background-color: $white;
@@ -978,8 +982,12 @@ th {
 
 */
 
-.voting div:focus {
+/* .voting div:focus {
     outline: 0;
+} */
+
+.active.arrow-up::before {
+    color: $upvote;
 }
 
 .arrow-up::before {
@@ -997,6 +1005,10 @@ th {
     opacity: 0.5;
 }
 
+.active.arrow-down::before {
+    color: $downvote;
+}
+
 .arrow-down::before {
     cursor: pointer;
     font-size: $font-size-base;
@@ -1011,7 +1023,7 @@ th {
     opacity: 0.5;
 }
 
-.upvoted .arrow-up::before {
+/* .upvoted .arrow-up::before {
     color: $upvote;
 }
 
@@ -1025,7 +1037,7 @@ th {
 
 .downvoted .arrow-down:hover::before {
     opacity: 1;
-}
+} */
 
 .comment-actions .arrow-up {
     top: 0;
@@ -1041,6 +1053,14 @@ th {
 
 .downvoted .arrow-mobile-down {
     color: $downvote!important;
+}
+
+.comment-actions .score {
+    color: $muted;
+}
+
+.score {
+    color: $black;
 }
 
 .score-up {
@@ -3523,8 +3543,28 @@ body, #settings, #notifications, #submit{
     font-size: $font-size-lg;
 }
 
-.arrow-up::before, .arrow-down::before {
+// Voting Mobile
+
+.comment-actions .score {
+    color: $muted;
+}
+
+.score {
+    color: $muted;
+}
+
+.arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
     font-size: $font-size-lg;
+    color: $gray-400;
+    opacity: 1;
+}
+
+.active.arrow-up::before, .active.arrow-up:hover::before {
+    color: $upvote;
+}
+
+.active.arrow-down::before, .active.arrow-down:hover::before {
+    color: $downvote;
 }
 
 .dropdown-actions a {
