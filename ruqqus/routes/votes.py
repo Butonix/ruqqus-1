@@ -38,7 +38,7 @@ def api_vote_post(post_id, x, v):
               )
 
     g.db.add(vote)
-    g.db.flush()
+    g.db.commit()
     
 
     #post.score_hot = post.rank_hot
@@ -48,6 +48,7 @@ def api_vote_post(post_id, x, v):
     post.score_best=post.rank_best
 
     g.db.add(post)
+    g.db.commit()
     
 
     #print(f"Vote Event: @{v.username} vote {x} on post {post_id}")
@@ -83,7 +84,7 @@ def api_vote_comment(comment_id, x, v):
               )
 
     g.db.add(vote)
-    g.db.flush()
+    g.db.commit()
     
 
     #comment.score_disputed=comment.rank_fiery
@@ -91,6 +92,7 @@ def api_vote_comment(comment_id, x, v):
     comment.score_top=comment.score
 
     g.db.add(comment)
+    g.db.commit()
     
 
     #print(f"Vote Event: @{v.username} vote {x} on comment {comment_id}")
