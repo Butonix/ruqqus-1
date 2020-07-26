@@ -29,16 +29,15 @@ def api_vote_post(post_id, x, v):
     existing = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
     if existing:
         existing.change_to(x)
-        #print(f"Re-vote Event: @{v.username} vote {x} on post {post_id}")
-        return "", 204
 
-    vote=Vote(user_id=v.id,
-              vote_type=x,
-              submission_id=base36decode(post_id)
-              )
+    else:
+        vote=Vote(user_id=v.id,
+                  vote_type=x,
+                  submission_id=base36decode(post_id)
+                  )
 
-    g.db.add(vote)
-    g.db.commit()
+        g.db.add(vote)
+        g.db.flush()
     
 
     #post.score_hot = post.rank_hot
@@ -48,9 +47,6 @@ def api_vote_post(post_id, x, v):
     post.score_best=post.rank_best
 
     g.db.add(post)
-
-    print("added post")
-    print(post in g.db.dirty)
 
     g.db.commit()
     
@@ -79,23 +75,22 @@ def api_vote_comment(comment_id, x, v):
     existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
     if existing:
         existing.change_to(x)
-        #print(f"Re-vote Event: @{v.username} vote {x} on comment {comment_id}")
-        return "", 204
+    else:
 
-    vote=CommentVote(user_id=v.id,
-              vote_type=x,
-              comment_id=base36decode(comment_id)
-              )
+        vote=CommentVote(user_id=v.id,
+                  vote_type=x,
+                  comment_id=base36decode(comment_id)
+                  )
 
-    g.db.add(vote)
-    g.db.commit()
+        g.db.add(vote)
+        g.db.flush()
     
 
     #comment.score_disputed=comment.rank_fiery
     comment.score_hot=comment.rank_hot
     comment.score_top=comment.score
 
-    g.db.merge(comment)
+    g.db.add(comment)
     g.db.commit()
     
 
