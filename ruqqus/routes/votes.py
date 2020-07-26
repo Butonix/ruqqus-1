@@ -36,8 +36,8 @@ def api_vote_post(post_id, x, v):
                   submission_id=base36decode(post_id)
                   )
 
-        g.db.add(vote)
-        g.db.flush()
+    g.db.add(vote)
+    g.db.flush()
     
 
     #post.score_hot = post.rank_hot
@@ -82,8 +82,8 @@ def api_vote_comment(comment_id, x, v):
                   comment_id=base36decode(comment_id)
                   )
 
-        g.db.add(vote)
-        g.db.flush()
+    g.db.add(vote)
+    g.db.flush()
     
 
     #comment.score_disputed=comment.rank_fiery
