@@ -76,7 +76,7 @@ def create_board_post(v):
 
 
     #check name
-    if get_guild(name, graceful=True):
+    if get_guild(board_name, graceful=True):
         return render_template("make_board.html",
                                v=v,
                                error="That Guild already exists.",
