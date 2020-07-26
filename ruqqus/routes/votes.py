@@ -29,6 +29,7 @@ def api_vote_post(post_id, x, v):
     existing = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
     if existing:
         existing.change_to(x)
+        g.db.add(existing)
 
     else:
         vote=Vote(user_id=v.id,
@@ -36,7 +37,7 @@ def api_vote_post(post_id, x, v):
                   submission_id=base36decode(post_id)
                   )
 
-    g.db.add(vote)
+        g.db.add(vote)
     g.db.flush()
     
 
@@ -75,6 +76,7 @@ def api_vote_comment(comment_id, x, v):
     existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
     if existing:
         existing.change_to(x)
+        g.db.add(existing)
     else:
 
         vote=CommentVote(user_id=v.id,
@@ -82,7 +84,7 @@ def api_vote_comment(comment_id, x, v):
                   comment_id=base36decode(comment_id)
                   )
 
-    g.db.add(vote)
+        g.db.add(vote)
     g.db.flush()
     
 
