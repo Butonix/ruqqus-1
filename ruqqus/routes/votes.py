@@ -85,7 +85,7 @@ def api_vote_comment(comment_id, x, v):
     
 
     #comment.score_disputed=comment.rank_fiery
-    #comment.score_hot=comment.rank_hot
+    comment.score_hot=comment.rank_hot
     comment.score_top=comment.score
 
     g.db.add(comment)
