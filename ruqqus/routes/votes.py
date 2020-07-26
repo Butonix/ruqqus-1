@@ -49,6 +49,7 @@ def api_vote_post(post_id, x, v):
 
     g.db.add(post)
 
+    print("added post")
     print(post in g.db.dirty)
 
     g.db.commit()
