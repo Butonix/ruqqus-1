@@ -47,9 +47,9 @@ def api_vote_post(post_id, x, v):
     #post.score_activity=post.rank_activity
     post.score_best=post.rank_best
 
-    g.db.add(post)
+    g.db.merge(post)
 
-    print(g.db.dirty)
+    #print(g.db.dirty)
 
     g.db.commit()
     
@@ -94,7 +94,7 @@ def api_vote_comment(comment_id, x, v):
     comment.score_hot=comment.rank_hot
     comment.score_top=comment.score
 
-    g.db.add(comment)
+    g.db.merge(comment)
     g.db.commit()
     
 
