@@ -48,6 +48,9 @@ def api_vote_post(post_id, x, v):
     post.score_best=post.rank_best
 
     g.db.add(post)
+
+    print(g.db.dirty)
+
     g.db.commit()
     
 
