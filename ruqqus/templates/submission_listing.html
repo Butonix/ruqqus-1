@@ -51,7 +51,7 @@
 
 
         {% elif p.thumb_url and not p.embed_url %}
-        <a href="{{ p.url }}" target="_blank">
+        <a href="{{ p.url }}" rel="nofollow noopener" target="_blank">
           <img src="{{ p.thumb_url }}" class="post-img" alt="">
         </a>
         {% endif %}
@@ -69,7 +69,7 @@
         {% endif %}
 
         {% if p.url and not p.thumb_url and not p.embed_url %}
-        <a href="{{ p.url }}" target="_blank">
+        <a href="{{ p.url }}" rel="nofollow noopener" target="_blank">
           <img src="/assets/images/icons/default_thumb_link.png" class="post-img border-0" alt="generic link post thumbnail">
         </a>
         {% endif %}
