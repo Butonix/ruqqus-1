@@ -108,6 +108,9 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
         if g.v:
             votes=g.db.query(CommentVote).filter(CommentVote.user_id==g.v.id, CommentVote.comment_id.in_(current_ids)).subquery()
 
+            blocking=v.blocking.subquery()
+            blocked=v.blocked.subquery()
+
             comms=g.db.query(
                 Comment,
                 votes.c.vote_type
@@ -118,6 +121,14 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                 ).join(
                 votes,
                 votes.c.comment_id==Comment.id,
+                isouter=True
+                ).join(
+                blocking,
+                blocking.c.target_id==Comment.author_id,
+                isouter=True
+                ).join(
+                blocked,
+                blocked.c.user_id==Comment.author_id,
                 isouter=True
                 )
 
@@ -138,9 +149,11 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
 
             output=[]
             for c in comms:
-                com=c[0]
-                com._voted=c[1] or 0
-                output.append(com)
+                comment=c[0]
+                comment._voted=c[1] or 0
+                comment._is_blocking=c[2] or 0
+                comment._is_blocked=c[3] or 0
+                output.append(comment)
         else:
             comms=g.db.query(
                 Comment
