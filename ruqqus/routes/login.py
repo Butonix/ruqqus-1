@@ -392,6 +392,7 @@ And since we're committed to [open-source](https://github.com/ruqqus/ruqqus) tra
     else:
         return redirect(new_user.permalink)
     
+    return redirect("/browse?onboarding=true")
 
 @app.route("/forgot", methods=["GET"])
 def get_forgot():
