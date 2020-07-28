@@ -99,16 +99,11 @@ $('#new_email').on('input', function () {
 
       cancelBtn.innerHTML = '<button class="btn btn-link pl-3 pr-0" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
 
-      console.log('searchTerm is: ', searchTerm)
-      console.log('comment or reply form is: ', commentFormID)
       $.ajax({
         url: "/giphy?searchTerm=" + searchTerm + "&limit=48",
         type: "GET",
         success: function(response) {
-          console.log(response)
         var max = response.data.length - 1 //length of response, minus 1 (cuz array starts at index 0)
-        console.log('response.data.length is ', max)
-        //var randomNumber = Math.round(Math.random() * max) //random number between 0 and max -1
         var randomNumber = Math.round(Math.random() * 6) //random number between 0 and max -1
         // GIF array
         var gifURL = [];
@@ -135,7 +130,6 @@ $('#new_email').on('input', function () {
             loadGIFs.innerHTML = '<div class="text-center py-3"><div class="mb-3"><i class="fad fa-grin-beam-sweat text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Thou&#39;ve reached the end of the list!</p></div>';
           }
         }
-        console.log(container);
       },
       error: function(e) {
         alert(e);
@@ -797,8 +791,6 @@ $('#password-register').on('input', function () {
   var id = document.getElementById("passwordHelpRegister");
   var successID = document.getElementById("passwordHelpSuccess");
 
-  console.log(charCount.length);
-
   if (charCount.length >= 8) {
     id.classList.add("d-none");
     successID.classList.remove("d-none");
@@ -968,7 +960,6 @@ var upvote = function(event) {
 
   for (var n = 0; n < 1; n++) {
     callback=function() {
-      console.log('voted')
     }
     post("/api/vote/" + type + "/" + id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
   }
@@ -1021,7 +1012,6 @@ var downvote = function(event) {
 
   for (var n = 0; n < 1; n++) {
     callback=function() {
-      console.log('voted')
     }
     post("/api/vote/" + type + "/" + id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
   }
@@ -1550,7 +1540,6 @@ function autoSuggestTitle()  {
     x.withCredentials=true;
     x.onreadystatechange = function() {
       if (x.readyState == 4 && x.status == 200) {
-        console.log(x.responseText);
 
         title=JSON.parse(x.responseText)["title"];
         titleField.value=title;
