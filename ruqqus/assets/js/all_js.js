@@ -1,8 +1,9 @@
 // 2FA toggle modal
 
-$('#2faModal').on('hidden.bs.modal', () => {
+$('#2faModal').on('hidden.bs.modal', function () {
 
-  let box = document.getElementById("2faToggle");
+  var box = document.getElementById("2faToggle");
+  
   box.checked = !box.checked;
 
 });
@@ -11,11 +12,11 @@ $('#2faModal').on('hidden.bs.modal', () => {
 
 // Show confirm password field when user clicks email box
 
-$('#new_email').on('input', () => {
+$('#new_email').on('input', function () {
 
-  let id = document.getElementById("email-password");
-  let id2 = document.getElementById("email-password-label");
-  let id3 = document.getElementById("emailpasswordRequired");
+  var id = document.getElementById("email-password");
+  var id2 = document.getElementById("email-password-label");
+  var id3 = document.getElementById("emailpasswordRequired");
 
   id.classList.remove("d-none");
   id2.classList.remove("d-none");
@@ -25,100 +26,97 @@ $('#new_email').on('input', () => {
 
 //GIFS
 
-// Identify which comment form to insert GIF into
+  // Identify which comment form to insert GIF into
 
-let commentFormID;
+  var commentFormID;
 
-function commentForm(form) {
-  commentFormID = form;
-};
+  function commentForm(form) {
+    commentFormID = form;
+  };
 
-function getGif(searchTerm) {
+  function getGif(searchTerm) {
 
-  if (searchTerm) {
-    document.getElementById('gifSearch').value = searchTerm;
-  } else {
-    document.getElementById('gifSearch').value = null;
-  }
+    if (searchTerm !== undefined) {
+      document.getElementById('gifSearch').value = searchTerm;
+    }
+    else {
+      document.getElementById('gifSearch').value = null;
+    }
 
-  // load more gifs div
+    // load more gifs div
 
-  let loadGIFs = document.getElementById('gifs-load-more');
+    var loadGIFs = document.getElementById('gifs-load-more');
 
-  // error message div
+    // error message div
 
-  let noGIFs = document.getElementById('no-gifs-found');
+    var noGIFs = document.getElementById('no-gifs-found');
 
-  // categories div
+    // categories div
 
-  let cats = document.getElementById('GIFcats');
+    var cats = document.getElementById('GIFcats');
 
-  // container div
+    // container div
 
-  let container = document.getElementById('GIFs');
+    var container = document.getElementById('GIFs');
 
-  // modal body div
+    // modal body div
 
-  let modalBody = document.getElementById('gif-modal-body')
+    var modalBody = document.getElementById('gif-modal-body')
 
-  // UI buttons
+    // UI buttons
 
-  let backBtn = document.getElementById('gifs-back-btn');
+    var backBtn = document.getElementById('gifs-back-btn');
 
-  let cancelBtn = document.getElementById('gifs-cancel-btn');
+    var cancelBtn = document.getElementById('gifs-cancel-btn');
 
-  container.innerHTML = '';
+    container.innerHTML = '';
 
-  if (searchTerm == undefined) {
-    container.innerHTML = '<div class="card" onclick="getGif(\'agree\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Agree</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/wGhYz3FHaRJgk/200w_d.gif"> </div> <div class="card" onclick="getGif(\'laugh\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Laugh</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/O5NyCibf93upy/200w_d.gif"> </div> <div class="card" onclick="getGif(\'confused\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Confused</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3o7btPCcdNniyf0ArS/200w_d.gif"> </div> <div class="card" onclick="getGif(\'sad\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Sad</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/ISOckXUybVfQ4/200w_d.gif"> </div> <div class="card" onclick="getGif(\'happy\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Happy</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/XR9Dp54ZC4dji/200w_d.gif"> </div> <div class="card" onclick="getGif(\'awesome\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Awesome</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3ohzdIuqJoo8QdKlnW/200w_d.gif"> </div> <div class="card" onclick="getGif(\'yes\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Yes</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/J336VCs1JC42zGRhjH/200w_d.gif"> </div> <div class="card" onclick="getGif(\'no\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">No</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1zSz5MVw4zKg0/200w_d.gif"> </div> <div class="card" onclick="getGif(\'love\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Love</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/4N1wOi78ZGzSB6H7vK/200w_d.gif"> </div> <div class="card" onclick="getGif(\'please\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Please</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/qUIm5wu6LAAog/200w_d.gif"> </div> <div class="card" onclick="getGif(\'scared\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Scared</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/bEVKYB487Lqxy/200w_d.gif"> </div> <div class="card" onclick="getGif(\'angry\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Angry</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/12Pb87uq0Vwq2c/200w_d.gif"> </div> <div class="card" onclick="getGif(\'awkward\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Awkward</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/unFLKoAV3TkXe/200w_d.gif"> </div> <div class="card" onclick="getGif(\'cringe\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Cringe</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1jDvQyhGd3L2g/200w_d.gif"> </div> <div class="card" onclick="getGif(\'omg\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">OMG</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3o72F8t9TDi2xVnxOE/200w_d.gif"> </div> <div class="card" onclick="getGif(\'why\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Why</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1M9fmo1WAFVK0/200w_d.gif"> </div> <div class="card" onclick="getGif(\'gross\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Gross</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/pVAMI8QYM42n6/200w_d.gif"> </div> <div class="card" onclick="getGif(\'meh\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Meh</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/xT77XTpyEzJ4OJO06c/200w_d.gif"> </div>'
+    if (searchTerm == undefined) {
+      container.innerHTML = '<div class="card" onclick="getGif(\'agree\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Agree</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/wGhYz3FHaRJgk/200w_d.gif"> </div> <div class="card" onclick="getGif(\'laugh\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Laugh</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/O5NyCibf93upy/200w_d.gif"> </div> <div class="card" onclick="getGif(\'confused\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Confused</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3o7btPCcdNniyf0ArS/200w_d.gif"> </div> <div class="card" onclick="getGif(\'sad\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Sad</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/ISOckXUybVfQ4/200w_d.gif"> </div> <div class="card" onclick="getGif(\'happy\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Happy</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/XR9Dp54ZC4dji/200w_d.gif"> </div> <div class="card" onclick="getGif(\'awesome\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Awesome</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3ohzdIuqJoo8QdKlnW/200w_d.gif"> </div> <div class="card" onclick="getGif(\'yes\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Yes</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/J336VCs1JC42zGRhjH/200w_d.gif"> </div> <div class="card" onclick="getGif(\'no\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">No</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1zSz5MVw4zKg0/200w_d.gif"> </div> <div class="card" onclick="getGif(\'love\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Love</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/4N1wOi78ZGzSB6H7vK/200w_d.gif"> </div> <div class="card" onclick="getGif(\'please\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Please</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/qUIm5wu6LAAog/200w_d.gif"> </div> <div class="card" onclick="getGif(\'scared\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Scared</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/bEVKYB487Lqxy/200w_d.gif"> </div> <div class="card" onclick="getGif(\'angry\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Angry</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/12Pb87uq0Vwq2c/200w_d.gif"> </div> <div class="card" onclick="getGif(\'awkward\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Awkward</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/unFLKoAV3TkXe/200w_d.gif"> </div> <div class="card" onclick="getGif(\'cringe\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Cringe</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1jDvQyhGd3L2g/200w_d.gif"> </div> <div class="card" onclick="getGif(\'omg\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">OMG</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3o72F8t9TDi2xVnxOE/200w_d.gif"> </div> <div class="card" onclick="getGif(\'why\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Why</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1M9fmo1WAFVK0/200w_d.gif"> </div> <div class="card" onclick="getGif(\'gross\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Gross</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/pVAMI8QYM42n6/200w_d.gif"> </div> <div class="card" onclick="getGif(\'meh\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Meh</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/xT77XTpyEzJ4OJO06c/200w_d.gif"> </div>'
 
-    backBtn.innerHTML = null;
+      backBtn.innerHTML = null;
 
-    cancelBtn.innerHTML = null;
+      cancelBtn.innerHTML = null;
 
-    noGIFs.innerHTML = null;
+      noGIFs.innerHTML = null;
 
-    loadGIFs.innerHTML = null;
-  } else {
-    backBtn.innerHTML = '<button class="btn btn-link pl-0 pr-3" id="gifs-back-btn" onclick="getGif();"><i class="fas fa-long-arrow-left text-muted"></i></button>';
+      loadGIFs.innerHTML = null;
+    }
+    else {
+      backBtn.innerHTML = '<button class="btn btn-link pl-0 pr-3" id="gifs-back-btn" onclick="getGif();"><i class="fas fa-long-arrow-left text-muted"></i></button>';
 
-    cancelBtn.innerHTML = '<button class="btn btn-link pl-3 pr-0" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
+      cancelBtn.innerHTML = '<button class="btn btn-link pl-3 pr-0" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
 
-    console.log('searchTerm is: ', searchTerm)
-    console.log('comment or reply form is: ', commentFormID)
-
-    $.ajax({
-      url: "/giphy?searchTerm=" + searchTerm + "&limit=48",
-      type: "GET",
-      success: response => {
-
-        console.log(response)
-        let max = response.data.length - 1 //length of response, minus 1 (cuz array starts at index 0)
+      console.log('searchTerm is: ', searchTerm)
+      console.log('comment or reply form is: ', commentFormID)
+      $.ajax({
+        url: "/giphy?searchTerm=" + searchTerm + "&limit=48",
+        type: "GET",
+        success: function(response) {
+          console.log(response)
+        var max = response.data.length - 1 //length of response, minus 1 (cuz array starts at index 0)
         console.log('response.data.length is ', max)
-        //let randomNumber = Math.round(Math.random() * max) //random number between 0 and max -1
-        let randomNumber = Math.round(Math.random() * 6) //random number between 0 and max -1
+        //var randomNumber = Math.round(Math.random() * max) //random number between 0 and max -1
+        var randomNumber = Math.round(Math.random() * 6) //random number between 0 and max -1
         // GIF array
-        let gifURL = [];
+        var gifURL = [];
 
         // loop for fetching mutliple GIFs and creating the card divs
         if (max < 48 && max > 0) {
-
-          for (let i = 0; i <= max; i++) {
-
+          for (var i = 0; i <= max; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/200w_d.gif";
             container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
             noGIFs.innerHTML = null;
             loadGIFs.innerHTML = '<div class="text-center py-3"><div class="mb-3"><i class="fad fa-grin-beam-sweat text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Thou&#39;ve reached the end of the list!</p></div>';
           }
-        } else if (max <= 0) {
-
+        }
+        else if (max <= 0) {
           noGIFs.innerHTML = '<div class="text-center py-3 mt-3"><div class="mb-3"><i class="fad fa-frown text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Aw shucks. No GIFs found...</p></div>';
           container.innerHTML = null;
           loadGIFs.innerHTML = null;
-        } else {
-
-          for (let i = 0; i <= 48; i++) {
-
+        }
+        else {
+          for (var i = 0; i <= 48; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/200w_d.gif";
             container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
             noGIFs.innerHTML = null;
@@ -127,70 +125,70 @@ function getGif(searchTerm) {
         }
         console.log(container);
       },
-      error: err => {
-        alert(err);
+      error: function(e) {
+        alert(e);
       }
     });
-  };
-}
+    };
+  }
 
-// Insert GIF markdown into comment box function
+  // Insert GIF markdown into comment box function
 
-function insertGIF(url, form) {
+  function insertGIF(url,form) {
 
-  let gif = "![](" + url + ")";
+    var gif = "![](" + url +")";
 
-  let commentBox = document.getElementById(form);
+    var commentBox = document.getElementById(form);
 
-  let old = commentBox.value;
+    var old  = commentBox.value;
 
-  commentBox.value = old + gif;
+    commentBox.value = old + gif;
 
-}
+  }
 
-// When GIF keyboard is hidden, hide all GIFs
+  // When GIF keyboard is hidden, hide all GIFs
 
-$('#gifModal').on('hidden.bs.modal', e => {
+  $('#gifModal').on('hidden.bs.modal', function (e) {
 
-  document.getElementById('gifSearch').value = null;
+    document.getElementById('gifSearch').value = null;
 
-  // load more gifs div
+    // load more gifs div
 
-  let loadGIFs = document.getElementById('gifs-load-more');
+    var loadGIFs = document.getElementById('gifs-load-more');
 
-  // no GIFs div
+    // no GIFs div
 
-  let noGIFs = document.getElementById('no-gifs-found');
+    var noGIFs = document.getElementById('no-gifs-found');
 
-  // container div
+    // container div
 
-  let container = document.getElementById('GIFs');
+    var container = document.getElementById('GIFs');
 
-  // UI buttons
+    // UI buttons
 
-  let backBtn = document.getElementById('gifs-back-btn');
+    var backBtn = document.getElementById('gifs-back-btn');
 
-  let cancelBtn = document.getElementById('gifs-cancel-btn');
+    var cancelBtn = document.getElementById('gifs-cancel-btn');
 
-  // Remove inner HTML from container let
+    // Remove inner HTML from container var
 
-  container.innerHTML = '<div class="card" onclick="getGif(\'agree\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Agree</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/wGhYz3FHaRJgk/200w_d.gif"> </div> <div class="card" onclick="getGif(\'laugh\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Laugh</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/O5NyCibf93upy/200w_d.gif"> </div> <div class="card" onclick="getGif(\'confused\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Confused</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3o7btPCcdNniyf0ArS/200w_d.gif"> </div> <div class="card" onclick="getGif(\'sad\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Sad</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/ISOckXUybVfQ4/200w_d.gif"> </div> <div class="card" onclick="getGif(\'happy\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Happy</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/XR9Dp54ZC4dji/200w_d.gif"> </div> <div class="card" onclick="getGif(\'awesome\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Awesome</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3ohzdIuqJoo8QdKlnW/200w_d.gif"> </div> <div class="card" onclick="getGif(\'yes\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Yes</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/J336VCs1JC42zGRhjH/200w_d.gif"> </div> <div class="card" onclick="getGif(\'no\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">No</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1zSz5MVw4zKg0/200w_d.gif"> </div> <div class="card" onclick="getGif(\'love\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Love</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/4N1wOi78ZGzSB6H7vK/200w_d.gif"> </div> <div class="card" onclick="getGif(\'please\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Please</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/qUIm5wu6LAAog/200w_d.gif"> </div> <div class="card" onclick="getGif(\'scared\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Scared</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/bEVKYB487Lqxy/200w_d.gif"> </div> <div class="card" onclick="getGif(\'angry\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Angry</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/12Pb87uq0Vwq2c/200w_d.gif"> </div> <div class="card" onclick="getGif(\'awkward\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Awkward</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/unFLKoAV3TkXe/200w_d.gif"> </div> <div class="card" onclick="getGif(\'cringe\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Cringe</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1jDvQyhGd3L2g/200w_d.gif"> </div> <div class="card" onclick="getGif(\'omg\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">OMG</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3o72F8t9TDi2xVnxOE/200w_d.gif"> </div> <div class="card" onclick="getGif(\'why\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Why</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1M9fmo1WAFVK0/200w_d.gif"> </div> <div class="card" onclick="getGif(\'gross\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Gross</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/pVAMI8QYM42n6/200w_d.gif"> </div> <div class="card" onclick="getGif(\'meh\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Meh</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/xT77XTpyEzJ4OJO06c/200w_d.gif"> </div>'
+    container.innerHTML = '<div class="card" onclick="getGif(\'agree\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Agree</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/wGhYz3FHaRJgk/200w_d.gif"> </div> <div class="card" onclick="getGif(\'laugh\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Laugh</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/O5NyCibf93upy/200w_d.gif"> </div> <div class="card" onclick="getGif(\'confused\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Confused</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3o7btPCcdNniyf0ArS/200w_d.gif"> </div> <div class="card" onclick="getGif(\'sad\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Sad</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/ISOckXUybVfQ4/200w_d.gif"> </div> <div class="card" onclick="getGif(\'happy\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Happy</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/XR9Dp54ZC4dji/200w_d.gif"> </div> <div class="card" onclick="getGif(\'awesome\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Awesome</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3ohzdIuqJoo8QdKlnW/200w_d.gif"> </div> <div class="card" onclick="getGif(\'yes\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Yes</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/J336VCs1JC42zGRhjH/200w_d.gif"> </div> <div class="card" onclick="getGif(\'no\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">No</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1zSz5MVw4zKg0/200w_d.gif"> </div> <div class="card" onclick="getGif(\'love\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Love</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/4N1wOi78ZGzSB6H7vK/200w_d.gif"> </div> <div class="card" onclick="getGif(\'please\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Please</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/qUIm5wu6LAAog/200w_d.gif"> </div> <div class="card" onclick="getGif(\'scared\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Scared</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/bEVKYB487Lqxy/200w_d.gif"> </div> <div class="card" onclick="getGif(\'angry\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Angry</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/12Pb87uq0Vwq2c/200w_d.gif"> </div> <div class="card" onclick="getGif(\'awkward\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Awkward</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/unFLKoAV3TkXe/200w_d.gif"> </div> <div class="card" onclick="getGif(\'cringe\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Cringe</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1jDvQyhGd3L2g/200w_d.gif"> </div> <div class="card" onclick="getGif(\'omg\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">OMG</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3o72F8t9TDi2xVnxOE/200w_d.gif"> </div> <div class="card" onclick="getGif(\'why\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Why</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1M9fmo1WAFVK0/200w_d.gif"> </div> <div class="card" onclick="getGif(\'gross\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Gross</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/pVAMI8QYM42n6/200w_d.gif"> </div> <div class="card" onclick="getGif(\'meh\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Meh</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/xT77XTpyEzJ4OJO06c/200w_d.gif"> </div>'
 
-  // Hide UI buttons
+    // Hide UI buttons
 
-  backBtn.innerHTML = null;
+    backBtn.innerHTML = null;
 
-  cancelBtn.innerHTML = null;
+    cancelBtn.innerHTML = null;
 
-  // Remove inner HTML from no gifs div
+    // Remove inner HTML from no gifs div
 
-  noGIFs.innerHTML = null;
+    noGIFs.innerHTML = null;
 
-  // Hide no more gifs div
+    // Hide no more gifs div
 
-  loadGIFs.innerHTML = null;
+    loadGIFs.innerHTML = null;
 
-});
+  });
 
 // comment collapse
 
@@ -198,9 +196,9 @@ $('#gifModal').on('hidden.bs.modal', e => {
 
 function collapse_comment(comment_id) {
 
-  let comment = "comment-" + comment_id;
+	var comment = "comment-" + comment_id;
 
-  document.getElementById(comment).classList.toggle("collapsed");
+	document.getElementById(comment).classList.toggle("collapsed");
 
 };
 
@@ -208,7 +206,7 @@ function collapse_comment(comment_id) {
 
 // Expand comment box on focus, hide otherwise
 
-$('.comment-box').focus(event => {
+$('.comment-box').focus(function (event) {
   event.preventDefault();
 
   $(this).parent().parent().addClass("collapsed");
@@ -217,7 +215,7 @@ $('.comment-box').focus(event => {
 
 
 /*
-$('.comment-box').blur(() => {
+$('.comment-box').blur(function () {
     event.preventDefault();
 
     $(this).parent().parent().removeClass("collapsed");
@@ -227,11 +225,11 @@ $('.comment-box').blur(() => {
 
 // Comment edit form
 
-function toggleEdit(id) {
-  comment = document.getElementById("comment-text-" + id);
-  form = document.getElementById("comment-edit-" + id);
-  box = document.getElementById('edit-box-comment-' + id);
-  actions = document.getElementById('comment-' + id + '-actions');
+toggleEdit=function(id){
+  comment=document.getElementById("comment-text-"+id);
+  form=document.getElementById("comment-edit-"+id);
+  box=document.getElementById('edit-box-comment-'+id);
+  actions = document.getElementById('comment-' + id +'-actions');
 
   comment.classList.toggle("d-none");
   form.classList.toggle("d-none");
@@ -241,11 +239,11 @@ function toggleEdit(id) {
 
 // Post edit form
 
-function togglePostEdit(id) {
+togglePostEdit=function(id){
 
-  body = document.getElementById("post-body");
-  form = document.getElementById("edit-post-body-" + id);
-  box = document.getElementById("post-edit-box-" + id);
+  body=document.getElementById("post-body");
+  form=document.getElementById("edit-post-body-"+id);
+  box=document.getElementById("post-edit-box-"+id);
 
   body.classList.toggle("d-none");
   form.classList.toggle("d-none");
@@ -254,93 +252,81 @@ function togglePostEdit(id) {
 
 //comment modding
 function removeComment(post_id) {
-  url = "/api/ban_comment/" + post_id
+  url="/api/ban_comment/"+post_id
 
-  callback = () => {
-    document.getElementById("comment-" + post_id + "-only").classList.add("banned");
+  callback=function(){
+    document.getElementById("comment-"+post_id+"-only").classList.add("banned");
 
-    button = document.getElementById("moderate-" + post_id);
-    button.onclick = () => {
-      approveComment(post_id)
-    };
-    button.innerHTML = "approve"
+    button=document.getElementById("moderate-"+post_id);
+    button.onclick=function(){approveComment(post_id)};
+    button.innerHTML="approve"
   }
   post(url, callback, "Unable to remove post at this time. Please try again later.")
 };
 
 function approveComment(post_id) {
-  url = "/api/unban_comment/" + post_id
+  url="/api/unban_comment/"+post_id
 
-  callback = () => {
-    document.getElementById("comment-" + post_id + "-only").classList.remove("banned");
+  callback=function(){
+    document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
 
-    button = document.getElementById("moderate-" + post_id);
-    button.onclick = () => {
-      removeComment(post_id)
-    };
-    button.innerHTML = "remove"
+    button=document.getElementById("moderate-"+post_id);
+    button.onclick=function(){removeComment(post_id)};
+    button.innerHTML="remove"
   }
 
   post(url, callback, "Unable to approve post at this time. Please try again later.")
 }
 
 function distinguishModComment(post_id) {
-  url = "/api/distinguish_comment/" + post_id
+  url="/api/distinguish_comment/"+post_id
 
-  callback = () => {
-    document.getElementById("comment-" + post_id + "-only").classList.add("distinguish-mod");
+  callback=function(){
+    document.getElementById("comment-"+post_id+"-only").classList.add("distinguish-mod");
 
-    button = document.getElementById("distinguish-" + post_id);
-    button.onclick = () => {
-      undistinguishModComment(post_id)
-    };
-    button.innerHTML = "undistinguish"
+    button=document.getElementById("distinguish-"+post_id);
+    button.onclick=function(){undistinguishModComment(post_id)};
+    button.innerHTML="undistinguish"
   }
 
   post(url, callback, "Unable to distinguish comment at this time. Please try again later.")
 };
 
 function undistinguishModComment(post_id) {
-  url = "/api/undistinguish_comment/" + post_id
+  url="/api/undistinguish_comment/"+post_id
 
-  callback = () => {
-    document.getElementById("comment-" + post_id + "-only").classList.remove("distinguish-mod");
+  callback=function(){
+    document.getElementById("comment-"+post_id+"-only").classList.remove("distinguish-mod");
 
-    button = document.getElementById("distinguish-" + post_id);
-    button.onclick = () => {
-      distinguishModComment(post_id)
-    };
-    button.innerHTML = "distinguish"
+    button=document.getElementById("distinguish-"+post_id);
+    button.onclick=function(){distinguishModComment(post_id)};
+    button.innerHTML="distinguish"
   }
   post(url, callback, "Unable to undistinguish comment at this time. Please try again later.")
 };
 
 function distinguishAdminComment(post_id) {
-  url = "/api/distinguish_comment/" + post_id
+  url="/api/distinguish_comment/"+post_id
 
-  callback = () => {
-    document.getElementById("comment-" + post_id + "-only").classList.add("distinguish-admin");
+  callback=function(){
+    document.getElementById("comment-"+post_id+"-only").classList.add("distinguish-admin");
 
-    button = document.getElementById("distinguish-" + post_id);
-    button.onclick = () => {
-      undistinguishAdminComment(post_id)
-    };
-    button.innerHTML = "undistinguish"
+    button=document.getElementById("distinguish-"+post_id);
+    button.onclick=function(){undistinguishAdminComment(post_id)};
+    button.innerHTML="undistinguish"
   }
   post(url, callback, "Unable to distinguish comment at this time. Please try again later.")
 };
 
 function undistinguishAdminComment(post_id) {
-  url = "/api/undistinguish_comment/" + post_id
+  url="/api/undistinguish_comment/"+post_id
 
-  callback = () => {
-    document.getElementById("comment-" + post_id + "-only").classList.remove("distinguish-admin");
+  callback=function(){
+    document.getElementById("comment-"+post_id+"-only").classList.remove("distinguish-admin");
 
-    button = document.getElementById("distinguish-" + post_id);
-    button.onclick = () => {
-      distinguishAdminComment(post_id)
-    };
-    button.innerHTML = "distinguish"
+    button=document.getElementById("distinguish-"+post_id);
+    button.onclick=function(){distinguishAdminComment(post_id)};
+    button.innerHTML="distinguish"
   }
   post(url, callback, "Unable to undistinguish post at this time. Please try again later.")
 }
@@ -353,7 +339,7 @@ function undistinguishAdminComment(post_id) {
 function toggleDropdown(e) {
     const _d = $(e.target).closest('.dropdown'),
         _m = $('.dropdown-menu', _d);
-    setTimeout(() => {
+    setTimeout(function () {
         const shouldOpen = e.type !== 'click' && _d.is(':hover');
         _m.toggleClass('show', shouldOpen);
         _d.toggleClass('show', shouldOpen);
@@ -369,10 +355,10 @@ $('body')
 
 // Toggle comment collapse
 
-$(".toggle-collapse").click(event => {
+$(".toggle-collapse").click(function (event) {
     event.preventDefault();
 
-    let id = $(this).parent().attr("id");
+    var id = $(this).parent().attr("id");
 
     document.getElementById(id).classList.toggle("collapsed");
 });
@@ -381,56 +367,54 @@ $(".toggle-collapse").click(event => {
 
 function addReplyForm(commentId, postId, formId) {
 
-  let id = "reply-to-" + commentId;
+  var id = "reply-to-" + commentId;
 
-  document.getElementById(id).innerHTML = '<div class="comment-write collapsed child"> <form id="reply-to-t3_' + commentId + '" action="/api/comment" method="post" class="input-group"> <input type="hidden" name="formkey" value="' + formkey() + '"> <input type="hidden" name="parent_fullname" value="t3_' + commentId + '"> <input type="hidden" name="submission" value="' + postId + '"> <textarea name="body" form="reply-to-t3_' + commentId + '" class="comment-box form-control rounded" id="reply-form-' + commentId + '" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> <div class="comment-format"> <small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold(\'' + formId + '\')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics(\'' + formId + '\')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> <small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote(\'' + formId + '\')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small> <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> <small class="format"><span class="font-weight-bolder text-uppercase" onclick="getGif();commentForm(\'' + formId + '\')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF">GIF</span></small> <a href="javascript:void(0)" onclick="delReplyForm(\'' + commentId + '\')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> <button form="reply-to-t3_' + commentId + '" class="btn btn-primary ml-2">Comment</button> </div> </form> </div>';
+  document.getElementById(id).innerHTML = '<div class="comment-write collapsed child"> <form id="reply-to-t3_'+commentId+'" action="/api/comment" method="post" class="input-group"> <input type="hidden" name="formkey" value="'+formkey()+'"> <input type="hidden" name="parent_fullname" value="t3_'+commentId+'"> <input type="hidden" name="submission" value="'+postId+'"> <textarea name="body" form="reply-to-t3_'+commentId+'" class="comment-box form-control rounded" id="reply-form-'+commentId+'" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> <div class="comment-format"> <small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> <small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote(\''+formId+'\')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small> <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> <small class="format"><span class="font-weight-bolder text-uppercase" onclick="getGif();commentForm(\''+formId+'\')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF">GIF</span></small> <a href="javascript:void(0)" onclick="delReplyForm(\''+commentId+'\')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> <button form="reply-to-t3_'+commentId+'" class="btn btn-primary ml-2">Comment</button> </div> </form> </div>';
 
 }
 
-// Removes reply form innerHTML on click
+    // Removes reply form innerHTML on click
 
-function delReplyForm(commentId) {
+    function delReplyForm(commentId) {
 
-  let id = "reply-to-" + commentId;
+      var id = "reply-to-" + commentId;
 
-  document.getElementById(id).innerHTML = '';
+      document.getElementById(id).innerHTML = '';
 
-};
+    };
 
 //Autoexpand textedit comments
 
-function autoExpand(field) {
+function autoExpand (field) {
 
-  //get current scroll position
-  xpos = window.scrollX;
-  ypos = window.scrollY;
+	//get current scroll position
+	xpos=window.scrollX;
+	ypos=window.scrollY;
 
-  // Reset field height
-  field.style.height = 'inherit';
+	// Reset field height
+	field.style.height = 'inherit';
 
-  // Get the computed styles for the element
-  let computed = window.getComputedStyle(field);
+	// Get the computed styles for the element
+	var computed = window.getComputedStyle(field);
 
-  // Calculate the height
-  let height = parseInt(computed.getPropertyValue('border-top-width'), 10) +
-    parseInt(computed.getPropertyValue('padding-top'), 10) +
-    field.scrollHeight +
-    parseInt(computed.getPropertyValue('padding-bottom'), 10) +
-    parseInt(computed.getPropertyValue('border-bottom-width'), 10) +
-    32;
+	// Calculate the height
+	var height = parseInt(computed.getPropertyValue('border-top-width'), 10)
+  + parseInt(computed.getPropertyValue('padding-top'), 10)
+  + field.scrollHeight
+  + parseInt(computed.getPropertyValue('padding-bottom'), 10)
+  + parseInt(computed.getPropertyValue('border-bottom-width'), 10)
+  + 32;
 
   field.style.height = height + 'px';
 
-  //keep window position from changing
-  window.scrollTo(xpos, ypos);
+	//keep window position from changing
+	window.scrollTo(xpos,ypos);
 
 };
 
-document.addEventListener('input', event => {
-  if (event.target.tagName.toLowerCase() !== 'textarea') {
-    return;
-  }
-  autoExpand(event.target);
+document.addEventListener('input', function (event) {
+	if (event.target.tagName.toLowerCase() !== 'textarea') return;
+	autoExpand(event.target);
 }, false);
 
 //dark mode
@@ -442,24 +426,25 @@ function switch_css() {
 
   if (css.href.endsWith("/assets/style/main.css")) {
     post("/settings/dark_mode/1",
-      callback = () => {
-        css.href = "/assets/style/main_dark.css";
+      callback=function(){
+        css.href="/assets/style/main_dark.css";
         dswitch.classList.remove("fa-toggle-off");
         dswitch.classList.add("fa-toggle-on");
         dswitchmobile.classList.remove("fa-toggle-off");
         dswitchmobile.classList.add("fa-toggle-on");
       }
-    );
-  } else {
+      );
+  }
+  else {
     post("/settings/dark_mode/0",
-      callback = () => {
-        css.href = "/assets/style/main.css";
+      callback=function(){
+        css.href="/assets/style/main.css";
         dswitch.classList.remove("fa-toggle-on");
         dswitch.classList.add("fa-toggle-off");
         dswitchmobile.classList.remove("fa-toggle-on");
         dswitchmobile.classList.add("fa-toggle-off");
       }
-    );
+      );
   }
 }
 
@@ -467,21 +452,24 @@ function switch_css() {
 
 function delete_postModal(id) {
 
-  function delete_post() {
-
-    this.innerHTML = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting post';
-    this.disabled = true;
-    post('/delete_post/' + id,
-      callback = () => {
-
-        location.reload();
-      }
-    )
-  }
   // Passed data for modal
+
   document.getElementById("deletePostButton-mobile").addEventListener("click", delete_post);
 
   document.getElementById("deletePostButton").addEventListener("click", delete_post);
+
+  function delete_post(){  
+
+    this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting post';  
+    this.disabled = true; 
+    post('/delete_post/' + id,
+      callback = function() {
+
+        location.reload();
+      }
+      )
+  }
+
 };
 
 // Delete Comment
@@ -490,16 +478,16 @@ function delete_commentModal(id) {
 
   // Passed data for modal
 
-  document.getElementById("deleteCommentButton").onclick = () => {
+  document.getElementById("deleteCommentButton").onclick = function() {  
 
-    this.innerHTML = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting comment';
-    this.disabled = true;
+    this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting comment';  
+    this.disabled = true; 
     post('/delete/comment/' + id,
-      callback = () => {
+      callback = function() {
 
         location.reload();
       }
-    )
+      )
   }
 
 };
@@ -515,39 +503,39 @@ function emailVerifyText() {
 //flagging
 // Flag Comment
 
-function report_commentModal(id, author) {
+report_commentModal = function(id, author) {
 
   document.getElementById("comment-author").textContent = author;
 
-  offtopic.disabled = true;
+  offtopic.disabled=true;
 
-  document.getElementById("reportCommentButton").onclick = () => {
+  document.getElementById("reportCommentButton").onclick = function() {
 
-    this.innerHTML = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting comment';
+    this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting comment';
     this.disabled = true;
     post('/api/flag/comment/' + id,
-      callback = () => {
+      callback = function() {
 
         document.getElementById("reportCommentFormBefore").classList.add('d-none');
         document.getElementById("reportCommentFormAfter").classList.remove('d-none');
       }
-    )
+      )
   }
 
 };
 
-$('#reportCommentModal').on('hidden.bs.modal', () => {
+$('#reportCommentModal').on('hidden.bs.modal', function () {
 
-  let button = document.getElementById("reportCommentButton");
+  var button = document.getElementById("reportCommentButton");
 
-  let beforeModal = document.getElementById("reportCommentFormBefore");
-  let afterModal = document.getElementById("reportCommentFormAfter");
+  var beforeModal = document.getElementById("reportCommentFormBefore");
+  var afterModal = document.getElementById("reportCommentFormAfter");
 
-  button.innerHTML = 'Report comment';
-  button.disabled = false;
+  button.innerHTML='Report comment';
+  button.disabled= false;
   afterModal.classList.add('d-none');
 
-  if (beforeModal.classList.contains('d-none')) {
+  if ( beforeModal.classList.contains('d-none') ) {
     beforeModal.classList.remove('d-none');
   }
 
@@ -556,66 +544,65 @@ $('#reportCommentModal').on('hidden.bs.modal', () => {
 
 // Flag Submission
 
-function report_postModal(id, author, board) {
+report_postModal = function(id, author, board) {
 
   document.getElementById("post-author").textContent = author;
 
-  offtopic = document.getElementById('report-post-to-guild-dropdown-option');
-  offtopic.innerHTML = 'This post is off-topic for +' + board;
+  offtopic=document.getElementById('report-post-to-guild-dropdown-option');
+  offtopic.innerHTML= 'This post is off-topic for +' + board;
 
-  if (board == 'general') {
-    offtopic.disabled = true;
-  } else {
-    offtopic.disabled = false;
+  if (board=='general') {
+    offtopic.disabled=true;
+  }
+  else {
+    offtopic.disabled=false;
   }
 
-  selectbox = document.getElementById('report-type-dropdown');
-  selectbox.value = 'reason_not_selected';
+  selectbox=document.getElementById('report-type-dropdown');
+  selectbox.value='reason_not_selected';
 
-  submitbutton = document.getElementById("reportPostButton");
-  submitbutton.disabled = true;
+  submitbutton=document.getElementById("reportPostButton");
+  submitbutton.disabled=true;
 
-  submitbutton.onclick = () => {
+  submitbutton.onclick = function() {
 
-    this.innerHTML = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting post';
+    this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting post';
     this.disabled = true;
 
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", '/api/flag/post/' + id, true);
-    let form = new FormData()
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", '/api/flag/post/'+id, true);
+    var form = new FormData()
     form.append("formkey", formkey());
 
-    dropdown = document.getElementById("report-type-dropdown");
+    dropdown=document.getElementById("report-type-dropdown");
     form.append("report_type", dropdown.options[dropdown.selectedIndex].value);
 
-    xhr.withCredentials = true;
+    xhr.withCredentials=true;
 
-    xhr.onload = () => {
+    xhr.onload=function() {
       document.getElementById("reportPostFormBefore").classList.add('d-none');
       document.getElementById("reportPostFormAfter").classList.remove('d-none');
     };
 
-    xhr.onerror = () => {
-      alert(errortext)
-    };
+    xhr.onerror=function(){alert(errortext)};
     xhr.send(form);
 
   }
 };
 
-$('#reportPostModal').on('hidden.bs.modal', () => {
+$('#reportPostModal').on('hidden.bs.modal', function () {
 
-  let button = document.getElementById("reportPostButton");
+  var button = document.getElementById("reportPostButton");
 
-  let beforeModal = document.getElementById("reportPostFormBefore");
-  let afterModal = document.getElementById("reportPostFormAfter");
+  var beforeModal = document.getElementById("reportPostFormBefore");
+  var afterModal = document.getElementById("reportPostFormAfter");
 
-  button.innerHTML = 'Report post';
-  button.disabled = false;
+  button.innerHTML='Report post';
+  button.disabled= false;
 
   afterModal.classList.add('d-none');
 
-  if (beforeModal.classList.contains('d-none')) {
+  if ( beforeModal.classList.contains('d-none') ) {
     beforeModal.classList.remove('d-none');
   }
 
@@ -624,42 +611,40 @@ $('#reportPostModal').on('hidden.bs.modal', () => {
 //enlarge thumbs
 // Enlarge submissionlisting thumbnail
 
-function enlarge_thumb(post_id) {
+enlarge_thumb = function(post_id) {
 
-  document.getElementById(post_id).classList.toggle("enlarged");
+	document.getElementById(post_id).classList.toggle("enlarged");
 
 };
 
 //iOS webapp stuff
 
-((document, navigator, standalone) => {
-  // prevents links from apps from oppening in mobile safari
-  // this javascript must be the first script in your <head>
-  if ((standalone in navigator) && navigator[standalone]) {
-    let curnode, location = document.location,
-      stop = /^(a|html)$/i;
-    document.addEventListener('click', e => {
-      curnode = e.target;
-      while (!(stop).test(curnode.nodeName)) {
-        curnode = curnode.parentNode;
-      }
-      // Condidions to do this only on links to your own app
-      // if you want all links, use if('href' in curnode) instead.
-      if ('href' in curnode && (curnode.href.indexOf('http') || ~curnode.href.indexOf(location.host))) {
-        e.preventDefault();
-        location.href = curnode.href;
-      }
-    }, false);
-  }
-})(document, window.navigator, 'standalone');
+(function(document,navigator,standalone) {
+            // prevents links from apps from oppening in mobile safari
+            // this javascript must be the first script in your <head>
+            if ((standalone in navigator) && navigator[standalone]) {
+              var curnode, location=document.location, stop=/^(a|html)$/i;
+              document.addEventListener('click', function(e) {
+                curnode=e.target;
+                while (!(stop).test(curnode.nodeName)) {
+                  curnode=curnode.parentNode;
+                }
+                    // Condidions to do this only on links to your own app
+                    // if you want all links, use if('href' in curnode) instead.
+                    if('href' in curnode && ( curnode.href.indexOf('http') || ~curnode.href.indexOf(location.host) ) ) {
+                      e.preventDefault();
+                      location.href = curnode.href;
+                    }
+                  },false);
+            }
+          })(document,window.navigator,'standalone');
 
 
 //KC easter egg
 
-$(() => {
-  let kKeys = [];
-
-  function Kpress(e) {
+$(function(){
+  var kKeys = [];
+  function Kpress(e){
     kKeys.push(e.keyCode);
     if (kKeys.toString().indexOf("38,38,40,40,37,39,37,39,66,65") >= 0) {
       $(this).unbind('keydown', Kpress);
@@ -668,48 +653,47 @@ $(() => {
   }
   $(document).keydown(Kpress);
 });
-
-function kExec() {
-  $('body').append('<iframe width="0" height="0" src="https://www.youtube.com/embed/xoEEOrTctpA?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
-  $('a').addClass('ruckus');
-  $('p').addClass('ruckus');
-  $('img').addClass('ruckus');
-  $('span').addClass('ruckus');
-  $('button').addClass('ruckus');
-  $('i').addClass('ruckus');
-  $('input').addClass('ruckus');
+function kExec(){
+ $('body').append ('<iframe width="0" height="0" src="https://www.youtube.com/embed/xoEEOrTctpA?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+ $('a').addClass('ruckus');
+ $('p').addClass('ruckus');
+ $('img').addClass('ruckus');
+ $('span').addClass('ruckus');
+ $('button').addClass('ruckus');
+ $('i').addClass('ruckus');
+ $('input').addClass('ruckus');
 };
 
 //Post kick
 
-function kick_postModal(id) {
+kick_postModal = function(id) {
 
-  document.getElementById("kickPostButton").onclick = () => {
+  document.getElementById("kickPostButton").onclick = function() {
 
-    this.innerHTML = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>kicking post';
+    this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>kicking post';
     this.disabled = true;
     post('/api/flag/post/' + id,
-      callback = () => {
+      callback = function() {
 
         location.reload();
       }
-    )
+      )
   }
 };
 
-$('#kickPostModal').on('hidden.bs.modal', () => {
+$('#kickPostModal').on('hidden.bs.modal', function () {
 
-  let button = document.getElementById("kickPostButton");
+  var button = document.getElementById("kickPostButton");
 
-  let beforeModal = document.getElementById("kickPostFormBefore");
-  let afterModal = document.getElementById("kickPostFormAfter");
+  var beforeModal = document.getElementById("kickPostFormBefore");
+  var afterModal = document.getElementById("kickPostFormAfter");
 
-  button.innerHTML = 'kick post';
-  button.disabled = false;
+  button.innerHTML='kick post';
+  button.disabled= false;
 
   afterModal.classList.add('d-none');
 
-  if (beforeModal.classList.contains('d-none')) {
+  if ( beforeModal.classList.contains('d-none') ) {
     beforeModal.classList.remove('d-none');
   }
 
@@ -718,21 +702,19 @@ $('#kickPostModal').on('hidden.bs.modal', () => {
 //POST
 
 function post(url, callback, errortext) {
-  let xhr = new XMLHttpRequest();
+  var xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
-  let form = new FormData()
+  var form = new FormData()
   form.append("formkey", formkey());
-  xhr.withCredentials = true;
-  xhr.onload = callback
-  xhr.onerror = () => {
-    alert(errortext)
-  }
+  xhr.withCredentials=true;
+  xhr.onload=callback
+  xhr.onerror=function(){alert(errortext)}
   xhr.send(form);
 };
 
 // sub/unsub
 
-function toggleSub() {
+function toggleSub(){
   document.getElementById('button-unsub').classList.toggle('d-none');
   document.getElementById('button-sub').classList.toggle('d-none');
   document.getElementById('button-unsub-modal').classList.toggle('d-none');
@@ -744,35 +726,31 @@ function toggleSub() {
 
 //Admin post modding
 function removePost(post_id) {
-  url = "/api/ban_post/" + post_id
+  url="/api/ban_post/"+post_id
 
-  callback = () => {
-    document.getElementById("post-" + post_id).classList.add("banned");
+  callback=function(){
+    document.getElementById("post-"+post_id).classList.add("banned");
 
-    let button = document.getElementById("moderate-post-" + post_id);
-    button.onclick = () => {
-      approvePost(post_id)
-    };
+    var button=document.getElementById("moderate-post-"+post_id);
+    button.onclick=function(){approvePost(post_id)};
     button.classList.remove("removeDropdownItem");
     button.classList.add("approveDropdownItem");
-    button.innerHTML = '<i class="fas fa-clipboard-check"></i>Approve'
+    button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
   }
   post(url, callback, "Unable to remove post at this time. Please try again later.")
 }
 
 function approvePost(post_id) {
-  url = "/api/unban_post/" + post_id
+  url="/api/unban_post/"+post_id
 
-  callback = () => {
-    document.getElementById("post-" + post_id).classList.remove("banned");
+  callback=function(){
+    document.getElementById("post-"+post_id).classList.remove("banned");
 
-    let button = document.getElementById("moderate-post-" + post_id);
-    button.onclick = () => {
-      removePost(post_id)
-    };
+    var button=document.getElementById("moderate-post-"+post_id);
+    button.onclick=function(){removePost(post_id)};
     button.classList.remove("approveDropdownItem");
     button.classList.add("removeDropdownItem");
-    button.innerHTML = '<i class="fas fa-trash-alt"></i>Remove'
+    button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
   }
 
   post(url, callback, "Unable to approve post at this time. Please try again later.")
@@ -781,8 +759,8 @@ function approvePost(post_id) {
 //Element deleter
 
 function deleteElement(eid) {
-  x = document.getElementById(eid)
-  x.parentElement.removeChild(x)
+	x=document.getElementById(eid)
+	x.parentElement.removeChild(x)
 
 }
 
@@ -790,18 +768,19 @@ function deleteElement(eid) {
 //Signup js
 // Display username and password requirements on input
 
-$('#password-register').on('input', () => {
+$('#password-register').on('input', function () {
 
-  let charCount = document.getElementById("password-register").value;
-  let id = document.getElementById("passwordHelpRegister");
-  let successID = document.getElementById("passwordHelpSuccess");
+  var charCount = document.getElementById("password-register").value;
+  var id = document.getElementById("passwordHelpRegister");
+  var successID = document.getElementById("passwordHelpSuccess");
 
   console.log(charCount.length);
 
   if (charCount.length >= 8) {
     id.classList.add("d-none");
     successID.classList.remove("d-none");
-  } else {
+  }
+  else {
     id.classList.remove("d-none");
     successID.classList.add("d-none");
   };
@@ -810,16 +789,18 @@ $('#password-register').on('input', () => {
 
 // Check username length, special chars
 
-$('#username-register').on('input', () => {
+$('#username-register').on('input', function () {
 
-  let charCount = document.getElementById("username-register").value;
-  let id = document.getElementById("usernameHelpRegister");
-  let successID = document.getElementById("usernameHelpSuccess");
+  var charCount = document.getElementById("username-register").value;
+  var id = document.getElementById("usernameHelpRegister");
+  var successID = document.getElementById("usernameHelpSuccess");
+
+  var ruqqusAPI = '/api/is_available/' + charCount;
 
   if (charCount.length >= 5) {
-    let ruqqusAPI = '/api/is_available/' + charCount;
-    $.getJSON(ruqqusAPI, result => {
-      $.each(result, (i, field) => {
+
+    $.getJSON(ruqqusAPI, function(result) {
+      $.each(result, function(i, field) {
         if (field == false) {
           id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">Username already taken :(';
         }
@@ -834,10 +815,12 @@ $('#username-register').on('input', () => {
 
     if (charCount.length < 5) {
       id.innerHTML = '<span class="form-text font-weight-bold text-muted mt-1">Username must be at least 5 characters long.';
-    } else if (charCount.length > 25) {
+    }
+    else if (charCount.length > 25) {
       id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">Username must be 25 characters or less.';
     }
-  } else {
+  }
+  else {
     id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">No special characters or spaces allowed.</span>';
   };
 
@@ -846,43 +829,43 @@ $('#username-register').on('input', () => {
 // Search Icon
 // Change navbar search icon when form is in focus, active states
 
-$(".form-control").focus(() => {
+$(".form-control").focus(function () {
   $(this).prev('.input-group-append').removeClass().addClass('input-group-append-focus');
   $(this).next('.input-group-append').removeClass().addClass('input-group-append-focus');
 });
 
-$(".form-control").focusout(() => {
+$(".form-control").focusout(function () {
   $(this).prev('.input-group-append-focus').removeClass().addClass('input-group-append');
   $(this).next('.input-group-append-focus').removeClass().addClass('input-group-append');
 });
 
 //spinner effect
 
-$(document).ready(() => {
-  $('#login').submit(() => {
-    // disable button
-    $("#login_button").prop("disabled", true);
-    // add spinner to button
-    $("#login_button").html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Signing in');
-  });
+$(document).ready(function() {
+	$('#login').submit(function() {
+      // disable button
+      $("#login_button").prop("disabled", true);
+      // add spinner to button
+      $("#login_button").html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Signing in');
+    });
 });
 
-$(document).ready(() => {
-  $('#signup').submit(() => {
-    // disable button
-    $("#register_button").prop("disabled", true);
-    // add spinner to button
-    $("#register_button").html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Registering');
-  });
+$(document).ready(function() {
+	$('#signup').submit(function() {
+      // disable button
+      $("#register_button").prop("disabled", true);
+      // add spinner to button
+      $("#register_button").html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Registering');
+    });
 });
 
-$(document).ready(() => {
-  $('#submitform').submit(() => {
-    // disable button
-    $("#create_button").prop("disabled", true);
-    // add spinner to button
-    $("#create_button").html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Creating post');
-  });
+$(document).ready(function() {
+	$('#submitform').submit(function() {
+      // disable button
+      $("#create_button").prop("disabled", true);
+      // add spinner to button
+      $("#create_button").html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Creating post');
+    });
 });
 
 // Sidebar collapsing
@@ -891,127 +874,99 @@ $(document).ready(() => {
 
 if (document.getElementById("sidebar-left") && localStorage.sidebar_pref == 'collapsed') {
 
-  document.getElementById('sidebar-left').classList.add('sidebar-collapsed');
+	document.getElementById('sidebar-left').classList.add('sidebar-collapsed');
 
 };
 
-function toggle_sidebar() {
+function toggle_sidebar_collapse() {
 
-  let sidebar_pref = localStorage.sidebar_pref
+	// Store Pref
+	localStorage.setItem('sidebar_pref', 'collapsed');
 
-  // Toggle the preference - Bass
-
-  // If collapsed, expand it...
-  if (sidebar_pref === 'collapsed') {
-    // Remove Pref
-    localStorage.removeItem('sidebar_pref');
-
-    document.getElementById('sidebar-left').classList.toggle('sidebar-collapsed');
-  }
-
-  // ...and if expanded, collapse it - Bass
-  // Store Pref
-  localStorage.setItem('sidebar_pref', 'collapsed');
-
-  document.getElementById('sidebar-left').classList.toggle('sidebar-collapsed');
+	document.getElementById('sidebar-left').classList.toggle('sidebar-collapsed');
 
 };
 
+function toggle_sidebar_expand() {
 
-// Voting
+	// Remove Pref
+	localStorage.removeItem('sidebar_pref');
+
+	document.getElementById('sidebar-left').classList.toggle('sidebar-collapsed');
+
+}
+
+
+//Voting
+
+
 
 function vote(post_id, direction) {
-  url = "/api/vote/post/" + post_id + "/" + direction;
+  url="/api/vote/post/"+post_id+"/"+direction;
 
-  callback = () => {
-    thing = document.getElementById("post-" + post_id);
-    uparrow1 = document.getElementById("post-" + post_id + "-up");
-    downarrow1 = document.getElementById("post-" + post_id + "-down");
-    scoreup1 = document.getElementById("post-" + post_id + "-score-up");
-    scorenone1 = document.getElementById("post-" + post_id + "-score-none");
-    scoredown1 = document.getElementById("post-" + post_id + "-score-down");
+  callback=function(){
+    thing = document.getElementById("post-"+post_id);
+    uparrow1=document.getElementById("post-"+post_id+"-up");
+    downarrow1=document.getElementById("post-"+post_id+"-down");
+    scoreup1=document.getElementById("post-"+post_id+"-score-up");
+    scorenone1=document.getElementById("post-"+post_id+"-score-none");
+    scoredown1=document.getElementById("post-"+post_id+"-score-down");
 
-    thing2 = document.getElementById("voting-" + post_id + "-mobile")
-    uparrow2 = document.getElementById("arrow-" + post_id + "-mobile-up");
-    downarrow2 = document.getElementById("arrow-" + post_id + "-mobile-down");
-    scoreup2 = document.getElementById("post-" + post_id + "-score-mobile-up");
-    scorenone2 = document.getElementById("post-" + post_id + "-score-mobile-none");
-    scoredown2 = document.getElementById("post-" + post_id + "-score-mobile-down");
+    thing2=document.getElementById("voting-"+post_id+"-mobile")
+    uparrow2=document.getElementById("arrow-"+post_id+"-mobile-up");
+    downarrow2=document.getElementById("arrow-"+post_id+"-mobile-down");
+    scoreup2=document.getElementById("post-"+post_id+"-score-mobile-up");
+    scorenone2=document.getElementById("post-"+post_id+"-score-mobile-none");
+    scoredown2=document.getElementById("post-"+post_id+"-score-mobile-down");
 
-    if (direction == "1") {
-
+    if (direction=="1") {
       thing.classList.add("upvoted");
       thing.classList.remove("downvoted");
-      uparrow1.onclick = () => {
-        vote(post_id, 0)
-      };
-      downarrow1.onclick = () => {
-        vote(post_id, -1)
-      };
+      uparrow1.onclick=function(){vote(post_id, 0)};
+      downarrow1.onclick=function(){vote(post_id, -1)};
       scoreup1.classList.remove("d-none");
       scorenone1.classList.add("d-none");
       scoredown1.classList.add("d-none");
 
       thing2.classList.add("upvoted");
       thing2.classList.remove("downvoted");
-      uparrow2.onclick = () => {
-        vote(post_id, 0)
-      };
-      downarrow2.onclick = () => {
-        vote(post_id, -1)
-      };
+      uparrow2.onclick=function(){vote(post_id, 0)};
+      downarrow2.onclick=function(){vote(post_id, -1)};
       scoreup2.classList.remove("d-none");
       scorenone2.classList.add("d-none");
       scoredown2.classList.add("d-none");
-
-    } else if (direction == "-1") {
-
+    }
+    else if (direction=="-1"){
       thing.classList.remove("upvoted");
       thing.classList.add("downvoted");
-      uparrow1.onclick = () => {
-        vote(post_id, 1)
-      };
-      downarrow1.onclick = () => {
-        vote(post_id, 0)
-      };
+      uparrow1.onclick=function(){vote(post_id, 1)};
+      downarrow1.onclick=function(){vote(post_id, 0)};
       scoreup1.classList.add("d-none");
       scorenone1.classList.add("d-none");
       scoredown1.classList.remove("d-none");
 
       thing2.classList.remove("upvoted");
       thing2.classList.add("downvoted");
-      uparrow2.onclick = () => {
-        vote(post_id, 1)
-      };
-      downarrow2.onclick = () => {
-        vote(post_id, 0)
-      };
+      uparrow2.onclick=function(){vote(post_id, 1)};
+      downarrow2.onclick=function(){vote(post_id, 0)};
       scoreup2.classList.add("d-none");
       scorenone2.classList.add("d-none");
       scoredown2.classList.remove("d-none");
 
-    } else if (direction == "0") {
-
+    }
+    else if (direction=="0"){
       thing.classList.remove("upvoted");
       thing.classList.remove("downvoted");
-      uparrow1.onclick = () => {
-        vote(post_id, 1)
-      };
-      downarrow1.onclick = () => {
-        vote(post_id, -1)
-      };
+      uparrow1.onclick=function(){vote(post_id, 1)};
+      downarrow1.onclick=function(){vote(post_id, -1)};
       scoreup1.classList.add("d-none");
       scorenone1.classList.remove("d-none");
       scoredown1.classList.add("d-none");
 
       thing2.classList.remove("upvoted");
       thing2.classList.remove("downvoted");
-      uparrow2.onclick = () => {
-        vote(post_id, 1)
-      };
-      downarrow2.onclick = () => {
-        vote(post_id, -1)
-      };
+      uparrow2.onclick=function(){vote(post_id, 1)};
+      downarrow2.onclick=function(){vote(post_id, -1)};
       scoreup2.classList.add("d-none");
       scorenone2.classList.remove("d-none");
       scoredown2.classList.add("d-none");
@@ -1024,52 +979,39 @@ function vote(post_id, direction) {
 
 
 function vote_comment(comment_id, direction) {
-  url = "/api/vote/comment/" + comment_id + "/" + direction;
+  url="/api/vote/comment/"+ comment_id +"/"+direction;
 
-  callback = () => {
-    thing = document.getElementById("comment-" + comment_id + "-actions");
-    uparrow1 = document.getElementById("comment-" + comment_id + "-up");
-    downarrow1 = document.getElementById("comment-" + comment_id + "-down");
-    scoreup1 = document.getElementById("comment-" + comment_id + "-score-up");
-    scorenone1 = document.getElementById("comment-" + comment_id + "-score-none");
-    scoredown1 = document.getElementById("comment-" + comment_id + "-score-down");
+  callback=function(){
+    thing = document.getElementById("comment-"+ comment_id+"-actions");
+    uparrow1=document.getElementById("comment-"+ comment_id +"-up");
+    downarrow1=document.getElementById("comment-"+ comment_id +"-down");
+    scoreup1=document.getElementById("comment-"+ comment_id +"-score-up");
+    scorenone1=document.getElementById("comment-"+ comment_id +"-score-none");
+    scoredown1=document.getElementById("comment-"+ comment_id +"-score-down");
 
-    if (direction == "1") {
-
+    if (direction=="1") {
       thing.classList.add("upvoted");
       thing.classList.remove("downvoted");
-      uparrow1.onclick = () => {
-        vote_comment(comment_id, 0)
-      };
-      downarrow1.onclick = () => {
-        vote_comment(comment_id, -1)
-      };
+      uparrow1.onclick=function(){vote_comment(comment_id, 0)};
+      downarrow1.onclick=function(){vote_comment(comment_id, -1)};
       scoreup1.classList.remove("d-none");
       scorenone1.classList.add("d-none");
       scoredown1.classList.add("d-none");
-
-    } else if (direction == "-1") {
+    }
+    else if (direction=="-1"){
       thing.classList.remove("upvoted");
       thing.classList.add("downvoted");
-      uparrow1.onclick = () => {
-        vote_comment(comment_id, 1)
-      };
-      downarrow1.onclick = () => {
-        vote_comment(comment_id, 0)
-      };
+      uparrow1.onclick=function(){vote_comment(comment_id, 1)};
+      downarrow1.onclick=function(){vote_comment(comment_id, 0)};
       scoreup1.classList.add("d-none");
       scorenone1.classList.add("d-none");
       scoredown1.classList.remove("d-none");
-
-    } else if (direction == "0") {
+    }
+    else if (direction=="0"){
       thing.classList.remove("upvoted");
       thing.classList.remove("downvoted");
-      uparrow1.onclick = () => {
-        vote_comment(comment_id, 1)
-      };
-      downarrow1.onclick = () => {
-        vote_comment(comment_id, -1)
-      };
+      uparrow1.onclick=function(){vote_comment(comment_id, 1)};
+      downarrow1.onclick=function(){vote_comment(comment_id, -1)};
       scoreup1.classList.add("d-none");
       scorenone1.classList.remove("d-none");
       scoredown1.classList.add("d-none");
@@ -1098,26 +1040,27 @@ function yank_postModal(id, author, comments, title, author_link, domain, timest
   document.getElementById("post-timestamp").textContent = timestamp;
 
 
-  document.getElementById("yank-post-form").action = "/mod/take/" + id;
+  document.getElementById("yank-post-form").action="/mod/take/"+id;
+  
+
+  document.getElementById("yankPostButton").onclick = function() {  
 
 
-  document.getElementById("yankPostButton").onclick = () => {
-
-
-    let yankError = document.getElementById("toast-error-message");
+    var yankError = document.getElementById("toast-error-message");
 
 
 
-    let xhr = new XMLHttpRequest();
-    xhr.open("post", "/mod/take/" + id);
-    xhr.withCredentials = true;
-    f = new FormData();
+    var xhr = new XMLHttpRequest();
+    xhr.open("post", "/mod/take/"+id);
+    xhr.withCredentials=true;
+    f=new FormData();
     f.append("formkey", formkey());
     f.append("board_id", document.getElementById('yank-type-dropdown').value)
-    xhr.onload = () => {
-      if (xhr.status == 204) {
+    xhr.onload=function(){
+      if (xhr.status==204) {
         window.location.reload(true);
-      } else {
+      }
+      else {
         $('#toast-invite-error').toast('dispose');
         $('#toast-invite-error').toast('show');
         yankError.textContent = JSON.parse(xhr.response)["error"];
@@ -1130,8 +1073,8 @@ function yank_postModal(id, author, comments, title, author_link, domain, timest
 //yt embed
 
 function getId(url) {
-  let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  let match = url.match(regExp);
+  var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  var match = url.match(regExp);
 
   if (match && match[2].length == 11) {
     return match[2];
@@ -1140,7 +1083,7 @@ function getId(url) {
   }
 }
 
-let myUrl = $('#embedURL').text();
+var myUrl = $('#embedURL').text();
 
 myId = getId(myUrl);
 
@@ -1151,57 +1094,59 @@ $('#ytEmbed').html('<iframe width="100%" height="475" src="//www.youtube.com/emb
 
 function expandDesktopImage(image, link) {
 
-  // GIPHY attribution div
+// GIPHY attribution div
 
-  let attribution = document.getElementById("modal-image-attribution");
+var attribution = document.getElementById("modal-image-attribution");
 
-  // Link text
+// Link text
 
-  let linkText = document.getElementById("desktop-expanded-image-link");
+var linkText = document.getElementById("desktop-expanded-image-link");
 
-  let inlineImage = document.getElementById("desktop-expanded-image");
+var inlineImage = document.getElementById("desktop-expanded-image");
 
-  inlineImage.src = image;
+inlineImage.src = image;
 
-  if (image.includes("i.ruqqus.com")) {
-    linkText.href = link;
-    linkText.textContent = 'Go to website';
-  } else if (image.includes("imgur.com") || image.includes("cdn.discordapp.com")) {
-    linkText.href = image;
-    linkText.textContent = 'View original';
-  } else {
-    linkText.href = image;
-    linkText.textContent = 'View original';
-  }
+if (image.includes("i.ruqqus.com")) {
+	linkText.href = link;
+	linkText.textContent = 'Go to website';
+}
+else if (image.includes("imgur.com") || image.includes("cdn.discordapp.com")){
+	linkText.href = image;
+	linkText.textContent = 'View original';
+}
+else {
+	linkText.href = image;
+	linkText.textContent = 'View original';
+}
 
-  if (image.includes("media.giphy.com")) {
-    attribution.innerHTML = '<img src="/assets/images/icons/PoweredBy_200px-Black_HorizLogo.png" style="width: 100px;">';
+if (image.includes("media.giphy.com")) {
+	attribution.innerHTML = '<img src="/assets/images/icons/PoweredBy_200px-Black_HorizLogo.png" style="width: 100px;">';
 
-    let GIPHYsrc = image.replace(/\b100w\b~?/g, 'giphy');
+  var GIPHYsrc = image.replace(/\b100w\b~?/g, 'giphy');
 
-    inlineImage.src = GIPHYsrc;
-    linkText.href = GIPHYsrc;
-  }
+  inlineImage.src = GIPHYsrc;
+  linkText.href = GIPHYsrc;
+}
 
 };
 
 // When image modal is closed
 
-$('#expandImageModal').on('hidden.bs.modal', e => {
+$('#expandImageModal').on('hidden.bs.modal', function (e) {
 
-  // GIPHY attribution div
+  	// GIPHY attribution div
 
-  let attribution = document.getElementById("modal-image-attribution");
+  	var attribution = document.getElementById("modal-image-attribution");
 
-  // remove the attribution
+  	// remove the attribution
 
-  attribution.innerHTML = null;
+  	attribution.innerHTML = null;
 
-  // remove image src and link
+	// remove image src and link
 
-  document.getElementById("desktop-expanded-image").src = null;
+	document.getElementById("desktop-expanded-image").src = null;
 
-  document.getElementById("desktop-expanded-image-link").href = null;
+	document.getElementById("desktop-expanded-image-link").href = null;
 
 });
 
@@ -1209,60 +1154,66 @@ $('#expandImageModal').on('hidden.bs.modal', e => {
 
 // Bold Text
 
-function makeBold(form) {
-  let text = document.getElementById(form);
-  let startIndex = text.selectionStart,
-    endIndex = text.selectionEnd;
-  let selectedText = text.value.substring(startIndex, endIndex);
+makeBold = function (form) {
+  var text = document.getElementById(form);
+  var startIndex = text.selectionStart,
+  endIndex = text.selectionEnd;
+  var selectedText = text.value.substring(startIndex, endIndex);
 
-  let format = '**'
+  var format = '**'
 
   if (selectedText.includes('**')) {
     text.value = selectedText.replace(/\*/g, '');
-
-  } else if (selectedText.length == 0) {
+    
+  }
+  else if (selectedText.length == 0) {
     text.value = text.value.substring(0, startIndex) + selectedText + text.value.substring(endIndex);
-  } else {
+  }
+  else {
     text.value = text.value.substring(0, startIndex) + format + selectedText + format + text.value.substring(endIndex);
   }
 }
 
 // Italicize Comment Text
 
-function makeItalics(form) {
-  let text = document.getElementById(form);
-  let startIndex = text.selectionStart,
-    endIndex = text.selectionEnd;
-  let selectedText = text.value.substring(startIndex, endIndex);
+makeItalics = function (form) {
+  var text = document.getElementById(form);
+  var startIndex = text.selectionStart,
+  endIndex = text.selectionEnd;
+  var selectedText = text.value.substring(startIndex, endIndex);
 
-  let format = '*'
+  var format = '*'
 
   if (selectedText.includes('*')) {
     text.value = selectedText.replace(/\*/g, '');
-
-  } else if (selectedText.length == 0) {
+    
+  }
+  else if (selectedText.length == 0) {
     text.value = text.value.substring(0, startIndex) + selectedText + text.value.substring(endIndex);
-  } else {
+  }
+  else {
     text.value = text.value.substring(0, startIndex) + format + selectedText + format + text.value.substring(endIndex);
   }
 }
 
 // Quote Comment Text
 
-function makeQuote(form) {
-  let text = document.getElementById(form);
-  let startIndex = text.selectionStart,
-    endIndex = text.selectionEnd;
-  let selectedText = text.value.substring(startIndex, endIndex);
+makeQuote = function (form) {
+  var text = document.getElementById(form);
+  var startIndex = text.selectionStart,
+  endIndex = text.selectionEnd;
+  var selectedText = text.value.substring(startIndex, endIndex);
 
-  let format = '>'
+  var format = '>'
 
   if (selectedText.includes('>')) {
     text.value = selectedText.replace(/\>/g, '');
-
-  } else if (selectedText.length == 0) {
+    
+  }
+  else if (selectedText.length == 0) {
     text.value = text.value.substring(0, startIndex) + selectedText + text.value.substring(endIndex);
-  } else {
+  }
+  else {
     text.value = text.value.substring(0, startIndex) + format + selectedText + text.value.substring(endIndex);
   }
 }
@@ -1271,19 +1222,21 @@ function makeQuote(form) {
 
 function charLimit(form, text) {
 
-  let input = document.getElementById(form);
+  var input = document.getElementById(form);
 
-  let text = document.getElementById(text);
+  var text = document.getElementById(text);
 
-  let length = input.value.length;
+  var length = input.value.length;
 
-  let maxLength = input.getAttribute("maxlength");
+  var maxLength = input.getAttribute("maxlength");
 
   if (length >= maxLength) {
     text.style.color = "#E53E3E";
-  } else if (length >= maxLength * .72) {
+  }
+  else if (length >= maxLength * .72){
     text.style.color = "#FFC107";
-  } else {
+  }
+  else {
     text.style.color = "#A0AEC0";
   }
 
@@ -1293,77 +1246,84 @@ function charLimit(form, text) {
 
 // Mobile bottom navigation bar
 
-window.onload = () => {
-  let prevScrollpos = window.pageYOffset;
-  window.onscroll = () => {
-    let currentScrollPos = window.pageYOffset;
+window.onload = function () {
+  var prevScrollpos = window.pageYOffset;
+  window.onscroll = function () {
+    var currentScrollPos = window.pageYOffset;
 
-    let topBar = document.getElementById("fixed-bar-mobile");
+    var topBar = document.getElementById("fixed-bar-mobile");
 
-    let bottomBar = document.getElementById("mobile-bottom-navigation-bar");
+    var bottomBar = document.getElementById("mobile-bottom-navigation-bar");
 
-    let dropdown = document.getElementById("mobileSortDropdown");
+    var dropdown = document.getElementById("mobileSortDropdown");
 
-    let navbar = document.getElementById("navbar");
+    var navbar = document.getElementById("navbar");
 
     if (bottomBar != null) {
       if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
         bottomBar.style.bottom = "0px";
-      } else if (currentScrollPos <= 125 && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
+      } 
+      else if (currentScrollPos <= 125 && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
         bottomBar.style.bottom = "0px";
-      } else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 65)) {
+      }
+      else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 65)) {
         bottomBar.style.bottom = "-50px";
-      } else {
+      }
+      else {
         bottomBar.style.bottom = "-50px";
       }
     }
 
-    // Execute if bottomBar exists
+  // Execute if bottomBar exists
 
-    if (topBar != null && dropdown != null) {
-      if (prevScrollpos > currentScrollPos) {
-        topBar.style.top = "49px";
-        navbar.classList.remove("shadow");
-      } else if (currentScrollPos <= 125) {
-        topBar.style.top = "49px";
-        navbar.classList.remove("shadow");
-      } else {
-        topBar.style.top = "-49px";
-        dropdown.classList.remove('show');
-        navbar.classList.add("shadow");
-      }
+  if (topBar != null && dropdown != null) {
+    if (prevScrollpos > currentScrollPos) {
+      topBar.style.top = "49px";
+      navbar.classList.remove("shadow");
+    } 
+    else if (currentScrollPos <= 125) {
+      topBar.style.top = "49px";
+      navbar.classList.remove("shadow");
     }
-    prevScrollpos = currentScrollPos;
+    else {
+      topBar.style.top = "-49px";
+      dropdown.classList.remove('show');
+      navbar.classList.add("shadow");
+    }
   }
+  prevScrollpos = currentScrollPos;
+}
 }
 
 // Tooltips
 
-$(document).ready(() => {
-  $('[data-toggle="tooltip"]').tooltip();
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip(); 
 });
 
 // Paste to create submission
 
-document.addEventListener('paste', event => {
+document.addEventListener('paste', function (event) {
 
-  let nothingFocused = document.activeElement === document.body;
+  var nothingFocused = document.activeElement === document.body;
 
   if (nothingFocused) {
 
     if (document.getElementById('guild-name-reference')) {
-      let guild = document.getElementById('guild-name-reference').innerText;
+        var guild = document.getElementById('guild-name-reference').innerText;
     }
 
-    let clipText = event.clipboardData.getData('Text');
+    var clipText = event.clipboardData.getData('Text');
 
-    let url = new RegExp('^(?:[a-z]+:)?//', 'i');
+    var url = new RegExp('^(?:[a-z]+:)?//', 'i');
 
     if (url.test(clipText) && window.location.pathname !== '/submit' && guild == undefined) {
       window.location.href = '/submit?url=' + clipText;
-    } else if (url.test(clipText) && window.location.pathname !== '/submit' && guild !== undefined) {
+    }
+    else if (url.test(clipText) && window.location.pathname !== '/submit' && guild !== undefined) {
       window.location.href = '/submit?url=' + clipText + '&guild=' + guild;
-    } else if (url.test(clipText) && window.location.pathname == '/submit' && guild == undefined) {
+    }
+    else if (url.test(clipText) && window.location.pathname == '/submit' && guild == undefined) {
 
       document.getElementById("post-URL").value = clipText;
 
@@ -1377,75 +1337,75 @@ document.addEventListener('paste', event => {
 
 function checkForRequired() {
 
-  // Divs
+// Divs
 
-  let title = document.getElementById("post-title");
+var title = document.getElementById("post-title");
 
-  let url = document.getElementById("post-URL");
+var url = document.getElementById("post-URL");
 
-  let text = document.getElementById("post-text");
+var text = document.getElementById("post-text");
 
-  let button = document.getElementById("create_button");
+var button = document.getElementById("create_button");
 
-  let image = document.getElementById("file-upload");
+var image = document.getElementById("file-upload");
 
-  // Toggle reuqired attribute
+// Toggle reuqired attribute
 
-  if (url.value.length > 0 || image.value.length > 0) {
-    text.required = false;
-    url.required = false;
-  } else if (text.value.length > 0 || image.value.length > 0) {
-    url.required = false;
-  } else {
-    text.required = true;
-    url.required = true;
-  }
+if (url.value.length > 0 || image.value.length > 0) {
+  text.required = false;
+  url.required=false;
+} else if (text.value.length > 0 || image.value.length > 0) {
+  url.required = false;
+} else {
+  text.required = true;
+  url.required = true;
+}
 
-  // Validity check
+// Validity check
 
-  let isValidTitle = title.checkValidity();
+var isValidTitle = title.checkValidity();
 
-  let isValidURL = url.checkValidity();
+var isValidURL = url.checkValidity();
 
-  let isValidText = text.checkValidity();
+var isValidText = text.checkValidity();
 
-  // Disable submit button if invalid inputs
+// Disable submit button if invalid inputs
 
-  if (isValidTitle && (isValidURL || image.value.length > 0)) {
-    button.disabled = false;
-  } else if (isValidTitle && isValidText) {
-    button.disabled = false;
-  } else {
-    button.disabled = true;
-  }
+if (isValidTitle && (isValidURL || image.value.length>0)) {
+  button.disabled = false;
+} else if (isValidTitle && isValidText) {
+  button.disabled = false;
+} else {
+  button.disabled = true;
+}
 
 }
 
 // Auto-suggest title given URL
 
-function autoSuggestTitle() {
+function autoSuggestTitle()  {
 
-  let urlField = document.getElementById("post-URL");
+  var urlField = document.getElementById("post-URL");
 
-  let titleField = document.getElementById("post-title");
+  var titleField = document.getElementById("post-title");
 
-  let isValidURL = urlField.checkValidity();
+  var isValidURL = urlField.checkValidity();
 
   if (isValidURL && urlField.value.length > 0 && titleField.value === "") {
 
-    let x = new XMLHttpRequest();
-    x.withCredentials = true;
-    x.onreadystatechange = () => {
+    var x = new XMLHttpRequest();
+    x.withCredentials=true;
+    x.onreadystatechange = function() {
       if (x.readyState == 4 && x.status == 200) {
         console.log(x.responseText);
 
-        title = JSON.parse(x.responseText)["title"];
-        titleField.value = title;
+        title=JSON.parse(x.responseText)["title"];
+        titleField.value=title;
 
         checkForRequired()
       }
     }
-    x.open('get', '/api/submit/title?url=' + urlField.value);
+    x.open('get','/api/submit/title?url=' + urlField.value);
     x.send(null);
 
   };
@@ -1454,7 +1414,7 @@ function autoSuggestTitle() {
 
 // Run AutoSuggestTitle function on load
 
-if (window.location.pathname == '/submit') {
+if (window.location.pathname=='/submit') {
   window.onload = autoSuggestTitle();
 }
 
@@ -1462,31 +1422,32 @@ if (window.location.pathname == '/submit') {
 
 function exile_from_guild(boardid) {
 
-  let exileForm = document.getElementById("exile-form");
+  var exileForm = document.getElementById("exile-form");
 
-  let exileError = document.getElementById("toast-error-message");
+  var exileError = document.getElementById("toast-error-message");
 
-  let usernameField = document.getElementById("exile-username");
+  var usernameField = document.getElementById("exile-username");
 
-  let isValidUsername = usernameField.checkValidity();
+  var isValidUsername = usernameField.checkValidity();
 
   username = usernameField.value;
 
   if (isValidUsername) {
 
-    let xhr = new XMLHttpRequest();
-    xhr.open("post", "/mod/exile/" + boardid);
-    xhr.withCredentials = true;
-    f = new FormData();
+    var xhr = new XMLHttpRequest();
+    xhr.open("post", "/mod/exile/"+boardid);
+    xhr.withCredentials=true;
+    f=new FormData();
     f.append("username", username);
     f.append("formkey", formkey());
-    xhr.onload = () => {
-      if (xhr.status == 204) {
+    xhr.onload=function(){
+      if (xhr.status==204) {
         window.location.reload(true);
-      } else {
-        $('#toast-exile-error').toast('dispose');
-        $('#toast-exile-error').toast('show');
-        exileError.textContent = JSON.parse(xhr.response)["error"];
+      }
+      else {
+      $('#toast-exile-error').toast('dispose');
+      $('#toast-exile-error').toast('show');
+      exileError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
     xhr.send(f)
@@ -1497,28 +1458,29 @@ function exile_from_guild(boardid) {
 // Approve user
 function approve_from_guild(boardid) {
 
-  let approvalForm = document.getElementById("approve-form");
+  var approvalForm = document.getElementById("approve-form");
 
-  let approveError = document.getElementById("toast-error-message");
+  var approveError = document.getElementById("toast-error-message");
 
-  let usernameField = document.getElementById("approve-username");
+  var usernameField = document.getElementById("approve-username");
 
-  let isValidUsername = usernameField.checkValidity();
+  var isValidUsername = usernameField.checkValidity();
 
   username = usernameField.value;
 
   if (isValidUsername) {
 
-    let xhr = new XMLHttpRequest();
-    xhr.open("post", "/mod/approve/" + boardid);
-    xhr.withCredentials = true;
-    f = new FormData();
+    var xhr = new XMLHttpRequest();
+    xhr.open("post", "/mod/approve/"+boardid);
+    xhr.withCredentials=true;
+    f=new FormData();
     f.append("username", username);
     f.append("formkey", formkey());
-    xhr.onload = () => {
-      if (xhr.status == 204) {
+    xhr.onload=function(){
+      if (xhr.status==204) {
         window.location.reload(true);
-      } else {
+      }
+      else {
         $('#toast-approve-error').toast('dispose');
         $('#toast-approve-error').toast('show');
         approveError.textContent = JSON.parse(xhr.response)["error"];
@@ -1532,28 +1494,29 @@ function approve_from_guild(boardid) {
 // Invite user to mod
 function invite_mod_to_guild(boardid) {
 
-  let inviteForm = document.getElementById("invite-form");
+  var inviteForm = document.getElementById("invite-form");
 
-  let inviteError = document.getElementById("toast-error-message");
+  var inviteError = document.getElementById("toast-error-message");
 
-  let usernameField = document.getElementById("invite-username");
+  var usernameField = document.getElementById("invite-username");
 
-  let isValidUsername = usernameField.checkValidity();
+  var isValidUsername = usernameField.checkValidity();
 
   username = usernameField.value;
 
   if (isValidUsername) {
 
-    let xhr = new XMLHttpRequest();
-    xhr.open("post", "/mod/invite_mod/" + boardid);
-    xhr.withCredentials = true;
-    f = new FormData();
+    var xhr = new XMLHttpRequest();
+    xhr.open("post", "/mod/invite_mod/"+boardid);
+    xhr.withCredentials=true;
+    f=new FormData();
     f.append("username", username);
     f.append("formkey", formkey());
-    xhr.onload = () => {
-      if (xhr.status == 204) {
+    xhr.onload=function(){
+      if (xhr.status==204) {
         window.location.reload(true);
-      } else {
+      }
+      else {
         $('#toast-invite-error').toast('dispose');
         $('#toast-invite-error').toast('show');
         inviteError.textContent = JSON.parse(xhr.response)["error"];
@@ -1566,12 +1529,13 @@ function invite_mod_to_guild(boardid) {
 
 //part of submit page js
 
-hide_image = () => {
-  x = document.getElementById('image-upload-block');
-  url = document.getElementById('post-URL').value;
-  if (url.length >= 1) {
-    x.classList.add('d-none');
-  } else {
-    x.classList.remove('d-none');
-  }
+hide_image=function(){
+    x=document.getElementById('image-upload-block');
+    url=document.getElementById('post-URL').value;
+    if (url.length>=1){
+        x.classList.add('d-none');
+    }
+    else {
+        x.classList.remove('d-none');
+    }
 }
