@@ -45,7 +45,7 @@
 
       <div class="position-relative d-none d-md-block" style="z-index: 3;">
         {% if p.thumb_url and p.is_image %}
-        <a href="javascript:void()" data-toggle="modal" data-target="#expandImageModal">
+        <a href="{{ p.url }}" data-toggle="modal" data-target="#expandImageModal">
           <img src="{{ p.thumb_url }}" class="post-img" alt="" onclick="expandDesktopImage('{{ p.url }}','{{ p.url }}')">
         </a>
 
@@ -85,7 +85,7 @@
 
       {% if p.thumb_url and p.is_image %}
       <div class="d-block d-md-none" style="z-index: 3;">
-        <a href="javascript:void()" rel="nofollow noopener" data-toggle="modal" data-target="#expandImageModal">
+        <a href="{{ p.url }}" rel="nofollow noopener" data-toggle="modal" data-target="#expandImageModal">
           <img src="{{ p.thumb_url }}" class="post-img" alt="" onclick="expandDesktopImage('{{ p.url }}','{{ p.url }}')">
         <a>
       </div>
