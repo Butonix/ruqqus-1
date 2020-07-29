@@ -125,7 +125,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def replies(self):
 
-        return self.__dict__.get("replies") or g.db.query(Comment).filter_by(parent_fullname=self.fullname).all()
+        return self.__dict__.get("replies", [])
 
     @property
     @lazy
