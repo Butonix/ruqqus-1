@@ -74,7 +74,7 @@ def search(v, search_type="posts"):
         #guild search stuff here
         sort=request.args.get("sort", "subs").lower()
 
-        boards = g.db.query(Board).filter(func.lower(Board.name).contains(query.lstrip("+").lower()))
+        boards = g.db.query(Board).filter(Board.name.ilike(query.lstrip("+").lower()))
 
         if not(v and v.over_18):
             boards=boards.filter_by(over_18=False)
