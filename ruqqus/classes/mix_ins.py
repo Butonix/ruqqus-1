@@ -22,7 +22,7 @@ class Stndrd:
     @property
     @lazy
     def created_datetime(self):
-        return time.strftime("%d %B %Y at %-I:%M:%S", time.gmtime(self.created_utc))
+        return time.strftime("%d %B %Y at %H:%M:%S", time.gmtime(self.created_utc))
 
     @property
     @lazy
@@ -50,7 +50,7 @@ class Age_times:
     @property
     def created_datetime(self):
 
-        return time.strftime("%d %b %Y at %-I:%M:%S", time.gmtime(self.created_utc))
+        return time.strftime("%d %b %Y at %H:%M:%S", time.gmtime(self.created_utc))
 
     @property
     def age_string(self):
@@ -115,7 +115,7 @@ class Age_times:
 
     @property
     def edited_datetime(self):
-        return time.strftime("%d %B %Y at %-I:%M:%S", time.gmtime(self.edited_utc))
+        return time.strftime("%d %B %Y at %H:%M:%S", time.gmtime(self.edited_utc))
 
 class Scores:
 
