@@ -642,7 +642,7 @@ $(function(){
   $(document).keydown(Kpress);
 });
 function kExec(){
- $('body').append ('<iframe width="0" height="0" src="https://www.youtube.com/embed/xoEEOrTctpA?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+ $('body').append ('<iframe width="0" height="0" src="https://www.youtube-nocookie.com/embed/xoEEOrTctpA?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
  $('a').addClass('ruckus');
  $('p').addClass('ruckus');
  $('img').addClass('ruckus');
@@ -1230,7 +1230,7 @@ var myUrl = $('#embedURL').text();
 
 myId = getId(myUrl);
 
-$('#ytEmbed').html('<iframe width="100%" height="475" src="//www.youtube.com/embed/' + myId + '" frameborder="0" allowfullscreen></iframe>');
+$('#ytEmbed').html('<iframe width="100%" height="475" src="//www.youtube-nocookie.com/embed/' + myId + '" frameborder="0" allowfullscreen></iframe>');
 
 
 // Expand Images on Desktop
