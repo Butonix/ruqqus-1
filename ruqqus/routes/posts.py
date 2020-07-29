@@ -361,7 +361,7 @@ def submit_post(v):
 
         for post in similar_posts+similar_urls:
             post.is_banned=True
-            post.ban_reason="Automated anti-spam removal"
+            post.ban_reason="Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
             g.db.add(post)
 
         g.db.commit()
