@@ -119,7 +119,9 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
 
             comms=g.db.query(
                 Comment,
-                votes.c.vote_type
+                votes.c.vote_type,
+                blocking.c.id,
+                blocked.c.id
                 ).select_from(Comment).options(
                 joinedload(Comment.author).joinedload(User.title)
                 ).filter(
