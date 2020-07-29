@@ -27,7 +27,7 @@ from .badges import *
 from ruqqus.__main__ import Base,cache
 
 
-class User(Base, Stndrd):
+class User(Base, Stndrd, Age_times):
 
     __tablename__="users"
     id = Column(Integer, primary_key=True)
@@ -86,6 +86,7 @@ class User(Base, Stndrd):
     subscriptions=relationship("Subscription", lazy="dynamic")
     boards_created=relationship("Board", lazy="dynamic")
     contributes=relationship("ContributorRelationship", lazy="dynamic", primaryjoin="ContributorRelationship.user_id==User.id")
+    board_blocks=relationship("BoardBlock", lazy="dynamic")
 
     following=relationship("Follow", lazy="dynamic", primaryjoin="Follow.user_id==User.id")
     followers=relationship("Follow", lazy="dynamic", primaryjoin="Follow.target_id==User.id")
@@ -127,6 +128,11 @@ class User(Base, Stndrd):
 
         return g.db.query(UserBlock).filter(or_(and_(UserBlock.user_id==self.id, UserBlock.target_id==other.id),and_(UserBlock.user_id==other.id, UserBlock.target_id==self.id))).first()
         
+    def has_blocked_guild(self, board):
+
+        return g.db.query(BoardBlock).filter_by(user_id=self.id, board_id=board.id).first()
+
+
     def validate_2fa(self, token):
         
         x=pyotp.TOTP(self.mfa_secret)
@@ -445,7 +451,7 @@ class User(Base, Stndrd):
     @property
     def comment_count(self):
 
-        return self.comments.filter(Comment.parent_submission!=None).filter_by(is_banned=False, is_deleted=True).count()
+        return self.comments.filter(Comment.parent_submission!=None).filter_by(is_banned=False, is_deleted=False).count()
 
     @property
     #@cache.memoize(timeout=60)
@@ -622,7 +628,7 @@ class User(Base, Stndrd):
         #return self.referral_count or self.has_earned_darkmode or self.has_badge(16) or self.has_badge(17)
 
 
-    def ban(self, admin, reason=None, include_alts=True, days=0):
+    def ban(self, admin=None, reason=None, include_alts=True, days=0):
 
         if days > 0:
             ban_time = int(time.time()) + (days * 86400)
@@ -636,7 +642,7 @@ class User(Base, Stndrd):
             if self.has_profile:
                 self.del_profile()
 
-        self.is_banned=admin.id
+        self.is_banned=admin.id if admin else 1
         if reason:
             self.ban_reason=reason
 

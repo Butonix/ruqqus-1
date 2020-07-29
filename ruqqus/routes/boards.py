@@ -46,7 +46,7 @@ def create_board_get(v):
 
 @app.route("/api/board_available/<name>", methods=["GET"])
 def api_board_available(name):
-    if g.db.query(Board).filter(Board.name.ilike(name)).first():
+    if get_guild(name, graceful=True):
         return jsonify({"board":name, "available":False})
     else:
         return jsonify({"board":name, "available":True})
@@ -76,7 +76,7 @@ def create_board_post(v):
 
 
     #check name
-    if g.db.query(Board).filter(Board.name.ilike(board_name)).first():
+    if get_guild(board_name, graceful=True):
         return render_template("make_board.html",
                                v=v,
                                error="That Guild already exists.",

@@ -95,6 +95,12 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
     while context > 0 and not c.is_top_level:
 
         parent=c.parent
+
+        if g.v:
+            parent._is_blocking=v.blocking.filter_by(target_id=parent.author_id).first()
+            parent._is_blocked=v.blocked.filter_by(user_id=parent.author_id).first()
+            parent._voted=g.db.query(CommentVote).filter_by(user_id=g.v.id, comment_id=parent.id).first()
+
         post._preloaded_comments+=[parent]
 
         c=parent
@@ -108,6 +114,9 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
         if g.v:
             votes=g.db.query(CommentVote).filter(CommentVote.user_id==g.v.id, CommentVote.comment_id.in_(current_ids)).subquery()
 
+            blocking=v.blocking.subquery()
+            blocked=v.blocked.subquery()
+
             comms=g.db.query(
                 Comment,
                 votes.c.vote_type
@@ -118,6 +127,14 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                 ).join(
                 votes,
                 votes.c.comment_id==Comment.id,
+                isouter=True
+                ).join(
+                blocking,
+                blocking.c.target_id==Comment.author_id,
+                isouter=True
+                ).join(
+                blocked,
+                blocked.c.user_id==Comment.author_id,
                 isouter=True
                 )
 
@@ -138,9 +155,11 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
 
             output=[]
             for c in comms:
-                com=c[0]
-                com._voted=c[1] or 0
-                output.append(com)
+                comment=c[0]
+                comment._voted=c[1] or 0
+                comment._is_blocking=c[2] or 0
+                comment._is_blocked=c[3] or 0
+                output.append(comment)
         else:
             comms=g.db.query(
                 Comment
@@ -238,6 +257,10 @@ def api_comment(v):
     post = get_post(request.form.get("submission"))
     if post.is_archived or not post.board.can_comment(v):
         return jsonify({"error":"You can't comment on this."}), 403
+
+    #check spam - this is stupid slow for now
+    #similar_comments=g.db.query(Comment).filter(Comment.author_id==v.id, CommentAux.body.op('<->')(body)<0.5).options(contains_eager(Comment.comment_aux)).all()
+    #print(similar_comments)
 
     for x in g.db.query(BadWord).all():
         if x.check(body):

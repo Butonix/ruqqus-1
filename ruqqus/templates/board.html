@@ -46,7 +46,7 @@
     <div class="d-flex align-items-center">
       {% for mod in b.mods_list[0:3] %}
       <a href="{{ mod.user.permalink }}">
-        <img src="{{ mod.user.profile_url }}" class="profile-pic profile-pic-30 profile-stacked {% if not loop.first %}ml-n2{% endif %}">
+        <img src="{{ mod.user.profile_url }}" class="profile-pic profile-pic-30 profile-stacked {% if not loop.first %}ml-n2{% endif %}" data-toggle="tooltip" data-placement="bottom" title="{{ '@' + mod.user.username }}">
       </a>
       {% if loop.last %}
       {% if b.mods_count - loop.index > 0 %}
@@ -210,6 +210,11 @@
         <button class="dropdown-item" data-toggle="modal" data-target="#guildDetailsModal"><i class="fas fa-info-circle"></i>Guild details</button>
         {% if b.has_mod(v) %}
         <a class="dropdown-item" href="{{ b.permalink }}/mod/settings"><i class="fas fa-cog"></i>Guild settings</a>
+        {% endif %}
+        {% if v and not v.has_blocked_guild(b) %}
+        <a class="dropdown-item" href="javscript:void(0)" onclick="post_toast('/settings/block_guild?board={{ b.name }}')"><i class="fas fa-filter"></i>Filter from /all</a>
+        {% elif v %}
+        <a class="dropdown-item" href="javscript:void(0)" onclick="post_toast('/settings/unblock_guild?board={{ b.name }}')"><i class="fas fa-filter"></i>Unfilter from /all</a>
         {% endif %}
       </div>
     </div>

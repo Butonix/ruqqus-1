@@ -34,7 +34,7 @@
 	<tbody>
 		{% for t in titles if t.kind==1 %}
 		<tr>
-			<td>{% if t.is_before %}<span style="color:#{{ t.color }}">{{ t.text }}</span> {% endif %}{% if v %}<a href="{{ v.permalink }}" class="user-name">{{ v.username }}</a>{% else %}[name]{% endif %}{% if not t.is_before %}<span style="color:#{{ t.color }}">{{ t.text }}</span>{% endif %}</td>
+			<td>{% if v %}<a href="{{ v.permalink }}" class="user-name">{{ v.username }}</a>{% else %}[name]{% endif %}{{ t.rendered | safe }}</td>
 			<td>{{ t.requirement_string }}</td>
 		</tr>
 		{% endfor %}
@@ -55,7 +55,7 @@
 	<tbody>
 		{% for t in titles if t.kind==2 %}
 		<tr>
-			<td>{% if t.is_before %}<span style="color:#{{ t.color }}">{{ t.text }}</span> {% endif %}{% if v %}<a href="{{ v.permalink }}" class="user-name">{{ v.username }}</a>{% else %}[name]{% endif %}{% if not t.is_before %}<span style="color:#{{ t.color }}">{{ t.text }}</span>{% endif %}</td>
+			<td>{% if v %}<a href="{{ v.permalink }}" class="user-name">{{ v.username }}</a>{% else %}[name]{% endif %}{{ t.rendered | safe }}</td>
 			<td>{{ t.requirement_string }}</td>
 		</tr>
 		{% endfor %}
@@ -75,7 +75,7 @@
 	<tbody>
 		{% for t in titles if t.kind==3 %}
 		<tr>
-			<td>{% if t.is_before %}<span style="color:#{{ t.color }}">{{ t.text }}</span> {% endif %}{% if v %}<a href="{{ v.permalink }}" class="user-name">{{ v.username }}</a>{% else %}[name]{% endif %}{% if not t.is_before %}<span style="color:#{{ t.color }}">{{ t.text }}</span>{% endif %}</td>
+			<td>{% if v %}<a href="{{ v.permalink }}" class="user-name">{{ v.username }}</a>{% else %}[name]{% endif %}{{ t.rendered | safe }}</td>
 			<td>{{ t.requirement_string }}</td>
 		</tr>
 		{% endfor %}
@@ -96,7 +96,7 @@
 	<tbody>
 		{% for t in titles if t.kind==4 %}
 		<tr>
-			<td>{% if t.is_before %}<span style="color:#{{ t.color }}">{{ t.text }}</span> {% endif %}{% if v %}<a href="{{ v.permalink }}" class="user-name">{{ v.username }}</a>{% else %}[name]{% endif %}{% if not t.is_before %}<span style="color:#{{ t.color }}">{{ t.text }}</span>{% endif %}</td>
+			<td>{% if v %}<a href="{{ v.permalink }}" class="user-name">{{ v.username }}</a>{% else %}[name]{% endif %}{{ t.rendered | safe }}</td>
 			<td>{{ t.requirement_string }}</td>
 		</tr>
 		{% endfor %}

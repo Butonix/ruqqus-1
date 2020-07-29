@@ -387,11 +387,7 @@ And since we're committed to [open-source](https://github.com/ruqqus/ruqqus) tra
 
     print(f"Signup event: @{new_user.username}")
     
-    if redir:
-        return redirect(redir)
-    else:
-        return redirect(new_user.permalink)
-    
+    return redirect("/browse?onboarding=true")
 
 @app.route("/forgot", methods=["GET"])
 def get_forgot():
@@ -406,7 +402,7 @@ def post_forgot():
     username = request.form.get("username")
     email = request.form.get("email")
 
-    user = g.db.query(User).filter(User.username.ilike(username), User.email.ilike(email)).first()
+    user = g.db.query(User).filter(User.username.ilike(username), User.email.ilike(email), User.is_deleted==False).first()
 
     if user:
         #generate url

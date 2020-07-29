@@ -1,4 +1,5 @@
 from sqlalchemy import *
+from flask import render_template
 
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
@@ -16,10 +17,20 @@ class Title(Base):
     color=Column(String(6), default="888888")
     kind=Column(Integer, default=1)
 
+    background_color_1=Column(String(6), default=None)
+    background_color_2=Column(String(6), default=None)
+    gradient_angle=Column(Integer, default=0)
+    box_shadow_color=Column(String(32), default=None)
+    text_shadow_color=Column(String(32), default=None)
 
     def check_eligibility(self, v):
 
         return bool(eval(self.qualification_expr, {}, {"v":v}))
+
+    @property
+    def rendered(self):
+        return render_template('title.html', t=self)
+    
 
     @property
     def json(self):
