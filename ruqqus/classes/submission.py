@@ -23,23 +23,23 @@ class SubmissionAux(Base):
 
     __tablename__="submissions_aux"
 
-    id=Column(BigInteger, primary_key=True)
+    key_id=Column(BigInteger, primary_key=True) # we don't care about this ID
+    id=Column(BigInteger, ForeignKey("submissions.id"))
     title = Column(String(500), default=None)
     url = Column(String(500), default=None)
     body=Column(String(10000), default="")
     body_html=Column(String(20000), default="")
     ban_reason=Column(String(128), default="")
+    embed_url=Column(String(256), default="")
 
 class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
  
     __tablename__="submissions"
 
     id = Column(BigInteger, primary_key=True)
-    submission_aux=relationship("SubmissionAux", lazy="joined")
+    submission_aux=relationship("SubmissionAux", lazy="joined", uselist=False, innerjoin=True, primaryjoin="Submission.id==SubmissionAux.id")
     author_id = Column(BigInteger, ForeignKey("users.id"))
     repost_id = Column(BigInteger, ForeignKey("submissions.id"), default=0)
-    #title = Column(String(500), default=None)
-    #url = Column(String(500), default=None)
     edited_utc = Column(BigInteger, default=0)
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
@@ -48,19 +48,15 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     created_str=Column(String(255), default=None)
     stickied=Column(Boolean, default=False)
     _comments=relationship("Comment", lazy="dynamic", primaryjoin="Comment.parent_submission==Submission.id", backref="submissions")
-    #body=Column(String(10000), default="")
-    #body_html=Column(String(20000), default="")
-    embed_url=Column(String(256), default="")
     domain_ref=Column(Integer, ForeignKey("domains.id"))
-    domain_obj=relationship("Domain", lazy="joined", innerjoin=False)
+    domain_obj=relationship("Domain")
     flags=relationship("Flag", lazy="dynamic", backref="submission")
     is_approved=Column(Integer, ForeignKey("users.id"), default=0)
     approved_utc=Column(Integer, default=0)
     board_id=Column(Integer, ForeignKey("boards.id"), default=None)
     original_board_id=Column(Integer, ForeignKey("boards.id"), default=None)
     over_18=Column(Boolean, default=False)
-    original_board=relationship("Board", lazy="subquery", primaryjoin="Board.id==Submission.original_board_id")
-    #ban_reason=Column(String(128), default="")
+    original_board=relationship("Board", primaryjoin="Board.id==Submission.original_board_id")
     creation_ip=Column(String(64), default="")
     mod_approved=Column(Integer, default=None)
     accepted_utc=Column(Integer, default=0)
@@ -71,12 +67,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     score_disputed=Column(Float, default=0)
     score_top=Column(Float, default=1)
     score_activity=Column(Float, default=0)
-    #author_name=Column(String(64), default="")
-    guild_name=Column(String(64), default="")
     is_offensive=Column(Boolean, default=False)
     is_nsfl=Column(Boolean, default=False)
     board=relationship("Board", lazy="joined", innerjoin=True, primaryjoin="Submission.board_id==Board.id")
-    _author=relationship("User", lazy="subquery", innerjoin=True, primaryjoin="Submission.author_id==User.id")
+    author=relationship("User", lazy="joined", innerjoin=True, primaryjoin="Submission.author_id==User.id")
     is_pinned=Column(Boolean, default=False)
     score_best=Column(Float, default=0)
 
@@ -89,14 +83,14 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
 
-    ups = deferred(Column(Integer, server_default=FetchedValue()))
-    downs=deferred(Column(Integer, server_default=FetchedValue()))
+    #ups = deferred(Column(Integer, server_default=FetchedValue()))
+    #downs=deferred(Column(Integer, server_default=FetchedValue()))
     age=deferred(Column(Integer, server_default=FetchedValue()))
     comment_count=Column(Integer, server_default=FetchedValue())
     flag_count=deferred(Column(Integer, server_default=FetchedValue()))
     report_count=deferred(Column(Integer, server_default=FetchedValue()))
-    score=Column(Float, server_default=FetchedValue())
-    is_public=Column(Boolean, server_default=FetchedValue())
+    score=deferred(Column(Float, server_default=FetchedValue()))
+    is_public=deferred(Column(Boolean, server_default=FetchedValue()))
 
     rank_hot=deferred(Column(Float, server_default=FetchedValue()))
     rank_fiery=deferred(Column(Float, server_default=FetchedValue()))
@@ -173,7 +167,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         else:
             template="submission.html"
 
-        private=not self.is_public and not self.board.can_view(v)
+        private=not self.is_public and not self.is_pinned and not self.board.can_view(v)
 
         if private and (not v or not self.author_id==v.id):
             abort(403)
@@ -263,8 +257,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     def visibility_reason(self, v):
 
-        if self.author_id==v.id:
+        if v and self.author_id==v.id:
             return "this is your content."
+        elif self.is_pinned:
+            return "a guildmaster has pinned it."
         elif self.board.has_mod(v):
             return f"you are a guildmaster of +{self.board.name}."
         elif self.board.has_contributor(v):
@@ -303,7 +299,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                     'permalink':self.permalink,
                     'guild_name':self.guild_name
                     }
-        data= {'author':self.author_name if not self.author.is_deleted else None,
+        data= {'author':self.author.username if not self.author.is_deleted else None,
                 'permalink':self.permalink,
                 'is_banned':False,
                 'is_deleted':False,
@@ -320,11 +316,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'body':self.body,
                 'body_html':self.body_html,
                 'created_utc':self.created_utc,
-                'edited_utc':self.edited_utc,
-                'guild_name':self.guild_name,
+                'edited_utc':self.edited_utc or 0,
+                'guild_name':self.board.name,
                 'embed_url':self.embed_url,
                 'is_archived':self.is_archived,
-                'author_title':self.author.title.json if self.author.title else None
+                'author_title':self.author.title.json if self.author.title else None,
+                'original_guild_name':self.original_board.name
                 }
 
         if "_voted" in self.__dict__:
@@ -354,8 +351,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return self.submission_aux.url
 
     @url.setter
-    def url_set(self, x):
-        self.submission_aux.title=x
+    def url(self, x):
+        self.submission_aux.url=x
         g.db.add(self.submission_aux)
     
     @property
@@ -363,7 +360,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return self.submission_aux.body
 
     @body.setter
-    def body_set(self, x):
+    def body(self, x):
         self.submission_aux.body=x
         g.db.add(self.submission_aux)
     
@@ -372,7 +369,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return self.submission_aux.body_html
 
     @body_html.setter
-    def body_html_set(self, x):
+    def body_html(self, x):
         self.submission_aux.body_html=x
         g.db.add(self.submission_aux)
     
@@ -381,7 +378,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return self.submission_aux.ban_reason
 
     @ban_reason.setter
-    def ban_reason_set(self, x):
+    def ban_reason(self, x):
         self.submission_aux.ban_reason=x
         g.db.add(self.submission_aux)
 
@@ -390,6 +387,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return self.submission_aux.embed_url
 
     @embed_url.setter
-    def embed_url_set(self, x):
+    def embed_url(self, x):
         self.submission_aux.embed_url=x
         g.db.add(self.submission_aux)

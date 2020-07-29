@@ -85,6 +85,8 @@ Start services
 
 `$ redis-server /usr/local/etc/redis.conf`
 
+`$ brew services start postgresql`
+
 `$ psql postgres -a -f schema.txt`
 
 

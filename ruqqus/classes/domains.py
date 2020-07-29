@@ -1,6 +1,11 @@
 from sqlalchemy import *
 from ruqqus.__main__ import Base, cache
 
+reasons={
+	1: "URL shorteners are not allowed.",
+	3: "Piracy is not allowed."
+}
+
 class Domain(Base):
 
     __tablename__="domains"
@@ -12,3 +17,6 @@ class Domain(Base):
     show_thumbnail=Column(Boolean, default=False)
     embed_function=Column(String(64), default=None)
     
+    @property
+    def reason_text(self):
+    	return reasons.get(self.reason)

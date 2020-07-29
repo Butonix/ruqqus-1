@@ -91,7 +91,6 @@
           <tr>
             <th scope="col">User</th>
             <th scope="col">Permissions</th>
-            <th scope="col">Status</th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -104,10 +103,7 @@
                 <img src="{{ mod.user.profile_url }}" class="profile-pic-20 align-top mr-2">@{{ mod.user.username }}</a>
               </td>
               <td>Full</td>
-              <td>
-                <i class="fas fa-circle text-success text-small-extra mr-2"></i>
-                Active
-              </td>
+
               <td>
                 {% if me and me.id < mod.id %}
                 <div class="dropdown float-right dropdown-actions">

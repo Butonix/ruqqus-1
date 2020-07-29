@@ -1,128 +1,133 @@
 from .base36 import *
+from .sqla_values import *
 from ruqqus.classes import *
 from flask import g
+from sqlalchemy.orm import joinedload
 
-def get_user(username, v=None, session=None, graceful=False):
+def get_user(username, v=None, nSession=None, graceful=False):
 
     username=username.replace('\\','')
     username=username.replace('_', '\_')
 
-    if not session:
-        session=g.db
+    if not nSession:
+        nSession=g.db
+        
+
+    user=nSession.query(User
+        ).filter(
+        User.username.ilike(username)
+        ).first()
+
+    if not user:
+        if not graceful:
+            abort(404)
+        else:
+            return None
 
     if v:
-        blocking=v.blocking.subquery()
-        blocked=v.blocked.subquery()
-
-        q=session.query(User, blocking.c.id, blocked.c.id
-            ).filter(
-            User.username.ilike(username)
-            ).join(
-            blocking,
-            blocking.c.target_id==User.id,
-            isouter=True
-            ).join(
-            blocked,
-            blocked.c.user_id==User.id,
-            isouter=True
+        block=nSession.query(UserBlock).filter(
+            or_(
+                and_(
+                    UserBlock.user_id==v.id, 
+                    UserBlock.target_id==user.id
+                    ),
+                and_(UserBlock.user_id==user.id,
+                    UserBlock.target_id==v.id
+                    )
+                )
             ).first()
 
-        if not q:
-            if not graceful:
-                abort(404)
-            else:
-                return None
+        user._is_blocking=block and block.user_id==v.id
+        user._is_blocked=block and block.target_id==v.id
 
-        #print(q)
-        x=q[0]
-        x._is_blocking=q[1] or 0
-        x._is_blocked=q[2] or 0
+    return user
+
+def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
+
+    if isinstance(pid, str):
+        i=base36decode(pid)
     else:
-        x=session.query(User).filter(User.username.ilike(username)).first()
-        if not x:
-            if not graceful:
-                abort(404)
-            else:
-                return None
-    return x
-
-def get_post(pid, v=None, session=None):
-
-    i=base36decode(pid)
-    
-    if not session:
-        session=g.db
+        i=pid
+        
+    nSession=nSession or kwargs.get("session")or g.db
 
     if v:
-        vt=session.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
+        vt=nSession.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
 
 
-        items= session.query(Submission, User, vt.c.vote_type
-            ).filter(Submission.id==i).join(Submission._author).join(vt, isouter=True).first()
+        items= nSession.query(Submission, vt.c.vote_type
+            ).options(
+            joinedload(Submission.author).joinedload(User.title)
+            ).filter(Submission.id==i).join(
+            vt, 
+            vt.c.submission_id==Submission.id, 
+            isouter=True
+            ).first()
         
         if not items:
             abort(404)
         
         x=items[0]
-        x.author=items[1]
-        x._voted=items[2] or 0
+        x._voted=items[1] or 0
 
     else:
-        row=session.query(Submission, User).join(Submission._author).filter(Submission.id==i).first()
-        x=row[0]
-        x.author=row[1]
+        x=nSession.query(Submission).options(
+            joinedload(Submission.author).joinedload(User.title)
+            ).filter(Submission.id==i).filter(Submission.id==i).first()
 
-    if not x:
+    if not x and not graceful:
         abort(404)
     return x
 
 def get_posts(pids, sort="hot", v=None):
 
+    #output=[get_post(pid, graceful=True, v=v) for pid in pids]
+    #return [i for i in output if i]
+
+    if not pids:
+        return []
+
+    queries=[]
+
     if v:
-        vt=g.db.query(Vote).filter(Vote.user_id==v.id, Vote.submission_id.in_(pids)).subquery()
+        for pid in pids:
+            vt=g.db.query(Vote).filter_by(submission_id=pid, user_id=v.id).subquery()
+            query=g.db.query(Submission, vt.c.vote_type
+                ).options(joinedload(Submission.author).joinedload(User.title)
+                ).filter_by(id=pid
+                ).join(vt, vt.c.submission_id==Submission.id, isouter=True
+                )
+            queries.append(query)
 
+        queries=tuple(queries)
+        first_query=queries[0]
+        if len(queries) > 1:
+            other_queries=queries[1:len(queries)]
+        else:
+            other_queries=tuple()
 
-        posts= g.db.query(Submission, User, Title, vt.c.vote_type).filter(
-            Submission.id.in_(pids)
-            ).join(
-            Submission._author
-            ).join(
-            User.title, isouter=True
-            ).join(
-            vt, vt.c.submission_id==Submission.id, isouter=True
-            )
+        posts=first_query.union_all(*other_queries).order_by(None).all()
 
-        items=[i for i in posts.all()]
-
-        
-        posts=[n[0] for n in items]
-        for i in range(len(posts)):
-            posts[i].author=items[i][1]
-            posts[i]._title=items[i][2]
-            posts[i]._voted=items[i][3] or 0
-
-
-
-
+        output=[p[0] for p in posts]
+        for i in range(len(output)):
+            output[i]._voted=posts[i][1] or 0
     else:
-        posts=g.db.query(Submission, User, Title).filter(
-            Submission.id.in_(pids)
-            ).join(
-            Submission._author
-            ).join(
-            User.title, isouter=True
-            )
+        for pid in pids:
+            query=g.db.query(Submission
+                ).options(joinedload(Submission.author).joinedload(User.title)
+                ).filter_by(id=pid
+                )
+            queries.append(query)
 
+        queries=tuple(queries)
+        first_query=queries[0]
+        if len(queries) > 1:
+            other_queries=queries[1:len(queries)]
+        else:
+            other_queries=tuple()
+        output=first_query.union_all(*other_queries).order_by(None).all()
 
-        items=[i for i in posts.all()]
-        
-        posts=[n[0] for n in items]
-        for i in range(len(posts)):
-            posts[i].author=items[i][1]
-            posts[i]._title=items[i][2]
-
-    posts=sorted(posts, key= lambda x: pids.index(x.id))
-    return posts
+    return output
 
 def get_post_with_comments(pid, sort_type="top", v=None):
 
@@ -137,16 +142,14 @@ def get_post_with_comments(pid, sort_type="top", v=None):
 
         comms=g.db.query(
             Comment,
-            User,
-            Title,
             votes.c.vote_type,
             blocking.c.id,
             blocked.c.id
+            ).options(
+            joinedload(Comment.author).joinedload(User.title)
             ).filter(
             Comment.parent_submission==post.id,
             Comment.level<=6
-            ).join(Comment._author).join(
-            User.title, isouter=True
             ).join(
             votes,
             votes.c.comment_id==Comment.id,
@@ -179,24 +182,20 @@ def get_post_with_comments(pid, sort_type="top", v=None):
         output=[]
         for c in comments:
             comment=c[0]
-            comment.author=c[1]
-            comment._title=c[2]
-            comment._voted=c[3] or 0
-            comment._is_blocking=c[4] or 0
-            comment._is_blocked=c[5] or 0
+            comment._voted=c[1] or 0
+            comment._is_blocking=c[2] or 0
+            comment._is_blocked=c[3] or 0
             output.append(comment)
         post._preloaded_comments=output
 
     else:
         comms=g.db.query(
-            Comment,
-            User,
-            Title
+            Comment
+            ).options(
+            joinedload(Comment.author).joinedload(User.title)
             ).filter(
             Comment.parent_submission==post.id,
             Comment.level<=6
-            ).join(Comment._author).join(
-            User.title, isouter=True
             )
 
         if sort_type=="hot":
@@ -213,26 +212,22 @@ def get_post_with_comments(pid, sort_type="top", v=None):
         else:
             abort(422)
 
-        output=[]
-        for c in comments:
-            comment=c[0]
-            comment.author=c[1]
-            comment._title=c[2]
-            output.append(comment)
+        output=[c for c in comments]
 
         post._preloaded_comments=output
 
     return post
 
 
-def get_comment(cid, v=None):
+def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 
 
     if isinstance(cid, str):
         i=base36decode(cid)
-    else: i=cid
+    else:
+        i=cid
 
-
+    nSession = nSession or kwargs.get('session') or g.db
 
     if v:
         blocking=v.blocking.subquery()
@@ -240,94 +235,103 @@ def get_comment(cid, v=None):
         vt=g.db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id==i).subquery()
 
 
-        items= g.db.query(Comment, User, vt.c.vote_type, blocking.c.id, blocked.c.id).filter(
+        items= g.db.query(Comment, vt.c.vote_type).options(
+            joinedload(Comment.author).joinedload(User.title)
+            ).filter(
             Comment.id==i
             ).join(
-            Comment._author
-            ).join(
-            vt, isouter=True
-            ).join(
-            blocking,
-            blocking.c.target_id==Comment.author_id,
-            isouter=True
-            ).join(
-            blocked,
-            blocked.c.user_id==Comment.author_id,
-            isouter=True
+            vt, vt.c.comment_id==Comment.id, isouter=True
             ).first()
         
         if not items:
             abort(404)
+
         x=items[0]
-        x.author=items[1]
-        x._voted=items[2] or 0
-        x._is_blocking=items[3] or 0
-        x._is_blocked=items[4] or 0
+        x._voted=items[1] or 0
+
+        block=nSession.query(UserBlock).filter(
+            or_(
+                and_(
+                    UserBlock.user_id==v.id, 
+                    UserBlock.target_id==x.author_id
+                    ),
+                and_(UserBlock.user_id==x.author_id,
+                    UserBlock.target_id==v.id
+                    )
+                )
+            ).first()
+
+
+        x._is_blocking=block and block.user_id==v.id
+        x._is_blocked=block and block.target_id==v.id
 
     else:
-        items=g.db.query(Comment, User).filter(Comment.id==i).join(Comment._author).first()
-        x=items[0]
-        x.author=items[1]
+        x=g.db.query(Comment).options(
+            joinedload(Comment.author).joinedload(User.title)
+            ).filter(Comment.id==i).first()
 
-    if not x:
+    if not x and not graceful:
         abort(404)
     return x
 
-def get_comments(cids, v=None, session=None, sort_type="new"):
+def get_comments(cids, v=None, nSession=None, sort_type="new", **kwargs):
 
-    if not session:
-        session=g.db
+    #output= [get_comment(cid, v=v, graceful=True, nSession=nSession) for cid in cids]
+    #return [i for i in output if i]
+
+    if not cids:
+        return []
+
+    nSession=nSession or kwargs.get('session') or g.db
+
+    queries=[]
 
     if v:
-        blocking=v.blocking.subquery()
-        blocked=v.blocked.subquery()
-        vt=session.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(cids)).subquery()
+        for cid in cids:
+            vt=nSession.query(CommentVote).filter_by(comment_id=cid, user_id=v.id).subquery()
+            query=nSession.query(Comment, vt.c.vote_type
+                ).options(joinedload(Comment.author).joinedload(User.title)
+                ).filter_by(id=cid
+                ).join(vt, vt.c.comment_id==Comment.id, isouter=True)
+            queries.append(query)
+        queries=tuple(queries)
+        first_query=queries[0]
+        if len(queries) > 1:
+            other_queries=queries[1:len(queries)]
+        else:
+            other_queries=tuple()
+        comments=first_query.union_all(*other_queries).order_by(None).all()
 
-
-        items= session.query(Comment, User, vt.c.vote_type, blocking.c.id, blocked.c.id).filter(
-            Comment.id.in_(cids)
-            ).join(
-            Comment._author
-            ).join(
-            vt, 
-            isouter=True
-            ).join(
-            blocking,
-            blocking.c.target_id==Comment.author_id,
-            isouter=True
-            ).join(
-            blocked,
-            blocked.c.user_id==Comment.author_id,
-            isouter=True
-            ).order_by(Comment.created_utc.desc()).all()
-
-        output=[]
-        for i in items:
-        
-            x=i[0]
-            x.author=i[1]
-            x._voted=i[2] or 0
-            x._is_blocking=i[3] or 0
-            x._is_blocked=i[4] or 0
-            output.append(x)
-
+        output=[x[0] for x in comments]
+        for i in range(len(output)):
+            output[i]._voted=comments[i][1] or 0
     else:
-        entries=session.query(Comment, User).join(Comment._author).filter(Comment.id.in_(cids)).all()
-        output=[]
-        for row in entries:
-            comment=row[0]
-            comment.author=row[1]
-            output.append(comment)
+        for cid in cids:
+            query=nSession.query(Comment
+                ).options(joinedload(Comment.author).joinedload(User.title)
+                ).filter_by(id=cid
+                )
+            queries.append(query)
 
-    output=sorted(output, key=lambda x:cids.index(x.id))
-    
+        queries=tuple(queries)
+        first_query=queries[0]
+        if len(queries) > 1:
+            other_queries=queries[1:len(queries)]
+        else:
+            other_queries=tuple()
+        output=first_query.union_all(*other_queries).order_by(None).all()
+
     return output
+    
 
-def get_board(bid):
+def get_board(bid, graceful=False):
 
     x=g.db.query(Board).filter_by(id=base36decode(bid)).first()
     if not x:
-        abort(404)
+        if graceful:
+            return None
+        else:
+            abort(404)
     return x
 
 def get_guild(name, graceful=False):

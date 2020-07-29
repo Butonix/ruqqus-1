@@ -9,36 +9,41 @@ from ruqqus.__main__ import app, cache
 @cache.memoize(300)
 def searchlisting(q, v=None, page=1, sort="hot"):
 
-    posts = g.db.query(Submission).filter(func.lower(Submission.title).contains(q.lower()))
+    posts = g.db.query(Submission).join(Submission.submission_aux).join(Submission.author).filter(SubmissionAux.title.ilike('%'+q+'%')).options(contains_eager(Submission.submission_aux), contains_eager(Submission.author))
 
 
     if not (v and v.over_18):
-        posts=posts.filter_by(over_18=False)
+        posts=posts.filter(Submission.over_18==False)
 
     if v and v.hide_offensive:
-        posts=posts.filter_by(is_offensive=False)
+        posts=posts.filter(Submission.is_offensive==False)
 
     if not(v and v.admin_level>=3):
-        posts=posts.filter_by(is_deleted=False, is_banned=False)
+        posts=posts.filter(Submission.is_deleted==False, Submission.is_banned==False, User.is_private==False)
 
     if v and v.admin_level >= 4:
         pass
     elif v:
-        m=v.moderates.filter_by(invite_rescinded=False).subquery()
-        c=v.contributes.subquery()
-        posts=posts.join(m,
-                         m.c.board_id==Submission.board_id,
-                         isouter=True
-                         ).join(c,
-                                c.c.board_id==Submission.board_id,
-                                isouter=True
-                                )
-        posts=posts.filter(or_(Submission.author_id==v.id,
-                               Submission.is_public==True,
-                               m.c.board_id != None,
-                               c.c.board_id !=None))
+        m=g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, invite_rescinded=False).subquery()
+        c=g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id).subquery()
+        posts=posts.filter(
+          or_(
+            Submission.author_id==v.id,
+            Submission.post_public==True,
+            Submission.board_id.in_(m),
+            Submission.board_id.in_(c)
+            )
+          )
+
+        blocking=g.db.query(UserBlock.target_id).filter_by(user_id=v.id).subquery()
+        blocked= g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
+
+        posts=posts.filter(
+            Submission.author_id.notin_(blocking),
+            Submission.author_id.notin_(blocked)
+            )
     else:
-        posts=posts.filter_by(is_public=True)
+        posts=posts.filter(Submission.is_public==True)
 
     if sort=="hot":
         posts=posts.order_by(Submission.score_hot.desc())

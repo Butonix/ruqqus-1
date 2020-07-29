@@ -1,5 +1,5 @@
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, deferred
+from sqlalchemy.orm import relationship, deferred, lazyload
 import time
 
 from ruqqus.helpers.base36 import *
@@ -7,6 +7,7 @@ from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import *
 from ruqqus.helpers.session import *
 import ruqqus.helpers.aws as aws
+from .userblock import *
 from .submission import *
 from .board_relationships import *
 from .comment import Comment
@@ -36,6 +37,8 @@ class Board(Base, Stndrd, Age_times):
     banner_nonce=Column(Integer, default=0)
     is_private=Column(Boolean, default=False)
     color_nonce=Column(Integer, default=0)
+    rank_trending=Column(Float, default=0)
+    stored_subscriber_count=Column(Integer, default=1)
 
     moderators=relationship("ModRelationship", lazy="dynamic")
     subscribers=relationship("Subscription", lazy="dynamic")
@@ -93,7 +96,7 @@ class Board(Base, Stndrd, Age_times):
     @cache.memoize(timeout=60)
     def idlist(self, sort="hot", page=1, t=None, show_offensive=True, v=None, nsfw=False, **kwargs):
 
-        posts=g.db.query(Submission.id).filter_by(is_banned=False,
+        posts=g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
                                          is_deleted=False,
                                          is_pinned=False,
                                          board_id=self.id
@@ -121,15 +124,14 @@ class Board(Base, Stndrd, Age_times):
 
         if v and not self.has_mod(v) and v.admin_level<=3:
             #blocks
-            blocking=v.blocking.subquery()
-            blocked=v.blocked.subquery()
-            posts=posts.join(blocking,
-                blocking.c.target_id==Submission.author_id,
-                isouter=True).join(blocked,
-                    blocked.c.user_id==Submission.author_id,
-                    isouter=True).filter(
-                        blocking.c.id==None,
-                        blocked.c.id==None)
+            blocking=g.db.query(UserBlock.target_id).filter_by(user_id=v.id).subquery()
+            blocked= g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
+
+            posts=posts.filter(
+                Submission.author_id.notin_(blocking),
+                Submission.author_id.notin_(blocked)
+                )
+
 
         if t:
             now=int(time.time())
@@ -333,7 +335,7 @@ class Board(Base, Stndrd, Age_times):
 
     def has_participant(self, user):
         return (self.submissions.filter_by(author_id=user.id).first() or
-                g.db.query(Comment).filter_by(author_id=user.id, board_id=self.id).first()
+                g.db.query(Comment).filter_by(author_id=user.id, original_board_id=self.id).first()
                 )
     @property
     def n_pins(self):

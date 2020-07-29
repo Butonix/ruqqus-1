@@ -39,18 +39,14 @@
   <div class="title"><i class="fas fa-info-circle mr-2"></i>About Guild</div>
   <div class="body">
     {{ b.description_html | safe }}
-    <!-----commenting this bit out----
-    {% if b.description_html | length > 140 %}
-    <a href="#" data-toggle="modal" data-target="#guildDetailsModal">Read more</a>
-    {% endif %}
-    ------>
+
     <div class="text-small font-weight-bold text-muted text-uppercase mb-1" style="letter-spacing: 0.025rem;">Founded</div>
     <p>{{ b.created_date }}</p>      
     <div class="text-small font-weight-bold text-muted text-uppercase mb-2" style="letter-spacing: 0.025rem;">Guildmasters</div>
     <div class="d-flex align-items-center">
       {% for mod in b.mods_list[0:3] %}
       <a href="{{ mod.user.permalink }}">
-        <img src="{{ mod.user.profile_url }}" class="profile-pic profile-pic-30 profile-stacked {% if not loop.first %}ml-n2{% endif %}">
+        <img src="{{ mod.user.profile_url }}" class="profile-pic profile-pic-30 profile-stacked {% if not loop.first %}ml-n2{% endif %}" data-toggle="tooltip" data-placement="bottom" title="{{ '@' + mod.user.username }}">
       </a>
       {% if loop.last %}
       {% if b.mods_count - loop.index > 0 %}
@@ -191,6 +187,9 @@
             {% if b.is_nsfl %}
             <span class="badge badge-black text-small ml-2" data-toggle="tooltip" data-placement="bottom" title="This guild contains adult content">nsfl</span>
             {% endif %}
+            {% if b.restricted_posting or b.is_private %}
+            <span class="badge badge-warning text-small ml-2" data-toggle="tooltip" data-placement="bottom" title="This guild is private. Content posted prior to the guild being set to private is visible to everyone.">private</span>
+            {% endif %}
           </a>
         </div>
       </div>
@@ -198,7 +197,7 @@
         <a href="{{ b.permalink+'/mod/mods' }}" class="text-black" style="text-decoration: none;">Guildmasters<span class="text-primary"> {{ b.mods_count }}</span></a>
       </div>
       <div class="border-right p-3">
-        Member{{ 's' if b.subscriber_count != 1 else '' }}<span class="text-primary"> {{ b.subscriber_count }}</span>
+        Member{{ 's' if b.stored_subscriber_count != 1 else '' }}<span class="text-primary"> {{ b.stored_subscriber_count }}</span>
       </div>
       <div class="d-flex align-items-center p-3">
         <div class="dropdown dropdown-actions">
@@ -211,6 +210,11 @@
         <button class="dropdown-item" data-toggle="modal" data-target="#guildDetailsModal"><i class="fas fa-info-circle"></i>Guild details</button>
         {% if b.has_mod(v) %}
         <a class="dropdown-item" href="{{ b.permalink }}/mod/settings"><i class="fas fa-cog"></i>Guild settings</a>
+        {% endif %}
+        {% if v and not v.has_blocked_guild(b) %}
+        <a class="dropdown-item" href="javscript:void(0)" onclick="post_toast('/settings/block_guild?board={{ b.name }}')"><i class="fas fa-filter"></i>Filter from /all</a>
+        {% elif v %}
+        <a class="dropdown-item" href="javscript:void(0)" onclick="post_toast('/settings/unblock_guild?board={{ b.name }}')"><i class="fas fa-filter"></i>Unfilter from /all</a>
         {% endif %}
       </div>
     </div>
@@ -289,10 +293,13 @@
           {% if b.is_nsfl %}
             <span class="badge badge-black text-small align-top">nsfl</span>
             {% endif %}
+            {% if b.restricted_posting or b.is_private %}
+            <span class="badge badge-warning text-small align-top" data-toggle="tooltip" data-placement="bottom" title="This guild is private. Content posted prior to the guild being set to private is visible to everyone.">private</span>
+            {% endif %}
           </h1>
         </a>
         <div class="text-muted text-break">{{ b.description_html | safe }}</div>
-        <p class="font-weight-bold">{{ b.subscriber_count }} member{{ 's' if b.subscriber_count != 1 else '' }}
+        <p class="font-weight-bold">{{ b.stored_subscriber_count }} member{{ 's' if b.stored_subscriber_count != 1 else '' }}
         </p>
         {% if b.has_mod(v) %}
         <a class="btn btn-outline-secondary btn-block text-muted mb-2" href="{{ b.permalink }}/mod/settings">Guild settings</a>

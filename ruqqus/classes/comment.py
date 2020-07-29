@@ -13,48 +13,56 @@ from .votes import CommentVote
 from .flags import CommentFlag
 from .badwords import *
 
+class CommentAux(Base):
+
+    __tablename__="comments_aux"
+
+    key_id=Column(Integer, primary_key=True)
+    id=Column(Integer, ForeignKey("comments.id"))
+    body = Column(String(10000), default=None)
+    body_html = Column(String(20000))
+    ban_reason=Column(String(256), default='')
+
 
 class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     __tablename__="comments"
 
     id = Column(Integer, primary_key=True)
+    comment_aux=relationship("CommentAux", lazy="joined", uselist=False, innerjoin=True, primaryjoin="Comment.id==CommentAux.id")
     author_id = Column(Integer, ForeignKey("users.id"))
-    body = Column(String(10000), default=None)
     parent_submission = Column(Integer, ForeignKey("submissions.id"))
     parent_fullname = Column(Integer) #this column is foreignkeyed to comment(id) but we can't do that yet as "comment" class isn't yet defined
     created_utc = Column(Integer, default=0)
     edited_utc = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
-    body_html = Column(String(20000))
     distinguish_level=Column(Integer, default=0)
     is_deleted = Column(Boolean, default=False)
     is_approved = Column(Integer, default=0)
     approved_utc=Column(Integer, default=0)
-    ban_reason=Column(String(256), default='')
     creation_ip=Column(String(64), default='')
     score_disputed=Column(Float, default=0)
     score_hot=Column(Float, default=0)
     score_top=Column(Integer, default=1)
     level=Column(Integer, default=0)
     parent_comment_id=Column(Integer, ForeignKey("comments.id"))
-    author_name=Column(String(64), default="")
+    original_board_id=Column(Integer, ForeignKey("boards.id"))
 
     over_18=Column(Boolean, default=False)
     is_op=Column(Boolean, default=False)
     is_offensive=Column(Boolean, default=False)
     is_nsfl=Column(Boolean, default=False)
 
-    post=relationship("Submission", lazy="joined")
-    flags=relationship("CommentFlag", lazy="joined", backref="comment")
-    _author=relationship("User", lazy="subquery", innerjoin=True, primaryjoin="User.id==Comment.author_id")
+    post=relationship("Submission")
+    flags=relationship("CommentFlag", lazy="subquery", backref="comment")
+    author=relationship("User", lazy="joined", innerjoin=True, primaryjoin="User.id==Comment.author_id")
     board=association_proxy("post", "board")
 
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
-    ups = deferred(Column(Integer, server_default=FetchedValue()))
-    downs=deferred(Column(Integer, server_default=FetchedValue()))
-    is_public=Column(Boolean, server_default=FetchedValue())
+    #ups = deferred(Column(Integer, server_default=FetchedValue()))
+    #downs=deferred(Column(Integer, server_default=FetchedValue()))
+    is_public=deferred(Column(Boolean, server_default=FetchedValue()))
 
     score=deferred(Column(Integer, server_default=FetchedValue()))
     
@@ -64,7 +72,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     flag_count=deferred(Column(Integer, server_default=FetchedValue()))
 
-    board_id=Column(Integer, server_default=FetchedValue())
+    board_id=deferred(Column(Integer, server_default=FetchedValue()))
     
     
 
@@ -107,9 +115,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             return self.post
 
         else:
-            return self.__dict__.get("parent",
-                                     get_comment(self.parent_comment_id, v=g.v)
-                                     )
+            return g.db.query(Comment).get(self.parent_comment_id)
 
     @property
     def children(self):
@@ -225,12 +231,20 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'post':self.post.base36id,
                 'level':self.level,
                 'parent':self.parent_fullname,
-                'author':self.author_name if not self.author.is_deleted else None,
+                'author':self.author.username if not self.author.is_deleted else None,
                 'body':self.body,
                 'body_html':self.body_html,
-            #   'replies': [x.json for x in self.replies]
                 'is_archived':self.is_archived,
-                'title': self.title.json if self.title else None
+                'title':self.title.json if self.title else None,
+                'guild_name':self.board.name,
+                'created_utc':self.created_utc,
+                'edited_utc':self.edited_utc or 0,
+                'is_banned':False,
+                'is_deleted':False,
+                'is_nsfw':self.over_18,
+                'is_offensive':self.is_offensive,
+                'is_nsfl':self.is_nsfl,
+                'permalink':self.permalink
                 }
             
     @property
@@ -265,6 +279,34 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def is_blocked(self):
         return self.__dict__.get('_is_blocked', 0)   
+
+    @property
+    def body(self):
+        return self.comment_aux.body
+
+    @body.setter
+    def body(self, x):
+        self.comment_aux.body=x
+        g.db.add(self.comment_aux)
+    
+    @property
+    def body_html(self):
+        return self.comment_aux.body_html
+
+    @body_html.setter
+    def body_html(self, x):
+        self.comment_aux.body_html=x
+        g.db.add(self.comment_aux)
+
+    @property
+    def ban_reason(self):
+        return self.comment_aux.ban_reason
+
+    @ban_reason.setter
+    def ban_reason(self, x):
+        self.comment_aux.ban_reason=x
+        g.db.add(self.comment_aux)
+    
     
     
         

@@ -20,7 +20,7 @@ from flask import *
 
 from ruqqus.__main__ import app, limiter, cache
 
-valid_board_regex=re.compile("^[a-zA-Z0-9]\w{2,24}$")
+valid_board_regex=re.compile("^[a-zA-Z0-9][a-zA-Z0-9_]{2,24}$")
 
 @app.route("/create_guild", methods=["GET"])
 @is_not_banned
@@ -46,7 +46,7 @@ def create_board_get(v):
 
 @app.route("/api/board_available/<name>", methods=["GET"])
 def api_board_available(name):
-    if g.db.query(Board).filter(Board.name.ilike(name)).first():
+    if get_guild(name, graceful=True):
         return jsonify({"board":name, "available":False})
     else:
         return jsonify({"board":name, "available":True})
@@ -76,7 +76,7 @@ def create_board_post(v):
 
 
     #check name
-    if g.db.query(Board).filter(Board.name.ilike(board_name)).first():
+    if get_guild(board_name, graceful=True):
         return render_template("make_board.html",
                                v=v,
                                error="That Guild already exists.",
@@ -376,6 +376,9 @@ def mod_take_pid(pid, v):
 
     if board.has_ban(post.author):
         return jsonify({'error':f"@{post.author.username} is exiled from +{board.name}, so you can't yank their post there."}), 403
+
+    if post.author.any_block_exists(v):
+        return jsonify({'error':f"You can't yank @{post.author.username}'s content."}), 403
 
     if not board.can_take(post):
         return jsonify({'error':f"You can't yank this particular post to +{board.name}."}), 403
@@ -752,10 +755,16 @@ def subscribe_board(boardname, v):
                          board_id=board.id)
 
     g.db.add(new_sub)
+    g.db.flush()
     
 
     #clear your cached guild listings
     cache.delete_memoized(User.idlist, v, kind="board")
+
+    #update board trending rank
+    board.rank_trending=board.trending_rank
+    board.stored_subscriber_count=board.subscriber_count
+    g.db.add(board)
 
     return "", 204
 
@@ -777,10 +786,15 @@ def unsubscribe_board(boardname, v):
     sub.is_active=False
 
     g.db.add(sub)
+    g.db.flush()
     
 
     #clear your cached guild listings
     cache.delete_memoized(User.idlist, v, kind="board")
+
+    board.rank_trending=board.trending_rank
+    board.stored_subscriber_count=board.subscriber_count
+    g.db.add(board)
 
     return "", 204
 

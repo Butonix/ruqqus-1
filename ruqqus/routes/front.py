@@ -1,12 +1,14 @@
 import time
 from flask import *
 from sqlalchemy import *
+from sqlalchemy.orm import lazyload
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
 
 from ruqqus.__main__ import app, cache
 from ruqqus.classes.submission import Submission
+
 
 
 @app.route("/post/", methods=["GET"])
@@ -27,6 +29,9 @@ def notifications(v):
     cids=cids[0:25]
 
     comments=get_comments(cids, v=v, sort_type="new")
+    for c in comments:
+        c._is_blocked=False
+        c._is_blocking=False
 
     return render_template("notifications.html",
                            v=v,
@@ -36,7 +41,7 @@ def notifications(v):
                            standalone=True)
 
 @cache.memoize(timeout=900)
-def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **kwargs):
+def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **kwargs):
 
     #cutoff=int(time.time())-(60*60*24*30)
 
@@ -54,46 +59,45 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
     else:
         abort(422)
 
-    posts = g.db.query(Submission,
-        func.rank().over(
-            partition_by=Submission.board_id,
-            order_by=sort_func()
-            ).label("rn")
-        ).filter_by(is_banned=False,
+    posts = g.db.query(Submission
+        ).options(lazyload('*')).filter_by(is_banned=False,
         is_deleted=False,
         stickied=False)
 
     if not (v and v.over_18):
         posts=posts.filter_by(over_18=False)
 
-    posts=posts.filter_by(is_offensive=False)
+    if v and v.hide_offensive:
+        posts.filter_by(is_offensive=False)
 
     if v and v.admin_level >= 4:
-        pass
-    elif v:
-        m=v.moderates.filter_by(invite_rescinded=False).subquery()
-        c=v.contributes.subquery()
-        posts=posts.join(m,
-                         m.c.board_id==Submission.board_id,
-                         isouter=True
-                         ).join(c,
-                                c.c.board_id==Submission.board_id,
-                                isouter=True
-                                )
-        posts=posts.filter(or_(Submission.author_id==v.id,
-                               Submission.is_public==True,
-                               m.c.board_id != None,
-                               c.c.board_id !=None))
+        board_blocks = g.db.query(BoardBlock.board_id).filter_by(user_id=v.id).subquery()
 
-        blocking=v.blocking.subquery()
-        blocked=v.blocked.subquery()
-        posts=posts.join(blocking,
-            blocking.c.target_id==Submission.author_id,
-            isouter=True).join(blocked,
-                blocked.c.user_id==Submission.author_id,
-                isouter=True).filter(
-                    blocking.c.id==None,
-                    blocked.c.id==None)
+        posts=posts.filter(Submission.board_id.notin_(board_blocks))
+    elif v:
+        m=g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, invite_rescinded=False).subquery()
+        c=g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id).subquery()
+
+        posts=posts.filter(
+          or_(
+            Submission.author_id==v.id,
+            Submission.post_public==True,
+            Submission.board_id.in_(m),
+            Submission.board_id.in_(c)
+            )
+          )
+
+        blocking=g.db.query(UserBlock.target_id).filter_by(user_id=v.id).subquery()
+        blocked= g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
+
+        posts=posts.filter(
+            Submission.author_id.notin_(blocking),
+            Submission.author_id.notin_(blocked)
+            )
+
+        board_blocks = g.db.query(BoardBlock.board_id).filter_by(user_id=v.id).subquery()
+
+        posts=posts.filter(Submission.board_id.notin_(board_blocks))
     else:
         posts=posts.filter_by(post_public=True)
 
@@ -110,11 +114,11 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
         elif t=='year':
             cutoff=now-31536000
         else:
-            cutoff=0        
+            cutoff=0    
         posts=posts.filter(Submission.created_utc >= cutoff)
 
     if sort=="hot":
-        posts=posts.order_by(Submission.score_hot.desc())
+        posts=posts.order_by(Submission.score_best.desc())
     elif sort=="new":
         posts=posts.order_by(Submission.created_utc.desc())
     elif sort=="disputed":
@@ -125,13 +129,6 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
         posts=posts.order_by(Submission.score_activity.desc())
     else:
         abort(422)
-
-    posts_subquery=posts.subquery()
-
-    if sort=="hot":
-        posts=g.db.query(posts_subquery).filter(posts_subquery.c.rn<=2)
-    else:
-        posts=g.db.query(posts_subquery)
 
     if ids_only:
         posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
@@ -157,8 +154,7 @@ def home(v):
         ids=v.idlist(sort=sort,
                      page=page,
                      only=only,
-                     t=t,
-                     hide_offensive = v.hide_offensive
+                     t=t
                      )
 
         next_exists=(len(ids)==26)
@@ -251,11 +247,11 @@ def guild_ids(sort="subs", page=1, nsfw=False):
         guilds=guilds.filter_by(over_18=False)
 
     if sort=="subs":
-        guilds=guilds.order_by(Board.subscriber_count.desc())
+        guilds=guilds.order_by(Board.stored_subscriber_count.desc())
     elif sort=="new":
         guilds=guilds.order_by(Board.created_utc.desc())
     elif sort=="trending":
-        guilds=guilds.order_by(Board.trending_rank.desc())
+        guilds=guilds.order_by(Board.rank_trending.desc())
 
     else:
         abort(422)
@@ -349,7 +345,7 @@ def my_subs(v):
                                    m.c.id != None
                                    )
                                )
-        content=content.order_by(Board.subscriber_count.desc())
+        content=content.order_by(Board.stored_subscriber_count.desc())
         
         content=[x for x in content.offset(25*(page-1)).limit(26)]
         next_exists=(len(content)==26)
@@ -391,7 +387,7 @@ def my_subs(v):
 @auth_desired
 def random_post(v):
 
-    x=g.db.query(Submission).filter_by(is_banned=False, is_deleted=False)
+    x=g.db.query(Submission).options(lazyload('board')).filter_by(is_banned=False, is_deleted=False)
 
     now=int(time.time())
     cutoff=now - (60*60*24*180)
@@ -417,7 +413,8 @@ def random_post(v):
 @auth_desired
 def random_guild(v):
 
-    x=g.db.query(Board).filter_by(is_banned=False, 
+    x=g.db.query(Board).filter_by(
+        is_banned=False, 
         is_private=False,
         over_18=False,
         is_nsfl=False)
