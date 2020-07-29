@@ -361,6 +361,7 @@ def submit_post(v):
 
         for post in similar_posts+similar_urls:
             post.is_banned=True
+            post.ban_reason="Automated anti-spam removal"
             g.db.add(post)
 
         g.db.commit()
