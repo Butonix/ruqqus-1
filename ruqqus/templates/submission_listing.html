@@ -82,7 +82,7 @@
         	<img src="{{ p.thumb_url }}" class="post-img" alt="link post thumbnail">
    		</a>
       {% elif p.thumb_url and p.is_image %}
-        <a href="{{ p.url }}" rel="nofollow noopener" data-toggle="modal" data-target="#expandImageModal">
+        <a data-toggle="modal" data-target="#expandImageModal">
           <img src="{{ p.thumb_url }}" class="post-img" alt="" onclick="expandDesktopImage('{{ p.url }}','{{ p.url }}')">
         <a>
       {% endif %}
