@@ -81,16 +81,19 @@
     <div id="comment-{{ c.base36id }}-only" class="{% if c.is_banned %} banned{% endif %}{% if c.is_deleted %} deleted{% endif %}">
 
       <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %}{% if c.author.is_deleted %}[deleted account]{% else %}<a href="/@{{ c.author.username }}" class="user-name {% if c.is_op and not c.post.is_deleted %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.title %}{{ c.title.rendered | safe }}{% endif %}{% endif %}
-        {% if c.distinguish_level or c.is_op %}
         {% if c.distinguish_level %}
         <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>
         {% endif %}
         {% if c.author_id==c.post.author_id and not c.post.is_deleted and not c.author.is_deleted %}
         <i class="fas fa-microphone-stand text-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Submitter"></i>
         {% endif %}
-        <span> </span>
+        {% if c.is_blocked %}
+        <i class="fas fa-user-minus text-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="You're blocking this user, but you can see this comment becuase it's in your guild."></i>
         {% endif %}
-        <span class="time-stamp">· {{ c.age_string }}</span>{% if standalone and c.parent_submission and not c.is_public %} · <i class="fas fa-eye-slash text-muted" data-toggle="tooltip" data-placement="bottom" title="Private content, visible because {{ c.visibility_reason(v) }}"></i>{% endif %}
+        {% if c.is_blocking %}
+        <i class="fas fa-user-minus text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="This user is blocking you, but you can see this comment becuase it's in your guild."></i>
+        {% endif %}
+        <span class="time-stamp"> · {{ c.age_string }}</span>{% if standalone and c.parent_submission and not c.is_public %} · <i class="fas fa-eye-slash text-muted" data-toggle="tooltip" data-placement="bottom" title="Private content, visible because {{ c.visibility_reason(v) }}"></i>{% endif %}
         {% if c.edited_utc %}
         <span class="time-edited"><span>&#183;</span> <span class="font-italic">Edited {{ c.edited_string }}</span></span>
         {% endif %}
