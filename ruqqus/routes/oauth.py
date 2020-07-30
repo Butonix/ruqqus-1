@@ -78,7 +78,8 @@ This page takes the following URL parameters:
         scopes=scopes,
         scopes_txt=scopes_txt,
         redirect_uri=redirect_uri,
-        permanent=permanent
+        permanent=permanent,
+        i=random_image()
         )
 
 
