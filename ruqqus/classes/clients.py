@@ -39,7 +39,7 @@ class ClientAuth(Base):
 	application = relationship("OauthApp", lazy="joined")
 
 	@property
-	def scopelist:
+	def scopelist(self):
 
 		output=""
 		output += "identity," if self.scope_identity else ""
