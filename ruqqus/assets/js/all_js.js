@@ -1287,9 +1287,9 @@ $('#expandImageModal').on('hidden.bs.modal', function (e) {
 
 	// remove image src and link
 
-	document.getElementById("desktop-expanded-image").src = null;
+	document.getElementById("desktop-expanded-image").src = '';
 
-	document.getElementById("desktop-expanded-image-link").href = null;
+	document.getElementById("desktop-expanded-image-link").href = '';
 
 });
 
