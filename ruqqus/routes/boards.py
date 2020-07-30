@@ -137,7 +137,7 @@ def reddit_moment_redirect(name):
 @app.route("/+<name>", methods=["GET"])
 @app.route("/api/v1/guild/<name>/listing", methods=["GET"])
 @auth_desired
-@api
+@api("read")
 def board_name(name, v):
 
     board=get_guild(name)

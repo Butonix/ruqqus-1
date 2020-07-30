@@ -61,7 +61,7 @@ def redditor_moment_redirect(username):
 @app.route("/@<username>", methods=["GET"])
 @app.route("/api/v1/user/<username>/listing", methods=["GET"])
 @auth_desired
-@api
+@api("read")
 def u_username(username, v=None):
     
     #username is unique so at most this returns one result. Otherwise 404
