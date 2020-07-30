@@ -68,9 +68,9 @@ This page takes the following URL parameters:
     if not state:
         return jsonify({'oauth_error':'state argument required'}), 400
 
-    permanent = request.args.get("permanent")=='true'
+    permanent = bool(request.args.get("permanent"))
 
-    return render_template("oauth_authorize.html",
+    return render_template("oauth.html",
         v=v,
         application=application,
         SCOPES=SCOPES,
