@@ -190,7 +190,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                                comment_info=comment_info,
                                is_allowed_to_comment=is_allowed_to_comment,
                                render_replies=True,
-                               is_guildmaster=p.board.has_mod(v)
+                               is_guildmaster=self.board.has_mod(v)
                                )
 
 
