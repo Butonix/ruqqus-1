@@ -329,17 +329,17 @@ class User(Base, Stndrd, Age_times):
     @property
     @cache.memoize(timeout=3600) #1hr cache time for user rep
     def karma(self):
-        return int(self.energy)
+        return int(self.energy) - self.post_count
 
     @property
     @cache.memoize(timeout=3600)
     def comment_karma(self):
-        return int(self.comment_energy)
+        return int(self.comment_energy) - self.comments.filter(Comment.parent_submission!=None).filter_by(is_banned=False).count()
 
     @property
     @cache.memoize(timeout=3600)
     def true_score(self):
-        return max((self.karma + self.comment_karma) - (self.post_count + self.comments.filter(Comment.parent_submission!=None).filter_by(is_banned=False).count()), -5)
+        return max((self.karma + self.comment_karma), -5)
 
 
     @property
