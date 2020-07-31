@@ -39,12 +39,13 @@ def oauth_authorize_prompt(v):
 
     application= get_application(client_id)
     if not application:
-        return jsonify({"oauth_error":"Invalid `client_id`"})
+        return jsonify({"oauth_error":"Invalid `client_id`"}), 401
 
     if application.is_banned:
-        return jsonify({"oauth_error":"Banned `client_id`"})
+        return jsonify({"oauth_error":"Banned `client_id`"}), 403
         
-    scopes_txt = request.args.get('scope')
+    scopes_txt = request.args.get('scope', "")
+
     scopes=scopes_txt.split(',')
     if not scopes:
         return jsonify({"oauth_error":"One or more scopes must be specified as a comma-separated list"}), 400
