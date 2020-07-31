@@ -12,17 +12,17 @@
 		<div class="text-center px-3 my-8">
 			<i class="fad fa-eye-evil text-danger mb-4" style="font-size: 3.5rem;"></i>
 			<h1 class="h5">Are you over 18?</h1>
-			<p class="mb-5">+{{ board.name }} is rated NSFL (Not Safe for Life). This content may not be suitable for some users and situations. Are you sure you want to proceed?</p>
+			<p class="mb-5">This content is marked NSFL ("Not Safe for Life"). It may be graphic or disturbing, and may not be suitable for some users and situations. Are you sure you want to proceed?</p>
 			<div class="btn-toolbar justify-content-center mb-4">
 
 				{% if v %}
-					<form action="/allow_nsfw_logged_in/{{ board.base36id }}" method="post">
+					<form action="/allow_nsfl_logged_in/{{ board.base36id }}" method="post">
 						<input type="hidden" name="formkey" value="{{ v.formkey }}">
 						<input type="hidden" name="redir" value="{{ request.path }}">
 						<input type="submit" class="btn btn-danger mr-2" value="Yes">
 					</form>
 				{% else %}
-					<form action="/allow_nsfw_logged_out/{{ board.base36id }}" method="post">
+					<form action="/allow_nsfl_logged_out/{{ board.base36id }}" method="post">
 						<input type="hidden" name="formkey" value="{{ lo_formkey }}">
 						<input type="hidden" name="redir" value="{{ request.path }}">
 						<input type="hidden" name="time" value="{{ t }}">
