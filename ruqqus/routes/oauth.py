@@ -28,12 +28,12 @@ SCOPES={
 def oauth_authorize_prompt(v):
 
 
-'''
-This page takes the following URL parameters:
-* client_id - Your application client ID
-* scope - Comma-separated list of scopes. Scopes are described above
-* redirect_uri - Your redirect link
-'''
+    '''
+    This page takes the following URL parameters:
+    * client_id - Your application client ID
+    * scope - Comma-separated list of scopes. Scopes are described above
+    * redirect_uri - Your redirect link
+    '''
 
     client_id=request.args.get("client_id")
 
