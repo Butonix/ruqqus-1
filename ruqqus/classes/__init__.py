@@ -7,6 +7,7 @@ from .clients import *
 from .comment import *
 from .domains import Domain
 from .flags import *
+from .oauth import *
 from .user import *
 from .userblock import *
 from .submission import *
