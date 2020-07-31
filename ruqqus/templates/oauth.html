@@ -4,9 +4,9 @@
 
 <div id="auth-form" class="">
 
-    <h1 class="h2">Authorization Request</h1>
+    <h1 class="h2">{{ application.app_name}}</h1>
 
-    <p class="mb-md-5">{{ application.name }} wants to access your Ruqqus account.</p>
+    <p class="mb-md-5">wants to access your Ruqqus account.</p>
     <p>It will be able to:</p>
     <ul>
     {% for scope in scopes %}
@@ -22,7 +22,7 @@
         <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}">
         <input type="hidden" name="permanent" value="{{ permanent}}">
 
-        <button class="btn btn-primary w-100 mt-3" id="login_button">Authorize {{ application.name }}</button>
+        <input type="submit" class="btn btn-primary" id="auth_button" value="Authorize {{ application.name }}"<>
         <a href="/"><button class="btn btn-secondary">No, back to Ruqqus</button></a>
 
     </form>
