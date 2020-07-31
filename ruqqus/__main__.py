@@ -27,7 +27,7 @@ from redis import BlockingConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.16.2"
+_version = "2.16.3"
 
 app = Flask(__name__,
             template_folder='./templates',
