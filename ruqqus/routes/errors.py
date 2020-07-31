@@ -116,7 +116,7 @@ def allow_nsfl_logged_in(bid, v):
 
 @app.route("/allow_nsfl_logged_out/<bid>", methods=["POST"])
 @auth_desired
-def allow_nsfw_logged_out(bid, v):
+def allow_nsfl_logged_out(bid, v):
 
     if v:
         return redirect('/')
