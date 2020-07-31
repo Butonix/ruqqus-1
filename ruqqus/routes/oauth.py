@@ -82,7 +82,7 @@ def oauth_authorize_prompt(v):
         scopes=scopes,
         scopes_txt=scopes_txt,
         redirect_uri=redirect_uri,
-        permanent=permanent,
+        permanent=int(permanent),
         i=random_image()
         )
 
@@ -118,7 +118,7 @@ def oauth_authorize_post(v):
     if not state:
         return jsonify({'oauth_error':'state argument required'}), 400
 
-    permanent=request.values.get("permanent")
+    permanent=bool(int(request.values.get("permanent",0)))
 
 
     new_auth=ClientAuth(
