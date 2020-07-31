@@ -22,6 +22,7 @@
         <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}">
         <input type="hidden" name="permanent" value="{{ permanent}}">
         <input type="hidden" name="client_id" value="{{ application.client_id }}">
+        <input type="hidden" name="state" value="{{ state }}">
 
         <input type="submit" class="btn btn-primary" id="auth_button" value="Authorize {{ application.app_name }}"<>
         <a href="/"><button class="btn btn-secondary">No, back to Ruqqus</button></a>
