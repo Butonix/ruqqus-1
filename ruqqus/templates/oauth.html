@@ -15,12 +15,13 @@
     </ul>
 
 
-    <form action="/oauth/authorize" enctype="application/x-www-form-urlencoded" method="post" class="mt-md-3" id="login">
+    <form action="/oauth/authorize" method="post" class="mt-md-3" id="login">
 
         <input type="hidden" name="formkey" value="{{ v.formkey }}">
         <input type="hidden" name="scopes" value="{{ scopes_txt }}">
         <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}">
         <input type="hidden" name="permanent" value="{{ permanent}}">
+        <input type="hidden" name="client_id" value="{{ application.client_id }}">
 
         <input type="submit" class="btn btn-primary" id="auth_button" value="Authorize {{ application.app_name }}"<>
         <a href="/"><button class="btn btn-secondary">No, back to Ruqqus</button></a>
