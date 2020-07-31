@@ -56,6 +56,9 @@ def oauth_authorize_prompt(v):
 
 
     redirect_uri = request.args.get("redirect_uri")
+    if not redirect_uri:
+        return jsonify({"oauth_error":f"`redirect_uri` must be provided."}), 400
+
     if not redirect_uri.startswith('https://') and not redirect_uri.startswith("https://localhost/"):
         return jsonify({"oauth_error":"redirect_uri must use https, or be localhost"}), 400
 
