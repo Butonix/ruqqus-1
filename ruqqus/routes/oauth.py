@@ -159,7 +159,9 @@ def oauth_grant():
         auth=g.db.query(ClientAuth).filter_by(oauth_code=code).first()
 
         if not auth:
-            return jsonify({"oauth_error":"Invalid code"}), 40auth.code=None
+            return jsonify({"oauth_error":"Invalid code"}), 401
+
+        auth.code=None
         auth.access_token=secrets.token_urlsafe(128)[0:128]
         auth.access_token_expire_utc = int(time.time())+60*60
 
