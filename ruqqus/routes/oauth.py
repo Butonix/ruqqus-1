@@ -139,12 +139,12 @@ def oauth_authorize_post(v):
 @app.route("/oauth/grant", methods=["post"])
 def oauth_grant():
 
-'''
-This endpoint takes the following parameters:
-* code - The code parameter provided in the redirect
-* client_id - Your client ID
-* client_secret - your client secret
-'''
+    '''
+    This endpoint takes the following parameters:
+    * code - The code parameter provided in the redirect
+    * client_id - Your client ID
+    * client_secret - your client secret
+    '''
 
     code=request.values.get("code")
     application = get_application(request.values.get("client_id"))
