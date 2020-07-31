@@ -48,7 +48,7 @@ def oauth_authorize_prompt(v):
 
     scopes=scopes_txt.split(',')
     if not scopes:
-        return jsonify({"oauth_error":"One or more scopes must be specified as a comma-separated list"}), 400
+        return jsonify({"oauth_error":"One or more scopes must be specified as a comma-separated list."}), 400
 
     for scope in scopes:
         if scope not in SCOPES:
@@ -56,8 +56,8 @@ def oauth_authorize_prompt(v):
 
 
     redirect_uri = request.args.get("redirect_uri")
-    if not redirect_uri.startswith('https://'):
-        return jsonify({"oauth_error":"redirect_uri must use https."}), 400
+    if not redirect_uri.startswith('https://') and not redirect_uri.startswith("https://localhost/"):
+        return jsonify({"oauth_error":"redirect_uri must use https, or be localhost"}), 400
 
 
     valid_redirect_uris = [x.lstrip().rstrip() for x in application.redirect_uri.split(",")]
