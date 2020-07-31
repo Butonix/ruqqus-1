@@ -178,7 +178,7 @@ def oauth_grant():
 
         return jsonify(data)
 
-    elif request.values.get("grant_type")=="refresh"
+    elif request.values.get("grant_type")=="refresh":
 
         auth=g.db.query(ClientAuth).filter_by(refresh_token=request.values.get("refresh_token")).first()
 
