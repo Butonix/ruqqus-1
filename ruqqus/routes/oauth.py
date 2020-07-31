@@ -39,10 +39,10 @@ This page takes the following URL parameters:
 
     application= get_application(client_id)
     if not application:
-        abort(404)
+        return jsonify{"oauth_error":"Invalid `client_id`"})
 
     if application.is_banned:
-        abort(403)
+        return jsonify{"oauth_error":"Banned `client_id`"})
 
     scopes_txt = request.args.get('scope')
     scopes=scopes_txt.split(',')
