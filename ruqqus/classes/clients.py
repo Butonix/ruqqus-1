@@ -14,6 +14,7 @@ class OauthApp(Base):
 	app_name=Column(String(50))
 	redirect_uri=Column(String(4096))
 	author_id=Column(Integer, ForeignKey("users.id"))
+	is_banned=Column(Boolean, default=False)
 
 
 class ClientAuth(Base):
