@@ -15,7 +15,7 @@
     </ul>
 
 
-    <form action="/oauth/authorize" method="post" class="mt-md-3" id="login">
+    <form action="/oauth/authorize" enctype="application/x-www-form-urlencoded" method="post" class="mt-md-3" id="login">
 
         <input type="hidden" name="formkey" value="{{ v.formkey }}">
         <input type="hidden" name="scopes" value="{{ scopes_txt }}">
