@@ -64,7 +64,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
 
                 }
 
-    if post.is_nsfl and not (v and v.hide_nsfl) and not session_isnsfl(comment.board):
+    if post.is_nsfl and not (v and v.show_nsfl) and not session_isnsfl(comment.board):
         t=int(time.time())
         return {'html':lambda:render_template("errors/nsfl.html",
                                v=v,
