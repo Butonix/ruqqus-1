@@ -40,6 +40,10 @@ def api_vote_post(post_id, x, v):
         g.db.add(vote)
     g.db.flush()
     
+    post.upvotes=post.ups
+    post.downvotes=post.downs
+    g.db.add(post)
+    g.db.flush()
 
     #post.score_hot = post.rank_hot
     #post.score_disputed=post.rank_fiery
