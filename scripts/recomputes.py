@@ -48,6 +48,8 @@ def recompute():
 
                 post.upvotes = post.ups
                 post.downvotes=post.downs
+                db.add(post)
+                db.flush()
 
                 post.score_hot = post.rank_hot
                 post.score_disputed=post.rank_fiery
