@@ -66,6 +66,11 @@ def recompute():
 
 
                     comment_count+=1
+
+                    comment.upvotes=comment.ups
+                    comment.downvotes=comment.downs
+                    g.db.add(comment)
+                    g.db.flush()
             
             
                     comment.score_disputed=comment.rank_fiery
