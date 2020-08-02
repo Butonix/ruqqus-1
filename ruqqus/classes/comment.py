@@ -59,10 +59,12 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     board=association_proxy("post", "board")
     original_board=relationship("Board", primaryjoin="Board.id==Comment.original_board_id")
 
+
+
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
-    #ups = deferred(Column(Integer, server_default=FetchedValue()))
-    #downs=deferred(Column(Integer, server_default=FetchedValue()))
+    ups = deferred(Column(Integer, server_default=FetchedValue()))
+    downs=deferred(Column(Integer, server_default=FetchedValue()))
     is_public=deferred(Column(Boolean, server_default=FetchedValue()))
 
     score=deferred(Column(Integer, server_default=FetchedValue()))
