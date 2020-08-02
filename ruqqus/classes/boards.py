@@ -149,7 +149,7 @@ class Board(Base, Stndrd, Age_times):
             
 
         if sort=="hot":
-            posts=posts.order_by(Submission.score_hot.desc())
+            posts=posts.order_by(Submission.score_best.desc())
         elif sort=="new":
             posts=posts.order_by(Submission.created_utc.desc())
         elif sort=="disputed":
