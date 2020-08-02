@@ -46,6 +46,9 @@ def recompute():
                 i+=1
                 post_count+=1
 
+                post.upvotes = post.ups
+                post.downvotes=post.downs
+
                 post.score_hot = post.rank_hot
                 post.score_disputed=post.rank_fiery
                 #post.score_top=post.score
