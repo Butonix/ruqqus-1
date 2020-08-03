@@ -59,6 +59,9 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     board=association_proxy("post", "board")
     original_board=relationship("Board", primaryjoin="Board.id==Comment.original_board_id")
 
+    upvotes=Column(Integer, default=1)
+    downvotes=Column(Integer, default=0)
+
 
 
     #These are virtual properties handled as postgres functions server-side
