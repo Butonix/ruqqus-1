@@ -32,7 +32,7 @@
 
       <div id="post-{{ p.base36id }}-up" tabindex="0" class="mx-auto arrow-up" onclick="location.href='/login';"></div>
 
-      <span id="post-{{ p.base36id }}-score-none" class="score">{% if p.is_banned %}✖{% else %}{{ score-adjust }}{% endif %}</span>
+      <span id="post-{{ p.base36id }}-score-none" class="score">{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
 
       <div id="post-{{ p.base36id }}-down" tabindex="0" class="text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
 
