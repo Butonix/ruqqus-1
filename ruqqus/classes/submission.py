@@ -74,6 +74,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     is_pinned=Column(Boolean, default=False)
     score_best=Column(Float, default=0)
 
+    upvotes = Column(Integer, default=1)
+    downvotes = Column(Integer, default=0)
+
     approved_by=relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id")
 
     # not sure if we need this
@@ -83,8 +86,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
 
-    #ups = deferred(Column(Integer, server_default=FetchedValue()))
-    #downs=deferred(Column(Integer, server_default=FetchedValue()))
+    ups = deferred(Column(Integer, server_default=FetchedValue()))
+    downs=deferred(Column(Integer, server_default=FetchedValue()))
     age=deferred(Column(Integer, server_default=FetchedValue()))
     comment_count=Column(Integer, server_default=FetchedValue())
     flag_count=deferred(Column(Integer, server_default=FetchedValue()))
