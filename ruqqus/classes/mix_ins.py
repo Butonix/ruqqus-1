@@ -143,7 +143,7 @@ class Fuzzing:
     @property
     def upvotes_fuzzed(self):
 
-        if self.upvotes <=10:
+        if self.upvotes <=10 or self.is_archived:
             return self.upvotes
 
         lower = int(self.upvotes * 0.99)
@@ -153,9 +153,9 @@ class Fuzzing:
 
     @property
     def downvotes_fuzzed(self):
-        if self.downvotes <=10:
+        if self.downvotes <=10 or self.is_archived:
             return self.downvotes
-            
+
         lower = int(self.downvotes * 0.99)
         upper = int(self.downvotes * 0.99)+1
 
