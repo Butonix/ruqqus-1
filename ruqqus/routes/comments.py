@@ -106,7 +106,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
     #children comments
     current_ids=[comment.id]
     for i in range(6-context):
-        if g.v:
+        if v:
             votes=g.db.query(CommentVote).filter(CommentVote.user_id==g.v.id, CommentVote.comment_id.in_(current_ids)).subquery()
 
             blocking=v.blocking.subquery()
