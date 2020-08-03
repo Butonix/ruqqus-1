@@ -94,12 +94,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
     c=comment
     while context > 0 and not c.is_top_level:
 
-        parent=c.parent
-
-        if g.v:
-            parent._is_blocking=v.blocking.filter_by(target_id=parent.author_id).first()
-            parent._is_blocked=v.blocked.filter_by(user_id=parent.author_id).first()
-            parent._voted=g.db.query(CommentVote.vote_type).filter_by(user_id=g.v.id, comment_id=parent.id).first()
+        parent=get_comment(c.parent_comment_id, v=v)
 
         post._preloaded_comments+=[parent]
 
