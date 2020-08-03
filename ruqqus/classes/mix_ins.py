@@ -121,8 +121,6 @@ class Scores:
     def score(self):
         return int(self.score_top) or 0
 
-
-
 class Fuzzing:
 
     @property
@@ -141,3 +139,17 @@ class Fuzzing:
         a = math.floor(real * (1 - k))
         b = math.ceil(real * (1 + k))
         return random.randint(a, b)
+
+    @property
+    def upvotes_fuzzed(self):
+        lower = int(self.upvotes * 0.99)
+        upper = int(self.upvotes * 0.99)+1
+
+        return random.randint(lower, upper)
+
+    @property
+    def downvotes_fuzzed(self):
+        lower = int(self.downvotes * 0.99)
+        upper = int(self.downvotes * 0.99)+1
+
+        return random.randint(lower, upper)
