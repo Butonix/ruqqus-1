@@ -107,7 +107,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
     current_ids=[comment.id]
     for i in range(6-context):
         if v:
-            votes=g.db.query(CommentVote).filter(CommentVote.user_id==v.id, CommentVote.comment_id.in_(current_ids)).subquery()
+            votes=g.db.query(CommentVote).filter(CommentVote.user_id==v.id).subquery()
 
             blocking=v.blocking.subquery()
             blocked=v.blocked.subquery()
@@ -158,6 +158,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                 comment._is_blocked=c[3] or 0
                 output.append(comment)
         else:
+
             comms=g.db.query(
                 Comment
                 ).options(
