@@ -63,8 +63,8 @@
     {% if p.board_id != p.original_board_id %}
     <div class="text-small mb-2">Originally posted in: <a href="{{ p.original_board.permalink }}">+{{ p.original_board.name }}</a></div>
     {% endif %}
-    <div class="text-small mb-1">Shortlink:</div>
-    <input readonly="readonly" value="https://ruqq.us/{{ p.base36id }}" data-clipboard-text="https://ruqq.us/{{ p.base36id }}" role="button" class="copy-link form-control form-control-sm rounded">
+    <div class="text-small mb-2">Shortlink: <input readonly="readonly" value="https://ruqq.us/{{ p.base36id }}" data-clipboard-text="https://ruqq.us/{{ p.base36id }}" role="button" class="copy-link form-control form-control-sm rounded"></div>
+    <div class="text-small mb-1">Votes: +{{ p.upvotes_fuzzed}}/-{{ p.downvotes_fuzzed }}</div>
   </div>
 </div>
 {% endblock %}

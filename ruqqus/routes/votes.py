@@ -92,7 +92,7 @@ def api_vote_comment(comment_id, x, v):
     g.db.flush()
 
     comment.upvotes=comment.ups
-    commnet.downvotes=comment.downs
+    comment.downvotes=comment.downs
     g.db.add(comment)
     g.db.flush()
     
