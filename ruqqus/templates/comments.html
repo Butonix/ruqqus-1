@@ -60,7 +60,7 @@
 {% set adjust=0 %}
 {% endif %}
 
-{% if standalone %}
+{% if standalone and level==1 %}
 <div class="post-info mt-3 mb-1">
 	{% if c.parent_submission %}
     {% if c.author_id==v.id and c.replies %}
@@ -289,11 +289,9 @@
   {% if render_replies %} 
     {% if level<5 %}
         <div id="replies-of-{{ c.base36id }}" class="">
-          {% with standalone=False %}
           {% for reply in c.replies %}
               {{ single_comment(reply, level=level+1) }}
           {% endfor %}
-          {% endwith %}
         </div>
     {% else %}
       {% if c.replies %}
