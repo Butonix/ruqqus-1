@@ -131,7 +131,15 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def replies(self):
 
-        return self.__dict__.get("replies", [])
+        r=self.__dict__.get("replies", None)
+        if r==None:
+            r=db.query(Comment).filter_by(parent_comment_id=self.id).all()
+        return r
+
+
+    @replies.setter
+    def replies(self, value):
+        self.__dict__["replies"]=value
 
     @property
     @lazy
