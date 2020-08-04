@@ -33,6 +33,7 @@ def notifications(v):
     for c in comments:
         c._is_blocked=False
         c._is_blocking=False
+        c.replies=[]
         if c.parent_comment:
             parent=c.parent_comment
             parent.replies=[c]
