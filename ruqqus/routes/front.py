@@ -35,8 +35,12 @@ def notifications(v):
         c._is_blocked=False
         c._is_blocking=False
         parent=c.parent
-        parent.replies=[c]
-        parents.append(parent)
+
+        if isinstance(parent, Comment):
+            parent.replies=[c]
+            parents.append(parent)
+        else:
+            parents.append(c)
 
     return render_template("notifications.html",
                            v=v,
