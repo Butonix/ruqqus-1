@@ -63,6 +63,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     downvotes=Column(Integer, default=0)
 
     parent_comment=relationship("Comment", remote_side=[id])
+    child_comments=relationship("Comment", remote_side=[parent_comment_id])
 
 
 
@@ -135,7 +136,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
         r=self.__dict__.get("replies", None)
         if r==None:
-            r=db.query(Comment).filter_by(parent_comment_id=self.id).all()
+            r=self.child_comments
         return r
 
 
