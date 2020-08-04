@@ -274,7 +274,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
         abort(404)
     return x
 
-def get_comments(cids, v=None, nSession=None, sort_type="new", **kwargs):
+def get_comments(cids, v=None, nSession=None, sort_type="new", load_parent=False, **kwargs):
 
     #output= [get_comment(cid, v=v, graceful=True, nSession=nSession) for cid in cids]
     #return [i for i in output if i]
@@ -291,8 +291,16 @@ def get_comments(cids, v=None, nSession=None, sort_type="new", **kwargs):
             vt=nSession.query(CommentVote).filter_by(comment_id=cid, user_id=v.id).subquery()
             query=nSession.query(Comment, vt.c.vote_type
                 ).options(joinedload(Comment.author).joinedload(User.title)
-                ).filter_by(id=cid
-                ).join(vt, vt.c.comment_id==Comment.id, isouter=True)
+                )
+            if load_parent:
+                query=query.options(joinedload(Comment.parent_comment).joinedload(Comment.author).joinedload(User.title))
+            query=query.filter_by(id=cid
+                ).join(
+                vt,
+                vt.c.comment_id==Comment.id,
+                isouter=True
+                )
+
             queries.append(query)
         queries=tuple(queries)
         first_query=queries[0]
