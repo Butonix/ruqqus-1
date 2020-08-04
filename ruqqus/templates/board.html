@@ -187,8 +187,10 @@
             {% if b.is_nsfl %}
             <span class="badge badge-black text-small ml-2" data-toggle="tooltip" data-placement="bottom" title="This guild contains adult content">nsfl</span>
             {% endif %}
-            {% if b.restricted_posting or b.is_private %}
+            {% if b.is_private %}
             <span class="badge badge-warning text-small ml-2" data-toggle="tooltip" data-placement="bottom" title="This guild is private. Content posted prior to the guild being set to private is visible to everyone.">private</span>
+            {% elif b.restricted_posting %}
+            <span class="badge badge-warning text-small ml-2" data-toggle="tooltip" data-placement="bottom" title="This guild is restricted. Anyone can comment, but only approved users can post.">private</span>
             {% endif %}
           </a>
         </div>
