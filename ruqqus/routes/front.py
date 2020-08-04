@@ -29,13 +29,18 @@ def notifications(v):
     cids=cids[0:25]
 
     comments=get_comments(cids, v=v, sort_type="new")
+    parents=[]
+
     for c in comments:
         c._is_blocked=False
         c._is_blocking=False
+        parent=c.parent
+        parent.replies=[c]
+        parents.append(parent)
 
     return render_template("notifications.html",
                            v=v,
-                           notifications=comments,
+                           notifications=parents,
                            next_exists=next_exists,
                            page=page,
                            standalone=True)
