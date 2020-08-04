@@ -61,7 +61,7 @@
 {% endif %}
 
 {% if standalone and level==1 %}
-<div class="post-info mt-3 mb-1">
+<div class="post-info mt-4 mb-1">
 	{% if c.parent_submission %}
     {% if c.author_id==v.id and c.replies %}
       <span class="align-top"><span class="font-weight-bold">Comment Reply: <a href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span>
