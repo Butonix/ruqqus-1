@@ -34,11 +34,19 @@ def notifications(v):
         c._is_blocked=False
         c._is_blocking=False
         c.replies=[]
-        if c.parent_comment and c.parent_comment.author_id==v.id:
+        if c.author_id==1:
+            c._is_system=True
+            listing.append(c)
+        elif c.parent_comment and c.parent_comment.author_id==v.id:
+            c._is_comment_reply=True
             parent=c.parent_comment
             parent.replies=[c]
             listing.append(parent)
+        elif c.parent.author_id==v.id:
+            c._is_post_reply=True
+            listing.append(c)
         else:
+            c._is_username_mention=True
             listing.append(c)
 
 
