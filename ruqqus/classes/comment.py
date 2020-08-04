@@ -62,6 +62,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     upvotes=Column(Integer, default=1)
     downvotes=Column(Integer, default=0)
 
+    parent_comment=relationship("Comment", remote_side=[id])
+
 
 
     #These are virtual properties handled as postgres functions server-side
