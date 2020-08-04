@@ -62,7 +62,12 @@ class Age_times:
 
         now = time.gmtime()
         ctd = time.gmtime(self.created_utc)
+
+        #compute number of months
         months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
+        #remove a month count if current day of month < creation day of month
+        if now.tm_day < ctd.tm_day:
+            months-=1
 
         if months < 12:
             return f"{months} month{'s' if months > 1 else ''} ago"
