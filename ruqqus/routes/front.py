@@ -56,7 +56,8 @@ def notifications(v):
                            next_exists=next_exists,
                            page=page,
                            standalone=True,
-                           render_replies=True)
+                           render_replies=True,
+                           is_notification_page=True)
 
 @cache.memoize(timeout=900)
 def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **kwargs):
