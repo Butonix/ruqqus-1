@@ -63,9 +63,9 @@
 {% if standalone and level==1 %}
 <div class="post-info mt-5 mb-1">
 	{% if c.parent_submission %}
-    {% if c.author_id==v.id and c.replies %}
+    {% if c.author_id==v.id and c.replies and is_notification_page%}
       <span class="align-top"><span class="font-weight-bold">Comment Reply: <a href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span>
-    {% elif c.post.author_id==v.id and c.is_top_level %}
+    {% elif c.post.author_id==v.id and c.is_top_level and is_notification_page%}
       <span class="align-top"><span class="font-weight-bold">Post Reply: <a href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span>
     {% elif is_notification_page %}
       <span class="align-top"><span class="font-weight-bold">Username Mention: <a href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span>
