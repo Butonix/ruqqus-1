@@ -2,6 +2,7 @@ from os import environ
 import requests
 import urllib
 import hmac
+import pprint
 
 from flask import *
 
@@ -157,15 +158,17 @@ def webhook_patreon():
 
     data=request.json
 
-    print(data)
+    pprint.pprint(data)
 
     user = g.db.query(User).filter_by(patreon_id=data["data"]["id"]).first()
     if not user:
         return "", 204
 
-    if request.headers.get("X-Patreon-Event") in ["members:pledge:create","members:pledge:update"]:
+    event_type=request.headers.get("X-Patreon-Event")
+
+    if event_type in ["members:pledge:create","members:pledge:update"]:
         user.patreon_pledge_cents=data["data"]["attributes"]["amount_cents"]
-    else:
+    elif event_type=="members:pledge:delete"
         user.patreon_pledge_cents=0
 
     g.db.add(user)
