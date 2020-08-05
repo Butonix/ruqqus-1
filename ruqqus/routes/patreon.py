@@ -152,7 +152,7 @@ def webhook_patreon():
                     ).hexdigest()
 
     if not hmac.compare_digest(sig, hash_):
-        abort(403)
+        abort(401)
 
     #look up user by patreon id
 
@@ -196,5 +196,8 @@ def webhook_patreon():
 
     g.db.add(user)
     g.db.commit()
+
+    print(user.patreon_pledge_cents)
+    print(user.title_id)
 
     return "", 204
