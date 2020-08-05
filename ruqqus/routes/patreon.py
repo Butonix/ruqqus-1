@@ -159,7 +159,7 @@ def webhook_patreon():
 
     print(data)
 
-    user = db.query(User).filter_by(patreon_id=data["data"]["id"]).first()
+    user = g.db.query(User).filter_by(patreon_id=data["data"]["id"]).first()
     if not user:
         return "", 204
 
