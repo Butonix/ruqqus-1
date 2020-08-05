@@ -158,7 +158,7 @@ def webhook_patreon():
 
     data=request.json
 
-    pprint.pprint(data)
+    #pprint.pprint(data)
 
     user = g.db.query(User).filter_by(patreon_id=data["data"]["id"]).first()
     if not user:
@@ -172,6 +172,8 @@ def webhook_patreon():
         user.patreon_pledge_cents=0
     else:
         abort(400)
+
+    print(user.patreon_pledge_cents)
 
     g.db.add(user)
     g.db.flush()
@@ -187,6 +189,8 @@ def webhook_patreon():
         user.title_id=34
     elif user.patreon_pledge_cents>=5000 and user.title_id in [32, 33, 34]:
         user.title_id=35
+
+    print(user.title_id)
 
     user.refresh_selfset_badges()
 
