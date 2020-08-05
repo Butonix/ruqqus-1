@@ -37,7 +37,7 @@ signature = b"provided_signature_bytestring"
 rsa.verify(file, signature, ruqqus_public_key)
 </pre>
 
-The expected output is a string with the result of the hash method used to generate the signature, for example `"SHA-512"`. If the signature fails, it will produce a `VerificationError`. If the signature fails, you should suspect the provided file of being inauthentic or tampered.
+The expected output is a string containing the name of the hash method used to generate the signature, for example `"SHA-512"`. If the signature fails, it will produce a `VerificationError`. If the signature fails, you should suspect the provided file of being inauthentic or tampered.
 
 {% endfilter %}
 
