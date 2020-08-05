@@ -167,7 +167,7 @@ def webhook_patreon():
     event_type=request.headers.get("X-Patreon-Event")
 
     if event_type in ["members:pledge:create","members:pledge:update"]:
-        user.patreon_pledge_cents=data["data"]["attributes"]["amount_cents"]
+        user.patreon_pledge_cents=data["data"]["attributes"]["pledge_amount_cents"]
     elif event_type=="members:pledge:delete":
         user.patreon_pledge_cents=0
     else:
