@@ -173,6 +173,8 @@ def webhook_patreon():
     else:
         abort(400)
 
+    print(user)
+
     print(user.patreon_pledge_cents)
 
     g.db.add(user)
