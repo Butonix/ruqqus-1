@@ -173,9 +173,9 @@ def webhook_patreon():
     else:
         abort(400)
 
-    print(user)
+    #print(user)
 
-    print(user.patreon_pledge_cents)
+    #print(user.patreon_pledge_cents)
 
     g.db.add(user)
     g.db.flush()
@@ -192,14 +192,14 @@ def webhook_patreon():
     elif user.patreon_pledge_cents>=5000 and user.title_id in [32, 33, 34]:
         user.title_id=35
 
-    print(user.title_id)
+    #print(user.title_id)
 
     user.refresh_selfset_badges()
 
     g.db.add(user)
     g.db.commit()
 
-    print(user.patreon_pledge_cents)
-    print(user.title_id)
+    #print(user.patreon_pledge_cents)
+    #print(user.title_id)
 
     return "", 204
