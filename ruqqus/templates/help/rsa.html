@@ -32,7 +32,7 @@ ruqqus_public_key = rsa.PublicKey(2214322128926851735186692499423957375380899447
 
 file=open("path/to/file", "rb")
 
-signature = b"provided_signature_bytestring"
+signature = b'provided_signature_bytestring'
 
 rsa.verify(file, signature, ruqqus_public_key)
 </pre>
