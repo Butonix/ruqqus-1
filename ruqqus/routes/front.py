@@ -453,7 +453,7 @@ def random_comment(v):
     x=g.db.query(Comment).filter_by(is_banned=False,
         over_18=False,
         is_nsfl=False,
-        is_offensive=False)
+        is_offensive=False).filter(Comment.parent_submission.isnot(None))
     if v:
         bans=g.db.query(BanRelationship.id).filter_by(user_id=v.id).all()
         x=x.filter(Comment.board_id.notin_([i[0] for i in bans]))
