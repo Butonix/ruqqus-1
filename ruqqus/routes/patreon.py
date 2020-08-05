@@ -177,16 +177,16 @@ def webhook_patreon():
     g.db.flush()
 
     #Change patron title if appropriate
-    if user.patreon_pledge_cents==0 and v.title_id in [32, 33, 34, 35]:
-        v.title_id=0
-    elif user.patreon_pledge_cents<500 and v.title_id in [33, 34, 35]:
-        v.title_id=32
-    elif user.patreon_pledge_cents<2000 and v.title_id in [32, 34, 35]:
-        v.title_id=33
-    elif user.patreon_pledge_cents<5000 and v.title_id in [32, 33, 35]:
-        v.title_id=34
-    elif user.patreon_pledge_cents>=5000 and v.title_id in [32, 33, 34]:
-        v.title_id=35
+    if user.patreon_pledge_cents==0 and user.title_id in [32, 33, 34, 35]:
+        user.title_id=0
+    elif user.patreon_pledge_cents<500 and user.title_id in [33, 34, 35]:
+        user.title_id=32
+    elif user.patreon_pledge_cents<2000 and user.title_id in [32, 34, 35]:
+        user.title_id=33
+    elif user.patreon_pledge_cents<5000 and user.title_id in [32, 33, 35]:
+        user.title_id=34
+    elif user.patreon_pledge_cents>=5000 and user.title_id in [32, 33, 34]:
+        user.title_id=35
 
     user.refresh_selfset_badges()
 
