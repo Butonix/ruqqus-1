@@ -43,6 +43,8 @@ def patreon_unauthorize(v):
     if v.title_id in [32, 33, 34, 35]:
         v.title_id=0
 
+    v.refresh_selfset_badges()
+    
     g.db.add(v)
     g.db.commit()
 
