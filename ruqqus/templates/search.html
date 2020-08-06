@@ -51,11 +51,11 @@
             {{ sort_method | capitalize }}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-            {% if not sort_method=="hot" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=hot"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
-            {% if not sort_method=="top" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=top"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
-            {% if not sort_method=="new" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-            {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=disputed"><i class="fas fa-bullhorn mr-2"></i>Disputed</a>{% endif %}
-            {% if not sort_method=="activity" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=activity"><i class="fas fa-comments mr-2"></i>Activity</a>{% endif %}
+            {% if not sort_method=="hot" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=hot&t={{ time_filter }}"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
+            {% if not sort_method=="top" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=top&t={{ time_filter }}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
+            {% if not sort_method=="new" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=new&t={{ time_filter }}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+            {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=disputed&t={{ time_filter }}"><i class="fas fa-bullhorn mr-2"></i>Disputed</a>{% endif %}
+            {% if not sort_method=="activity" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=activity&t={{ time_filter }}"><i class="fas fa-comments mr-2"></i>Activity</a>{% endif %}
           </div>
         </div>
       </div>
@@ -97,19 +97,19 @@
   <ul class="nav post-nav mr-auto">
     <li class="nav-item">
 
-      <a class="nav-link{% if sort_method=='hot' %} active{% endif %}" href="?sort=hot&q={{ query | urlencode }}"><i class="fas fa-fire"></i>Hot</a>
+      <a class="nav-link{% if sort_method=='hot' %} active{% endif %}" href="?sort=hot&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-fire"></i>Hot</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link{% if sort_method=='top' %} active{% endif %}" href="?sort=top&q={{ query | urlencode }}"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
+      <a class="nav-link{% if sort_method=='top' %} active{% endif %}" href="?sort=top&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link{% if sort_method=='new' %} active{% endif %}" href="?sort=new&q={{ query | urlencode }}"><i class="fas fa-sparkles"></i>New</a> 
+      <a class="nav-link{% if sort_method=='new' %} active{% endif %}" href="?sort=new&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-sparkles"></i>New</a> 
     </li>
     <li class="nav-item">
-      <a class="nav-link{% if sort_method=='fiery' %} active{% endif %}" href="?sort=fiery&q={{ query | urlencode }}"><i class="fas fa-bullhorn"></i>Disputed</a>
+      <a class="nav-link{% if sort_method=='fiery' %} active{% endif %}" href="?sort=fiery&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-bullhorn"></i>Disputed</a>
     </li>
     <li class="nav-item ">
-      <a class="nav-link {% if sort_method=='activity' %} active{% endif %}" href="/?sort=activity"><i class="fas fa-comments"></i>Activity</a>
+      <a class="nav-link {% if sort_method=='activity' %} active{% endif %}" href="/?sort=activity&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-comments"></i>Activity</a>
     </li>
   </ul>
 
