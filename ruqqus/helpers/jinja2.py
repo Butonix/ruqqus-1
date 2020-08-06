@@ -58,6 +58,6 @@ def jinja_is_mod(uid, bid):
 @cache.memoize(3600)
 def patreon_goals():
     try:
-        return requests.get(f"https://www.patreon.com/api/oauth2/api/current_user/campaigns").json()
+        return requests.get(f"https://www.patreon.com/api/oauth2/api/current_user/campaigns").json()['data']['goals']
     except:
         return {'data': None}
