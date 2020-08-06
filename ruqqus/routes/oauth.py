@@ -21,8 +21,6 @@ SCOPES={
 }
 
 
-
-
 @app.route("/oauth/authorize", methods=["GET"])
 @auth_required
 def oauth_authorize_prompt(v):
@@ -150,15 +148,19 @@ def oauth_grant():
     * client_secret - your client secret
     '''
 
-    code=request.values.get("code")
+
     application = get_application(request.values.get("client_id"))
 
     if not application or (request.values.get("client_secret") != application.client_secret):
         return jsonify({"oauth_error":"Invalid client ID or secret"}), 401
 
+    if application.client_id != request.values.get("client_id"):
+        return jsonify({"oauth_error":"Invalid client ID or secret"}), 401
+
 
     if request.values.get("grant_type")=="code":
 
+        code=request.values.get("code")
 
         auth=g.db.query(ClientAuth).filter_by(oauth_code=code).first()
 
@@ -200,6 +202,10 @@ def oauth_grant():
 
     else:
         return jsonify({"oauth_error":"Invalid grant type"})
+
+
+
+
 
 
 @app.route("/api/v1/identity")

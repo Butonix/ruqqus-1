@@ -49,7 +49,7 @@ class ClientAuth(Base):
 		output += "update," if self.scope_update else ""
 		output += "delete," if self.scope_delete else ""
 		output += "vote," if self.scope_vote else ""
-		output += "guildmaster," if self.guildmaster else ""
+		output += "guildmaster," if self.scope_guildmaster else ""
 
 		output=output.rstrip(',')
 
