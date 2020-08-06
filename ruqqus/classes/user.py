@@ -86,6 +86,7 @@ class User(Base, Stndrd, Age_times):
     subscriptions=relationship("Subscription", lazy="dynamic")
     boards_created=relationship("Board", lazy="dynamic")
     contributes=relationship("ContributorRelationship", lazy="dynamic", primaryjoin="ContributorRelationship.user_id==User.id")
+    board_blocks=relationship("BoardBlock", lazy="dynamic")
 
     following=relationship("Follow", lazy="dynamic", primaryjoin="Follow.user_id==User.id")
     followers=relationship("Follow", lazy="dynamic", primaryjoin="Follow.target_id==User.id")
@@ -127,6 +128,11 @@ class User(Base, Stndrd, Age_times):
 
         return g.db.query(UserBlock).filter(or_(and_(UserBlock.user_id==self.id, UserBlock.target_id==other.id),and_(UserBlock.user_id==other.id, UserBlock.target_id==self.id))).first()
         
+    def has_blocked_guild(self, board):
+
+        return g.db.query(BoardBlock).filter_by(user_id=self.id, board_id=board.id).first()
+
+
     def validate_2fa(self, token):
         
         x=pyotp.TOTP(self.mfa_secret)
@@ -323,17 +329,17 @@ class User(Base, Stndrd, Age_times):
     @property
     @cache.memoize(timeout=3600) #1hr cache time for user rep
     def karma(self):
-        return int(self.energy)
+        return int(self.energy) - self.post_count
 
     @property
     @cache.memoize(timeout=3600)
     def comment_karma(self):
-        return int(self.comment_energy)
+        return int(self.comment_energy) - self.comments.filter(Comment.parent_submission!=None).filter_by(is_banned=False).count()
 
     @property
     @cache.memoize(timeout=3600)
     def true_score(self):
-        return max((self.karma + self.comment_karma) - (self.post_count + self.comments.filter(Comment.parent_submission!=None).filter_by(is_banned=False).count()), -5)
+        return max((self.karma + self.comment_karma), -5)
 
 
     @property

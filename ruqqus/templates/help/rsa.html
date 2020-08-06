@@ -1,0 +1,65 @@
+{% extends "docs_default.html" %}
+
+{% block title %}
+<title>Ruqqus - The independent social platform</title>
+<meta name="description" content="RSA Key">
+{% endblock %}
+
+
+
+
+{% block content %}
+<h1 class="article-title">RSA Key</h1>
+{% filter markdown %}
+
+This page contains Ruqqus's public RSA key, which may be used to verify the authenticity of files purporting to be from Ruqqus LLC.
+
+Authenticity should be verified using the Python `rsa` package, and the `rsa.verify()` function.
+
+Ruqqus's public key is:
+
+<pre style="color:#e83e8c">
+rsa.PublicKey(22143221289268517351866924994239573753808994478951920706454703869195529541923888383503921492387920401523880193142481902365843981277755755229381844574181332006661231942458436110557127042944996660924548426146672446793586708098927532719495118075791809086806255729634409006990909320031156995178109758079790245250821057084423864806490534981705489623860475628663495998023974702433471709599180300761034728468881697034697720569747976878842672622014047370963066076573147563376029916250896220766845193587967879002998374751683718540495989355055110322299276635608213578197158906390984523880183794527891892241225629096566190621273, 65537)
+</pre>
+
+An example verification script: 
+
+
+<pre style="color:#e83e8c">
+import rsa
+
+ruqqus_public_key = rsa.PublicKey(22143221289268517351866924994239573753808994478951920706454703869195529541923888383503921492387920401523880193142481902365843981277755755229381844574181332006661231942458436110557127042944996660924548426146672446793586708098927532719495118075791809086806255729634409006990909320031156995178109758079790245250821057084423864806490534981705489623860475628663495998023974702433471709599180300761034728468881697034697720569747976878842672622014047370963066076573147563376029916250896220766845193587967879002998374751683718540495989355055110322299276635608213578197158906390984523880183794527891892241225629096566190621273, 65537)
+
+file=open("path/to/file", "rb")
+
+signature = b'provided_signature_bytestring'
+
+rsa.verify(file, signature, ruqqus_public_key)
+</pre>
+
+The expected output is a string containing the name of the hash method used to generate the signature, for example `"SHA-512"`. If the signature fails, it will produce a `VerificationError`. If that occurs, you should suspect the file of being inauthentic or tampered.
+
+Any other output is the result of (your own) user error.
+
+To test yourself on the ability to correctly check our signatures, use the following data. Save the message and the signature as text files, and use the script above.
+
+Message:
+
+<pre style="color:#e83e8c">
+"When you tear out a man's tongue, you are not proving him a liar, you're only telling the world that you fear what he might say."
+
+- Tyrion Lannister (George R.R. Martin, A Clash of Kings)
+</pre>
+
+Signature:
+<pre style="color:#e83e8c">
+b'\xa3-[\x9c7]\xc9e\x0fa\x99l\xbc\xabC\x9e\xfd\xc9\xd0\x87\xa8\x85\xcd%\x05\xf1\xb3\x10\xaa\x13\x93T\xd4\x10\x97[\xd5GhK\xf2"\xdb\x93\x85+\xd7_\x1b\xab$\x82N0\x916\x04.\x1c\x07\xc1s\xf7\xb8\xc6,V\x94\x1bs\xa2\x8dT#\xf6\xe3\xbd%q\x0f\xac\xca\x03\xa2\t:\xd5m9\xd1\x852\x85\x03_\xcc\xbc\x05\nAV\xf64\xaeHEk\xd0\xe5\xe3\xe1\x17q\xba)K\x8b\xf1)\x8e\xcd\xd2\x85\x9dg\x91\xc0\xadP\xee\x98\xf2\xc1\x9e5Vru\x9e\x82\x0c\x0c\xcc{\x85S\x0c\xef,\xe1\x8c\x96\x8dgdp\xe8\xeb\xc0\xbb\x83\x95\x19bb \xca\xc8"\xf7."T\xc9KD\x0cf\x90\xdd\xce\xf0\xbd\xb6\xef\xa0\x19\x18\x0cM\x06\xa4\xf6VdVP\x80\xd2N\xa5\xd3\x18\xc3\xec\xb7r$\xa1q\x00\xc7t\xd0\x8b\r\xfd\x89\xe1$\xff\x03@\xec\xa9\x9c\x0e\x9ejU\x1c\xe6\x809\x01-\x7fmg\x0e\r\xb4\xc0s\xca#^\'ruEI\x8d`\xf7\x0b'
+</pre>
+
+If you obtain anything other than `"SHA-512"` as a result, you did something wrong.
+
+{% endfilter %}
+
+
+{% endblock %}
+

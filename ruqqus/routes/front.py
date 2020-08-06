@@ -28,20 +28,39 @@ def notifications(v):
     next_exists=(len(cids)==26)
     cids=cids[0:25]
 
-    comments=get_comments(cids, v=v, sort_type="new")
+    comments=get_comments(cids, v=v, sort_type="new", load_parent=True)
+    listing=[]
     for c in comments:
         c._is_blocked=False
         c._is_blocking=False
+        c.replies=[]
+        if c.author_id==1:
+            c._is_system=True
+            listing.append(c)
+        elif c.parent_comment and c.parent_comment.author_id==v.id:
+            c._is_comment_reply=True
+            parent=c.parent_comment
+            parent.replies=[c]
+            listing.append(parent)
+        elif c.parent.author_id==v.id:
+            c._is_post_reply=True
+            listing.append(c)
+        else:
+            c._is_username_mention=True
+            listing.append(c)
+
 
     return render_template("notifications.html",
                            v=v,
-                           notifications=comments,
+                           notifications=listing,
                            next_exists=next_exists,
                            page=page,
-                           standalone=True)
+                           standalone=True,
+                           render_replies=True,
+                           is_notification_page=True)
 
 @cache.memoize(timeout=900)
-def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **kwargs):
+def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **kwargs):
 
     #cutoff=int(time.time())-(60*60*24*30)
 
@@ -71,10 +90,13 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
         posts.filter_by(is_offensive=False)
 
     if v and v.admin_level >= 4:
-        pass
+        board_blocks = g.db.query(BoardBlock.board_id).filter_by(user_id=v.id).subquery()
+
+        posts=posts.filter(Submission.board_id.notin_(board_blocks))
     elif v:
         m=g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, invite_rescinded=False).subquery()
         c=g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id).subquery()
+
         posts=posts.filter(
           or_(
             Submission.author_id==v.id,
@@ -91,6 +113,10 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
             Submission.author_id.notin_(blocking),
             Submission.author_id.notin_(blocked)
             )
+
+        board_blocks = g.db.query(BoardBlock.board_id).filter_by(user_id=v.id).subquery()
+
+        posts=posts.filter(Submission.board_id.notin_(board_blocks))
     else:
         posts=posts.filter_by(post_public=True)
 
@@ -107,7 +133,7 @@ def frontlist(sort="hot", page=1, nsfw=False, t=None, v=None, ids_only=True, **k
         elif t=='year':
             cutoff=now-31536000
         else:
-            cutoff=0        
+            cutoff=0    
         posts=posts.filter(Submission.created_utc >= cutoff)
 
     if sort=="hot":
@@ -427,7 +453,7 @@ def random_comment(v):
     x=g.db.query(Comment).filter_by(is_banned=False,
         over_18=False,
         is_nsfl=False,
-        is_offensive=False)
+        is_offensive=False).filter(Comment.parent_submission.isnot(None))
     if v:
         bans=g.db.query(BanRelationship.id).filter_by(user_id=v.id).all()
         x=x.filter(Comment.board_id.notin_([i[0] for i in bans]))

@@ -1,3 +1,15 @@
+// Using mouse
+
+document.body.addEventListener('mousedown', function() {
+  document.body.classList.add('using-mouse');
+});
+
+document.body.addEventListener('keydown', function(event) {
+  if (event.keyCode === 9) {
+    document.body.classList.remove('using-mouse');
+  }
+});
+
 // 2FA toggle modal
 
 $('#2faModal').on('hidden.bs.modal', function () {
@@ -87,16 +99,11 @@ $('#new_email').on('input', function () {
 
       cancelBtn.innerHTML = '<button class="btn btn-link pl-3 pr-0" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
 
-      console.log('searchTerm is: ', searchTerm)
-      console.log('comment or reply form is: ', commentFormID)
       $.ajax({
         url: "/giphy?searchTerm=" + searchTerm + "&limit=48",
         type: "GET",
         success: function(response) {
-          console.log(response)
         var max = response.data.length - 1 //length of response, minus 1 (cuz array starts at index 0)
-        console.log('response.data.length is ', max)
-        //var randomNumber = Math.round(Math.random() * max) //random number between 0 and max -1
         var randomNumber = Math.round(Math.random() * 6) //random number between 0 and max -1
         // GIF array
         var gifURL = [];
@@ -123,7 +130,6 @@ $('#new_email').on('input', function () {
             loadGIFs.innerHTML = '<div class="text-center py-3"><div class="mb-3"><i class="fad fa-grin-beam-sweat text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Thou&#39;ve reached the end of the list!</p></div>';
           }
         }
-        console.log(container);
       },
       error: function(e) {
         alert(e);
@@ -711,6 +717,29 @@ function toggleSub(){
   document.getElementById('button-sub-mobile').classList.toggle('d-none');
 }
 
+function post_toast(url) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  var form = new FormData()
+  form.append("formkey", formkey());
+  xhr.withCredentials=true;
+
+  xhr.onload = function() {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      $('#toast-post-success').toast('dispose');
+      $('#toast-post-success').toast('show');
+      document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+    } else {
+      $('#toast-post-error').toast('dispose');
+      $('#toast-post-error').toast('show');
+      document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];
+    }
+  };
+
+  xhr.send(form);
+
+}
+
 
 //Admin post modding
 function removePost(post_id) {
@@ -761,8 +790,6 @@ $('#password-register').on('input', function () {
   var charCount = document.getElementById("password-register").value;
   var id = document.getElementById("passwordHelpRegister");
   var successID = document.getElementById("passwordHelpSuccess");
-
-  console.log(charCount.length);
 
   if (charCount.length >= 8) {
     id.classList.add("d-none");
@@ -884,10 +911,137 @@ function toggle_sidebar_expand() {
 
 }
 
+// Voting
 
-//Voting
+var upvote = function(event) {
+  var type = event.target.dataset.contentType;
+  var id = event.target.dataset.idUp;
 
+  var downvoteButton = document.getElementsByClassName(type + '-' + id + '-down');
+  var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
+  var scoreText = document.getElementsByClassName(type + '-score-' + id);
 
+  for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
+
+    var thisUpvoteButton = upvoteButton[j];
+    var thisDownvoteButton = downvoteButton[j];
+    var thisScoreText = scoreText[j];
+    var thisScore = Number(thisScoreText.textContent);
+
+    if (thisUpvoteButton.classList.contains('active')) {
+      thisUpvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore - 1
+      voteDirection = "0"
+    } else if (thisDownvoteButton.classList.contains('active')) {
+      thisUpvoteButton.classList.add('active')
+      thisDownvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore + 2
+      voteDirection = "1"
+    } else {
+      thisUpvoteButton.classList.add('active')
+      thisScoreText.textContent = thisScore + 1
+      voteDirection = "1"
+    }
+
+    if (thisUpvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-up')
+      thisScoreText.classList.remove('score-down')
+      thisScoreText.classList.remove('score')
+    } else if (thisDownvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-down')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score')
+    } else {
+      thisScoreText.classList.add('score')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score-down')
+    }
+  }
+
+  for (var n = 0; n < 1; n++) {
+    callback=function() {
+    }
+    post("/api/vote/" + type + "/" + id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
+  }
+}
+
+var downvote = function(event) {
+  var type = event.target.dataset.contentType;
+  var id = event.target.dataset.idDown;
+
+  var downvoteButton = document.getElementsByClassName(type + '-' + id + '-down');
+  var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
+  var scoreText = document.getElementsByClassName(type + '-score-' + id);
+
+  for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
+
+    var thisUpvoteButton = upvoteButton[j];
+    var thisDownvoteButton = downvoteButton[j];
+    var thisScoreText = scoreText[j];
+    var thisScore = Number(thisScoreText.textContent);
+
+    if (thisDownvoteButton.classList.contains('active')) {
+      thisDownvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore + 1
+      voteDirection = "0"
+    } else if (thisUpvoteButton.classList.contains('active')) {
+      thisDownvoteButton.classList.add('active')
+      thisUpvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore - 2
+      voteDirection = "-1"
+    } else {
+      thisDownvoteButton.classList.add('active')
+      thisScoreText.textContent = thisScore - 1
+      voteDirection = "-1"
+    }
+
+    if (thisUpvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-up')
+      thisScoreText.classList.remove('score-down')
+      thisScoreText.classList.remove('score')
+    } else if (thisDownvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-down')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score')
+    } else {
+      thisScoreText.classList.add('score')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score-down')
+    }
+  }
+
+  for (var n = 0; n < 1; n++) {
+    callback=function() {
+    }
+    post("/api/vote/" + type + "/" + id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
+  }
+}
+
+var upvoteButtons = document.getElementsByClassName('upvote-button')
+
+var downvoteButtons = document.getElementsByClassName('downvote-button')
+
+var voteDirection = 0
+
+for (var i = 0; i < upvoteButtons.length; i++) {
+  upvoteButtons[i].addEventListener('click', upvote, false);
+  upvoteButtons[i].addEventListener('keydown', function(event) {
+    if (event.keyCode === 13) {
+      upvote(event)
+    }
+  }, false)
+};
+
+for (var i = 0; i < downvoteButtons.length; i++) {
+  downvoteButtons[i].addEventListener('click', downvote, false);
+  downvoteButtons[i].addEventListener('keydown', function(event) {
+    if (event.keyCode === 13) {
+      downvote(event)
+    }
+  }, false)
+};
+
+/*
 
 function vote(post_id, direction) {
   url="/api/vote/post/"+post_id+"/"+direction;
@@ -965,6 +1119,7 @@ function vote(post_id, direction) {
   post(url, callback, "Unable to vote at this time. Please try again later.");
 };
 
+*/
 
 function vote_comment(comment_id, direction) {
   url="/api/vote/comment/"+ comment_id +"/"+direction;
@@ -1132,9 +1287,9 @@ $('#expandImageModal').on('hidden.bs.modal', function (e) {
 
 	// remove image src and link
 
-	document.getElementById("desktop-expanded-image").src = null;
+	document.getElementById("desktop-expanded-image").src = '';
 
-	document.getElementById("desktop-expanded-image-link").href = null;
+	document.getElementById("desktop-expanded-image-link").href = '';
 
 });
 
@@ -1298,7 +1453,7 @@ document.addEventListener('paste', function (event) {
   if (nothingFocused) {
 
     if (document.getElementById('guild-name-reference')) {
-        var guild = document.getElementById('guild-name-reference').innerText;
+      var guild = document.getElementById('guild-name-reference').innerText;
     }
 
     var clipText = event.clipboardData.getData('Text');
@@ -1385,7 +1540,6 @@ function autoSuggestTitle()  {
     x.withCredentials=true;
     x.onreadystatechange = function() {
       if (x.readyState == 4 && x.status == 200) {
-        console.log(x.responseText);
 
         title=JSON.parse(x.responseText)["title"];
         titleField.value=title;
@@ -1433,9 +1587,9 @@ function exile_from_guild(boardid) {
         window.location.reload(true);
       }
       else {
-      $('#toast-exile-error').toast('dispose');
-      $('#toast-exile-error').toast('show');
-      exileError.textContent = JSON.parse(xhr.response)["error"];
+        $('#toast-exile-error').toast('dispose');
+        $('#toast-exile-error').toast('show');
+        exileError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
     xhr.send(f)
@@ -1540,9 +1694,9 @@ block_user=function() {
         window.location.reload(true);
       }
       else {
-      $('#toast-exile-error').toast('dispose');
-      $('#toast-exile-error').toast('show');
-      exileError.textContent = JSON.parse(xhr.response)["error"];
+        $('#toast-exile-error').toast('dispose');
+        $('#toast-exile-error').toast('show');
+        exileError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
     xhr.send(f)
@@ -1569,7 +1723,7 @@ post_comment=function(fullname){
     if (xhr.status==200) {
       commentForm=document.getElementById('comment-form-space-'+fullname);
       commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-        $('#toast-comment-success').toast('dispose');
+      $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-success').toast('show');
     }
@@ -1577,7 +1731,7 @@ post_comment=function(fullname){
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-error').toast('show');
-     commentError.textContent = JSON.parse(xhr.response)["error"];
+      commentError.textContent = JSON.parse(xhr.response)["error"];
     }
   }
   xhr.send(form)
@@ -1586,14 +1740,14 @@ post_comment=function(fullname){
 //part of submit page js
 
 hide_image=function(){
-    x=document.getElementById('image-upload-block');
-    url=document.getElementById('post-URL').value;
-    if (url.length>=1){
-        x.classList.add('d-none');
-    }
-    else {
-        x.classList.remove('d-none');
-    }
+  x=document.getElementById('image-upload-block');
+  url=document.getElementById('post-URL').value;
+  if (url.length>=1){
+    x.classList.add('d-none');
+  }
+  else {
+    x.classList.remove('d-none');
+  }
 }
 
 
@@ -1623,9 +1777,45 @@ comment_edit=function(id){
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-error').toast('show');
-     commentError.textContent = JSON.parse(xhr.response)["error"];
+      commentError.textContent = JSON.parse(xhr.response)["error"];
     }
   }
   xhr.send(form)
+
+}
+
+
+filter_guild=function() {
+
+  var exileForm = document.getElementById("exile-form");
+
+  var exileError = document.getElementById("toast-error-message");
+
+  var boardField = document.getElementById("exile-username");
+
+  var isValidUsername = boardField.checkValidity();
+
+  boardname = boardField.value;
+
+  if (isValidUsername) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("post", "/settings/block_guild");
+    xhr.withCredentials=true;
+    f=new FormData();
+    f.append("board", boardname);
+    f.append("formkey", formkey());
+    xhr.onload=function(){
+      if (xhr.status<300) {
+        window.location.reload(true);
+      }
+      else {
+      $('#toast-exile-error').toast('dispose');
+      $('#toast-exile-error').toast('show');
+      exileError.textContent = JSON.parse(xhr.response)["error"];
+      }
+    }
+    xhr.send(f)
+  }
 
 }

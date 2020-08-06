@@ -64,7 +64,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
 
                 }
 
-    if post.is_nsfl and not (v and v.hide_nsfl) and not session_isnsfl(comment.board):
+    if post.is_nsfl and not (v and v.show_nsfl) and not session_isnsfl(comment.board):
         t=int(time.time())
         return {'html':lambda:render_template("errors/nsfl.html",
                                v=v,
@@ -90,11 +90,12 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
     post._preloaded_comments=[comment]
 
     #context improver
-    context=min(int(request.args.get("context", 0)), 5)
+    context=min(int(request.args.get("context", 0)), 4)
     c=comment
     while context > 0 and not c.is_top_level:
 
-        parent=c.parent
+        parent=get_comment(c.parent_comment_id, v=v)
+
         post._preloaded_comments+=[parent]
 
         c=parent
@@ -105,12 +106,17 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
     #children comments
     current_ids=[comment.id]
     for i in range(6-context):
-        if g.v:
-            votes=g.db.query(CommentVote).filter(CommentVote.user_id==g.v.id, CommentVote.comment_id.in_(current_ids)).subquery()
+        if v:
+            votes=g.db.query(CommentVote).filter(CommentVote.user_id==v.id).subquery()
+
+            blocking=v.blocking.subquery()
+            blocked=v.blocked.subquery()
 
             comms=g.db.query(
                 Comment,
-                votes.c.vote_type
+                votes.c.vote_type,
+                blocking.c.id,
+                blocked.c.id
                 ).select_from(Comment).options(
                 joinedload(Comment.author).joinedload(User.title)
                 ).filter(
@@ -118,6 +124,14 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
                 ).join(
                 votes,
                 votes.c.comment_id==Comment.id,
+                isouter=True
+                ).join(
+                blocking,
+                blocking.c.target_id==Comment.author_id,
+                isouter=True
+                ).join(
+                blocked,
+                blocked.c.user_id==Comment.author_id,
                 isouter=True
                 )
 
@@ -138,10 +152,13 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
 
             output=[]
             for c in comms:
-                com=c[0]
-                com._voted=c[1] or 0
-                output.append(com)
+                comment=c[0]
+                comment._voted=c[1] or 0
+                comment._is_blocking=c[2] or 0
+                comment._is_blocked=c[3] or 0
+                output.append(comment)
         else:
+
             comms=g.db.query(
                 Comment
                 ).options(

@@ -36,14 +36,14 @@
 
 	<!-- iOS webapp -->
 	<meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-touch-fullscreen" content="yes" />
+  <meta name="apple-touch-fullscreen" content="yes">
 	<meta name="format-detection" content="telephone=no">
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png">
   <!---<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png">
-  <link rel="manifest" href="/assets/images/favicons/site.webmanifest">--->
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png">--->
+  <link rel="manifest" href="/assets/manifest.json">
   <link rel="mask-icon" href="/assets/images/favicons/safari-pinned-tab.svg" color="#805ad5">
   <link rel="shortcut icon" href="/assets/images/favicons/favicon.ico">
   <meta name="apple-mobile-web-app-title" content="Ruqqus">
@@ -504,12 +504,56 @@
     {% block sidebar %}
     <div class="col sidebar text-left d-none d-lg-block pt-3 bg-white border-left">
       {% block sidebarblock %}
-      <div class="text-center my-4">
-        <i class="fad fa-comment-alt-smile text-gray-400 mb-3" style="
-        font-size: 3.5rem;
-        "></i>
-        <div class="h5 text-gray-500">Cool features coming here soon!</div>
+          <div class="sidebar-section">
+      <div class="title">
+        <i class="fas fa-heart mr-2"></i>Support Ruqqus
       </div>
+      <div class="body">
+        <p>Exclusive patron titles, merch, and more. Support Ruqqus today!</p>
+
+        {% if v %}
+
+        <a href="/settings#patreon" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
+          </span>Unlock Patron Titles
+        </a>
+
+        {% else %}
+
+        <a href="https://patreon.com/ruqqus" target="blank" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
+          </span>Become a Patron
+        </a>
+
+        {% endif %}
+
+        <a href="https://www.bonfire.com/store/ruqqus/" target="blank" class="btn btn-block btn-link text-info text-left text-decoration-none px-1 mt-0">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #BEE3F8!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-tshirt fa-stack-1x text-info text-base fa-inverse"></i>
+          </span>Awesome T-Shirts
+        </a>
+
+        <a href="https://gumroad.com/l/XpCXQ" target="blank" class="btn btn-block btn-link text-success text-left text-decoration-none px-1 mt-0">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #9AE6B4!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-laugh fa-stack-1x text-success text-base fa-inverse"></i>
+          </span>Custom Stickers
+        </a>
+
+        <a href="https://github.com/ruqqus/ruqqus" target="blank" class="btn btn-block btn-link text-black text-left text-decoration-none px-1 mt-0">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x text-gray-300" style="font-size: 2rem!important;"></i>
+            <i class="fab fa-github fa-stack-1x text-black text-base fa-inverse"></i>
+          </span>Contribute Code
+        </a>
+
+      </div>
+    </div>
       {% endblock %}
 
       {% if v and v.can_use_darkmode==0 %}
@@ -584,6 +628,17 @@
 	<div class="toast-body text-center">
 		<i class="fas fa-exclamation-circle text-danger mr-2"></i>Unable to copy link
 	</div>
+</div>
+
+<div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-success text-center text-white">
+    <i class="fas fa-comment-alt-smile mr-2"></i><span id="toast-post-success-text"></span>
+  </div>
+</div>
+<div class="toast" id="toast-post-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-danger text-center text-white">
+    <i class="fas fa-exclamation-circle mr-2"></i><span id="toast-post-error-text"></span>
+  </div>
 </div>
 
 {% if v %}
