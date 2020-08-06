@@ -176,11 +176,11 @@
                 {{ sort_method }}
               </button>
               <div class="dropdown-menu" id="mobileSortDropdown" aria-labelledby="dropdownMenuButtonMobile" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-                {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot"><i class="fas fa-fire text-primary mr-3"></i>Hot</a>{% endif %}
-                {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top"><i class="fas fa-arrow-alt-circle-up text-primary mr-3"></i>Top</a>{% endif %}
-                {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles text-primary mr-3"></i>New</a>{% endif %}
-                {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed"><i class="fas fa-bullhorn text-primary mr-3"></i>Disputed</a>{% endif %}
-                {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity"><i class="fas fa-comments text-primary mr-3"></i>Activity</a>{% endif %}
+                {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot&q={{ query | urlencode }}"><i class="fas fa-fire text-primary mr-3"></i>Hot</a>{% endif %}
+                {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top&q={{ query | urlencode }}"><i class="fas fa-arrow-alt-circle-up text-primary mr-3"></i>Top</a>{% endif %}
+                {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new&q={{ query | urlencode }}"><i class="fas fa-sparkles text-primary mr-3"></i>New</a>{% endif %}
+                {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed&q={{ query | urlencode }}"><i class="fas fa-bullhorn text-primary mr-3"></i>Disputed</a>{% endif %}
+                {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity&q={{ query | urlencode }}"><i class="fas fa-comments text-primary mr-3"></i>Activity</a>{% endif %}
               </div>
             </div>
 

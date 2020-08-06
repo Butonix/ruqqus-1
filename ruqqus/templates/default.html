@@ -504,12 +504,56 @@
     {% block sidebar %}
     <div class="col sidebar text-left d-none d-lg-block pt-3 bg-white border-left">
       {% block sidebarblock %}
-      <div class="text-center my-4">
-        <i class="fad fa-comment-alt-smile text-gray-400 mb-3" style="
-        font-size: 3.5rem;
-        "></i>
-        <div class="h5 text-gray-500">Cool features coming here soon!</div>
+          <div class="sidebar-section">
+      <div class="title">
+        <i class="fas fa-heart mr-2"></i>Support Ruqqus
       </div>
+      <div class="body">
+        <p>Exclusive patron titles, merch, and more. Support Ruqqus today!</p>
+
+        {% if v %}
+
+        <a href="/settings#patreon" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
+          </span>Unlock Patron Titles
+        </a>
+
+        {% else %}
+
+        <a href="https://patreon.com/ruqqus" target="blank" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
+          </span>Become a Patron
+        </a>
+
+        {% endif %}
+
+        <a href="https://www.bonfire.com/store/ruqqus/" target="blank" class="btn btn-block btn-link text-info text-left text-decoration-none px-1 mt-0">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #BEE3F8!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-tshirt fa-stack-1x text-info text-base fa-inverse"></i>
+          </span>Awesome T-Shirts
+        </a>
+
+        <a href="https://gumroad.com/l/XpCXQ" target="blank" class="btn btn-block btn-link text-success text-left text-decoration-none px-1 mt-0">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #9AE6B4!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-laugh fa-stack-1x text-success text-base fa-inverse"></i>
+          </span>Custom Stickers
+        </a>
+
+        <a href="https://github.com/ruqqus/ruqqus" target="blank" class="btn btn-block btn-link text-black text-left text-decoration-none px-1 mt-0">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x text-gray-300" style="font-size: 2rem!important;"></i>
+            <i class="fab fa-github fa-stack-1x text-black text-base fa-inverse"></i>
+          </span>Contribute Code
+        </a>
+
+      </div>
+    </div>
       {% endblock %}
 
       {% if v and v.can_use_darkmode==0 %}
