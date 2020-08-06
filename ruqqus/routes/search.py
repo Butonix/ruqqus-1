@@ -7,7 +7,7 @@ from flask import *
 from ruqqus.__main__ import app, cache
 
 @cache.memoize(300)
-def searchlisting(q, v=None, page=1, sort="hot"):
+def searchlisting(q, v=None, page=1, t="None", sort="hot"):
 
     posts = g.db.query(Submission).join(Submission.submission_aux).join(Submission.author).filter(SubmissionAux.title.ilike('%'+q+'%')).options(contains_eager(Submission.submission_aux), contains_eager(Submission.author))
 
@@ -44,6 +44,20 @@ def searchlisting(q, v=None, page=1, sort="hot"):
             )
     else:
         posts=posts.filter(Submission.is_public==True)
+
+    if t:
+        now=int(time.time())
+        if t=='day':
+            cutoff=now-86400
+        elif t=='week':
+            cutoff=now-604800
+        elif t=='month':
+            cutoff=now-2592000
+        elif t=='year':
+            cutoff=now-31536000
+        else:
+            cutoff=0    
+        posts=posts.filter(Submission.created_utc >= cutoff)
 
     if sort=="hot":
         posts=posts.order_by(Submission.score_hot.desc())
@@ -103,10 +117,11 @@ def search(v, search_type="posts"):
 
     else:
         sort=request.args.get("sort", "hot").lower()
+        t=request.args.get('t','all').lower()
 
         #posts search
 
-        total, ids = searchlisting(query, v=v, page=page, sort=sort)
+        total, ids = searchlisting(query, v=v, page=page, t=t, sort=sort)
         
         next_exists=(len(ids)==26)
         ids=ids[0:25]
@@ -120,5 +135,6 @@ def search(v, search_type="posts"):
                                page=page,
                                listing=posts,
                                sort_method=sort,
+                               time_filter=t,
                                next_exists=next_exists
                                )

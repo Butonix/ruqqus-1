@@ -347,7 +347,7 @@ def delete_account(v):
 
     blocks=g.db.query(UserBlock).filter_by(target_id=v.id).all()
     for block in blocks:
-        g.db.delete(blocks)
+        g.db.delete(block)
     
 
     session.pop("user_id", None)

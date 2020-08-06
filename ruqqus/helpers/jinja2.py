@@ -5,6 +5,7 @@ from sqlalchemy import text
 
 from ruqqus.classes.user import User
 from .get import *
+import requests
 from ruqqus.__main__ import app, cache
 
 
@@ -52,3 +53,22 @@ def js_str_escape(s):
 def jinja_is_mod(uid, bid):
 
     return bool(get_mod(uid, bid))
+
+@app.template_filter('goals')
+@cache.memoize(3600)
+def patreon_goals():
+    try:
+        token = environ.get("PATREON_AUTH_TOKEN")
+
+        headers = {"Authorization": "Bearer " + token}
+
+        url = "https://www.patreon.com/api/oauth2/api/current_user/campaigns"
+
+        x = requests.get(url, headers=headers)
+
+        data = x.json()
+
+        return data
+
+    except:
+        return {'data': None}

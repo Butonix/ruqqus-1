@@ -2384,6 +2384,10 @@ div:hover .thumb-img-link-overlay {
     color: $black;
 }
 
+.comment .comment-body .comment-image {
+    border: 1px solid $primary
+}
+
 blockquote {
     border-left: 2px solid $primary;
     color: $primary;

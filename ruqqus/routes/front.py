@@ -28,17 +28,36 @@ def notifications(v):
     next_exists=(len(cids)==26)
     cids=cids[0:25]
 
-    comments=get_comments(cids, v=v, sort_type="new")
+    comments=get_comments(cids, v=v, sort_type="new", load_parent=True)
+    listing=[]
     for c in comments:
         c._is_blocked=False
         c._is_blocking=False
+        c.replies=[]
+        if c.author_id==1:
+            c._is_system=True
+            listing.append(c)
+        elif c.parent_comment and c.parent_comment.author_id==v.id:
+            c._is_comment_reply=True
+            parent=c.parent_comment
+            parent.replies=[c]
+            listing.append(parent)
+        elif c.parent.author_id==v.id:
+            c._is_post_reply=True
+            listing.append(c)
+        else:
+            c._is_username_mention=True
+            listing.append(c)
+
 
     return render_template("notifications.html",
                            v=v,
-                           notifications=comments,
+                           notifications=listing,
                            next_exists=next_exists,
                            page=page,
-                           standalone=True)
+                           standalone=True,
+                           render_replies=True,
+                           is_notification_page=True)
 
 @cache.memoize(timeout=900)
 def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **kwargs):
@@ -434,7 +453,7 @@ def random_comment(v):
     x=g.db.query(Comment).filter_by(is_banned=False,
         over_18=False,
         is_nsfl=False,
-        is_offensive=False)
+        is_offensive=False).filter(Comment.parent_submission.isnot(None))
     if v:
         bans=g.db.query(BanRelationship.id).filter_by(user_id=v.id).all()
         x=x.filter(Comment.board_id.notin_([i[0] for i in bans]))
