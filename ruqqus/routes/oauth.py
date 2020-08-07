@@ -178,7 +178,8 @@ def oauth_grant():
         data = {
             "access_token":auth.access_token,
             "scopes": auth.scopelist,
-            "expires_at": auth.access_token_expire_utc
+            "expires_at": auth.access_token_expire_utc,
+            "token_type":"Bearer"
         }
 
         if auth.refresh_token:
