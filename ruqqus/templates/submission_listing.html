@@ -153,7 +153,7 @@
         {% endif %}
 
         {% if v.id | is_mod(p.board_id) %}
-        <li class="list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}else{window.location.href='{{ p.permalink }}';}})"><i class="fas fa-times text-danger"></i>Kick</a></li>
+        <li class="list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}else{window.location.href='{{ p.permalink }}';}})"><i class="fas fa-door-open text-danger"></i>Kick</a></li>
         {% if p.report_count >= 1 %}
         <li class="list-inline-item"><a class="text-success" href="javascript:void(0)" onclick="post('/mod/accept/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}})"><i class="fas fa-check text-success"></i>Approve</a></li>
         {% endif %}
@@ -251,7 +251,7 @@
           {% endif %}
           {% if v %}
           {% if v.id | is_mod(p.board_id) %}
-          <button class="btn btn-white btn-block btn-lg text-danger text-left" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}})"><i class="far fa-times text-center text-danger mr-3"></i>Kick</button>
+          <button class="btn btn-white btn-block btn-lg text-danger text-left" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}})"><i class="far fa-door-open text-center text-danger mr-3"></i>Kick</button>
 
           {% if p.is_pinned %}
           <button class="btn btn-white btn-block btn-lg text-success text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-center text-success mr-3"></i>Unpin</button>
