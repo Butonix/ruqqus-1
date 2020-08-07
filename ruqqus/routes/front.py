@@ -44,8 +44,8 @@ def notifications(v):
             if parent in listing:
                 parent.replies=[c]+parent.replies
             else:
-            parent.replies=[c]
-            listing.append(parent)
+                parent.replies=[c]
+                listing.append(parent)
 
         elif c.parent.author_id==v.id:
             c._is_post_reply=True
