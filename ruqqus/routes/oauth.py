@@ -173,6 +173,8 @@ def oauth_grant():
 
         g.db.add(auth)
 
+        g.db.commit()
+
         data = {
             "access_token":auth.access_token,
             "scopes": auth.scopelist,
