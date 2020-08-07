@@ -167,7 +167,7 @@ def oauth_grant():
         if not auth:
             return jsonify({"oauth_error":"Invalid code"}), 401
 
-        auth.code=None
+        auth.oauth_code=None
         auth.access_token=secrets.token_urlsafe(128)[0:128]
         auth.access_token_expire_utc = int(time.time())+60*60
 
