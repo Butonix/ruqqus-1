@@ -64,13 +64,13 @@
 <div class="post-info mt-5 mb-1">
 	{% if c.parent_submission %}
     {% if c.author_id==v.id and c.replies and is_notification_page%}
-      <span class="align-top"><span class="font-weight-bold">Comment {{ 'Replies' if (c.replies | length)>1 else 'Reply' }}: <a href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span>
+      <span class="align-top"><span class="font-weight-bold">Comment {{ 'Replies' if (c.replies | length)>1 else 'Reply' }}: <a href="{{ c.post.permalink }}">{{ c.post.title | safe }}</a></span>
     {% elif c.post.author_id==v.id and c.is_top_level and is_notification_page%}
-      <span class="align-top"><span class="font-weight-bold">Post Reply: <a href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span>
+      <span class="align-top"><span class="font-weight-bold">Post Reply: <a href="{{ c.post.permalink }}">{{ c.post.title | safe }}</a></span>
     {% elif is_notification_page %}
-      <span class="align-top"><span class="font-weight-bold">Username Mention: <a href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span>
+      <span class="align-top"><span class="font-weight-bold">Username Mention: <a href="{{ c.post.permalink }}">{{ c.post.title | safe }}</a></span>
     {% else %}
-      <span class="align-top"><span class="font-weight-bold"><a href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span>
+      <span class="align-top"><span class="font-weight-bold"><a href="{{ c.post.permalink }}">{{ c.post.title | safe }}</a></span>
     {% endif %}
   {% else %}
   <span class="align-top font-weight-bold">Ruqqus Notification</span>
