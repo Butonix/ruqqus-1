@@ -267,7 +267,18 @@ def api(*scopes, no_ban=False):
                     return jsonify({"error":f"403 Forbidden"}), 403
 
                 result = f(*args, v=client.user, **kwargs)
-                resp=make_response(jsonify(result["api"]()))
+
+
+
+
+                if isinstance(result, RespObj):
+                    return result
+
+                if request.path.startswith('/api/v1/'):
+                    return jsonify(result['api']())
+                else:
+                    return result['html']()
+
                 resp.headers.add("Cache-Control","private")
                 resp.headers.add("Access-Control-Allow-Origin",app.config["SERVER_NAME"])
                 return resp
