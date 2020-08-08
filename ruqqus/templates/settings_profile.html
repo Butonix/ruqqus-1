@@ -241,7 +241,7 @@
               <div class="d-lg-flex border-bottom">
 
                 <div class="title w-lg-25">
-                  <label for="over18">View NSFW Content</label>
+                  <label for="over18">Allow NSFW Content</label>
                 </div>
 
                 <div class="body w-lg-100">
@@ -252,6 +252,25 @@
                   </div>
 
                   <span class="text-small-extra text-muted">Enable if you are 18+ and are ok with viewing NSFW content.</span>
+
+                </div>
+
+              </div>
+
+              <div id="filter-nsfw-option" class="d-lg-flex border-bottom{% if not v.over_18 %} d-none{% endif %}">
+
+                <div class="title w-lg-25">
+                  <label for="over18">Filter NSFW Content from All/Trending</label>
+                </div>
+
+                <div class="body w-lg-100">
+
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="filter-nsfw" name="filter_nsfw"{% if v.filter_nsfw %} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
+                    <label class="custom-control-label" for="filter-nsfw"></label>
+                  </div>
+
+                  <span class="text-small-extra text-muted">Enable if you would rather not see NSFW content in All/Trending.</span>
 
                 </div>
 

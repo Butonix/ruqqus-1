@@ -73,6 +73,7 @@ class User(Base, Stndrd, Age_times):
     unban_utc=Column(Integer, default=0)
     is_deleted=Column(Boolean, default=False)
     delete_reason=Column(String(500), default='')
+    filter_nsfw=Column(Boolean, default=False)
 
     patreon_id=Column(String(64), default=None)
     patreon_access_token=Column(String(128), default='')
@@ -158,7 +159,7 @@ class User(Base, Stndrd, Age_times):
                                              stickied=False
                                              )
 
-        if not self.over_18:
+        if (not self.over_18) or self.filter_nsfw:
             posts=posts.filter_by(over_18=False)
 
         if self.hide_offensive:
@@ -177,7 +178,7 @@ class User(Base, Stndrd, Age_times):
                 )
             )
 
-        if not self.admin_level >=4:
+        if self.admin_level < 4:
             #admins can see everything
 
             m=g.db.query(ModRelationship.board_id).filter_by(user_id=self.id, invite_rescinded=False).subquery()
