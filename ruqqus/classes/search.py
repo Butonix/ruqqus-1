@@ -10,7 +10,7 @@ class Search:
         self.user = False
         self.guild = False
         self.title = False
-        self.items = {}
+        self.params = {}
         self.scan()
         self.check()
 
@@ -35,10 +35,10 @@ class Search:
             if check_user != None:
                 if "@" not in i:
                     x = i.split(":")
-                    self.items["user"] = x[1]
+                    self.params["user"] = x[1]
                     self.query.remove(i)
                     return
-                self.items["user"] = check_user.groups(1)[1]
+                self.params["user"] = check_user.groups(1)[1]
                 self.query.remove(i)
 
     def getGuild(self):
@@ -47,10 +47,10 @@ class Search:
             if check_guild != None:
                 if "+" not in i:
                     x = i.split(":")
-                    self.items["guild"] = x[1]
+                    self.params["guild"] = x[1]
                     self.query.remove(i)
                     return
-                self.items["guild"] = check_guild.groups(1)[1]
+                self.params["guild"] = check_guild.groups(1)[1]
                 self.query.remove(i)
 
     def getTitle(self):
@@ -58,12 +58,12 @@ class Search:
             check_title = re.match(regex_title, i)
             if check_title != None:
                 i = i.split(":")
-                self.items["title"] = i[1]
+                self.params["title"] = i[1]
 
     def check(self):
 
         if not self.user and not self.guild and not self.title:
-            self.items = {"title": self.query[0]}
+            self.params = {"title": self.query[0]}
 
         elif self.user and self.guild and self.title:
             self.getUser()

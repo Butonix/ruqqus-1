@@ -10,9 +10,9 @@ from ruqqus.__main__ import app, cache
 def searchlisting(q, v=None, page=1, t="None", sort="hot"):
 
     posts = g.db.query(Submission).join(Submission.submission_aux).join(Submission.author).filter(SubmissionAux.title.ilike('%' + q + '%')).options(contains_eager(Submission.submission_aux),contains_eager(Submission.author))
-    params = Search(q)
+    p = Search(q)
 
-    for key, val in params.items():
+    for key, val in p.params.items():
         if key == "user":
             posts = posts.filter(User.username == val)
 
