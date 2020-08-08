@@ -178,7 +178,12 @@ def home(v):
         ids=v.idlist(sort=sort,
                      page=page,
                      only=only,
-                     t=t
+                     t=t,
+
+                     #these arguments don't really do much but they exist for cache memoization differentiation
+                     allow_nsfw=v.over_18,
+                     filter_nsfw=v.filter_nsfw,
+                     hide_offensive=v.hide_offensive
                      )
 
         next_exists=(len(ids)==26)
