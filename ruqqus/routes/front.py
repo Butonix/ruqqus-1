@@ -182,7 +182,6 @@ def home(v):
 
                      #these arguments don't really do much but they exist for cache memoization differentiation
                      allow_nsfw=v.over_18,
-                     filter_nsfw=v.filter_nsfw,
                      hide_offensive=v.hide_offensive
                      )
 
@@ -231,7 +230,7 @@ def front_all(v):
     #get list of ids
     ids = frontlist(sort=sort_method,
                     page=page,
-                    nsfw=(v and v.over_18),
+                    nsfw=(v and v.over_18 and not v.filter_nsfw),
                     t=t,
                     v=v,
                     hide_offensive= v and v.hide_offensive
