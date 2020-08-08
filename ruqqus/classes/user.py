@@ -159,6 +159,8 @@ class User(Base, Stndrd, Age_times):
                                              stickied=False
                                              )
 
+        print(self.filter_nsfw)
+
         if (not self.over_18) or self.filter_nsfw:
             posts=posts.filter_by(over_18=False)
 
