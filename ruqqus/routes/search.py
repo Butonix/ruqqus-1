@@ -9,18 +9,22 @@ from ruqqus.__main__ import app, cache
 @cache.memoize(300)
 def searchlisting(q, v=None, page=1, t="None", sort="hot"):
 
-    posts = g.db.query(Submission).join(Submission.submission_aux).join(Submission.author).filter(SubmissionAux.title.ilike('%' + q + '%')).options(contains_eager(Submission.submission_aux),contains_eager(Submission.author))
+    posts = g.db.query(Submission).join(Submission.submission_aux).join(Submission.author).options(
+        contains_eager(Submission.submission_aux),
+        contains_eager(Submission.author),
+        contains_eager(Submission.board)
+    )
     p = Search(q)
 
     for key, val in p.params.items():
         if key == "user":
-            posts = posts.filter(User.username == val)
+            posts = posts.filter(Submission.author.name.ilike('%' + val + '%'))
 
         elif key == "guild":
-            posts = posts.filter(Guild.name == val)
+            posts = posts.filter(Submission.board.name.ilike('%' + val + '%'))
 
         elif key == "title":
-            posts = posts.filter(Submission.Title == val)
+            posts = posts.filter(SubmissionAux.title.ilike('%' + val + '%'))
 
 
     if not (v and v.over_18):
