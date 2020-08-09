@@ -32,33 +32,31 @@ def settings_profile_post(v):
 
     if request.values.get("over18", v.over_18) != v.over_18:
         updated=True
-        v.over_18=request.form.get("over18", None)=='true'
+        v.over_18=request.values.get("over18", None)=='true'
         cache.delete_memoized(User.idlist, v)
 
     if request.values.get("hide_offensive", v.hide_offensive) != v.hide_offensive:
         updated=True
-        v.hide_offensive=request.form.get("hide_offensive", None)=='true'
+        v.hide_offensive=request.values.get("hide_offensive", None)=='true'
         cache.delete_memoized(User.idlist, v)
 
     if request.values.get("show_nsfl", v.show_nsfl) != v.show_nsfl:
         updated=True
-        v.show_nsfl=request.form.get("show_nsfl", None)=='true'
+        v.show_nsfl=request.values.get("show_nsfl", None)=='true'
         cache.delete_memoized(User.idlist, v)
 
     if request.values.get("filter_nsfw", v.filter_nsfw) != v.filter_nsfw:
         updated=True
-        new=not(request.form.get("filter_nsfw", None)=='true')
-        print(v.filter_nsfw, new)
-        v.filter_nsfw= new
+        v.filter_nsfw= not request.values.get("filter_nsfw", None)=='true'
         cache.delete_memoized(User.idlist, v)
         
     if request.values.get("private", v.is_private) != v.is_private:
         updated=True
-        v.is_private=request.form.get("private", None)=='true'
+        v.is_private=request.values.get("private", None)=='true'
         
     if request.values.get("bio", v.bio) != v.bio:
         updated=True
-        bio = request.form.get("bio")[0:256]
+        bio = request.values.get("bio")[0:256]
         v.bio=bio
 
         with CustomRenderer() as renderer:
