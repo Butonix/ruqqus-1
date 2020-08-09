@@ -30,31 +30,31 @@ def settings_profile_post(v):
         v.passhash=v.hash_password(request.form.get("new_password"))
         updated=True                                  
 
-    if request.form.get("over18") != v.over_18:
+    if request.form.get("over18", v.over_18) != v.over_18:
         updated=True
         v.over_18=bool(request.form.get("over18", None))
         cache.delete_memoized(User.idlist, v)
 
-    if request.form.get("hide_offensive") != v.hide_offensive:
+    if request.form.get("hide_offensive", v.hide_offensive) != v.hide_offensive:
         updated=True
         v.hide_offensive=bool(request.form.get("hide_offensive", None))
         cache.delete_memoized(User.idlist, v)
 
-    if request.form.get("show_nsfl") != v.show_nsfl:
+    if request.form.get("show_nsfl", v.show_nsfl) != v.show_nsfl:
         updated=True
         v.show_nsfl=bool(request.form.get("show_nsfl", None))
         cache.delete_memoized(User.idlist, v)
 
-    if request.form.get("filter_nsfw") != v.filter_nsfw:
+    if request.form.get("filter_nsfw", v.filter_nsfw) != v.filter_nsfw:
         updated=True
         v.filter_nsfw= not bool(request.form.get("filter_nsfw", None))
         cache.delete_memoized(User.idlist, v)
         
-    if request.form.get("private") != v.is_private:
+    if request.form.get("private", v.is_private) != v.is_private:
         updated=True
         v.is_private=bool(request.form.get("private", None))
         
-    if request.form.get("bio") != v.bio:
+    if request.form.get("bio", v.bio) != v.bio:
         updated=True
         bio = request.form.get("bio")[0:256]
         v.bio=bio
@@ -64,19 +64,20 @@ def settings_profile_post(v):
         v.bio_html=sanitize(v.bio_html, linkgen=True)
 
 
-    x=int(request.form.get("title_id",0))
-    if x==0:
-        v.title_id=None
-        updated=True
-    elif x>0:
-        title =get_title(x)
-        if bool(eval(title.qualification_expr)):
-            v.title_id=title.id
+    x=int(request.form.get("title_id",None))
+    if x!=None:
+        if x==0:
+            v.title_id=None
             updated=True
+        elif x>0:
+            title =get_title(x)
+            if bool(eval(title.qualification_expr)):
+                v.title_id=title.id
+                updated=True
+            else:
+                return jsonify({"error":f"You don't meet the requirements for title `{title.text}`."}), 403
         else:
-            return jsonify({"error":f"You don't meet the requirements for title `{title.text}`."}), 403
-    else:
-        abort(400)
+            abort(400)
         
     if updated:
         g.db.add(v)
