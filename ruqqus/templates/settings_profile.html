@@ -247,7 +247,7 @@
                 <div class="body w-lg-100">
 
                   <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="over18" name="over18"{% if v.over_18 %} checked{% endif %} onchange="post_toast('/settings/profile?over18='+document.getElementById('over18').checked)">
+                    <input type="checkbox" class="custom-control-input" id="over18" name="over18"{% if v.over_18 %} checked{% endif %} onchange="post_toast('/settings/profile?over18='+document.getElementById('over18').checked);document.getElementById('filter-nsfw-option').classList.toggle('d-none')">
                     <label class="custom-control-label" for="over18"></label>
                   </div>
 
