@@ -22,10 +22,10 @@ def settings_profile_post(v):
 
     if request.form.get("new_password"):
         if request.form.get("new_password") != request.form.get("cnf_password"):
-            return render_template("settings.html", v=v, error="Passwords do not match.")
+            return jsonify({"error":f"Passwords do not match"}), 400
 
         if not v.verifyPass(request.form.get("old_password")):
-            return render_template("settings.html", v=v, error="Incorrect password")
+            return jsonify({"error":f"Incorrect password"}), 401
 
         v.passhash=v.hash_password(request.form.get("new_password"))
         updated=True                                  
@@ -74,10 +74,7 @@ def settings_profile_post(v):
             v.title_id=title.id
             updated=True
         else:
-            return render_template("settings_profile.html",
-                                   v=v,
-                                   error=f"Unable to set title {title.text} - {title.requirement_string}"
-                                   )
+            return jsonify({"error":f"You don't meet the requirements for title `{title.text}`."}), 403
     else:
         abort(400)
         
@@ -85,16 +82,10 @@ def settings_profile_post(v):
         g.db.add(v)
         
 
-        return render_template("settings_profile.html",
-                               v=v,
-                               msg="Your settings have been saved."
-                               )
+        return jsonify({"message":"Your settings have been updated."})
 
     else:
-        return render_template("settings_profile.html",
-                               v=v,
-                               error="You didn't change anything."
-                               )
+        return jsonify({"error":"You didn't change anything."}), 400
 
 @app.route("/settings/security", methods=["POST"])
 @is_not_banned
