@@ -47,7 +47,7 @@ def settings_profile_post(v):
 
     if request.form.get("filter_nsfw") != v.filter_nsfw:
         updated=True
-        v.filter_nsfw=bool(request.form.get("filter_nsfw", None))
+        v.filter_nsfw= not bool(request.form.get("filter_nsfw", None))
         cache.delete_memoized(User.idlist, v)
         
     if request.form.get("private") != v.is_private:
