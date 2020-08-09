@@ -371,7 +371,7 @@
               <div class="body w-lg-100">
 
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
+                  <input type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="post_toast('/settings/profile?private='+document.getElementById('privateswitch').checked)">
                   <label class="custom-control-label" for="privateswitch"></label>
                 </div>
 
