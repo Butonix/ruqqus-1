@@ -22,7 +22,8 @@ class Comment(SQLAlchemyObjectType):
         return query.filter_by(id=self.id).all()
 
     def resolve_submission(self, info, **kwargs):
-        return CommentModel.filter(CommentModel.is_banned == False, CommentModel.is_deleted == False).all()
+        return CommentModel.filter_by(is_banned=False,
+                                      is_deleted=False).all()
 
 
 class Submission(SQLAlchemyObjectType):
@@ -38,7 +39,9 @@ class Submission(SQLAlchemyObjectType):
         return query.filter_by(id=self.id).all()
 
     def resolve_submission(self, info, **kwargs):
-        return SubmissionModel.filter(BoardModel.is_banned == False, BoardModel.is_deleted == False).all()
+        return SubmissionModel.filter_by(is_banned=False,
+                                         is_deleted=False,
+                                         is_public=True).all()
 
 
 class CommentAux(SQLAlchemyObjectType):
@@ -90,11 +93,15 @@ class User(SQLAlchemyObjectType):
 
     def resolve_posts(self, info, **kwargs):
         query = Submission.get_query(info)
-        return query.filter_by(author_id=self.id, is_banned=False, is_deleted=False).all()
+        return query.filter_by(author_id=self.id,
+                               is_banned=False,
+                               is_deleted=False).all()
 
     def resolve_comments(self, info, **kwargs):
         query = Comment.get_query(info)
-        return query.filter_by(author_id=self.id, is_banned=False, is_deleted=False).all()
+        return query.filter_by(author_id=self.id,
+                               is_banned=False,
+                               is_deleted=False).all()
 
 
 class Guild(SQLAlchemyObjectType):
@@ -103,17 +110,21 @@ class Guild(SQLAlchemyObjectType):
         interfaces = (relay.Node,)
 
     def resolve_guilds(self, info, **kwargs):
-        return BoardModel.fitler(BoardModel.is_private == False,
-                                 BoardModel.is_banned == False).all()
+        return BoardModel.fitler_by(is_private=False,
+                                    is_banned=False).all()
 
     posts = graphene.List(lambda: Submission)  # , id=graphene.String())
 
     def resolve_posts(self, info, **kwargs):
         query = Submission.get_query(info)
         if self.id:
-            return query.filter_by(board_id=self.id, is_banned=False, is_deleted=False).all()
+            return query.filter_by(board_id=self.id,
+                                   is_banned=False,
+                                   is_deleted=False).all()
         elif self.name:
-            return query.filter_by(name=self.name, is_banned=False, is_deleted=False).all()
+            return query.filter_by(name=self.name,
+                                   is_banned=False,
+                                   is_deleted=False).all()
 
 
 class Query(graphene.ObjectType):
@@ -123,17 +134,17 @@ class Query(graphene.ObjectType):
     # all_posts = SQLAlchemyConnectionField(Submission.connection, sort=None)
     guild = SQLAlchemyConnectionField(Guild.connection, id=graphene.String(), name=graphene.String(), sort=None)
     def resolve_guild(self, info, **kwargs):
+        query = Guild.get_query(info)
         if "id" in kwargs:
             # print("id = ", kwargs['id'])
-            query = Guild.get_query(info)
-            check = query.filter_by(id=kwargs['id'], is_private=True).all()
-            if check:
-                return ['private guild']
-            elif kwargs['id']:
-                return query.filter_by(id=kwargs['id']).all()
+            return query.filter_by(id=kwargs['id'],
+                                   is_private=False,
+                                   is_banned=False).all()
 
-            elif kwargs['name']:
-                return query.filter_by(name=kwargs['name']).all()
+        if 'name' in kwargs:
+            return query.filter_by(name=kwargs['name'],
+                                   is_private=False,
+                                   is_banned=False).all()
 
     user = SQLAlchemyConnectionField(User.connection, id=graphene.String(), sort=None)
 
@@ -141,10 +152,13 @@ class Query(graphene.ObjectType):
         if "id" in kwargs:
             # print("id = ", kwargs['id'])
             query = User.get_query(info)
-            check = query.filter_by(id=kwargs['id'], is_private=True).all()
+            """check = query.filter_by(id=kwargs['id'], is_private=True).all()
             if check:
-                return ['private user']
-            return query.filter_by(id=kwargs['id']).all()
+                return ['private user']"""
+            return query.filter_by(id=kwargs['id'],
+                                   is_private=False,
+                                   is_banned=0,
+                                   is_deleted=False).all()
 
     """submission_aux = SQLAlchemyConnectionField(SubmissionAux.connection, sort=None)
     def resolve_submission_aux(self, info, **kwargs):
