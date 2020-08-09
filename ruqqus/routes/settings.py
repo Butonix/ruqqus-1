@@ -18,17 +18,7 @@ from ruqqus.__main__ import app, cache
 @validate_formkey
 def settings_profile_post(v):
 
-    updated=False
-
-    if request.values.get("new_password"):
-        if request.form.get("new_password") != request.form.get("cnf_password"):
-            return jsonify({"error":f"Passwords do not match"}), 400
-
-        if not v.verifyPass(request.form.get("old_password")):
-            return jsonify({"error":f"Incorrect password"}), 401
-
-        v.passhash=v.hash_password(request.form.get("new_password"))
-        updated=True                                  
+    updated=False                             
 
     if request.values.get("over18", v.over_18) != v.over_18:
         updated=True
