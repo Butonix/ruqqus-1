@@ -232,11 +232,7 @@
 
           <h2 class="h5">Content Filters</h2>
 
-          <form id="profile-settings" action="/settings/profile" method="post">
-
             <div class="settings-section rounded">
-
-              <input type="hidden" name="formkey" value="{{ v.formkey }}">
 
               <div class="d-lg-flex border-bottom">
 
@@ -320,6 +316,9 @@
                 <label for="bio" class="text-black w-lg-25">Bio</label>
 
                 <div class="w-lg-100">
+
+
+                  <form id="profile-settings" action="/settings/profile" method="post">
                   <div class="input-group mb-2">
                     <textarea class="form-control rounded" id="bio-text" aria-label="With textarea"
                     placeholder="Tell the Ruqqus community a bit about yourself."
@@ -327,8 +326,9 @@
                   </div>
                   <div class="d-flex">
                     <small>Limit of 280 characters</small>
-                    <a class="btn btn-primary ml-auto" id="bioSave" href="javascript:void(0)" role="button" onclick="post_toast('/settings/profile?bio='+document.getElementById('bio-text').value)">Save Changes</a>
+                    <input class="btn btn-primary ml-auto" id="bioSave" type="submit" value="Save Changes">
                   </div>
+                  </form>
                 </div>
 
               </div>
@@ -374,8 +374,6 @@
           </div>
 
         </div>
-
-      </form>
 
     </div>
 
