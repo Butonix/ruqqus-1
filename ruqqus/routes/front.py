@@ -227,8 +227,6 @@ def front_all(v):
     sort_method=request.args.get("sort", "hot")
     t=request.args.get('t','all')
 
-    nsfw=(v and v.over_18 and not v.filter_nsfw)
-
     #get list of ids
     ids = frontlist(sort=sort_method,
                     page=page,
