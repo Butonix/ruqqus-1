@@ -1941,6 +1941,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .post-body {
     word-break: break-word;
+    overflow: hidden;
 }
 
 // Modals (post actions, delete confirmations, etc)
@@ -2429,6 +2430,7 @@ div:hover .thumb-img-link-overlay {
     margin-bottom: 1rem;
     word-break: break-word;
     color: $black;
+    overflow: hidden;
 }
 
 .comment .comment-body .comment-image {
@@ -3591,6 +3593,7 @@ body, #settings, #notifications, #submit {
     font-size: 14px;
     font-weight: $font-weight-normal;
     line-height: normal;
+    overflow: hidden;
 }
 
 .post-meta {
