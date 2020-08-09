@@ -285,7 +285,7 @@
                 <div class="body w-lg-100">
 
                   <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="hidensfl" name="show_nsfl"{% if v.show_nsfl %} checked{% endif %} onchange="post_toast('/settings/profile?show_nsfl='+document.getElementById('hide_nsfl').checked)">
+                    <input type="checkbox" class="custom-control-input" id="hidensfl" name="show_nsfl"{% if v.show_nsfl %} checked{% endif %} onchange="post_toast('/settings/profile?show_nsfl='+document.getElementById('hidensfl').checked)">
                     <label class="custom-control-label" for="hidensfl"></label>
                   </div>
 
