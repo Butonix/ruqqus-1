@@ -88,7 +88,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **k
         is_deleted=False,
         stickied=False)
 
-    if not (v and v.over_18):
+    if not nsfw:
         posts=posts.filter_by(over_18=False)
 
     if v and v.hide_offensive:
@@ -227,7 +227,7 @@ def front_all(v):
     sort_method=request.args.get("sort", "hot")
     t=request.args.get('t','all')
 
-    print(v, v.over_18, v.filter_nsfw)
+    nsfw=(v and v.over_18 and not v.filter_nsfw)
 
     #get list of ids
     ids = frontlist(sort=sort_method,
