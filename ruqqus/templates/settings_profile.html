@@ -349,7 +349,7 @@
                 <div class="w-lg-100">
                   <p>Titles change the way your name is displayed across Ruqqus, allowing you to show off a site achievement.</p>
                   <div class="input-group mb2">
-                    <select class="form-control" form="profile-settings" name="title_id">
+                    <select id='title-selector' class="form-control" form="profile-settings" name="title_id" onchange="post_toast('/settings/profile?title_id='+document.getElementById('title-selector').value)">
                      <option value="0"{{ ' selected' if v.title_id==0 else '' }}>No title</option>
                      {% for entry in v.available_titles %}
                      <option value="{{ entry.id }}"{{ ' selected' if v.title_id==entry.id else '' }}>{{ entry.text }}</option>
