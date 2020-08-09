@@ -164,7 +164,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **k
 @app.route("/", methods=["GET"])
 @app.route("/api/v1/front/listing", methods=["GET"])
 @auth_desired
-@api
+@api("read")
 def home(v):
 
     if v and v.subscriptions.filter_by(is_active=True).count():
@@ -216,7 +216,7 @@ def home(v):
 @app.route("/api/v1/all/listing", methods=["GET"])
 @app.route("/inpage/all")
 @auth_desired
-@api
+@api("read")
 def front_all(v):
 
     page=int(request.args.get("page") or 1)

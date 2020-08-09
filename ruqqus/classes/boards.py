@@ -59,6 +59,11 @@ class Board(Base, Stndrd, Age_times):
 
     def __repr__(self):
         return f"<Board(name={self.name})>"
+
+    @property
+    def fullname(self):
+        return f"t4_{self.base36id}"
+    
     
     @property
     def mods_list(self):

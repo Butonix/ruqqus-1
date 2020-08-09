@@ -525,7 +525,7 @@
             </span>
             {% endif %}
 
-            <span id="post-score-{{ p.base36id }}" class="score post-score-{{ p.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
+            <span id="post-score-{{ p.base36id }}" class="score post-score-{{ p.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-toggle="tooltip" data-placement="bottom" data-original-title="+{{ p.upvotes_fuzzed }} | -{{ p.downvotes_fuzzed }}">{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
 
             {% if v %}
             <span id="post-{{ p.base36id }}-down-mobile" tabindex="0" data-id-down="{{ p.base36id }}" data-content-type="post" class="ml-2 my-0 arrow-down downvote-button post-{{ p.base36id }}-down {% if voted==-1 %}active{% endif %}">
