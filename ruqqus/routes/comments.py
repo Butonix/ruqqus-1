@@ -419,7 +419,8 @@ def delete_comment(cid, v):
 
     cache.delete_memoized(User.commentlisting, v)
 
-    return "", 204
+    return {"html":lambda:("", 204),
+        "api":lambda:("", 204)}
 
 
 
