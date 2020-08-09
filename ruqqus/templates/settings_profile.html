@@ -241,7 +241,7 @@
               <div class="d-lg-flex border-bottom">
 
                 <div class="title w-lg-25">
-                  <label for="over18">Allow NSFW Content{% if v.over_18 %}...{% endif %}</label>
+                  <label for="over18">View NSFW Content</label>
                 </div>
 
                 <div class="body w-lg-100">
@@ -252,18 +252,7 @@
                   </div>
 
                   <span class="text-small-extra text-muted">Enable if you are 18+ and are ok with viewing NSFW content.</span>
-
-                </div>
-
-              </div>
-
-              <div id="filter-nsfw-option" class="{% if not v.over_18 %}d-none{% else %}d-lg-flex{% endif %} border-bottom">
-
-                <div class="title w-lg-25">
-                  <label for="filter-nsfw">...including in All/Trending</label>
-                </div>
-
-                <div class="body w-lg-100">
+                  <hr>
 
                   <div class="custom-control custom-switch">
                     <input type="checkbox" class="custom-control-input" id="filter-nsfw" name="filter_nsfw"{% if not v.filter_nsfw %} checked{% endif %} onchange="post_toast('/settings/profile?filter_nsfw='+document.getElementById('filter-nsfw').checked)">
