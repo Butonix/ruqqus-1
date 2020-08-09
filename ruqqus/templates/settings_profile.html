@@ -266,7 +266,7 @@
                 <div class="body w-lg-100">
 
                   <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="filter-nsfw" name="filter_nsfw"{% if not v.filter_nsfw %} checked{% endif %} onchange="post_toast('/settings/profile?filter_nsfw='+document.getElementById('filter-nsfw').checked+'formkey='+formkey())">
+                    <input type="checkbox" class="custom-control-input" id="filter-nsfw" name="filter_nsfw"{% if not v.filter_nsfw %} checked{% endif %} onchange="post_toast('/settings/profile?filter_nsfw='+document.getElementById('filter-nsfw').checked)">
                     <label class="custom-control-label" for="filter-nsfw"></label>
                   </div>
 
