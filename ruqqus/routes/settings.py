@@ -20,7 +20,7 @@ def settings_profile_post(v):
 
     updated=False
 
-    if request.form.get("new_password"):
+    if request.values.get("new_password"):
         if request.form.get("new_password") != request.form.get("cnf_password"):
             return jsonify({"error":f"Passwords do not match"}), 400
 
@@ -30,31 +30,31 @@ def settings_profile_post(v):
         v.passhash=v.hash_password(request.form.get("new_password"))
         updated=True                                  
 
-    if request.form.get("over18", v.over_18) != v.over_18:
+    if request.values.get("over18", v.over_18) != v.over_18:
         updated=True
         v.over_18=bool(request.form.get("over18", None))
         cache.delete_memoized(User.idlist, v)
 
-    if request.form.get("hide_offensive", v.hide_offensive) != v.hide_offensive:
+    if request.values.get("hide_offensive", v.hide_offensive) != v.hide_offensive:
         updated=True
         v.hide_offensive=bool(request.form.get("hide_offensive", None))
         cache.delete_memoized(User.idlist, v)
 
-    if request.form.get("show_nsfl", v.show_nsfl) != v.show_nsfl:
+    if request.values.get("show_nsfl", v.show_nsfl) != v.show_nsfl:
         updated=True
         v.show_nsfl=bool(request.form.get("show_nsfl", None))
         cache.delete_memoized(User.idlist, v)
 
-    if request.form.get("filter_nsfw", v.filter_nsfw) != v.filter_nsfw:
+    if request.values.get("filter_nsfw", v.filter_nsfw) != v.filter_nsfw:
         updated=True
         v.filter_nsfw= not bool(request.form.get("filter_nsfw", None))
         cache.delete_memoized(User.idlist, v)
         
-    if request.form.get("private", v.is_private) != v.is_private:
+    if request.values.get("private", v.is_private) != v.is_private:
         updated=True
         v.is_private=bool(request.form.get("private", None))
         
-    if request.form.get("bio", v.bio) != v.bio:
+    if request.values.get("bio", v.bio) != v.bio:
         updated=True
         bio = request.form.get("bio")[0:256]
         v.bio=bio
@@ -64,7 +64,7 @@ def settings_profile_post(v):
         v.bio_html=sanitize(v.bio_html, linkgen=True)
 
 
-    x=request.form.get("title_id",None)
+    x=request.values.get("title_id",None)
     if x:
         x=int(x)
         if x==0:
