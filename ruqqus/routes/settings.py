@@ -64,8 +64,9 @@ def settings_profile_post(v):
         v.bio_html=sanitize(v.bio_html, linkgen=True)
 
 
-    x=int(request.form.get("title_id",None))
-    if x!=None:
+    x=request.form.get("title_id",None)
+    if x:
+        x=int(x)
         if x==0:
             v.title_id=None
             updated=True
