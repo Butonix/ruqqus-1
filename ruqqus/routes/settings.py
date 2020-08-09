@@ -45,13 +45,16 @@ def settings_profile_post(v):
         v.is_private=request.values.get("private", None)=='true'
         
     if request.values.get("bio", v.bio) != v.bio:
-        updated=True
         bio = request.values.get("bio")[0:256]
         v.bio=bio
 
         with CustomRenderer() as renderer:
             v.bio_html=renderer.render(mistletoe.Document(bio))
         v.bio_html=sanitize(v.bio_html, linkgen=True)
+        g.db.add(v)
+        return render_template("settings_profile.html",
+            v=v,
+            msg="Your bio has been updated.")
 
 
     x=request.values.get("title_id",None)
