@@ -257,7 +257,7 @@
 
               </div>
 
-              <div id="filter-nsfw-option" class="d-lg-flex border-bottom{% if not v.over_18 %} d-none{% endif %}">
+              <div id="filter-nsfw-option" class="{% if not v.over_18 %}d-none{% else %}d-lg-flex{% endif %} border-bottom">
 
                 <div class="title w-lg-25">
                   <label for="filter-nsfw">...including in All/Trending</label>
