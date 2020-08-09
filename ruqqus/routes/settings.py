@@ -44,8 +44,14 @@ def settings_profile_post(v):
         updated=True
         v.is_private=request.values.get("private", None)=='true'
         
-    if request.values.get("bio", v.bio) != v.bio:
+    if request.values.get("bio"):
         bio = request.values.get("bio")[0:256]
+
+        if bio==v.bio:
+            return render_template("settings_profile.html",
+                v=v,
+                error="You didn't change anything")
+
         v.bio=bio
 
         with CustomRenderer() as renderer:
