@@ -71,10 +71,8 @@
 {% set score=p.score_fuzzed if p.score_fuzzed else 0 %}
 {% if v %}
 {% set voted=p.voted if p.voted else 0 %}
-{% set adjust=voted %}
 {% else %}
 {% set voted=-2 %}
-{% set adjust=0 %}
 {% endif %}
 
 {% block title %}
@@ -471,7 +469,7 @@
             <div id="voting" class="voting d-none d-md-block mb-auto">
               <div id="post-{{ p.base36id }}-up" tabindex="0" class="arrow-up mx-auto" onclick="location.href='/login?redirect={{ request.path | urlencode}}';">
               </div>
-              <span id="post-{{ p.base36id }}-score-none" class="score text-muted">{{ score-adjust }}</span>
+              <span id="post-{{ p.base36id }}-score-none" class="score text-muted"{% if not p.is_banned %} data-toggle="tooltip" data-placement="bottom" data-original-title="+{{ p.upvotes_fuzzed }} | -{{ p.downvotes_fuzzed }}"{% endif %}>{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
               <div id="post-{{ p.base36id }}-down" tabindex="0" class="arrow-down mx-auto" onclick="location.href='/login?redirect={{ request.path | urlencode}}';">
               </div>
             </div>
