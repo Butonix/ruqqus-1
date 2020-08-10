@@ -394,3 +394,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def embed_url(self, x):
         self.submission_aux.embed_url=x
         g.db.add(self.submission_aux)
+
+    @property
+    def is_guildmaster(self):
+        return self.__dict__.get('_is_guildmaster', False)
+    

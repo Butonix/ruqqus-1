@@ -53,15 +53,17 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 
     if v:
         vt=nSession.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
+        mod=nSession.query(ModRelationship).filter_by(user_id=v.id, invite_rescinded=False).subquery()
 
 
-        items= nSession.query(Submission, vt.c.vote_type
+        items= nSession.query(Submission, vt.c.vote_type, mod.c.id
             ).options(
             joinedload(Submission.author).joinedload(User.title)
             ).filter(Submission.id==i).join(
             vt, 
             vt.c.submission_id==Submission.id, 
             isouter=True
+            ).join(mod, mod.c.board_id==Submission.board_id, isouter=True
             ).first()
         
         if not items:
@@ -69,6 +71,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         
         x=items[0]
         x._voted=items[1] or 0
+        x._is_guildmaster=items[2] or 0
 
     else:
         x=nSession.query(Submission).options(
@@ -92,11 +95,13 @@ def get_posts(pids, sort="hot", v=None):
     if v:
         for pid in pids:
             vt=g.db.query(Vote).filter_by(submission_id=pid, user_id=v.id).subquery()
-            query=g.db.query(Submission, vt.c.vote_type
+            mod=nSession.query(ModRelationship).filter_by(user_id=v.id, invite_rescinded=False).subquery()
+            query=g.db.query(Submission, vt.c.vote_type, mod.c.id
                 ).options(joinedload(Submission.author).joinedload(User.title)
                 ).filter_by(id=pid
                 ).join(vt, vt.c.submission_id==Submission.id, isouter=True
-                )
+                ).join(mod, mod.c.board_id==Submission.board_id, isouter=True
+            )
             queries.append(query)
 
         queries=tuple(queries)
@@ -111,6 +116,7 @@ def get_posts(pids, sort="hot", v=None):
         output=[p[0] for p in posts]
         for i in range(len(output)):
             output[i]._voted=posts[i][1] or 0
+            ouptut[i]._is_guildmasteposts[i][2] or 0
     else:
         for pid in pids:
             query=g.db.query(Submission
