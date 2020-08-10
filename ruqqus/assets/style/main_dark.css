@@ -15358,6 +15358,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .post-body {
   word-break: break-word;
+  overflow: hidden;
 }
 
 .modal-backdrop.show {
@@ -15829,6 +15830,7 @@ div:hover .thumb-img-link-overlay {
   margin-bottom: 1rem;
   word-break: break-word;
   color: #CFCFCF;
+  overflow: hidden;
 }
 
 blockquote {
@@ -17376,6 +17378,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     font-size: 14px;
     font-weight: 400;
     line-height: normal;
+    overflow: hidden;
   }
 
   .post-meta {

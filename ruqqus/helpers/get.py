@@ -406,3 +406,8 @@ def get_mod(uid, bid):
                                             invite_rescinded=False).first()
 
     return mod
+
+def get_application(client_id):
+
+    application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
+    return application

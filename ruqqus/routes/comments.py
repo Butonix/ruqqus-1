@@ -31,7 +31,7 @@ def comment_cid(cid):
 @app.route("/post/<p_id>/<anything>/<c_id>", methods=["GET"])
 @app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
 @auth_desired
-@api
+@api("read")
 def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
 
     comment=get_comment(c_id, v=v)
@@ -346,7 +346,7 @@ def api_comment(v):
 @app.route("/edit_comment/<cid>", methods=["POST"])
 @is_not_banned
 @validate_formkey
-#@api
+@api("edit")
 def edit_comment(cid, v):
 
     c = get_comment(cid, v=v)
@@ -401,7 +401,7 @@ def edit_comment(cid, v):
 @app.route("/api/v1/delete/comment/<cid>", methods=["POST"])
 @auth_required
 @validate_formkey
-#@api
+@api("delete")
 def delete_comment(cid, v):
 
     c=g.db.query(Comment).filter_by(id=base36decode(cid)).first()
@@ -419,7 +419,8 @@ def delete_comment(cid, v):
 
     cache.delete_memoized(User.commentlisting, v)
 
-    return "", 204
+    return {"html":lambda:("", 204),
+        "api":lambda:("", 204)}
 
 
 
@@ -427,7 +428,6 @@ def delete_comment(cid, v):
 @app.route("/embed/post/<pid>/comment/<cid>", methods=["GET"])
 @app.route("/api/vi/embed/comment/<cid>", methods=["GET"])
 @app.route("/api/vi/embed/post/<pid>/comment/<cid>", methods=["GET"])
-@api
 def embed_comment_cid(cid, pid=None):
 
     comment=get_comment(cid)
