@@ -40,8 +40,13 @@ def notifications(v):
         elif c.parent_comment and c.parent_comment.author_id==v.id:
             c._is_comment_reply=True
             parent=c.parent_comment
-            parent.replies=[c]
-            listing.append(parent)
+
+            if parent in listing:
+                parent.replies=parent.replies+[c]
+            else:
+                parent.replies=[c]
+                listing.append(parent)
+
         elif c.parent.author_id==v.id:
             c._is_post_reply=True
             listing.append(c)
@@ -83,7 +88,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **k
         is_deleted=False,
         stickied=False)
 
-    if not (v and v.over_18):
+    if not nsfw:
         posts=posts.filter_by(over_18=False)
 
     if v and v.hide_offensive:
@@ -159,7 +164,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **k
 @app.route("/", methods=["GET"])
 @app.route("/api/v1/front/listing", methods=["GET"])
 @auth_desired
-@api
+@api("read")
 def home(v):
 
     if v and v.subscriptions.filter_by(is_active=True).count():
@@ -173,7 +178,11 @@ def home(v):
         ids=v.idlist(sort=sort,
                      page=page,
                      only=only,
-                     t=t
+                     t=t,
+
+                     #these arguments don't really do much but they exist for cache memoization differentiation
+                     allow_nsfw=v.over_18,
+                     hide_offensive=v.hide_offensive
                      )
 
         next_exists=(len(ids)==26)
@@ -207,7 +216,7 @@ def home(v):
 @app.route("/api/v1/all/listing", methods=["GET"])
 @app.route("/inpage/all")
 @auth_desired
-@api
+@api("read")
 def front_all(v):
 
     page=int(request.args.get("page") or 1)
@@ -221,7 +230,7 @@ def front_all(v):
     #get list of ids
     ids = frontlist(sort=sort_method,
                     page=page,
-                    nsfw=(v and v.over_18),
+                    nsfw=(v and v.over_18 and not v.filter_nsfw),
                     t=t,
                     v=v,
                     hide_offensive= v and v.hide_offensive

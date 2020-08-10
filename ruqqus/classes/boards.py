@@ -59,6 +59,11 @@ class Board(Base, Stndrd, Age_times):
 
     def __repr__(self):
         return f"<Board(name={self.name})>"
+
+    @property
+    def fullname(self):
+        return f"t4_{self.base36id}"
+    
     
     @property
     def mods_list(self):
@@ -334,7 +339,7 @@ class Board(Base, Stndrd, Age_times):
 
 
     def has_participant(self, user):
-        return (self.submissions.filter_by(author_id=user.id).first() or
+        return (g.db.query(Submission).filter_by(original_board_id=self.id, author_id=user.id).first() or
                 g.db.query(Comment).filter_by(author_id=user.id, original_board_id=self.id).first()
                 )
     @property

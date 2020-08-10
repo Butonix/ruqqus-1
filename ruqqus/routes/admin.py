@@ -30,7 +30,7 @@ def flagged_posts(v):
 
 @app.route("/admin/image_posts", methods=["GET"])
 @admin_level_required(3)
-@api
+@api("read")
 def image_posts_listing(v):
 
     page=int(request.args.get('page',1))
