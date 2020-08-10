@@ -11,6 +11,7 @@ from .front import *
 from .giphy import *
 from .legal import *
 from .login import *
+from .oauth import *
 from .posts import *
 from .search import *
 from .settings import *

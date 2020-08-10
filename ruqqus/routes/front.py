@@ -28,17 +28,41 @@ def notifications(v):
     next_exists=(len(cids)==26)
     cids=cids[0:25]
 
-    comments=get_comments(cids, v=v, sort_type="new")
+    comments=get_comments(cids, v=v, sort_type="new", load_parent=True)
+    listing=[]
     for c in comments:
         c._is_blocked=False
         c._is_blocking=False
+        c.replies=[]
+        if c.author_id==1:
+            c._is_system=True
+            listing.append(c)
+        elif c.parent_comment and c.parent_comment.author_id==v.id:
+            c._is_comment_reply=True
+            parent=c.parent_comment
+
+            if parent in listing:
+                parent.replies=parent.replies+[c]
+            else:
+                parent.replies=[c]
+                listing.append(parent)
+
+        elif c.parent.author_id==v.id:
+            c._is_post_reply=True
+            listing.append(c)
+        else:
+            c._is_username_mention=True
+            listing.append(c)
+
 
     return render_template("notifications.html",
                            v=v,
-                           notifications=comments,
+                           notifications=listing,
                            next_exists=next_exists,
                            page=page,
-                           standalone=True)
+                           standalone=True,
+                           render_replies=True,
+                           is_notification_page=True)
 
 @cache.memoize(timeout=900)
 def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **kwargs):
@@ -64,7 +88,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **k
         is_deleted=False,
         stickied=False)
 
-    if not (v and v.over_18):
+    if not nsfw:
         posts=posts.filter_by(over_18=False)
 
     if v and v.hide_offensive:
@@ -140,7 +164,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **k
 @app.route("/", methods=["GET"])
 @app.route("/api/v1/front/listing", methods=["GET"])
 @auth_desired
-@api
+@api("read")
 def home(v):
 
     if v and v.subscriptions.filter_by(is_active=True).count():
@@ -154,7 +178,11 @@ def home(v):
         ids=v.idlist(sort=sort,
                      page=page,
                      only=only,
-                     t=t
+                     t=t,
+
+                     #these arguments don't really do much but they exist for cache memoization differentiation
+                     allow_nsfw=v.over_18,
+                     hide_offensive=v.hide_offensive
                      )
 
         next_exists=(len(ids)==26)
@@ -188,7 +216,7 @@ def home(v):
 @app.route("/api/v1/all/listing", methods=["GET"])
 @app.route("/inpage/all")
 @auth_desired
-@api
+@api("read")
 def front_all(v):
 
     page=int(request.args.get("page") or 1)
@@ -202,7 +230,7 @@ def front_all(v):
     #get list of ids
     ids = frontlist(sort=sort_method,
                     page=page,
-                    nsfw=(v and v.over_18),
+                    nsfw=(v and v.over_18 and not v.filter_nsfw),
                     t=t,
                     v=v,
                     hide_offensive= v and v.hide_offensive
@@ -434,7 +462,7 @@ def random_comment(v):
     x=g.db.query(Comment).filter_by(is_banned=False,
         over_18=False,
         is_nsfl=False,
-        is_offensive=False)
+        is_offensive=False).filter(Comment.parent_submission.isnot(None))
     if v:
         bans=g.db.query(BanRelationship.id).filter_by(user_id=v.id).all()
         x=x.filter(Comment.board_id.notin_([i[0] for i in bans]))
