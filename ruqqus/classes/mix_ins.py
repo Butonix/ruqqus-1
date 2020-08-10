@@ -152,7 +152,7 @@ class Fuzzing:
             return self.upvotes
 
         lower = int(self.upvotes * 0.99)
-        upper = int(self.upvotes * 0.99)+1
+        upper = int(self.upvotes * 1.01)+1
 
         return random.randint(lower, upper)
 
@@ -162,6 +162,6 @@ class Fuzzing:
             return self.downvotes
 
         lower = int(self.downvotes * 0.99)
-        upper = int(self.downvotes * 0.99)+1
+        upper = int(self.downvotes * 1.01)+1
 
         return random.randint(lower, upper)
