@@ -417,8 +417,8 @@ def submit_post(v):
         check_url=ParseResult(scheme="https",
                             netloc=parse_link.netloc,
                             path=parse_link.path,
-                            params='',
-                            query='',
+                            params=parse_link.params,
+                            query=parse_link.query,
                             fragment='')
         check_links.append(urlunparse(check_url))
 
