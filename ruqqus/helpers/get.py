@@ -84,8 +84,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 
 def get_posts(pids, sort="hot", v=None):
 
-    #output=[get_post(pid, graceful=True, v=v) for pid in pids]
-    #return [i for i in output if i]
+    
 
     if not pids:
         return []
@@ -95,7 +94,7 @@ def get_posts(pids, sort="hot", v=None):
     if v:
         for pid in pids:
             vt=g.db.query(Vote).filter_by(submission_id=pid, user_id=v.id).subquery()
-            mod=nSession.query(ModRelationship).filter_by(user_id=v.id, invite_rescinded=False).subquery()
+            mod=g.db.query(ModRelationship).filter_by(user_id=v.id, invite_rescinded=False).subquery()
             query=g.db.query(Submission, vt.c.vote_type, mod.c.id
                 ).options(joinedload(Submission.author).joinedload(User.title)
                 ).filter_by(id=pid
