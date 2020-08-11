@@ -23,7 +23,7 @@ class Domain(Base):
     def reason_text(self):
     	return reasons.get(self.reason)
 
-class BadLink(Base)
+class BadLink(Base):
 
     __tablename__="badlinks"
     id=Column(Integer, primary_key=True)
