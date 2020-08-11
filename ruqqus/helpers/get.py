@@ -115,7 +115,7 @@ def get_posts(pids, sort="hot", v=None):
         output=[p[0] for p in posts]
         for i in range(len(output)):
             output[i]._voted=posts[i][1] or 0
-            ouptut[i]._is_guildmasteposts[i][2] or 0
+            output[i]._is_guildmaster=posts[i][2] or 0
     else:
         for pid in pids:
             query=g.db.query(Submission
