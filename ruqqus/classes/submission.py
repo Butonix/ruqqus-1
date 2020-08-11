@@ -88,7 +88,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     ups = deferred(Column(Integer, server_default=FetchedValue()))
     downs=deferred(Column(Integer, server_default=FetchedValue()))
-    age=deferred(Column(Integer, server_default=FetchedValue()))
+    #age=deferred(Column(Integer, server_default=FetchedValue()))
     comment_count=Column(Integer, server_default=FetchedValue())
     flag_count=deferred(Column(Integer, server_default=FetchedValue()))
     report_count=deferred(Column(Integer, server_default=FetchedValue()))
@@ -394,3 +394,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def embed_url(self, x):
         self.submission_aux.embed_url=x
         g.db.add(self.submission_aux)
+
+    @property
+    def is_guildmaster(self):
+        return self.__dict__.get('_is_guildmaster', False)
+    

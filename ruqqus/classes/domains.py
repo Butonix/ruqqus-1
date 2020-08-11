@@ -3,7 +3,9 @@ from ruqqus.__main__ import Base, cache
 
 reasons={
 	1: "URL shorteners are not allowed.",
-	3: "Piracy is not allowed."
+	3: "Piracy is not allowed.",
+    4: "Sites hosting digitally malicious content are not allowed.",
+    5: "Spam"
 }
 
 class Domain(Base):
@@ -20,3 +22,16 @@ class Domain(Base):
     @property
     def reason_text(self):
     	return reasons.get(self.reason)
+
+class BadLink(Base):
+
+    __tablename__="badlinks"
+    id=Column(Integer, primary_key=True)
+    reason=Column(Integer)
+    link=Column(String(512))
+    autoban=Column(Boolean, default=False)
+
+    @property
+    def reason_text(self):
+        return reasons.get(self.reason)
+    

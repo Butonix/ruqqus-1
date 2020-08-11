@@ -53,15 +53,17 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 
     if v:
         vt=nSession.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
+        mod=nSession.query(ModRelationship).filter_by(user_id=v.id, invite_rescinded=False).subquery()
 
 
-        items= nSession.query(Submission, vt.c.vote_type
+        items= nSession.query(Submission, vt.c.vote_type, mod.c.id
             ).options(
             joinedload(Submission.author).joinedload(User.title)
             ).filter(Submission.id==i).join(
             vt, 
             vt.c.submission_id==Submission.id, 
             isouter=True
+            ).join(mod, mod.c.board_id==Submission.board_id, isouter=True
             ).first()
         
         if not items:
@@ -69,6 +71,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         
         x=items[0]
         x._voted=items[1] or 0
+        x._is_guildmaster=items[2] or 0
 
     else:
         x=nSession.query(Submission).options(
@@ -81,8 +84,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 
 def get_posts(pids, sort="hot", v=None):
 
-    #output=[get_post(pid, graceful=True, v=v) for pid in pids]
-    #return [i for i in output if i]
+    
 
     if not pids:
         return []
@@ -92,11 +94,13 @@ def get_posts(pids, sort="hot", v=None):
     if v:
         for pid in pids:
             vt=g.db.query(Vote).filter_by(submission_id=pid, user_id=v.id).subquery()
-            query=g.db.query(Submission, vt.c.vote_type
+            mod=g.db.query(ModRelationship).filter_by(user_id=v.id, invite_rescinded=False).subquery()
+            query=g.db.query(Submission, vt.c.vote_type, mod.c.id
                 ).options(joinedload(Submission.author).joinedload(User.title)
                 ).filter_by(id=pid
                 ).join(vt, vt.c.submission_id==Submission.id, isouter=True
-                )
+                ).join(mod, mod.c.board_id==Submission.board_id, isouter=True
+            )
             queries.append(query)
 
         queries=tuple(queries)
@@ -111,6 +115,7 @@ def get_posts(pids, sort="hot", v=None):
         output=[p[0] for p in posts]
         for i in range(len(output)):
             output[i]._voted=posts[i][1] or 0
+            output[i]._is_guildmaster=posts[i][2] or 0
     else:
         for pid in pids:
             query=g.db.query(Submission
@@ -274,7 +279,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
         abort(404)
     return x
 
-def get_comments(cids, v=None, nSession=None, sort_type="new", **kwargs):
+def get_comments(cids, v=None, nSession=None, sort_type="new", load_parent=False, **kwargs):
 
     #output= [get_comment(cid, v=v, graceful=True, nSession=nSession) for cid in cids]
     #return [i for i in output if i]
@@ -291,8 +296,16 @@ def get_comments(cids, v=None, nSession=None, sort_type="new", **kwargs):
             vt=nSession.query(CommentVote).filter_by(comment_id=cid, user_id=v.id).subquery()
             query=nSession.query(Comment, vt.c.vote_type
                 ).options(joinedload(Comment.author).joinedload(User.title)
-                ).filter_by(id=cid
-                ).join(vt, vt.c.comment_id==Comment.id, isouter=True)
+                )
+            if load_parent:
+                query=query.options(joinedload(Comment.parent_comment).joinedload(Comment.author).joinedload(User.title))
+            query=query.filter_by(id=cid
+                ).join(
+                vt,
+                vt.c.comment_id==Comment.id,
+                isouter=True
+                )
+
             queries.append(query)
         queries=tuple(queries)
         first_query=queries[0]
@@ -392,3 +405,8 @@ def get_mod(uid, bid):
                                             invite_rescinded=False).first()
 
     return mod
+
+def get_application(client_id):
+
+    application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
+    return application
