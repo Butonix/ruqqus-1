@@ -370,13 +370,6 @@ def submit_post(v):
         g.db.commit()
         return redirect("/notifications")
 
-
-    #bad link check
-    #remove params
-    check_url=
-
-    #now make new post
-
    
 
     #catch too-long body
@@ -403,6 +396,8 @@ def submit_post(v):
                                b=get_guild(request.form.get("board","general"),
                                            graceful=True)
                                ), 400
+
+    #render text
 
     with CustomRenderer() as renderer:
         body_md=renderer.render(mistletoe.Document(body))
