@@ -266,6 +266,26 @@ def api_comment(v):
             break
         else:
             is_offensive=False
+
+    #check badlinks
+    soup=BeautifulSoup(body_html, features="html.parser")
+    links=[x['href'] for x in soup.find_all('a') if x.get('href')]
+
+    check_links=[]
+    for link in links:
+        parse_link=urlparse(link)
+        check_url=ParseResult(scheme="https",
+                            netloc=parse_link.netloc,
+                            path=parse_link.path,
+                            params=parse_link.params,
+                            query=parse_link.query,
+                            fragment='')
+        check_links.append(urlunparse(check_url))
+
+
+    badlink=g.db.query(BadLink).filter(BadLink.link.in_(tuple(check_links))).first()
+    if badlink:
+        return jsonify({"error":f"Remove the following link and try again: `{badlink.link}`"}), 403
         
     #create comment
     c=Comment(author_id=v.id,
