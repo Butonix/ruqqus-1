@@ -405,8 +405,8 @@ def submit_post(v):
 
 
     ##check spam
-    soup=BeautifulSoup(body_html)
-    links=[x.href for x in soup.find_all('a')]
+    soup=BeautifulSoup(body_html, features="html.parser")
+    links=[x['href'] for x in soup.find_all('a') if x.get('href')]
 
     if url:
         links=[url]+links
