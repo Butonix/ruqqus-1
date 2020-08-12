@@ -168,7 +168,7 @@ class Query(graphene.ObjectType):
             return query.filter_by(id=kwargs['id']).all()"""
 
     # Disable sorting over this field
-    all_guilds = SQLAlchemyConnectionField(Guild.connection, sort=None)
+    #all_guilds = SQLAlchemyConnectionField(Guild.connection, sort=None)
 
 
 schema = graphene.Schema(query=Query)
