@@ -164,7 +164,7 @@ def u_username_comments(username, v=None):
     if user.is_suspended and (not v or v.admin_level < 3):
         return render_template("userpage_banned.html", u=user, v=v)
 
-    if user.is_deleted and (not v or (v.id!=user.id and v.admin_level<3)):
+    if user.is_deleted and (not v or v.admin_level<3):
         return render_template("userpage_deleted.html",
                                                u=user,
                                                v=v)
