@@ -90,7 +90,7 @@ def u_username(username, v=None):
                 'api': lambda:{"error":"That user is banned"}
                 }
 
-    if u.is_deleted and (not v or (v.id!=u.id and v.admin_level<3)):
+    if u.is_deleted and (not v or v.admin_level<3):
         return {'html': lambda:render_template("userpage_deleted.html",
                                                u=u,
                                                v=v),
