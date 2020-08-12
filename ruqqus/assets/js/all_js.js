@@ -717,7 +717,7 @@ function toggleSub(){
   document.getElementById('button-sub-mobile').classList.toggle('d-none');
 }
 
-function post_toast(url) {
+function post_toast(url, callback) {
   var xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
   var form = new FormData()
@@ -729,6 +729,7 @@ function post_toast(url) {
       $('#toast-post-success').toast('dispose');
       $('#toast-post-success').toast('show');
       document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+      callback()
     } else {
       $('#toast-post-error').toast('dispose');
       $('#toast-post-error').toast('show');
