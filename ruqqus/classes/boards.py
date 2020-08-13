@@ -59,6 +59,11 @@ class Board(Base, Stndrd, Age_times):
 
     def __repr__(self):
         return f"<Board(name={self.name})>"
+
+    @property
+    def fullname(self):
+        return f"t4_{self.base36id}"
+    
     
     @property
     def mods_list(self):
@@ -149,7 +154,7 @@ class Board(Base, Stndrd, Age_times):
             
 
         if sort=="hot":
-            posts=posts.order_by(Submission.score_hot.desc())
+            posts=posts.order_by(Submission.score_best.desc())
         elif sort=="new":
             posts=posts.order_by(Submission.created_utc.desc())
         elif sort=="disputed":
@@ -334,7 +339,7 @@ class Board(Base, Stndrd, Age_times):
 
 
     def has_participant(self, user):
-        return (self.submissions.filter_by(author_id=user.id).first() or
+        return (g.db.query(Submission).filter_by(original_board_id=self.id, author_id=user.id).first() or
                 g.db.query(Comment).filter_by(author_id=user.id, original_board_id=self.id).first()
                 )
     @property
@@ -370,8 +375,9 @@ class Board(Base, Stndrd, Age_times):
                 'is_private':self.is_private,
                 'is_restricted':self.restricted_posting,
                 'id':self.base36id,
+                'fullname':self.fullname,
                 'banner_url':self.banner_url,
                 'profile_url':self.profile_url,
-                'color':self.color
+                'color':"#"+self.color
                 }
 

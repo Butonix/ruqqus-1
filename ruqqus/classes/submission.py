@@ -88,7 +88,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     ups = deferred(Column(Integer, server_default=FetchedValue()))
     downs=deferred(Column(Integer, server_default=FetchedValue()))
-    age=deferred(Column(Integer, server_default=FetchedValue()))
+    #age=deferred(Column(Integer, server_default=FetchedValue()))
     comment_count=Column(Integer, server_default=FetchedValue())
     flag_count=deferred(Column(Integer, server_default=FetchedValue()))
     report_count=deferred(Column(Integer, server_default=FetchedValue()))
@@ -309,6 +309,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'is_deleted':False,
                 'created_utc':self.created_utc,
                 'id':self.base36id,
+                'fullname':self.fullname,
                 'title':self.title,
                 'is_nsfw':self.over_18,
                 'is_offensive':self.is_offensive,
@@ -325,7 +326,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'embed_url':self.embed_url,
                 'is_archived':self.is_archived,
                 'author_title':self.author.title.json if self.author.title else None,
-                'original_guild_name':self.original_board.name
+                'original_guild_name':self.original_board.name,
+                'comment_count':self.comment_count,
+                'score':self.score_fuzzed,
+                'upvotes':self.upvotes_fuzzed,
+                'downvotes':self.downvotes_fuzzed
                 }
 
         if "_voted" in self.__dict__:
@@ -394,3 +399,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def embed_url(self, x):
         self.submission_aux.embed_url=x
         g.db.add(self.submission_aux)
+
+    @property
+    def is_guildmaster(self):
+        return self.__dict__.get('_is_guildmaster', False)
+    

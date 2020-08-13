@@ -38,10 +38,11 @@ def recompute():
         post_count=0
         while posts:
             posts=db.query(Submission
-                           ).options(lazyload('*')).filter_by(is_banned=False, is_deleted=False
-                                       ).filter(Submission.created_utc>cutoff
-                                                ).order_by(Submission.id.asc()
-                                                           ).offset(100*(page-1)).limit(100).all()
+                ).options(lazyload('*')).filter_by(is_banned=False, is_deleted=False
+                ).filter(Submission.created_utc>cutoff
+                ).order_by(Submission.id.asc()
+                ).offset(100*(page-1)).limit(100).all()
+                
             for post in posts:
                 i+=1
                 post_count+=1
@@ -69,8 +70,8 @@ def recompute():
 
                     comment.upvotes=comment.ups
                     comment.downvotes=comment.downs
-                    g.db.add(comment)
-                    g.db.flush()
+                    db.add(comment)
+                    db.flush()
             
             
                     comment.score_disputed=comment.rank_fiery
