@@ -622,7 +622,9 @@ class User(Base, Stndrd, Age_times):
                 'banner_url':self.banner_url,
                 'post_count':self.post_count,
                 'comment_count':self.comment_count,
-                'title':self.title.json if self.title else None
+                'title':self.title.json if self.title else None,
+                'bio':self.bio,
+                'bio_html':self.bio_html
                 }
 
     @property
