@@ -196,9 +196,11 @@ def webhook_patreon():
 
     #print(user.title_id)
 
+    g.db.add(user)
+    g.db.flush()
+
     user.refresh_selfset_badges()
 
-    g.db.add(user)
     g.db.commit()
 
     #print(user.patreon_pledge_cents)
