@@ -290,7 +290,9 @@ def guild_ids(sort="subs", page=1, nsfw=False):
     return guilds
 
 @app.route("/browse", methods=["GET"])
+@app.route("/api/v1/guilds")
 @auth_desired
+@api("read")
 def browse_guilds(v):
 
     page=int(request.args.get("page",1))
@@ -335,13 +337,15 @@ def browse_guilds(v):
     else:
         boards=[]
 
-    return render_template("boards.html",
+    return {"html":lambda:render_template("boards.html",
                            v=v,
                            boards=boards,
                            page=page,
                            next_exists=next_exists,
                            sort_method=sort_method
-                            )
+                            ),
+            "api":lambda:[board.json for board in boards]
+            }
 
 @app.route('/mine', methods=["GET"])
 @auth_required
