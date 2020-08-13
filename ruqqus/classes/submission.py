@@ -326,7 +326,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'embed_url':self.embed_url,
                 'is_archived':self.is_archived,
                 'author_title':self.author.title.json if self.author.title else None,
-                'original_guild_name':self.original_board.name
+                'original_guild_name':self.original_board.name,
+                'comment_count':self.comment_count,
+                'score':self.score_fuzzed,
+                'upvotes':self.upvotes_fuzzed,
+                'downvotes':self.downvotes_fuzzed
                 }
 
         if "_voted" in self.__dict__:
