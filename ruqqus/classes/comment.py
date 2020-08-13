@@ -57,11 +57,20 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     flags=relationship("CommentFlag", lazy="subquery", backref="comment")
     author=relationship("User", lazy="joined", innerjoin=True, primaryjoin="User.id==Comment.author_id")
     board=association_proxy("post", "board")
+    original_board=relationship("Board", primaryjoin="Board.id==Comment.original_board_id")
+
+    upvotes=Column(Integer, default=1)
+    downvotes=Column(Integer, default=0)
+
+    parent_comment=relationship("Comment", remote_side=[id])
+    child_comments=relationship("Comment", remote_side=[parent_comment_id])
+
+
 
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
-    #ups = deferred(Column(Integer, server_default=FetchedValue()))
-    #downs=deferred(Column(Integer, server_default=FetchedValue()))
+    ups = deferred(Column(Integer, server_default=FetchedValue()))
+    downs=deferred(Column(Integer, server_default=FetchedValue()))
     is_public=deferred(Column(Boolean, server_default=FetchedValue()))
 
     score=deferred(Column(Integer, server_default=FetchedValue()))
@@ -125,7 +134,15 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def replies(self):
 
-        return self.__dict__.get("replies", g.db.query(Comment).filter_by(parent_fullname=self.fullname).all())
+        r=self.__dict__.get("replies", None)
+        if r==None:
+            r=self.child_comments
+        return r
+
+
+    @replies.setter
+    def replies(self, value):
+        self.__dict__["replies"]=value
 
     @property
     @lazy
@@ -228,6 +245,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                     'parent':self.parent_fullname
                     }
         return {'id':self.base36id,
+                'fullname':self.fullname,
                 'post':self.post.base36id,
                 'level':self.level,
                 'parent':self.parent_fullname,

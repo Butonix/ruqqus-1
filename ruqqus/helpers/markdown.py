@@ -4,6 +4,8 @@ from mistletoe.span_token import SpanToken
 from mistletoe.html_renderer import HTMLRenderer
 import re
 
+from flask import g
+
 # add token/rendering for @username mentions
 
 class UserMention(SpanToken):
@@ -47,7 +49,14 @@ class CustomRenderer(HTMLRenderer):
         target = token.target[1]
 
         user=get_user(target, graceful=True)
-        if not user or user.is_banned or user.is_deleted:
+
+        try:
+            if g.v.admin_level==0 and g.dv.any_block-exists(user):
+                return f"{space}@{target}"
+        except:
+            pass
+
+        if (not user or user.is_banned or user.is_deleted):
             return f"{space}@{target}"
         
         return f'{space}<a href="{user.permalink}" class="d-inline-block"><img src="/@{user.username}/pic/profile" class="profile-pic-20 mr-1">@{user.username}</a>'

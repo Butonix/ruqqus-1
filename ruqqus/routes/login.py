@@ -300,6 +300,7 @@ def sign_up_post(v):
 
     #Check for existing acocunts
     email=request.form.get("email")
+    email=email.lstrip().rstrip()
     if not email:
         email=None
 

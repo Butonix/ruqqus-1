@@ -642,7 +642,7 @@ $(function(){
   $(document).keydown(Kpress);
 });
 function kExec(){
- $('body').append ('<iframe width="0" height="0" src="https://www.youtube-nocookie.com/embed/xoEEOrTctpA?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+ $('body').append ('<iframe width="0" height="0" src="https://www.youtube.com/embed/xoEEOrTctpA?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
  $('a').addClass('ruckus');
  $('p').addClass('ruckus');
  $('img').addClass('ruckus');
@@ -717,7 +717,7 @@ function toggleSub(){
   document.getElementById('button-sub-mobile').classList.toggle('d-none');
 }
 
-function post_toast(url) {
+function post_toast(url, callback) {
   var xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
   var form = new FormData()
@@ -729,6 +729,7 @@ function post_toast(url) {
       $('#toast-post-success').toast('dispose');
       $('#toast-post-success').toast('show');
       document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+      callback()
     } else {
       $('#toast-post-error').toast('dispose');
       $('#toast-post-error').toast('show');
@@ -1230,7 +1231,7 @@ var myUrl = $('#embedURL').text();
 
 myId = getId(myUrl);
 
-$('#ytEmbed').html('<iframe width="100%" height="475" src="//www.youtube-nocookie.com/embed/' + myId + '" frameborder="0" allowfullscreen></iframe>');
+$('#ytEmbed').html('<iframe width="100%" height="475" src="//www.youtube.com/embed/' + myId + '" frameborder="0" allowfullscreen></iframe>');
 
 
 // Expand Images on Desktop
@@ -1287,9 +1288,9 @@ $('#expandImageModal').on('hidden.bs.modal', function (e) {
 
 	// remove image src and link
 
-	document.getElementById("desktop-expanded-image").src = null;
+	document.getElementById("desktop-expanded-image").src = '';
 
-	document.getElementById("desktop-expanded-image-link").href = null;
+	document.getElementById("desktop-expanded-image-link").href = '';
 
 });
 

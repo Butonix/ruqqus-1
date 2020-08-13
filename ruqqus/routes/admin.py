@@ -30,7 +30,7 @@ def flagged_posts(v):
 
 @app.route("/admin/image_posts", methods=["GET"])
 @admin_level_required(3)
-@api
+@api("read")
 def image_posts_listing(v):
 
     page=int(request.args.get('page',1))
@@ -186,16 +186,17 @@ def participation_stats(v):
 
     now=int(time.time())
 
-    data={"banned_users":g.db.query(User).filter(User.is_banned>0, or_(User.unban_utc>now, User.unban_utc==0)).count(),
-          "valid_accounts":g.db.query(User).filter_by(is_deleted=False).filter(or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc<now))).count(),
-          "deleted_accounts":g.db.query(User).filter_by(is_deleted=True).count(),
+    data={"valid_users":g.db.query(User).filter_by(is_deleted=False).filter(or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc<now))).count(),
+          "private_users":g.db.query(User).filter_by(is_deleted=False, is_private=False).filter(User.is_banned>0, or_(User.unban_utc>now, User.unban_utc==0)).count(),
+          "banned_users":g.db.query(User).filter(User.is_banned>0, or_(User.unban_utc>now, User.unban_utc==0)).count(),
+          "deleted_users":g.db.query(User).filter_by(is_deleted=True).count(),
           "total_posts": g.db.query(Submission).count(),
-          "posting_users": g.db.query(User).join(Submission.author).distinct().count(),
+          "posting_users": g.db.query(Submission.author_id).distinct().count(),
           "listed_posts": g.db.query(Submission).filter_by(is_banned=False, is_deleted=False).count(),
           "removed_posts":g.db.query(Submission).filter_by(is_banned=True).count(),
           "deleted_posts":g.db.query(Submission).filter_by(is_deleted=True).count(),
           "total_comments":g.db.query(Comment).count(),
-          "commenting_users":g.db.query(User).join(Comment.author).distinct().count(),
+          "commenting_users":g.db.query(Comment.author_id).distinct().count(),
           "removed_comments":g.db.query(Comment).filter_by(is_banned=True).count(),
           "deleted_comments":g.db.query(Comment).filter_by(is_deleted=True).count(),
           "total_guilds":g.db.query(Board).count(),
@@ -203,9 +204,9 @@ def participation_stats(v):
           "private_guilds":g.db.query(Board).filter_by(is_banned=False, is_private=True).count(),
           "banned_guilds":g.db.query(Board).filter_by(is_banned=True).count(),
           "post_votes":g.db.query(Vote).count(),
-          "post_voting_users":g.db.query(User).join(Vote, Vote.user_id==User.id).distinct().count(),
+          "post_voting_users":g.db.query(Vote.user_id).distinct().count(),
           "comment_votes":g.db.query(CommentVote).count(),
-          "comment_voting_users":g.db.query(User).join(CommentVote, CommentVote.user_id==User.id).distinct().count()
+          "comment_voting_users":g.db.query(CommentVote.user_id).distinct().count()
           }
 
     data={x:f"{data[x]:,}" for x in data}

@@ -71,7 +71,12 @@ class Age_times:
 
         now = time.gmtime()
         ctd = time.gmtime(self.created_utc)
+
+        #compute number of months
         months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
+        #remove a month count if current day of month < creation day of month
+        if now.tm_mday < ctd.tm_mday:
+            months-=1
 
         if months < 12:
             return f"{months} month{'s' if months > 1 else ''} ago"
@@ -134,8 +139,6 @@ class Scores:
     def score(self):
         return int(self.score_top) or 0
 
-
-
 class Fuzzing:
 
     @property
@@ -154,3 +157,24 @@ class Fuzzing:
         a = math.floor(real * (1 - k))
         b = math.ceil(real * (1 + k))
         return random.randint(a, b)
+
+    @property
+    def upvotes_fuzzed(self):
+
+        if self.upvotes <=10 or self.is_archived:
+            return self.upvotes
+
+        lower = int(self.upvotes * 0.99)
+        upper = int(self.upvotes * 1.01)+1
+
+        return random.randint(lower, upper)
+
+    @property
+    def downvotes_fuzzed(self):
+        if self.downvotes <=10 or self.is_archived:
+            return self.downvotes
+
+        lower = int(self.downvotes * 0.99)
+        upper = int(self.downvotes * 1.01)+1
+
+        return random.randint(lower, upper)

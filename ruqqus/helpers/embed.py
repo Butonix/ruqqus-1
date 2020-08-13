@@ -20,9 +20,9 @@ def youtube_embed(url):
     params=parse_qs(x.query)
     t=params.get('t',params.get('start', [0]))[0]
     if t:
-        return f"https://youtube-nocookie.com/embed/{yt_id}?start={t}"
+        return f"https://youtube.com/embed/{yt_id}?start={t}"
     else:
-        return f"https://youtube-nocookie.com/embed/{yt_id}"
+        return f"https://youtube.com/embed/{yt_id}"
 
 
 
