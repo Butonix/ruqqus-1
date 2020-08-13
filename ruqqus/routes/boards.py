@@ -137,7 +137,7 @@ def reddit_moment_redirect(name):
 @app.route("/+<name>", methods=["GET"])
 @app.route("/api/v1/guild/<name>/listing", methods=["GET"])
 @auth_desired
-@api
+@api("read")
 def board_name(name, v):
 
     board=get_guild(name)
@@ -742,13 +742,13 @@ def subscribe_board(boardname, v):
     sub= g.db.query(Subscription).filter_by(user_id=v.id, board_id=board.id).first()
     if sub:
         if sub.is_active:
-            abort(409)
+            return jsonify({"error":f"You are already a member of +{board.name}"}), 409
         else:
             #reactivate canceled sub
             sub.is_active=True
             g.db.add(sub)
             
-            return "", 204
+            return jsonify({"message":f"Joined +{board.name}"}), 200
 
     
     new_sub=Subscription(user_id=v.id,
@@ -766,7 +766,7 @@ def subscribe_board(boardname, v):
     board.stored_subscriber_count=board.subscriber_count
     g.db.add(board)
 
-    return "", 204
+    return jsonify({"message":f"Joined +{board.name}"}), 200
 
 
 @app.route("/api/unsubscribe/<boardname>", methods=["POST"])
@@ -778,10 +778,8 @@ def unsubscribe_board(boardname, v):
     #check for existing subscription
     sub= g.db.query(Subscription).filter_by(user_id=v.id, board_id=board.id).first()
 
-    if not sub:
-        abort(409)
-    elif not sub.is_active:
-        abort(409)
+    if not sub or not sub.is_active:
+            return jsonify({"error":f"You aren't a member of +{board.name}"}), 409
 
     sub.is_active=False
 
@@ -796,7 +794,7 @@ def unsubscribe_board(boardname, v):
     board.stored_subscriber_count=board.subscriber_count
     g.db.add(board)
 
-    return "", 204
+    return jsonify({"message":f"Left +{board.name}"}), 200
 
 @app.route("/+<boardname>/mod/queue", methods=["GET"])
 @auth_required
