@@ -17,7 +17,7 @@
 <p><b>App Name</b></p>
 <p>{{ app.app_name }}</p>
 <p><b>Client ID</b></p>
-<p>{{ app.client_id }}</p>
+<p><span id="secret-{{ app.id }}-click" onclick="document.getElementById('secret-{{ app.id }}-click').classList.add('d-none');document.getElementById('secret-{{ app.id }}-reveal').classList.reveal('d-none');">click to reveal</span><span id="secret-{{ app.id }}-reveal"class="d-none">{{ app.client_id }}</span></p>
 <p><b>Client Secret - do not share</b></p>
 <p>{{ app.client_secret }}</p>
 <p><b>Redirect URIs</b></p>
