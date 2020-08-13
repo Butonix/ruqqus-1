@@ -1115,13 +1115,13 @@ def siege_guild(v):
     
 
     #Assemble list of mod ids to check
-    #skip any user with a site-wide ban
+    #skip any user with a perm site-wide ban
     #skip any deleted mod
     mods=[]
     for user in guild.mods:
         if user.id==v.id:
             break
-        if not user.is_banned and not user.is_deleted:
+        if not (user.is_banned and user.unban_utc==0) and not user.is_deleted:
             mods.append(user)
 
     #if no mods, skip straight to success
