@@ -383,6 +383,9 @@ def mod_take_pid(pid, v):
     if not board.can_take(post):
         return jsonify({'error':f"You can't yank this particular post to +{board.name}."}), 403
 
+    if board.is_private and post.original_board_id!=board.id:
+        return jsonify({'error':f"+{board.name} is private, so you can only yank content that started there."}), 403
+
     post.board_id=board.id
     post.guild_name=board.name
     g.db.add(post)
