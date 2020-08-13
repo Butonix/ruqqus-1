@@ -96,6 +96,9 @@ class User(Base, Stndrd, Age_times):
     blocked=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id")
 
 
+    applications = relationship("OauthApp")
+
+
     
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
