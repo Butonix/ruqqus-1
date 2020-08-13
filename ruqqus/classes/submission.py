@@ -309,6 +309,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'is_deleted':False,
                 'created_utc':self.created_utc,
                 'id':self.base36id,
+                'fullname':self.fullname,
                 'title':self.title,
                 'is_nsfw':self.over_18,
                 'is_offensive':self.is_offensive,

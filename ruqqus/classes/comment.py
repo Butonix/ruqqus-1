@@ -245,6 +245,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                     'parent':self.parent_fullname
                     }
         return {'id':self.base36id,
+                'fullname':self.fullname,
                 'post':self.post.base36id,
                 'level':self.level,
                 'parent':self.parent_fullname,
