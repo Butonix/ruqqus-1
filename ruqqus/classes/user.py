@@ -24,6 +24,7 @@ from .mix_ins import *
 from .subscriptions import *
 from .userblock import *
 from .badges import *
+from .clients import *
 from ruqqus.__main__ import Base,cache
 
 
