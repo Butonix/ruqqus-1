@@ -93,13 +93,22 @@ def get_posts(pids, sort="hot", v=None):
 
     if v:
         for pid in pids:
+            
             vt=g.db.query(Vote).filter_by(submission_id=pid, user_id=v.id).subquery()
             mod=g.db.query(ModRelationship).filter_by(user_id=v.id, invite_rescinded=False).subquery()
-            query=g.db.query(Submission, vt.c.vote_type, mod.c.id
+            boardblocks=g.db.query(BoardBlock).filter_by(user_id=v.id).subquery()
+
+
+            query=g.db.query(
+                    Submission,
+                    vt.c.vote_type, 
+                    mod.c.id, 
+                    boardblocks.c.id
                 ).options(joinedload(Submission.author).joinedload(User.title)
                 ).filter_by(id=pid
                 ).join(vt, vt.c.submission_id==Submission.id, isouter=True
                 ).join(mod, mod.c.board_id==Submission.board_id, isouter=True
+                ).join(boardblocks, boardblocks.c.board_id==Submission.board_id, isouter=True
             )
             queries.append(query)
 
@@ -116,6 +125,7 @@ def get_posts(pids, sort="hot", v=None):
         for i in range(len(output)):
             output[i]._voted=posts[i][1] or 0
             output[i]._is_guildmaster=posts[i][2] or 0
+            output[i]._is_blocking_guild=posts[i][3] or 0
     else:
         for pid in pids:
             query=g.db.query(Submission
