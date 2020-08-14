@@ -307,7 +307,7 @@
           {% endif %}
           {% endif %}
 
-          {% if v %}
+          {% if v and not v.id==p.author_id %}
           <button class="btn btn-link btn-block btn-lg text-left text-danger" data-dismiss="modal" onclick="post_toast('/settings/block?username={{ p.author.username }}')"
           ><i class="fas fa-user-slash text-danger mr-3"></i>Block user</button>
           {% endif %}
@@ -450,7 +450,7 @@
                     {% endif %}
                     {% endif %}
 
-                    {% if v %}
+                    {% if v and not v.id==p.author_id %}
                     <li class="list-inline-item d-none d-md-inline-block">
                     	<div class="dropdown show">
                     		<a href="#" role="button" id="dropdownMoreLink-{{ p.base36id }}" data-toggle="dropdown" aria-haspopup="true"
