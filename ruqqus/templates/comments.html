@@ -185,20 +185,20 @@
             </a>
 
             <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
-              <a class="dropdown-item" href="{{ c.permalink }}?context=3"><i class="fas fa-book-open"></i>Context</a>
-              <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
+              <a class="dropdown-item" href="{{ c.permalink }}?context=3"><i class="fas fa-book-open fa-width-rem"></i>Context</a>
+              <a class="dropdown-item d-none" href="#"><i class="fas fa-save fa-width-rem"></i>Save</a>
 
 
               {% if v and c.parent_submission and not c.author_id==v.id and is_allowed_to_comment %}
-              <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author.username if not c.author.is_deleted else '[is_deleted]' }}',)"><i class="fas fa-flag"></i>Flag</a>
+              <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author.username if not c.author.is_deleted else '[is_deleted]' }}',)"><i class="fas fa-flag fa-width-rem"></i>Flag</a>
 
               {% endif %}
 
               {% if v and c.parent_submission and c.author_id==v.id and not c.is_deleted %}
 
-              <a class="dropdown-item" href="javascript:void(0)" onclick="toggleEdit('{{ c.base36id }}')"><i class="fas fa-edit"></i>Edit</a>
+              <a class="dropdown-item" href="javascript:void(0)" onclick="toggleEdit('{{ c.base36id }}')"><i class="fas fa-edit fa-width-rem"></i>Edit</a>
 
-              <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal('{{ c.base36id }}')"><i class="fas fa-trash-alt"></i>Delete</a>
+              <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal('{{ c.base36id }}')"><i class="fas fa-trash-alt fa-width-rem"></i>Delete</a>
 
               {% endif %}
 
@@ -209,22 +209,22 @@
               <div class="dropdown-divider"></div>
               <h6 class="dropdown-header">Admin actions</h6>
 
-              <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Undistinguish</a>
+              <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge fa-width-rem"></i>Undistinguish</a>
               {% else %}
-              <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="distinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Distinguish</a>
+              <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="distinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge fa-width-rem"></i>Distinguish</a>
 
               {% endif %}
               {% endif %}
               {% if v.admin_level>=3 %}
 		{% if not c.is_banned %}
-              <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times"></i>Remove</a>
+              <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times fa-width-rem"></i>Remove</a>
                 {% endif %}
               {% endif %}
 	      {% endif %}
 
             {% if v %}
             <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ c.author.username }}')"
-            ><i class="fas fa-user-slash text-danger"></i>Block user</a>
+            ><i class="fas fa-user-slash text-danger fa-width-rem"></i>Block user</a>
             {% endif %}
 
             </div>
