@@ -54,16 +54,20 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
     if v:
         vt=nSession.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
         mod=nSession.query(ModRelationship).filter_by(user_id=v.id, invite_rescinded=False).subquery()
+        boardblocks=nSession.query(BoardBlock).filter_by(user_id=v.id).subquery()
 
 
-        items= nSession.query(Submission, vt.c.vote_type, mod.c.id
+        items= nSession.query(
+                Submission, 
+                vt.c.vote_type, 
+                mod.c.id,
+                boardblocks.c.id
             ).options(
             joinedload(Submission.author).joinedload(User.title)
-            ).filter(Submission.id==i).join(
-            vt, 
-            vt.c.submission_id==Submission.id, 
-            isouter=True
+            ).filter(Submission.id==i
+            ).join(vt, vt.c.submission_id==Submission.id, isouter=True
             ).join(mod, mod.c.board_id==Submission.board_id, isouter=True
+            ).join(boardblocks, boardblocks.c.board_id==Submission.board_id, isouter=True
             ).first()
         
         if not items:
@@ -109,7 +113,7 @@ def get_posts(pids, sort="hot", v=None):
                 ).join(vt, vt.c.submission_id==Submission.id, isouter=True
                 ).join(mod, mod.c.board_id==Submission.board_id, isouter=True
                 ).join(boardblocks, boardblocks.c.board_id==Submission.board_id, isouter=True
-            )
+                )
             queries.append(query)
 
         queries=tuple(queries)
