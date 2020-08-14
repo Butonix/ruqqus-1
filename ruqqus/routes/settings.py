@@ -376,7 +376,7 @@ def settings_blockedguilds(v):
 @validate_formkey
 def settings_block_user(v):
 
-    user=get_user(request.form.get("username"), graceful=True)
+    user=get_user(request.values.get("username"), graceful=True)
 
     if not user:
         return jsonify({"error":"That user doesn't exist."}), 404
