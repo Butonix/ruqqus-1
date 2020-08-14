@@ -22,7 +22,7 @@
 	<label for="edit-{{ app.id }}-client-id">Client ID</label>
 	<input id="edit-{{ app.id }}-client-id" class="form-control" type="text" name="name" value="{{ app.client_id }}" readonly>
 	<label for="edit-{{ app.id }}-client-secret">Client Secret</label>
-	<a href="javascript:void(0)" id="secret-{{ app.id }}-click" class="btn btn-secondary d-block" onclick="document.getElementById('secret-{{ app.id }}-click').classList.add('d-none');document.getElementById('edit-{{ app.id }}-client-secret').classList.remove('d-none');">Click to show</a>
+	<a href="javascript:void(0)" id="secret-{{ app.id }}-click" class="btn btn-secondary d-block" onclick="x=document.getElementById('secret-{{ app.id }}-click');x.classList.add('d-none');x.classList.remove('d-block');document.getElementById('edit-{{ app.id }}-client-secret').classList.remove('d-none');">Click to show</a>
 	<input class="d-none form-control" id="edit-{{ app.id }}-client-secret" type="text" name="name" value="{{ app.client_secret }}" readonly>
 	<label for="edit-{{ app.id }}-redirect">Redirect URI</label>
 	<input id="edit-{{ app.id }}-redirect" class="form-control" type="text" name="redirect_uri" value="{{ app.redirect_uri }}">

@@ -96,7 +96,7 @@ class User(Base, Stndrd, Age_times):
     blocked=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id")
 
 
-    applications = relationship("OauthApp")
+    _applications = relationship("OauthApp", lazy="subquery")
 
 
     
@@ -717,3 +717,6 @@ class User(Base, Stndrd, Age_times):
                     g.db.delete(bad_badge)
 
         g.db.add(self)
+
+    def applications(self):
+        return self._applications.order_by(OauthApp.id.asc()).all()
