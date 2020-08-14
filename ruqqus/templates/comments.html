@@ -222,6 +222,11 @@
               {% endif %}
 	      {% endif %}
 
+            {% if v %}
+            <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ c.author.username }}')"
+            ><i class="fas fa-user-slash text-danger"></i>Block user</a>
+            {% endif %}
+
             </div>
           </div>
         </li>
@@ -349,6 +354,14 @@
           {% endif %}
           {% endif %}
           {% endif %}
+
+          {% if v %}
+          <li class="list-group-item">
+            <a class="d-block" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ c.author.username }}')"
+            ><i class="fas fa-user-slash text-danger"></i>Block user</a>
+          </li>
+          {% endif %}
+
         </ul>
       </div>
     </div>

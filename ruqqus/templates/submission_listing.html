@@ -179,7 +179,7 @@
   			<div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink-{{ p.base36id }}">
   				<a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ p.author.username }}')"
   				><i class="fas fa-user-slash text-danger"></i>Block user</a>
-  				{% if not v.has_blocked_guild(p.board) %}
+  				{% if not p.is_blocking_guild %}
   				<a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block_guild?board={{ p.board.name }}')"><i class="fas fa-eye-slash text-danger"></i>Hide guild</a>
   				{% endif %}
   			</div>
