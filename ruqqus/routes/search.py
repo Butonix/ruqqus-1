@@ -43,7 +43,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot"):
             Submission.author_id.notin_(blocked)
             )
     else:
-        posts=posts.filter(Submission.is_public==True)
+        posts=posts.filter(Submission.post_public==True)
 
     if t:
         now=int(time.time())
