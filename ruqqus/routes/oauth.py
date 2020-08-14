@@ -206,10 +206,16 @@ def oauth_grant():
     else:
         return jsonify({"oauth_error":"Invalid grant type"})
 
+@app.route("/help/api_keys", methods=["POST"])
+@is_not_banned
+def request_api_keys(v):
 
-
-
-
+    new_app=OauthApp(
+        app_name=request.form.get('name'),
+        redirect_uri=request.form.get('redirect_uri'),
+        author_id=v.id,
+        description=request.form.get("description")[0:256]
+        )
 
 @app.route("/api/v1/identity")
 @api("identity")
