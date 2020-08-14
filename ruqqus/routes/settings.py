@@ -401,7 +401,7 @@ def settings_block_user(v):
     #cache.delete_memoized(Board.idlist, v=v)
     cache.delete_memoized(frontlist, v=v)
 
-    return "", 204
+    return jsonify({"message":f"@{user.username} blocked."})
     
 @app.route("/settings/unblock", methods=["POST"])
 @auth_required
@@ -420,7 +420,7 @@ def settings_unblock_user(v):
     #cache.delete_memoized(Board.idlist, v=v)
     cache.delete_memoized(frontlist, v=v)
     
-    return "", 204
+    return jsonify({"message":f"@{user.username} unblocked."})
 
 
 @app.route("/settings/block_guild", methods=["POST"])
