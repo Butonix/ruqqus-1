@@ -718,5 +718,6 @@ class User(Base, Stndrd, Age_times):
 
         g.db.add(self)
 
+    @property
     def applications(self):
         return self._applications.order_by(OauthApp.id.asc()).all()
