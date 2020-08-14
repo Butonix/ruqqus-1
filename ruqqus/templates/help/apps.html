@@ -14,18 +14,19 @@
 {% endfilter %}
 
 {% for app in v.applications %}
-<p><b>App Name</b></p>
-<p>{{ app.app_name }}</p>
+<h3>{{ app.app_name }}</h3>
 <p><b>Client ID</b></p>
 <p>{{ app.client_id }}</p>
 <p><b>Client Secret - do not share</b></p>
 <p><span id="secret-{{ app.id }}-click" onclick="document.getElementById('secret-{{ app.id }}-click').classList.add('d-none');document.getElementById('secret-{{ app.id }}-reveal').classList.remove('d-none');">click to reveal</span><span id="secret-{{ app.id }}-reveal" class="d-none">{{ app.client_secret }}</span></p>
 <p><b>Redirect URIs</b></p>
 <p>{{ app.redirect_uri }}</p>
+<p><b>Description</b></p>
+<p>{{ app.description }}</p>
 <hr>
 {% endfor %}
 
-##Request API Keys
+<h2>Request API Keys</h2>
 
 <form id="api-key-request-form" action="/help/api_keys" method="post">
 	<input type="hidden" name="formkey" value="{{ v.formkey }}">
@@ -37,6 +38,7 @@
 	<input type="text" id="form-redirect" class="form-control" name="redirect_uri" placeholder="Must use https. Separate multiple options with comma.">
 	<label for="form-username">Description</label>
 	<textarea form="api-key-request-form" id="form-desc" class="form-control" name="description" maxlength="256"></textarea>
+	<input type="submit" value="Request API Key"
 </form>
 
 {% endblock %}
