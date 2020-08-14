@@ -15,14 +15,21 @@
 
 {% for app in v.applications %}
 <h3>{{ app.app_name }}</h3>
-<p><b>Client ID</b></p>
-<p>{{ app.client_id }}</p>
-<p><b>Client Secret - do not share</b></p>
-<p><span id="secret-{{ app.id }}-click" onclick="document.getElementById('secret-{{ app.id }}-click').classList.add('d-none');document.getElementById('secret-{{ app.id }}-reveal').classList.remove('d-none');">click to reveal</span><span id="secret-{{ app.id }}-reveal" class="d-none">{{ app.client_secret }}</span></p>
-<p><b>Redirect URIs</b></p>
-<p>{{ app.redirect_uri }}</p>
-<p><b>Description</b></p>
-<p>{{ app.description }}</p>
+<form id="edit-app-{{ app.id }}" action="/edit_app/{{ app.id }}" method="post">
+	<input type="hidden" name="formkey" value="{{ v.formkey }}">
+	<label for="edit-{{ app.id }}-name">App Name</label>
+	<input id="edit-{{ app.id }}-name" class="form-control" type="text" name="name" value="{{ app.app_name }}">
+	<label for="edit-{{ app.id }}-client-id">Client ID</label>
+	<input id="edit-{{ app.id }}-client-id" class="form-control" type="text" name="name" value="{{ app.client_id }}" readonly>
+	<label for="edit-{{ app.id }}-client-secret">Client Secret</label>
+	<button id="secret-{{ app.id }}-click" class="btn btn-secondary" onclick="document.getElementById('secret-{{ app.id }}-click').classList.add('d-none');document.getElementById('edit-{{ app.id }}-client-secret').classList.remove('d-none');">Click to show</button>
+	<input class="d-none form-control" id="edit-{{ app.id }}-client-secret" type="text" name="name" value="{{ app.client_secret }}" readonly>
+	<label for="edit-{{ app.id }}-redirect">Redirect URI</label>
+	<input id="edit-{{ app.id }}-redirect" class="form-control" type="text" name="name" value="{{ app.redirect_uri }}" readonly>
+	<label for="edit-{{ app.id }}-desc">Description</label>
+	<textarea form="edit-app-{{ app.id }}" class="form-control" name="description" id="edit-{{ app.id }}-desc" maxlength="256">{{ app.description }}</textarea>
+	<input type="submit" class="btn btn-primary ml-auto" value="Save Changes">
+</form>
 <hr>
 {% endfor %}
 
