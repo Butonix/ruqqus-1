@@ -25,4 +25,18 @@
 <hr>
 {% endfor %}
 
+##Request API Keys
+
+<form id="api-key-request-form" action="/help/api_keys" method="post">
+	<input type="hidden" name="formkey" value="{{ v.formkey }}">
+	<label for="form-username">Username</label>
+	<input type="text" id="form-username" class="form-control" name="username" value="{{ v.username }}" readonly>
+	<label for="form-appname">Application Name</label>
+	<input type="text" id="form-appname" class="form-control" name="name">
+	<label for="form-redirect">Redirect URI</label>
+	<input type="text" id="form-redirect" class="form-control" name="redirect_uri">
+	<label for="form-username">Description</label>
+	<textarea form="api-key-request-form" id="form-desc" class="form-control" name="description"></textarea>
+</form>
+
 {% endblock %}
