@@ -721,4 +721,4 @@ class User(Base, Stndrd, Age_times):
 
     @property
     def applications(self):
-        return self._applications.order_by(OauthApp.id.asc()).all()
+        return [x for x in self._applications.order_by(OauthApp.id.asc()).all()]
