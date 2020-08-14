@@ -223,7 +223,7 @@ def request_api_keys(v):
 
 @app.route("/delete_app/<aid>", methods=["POST"])
 @is_not_banned
-def delete_oauth_app(v):
+def delete_oauth_app(v, aid):
 
     aid=int(aid)
     app=g.db.query(OauthApp).filter_by(id=aid).first()
@@ -234,7 +234,7 @@ def delete_oauth_app(v):
 
 @app.route("/edit_app/<aid>", methods=["POST"])
 @is_not_banned
-def edit_oauth_app(v):
+def edit_oauth_app(v, aid):
 
     aid=int(aid)
     app=g.db.query(OauthApp).filter_by(id=aid).first()
