@@ -217,6 +217,23 @@ def request_api_keys(v):
         description=request.form.get("description")[0:256]
         )
 
+    g.db.add(new_app)
+
+    return redirect('/help/apps')
+
+@app.route("/delete_app/<aid>", methods=["POST"])
+@is_not_banned
+def delete_oauth_app(v):
+
+    aid=int(aid)
+
+    app=g.db.query(OauthApp).filter_by(id=aid).first()
+
+    g.db.delete(app)
+
+    return redirect('/help/apps')
+
+
 @app.route("/api/v1/identity")
 @api("identity")
 def api_v1_identity(v):
