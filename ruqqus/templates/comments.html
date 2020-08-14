@@ -222,7 +222,7 @@
               {% endif %}
 	      {% endif %}
 
-            {% if v %}
+            {% if v and not v.id==c.author_id %}
             <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ c.author.username }}')"
             ><i class="fas fa-user-slash text-danger fa-width-rem"></i>Block user</a>
             {% endif %}
@@ -355,7 +355,7 @@
           {% endif %}
           {% endif %}
 
-          {% if v %}
+          {% if v and not v.id==c.author_id %}
           <li class="list-group-item">
             <a class="d-block" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ c.author.username }}')"
             ><i class="fas fa-user-slash text-danger"></i>Block user</a>
