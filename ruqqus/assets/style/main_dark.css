@@ -15069,7 +15069,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   text-align: center;
   object-fit: cover;
   color: #FFFFFF;
-  background-color: #FFFFFF;
+  background-color: #1f2023;
 }
 
 .profile-pic .letter {
@@ -15109,7 +15109,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-radius: 50%;
   text-align: center;
   object-fit: cover;
-  background-color: #FFFFFF;
+  background-color: #1f2023;
 }
 
 .profile-pic-25 {
@@ -15118,7 +15118,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-radius: 50%;
   text-align: center;
   object-fit: cover;
-  background-color: #FFFFFF;
+  background-color: #1f2023;
 }
 
 .profile-pic-30 {
@@ -15127,7 +15127,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-radius: 50%;
   text-align: center;
   object-fit: cover;
-  background-color: #FFFFFF;
+  background-color: #1f2023;
 }
 
 .profile-pic-35 {
@@ -15136,7 +15136,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-radius: 50%;
   text-align: center;
   object-fit: cover;
-  background-color: #FFFFFF;
+  background-color: #1f2023;
 }
 
 .profile-pic-40 {
@@ -15145,7 +15145,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-radius: 50%;
   text-align: center;
   object-fit: cover;
-  background-color: #FFFFFF;
+  background-color: #1f2023;
 }
 
 .profile-pic-50 {
@@ -15154,7 +15154,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-radius: 50%;
   text-align: center;
   object-fit: cover;
-  background-color: #FFFFFF;
+  background-color: #1f2023;
 }
 
 .profile-pic-65 {
@@ -15163,7 +15163,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-radius: 50%;
   text-align: center;
   object-fit: cover;
-  background-color: #FFFFFF;
+  background-color: #1f2023;
 }
 
 .profile-pic-75 {
@@ -15172,7 +15172,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-radius: 50%;
   text-align: center;
   object-fit: cover;
-  background-color: #FFFFFF;
+  background-color: #1f2023;
 }
 
 .profile-pic-100 {
@@ -15181,7 +15181,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-radius: 50%;
   text-align: center;
   object-fit: cover;
-  background-color: #FFFFFF;
+  background-color: #1f2023;
 }
 
 .profile-pic-overlap {
@@ -15368,6 +15368,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .post-body {
   word-break: break-word;
+  overflow: hidden;
 }
 
 .modal-backdrop.show {
@@ -15839,6 +15840,7 @@ div:hover .thumb-img-link-overlay {
   margin-bottom: 1rem;
   word-break: break-word;
   color: #CFCFCF;
+  overflow: hidden;
 }
 
 blockquote {
@@ -17386,6 +17388,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     font-size: 14px;
     font-weight: 400;
     line-height: normal;
+    overflow: hidden;
   }
 
   .post-meta {

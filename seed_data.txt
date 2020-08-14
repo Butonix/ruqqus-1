@@ -116,7 +116,7 @@ ALTER TABLE ONLY public.titles ALTER COLUMN id SET DEFAULT nextval('public.title
 COPY public.badge_defs (id, name, description, icon, kind, rank, qualification_expr) FROM stdin;
 3	Code Contributor	Contributed to Ruqqus source code	git.png	3	3	\N
 4	White Hat	Responsibly reported a security issue	whitehat.png	3	3	\N
-7	Sitebreaker	Inadvertantly broke Ruqqus	sitebreaker.png	3	2	\N
+7	Sitebreaker	Inadvertently broke Ruqqus	sitebreaker.png	3	2	\N
 8	Unsilenced	Ruqqus rejected a foreign order to take down this user's content.	unsilenced.png	3	4	\N
 1	Alpha User	Joined Ruqqus during open alpha	alpha.png	4	4	\N
 6	Beta User	Joined Ruqqus during open beta	beta.png	4	3	\N

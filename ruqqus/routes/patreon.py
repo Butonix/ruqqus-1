@@ -2,6 +2,7 @@ from os import environ
 import requests
 import urllib
 import hmac
+import pprint
 
 from flask import *
 
@@ -40,8 +41,10 @@ def patreon_unauthorize(v):
     v.patreon_name=""
 
     if v.title_id in [32, 33, 34, 35]:
-        v.title_id=0
+        v.title_id=None
 
+    v.refresh_selfset_badges()
+    
     g.db.add(v)
     g.db.commit()
 
@@ -151,41 +154,56 @@ def webhook_patreon():
                     ).hexdigest()
 
     if not hmac.compare_digest(sig, hash_):
-        abort(403)
+        abort(401)
 
     #look up user by patreon id
 
     data=request.json
 
-    print(data)
+    #pprint.pprint(data)
 
-    user = db.query(User).filter_by(patreon_id=data["data"]["id"]).first()
+    user = g.db.query(User).filter_by(patreon_id=data["data"]["id"]).first()
     if not user:
         return "", 204
 
-    if request.headers.get("X-Patreon-Event") in ["members:pledge:create","members:pledge:update"]:
-        user.patreon_pledge_cents=data["data"]["attributes"]["amount_cents"]
-    else:
+    event_type=request.headers.get("X-Patreon-Event")
+
+    if event_type in ["members:pledge:create","members:pledge:update"]:
+        user.patreon_pledge_cents=data["data"]["attributes"]["pledge_amount_cents"]
+    elif event_type=="members:pledge:delete":
         user.patreon_pledge_cents=0
+    else:
+        abort(400)
+
+    #print(user)
+
+    #print(user.patreon_pledge_cents)
 
     g.db.add(user)
     g.db.flush()
 
     #Change patron title if appropriate
-    if user.patreon_pledge_cents==0 and v.title_id in [32, 33, 34, 35]:
-        v.title_id=0
-    elif user.patreon_pledge_cents<500 and v.title_id in [33, 34, 35]:
-        v.title_id=32
-    elif user.patreon_pledge_cents<2000 and v.title_id in [32, 34, 35]:
-        v.title_id=33
-    elif user.patreon_pledge_cents<5000 and v.title_id in [32, 33, 35]:
-        v.title_id=34
-    elif user.patreon_pledge_cents>=5000 and v.title_id in [32, 33, 34]:
-        v.title_id=35
+    if user.patreon_pledge_cents==0 and user.title_id in [32, 33, 34, 35]:
+        user.title_id=None
+    elif user.patreon_pledge_cents<500 and user.title_id in [33, 34, 35]:
+        user.title_id=32
+    elif user.patreon_pledge_cents<2000 and user.title_id in [32, 34, 35]:
+        user.title_id=33
+    elif user.patreon_pledge_cents<5000 and user.title_id in [32, 33, 35]:
+        user.title_id=34
+    elif user.patreon_pledge_cents>=5000 and user.title_id in [32, 33, 34]:
+        user.title_id=35
+
+    #print(user.title_id)
+
+    g.db.add(user)
+    g.db.flush()
 
     user.refresh_selfset_badges()
 
-    g.db.add(user)
     g.db.commit()
+
+    #print(user.patreon_pledge_cents)
+    #print(user.title_id)
 
     return "", 204

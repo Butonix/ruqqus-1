@@ -137,7 +137,7 @@ def reddit_moment_redirect(name):
 @app.route("/+<name>", methods=["GET"])
 @app.route("/api/v1/guild/<name>/listing", methods=["GET"])
 @auth_desired
-@api
+@api("read")
 def board_name(name, v):
 
     board=get_guild(name)
@@ -382,6 +382,9 @@ def mod_take_pid(pid, v):
 
     if not board.can_take(post):
         return jsonify({'error':f"You can't yank this particular post to +{board.name}."}), 403
+
+    if board.is_private and post.original_board_id!=board.id:
+        return jsonify({'error':f"+{board.name} is private, so you can only yank content that started there."}), 403
 
     post.board_id=board.id
     post.guild_name=board.name
@@ -742,13 +745,13 @@ def subscribe_board(boardname, v):
     sub= g.db.query(Subscription).filter_by(user_id=v.id, board_id=board.id).first()
     if sub:
         if sub.is_active:
-            abort(409)
+            return jsonify({"error":f"You are already a member of +{board.name}"}), 409
         else:
             #reactivate canceled sub
             sub.is_active=True
             g.db.add(sub)
             
-            return "", 204
+            return jsonify({"message":f"Joined +{board.name}"}), 200
 
     
     new_sub=Subscription(user_id=v.id,
@@ -766,7 +769,7 @@ def subscribe_board(boardname, v):
     board.stored_subscriber_count=board.subscriber_count
     g.db.add(board)
 
-    return "", 204
+    return jsonify({"message":f"Joined +{board.name}"}), 200
 
 
 @app.route("/api/unsubscribe/<boardname>", methods=["POST"])
@@ -778,10 +781,8 @@ def unsubscribe_board(boardname, v):
     #check for existing subscription
     sub= g.db.query(Subscription).filter_by(user_id=v.id, board_id=board.id).first()
 
-    if not sub:
-        abort(409)
-    elif not sub.is_active:
-        abort(409)
+    if not sub or not sub.is_active:
+            return jsonify({"error":f"You aren't a member of +{board.name}"}), 409
 
     sub.is_active=False
 
@@ -796,7 +797,7 @@ def unsubscribe_board(boardname, v):
     board.stored_subscriber_count=board.subscriber_count
     g.db.add(board)
 
-    return "", 204
+    return jsonify({"message":f"Left +{board.name}"}), 200
 
 @app.route("/+<boardname>/mod/queue", methods=["GET"])
 @auth_required
@@ -1117,13 +1118,13 @@ def siege_guild(v):
     
 
     #Assemble list of mod ids to check
-    #skip any user with a site-wide ban
+    #skip any user with a perm site-wide ban
     #skip any deleted mod
     mods=[]
     for user in guild.mods:
         if user.id==v.id:
             break
-        if not user.is_banned and not user.is_deleted:
+        if not (user.is_banned and user.unban_utc==0) and not user.is_deleted:
             mods.append(user)
 
     #if no mods, skip straight to success

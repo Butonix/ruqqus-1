@@ -18,78 +18,75 @@ from ruqqus.__main__ import app, cache
 @validate_formkey
 def settings_profile_post(v):
 
-    updated=False
+    updated=False                             
 
-    if request.form.get("new_password"):
-        if request.form.get("new_password") != request.form.get("cnf_password"):
-            return render_template("settings.html", v=v, error="Passwords do not match.")
-
-        if not v.verifyPass(request.form.get("old_password")):
-            return render_template("settings.html", v=v, error="Incorrect password")
-
-        v.passhash=v.hash_password(request.form.get("new_password"))
-        updated=True                                  
-
-    if request.form.get("over18") != v.over_18:
+    if request.values.get("over18", v.over_18) != v.over_18:
         updated=True
-        v.over_18=bool(request.form.get("over18", None))
+        v.over_18=request.values.get("over18", None)=='true'
         cache.delete_memoized(User.idlist, v)
 
-    if request.form.get("hide_offensive") != v.hide_offensive:
+    if request.values.get("hide_offensive", v.hide_offensive) != v.hide_offensive:
         updated=True
-        v.hide_offensive=bool(request.form.get("hide_offensive", None))
+        v.hide_offensive=request.values.get("hide_offensive", None)=='true'
         cache.delete_memoized(User.idlist, v)
 
-    if request.form.get("show_nsfl") != v.show_nsfl:
+    if request.values.get("show_nsfl", v.show_nsfl) != v.show_nsfl:
         updated=True
-        v.show_nsfl=bool(request.form.get("show_nsfl", None))
+        v.show_nsfl=request.values.get("show_nsfl", None)=='true'
+        cache.delete_memoized(User.idlist, v)
+
+    if request.values.get("filter_nsfw", v.filter_nsfw) != v.filter_nsfw:
+        updated=True
+        v.filter_nsfw= not request.values.get("filter_nsfw", None)=='true'
         cache.delete_memoized(User.idlist, v)
         
-    if request.form.get("private") != v.is_private:
+    if request.values.get("private", v.is_private) != v.is_private:
         updated=True
-        v.is_private=bool(request.form.get("private", None))
+        v.is_private=request.values.get("private", None)=='true'
         
-    if request.form.get("bio") != v.bio:
-        updated=True
-        bio = request.form.get("bio")[0:256]
+    if request.values.get("bio"):
+        bio = request.values.get("bio")[0:256]
+
+        if bio==v.bio:
+            return render_template("settings_profile.html",
+                v=v,
+                error="You didn't change anything")
+
         v.bio=bio
 
         with CustomRenderer() as renderer:
             v.bio_html=renderer.render(mistletoe.Document(bio))
         v.bio_html=sanitize(v.bio_html, linkgen=True)
+        g.db.add(v)
+        return render_template("settings_profile.html",
+            v=v,
+            msg="Your bio has been updated.")
 
 
-    x=int(request.form.get("title_id",0))
-    if x==0:
-        v.title_id=None
-        updated=True
-    elif x>0:
-        title =get_title(x)
-        if bool(eval(title.qualification_expr)):
-            v.title_id=title.id
+    x=request.values.get("title_id",None)
+    if x:
+        x=int(x)
+        if x==0:
+            v.title_id=None
             updated=True
+        elif x>0:
+            title =get_title(x)
+            if bool(eval(title.qualification_expr)):
+                v.title_id=title.id
+                updated=True
+            else:
+                return jsonify({"error":f"You don't meet the requirements for title `{title.text}`."}), 403
         else:
-            return render_template("settings_profile.html",
-                                   v=v,
-                                   error=f"Unable to set title {title.text} - {title.requirement_string}"
-                                   )
-    else:
-        abort(400)
+            abort(400)
         
     if updated:
         g.db.add(v)
         
 
-        return render_template("settings_profile.html",
-                               v=v,
-                               msg="Your settings have been saved."
-                               )
+        return jsonify({"message":"Your settings have been updated."})
 
     else:
-        return render_template("settings_profile.html",
-                               v=v,
-                               error="You didn't change anything."
-                               )
+        return jsonify({"error":"You didn't change anything."}), 400
 
 @app.route("/settings/security", methods=["POST"])
 @is_not_banned
@@ -347,7 +344,7 @@ def delete_account(v):
 
     blocks=g.db.query(UserBlock).filter_by(target_id=v.id).all()
     for block in blocks:
-        g.db.delete(blocks)
+        g.db.delete(block)
     
 
     session.pop("user_id", None)

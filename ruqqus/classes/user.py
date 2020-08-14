@@ -73,6 +73,7 @@ class User(Base, Stndrd, Age_times):
     unban_utc=Column(Integer, default=0)
     is_deleted=Column(Boolean, default=False)
     delete_reason=Column(String(500), default='')
+    filter_nsfw=Column(Boolean, default=False)
 
     patreon_id=Column(String(64), default=None)
     patreon_access_token=Column(String(128), default='')
@@ -158,6 +159,7 @@ class User(Base, Stndrd, Age_times):
                                              stickied=False
                                              )
 
+
         if not self.over_18:
             posts=posts.filter_by(over_18=False)
 
@@ -177,7 +179,7 @@ class User(Base, Stndrd, Age_times):
                 )
             )
 
-        if not self.admin_level >=4:
+        if self.admin_level < 4:
             #admins can see everything
 
             m=g.db.query(ModRelationship.board_id).filter_by(user_id=self.id, invite_rescinded=False).subquery()
@@ -414,12 +416,6 @@ class User(Base, Stndrd, Age_times):
     def permalink(self):
         return self.url
 
-    @property
-    @lazy
-    def created_date(self):
-
-        return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
-
     def __repr__(self):
         return f"<User(username={self.username})>"
 
@@ -561,7 +557,7 @@ class User(Base, Stndrd, Age_times):
 
     @property
     def can_make_guild(self):
-        return (self.true_score > 250 or self.created_utc <= 1592974538 and self.true_score > 50 or (self.patreon_pledge_cents and self.patreon_pledge_cents>=500)) and len(self.boards_modded) < 10
+        return (self.true_score >= 250 or self.created_utc <= 1592974538 and self.true_score >= 50 or (self.patreon_pledge_cents and self.patreon_pledge_cents>=500)) and len(self.boards_modded) < 10
     
     @property
     def can_join_gms(self):
@@ -620,7 +616,9 @@ class User(Base, Stndrd, Age_times):
                 'banner_url':self.banner_url,
                 'post_count':self.post_count,
                 'comment_count':self.comment_count,
-                'title':self.title.json if self.title else None
+                'title':self.title.json if self.title else None,
+                'bio':self.bio,
+                'bio_html':self.bio_html
                 }
 
     @property

@@ -32,12 +32,11 @@
     <div class="d-md-flex justify-content-between mb-3">
 
       <div>
-        <h2 class="h5" name="guild_name">Guilds you are filtering</h2>
-        <p class="text-small text-muted mb-md-0">You are filtering the following guilds. They will not be shown in your "Trending" or "All" pages.</p>
-        <p class="text-small text-muted mb-md-0">Changes to your guild filters may take a few minutes to take effect.</p>
+        <h2 class="h5" name="guild_name">Guilds you are hiding</h2>
+        <p class="text-small text-muted mb-md-0">You are hiding the following guilds. They will not be shown in your "Trending" or "All" pages.</p>
       </div>
       <div class="mt-auto">
-        <button class="btn btn-primary" data-toggle="modal" data-target="#guildmasterExileModal">Filter Guild</button>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#HideGuildModal">Hide Guild</button>
       </div>
     </div>
 
@@ -49,7 +48,7 @@
       <thead class="thead-dark">
         <tr>
           <th scope="col">Guild</th>
-          <th scope="col">Filtered since</th>
+          <th scope="col">Hidden since</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -69,13 +68,13 @@
                   <i class="fas fa-ellipsis-h text-muted"></i>
                 </a>
                 <div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
-                  <a class="dropdown-item" href="javascript:void(0)" onclick="post('/settings/unblock_guild?board={{ block.board.name }}', callback=function(){window.location.reload(true)})"><i class="fas fa-check"></i>Unfilter</a>
+                  <a class="dropdown-item" href="javascript:void(0)" onclick="post('/settings/unblock_guild?board={{ block.board.name }}', callback=function(){window.location.reload(true)})"><i class="fas fa-eye"></i>Show in /all</a>
                 </div>
               </div>
             </td>
           </tr>
           {% else %}
-          <td>There are no filtered gilds.</td>
+          <td>You have not hidden any guilds.</td>
           {% endfor %}
         </tbody>
       </table>
@@ -83,7 +82,7 @@
     {% else %}
     <div class="text-center border-md rounded py-7">
       <i class="fad fa-ghost text-gray-500 mb-3" style="font-size: 3.5rem;"></i>
-      <p class="font-weight-bold text-gray-500 mb-0">No filtered guilds</p>
+      <p class="font-weight-bold text-gray-500 mb-0">No hidden guilds</p>
     </div>
     {% endif %}
 
@@ -91,13 +90,13 @@
 
 </div>
 
-<!-- Guild Filter Modal -->
-<div class="modal fade" id="guildmasterExileModal" tabindex="-1" role="dialog" aria-labelledby="guildmasterExileModalTitle" aria-hidden="true">
+<!-- Hide Guild Modal -->
+<div class="modal fade" id="HideGuildModal" tabindex="-1" role="dialog" aria-labelledby="HideGuildModalTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <form action="/settings/block" id="exile-form" method="post" onsubmit="return false;">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Filter Guild</h5>
+          <h5 class="modal-title">Hide Guild</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true"><i class="far fa-times"></i></span>
           </button>
@@ -105,11 +104,11 @@
         <div class="modal-body">
           <p>Changes to your guild filters may take up to 15 minutes to take effect.</p>
           <input type="hidden" name="formkey" value="{{ v.formkey }}">
-          <input type="text" name="guildname" placeholder="enter guild name (no + sign needed)" id="exile-username" class="form-control" maxlength=25 required>
+          <input type="text" name="guildname" placeholder="enter guild name (no + needed)" id="exile-username" class="form-control" maxlength=25 required>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" id="exileUserButton" onclick="filter_guild()">Filter Guild</button>
+          <button type="button" class="btn btn-primary" id="exileUserButton" onclick="filter_guild()">Hide Guild</button>
         </div>
       </div>
     </form>

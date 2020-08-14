@@ -8,9 +8,11 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
+  <link rel="icon" type="image/png" href="/assets/images/logo/favicon.png">
+
   <title>{% block pagetitle %}Settings - Ruqqus{% endblock %}</title>
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Ruqqus - Awesome Online Communities, Without Censorship" />
+    <meta property="og:title" content="Ruqqus: Awesome Online Communities, Without Censorship" />
     <meta property="og:site_name" content="ruqqus.com" />
     <meta property="og:image" content="{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}" />
     <meta property="og:url" content="https://ruqqus.com">
@@ -20,7 +22,7 @@
 
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:site" content="@ruqqus">
-    <meta name="twitter:title" content="Ruqqus - Awesome Online Communities, Without Censorship" />
+    <meta name="twitter:title" content="Ruqqus: Awesome Online Communities, Without Censorship" />
     <meta name="twitter:creator" content="@ruqqus">
     <meta name="twitter:description" content="Ruqqus is an open-source platform for online communities, free of censorship and moderator abuse by design." />
     <meta name="twitter:image" content="{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}" />
@@ -107,7 +109,7 @@
           <a class="nav-link{% if request.path=='/settings/blocks' %} active{% endif %}" href="/settings/blocks">Block Users</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link{% if request.path=='/settings/filters' %} active{% endif %}" href="/settings/filters">Filter Guilds</a>
+          <a class="nav-link{% if request.path=='/settings/filters' %} active{% endif %}" href="/settings/filters">Hide Guilds</a>
         </li>
       </ul>
 
@@ -128,7 +130,7 @@
           <a class="nav-link{% if request.path=='/settings/blocks' %} active{% endif %}" href="/settings/blocks"><i class="fas fa-user-minus text-lg mr-0"></i></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link{% if request.path=='/settings/filters' %} active{% endif %}" href="/settings/filters"><i class="fas fa-filter text-lg mr-0"></i></a>
+          <a class="nav-link{% if request.path=='/settings/filters' %} active{% endif %}" href="/settings/filters"><i class="fas fa-eye-slash text-lg mr-0"></i></a>
         </li>
       </ul>
 
@@ -189,6 +191,18 @@
     console.log(e);
   });
 </script>
+
+<!--Post toasts -->
+<div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-success text-center text-white">
+    <i class="fas fa-comment-alt-smile mr-2"></i><span id="toast-post-success-text"></span>
+  </div>
+</div>
+<div class="toast" id="toast-post-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-danger text-center text-white">
+    <i class="fas fa-exclamation-circle mr-2"></i><span id="toast-post-error-text"></span>
+  </div>
+</div>
 
 <script src="/assets/js/all_js.js"></script>
 
