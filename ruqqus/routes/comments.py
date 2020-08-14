@@ -330,7 +330,8 @@ def api_comment(v):
         if user:
             if v.any_block_exists(user):
                 continue
-            notify_users.add(user.id)
+            if user.id != v.id:
+                notify_users.add(user.id)
 
 
     for x in notify_users:
