@@ -219,7 +219,7 @@ def no_cors(f):
         resp = make_response(f(*args, **kwargs))
         domain = "elastic-kare-3iuy92-apollo.netlify.app"
         resp.headers.add("Access-Control-Allow-Origin",
-                         app.config["SERVER_NAME"], domain)
+                         f'{app.config["SERVER_NAME"]}, {domain}')
 
         return resp
 
