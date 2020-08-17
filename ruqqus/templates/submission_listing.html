@@ -182,7 +182,7 @@
   				  <a id="join-guild-{{ p.base36id }}" class="dropdown-item text-black" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ p.board.name }}', callback=function(){document.getElementById('join-guild-{{ p.base36id }}').classList.toggle('d-none');})"
   				><i class="fas fa-chess-rook text-black"></i>Join Guild</a>
   				{% endif %}
-  				{% if not v.id==p.author_id %}
+  				{% if not v.id==p.author_id and not p.author.is_deleted %}
   				<a id="block-user-{{ p.base36id }}" class="dropdown-item text-danger{% if p.is_blocking %} d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-{{ p.base36id }}').classList.toggle('d-none');})"
   				><i class="fas fa-user-slash text-danger"></i>Block user</a>
   				<a id="unblock-user-{{ p.base36id }}" class="dropdown-item text-danger{% if not p.is_blocking %} d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/settings/unblock?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-{{ p.base36id }}').classList.toggle('d-none');})"
@@ -314,9 +314,9 @@
 					{% endif %}
 
 					{% if v and request.path=="/all" %}
-					<button id="hide-guild-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if p.is_blocking_guild %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/block_guild?board={{ p.author.username }}', callback=function(){document.getElementById('hide-guild-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unhide-guild-button-{{ p.base36id }}').classList.toggle('d-none');})"
+					<button id="hide-guild-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if p.is_blocking_guild %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/block_guild?board={{ p.board.name }}', callback=function(){document.getElementById('hide-guild-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unhide-guild-button-{{ p.base36id }}').classList.toggle('d-none');})"
   					><i class="fas fa-user-slash text-danger mr-3"></i>Filter +{{ p.board.name }}</button>
-  					<button id="unhide-guild-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if not p.is_blocking_guild %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/unblock_guild?board={{ p.author.username }}', callback=function(){document.getElementById('hide-guild-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unhide-guild-button-{{ p.base36id }}').classList.toggle('d-none');})"
+  					<button id="unhide-guild-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if not p.is_blocking_guild %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/unblock_guild?board={{ p.board.name }}', callback=function(){document.getElementById('hide-guild-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unhide-guild-button-{{ p.base36id }}').classList.toggle('d-none');})"
   					><i class="fas fa-user-slash text-danger mr-3"></i>Unfilter +{{ p.board.name }}</button>
 					{% endif %}
 				</ul>
