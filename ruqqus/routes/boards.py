@@ -1091,7 +1091,7 @@ def siege_guild(v):
     g.db.add(v)
 
     #check guild count
-    if not v.can_join_gms:
+    if not v.can_join_gms and guild not in v.boards_modded:
         return render_template("message.html",
                                v=v,
                                title=f"Siege against +{guild.name} Failed",
