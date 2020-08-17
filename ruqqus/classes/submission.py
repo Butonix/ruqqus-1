@@ -407,5 +407,14 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def is_blocking_guild(self):
         return self.__dict__.get('_is_blocking_guild', False)
+
+    @property
+    def is_blocked(self):
+        return self.__dict__.get('_is_blocked', False)
+
+    @property
+    def is_blocking(self):
+        return self.__dict__.get('_is_blocking', False)
+    
     
     
