@@ -177,6 +177,11 @@
   			</a>
 
   			<div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink-{{ p.base36id }}">
+
+  				{% if v and not p.is_subscribed %}
+  				  <a id="join-guild-{{ p.base36id }}" class="dropdown-item text-black" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ p.board.name }}', callback=function(){document.getElementById('join-guild-{{ p.base36id }}').classList.toggle('d-none');})"
+  				><i class="fas fa-chess-rook text-black"></i>Join Guild</a>
+  				{% endif %}
   				{% if not v.id==p.author_id %}
   				<a id="block-user-{{ p.base36id }}" class="dropdown-item text-danger{% if p.is_blocking %} d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-{{ p.base36id }}').classList.toggle('d-none');})"
   				><i class="fas fa-user-slash text-danger"></i>Block user</a>
@@ -293,6 +298,10 @@
 					<button class="btn btn-link btn-block btn-lg text-left text-danger" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="far fa-ban text-center text-danger mr-3"></i>Remove</button>
 					{% endif %}
 					{% endif %}
+					{% endif %}
+					{% if v and not p.is_subscribed %}
+					<button id="sub-guild-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-black" data-dismiss="modal" onclick="post_toast('/api/subscribe/{{ p.board.name }}', callback=function(){document.getElementById('sub-guild-button-{{ p.base36id }}').classList.toggle('d-none');})"
+  					><i class="fas fa-chess-rook text-black mr-3"></i>Join guild</button>
 					{% endif %}
 
 					{% if v and not v.id==p.author_id %}
