@@ -218,6 +218,8 @@ def no_cors(f):
         if origin and origin == 'https://'+domain:
             resp = resp.headers.add("Access-Control-Allow-Origin",
                                     domain)
+            resp = resp.headers.add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS")
+            resp = resp.headers.add("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token")
             return resp
 
         elif origin and origin != "https://"+app.config["SERVER_NAME"]:
