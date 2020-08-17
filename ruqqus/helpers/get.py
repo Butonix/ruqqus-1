@@ -103,6 +103,7 @@ def get_posts(pids, sort="hot", v=None):
             boardblocks=g.db.query(BoardBlock).filter_by(user_id=v.id).subquery()
             blocking=v.blocking.subquery()
             blocked=v.blocked.subquery()
+            subs=v.subscriptions.filter_by(is_active=True).subquery()
 
             query=g.db.query(
                     Submission,
@@ -110,7 +111,8 @@ def get_posts(pids, sort="hot", v=None):
                     mod.c.id, 
                     boardblocks.c.id,
                     blocking.c.id,
-                    blocked.c.id
+                    blocked.c.id,
+                    subs.c.id
                 ).options(joinedload(Submission.author).joinedload(User.title)
                 ).filter_by(id=pid
                 ).join(vt, vt.c.submission_id==Submission.id, isouter=True
@@ -118,6 +120,7 @@ def get_posts(pids, sort="hot", v=None):
                 ).join(boardblocks, boardblocks.c.board_id==Submission.board_id, isouter=True
                 ).join(blocking, blocking.c.target_id==Submission.author_id, isouter=True
                 ).join(blocked, blocked.c.user_id==Submission.author_id, isouter=True
+                ).join(subs, subs.c.board_id==Submission.board_id, isouter=True
                 )
             queries.append(query)
 
@@ -137,6 +140,7 @@ def get_posts(pids, sort="hot", v=None):
             output[i]._is_blocking_guild=posts[i][3] or 0
             output[i]._is_blocking=posts[i][4] or 0
             output[i]._is_blocked=posts[i][5] or 0
+            output[i]._is_subscribed=posts[i][6] or 0
     else:
         for pid in pids:
             query=g.db.query(Submission

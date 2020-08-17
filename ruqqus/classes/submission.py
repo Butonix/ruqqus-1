@@ -415,6 +415,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def is_blocking(self):
         return self.__dict__.get('_is_blocking', False)
+
+    @property
+    def is_subscribed(self):
+        return self.__dict__.get('_is_subscribed', False)
     
     
     
