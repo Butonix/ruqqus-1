@@ -303,21 +303,21 @@
 					{% endif %}
 					{% if v and not p.is_subscribed %}
 					<button id="sub-guild-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-black" data-dismiss="modal" onclick="post_toast('/api/subscribe/{{ p.board.name }}', callback=function(){document.getElementById('sub-guild-button-{{ p.base36id }}').classList.toggle('d-none');})"
-  					><i class="fas fa-chess-rook text-black mr-3"></i>Join guild</button>
+  					><i class="fas fa-chess-rook text-black mr-3"></i>Join +{{ p.board.name }}</button>
 					{% endif %}
 
-					{% if v and not v.id==p.author_id %}
+					{% if v and not v.id==p.author_id and not p.author.is_deleted %}
 					<button id="block-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if p.is_blocking %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/block?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{ p.base36id }}').classList.toggle('d-none');})"
-  					><i class="fas fa-user-slash text-danger mr-3"></i>Block user</button>
+  					><i class="fas fa-user-slash text-danger mr-3"></i>Block @{{ p.author.username }}</button>
   					<button id="unblock-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if not p.is_blocking %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/unblock?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{ p.base36id }}').classList.toggle('d-none');})"
-  					><i class="fas fa-user-slash text-danger mr-3"></i>Unblock user</button>
+  					><i class="fas fa-user-slash text-danger mr-3"></i>Unblock @{{ p.author.username }}</button>
 					{% endif %}
 
 					{% if v and request.path=="/all" %}
 					<button id="hide-guild-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if p.is_blocking_guild %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/block_guild?board={{ p.author.username }}', callback=function(){document.getElementById('hide-guild-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unhide-guild-button-{{ p.base36id }}').classList.toggle('d-none');})"
-  					><i class="fas fa-user-slash text-danger mr-3"></i>Hide guild</button>
+  					><i class="fas fa-user-slash text-danger mr-3"></i>Filter +{{ p.board.name }}</button>
   					<button id="unhide-guild-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if not p.is_blocking_guild %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/unblock_guild?board={{ p.author.username }}', callback=function(){document.getElementById('hide-guild-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unhide-guild-button-{{ p.base36id }}').classList.toggle('d-none');})"
-  					><i class="fas fa-user-slash text-danger mr-3"></i>Unhide guild</button>
+  					><i class="fas fa-user-slash text-danger mr-3"></i>Unfilter +{{ p.board.name }}</button>
 					{% endif %}
 				</ul>
 			</div>
