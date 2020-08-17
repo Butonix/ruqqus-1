@@ -178,9 +178,9 @@
 
   			<div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink-{{ p.base36id }}">
   				{% if not v.id==p.author_id %}
-  				<a id="block-user-{{ p.base36id }}" class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-{{ p.base36id }}').classList.toggle('d-none');})"
+  				<a id="block-user-{{ p.base36id }}" class="dropdown-item text-danger{% if p.is_blocking %} d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-{{ p.base36id }}').classList.toggle('d-none');})"
   				><i class="fas fa-user-slash text-danger"></i>Block user</a>
-  				<a id="unblock-user-{{ p.base36id }}" class="dropdown-item text-danger d-none" href="javascript:void(0)" onclick="post_toast('/settings/unblock?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-{{ p.base36id }}').classList.toggle('d-none');})"
+  				<a id="unblock-user-{{ p.base36id }}" class="dropdown-item text-danger{% if not p.is_blocking %} d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/settings/unblock?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-{{ p.base36id }}').classList.toggle('d-none');})"
   				><i class="fas fa-user-slash text-danger"></i>Unblock user</a>
   				{% endif %}
   				<a id="hide-guild-{{ p.base36id }}" class="dropdown-item text-danger{% if p.is_blocking_guild %} d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/settings/block_guild?board={{ p.board.name }}', callback=function(){document.getElementById('hide-guild-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unhide-guild-{{ p.base36id }}').classList.toggle('d-none');})"><i class="fas fa-eye-slash text-danger"></i>Hide guild</a>
@@ -296,9 +296,9 @@
 					{% endif %}
 
 					{% if v and not v.id==p.author_id %}
-					<button id="block-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger" data-dismiss="modal" onclick="post_toast('/settings/block?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{ p.base36id }}').classList.toggle('d-none');})"
+					<button id="block-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if p.is_blocking %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/block?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{ p.base36id }}').classList.toggle('d-none');})"
   					><i class="fas fa-user-slash text-danger mr-3"></i>Block user</button>
-  					<button id="unblock-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger d-none" data-dismiss="modal" onclick="post_toast('/settings/unblock?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{ p.base36id }}').classList.toggle('d-none');})"
+  					<button id="unblock-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if not p.is_blocking %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/unblock?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{ p.base36id }}').classList.toggle('d-none');})"
   					><i class="fas fa-user-slash text-danger mr-3"></i>Unblock user</button>
 					{% endif %}
 				</ul>
