@@ -285,7 +285,7 @@ def api_comment(v):
         badlink=g.db.query(BadLink).filter(literal(check_url).contains(BadLink.link)).first()
 
         if badlink:
-            return jsonify({"error":f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason}"}), 403
+            return jsonify({"error":f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason_text}"}), 403
         
     #create comment
     c=Comment(author_id=v.id,
