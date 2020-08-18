@@ -84,7 +84,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
     else:
         x=nSession.query(Submission).options(
             joinedload(Submission.author).joinedload(User.title)
-            ).filter(Submission.id==i).filter(Submission.id==i).first()
+            ).filter(Submission.id==i).first()
 
     if not x and not graceful:
         abort(404)
