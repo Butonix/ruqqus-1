@@ -70,6 +70,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             ).join(vt, vt.c.submission_id==Submission.id, isouter=True
             ).join(mod, mod.c.board_id==Submission.board_id, isouter=True
             ).join(boardblocks, boardblocks.c.board_id==Submission.board_id, isouter=True
+            ).join(blocking, blocking.c.target_id==SUbmission.author_id, isouter=True
             ).first()
         
         if not items:
