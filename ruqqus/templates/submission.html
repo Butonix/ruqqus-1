@@ -2,7 +2,7 @@
 
 {% set ups=p.upvotes_fuzzed %}
 {% set downs=p.downvotes_fuzzed %}
-{% set score=ups-downs}
+{% set score=ups-downs %}
 
 {% block stylesheets %}
 {% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
