@@ -55,19 +55,22 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         vt=nSession.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
         mod=nSession.query(ModRelationship).filter_by(user_id=v.id, invite_rescinded=False).subquery()
         boardblocks=nSession.query(BoardBlock).filter_by(user_id=v.id).subquery()
+        blocking=v.blocking.subquery()
 
 
         items= nSession.query(
                 Submission, 
                 vt.c.vote_type, 
                 mod.c.id,
-                boardblocks.c.id
+                boardblocks.c.id,
+                blocking.c.id
             ).options(
             joinedload(Submission.author).joinedload(User.title)
             ).filter(Submission.id==i
             ).join(vt, vt.c.submission_id==Submission.id, isouter=True
             ).join(mod, mod.c.board_id==Submission.board_id, isouter=True
             ).join(boardblocks, boardblocks.c.board_id==Submission.board_id, isouter=True
+            ).join(blocking, blocking.c.target_id==Submission.author_id, isouter=True
             ).first()
         
         if not items:
@@ -76,11 +79,13 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         x=items[0]
         x._voted=items[1] or 0
         x._is_guildmaster=items[2] or 0
+        x._is_blocking_guild=items[3] or 0
+        x._is_blocking=items[4] or 0
 
     else:
         x=nSession.query(Submission).options(
             joinedload(Submission.author).joinedload(User.title)
-            ).filter(Submission.id==i).filter(Submission.id==i).first()
+            ).filter(Submission.id==i).first()
 
     if not x and not graceful:
         abort(404)

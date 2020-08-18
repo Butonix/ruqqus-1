@@ -178,7 +178,7 @@
 
   			<div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink-{{ p.base36id }}">
 
-  				{% if v and not p.is_subscribed %}
+  				{% if v and not p.is_subscribed and not b %}
   				  <a id="join-guild-{{ p.base36id }}" class="dropdown-item text-black" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ p.board.name }}', callback=function(){document.getElementById('join-guild-{{ p.base36id }}').classList.toggle('d-none');})"
   				><i class="fas fa-chess-rook text-black"></i>Join Guild</a>
   				{% endif %}
