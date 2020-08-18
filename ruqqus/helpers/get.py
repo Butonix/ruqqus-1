@@ -80,7 +80,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         x._voted=items[1] or 0
         x._is_guildmaster=items[2] or 0
         x._is_blocking_guild=items[3] or 0
-        x.is_blocking=items[4] or 0
+        x._is_blocking=items[4] or 0
 
     else:
         x=nSession.query(Submission).options(
