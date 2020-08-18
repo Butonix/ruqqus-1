@@ -55,13 +55,15 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         vt=nSession.query(Vote).filter_by(user_id=v.id, submission_id=i).subquery()
         mod=nSession.query(ModRelationship).filter_by(user_id=v.id, invite_rescinded=False).subquery()
         boardblocks=nSession.query(BoardBlock).filter_by(user_id=v.id).subquery()
+        blocking=v.blocking.subquery()
 
 
         items= nSession.query(
                 Submission, 
                 vt.c.vote_type, 
                 mod.c.id,
-                boardblocks.c.id
+                boardblocks.c.id,
+                blocking.c.id
             ).options(
             joinedload(Submission.author).joinedload(User.title)
             ).filter(Submission.id==i
@@ -76,6 +78,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         x=items[0]
         x._voted=items[1] or 0
         x._is_guildmaster=items[2] or 0
+        x._is_blocking=items[3] or 0
 
     else:
         x=nSession.query(Submission).options(
