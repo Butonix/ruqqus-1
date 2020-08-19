@@ -11,9 +11,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot"):
 
     posts = g.db.query(Submission
         ).options(
-            joinedload(Submission.author), 
             joinedload(Submission.submission_aux)
-        ).options(contains_eager(Submission.submission_aux), contains_eager(Submission.author)
         )
 
 
@@ -74,6 +72,10 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot"):
         posts=posts.order_by(Submission.score_fiery.desc())
     elif sort=="top":
         posts=posts.order_by(Submission.score_top.desc())
+
+    posts=posts.options(
+            contains_eager(Submission.submission_aux)
+        )
         
     total=posts.count()
     posts=[x for x in posts.offset(25*(page-1)).limit(26).all()]
