@@ -244,13 +244,13 @@ def admin_vote_info_post(v):
     elif isinstance(thing, Comment):
 
         ups=g.db.query(CommentVote
-            ).options(joinedload(Vote.user)
+            ).options(joinedload(CommentVote.user)
             ).filter_by(submission_id=thing.id, vote_type=1
             ).order_by(CommentVote.creation_ip.asc()
             ).all()
 
         downs=g.db.query(CommentVote
-            ).options(joinedload(Vote.user)
+            ).options(joinedload(CommentVote.user)
             ).filter_by(submission_id=thing.id, vote_type=-1
             ).order_by(CommentVote.creation_ip.asc()
             ).all()
