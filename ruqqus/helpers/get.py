@@ -443,7 +443,7 @@ def get_application(client_id):
     application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
     return application
 
-def get_from_permalink(link):
+def get_from_permalink(link, v=None):
 
     if "@" in link:
 

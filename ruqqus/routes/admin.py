@@ -225,7 +225,7 @@ def admin_vote_info_get(v):
 @validate_formkey
 def admin_vote_info_post(v):
 
-    thing=get_from_permalink(request.form.get("link"))
+    thing=get_from_permalink(request.form.get("link"), v=v)
 
     if isinstance(thing, Submission):
 
