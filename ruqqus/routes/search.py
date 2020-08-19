@@ -9,13 +9,7 @@ from ruqqus.__main__ import app, cache
 @cache.memoize(300)
 def searchlisting(q, v=None, page=1, t="None", sort="hot"):
 
-    posts = g.db.query(Submission
-        ).options(
-            joinedload(Submission.author), 
-            joinedload(Submission.submission_aux)
-        ).order_by(SubmissionAux.title.op('<->>')(q).asc()
-        ).options(contains_eager(Submission.submission_aux), contains_eager(Submission.author)
-        )
+    posts = g.db.query(Submission).join(Submission.submission_aux).join(Submission.author).filter(SubmissionAux.title.ilike('%'+q+'%')).options(contains_eager(Submission.submission_aux), contains_eager(Submission.author))
 
 
     if not (v and v.over_18):
