@@ -241,13 +241,18 @@ def after_request(response):
     except:
         pass #g.db.close()
 
+    domain = "https://elastic-kare-3iuy92-apollo.netlify.app"
     response.headers.add('Access-Control-Allow-Headers',
                          "Origin, X-Requested-With, Content-Type, Accept, x-auth, X-Auth-Token"
                          )
-    response.headers.add("Access-Control-Allow-Origin", "https://elastic-kare-3iuy92-apollo.netlify.app")
+
+    response.headers.add("Access-Control-Allow-Origin", domain)
+    if request.headers.get("Origin") == domain:
+        response.headers.add("Access-Control-Allow-Credentials", True)
     response.headers.add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS")
     response.headers.add("Cache-Control",
                          "maxage=600")
+    response.header.add("Access-Control-Allow-Credentials", True)
     response.headers.add("Strict-Transport-Security","max-age=31536000")
     response.headers.add("Referrer-Policy","same-origin")
     #response.headers.add("X-Content-Type-Options","nosniff")
