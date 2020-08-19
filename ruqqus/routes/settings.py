@@ -44,7 +44,7 @@ def settings_profile_post(v):
         updated=True
         v.is_private=request.values.get("private", None)=='true'
         
-    if request.values.get("bio"):
+    if request.values.get("bio") is not None:
         bio = request.values.get("bio")[0:256]
 
         if bio==v.bio:
