@@ -213,18 +213,10 @@ def no_cors(f):
     def wrapper(*args, **kwargs):
 
         origin = request.headers.get("Origin",None)
-        domain = "elastic-kare-3iuy92-apollo.netlify.app"
-        resp = make_response(f(*args, **kwargs))
-        if origin and origin == 'https://'+domain:
-            resp = resp.headers.add("Access-Control-Allow-Origin",
-                                    domain)
-            resp = resp.headers.add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS")
-            resp = resp.headers.add("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token")
-            return resp
-
-        elif origin and origin != "https://"+app.config["SERVER_NAME"]:
+        if origin and origin != "https://"+app.config["SERVER_NAME"]:
             return "This page may not be embedded in other webpages.", 403
 
+        resp = make_response(f(*args, **kwargs))
         resp.headers.add("Access-Control-Allow-Origin",
                          app.config["SERVER_NAME"])
 
