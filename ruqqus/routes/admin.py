@@ -261,5 +261,6 @@ def admin_vote_info_post(v):
 
     return render_template("admin/votes.html",
         v=v,
+        thing=thing,
         ups=ups,
         downs=downs,)
