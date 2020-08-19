@@ -457,8 +457,8 @@ def get_from_permalink(link):
 
     ids=re.search("://[^/]+/post/(\w+)/[^/]+(/(\w+))?", link)
 
-    post_id=ids.match(1)
-    comment_id=ids.math(3)
+    post_id=ids.group(1)
+    comment_id=ids.group(3)
 
     if comment_id:
         return get_comment(comment_id, v=v)
