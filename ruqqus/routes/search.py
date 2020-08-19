@@ -11,7 +11,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot"):
 
     posts = g.db.query(Submission
         ).options(
-            joinedload(Submission.submission_aux)
+            lazyload('*')
         )
 
 
@@ -62,7 +62,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot"):
             cutoff=0    
         posts=posts.filter(Submission.created_utc >= cutoff)
 
-    posts=posts.order_by(SubmissionAux.title.op('<->>')(q).asc())
+    posts=posts.join(Submission.submission_aux).order_by(SubmissionAux.title.op('<->>')(q).asc())
 
     if sort=="hot":
         posts=posts.order_by(Submission.score_hot.desc())
