@@ -13,8 +13,8 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot"):
         ).options(
             joinedload(Submission.author), 
             joinedload(Submission.submission_aux)
-        ).order_by(SubmissionAux.title.op('<->>')(q).asc()
         ).options(contains_eager(Submission.submission_aux), contains_eager(Submission.author)
+        ).order_by(SubmissionAux.title.op('<->>')(q).asc()
         )
 
 
