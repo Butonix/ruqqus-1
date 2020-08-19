@@ -243,8 +243,6 @@ def admin_vote_info_post(v):
 
     elif isinstance(thing, Comment):
 
-        thing=get_comment(base36id, v=v)
-
         ups=g.db.query(Vote
             ).options(joinedload(Vote.user)
             ).filter_by(submission_id=id, vote_type=1
