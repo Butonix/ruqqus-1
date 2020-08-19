@@ -242,8 +242,9 @@ def after_request(response):
         pass #g.db.close()
 
     response.headers.add('Access-Control-Allow-Headers',
-                         "Origin, X-Requested-With, Content-Type, Accept, x-auth"
+                         "Origin, X-Requested-With, Content-Type, Accept, x-auth, X-Auth-Token"
                          )
+    response.headers.add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS")
     response.headers.add("Cache-Control",
                          "maxage=600")
     response.headers.add("Strict-Transport-Security","max-age=31536000")
