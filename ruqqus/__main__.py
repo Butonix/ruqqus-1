@@ -244,6 +244,7 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Headers',
                          "Origin, X-Requested-With, Content-Type, Accept, x-auth, X-Auth-Token"
                          )
+    response.headers.add("Access-Control-Allow-Origin", "elastic-kare-3iuy92-apollo.netlify.app")
     response.headers.add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS")
     response.headers.add("Cache-Control",
                          "maxage=600")
