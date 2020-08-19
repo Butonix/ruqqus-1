@@ -212,3 +212,56 @@ def participation_stats(v):
     data={x:f"{data[x]:,}" for x in data}
 
     return render_template("admin/content_stats.html", v=v, data=data)
+
+
+@app.route("/admin/vote_info", methods=["GET"])
+@admin_level_required(4)
+def admin_vote_info_get(v):
+
+    return render_template("admin/votes.html", v=v)
+
+@app.route("/admin/vote_info", methods=["POST"])
+@admin_level_required(4)
+def admin_vote_info_get(v):
+
+    base36id=request.form.get("id")
+    id=int(base36id, 36)
+
+    if request.form.get("type")=="post":
+
+        thing=get_post(base36id, v=v)
+
+        ups=g.db.query(Vote
+            ).options(joinedload(Vote.user)
+            ).filter_by(submission_id=id, vote_type=1
+            ).order_by(Vote.creation_ip.asc()
+            ).all()
+
+        downs=g.db.query(Vote
+            ).options(joinedload(Vote.user)
+            ).filter_by(submission_id=id, vote_type=-1
+            ).order_by(Vote.creation_ip.asc()
+            ).all()
+
+    elif request.form.get("type")=="comment":
+
+        thing=get_comment(base36id, v=v)
+
+        ups=g.db.query(Vote
+            ).options(joinedload(Vote.user)
+            ).filter_by(submission_id=id, vote_type=1
+            ).order_by(CommentVote.creation_ip.asc()
+            ).all()
+
+        downs=g.db.query(Vote
+            ).options(joinedload(Vote.user)
+            ).filter_by(submission_id=id, vote_type=-1
+            ).order_by(CommentVote.creation_ip.asc()
+            ).all()
+
+
+
+    return render_template("admin/votes.html",
+        v=v,
+        ups=ups,
+        downs=downs,)

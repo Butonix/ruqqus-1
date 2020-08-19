@@ -4,6 +4,8 @@ from ruqqus.classes import *
 from flask import g
 from sqlalchemy.orm import joinedload
 
+import re
+
 def get_user(username, v=None, nSession=None, graceful=False):
 
     username=username.replace('\\','')
@@ -440,3 +442,26 @@ def get_application(client_id):
 
     application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
     return application
+
+def get_from_permalink(link):
+
+    if "@" in link:
+
+        name=re.search("/@(\w+)", link).match(1)
+        return get_user(name)
+
+    if "+" in link:
+
+        name=re.search("/\+(\w+)", link).match(1)
+        return get_guild(name)
+
+    ids=re.search("://[^/]+/post/(\w+)/[^/]+(/(\w+))?", link)
+
+    post_id=ids.match(1)
+    comment_id=ids.math(3)
+
+    if comment_id:
+        return get_comment(comment_id, v=v)
+
+    else:
+        return get_post(post_id, v=v)
