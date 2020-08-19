@@ -252,7 +252,7 @@ def after_request(response):
     response.headers.add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS")
     response.headers.add("Cache-Control",
                          "maxage=600")
-    response.header.add("Access-Control-Allow-Credentials", True)
+    response.headers.add("Access-Control-Allow-Credentials", True)
     response.headers.add("Strict-Transport-Security","max-age=31536000")
     response.headers.add("Referrer-Policy","same-origin")
     #response.headers.add("X-Content-Type-Options","nosniff")
