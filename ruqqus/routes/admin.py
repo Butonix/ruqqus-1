@@ -222,7 +222,7 @@ def admin_vote_info_get(v):
 
 @app.route("/admin/vote_info", methods=["POST"])
 @admin_level_required(4)
-def admin_vote_info_get(v):
+def admin_vote_info_post(v):
 
     base36id=request.form.get("id")
     id=int(base36id, 36)
