@@ -225,12 +225,9 @@ def admin_vote_info_get(v):
 @validate_formkey
 def admin_vote_info_post(v):
 
-    base36id=request.form.get("id")
-    id=int(base36id, 36)
+    thing=get_from_permalink(request.form.get("link"))
 
-    if request.form.get("type")=="post":
-
-        thing=get_post(base36id, v=v)
+    if isinstance(thing, Submission):
 
         ups=g.db.query(Vote
             ).options(joinedload(Vote.user)
@@ -244,7 +241,7 @@ def admin_vote_info_post(v):
             ).order_by(Vote.creation_ip.asc()
             ).all()
 
-    elif request.form.get("type")=="comment":
+    elif isinstance(thing, Comment):
 
         thing=get_comment(base36id, v=v)
 
@@ -260,6 +257,8 @@ def admin_vote_info_post(v):
             ).order_by(CommentVote.creation_ip.asc()
             ).all()
 
+    else:
+        abort(400)
 
 
     return render_template("admin/votes.html",
