@@ -14,6 +14,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot"):
             joinedload(Submission.author), 
             joinedload(Submission.submission_aux)
         ).options(contains_eager(Submission.submission_aux), contains_eager(Submission.author)
+        ).order_by(SubmissionAux.title.op('<->>')(q).asc()
         )
 
 
@@ -63,8 +64,6 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot"):
         else:
             cutoff=0    
         posts=posts.filter(Submission.created_utc >= cutoff)
-
-    posts=posts.order_by(SubmissionAux.title.op('<->>')(q).asc())
 
     if sort=="hot":
         posts=posts.order_by(Submission.score_hot.desc())
