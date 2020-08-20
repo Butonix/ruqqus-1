@@ -11,8 +11,7 @@
 {% block content %}
 <h1>Vote Info</h1>
 
-<form action="/admin/alt_votes" method="post" class="mb-6">
-	<input type="hidden" name="formkey" value="{{ v.formkey }}">
+<form action="/admin/alt_votes" method="get" class="mb-6">
 	<label for="link-input">Usernames</label>
 	<input id="link-input" type="text" class="form-control mb-2" name="user1" value="{{ u1.username if u1 else '' }}" placeholder="User 1">
 	<input id="link-input" type="text" class="form-control mb-2" name="user1" value="{{ u2.username if u2 else '' }}" placeholder="User 2">
@@ -59,7 +58,19 @@
 	</tr>
 </table>
 
+<h2>Link Accounts</h2>
 
+{% if alt %}
+<p>Accounts are known alts of eachother.</p>
+{% else %}
+<form action="/admin/link_accounts" method="post">
+	<input type="hidden" name="formkey" value="{{ v.formkey }}">
+	<input type="hidden" name="u1" value="{{ u1.id }}">
+	<input type="hidden" name="u2" value="{{ u2.id }}">
+	<input type="submit" value="Link {{ u1.username }} and {{ u2.username }}">
+</form>
+
+{% endif %}
 
 
 {% endif %}

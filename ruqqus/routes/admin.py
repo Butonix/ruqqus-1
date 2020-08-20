@@ -218,12 +218,8 @@ def participation_stats(v):
 @admin_level_required(4)
 def admin_vote_info_get(v):
 
-    return render_template("admin/votes.html", v=v)
-
-@app.route("/admin/vote_info", methods=["POST"])
-@admin_level_required(4)
-@validate_formkey
-def admin_vote_info_post(v):
+    if not request.args.get("link"):
+        return render_template("admin/votes.html", v=v)
 
     thing=get_from_permalink(request.form.get("link"), v=v)
 
@@ -269,15 +265,11 @@ def admin_vote_info_post(v):
 @admin_level_required(4)
 def alt_votes_get(v):
 
-    return render_template("admin/alt_votes.html", v=v)
+    if not request.args.get("u1") or not request.args.get("u2"):
+        return render_template("admin/alt_votes.html", v=v) 
 
-
-@app.route("/admin/alt_votes", methods=["POST"])
-@admin_level_required(4)
-def alt_votes_post(v):
-
-    u1=request.args.get("user1")
-    u2=request.args.get("user2")
+    u1=request.args.get("u1")
+    u2=request.args.get("u2")
 
     if not u1 or not u2:
         return redirect("/admin/alt_votes")
@@ -312,13 +304,18 @@ def alt_votes_post(v):
     data['both_comment_downs']       = len(list(set(u1_comment_downs) & set(u2_comment_downs)))
 
 
-    
+    alt=g.db.query(Alt).filter(
+        or_(and_(Alt.user1=u1.id, Alt.user2=u2.id),
+            and_(Alt.user1=u2.id, Alt.user2=u1.id)
+            )
+        ).first
 
     return render_template("admin/alt_votes.html",
         u1=u1, 
         u2=u2,
         v=v,
-        data=data)
+        data=data,
+        alt=alt)
 
 
 @app.route("/admin/link_accounts", methods=["POST"])
@@ -333,4 +330,4 @@ def admin_link_accounts(v):
 
     g.db.add(new_alt)
 
-    return "", 204
+    return "success"
