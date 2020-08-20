@@ -334,4 +334,4 @@ def admin_link_accounts(v):
 
     g.db.add(new_alt)
 
-    return "success"
+    return redirect(f"/admin/link_accounts?u1={g.db.query(User).get(u1).username}&u2={g.db.query(User).get(u2).username}")
