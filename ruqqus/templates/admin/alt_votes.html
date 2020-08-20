@@ -34,27 +34,27 @@
 
 	<tr>
 		<td><b>Post Upvotes</b></td>
-		<td>{{ data['u1_only_post_ups'] }} ({{ 100 * data['u1_only_post_ups'] // (data['u1_only_post_ups'] + data['both_post_ups']) }}%)</td>
+		<td>{{ data['u1_only_post_ups'] }} ({{ data['u1_post_ups_unique'] }}%)</td>
 		<td>{{ data['both_post_ups'] }}</td>
-		<td>{{ data['u2_only_post_ups'] }} ({{ 100 * data['u2_only_post_ups'] // (data['u2_only_post_ups'] + data['both_post_ups']) }}%)</td>
+		<td>{{ data['u2_only_post_ups'] }} ({{ data['u2_post_ups_unique'] }}%)</td>
 	</tr>
 	<tr>
 		<td><b>Post Downvotes</b></td>
-		<td>{{ data['u1_only_post_downs'] }} ({{ 100 * data['u1_only_post_downs'] // (data['u1_only_post_downs'] + data['both_post_downs']) }}%)</td>
+		<td>{{ data['u1_only_post_downs'] }} ({{ data['u1_post_downs_unique'] }}%)</td>
 		<td>{{ data['both_post_downs'] }}</td>
-		<td>{{ data['u2_only_post_downs'] }} ({{ 100 * data['u2_only_post_downs'] // (data['u2_only_post_downs'] + data['both_post_downs']) }}%)</td>
+		<td>{{ data['u2_only_post_downs'] }} ({{ data['u2_post_downs_unique'] }}%)</td>
 	</tr>
 	<tr>
 		<td><b>Comment Upvotes</b></td>
-		<td>{{ data['u1_only_comment_ups'] }} ({{ 100 * data['u1_only_comment_ups'] // (data['u1_only_comment_ups'] + data['both_comment_ups']) }}%)</td>
+		<td>{{ data['u1_only_comment_ups'] }} ({{ data['u1_comment_ups_unique'] }}%)</td>
 		<td>{{ data['both_comment_ups'] }}</td>
-		<td>{{ data['u2_only_comment_ups'] }} ({{ 100 * data['u2_only_comment_ups'] // (data['u2_only_comment_ups'] + data['both_comment_ups']) }}%)</td>
+		<td>{{ data['u2_only_comment_ups'] }} ({{ data['u2_comment_ups_unique'] }}%)</td>
 	</tr>
 	<tr>
 		<td><b>Comment Downvotes</b></td>
-		<td>{{ data['u1_only_comment_downs'] }} ({{ 100 * data['u1_only_comment_downs'] // (data['u1_only_comment_downs'] + data['both_comment_downs']) }}%)</td>
+		<td>{{ data['u1_only_comment_downs'] }} ({{ data['u1_comment_downs_unique'] }}%)</td>
 		<td>{{ data['both_comment_downs'] }}</td>
-		<td>{{ data['u2_only_comment_downs'] }} ({{ 100 * data['u2_only_comment_downs'] // (data['u2_only_comment_downs'] + data['both_comment_downs']) }}%)</td>
+		<td>{{ data['u2_only_comment_downs'] }} ({{ data['u2_comment_downs_unique'] }}%)</td>
 	</tr>
 </table>
 
