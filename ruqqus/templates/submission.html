@@ -106,6 +106,10 @@
 <meta name="twitter:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}{% endif %}" />
 <meta name="twitter:url" content="{{ p.permalink | full_link }}" />
 
+  {% if linked_comment.author.is_private %}
+  <meta name="robots" content="noindex">
+  {% endif %}
+
 {% else %}
 <title>{{ p.title | safe}} - Ruqqus</title>
 
@@ -128,6 +132,11 @@
 <meta name="twitter:description" content="{{ p.body_html }}" />
 <meta name="twitter:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb %}{{ p.thumb_url }}{% else %}{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}{% endif %}" />
 <meta name="twitter:url" content="{{ p.permalink | full_link}}" />
+
+  {% if p.author.is_private %}
+  <meta name="robots" content="noindex">
+  {% endif %}
+
 {% endif %}
 {% endblock %}
 

@@ -61,7 +61,7 @@
 				{% endif %}
 
 				{% if not p.url %}
-				<a href="{{ p.permalink }}" target="_blank" rel="nofollow noopener">
+				<a href="{{ p.permalink }}" target="_blank" rel="{% if p.author.is_private %}nofollow {% endif %}noopener">
 					<img src="/assets/images/icons/default_thumb_text.png" class="post-img border-0" alt="text post thumbnail">
 				</a>
 				{% endif %}
@@ -101,7 +101,7 @@
 
 					</div>
 
-					<h5 class="card-title post-title text-left w-lg-75 mb-0 mb-md-2"><a href="{{ p.permalink }}" class="stretched-link" onclick="">{{ p.title | safe }}</a></h5>
+					<h5 class="card-title post-title text-left w-lg-75 mb-0 mb-md-2"><a href="{{ p.permalink }}" class="stretched-link" {% if p.author.is_private %} rel="nofollow"{% endif %}>{{ p.title | safe }}</a></h5>
 
 					{% if p.body_html %}
 					<div class="post-preview-lg">
@@ -126,7 +126,7 @@
   {% if p.thumb_url %}
   <div class="row post-img-lg mb-3">
   	<div class="col px-0">
-  		<a target="_blank" href="{{ p.permalink }}" rel="nofollow noopener"><img src="{{ p.thumb_url }}" class="img-fluid" alt="post image"></a>
+  		<a target="_blank" href="{{ p.permalink }}" rel="{% if p.author.is_private %}nofollow {% endif %} noopener"><img src="{{ p.thumb_url }}" class="img-fluid" alt="post image"></a>
   	</div>
   </div>
   {% endif %}
@@ -134,7 +134,7 @@
   <div class="post-actions mt-2 d-none d-md-block">
   	<ul class="list-inline text-right d-flex">
 
-  		<li class="list-inline-item"><a href="{{ p.permalink }}"><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
+  		<li class="list-inline-item"><a href="{{ p.permalink }}"{% if p.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
 
   		<li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link }}"><i class="fas fa-copy"></i>Copy link</a></li>
 
@@ -217,7 +217,7 @@
 <div class="card-footer d-block d-md-none mt-2">
 	<div class="post-actions">
 		<ul class="list-inline text-right d-flex">
-			<li class="list-inline-item mr-auto"><a href="{{ p.permalink }}"><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
+			<li class="list-inline-item mr-auto"><a href="{{ p.permalink }}"{% if p.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
 
 			<li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link}}"><i class="fas fa-link"></i>Share</a></li>
 			{% if v %}
