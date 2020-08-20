@@ -13,26 +13,30 @@
 <h2 class="h5">Your API Applications</h2>
 
 {% for app in v.applications %}
-<div class="settings-section rounded">
-	<div class="d-lg-flex">
-		<h3 class="h6">{{ app.app_name }}</h3>
-		<form id="edit-app-{{ app.id }}" action="/edit_app/{{ app.id }}" method="post">
-			<input type="hidden" name="formkey" value="{{ v.formkey }}">
-			<label for="edit-{{ app.id }}-name">App Name</label>
-			<input id="edit-{{ app.id }}-name" class="form-control" type="text" name="name" value="{{ app.app_name }}">
-			<label for="edit-{{ app.id }}-client-id">Client ID</label>
-			<input id="edit-{{ app.id }}-client-id" class="form-control copy-text" type="text" name="name" value="{{ app.client_id }}" data-clipboard-text="{{ app.client_id }}" readonly>
-			<label for="edit-{{ app.id }}-client-secret">Client Secret</label>
-			<a href="javascript:void(0)" id="secret-{{ app.id }}-click" class="btn btn-secondary d-block" onclick="x=document.getElementById('secret-{{ app.id }}-click');x.classList.add('d-none');x.classList.remove('d-block');document.getElementById('edit-{{ app.id }}-client-secret').classList.remove('d-none');">Click to show</a>
-			<input class="d-none form-control copy-text" id="edit-{{ app.id }}-client-secret" type="text" name="name" value="{{ app.client_secret }}" data-clipboard-text="{{ app.client_secret }}" readonly>
-			<label for="edit-{{ app.id }}-redirect">Redirect URI</label>
-			<input id="edit-{{ app.id }}-redirect" class="form-control" type="text" name="redirect_uri" value="{{ app.redirect_uri }}">
-			<label for="edit-{{ app.id }}-desc">Description</label>
-			<textarea form="edit-app-{{ app.id }}" class="form-control" name="description" id="edit-{{ app.id }}-desc" maxlength="256">{{ app.description }}</textarea>
-			<input type="submit" class="btn btn-primary ml-auto" value="Save Changes">
-		</form>
+
+<form id="edit-app-{{ app.id }}" action="/edit_app/{{ app.id }}" method="post">
+	<div class="settings-section rounded">
+		<div class="d-lg-flex">
+			<h3 class="h6">{{ app.app_name }}</h3>
+			<form id="edit-app-{{ app.id }}" action="/edit_app/{{ app.id }}" method="post">
+				<input type="hidden" name="formkey" value="{{ v.formkey }}">
+				<label for="edit-{{ app.id }}-name">App Name</label>
+				<input id="edit-{{ app.id }}-name" class="form-control" type="text" name="name" value="{{ app.app_name }}">
+				<label for="edit-{{ app.id }}-client-id">Client ID</label>
+				<input id="edit-{{ app.id }}-client-id" class="form-control copy-text" type="text" name="name" value="{{ app.client_id }}" data-clipboard-text="{{ app.client_id }}" readonly>
+				<label for="edit-{{ app.id }}-client-secret">Client Secret</label>
+				<a href="javascript:void(0)" id="secret-{{ app.id }}-click" class="btn btn-secondary d-block" onclick="x=document.getElementById('secret-{{ app.id }}-click');x.classList.add('d-none');x.classList.remove('d-block');document.getElementById('edit-{{ app.id }}-client-secret').classList.remove('d-none');">Click to show</a>
+				<input class="d-none form-control copy-text" id="edit-{{ app.id }}-client-secret" type="text" name="name" value="{{ app.client_secret }}" data-clipboard-text="{{ app.client_secret }}" readonly>
+				<label for="edit-{{ app.id }}-redirect">Redirect URI</label>
+				<input id="edit-{{ app.id }}-redirect" class="form-control" type="text" name="redirect_uri" value="{{ app.redirect_uri }}">
+				<label for="edit-{{ app.id }}-desc">Description</label>
+				<textarea form="edit-app-{{ app.id }}" class="form-control" name="description" id="edit-{{ app.id }}-desc" maxlength="256">{{ app.description }}</textarea>
+		</div>
 	</div>
-</div>
+	<div class="footer">
+		<input type="submit" class="btn btn-primary ml-auto" value="Save Changes">
+	</div>
+</form>
 {% endfor %}
 
 <h2>Request API Keys</h2>
