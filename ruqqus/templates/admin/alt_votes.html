@@ -67,8 +67,10 @@
 	<input type="hidden" name="formkey" value="{{ v.formkey }}">
 	<input type="hidden" name="u1" value="{{ u1.id }}">
 	<input type="hidden" name="u2" value="{{ u2.id }}">
-	<input type="submit" value="Link {{ u1.username }} and {{ u2.username }}">
+	<input type="submit" id="linkbtn" class="btn btn-primary d-none" value="Confirm Link: {{ u1.username }} and {{ u2.username }}">
 </form>
+
+<a id="thisbtn" href="javascript:void(0)" onclick="document.getElementById('thisbtn').classList.add('d-none');document.getElementById.classList.remove('d-none');">Link Accounts</a>
 
 {% endif %}
 
