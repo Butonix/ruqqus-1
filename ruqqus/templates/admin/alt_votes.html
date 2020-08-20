@@ -63,6 +63,8 @@
 {% if u2 in u1.alts %}
 <p>Accounts are known alts of eachother.</p>
 {% else %}
+
+<a href="javascript:void(0)" onclick="document.getElementById.classList.toggle('d-none');">Link Accounts</a>
 <form action="/admin/link_accounts" method="post">
 	<input type="hidden" name="formkey" value="{{ v.formkey }}">
 	<input type="hidden" name="u1" value="{{ u1.id }}">
@@ -70,7 +72,6 @@
 	<input type="submit" id="linkbtn" class="btn btn-primary d-none" value="Confirm Link: {{ u1.username }} and {{ u2.username }}">
 </form>
 
-<a id="thisbtn" href="javascript:void(0)" onclick="document.getElementById('thisbtn').classList.add('d-none');document.getElementById.classList.remove('d-none');">Link Accounts</a>
 
 {% endif %}
 
