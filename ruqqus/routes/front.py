@@ -2,6 +2,7 @@ import time
 from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import lazyload
+import random
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
@@ -438,7 +439,12 @@ def random_post(v):
         bans=g.db.query(BanRelationship.id).filter_by(user_id=v.id).all()
         x=x.filter(Submission.board_id.notin_([i[0] for i in bans]))
 
-    post = x.order_by(func.random()).first()
+    total=x.count()
+    n=random.randint(0, total-1)
+
+
+
+    post = x.order_by(Submission.created_utc).offset(n).limit(1).first()
     return redirect(post.permalink)
 
 @app.route("/random/guild", methods=["GET"])
@@ -455,7 +461,11 @@ def random_guild(v):
         bans=g.db.query(BanRelationship.id).filter_by(user_id=v.id).all()
         x=x.filter(Board.id.notin_([i[0] for i in bans]))
 
-    board=x.order_by(func.random()).first()
+
+    total=x.count()
+    n=random.randint(0, total-1)
+
+    board=x.order_by(Board.created_utc).offset(n).limit(1).first()
 
     return redirect(board.permalink)
 
@@ -470,7 +480,10 @@ def random_comment(v):
     if v:
         bans=g.db.query(BanRelationship.id).filter_by(user_id=v.id).all()
         x=x.filter(Comment.board_id.notin_([i[0] for i in bans]))
-    comment=x.order_by(func.random()).first()
+
+    total=x.count()
+    n=random.randint(0, total-1)
+    comment=x.order_by(Comment.created_utc).offset(n).limit(1).first()
 
     return redirect(comment.permalink)
 
@@ -480,6 +493,10 @@ def random_user(v):
     x=g.db.query(User).filter(or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc<int(time.time()))))
 
     x=x.filter_by(is_private=False)
-    user=x.order_by(func.random()).first()
+
+    total=x.count()
+    n=random.randint(0, total-1)
+
+    user=x.order_by(User.created_utc).offset(n).limit(1).first()
 
     return redirect(user.permalink)

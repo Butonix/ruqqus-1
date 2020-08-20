@@ -27,7 +27,7 @@ from redis import BlockingConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.17.7"
+_version = "2.17.9"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -101,9 +101,12 @@ app.config["RATELIMIT_STORAGE_URL"]=environ.get("REDIS_URL", "memory://")
 app.config["RATELIMIT_KEY_PREFIX"]="flask_limiting_"
 app.config["RATELIMIT_ENABLED"]=bool(int(environ.get("RATELIMIT_ENABLED", True)))
 
+def limiter_key_func():
+    return request.remote_addr
+
 limiter = Limiter(
     app,
-    key_func=get_remote_address,
+    key_func=limiter_key_func,
     default_limits=["100/minute"],
     headers_enabled=True,
     strategy="fixed-window"

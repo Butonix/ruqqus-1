@@ -409,7 +409,6 @@ def submit_post(v):
     if url:
         links=[url]+links
 
-    check_links=[]
     for link in links:
         parse_link=urlparse(link)
         check_url=ParseResult(scheme="https",
@@ -418,26 +417,26 @@ def submit_post(v):
                             params=parse_link.params,
                             query=parse_link.query,
                             fragment='')
-        check_links.append(urlunparse(check_url))
+        check_url=urlunparse(check_url)
 
 
-    badlink=g.db.query(BadLink).filter(BadLink.link.in_(tuple(check_links))).first()
-    if badlink:
-        if badlink.autoban:
-            text="Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-            send_notification(v, text)
-            v.ban(days=1, reason="spam")
+        badlink=g.db.query(BadLink).filter(literal(check_url).contains(BadLink.link)).first()
+        if badlink:
+            if badlink.autoban:
+                text="Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+                send_notification(v, text)
+                v.ban(days=1, reason="spam")
 
-            return redirect('/notifications')
-        else:
-            return render_template("submit.html",
-                       v=v,
-                       error=f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}",
-                       title=title,
-                       text=body[0:2000],
-                       b=get_guild(request.form.get("board","general"),
-                                   graceful=True)
-                       ), 400
+                return redirect('/notifications')
+            else:
+                return render_template("submit.html",
+                           v=v,
+                           error=f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}",
+                           title=title,
+                           text=body[0:2000],
+                           b=get_guild(request.form.get("board","general"),
+                                       graceful=True)
+                           ), 400
 
     #check for embeddable video
     domain=parsed_url.netloc

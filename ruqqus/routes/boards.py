@@ -806,21 +806,23 @@ def board_mod_queue(boardname, board, v):
 
     page=int(request.args.get("page",1))
 
-    posts = g.db.query(Submission).filter_by(board_id=board.id,
+    ids = g.db.query(Submission.id).filter_by(board_id=board.id,
                                            is_banned=False,
                                            mod_approved=None
                                            ).filter(Submission.report_count>=1)
 
     if not v.over_18:
-        posts=posts.filter_by(over_18=False)
+        ids=ids.filter_by(over_18=False)
 
-    posts=posts.order_by(Submission.report_count.desc()).offset((page-1)*25).limit(26)
+    ids=ids.order_by(Submission.report_count.desc()).offset((page-1)*25).limit(26)
 
-    posts=[x for x in posts]
+    ids=[x for x in ids]
 
-    next_exists=(len(posts)==26)
+    next_exists=(len(ids)==26)
 
-    posts=posts[0:25]
+    ids=ids[0:25]
+
+    posts=get_posts(ids, v=v)
 
     return render_template("guild/reported_posts.html",
                            listing=posts,
@@ -837,21 +839,23 @@ def all_mod_queue(v):
 
     board_ids=[x.board_id for x in v.moderates.filter_by(accepted=True).all()]
 
-    posts = g.db.query(Submission).filter(Submission.board_id.in_(board_ids),
+    ids = g.db.query(Submission.id).filter(Submission.board_id.in_(board_ids),
                                         Submission.mod_approved==None,
                                         Submission.report_count >=1,
                                         Submission.is_banned==False)
 
     if not v.over_18:
-        posts=posts.filter_by(over_18=False)
+        ids=ids.filter_by(over_18=False)
 
-    posts=posts.order_by(Submission.report_count.desc()).offset((page-1)*25).limit(26)
+    ids=ids.order_by(Submission.report_count.desc()).offset((page-1)*25).limit(26)
 
-    posts=[x for x in posts]
+    ids=[x for x in ids]
 
-    next_exists=(len(posts)==26)
+    next_exists=(len(ids)==26)
 
-    posts=posts[0:25]
+    ids=ids[0:25]
+
+    posts=get_posts(ids, v=v)
 
     return render_template("guild/reported_posts.html",
                            listing=posts,
@@ -1091,7 +1095,7 @@ def siege_guild(v):
     g.db.add(v)
 
     #check guild count
-    if not v.can_join_gms:
+    if not v.can_join_gms and guild not in v.boards_modded:
         return render_template("message.html",
                                v=v,
                                title=f"Siege against +{guild.name} Failed",

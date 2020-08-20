@@ -74,6 +74,10 @@ As an open-source project, we are supported by the community. If you would like 
 
 ### [Linux](https://github.com/ruqqus/ruqqus/wiki/Linux-Installation)
 
+Upon installation, trying to submit a post will cause a 404 error. You have to create a guild first (to achieve this perhaps temporarily remove the 250 rep restriction on making guilds). You also need to make sure the badwords table is populated.
+
+Note: When trying to run Ruqqus locally, make sure to use a [tagged release version](https://github.com/ruqqus/ruqqus/releases). The reason this is necessary is that the file schema.txt is not always updated, which will cause Ruqqus to crash. If after first setting up Ruqqus you are getting a 500/Internal Server Error on pages because of database errors, this is most likely why.
+
 
 ## License
 [MPL-2.0](https://github.com/ruqqus/ruqqus/blob/master/LICENSE)

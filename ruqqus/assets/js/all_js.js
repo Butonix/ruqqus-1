@@ -730,6 +730,9 @@ function post_toast(url, callback) {
       $('#toast-post-success').toast('show');
       document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
       callback()
+
+    } else if (xhr.status >= 300 && xhr.status < 400) {
+      window.location.href = JSON.parse(xhr.response)["redirect"]
     } else {
       $('#toast-post-error').toast('dispose');
       $('#toast-post-error').toast('show');

@@ -96,7 +96,7 @@ def search(v, search_type="posts"):
         if not (v and v.admin_level >= 3):
             boards=boards.filter_by(is_banned=False)
 
-        boards=boards.order_by(Board.subscriber_count.desc())
+        boards=boards.order_by(Board.stored_subscriber_count.desc())
 
         total=boards.count()
 

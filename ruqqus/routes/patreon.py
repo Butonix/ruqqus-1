@@ -41,7 +41,7 @@ def patreon_unauthorize(v):
     v.patreon_name=""
 
     if v.title_id in [32, 33, 34, 35]:
-        v.title_id=0
+        v.title_id=None
 
     v.refresh_selfset_badges()
     
@@ -184,7 +184,7 @@ def webhook_patreon():
 
     #Change patron title if appropriate
     if user.patreon_pledge_cents==0 and user.title_id in [32, 33, 34, 35]:
-        user.title_id=0
+        user.title_id=None
     elif user.patreon_pledge_cents<500 and user.title_id in [33, 34, 35]:
         user.title_id=32
     elif user.patreon_pledge_cents<2000 and user.title_id in [32, 34, 35]:
@@ -196,9 +196,11 @@ def webhook_patreon():
 
     #print(user.title_id)
 
+    g.db.add(user)
+    g.db.flush()
+
     user.refresh_selfset_badges()
 
-    g.db.add(user)
     g.db.commit()
 
     #print(user.patreon_pledge_cents)

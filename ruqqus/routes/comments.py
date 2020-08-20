@@ -1,6 +1,6 @@
 from urllib.parse import urlparse
 import mistletoe
-from sqlalchemy import func
+from sqlalchemy import func, literal
 from bs4 import BeautifulSoup
 
 from ruqqus.helpers.wrappers import *
@@ -271,7 +271,6 @@ def api_comment(v):
     soup=BeautifulSoup(body_html, features="html.parser")
     links=[x['href'] for x in soup.find_all('a') if x.get('href')]
 
-    check_links=[]
     for link in links:
         parse_link=urlparse(link)
         check_url=ParseResult(scheme="https",
@@ -280,12 +279,13 @@ def api_comment(v):
                             params=parse_link.params,
                             query=parse_link.query,
                             fragment='')
-        check_links.append(urlunparse(check_url))
+        check_url=urlunparse(check_url)
 
 
-    badlink=g.db.query(BadLink).filter(BadLink.link.in_(tuple(check_links))).first()
-    if badlink:
-        return jsonify({"error":f"Remove the following link and try again: `{badlink.link}`"}), 403
+        badlink=g.db.query(BadLink).filter(literal(check_url).contains(BadLink.link)).first()
+
+        if badlink:
+            return jsonify({"error":f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason_text}"}), 403
         
     #create comment
     c=Comment(author_id=v.id,
@@ -330,7 +330,8 @@ def api_comment(v):
         if user:
             if v.any_block_exists(user):
                 continue
-            notify_users.add(user.id)
+            if user.id != v.id:
+                notify_users.add(user.id)
 
 
     for x in notify_users:
