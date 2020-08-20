@@ -303,15 +303,15 @@ def alt_votes_get(v):
     data['u2_only_comment_downs']    = len([x for x in u2_comment_downs if x not in u1_comment_downs])
     data['both_comment_downs']       = len(list(set(u1_comment_downs) & set(u2_comment_downs)))
 
-    data['u1_post_ups_unique'] = 100 * data['u1_only_post_ups'] // u1_post_ups if u1_post_ups else 'NaN'
-    data['u2_post_ups_unique'] = 100 * data['u2_only_post_ups'] // u2_post_ups if u2_post_ups else 'NaN'
-    data['u1_post_downs_unique'] = 100 * data['u1_only_post_downs'] // u1_post_downs if u1_post_downs else 'NaN'
-    data['u2_post_downs_unique'] = 100 * data['u2_only_post_downs'] // u2_post_downs if u2_post_downs else 'NaN'
+    data['u1_post_ups_unique'] = 100 * data['u1_only_post_ups'] // len(u1_post_ups) if u1_post_ups else 'NaN'
+    data['u2_post_ups_unique'] = 100 * data['u2_only_post_ups'] // len(u2_post_ups) if u2_post_ups else 'NaN'
+    data['u1_post_downs_unique'] = 100 * data['u1_only_post_downs'] // len(u1_post_downs) if u1_post_downs else 'NaN'
+    data['u2_post_downs_unique'] = 100 * data['u2_only_post_downs'] // len(u2_post_downs) if u2_post_downs else 'NaN'
 
-    data['u1_comment_ups_unique'] = 100 * data['u1_only_comment_ups'] // u1_comment_ups if u1_comment_ups else 'NaN'
-    data['u2_comment_ups_unique'] = 100 * data['u2_only_comment_ups'] // u2_comment_ups if u2_comment_ups else 'NaN'
-    data['u1_comment_downs_unique'] = 100 * data['u1_only_comment_downs'] // u1_comment_downs if u1_comment_downs else 'NaN'
-    data['u2_comment_downs_unique'] = 100 * data['u2_only_comment_downs'] // u2_comment_downs if u2_comment_downs else 'NaN'
+    data['u1_comment_ups_unique'] = 100 * data['u1_only_comment_ups'] // len(u1_comment_ups) if u1_comment_ups else 'NaN'
+    data['u2_comment_ups_unique'] = 100 * data['u2_only_comment_ups'] // len(u2_comment_ups) if u2_comment_ups else 'NaN'
+    data['u1_comment_downs_unique'] = 100 * data['u1_only_comment_downs'] // len(u1_comment_downs) if u1_comment_downs else 'NaN'
+    data['u2_comment_downs_unique'] = 100 * data['u2_only_comment_downs'] // len(u2_comment_downs) if u2_comment_downs else 'NaN'
 
 
     return render_template("admin/alt_votes.html",
