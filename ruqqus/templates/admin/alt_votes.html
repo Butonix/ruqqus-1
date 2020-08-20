@@ -21,7 +21,7 @@
 {% if u1 and u2 %}
 
 
-<h2>Info</h2>
+<h2>Analysis</h2>
 <table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
 		<tr>
@@ -34,27 +34,27 @@
 
 	<tr>
 		<td><b>Post Upvotes</b></td>
-		<td>{{ data['u1_only_post_ups'] }} ({{ 100 * data['u1_only_post_ups'] // (data['u1_only_post_ups'] + data['both_post_ups']) }} %)</td>
+		<td>{{ data['u1_only_post_ups'] }} ({{ 100 * data['u1_only_post_ups'] // (data['u1_only_post_ups'] + data['both_post_ups']) }}%)</td>
 		<td>{{ data['both_post_ups'] }}</td>
-		<td>{{ data['u2_only_post_ups'] }} ({{ 100 * data['u2_only_post_ups'] // (data['u2_only_post_ups'] + data['both_post_ups']) }} %)</td>
+		<td>{{ data['u2_only_post_ups'] }} ({{ 100 * data['u2_only_post_ups'] // (data['u2_only_post_ups'] + data['both_post_ups']) }}%)</td>
 	</tr>
 	<tr>
 		<td><b>Post Downvotes</b></td>
-		<td>{{ data['u1_only_post_downs'] }} ({{ 100 * data['u1_only_post_downs'] // (data['u1_only_post_downs'] + data['both_post_downs']) }} %)</td>
+		<td>{{ data['u1_only_post_downs'] }} ({{ 100 * data['u1_only_post_downs'] // (data['u1_only_post_downs'] + data['both_post_downs']) }}%)</td>
 		<td>{{ data['both_post_downs'] }}</td>
-		<td>{{ data['u2_only_post_downs'] }} ({{ 100 * data['u2_only_post_downs'] // (data['u2_only_post_downs'] + data['both_post_downs']) }} %)</td>
+		<td>{{ data['u2_only_post_downs'] }} ({{ 100 * data['u2_only_post_downs'] // (data['u2_only_post_downs'] + data['both_post_downs']) }}%)</td>
 	</tr>
 	<tr>
 		<td><b>Comment Upvotes</b></td>
-		<td>{{ data['u1_only_comment_ups'] }} ({{ 100 * data['u1_only_comment_ups'] // (data['u1_only_comment_ups'] + data['both_comment_ups']) }} %)</td>
+		<td>{{ data['u1_only_comment_ups'] }} ({{ 100 * data['u1_only_comment_ups'] // (data['u1_only_comment_ups'] + data['both_comment_ups']) }}%)</td>
 		<td>{{ data['both_comment_ups'] }}</td>
-		<td>{{ data['u2_only_comment_ups'] }} ({{ 100 * data['u2_only_comment_ups'] // (data['u2_only_comment_ups'] + data['both_comment_ups']) }} %)</td>
+		<td>{{ data['u2_only_comment_ups'] }} ({{ 100 * data['u2_only_comment_ups'] // (data['u2_only_comment_ups'] + data['both_comment_ups']) }}%)</td>
 	</tr>
 	<tr>
 		<td><b>Comment Downvotes</b></td>
-		<td>{{ data['u1_only_comment_downs'] }} ({{ 100 * data['u1_only_comment_downs'] // (data['u1_only_comment_downs'] + data['both_comment_downs']) }} %)</td>
+		<td>{{ data['u1_only_comment_downs'] }} ({{ 100 * data['u1_only_comment_downs'] // (data['u1_only_comment_downs'] + data['both_comment_downs']) }}%)</td>
 		<td>{{ data['both_comment_downs'] }}</td>
-		<td>{{ data['u2_only_comment_downs'] }} ({{ 100 * data['u2_only_comment_downs'] // (data['u2_only_comment_downs'] + data['both_comment_downs']) }} %)</td>
+		<td>{{ data['u2_only_comment_downs'] }} ({{ 100 * data['u2_only_comment_downs'] // (data['u2_only_comment_downs'] + data['both_comment_downs']) }}%)</td>
 	</tr>
 </table>
 
@@ -63,6 +63,9 @@
 {% if u2 in u1.alts %}
 <p>Accounts are known alts of eachother.</p>
 {% else %}
+
+<p>Two accounts controlled by different people should have most uniqueness percentages at or above 70-80%</p>
+<p>A sockpuppet account will have its uniqueness percentages significantly lower.</p>
 
 <a href="javascript:void(0)" onclick="document.getElementById.classList.toggle('d-none');">Link Accounts</a>
 <form action="/admin/link_accounts" method="post">
