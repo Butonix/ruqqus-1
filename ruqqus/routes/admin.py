@@ -221,7 +221,7 @@ def admin_vote_info_get(v):
     if not request.args.get("link"):
         return render_template("admin/votes.html", v=v)
 
-    thing=get_from_permalink(request.form.get("link"), v=v)
+    thing=get_from_permalink(request.args.get("link"), v=v)
 
     if isinstance(thing, Submission):
 
