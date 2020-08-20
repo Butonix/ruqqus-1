@@ -5,7 +5,7 @@ reasons={
 	1: "URL shorteners are not allowed.",
 	3: "Piracy is not allowed.",
     4: "Sites hosting digitally malicious content are not allowed.",
-    5: "Spam"
+    5: "Spam",
     6: "Doxxing is not allowed."
 }
 
