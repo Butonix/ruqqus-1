@@ -35,10 +35,13 @@
 				<textarea form="edit-app-{{ app.id }}" class="form-control" name="description" id="edit-{{ app.id }}-desc" maxlength="256">{{ app.description }}</textarea>
 			</div>
 		</div>
+		<div class="footer">
+			<div class="d-flex">
+				<input type="submit" class="btn btn-primary ml-auto" value="Save Changes">
+			</div>
+		</div>
 	</div>
-	<div class="footer">
-		<input type="submit" class="btn btn-primary ml-auto" value="Save Changes">
-	</div>
+
 </form>
 {% endfor %}
 
