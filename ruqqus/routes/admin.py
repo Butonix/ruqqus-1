@@ -278,7 +278,7 @@ def alt_votes_get(v):
     u2=get_user(u2)
 
     u1_post_ups     = g.db.query(Vote.submission_id).filter_by(user_id=u1.id, vote_type=1).all()
-    u2_post_downs   = g.db.query(Vote.submission_id).filter_by(user_id=u1.id, vote_type=-1).all()
+    u1_post_downs   = g.db.query(Vote.submission_id).filter_by(user_id=u1.id, vote_type=-1).all()
     u1_comment_ups  = g.db.query(CommentVote.comment_id).filter_by(user_id=u1.id, vote_type=1).all()
     u1_comment_downs= g.db.query(CommentVote.comment_id).filter_by(user_id=u1.id, vote_type=-1).all()
     u2_post_ups     = g.db.query(Vote.submission_id).filter_by(user_id=u2.id, vote_type=1).all()
