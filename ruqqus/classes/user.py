@@ -97,7 +97,7 @@ class User(Base, Stndrd, Age_times):
     blocked=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id")
 
 
-    _applications = relationship("OauthApp", lazy="subquery")
+    _applications = relationship("OauthApp", lazy="dynamic")
 
 
     
