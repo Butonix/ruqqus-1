@@ -305,8 +305,8 @@ def alt_votes_get(v):
 
 
     alt=g.db.query(Alt).filter(
-        or_(and_(Alt.user1=u1.id, Alt.user2=u2.id),
-            and_(Alt.user1=u2.id, Alt.user2=u1.id)
+        or_(and_(Alt.user1==u1.id, Alt.user2==u2.id),
+            and_(Alt.user1==u2.id, Alt.user2==u1.id)
             )
         ).first
 
