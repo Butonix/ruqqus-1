@@ -303,19 +303,12 @@ def alt_votes_get(v):
     data['u2_only_comment_downs']    = len([x for x in u2_comment_downs if x not in u1_comment_downs])
     data['both_comment_downs']       = len(list(set(u1_comment_downs) & set(u2_comment_downs)))
 
-
-    alt=g.db.query(Alt).filter(
-        or_(and_(Alt.user1==u1.id, Alt.user2==u2.id),
-            and_(Alt.user1==u2.id, Alt.user2==u1.id)
-            )
-        ).first
-
     return render_template("admin/alt_votes.html",
         u1=u1, 
         u2=u2,
         v=v,
-        data=data,
-        alt=alt)
+        data=data
+        )
 
 
 @app.route("/admin/link_accounts", methods=["POST"])

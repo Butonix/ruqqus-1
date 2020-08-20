@@ -60,7 +60,7 @@
 
 <h2>Link Accounts</h2>
 
-{% if alt %}
+{% if u2 in u1.alts %}
 <p>Accounts are known alts of eachother.</p>
 {% else %}
 <form action="/admin/link_accounts" method="post">
