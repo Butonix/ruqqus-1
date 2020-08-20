@@ -1,6 +1,9 @@
 {% macro single_comment(c, level=1) %}
 <!---beginning of comment {{ c.id }}--->
 
+{% set ups=c.upvotes_fuzzed %}
+{% set downs=c.downvotes_fuzzed %}
+{% set score=ups-downs %}
 
 <!--conditions under which a comment might be hidden-->
 {% if ((c.is_banned or c.is_deleted) and not (v and v.admin_level >=3)) or (c.is_blocking or (c.is_blocked and not (is_guildmaster and c.original_board_id==c.post.board_id)) and not c.distinguish_level and not (v and v.admin_level>=3)) %}
@@ -8,7 +11,7 @@
 <div id="comment-{{ c.base36id }}" class="comment rounded">
 
 
-    <span class="comment-collapse"></span>
+    <span class="comment-collapse" onclick="collapse_comment('{{ c.base36id }}')"></span>
 
     <div class="comment-body">
 
@@ -26,10 +29,6 @@
          </div>
 
 
-    </div>
-
-
-</div>
 
     {% if render_replies %} 
     {% if level<5 %}
@@ -42,11 +41,13 @@
     {% else %}
       {% if c.replies %}
         <div id="morecomment-{{ c.base36id }}" class="mt-2 more-comments text-small">
-          <a href="{{ c.permalink }}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+          <a href="{{ c.permalink }}"{% if c.author.is_private %} rel="nofollow"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
         </div>
       {% endif %}
     {% endif %}
   {% endif %}
+</div>
+</div>
 
 
 {% else %}
@@ -112,9 +113,9 @@
       </div>
 
       {% if c.is_banned and c.ban_reason %}
-      <div id="comment-banned-warning" class="comment-text text-danger text-small">Reason: {{ c.ban_reason }}</div>
+      <div id="comment-banned-warning" class="comment-text text-danger text-small mb-0">Reason: {{ c.ban_reason }}</div>
       {% endif %}
-      <div id="comment-text-{{ c.base36id }}" class="comment-text">
+      <div id="comment-text-{{ c.base36id }}" class="comment-text mb-0">
         {{ c.body_html | safe }}
       </div>
 
@@ -150,7 +151,7 @@
           {% endif %}
 
           <li class="list-inline-item d-none d-md-inline-block mr-2">
-            <span class="points" data-toggle="tooltip" data-placement="top" data-original-title="+{{ c.upvotes_fuzzed }} | -{{ c.downvotes_fuzzed }}"><span id="comment-score-{{ c.base36id }}" class="score comment-score-{{ c.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{{ score }}</span></span>
+            <span class="points" data-toggle="tooltip" data-placement="top" data-original-title="+{{ ups }} | -{{ downs }}"><span id="comment-score-{{ c.base36id }}" class="score comment-score-{{ c.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{{ score }}</span></span>
           </li>
 
           {% if v %}
@@ -175,7 +176,7 @@
           </li>
           {% endif %}
           {% endif %}
-          <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ c.permalink | full_link }}"><i class="fas fa-link"></i>Permalink</a>
+          <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ c.permalink  }}"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-link"></i>Permalink</a>
           </li>
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i><span>Copy link</span></a>
           </li>
@@ -183,24 +184,24 @@
             <div class="dropdown show">
               <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
-              <i class="fas fa-ellipsis-h"></i>
+              <i class="fas fa-ellipsis-h text-small align-middle mr-0"></i>
             </a>
 
             <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
-              <a class="dropdown-item" href="{{ c.permalink }}?context=3"><i class="fas fa-book-open"></i>Context</a>
-              <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
+              <a class="dropdown-item" href="{{ c.permalink }}?context=3"><i class="fas fa-book-open fa-width-rem"></i>Context</a>
+              <a class="dropdown-item d-none" href="#"><i class="fas fa-save fa-width-rem"></i>Save</a>
 
 
               {% if v and c.parent_submission and not c.author_id==v.id and is_allowed_to_comment %}
-              <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author.username if not c.author.is_deleted else '[is_deleted]' }}',)"><i class="fas fa-flag"></i>Flag</a>
+              <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author.username if not c.author.is_deleted else '[is_deleted]' }}',)"><i class="fas fa-flag fa-width-rem"></i>Flag</a>
 
               {% endif %}
 
               {% if v and c.parent_submission and c.author_id==v.id and not c.is_deleted %}
 
-              <a class="dropdown-item" href="javascript:void(0)" onclick="toggleEdit('{{ c.base36id }}')"><i class="fas fa-edit"></i>Edit</a>
+              <a class="dropdown-item" href="javascript:void(0)" onclick="toggleEdit('{{ c.base36id }}')"><i class="fas fa-edit fa-width-rem"></i>Edit</a>
 
-              <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal('{{ c.base36id }}')"><i class="fas fa-trash-alt"></i>Delete</a>
+              <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal('{{ c.base36id }}')"><i class="fas fa-trash-alt fa-width-rem"></i>Delete</a>
 
               {% endif %}
 
@@ -211,18 +212,23 @@
               <div class="dropdown-divider"></div>
               <h6 class="dropdown-header">Admin actions</h6>
 
-              <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Undistinguish</a>
+              <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge fa-width-rem"></i>Undistinguish</a>
               {% else %}
-              <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="distinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Distinguish</a>
+              <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="distinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge fa-width-rem"></i>Distinguish</a>
 
               {% endif %}
               {% endif %}
               {% if v.admin_level>=3 %}
 		{% if not c.is_banned %}
-              <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times"></i>Remove</a>
+              <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times fa-width-rem"></i>Remove</a>
                 {% endif %}
               {% endif %}
 	      {% endif %}
+
+            {% if v and not v.id==c.author_id %}
+            <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ c.author.username }}')"
+            ><i class="fas fa-user-slash text-danger fa-width-rem"></i>Block user</a>
+            {% endif %}
 
             </div>
           </div>
@@ -238,7 +244,7 @@
         </li>
         {% endif %}
         <li class="list-inline-item d-inline-block d-md-none mr-2">
-            <span class="points" data-toggle="tooltip" data-placement="top" data-original-title="+{{ c.upvotes_fuzzed }} | -{{ c.downvotes_fuzzed }}"><span id="comment-score-{{ c.base36id }}" class="score comment-score-{{ c.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{{ score }}</span></span>
+            <span class="points" data-toggle="tooltip" data-placement="top" data-original-title="+{{ ups }} | -{{ downs }}"><span id="comment-score-{{ c.base36id }}" class="score comment-score-{{ c.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{{ score }}</span></span>
         </li>
         {% if v %}
         <li id="comment-{{ c.base36id }}-down" tabindex="0" class="list-inline-item arrow-down downvote-button d-inline-block d-md-none mr-2 comment-{{ c.base36id }}-down {% if voted==-1 %}active{% endif %}" data-id-down="{{ c.base36id }}" data-content-type="comment">
@@ -298,7 +304,7 @@
     {% else %}
       {% if c.replies %}
         <div id="morecomment-{{ c.base36id }}" class="mt-2 more-comments text-small">
-          <a href="{{ c.permalink }}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+          <a href="{{ c.permalink }}"{% if c.author.is_private %} rel="nofollow"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
         </div>
       {% endif %}
     {% endif %}
@@ -321,8 +327,8 @@
         <ul class="list-group comment-actions">
           <li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i><span>Copy Link</span></a></li>
 
-          <li class="list-group-item"><a href="{{ c.permalink | full_link }}"><i class="fas fa-link"></i>Permalink</a></li>
-          <li class="list-group-item"><a href="{{ c.permalink }}?context=3"><i class="fas fa-dna"></i>Context</a></li>
+          <li class="list-group-item"><a href="{{ c.permalink }}"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-link"></i>Permalink</a></li>
+          <li class="list-group-item"><a href="{{ c.permalink }}?context=3"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-dna"></i>Context</a></li>
           <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
 
           {% if v and not v.id==c.author_id %}
@@ -351,6 +357,14 @@
           {% endif %}
           {% endif %}
           {% endif %}
+
+          {% if v and not v.id==c.author_id %}
+          <li class="list-group-item">
+            <a class="d-block" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ c.author.username }}')"
+            ><i class="fas fa-user-slash text-danger"></i>Block user</a>
+          </li>
+          {% endif %}
+
         </ul>
       </div>
     </div>

@@ -112,13 +112,11 @@ def edit_post(pid, v):
     p.edited_utc = int(time.time())
 
     #offensive
+    p.is_offensive=False
     for x in g.db.query(BadWord).all():
         if (p.body and x.check(p.body)) or x.check(p.title):
             p.is_offensive=True
-            break
-        else:
-            p.is_offensive=False
-    
+            break   
 
     return redirect(p.permalink)
 
@@ -317,7 +315,10 @@ def submit_post(v):
                                            graceful=True
                                            )
                                )
-    #check spam
+
+
+
+    #similarity check
     now=int(time.time())
     cutoff=now-60*60*24
     similar_posts = g.db.query(Submission).options(
@@ -367,11 +368,6 @@ def submit_post(v):
         g.db.commit()
         return redirect("/notifications")
 
-
-    #print(similar_posts)
-
-    #now make new post
-
    
 
     #catch too-long body
@@ -399,9 +395,48 @@ def submit_post(v):
                                            graceful=True)
                                ), 400
 
+    #render text
+
     with CustomRenderer() as renderer:
         body_md=renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
+
+
+    ##check spam
+    soup=BeautifulSoup(body_html, features="html.parser")
+    links=[x['href'] for x in soup.find_all('a') if x.get('href')]
+
+    if url:
+        links=[url]+links
+
+    for link in links:
+        parse_link=urlparse(link)
+        check_url=ParseResult(scheme="https",
+                            netloc=parse_link.netloc,
+                            path=parse_link.path,
+                            params=parse_link.params,
+                            query=parse_link.query,
+                            fragment='')
+        check_url=urlunparse(check_url)
+
+
+        badlink=g.db.query(BadLink).filter(literal(check_url).contains(BadLink.link)).first()
+        if badlink:
+            if badlink.autoban:
+                text="Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+                send_notification(v, text)
+                v.ban(days=1, reason="spam")
+
+                return redirect('/notifications')
+            else:
+                return render_template("submit.html",
+                           v=v,
+                           error=f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}",
+                           title=title,
+                           text=body[0:2000],
+                           b=get_guild(request.form.get("board","general"),
+                                       graceful=True)
+                           ), 400
 
     #check for embeddable video
     domain=parsed_url.netloc
@@ -422,12 +457,11 @@ def submit_post(v):
         abort(403)
 
     #offensive
+    is_offensive=False
     for x in g.db.query(BadWord).all():
         if (body and x.check(body)) or x.check(title):
             is_offensive=True
             break
-        else:
-            is_offensive=False
 
     new_post=Submission(author_id=v.id,
                         domain_ref=domain_obj.id if domain_obj else None,

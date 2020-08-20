@@ -245,6 +245,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                     'parent':self.parent_fullname
                     }
         return {'id':self.base36id,
+                'fullname':self.fullname,
                 'post':self.post.base36id,
                 'level':self.level,
                 'parent':self.parent_fullname,
@@ -261,7 +262,10 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'is_nsfw':self.over_18,
                 'is_offensive':self.is_offensive,
                 'is_nsfl':self.is_nsfl,
-                'permalink':self.permalink
+                'permalink':self.permalink,
+                'score':self.score_fuzzed,
+                'upvotes':self.upvotes_fuzzed,
+                'downvotes':self.downvotes_fuzzed
                 }
             
     @property

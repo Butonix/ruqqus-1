@@ -70,63 +70,13 @@ As an open-source project, we are supported by the community. If you would like 
 
 ## Local development
 
-### Mac
+### [Mac](https://github.com/ruqqus/ruqqus/wiki/Mac-Installation)
 
-Install dependencies
+### [Linux](https://github.com/ruqqus/ruqqus/wiki/Linux-Installation)
 
-`$ pip3 install -r requirements.txt`
+Upon installation, trying to submit a post will cause a 404 error. You have to create a guild first (to achieve this perhaps temporarily remove the 250 rep restriction on making guilds). You also need to make sure the badwords table is populated.
 
-`$ brew install redis`
-
-`$ brew install postgres`
-
-
-Start services
-
-`$ redis-server /usr/local/etc/redis.conf`
-
-`$ brew services start postgresql`
-
-`$ psql postgres -a -f schema.txt`
-
-
-Add test user to database (password = password)
-
-`$ psql postgres`
-
-```
-INSERT INTO users (id, username, email, passhash, created_utc, creation_ip, tos_agreed_utc, login_nonce)
-         VALUES (NEXTVAL('users_id_seq'), 'ruqqie', 'ruqqie@ruqqus.com', 'pbkdf2:sha512:150000$vmPzuBFj$24cde8a6305b7c528b0428b1e87f256c65741bb035b4356549c13e745cc0581701431d5a2297d98501fcf20367791b4334dcd19cf063a6e60195abe8214f91e8',
-         1592672337, '127.0.0.1', 1592672337, 1);
-```
-
-
-Add this line to `/etc/hosts`
-
-`127.0.0.1 ruqqus.localhost`
-
-
-Refresh DNS
-
-`$ sudo killall -HUP mDNSResponder`
-
-
-Create environment variables
-
-`$ export domain=ruqqus.localhost:8000`
-
-`$ export REDIS_URL=redis://localhost:6379`
-
-`$ export DATABASE_URL=postgres://localhost:5432/postgres`
-
-`$ export PYTHONPATH=$(/path/to/ruqqus/root)`
-
-`$ export MASTER_KEY=$(openssl rand -base64 32)`
-
-
-Run Ruqqus
-
-`$ gunicorn ruqqus.__main__:app -w 3 -k gevent --worker-connections 6 --preload --max-requests 500 --max-requests-jitter 50`
+Note: When trying to run Ruqqus locally, make sure to use a [tagged release version](https://github.com/ruqqus/ruqqus/releases). The reason this is necessary is that the file schema.txt is not always updated, which will cause Ruqqus to crash. If after first setting up Ruqqus you are getting a 500/Internal Server Error on pages because of database errors, this is most likely why.
 
 
 ## License

@@ -90,7 +90,9 @@ CREATE TABLE public.comments (
     is_op boolean DEFAULT false,
     is_offensive boolean,
     is_nsfl boolean DEFAULT false,
-    original_board_id integer
+    original_board_id integer,
+    upvotes integer DEFAULT 1,
+    downvotes integer DEFAULT 0
 );
 
 
@@ -139,7 +141,9 @@ CREATE TABLE public.submissions (
     is_pinned boolean DEFAULT false,
     is_nsfl boolean DEFAULT false,
     repost_id integer DEFAULT 0,
-    score_best double precision DEFAULT 0
+    score_best double precision DEFAULT 0,
+    upvotes integer DEFAULT 1,
+    downvotes integer DEFAULT 0
 );
 
 
@@ -202,7 +206,10 @@ CREATE TABLE public.users (
     patreon_access_token character(128),
     patreon_refresh_token character(128),
     patreon_pledge_cents integer DEFAULT 0,
-    patreon_name character varying(64)
+    patreon_name character varying(64),
+    is_enrolled boolean DEFAULT false,
+    roulette_wins integer DEFAULT 0,
+    filter_nsfw boolean DEFAULT false
 );
 
 
@@ -319,49 +326,60 @@ $_$;
 --
 
 CREATE FUNCTION public.downs(public.comments) RETURNS bigint
-    LANGUAGE sql IMMUTABLE STRICT
+    LANGUAGE sql
     AS $_$
-
 select (
-
 (
   SELECT count(*)
   from (
     select * from commentvotes
     where comment_id=$1.id
     and vote_type=-1
+    and user_id not in
+    (
+    	select user_id
+    	from bans
+    	where board_id=$1.original_board_id
+    )
   ) as v1
-  left join users
-    on users.id=v1.user_id
-  where users.is_banned=0
+   join (select * from users where users.is_banned=0 or users.unban_utc>0
+) as u0
+    on u0.id=v1.user_id
 )-(
   SELECT count(distinct v1.id)
   from (
     select * from commentvotes
     where comment_id=$1.id
     and vote_type=-1
+    and user_id not in
+    (
+    	select user_id
+    	from bans
+    	where board_id=$1.original_board_id
+    )
   ) as v1
-  left join (select * from users) as u1
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
     on u1.id=v1.user_id
-  left join (select * from alts) as a1
-    on a1.user1=v1.user_id
-  left join (select * from alts) as a2
-    on a2.user2=v1.user_id
-  left join (
+   join (select * from alts) as a
+    on (a.user1=v1.user_id or a.user2=v1.user_id)
+   join (
       select * from commentvotes
       where comment_id=$1.id
       and vote_type=-1
+    and user_id not in
+    (
+    	select user_id
+    	from bans
+    	where board_id=$1.original_board_id
+    )
   ) as v2
-    on (v2.user_id=a1.user2 or v2.user_id=a2.user1)
-  left join (select * from users) as u2
+    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
     on u2.id=v2.user_id
-  where u1.is_banned=0
-  and u2.is_banned=0
-  and v1.id is not null
+  where v1.id is not null
   and v2.id is not null
 ))
-
-      $_$;
+     $_$;
 
 
 --
@@ -369,49 +387,59 @@ select (
 --
 
 CREATE FUNCTION public.downs(public.submissions) RETURNS bigint
-    LANGUAGE sql IMMUTABLE STRICT
+    LANGUAGE sql
     AS $_$
-
 select (
-
 (
   SELECT count(*)
   from (
     select * from votes
     where submission_id=$1.id
     and vote_type=-1
+    and user_id not in
+    (
+    	select user_id
+    	from bans
+    	where board_id=$1.board_id
+    )
   ) as v1
-  left join users
-    on users.id=v1.user_id
-  where users.is_banned=0
+   join (select * from users where users.is_banned=0 or users.unban_utc>0) as u0
+    on u0.id=v1.user_id
 )-(
   SELECT count(distinct v1.id)
   from (
     select * from votes
     where submission_id=$1.id
     and vote_type=-1
+    and user_id not in
+    (
+    	select user_id
+    	from bans
+    	where board_id=$1.board_id
+    )
   ) as v1
-  left join (select * from users) as u1
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
     on u1.id=v1.user_id
-  left join (select * from alts) as a1
-    on a1.user1=v1.user_id
-  left join (select * from alts) as a2
-    on a2.user2=v1.user_id
-  left join (
+   join (select * from alts) as a
+    on (a.user1=v1.user_id or a.user2=v1.user_id)
+   join (
       select * from votes
       where submission_id=$1.id
       and vote_type=-1
+    and user_id not in
+    (
+    	select user_id
+    	from bans
+    	where board_id=$1.board_id
+    )
   ) as v2
-    on (v2.user_id=a1.user2 or v2.user_id=a2.user1)
-  left join (select * from users) as u2
+    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
     on u2.id=v2.user_id
-  where u1.is_banned=0
-  and u2.is_banned=0
-  and v1.id is not null
+  where v1.id is not null
   and v2.id is not null
 ))
-
-      $_$;
+     $_$;
 
 
 --
@@ -556,7 +584,7 @@ CREATE FUNCTION public.mod_count(public.users) RETURNS bigint
 CREATE FUNCTION public.rank_activity(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT CAST($1.comment_count AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.6))
+      SELECT 1000000.0*CAST($1.comment_count AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.5))
     $_$;
 
 
@@ -567,7 +595,7 @@ CREATE FUNCTION public.rank_activity(public.submissions) RETURNS double precisio
 CREATE FUNCTION public.rank_best(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT 10000000.0*CAST(($1.ups - $1.downs) AS float)/((CAST(($1.age+5000) AS FLOAT)*cast((select boards.subscriber_count from boards where boards.id=$1.board_id)+3000 as float)/100.0)^(1.6))
+      SELECT 10000000.0*CAST(($1.upvotes - $1.downvotes) AS float)/((CAST(($1.age+5000) AS FLOAT)*cast((select boards.subscriber_count from boards where boards.id=$1.board_id)+7000 as float)/100.0)^(1.5))
       $_$;
 
 
@@ -578,7 +606,7 @@ CREATE FUNCTION public.rank_best(public.submissions) RETURNS double precision
 CREATE FUNCTION public.rank_fiery(public.comments) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-  SELECT SQRT(CAST(($1.ups * $1.downs) AS float))/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.6))
+  SELECT SQRT(CAST(($1.upvotes * $1.downvotes) AS float))/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.5))
   $_$;
 
 
@@ -589,7 +617,7 @@ CREATE FUNCTION public.rank_fiery(public.comments) RETURNS double precision
 CREATE FUNCTION public.rank_fiery(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT SQRT(CAST(($1.ups * $1.downs) AS float))/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.6))
+      SELECT 1000000.0*SQRT(CAST(($1.upvotes * $1.downvotes) AS float))/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.5))
       $_$;
 
 
@@ -600,7 +628,7 @@ CREATE FUNCTION public.rank_fiery(public.submissions) RETURNS double precision
 CREATE FUNCTION public.rank_hot(public.comments) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-  SELECT CAST(($1.ups - $1.downs) AS float)/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.6))
+  SELECT CAST(($1.upvotes - $1.downvotes) AS float)/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.5))
   $_$;
 
 
@@ -611,7 +639,7 @@ CREATE FUNCTION public.rank_hot(public.comments) RETURNS double precision
 CREATE FUNCTION public.rank_hot(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT CAST(($1.ups - $1.downs) AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.6))
+      SELECT 1000000.0*CAST(($1.upvotes - $1.downvotes) AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.5))
       $_$;
 
 
@@ -697,21 +725,21 @@ CREATE FUNCTION public.report_count(public.submissions) RETURNS bigint
 -- Name: score(public.comments); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.score(public.comments) RETURNS bigint
+CREATE FUNCTION public.score(public.comments) RETURNS integer
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-  SELECT ($1.ups - $1.downs)
-  $_$;
+      SELECT ($1.upvotes - $1.downvotes)
+      $_$;
 
 
 --
 -- Name: score(public.submissions); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.score(public.submissions) RETURNS bigint
+CREATE FUNCTION public.score(public.submissions) RETURNS integer
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT ($1.ups - $1.downs)
+      SELECT ($1.upvotes - $1.downvotes)
       $_$;
 
 
@@ -811,49 +839,59 @@ $_$;
 --
 
 CREATE FUNCTION public.ups(public.comments) RETURNS bigint
-    LANGUAGE sql IMMUTABLE STRICT
+    LANGUAGE sql
     AS $_$
-
 select (
-
 (
   SELECT count(*)
   from (
     select * from commentvotes
     where comment_id=$1.id
     and vote_type=1
+    and user_id not in
+    (
+    	select user_id
+    	from bans
+    	where board_id=$1.original_board_id
+    )
   ) as v1
-  left join users
-    on users.id=v1.user_id
-  where users.is_banned=0
+   join (select * from users where users.is_banned=0 or users.unban_utc>0) as u0
+    on u0.id=v1.user_id
 )-(
   SELECT count(distinct v1.id)
   from (
     select * from commentvotes
     where comment_id=$1.id
     and vote_type=1
+    and user_id not in
+    (
+    	select user_id
+    	from bans
+    	where board_id=$1.original_board_id
+    )
   ) as v1
-  left join (select * from users) as u1
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
     on u1.id=v1.user_id
-  left join (select * from alts) as a1
-    on a1.user1=v1.user_id
-  left join (select * from alts) as a2
-    on a2.user2=v1.user_id
-  left join (
+   join (select * from alts) as a
+    on (a.user1=v1.user_id or a.user2=v1.user_id)
+   join (
       select * from commentvotes
       where comment_id=$1.id
       and vote_type=1
+	    and user_id not in
+	    (
+	    	select user_id
+	    	from bans
+	    	where board_id=$1.original_board_id
+	    )
   ) as v2
-    on (v2.user_id=a1.user2 or v2.user_id=a2.user1)
-  left join (select * from users) as u2
+    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
     on u2.id=v2.user_id
-  where u1.is_banned=0
-  and u2.is_banned=0
-  and v1.id is not null
+  where v1.id is not null
   and v2.id is not null
 ))
-
-      $_$;
+     $_$;
 
 
 --
@@ -861,12 +899,69 @@ select (
 --
 
 CREATE FUNCTION public.ups(public.submissions) RETURNS bigint
+    LANGUAGE sql
+    AS $_$
+select (
+(
+  SELECT count(*)
+  from (
+    select * from votes
+    where submission_id=$1.id
+    and vote_type=1
+    and user_id not in
+    (
+    	select user_id
+    	from bans
+    	where board_id=$1.board_id
+    )
+  ) as v1
+   join (select * from users where users.is_banned=0 or users.unban_utc>0) as u0
+    on u0.id=v1.user_id
+)-(
+  SELECT count(distinct v1.id)
+  from (
+    select * from votes
+    where submission_id=$1.id
+    and vote_type=1
+    and user_id not in
+    (
+    	select user_id
+    	from bans
+    	where board_id=$1.board_id
+    )
+  ) as v1
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
+    on u1.id=v1.user_id
+   join (select * from alts) as a
+    on (a.user1=v1.user_id or a.user2=v1.user_id)
+   join (
+      select * from votes
+      where submission_id=$1.id
+      and vote_type=1
+    and user_id not in
+    (
+    	select user_id
+    	from bans
+    	where board_id=$1.board_id
+    )
+  ) as v2
+    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
+    on u2.id=v2.user_id
+  where v1.id is not null
+  and v2.id is not null
+))
+     $_$;
+
+
+--
+-- Name: ups_test(public.submissions); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.ups_test(public.submissions) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-
-
 select (
-
 (
   SELECT count(*)
   from (
@@ -874,9 +969,8 @@ select (
     where submission_id=$1.id
     and vote_type=1
   ) as v1
-  left join users
-    on users.id=v1.user_id
-  where users.is_banned=0
+   join (select * from users where users.is_banned=0) as u0
+    on u0.id=v1.user_id
 )-(
   SELECT count(distinct v1.id)
   from (
@@ -884,26 +978,21 @@ select (
     where submission_id=$1.id
     and vote_type=1
   ) as v1
-  left join (select * from users) as u1
+   join (select * from users where is_banned=0) as u1
     on u1.id=v1.user_id
-  left join (select * from alts) as a1
-    on a1.user1=v1.user_id
-  left join (select * from alts) as a2
-    on a2.user2=v1.user_id
-  left join (
+   join (select * from alts) as a
+    on (a.user1=v1.user_id or a.user2=v1.user_id)
+   join (
       select * from votes
       where submission_id=$1.id
       and vote_type=1
   ) as v2
-    on (v2.user_id=a1.user2 or v2.user_id=a2.user1)
-  left join (select * from users) as u2
+    on ((a.user1=v2.id or a.user2=v2.id) and v2.id != v1.id)
+   join (select * from users where is_banned=0) as u2
     on u2.id=v2.user_id
-  where u1.is_banned=0
-  and u2.is_banned=0
-  and v1.id is not null
+  where v1.id is not null
   and v2.id is not null
 ))
-
       $_$;
 
 
@@ -1008,6 +1097,38 @@ ALTER SEQUENCE public.badges_id_seq OWNED BY public.badges.id;
 
 
 --
+-- Name: badlinks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.badlinks (
+    id integer NOT NULL,
+    reason integer,
+    link character varying(512),
+    autoban boolean
+);
+
+
+--
+-- Name: badlinks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.badlinks_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: badlinks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.badlinks_id_seq OWNED BY public.badlinks.id;
+
+
+--
 -- Name: badpics; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1105,6 +1226,38 @@ ALTER SEQUENCE public.bans_id_seq OWNED BY public.bans.id;
 
 
 --
+-- Name: boardblocks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.boardblocks (
+    id integer NOT NULL,
+    user_id integer,
+    board_id integer,
+    created_utc integer
+);
+
+
+--
+-- Name: boardblocks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.boardblocks_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: boardblocks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.boardblocks_id_seq OWNED BY public.boardblocks.id;
+
+
+--
 -- Name: boards_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1122,6 +1275,48 @@ CREATE SEQUENCE public.boards_id_seq
 --
 
 ALTER SEQUENCE public.boards_id_seq OWNED BY public.boards.id;
+
+
+--
+-- Name: client_auths; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.client_auths (
+    id integer NOT NULL,
+    user_id integer,
+    oauth_client integer,
+    scope_identity boolean DEFAULT false,
+    scope_create boolean DEFAULT false,
+    scope_read boolean DEFAULT false,
+    scope_update boolean DEFAULT false,
+    scope_delete boolean DEFAULT false,
+    scope_vote boolean DEFAULT false,
+    scope_guildmaster boolean DEFAULT false,
+    access_token character(128),
+    refresh_token character(128),
+    oauth_code character(128),
+    access_token_expire_utc integer DEFAULT 0
+);
+
+
+--
+-- Name: client_auths_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.client_auths_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: client_auths_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.client_auths_id_seq OWNED BY public.client_auths.id;
 
 
 --
@@ -1516,6 +1711,42 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 
 --
+-- Name: oauth_apps; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.oauth_apps (
+    id integer NOT NULL,
+    client_id character(64),
+    client_secret character(128),
+    app_name character varying(50),
+    redirect_uri character varying(4096),
+    author_id integer,
+    is_banned boolean DEFAULT false,
+    description character(256) DEFAULT NULL::bpchar
+);
+
+
+--
+-- Name: oauth_apps_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.oauth_apps_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: oauth_apps_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.oauth_apps_id_seq OWNED BY public.oauth_apps.id;
+
+
+--
 -- Name: postrels; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1573,7 +1804,7 @@ ALTER SEQUENCE public.reports_id_seq OWNED BY public.reports.id;
 CREATE TABLE public.submissions_aux (
     id integer,
     title character varying(500),
-    url character varying(255),
+    url character varying(2083),
     body character varying(10000),
     body_html character varying(20000),
     embed_url character varying(256),
@@ -1868,6 +2099,13 @@ ALTER TABLE ONLY public.badges ALTER COLUMN id SET DEFAULT nextval('public.badge
 
 
 --
+-- Name: badlinks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.badlinks ALTER COLUMN id SET DEFAULT nextval('public.badlinks_id_seq'::regclass);
+
+
+--
 -- Name: badpics id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1889,10 +2127,24 @@ ALTER TABLE ONLY public.bans ALTER COLUMN id SET DEFAULT nextval('public.bans_id
 
 
 --
+-- Name: boardblocks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.boardblocks ALTER COLUMN id SET DEFAULT nextval('public.boardblocks_id_seq'::regclass);
+
+
+--
 -- Name: boards id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.boards ALTER COLUMN id SET DEFAULT nextval('public.boards_id_seq'::regclass);
+
+
+--
+-- Name: client_auths id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.client_auths ALTER COLUMN id SET DEFAULT nextval('public.client_auths_id_seq'::regclass);
 
 
 --
@@ -1984,6 +2236,13 @@ ALTER TABLE ONLY public.mods ALTER COLUMN id SET DEFAULT nextval('public.mods_id
 --
 
 ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('public.notifications_id_seq'::regclass);
+
+
+--
+-- Name: oauth_apps id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.oauth_apps ALTER COLUMN id SET DEFAULT nextval('public.oauth_apps_id_seq'::regclass);
 
 
 --
@@ -2096,6 +2355,14 @@ ALTER TABLE ONLY public.badges
 
 
 --
+-- Name: badlinks badlinks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.badlinks
+    ADD CONSTRAINT badlinks_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: badpics badpics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2128,11 +2395,27 @@ ALTER TABLE ONLY public.bans
 
 
 --
+-- Name: boardblocks boardblocks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.boardblocks
+    ADD CONSTRAINT boardblocks_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: boards boards_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.boards
     ADD CONSTRAINT boards_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: client_auths client_auths_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.client_auths
+    ADD CONSTRAINT client_auths_pkey PRIMARY KEY (id);
 
 
 --
@@ -2272,6 +2555,30 @@ ALTER TABLE ONLY public.notifications
 
 
 --
+-- Name: oauth_apps oauth_apps_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.oauth_apps
+    ADD CONSTRAINT oauth_apps_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: boardblocks one_board_block; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.boardblocks
+    ADD CONSTRAINT one_board_block UNIQUE (user_id, board_id);
+
+
+--
+-- Name: notifications one_notif; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notifications
+    ADD CONSTRAINT one_notif UNIQUE (user_id, comment_id);
+
+
+--
 -- Name: commentvotes onecvote; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2349,6 +2656,46 @@ ALTER TABLE ONLY public.subscriptions
 
 ALTER TABLE ONLY public.titles
     ADD CONSTRAINT titles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: client_auths unique_access; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.client_auths
+    ADD CONSTRAINT unique_access UNIQUE (access_token);
+
+
+--
+-- Name: client_auths unique_code; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.client_auths
+    ADD CONSTRAINT unique_code UNIQUE (oauth_code);
+
+
+--
+-- Name: oauth_apps unique_id; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.oauth_apps
+    ADD CONSTRAINT unique_id UNIQUE (client_id);
+
+
+--
+-- Name: client_auths unique_refresh; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.client_auths
+    ADD CONSTRAINT unique_refresh UNIQUE (refresh_token);
+
+
+--
+-- Name: oauth_apps unique_secret; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.oauth_apps
+    ADD CONSTRAINT unique_secret UNIQUE (client_secret);
 
 
 --
@@ -2468,6 +2815,13 @@ CREATE INDEX badges_user_index ON public.badges USING btree (user_id);
 
 
 --
+-- Name: badlink_link_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX badlink_link_idx ON public.badlinks USING btree (link);
+
+
+--
 -- Name: badpics_phash_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2503,10 +2857,38 @@ CREATE INDEX block_user_idx ON public.userblocks USING btree (user_id);
 
 
 --
+-- Name: board_name_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX board_name_idx ON public.boards USING btree (name);
+
+
+--
+-- Name: boardblocks_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX boardblocks_idx ON public.boardblocks USING btree (user_id, board_id);
+
+
+--
+-- Name: boards_isbanned_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX boards_isbanned_idx ON public.boards USING btree (is_banned);
+
+
+--
 -- Name: boards_name_trgm_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX boards_name_trgm_idx ON public.boards USING gin (name public.gin_trgm_ops);
+
+
+--
+-- Name: boards_over18_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX boards_over18_idx ON public.boards USING btree (over_18);
 
 
 --
@@ -2521,6 +2903,20 @@ CREATE INDEX boards_sub_idx ON public.boards USING btree (stored_subscriber_coun
 --
 
 CREATE INDEX cflag_user_idx ON public.commentflags USING btree (user_id);
+
+
+--
+-- Name: client_access_token_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX client_access_token_idx ON public.client_auths USING btree (access_token, access_token_expire_utc);
+
+
+--
+-- Name: client_refresh_token_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX client_refresh_token_idx ON public.client_auths USING btree (refresh_token);
 
 
 --
@@ -2605,6 +3001,13 @@ CREATE INDEX comments_score_top_idx ON public.comments USING btree (score_top DE
 --
 
 CREATE INDEX comments_user_index ON public.comments USING btree (author_id);
+
+
+--
+-- Name: commentsaux_body_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX commentsaux_body_idx ON public.comments_aux USING gin (to_tsvector('english'::regconfig, (body)::text));
 
 
 --
@@ -2762,6 +3165,13 @@ CREATE INDEX post_offensive_index ON public.submissions USING btree (is_offensiv
 
 
 --
+-- Name: post_public_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX post_public_idx ON public.submissions USING btree (post_public);
+
+
+--
 -- Name: reports_post_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2853,6 +3263,20 @@ CREATE INDEX submission_hot_sort_idx ON public.submissions USING btree (is_banne
 
 
 --
+-- Name: submission_isbanned_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submission_isbanned_idx ON public.submissions USING btree (is_banned);
+
+
+--
+-- Name: submission_isdeleted_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submission_isdeleted_idx ON public.submissions USING btree (is_deleted);
+
+
+--
 -- Name: submission_new_sort_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2930,6 +3354,13 @@ CREATE INDEX submissions_over18_index ON public.submissions USING btree (over_18
 
 
 --
+-- Name: submissions_score_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submissions_score_idx ON public.submissions USING btree (score_top);
+
+
+--
 -- Name: submissions_sticky_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3000,6 +3431,13 @@ CREATE INDEX user_privacy_idx ON public.users USING btree (is_private);
 
 
 --
+-- Name: user_private_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX user_private_idx ON public.users USING btree (is_private);
+
+
+--
 -- Name: userblocks_both_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3018,6 +3456,13 @@ CREATE INDEX users_created_utc_index ON public.users USING btree (created_utc);
 --
 
 CREATE INDEX users_title_idx ON public.users USING btree (title_id);
+
+
+--
+-- Name: users_unbanutc_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX users_unbanutc_idx ON public.users USING btree (unban_utc DESC);
 
 
 --

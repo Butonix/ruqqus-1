@@ -416,12 +416,6 @@ class User(Base, Stndrd, Age_times):
     def permalink(self):
         return self.url
 
-    @property
-    @lazy
-    def created_date(self):
-
-        return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
-
     def __repr__(self):
         return f"<User(username={self.username})>"
 
@@ -622,7 +616,9 @@ class User(Base, Stndrd, Age_times):
                 'banner_url':self.banner_url,
                 'post_count':self.post_count,
                 'comment_count':self.comment_count,
-                'title':self.title.json if self.title else None
+                'title':self.title.json if self.title else None,
+                'bio':self.bio,
+                'bio_html':self.bio_html
                 }
 
     @property

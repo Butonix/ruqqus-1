@@ -43,7 +43,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot"):
             Submission.author_id.notin_(blocked)
             )
     else:
-        posts=posts.filter(Submission.is_public==True)
+        posts=posts.filter(Submission.post_public==True)
 
     if t:
         now=int(time.time())
@@ -96,7 +96,7 @@ def search(v, search_type="posts"):
         if not (v and v.admin_level >= 3):
             boards=boards.filter_by(is_banned=False)
 
-        boards=boards.order_by(Board.subscriber_count.desc())
+        boards=boards.order_by(Board.stored_subscriber_count.desc())
 
         total=boards.count()
 

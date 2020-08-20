@@ -248,8 +248,8 @@
                   </div>
 
                   <span class="text-small-extra text-muted">Enable if you are 18+ and are ok with viewing NSFW content.</span>
+                  <hr>
                   <div id="filter-nsfw-option">
-                    <hr>
 
                     <div class="custom-control custom-switch">
                       <input type="checkbox" class="custom-control-input" id="filter-nsfw" name="filter_nsfw"{% if not v.filter_nsfw %} checked{% endif %} onchange="post_toast('/settings/profile?filter_nsfw='+document.getElementById('filter-nsfw').checked)">

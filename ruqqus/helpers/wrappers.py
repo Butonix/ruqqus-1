@@ -131,7 +131,7 @@ def is_guildmaster(f):
         if not board.has_mod(v):
             abort(403)
 
-        if v.is_banned:
+        if v.is_banned and not v.unban_utc:
             abort(403)
 
         return f(*args, board=board, **kwargs)

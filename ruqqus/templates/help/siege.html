@@ -52,7 +52,7 @@ In order to successfully siege a guild, no current Guildmaster (or no Guildmaste
 
 Additionally, the siege will fail if made against [+general](/+general), or admin-controlled Guilds such as [+Ruqqus](/+Ruqqus) or [+RuqqusPress](/+RuqqusPress).
 
-Guildmasters with a Ruqqus site-wide ban will always count as inactive for the purposes of sieges, regardless of actual activity.
+Guildmasters with a permanent Ruqqus site-wide ban will always count as inactive for the purposes of sieges, regardless of actual activity.
 
 Guildmasters who have deactivated their Ruqqus account will also always count as inactive.
 
@@ -61,35 +61,37 @@ Guildmasters who have deactivated their Ruqqus account will also always count as
 
 {% endfilter %}
 
+
+
 {% if v %}
 
-{% if not v.can_join_gms %}
+  {% if not v.can_join_gms %}
 
-<p>You already lead the maximum number of guilds. You cannot siege unless you lead 9 or fewer guilds.</p>
+    <p>You already lead the maximum number of guilds. You cannot siege a new guild unless you lead 9 or fewer guilds, but you can try to overthrow a top guildmaster in a guild you already lead.</p>
+  {% endif %}
+  {% if v.can_siege %}
 
-{% elif v.can_siege %}
+    <label>Your name:</label>
+    <input class="form-control" type="text" name="username" value="{{ v.username }}" readonly="readonly">
 
-<label>Your name:</label>
-<input class="form-control" type="text" name="username" value="{{ v.username }}" readonly="readonly">
+    <form action="/siege_guild" method="post">
+      <input type="hidden" name="formkey" value="{{ v.formkey }}">
 
-<form action="/siege_guild" method="post">
-  <input type="hidden" name="formkey" value="{{ v.formkey }}">
+      <label for="text-guild">Guild to siege:</label>
+      <input class="form-control" id="text-guild" type="text" name="guild">
 
-  <label for="text-guild">Guild to siege:</label>
-  <input class="form-control" id="text-guild" type="text" name="guild">
+      <input class="btn btn-primary" type="submit" value="Siege Guild">
+    </form>
 
-  <input class="btn btn-primary" type="submit" value="Siege Guild">
-</form>
+  {% elif v.is_banned %}
 
-{% elif v.is_banned %}
+    <p>You have been banned from Ruqqus. You cannot siege any guilds.</p>
 
-<p>You have been banned from Ruqqus. You cannot siege any guilds.</p>
+  {% else %}
 
+    <p>You cannot siege any Guilds right now. You can only make one siege attempt every 30 days (and your account must be 30 days old).</p>
+  {% endif %}
 {% else %}
-
-<p>You cannot siege any Guilds right now. You can only make one siege attempt every 30 days (and your account must be 30 days old).</p>
-{% endif %}
-{% else %}
-<p>You need to be logged in to siege a Guild.</p>
+  <p>You need to be logged in to siege a Guild.</p>
 {% endif %}
 {% endblock %}

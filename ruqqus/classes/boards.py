@@ -375,8 +375,9 @@ class Board(Base, Stndrd, Age_times):
                 'is_private':self.is_private,
                 'is_restricted':self.restricted_posting,
                 'id':self.base36id,
+                'fullname':self.fullname,
                 'banner_url':self.banner_url,
                 'profile_url':self.profile_url,
-                'color':self.color
+                'color':"#"+self.color
                 }
 
