@@ -264,3 +264,73 @@ def admin_vote_info_post(v):
         thing=thing,
         ups=ups,
         downs=downs,)
+
+@app.route("/admin/alt_votes", methods=["GET"])
+@admin_level_required(4)
+def alt_votes_get(v):
+
+    return render_template("admin/alt_votes.html", v=v)
+
+
+@app.route("/admin/alt_votes", methods=["POST"])
+@admin_level_required(4)
+def alt_votes_post(v):
+
+    u1=request.args.get("user1")
+    u2=request.args.get("user2")
+
+    if not u1 or not u2:
+        return redirect("/admin/alt_votes")
+
+    u1=get_user(u1)
+    u2=get_user(u2)
+
+    u1_post_ups     = g.db.query(Vote.submission_id).filter_by(user_id=u1.id, vote_type=1).all()
+    u2_post_downs   = g.db.query(Vote.submission_id).filter_by(user_id=u1.id, vote_type=-1).all()
+    u1_comment_ups  = g.db.query(CommentVote.comment_id).filter_by(user_id=u1.id, vote_type=1).all()
+    u1_comment_downs= g.db.query(CommentVote.comment_id).filter_by(user_id=u1.id, vote_type=-1).all()
+    u2_post_ups     = g.db.query(Vote.submission_id).filter_by(user_id=u2.id, vote_type=1).all()
+    u2_post_downs   = g.db.query(Vote.submission_id).filter_by(user_id=u2.id, vote_type=-1).all()
+    u2_comment_ups  = g.db.query(CommentVote.comment_id).filter_by(user_id=u2.id, vote_type=1).all()
+    u2_comment_downs= g.db.query(CommentVote.comment_id).filter_by(user_id=u2.id, vote_type=-1).all()
+
+    data={}
+    data['u1_only_post_ups']    = len([x for x in u1_post_ups if x not in u2_post_ups])
+    data['u2_only_post_ups']    = len([x for x in u2_post_ups if x not in u1_post_ups])
+    data['both_post_ups']       = len(list(set(u1_post_ups) & set(u2_post_ups)))
+
+    data['u1_only_post_downs']  = len([x for x in u1_post_downs if x not in u2_post_downs])
+    data['u2_only_post_downs']  = len([x for x in u2_post_downs if x not in u1_post_downs])
+    data['both_post_downs']     = len(list(set(u1_post_downs) & set(u2_post_downs)))
+
+    data['u1_only_comment_ups'] = len([x for x in u1_comment_ups if x not in u2_comment_ups])
+    data['u2_only_comment_ups'] = len([x for x in u2_comment_ups if x not in u1_comment_ups])
+    data['both_comment_ups']    = len(list(set(u1_comment_ups) & set(u2_comment_ups)))
+
+    data['u1_only_comment_downs']    = len([x for x in u1_comment_downs if x not in u2_comment_downs])
+    data['u2_only_comment_downs']    = len([x for x in u2_comment_downs if x not in u1_comment_downs])
+    data['both_comment_downs']       = len(list(set(u1_comment_downs) & set(u2_comment_downs)))
+
+
+    
+
+    return render_template("admin/alt_votes.html",
+        u1=u1, 
+        u2=u2,
+        v=v,
+        data=data)
+
+
+@app.route("/admin/link_accounts", methods=["POST"])
+@admin_level_required(4)
+@validate_formkey
+def admin_link_accounts(v):
+
+    u1=int(request.form.get("u1"))
+    u2=int(request.form.get("u2"))
+
+    new_alt=Alt(user1=u1, user2=u2)
+
+    g.db.add(new_alt)
+
+    return "", 204

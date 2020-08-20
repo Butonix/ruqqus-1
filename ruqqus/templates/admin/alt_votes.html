@@ -1,0 +1,68 @@
+{% extends "docs_default.html" %}
+
+{% block sidebarblock %}{% endblock %}
+{% block sidebarLeftblock %}{% endblock %}
+
+{% block title %}
+<title>Ruqqus - Help</title>
+<meta name="description" content="Ruqqus Help">
+{% endblock %}
+
+{% block content %}
+<h1>Vote Info</h1>
+
+<form action="/admin/alt_votes" method="post" class="mb-6">
+	<input type="hidden" name="formkey" value="{{ v.formkey }}">
+	<label for="link-input">Usernames</label>
+	<input id="link-input" type="text" class="form-control mb-2" name="user1" value="{{ u1.username if u1 else '' }}" placeholder="User 1">
+	<input id="link-input" type="text" class="form-control mb-2" name="user1" value="{{ u2.username if u2 else '' }}" placeholder="User 2">
+	<input type="submit" value="Submit" class="btn btn-primary">
+</form>
+
+{% if u1 and u2 %}
+
+
+<h2>Info</h2>
+<table class="table table-striped mb-5">
+	<thead class="bg-primary text-white">
+		<tr>
+			<th></th>
+			<th>{{ u1.username }} only</th>
+			<th>Both</th>
+			<th>{{ u2.username }} only</th>
+		</tr>
+	</thead>
+
+	<tr>
+		<td><b>Post Upvotes</b></td>
+		<td>{{ data['u1_only_post_ups'] }}</td>
+		<td>{{ data['both_post_ups'] }}</td>
+		<td>{{ data['u2_only_post_ups'] }}</td>
+	</tr>
+	<tr>
+		<td><b>Post Downvotes</b></td>
+		<td>{{ data['u1_only_post_downs'] }}</td>
+		<td>{{ data['both_post_downs'] }}</td>
+		<td>{{ data['u2_only_post_downs'] }}</td>
+	</tr>
+	<tr>
+		<td><b>Comment Upvotes</b></td>
+		<td>{{ data['u1_only_comment_ups'] }}</td>
+		<td>{{ data['both_comment_ups'] }}</td>
+		<td>{{ data['u2_only_comment_ups'] }}</td>
+	</tr>
+	<tr>
+		<td><b>Comment Downvotes</b></td>
+		<td>{{ data['u1_only_comment_downs'] }}</td>
+		<td>{{ data['both_comment_downs'] }}</td>
+		<td>{{ data['u2_only_comment_downs'] }}</td>
+	</tr>
+</table>
+
+
+
+
+{% endif %}
+
+
+{% endblock %}

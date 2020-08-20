@@ -14,7 +14,7 @@
 <form action="/admin/vote_info" method="post" class="mb-6">
 	<input type="hidden" name="formkey" value="{{ v.formkey }}">
 	<label for="link-input">Paste permalink</label>
-	<input id="link-input" type="text" class="form-control" name="link" value="{{ thing.permalink if thing else '' }}">
+	<input id="link-input" type="text" class="form-control mb-2" name="link" value="{{ thing.permalink if thing else '' }}">
 	<input type="submit" value="Submit" class="btn btn-primary">
 </form>
 
