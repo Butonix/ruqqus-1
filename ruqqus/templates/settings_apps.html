@@ -6,15 +6,12 @@
 {% endblock %}
 
 {% block content %}
-{% filter markdown %}
 
-# API Clients
-
-## Your Applications
-{% endfilter %}
+<h2 class="h5">Your API Applications
 
 {% for app in v.applications %}
-<h3>{{ app.app_name }}</h3>
+<div class="settings-section rounded">
+<h3 class="h6">{{ app.app_name }}</h3>
 <form id="edit-app-{{ app.id }}" action="/edit_app/{{ app.id }}" method="post">
 	<input type="hidden" name="formkey" value="{{ v.formkey }}">
 	<label for="edit-{{ app.id }}-name">App Name</label>
@@ -30,7 +27,7 @@
 	<textarea form="edit-app-{{ app.id }}" class="form-control" name="description" id="edit-{{ app.id }}-desc" maxlength="256">{{ app.description }}</textarea>
 	<input type="submit" class="btn btn-primary ml-auto" value="Save Changes">
 </form>
-<hr>
+</div>
 {% endfor %}
 
 <h2>Request API Keys</h2>
