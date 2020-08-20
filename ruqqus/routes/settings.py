@@ -467,3 +467,9 @@ def settings_unblock_guild(v):
     cache.delete_memoized(frontlist, v=v)
     
     return jsonify({"message":f"+{board.name} removed from filter"})
+
+@app.route("/settings/apps", methods=["GET"])
+@auth_required
+def settings_apps(v):
+
+    return render_template("settings_apps.html", v=v)
