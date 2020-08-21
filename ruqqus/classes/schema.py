@@ -127,11 +127,9 @@ class Guild(SQLAlchemyObjectType):
             page = kwargs['page']
 
         query = Submission.get_query(info)
-        query = query.join(SubmissionAuxModel)
 
         if self.id:
-            query = query.filter_by(board_id=self.id)\
-                .filter(Submission.board_id == self.id)
+            query = query.filter_by(board_id=self.id)
 
         #if self.name:
             #query = query.filter_by(name=self.name)
@@ -139,6 +137,8 @@ class Guild(SQLAlchemyObjectType):
         if 'id' in kwargs:
             query = query.filter_by(id=kwargs['id'])#\
                 #.filter(Submission.author_id == kwargs['id'])
+
+        query = query.join(SubmissionAuxModel)
 
         if 'title' in kwargs:
             query = query.filter(SubmissionAuxModel.title == kwargs['title'])
