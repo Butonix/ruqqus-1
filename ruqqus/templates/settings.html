@@ -158,7 +158,8 @@
 
  <!-- Clipboard Toast -->
 
- <div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+{% block clipboard %}
+<div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
   <div class="toast-body text-center">
     <i class="fas fa-check-circle text-success mr-2"></i>Link copied to clipboard
   </div>
@@ -169,6 +170,7 @@
     <i class="fas fa-exclamation-circle text-danger mr-2"></i>Unable to copy link
   </div>
 </div>
+{% endblock %}
 
 {% include "announcements_modal.html" %}
 {% include "bootstrap.html" %}
