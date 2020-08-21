@@ -245,7 +245,7 @@ def edit_oauth_app(v, aid):
 
     g.db.add(app)
 
-    return redirect('/help/apps')
+    return redirect('/settings/apps')
 
 @app.route("/api/v1/identity")
 @api("identity")
