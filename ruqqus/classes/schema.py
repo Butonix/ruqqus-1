@@ -157,8 +157,7 @@ class Guild(SQLAlchemyObjectType):
         if 'title' in kwargs:
             query = query.filter(SubmissionAuxModel.title == kwargs['title'])
 
-        print(query.offset(25*(page-1)).limit(26).all())
-        return [x[0] for x in query.offset(25*(page-1)).limit(26).all()]
+        return query.offset(25*(page-1)).limit(26).all()
 
 
 
