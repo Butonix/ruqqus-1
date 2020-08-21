@@ -25,6 +25,17 @@ class Comment(SQLAlchemyObjectType):
         return CommentModel.filter_by(is_banned=False,
                                       is_deleted=False).all()
 
+class CommentAux(SQLAlchemyObjectType):
+    class Meta:
+        model = CommentAuxModel
+        interfaces = (relay.Node,)
+
+    # comments_aux = graphene.List(lambda: Comm, id=graphene.String())
+    def resolve_comment_aux(self, info, **kwargs):
+        # query = SubmissionAux.get_query(info)
+        # return query.filter_by(id=kwargs['id']).all()
+        return CommentAuxModel.all()
+
 
 class Submission(SQLAlchemyObjectType):
     class Meta:
@@ -42,18 +53,6 @@ class Submission(SQLAlchemyObjectType):
         return SubmissionModel.filter_by(is_banned=False,
                                          is_deleted=False,
                                          is_public=True).all()
-
-
-class CommentAux(SQLAlchemyObjectType):
-    class Meta:
-        model = CommentAuxModel
-        interfaces = (relay.Node,)
-
-    # comments_aux = graphene.List(lambda: Comm, id=graphene.String())
-    def resolve_comment_aux(self, info, **kwargs):
-        # query = SubmissionAux.get_query(info)
-        # return query.filter_by(id=kwargs['id']).all()
-        return CommentAuxModel.all()
 
 
 class SubmissionAux(SQLAlchemyObjectType):
@@ -111,64 +110,119 @@ class Guild(SQLAlchemyObjectType):
 
     def resolve_guilds(self, info, **kwargs):
         return BoardModel.fitler_by(is_private=False,
-                                    is_banned=False).all()
+                                    is_banned=False
+                                    ).all()
 
-    posts = graphene.List(lambda: Submission)  # , id=graphene.String())
+    posts = graphene.List(lambda: Submission,
+                          id=graphene.String(),
+                          sort=graphene.String(),
+                          title=graphene.String(),
+                          page=graphene.Int()
+                          )
 
     def resolve_posts(self, info, **kwargs):
-        query = Submission.get_query(info)
-        if self.id:
-            return query.filter_by(board_id=self.id,
-                                   is_banned=False,
-                                   is_deleted=False).all()
-        elif self.name:
-            return query.filter_by(name=self.name,
-                                   is_banned=False,
-                                   is_deleted=False).all()
 
+        page = 1
+        if 'page' in kwargs:
+            page = kwargs['page']
+
+        query = Submission.get_query(info)
+        query = query.join(Submission.submission_aux)
+
+        if self.id:
+            query = query.filter_by(board_id=self.id)\
+                .filter(Submission.board_id == self.id)
+
+        if self.name:
+            query = query.filter_by(name=self.name)
+
+        if 'id' in kwargs:
+            query = query.filter_by(id=kwargs['id'])\
+                .filter(Submission.author_id == kwargs['id'])
+
+        if 'title' in kwargs:
+            query = query.filter(SubmissionAux.title == kwargs['title'])
+
+        if 'sort' in kwargs:
+            sort = kwargs['sort']
+            if sort == "hot":
+                query = query.order_by(Submission.score_best.desc())
+            elif sort == "new":
+                query = query.order_by(Submission.created_utc.desc())
+            elif sort == "disputed":
+                query = query.order_by(Submission.score_disputed.desc())
+            elif sort == "top":
+                query = query.order_by(Submission.score_top.desc())
+            elif sort == "activity":
+                query = query.order_by(Submission.score_activity.desc())
+
+        query.filter_by(is_banned=False,is_deleted=False)
+
+        return [x[0] for x in query.offset(25*(page-1)).limit(26).all()]
+
+
+
+
+# all_users = SQLAlchemyConnectionField(User.connection)
+# all_posts = SQLAlchemyConnectionField(Submission.connection, sort=None)
 
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
     # Allows sorting over multiple columns, by default over the primary key
-    # all_users = SQLAlchemyConnectionField(User.connection)
-    # all_posts = SQLAlchemyConnectionField(Submission.connection, sort=None)
-    guild = SQLAlchemyConnectionField(Guild.connection, id=graphene.String(), name=graphene.String(), sort=None)
+    guild = SQLAlchemyConnectionField(Guild.connection,
+                                      id=graphene.String(),
+                                      name=graphene.String()
+                                      )
+
+    user = SQLAlchemyConnectionField(User.connection,
+                                     id=graphene.String(),
+                                     username=graphene.String(),
+                                     sort=graphene.String()
+                                     )
+
     def resolve_guild(self, info, **kwargs):
+
         query = Guild.get_query(info)
+
         if "id" in kwargs:
             # print("id = ", kwargs['id'])
-            return query.filter_by(id=kwargs['id'],
-                                   is_private=False,
-                                   is_banned=False).all()
+            query = query.filter_by(id=kwargs['id'])
 
         if 'name' in kwargs:
-            return query.filter_by(name=kwargs['name'],
-                                   is_private=False,
-                                   is_banned=False).all()
+            query = query.filter_by(name=kwargs['name'])
 
-    user = SQLAlchemyConnectionField(User.connection, id=graphene.String(), sort=None)
+        #if 'sort' in kwargs:
+            #query
+
+        return query.filter_by(is_private=False,
+                               is_banned=False)
+
 
     def resolve_user(self, info, **kwargs):
         if "id" in kwargs:
             # print("id = ", kwargs['id'])
             query = User.get_query(info)
-            """check = query.filter_by(id=kwargs['id'], is_private=True).all()
-            if check:
-                return ['private user']"""
             return query.filter_by(id=kwargs['id'],
                                    is_private=False,
                                    is_banned=0,
                                    is_deleted=False).all()
 
-    """submission_aux = SQLAlchemyConnectionField(SubmissionAux.connection, sort=None)
-    def resolve_submission_aux(self, info, **kwargs):
-        if "id" in kwargs:
-            # print("uname = ", kwargs['id'])
-            query = SubmissionAux.get_query(info)
-            return query.filter_by(id=kwargs['id']).all()"""
 
     # Disable sorting over this field
     #all_guilds = SQLAlchemyConnectionField(Guild.connection, sort=None)
 
 
+
+
 schema = graphene.Schema(query=Query)
+
+
+"""check = query.filter_by(id=kwargs['id'], is_private=True).all()
+            if check:
+                return ['private user']"""
+"""submission_aux = SQLAlchemyConnectionField(SubmissionAux.connection, sort=None)
+    def resolve_submission_aux(self, info, **kwargs):
+        if "id" in kwargs:
+            # print("uname = ", kwargs['id'])
+            query = SubmissionAux.get_query(info)
+            return query.filter_by(id=kwargs['id']).all()"""
