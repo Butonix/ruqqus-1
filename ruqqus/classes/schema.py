@@ -127,6 +127,7 @@ class Guild(SQLAlchemyObjectType):
             page = kwargs['page']
 
         query = Submission.get_query(info)
+        query = query.filter_by(is_banned=False, is_deleted=False)
 
         if self.id:
             query = query.filter_by(board_id=self.id)
@@ -155,8 +156,6 @@ class Guild(SQLAlchemyObjectType):
                 query = query.order_by(Submission.score_top.desc())
             elif sort == "activity":
                 query = query.order_by(Submission.score_activity.desc())
-
-        query.filter_by(is_banned=False,is_deleted=False)
 
         return [x[0] for x in query.offset(25*(page-1)).limit(26).all()]
 
