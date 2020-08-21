@@ -135,15 +135,6 @@ class Guild(SQLAlchemyObjectType):
         #if self.name:
             #query = query.filter_by(name=self.name)
 
-        if 'id' in kwargs:
-            query = query.filter_by(id=kwargs['id'])#\
-                #.filter(Submission.author_id == kwargs['id'])
-
-        query = query.join(SubmissionAuxModel)
-
-        if 'title' in kwargs:
-            query = query.filter(SubmissionAuxModel.title == kwargs['title'])
-
         if 'sort' in kwargs:
             sort = kwargs['sort']
             if sort == "hot":
@@ -157,6 +148,16 @@ class Guild(SQLAlchemyObjectType):
             elif sort == "activity":
                 query = query.order_by(Submission.score_activity.desc())
 
+        if 'id' in kwargs:
+            query = query.filter_by(id=kwargs['id'])#\
+                #.filter(Submission.author_id == kwargs['id'])
+
+        query = query.join(SubmissionAuxModel)
+
+        if 'title' in kwargs:
+            query = query.filter(SubmissionAuxModel.title == kwargs['title'])
+
+        print(query.offset(25*(page-1)).limit(26).all())
         return [x[0] for x in query.offset(25*(page-1)).limit(26).all()]
 
 
