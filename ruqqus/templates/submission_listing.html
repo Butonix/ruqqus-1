@@ -241,17 +241,20 @@
       {% if v and not request.path.startswith('/@') %}
       <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none">
 
-        {% if voted==1 %}
-        <span class="mr-2 arrow-up post-{{ p.base36id }}-up active">
-        </span>
-        {% endif %}
+        <span class="mr-2 ml-2">
+          {% if voted==1 %}
+          <span class="arrow-up post-{{ p.base36id }}-up active">
+          </span>
+          {% endif %}
 
-        <span id="post-score-{{ p.base36id }}-mobile" class="score post-score-{{ p.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-toggle="tooltip" data-placement="top" data-original-title="+{{ ups }} | -{{ downs }}"{% endif %}>{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
+          <span id="post-score-{{ p.base36id }}-mobile" class="score post-score-{{ p.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-toggle="tooltip" data-placement="top" data-original-title="+{{ ups }} | -{{ downs }}"{% endif %}>{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
 
-        {% if voted==-1 %}
-        <span class="ml-2 my-0 arrow-down post-{{ p.base36id }}-down active">
+          {% if voted==-1 %}
+          <span class=" my-0 arrow-down post-{{ p.base36id }}-down active">
+          </span>
+          {% endif %}
         </span>
-        {% endif %}
+
 
       </li>
       {% elif v %}
