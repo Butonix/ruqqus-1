@@ -138,10 +138,10 @@
        <div id="comment-{{ c.base36id }}-actions" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
         <ul class="list-inline text-right text-md-left">
 
-          {% if v and request.path.startswith('/@') %}
-
+          {% if v and request.path.startswith('/@')%}
+          {% if voted==1 %}
           <li class="list-inline-item arrow-up d-none d-md-inline-block mr-2 comment-{{ c.base36id }}-up active"></li>
-
+          {% endif %}
           {% elif v %}
 
           <li id="comment-{{ c.base36id }}-up" tabindex="0" class="list-inline-item arrow-up upvote-button d-none d-md-inline-block mr-2 comment-{{ c.base36id }}-up {% if voted==1 %}active{% endif %}" data-id-up="{{ c.base36id }}" data-content-type="comment">
@@ -158,8 +158,9 @@
           </li>
 
           {% if v and request.path.startswith('/@') %}
+          {% if voted==-1 %}
           <li class="list-inline-item arrow-down d-none d-md-inline-block mr-2 comment-{{ c.base36id }}-down active"></li>
-
+{% endif %}
           {% elif v %}
           <li id="comment-{{ c.base36id }}-down" tabindex="0" class="list-inline-item arrow-down downvote-button d-none d-md-inline-block mr-2 comment-{{ c.base36id }}-down {% if voted==-1 %}active{% endif %}" data-id-down="{{ c.base36id }}" data-content-type="comment">
           </li>
