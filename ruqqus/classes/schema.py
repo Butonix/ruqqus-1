@@ -1,20 +1,20 @@
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
-"""from ruqqus.classes import Board as BoardModel, User as UserModel, Submission as Submission, \
-    SubmissionAux as SubmissionAuxModel, Comment as CommentModel, CommentAux as CommentAuxModel"""
-from ruqqus.classes import Board, User, Submission, SubmissionAux, Comment, CommentAux
+from ruqqus.classes import Board as BoardModel, User as UserModel, Submission as SubmissionModel, \
+    SubmissionAux as SubmissionAuxModel, Comment as CommentModel, CommentAux as CommentAuxModel
+#from ruqqus.classes import Board, User, Submission, SubmissionAux, Comment, CommentAux
 from ruqqus.__main__ import app, Base, db_session
 from flask_graphql import GraphQLView
 
 
 class CommentGQL(SQLAlchemyObjectType):
     class Meta:
-        model = Submission
+        model = SubmissionModel
         # abstract = True
         interfaces = (relay.Node,)
 
-    comments_aux = graphene.List(lambda: CommentAux, id=graphene.String())
+    comments_aux = graphene.List(lambda: CommentAuxGQL, id=graphene.String())
 
     def resolve_comments_aux(self, info, **kwargs):
         query = CommentAuxGQL.get_query(info)
@@ -23,42 +23,42 @@ class CommentGQL(SQLAlchemyObjectType):
         return query.filter_by(id=self.id).all()
 
     def resolve_submission(self, info, **kwargs):
-        return Comment.filter_by(is_banned=False,
+        return CommentGQL.filter_by(is_banned=False,
                                       is_deleted=False).all()
 
 class CommentAuxGQL(SQLAlchemyObjectType):
     class Meta:
-        model = CommentAux
+        model = CommentAuxModel
         interfaces = (relay.Node,)
 
     # comments_aux = graphene.List(lambda: Comm, id=graphene.String())
     def resolve_comment_aux(self, info, **kwargs):
         # query = SubmissionAux.get_query(info)
         # return query.filter_by(id=kwargs['id']).all()
-        return CommentAux.all()
+        return CommentAuxGQL.all()
 
 
 class SubmissionGQL(SQLAlchemyObjectType):
     class Meta:
-        model = Submission
+        model = SubmissionModel
         # abstract = True
         interfaces = (relay.Node,)
 
-    posts_aux = graphene.List(lambda: SubmissionAux, id=graphene.String())
+    posts_aux = graphene.List(lambda: SubmissionAuxGQL, id=graphene.String())
 
     def resolve_posts_aux(self, info, **kwargs):
-        query = SubmissionAux.get_query(info)
+        query = SubmissionAuxGQL.get_query(info)
         return query.filter_by(id=self.id).all()
 
     def resolve_submission(self, info, **kwargs):
-        return Submission.filter_by(is_banned=False,
+        return SubmissionGQL.filter_by(is_banned=False,
                                          is_deleted=False,
                                          is_public=True).all()
 
 
 class SubmissionAuxGQL(SQLAlchemyObjectType):
     class Meta:
-        model = SubmissionAux
+        model = SubmissionAuxModel
         interfaces = (relay.Node,)
 
     # posts_aux = graphene.List(lambda: SubmissionAux, id=graphene.String())
@@ -66,12 +66,12 @@ class SubmissionAuxGQL(SQLAlchemyObjectType):
     def resolve_submission_aux(self, info, **kwargs):
         # query = SubmissionAux.get_query(info)
         # return query.filter_by(id=kwargs['id']).all()
-        return SubmissionAux.all()
+        return SubmissionAuxGQL.all()
 
 
 class UserGQL(SQLAlchemyObjectType):
     class Meta:
-        model = User
+        model = UserModel
         interfaces = (relay.Node,)
 
         # only_fields = ('username', 'id','created_utc','admin_level','over_18')
@@ -88,8 +88,8 @@ class UserGQL(SQLAlchemyObjectType):
             'patreon_refresh_token'
         )
 
-    posts = graphene.List(lambda: Submission)  # , id=graphene.String())
-    comments = graphene.List(lambda: Comment)  # , id=graphene.String())
+    posts = graphene.List(lambda: SubmissionGQL)  # , id=graphene.String())
+    comments = graphene.List(lambda: CommentGQL)  # , id=graphene.String())
 
     def resolve_posts(self, info, **kwargs):
         query = SubmissionGQL.get_query(info)
@@ -106,15 +106,15 @@ class UserGQL(SQLAlchemyObjectType):
 
 class GuildGQL(SQLAlchemyObjectType):
     class Meta:
-        model = Board
+        model = BoardModel
         interfaces = (relay.Node,)
 
     def resolve_guilds(self, info, **kwargs):
-        return Board.fitler_by(is_private=False,
+        return GuildGQL.fitler_by(is_private=False,
                                     is_banned=False
                                     ).all()
 
-    posts = graphene.List(lambda: Submission,
+    posts = graphene.List(lambda: SubmissionGQL,
                           id=graphene.String(),
                           sort=graphene.String(),
                           title=graphene.String(),
@@ -139,24 +139,24 @@ class GuildGQL(SQLAlchemyObjectType):
         if 'sort' in kwargs:
             sort = kwargs['sort']
             if sort == "hot":
-                query = query.order_by(Submission.score_best.desc())
+                query = query.order_by(SubmissionGQL.score_best.desc())
             elif sort == "new":
-                query = query.order_by(Submission.created_utc.desc())
+                query = query.order_by(SubmissionGQL.created_utc.desc())
             elif sort == "disputed":
-                query = query.order_by(Submission.score_disputed.desc())
+                query = query.order_by(SubmissionGQL.score_disputed.desc())
             elif sort == "top":
-                query = query.order_by(Submission.score_top.desc())
+                query = query.order_by(SubmissionGQL.score_top.desc())
             elif sort == "activity":
-                query = query.order_by(Submission.score_activity.desc())
+                query = query.order_by(SubmissionGQL.score_activity.desc())
 
         if 'id' in kwargs:
             query = query.filter_by(id=kwargs['id'])#\
                 #.filter(Submission.author_id == kwargs['id'])
 
-        query = query.join(SubmissionAux)
+        query = query.join(SubmissionAuxGQL)
 
         if 'title' in kwargs:
-            query = query.filter(SubmissionAux.title == kwargs['title'])
+            query = query.filter(SubmissionAuxGQL.title == kwargs['title'])
 
         return query.offset(25*(page-1)).limit(26).all()
 
