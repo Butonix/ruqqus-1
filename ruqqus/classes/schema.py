@@ -93,11 +93,11 @@ class UserGQL(SQLAlchemyObjectType):
 
     posts = graphene.List(lambda: SubmissionGQL,
                           sort=graphene.String(),
-                          page=graphene.String()
+                          page=graphene.int()
                           )
     comments = graphene.List(lambda: CommentGQL,
                              sort=graphene.String(),
-                             page=graphene.String())
+                             page=graphene.int())
 
     def resolve_posts(self, info, **kwargs):
 
