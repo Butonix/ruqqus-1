@@ -92,13 +92,13 @@ class UserGQL(SQLAlchemyObjectType):
     comments = graphene.List(lambda: Comment)  # , id=graphene.String())
 
     def resolve_posts(self, info, **kwargs):
-        query = Submission.get_query(info)
+        query = SubmissionGQL.get_query(info)
         return query.filter_by(author_id=self.id,
                                is_banned=False,
                                is_deleted=False).all()
 
     def resolve_comments(self, info, **kwargs):
-        query = Comment.get_query(info)
+        query = CommentGQL.get_query(info)
         return query.filter_by(author_id=self.id,
                                is_banned=False,
                                is_deleted=False).all()
@@ -201,7 +201,7 @@ class Query(graphene.ObjectType):
     def resolve_user(self, info, **kwargs):
         if "id" in kwargs:
             # print("id = ", kwargs['id'])
-            query = User.get_query(info)
+            query = UserGQL.get_query(info)
             return query.filter_by(id=kwargs['id'],
                                    is_private=False,
                                    is_banned=0,
