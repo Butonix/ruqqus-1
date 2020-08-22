@@ -13,6 +13,9 @@ class CommentGQL(SQLAlchemyObjectType):
         model = SubmissionModel
         # abstract = True
         interfaces = (relay.Node,)
+        exclude_fields = (
+            'creation_ip'
+        )
 
     comments_aux = graphene.List(lambda: CommentAuxGQL, id=graphene.String())
 
@@ -43,7 +46,9 @@ class SubmissionGQL(SQLAlchemyObjectType):
         model = SubmissionModel
         # abstract = True
         interfaces = (relay.Node,)
-
+        exclude_fields = (
+            'creation_ip'
+        )
     posts_aux = graphene.List(lambda: SubmissionAuxGQL, id=graphene.String())
 
     def resolve_posts_aux(self, info, **kwargs):
@@ -100,7 +105,7 @@ class UserGQL(SQLAlchemyObjectType):
                              page=graphene.Int())
 
     def resolve_posts(self, info, **kwargs):
-
+        sort = "hot"
         page = 1
         if 'page' in kwargs:
             page = kwargs['page']
@@ -111,21 +116,19 @@ class UserGQL(SQLAlchemyObjectType):
         if self.id:
             query = query.filter_by(author_id=self.id)
 
-        # if self.name:
-        # query = query.filter_by(name=self.name)
-
         if 'sort' in kwargs:
             sort = kwargs['sort']
-            if sort == "hot":
-                query = query.order_by(SubmissionModel.score_hot.desc())
-            elif sort == "new":
-                query = query.order_by(SubmissionModel.created_utc.desc())
-            elif sort == "disputed":
-                query = query.order_by(SubmissionModel.score_disputed.desc())
-            elif sort == "top":
-                query = query.order_by(SubmissionModel.score_top.desc())
-            elif sort == "activity":
-                query = query.order_by(SubmissionModel.score_activity.desc())
+
+        if sort == "hot":
+            query = query.order_by(SubmissionModel.score_hot.desc())
+        elif sort == "new":
+            query = query.order_by(SubmissionModel.created_utc.desc())
+        elif sort == "disputed":
+            query = query.order_by(SubmissionModel.score_disputed.desc())
+        elif sort == "top":
+            query = query.order_by(SubmissionModel.score_top.desc())
+        elif sort == "activity":
+            query = query.order_by(SubmissionModel.score_activity.desc())
 
         if 'id' in kwargs:
             query = query.filter_by(id=kwargs['id'])  # \
