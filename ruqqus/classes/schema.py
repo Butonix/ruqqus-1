@@ -117,21 +117,21 @@ class UserGQL(SQLAlchemyObjectType):
         if 'sort' in kwargs:
             sort = kwargs['sort']
             if sort == "hot":
-                query = query.order_by(SubmissionGQL.score_hot.desc())
+                query = query.order_by(SubmissionModel.score_hot.desc())
             elif sort == "new":
-                query = query.order_by(SubmissionGQL.created_utc.desc())
+                query = query.order_by(SubmissionModel.created_utc.desc())
             elif sort == "disputed":
-                query = query.order_by(SubmissionGQL.score_disputed.desc())
+                query = query.order_by(SubmissionModel.score_disputed.desc())
             elif sort == "top":
-                query = query.order_by(SubmissionGQL.score_top.desc())
+                query = query.order_by(SubmissionModel.score_top.desc())
             elif sort == "activity":
-                query = query.order_by(SubmissionGQL.score_activity.desc())
+                query = query.order_by(SubmissionModel.score_activity.desc())
 
         if 'id' in kwargs:
             query = query.filter_by(id=kwargs['id'])  # \
             # .filter(Submission.author_id == kwargs['id'])
 
-        query = query.join(SubmissionAuxModel)
+        query = query.join(SubmissionAuxModel, SubmissionModel.id==SubmissionAuxModel.id)
 
         if 'title' in kwargs:
             query = query.filter(SubmissionAuxModel.title == kwargs['title'])
@@ -165,7 +165,7 @@ class UserGQL(SQLAlchemyObjectType):
         if 'id' in kwargs:
             query = query.filter_by(id=kwargs['id'])
 
-        query = query.join(CommentAuxModel)
+        query = query.join(CommentAuxModel, CommentModel.id==CommentAuxModel.id)
 
         return query.offset(25 * (page - 1)).limit(26).all()
 
@@ -215,7 +215,7 @@ class GuildGQL(SQLAlchemyObjectType):
         if 'id' in kwargs:
             query = query.filter_by(id=kwargs['id'])
 
-        query = query.join(SubmissionAuxModel)
+        query = query.join(SubmissionAuxModel, SubmissionModel.id==SubmissionAuxModel.id)
 
         if 'title' in kwargs:
             query = query.filter(SubmissionAuxModel.title == kwargs['title'])
