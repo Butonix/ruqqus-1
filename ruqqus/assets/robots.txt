@@ -1,38 +1,18 @@
-User-Agent:
+User-Agent: *
 Disallow: /api/*
 Disallow: /mod/*
 Disallow: /submit
 Disallow: /settings
 
 User-Agent: DotBot
-Disallow: /
-
 User-Agent: TurnitinBot
-Disallow: /
-
 User-Agent: Huaweisymantecspider
-Disallow: /
-
 User-Agent: SiteSnagger
-Disallow: /
-
 User-Agent: TeleportPro
-Disallow: /
-
 User-Agent: Xaldon_WebSpider
-Disallow: /
-
 User-Agent: MJ12bot
-Disallow: /
-
 User-Agent: SEMrushBot
-Disallow: /
-
 User-Agent: AhrefsBot
-Disallow: /
-
 User-Agent: CCBot
-Disallow: /
-
 User-agent: SBSearch
 Disallow: /
