@@ -153,23 +153,20 @@ class UserGQL(SQLAlchemyObjectType):
         if 'sort' in kwargs:
             sort = kwargs['sort']
             if sort == "hot":
-                query = query.order_by(CommentGQL.score_best.desc())
+                query = query.order_by(CommentModel.score_best.desc())
             elif sort == "new":
-                query = query.order_by(CommentGQL.created_utc.desc())
+                query = query.order_by(CommentModel.created_utc.desc())
             elif sort == "disputed":
-                query = query.order_by(CommentGQL.score_disputed.desc())
+                query = query.order_by(CommentModel.score_disputed.desc())
             elif sort == "top":
-                query = query.order_by(CommentGQL.score_top.desc())
+                query = query.order_by(CommentModel.score_top.desc())
             elif sort == "activity":
-                query = query.order_by(CommentGQL.score_activity.desc())
+                query = query.order_by(CommentModel.score_activity.desc())
 
         if 'id' in kwargs:
             query = query.filter_by(id=kwargs['id'])
 
         query = query.join(CommentAuxModel)
-
-        if 'title' in kwargs:
-            query = query.filter(CommentAuxModel.title == kwargs['title'])
 
         return query.offset(25 * (page - 1)).limit(26).all()
 
@@ -203,25 +200,21 @@ class GuildGQL(SQLAlchemyObjectType):
         if self.id:
             query = query.filter_by(board_id=self.id)
 
-        #if self.name:
-            #query = query.filter_by(name=self.name)
-
         if 'sort' in kwargs:
             sort = kwargs['sort']
             if sort == "hot":
-                query = query.order_by(SubmissionGQL.score_best.desc())
+                query = query.order_by(SubmissionModel.score_best.desc())
             elif sort == "new":
-                query = query.order_by(SubmissionGQL.created_utc.desc())
+                query = query.order_by(SubmissionModel.created_utc.desc())
             elif sort == "disputed":
-                query = query.order_by(SubmissionGQL.score_disputed.desc())
+                query = query.order_by(SubmissionModel.score_disputed.desc())
             elif sort == "top":
-                query = query.order_by(SubmissionGQL.score_top.desc())
+                query = query.order_by(SubmissionModel.score_top.desc())
             elif sort == "activity":
-                query = query.order_by(SubmissionGQL.score_activity.desc())
+                query = query.order_by(SubmissionModel.score_activity.desc())
 
         if 'id' in kwargs:
-            query = query.filter_by(id=kwargs['id'])#\
-                #.filter(Submission.author_id == kwargs['id'])
+            query = query.filter_by(id=kwargs['id'])
 
         query = query.join(SubmissionAuxModel)
 
