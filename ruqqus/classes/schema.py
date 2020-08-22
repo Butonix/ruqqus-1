@@ -153,15 +153,14 @@ class UserGQL(SQLAlchemyObjectType):
         if 'sort' in kwargs:
             sort = kwargs['sort']
             if sort == "hot":
-                query = query.order_by(CommentModel.score_best.desc())
+                query = query.order_by(CommentModel.score_hot.desc())
             elif sort == "new":
                 query = query.order_by(CommentModel.created_utc.desc())
             elif sort == "disputed":
                 query = query.order_by(CommentModel.score_disputed.desc())
             elif sort == "top":
                 query = query.order_by(CommentModel.score_top.desc())
-            elif sort == "activity":
-                query = query.order_by(CommentModel.score_activity.desc())
+
 
         if 'id' in kwargs:
             query = query.filter_by(id=kwargs['id'])
