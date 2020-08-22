@@ -268,7 +268,7 @@ class Query(graphene.ObjectType):
             query = query.filter_by(id=kwargs['id'])
 
         if 'username' in kwargs:
-            query = query.filter_by(username=kwargs['usernmae'])
+            query = query.filter_by(username=kwargs['username'])
 
         return query.filter_by(is_private=False,
                                is_banned=0,
