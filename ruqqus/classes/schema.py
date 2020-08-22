@@ -115,6 +115,7 @@ class UserGQL(SQLAlchemyObjectType):
 
         if self.id:
             query = query.filter_by(author_id=self.id)
+            query = query.join(SubmissionModel, SubmissionModel.author_id == self.id)
 
         if 'sort' in kwargs:
             sort = kwargs['sort']
@@ -134,7 +135,7 @@ class UserGQL(SQLAlchemyObjectType):
             query = query.filter_by(id=kwargs['id'])  # \
             # .filter(Submission.author_id == kwargs['id'])
 
-        query = query.join(SubmissionAuxModel, SubmissionModel.author_id==self.id)
+        query = query.join(SubmissionAuxModel, SubmissionAuxModel.id==SubmissionModel.id)
 
         if 'title' in kwargs:
             query = query.filter(SubmissionAuxModel.title == kwargs['title'])
@@ -167,7 +168,6 @@ class UserGQL(SQLAlchemyObjectType):
 
         if 'id' in kwargs:
             query = query.filter_by(id=kwargs['id'])
-
         query = query.join(CommentAuxModel, CommentModel.author_id==self.id)
 
         return query.offset(25 * (page - 1)).limit(26).all()
