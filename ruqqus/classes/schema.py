@@ -202,7 +202,7 @@ class GuildGQL(SQLAlchemyObjectType):
         if 'sort' in kwargs:
             sort = kwargs['sort']
             if sort == "hot":
-                query = query.order_by(SubmissionModel.score_best.desc())
+                query = query.order_by(SubmissionModel.score_hot.desc())
             elif sort == "new":
                 query = query.order_by(SubmissionModel.created_utc.desc())
             elif sort == "disputed":
