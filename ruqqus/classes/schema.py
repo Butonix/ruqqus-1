@@ -74,6 +74,9 @@ class UserGQL(SQLAlchemyObjectType):
         model = UserModel
         interfaces = (relay.Node,)
 
+        # can use only one
+        # 'only_fields' or 'exclude_fields'
+
         # only_fields = ('username', 'id','created_utc','admin_level','over_18')
         exclude_fields = (
             'passhash',
@@ -88,20 +91,87 @@ class UserGQL(SQLAlchemyObjectType):
             'patreon_refresh_token'
         )
 
-    posts = graphene.List(lambda: SubmissionGQL)  # , id=graphene.String())
-    comments = graphene.List(lambda: CommentGQL)  # , id=graphene.String())
+    posts = graphene.List(lambda: SubmissionGQL,
+                          sort=graphene.String(),
+                          page=graphene.String()
+                          )
+    comments = graphene.List(lambda: CommentGQL,
+                             sort=graphene.String(),
+                             page=graphene.String())
 
     def resolve_posts(self, info, **kwargs):
+
+        page = 1
+        if 'page' in kwargs:
+            page = kwargs['page']
+
         query = SubmissionGQL.get_query(info)
-        return query.filter_by(author_id=self.id,
-                               is_banned=False,
-                               is_deleted=False).all()
+        query = query.filter_by(is_banned=False, is_deleted=False)
+
+        if self.id:
+            query = query.filter_by(board_id=self.id)
+
+        # if self.name:
+        # query = query.filter_by(name=self.name)
+
+        if 'sort' in kwargs:
+            sort = kwargs['sort']
+            if sort == "hot":
+                query = query.order_by(SubmissionGQL.score_best.desc())
+            elif sort == "new":
+                query = query.order_by(SubmissionGQL.created_utc.desc())
+            elif sort == "disputed":
+                query = query.order_by(SubmissionGQL.score_disputed.desc())
+            elif sort == "top":
+                query = query.order_by(SubmissionGQL.score_top.desc())
+            elif sort == "activity":
+                query = query.order_by(SubmissionGQL.score_activity.desc())
+
+        if 'id' in kwargs:
+            query = query.filter_by(id=kwargs['id'])  # \
+            # .filter(Submission.author_id == kwargs['id'])
+
+        query = query.join(SubmissionAuxModel)
+
+        if 'title' in kwargs:
+            query = query.filter(SubmissionAuxModel.title == kwargs['title'])
+
+        return query.offset(25 * (page - 1)).limit(26).all()
+
 
     def resolve_comments(self, info, **kwargs):
+        page = 1
+        if 'page' in kwargs:
+            page = kwargs['page']
+
         query = CommentGQL.get_query(info)
-        return query.filter_by(author_id=self.id,
-                               is_banned=False,
-                               is_deleted=False).all()
+        query = query.filter_by(is_banned=False, is_deleted=False)
+
+        if self.id:
+            query = query.filter_by(board_id=self.id)
+
+        if 'sort' in kwargs:
+            sort = kwargs['sort']
+            if sort == "hot":
+                query = query.order_by(CommentGQL.score_best.desc())
+            elif sort == "new":
+                query = query.order_by(CommentGQL.created_utc.desc())
+            elif sort == "disputed":
+                query = query.order_by(CommentGQL.score_disputed.desc())
+            elif sort == "top":
+                query = query.order_by(CommentGQL.score_top.desc())
+            elif sort == "activity":
+                query = query.order_by(CommentGQL.score_activity.desc())
+
+        if 'id' in kwargs:
+            query = query.filter_by(id=kwargs['id'])
+
+        query = query.join(CommentAuxModel)
+
+        if 'title' in kwargs:
+            query = query.filter(CommentAuxModel.title == kwargs['title'])
+
+        return query.offset(25 * (page - 1)).limit(26).all()
 
 
 class GuildGQL(SQLAlchemyObjectType):
@@ -184,7 +254,7 @@ class Query(graphene.ObjectType):
 
         query = GuildGQL.get_query(info)
 
-        if "id" in kwargs:
+        if 'id' in kwargs:
             # print("id = ", kwargs['id'])
             query = query.filter_by(id=kwargs['id'])
 
@@ -199,17 +269,20 @@ class Query(graphene.ObjectType):
 
 
     def resolve_user(self, info, **kwargs):
-        if "id" in kwargs:
+        query = UserGQL.get_query(info)
+
+        if 'id' in kwargs:
             # print("id = ", kwargs['id'])
-            query = UserGQL.get_query(info)
-            return query.filter_by(id=kwargs['id'],
-                                   is_private=False,
-                                   is_banned=0,
-                                   is_deleted=False).all()
+            query = query.filter_by(id=kwargs['id'])
+
+        if 'username' in kwargs:
+            query = query.filter_by(username=kwargs['usernmae'])
+
+        return query.filter_by(is_private=False,
+                               is_banned=0,
+                               is_deleted=False)
 
 
-    # Disable sorting over this field
-    #all_guilds = SQLAlchemyConnectionField(Guild.connection, sort=None)
 
 
 
