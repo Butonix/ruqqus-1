@@ -115,7 +115,7 @@ class UserGQL(SQLAlchemyObjectType):
 
         if self.id:
             query = query.filter_by(author_id=self.id)
-            query = query.join(SubmissionModel, SubmissionModel.author_id == self.id)
+            query = query.join(SubmissionModel, SubmissionModel.author_id == UserModel.id)
 
         if 'sort' in kwargs:
             sort = kwargs['sort']
