@@ -109,7 +109,7 @@ class UserGQL(SQLAlchemyObjectType):
         query = query.filter_by(is_banned=False, is_deleted=False)
 
         if self.id:
-            query = query.filter_by(board_id=self.id)
+            query = query.filter_by(author_id=self.id)
 
         # if self.name:
         # query = query.filter_by(name=self.name)
@@ -148,7 +148,7 @@ class UserGQL(SQLAlchemyObjectType):
         query = query.filter_by(is_banned=False, is_deleted=False)
 
         if self.id:
-            query = query.filter_by(board_id=self.id)
+            query = query.filter_by(author_id=self.id)
 
         if 'sort' in kwargs:
             sort = kwargs['sort']
