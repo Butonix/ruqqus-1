@@ -153,10 +153,10 @@ class GuildGQL(SQLAlchemyObjectType):
             query = query.filter_by(id=kwargs['id'])#\
                 #.filter(Submission.author_id == kwargs['id'])
 
-        query = query.join(SubmissionAuxGQL)
+        query = query.join(SubmissionAuxModel)
 
         if 'title' in kwargs:
-            query = query.filter(SubmissionAuxGQL.title == kwargs['title'])
+            query = query.filter(SubmissionAuxModel.title == kwargs['title'])
 
         return query.offset(25*(page-1)).limit(26).all()
 
