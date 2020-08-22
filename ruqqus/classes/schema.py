@@ -3,7 +3,7 @@ from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 """from ruqqus.classes import Board as BoardModel, User as UserModel, Submission as Submission, \
     SubmissionAux as SubmissionAuxModel, Comment as CommentModel, CommentAux as CommentAuxModel"""
-from ruqqus.classes import *
+from ruqqus.classes import Board, User, Submission, SubmissionAux, Comment, CommentAux
 from ruqqus.__main__ import app, Base, db_session
 from flask_graphql import GraphQLView
 
