@@ -115,7 +115,6 @@ class UserGQL(SQLAlchemyObjectType):
 
         if self.id:
             query = query.filter_by(author_id=self.id)
-        query = query.join(UserModel, SubmissionModel.author_id)
 
         if 'sort' in kwargs:
             sort = kwargs['sort']
@@ -135,7 +134,8 @@ class UserGQL(SQLAlchemyObjectType):
             query = query.filter_by(id=kwargs['id'])  # \
             # .filter(Submission.author_id == kwargs['id'])
 
-        query = query.join(SubmissionAuxModel, SubmissionAuxModel.id==SubmissionModel.id)
+        #query = query.join(SubmissionAuxModel, UserModel.id)
+        query = query.join(SubmissionAuxModel, SubmissionModel.id == SubmissionAuxModel.id)
 
         if 'title' in kwargs:
             query = query.filter(SubmissionAuxModel.title == kwargs['title'])
@@ -271,7 +271,8 @@ class Query(graphene.ObjectType):
             query = query.filter_by(id=kwargs['id'])
 
         if 'username' in kwargs:
-            query = query.filter_by(username=kwargs['username'])
+            query = query.filter(UserModel.username.ilike(kwargs['username']))
+            #query = query.filter_by(username=kwargs['username'])
 
         return query.filter_by(is_private=False,
                                is_banned=0,
