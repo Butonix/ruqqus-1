@@ -89,6 +89,7 @@ class UserGQL(SQLAlchemyObjectType):
             'email',
             'delete_reason',
             'reddit_username',
+            'creation_ip',
             'patreon_id',
             'patreon_pledge_cents',
             'patreon_name',
@@ -131,10 +132,8 @@ class UserGQL(SQLAlchemyObjectType):
             query = query.order_by(SubmissionModel.score_activity.desc())
 
         if 'id' in kwargs:
-            query = query.filter_by(id=kwargs['id'])  # \
-            # .filter(Submission.author_id == kwargs['id'])
+            query = query.filter_by(id=kwargs['id'])
 
-        #query = query.join(SubmissionAuxModel, UserModel.id)
         query = query.join(SubmissionAuxModel, SubmissionModel.id == SubmissionAuxModel.id)
 
         if 'title' in kwargs:
@@ -277,10 +276,6 @@ class Query(graphene.ObjectType):
         return query.filter_by(is_private=False,
                                is_banned=0,
                                is_deleted=False)
-
-
-
-
 
 
 schema = graphene.Schema(query=Query)
