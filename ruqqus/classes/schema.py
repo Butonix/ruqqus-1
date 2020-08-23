@@ -168,7 +168,7 @@ class UserGQL(SQLAlchemyObjectType):
 
         if 'id' in kwargs:
             query = query.filter_by(id=kwargs['id'])
-        query = query.join(CommentAuxModel, CommentModel.author_id==self.id)
+        query = query.join(CommentAuxModel, CommentModel.id == CommentAuxModel.id)
 
         return query.offset(25 * (page - 1)).limit(26).all()
 
