@@ -10,7 +10,7 @@ from flask_graphql import GraphQLView
 
 class CommentGQL(SQLAlchemyObjectType):
     class Meta:
-        model = SubmissionModel
+        model = CommentModel
         # abstract = True
         interfaces = (relay.Node,)
         exclude_fields = (
