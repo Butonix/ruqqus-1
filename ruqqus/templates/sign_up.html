@@ -146,8 +146,11 @@
                                     Already have an account? <a href="/login{{ '?redirect='+redirect if redirect else '' }}" class="font-weight-bold toggle-login">Log in</a>
                             </div>
 
-                            <div class="h-captcha" data-sitekey="{{ app.config['HCAPTCHA_SITEKEY'] }}"></div>
-                            <script src="https://hcaptcha.com/1/api.js" async defer></script>
+                            {% if hcaptcha %}
+
+                                <div class="h-captcha" data-sitekey="{{ hcaptcha }}"></div>
+                                <script src="https://hcaptcha.com/1/api.js" async defer></script>
+                            {% endif %}
 
 
                         </form>

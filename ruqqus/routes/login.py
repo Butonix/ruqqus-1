@@ -231,7 +231,8 @@ def sign_up_get(v):
                            i=random_image(),
                            redirect=redir,
                            ref_user=ref_user,
-                           error=error
+                           error=error,
+                           hcaptcha=app.config["HCAPTCHA_SITEKEY"]
                            )
 
 #signup api
@@ -349,7 +350,7 @@ def sign_up_post(v):
 
         if not x.json()["success"]:
             return new_signup("Unable to verify captcha.")
-            
+
     
     #kill tokens
     session.pop("signup_token")
