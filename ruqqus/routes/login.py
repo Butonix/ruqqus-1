@@ -118,7 +118,7 @@ def login_post():
                             ):
             return redirect("/login")
         
-        if not account.validate_2fa(request.form.get("2fa_token", "")):
+        if not account.validate_2fa(request.form.get("2fa_token", "").strip()):
             hash=generate_hash(f"{account.id}+{time}+2fachallenge")
             return render_template("login_2fa.html",
                                    v=account,
@@ -184,6 +184,7 @@ def sign_up_get(v):
     if not agent:
         abort(403)
 
+
     #check for referral in link
     ref_id=None
     ref = request.args.get("ref",None)
@@ -196,7 +197,12 @@ def sign_up_get(v):
     if ref_user and (ref_user.id in session.get("history", [])):
         return render_template("sign_up_failed_ref.html",
                                i=random_image())
-    
+  
+    #check tor
+    if request.headers.get("CF-IPCountry")=="T1":
+        return render_template("sign_up_tor.html",
+            i=random_image(),
+            ref_user=ref_user)  
     
     #Make a unique form key valid for one account creation
     now = int(time.time())
@@ -239,7 +245,13 @@ def sign_up_post(v):
     agent=request.headers.get("User-Agent", None)
     if not agent:
         abort(403)
-    
+
+    #check tor
+    if   request.headers.get("CF-IPCountry")=="T1":
+        return render_template("sign_up_tor.html",
+            i=random_image()
+        )
+
     form_timestamp = request.form.get("now", 0)
     form_formkey = request.form.get("formkey","none")
     
@@ -316,7 +328,11 @@ def sign_up_post(v):
     if any([x.is_banned for x in [g.db.query(User).filter_by(id=y).first() for y in session.get("history",[])] if x]):
         abort(403)
     
-    #success
+
+    # ip ratelimit
+    previous=g.db.query(User).filter_by(creation_ip=request.remote_addr).filter(User.created_utc<int(time.time())-60*60).first()
+    if previous:
+        abort(429)
     
     #kill tokens
     session.pop("signup_token")
