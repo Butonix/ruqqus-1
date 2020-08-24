@@ -184,6 +184,7 @@ def sign_up_get(v):
     if not agent:
         abort(403)
 
+
     #check for referral in link
     ref_id=None
     ref = request.args.get("ref",None)
@@ -196,7 +197,12 @@ def sign_up_get(v):
     if ref_user and (ref_user.id in session.get("history", [])):
         return render_template("sign_up_failed_ref.html",
                                i=random_image())
-    
+  
+    #check tor
+    if request.headers.get("CF-IPCountry")=="T1"
+        return render_template("sign_up_tor.html",
+            i=random_image(),
+            ref_user=ref_user)  
     
     #Make a unique form key valid for one account creation
     now = int(time.time())
@@ -239,7 +245,13 @@ def sign_up_post(v):
     agent=request.headers.get("User-Agent", None)
     if not agent:
         abort(403)
-    
+
+    #check tor
+    if request.headers.get("CF-IPCountry")=="T1"
+        return render_template("sign_up_tor.html",
+            i=random_image()
+        )  
+
     form_timestamp = request.form.get("now", 0)
     form_formkey = request.form.get("formkey","none")
     
