@@ -199,10 +199,10 @@ def sign_up_get(v):
                                i=random_image())
   
     #check tor
-    if request.headers.get("CF-IPCountry")=="T1":
-        return render_template("sign_up_tor.html",
-            i=random_image(),
-            ref_user=ref_user)  
+    #if request.headers.get("CF-IPCountry")=="T1":
+    #    return render_template("sign_up_tor.html",
+    #        i=random_image(),
+    #        ref_user=ref_user)  
     
     #Make a unique form key valid for one account creation
     now = int(time.time())
