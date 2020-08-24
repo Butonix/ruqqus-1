@@ -66,6 +66,9 @@ else:
 
 app.config["CACHE_DIR"]=environ.get("CACHE_DIR", "ruqquscache")
 
+#captcha configs
+app.config["HCAPTCHA_SITEKEY"]=environ.get("HCAPTCHA_SITEKEY")
+app.config["HCAPTCHA_SECRET"]=eniviron.get("HCAPTCHA_SECRET")
 
 
 

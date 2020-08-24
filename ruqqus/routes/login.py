@@ -247,10 +247,10 @@ def sign_up_post(v):
         abort(403)
 
     #check tor
-    if   request.headers.get("CF-IPCountry")=="T1":
-        return render_template("sign_up_tor.html",
-            i=random_image()
-        )
+    #if request.headers.get("CF-IPCountry")=="T1":
+    #    return render_template("sign_up_tor.html",
+    #        i=random_image()
+    #    )
 
     form_timestamp = request.form.get("now", 0)
     form_formkey = request.form.get("formkey","none")
@@ -333,6 +333,23 @@ def sign_up_post(v):
     previous=g.db.query(User).filter_by(creation_ip=request.remote_addr).filter(User.created_utc>int(time.time())-60*60).first()
     if previous:
         abort(429)
+
+    #check bot
+    if app.config.get("HCAPTCHA_SITEKEY"):
+        token=request.form.get("h-captcha-response")
+        if not token:
+            return new_signup("Unable to verify captcha.")
+
+        data={"secret":app.config["HCAPTCHA_SECRET"],
+            "response":token,
+            "sitekey":app.config["HCAPTCHA_SITEKEY"]}
+        url="https://hcaptcha.com/siteverify"
+
+        x=requests.post(url, data=data)
+
+        if not x.json()["success"]:
+            return new_signup("Unable to verify captcha.")
+            
     
     #kill tokens
     session.pop("signup_token")
