@@ -330,7 +330,7 @@ def sign_up_post(v):
     
 
     # ip ratelimit
-    previous=g.db.query(User).filter_by(creation_ip=request.remote_addr).filter(User.created_utc<int(time.time())-60*60).first()
+    previous=g.db.query(User).filter_by(creation_ip=request.remote_addr).filter(User.created_utc>int(time.time())-60*60).first()
     if previous:
         abort(429)
     
