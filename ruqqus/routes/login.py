@@ -199,7 +199,7 @@ def sign_up_get(v):
                                i=random_image())
   
     #check tor
-    if request.headers.get("CF-IPCountry")=="T1"
+    if request.headers.get("CF-IPCountry")=="T1":
         return render_template("sign_up_tor.html",
             i=random_image(),
             ref_user=ref_user)  
@@ -247,10 +247,10 @@ def sign_up_post(v):
         abort(403)
 
     #check tor
-    if request.headers.get("CF-IPCountry")=="T1"
+    if   request.headers.get("CF-IPCountry")=="T1":
         return render_template("sign_up_tor.html",
             i=random_image()
-        )  
+        )
 
     form_timestamp = request.form.get("now", 0)
     form_formkey = request.form.get("formkey","none")
