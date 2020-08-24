@@ -65,6 +65,11 @@ def check_for_alts(current_id):
             except:
                 pass
 
+@limiter.limit("1/hour")
+def ip_ratelimit_function():
+
+    return "all good"
+
 #login post procedure
 @no_cors
 @app.route("/login", methods=["POST"])
@@ -316,7 +321,14 @@ def sign_up_post(v):
     if any([x.is_banned for x in [g.db.query(User).filter_by(id=y).first() for y in session.get("history",[])] if x]):
         abort(403)
     
-    #success
+    #almost success - ip ratelimit
+
+
+
+    if not ip_ratelimit_function()=="all good":
+        abort(429)
+
+
     
     #kill tokens
     session.pop("signup_token")
