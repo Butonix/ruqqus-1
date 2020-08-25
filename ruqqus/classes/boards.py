@@ -354,6 +354,7 @@ class Board(Base, Stndrd, Age_times):
                 g.db.query(Comment).filter_by(author_id=user.id, original_board_id=self.id).first()
                 )
     @property
+    @lazy
     def n_pins(self):
         return g.db.query(Submission).filter_by(board_id=self.id, is_pinned=True).count()
 
