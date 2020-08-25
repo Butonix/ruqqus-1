@@ -444,7 +444,7 @@ def random_post(v):
 
 
 
-    post = x.order_by(Submission.created_utc).offset(n).limit(1).first()
+    post = x.offset(n).limit(1).first()
     return redirect(post.permalink)
 
 @app.route("/random/guild", methods=["GET"])
@@ -465,7 +465,7 @@ def random_guild(v):
     total=x.count()
     n=random.randint(0, total-1)
 
-    board=x.order_by(Board.created_utc).offset(n).limit(1).first()
+    board=x.offset(n).limit(1).first()
 
     return redirect(board.permalink)
 
@@ -483,7 +483,7 @@ def random_comment(v):
 
     total=x.count()
     n=random.randint(0, total-1)
-    comment=x.order_by(Comment.created_utc).offset(n).limit(1).first()
+    comment=x.offset(n).limit(1).first()
 
     return redirect(comment.permalink)
 
@@ -497,6 +497,6 @@ def random_user(v):
     total=x.count()
     n=random.randint(0, total-1)
 
-    user=x.order_by(User.created_utc).offset(n).limit(1).first()
+    user=x.offset(n).limit(1).first()
 
     return redirect(user.permalink)
