@@ -82,18 +82,18 @@ class User(Base, Stndrd, Age_times):
     patreon_name=Column(String(64), default='')
     
 
-    moderates=relationship("ModRelationship", lazy="subquery")
+    moderates=relationship("ModRelationship", lazy="dynamic")
     banned_from=relationship("BanRelationship", primaryjoin="BanRelationship.user_id==User.id")
-    subscriptions=relationship("Subscription", lazy="subquery")
-    boards_created=relationship("Board", lazy="subquery")
+    subscriptions=relationship("Subscription", lazy="dynamic")
+    boards_created=relationship("Board", lazy="dynamic")
     contributes=relationship("ContributorRelationship", primaryjoin="ContributorRelationship.user_id==User.id")
     board_blocks=relationship("BoardBlock")
 
     following=relationship("Follow", primaryjoin="Follow.user_id==User.id")
     followers=relationship("Follow", primaryjoin="Follow.target_id==User.id")
 
-    blocking=relationship("UserBlock", lazy="subquery", primaryjoin="User.id==UserBlock.user_id")
-    blocked=relationship("UserBlock", lazy="subquery", primaryjoin="User.id==UserBlock.target_id")
+    blocking=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id")
+    blocked=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id")
 
 
     
