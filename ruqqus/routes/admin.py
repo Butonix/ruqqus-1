@@ -336,7 +336,7 @@ def admin_link_accounts(v):
 
     return redirect(f"/admin/alt_votes?u1={g.db.query(User).get(u1).username}&u2={g.db.query(User).get(u2).username}")
 
-@app.route("/admin/<pagename>", mehods=["GET"])
+@app.route("/admin/<pagename>", methods=["GET"])
 @admin_level_required(3)
 def admin_tools(v, pagename):
     return render_template(f"admin/{pagename}.html", v=v)
