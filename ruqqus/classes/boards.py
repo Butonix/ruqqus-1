@@ -181,7 +181,7 @@ class Board(Base, Stndrd, Age_times):
         if self.is_banned:
             return False
 
-        return self.moderators.filter_by(user_id=user.id, accepted=True).first()
+        return user.id in [x.user_id for x in self.moderators]
 
 
     def can_invite_mod(self, user):
