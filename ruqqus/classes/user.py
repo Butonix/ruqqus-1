@@ -318,6 +318,7 @@ class User(Base, Stndrd, Age_times):
         return listing
 
     @property
+    @lazy
     def mods_anything(self):
 
         return bool(self.moderates.filter_by(accepted=True).first())
