@@ -16,7 +16,7 @@ def auth_desired(f):
     def wrapper(*args, **kwargs):
 
         if "user_id" in session:
-            v=g.db.query(User).options(lazyload('*')).filter_by(id=session["user_id"]).first()
+            v=g.db.query(User).options(lazyload('title'), joinedload('moderates')).filter_by(id=session["user_id"]).first()
             nonce=session.get("login_nonce",0)
             if v and nonce<v.login_nonce:
                 v=None
@@ -43,7 +43,7 @@ def auth_required(f):
     def wrapper(*args, **kwargs):
 
         if "user_id" in session:
-            v=g.db.query(User).options(lazyload('*')).filter_by(id=session["user_id"]).first()
+            v=g.db.query(User).options(lazyload('title'), joinedload('moderates')).filter_by(id=session["user_id"]).first()
             nonce=session.get("login_nonce",0)
             if v and nonce<v.login_nonce:
                 abort(401)
@@ -70,7 +70,7 @@ def is_not_banned(f):
     def wrapper(*args, **kwargs):
 
         if "user_id" in session:
-            v=g.db.query(User).options(lazyload('*')).filter_by(id=session["user_id"]).first()
+            v=g.db.query(User).options(lazyload('title'), joinedload('moderates')).filter_by(id=session["user_id"]).first()
             nonce=session.get("login_nonce",0)
             if v and nonce<v.login_nonce:
                 abort(401)
