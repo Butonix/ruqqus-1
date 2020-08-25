@@ -82,10 +82,10 @@ class User(Base, Stndrd, Age_times):
     patreon_name=Column(String(64), default='')
     
 
-    moderates=relationship("ModRelationship")
+    moderates=relationship("ModRelationship", lazy="subquery")
     banned_from=relationship("BanRelationship", primaryjoin="BanRelationship.user_id==User.id")
-    subscriptions=relationship("Subscription")
-    boards_created=relationship("Board")
+    subscriptions=relationship("Subscription", lazy="subquery")
+    boards_created=relationship("Board", lazy="subquery")
     contributes=relationship("ContributorRelationship", primaryjoin="ContributorRelationship.user_id==User.id")
     board_blocks=relationship("BoardBlock")
 
