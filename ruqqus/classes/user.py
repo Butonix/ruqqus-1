@@ -86,11 +86,11 @@ class User(Base, Stndrd, Age_times):
     banned_from=relationship("BanRelationship", primaryjoin="BanRelationship.user_id==User.id")
     subscriptions=relationship("Subscription")
     boards_created=relationship("Board")
-    contributes=relationship("ContributorRelationship" primaryjoin="ContributorRelationship.user_id==User.id")
+    contributes=relationship("ContributorRelationship", primaryjoin="ContributorRelationship.user_id==User.id")
     board_blocks=relationship("BoardBlock")
 
-    following=relationship("Follow" primaryjoin="Follow.user_id==User.id")
-    followers=relationship("Follow" primaryjoin="Follow.target_id==User.id")
+    following=relationship("Follow", primaryjoin="Follow.user_id==User.id")
+    followers=relationship("Follow", primaryjoin="Follow.target_id==User.id")
 
     blocking=relationship("UserBlock", primaryjoin="User.id==UserBlock.user_id")
     blocked=relationship("UserBlock", primaryjoin="User.id==UserBlock.target_id")
@@ -119,11 +119,11 @@ class User(Base, Stndrd, Age_times):
 
     def has_block(self, target):
 
-        return self.blocking.filter_by(target_id=target.id).first()
+        return g.db.query(UserBlock).filter_by(user_id=self.id, target_id=target.id).first()
 
     def is_blocked_by(self, user):
 
-        return self.blocked.filter_by(user_id=user.id).first()
+        return g.db.query(UserBlock).filter_by(user_id=user.id, target_id=self.id).first()
 
     def any_block_exists(self, other):
 
