@@ -326,7 +326,7 @@ class User(Base, Stndrd, Age_times):
     @property
     def boards_modded(self):
 
-        z=[x.board for x in self.moderates if x and x.board and x.acceptedand not x.board.is_banned]
+        z=[x.board for x in self.moderates if x and x.board and x.accepted and not x.board.is_banned]
         z=sorted(z, key=lambda x: x.name)
 
         return z
