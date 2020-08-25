@@ -286,7 +286,7 @@ def api(*scopes, no_ban=False):
 
             else:
 
-                result = f(*args, v=None, **kwargs)
+                result = f(*args, **kwargs)
 
                 if isinstance(result, RespObj):
                     return result
