@@ -82,18 +82,18 @@ class User(Base, Stndrd, Age_times):
     patreon_name=Column(String(64), default='')
     
 
-    moderates=relationship("ModRelationship", lazy="subquery")
-    banned_from=relationship("BanRelationship", lazy="dynamic", primaryjoin="BanRelationship.user_id==User.id")
-    subscriptions=relationship("Subscription", lazy="dynamic")
-    boards_created=relationship("Board", lazy="dynamic")
-    contributes=relationship("ContributorRelationship", lazy="dynamic", primaryjoin="ContributorRelationship.user_id==User.id")
-    board_blocks=relationship("BoardBlock", lazy="dynamic")
+    moderates=relationship("ModRelationship")
+    banned_from=relationship("BanRelationship", primaryjoin="BanRelationship.user_id==User.id")
+    subscriptions=relationship("Subscription")
+    boards_created=relationship("Board")
+    contributes=relationship("ContributorRelationship" primaryjoin="ContributorRelationship.user_id==User.id")
+    board_blocks=relationship("BoardBlock")
 
-    following=relationship("Follow", lazy="dynamic", primaryjoin="Follow.user_id==User.id")
-    followers=relationship("Follow", lazy="dynamic", primaryjoin="Follow.target_id==User.id")
+    following=relationship("Follow" primaryjoin="Follow.user_id==User.id")
+    followers=relationship("Follow" primaryjoin="Follow.target_id==User.id")
 
-    blocking=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id")
-    blocked=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id")
+    blocking=relationship("UserBlock", primaryjoin="User.id==UserBlock.user_id")
+    blocked=relationship("UserBlock", primaryjoin="User.id==UserBlock.target_id")
 
 
     
@@ -326,7 +326,10 @@ class User(Base, Stndrd, Age_times):
     @property
     def boards_modded(self):
 
-        return [x.board for x in self.moderates.filter_by(accepted=True).all() if x and x.board and not x.board.is_banned]
+        z=[x.board for x in self.moderates if x and x.board and x.acceptedand not x.board.is_banned]
+        z=sorted(z, key=lambda x: x.name)
+
+        return z
 
     @property
     @cache.memoize(timeout=3600) #1hr cache time for user rep
