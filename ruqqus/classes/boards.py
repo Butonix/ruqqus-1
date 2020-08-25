@@ -186,7 +186,7 @@ class Board(Base, Stndrd, Age_times):
             return False
 
         for x in self.moderators:
-            if x.id==user.id:
+            if x.user_id==user.id:
                 return x
 
         return False
