@@ -355,7 +355,7 @@ class Board(Base, Stndrd, Age_times):
                 )
     @property
     def n_pins(self):
-        return self.submissions.filter_by(is_pinned=True).count()
+        return g.db.query(Submission).filter_by(board_id=self.id, is_pinned=True).count()
 
     @property
     def can_pin_another(self):
