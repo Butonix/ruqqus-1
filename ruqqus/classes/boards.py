@@ -82,7 +82,7 @@ class Board(Base, Stndrd, Age_times):
     @property
     def invited_mods(self):
         
-        z=[x.user for x in self.moderators if x.accepted==False and x.invite_rescinded=False]
+        z=[x.user for x in self.moderators if x.accepted==False and x.invite_rescinded==False]
         z=z.sorted(key=lambda:z.id)
         return z
 
