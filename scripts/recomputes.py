@@ -22,7 +22,6 @@ def recompute():
             i+=1
             board.rank_trending=board.trending_rank
             board.stored_subscriber_count=board.subscriber_count
-            board.avg_score=board.avg_score_computed
             db.add(board)
 
             if not i%100:

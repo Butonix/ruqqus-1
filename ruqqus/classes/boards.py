@@ -39,7 +39,6 @@ class Board(Base, Stndrd, Age_times):
     color_nonce=Column(Integer, default=0)
     rank_trending=Column(Float, default=0)
     stored_subscriber_count=Column(Integer, default=1)
-    avg_score=Column(Float, default=1)
 
     moderators=relationship("ModRelationship", lazy="dynamic")
     subscribers=relationship("Subscription", lazy="dynamic")
@@ -48,7 +47,6 @@ class Board(Base, Stndrd, Age_times):
     bans=relationship("BanRelationship", lazy="dynamic")
     postrels=relationship("PostRelationship", lazy="dynamic")
     trending_rank=deferred(Column(Float, server_default=FetchedValue()))
-    avg_score_computed=deferred(Column(Float, server_default=FetchedValue()))
 
     #db side functions
     subscriber_count=deferred(Column(Integer, server_default=FetchedValue()))
