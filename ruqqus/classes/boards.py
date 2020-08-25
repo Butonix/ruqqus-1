@@ -74,11 +74,11 @@ class Board(Base, Stndrd, Age_times):
         z=sorted(z, key=lambda x: x.id)
         return z
 
-    @property
-    def mods(self):
+    # @property
+    # def mods(self):
 
-        z= [x.user for x in self.moderators.filter_by(accepted=True).order_by(ModRelationship.id.asc()).all()]
-        return z
+    #     z= [x.user for x in self.moderators.filter_by(accepted=True).order_by(ModRelationship.id.asc()).all()]
+    #     return z
 
     @property
     def invited_mods(self):
@@ -198,7 +198,7 @@ class Board(Base, Stndrd, Age_times):
         if user is None:
             return None
 
-        return self.moderators.filter_by(user_id=user.id, accepted=False, invite_rescinded=False).first()
+        return user.id in [x.user_id for x in self.moderators if x.invite_rescinded==False and x.accepted==False]
         
     def has_ban(self, user):
 
