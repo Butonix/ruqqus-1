@@ -185,8 +185,8 @@ class Board(Base, Stndrd, Age_times):
         if self.is_banned:
             return False
 
-        for x in self.moderators:
-            if x.user_id==user.id:
+        for x in user.moderates:
+            if x.board_id==self.id and x.accepted and not x.invite_rescinded:
                 return x
 
         return False
