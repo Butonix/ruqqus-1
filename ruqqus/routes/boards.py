@@ -767,6 +767,7 @@ def subscribe_board(boardname, v):
     #update board trending rank
     board.rank_trending=board.trending_rank
     board.stored_subscriber_count=board.subscriber_count
+    board.avg_score=board.avg_score_computed
     g.db.add(board)
 
     return jsonify({"message":f"Joined +{board.name}"}), 200
