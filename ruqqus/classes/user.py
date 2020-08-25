@@ -92,8 +92,8 @@ class User(Base, Stndrd, Age_times):
     following=relationship("Follow", primaryjoin="Follow.user_id==User.id")
     followers=relationship("Follow", primaryjoin="Follow.target_id==User.id")
 
-    blocking=relationship("UserBlock", primaryjoin="User.id==UserBlock.user_id")
-    blocked=relationship("UserBlock", primaryjoin="User.id==UserBlock.target_id")
+    blocking=relationship("UserBlock", lazy="subquery", primaryjoin="User.id==UserBlock.user_id")
+    blocked=relationship("UserBlock", lazy="subquery", primaryjoin="User.id==UserBlock.target_id")
 
 
     
