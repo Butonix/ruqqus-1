@@ -74,11 +74,14 @@ class Board(Base, Stndrd, Age_times):
         z=sorted(z, key=lambda x: x.id)
         return z
 
-    # @property
-    # def mods(self):
+    @property
+    def mods(self):
 
-    #     z= [x.user for x in self.moderators.filter_by(accepted=True).order_by(ModRelationship.id.asc()).all()]
-    #     return z
+        z= [x.user for x in self.moderators if x.accepted]
+
+        z=sorted(z, key=lambda x: x.id)
+        
+        return z
 
     @property
     def invited_mods(self):
