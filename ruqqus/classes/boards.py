@@ -187,11 +187,11 @@ class Board(Base, Stndrd, Age_times):
 
     def can_invite_mod(self, user):
 
-        return user.id not in [x.user_id for x in self.moderators.filter_by(invite_rescinded=False).all()]
+        return user.id not in [x.user_id for x in self.moderators if not x.invite_rescinded]
 
     def has_rescinded_invite(self, user):
 
-        return user.id in [x.user_id for x in self.moderators.filter_by(invite_rescinded=True).all()]
+        return user.id in [x.user_id for x in self.moderators if x.invite_rescinded==True]
 
     def has_invite(self, user):
 
