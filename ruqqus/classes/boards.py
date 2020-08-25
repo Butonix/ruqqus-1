@@ -68,7 +68,7 @@ class Board(Base, Stndrd, Age_times):
     @property
     def mods_list(self):
 
-        z= [x for x in self.moderators.all() if x.accepted and x.user.is_deleted]
+        z= [x for x in self.moderators.all() if x.accepted and not x.user.is_deleted]
 
         z=z.sorted(key=lambda:z.id)
         return z
@@ -89,7 +89,7 @@ class Board(Base, Stndrd, Age_times):
     @property
     def mods_count(self):
 
-        return len([x for x in self.moderators.all() if x.acepted=True])
+        return len([x for x in self.moderators.all() if x.acepted==True])
 
     @property
     def permalink(self):
