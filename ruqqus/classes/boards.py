@@ -80,7 +80,7 @@ class Board(Base, Stndrd, Age_times):
         z= [x.user for x in self.moderators if x.accepted]
 
         z=sorted(z, key=lambda x: x.id)
-        
+
         return z
 
     @property
@@ -185,7 +185,11 @@ class Board(Base, Stndrd, Age_times):
         if self.is_banned:
             return False
 
-        return user.id in [x.user_id for x in self.moderators]
+        for x in self.moderators:
+            if x.id==user.id:
+                return x
+
+        return False
 
 
     def can_invite_mod(self, user):
