@@ -68,7 +68,9 @@ class Board(Base, Stndrd, Age_times):
     @property
     def mods_list(self):
 
-        z= [x for x in self.moderators.filter_by(accepted=True).order_by(ModRelationship.id.asc()).all() if not x.user.is_deleted]
+        z= [x for x in self.moderators.all() if x.accepted and x.user.is_deleted]
+
+        z=z.sorted(key=lambda:z.id)
         return z
 
     @property
@@ -80,13 +82,14 @@ class Board(Base, Stndrd, Age_times):
     @property
     def invited_mods(self):
         
-        z=[x.user for x in self.moderators.filter_by(accepted=False, invite_rescinded=False).order_by(ModRelationship.id.asc()).all()]
+        z=[x.user for x in self.moderators if x.accepted==False and x.invite_rescinded=False]
+        z=z.sorted(key=lambda:z.id)
         return z
 
     @property
     def mods_count(self):
 
-        return self.moderators.filter_by(accepted=True).count()
+        return len([x for x in self.moderators.all() if x.acepted=True])
 
     @property
     def permalink(self):
