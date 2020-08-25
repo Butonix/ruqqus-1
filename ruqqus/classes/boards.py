@@ -89,7 +89,7 @@ class Board(Base, Stndrd, Age_times):
     @property
     def mods_count(self):
 
-        return len([x for x in self.moderators.all() if x.acepted==True])
+        return len([x for x in self.moderators.all() if x.accepted==True])
 
     @property
     def permalink(self):
