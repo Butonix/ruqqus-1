@@ -71,7 +71,7 @@ class Board(Base, Stndrd, Age_times):
 
         z= [x for x in self.moderators.all() if x.accepted and not x.user.is_deleted]
 
-        z=z.sorted(key=lambda:z.id)
+        z=sorted(z, key=lambda x: x.id)
         return z
 
     @property
@@ -84,7 +84,7 @@ class Board(Base, Stndrd, Age_times):
     def invited_mods(self):
         
         z=[x.user for x in self.moderators if x.accepted==False and x.invite_rescinded==False]
-        z=z.sorted(key=lambda:z.id)
+        z=sorted(z, key=lambda x: x.id)
         return z
 
     @property
