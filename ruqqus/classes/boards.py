@@ -42,11 +42,11 @@ class Board(Base, Stndrd, Age_times):
     stored_subscriber_count=Column(Integer, default=1)
 
     moderators=relationship("ModRelationship")
-    subscribers=relationship("Subscription")
+    subscribers=relationship("Subscription", lazy="dynamic")
     submissions=relationship("Submission", primaryjoin="Board.id==Submission.board_id")
     contributors=relationship("ContributorRelationship")
-    bans=relationship("BanRelationship")
-    postrels=relationship("PostRelationship")
+    bans=relationship("BanRelationship", lazy="dynamic")
+    postrels=relationship("PostRelationship", lazy="dynamic")
     trending_rank=deferred(Column(Float, server_default=FetchedValue()))
 
     #db side functions
