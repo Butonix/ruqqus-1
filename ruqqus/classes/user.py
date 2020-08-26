@@ -265,7 +265,7 @@ class User(Base, Stndrd, Age_times):
                 )
               )
         else:
-            submissions=submissions.filter_by(post_public=True)
+            submissions=submissions.filter(Submission.post_public==True)
 
         listing = [x[0] for x in submissions.order_by(Submission.created_utc.desc()).offset(25*(page-1)).limit(26)]
 
@@ -308,7 +308,7 @@ class User(Base, Stndrd, Age_times):
                                m.c.board_id != None,
                                c.c.board_id !=None))
         else:
-            comments=comments.filter(Submission.post_public=True)
+            comments=comments.filter(Submission.post_public==True)
 
         comments=comments.options(contains_eager(Comment.post))
 
