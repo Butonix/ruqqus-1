@@ -8,7 +8,7 @@
     <div class="posts p-3">
       {% with comments=listing %}
         {% include "comments.html" %}
-      {% else %}
+      {% endwith %}
 	<div class="row no-gutters">   
 	  <div class="col">      
 	    <div class="text-center py-7">
