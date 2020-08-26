@@ -22,7 +22,9 @@ def flagged_posts(v):
     posts = g.db.query(Submission).filter_by(
         is_approved=0, 
         is_banned=False
-        ).join(Submission.flags).options(contains_eager(Submission.flags)).order_by(Submission.id.desc()).offset(25*(page-1)).limit(26)
+        ).join(Submission.flags
+        ).options(contains_eager(Submission.flags)
+        ).order_by(Submission.id.desc()).offset(25*(page-1)).limit(26)
 
     listing=[p for p in posts]
     next_exists=(len(listing)==26)
@@ -70,8 +72,7 @@ def flagged_comments(v):
             is_approved=0, 
             is_banned=False, 
             is_deleted=False
-        ).join(Comment.flags).options(
-            contains_eager(Comment.flags)
+        ).join(Comment.flags).options(contains_eager(Comment.flags)
         ).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26)
 
     listing=[p for p in posts]

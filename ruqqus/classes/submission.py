@@ -73,6 +73,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     author=relationship("User", lazy="joined", innerjoin=True, primaryjoin="Submission.author_id==User.id")
     is_pinned=Column(Boolean, default=False)
     score_best=Column(Float, default=0)
+    reports=relationship("Report", lazy="dynamic", backref="submission")
 
     upvotes = Column(Integer, default=1)
     downvotes = Column(Integer, default=0)
@@ -90,8 +91,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     downs=deferred(Column(Integer, server_default=FetchedValue()))
     #age=deferred(Column(Integer, server_default=FetchedValue()))
     comment_count=Column(Integer, server_default=FetchedValue())
-    flag_count=deferred(Column(Integer, server_default=FetchedValue()))
-    report_count=deferred(Column(Integer, server_default=FetchedValue()))
+    #flag_count=deferred(Column(Integer, server_default=FetchedValue()))
+    #report_count=deferred(Column(Integer, server_default=FetchedValue()))
     score=deferred(Column(Float, server_default=FetchedValue()))
     #is_public=deferred(Column(Boolean, server_default=FetchedValue()))
 
@@ -424,4 +425,14 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def is_public(self):
         return self.post_public or not self.board.is_private
+
+    @property
+    def flag_count(self):
+        return self.flags.count()
+
+    @property
+    def report_count(self):
+        return self.reports.count()
+    
+    
     

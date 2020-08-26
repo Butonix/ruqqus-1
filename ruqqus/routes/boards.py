@@ -809,7 +809,7 @@ def board_mod_queue(boardname, board, v):
     ids = g.db.query(Submission.id).filter_by(board_id=board.id,
                                            is_banned=False,
                                            mod_approved=None
-                                           ).filter(Submission.report_count>=1)
+                                           ).join(Submission.reports).options(contains_eager(Submission.reports))
 
     if not v.over_18:
         ids=ids.filter_by(over_18=False)
