@@ -1249,3 +1249,17 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
     
 
     return "", 204
+
+
+@app.route("/mod/all_opt_out/<bid>")
+@auth_required
+@is_guildmaster
+@validate_formkey
+def mod_all_opt_out(bid, x, board, v):
+
+
+    board.all_opt_out = not board.all_opt_out
+
+    g.db.add(board)
+
+    return jsonify({"message":f"Opted +{board.name} {'out of' if board.all_opt_out else 'in to'} All/Trending."})
