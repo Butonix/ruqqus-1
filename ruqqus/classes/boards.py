@@ -219,7 +219,7 @@ class Board(Base, Stndrd, Age_times):
         if not user:
             return False
 
-        return bool(g.db.query(Subscription).filter_by(board_id=self.id, user_id=user.id, is_active=True).first())
+        return self.id in [x.board_id for x in user.subscriptions]
 
     def has_contributor(self, user):
 
