@@ -239,7 +239,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         if self.is_approved:
             return 0
         else:
-            return self.flags.filter(Flag.created_utc>self.approved_utc).count()
+            return len(self.flags)
 
     @property
     def active_reports(self):
