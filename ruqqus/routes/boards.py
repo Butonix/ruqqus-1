@@ -405,24 +405,38 @@ def mod_invite_username(bid, board, v):
     username=request.form.get("username",'').lstrip('@')
     user=get_user(username)
 
-    if not board.can_invite_mod(user):
-        return jsonify({"error":f"@{user.username} is already a mod or has already been invited."}), 409
+
 
 
     if not user.can_join_gms:
         return jsonify({"error":f"@{user.username} already leads enough guilds."}), 409
 
-    if not board.has_rescinded_invite(user):
 
-        #notification
+    x=g.db.query(ModRelationship).filter_by(user_id=user.id, board_id=board.id).first()
+
+    if x and not x.accepted:
+        return jsonify({"error":f"@{user.username} is already a mod."}), 409
+
+    if x and not x.invite_rescinded:
+        return jsonify({"error":f"@{user.username} has already been invited."}), 409
+
+
+
+
+    if x:
+
+        x.invite_rescinded=False
+        g.db.add(x)
+
+    else:
+        new_mod=ModRelationship(user_id=user.id,
+                            board_id=board.id,
+                            accepted=False)
 
         text=f"You have been invited to join +{board.name} as a guildmaster. You can [click here]({board.permalink}/mod/mods) and accept this invitation. Or, if you weren't expecting this, you can ignore it."
         send_notification(user, text)
 
-    new_mod=ModRelationship(user_id=user.id,
-                            board_id=board.id,
-                            accepted=False)
-    g.db.add(new_mod)
+        g.db.add(new_mod)
     
     
     return "", 204
