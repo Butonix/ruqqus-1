@@ -330,7 +330,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     @property
     def flag_count(self):
-        return self.flags.count()
+        return len(self.flags)
     
     
     
