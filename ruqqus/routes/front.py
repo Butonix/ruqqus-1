@@ -451,7 +451,7 @@ def random_post(v):
         x=x.filter_by(is_offensive=False)
 
     if v:
-        bans=g.db.query(BanRelationship.id).filter_by(user_id=v.id).all()
+        bans=g.db.query(BanRelationship.id()).filter_by(user_id=v.id).all()
         x=x.filter(Submission.board_id.notin_([i[0] for i in bans]))
 
     total=x.count()
@@ -459,7 +459,7 @@ def random_post(v):
 
 
 
-    post = x.order_by(Submission.id.asc).offset(n).limit(1).first()
+    post = x.order_by(Submission.id.asc()).offset(n).limit(1).first()
     return redirect(post.permalink)
 
 @app.route("/random/guild", methods=["GET"])
