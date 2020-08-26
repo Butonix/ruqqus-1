@@ -428,10 +428,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     @property
     def flag_count(self):
-        return g.db.query(Flag).filter_by(post_id=self.id).count()
+        return len(self.flags)
 
     @property
     def report_count(self):
-        return g.db.query(Report).filter_by(post_id=self.id).count()
+        return len(self.reports)
     
     
