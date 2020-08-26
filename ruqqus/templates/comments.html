@@ -218,16 +218,16 @@
 
               {% if v %}
               {% if v.admin_level>=1 and v.id==c.author_id %}
-              {% if c.distinguish_level %}
+                {% if c.distinguish_level %}
 
-              <div class="dropdown-divider"></div>
-              <h6 class="dropdown-header">Admin actions</h6>
+                  <div class="dropdown-divider"></div>
+                  <h6 class="dropdown-header">Admin actions</h6>
 
-              <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge fa-width-rem"></i>Undistinguish</a>
-              {% else %}
-              <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="distinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge fa-width-rem"></i>Distinguish</a>
+                  <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge fa-width-rem"></i>Undistinguish</a>
+                  {% else %}
+                  <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="distinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge fa-width-rem"></i>Distinguish</a>
 
-              {% endif %}
+                {% endif %}
               {% endif %}
               {% if v.admin_level>=3 %}
                 {% if not c.is_banned %}
@@ -235,7 +235,7 @@
                 {% endif %}
                 {% if c.is_banned or '/admin/' in request.path %}
                   <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-comment-check fa-width-rem"></i>Approve</a>
-                  {% endif %}
+                {% endif %}
               {% endif %}
         {% endif %}
 
@@ -365,29 +365,29 @@
           {% endif %}
 
           {% if v %}
-          {% if v.admin_level>=1 and v.id==c.author_id %}
-          {% if c.distinguish_level %}
+              {% if v.admin_level>=1 and v.id==c.author_id %}
+                  {% if c.distinguish_level %}
 
-          <li class="list-group-item"><a class="d-block" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Undistinguish</a></li>
-          {% else %}
-          <li class="list-group-item"><a class="d-block" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="distinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Distinguish</a></li>
+                      <li class="list-group-item"><a class="d-block" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Undistinguish</a></li>
+                  {% else %}
+                      <li class="list-group-item"><a class="d-block" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="distinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Distinguish</a></li>
 
-          {% endif %}
-          {% endif %}
-          {% if v.admin_level>=3 %}
-          {% if not c.is_banned %}
-          <li class="list-group-item"><a class="d-block" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times"></i>Remove</a></li>
-          {% endif %}
-          {% if c.is_banned or '/admin/' in request.path %}
-          <li class="list-group-item"><a class="d-block" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-comment-check"></i>Approve</a></li>
-          {% endif %}
-          {% endif %}
+                  {% endif %}
+              {% endif %}
+              {% if v.admin_level>=3 %}
+                  {% if not c.is_banned %}
+                      <li class="list-group-item"><a class="d-block" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times"></i>Remove</a></li>
+                  {% endif %}
+                  {% if c.is_banned or '/admin/' in request.path %}
+                      <li class="list-group-item"><a class="d-block" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-comment-check"></i>Approve</a></li>
+                  {% endif %}
+              {% endif %}
 
-          {% if v and not v.id==c.author_id %}
-          <li class="list-group-item">
-            <a class="d-block" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ c.author.username }}')"
-            ><i class="fas fa-user-slash text-danger"></i>Block user</a>
-          </li>
+              {% if not v.id==c.author_id %}
+                  <li class="list-group-item">
+                    <a class="d-block" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ c.author.username }}')"><i class="fas fa-user-slash text-danger"></i>Block user</a>
+                  </li>
+              {% endif %}
           {% endif %}
 
         </ul>
