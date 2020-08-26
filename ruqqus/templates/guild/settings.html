@@ -296,7 +296,7 @@
               <div class="body w-lg-100">
 
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="guildoptout" name="guildprivacy"{% if b.all_opt_out %} checked{% endif %} onchange="mod_post('/mod/{{ b.base36id }}/settings/opt_out','guildoptout')">
+                  <input type="checkbox" class="custom-control-input" id="guildoptout" name="opt_out"{% if b.all_opt_out %} checked{% endif %} onchange="mod_post('/mod/{{ b.base36id }}/settings/opt_out','guildoptout')">
                   <label class="custom-control-label" for="guildoptout"></label>
                 </div>
 
