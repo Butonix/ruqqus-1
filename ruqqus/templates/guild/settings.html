@@ -279,6 +279,37 @@
 
         </div>
 
+        <div id="optout">
+
+          <h2 class="h5">Opt Out of All/Trending</h2>
+
+          <p class="text-small text-muted">Don't show +{{ b.name }} content in All or Trending for users that aren't members of the guild.</p>
+
+          <div class="settings-section rounded">
+
+            <div class="d-lg-flex">
+
+              <div class="title w-lg-25">
+                <label for="guildoptout">Toggle Opt-Out</label>
+              </div>
+
+              <div class="body w-lg-100">
+
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="guildoptout" name="guildprivacy"{% if b.is_private %} checked{% endif %} onchange="mod_post('/mod/{{ b.base36id }}/settings/opt_out','guildoptout')">
+                  <label class="custom-control-label" for="guildoptout"></label>
+                </div>
+
+                <span class="text-small-extra text-muted">Don't show +{{ b.name }} content in All or Trending for users that aren't members of the guild. (You will also be unable to yank posts from +general into +{{ b.name }}, unless the post was originally made in +{{ b.name }}) </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
   </div>
 
 </div>

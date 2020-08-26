@@ -528,6 +528,20 @@ def mod_bid_settings_nsfw(bid,  board, v):
 
     return "",204
 
+
+@app.route("/mod/<bid>/settings/opt_out", methods=["POST"])
+@auth_required
+@is_guildmaster
+@validate_formkey
+def mod_bid_settings_nsfw(bid,  board, v):
+
+    # nsfw
+    board.over_18 = bool(request.form.get("opt_out", False)=='true')
+
+    g.db.add(board)
+
+    return "",204
+
 @app.route("/mod/<bid>/settings/downdisable", methods=["POST"])
 @auth_required
 @is_guildmaster
@@ -1249,17 +1263,3 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
     
 
     return "", 204
-
-
-@app.route("/mod/all_opt_out/<bid>")
-@auth_required
-@is_guildmaster
-@validate_formkey
-def mod_all_opt_out(bid, x, board, v):
-
-
-    board.all_opt_out = not board.all_opt_out
-
-    g.db.add(board)
-
-    return jsonify({"message":f"Opted +{board.name} {'out of' if board.all_opt_out else 'in to'} All/Trending."})
