@@ -206,7 +206,12 @@ class Board(Base, Stndrd, Age_times):
         if user is None:
             return None
 
-        return user.id in [x.user_id for x in self.moderators if x.invite_rescinded==False and x.accepted==False]
+        for x in [i for i in self.moderators if not x.invite_rescinded and not x.accepted]:
+
+            if x.user_id==user.id:
+                return x
+
+        return None
         
     def has_ban(self, user):
 
