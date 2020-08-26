@@ -859,7 +859,7 @@ def all_mod_queue(v):
                                         ).join(Report, Report.post_id==Submission.id)
 
     if not v.over_18:
-        ids=ids.filter(Submission.over_18=False)
+        ids=ids.filter(Submission.over_18==False)
 
     ids=ids.order_by(Submission.id.desc()).offset((page-1)*25).limit(26)
 
