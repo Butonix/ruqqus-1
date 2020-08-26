@@ -9,6 +9,7 @@
       {% with comments=listing %}
         {% include "comments.html" %}
       {% endwith %}
+      {% if not listing %}
     	<div class="row no-gutters">   
     	  <div class="col">      
     	    <div class="text-center py-7">
@@ -16,6 +17,7 @@
     	    </div>       
     	  </div>  
     	</div>
+        {% endif %}
     </div>
 
 {% endblock %}
