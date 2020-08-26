@@ -87,7 +87,7 @@ class User(Base, Stndrd, Age_times):
     subscriptions=relationship("Subscription", lazy="dynamic")
     boards_created=relationship("Board", lazy="dynamic")
     contributes=relationship("ContributorRelationship", lazy="dynamic", primaryjoin="ContributorRelationship.user_id==User.id")
-    board_blocks=relationship("BoardBlock")
+    board_blocks=relationship("BoardBlock", lazy="dynamic")
 
     following=relationship("Follow", primaryjoin="Follow.user_id==User.id")
     followers=relationship("Follow", primaryjoin="Follow.target_id==User.id")
