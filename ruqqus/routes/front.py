@@ -129,7 +129,17 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **k
 
 
     #board opt out of all
-    posts=posts.join(Submission.board).filter_by(all_opt_out=False).options(contains_eager(Submission.board))
+    if v:
+        posts=posts.join(Submission.board).filter(
+            or_(
+                Submission.all_opt_out=False,
+                Submission.board_id.in_(
+                    g.db.query.query(Subscription.board_id).filter_by(user_id=v.id).subquery()
+                    )
+                )
+            ).options(contains_eager(Submission.board))
+    else:
+        posts=posts.join(Submission.board).filter_by(all_opt_out=False).options(contains_eager(Submission.board))
 
 
 
