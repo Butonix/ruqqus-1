@@ -83,14 +83,14 @@ class User(Base, Stndrd, Age_times):
     
 
     moderates=relationship("ModRelationship", lazy="dynamic")
-    banned_from=relationship("BanRelationship", lazy="dynamic", primaryjoin="BanRelationship.user_id==User.id")
+    banned_from=relationship("BanRelationship", primaryjoin="BanRelationship.user_id==User.id")
     subscriptions=relationship("Subscription", lazy="dynamic")
     boards_created=relationship("Board", lazy="dynamic")
     contributes=relationship("ContributorRelationship", lazy="dynamic", primaryjoin="ContributorRelationship.user_id==User.id")
-    board_blocks=relationship("BoardBlock", lazy="dynamic")
+    board_blocks=relationship("BoardBlock")
 
-    following=relationship("Follow", lazy="dynamic", primaryjoin="Follow.user_id==User.id")
-    followers=relationship("Follow", lazy="dynamic", primaryjoin="Follow.target_id==User.id")
+    following=relationship("Follow", primaryjoin="Follow.user_id==User.id")
+    followers=relationship("Follow", primaryjoin="Follow.target_id==User.id")
 
     blocking=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id")
     blocked=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id")
@@ -119,11 +119,11 @@ class User(Base, Stndrd, Age_times):
 
     def has_block(self, target):
 
-        return self.blocking.filter_by(target_id=target.id).first()
+        return g.db.query(UserBlock).filter_by(user_id=self.id, target_id=target.id).first()
 
     def is_blocked_by(self, user):
 
-        return self.blocked.filter_by(user_id=user.id).first()
+        return g.db.query(UserBlock).filter_by(user_id=user.id, target_id=self.id).first()
 
     def any_block_exists(self, other):
 
@@ -320,6 +320,7 @@ class User(Base, Stndrd, Age_times):
         return listing
 
     @property
+    @lazy
     def mods_anything(self):
 
         return bool(self.moderates.filter_by(accepted=True).first())
@@ -328,7 +329,10 @@ class User(Base, Stndrd, Age_times):
     @property
     def boards_modded(self):
 
-        return [x.board for x in self.moderates.filter_by(accepted=True).all() if x and x.board and not x.board.is_banned]
+        z=[x.board for x in self.moderates if x and x.board and x.accepted and not x.board.is_banned]
+        z=sorted(z, key=lambda x: x.name)
+
+        return z
 
     @property
     @cache.memoize(timeout=3600) #1hr cache time for user rep
@@ -490,7 +494,7 @@ class User(Base, Stndrd, Age_times):
 
     def has_follower(self, user):
 
-        return self.followers.filter_by(user_id=user.id).first()
+        return g.db.query(Follow).filter_by(target_id=self.id, user_id=user.id).first()
 
     def set_profile(self, file):
 

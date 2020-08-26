@@ -93,7 +93,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     flag_count=deferred(Column(Integer, server_default=FetchedValue()))
     report_count=deferred(Column(Integer, server_default=FetchedValue()))
     score=deferred(Column(Float, server_default=FetchedValue()))
-    is_public=deferred(Column(Boolean, server_default=FetchedValue()))
+    #is_public=deferred(Column(Boolean, server_default=FetchedValue()))
 
     rank_hot=deferred(Column(Float, server_default=FetchedValue()))
     rank_fiery=deferred(Column(Float, server_default=FetchedValue()))
@@ -421,4 +421,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return self.__dict__.get('_is_subscribed', False)
     
     
+    @property
+    def is_public(self):
+        return self.post_public or not self.board.is_private
     

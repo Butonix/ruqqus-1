@@ -7,6 +7,7 @@ from ruqqus.__main__ import app
 
 #Errors
 @app.errorhandler(401)
+@auth_desired
 @api()
 def error_401(e, v):
 

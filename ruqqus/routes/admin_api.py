@@ -490,3 +490,11 @@ def admin_csam_nuke(pid, v):
 
         
     
+@app.route("/admin/dump_cache", methods=["POST"])
+@admin_level_required(3)
+@validate_formkey
+def admin_dump_cache(v):
+
+    cache.clear()
+
+    return jsonify({"message":"Internal cache cleared."})
