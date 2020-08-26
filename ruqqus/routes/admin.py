@@ -26,9 +26,11 @@ def flagged_posts(v):
         ).options(contains_eager(Submission.flags)
         ).order_by(Submission.id.desc()).offset(25*(page-1)).limit(26)
 
-    listing=[p for p in posts]
+    listing=[p.id for p in posts]
     next_exists=(len(listing)==26)
     listing=listing[0:25]
+
+    listing=get_posts(listing, v=v)
 
     return render_template("admin/flagged_posts.html", next_exists=next_exists, listing=listing, page=page, v=v)
 
@@ -42,12 +44,13 @@ def image_posts_listing(v):
 
     posts=g.db.query(Submission).filter_by(domain_ref=1).order_by(Submission.id.desc()
                                                  ).offset(25*(page-1)
-                                                          ).limit(26
-                                                                  )
+                                                          ).limit(26)
     
-    posts=[x for x in posts]
+    posts=[x.id for x in posts]
     next_exists=(len(posts)==26)
     posts=posts[0:25]
+
+    posts=get_posts(posts, v=v)
 
     return {'html':lambda:render_template("admin/image_posts.html",
                                           v=v,
@@ -73,11 +76,13 @@ def flagged_comments(v):
             is_banned=False, 
             is_deleted=False
         ).join(Comment.flags).options(contains_eager(Comment.flags)
-        ).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26)
+        ).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26).all()
 
-    listing=[p for p in posts]
+    listing=[p.id for p in posts]
     next_exists=(len(listing)==26)
     listing=listing[0:25]
+
+    listing=get_comments(listing, v=v)
 
     return render_template("admin/flagged_comments.html",
         next_exists=next_exists, 
