@@ -770,7 +770,8 @@ def subscribe_board(boardname, v):
         new_sub=Subscription(user_id=v.id,
                          board_id=board.id)
 
-    g.db.add(new_sub)
+        g.db.add(new_sub)
+        
     g.db.flush()
     
 
