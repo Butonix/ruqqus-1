@@ -750,11 +750,10 @@ def subscribe_board(boardname, v):
             #reactivate canceled sub
             sub.is_active=True
             g.db.add(sub)
-            
-            return jsonify({"message":f"Joined +{board.name}"}), 200
 
+    else:
     
-    new_sub=Subscription(user_id=v.id,
+        new_sub=Subscription(user_id=v.id,
                          board_id=board.id)
 
     g.db.add(new_sub)
