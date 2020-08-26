@@ -414,7 +414,7 @@ def mod_invite_username(bid, board, v):
 
     x=g.db.query(ModRelationship).filter_by(user_id=user.id, board_id=board.id).first()
 
-    if x and not x.accepted:
+    if x and x.accepted:
         return jsonify({"error":f"@{user.username} is already a mod."}), 409
 
     if x and not x.invite_rescinded:
