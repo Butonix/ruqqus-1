@@ -376,8 +376,10 @@
           {% endif %}
           {% if v.admin_level>=3 %}
           {% if not c.is_banned %}
-          <li class="list-group-item"><a class="d-block" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-trash-alt"></i>Remove</a></li>
+          <li class="list-group-item"><a class="d-block" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times"></i>Remove</a></li>
           {% endif %}
+          {% if c.is_banned or c.flag_count %}
+          <li class="list-group-item"><a class="d-block" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-comment-check"></i>Approve</a></li>
           {% endif %}
           {% endif %}
 
