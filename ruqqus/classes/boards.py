@@ -206,7 +206,7 @@ class Board(Base, Stndrd, Age_times):
         if user is None:
             return None
 
-        for x in [i for i in self.moderators if not x.invite_rescinded and not x.accepted]:
+        for x in [i for i in self.moderators if not i.invite_rescinded and not i.accepted]:
 
             if x.user_id==user.id:
                 return x
