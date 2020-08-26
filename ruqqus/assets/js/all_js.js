@@ -495,7 +495,7 @@ report_commentModal = function(id, author) {
 
   document.getElementById("comment-author").textContent = author;
 
-  offtopic.disabled=true;
+  //offtopic.disabled=true;
 
   document.getElementById("reportCommentButton").onclick = function() {
 
