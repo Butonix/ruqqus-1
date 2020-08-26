@@ -232,7 +232,8 @@
               {% if v.admin_level>=3 %}
                 {% if not c.is_banned %}
                   <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times fa-width-rem"></i>Remove</a>
-                {% elif c.is_banned or c.flag_count or '/admin/' in request.path %}
+                {% endif %}
+                {% if c.is_banned or c.flag_count or '/admin/' in request.path %}
                   <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-comment-check fa-width-rem"></i>Approve</a>
                   {% endif %}
               {% endif %}
