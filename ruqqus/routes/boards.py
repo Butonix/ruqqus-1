@@ -533,7 +533,7 @@ def mod_bid_settings_nsfw(bid,  board, v):
 @auth_required
 @is_guildmaster
 @validate_formkey
-def mod_bid_settings_nsfw(bid,  board, v):
+def mod_bid_settings_optout(bid,  board, v):
 
     # nsfw
     board.over_18 = bool(request.form.get("opt_out", False)=='true')
