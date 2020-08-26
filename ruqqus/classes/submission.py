@@ -428,10 +428,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     @property
     def flag_count(self):
-        return len(self.flags)
+        return self.flags.count()
 
     @property
     def report_count(self):
-        return len(self.reports)
+        return self.reports.count()
     
     
