@@ -40,6 +40,7 @@ class Board(Base, Stndrd, Age_times):
     color_nonce=Column(Integer, default=0)
     rank_trending=Column(Float, default=0)
     stored_subscriber_count=Column(Integer, default=1)
+    opt_out_all=Column(Boolean, default=False)
 
     moderators=relationship("ModRelationship")
     subscribers=relationship("Subscription", lazy="dynamic")

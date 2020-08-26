@@ -128,6 +128,10 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **k
         posts=posts.filter_by(post_public=True)
 
 
+    #board opt out of all
+    posts=posts.join(Submission.board).filter_by(opt_out_all=False).options(contains_eager(Submission.board))
+
+
 
     if t:
         now=int(time.time())
