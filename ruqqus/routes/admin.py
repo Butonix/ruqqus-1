@@ -19,7 +19,10 @@ def flagged_posts(v):
 
     page=max(1, int(request.args.get("page", 1)))
 
-    posts = g.db.query(Submission).filter_by(is_approved=0, is_banned=False).filter(Submission.flag_count>=1).order_by(Submission.flag_count.desc()).offset(25*(page-1)).limit(26)
+    posts = g.db.query(Submission).filter_by(
+        is_approved=0, 
+        is_banned=False
+        ).join(Submission.flags).options(contains_eager(Submission.flags)).order_by(Submission.id.desc()).offset(25*(page-1)).limit(26)
 
     listing=[p for p in posts]
     next_exists=(len(listing)==26)
