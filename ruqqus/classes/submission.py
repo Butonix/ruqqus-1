@@ -428,11 +428,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     @property
     def flag_count(self):
-        return self.flags.subquery().count()
+        return self.flags.count()
 
     @property
     def report_count(self):
-        return self.reports.subquery().count()
+        return self.reports.count()
     
     
     
