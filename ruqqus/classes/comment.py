@@ -79,7 +79,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     rank_fiery=deferred(Column(Float, server_default=FetchedValue()))
     rank_hot=deferred(Column(Float, server_default=FetchedValue()))
 
-    flag_count=deferred(Column(Integer, server_default=FetchedValue()))
+    #flag_count=deferred(Column(Integer, server_default=FetchedValue()))
 
     board_id=deferred(Column(Integer, server_default=FetchedValue()))
     
@@ -327,6 +327,11 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     def ban_reason(self, x):
         self.comment_aux.ban_reason=x
         g.db.add(self.comment_aux)
+
+    @property
+    def flag_count(self):
+        return self.flags.count()
+    
     
     
     

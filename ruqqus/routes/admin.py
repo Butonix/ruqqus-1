@@ -62,7 +62,14 @@ def flagged_comments(v):
 
     page=max(1, int(request.args.get("page", 1)))
 
-    posts = g.db.query(Comment).filter_by(is_approved=0, is_banned=False).filter(Comment.flag_count>=1).order_by(Comment.flag_count.desc()).offset(25*(page-1)).limit(26)
+    posts = g.db.query(Comment
+        ).filter_by(
+            is_approved=0, 
+            is_banned=False, 
+            is_deleted=False
+        ).join(Comment.flags).options(
+            contains_eager(Comment.flags)
+        ).order_by(Comment.id.desc()).offset(25*(page-1)).limit(26)
 
     listing=[p for p in posts]
     next_exists=(len(listing)==26)
