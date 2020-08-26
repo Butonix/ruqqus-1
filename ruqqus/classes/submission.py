@@ -73,7 +73,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     author=relationship("User", lazy="joined", innerjoin=True, primaryjoin="Submission.author_id==User.id")
     is_pinned=Column(Boolean, default=False)
     score_best=Column(Float, default=0)
-    reports=relationship("Report", lazy="dynamic", backref="submission")
+    reports=relationship("Report", backref="submission")
 
     upvotes = Column(Integer, default=1)
     downvotes = Column(Integer, default=0)
