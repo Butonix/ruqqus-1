@@ -30,6 +30,7 @@ def notifications(v):
     cids=cids[0:25]
 
     comments=get_comments(cids, v=v, sort_type="new", load_parent=True)
+
     listing=[]
     for c in comments:
         c._is_blocked=False
@@ -444,7 +445,7 @@ def random_post(v):
 
 
 
-    post = x.offset(n).limit(1).first()
+    post = x.order_by(Submission.id.asc).offset(n).limit(1).first()
     return redirect(post.permalink)
 
 @app.route("/random/guild", methods=["GET"])
@@ -465,7 +466,7 @@ def random_guild(v):
     total=x.count()
     n=random.randint(0, total-1)
 
-    board=x.offset(n).limit(1).first()
+    board=x.order_by(Board.id.asc()).offset(n).limit(1).first()
 
     return redirect(board.permalink)
 
@@ -483,7 +484,7 @@ def random_comment(v):
 
     total=x.count()
     n=random.randint(0, total-1)
-    comment=x.offset(n).limit(1).first()
+    comment=x.order_by(Comment.id.asc()).offset(n).limit(1).first()
 
     return redirect(comment.permalink)
 

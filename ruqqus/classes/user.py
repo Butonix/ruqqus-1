@@ -273,7 +273,7 @@ class User(Base, Stndrd, Age_times):
 
     @cache.memoize(300)
     def commentlisting(self, v=None, page=1):
-        comments=self.comments.filter(Comment.parent_submission is not None).options(joinedload(Comment.post))
+        comments=self.comments.filter(Comment.parent_submission is not None).join(Comment.post)
 
         if not (v and v.over_18):
             comments=comments.filter_by(over_18=False)
@@ -428,10 +428,18 @@ class User(Base, Stndrd, Age_times):
 
     def notification_commentlisting(self, page=1, all_=False):
 
-        notifications=self.notifications.join(Notification.comment).options(contains_eager(Notification.comment)).filter(Comment.is_banned==False, Comment.is_deleted==False)
+        notifications=self.notifications.options(
+            joinedload(Notification.comment)
+            ).filter(
+            Comment.is_banned==False, 
+            Comment.is_deleted==False)
 
         if not all_:
             notifications=notifications.filter(Notification.read==False)
+
+        notifications=notifications.options(
+            contains_eager(Notification.comment)
+            )
 
         notifications = notifications.order_by(Notification.id.desc()).offset(25*(page-1)).limit(26)
 
