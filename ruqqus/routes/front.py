@@ -132,7 +132,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **k
     if v:
         posts=posts.join(Submission.board).filter(
             or_(
-                Submission.all_opt_out=False,
+                Submission.all_opt_out==False,
                 Submission.board_id.in_(
                     g.db.query.query(Subscription.board_id).filter_by(user_id=v.id).subquery()
                     )
