@@ -134,7 +134,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **k
             or_(
                 Board.all_opt_out==False,
                 Submission.board_id.in_(
-                    g.db.query(Subscription.board_id).filter_by(user_id=v.id).subquery()
+                    g.db.query(Subscription.board_id).filter_by(user_id=v.id, is_active=True).subquery()
                     )
                 )
             ).options(contains_eager(Submission.board))
