@@ -66,7 +66,7 @@ def activate(v):
     token=request.args.get("token","")
 
     if int(time.time())-timestamp > 3600:
-        return render_template("message.html", v=v, title="Verification link expired.", message="That link has expired."), 410
+        return render_template("message.html", v=v, title="Verification link expired.", message="That link has expired. Visit your settings to send yourself another verification email."), 410
 
 
     if not validate_hash(f"{email}+{id}+{timestamp}", token):
