@@ -265,7 +265,7 @@ class User(Base, Stndrd, Age_times):
                 )
               )
         else:
-            submissions=submissions.filter_by(is_public=True)
+            submissions=submissions.filter_by(post_public=True)
 
         listing = [x[0] for x in submissions.order_by(Submission.created_utc.desc()).offset(25*(page-1)).limit(26)]
 
@@ -273,7 +273,7 @@ class User(Base, Stndrd, Age_times):
 
     @cache.memoize(300)
     def commentlisting(self, v=None, page=1):
-        comments=self.comments.filter(Comment.parent_submission is not None)
+        comments=self.comments.filter(Comment.parent_submission is not None).options(joinedload(Comment.post))
 
         if not (v and v.over_18):
             comments=comments.filter_by(over_18=False)
@@ -308,7 +308,9 @@ class User(Base, Stndrd, Age_times):
                                m.c.board_id != None,
                                c.c.board_id !=None))
         else:
-            comments=comments.filter_by(is_public=True)
+            comments=comments.filter(Submission.post_public=True)
+
+        comments=comments.options(contains_eager(Comment.post))
 
         comments=comments.order_by(Comment.created_utc.desc())
         comments=comments.offset(25*(page-1)).limit(26)
