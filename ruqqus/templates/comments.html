@@ -62,7 +62,7 @@
 
 {% if standalone and level==1 %}
 <div class="post-info mt-5 mb-1">
-	{% if c.parent_submission %}
+  {% if c.parent_submission %}
     {% if c.author_id==v.id and c.replies and is_notification_page%}
       <span class="align-top"><span class="font-weight-bold">Comment {{ 'Replies' if (c.replies | length)>1 else 'Reply' }}: <a href="{{ c.post.permalink }}">{{ c.post.title | safe }}</a></span>
     {% elif c.post.author_id==v.id and c.is_top_level and is_notification_page%}
@@ -230,11 +230,13 @@
               {% endif %}
               {% endif %}
               {% if v.admin_level>=3 %}
-		{% if not c.is_banned %}
-              <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times fa-width-rem"></i>Remove</a>
-                {% endif %}
+                {% if not c.is_banned %}
+                  <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times fa-width-rem"></i>Remove</a>
+                {% elif c.is_banned or c.flag_count or '/admin/' in request.path %}
+                  <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-comment-check fa-width-rem"></i>Approve</a>
+                  {% endif %}
               {% endif %}
-	      {% endif %}
+        {% endif %}
 
             {% if v and not v.id==c.author_id %}
             <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ c.author.username }}')"
