@@ -852,10 +852,10 @@ def all_mod_queue(v):
 
     board_ids=[x.board_id for x in v.moderates.filter_by(accepted=True).all()]
 
-    ids = g.db.query(Submission.id).options(joinedload(Submission.reports)).filter(Submission.board_id.in_(board_ids),
+    ids = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.board_id.in_(board_ids),
                                         Submission.mod_approved==None,
                                         Submission.is_banned==False
-                                        )
+                                        ).join(Report, Report.post_id==Submission.id)
 
     if not v.over_18:
         ids=ids.filter_by(over_18=False)
