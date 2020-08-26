@@ -220,7 +220,7 @@ class Board(Base, Stndrd, Age_times):
         if not user:
             return False
 
-        return self.id in [x.board_id for x in user.subscriptions if x.is_active]
+        return self.id in [x.board_id for x in user.subscriptions.all() if x.is_active]
 
     def has_contributor(self, user):
 
