@@ -163,6 +163,10 @@ def submit_post(v):
     title=request.form.get("title","")
 
     title=title.lstrip().rstrip()
+    title=title.replace("\n","")
+    title=title.replace("\r","")
+    title=title.replace("\t","")
+    
 
 
     url=request.form.get("url","")
