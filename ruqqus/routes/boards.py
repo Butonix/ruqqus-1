@@ -837,7 +837,7 @@ def board_mod_queue(boardname, board, v):
     ids = g.db.query(Submission.id).filter_by(board_id=board.id,
                                            is_banned=False,
                                            mod_approved=None
-                                           ).join(Submission.reports).options(contains_eager(Submission.reports))
+                                           ).join(Report, Report.post_id==Submission.id)
 
     if not v.over_18:
         ids=ids.filter_by(over_18=False)
