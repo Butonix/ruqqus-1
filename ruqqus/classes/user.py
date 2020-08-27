@@ -24,6 +24,7 @@ from .mix_ins import *
 from .subscriptions import *
 from .userblock import *
 from .badges import *
+from .clients import *
 from ruqqus.__main__ import Base,cache
 
 
@@ -80,7 +81,6 @@ class User(Base, Stndrd, Age_times):
     patreon_refresh_token=Column(String(128), default='')
     patreon_pledge_cents=Column(Integer, default=0)
     patreon_name=Column(String(64), default='')
-    
 
     moderates=relationship("ModRelationship", lazy="dynamic")
     banned_from=relationship("BanRelationship", primaryjoin="BanRelationship.user_id==User.id")
@@ -95,8 +95,8 @@ class User(Base, Stndrd, Age_times):
     blocking=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id")
     blocked=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id")
 
+    _applications = relationship("OauthApp", lazy="dynamic")
 
-    
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
     comment_energy = deferred(Column(Integer, server_default=FetchedValue()))
@@ -726,3 +726,7 @@ class User(Base, Stndrd, Age_times):
                     g.db.delete(bad_badge)
 
         g.db.add(self)
+
+    @property
+    def applications(self):
+        return [x for x in self._applications.order_by(OauthApp.id.asc()).all()]

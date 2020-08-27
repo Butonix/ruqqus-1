@@ -206,10 +206,53 @@ def oauth_grant():
     else:
         return jsonify({"oauth_error":"Invalid grant type"})
 
+@app.route("/help/api_keys", methods=["POST"])
+@is_not_banned
+def request_api_keys(v):
 
+    new_app=OauthApp(
+        app_name=request.form.get('name'),
+        redirect_uri=request.form.get('redirect_uri'),
+        author_id=v.id,
+        description=request.form.get("description")[0:256]
+        )
 
+    g.db.add(new_app)
 
+    return redirect('/help/apps')
 
+@app.route("/delete_app/<aid>", methods=["POST"])
+@is_not_banned
+@validate_formkey
+def delete_oauth_app(v, aid):
+
+    aid=int(aid)
+    app=g.db.query(OauthApp).filter_by(id=aid).first()
+
+    for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all():
+        g.db.delete(auth)
+
+    g.db.commit()
+
+    g.db.delete(app)
+
+    return redirect('/help/apps')
+
+@app.route("/edit_app/<aid>", methods=["POST"])
+@is_not_banned
+@validate_formkey
+def edit_oauth_app(v, aid):
+
+    aid=int(aid)
+    app=g.db.query(OauthApp).filter_by(id=aid).first()
+
+    app.redirect_uri=request.form.get('redirect_uri')
+    app.app_name=request.form.get('name')
+    app.description=request.form.get("description")[0:256]
+
+    g.db.add(app)
+
+    return redirect('/settings/apps')
 
 @app.route("/api/v1/identity")
 @api("identity")
