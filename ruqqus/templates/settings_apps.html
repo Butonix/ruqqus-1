@@ -1,0 +1,85 @@
+{% extends "settings.html" %}
+
+{% block title %}
+<title>Ruqqus - FAQ</title>
+<meta name="description" content="Ruqqus FAQ">
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col col-lg-8">
+		<div class="settings">
+
+<h2 class="h5">Your API Applications</h2>
+
+{% for app in v.applications %}
+
+<form id="edit-app-{{ app.id }}" action="/edit_app/{{ app.id }}" method="post">
+	<div class="settings-section rounded">
+		<div class="d-lg-flex">
+		    <div class="title w-lg-25">
+                <label for="over18">{{ app.app_name }}</label>
+            </div>
+            <div class="body w-lg-100">
+				<input type="hidden" name="formkey" value="{{ v.formkey }}">
+				<label for="edit-{{ app.id }}-name" class="mb-0 w-lg-25">App Name</label>
+				<input id="edit-{{ app.id }}-name" class="form-control" type="text" name="name" value="{{ app.app_name }}">
+
+				{% if app.client_secret %}
+				<label for="edit-{{ app.id }}-client-id" class="mb-0 w-lg-25">Client ID</label>
+				<input id="edit-{{ app.id }}-client-id" class="form-control copy-link" type="text" name="name" value="{{ app.client_id }}" data-clipboard-text="{{ app.client_id }}" role="button" readonly="readonly">
+				<label for="edit-{{ app.id }}-client-secret" class="mb-0 w-lg-25">Client Secret</label>
+				<a href="javascript:void(0)" id="secret-{{ app.id }}-click" class="btn btn-secondary d-block" onclick="x=document.getElementById('secret-{{ app.id }}-click');x.classList.add('d-none');x.classList.remove('d-block');document.getElementById('edit-{{ app.id }}-client-secret').classList.remove('d-none');">Click to show</a>
+				<input class="d-none form-control copy-link" id="edit-{{ app.id }}-client-secret" type="text" name="name" value="{{ app.client_secret }}" data-clipboard-text="{{ app.client_secret }}" role="button" readonly="readonly">
+				{% endif %}
+
+
+				<label for="edit-{{ app.id }}-redirect" class="mb-0 w-lg-25">Redirect URI</label>
+				<input id="edit-{{ app.id }}-redirect" class="form-control" type="text" name="redirect_uri" value="{{ app.redirect_uri }}">
+				<label for="edit-{{ app.id }}-desc" class="mb-0 w-lg-25">Description</label>
+				<textarea form="edit-app-{{ app.id }}" class="form-control" name="description" id="edit-{{ app.id }}-desc" maxlength="256">{{ app.description }}</textarea>
+			</div>
+		</div>
+		<div class="footer">
+			<div class="d-flex">
+				<input type="submit" class="btn btn-primary ml-auto" value="Save Changes">
+			</div>
+		</div>
+	</div>
+
+</form>
+{% endfor %}
+
+<h2>Request API Keys</h2>
+
+<form id="api-key-request-form" action="/help/api_keys" method="post">
+	<input type="hidden" name="formkey" value="{{ v.formkey }}">
+	<label for="form-username">Username</label>
+	<input type="text" id="form-username" class="form-control" name="username" value="{{ v.username }}" readonly>
+	<label for="form-appname">Application Name</label>
+	<input type="text" id="form-appname" class="form-control" name="name" required>
+	<label for="form-redirect">Redirect URI</label>
+	<input type="text" id="form-redirect" class="form-control" name="redirect_uri" placeholder="Must use https. Separate multiple options with comma." required>
+	<label for="form-username">Description</label>
+	<textarea form="api-key-request-form" id="form-desc" class="form-control" name="description" maxlength="256" required></textarea>
+	<input type="submit" class="btn btn-primary ml-auto" value="Request API Key">
+</form>
+</div>
+</div>
+</div>
+{% endblock %}
+
+
+{% block clipboard %}
+<div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body text-center">
+    <i class="fas fa-check-circle text-success mr-2"></i>Token copied to clipboard
+  </div>
+</div>
+
+<div class="toast clipboard" id="toast-error" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body text-center">
+    <i class="fas fa-exclamation-circle text-danger mr-2"></i>Unable to copy data
+  </div>
+</div>
+{% endblock %}
