@@ -45,14 +45,14 @@ If done correctly, the user will see that your application wants to access their
 
 ## Step 3: Catch the redirect
 
-The user clicks "Authorize". Ruqqus will redirec the user's browser to GET the designated redirect URI. The following URL parameters will be included, which your server should process:
+The user clicks "Authorize". Ruqqus will redirect the user's browser to GET the designated redirect URI. The following URL parameters will be included, which your server should process:
 
 * `code` - a **single-use** authorization code.
 * `state` - The state token from earlier.
 
 Validate the state token. How you do this is up to you.
 
-## Exchange code for access token
+## Step 4: Exchange code for access token
 
 Make a POST request to `https://ruqqus.com/oauth/grant`. Include the following form parameters:
 
@@ -75,7 +75,7 @@ If everything is good, we will respond with the following (example) JSON body:
 
 Store the access and refresh tokens. You should also store expiration timestamp and the scopes list, so that you pre-emptively avoid sending requests to Ruqqus that won't be accepted.
 
-## Step 4: Using the Access Token
+## Step 5: Using the Access Token
 
 To use the access token, include the following header in subsequent API requests to Ruqqus: `Authorization: Bearer access_token_goes_here`
 
@@ -96,7 +96,7 @@ Python example, presuming that the application has obtained a valid `read` autho
 
 The expected result of this would be a large JSON representation of the submissions that make up the user's personal front page.
 
-## Step 5: Maintain Access
+## Step 6: Maintain Access
 
 Access tokens expire one hour after they are issued. To maintain ongoing access, you will need to use the refresh token to obtain a new access token.
 
@@ -116,7 +116,7 @@ A successful refresh will result in the following response:
 	}
 </pre>
 
-You should overwrite the previous access code and expiration timestamp with this new information. Continue to use the access token as in Step 4, until it expires.
+You should overwrite the previous access code and expiration timestamp with this new information. Continue to use the access token as in Step 5, until it expires.
 
 {% endfilter %}
 {% endblock %}
