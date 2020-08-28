@@ -295,7 +295,7 @@ def admin_app_reject(v, aid):
 
     app=g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
 
-    for auth in g.db.query(OauthApp).filter_by(oauth_client=app.id).all():
+    for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all():
         g.db.delete(auth)
 
     g.db.flush()
