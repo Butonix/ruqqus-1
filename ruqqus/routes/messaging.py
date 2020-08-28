@@ -13,10 +13,15 @@ from flask import *
 from ruqqus.__main__ import app
 
 
+'''
+create new conversation
+'''
+
 @app.route("/new_message", methods=["POST"])
 @is_not_banned
 @validate_formkey
 def create_new_convo(v)
+
 
     names=request.form.get("to_users")
     names=names.split(',')
@@ -72,6 +77,10 @@ def create_new_convo(v)
     return jsonify({"redirect":new_convo.permalink})
 
 
+'''
+reply to existing conversation
+'''
+
 @app.route("/reply_message", methods=["POST"])
 @is_not_banned
 @validate_formkey
@@ -79,14 +88,7 @@ def reply_to_message(v):
 
     convo_id=request.form.get("convo_id")
 
-    convo=g.db.query(Conversation).get(convo_id)
-
-    if not convo:
-        abort(404)
-
-    cm=g.db.query(ConvoMember).filter_by(user_id=v.id, convo_id=convo_id)
-    if not cm:
-        abort(403)
+    convo=get_convo(convo_id, v=v)
 
     message=request.form.get("message")
 
@@ -103,3 +105,18 @@ def reply_to_message(v):
     g.db.add(new_message)
 
     return jsonify({"html":body_html})
+
+'''
+view conversation
+'''
+
+@app.route("/message/<convo_id>")
+@auth_required
+def message_perma(v, convo_id):
+
+    convo=get_convo(convo_id, v=v)
+
+    return render_template("conversation.html"
+        v=v,
+        convo=convo
+        )
