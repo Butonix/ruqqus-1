@@ -295,7 +295,7 @@ def admin_app_id(v, aid):
 
     oauth=g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
 
-    return render_template("admin/app",
+    return render_template("admin/app.html",
         v=v,
         app=oauth)
 
