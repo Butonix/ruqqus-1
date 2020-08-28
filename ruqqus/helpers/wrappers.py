@@ -266,7 +266,9 @@ def api(*scopes, no_ban=False):
                 if no_ban and client.user.is_banned and (client.user.unban_utc==0 or client.user.unban_utc>time.time()):
                     return jsonify({"error":f"403 Forbidden"}), 403
 
-                result = f(*args, v=client.user, **kwargs)
+                kwargs['v']=client.user
+
+                result = f(*args, **kwargs)
 
 
 
