@@ -272,7 +272,7 @@ def admin_app_approve(v, aid):
 
     g.db.add(app)
 
-    return redirect(app.permalink)
+    return jsonify({"message":f"{app.app_name} approved"})
 
 @app.route("/admin/app/revoke/<aid>", methods=["POST"])
 @admin_level_required(3)
@@ -286,7 +286,7 @@ def admin_app_revoke(v, aid):
 
     g.db.add(app)
 
-    return redirect(app.permalink)
+    return jsonify({"message":f"{app.app_name} revoked"})
 
 @app.route("/admin/app/<aid>", methods=["GET"])
 @admin_level_required(3)
@@ -299,5 +299,11 @@ def admin_app_id(v, aid):
         v=v,
         app=oauth)
 
+@app.route("/admin/apps", methods=["GET"])
+@admin_level_required(3)
+def admin_apps_list(v):
 
+    apps=g.db.query(OauthApp).filter(OauthApp.client_id.isnot_(None)).order_by(OauthApp.id.desc()).all()
+
+    return render_template("admin/apps.html", v=v, apps=apps)
 
