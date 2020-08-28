@@ -39,6 +39,8 @@ Send your user to `https://ruqqus.com/oauth/authorize`, with the following URL p
 
 If done correctly, the user will see that your application wants to access their Ruqqus account, and be prompted to approve or deny the request.
 
+<img src="/assets/images/illustrations/reader.png" style="border:1px solid #805ad5">
+
 ## Step 3: Catch the redirect
 
 The user clicks "Authorize". Ruqqus will redirec the user's browser to GET the designated redirect URI. The following URL parameters will be included, which your server should process:
@@ -81,7 +83,8 @@ Python example, presuming that the application has obtained a valid `read` autho
 	import requests
 	import pprint
 
-	headers={"Authorization": "Bearer " + access_token}
+	headers={"Authorization": "Bearer " + access_token,
+			 "User-Agent": "Porpl Reader v1 by @captainmeta4"}
 	url="https://ruqqus.com/api/v1/front/listing"
 
 	r=requests.get(url, headers=headers)
