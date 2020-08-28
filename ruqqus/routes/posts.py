@@ -154,9 +154,11 @@ def get_post_title(v):
 
 
 @app.route("/submit", methods=['POST'])
+@app.route("/api/v1/submit", methods=["POST"])
 @limiter.limit("6/minute")
 @is_not_banned
 @tos_agreed
+@api("create")
 @validate_formkey
 def submit_post(v):
 
@@ -536,7 +538,9 @@ def submit_post(v):
 
     #print(f"Content Event: @{new_post.author.username} post {new_post.base36id}")
 
-    return redirect(new_post.permalink)
+    return {"html":lambda:redirect(new_post.permalink),
+            "api":lambda:jsonify(new_post.json)
+            }
     
 # @app.route("/api/nsfw/<pid>/<x>", methods=["POST"])
 # @auth_required

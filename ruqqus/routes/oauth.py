@@ -31,6 +31,7 @@ def oauth_authorize_prompt(v):
     * client_id - Your application client ID
     * scope - Comma-separated list of scopes. Scopes are described above
     * redirect_uri - Your redirect link
+    * state - Your anti-csrf token
     '''
 
     client_id=request.args.get("client_id")
@@ -190,6 +191,9 @@ def oauth_grant():
     elif request.values.get("grant_type")=="refresh":
 
         auth=g.db.query(ClientAuth).filter_by(refresh_token=request.values.get("refresh_token")).first()
+
+        if not auth:
+            return jsonify({"oauth_error": "Invalid refresh_token"})
 
         auth.access_token=secrets.token_urlsafe(128)[0:128]
         auth.access_token_expire_utc = int(time.time())+60*60
