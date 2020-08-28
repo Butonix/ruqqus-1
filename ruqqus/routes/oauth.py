@@ -259,3 +259,45 @@ def edit_oauth_app(v, aid):
 def api_v1_identity(v):
 
     return jsonify(v.json)
+
+@app.route("/admin/app/approve/<aid>", methods=["POST"])
+@admin_level_required(3)
+@validate_formkey
+def admin_app_approve(v, aid):
+
+    app=g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
+
+    app.client_id=secrets.hex_token(64)[0:64]
+    app.client_secret=secrets.hex_token(128)[0:128]
+
+    g.db.add(app)
+
+    return redirect(app.permalink)
+
+@app.route("/admin/app/revoke/<aid>", methods=["POST"])
+@admin_level_required(3)
+@validate_formkey
+def admin_app_revoke(v, aid):
+
+    app=g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
+
+    app.client_id=None
+    app.client_secret=None
+
+    g.db.add(app)
+
+    return redirect(app.permalink)
+
+@app.route("/admin/app/<aid>", methods=["GET"])
+@admin_level_required(3)
+def admin_app_id(v, aid):
+
+
+    oauth=g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
+
+    return render_template("admin/app",
+        v=v,
+        app=oauth)
+
+
+
