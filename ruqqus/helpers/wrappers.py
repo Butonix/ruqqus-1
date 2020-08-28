@@ -277,7 +277,7 @@ def api(*scopes, no_ban=False):
                     return result
 
                 if request.path.startswith('/api/v1/'):
-                    return jsonify(result['api']())
+                    return result['api']()
                 else:
                     return result['html']()
 
