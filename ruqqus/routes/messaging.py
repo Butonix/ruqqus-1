@@ -29,6 +29,9 @@ def create_new_convo(v)
     for name in names:
         user=get_user(name, graceful=True)
 
+        if user.id==v.id:
+            return jsonify({"error":"You can't send messages to yourself."})
+
         if not user:
             return jsonify({"error": f"No user named @{name}"}), 404
 
@@ -65,4 +68,38 @@ def create_new_convo(v)
             convo_id=new_convo.id)
         g.db.add(new_cm)
 
+
     return jsonify({"redirect":new_convo.permalink})
+
+
+@app.route("/reply_message", methods=["POST"])
+@is_not_banned
+@validate_formkey
+def reply_to_message(v):
+
+    convo_id=request.form.get("convo_id")
+
+    convo=g.db.query(Conversation).get(convo_id)
+
+    if not convo:
+        abort(404)
+
+    cm=g.db.query(ConvoMember).filter_by(user_id=v.id, convo_id=convo_id)
+    if not cm:
+        abort(403)
+
+    message=request.form.get("message")
+
+    with CustomRenderer() as renderer:
+        message_md=renderer.render(mistletoe.Document(message))
+    message_html=sanitize(messge_md, linkgen=True)
+
+    new_message=Message(author_id=v.id,
+        created_utc=int(time.time()),
+        body=message,
+        body_html=message_html,
+        )
+
+    g.db.add(new_message)
+
+    return jsonify({"html":body_html})
