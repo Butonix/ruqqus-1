@@ -20,7 +20,9 @@
             <label for="over18">{{ app.app_name }}</label>
         </div>
         <div class="body w-lg-100">
-			<input type="hidden" name="formkey" value="{{ v.formkey }}">
+			<label for="edit-{{ app.id }}-author" class="mb-0 w-lg-25">user</label>
+			<input id="edit-{{ app.id }}-author" class="form-control" type="text" name="name" value="{{ app.author.username }}" readonly=readonly>
+
 			<label for="edit-{{ app.id }}-name" class="mb-0 w-lg-25">App Name</label>
 			<input id="edit-{{ app.id }}-name" class="form-control" type="text" name="name" value="{{ app.app_name }}" readonly=readonly>
 
