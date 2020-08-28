@@ -20,7 +20,7 @@
             <label for="over18">{{ app.app_name }}</label>
         </div>
         <div class="body w-lg-100">
-			<label for="edit-{{ app.id }}-author" class="mb-0 w-lg-25">user</label>
+			<label for="edit-{{ app.id }}-author" class="mb-0 w-lg-25">User</label>
 			<input id="edit-{{ app.id }}-author" class="form-control" type="text" name="name" value="{{ app.author.username }}" readonly=readonly>
 
 			<label for="edit-{{ app.id }}-name" class="mb-0 w-lg-25">App Name</label>
@@ -40,9 +40,10 @@
 	</div>
 	<div class="footer">
 		<div class="d-flex">
-			{% if not app.client_secret%}
+			{% if not app.client_secret %}
 
 			<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post_toast('/admin/app/approve/<aid>')">Approve</a>
+			<a href="javascript:void(0)" class="btn btn-secondary mr-0" onclick="post_toast('/admin/app/reject/<aid>')">Reject</a> 
 
 			{% else %}
 

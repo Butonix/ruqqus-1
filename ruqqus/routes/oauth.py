@@ -288,6 +288,23 @@ def admin_app_revoke(v, aid):
 
     return jsonify({"message":f"{app.app_name} revoked"})
 
+@app.route("/admin/app/reject/<aid>", methods=["POST"])
+@admin_level_required(3)
+@validate_formkey
+def admin_app_revoke(v, aid):
+
+    app=g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
+
+    for auth in g.db.query(OauthApp).filter_by(oauth_client=app.id).all():
+        g.db.delete(auth)
+
+    g.db.flush()
+
+    g.db.delete(app)
+
+    return jsonify({"message":f"{app.app_name} rejected"})
+
+
 @app.route("/admin/app/<aid>", methods=["GET"])
 @admin_level_required(3)
 def admin_app_id(v, aid):
@@ -299,11 +316,13 @@ def admin_app_id(v, aid):
         v=v,
         app=oauth)
 
+
+
 @app.route("/admin/apps", methods=["GET"])
 @admin_level_required(3)
 def admin_apps_list(v):
 
-    apps=g.db.query(OauthApp).filter(OauthApp.client_id==None).order_by(OauthApp.id.desc()).all()
+    apps=g.db.query(OauthApp).options(joinedload(OauthApp.author)).filter(OauthApp.client_id==None).order_by(OauthApp.id.desc()).all()
 
     return render_template("admin/apps.html", v=v, apps=apps)
 
