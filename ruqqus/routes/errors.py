@@ -25,7 +25,7 @@ def error_401(e, v):
 @api()
 def error_403(e, v):
     return{"html":lambda:(render_template('errors/403.html', v=v), 403),
-        "api":lambda:jsonify({"error":"403 Forbidden"})
+        "api":lambda:(jsonify({"error":"403 Forbidden"}), 403)
         }
 
 @app.errorhandler(404)
@@ -33,7 +33,7 @@ def error_403(e, v):
 @api()
 def error_404(e, v):
     return{"html":lambda:(render_template('errors/404.html', v=v), 404),
-        "api":lambda:jsonify({"error":"404 Not Found"})
+        "api":lambda:(jsonify({"error":"404 Not Found"}), 404)
         }
 
 @app.errorhandler(405)
@@ -41,7 +41,7 @@ def error_404(e, v):
 @api()
 def error_405(e, v):
     return{"html":lambda:(render_template('errors/405.html', v=v), 405),
-        "api":lambda:jsonify({"error":"405 Method Not Allowed"})
+        "api":lambda:(jsonify({"error":"405 Method Not Allowed"}), 405)
         }
 
 @app.errorhandler(409)
