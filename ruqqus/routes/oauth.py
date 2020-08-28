@@ -310,7 +310,7 @@ def admin_app_reject(v, aid):
 def admin_app_id(v, aid):
 
 
-    oauth=g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
+    oauth=g.db.query(OauthApp).options(joinedload(OauthApp.author)).filter_by(id=base36decode(aid)).first()
 
     return render_template("admin/app.html",
         v=v,
