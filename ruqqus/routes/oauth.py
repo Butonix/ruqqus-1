@@ -303,7 +303,7 @@ def admin_app_id(v, aid):
 @admin_level_required(3)
 def admin_apps_list(v):
 
-    apps=g.db.query(OauthApp).filter(OauthApp.client_id.isnot_(None)).order_by(OauthApp.id.desc()).all()
+    apps=g.db.query(OauthApp).filter(OauthApp.client_id==None).order_by(OauthApp.id.desc()).all()
 
     return render_template("admin/apps.html", v=v, apps=apps)
 
