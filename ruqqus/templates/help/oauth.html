@@ -18,7 +18,7 @@ This page explains how to obtain API application keys, how to prompt a user for 
 In the [apps tab of Ruqqus settings](/settings/apps), fill in and submit the form to request new API keys. You will need:
 
 * an application name
-* a Redirect URI, or a comma-separated list of redirect URIs. Must use HTTPS or be `localhost`. This is an endpoint on your server, on which your third-party application runs.
+* a Redirect URI, or a comma-separated list of redirect URIs. Must use HTTPS or start with `http://localhost/`. This is an endpoint on your server, on which your third-party application runs.
 * a brief description of what your application is intended to do
 
 Don't worry too much about accuracy; you will be able to change all of these later.
@@ -32,7 +32,7 @@ DO NOT reveal your Client Secret. Anyone with your Client Secret will be able to
 Send your user to `https://ruqqus.com/oauth/authorize`, with the following URL parameters:
 
 * `client_id` - Your application's Client ID
-* `redirect_uri` - The redirect URI (or one of the URIs) specified in your application information. Must use HTTPS or be `localhost`. 
+* `redirect_uri` - The redirect URI (or one of the URIs) specified in your application information. Must use HTTPS or start with `http://localhost/`. 
 * `state` - This is your own anti-cross-site-forgery token. We don't do anything with this, except give it to the user to pass back to you later. You are responsible for generating and validating the state token.
 * `scope` - A comma-separated list of permission scopes that you are requesting. Valid scopes are: `identity`, `create`, `read`, `update`, `delete`, `vote`, and `guildmaster`.
 * `permanent` - optional. Set to `true` if you are requesting indefinite access. Omit if not.

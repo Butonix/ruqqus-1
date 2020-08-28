@@ -58,8 +58,8 @@ def oauth_authorize_prompt(v):
     if not redirect_uri:
         return jsonify({"oauth_error":f"`redirect_uri` must be provided."}), 400
 
-    if not redirect_uri.startswith('https://') and not redirect_uri.startswith("https://localhost/"):
-        return jsonify({"oauth_error":"redirect_uri must use https, or be localhost"}), 400
+    if not redirect_uri.startswith('https://') and not redirect_uri.startswith("http://localhost/"):
+        return jsonify({"oauth_error":"redirect_uri must use https, or be `https://localhost/`"}), 400
 
 
     valid_redirect_uris = [x.lstrip().rstrip() for x in application.redirect_uri.split(",")]
@@ -105,6 +105,9 @@ def oauth_authorize_post(v):
     valid_redirect_uris = [x.lstrip().rstrip() for x in application.redirect_uri.split(",")]
     if redirect_uri not in valid_redirect_uris:
         return jsonify({"oauth_error":"Invalid redirect_uri"}), 400
+
+    if not redirect_uri.startswith('https://') and not redirect_uri.startswith("http://localhost/"):
+        return jsonify({"oauth_error":"redirect_uri must use https, or be `http://localhost/"}), 400
 
     scopes=scopes_txt.split(',')
     if not scopes:
