@@ -842,7 +842,7 @@ def board_mod_queue(boardname, board, v):
     if not v.over_18:
         ids=ids.filter_by(over_18=False)
 
-    ids=ids.order_by(Submission.report_count.desc()).offset((page-1)*25).limit(26)
+    ids=ids.order_by(Submission.ids.desc()).offset((page-1)*25).limit(26)
 
     ids=[x for x in ids]
 
