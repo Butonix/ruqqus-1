@@ -438,9 +438,12 @@ def get_mod(uid, bid):
 
     return mod
 
-def get_application(client_id):
+def get_application(client_id, graceful=False):
 
     application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
+    if not application and not graceful:
+        abort(404)
+
     return application
 
 def get_from_permalink(link, v=None):
