@@ -291,7 +291,7 @@ def admin_app_revoke(v, aid):
 @app.route("/admin/app/reject/<aid>", methods=["POST"])
 @admin_level_required(3)
 @validate_formkey
-def admin_app_revoke(v, aid):
+def admin_app_reject(v, aid):
 
     app=g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
 
