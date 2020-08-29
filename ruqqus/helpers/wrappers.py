@@ -14,7 +14,6 @@ def get_logged_in_user():
 
         print("cookie auth")
         v=g.db.query(User).options(lazyload('*')).filter_by(id=session["user_id"]).first()
-        nonce=session.get("login_nonce",0)
         if v and nonce<v.login_nonce:
             return None, None
         else:
@@ -22,7 +21,8 @@ def get_logged_in_user():
 
     elif request.path.startswith("/api/v1") and request.headers.get("Authorizaztion"):
 
-        print("token auth")
+        print("token_auth")
+
 
         token=request.headers.get("Authorization")
         token=token.split()[1]
@@ -93,6 +93,8 @@ def is_not_banned(f):
     def wrapper(*args, **kwargs):
 
         v, c=get_logged_in_user()
+
+        print(v, c)
             
         if not v:
             abort(401)
