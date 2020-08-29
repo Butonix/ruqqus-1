@@ -28,7 +28,9 @@ def get_logged_in_user():
             ClientAuth.access_token_expire_utc>int(time.time())
             ).first()
 
-        return (client.user, client) if client else (None, None)
+        x= (client.user, client) if client else (None, None)
+        print(x)
+        return x
 
     return None, None
 
