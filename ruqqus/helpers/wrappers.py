@@ -12,9 +12,6 @@ def get_logged_in_user():
 
     if request.path.startswith("/api/v1"):
 
-        print("token_auth")
-
-
         token=request.headers.get("Authorization")
         token=token.split()[1]
 
@@ -31,7 +28,6 @@ def get_logged_in_user():
 
     elif "user_id" in session:
 
-        print("cookie auth")
         uid=session.get("user_id")
         nonce=session.get("login_nonce")
         if not uid:
@@ -44,7 +40,6 @@ def get_logged_in_user():
 
 
     else:
-        print("no auth")
         return None, None
 
 
