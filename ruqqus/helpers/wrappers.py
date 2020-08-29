@@ -18,6 +18,8 @@ def get_logged_in_user():
         token=request.headers.get("Authorization")
         token=token.split()[1]
 
+        print(token)
+
         client=g.db.query(ClientAuth).filter(
             ClientAuth.access_token==token,
             ClientAuth.access_token_expire_utc>int(time.time())
