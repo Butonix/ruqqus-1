@@ -208,8 +208,8 @@ def validate_formkey(f):
                 if request.path.startswith("/api/v1/") and request.headers.get("Authorization"):
                     pass
                 else:
-                #print("no submitted key")
-                abort(401)
+                    #print("no submitted key")
+                    abort(401)
 
             elif not v.validate_formkey(submitted_key):
                 abort(401)
