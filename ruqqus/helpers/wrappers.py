@@ -11,6 +11,8 @@ from ruqqus.__main__ import Base, app
 def get_logged_in_user():
 
     if "user_id" in session:
+
+        print("cookie auth")
         v=g.db.query(User).options(lazyload('*')).filter_by(id=session["user_id"]).first()
         nonce=session.get("login_nonce",0)
         if v and nonce<v.login_nonce:
@@ -19,6 +21,8 @@ def get_logged_in_user():
             return v, None
 
     elif request.path.startswith("/api/v1") and request.headers.get("Authorizaztion"):
+
+        print("token auth")
 
         token=request.headers.get("Authorization")
         token=token.split()[1]
