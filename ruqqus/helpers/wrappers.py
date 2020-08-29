@@ -51,12 +51,20 @@ def auth_required(f):
             if not v:
                 abort(401)
 
-        else:
+        elif not request.path.startswith("/api/v1/") or not request.headers.get("Authorization"):
             abort(401)
+        else:
+            v=None
+
 
         g.v=v
 
-        resp = make_response( f(*args, v=v, **kwargs))
+        #an ugly hack to make api work
+        try:
+            resp = make_response( f(*args, v=v, **kwargs))
+        except AttributeError:
+            abort(401)
+
         resp.headers.add("Cache-Control","private")
         resp.headers.add("Access-Control-Allow-Origin",app.config["SERVER_NAME"])
         return resp
@@ -161,7 +169,6 @@ def admin_level_required(x):
                 if v.admin_level < x:
                     abort(403)
 
-                #v.update_ip(request.remote_addr)
                     
             else:
                 abort(401)
@@ -193,7 +200,7 @@ def validate_formkey(f):
         submitted_key = request.values.get("formkey","none")
             
         if not submitted_key:
-            print("no submitted key")
+            #print("no submitted key")
             abort(401)
 
         if not v.validate_formkey(submitted_key):
@@ -273,13 +280,14 @@ def api(*scopes, no_ban=False):
 
 
 
-                if isinstance(result, RespObj):
-                    return result
 
-                if request.path.startswith('/api/v1/'):
-                    return result['api']()
+
+                if isinstance(result, dict):
+                    resp=result['api']()
                 else:
-                    return result['html']()
+                    resp=result
+
+                resp=make_response(resp)
 
                 resp.headers.add("Cache-Control","private")
                 resp.headers.add("Access-Control-Allow-Origin",app.config["SERVER_NAME"])
