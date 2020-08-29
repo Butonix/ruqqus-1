@@ -313,7 +313,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'fullname':self.fullname,
                 'title':self.title,
                 'is_nsfw':self.over_18,
-                'is_offensive':self.is_offensive,
                 'is_nsfl':self.is_nsfl,
                 'thumb_url':self.thumb_url,
                 'domain':self.domain,

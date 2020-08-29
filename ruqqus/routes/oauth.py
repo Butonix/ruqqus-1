@@ -53,6 +53,8 @@ def oauth_authorize_prompt(v):
         if scope not in SCOPES:
             return jsonify({"oauth_error":f"The provided scope `{scope}` is not valid."}), 400
 
+    if any(x in scopes for x in ["create", "update", "guildmaster"]) and "identity" not in scopes:
+        return jsonify({"oauth_error":f"`identity` scope required when requesting `create`, `update`, or `guildmaster` scope."}), 400
 
     redirect_uri = request.args.get("redirect_uri")
     if not redirect_uri:
@@ -117,11 +119,13 @@ def oauth_authorize_post(v):
         if scope not in SCOPES:
             return jsonify({"oauth_error":f"The provided scope `{scope}` is not valid."}), 400
 
+    if any(x in scopes for x in ["create", "update", "guildmaster"]) and "identity" not in scopes:
+        return jsonify({"oauth_error":f"`identity` scope required when requesting `create`, `update`, or `guildmaster` scope."}), 400
+
     if not state:
         return jsonify({'oauth_error':'state argument required'}), 400
 
     permanent=bool(int(request.values.get("permanent",0)))
-
 
     new_auth=ClientAuth(
         oauth_client=application.id,
