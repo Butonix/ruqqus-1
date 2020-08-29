@@ -270,8 +270,8 @@ def api(*scopes, no_ban=False):
                     if not client.__dict__.get(f"scope_{scope}"):
                         return jsonify({"error":f"401 Not Authorized. Scope `{scope}` is required."}), 403
     
-                if no_ban and client.user.is_banned and (client.user.unban_utc==0 or client.user.unban_utc>time.time()):
-                    return jsonify({"error":f"403 Forbidden"}), 403
+                if (request.method=="POST" or no_ban) and client.user.is_suspended:
+                    return jsonify({"error":f"403 Forbidden. The user account is suspended."}), 403
 
                 kwargs['v']=client.user
 
