@@ -10,6 +10,8 @@ from ruqqus.__main__ import Base, app
 
 def get_logged_in_user():
 
+    print(request.path)
+
     if request.path.startswith("/api/v1") and request.headers.get("Authorizaztion"):
 
         print("token_auth")
