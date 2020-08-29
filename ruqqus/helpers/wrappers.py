@@ -10,16 +10,7 @@ from ruqqus.__main__ import Base, app
 
 def get_logged_in_user():
 
-    if "user_id" in session:
-
-        print("cookie auth")
-        v=g.db.query(User).options(lazyload('*')).filter_by(id=session["user_id"]).first()
-        if v and nonce<v.login_nonce:
-            return None, None
-        else:
-            return v, None
-
-    elif request.path.startswith("/api/v1") and request.headers.get("Authorizaztion"):
+    if request.path.startswith("/api/v1") and request.headers.get("Authorizaztion"):
 
         print("token_auth")
 
@@ -36,7 +27,18 @@ def get_logged_in_user():
         print(x)
         return x
 
-    return None, None
+    elif "user_id" in session:
+
+        print("cookie auth")
+        v=g.db.query(User).options(lazyload('*')).filter_by(id=session["user_id"]).first()
+        if v and nonce<v.login_nonce:
+            return None, None
+        else:
+            return v, None
+
+
+    else:
+        return None, None
 
 
 #Wrappers
