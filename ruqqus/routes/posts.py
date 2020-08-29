@@ -158,8 +158,8 @@ def get_post_title(v):
 @limiter.limit("6/minute")
 @is_not_banned
 @tos_agreed
-@api("create")
 @validate_formkey
+@api("create")
 def submit_post(v):
 
     title=request.form.get("title","")

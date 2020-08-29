@@ -8,6 +8,30 @@ from ruqqus.classes import *
 from .get import *
 from ruqqus.__main__ import Base, app
 
+def get_logged_in_user():
+
+    if "user_id" in session:
+        v=g.db.query(User).options(lazyload('*')).filter_by(id=session["user_id"]).first()
+        nonce=session.get("login_nonce",0)
+        if v and nonce<v.login_nonce:
+            return None, None
+        else:
+            return v, None
+
+    elif request.path.startswith("/api/v1") and request.headers.get("Authorizaztion"):
+
+        token=request.headers.get("Authorization")
+        token=token.split()[1]
+
+        client=g.db.query(ClientAuth).filter(
+            ClientAuth.access_token==token,
+            ClientAuth.access_token_expire_utc>int(time.time())
+            ).first()
+
+        return (client.user, client) if client else (None, None)
+
+    return None, None
+
 
 #Wrappers
 def auth_desired(f):
@@ -15,16 +39,10 @@ def auth_desired(f):
 
     def wrapper(*args, **kwargs):
 
-        if "user_id" in session:
-            v=g.db.query(User).options(lazyload('*')).filter_by(id=session["user_id"]).first()
-            nonce=session.get("login_nonce",0)
-            if v and nonce<v.login_nonce:
-                v=None
+        v, c=get_logged_in_user()
 
-        else:
-            v=None
-        
-        g.v=v
+        if c:
+            kwargs["c"]=c
 
         resp=make_response( f(*args, v=v, **kwargs))
         if v:
@@ -42,28 +60,19 @@ def auth_required(f):
 
     def wrapper(*args, **kwargs):
 
-        if "user_id" in session:
-            v=g.db.query(User).options(lazyload('*')).filter_by(id=session["user_id"]).first()
-            nonce=session.get("login_nonce",0)
-            if v and nonce<v.login_nonce:
-                abort(401)
-            
-            if not v:
-                abort(401)
+        v, c=get_logged_in_user()
 
-        elif not request.path.startswith("/api/v1/") or not request.headers.get("Authorization"):
+        if not v:
             abort(401)
-        else:
-            v=None
+
+        if c:
+            kwargs["c"]=c
 
 
         g.v=v
 
         #an ugly hack to make api work
-        try:
-            resp = make_response( f(*args, v=v, **kwargs))
-        except AttributeError:
-            abort(401)
+        resp = make_response( f(*args, v=v, **kwargs))
 
         resp.headers.add("Cache-Control","private")
         resp.headers.add("Access-Control-Allow-Origin",app.config["SERVER_NAME"])
@@ -77,20 +86,16 @@ def is_not_banned(f):
 
     def wrapper(*args, **kwargs):
 
-        if "user_id" in session:
-            v=g.db.query(User).options(lazyload('*')).filter_by(id=session["user_id"]).first()
-            nonce=session.get("login_nonce",0)
-            if v and nonce<v.login_nonce:
-                abort(401)
+        v, c=get_logged_in_user()
             
-            if not v:
-                abort(401)
-
-            if v.is_suspended:
-                abort(403)
-            
-        else:
+        if not v:
             abort(401)
+
+        if v.is_suspended:
+            abort(403)
+
+        if c:
+            kwargs["c"]=c
 
         g.v=v
 
@@ -155,23 +160,20 @@ def admin_level_required(x):
         def wrapper(*args, **kwargs):
 
 
-            if "user_id" in session:
-                v=g.db.query(User).options(lazyload('*')).filter_by(id=session["user_id"]).first()
-                if not v:
-                    abort(401)
-                nonce=session.get("login_nonce",0)
-                if nonce<v.login_nonce:
-                    abort(401)
-                
-                if v.is_banned:
-                    abort(403)
+            v, c = get_logged_in_user()
 
-                if v.admin_level < x:
-                    abort(403)
+            if c:
+                return jsonify({"error":"No admin api access"}), 403
 
-                    
-            else:
+            if not v:
                 abort(401)
+                
+            if v.is_banned:
+                abort(403)
+
+            if v.admin_level < x:
+                abort(403)
+
 
             g.v=v
             
@@ -197,14 +199,20 @@ def validate_formkey(f):
 
     def wrapper(*args, v, **kwargs):
 
-        submitted_key = request.values.get("formkey","none")
-            
-        if not submitted_key:
-            #print("no submitted key")
-            abort(401)
+        if "c" not in kwargs:
 
-        if not v.validate_formkey(submitted_key):
-            abort(401)
+            submitted_key = request.values.get("formkey","none")
+                
+            if not submitted_key:
+
+                if request.path.startswith("/api/v1/") and request.headers.get("Authorization"):
+                    pass
+                else:
+                #print("no submitted key")
+                abort(401)
+
+            elif not v.validate_formkey(submitted_key):
+                abort(401)
 
         return f(*args, v=v, **kwargs)
 
@@ -246,19 +254,10 @@ def api(*scopes, no_ban=False):
 
             if request.path.startswith('/api/v1'):
 
-                #validate auth token
-                token=request.headers.get("Authorization", "Bearer: ")
-                try:
-                    token=token.split()[1]
-                except:
-                    return jsonify({"error":"400 Bad Request. Authorization token not provided"}), 400
-                
-                client=g.db.query(ClientAuth).filter(
-                    ClientAuth.access_token==token,
-                    ClientAuth.access_token_expire_utc>int(time.time())
-                    ).first()
+                v=kwargs.get('v')
+                client=kwargs.pop('c')
 
-                if not client:
+                if not v:
                     return jsonify({"error":"401 Not Authorized. Invalid or Expired Token"}), 401
 
                 #validate app associated with token
@@ -273,14 +272,7 @@ def api(*scopes, no_ban=False):
                 if (request.method=="POST" or no_ban) and client.user.is_suspended:
                     return jsonify({"error":f"403 Forbidden. The user account is suspended."}), 403
 
-                kwargs['v']=client.user
-
                 result = f(*args, **kwargs)
-
-
-
-
-
 
                 if isinstance(result, dict):
                     resp=result['api']()
@@ -292,7 +284,6 @@ def api(*scopes, no_ban=False):
                 resp.headers.add("Cache-Control","private")
                 resp.headers.add("Access-Control-Allow-Origin",app.config["SERVER_NAME"])
                 return resp
-
 
             else:
 
