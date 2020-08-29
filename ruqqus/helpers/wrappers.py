@@ -31,6 +31,7 @@ def get_logged_in_user():
 
         print("cookie auth")
         uid=session.get("user_id")
+        nonce=session.get("login_nonce")
         if not uid:
             return None, None
         v=g.db.query(User).options(lazyload('*')).filter_by(id=uid).first()
