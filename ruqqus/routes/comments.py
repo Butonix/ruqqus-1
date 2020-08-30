@@ -358,14 +358,14 @@ def api_comment(v):
 
     #print(f"Content Event: @{v.username} comment {c.base36id}")
 
-    return {"html":lambda:render_template("comments.html",
+    return {"html":lambda:jsonify({"html":render_template("comments.html",
                                            v=v, 
                                            comments=[c], 
                                            render_replies=False,
                                            is_allowed_to_comment=True
-                                           ),
+                                           )}),
             "api":lambda:c.json
-                    }
+            }
     
 
 @app.route("/edit_comment/<cid>", methods=["POST"])
