@@ -278,7 +278,7 @@ def front_all(v):
                                             v=v,
                                             listing=posts
                                             ),
-            'api':lambda:[x.json for x in posts]
+            'api':lambda:jsonify({"data":[x.json for x in posts]})
             }
 
 @cache.memoize(600)
@@ -360,7 +360,7 @@ def browse_guilds(v):
                            next_exists=next_exists,
                            sort_method=sort_method
                             ),
-            "api":lambda:[board.json for board in boards]
+            "api":lambda:jsonify({"data":[board.json for board in boards]})
             }
 
 @app.route('/mine', methods=["GET"])

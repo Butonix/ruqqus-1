@@ -140,11 +140,13 @@ def u_username(username, v=None):
                            page=page,
                            next_exists=next_exists,
                            is_following=(v and u.has_follower(v))),
-            'api': lambda:[x.json for x in listing]
+            'api': lambda:jsonify({"data":[x.json for x in listing]})
             }
 
 @app.route("/@<username>/comments", methods=["GET"])
+@app.route("/api/v1/user/<username>/comments", methods=["GET"])
 @auth_desired
+@api("read")
 def u_username_comments(username, v=None):
     
     #username is unique so at most this returns one result. Otherwise 404
@@ -195,14 +197,16 @@ def u_username_comments(username, v=None):
 
     is_following=(v and user.has_follower(v))
     
-    return render_template("userpage_comments.html",
+    return {"html":lambda:render_template("userpage_comments.html",
                            u=user,
                            v=v,
                            listing=listing,
                            page=page,
                            next_exists=next_exists,
                            is_following=is_following,
-                           standalone=True)
+                           standalone=True),
+            "api":lambda:jsonify({"data":[c.json for c in listing]})
+            }
 
 @app.route("/api/follow/<username>", methods=["POST"])
 @auth_required
