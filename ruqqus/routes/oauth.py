@@ -230,7 +230,7 @@ def request_api_keys(v):
 
     g.db.add(new_app)
 
-    return redirect('/help/apps')
+    return redirect('/settings/apps')
 
 @app.route("/delete_app/<aid>", methods=["POST"])
 @is_not_banned
