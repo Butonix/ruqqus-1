@@ -288,7 +288,8 @@ def api(*scopes, no_ban=False):
                 else:
                     resp=result
 
-                resp=make_response(resp)
+                if not isinstance(resp, RespObj)
+                    resp=make_response(resp)
 
                 resp.headers.add("Cache-Control","private")
                 resp.headers.add("Access-Control-Allow-Origin",app.config["SERVER_NAME"])
