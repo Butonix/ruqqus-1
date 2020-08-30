@@ -10,6 +10,8 @@ from ruqqus.classes.boards import Board
 
 
 @app.route("/api/v1/guild/<boardname>", methods=["GET"])
+@auth_desired
+@api("read")
 def guild_info(boardname):
     guild = get_guild(boardname)
 
@@ -17,6 +19,8 @@ def guild_info(boardname):
 
 
 @app.route("/api/v1/user/<username>", methods=["GET"])
+@auth_desired
+@api("read")
 def user_info(username):
 
     user=get_user(username)
@@ -24,6 +28,7 @@ def user_info(username):
 
 @app.route("/api/v1/post/<pid>", methods=["GET"])
 @auth_desired
+@api("read")
 def post_info(v, pid):
 
     post=get_post(pid)
@@ -35,6 +40,7 @@ def post_info(v, pid):
 
 @app.route("/api/v1/comment/<cid>", methods=["GET"])
 @auth_desired
+@api("read")
 def comment_info(v, cid):
 
     comment=get_comment(cid)
