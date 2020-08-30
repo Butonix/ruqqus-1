@@ -399,3 +399,7 @@ class Board(Base, Stndrd, Age_times):
                 'color':"#"+self.color
                 }
 
+
+    @property
+    def show_settings_icons(self):
+        return self.is_private or self.restricted_posting or self.over_18 or self.all_opt_out
