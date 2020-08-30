@@ -35,13 +35,15 @@ The purpose of this document is to clearly identify:
 
 Several layers of administrative privilege will be implemented
 
-Integer|Name|Suggested permissions|Type of user
+As of 30 Aug 2020, only levels 0, 1, and 6 are in use.
+
+Integer|Name|Permissions|Type of user
 -|-|-|-
 0|User|None|Everyone and anyone
-1|Admin Emeritus|Distinguish comments|Former employees
-2|Admin|Distinguish comments. Basic, non-T&S features|Non-tech staff (ex. legal). Employment required
+1|Admin Emeritus|No permissions. Black "former admin" badge on profile.|Former employees
+2|Admin|Distinguish comments. Basic, non-T&S features. |Non-tech staff (ex. Legal, HR)
 3|T&S I|Remove content| Junior Devs
-4|T&S II|Issue bans, view more detailed data|Senior devs
+4|T&S II|Issue bans, view more detailed data, such as IP addresses|Senior devs
 5|Deputy Owner|Add/remove lower ranks|Part owners
 6|Owner|Direct Heroku/database access|Majority owners only.
 
