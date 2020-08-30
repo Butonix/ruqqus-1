@@ -235,6 +235,8 @@ def api_comment(v):
         parent=get_comment(parent_id, v=v)
         parent_comment_id=parent.id
         level=parent.level+1
+        if parent.parent_submission!=parent_submission:
+            abort(400)
 
     #check existing
     existing=g.db.query(Comment).join(CommentAux).filter(Comment.author_id==v.id,
