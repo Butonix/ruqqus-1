@@ -60,7 +60,7 @@ def oauth_authorize_prompt(v):
     if not redirect_uri:
         return jsonify({"oauth_error":f"`redirect_uri` must be provided."}), 400
 
-    if redirect_uri.startswith('http://'):
+    if redirect_uri.startswith('http://') and not urlparse(redirect_uri).netloc=="localhost":
         return jsonify({"oauth_error":"redirect_uri must not use http (use https instead)"}), 400
 
 
@@ -108,7 +108,7 @@ def oauth_authorize_post(v):
     if redirect_uri not in valid_redirect_uris:
         return jsonify({"oauth_error":"Invalid redirect_uri"}), 400
 
-    if  redirect_uri.startswith('http://'):
+    if  redirect_uri.startswith('http://') and not urlparse(redirect_uri).netloc=="localhost":
         return jsonify({"oauth_error":"redirect_uri must not use http (use https instead)"}), 400
 
     scopes=scopes_txt.split(',')
