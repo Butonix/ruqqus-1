@@ -39,9 +39,9 @@ Integer|Name|Suggested permissions|Type of user
 -|-|-|-
 0|User|None|Everyone and anyone
 1|Admin Emeritus|Distinguish comments|Former employees
-2|Admin|Distinguish comments. Basic, non-T&S features|Non-tech staff (ex. legal). NDA/agreement required.
-3|Junior Dev|Remove content| Vetted contributors
-4|Senior Dev|Issue bans|Trust+Safety
+2|Admin|Distinguish comments. Basic, non-T&S features|Non-tech staff (ex. legal). Employment required
+3|T&S I|Remove content| Junior Devs
+4|T&S II|Issue bans, view more detailed data|Senior devs
 5|Deputy Owner|Add/remove lower ranks|Part owners
 6|Owner|Direct Heroku/database access|Majority owners only.
 
