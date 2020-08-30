@@ -288,7 +288,7 @@ def api(*scopes, no_ban=False):
                 else:
                     resp=result
 
-                if not isinstance(resp, RespObj)
+                if not isinstance(resp, RespObj):
                     resp=make_response(resp)
 
                 resp.headers.add("Cache-Control","private")
