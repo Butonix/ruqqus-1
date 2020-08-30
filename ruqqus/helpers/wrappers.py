@@ -15,21 +15,18 @@ def get_logged_in_user():
         token=request.headers.get("Authorization")
         token=token.split()[1]
 
-        print(token)
-
         client=g.db.query(ClientAuth).filter(
             ClientAuth.access_token==token,
             ClientAuth.access_token_expire_utc>int(time.time())
             ).first()
 
         x= (client.user, client) if client else (None, None)
-        print(x)
         return x
 
     elif "user_id" in session:
 
         uid=session.get("user_id")
-        nonce=session.get("login_nonce")
+        nonce=session.get("login_nonce", 0)
         if not uid:
             return None, None
         v=g.db.query(User).options(lazyload('*')).filter_by(id=uid).first()
