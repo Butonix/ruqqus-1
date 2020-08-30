@@ -223,7 +223,7 @@ def home(v):
                                time_filter=t,
                                page=page,
                                only=only),
-                'api':lambda:[x.json for x in posts]
+                'api':lambda:jsonify({"data":[x.json for x in posts]})
                 }
     else:
         return front_all()
