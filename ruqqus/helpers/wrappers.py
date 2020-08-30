@@ -298,7 +298,7 @@ def api(*scopes, no_ban=False):
 
                 result = f(*args, **kwargs)
 
-                if isinstance(result, RespObj):
+                if isinstance(result, RespObj) or isinstance(result, tuple):
                     return result
 
                 if request.path.startswith('/inpage/'):
