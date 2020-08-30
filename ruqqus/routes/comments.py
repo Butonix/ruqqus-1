@@ -451,8 +451,8 @@ def delete_comment(cid, v):
 
 @app.route("/embed/comment/<cid>", methods=["GET"])
 @app.route("/embed/post/<pid>/comment/<cid>", methods=["GET"])
-@app.route("/api/vi/embed/comment/<cid>", methods=["GET"])
-@app.route("/api/vi/embed/post/<pid>/comment/<cid>", methods=["GET"])
+@app.route("/api/v1/embed/comment/<cid>", methods=["GET"])
+@app.route("/api/v1/embed/post/<pid>/comment/<cid>", methods=["GET"])
 def embed_comment_cid(cid, pid=None):
 
     comment=get_comment(cid)
