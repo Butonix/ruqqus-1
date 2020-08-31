@@ -232,7 +232,7 @@ class Board(Base, Stndrd, Age_times):
         if user is None:
             return False
 
-        return g.db.query(ContributorRelationship).filter_by(user_id=user.id, is_active=True).first()
+        return g.db.query(ContributorRelationship).filter_by(user_id=user.id, board_id=self.id, is_active=True).first()
 
     def can_submit(self, user):
 
