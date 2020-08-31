@@ -451,8 +451,8 @@ def random_post(v):
         x=x.filter_by(is_offensive=False)
 
     if v:
-        bans=g.db.query(BanRelationship.id()).filter_by(user_id=v.id).all()
-        x=x.filter(Submission.board_id.notin_([i[0] for i in bans]))
+        bans=g.db.query(BanRelationship.board_id).filter_by(user_id=v.id).subquery()
+        x=x.filter(Submission.board_id.notin_(bans)
 
     total=x.count()
     n=random.randint(0, total-1)
