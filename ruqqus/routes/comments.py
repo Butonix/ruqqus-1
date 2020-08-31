@@ -231,12 +231,16 @@ def api_comment(v):
         parent=parent_post
         parent_comment_id=None
         level=1
+        if parent_fullname!=parent_post.fullname:
+            abort(400)
     elif parent_fullname.startswith("t3"):
         parent=get_comment(parent_id, v=v)
         parent_comment_id=parent.id
         level=parent.level+1
         if parent.parent_submission!=parent_submission:
             abort(400)
+    else:
+        abort(400)
 
     #check existing
     existing=g.db.query(Comment).join(CommentAux).filter(Comment.author_id==v.id,
@@ -294,7 +298,7 @@ def api_comment(v):
     #create comment
     c=Comment(author_id=v.id,
               parent_submission=parent_submission,
-              parent_fullname=parent_fullname,
+              parent_fullname=parent.fullname,
               parent_comment_id=parent_comment_id,
               level=level,
               over_18=post.over_18,

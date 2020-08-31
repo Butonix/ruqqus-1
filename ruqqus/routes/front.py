@@ -409,7 +409,7 @@ def my_subs(v):
     elif kind=="users":
 
         u=g.db.query(User)
-        follows=v.following.subquery()
+        follows=g.db.query(Follow).filter_by(user_id=v.id).subquery()
 
         content=u.join(follows,
                        User.id==follows.c.target_id,

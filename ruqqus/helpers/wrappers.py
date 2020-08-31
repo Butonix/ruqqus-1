@@ -264,10 +264,12 @@ def api(*scopes, no_ban=False):
             if request.path.startswith('/api/v1'):
 
                 v=kwargs.get('v')
-                client=kwargs.pop('c')
+                client=kwargs.get('c')
 
-                if not v:
+                if not v or not client:
                     return jsonify({"error":"401 Not Authorized. Invalid or Expired Token"}), 401
+
+                kwargs.pop('c')
 
                 #validate app associated with token
                 if client.application.is_banned:
