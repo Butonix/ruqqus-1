@@ -13,7 +13,16 @@ def get_logged_in_user():
     if request.path.startswith("/api/v1"):
 
         token=request.headers.get("Authorization")
-        token=token.split()[1]
+        if not token:
+            return None, None
+
+        token=token.split()
+        if len(token)<2:
+            return None, None
+
+        token=token[1]
+        if not token:
+            return None, None
 
         client=g.db.query(ClientAuth).filter(
             ClientAuth.access_token==token,
