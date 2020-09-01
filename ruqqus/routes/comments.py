@@ -91,6 +91,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
 
     #context improver
     context=min(int(request.args.get("context", 0)), 4)
+    comment_info=comment
     c=comment
     while context > 0 and not c.is_top_level:
 
@@ -188,8 +189,8 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
         current_ids=[x.id for x in output]
 
         
-    return {'html':lambda:post.rendered_page(v=v, comment=top_comment, comment_info=c),
-            'api':lambda:c.json
+    return {'html':lambda:post.rendered_page(v=v, comment=top_comment, comment_info=comment_info),
+            'api':lambda:top_comment.json
             }
 
 @app.route("/api/comment", methods=["POST"])
