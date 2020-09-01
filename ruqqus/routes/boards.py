@@ -1230,7 +1230,8 @@ def siege_guild(v):
     #delete and notify mods
     for x in guild.moderators:
 
-        send_notification(x.user,
+        if x.accepted:
+            send_notification(x.user,
                           f"You have been overthrown from +{guild.name}.")
         g.db.delete(x)
         
