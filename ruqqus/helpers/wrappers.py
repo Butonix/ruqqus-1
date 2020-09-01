@@ -13,7 +13,16 @@ def get_logged_in_user():
     if request.path.startswith("/api/v1"):
 
         token=request.headers.get("Authorization")
-        token=token.split()[1]
+        if not token:
+            return None, None
+
+        token=token.split()
+        if len(token)<2:
+            return None, None
+
+        token=token[1]
+        if not token:
+            return None, None
 
         client=g.db.query(ClientAuth).filter(
             ClientAuth.access_token==token,
@@ -95,7 +104,7 @@ def is_not_banned(f):
 
         v, c=get_logged_in_user()
 
-        print(v, c)
+        #print(v, c)
             
         if not v:
             abort(401)
@@ -264,10 +273,12 @@ def api(*scopes, no_ban=False):
             if request.path.startswith('/api/v1'):
 
                 v=kwargs.get('v')
-                client=kwargs.pop('c')
+                client=kwargs.get('c')
 
-                if not v:
+                if not v or not client:
                     return jsonify({"error":"401 Not Authorized. Invalid or Expired Token"}), 401
+
+                kwargs.pop('c')
 
                 #validate app associated with token
                 if client.application.is_banned:

@@ -7,18 +7,17 @@ from ruqqus.__main__ import app
 
 #Errors
 @app.errorhandler(401)
-@auth_desired
-@api()
-def error_401(e, v):
+def error_401(e):
 
     path=request.path
     qs=urlencode(dict(request.args))
     argval=quote(f"{path}?{qs}", safe='')
     output=f"/login?redirect={argval}"
 
-    return {"html":lambda:redirect(output),
-            "api":lambda:jsonify({"error":"401 Not Authorized"})
-            }
+    if request.path.startswith("/api/v1/"):
+        return jsonify({"error":"401 Not Authorized"})
+    else:
+        return redirect(output)
 
 @app.errorhandler(403)
 @auth_desired
