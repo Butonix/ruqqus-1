@@ -7,7 +7,7 @@ from ruqqus.__main__ import app
 
 #Errors
 @app.errorhandler(401)
-def error_401(e, v):
+def error_401(e):
 
     path=request.path
     qs=urlencode(dict(request.args))
