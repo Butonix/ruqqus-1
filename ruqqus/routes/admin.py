@@ -369,7 +369,7 @@ def admin_removed(v):
 
     page=int(request.args.get("page",1))
 
-    ids=g.db.query(Submission.id).filter_by(is_banned=True).order_by(Submission.created_utc.desc()).offset(25*(page-1)).limit(26)
+    ids=g.db.query(Submission.id).filter_by(is_banned=True).order_by(Submission.created_utc.desc()).offset(25*(page-1)).limit(26).all()
 
     next_exists=len(ids)==26
 
