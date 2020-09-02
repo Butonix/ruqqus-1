@@ -159,4 +159,8 @@ def info_image_hosts():
 
     sites=[x.domain for x in sites]
 
-    return "\n".join(sites)
+    text= "\n".join(sites)
+
+    resp=make_response(text)
+    resp.mimetype="text/plain"
+    return resp
