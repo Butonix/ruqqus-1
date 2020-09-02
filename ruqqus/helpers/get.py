@@ -44,6 +44,43 @@ def get_user(username, v=None, nSession=None, graceful=False):
 
     return user
 
+def get_account(base36id, v=None, nSession=None, graceful=False):
+
+    if not nSession:
+        nSession=g.db
+
+    id=base36decode(base36id)
+        
+
+    user=nSession.query(User
+        ).filter(
+        User.id==id
+        ).first()
+
+    if not user:
+        if not graceful:
+            abort(404)
+        else:
+            return None
+
+    if v:
+        block=nSession.query(UserBlock).filter(
+            or_(
+                and_(
+                    UserBlock.user_id==v.id, 
+                    UserBlock.target_id==user.id
+                    ),
+                and_(UserBlock.user_id==user.id,
+                    UserBlock.target_id==v.id
+                    )
+                )
+            ).first()
+
+        user._is_blocking=block and block.user_id==v.id
+        user._is_blocked=block and block.target_id==v.id
+
+    return user
+
 def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 
     if isinstance(pid, str):
@@ -468,3 +505,22 @@ def get_from_permalink(link, v=None):
 
     else:
         return get_post(post_id, v=v)
+
+def get_from_fullname(fullname, v=None, graceful=False):
+
+    parts = fullname.split('_')
+
+    if len(parts)<2:
+        abort(400)
+
+    kind=parts[0]
+    b36=parts[1]
+
+    if kind=='t1':
+        return get_account(b36, v=v, graceful=graceful)
+    elif kind=='t2':
+        return get_post(b36, v=v, graceful=graceful)
+    elif kind=='t3':
+        return get_comment(b36, v=v, graceful=graceful)
+    elif kind=='t4':
+        return get_board(b36, v=v, graceful=graceful)
