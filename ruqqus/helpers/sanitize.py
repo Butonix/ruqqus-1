@@ -95,7 +95,10 @@ def sanitize(text, linkgen=False):
 
         for tag in soup.find_all("img"):
 
-            netloc=urlparse(tag["src"]).netloc
+            url=tag.get("src","")
+            if not url:
+                continue
+            netloc=urlparse(url).netloc
 
 
             domain=get_domain(netloc)
