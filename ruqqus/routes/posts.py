@@ -290,28 +290,33 @@ def submit_post(v):
         board=get_guild('general')
 
     if board.is_banned:
-        return render_template("submit.html",
+        return {"html":lamda:(render_template("submit.html",
                                v=v,
-                               error=f"+{board.name} has been demolished.",
+                               error=f"+{board.name} has been banned.",
                                title=title,
                                url=url
                                , body=request.form.get("body",""),
                                b=get_guild("general",
                                            graceful=True)
-                               ), 403       
+                               ), 403),
+        "api":lambda:(jsonify({"error":f"403 Not Authorized - +{board.name} has been banned."}))
+        }
+
     
     if board.has_ban(v):
-        return render_template("submit.html",
+        return {"html":lambda:(render_template("submit.html",
                                v=v,
                                error=f"You are exiled from +{board.name}.",
                                title=title,
                                url=url
                                , body=request.form.get("body",""),
                                b=get_guild("general")
-                               ), 403
+                               ), 403),
+                "api":lambda:(jsonify({"error":f"403 Not Authorized - You are exiled from +{board.name}"}), 403)
+                }
 
     if (board.restricted_posting or board.is_private) and not (board.can_submit(v)):
-        return render_template("submit.html",
+        return {"html":lambda:(render_template("submit.html",
                                v=v,
                                error=f"You are not an approved contributor for +{board.name}.",
                                title=title,
@@ -320,7 +325,10 @@ def submit_post(v):
                                b=get_guild(request.form.get("board","general"),
                                            graceful=True
                                            )
-                               )
+                               ),403),
+                "api":lambda:(jsonify({"error":f"403 Not Authorized - You are not an approved contributor for +{board.name}"}), 403)
+                }
+
 
 
 
