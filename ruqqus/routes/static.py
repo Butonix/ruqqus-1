@@ -155,8 +155,8 @@ def press_inquiry(v):
 @app.route("/info/image_hosts")
 def info_image_hosts():
 
-    sites=g.db.query(Domain.domain).filter_by(show_thumbnail=True).order_by(Domain.domain.asc()).all()
+    sites=g.db.query(Domain).filter_by(show_thumbnail=True).order_by(Domain.domain.asc()).all()
 
-    sites=list(sites)
+    sites=[x.domain for x in sites]
 
     return "\n".join(sites)
