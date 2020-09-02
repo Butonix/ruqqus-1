@@ -151,3 +151,12 @@ def press_inquiry(v):
     return render_template("/help/press.html",
                            msg="Your inquiry has been saved.",
                            v=v)
+
+@app.route("/info/image_hosts")
+def info_image_hosts():
+
+    sites=g.db.query(Domain.domain).filter_by(show_thumbnail=True).order_by(Domain.domain.asc()).all()
+
+    sites=list(sites)
+
+    return "\n".join(sites)
