@@ -290,7 +290,7 @@ def submit_post(v):
         board=get_guild('general')
 
     if board.is_banned:
-        return {"html":lamda:(render_template("submit.html",
+        return {"html":lambda:(render_template("submit.html",
                                v=v,
                                error=f"+{board.name} has been banned.",
                                title=title,
