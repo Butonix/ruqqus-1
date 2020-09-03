@@ -1299,5 +1299,8 @@ def board_comments(boardname, v):
 
     comments=get_comments(idlist, v=v)
 
-    return {"html":lambda:render_template("board_comments.html", v=v, comments=comments),
+    return {"html":lambda:render_template("board_comments.html",
+                    v=v,
+                    b=b,
+                    comments=comments),
             "api":lambda:jsonify({"data":[x.json for x in comments]})}
