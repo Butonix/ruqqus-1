@@ -266,6 +266,7 @@ def edit_oauth_app(v, aid):
     return redirect('/settings/apps')
 
 @app.route("/api/v1/identity")
+@auth_required
 @api("identity")
 def api_v1_identity(v):
 
