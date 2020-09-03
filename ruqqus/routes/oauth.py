@@ -279,8 +279,8 @@ def admin_app_approve(v, aid):
 
     app=g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
 
-    app.client_id=secrets.token_hex(64)[0:64]
-    app.client_secret=secrets.token_hex(128)[0:128]
+    app.client_id=secrets.token_urlsafe(64)[0:64]
+    app.client_secret=secrets.token_urlsafe(128)[0:128]
 
     g.db.add(app)
 
@@ -350,8 +350,8 @@ def reroll_oauth_tokens(aid, v):
     if a.author_id!=v.id:
         abort(403)
 
-    a.client_id=secrets.token_hex(64)[0:64]
-    a.client_secret=secrets.token_hex(128)[0:128]
+    a.client_id=secrets.token_urlsafe(64)[0:64]
+    a.client_secret=secrets.token_urlsafe(128)[0:128]
 
     g.db.add(a)
 
