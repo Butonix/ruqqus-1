@@ -78,6 +78,8 @@ def auth_required(f):
 
         v, c=get_logged_in_user()
 
+        print(v, c)
+
         if not v:
             abort(401)
 
