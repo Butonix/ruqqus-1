@@ -106,10 +106,10 @@
             </div>
             <div class="body w-lg-100">
 				<input type="hidden" name="formkey" value="{{ v.formkey }}">
-				<label for="edit-{{ app.id }}-name" class="mb-0 w-lg-25">Permissions</label>
-				<input id="edit-{{ app.id }}-name" class="form-control" type="text" name="name" value="{{ auth.scopelist }}">
+				<label class="mb-0 w-lg-25">Permissions</label>
+				<input class="form-control" type="text" name="name" value="{{ auth.scopelist }}">
 				<label for="edit-{{ app.id }}-desc" class="mb-0 w-lg-25">Description</label>
-				<textarea form="edit-app-{{ app.id }}" class="form-control" name="description" id="edit-{{ app.id }}-desc" maxlength="256">{{ app.description }}</textarea>
+				<textarea form="edit-app-{{ app.id }}" class="form-control" name="description" maxlength="256">{{ auth.application.description }}</textarea>
 				<
 			</div>
 		</div>
