@@ -582,8 +582,13 @@ def all_comments(v):
 
     comments=get_comments(idlist, v=v)
 
+    next_exists=len(idlist)==26
+
+    idlist=idlist[0:25]
+
     return {"html":lambda:render_template("home_comments.html",
                     v=v,
                     comments=comments,
-                    standalone=True),
+                    standalone=True,
+                    next_exists=next_exists),
             "api":lambda:jsonify({"data":[x.json for x in comments]})}
