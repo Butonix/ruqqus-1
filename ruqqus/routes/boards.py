@@ -1306,6 +1306,7 @@ def board_comments(boardname, v):
     return {"html":lambda:render_template("board_comments.html",
                     v=v,
                     b=b,
+                    page=page,
                     comments=comments,
                     standalone=True,
                     next_exists=next_exists),
