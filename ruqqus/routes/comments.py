@@ -261,7 +261,7 @@ def api_comment(v):
         return jsonify({"error":"You can't reply to users who have blocked you, or users you have blocked."}), 403
 
     #check for archive and ban state
-    post = get_post(request.form.get("submission"))
+    post = get_post(parent_id)
     if post.is_archived or not post.board.can_comment(v):
         return jsonify({"error":"You can't comment on this."}), 403
 
