@@ -339,7 +339,7 @@ def admin_apps_list(v):
     return render_template("admin/apps.html", v=v, apps=apps)
 
 
-@app.route("/oauth/reroll/<aid>")
+@app.route("/oauth/reroll/<aid>", methods=["POST"])
 @auth_required
 def reroll_oauth_tokens(aid, v):
 
