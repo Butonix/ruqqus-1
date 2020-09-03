@@ -29,7 +29,7 @@ class OauthApp(Base, Stndrd):
 		return f"/admin/app/{self.base36id}"
 
 
-class ClientAuth(Base):
+class ClientAuth(Base, Stndrd):
 
 	__tablename__="client_auths"
 
