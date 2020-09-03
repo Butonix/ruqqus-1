@@ -15,7 +15,7 @@ def error_401(e):
     output=f"/login?redirect={argval}"
 
     if request.path.startswith("/api/v1/"):
-        return jsonify({"error":"401 Not Authorized"})
+        return jsonify({"error":"401 Not Authorized"}), 401
     else:
         return redirect(output)
 
