@@ -219,17 +219,13 @@ def validate_formkey(f):
 
     def wrapper(*args, v, **kwargs):
 
-        if "c" not in kwargs:
+        if not request.path.startswith("/api/v1"):
 
             submitted_key = request.values.get("formkey","none")
                 
             if not submitted_key:
 
-                if request.path.startswith("/api/v1/") and request.headers.get("Authorization"):
-                    pass
-                else:
-                    #print("no submitted key")
-                    abort(401)
+                abort(401)
 
             elif not v.validate_formkey(submitted_key):
                 abort(401)
