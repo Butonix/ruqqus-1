@@ -1302,5 +1302,6 @@ def board_comments(boardname, v):
     return {"html":lambda:render_template("board_comments.html",
                     v=v,
                     b=b,
-                    comments=comments),
+                    comments=comments,
+                    standalone=True),
             "api":lambda:jsonify({"data":[x.json for x in comments]})}
