@@ -363,6 +363,7 @@ def reroll_oauth_tokens(aid, v):
 
 @app.route("/oauth/rescind/<aid>", methods=["POST"])
 @auth_required
+@validate_formkey
 def oauth_rescind_app(aid, v):
 
     aid=base36decode(aid)
