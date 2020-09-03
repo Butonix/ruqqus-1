@@ -1279,3 +1279,25 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
     
 
     return "", 204
+
+
+@app.route("/+<boardname>/comments")
+@app.route("/api/v1/guild/<boardname>/comments")
+@auth_desired
+@api("read")
+def board_comments(boardname, v):
+
+    b=get_guild(boardname)
+
+    page=int(request.args.get("page", 1))
+
+    idlist=b.comment_idlist(v=v,
+        page=page,
+        nsfw=v and v.over_18,
+        nsfl=v and v.show_nsfl,
+        hide_offensive=v and v.hide_offensive)
+
+    comments=get_comments(idlist, v=v)
+
+    return {"html":lambda:render_template("board_comments.html", v=v, comments=comments),
+            "api":lambda:jsonify({"data":[x.json for x in comments]})}
