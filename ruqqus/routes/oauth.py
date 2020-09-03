@@ -347,6 +347,9 @@ def reroll_oauth_tokens(aid, v):
 
     a=g.db.query(OauthApp).filter_by(id=aid).first()
 
+    if a.author_id!=v.id:
+        abort(403)
+
     a.client_id=secrets.token_hex(64)[0:64]
     a.client_secret=secrets.token_hex(128)[0:128]
 
@@ -364,6 +367,9 @@ def oauth_rescind_app(aid, v):
 
     aid=base36decode(aid)
     auth=g.db.query(ClientAuth).filter_by(id=aid).first()
+
+    if auth.user_id != v.id:
+        abort(403)
 
     g.db.delete(auth)
 
