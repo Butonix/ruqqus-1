@@ -42,7 +42,7 @@
 		</div>
 		<div class="footer">
 			<div class="d-flex">
-				<a href="javascript:void(0)" class="btn btn-secondary ml-auto" onclick="post_toast('/oauth/reroll/{{ app.base36id}}', callback=function(){document.getElementById('edit-{{ app.id }}-client-id').value=JSON.parse(xhr.response)['id'];document.getElementById('edit-{{ app.id }}-client-secret').value=JSON.parse(xhr.response)['secret'];})">Reroll Tokens</a>
+				<a href="javascript:void(0)" class="btn btn-secondary ml-auto" onclick="post_toast('/oauth/reroll/{{ app.base36id}}', callback=function(xhr){document.getElementById('edit-{{ app.id }}-client-id').value=JSON.parse(xhr.response)['id'];document.getElementById('edit-{{ app.id }}-client-secret').value=JSON.parse(xhr.response)['secret'];})">Reroll Tokens</a>
 				<input type="submit" class="btn btn-primary ml-2" value="Save Changes">
 			</div>
 		</div>
