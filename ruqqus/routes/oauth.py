@@ -157,7 +157,7 @@ def oauth_grant():
     '''
 
 
-    application = get_application(request.values.get("client_id"))
+    application = get_application(request.values.get("client_id"), graceful=True)
 
     if not application or (request.values.get("client_secret") != application.client_secret):
         return jsonify({"oauth_error":"Invalid client ID or secret"}), 401
