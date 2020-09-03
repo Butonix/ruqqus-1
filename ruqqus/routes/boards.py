@@ -1297,11 +1297,16 @@ def board_comments(boardname, v):
         nsfl=v and v.show_nsfl,
         hide_offensive=v and v.hide_offensive)
 
+    next_exists=len(idlist)==26
+
+    idlist=idlist[0:25]
+
     comments=get_comments(idlist, v=v)
 
     return {"html":lambda:render_template("board_comments.html",
                     v=v,
                     b=b,
                     comments=comments,
-                    standalone=True),
+                    standalone=True,
+                    next_exists=next_exists),
             "api":lambda:jsonify({"data":[x.json for x in comments]})}

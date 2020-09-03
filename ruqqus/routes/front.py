@@ -515,3 +515,75 @@ def random_user(v):
     user=x.offset(n).limit(1).first()
 
     return redirect(user.permalink)
+
+
+@cache.memoize(600)
+def comment_idlist(self, page=1, v=None, nsfw=False, **kwargs):
+
+    posts=g.db.query(Submission).options(lazyload('*'))
+
+    if not nsfw:
+        posts=posts.filter_by(over_18=False)
+
+    if v and not v.show_nsfl:
+        posts = posts.filter_by(is_nsfl=False)
+
+    if self.is_private:
+        if v and (self.can_view(v) or v.admin_level >= 4):
+            pass
+        elif v:
+            posts=posts.filter(or_(Submission.post_public==True,
+                                   Submission.author_id==v.id
+                                   )
+                               )
+        else:
+            posts=posts.filter_by(post_public=True)
+
+
+    posts=posts.subquery()
+
+
+    comments=g.db.query(Comment).options(lazyload('*'))
+
+
+    if v and v.hide_offensive:
+        comments = comments.filter_by(is_offensive=False)
+
+    if v and not self.has_mod(v) and v.admin_level<=3:
+        #blocks
+        blocking=g.db.query(UserBlock.target_id).filter_by(user_id=v.id).subquery()
+        blocked= g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
+
+        comments=comments.filter(
+            Comment.author_id.notin_(blocking),
+            Comment.author_id.notin_(blocked)
+            )
+    
+    comments=comments.join(posts, Comment.parent_submission==posts.c.id)
+
+    comments=comments.order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
+
+    return [x.id for x in comments]
+
+
+@app.route("/all/comments", methods=["GET"])
+@app.route("/api/v1/front/comments", methods=["GET"])
+@auth_desired
+@api("read")
+def all_comments(v):
+
+    page=int(request.args.get("page", 1))
+
+    idlist=comment_idlist(v=v,
+        page=page,
+        nsfw=v and v.over_18,
+        nsfl=v and v.show_nsfl,
+        hide_offensive=v and v.hide_offensive)
+
+    comments=get_comments(idlist, v=v)
+
+    return {"html":lambda:render_template("home_comments.html",
+                    v=v,
+                    comments=comments,
+                    standalone=True),
+            "api":lambda:jsonify({"data":[x.json for x in comments]})}
