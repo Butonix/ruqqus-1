@@ -11,7 +11,8 @@ from ruqqus.__main__ import app
 
 @app.route("/api/v1/vote/post/<post_id>/<x>", methods=["POST"])
 @app.route("/api/vote/post/<post_id>/<x>", methods=["POST"])
-@is_not_banned
+#@is_not_banned
+@auth_required
 @api("vote")
 @validate_formkey
 def api_vote_post(post_id, x, v):
