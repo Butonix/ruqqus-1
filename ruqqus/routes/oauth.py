@@ -357,3 +357,14 @@ def reroll_oauth_tokens(aid, v):
         "secret":a.client_secret
         }
         )
+
+@app.route("/oauth/rescind/<aid>", methods=["POST"])
+@auth_required
+def oauth_rescind_app(aid, v):
+
+    aid=base36decode(aid)
+    auth=g.db.query(ClientAuth).filter_by(id=aid).first()
+
+    g.db.delete(auth)
+
+    return jsonify({"message":f"{auth.application.app_name} Revoked"})
