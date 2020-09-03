@@ -98,7 +98,7 @@
 <h2>Your Authorized Applications</h2>
 
 {% for auth in v.authorizations.all() %}
-<form id="rescind-auth-{{ auth.id }}" action="/oauth/rescind/{{ auth.id }}" method="post">
+<form id="rescind-auth-{{ auth.id }}" action="/oauth/rescind/{{ auth.base36id }}" method="post">
 	<div class="settings-section rounded">
 		<div class="d-lg-flex">
 		    <div class="title w-lg-25">
