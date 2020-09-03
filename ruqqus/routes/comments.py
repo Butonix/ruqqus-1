@@ -204,13 +204,30 @@ def api_comment(v):
 
     parent_submission=base36decode(request.form.get("submission"))
     parent_fullname=request.form.get("parent_fullname")
-    parent_post=get_post(request.form.get("submission"))
+    
+    #get parent item info
+    parent_id=parent_fullname.split("_")[1]
+    if parent_fullname.startswith("t2"):
+        parent_post=get_post(parent_id)
+        parent=parent_post
+        parent_comment_id=None
+        level=1
+        parent_submission=base36decode(parent_id)
+    elif parent_fullname.startswith("t3"):
+        parent=get_comment(parent_id, v=v)
+        parent_comment_id=parent.id
+        level=parent.level+1
+        parent_id=parent.parent_submission
+        parent_submission=base36decode(parent_id)
+        parent_post=get_post(parent_id)
+    else:
+        abort(400)
 
     #process and sanitize
     body=request.form.get("body","")[0:10000]
     body=body.lstrip().rstrip()
 
-    with CustomRenderer(post_id=request.form.get("submission")) as renderer:
+    with CustomRenderer(post_id=parent_id) as renderer:
         body_md=renderer.render(mistletoe.Document(body))
     body_html=sanitize(body_md, linkgen=True)
 
@@ -223,25 +240,6 @@ def api_comment(v):
         if ban.reason:
           reason += f" {ban.reason_text}"
         return jsonify({"error": reason}), 401
-
-
-
-    #get parent item info
-    parent_id=parent_fullname.split("_")[1]
-    if parent_fullname.startswith("t2"):
-        parent=parent_post
-        parent_comment_id=None
-        level=1
-        if parent_fullname!=parent_post.fullname:
-            abort(400)
-    elif parent_fullname.startswith("t3"):
-        parent=get_comment(parent_id, v=v)
-        parent_comment_id=parent.id
-        level=parent.level+1
-        if parent.parent_submission!=parent_submission:
-            abort(400)
-    else:
-        abort(400)
 
     #check existing
     existing=g.db.query(Comment).join(CommentAux).filter(Comment.author_id==v.id,
