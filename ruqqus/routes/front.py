@@ -588,6 +588,7 @@ def all_comments(v):
 
     return {"html":lambda:render_template("home_comments.html",
                     v=v,
+                    page=page,
                     comments=comments,
                     standalone=True,
                     next_exists=next_exists),
