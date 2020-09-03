@@ -338,3 +338,22 @@ def admin_apps_list(v):
 
     return render_template("admin/apps.html", v=v, apps=apps)
 
+
+@app.route("/oauth/reroll/<aid>")
+@auth_required
+def reroll_oauth_tokens(aid, v):
+
+    aid=base36decode(aid)
+
+    a=g.db.query(OauthApp).filter_by(id=aid).first()
+
+    a.client_id=secrets.token_hex(64)[0:64]
+    a.client_secret=secrets.token_hex(128)[0:128]
+
+    g.db.add(a)
+
+    return jsonify({"message": "Tokens Rerolled", 
+        "id":a.client_id,
+        "secret":a.client_secret
+        }
+        )
