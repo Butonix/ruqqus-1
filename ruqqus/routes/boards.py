@@ -45,6 +45,8 @@ def create_board_get(v):
     return render_template("make_board.html", v=v)
 
 @app.route("/api/board_available/<name>", methods=["GET"])
+@app.route("/api/v1/board_available/<name>", methods=["GET"])
+@api()
 def api_board_available(name):
     if get_guild(name, graceful=True):
         return jsonify({"board":name, "available":False})

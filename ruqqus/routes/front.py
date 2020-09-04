@@ -518,7 +518,7 @@ def random_user(v):
 
 
 @cache.memoize(600)
-def comment_idlist(self, page=1, v=None, nsfw=False, **kwargs):
+def comment_idlist(page=1, v=None, nsfw=False, **kwargs):
 
     posts=g.db.query(Submission).options(lazyload('*'))
 
