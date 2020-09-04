@@ -102,7 +102,7 @@
         {% if c.is_blocking %}
         <i class="fas fa-user-minus text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="This user is blocking you, but you can see this comment becuase it's in your guild."></i>
         {% endif %}
-        <span class="time-stamp"> · {{ c.age_string }}</span>{% if standalone and c.parent_submission and not c.is_public %} · <i class="fas fa-eye-slash text-muted" data-toggle="tooltip" data-placement="bottom" title="Private content, visible because {{ c.visibility_reason(v) }}"></i>{% endif %}
+        <span class="time-stamp"> · {{ c.age_string }}</span>{% if standalone and c.parent_submission and c.post.board.is_private %} · <i class="fas fa-eye-slash text-muted" data-toggle="tooltip" data-placement="bottom" title="Private content, visible because {{ c.visibility_reason(v) }}"></i>{% endif %}
         {% if c.edited_utc %}
         <span class="time-edited"><span>&#183;</span> <span class="font-italic">Edited {{ c.edited_string }}</span></span>
         {% endif %}
