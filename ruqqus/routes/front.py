@@ -545,7 +545,7 @@ def comment_idlist(page=1, v=None, nsfw=False, **kwargs):
             )
           )
     else:
-        posts=posts.filter_by(or_(Submission.post_public==True, Board.is_private==False))
+        posts=posts.filter(or_(Submission.post_public==True, Board.is_private==False))
 
 
     posts=posts.subquery()
