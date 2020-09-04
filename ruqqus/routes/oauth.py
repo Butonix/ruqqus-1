@@ -163,7 +163,7 @@ def oauth_grant():
 
         auth=g.db.query(ClientAuth).join(ClientAuth.application).filter(
             ClientAuth.oauth_code==code,
-            OauthApp.client_id==request.values.get("client_id")
+            OauthApp.client_id==request.values.get("client_id"),
             OauthApp.client_secret==request.values.get("client_secret")
             ).options(contains_eager(ClientAuth.application)).first()
 
@@ -195,7 +195,7 @@ def oauth_grant():
         auth=g.db.query(ClientAuth).join(ClientAuth.application).filter(
             ClientAuth.refresh_token==request.values.get("refresh_token"),
             ClientAuth.oauth_code==None,
-            OauthApp.client_id==request.values.get("client_id")
+            OauthApp.client_id==request.values.get("client_id"),
             OauthApp.client_secret==request.values.get("client_secret")
             ).options(contains_eager(ClientAuth.application)).first()
 
