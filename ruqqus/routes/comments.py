@@ -218,8 +218,8 @@ def api_comment(v):
         parent_comment_id=parent.id
         level=parent.level+1
         parent_id=parent.parent_submission
-        parent_submission=base36decode(parent_id)
-        parent_post=get_post(parent_id)
+        parent_submission=parent_id
+        parent_post=get_post(base36encode(parent_id))
     else:
         abort(400)
 
