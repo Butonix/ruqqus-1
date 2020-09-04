@@ -1,6 +1,6 @@
 cd ~/ruqqus
 pip3 install -r requirements.txt
-export PATH=$PATH:~/ruqqus/ruqqus
+export PYTHONPATH=$PYTHONPATH:~/ruqqus/ruqqus
 cd ~
 source env.sh
 cd ~/ruqqus/ruqqus
