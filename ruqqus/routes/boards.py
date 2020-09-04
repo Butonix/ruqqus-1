@@ -966,7 +966,11 @@ def board_dark_css(boardname, x):
 @validate_formkey
 def mod_board_color(bid, board, v):
 
-    color=str(request.form.get("color",""))
+    color=str(request.form.get("color","")).strip()
+
+    #Remove the '#' from the beginning in case it was entered.
+    if len(color) ==7:
+        color = color[1:]
 
     if len(color) !=6:
         color="603abb"
