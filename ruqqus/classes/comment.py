@@ -206,6 +206,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     def visibility_reason(self, v):
         if self.author_id==v.id:
             return "this is your content."
+        elif not self.board:
+            return None
         elif self.board.has_mod(v):
             return f"you are a guildmaster of +{self.board.name}."
         elif self.board.has_contributor(v):
