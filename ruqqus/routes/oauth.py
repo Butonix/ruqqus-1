@@ -157,20 +157,17 @@ def oauth_grant():
     '''
 
 
-    application = get_application(request.values.get("client_id"), graceful=True)
-
-    if not application or (request.values.get("client_secret") != application.client_secret):
-        return jsonify({"oauth_error":"Invalid client ID or secret"}), 401
-
-    if application.client_id != request.values.get("client_id"):
-        return jsonify({"oauth_error":"Invalid client ID or secret"}), 401
-
-
     if request.values.get("grant_type")=="code":
 
         code=request.values.get("code")
 
         auth=g.db.query(ClientAuth).filter_by(oauth_code=code).first()
+
+        if not auth:
+            return jsonify({"oauth_error": "Invalid refresh_token"})
+
+        if auth.application.client_id != request.values.get('client_id') or auth.application.client_secret!=request.values.get('client_secret'):
+            return jsonify({"oauth_error":"Invalid client ID or secret"})
 
         if not auth:
             return jsonify({"oauth_error":"Invalid code"}), 401
@@ -197,10 +194,13 @@ def oauth_grant():
 
     elif request.values.get("grant_type")=="refresh":
 
-        auth=g.db.query(ClientAuth).filter_by(refresh_token=request.values.get("refresh_token")).first()
+        auth=g.db.query(ClientAuth).filter_by(refresh_token=request.values.get("refresh_token"), oauth_code=None).first()
 
         if not auth:
             return jsonify({"oauth_error": "Invalid refresh_token"})
+
+        if auth.application.client_id != request.values.get('client_id') or auth.application.client_secret!=request.values.get('client_secret'):
+            return jsonify({"oauth_error":"Invalid client ID or secret"})
 
         auth.access_token=secrets.token_urlsafe(128)[0:128]
         auth.access_token_expire_utc = int(time.time())+60*60
