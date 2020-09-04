@@ -361,3 +361,25 @@ def admin_link_accounts(v):
 @admin_level_required(3)
 def admin_tools(v, pagename):
     return render_template(f"admin/{pagename}.html", v=v)
+
+
+@app.route("/admin/removed", methods=["GET"])
+@admin_level_required(3)
+def admin_removed(v):
+
+    page=int(request.args.get("page",1))
+
+    ids=g.db.query(Submission.id).filter_by(is_banned=True).order_by(Submission.created_utc.desc()).offset(25*(page-1)).limit(26).all()
+
+    next_exists=len(ids)==26
+
+    ids=ids[0:25]
+
+    posts=get_posts(ids, v=v)
+
+    return render_template("admin/removed_posts.html",
+        v=v,
+        listing=posts,
+        page=page,
+        next_exists=next_exists
+        )

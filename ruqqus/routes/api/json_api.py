@@ -10,23 +10,28 @@ from ruqqus.classes.boards import Board
 
 
 @app.route("/api/v1/guild/<boardname>", methods=["GET"])
-def guild_info(boardname):
+@auth_desired
+@api("read")
+def guild_info(v, boardname):
     guild = get_guild(boardname)
 
     return jsonify(guild.json)
 
 
 @app.route("/api/v1/user/<username>", methods=["GET"])
-def user_info(username):
+@auth_desired
+@api("read")
+def user_info(v, username):
 
-    user=get_user(username)
+    user=get_user(username, v=v)
     return jsonify(user.json)
 
 @app.route("/api/v1/post/<pid>", methods=["GET"])
 @auth_desired
+@api("read")
 def post_info(v, pid):
 
-    post=get_post(pid)
+    post=get_post(pid, v=v)
 
     if not post.is_public and post.board.is_private and not post.board.can_view(v):
         abort(403)
@@ -35,9 +40,10 @@ def post_info(v, pid):
 
 @app.route("/api/v1/comment/<cid>", methods=["GET"])
 @auth_desired
+@api("read")
 def comment_info(v, cid):
 
-    comment=get_comment(cid)
+    comment=get_comment(cid, v=v)
 
     post=comment.post
     if not post or not post.is_public and post.board.is_private and not post.board.can_view(v):

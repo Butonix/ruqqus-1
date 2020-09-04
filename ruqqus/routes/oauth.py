@@ -31,6 +31,7 @@ def oauth_authorize_prompt(v):
     * client_id - Your application client ID
     * scope - Comma-separated list of scopes. Scopes are described above
     * redirect_uri - Your redirect link
+    * state - Your anti-csrf token
     '''
 
     client_id=request.args.get("client_id")
@@ -52,13 +53,15 @@ def oauth_authorize_prompt(v):
         if scope not in SCOPES:
             return jsonify({"oauth_error":f"The provided scope `{scope}` is not valid."}), 400
 
+    if any(x in scopes for x in ["create", "update", "guildmaster"]) and "identity" not in scopes:
+        return jsonify({"oauth_error":f"`identity` scope required when requesting `create`, `update`, or `guildmaster` scope."}), 400
 
     redirect_uri = request.args.get("redirect_uri")
     if not redirect_uri:
         return jsonify({"oauth_error":f"`redirect_uri` must be provided."}), 400
 
-    if not redirect_uri.startswith('https://') and not redirect_uri.startswith("https://localhost/"):
-        return jsonify({"oauth_error":"redirect_uri must use https, or be localhost"}), 400
+    if redirect_uri.startswith('http://') and not urlparse(redirect_uri).netloc=="localhost":
+        return jsonify({"oauth_error":"redirect_uri must not use http (use https instead)"}), 400
 
 
     valid_redirect_uris = [x.lstrip().rstrip() for x in application.redirect_uri.split(",")]
@@ -105,6 +108,9 @@ def oauth_authorize_post(v):
     if redirect_uri not in valid_redirect_uris:
         return jsonify({"oauth_error":"Invalid redirect_uri"}), 400
 
+    if  redirect_uri.startswith('http://') and not urlparse(redirect_uri).netloc=="localhost":
+        return jsonify({"oauth_error":"redirect_uri must not use http (use https instead)"}), 400
+
     scopes=scopes_txt.split(',')
     if not scopes:
         return jsonify({"oauth_error":"One or more scopes must be specified as a comma-separated list"}), 400
@@ -113,11 +119,13 @@ def oauth_authorize_post(v):
         if scope not in SCOPES:
             return jsonify({"oauth_error":f"The provided scope `{scope}` is not valid."}), 400
 
+    if any(x in scopes for x in ["create", "update", "guildmaster"]) and "identity" not in scopes:
+        return jsonify({"oauth_error":f"`identity` scope required when requesting `create`, `update`, or `guildmaster` scope."}), 400
+
     if not state:
         return jsonify({'oauth_error':'state argument required'}), 400
 
     permanent=bool(int(request.values.get("permanent",0)))
-
 
     new_auth=ClientAuth(
         oauth_client=application.id,
@@ -149,7 +157,7 @@ def oauth_grant():
     '''
 
 
-    application = get_application(request.values.get("client_id"))
+    application = get_application(request.values.get("client_id"), graceful=True)
 
     if not application or (request.values.get("client_secret") != application.client_secret):
         return jsonify({"oauth_error":"Invalid client ID or secret"}), 401
@@ -191,6 +199,9 @@ def oauth_grant():
 
         auth=g.db.query(ClientAuth).filter_by(refresh_token=request.values.get("refresh_token")).first()
 
+        if not auth:
+            return jsonify({"oauth_error": "Invalid refresh_token"})
+
         auth.access_token=secrets.token_urlsafe(128)[0:128]
         auth.access_token_expire_utc = int(time.time())+60*60
 
@@ -219,7 +230,7 @@ def request_api_keys(v):
 
     g.db.add(new_app)
 
-    return redirect('/help/apps')
+    return redirect('/settings/apps')
 
 @app.route("/delete_app/<aid>", methods=["POST"])
 @is_not_banned
@@ -255,7 +266,112 @@ def edit_oauth_app(v, aid):
     return redirect('/settings/apps')
 
 @app.route("/api/v1/identity")
+@auth_required
 @api("identity")
 def api_v1_identity(v):
 
     return jsonify(v.json)
+
+@app.route("/admin/app/approve/<aid>", methods=["POST"])
+@admin_level_required(3)
+@validate_formkey
+def admin_app_approve(v, aid):
+
+    app=g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
+
+    app.client_id=secrets.token_urlsafe(64)[0:64]
+    app.client_secret=secrets.token_urlsafe(128)[0:128]
+
+    g.db.add(app)
+
+    return jsonify({"message":f"{app.app_name} approved"})
+
+@app.route("/admin/app/revoke/<aid>", methods=["POST"])
+@admin_level_required(3)
+@validate_formkey
+def admin_app_revoke(v, aid):
+
+    app=g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
+
+    app.client_id=None
+    app.client_secret=None
+
+    g.db.add(app)
+
+    return jsonify({"message":f"{app.app_name} revoked"})
+
+@app.route("/admin/app/reject/<aid>", methods=["POST"])
+@admin_level_required(3)
+@validate_formkey
+def admin_app_reject(v, aid):
+
+    app=g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
+
+    for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all():
+        g.db.delete(auth)
+
+    g.db.flush()
+
+    g.db.delete(app)
+
+    return jsonify({"message":f"{app.app_name} rejected"})
+
+
+@app.route("/admin/app/<aid>", methods=["GET"])
+@admin_level_required(3)
+def admin_app_id(v, aid):
+
+
+    oauth=g.db.query(OauthApp).options(joinedload(OauthApp.author)).filter_by(id=base36decode(aid)).first()
+
+    return render_template("admin/app.html",
+        v=v,
+        app=oauth)
+
+
+
+@app.route("/admin/apps", methods=["GET"])
+@admin_level_required(3)
+def admin_apps_list(v):
+
+    apps=g.db.query(OauthApp).options(joinedload(OauthApp.author)).filter(OauthApp.client_id==None).order_by(OauthApp.id.desc()).all()
+
+    return render_template("admin/apps.html", v=v, apps=apps)
+
+
+@app.route("/oauth/reroll/<aid>", methods=["POST"])
+@auth_required
+def reroll_oauth_tokens(aid, v):
+
+    aid=base36decode(aid)
+
+    a=g.db.query(OauthApp).filter_by(id=aid).first()
+
+    if a.author_id!=v.id:
+        abort(403)
+
+    a.client_id=secrets.token_urlsafe(64)[0:64]
+    a.client_secret=secrets.token_urlsafe(128)[0:128]
+
+    g.db.add(a)
+
+    return jsonify({"message": "Tokens Rerolled", 
+        "id":a.client_id,
+        "secret":a.client_secret
+        }
+        )
+
+@app.route("/oauth/rescind/<aid>", methods=["POST"])
+@auth_required
+@validate_formkey
+def oauth_rescind_app(aid, v):
+
+    aid=base36decode(aid)
+    auth=g.db.query(ClientAuth).filter_by(id=aid).first()
+
+    if auth.user_id != v.id:
+        abort(403)
+
+    g.db.delete(auth)
+
+    return jsonify({"message":f"{auth.application.app_name} Revoked"})

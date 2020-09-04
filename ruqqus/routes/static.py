@@ -151,3 +151,16 @@ def press_inquiry(v):
     return render_template("/help/press.html",
                            msg="Your inquiry has been saved.",
                            v=v)
+
+@app.route("/info/image_hosts")
+def info_image_hosts():
+
+    sites=g.db.query(Domain).filter_by(show_thumbnail=True).order_by(Domain.domain.asc()).all()
+
+    sites=[x.domain for x in sites]
+
+    text= "\n".join(sites)
+
+    resp=make_response(text)
+    resp.mimetype="text/plain"
+    return resp

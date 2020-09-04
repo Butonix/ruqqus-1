@@ -7,25 +7,24 @@ from ruqqus.__main__ import app
 
 #Errors
 @app.errorhandler(401)
-@auth_desired
-@api()
-def error_401(e, v):
+def error_401(e):
 
     path=request.path
     qs=urlencode(dict(request.args))
     argval=quote(f"{path}?{qs}", safe='')
     output=f"/login?redirect={argval}"
 
-    return {"html":lambda:redirect(output),
-            "api":lambda:jsonify({"error":"401 Not Authorized"})
-            }
+    if request.path.startswith("/api/v1/"):
+        return jsonify({"error":"401 Not Authorized"}), 401
+    else:
+        return redirect(output)
 
 @app.errorhandler(403)
 @auth_desired
 @api()
 def error_403(e, v):
     return{"html":lambda:(render_template('errors/403.html', v=v), 403),
-        "api":lambda:jsonify({"error":"403 Forbidden"})
+        "api":lambda:(jsonify({"error":"403 Forbidden"}), 403)
         }
 
 @app.errorhandler(404)
@@ -33,7 +32,7 @@ def error_403(e, v):
 @api()
 def error_404(e, v):
     return{"html":lambda:(render_template('errors/404.html', v=v), 404),
-        "api":lambda:jsonify({"error":"404 Not Found"})
+        "api":lambda:(jsonify({"error":"404 Not Found"}), 404)
         }
 
 @app.errorhandler(405)
@@ -41,7 +40,7 @@ def error_404(e, v):
 @api()
 def error_405(e, v):
     return{"html":lambda:(render_template('errors/405.html', v=v), 405),
-        "api":lambda:jsonify({"error":"405 Method Not Allowed"})
+        "api":lambda:(jsonify({"error":"405 Method Not Allowed"}), 405)
         }
 
 @app.errorhandler(409)

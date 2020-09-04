@@ -45,6 +45,8 @@ def create_board_get(v):
     return render_template("make_board.html", v=v)
 
 @app.route("/api/board_available/<name>", methods=["GET"])
+@app.route("/api/v1/board_available/<name>", methods=["GET"])
+@api()
 def api_board_available(name):
     if get_guild(name, graceful=True):
         return jsonify({"board":name, "available":False})
@@ -207,7 +209,7 @@ def board_name(name, v):
                            is_subscribed=(v and board.has_subscriber(v)
                                           )
                                           ),
-            'api':lambda:[x.json for x in posts]
+            'api':lambda:jsonify({"data":[x.json for x in posts]})
             }
 
 
@@ -842,7 +844,7 @@ def board_mod_queue(boardname, board, v):
     if not v.over_18:
         ids=ids.filter_by(over_18=False)
 
-    ids=ids.order_by(Submission.report_count.desc()).offset((page-1)*25).limit(26)
+    ids=ids.order_by(Submission.id.desc()).offset((page-1)*25).limit(26)
 
     ids=[x for x in ids]
 
@@ -1230,7 +1232,8 @@ def siege_guild(v):
     #delete and notify mods
     for x in guild.moderators:
 
-        send_notification(x.user,
+        if x.accepted:
+            send_notification(x.user,
                           f"You have been overthrown from +{guild.name}.")
         g.db.delete(x)
         
@@ -1278,3 +1281,35 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
     
 
     return "", 204
+
+
+@app.route("/+<boardname>/comments")
+@app.route("/api/v1/guild/<boardname>/comments")
+@auth_desired
+@api("read")
+def board_comments(boardname, v):
+
+    b=get_guild(boardname)
+
+    page=int(request.args.get("page", 1))
+
+    idlist=b.comment_idlist(v=v,
+        page=page,
+        nsfw=v and v.over_18,
+        nsfl=v and v.show_nsfl,
+        hide_offensive=v and v.hide_offensive)
+
+    next_exists=len(idlist)==26
+
+    idlist=idlist[0:25]
+
+    comments=get_comments(idlist, v=v)
+
+    return {"html":lambda:render_template("board_comments.html",
+                    v=v,
+                    b=b,
+                    page=page,
+                    comments=comments,
+                    standalone=True,
+                    next_exists=next_exists),
+            "api":lambda:jsonify({"data":[x.json for x in comments]})}

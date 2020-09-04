@@ -45,7 +45,7 @@ class Board(Base, Stndrd, Age_times):
     moderators=relationship("ModRelationship")
     subscribers=relationship("Subscription", lazy="dynamic")
     submissions=relationship("Submission", primaryjoin="Board.id==Submission.board_id")
-    contributors=relationship("ContributorRelationship")
+    contributors=relationship("ContributorRelationship", lazy="dynamic")
     bans=relationship("BanRelationship", lazy="dynamic")
     postrels=relationship("PostRelationship", lazy="dynamic")
     trending_rank=deferred(Column(Float, server_default=FetchedValue()))
@@ -232,7 +232,7 @@ class Board(Base, Stndrd, Age_times):
         if user is None:
             return False
 
-        return g.db.query(ContributorRelationship).filter_by(user_id=user.id, is_active=True).first()
+        return g.db.query(ContributorRelationship).filter_by(user_id=user.id, board_id=self.id, is_active=True).first()
 
     def can_submit(self, user):
 
@@ -399,3 +399,58 @@ class Board(Base, Stndrd, Age_times):
                 'color':"#"+self.color
                 }
 
+
+    @property
+    def show_settings_icons(self):
+        return self.is_private or self.restricted_posting or self.over_18 or self.all_opt_out
+
+    @cache.memoize(600)
+    def comment_idlist(self, page=1, v=None, nsfw=False, **kwargs):
+
+        posts=g.db.query(Submission).options(lazyload('*')).filter_by(board_id=self.id)
+
+        if not nsfw:
+            posts=posts.filter_by(over_18=False)
+
+        if v and not v.show_nsfl:
+            posts = posts.filter_by(is_nsfl=False)
+
+        if self.is_private:
+            if v and (self.can_view(v) or v.admin_level >= 4):
+                pass
+            elif v:
+                posts=posts.filter(or_(Submission.post_public==True,
+                                       Submission.author_id==v.id
+                                       )
+                                   )
+            else:
+                posts=posts.filter_by(post_public=True)
+
+
+        posts=posts.subquery()
+
+
+        comments=g.db.query(Comment).options(lazyload('*'))
+
+
+        if v and v.hide_offensive:
+            comments = comments.filter_by(is_offensive=False)
+
+        if v and not self.has_mod(v) and v.admin_level<=3:
+            #blocks
+            blocking=g.db.query(UserBlock.target_id).filter_by(user_id=v.id).subquery()
+            blocked= g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
+
+            comments=comments.filter(
+                Comment.author_id.notin_(blocking),
+                Comment.author_id.notin_(blocked)
+                )
+
+        if not v or not v.admin_level>=3:
+            comments=comments.filter_by(is_deleted=False, is_banned=False)
+        
+        comments=comments.join(posts, Comment.parent_submission==posts.c.id)
+
+        comments=comments.order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
+
+        return [x.id for x in comments]

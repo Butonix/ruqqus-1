@@ -96,6 +96,7 @@ class User(Base, Stndrd, Age_times):
     blocked=relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id")
 
     _applications = relationship("OauthApp", lazy="dynamic")
+    authorizations=relationship("ClientAuth", lazy="dynamic")
 
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
@@ -284,7 +285,7 @@ class User(Base, Stndrd, Age_times):
         if v and not v.show_nsfl:
             comments=comments.filter_by(is_nsfl=False)
 
-        if not (v and (v.admin_level >=3)):
+        if (not v) or v.admin_level<3:
             comments=comments.filter_by(is_deleted=False)
             
         if not (v and (v.admin_level >=3 or v.id==self.id)):

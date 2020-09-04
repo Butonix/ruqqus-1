@@ -223,7 +223,7 @@ def home(v):
                                time_filter=t,
                                page=page,
                                only=only),
-                'api':lambda:[x.json for x in posts]
+                'api':lambda:jsonify({"data":[x.json for x in posts]})
                 }
     else:
         return front_all()
@@ -278,7 +278,7 @@ def front_all(v):
                                             v=v,
                                             listing=posts
                                             ),
-            'api':lambda:[x.json for x in posts]
+            'api':lambda:jsonify({"data":[x.json for x in posts]})
             }
 
 @cache.memoize(600)
@@ -360,7 +360,7 @@ def browse_guilds(v):
                            next_exists=next_exists,
                            sort_method=sort_method
                             ),
-            "api":lambda:[board.json for board in boards]
+            "api":lambda:jsonify({"data":[board.json for board in boards]})
             }
 
 @app.route('/mine', methods=["GET"])
@@ -409,7 +409,7 @@ def my_subs(v):
     elif kind=="users":
 
         u=g.db.query(User)
-        follows=v.following.subquery()
+        follows=g.db.query(Follow).filter_by(user_id=v.id).subquery()
 
         content=u.join(follows,
                        User.id==follows.c.target_id,
@@ -451,8 +451,8 @@ def random_post(v):
         x=x.filter_by(is_offensive=False)
 
     if v:
-        bans=g.db.query(BanRelationship.id()).filter_by(user_id=v.id).all()
-        x=x.filter(Submission.board_id.notin_([i[0] for i in bans]))
+        bans=g.db.query(BanRelationship.board_id).filter_by(user_id=v.id).subquery()
+        x=x.filter(Submission.board_id.notin_(bans))
 
     total=x.count()
     n=random.randint(0, total-1)
@@ -515,3 +515,92 @@ def random_user(v):
     user=x.offset(n).limit(1).first()
 
     return redirect(user.permalink)
+
+
+@cache.memoize(600)
+def comment_idlist(page=1, v=None, nsfw=False, **kwargs):
+
+    posts=g.db.query(Submission).options(lazyload('*')).join(Submission.board)
+
+    if not nsfw:
+        posts=posts.filter_by(over_18=False)
+
+    if v and not v.show_nsfl:
+        posts = posts.filter_by(is_nsfl=False)
+
+
+    if v and v.admin_level >= 4:
+        pass
+    elif v:
+        m=g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, invite_rescinded=False).subquery()
+        c=g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id).subquery()
+
+        posts=posts.filter(
+          or_(
+            Submission.author_id==v.id,
+            Submission.post_public==True,
+            Submission.board_id.in_(m),
+            Submission.board_id.in_(c),
+            Board.is_private==False
+            )
+          )
+    else:
+        posts=posts.filter(or_(Submission.post_public==True, Board.is_private==False))
+
+
+    posts=posts.subquery()
+
+
+    comments=g.db.query(Comment).options(lazyload('*'))
+
+
+    if v and v.hide_offensive:
+        comments = comments.filter_by(is_offensive=False)
+
+    if v and v.admin_level<=3:
+        #blocks
+        blocking=g.db.query(UserBlock.target_id).filter_by(user_id=v.id).subquery()
+        blocked= g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
+
+        comments=comments.filter(
+            Comment.author_id.notin_(blocking),
+            Comment.author_id.notin_(blocked)
+            )
+
+    if not v or not v.admin_level>=3:
+        comments=comments.filter_by(is_deleted=False, is_banned=False)
+    
+    comments=comments.join(posts, Comment.parent_submission==posts.c.id)
+
+    comments=comments.order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
+
+    return [x.id for x in comments]
+
+
+@app.route("/all/comments", methods=["GET"])
+@app.route("/api/v1/front/comments", methods=["GET"])
+@auth_desired
+@api("read")
+def all_comments(v):
+
+    page=int(request.args.get("page", 1))
+
+    idlist=comment_idlist(v=v,
+        page=page,
+        nsfw=v and v.over_18,
+        nsfl=v and v.show_nsfl,
+        hide_offensive=v and v.hide_offensive)
+
+    comments=get_comments(idlist, v=v)
+
+    next_exists=len(idlist)==26
+
+    idlist=idlist[0:25]
+
+    return {"html":lambda:render_template("home_comments.html",
+                    v=v,
+                    page=page,
+                    comments=comments,
+                    standalone=True,
+                    next_exists=next_exists),
+            "api":lambda:jsonify({"data":[x.json for x in comments]})}
