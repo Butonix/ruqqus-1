@@ -529,15 +529,23 @@ def comment_idlist(page=1, v=None, nsfw=False, **kwargs):
         posts = posts.filter_by(is_nsfl=False)
 
 
-    if v and (self.can_view(v) or v.admin_level >= 4):
+    if v and v.admin_level >= 4:
         pass
     elif v:
-        posts=posts.filter(or_(Submission.post_public==True,
-                               Board.is_private==False
-                               )
-                           )
+        m=g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, invite_rescinded=False).subquery()
+        c=g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id).subquery()
+
+        posts=posts.filter(
+          or_(
+            Submission.author_id==v.id,
+            Submission.post_public==True,
+            Submission.board_id.in_(m),
+            Submission.board_id.in_(c),
+            Board.is_private==False
+            )
+          )
     else:
-        posts=posts.filter_by(post_public=True)
+        posts=posts.filter_by(or_(post_public=True,Board.is_private==False))
 
 
     posts=posts.subquery()
@@ -549,7 +557,7 @@ def comment_idlist(page=1, v=None, nsfw=False, **kwargs):
     if v and v.hide_offensive:
         comments = comments.filter_by(is_offensive=False)
 
-    if v and not self.has_mod(v) and v.admin_level<=3:
+    if v and v.admin_level<=3:
         #blocks
         blocking=g.db.query(UserBlock.target_id).filter_by(user_id=v.id).subquery()
         blocked= g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
