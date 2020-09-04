@@ -520,7 +520,7 @@ def random_user(v):
 @cache.memoize(600)
 def comment_idlist(page=1, v=None, nsfw=False, **kwargs):
 
-    posts=g.db.query(Submission).options(lazyload('*'))
+    posts=g.db.query(Submission).options(lazyload('*')).join(Submission.board)
 
     if not nsfw:
         posts=posts.filter_by(over_18=False)
@@ -528,16 +528,16 @@ def comment_idlist(page=1, v=None, nsfw=False, **kwargs):
     if v and not v.show_nsfl:
         posts = posts.filter_by(is_nsfl=False)
 
-    if self.is_private:
-        if v and (self.can_view(v) or v.admin_level >= 4):
-            pass
-        elif v:
-            posts=posts.filter(or_(Submission.post_public==True,
-                                   Submission.author_id==v.id
-                                   )
+
+    if v and (self.can_view(v) or v.admin_level >= 4):
+        pass
+    elif v:
+        posts=posts.filter(or_(Submission.post_public==True,
+                               Board.is_private==False
                                )
-        else:
-            posts=posts.filter_by(post_public=True)
+                           )
+    else:
+        posts=posts.filter_by(post_public=True)
 
 
     posts=posts.subquery()
