@@ -2,7 +2,10 @@
 
 
 {% block PseudoSubmitForm %}{% endblock %}
-{% block sortnav %}{% endblock %}{% block desktopBanner %}
+{% block sortnav %}{% endblock %}
+
+
+{% block desktopBanner %}
 <!-- Guild reference -->
 
 <span id="guild-name-reference" class="d-none">{{ b.name }}</span>
@@ -64,7 +67,18 @@
       </div>
     </div>
   </div>
+  <div class="ml-auto">
+    <div class="d-flex align-items-center">
 
+
+      {% if v %}
+      <div id="button-sub" {% if b.has_subscriber(v) %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=toggleSub)">Join guild</a></div>
+      <div id="button-unsub" {% if not b.has_subscriber(v) %}class="d-none"{% endif %}><a class="btn btn-secondary" href="javascript:void(0)" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">Leave</a></div>
+      {% elif not v %}
+      <a class="btn btn-primary" href="/signup">Join guild</a>
+      {% endif %}
+    </div>
+  </div>
 </div>
 </div>
 </div>
