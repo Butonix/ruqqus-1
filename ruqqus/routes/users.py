@@ -38,6 +38,9 @@ def mfa_qr(secret, v):
     return send_file(mem, mimetype="image/png", as_attachment=False)
 
 @app.route("/api/is_available/<name>", methods=["GET"])
+@app.route("/api/v1/is_available/<name>", methods=["GET"])
+@auth_desired
+@api()
 def api_is_available(name):
     if get_user(name, graceful=True):
         return jsonify({name:False})
