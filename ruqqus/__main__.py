@@ -55,7 +55,7 @@ app.config["SESSION_COOKIE_SAMESITE"]="Lax"
 app.config["PERMANENT_SESSION_LIFETIME"]=60*60*24*365
 app.config["SESSION_REFRESH_EACH_REQUEST"]=False
 
-app.config["FORCE_HTTPS"]=int(environ.get("FORCE_HTTPS", 0))
+app.config["FORCE_HTTPS"]=int(environ.get("FORCE_HTTPS", 1))
 
 app.jinja_env.cache = {}
 
