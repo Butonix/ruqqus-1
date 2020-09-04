@@ -55,6 +55,8 @@ app.config["SESSION_COOKIE_SAMESITE"]="Lax"
 app.config["PERMANENT_SESSION_LIFETIME"]=60*60*24*365
 app.config["SESSION_REFRESH_EACH_REQUEST"]=False
 
+app.config["FORCE_HTTPS"]=int(environ.get("FORCE_HTTPS", 0))
+
 app.jinja_env.cache = {}
 
 app.config["UserAgent"]=f"Ruqqus webserver tools for Ruqqus v{_version} developed by Ruqqus LLC for ruqqus.com."
@@ -192,7 +194,7 @@ def before_request():
     if ua_banned and request.path != "/robots.txt":
         return response_tuple
 
-    if request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
+    if app.config["FORCE_HTTPS"] and request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
         url = request.url.replace("http://", "https://", 1)
         return redirect(url, code=301)
 
