@@ -160,6 +160,8 @@ def oauth_grant():
     if request.values.get("grant_type")=="code":
 
         code=request.values.get("code")
+        if not code:
+            return jsonify({"oauth_error":"code required"})
 
         auth=g.db.query(ClientAuth).join(ClientAuth.application).filter(
             ClientAuth.oauth_code==code,
@@ -193,8 +195,12 @@ def oauth_grant():
 
     elif request.values.get("grant_type")=="refresh":
 
+        refresh_token=request.values.get('refresh_token')
+        if not refresh_token:
+            return jsonify({"oauth_error":"refresh_token required"})
+
         auth=g.db.query(ClientAuth).join(ClientAuth.application).filter(
-            ClientAuth.refresh_token==request.values.get("refresh_token"),
+            ClientAuth.refresh_token==refresh_token,
             ClientAuth.oauth_code==None,
             OauthApp.client_id==request.values.get("client_id"),
             OauthApp.client_secret==request.values.get("client_secret")
