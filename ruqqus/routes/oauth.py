@@ -161,16 +161,14 @@ def oauth_grant():
 
         code=request.values.get("code")
 
-        auth=g.db.query(ClientAuth).filter_by(oauth_code=code).first()
+        auth=g.db.query(ClientAuth).join(ClientAuth.application).filter(
+            ClientAuth.oauth_code==code,
+            OauthApp.client_id==request.values.get("client_id")
+            OauthApp.client_secret==request.values.get("client_secret")
+            ).options(contains_eager(ClientAuth.application)).first()
 
         if not auth:
-            return jsonify({"oauth_error": "Invalid refresh_token"})
-
-        if auth.application.client_id != request.values.get('client_id') or auth.application.client_secret!=request.values.get('client_secret'):
-            return jsonify({"oauth_error":"Invalid client ID or secret"})
-
-        if not auth:
-            return jsonify({"oauth_error":"Invalid code"}), 401
+            return jsonify({"oauth_error": "Invalid code, client ID, or secret"}), 401
 
         auth.oauth_code=None
         auth.access_token=secrets.token_urlsafe(128)[0:128]
@@ -194,13 +192,15 @@ def oauth_grant():
 
     elif request.values.get("grant_type")=="refresh":
 
-        auth=g.db.query(ClientAuth).filter_by(refresh_token=request.values.get("refresh_token"), oauth_code=None).first()
+        auth=g.db.query(ClientAuth).join(ClientAuth.application).filter(
+            ClientAuth.refresh_token==request.values.get("refresh_token"),
+            ClientAuth.oauth_code==None,
+            OauthApp.client_id==request.values.get("client_id")
+            OauthApp.client_secret==request.values.get("client_secret")
+            ).options(contains_eager(ClientAuth.application)).first()
 
         if not auth:
-            return jsonify({"oauth_error": "Invalid refresh_token"})
-
-        if auth.application.client_id != request.values.get('client_id') or auth.application.client_secret!=request.values.get('client_secret'):
-            return jsonify({"oauth_error":"Invalid client ID or secret"})
+            return jsonify({"oauth_error": "Invalid refresh_token, client ID, or secret"}), 401
 
         auth.access_token=secrets.token_urlsafe(128)[0:128]
         auth.access_token_expire_utc = int(time.time())+60*60
