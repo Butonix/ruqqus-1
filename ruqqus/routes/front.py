@@ -568,7 +568,7 @@ def comment_idlist(page=1, v=None, nsfw=False, **kwargs):
             )
 
     if not v or not v.admin_level>=3:
-        comments=comments.filter(is_deleted=False, is_banned=False)
+        comments=comments.filter_by(is_deleted=False, is_banned=False)
     
     comments=comments.join(posts, Comment.parent_submission==posts.c.id)
 
