@@ -1,3 +1,4 @@
+cd ~/ruqqus
 pip3 install -r requirements.txt
 export PATH=$PATH:~/ruqqus/ruqqus
 cd ~
