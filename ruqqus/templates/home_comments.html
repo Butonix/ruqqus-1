@@ -2,8 +2,21 @@
 
 {% block PseudoSubmitForm %}{% endblock %}
 {% block sortnav %}{% endblock %}
-{% block navbar %}{% endblock %}
 
+{% block desktopBanner %}
+
+<div class="row border-bottom bg-white sticky d-none d-md-block guild-border-top" style="overflow: visible;">
+  <div class="col">
+    <div class="d-flex justify-content-between align-items-center">
+
+      <div class="font-weight-bold py-3">Comments</div>
+
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
 {% block content %}
 
 <!-- View toggle visible only on large devices or larger -->
