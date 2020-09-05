@@ -5,7 +5,7 @@ source venv/bin/activate
 source env.sh
 cd ~/ruqqus
 pip3 install -r requirements.txt
-export domain=aws.ruqqus.com
+export domain=ruqqus.com
 export PYTHONPATH=$PYTHONPATH:~/ruqqus
 export CACHE_TYPE=filesystem
 export CACHE_DIR=cachetemp
