@@ -405,6 +405,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new", load_parent=False
             other_queries=tuple()
         output=first_query.union_all(*other_queries).order_by(None).all()
 
+    output=sorted(output, key=lambda x: cids.index(x.id))
+
     return output
     
 
