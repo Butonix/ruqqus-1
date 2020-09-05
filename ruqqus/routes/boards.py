@@ -959,6 +959,9 @@ def mod_board_images_delete_banner(bid, board, v):
 #@cache.memoize(60*6*24)
 def board_css(boardname, x):
 
+    #temp
+    return redirect("/ruqqus/assets/style/main.css")
+
     board=get_guild(boardname)
 
     if int(x) != board.color_nonce:
@@ -980,6 +983,9 @@ def board_css(boardname, x):
 @app.route("/assets/<boardname>/dark/<x>.css", methods=["GET"])
 #@cache.memoize(60*60*24)
 def board_dark_css(boardname, x):
+
+    #temp
+    return redirect("/ruqqus/assets/style/main.css")
 
     board=get_guild(boardname)
 
