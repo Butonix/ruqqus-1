@@ -21,7 +21,7 @@ def total_users(x):
 @cache.memoize(timeout=60*60*24)
 def source_code(file_name):
 
-    return open(os.expand('~')+'/ruqqus/'+file_name, mode="r+").read()
+    return open(os.expanduser('~')+'/ruqqus/'+file_name, mode="r+").read()
 
 @app.template_filter("full_link")
 def full_link(url):
