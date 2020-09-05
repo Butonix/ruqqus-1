@@ -964,7 +964,7 @@ def board_css(boardname, x):
         return redirect(board.css_url)
 
 
-    with open("ruqqus/assets/style/board_main.scss", "r") as file:
+    with open("~/ruqqus/ruqqus/assets/style/board_main.scss", "r") as file:
         raw=file.read()
 
     #This doesn't use python's string formatting because
@@ -985,7 +985,7 @@ def board_dark_css(boardname, x):
     if int(x) != board.color_nonce:
         return redirect(board.css_dark_url)
 
-    with open("ruqqus/assets/style/board_dark.scss", "r") as file:
+    with open("~/ruqqus/ruqqus/assets/style/board_dark.scss", "r") as file:
         raw=file.read()
 
     #This doesn't use python's string formatting because
