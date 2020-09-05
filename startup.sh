@@ -1,4 +1,5 @@
-pip3 install -r ruqqus/requirements.txt
+cd ~/ruqqus
+pip3 install -r requirements.txt
 export PYTHONPATH=$PYTHONPATH:~/ruqqus
 export CACHE_TYPE=filesystem
 cd ~
