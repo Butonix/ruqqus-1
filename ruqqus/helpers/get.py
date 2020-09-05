@@ -201,6 +201,8 @@ def get_posts(pids, sort="hot", v=None):
             other_queries=tuple()
         output=first_query.union_all(*other_queries).order_by(None).all()
 
+    output=sorted(output, key=lambda x: pids.index(x.id))
+
     return output
 
 def get_post_with_comments(pid, sort_type="top", v=None):
