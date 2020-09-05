@@ -2,13 +2,14 @@ server {
 	
 	server_name aws.ruqqus.com;
 
-	proxy_set_header Host $host
-	proxy_set_header X-Real-IP $remote_addr
+	proxy_set_header Host $host;
+	proxy_set_header X-Real-IP $remote_addr;
 
     listen      80;
     listen [::]:80;
     listen 		443;
     listen [::]:443;
+
     ssl_certificate /etc/letsencrypt/live/aws.ruqqus.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/aws.ruqqus.com/privkey.pem
     include /etc/letsencrypt/options-ssl-nginx.conf;
