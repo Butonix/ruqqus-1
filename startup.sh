@@ -1,5 +1,5 @@
 cd ~
-sudo cp ruqqus/nginx.txt /etc/nginx/sites-available/aws.ruqqus.com.conf
+sudo cp ruqqus/nginx.txt /etc/nginx/sites-available/ruqqus.com.conf
 sudo nginx -s reload
 source venv/bin/activate
 source env.sh
