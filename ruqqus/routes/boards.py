@@ -960,7 +960,7 @@ def mod_board_images_delete_banner(bid, board, v):
 def board_css(boardname, x):
 
     #temp
-    return redirect("/ruqqus/assets/style/main.css")
+    return redirect("/assets/style/main.css")
 
     board=get_guild(boardname)
 
@@ -985,7 +985,7 @@ def board_css(boardname, x):
 def board_dark_css(boardname, x):
 
     #temp
-    return redirect("/ruqqus/assets/style/main.css")
+    return redirect("/assets/style/main.css")
 
     board=get_guild(boardname)
 
