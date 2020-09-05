@@ -225,6 +225,55 @@ CREATE FUNCTION public.age(public.users) RETURNS integer
 
 
 --
+-- Name: boards; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.boards (
+    id integer NOT NULL,
+    name character varying(64),
+    is_banned boolean,
+    created_utc integer,
+    description character varying(1500) DEFAULT ''::character varying,
+    description_html character varying(5000) DEFAULT ''::character varying,
+    over_18 boolean DEFAULT false,
+    creator_id integer,
+    has_banner boolean DEFAULT false NOT NULL,
+    has_profile boolean DEFAULT false NOT NULL,
+    ban_reason character varying(256) DEFAULT NULL::character varying,
+    color character varying(8) DEFAULT '603abb'::character varying,
+    downvotes_disabled boolean DEFAULT false,
+    restricted_posting boolean DEFAULT false,
+    hide_banner_data boolean DEFAULT false,
+    profile_nonce integer DEFAULT 0 NOT NULL,
+    banner_nonce integer DEFAULT 0 NOT NULL,
+    is_private boolean DEFAULT false,
+    color_nonce integer DEFAULT 0,
+    is_nsfl boolean DEFAULT false,
+    rank_trending double precision DEFAULT 0,
+    stored_subscriber_count integer,
+    avg_score double precision DEFAULT 1,
+    all_opt_out boolean DEFAULT false
+);
+
+
+--
+-- Name: avg_score_computed(public.boards); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.avg_score_computed(public.boards) RETURNS numeric
+    LANGUAGE sql IMMUTABLE STRICT
+    AS $_$
+select coalesce (
+	(select avg(score_top) from submissions
+	where original_board_id=$1.id
+	and score_top>0)
+	,
+	1
+	)
+$_$;
+
+
+--
 -- Name: board_id(public.comments); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -595,7 +644,7 @@ CREATE FUNCTION public.rank_activity(public.submissions) RETURNS double precisio
 CREATE FUNCTION public.rank_best(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT 10000000.0*CAST(($1.upvotes - $1.downvotes) AS float)/((CAST(($1.age+5000) AS FLOAT)*cast((select boards.subscriber_count from boards where boards.id=$1.board_id)+7000 as float)/100.0)^(1.5))
+      SELECT 10000000.0*CAST(($1.upvotes - $1.downvotes) AS float)/((CAST(($1.age+3600) AS FLOAT)*cast((select boards.subscriber_count from boards where boards.id=$1.board_id)+3000 as float)/100.0)^(1.5))
       $_$;
 
 
@@ -641,36 +690,6 @@ CREATE FUNCTION public.rank_hot(public.submissions) RETURNS double precision
     AS $_$
       SELECT 1000000.0*CAST(($1.upvotes - $1.downvotes) AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.5))
       $_$;
-
-
---
--- Name: boards; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.boards (
-    id integer NOT NULL,
-    name character varying(64),
-    is_banned boolean,
-    created_utc integer,
-    description character varying(1500) DEFAULT ''::character varying,
-    description_html character varying(2500) DEFAULT ''::character varying,
-    over_18 boolean DEFAULT false,
-    creator_id integer,
-    has_banner boolean DEFAULT false NOT NULL,
-    has_profile boolean DEFAULT false NOT NULL,
-    ban_reason character varying(256) DEFAULT NULL::character varying,
-    color character varying(8) DEFAULT '603abb'::character varying,
-    downvotes_disabled boolean DEFAULT false,
-    restricted_posting boolean DEFAULT false,
-    hide_banner_data boolean DEFAULT false,
-    profile_nonce integer DEFAULT 0 NOT NULL,
-    banner_nonce integer DEFAULT 0 NOT NULL,
-    is_private boolean DEFAULT false,
-    color_nonce integer DEFAULT 0,
-    is_nsfl boolean DEFAULT false,
-    rank_trending double precision DEFAULT 0,
-    stored_subscriber_count integer
-);
 
 
 --
@@ -1413,7 +1432,8 @@ CREATE TABLE public.commentvotes (
     comment_id integer,
     vote_type integer,
     user_id integer,
-    created_utc integer
+    created_utc integer,
+    creation_ip character(64) DEFAULT NULL::bpchar
 );
 
 
@@ -1469,6 +1489,70 @@ CREATE SEQUENCE public.contributors_id_seq
 --
 
 ALTER SEQUENCE public.contributors_id_seq OWNED BY public.contributors.id;
+
+
+--
+-- Name: conversations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.conversations (
+    id integer NOT NULL,
+    author_id integer NOT NULL,
+    created_utc integer,
+    subject character(256),
+    board_id integer
+);
+
+
+--
+-- Name: conversations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.conversations_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: conversations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.conversations_id_seq OWNED BY public.conversations.id;
+
+
+--
+-- Name: convo_member; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.convo_member (
+    id integer NOT NULL,
+    user_id integer,
+    convo_id integer
+);
+
+
+--
+-- Name: convo_member_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.convo_member_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: convo_member_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.convo_member_id_seq OWNED BY public.convo_member.id;
 
 
 --
@@ -1657,6 +1741,40 @@ ALTER SEQUENCE public.ips_id_seq OWNED BY public.ips.id;
 
 
 --
+-- Name: messages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.messages (
+    id integer NOT NULL,
+    author_id integer NOT NULL,
+    body character(10000),
+    body_html character(15000),
+    has_read boolean DEFAULT false,
+    created_utc integer
+);
+
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.messages_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.messages_id_seq OWNED BY public.messages.id;
+
+
+--
 -- Name: mods; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1722,7 +1840,7 @@ CREATE TABLE public.oauth_apps (
     redirect_uri character varying(4096),
     author_id integer,
     is_banned boolean DEFAULT false,
-    description character(256) DEFAULT NULL::bpchar
+    description character varying(256) DEFAULT NULL::bpchar
 );
 
 
@@ -2053,7 +2171,8 @@ CREATE TABLE public.votes (
     user_id integer NOT NULL,
     submission_id integer,
     created_utc integer DEFAULT 0 NOT NULL,
-    vote_type integer DEFAULT 0
+    vote_type integer DEFAULT 0,
+    creation_ip character(64) DEFAULT NULL::bpchar
 );
 
 
@@ -2183,6 +2302,20 @@ ALTER TABLE ONLY public.contributors ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: conversations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.conversations ALTER COLUMN id SET DEFAULT nextval('public.conversations_id_seq'::regclass);
+
+
+--
+-- Name: convo_member id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.convo_member ALTER COLUMN id SET DEFAULT nextval('public.convo_member_id_seq'::regclass);
+
+
+--
 -- Name: dms id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2222,6 +2355,13 @@ ALTER TABLE ONLY public.images ALTER COLUMN id SET DEFAULT nextval('public.image
 --
 
 ALTER TABLE ONLY public.ips ALTER COLUMN id SET DEFAULT nextval('public.ips_id_seq'::regclass);
+
+
+--
+-- Name: messages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.messages ALTER COLUMN id SET DEFAULT nextval('public.messages_id_seq'::regclass);
 
 
 --
@@ -2451,6 +2591,22 @@ ALTER TABLE ONLY public.commentvotes
 
 
 --
+-- Name: conversations conversations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.conversations
+    ADD CONSTRAINT conversations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: convo_member convo_member_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.convo_member
+    ADD CONSTRAINT convo_member_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: dms dms_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2528,6 +2684,14 @@ ALTER TABLE ONLY public.ips
 
 ALTER TABLE ONLY public.ips
     ADD CONSTRAINT ips_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.messages
+    ADD CONSTRAINT messages_pkey PRIMARY KEY (id);
 
 
 --
@@ -2787,6 +2951,13 @@ ALTER TABLE ONLY public.votes
 
 
 --
+-- Name: accepted_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX accepted_idx ON public.mods USING btree (accepted);
+
+
+--
 -- Name: alts_user1_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2805,6 +2976,13 @@ CREATE INDEX alts_user2_idx ON public.alts USING btree (user2);
 --
 
 CREATE INDEX badgedef_qual_idx ON public.badge_defs USING btree (qualification_expr);
+
+
+--
+-- Name: badges_badge_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX badges_badge_id_idx ON public.badges USING btree (badge_id);
 
 
 --
@@ -2861,6 +3039,20 @@ CREATE INDEX block_user_idx ON public.userblocks USING btree (user_id);
 --
 
 CREATE INDEX board_name_idx ON public.boards USING btree (name);
+
+
+--
+-- Name: board_optout_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX board_optout_idx ON public.boards USING btree (all_opt_out);
+
+
+--
+-- Name: board_private_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX board_private_idx ON public.boards USING btree (is_private);
 
 
 --
@@ -3235,6 +3427,13 @@ CREATE INDEX submission_aux_url_idx ON public.submissions_aux USING btree (url);
 
 
 --
+-- Name: submission_best_only_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submission_best_only_idx ON public.submissions USING btree (score_best DESC);
+
+
+--
 -- Name: submission_best_sort_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3407,6 +3606,13 @@ CREATE INDEX trending_all_idx ON public.submissions USING btree (is_banned, is_d
 --
 
 CREATE INDEX user_banned_idx ON public.users USING btree (is_banned);
+
+
+--
+-- Name: user_creation_ip_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX user_creation_ip_idx ON public.users USING btree (creation_ip);
 
 
 --
