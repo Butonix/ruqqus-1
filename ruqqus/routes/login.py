@@ -349,7 +349,7 @@ def sign_up_post(v):
         x=requests.post(url, data=data)
 
         if not x.json()["success"]:
-            print x.json()
+            print(x.json())
             return new_signup("Unable to verify captcha [2].")
 
     
