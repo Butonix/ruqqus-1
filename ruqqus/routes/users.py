@@ -162,6 +162,8 @@ def u_username_comments(username, v=None):
 
     if username != user.username:
         return redirect(f'{user.url}/comments')
+
+    u=user
         
     if u.reserved:
         return {'html': lambda:render_template("userpage_reserved.html",
