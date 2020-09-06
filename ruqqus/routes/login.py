@@ -341,6 +341,8 @@ def sign_up_post(v):
         if not token:
             return new_signup("Unable to verify captcha [1].")
 
+        print(app.config["HCAPTCHA_SECRET"])
+
         data={"secret":app.config["HCAPTCHA_SECRET"],
             "response":token,
             "sitekey":app.config["HCAPTCHA_SITEKEY"]}

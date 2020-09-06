@@ -72,8 +72,6 @@ app.config["CACHE_DIR"]=environ.get("CACHE_DIR", "ruqquscache")
 app.config["HCAPTCHA_SITEKEY"]=environ.get("HCAPTCHA_SITEKEY")
 app.config["HCAPTCHA_SECRET"]=environ.get("HCAPTCHA_SECRET")
 
-
-
 #antispam configs
 app.config["SPAM_SIMILARITY_THRESHOLD"]=float(environ.get("SPAM_SIMILARITY_THRESHOLD", 0.5))
 app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]=int(environ.get("SPAM_SIMILAR_COUNT_THRESHOLD", 5))
