@@ -39,7 +39,7 @@ def notifications(v):
         if c.author_id==1:
             c._is_system=True
             listing.append(c)
-        elif c.parent_comment and c.parent_comment.author_id==v.id:
+        elif c.level>1 and c.parent_comment.author_id==v.id:
             c._is_comment_reply=True
             parent=c.parent_comment
 
@@ -49,7 +49,7 @@ def notifications(v):
                 parent.replies=[c]
                 listing.append(parent)
 
-        elif c.parent.author_id==v.id:
+        elif c.level==1 and c.post.author_id==v.id:
             c._is_post_reply=True
             listing.append(c)
         else:
