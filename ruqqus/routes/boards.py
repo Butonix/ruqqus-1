@@ -985,7 +985,7 @@ def board_css(boardname, x):
 def board_dark_css(boardname, x):
 
     #temp
-    return redirect("/assets/style/dark.css")
+    return redirect("/assets/style/main_dark.css")
 
     board=get_guild(boardname)
 
