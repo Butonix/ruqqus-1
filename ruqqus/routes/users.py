@@ -163,29 +163,49 @@ def u_username_comments(username, v=None):
     if username != user.username:
         return redirect(f'{user.url}/comments')
         
-    if user.reserved:
-        return render_template("userpage_reserved.html", u=user, v=v)
+    if u.reserved:
+        return {'html': lambda:render_template("userpage_reserved.html",
+                                               u=u,
+                                               v=v),
+                'api': lambda:{"error":"That user is banned"}
+                }
 
-    if user.is_suspended and (not v or v.admin_level < 3):
-        return render_template("userpage_banned.html", u=user, v=v)
+    if u.is_suspended and (not v or v.admin_level < 3):
+        return {'html': lambda:render_template("userpage_banned.html",
+                                               u=u,
+                                               v=v),
+                'api': lambda:{"error":"That user is banned"}
+                }
 
-    if user.is_deleted and (not v or v.admin_level<3):
-        return render_template("userpage_deleted.html",
-                                               u=user,
-                                               v=v)
+    if u.is_deleted and (not v or v.admin_level<3):
+        return {'html': lambda:render_template("userpage_deleted.html",
+                                               u=u,
+                                               v=v),
+                'api': lambda:{"error":"That user deactivated their account."}
+                }
 
-    if user.is_private and (not v or (v.id!=user.id and v.admin_level<3)):
-        return render_template("userpage_private.html", u=user, v=v)
+    if u.is_private and (not v or (v.id!=u.id and v.admin_level<3)):
+        return {'html': lambda:render_template("userpage_private.html",
+                                               u=u,
+                                               v=v),
+                'api': lambda:{"error":"That userpage is private"}
+                }
 
-    if user.is_blocking and (not v or v.admin_level<3):
-        return render_template("userpage_blocking.html",
-                                               u=user,
-                                               v=v)
 
-    if user.is_blocked and (not v or v.admin_level<3):
-        return render_template("userpage_blocked.html",
-                                               u=user,
-                                               v=v)
+
+    if u.is_blocking and (not v or v.admin_level<3):
+        return {'html': lambda:render_template("userpage_blocking.html",
+                                               u=u,
+                                               v=v),
+                'api': lambda:{"error":f"You are blocking @{u.username}."}
+                }
+
+    if u.is_blocked and (not v or v.admin_level<3):
+        return {'html': lambda:render_template("userpage_blocked.html",
+                                               u=u,
+                                               v=v),
+                'api': lambda:{"error":"This person is blocking you."}
+                }
     
     page=int(request.args.get("page","1"))
 
