@@ -17,7 +17,7 @@ server {
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
     if ($host = www.ruqqus.com){
-        return 301 https://ruqqus.com$request_uri
+        return 301 https://ruqqus.com$request_uri;
     }
 
     location / {
