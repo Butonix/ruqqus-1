@@ -24,7 +24,7 @@ def upload_from_url(name, url):
 
     print('got content')
 
-    tempname="temp/"+name.replace("/","_")
+    tempname=name.replace("/","_")
 
     with open(tempname, "wb") as file:
         for chunk in r.iter_content(1024):
@@ -67,7 +67,7 @@ def crop_and_resize(img, resize):
 def upload_file(name, file, resize=None):
 
     #temp save for exif stripping
-    tempname="temp/"+name.replace("/","_")
+    tempname=name.replace("/","_")
 
     file.save(tempname)
     
