@@ -61,7 +61,7 @@ def oauth_authorize_prompt(v):
     if not redirect_uri:
         return jsonify({"oauth_error":f"`redirect_uri` must be provided."}), 400
 
-    if redirect_uri.startswith('http://') and not bool(re.match(r"^localhost(:\d+)?$", urlparse(redirect_uri).netloc=="localhost")):
+    if redirect_uri.startswith('http://') and not bool(re.match(r"^localhost(:\d+)?$", urlparse(redirect_uri).netloc)):
         return jsonify({"oauth_error":"redirect_uri must not use http (use https instead)"}), 400
 
 
