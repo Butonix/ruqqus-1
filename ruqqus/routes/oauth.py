@@ -216,6 +216,7 @@ def oauth_grant():
 
         data={
             "access_token":auth.access_token, 
+            "scopes": auth.scopelist,
             "expires_at": auth.access_token_expire_utc
         }
 
