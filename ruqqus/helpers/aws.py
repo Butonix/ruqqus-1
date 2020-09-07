@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from PIL import Image
 
 BUCKET="i.ruqqus.com"
-CF_KEY=environ.get("CLOUDFLARE_KEY")
+CF_KEY=environ.get("CLOUDFLARE_KEY").lstrip().rstrip()
 CF_ZONE=environ.get("CLOUDFLARE_ZONE")
 
 #setup AWS connection
