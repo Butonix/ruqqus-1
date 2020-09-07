@@ -299,7 +299,7 @@ def submit_post(v):
                                b=get_guild("general",
                                            graceful=True)
                                ), 403),
-        "api":lambda:(jsonify({"error":f"403 Not Authorized - +{board.name} has been banned."}))
+        "api":lambda:(jsonify({"error":f"403 Forbidden - +{board.name} has been banned."}))
         }
 
     
