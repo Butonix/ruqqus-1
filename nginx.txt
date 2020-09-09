@@ -34,5 +34,5 @@ server {
 
     server_name *.amazonaws.com;
 
-    return 418;
+    return 404;
 }
