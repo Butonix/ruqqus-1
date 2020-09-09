@@ -63,8 +63,8 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot"):
         posts=posts.order_by(Submission.score_hot.desc())
     elif sort=="new":
         posts=posts.order_by(Submission.created_utc.desc())
-    elif sort=="fiery":
-        posts=posts.order_by(Submission.score_fiery.desc())
+    elif sort=="disputed":
+        posts=posts.order_by(Submission.score_disputed.desc())
     elif sort=="top":
         posts=posts.order_by(Submission.score_top.desc())
         
