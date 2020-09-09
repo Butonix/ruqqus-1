@@ -346,10 +346,11 @@ def user_kick_pid(pid, v):
     g.db.add(new_rel)
 
     post.board_id=1
-    post.guild_name="general"
     post.is_pinned=False
     
     g.db.add(post)
+
+    g.db.commit()
     
     
     #clear board's listing caches
