@@ -23,15 +23,15 @@ server {
     }
 
     if ($host = ruqq.us) {
-        return 301 https://ruqqus.com/post_short$request_uri
+        return 301 https://ruqqus.com/post_short$request_uri;
     }
 
     if ($host = c.ruqq.us) {
-        return 301 https://ruqqus.com/comment$request_uri
+        return 301 https://ruqqus.com/comment$request_uri;
     }
 
     if ($host = ruqqus.win) {
-        return 301 https://ruqqus.com
+        return 301 https://ruqqus.com;
     }
 
     if ($host = ruqqus.com) {
