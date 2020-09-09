@@ -329,8 +329,6 @@ def user_kick_pid(pid, v):
     
     post=get_post(pid)
 
-    current_board=post.board
-
     if not post.author_id==v.id:
         abort(403)
 
@@ -346,10 +344,11 @@ def user_kick_pid(pid, v):
     g.db.add(new_rel)
 
     post.board_id=1
-    post.guild_name="general"
     post.is_pinned=False
     
     g.db.add(post)
+
+    g.db.commit()
     
     
     #clear board's listing caches
