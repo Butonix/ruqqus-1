@@ -1,6 +1,6 @@
 server {
     
-    server_name ruqqus.com;
+    server_name ruqqus.com ruqq.us c.ruqq.us ruqqus.org ruqqus.win *.amazonaws.com;
 
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
@@ -22,17 +22,21 @@ server {
         return 301 https://ruqqus.com$request_uri;
     }
 
-    location / {
+    if ($host = ruqq.us) {
+        return 301 https://ruqqus.com/post_short$request_uri
+    }
+
+    if ($host = c.ruqq.us) {
+        return 301 https://ruqqus.com/comment$request_uri
+    }
+
+    if ($host = ruqqus.win) {
+        return 301 https://ruqqus.com
+    }
+
+    if ($host = ruqqus.com) {
         proxy_pass http://127.0.0.1:5000;
     }
-}
-
-server {
-    
-    listen      80;
-    listen [::]:80;
-
-    server_name *.amazonaws.com;
 
     return 404;
 }
