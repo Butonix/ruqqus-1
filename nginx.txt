@@ -35,7 +35,7 @@ server {
     }
 
     if ($host = *.amazonaws.com) {
-        return 404
+        return 404;
     }
 
     location / {
