@@ -34,9 +34,11 @@ server {
         return 301 https://ruqqus.com;
     }
 
-    if ($host = ruqqus.com) {
-        proxy_pass http://127.0.0.1:5000;
+    if ($host = *.amazonaws.com) {
+        return 404
     }
 
-    return 404;
+    location / {
+        proxy_pass http://127.0.0.1:5000;
+    }
 }
