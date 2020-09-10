@@ -98,6 +98,8 @@ class User(Base, Stndrd, Age_times):
     _applications = relationship("OauthApp", lazy="dynamic")
     authorizations=relationship("ClientAuth", lazy="dynamic")
 
+    message_notifs=relationship("MessageNotif", lazy="dynamic")
+
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
     comment_energy = deferred(Column(Integer, server_default=FetchedValue()))
@@ -458,6 +460,11 @@ class User(Base, Stndrd, Age_times):
     def notifications_count(self):
 
         return self.notifications.filter_by(read=False).join(Notification.comment).filter(Comment.is_banned==False, Comment.is_deleted==False).count()
+
+    @property
+    def unread_message_count(self):
+        return self.message_notifs.filter_by(read=False).count()
+    
 
     @property
     def post_count(self):
