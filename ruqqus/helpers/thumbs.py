@@ -153,4 +153,4 @@ def thumbnail_thread(pid):
 
     #db.close()
     
-    #remove(tempname)
+    remove(tempname)
