@@ -153,4 +153,7 @@ def thumbnail_thread(pid):
 
     #db.close()
     
-    remove(tempname)
+    try:
+        remove(tempname)
+    except FileNotFoundError:
+        pass
