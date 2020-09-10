@@ -19,6 +19,7 @@ Pillow==7.2.0
 psycopg2-binary==2.8.4
 psycogreen==1.0.2
 pyotp==2.3.0
+python-daemon==2.2.4
 qrcode==6.1
 redis==3.3.6
 requests==2.23.0
