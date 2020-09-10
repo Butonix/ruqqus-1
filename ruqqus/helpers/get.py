@@ -511,7 +511,7 @@ def get_from_permalink(link, v=None):
         return get_post(post_id, v=v)
 
 
-def get_convo(convo_id, v=v):
+def get_convo(convo_id, v=None):
 
     id=base36decode(convo_id)
     
