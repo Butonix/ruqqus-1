@@ -339,7 +339,7 @@ def sign_up_post(v):
     if app.config.get("HCAPTCHA_SITEKEY"):
         token=request.form.get("h-captcha-response")
         if not token:
-            return new_signup("Unable to verify captcha.")
+            return new_signup("Unable to verify captcha [1].")
 
         data={"secret":app.config["HCAPTCHA_SECRET"],
             "response":token,
@@ -349,7 +349,8 @@ def sign_up_post(v):
         x=requests.post(url, data=data)
 
         if not x.json()["success"]:
-            return new_signup("Unable to verify captcha.")
+            print(x.json())
+            return new_signup("Unable to verify captcha [2].")
 
     
     #kill tokens

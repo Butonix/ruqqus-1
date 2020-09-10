@@ -48,7 +48,7 @@ def error_405(e, v):
 @api()
 def error_409(e, v):
     return{"html":lambda:(render_template('errors/409.html', v=v), 409),
-        "api":lambda:jsonify({"error":"409 Conflict"})
+        "api":lambda:(jsonify({"error":"409 Conflict"}), 409)
         }
 
 @app.errorhandler(413)
@@ -56,7 +56,7 @@ def error_409(e, v):
 @api()
 def error_413(e, v):
     return{"html":lambda:(render_template('errors/413.html', v=v), 413),
-        "api":lambda:jsonify({"error":"413 Request Payload Too Large"})
+        "api":lambda:(jsonify({"error":"413 Request Payload Too Large"}), 413)
         }
 
 @app.errorhandler(422)
@@ -64,7 +64,7 @@ def error_413(e, v):
 @api()
 def error_422(e, v):
     return{"html":lambda:(render_template('errors/422.html', v=v), 422),
-        "api":lambda:jsonify({"error":"422 Unprocessable Entity"})
+        "api":lambda:(jsonify({"error":"422 Unprocessable Entity"}), 422)
         }
 
 @app.errorhandler(429)
@@ -72,7 +72,7 @@ def error_422(e, v):
 @api()
 def error_429(e, v):
     return{"html":lambda:(render_template('errors/429.html', v=v), 429),
-        "api":lambda:jsonify({"error":"429 Too Many Requests"})
+        "api":lambda:(jsonify({"error":"429 Too Many Requests"}), 429)
         }
 
 
@@ -81,7 +81,7 @@ def error_429(e, v):
 @api()
 def error_451(e, v):
     return{"html":lambda:(render_template('errors/451.html', v=v), 451),
-        "api":lambda:jsonify({"error":"451 Unavailable For Legal Reasons"})
+        "api":lambda:(jsonify({"error":"451 Unavailable For Legal Reasons"}), 451)
         }
 
 
@@ -91,7 +91,7 @@ def error_451(e, v):
 def error_500(e, v):
     g.db.rollback()
     return{"html":lambda:(render_template('errors/500.html', v=v), 500),
-        "api":lambda:jsonify({"error":"500 Internal Server Error"})
+        "api":lambda:(jsonify({"error":"500 Internal Server Error"}), 500)
         }
 
 

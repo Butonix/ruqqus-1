@@ -21,7 +21,7 @@ def send_mail(to_address, subject, html, plaintext=None, files={}, from_address=
           }
         
     return requests.post(url,
-                         auth=("api",environ.get("MAILGUN_KEY")),
+                         auth=("api",environ.get("MAILGUN_KEY").lstrip().rstrip()),
                          data=data,
                          files=[("attachment", (k, files[k])) for k in files]
                          )

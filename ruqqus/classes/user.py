@@ -303,9 +303,10 @@ class User(Base, Stndrd, Age_times):
                          ).join(c,
                                 c.c.board_id==Comment.board_id,
                                 isouter=True
-                                )
+                                ).join(Board, Board.id==Submission.board_id)
             comments=comments.filter(or_(Comment.author_id==v.id,
-                                   Comment.is_public==True,
+                                   Submission.post_public==True,
+                                   Board.is_private==False,
                                m.c.board_id != None,
                                c.c.board_id !=None))
         else:

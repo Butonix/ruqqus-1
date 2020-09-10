@@ -1,6 +1,7 @@
 from urllib.parse import urlparse
 from time import time
 import secrets
+import re
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -60,7 +61,7 @@ def oauth_authorize_prompt(v):
     if not redirect_uri:
         return jsonify({"oauth_error":f"`redirect_uri` must be provided."}), 400
 
-    if redirect_uri.startswith('http://') and not urlparse(redirect_uri).netloc=="localhost":
+    if redirect_uri.startswith('http://') and not urlparse(redirect_uri).netloc.startswith("localhost"):
         return jsonify({"oauth_error":"redirect_uri must not use http (use https instead)"}), 400
 
 
@@ -157,23 +158,21 @@ def oauth_grant():
     '''
 
 
-    application = get_application(request.values.get("client_id"), graceful=True)
-
-    if not application or (request.values.get("client_secret") != application.client_secret):
-        return jsonify({"oauth_error":"Invalid client ID or secret"}), 401
-
-    if application.client_id != request.values.get("client_id"):
-        return jsonify({"oauth_error":"Invalid client ID or secret"}), 401
-
-
     if request.values.get("grant_type")=="code":
 
         code=request.values.get("code")
+        if not code:
+            return jsonify({"oauth_error":"code required"})
 
-        auth=g.db.query(ClientAuth).filter_by(oauth_code=code).first()
+        auth=g.db.query(ClientAuth).join(ClientAuth.application).filter(
+            ClientAuth.oauth_code==code,
+            ClientAuth.access_token==None,
+            OauthApp.client_id==request.values.get("client_id"),
+            OauthApp.client_secret==request.values.get("client_secret")
+            ).options(contains_eager(ClientAuth.application)).first()
 
         if not auth:
-            return jsonify({"oauth_error":"Invalid code"}), 401
+            return jsonify({"oauth_error": "Invalid code, client ID, or secret"}), 401
 
         auth.oauth_code=None
         auth.access_token=secrets.token_urlsafe(128)[0:128]
@@ -197,10 +196,19 @@ def oauth_grant():
 
     elif request.values.get("grant_type")=="refresh":
 
-        auth=g.db.query(ClientAuth).filter_by(refresh_token=request.values.get("refresh_token")).first()
+        refresh_token=request.values.get('refresh_token')
+        if not refresh_token:
+            return jsonify({"oauth_error":"refresh_token required"})
+
+        auth=g.db.query(ClientAuth).join(ClientAuth.application).filter(
+            ClientAuth.refresh_token==refresh_token,
+            ClientAuth.oauth_code==None,
+            OauthApp.client_id==request.values.get("client_id"),
+            OauthApp.client_secret==request.values.get("client_secret")
+            ).options(contains_eager(ClientAuth.application)).first()
 
         if not auth:
-            return jsonify({"oauth_error": "Invalid refresh_token"})
+            return jsonify({"oauth_error": "Invalid refresh_token, client ID, or secret"}), 401
 
         auth.access_token=secrets.token_urlsafe(128)[0:128]
         auth.access_token_expire_utc = int(time.time())+60*60
@@ -209,6 +217,7 @@ def oauth_grant():
 
         data={
             "access_token":auth.access_token, 
+            "scopes": auth.scopelist,
             "expires_at": auth.access_token_expire_utc
         }
 

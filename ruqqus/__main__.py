@@ -55,6 +55,8 @@ app.config["SESSION_COOKIE_SAMESITE"]="Lax"
 app.config["PERMANENT_SESSION_LIFETIME"]=60*60*24*365
 app.config["SESSION_REFRESH_EACH_REQUEST"]=False
 
+app.config["FORCE_HTTPS"]=int(environ.get("FORCE_HTTPS", 1))
+
 app.jinja_env.cache = {}
 
 app.config["UserAgent"]=f"Ruqqus webserver tools for Ruqqus v{_version} developed by Ruqqus LLC for ruqqus.com."
@@ -68,9 +70,7 @@ app.config["CACHE_DIR"]=environ.get("CACHE_DIR", "ruqquscache")
 
 #captcha configs
 app.config["HCAPTCHA_SITEKEY"]=environ.get("HCAPTCHA_SITEKEY")
-app.config["HCAPTCHA_SECRET"]=environ.get("HCAPTCHA_SECRET")
-
-
+app.config["HCAPTCHA_SECRET"]=environ.get("HCAPTCHA_SECRET").lstrip().rstrip()
 
 #antispam configs
 app.config["SPAM_SIMILARITY_THRESHOLD"]=float(environ.get("SPAM_SIMILARITY_THRESHOLD", 0.5))
@@ -100,7 +100,7 @@ cache=Cache(app)
 Compress(app)
 
 
-app.config["RATELIMIT_STORAGE_URL"]=environ.get("REDIS_URL", "memory://")
+app.config["RATELIMIT_STORAGE_URL"]="memory://"  # environ.get("REDIS_URL", "memory://")
 app.config["RATELIMIT_KEY_PREFIX"]="flask_limiting_"
 app.config["RATELIMIT_ENABLED"]=bool(int(environ.get("RATELIMIT_ENABLED", True)))
 
@@ -192,7 +192,7 @@ def before_request():
     if ua_banned and request.path != "/robots.txt":
         return response_tuple
 
-    if request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
+    if app.config["FORCE_HTTPS"] and request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
         url = request.url.replace("http://", "https://", 1)
         return redirect(url, code=301)
 

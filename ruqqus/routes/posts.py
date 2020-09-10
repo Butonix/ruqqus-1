@@ -299,7 +299,7 @@ def submit_post(v):
                                b=get_guild("general",
                                            graceful=True)
                                ), 403),
-        "api":lambda:(jsonify({"error":f"403 Not Authorized - +{board.name} has been banned."}))
+        "api":lambda:(jsonify({"error":f"403 Forbidden - +{board.name} has been banned."}))
         }
 
     
@@ -625,6 +625,7 @@ def embed_post_pid(pid):
 
 @app.route("/api/toggle_post_nsfw/<pid>", methods=["POST"])
 @is_not_banned
+@api("update")
 @validate_formkey
 def toggle_post_nsfw(pid, v):
 
@@ -644,6 +645,7 @@ def toggle_post_nsfw(pid, v):
 
 @app.route("/api/toggle_post_nsfl/<pid>", methods=["POST"])
 @is_not_banned
+@api("update")
 @validate_formkey
 def toggle_post_nsfl(pid, v):
 

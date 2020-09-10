@@ -4,6 +4,7 @@ import re
 import sass
 import threading
 import time
+import os.path
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -46,8 +47,9 @@ def create_board_get(v):
 
 @app.route("/api/board_available/<name>", methods=["GET"])
 @app.route("/api/v1/board_available/<name>", methods=["GET"])
+@auth_desired
 @api()
-def api_board_available(name):
+def api_board_available(name, v):
     if get_guild(name, graceful=True):
         return jsonify({"board":name, "available":False})
     else:
@@ -149,12 +151,12 @@ def board_name(name, v):
                                        
 
     if board.is_banned and not (v and v.admin_level>=3):
-        return {'html':lambda:render_template("board_banned.html",
+        return {'html':lambda:(render_template("board_banned.html",
                                v=v,
                                b=board,
                                p=True
-                               ),
-                'api':lambda:{'error':f'+{board.name} is banned.'}
+                               ), 410),
+                'api':lambda:(jsonify({'error':f'410 Gone - +{board.name} is banned.'}), 410)
                 }
     if board.over_18 and not (v and v.over_18) and not session_over18(board):
         t=int(time.time())
@@ -164,7 +166,7 @@ def board_name(name, v):
                                lo_formkey=make_logged_out_formkey(t),
                                board=board
                                ),
-                'api':lambda:{'error':f'+{board.name} is NSFW.'}
+                'api':lambda:jsonify({'error':f'+{board.name} is NSFW.'})
                 }
 
     sort=request.args.get("sort","hot")
@@ -344,10 +346,11 @@ def user_kick_pid(pid, v):
     g.db.add(new_rel)
 
     post.board_id=1
-    post.guild_name="general"
     post.is_pinned=False
     
     g.db.add(post)
+
+    g.db.commit()
     
     
     #clear board's listing caches
@@ -842,7 +845,7 @@ def board_mod_queue(boardname, board, v):
                                            ).join(Report, Report.post_id==Submission.id)
 
     if not v.over_18:
-        ids=ids.filter_by(over_18=False)
+        ids=ids.filter(Submission.over_18==False)
 
     ids=ids.order_by(Submission.id.desc()).offset((page-1)*25).limit(26)
 
@@ -957,14 +960,19 @@ def mod_board_images_delete_banner(bid, board, v):
 #@cache.memoize(60*6*24)
 def board_css(boardname, x):
 
+    #temp
+
     board=get_guild(boardname)
 
     if int(x) != board.color_nonce:
         return redirect(board.css_url)
 
 
-    with open("ruqqus/assets/style/board_main.scss", "r") as file:
-        raw=file.read()
+    try:
+        with open(os.path.join(os.path.expanduser('~'),"ruqqus/ruqqus/assets/style/board_main.scss"), "r") as file:
+            raw=file.read()
+    except FileNotFoundError:
+        return redirect("/assets/style/main.css")
 
     #This doesn't use python's string formatting because
     #of some odd behavior with css files
@@ -979,13 +987,19 @@ def board_css(boardname, x):
 #@cache.memoize(60*60*24)
 def board_dark_css(boardname, x):
 
+    #temp
+    #return redirect("/assets/style/main_dark.css")
+
     board=get_guild(boardname)
 
     if int(x) != board.color_nonce:
         return redirect(board.css_dark_url)
 
-    with open("ruqqus/assets/style/board_dark.scss", "r") as file:
-        raw=file.read()
+    try:
+        with open(os.path.join(os.path.expanduser('~'),"ruqqus/ruqqus/assets/style/board_dark.scss"), "r") as file:
+            raw=file.read()
+    except FileNotFoundError:
+        return redirect("/assets/style/main_dark.css")
 
     #This doesn't use python's string formatting because
     #of some odd behavior with css files
@@ -1001,10 +1015,14 @@ def board_dark_css(boardname, x):
 @validate_formkey
 def mod_board_color(bid, board, v):
 
-    color=str(request.form.get("color",""))
+    color=str(request.form.get("color","")).strip()
+
+    #Remove the '#' from the beginning in case it was entered.
+    if color.startswith('#'):
+        color = color[1:]
 
     if len(color) !=6:
-        color="603abb"
+        return render_template("guild/appearance.html", v=v, b=board, error="Invalid color code."), 400
 
     red=color[0:1]
     green=color[2:3]
@@ -1012,9 +1030,9 @@ def mod_board_color(bid, board, v):
 
     try:
         if any([int(x,16)>255 for x in [red,green,blue]]):
-            color="603abb"
+            return render_template("guild/appearance.html", v=v, b=board, error="Invalid color code."), 400
     except ValueError:
-        color="603abb"
+        return render_template("guild/appearance.html", v=v, b=board, error="Invalid color code."), 400
 
     board.color=color
     board.color_nonce+=1

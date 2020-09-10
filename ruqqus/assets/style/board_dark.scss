@@ -149,7 +149,7 @@ $yiq-contrasted-threshold:  160 !default;
     }
   }
 
-@import "ruqqus/assets/style/node_modules/bootstrap/scss/bootstrap";
+@import "/home/ubuntu/ruqqus/ruqqus/assets/style/node_modules/bootstrap/scss/bootstrap.scss";
 
 html {
     font-size: 14px;
@@ -272,7 +272,7 @@ body.using-mouse :focus {
     top: 63px;
     height: auto;
     overflow-y: auto;
-    z-index: 4;
+    z-index: 2;
 }
 
 .sticky-105 {

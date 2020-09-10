@@ -294,7 +294,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                     'id':self.base36id,
                     'title':self.title,
                     'permalink':self.permalink,
-                    'guild_name':self.guild_name
+                    'guild_name':self.board.name
                     }
         elif self.is_deleted:
             return {'is_banned':bool(self.is_banned),
@@ -302,7 +302,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                     'id':self.base36id,
                     'title':self.title,
                     'permalink':self.permalink,
-                    'guild_name':self.guild_name
+                    'guild_name':self.board.name
                     }
         data= {'author':self.author.username if not self.author.is_deleted else None,
                 'permalink':self.permalink,

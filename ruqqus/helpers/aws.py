@@ -7,13 +7,13 @@ from urllib.parse import urlparse
 from PIL import Image
 
 BUCKET="i.ruqqus.com"
-CF_KEY=environ.get("CLOUDFLARE_KEY")
+CF_KEY=environ.get("CLOUDFLARE_KEY").lstrip().rstrip()
 CF_ZONE=environ.get("CLOUDFLARE_ZONE")
 
 #setup AWS connection
 S3=boto3.client("s3",
-                aws_access_key_id=environ.get("AWS_ACCESS_KEY_ID"),
-                aws_secret_access_key=environ.get("AWS_SECRET_ACCESS_KEY")
+                aws_access_key_id=environ.get("AWS_ACCESS_KEY_ID").lstrip().rstrip(),
+                aws_secret_access_key=environ.get("AWS_SECRET_ACCESS_KEY").lstrip().rstrip()
                 )
 
 def upload_from_url(name, url):

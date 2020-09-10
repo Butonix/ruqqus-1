@@ -207,9 +207,9 @@ def participation_stats(v):
 
     now=int(time.time())
 
-    data={"valid_users":g.db.query(User).filter_by(is_deleted=False).filter(or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc<now))).count(),
+    data={"valid_users":g.db.query(User).filter_by(is_deleted=False).filter(or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc>0))).count(),
           "private_users":g.db.query(User).filter_by(is_deleted=False, is_private=False).filter(User.is_banned>0, or_(User.unban_utc>now, User.unban_utc==0)).count(),
-          "banned_users":g.db.query(User).filter(User.is_banned>0, or_(User.unban_utc>now, User.unban_utc==0)).count(),
+          "banned_users":g.db.query(User).filter(User.is_banned>0, User.unban_utc==0).count(),
           "deleted_users":g.db.query(User).filter_by(is_deleted=True).count(),
           "total_posts": g.db.query(Submission).count(),
           "posting_users": g.db.query(Submission.author_id).distinct().count(),
