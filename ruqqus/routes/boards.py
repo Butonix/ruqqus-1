@@ -1010,10 +1010,14 @@ def board_dark_css(boardname, x):
 @validate_formkey
 def mod_board_color(bid, board, v):
 
-    color=str(request.form.get("color",""))
+    color=str(request.form.get("color","")).strip()
+
+    #Remove the '#' from the beginning in case it was entered.
+    if color.startswith('#'):
+        color = color[1:]
 
     if len(color) !=6:
-        color="603abb"
+        return render_template("guild/appearance.html", v=v, b=board, error="Invalid color code."), 400
 
     red=color[0:1]
     green=color[2:3]
@@ -1021,9 +1025,9 @@ def mod_board_color(bid, board, v):
 
     try:
         if any([int(x,16)>255 for x in [red,green,blue]]):
-            color="603abb"
+            return render_template("guild/appearance.html", v=v, b=board, error="Invalid color code."), 400
     except ValueError:
-        color="603abb"
+        return render_template("guild/appearance.html", v=v, b=board, error="Invalid color code."), 400
 
     board.color=color
     board.color_nonce+=1
