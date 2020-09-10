@@ -20,7 +20,7 @@ create new conversation
 @app.route("/new_message", methods=["POST"])
 @is_not_banned
 @validate_formkey
-def create_new_convo(v)
+def create_new_convo(v):
 
 
     names=request.form.get("to_users")
