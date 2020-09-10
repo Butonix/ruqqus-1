@@ -43,6 +43,7 @@ class Message(Base, Stndrd, Age_times):
     body=Column(String(10000))
     body_html=Column(String(15000))
     has_read=Column(Boolean, default=False)
+    distinguish_level=Column(Integer, default=0)
 
     conversation=relationship("Conversation")
 
