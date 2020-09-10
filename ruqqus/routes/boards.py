@@ -961,7 +961,6 @@ def mod_board_images_delete_banner(bid, board, v):
 def board_css(boardname, x):
 
     #temp
-    #return redirect("/assets/style/main.css")
 
     board=get_guild(boardname)
 
@@ -969,8 +968,11 @@ def board_css(boardname, x):
         return redirect(board.css_url)
 
 
-    with open(os.path.join(os.path.expanduser('~'),"ruqqus/ruqqus/assets/style/board_main.scss"), "r") as file:
-        raw=file.read()
+    try:
+        with open(os.path.join(os.path.expanduser('~'),"ruqqus/ruqqus/assets/style/board_main.scss"), "r") as file:
+            raw=file.read()
+    except FileNotFoundError:
+        return redirect("/assets/style/main.css")
 
     #This doesn't use python's string formatting because
     #of some odd behavior with css files
@@ -993,8 +995,11 @@ def board_dark_css(boardname, x):
     if int(x) != board.color_nonce:
         return redirect(board.css_dark_url)
 
-    with open(os.path.join(os.path.expanduser('~'),"ruqqus/ruqqus/assets/style/board_dark.scss"), "r") as file:
-        raw=file.read()
+    try:
+        with open(os.path.join(os.path.expanduser('~'),"ruqqus/ruqqus/assets/style/board_dark.scss"), "r") as file:
+            raw=file.read()
+    except FileNotFoundError:
+        return redirect("/assets/style/main_dark.css")
 
     #This doesn't use python's string formatting because
     #of some odd behavior with css files

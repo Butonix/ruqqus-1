@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from PIL import Image as PILimage
 from flask import g
+from io import BytesIO
 
 from .get import *
 from ruqqus.__main__ import app, db_session
@@ -128,6 +129,10 @@ def thumbnail_thread(pid):
                 
                 if type.startswith("image/svg"):
                     #print("svg image, next")
+                    continue
+
+                i=PILimage.open(BytesIO(x.content))
+                if i.width<30 or i.height<30:
                     continue
                 
                 break
