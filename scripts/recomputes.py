@@ -2,6 +2,7 @@ from ruqqus.__main__ import db_session
 from ruqqus.classes import *
 
 import time
+import daemon
 
 db=db_session()
 
@@ -92,42 +93,6 @@ def recompute():
 
         db.commit()
 
-        print(f"Scored {i} posts. Beginning comment recompute")
 
-
-
-        
-        # comments=True
-        # page=1
-        # comment_count=0
-        # while comments:
-        #     comments=db.query(Comment
-        #                     ).options(lazyload('*'), joinedload(Comment.post)
-        #                     ).filter(
-        #                         Submission.created_utc>cutoff,
-        #                         classes.comment.Comment.is_deleted==False,
-        #                         classes.comment.Comment.is_banned==False
-        #                     ).options(
-        #                         contains_eager(Comment.post)
-        #                     ).offset(100*(page-1)).limit(100).all()
-
-        #     for comment in comments:
-
-        #         comment_count+=1
-            
-            
-        #         comment.score_disputed=comment.rank_fiery
-        #         comment.score_hot=comment.rank_hot
-        #         comment.score_top=comment.score
-
-        #         db.add(comment)
-            
-            
-        #     db.commit()
-        #     page+=1
-
-        #     print(f"re-scored {comment_count} comments")
-        #time.sleep(60)
-
-
-recompute()
+with daemon.DaemonContext():
+    recompute()
