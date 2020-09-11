@@ -11,7 +11,7 @@ from ruqqus.__main__ import Base
 class Conversation(Base, Stndrd, Age_times):
 
     __tablename__="conversations"
-    id=Column(Integer, primarykey=True)
+    id=Column(Integer, primary_key=True)
     author_id=Column(Integer, ForeignKey("User.id"))
     created_utc=Column(Integer)
     subject=Column(String(256))
