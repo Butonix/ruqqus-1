@@ -37,7 +37,7 @@ class Conversation(Base, Stndrd, Age_times):
 class Message(Base, Stndrd, Age_times):
 
     __tablename__="messages"
-    id=Column(Integer, primarykey=True)
+    id=Column(Integer, primary_key=True)
     author_id=Column(Integer, ForeignKey("User.id"))
     created_utc=Column(Integer)
     body=Column(String(10000))
@@ -58,7 +58,7 @@ class Message(Base, Stndrd, Age_times):
 class ConvoMember(Base, Stndrd, Age_times):
 
     __tablename__="conve_member"
-    id=Column(Integer, primarykey=True)
+    id=Column(Integer, primary_key=True)
     user_id=Column(Integer, ForeignKey("User.id"))
     convo_id=Column(Integer, ForeignKey("Conversation.id"))
 
@@ -73,7 +73,7 @@ class ConvoMember(Base, Stndrd, Age_times):
 class MessageNotif(Base, Stndrd, Age_times):
 
     __tablename__="message_notifications"
-    id=Column(Integer, primarykey=True)
+    id=Column(Integer, primary_key=True)
     user_id=Column(Integer, ForeignKey("User.id"))
     message_id=Column(Integer, ForeignKey("Message.id"))
     has_read=Column(Boolean, default=False)
