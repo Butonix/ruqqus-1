@@ -63,7 +63,7 @@ def thumbnail_thread(pid):
 
         metas = ["ruqqus:thumbnail",
                  "twitter:image",
-                 "og:image"
+                 "og:image",
                  "thumbnail"
                  ]
 
@@ -153,4 +153,7 @@ def thumbnail_thread(pid):
 
     #db.close()
     
-    remove(tempname)
+    try:
+        remove(tempname)
+    except FileNotFoundError:
+        pass
