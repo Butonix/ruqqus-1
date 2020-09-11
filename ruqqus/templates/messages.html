@@ -3,7 +3,7 @@
 
 
 <!--conditions under which a comment might be hidden-->
-{% if (m.is_blocking or m.is_blocked) and not m.distinguish_level and not (v and v.admin_level>=3)) %}
+{% if (m.is_blocking or m.is_blocked) and not m.distinguish_level and not (v and v.admin_level>=3) %}
 
 <div id="message-{{ m.base36id }}" class="comment rounded">
     <span class="comment-collapse" onclick="collapse_comment('{{ m.base36id }}')"></span>
