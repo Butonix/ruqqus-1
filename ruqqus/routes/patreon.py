@@ -12,10 +12,10 @@ from ruqqus.helpers.security import *
 import ruqqus.helpers.discord
 from ruqqus.__main__ import app
 
-PATREON_SECRET=environ.get("PATREON_SECRET")
+PATREON_SECRET=environ.get("PATREON_SECRET").rstrip()
 
-PATREON_CLIENT_ID=environ.get("PATREON_CLIENT_ID")
-PATREON_CLIENT_SECRET=environ.get("PATREON_CLIENT_SECRET")
+PATREON_CLIENT_ID=environ.get("PATREON_CLIENT_ID").rstrip()
+PATREON_CLIENT_SECRET=environ.get("PATREON_CLIENT_SECRET").rstrip()
 
 @app.route("/patreon_authorize", methods=["GET"])
 @auth_required
