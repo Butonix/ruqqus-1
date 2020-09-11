@@ -1,5 +1,4 @@
 from flask import *
-import time
 import hmac
 from os import environ
 import re
@@ -15,9 +14,10 @@ from ruqqus.helpers.get import *
 from ruqqus.mail import send_verification_email
 from secrets import token_hex
 
-
 from ruqqus.mail import *
 from ruqqus.__main__ import app, limiter
+
+import time
 
 valid_username_regex=re.compile("^[a-zA-Z0-9_]{5,25}$")
 valid_password_regex=re.compile("^.{8,100}$")
