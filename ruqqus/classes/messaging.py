@@ -46,6 +46,7 @@ class Message(Base, Stndrd, Age_times):
     convo_id=Column(Integer, ForeignKey("conversations.id"))
 
     conversation=relationship("Conversation")
+    author=relationship("User", lazy="joined")
 
     
     def __repr__(self):
