@@ -98,7 +98,7 @@ class User(Base, Stndrd, Age_times):
     _applications = relationship("OauthApp", lazy="dynamic")
     authorizations=relationship("ClientAuth", lazy="dynamic")
 
-    message_notifs=relationship("MessageNotif", lazy="dynamic")
+    message_notifs=relationship("MessageNotif", lazy="dynamic", primaryjoin="User.id==MessageNotif.user_id")
 
     #properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
