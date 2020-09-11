@@ -64,6 +64,7 @@ def create_new_convo(v):
         created_utc=new_convo.created_utc,
         body=message,
         body_html=message_html,
+        convo_id=new_convo.id
         )
 
     g.db.add(new_message)
@@ -100,6 +101,7 @@ def reply_to_message(v):
         created_utc=int(time.time()),
         body=message,
         body_html=message_html,
+        convo_id=convo.id
         )
 
     g.db.add(new_message)
