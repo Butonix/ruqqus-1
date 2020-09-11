@@ -3,7 +3,7 @@ from time import time, strftime, gmtime
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
-from .mixins import Stndrd, Age_times
+from .mix_ins import Stndrd, Age_times
 from ruqqus.helpers.base36 import *
 from ruqqus.__main__ import Base
 
@@ -42,7 +42,6 @@ class Message(Base, Stndrd, Age_times):
     created_utc=Column(Integer)
     body=Column(String(10000))
     body_html=Column(String(15000))
-    has_read=Column(Boolean, default=False)
     distinguish_level=Column(Integer, default=0)
 
     conversation=relationship("Conversation")
@@ -70,3 +69,11 @@ class ConvoMember(Base, Stndrd, Age_times):
     def __repr__(self):
 
         return f"<ConvoMember(id={self.id})>"
+
+class MessageNotif(Base, Stndrd, Age_times):
+
+    __tablename__="message_notifications"
+    id=Column(Integer, primarykey=True)
+    user_id=Column(Integer, ForeignKey("User.id"))
+    message_id=Column(Integer, ForeignKey("Message.id"))
+    has_read=Column(Boolean, default=False)
