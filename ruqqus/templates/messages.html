@@ -153,7 +153,7 @@
       <form id="reply-to-t5_{{ convo.base36id }}" action="/reply_message" method="post" class="input-group"> 
         <input type="hidden" name="formkey" value="{{ v.formkey }}"> 
         <input type="hidden" name="convo_id" value="{{ convo.id }}"> 
-        <textarea name="body" form="reply-to-t5_{{ convo.base36id }}" class="comment-box form-control rounded" id="reply-form-body-{{ convo.fullname }}" aria-label="With textarea" placeholder="Add your reply..." rows="3"></textarea> 
+        <textarea name="message" form="reply-to-t5_{{ convo.base36id }}" class="comment-box form-control rounded" id="reply-form-body-{{ convo.fullname }}" aria-label="With textarea" placeholder="Add your reply..." rows="3"></textarea> 
         <div class="comment-format" id="comment-format-bar-{{ convo.base36id }}"> 
           <small class="format pl-0">
             <i class="fas fa-bold" aria-hidden="true" onclick="makeBold('reply-form-body-{{ convo.fullname }}')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i>
