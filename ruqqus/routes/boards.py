@@ -1123,7 +1123,7 @@ def guild_profile(guild):
 def siege_guild(v):
 
     now=int(time.time())
-    guild=request.form.get("guild",None)
+    guild=request.form.get("guild",None).lstrip('+')
 
     if not guild:
         abort(400)
