@@ -116,7 +116,7 @@ def message_perma(v, convo_id):
 
     convo=get_convo(convo_id, v=v)
 
-    return render_template("messages.html"
+    return render_template("messages.html",
         v=v,
         conversations=[convo]
         )
