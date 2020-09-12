@@ -4,9 +4,9 @@ from sqlalchemy.orm import relationship
 
 from ruqqus.__main__ import Base
 
-class linkedCategories(Base):
+class BoardCategories(Base):
 
-    __tablename__ = "boardCategories"
+    __tablename__ = "board_categories"
 
     id = Column(Integer, primary_key=True)
     category_id = Column(Integer, ForeignKey("categories.id"))
@@ -14,7 +14,7 @@ class linkedCategories(Base):
     created_utc = Column(Integer)
 
     def __repr__(self):
-        return f"<linkedCategories(id={self.id}, board_id={self.board_id})>"
+        return f"<BoardCategories(id={self.id}, board_id={self.board_id})>"
 
     @property
     def json(self):

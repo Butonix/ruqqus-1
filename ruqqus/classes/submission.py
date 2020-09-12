@@ -83,6 +83,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     # not sure if we need this
     reposts = relationship("Submission", lazy="joined", remote_side=[id])
 
+    cross_posts = relationship("CrossPosts", lazy="dynamic")
+
 
     #These are virtual properties handled as postgres functions server-side
     #There is no difference to SQLAlchemy, but they cannot be written to
@@ -113,6 +115,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         
     def __repr__(self):
         return f"<Submission(id={self.id})>"
+
+    @property
+    def num_of_guilds(self):
+        return len(self.cross_posts)
 
     @property
     @lazy
