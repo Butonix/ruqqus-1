@@ -421,7 +421,7 @@ And since we're committed to [open-source](https://github.com/ruqqus/ruqqus) tra
 
     redir=request.form.get("redirect", None)
 
-    print(f"Signup event: @{new_user.username}")
+    #print(f"Signup event: @{new_user.username}")
     
     return redirect("/browse?onboarding=true")
 
