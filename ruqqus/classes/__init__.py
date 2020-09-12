@@ -17,3 +17,4 @@ from .subscriptions import *
 from .ips import *
 from .titles import *
 from .categories import *
+from .cross_boards import *

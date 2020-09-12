@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 
 from ruqqus.__main__ import Base
 
-class linkedCategories():
+class linkedCategories(Base):
 
     __tablename__ = "boardCategories"
 
@@ -25,7 +25,7 @@ class linkedCategories():
                 }
 
 
-class Categories():
+class Categories(Base):
 
     __tablename__ = "categories"
 
