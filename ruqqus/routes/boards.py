@@ -237,7 +237,7 @@ def addCategory(bid, board, v):
 
     if not categories:
         abort(422)
-        
+
     check_category = g.db.query(BoardCategories).filter_by(category_id=categories.id,
                                                            board_id=board.id).first()
     if not check_category:

@@ -49,7 +49,7 @@ class Board(Base, Stndrd, Age_times):
     bans=relationship("BanRelationship", lazy="dynamic")
     postrels=relationship("PostRelationship", lazy="dynamic")
 
-    categories=relationship("BoardCatagoeries", lazy="dynamic")
+    categories=relationship("BoardCategories", lazy="dynamic")
     posts = relationship("CrossPosts", lazy="dynamic")
 
     trending_rank=deferred(Column(Float, server_default=FetchedValue()))
