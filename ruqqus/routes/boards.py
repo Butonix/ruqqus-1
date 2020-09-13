@@ -217,7 +217,7 @@ def board_name(name, v):
 
 
 
-@app.route("/+<board>/add_category", methods=["POST"])
+@app.route("/+<boardname>/add_category", methods=["POST"])
 @auth_required
 @is_guildmaster
 @validate_formkey
@@ -249,7 +249,7 @@ def addCategory(bid, board, v):
     return "", 204
 
 
-@app.route("/+<board>/rem_category", methods=["POST"])
+@app.route("/+<boardname>/rem_category", methods=["POST"])
 @auth_required
 @is_guildmaster
 @validate_formkey
