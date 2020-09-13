@@ -14,6 +14,7 @@ class CrossPosts(Base):
     board_id = Column(Integer, ForeignKey('boards.id'))
 
     board = relationship("Board", lazy="joined", innerjoin=True, primaryjoin="CrossPosts.board_id==Board.id")
+    post = relationship("Board", lazy="joined", innerjoin=True, primaryjoin="CrossPosts.post_id==Submission.id")
 
     def __repr__(self):
         return f"<CrossPosts(id={self.id}, board_id={self.id}, post_id={self.post_id})>"
