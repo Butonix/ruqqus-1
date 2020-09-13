@@ -400,7 +400,8 @@ class Board(Base, Stndrd, Age_times):
                 'fullname':self.fullname,
                 'banner_url':self.banner_url,
                 'profile_url':self.profile_url,
-                'color':"#"+self.color
+                'color':"#"+self.color,
+                'categories:':self.categories.json()
                 }
 
 
