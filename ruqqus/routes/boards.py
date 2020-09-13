@@ -215,6 +215,68 @@ def board_name(name, v):
             }
 
 
+
+
+@app.route("/+<board>/add_category", methods=["POST"])
+@auth_required
+@is_guildmaster
+@validate_formkey
+def addCategory(bid, board, v):
+    board = get_board(bid)
+
+    if not board:
+        abort(404)
+
+    category = request.form.get("category", "")
+
+    if not category:
+        abort(422)
+
+    categories = g.db.query(Categories).filter(type=category).first()
+
+
+    if not categories:
+        abort(422)
+        
+    check_category = g.db.query(BoardCategories).filter_by(category_id=categories.id,
+                                                           board_id=board.id).first()
+    if not check_category:
+        newCat = BoardCategories(board_id=bid,
+                                  type=category,
+                                  )
+        g.db.add(newCat)
+
+    return "", 204
+
+
+@app.route("/+<board>/rem_category", methods=["POST"])
+@auth_required
+@is_guildmaster
+@validate_formkey
+def removeCategory(bid, board, v):
+    board = get_board(bid)
+
+    if not board:
+        abort(404)
+
+    category = request.form.get("category", "")
+
+    if not category:
+        abort(422)
+
+    categories = g.db.query(Categories).filter(type=category).first()
+
+    check_category = g.db.query(BoardCategories).filter_by(category_id=categories.id,
+                                                           board_id=board.id).first()
+
+    if check_category:
+        g.db.delete(check_category)
+
+    return "", 204
+
+
+
+
 @app.route("/mod/kick/<bid>/<pid>", methods=["POST"])
 @auth_required
 @is_guildmaster
