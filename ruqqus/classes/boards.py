@@ -67,6 +67,15 @@ class Board(Base, Stndrd, Age_times):
         return f"<Board(name={self.name})>"
 
     @property
+    def num_of_categories(self):
+        return len(self.categories)
+
+    @property
+    def can_add_category(self):
+        return self.num_of_categories < 3
+
+
+    @property
     def fullname(self):
         return f"t4_{self.base36id}"
     
