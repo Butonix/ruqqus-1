@@ -242,8 +242,9 @@ def addCategory(bid, board, v):
                                                            board_id=board.id).first()
     if not check_category:
         newCat = BoardCategories(board_id=bid,
-                                  type=category,
-                                  )
+                                 type=category,
+                                 created_utc=int(time.time())
+                                )
         g.db.add(newCat)
 
     return "", 204
