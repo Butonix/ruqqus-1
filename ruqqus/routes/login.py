@@ -322,7 +322,7 @@ def sign_up_post(v):
         return redirect(existing_account.permalink)
 
     if existing_account or (email and g.db.query(User).filter(User.email.ilike(email)).first()):
-        print(f"signup fail - {username } - email already exists")
+        #print(f"signup fail - {username } - email already exists")
         return new_signup("An account with that username or email already exists.")
 
     #check bans
@@ -421,7 +421,7 @@ And since we're committed to [open-source](https://github.com/ruqqus/ruqqus) tra
 
     redir=request.form.get("redirect", None)
 
-    print(f"Signup event: @{new_user.username}")
+    #print(f"Signup event: @{new_user.username}")
     
     return redirect("/browse?onboarding=true")
 
