@@ -18,7 +18,7 @@ class UserMention(SpanToken):
 
 class BoardMention(SpanToken):
 
-    pattern=re.compile("(^|\s)\+(\w{3,25})")
+    pattern=re.compile("(^|\s|\n)\+(\w{3,25})")
     parse_inner=False
 
     def __init__(self, match_obj):
