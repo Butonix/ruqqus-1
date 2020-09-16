@@ -575,7 +575,9 @@ def submit_post(v):
 #     return "", 204
 
 @app.route("/delete_post/<pid>", methods=["POST"])
+@app.route("/api/v1/delete_post/<pid>", methods=["POST"])
 @auth_required
+@api("delete")
 @validate_formkey
 def delete_post_pid(pid, v):
 
