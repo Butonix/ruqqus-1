@@ -27,7 +27,7 @@ def robots_txt():
 @app.route("/slurs.txt", methods=["GET"])
 def slurs():
     resp= make_response('\n'.join([x.keyword for x in g.db.query(BadWord).order_by(BadWord.keyword.asc()).all()]))
-    resp.add_headers("Content-Type","text/plain")
+    resp.headers.add("Content-Type","text/plain")
     return resp
 
 @app.route("/settings", methods=["GET"])
