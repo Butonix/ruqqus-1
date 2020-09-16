@@ -26,7 +26,7 @@ def robots_txt():
 
 @app.route("/slurs.txt", methods=["GET"])
 def slurs():
-    return send_file("./assets/slurs.txt")
+    return '\n'.join(g.db.query(BadWord.keyword).order_by(BadWord.keyword.asc()).all())
 
 @app.route("/settings", methods=["GET"])
 @auth_required
