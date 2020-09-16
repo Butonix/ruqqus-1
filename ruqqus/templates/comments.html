@@ -65,13 +65,13 @@
   <span class="align-top">
   {% if c.parent_submission %}
     {% if c.author_id==v.id and c.replies and is_notification_page%}
-      <span class="font-weight-bold">Comment {{ 'Replies' if (c.replies | length)>1 else 'Reply' }}: <a href="{{ c.post.permalink }}">{{ c.post.title | safe }}</a></span> in +{{ c.post.board.name }}
+      <span class="font-weight-bold">Comment {{ 'Replies' if (c.replies | length)>1 else 'Reply' }}: <a href="{{ c.post.permalink }}">{{ c.post.title | safe }}</a></span> in <a href="{{ c.post.board.permalink }}">+{{ c.post.board.name }}</a>
     {% elif c.post.author_id==v.id and c.is_top_level and is_notification_page%}
-      <span class="font-weight-bold">Post Reply: <a href="{{ c.post.permalink }}">{{ c.post.title | safe }}</a></span> in +{{ c.post.board.name }}
+      <span class="font-weight-bold">Post Reply: <a href="{{ c.post.permalink }}">{{ c.post.title | safe }}</a></span> in <a href="{{ c.post.board.permalink }}">+{{ c.post.board.name }}</a>
     {% elif is_notification_page %}
-      <span class="font-weight-bold">Username Mention: <a href="{{ c.post.permalink }}">{{ c.post.title | safe }}</a></span> in +{{ c.post.board.name }}
+      <span class="font-weight-bold">Username Mention: <a href="{{ c.post.permalink }}">{{ c.post.title | safe }}</a></span> in <a href="{{ c.post.board.permalink }}">+{{ c.post.board.name }}</a>
     {% else %}
-      <span class="font-weight-bold"><a href="{{ c.post.permalink }}">{{ c.post.title | safe }}</a></span> in +{{ c.post.board.name }}
+      <span class="font-weight-bold"><a href="{{ c.post.permalink }}">{{ c.post.title | safe }}</a></span> in <a href="{{ c.post.board.permalink }}">+{{ c.post.board.name }}</a>
     {% endif %}
   {% else %}
   <span class="font-weight-bold">Ruqqus Notification</span>
