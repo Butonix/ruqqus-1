@@ -140,7 +140,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
         output=re.sub('&\w{2,3};', '', output)
 
-        output=[re.sub('\W', '', word) for word in output.split()[0:6]]
+        output=[re.sub('\W', '', word) for word in output.split()]
+        output=[x for x in output if x][0:6]
 
         output='-'.join(output)
 
