@@ -667,3 +667,20 @@ def toggle_post_nsfl(pid, v):
     
 
     return "", 204
+
+
+@app.route("/retry_thumb/<pid>", methods=["POST"])
+@is_not_banned
+@validate_formkey
+def retry_thumbnail(pid, v):
+
+    post=get_post(pid, v=v)
+
+    if post.author_id != v.id and v.admin_level<3:
+        abort(403)
+
+    new_thread=threading.Thread(target=thumbnail_thread,
+                                args=(new_post.base36id,)
+                                )
+    new_thread.start()
+    return jsonify({"message":"Thumbnail Retry Queued"})
