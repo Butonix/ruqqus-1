@@ -14,7 +14,7 @@
 <meta property="og:article:author" content="@{{ u.username }}" />
 <meta property="article:section" content="{{ u.username }}'s profile - Ruqqus" />
 <meta property="article:published_time" content="{{ u.created_date }}" />
-<meta property="og:description" name="description" content="{{ u.true_score }} Rep · Joined {{ u.created_date }} · {% if u.follower_count >=1 and not u.is_private %}{{ u.follower_count }} Subscribers · {% endif %}{% if not u.is_private %}{{ u.post_count }} Posts · {{ u.comment_count }} Comments · {% endif %}{{u.bio}}" />
+<meta property="og:description" name="description" content="{{ u.true_score }} Rep · Joined {{ u.created_date }} · {% if u.follower_count >=1 and not u.is_private and not u.is_nofollow %}{{ u.follower_count }} Subscribers · {% endif %}{% if not u.is_private %}{{ u.post_count }} Posts · {{ u.comment_count }} Comments · {% endif %}{{u.bio}}" />
 <meta property="og:author" name="author" content="@{{ u.username }}" />
 <meta property="og:title" content="{{ u.username }}" />
 <meta property="og:image" content="{% if u.has_banner %}{{ u.banner_url }}{% else %}{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}{% endif %}" />
@@ -25,7 +25,7 @@
 <meta name="twitter:site" content="@ruqqus">
 <meta name="twitter:title" content="{{ u.username }}'s profile - Ruqqus" />
 <meta name="twitter:creator" content="@{{ u.username }}">
-<meta name="twitter:description" content="{{ u.true_score }} Rep · Joined {{ u.created_date }} ·{% if u.follower_count >=1 and not u.is_private %}{{ u.follower_count }} Subscribers ·{% endif %} {% if not u.is_private %} {{ u.post_count }} Posts · {{ u.comment_count }} Comments ·{% endif %} {{u.bio}}" />
+<meta name="twitter:description" content="{{ u.true_score }} Rep · Joined {{ u.created_date }} ·{% if u.follower_count >=1 and not u.is_private and not u.is_nofollow %}{{ u.follower_count }} Subscribers ·{% endif %} {% if not u.is_private %} {{ u.post_count }} Posts · {{ u.comment_count }} Comments ·{% endif %} {{u.bio}}" />
 <meta name="twitter:image" content="{% if u.has_banner %}{{ u.banner_url }}{% else %}{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}{% endif %}" />
 <meta name="twitter:url" content="{{ u.permalink | full_link}}" />
 {% endblock %}
@@ -96,7 +96,7 @@
         </div>
 
         <div class="font-weight-normal">
-          <span class="font-weight-bold">{{ u.true_score }}</span> rep · {% if u.follower_count >=1 %}<span class="font-weight-bold">{{ u.follower_count }}</span> subscriber{{ 's' if u.follower_count != 1 else '' }} · {% endif %}joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ u.created_datetime }}" class="font-weight-bold">{{ u.created_date }}</span>
+          <span class="font-weight-bold">{{ u.true_score }}</span> rep · {% if u.follower_count >=1 and not u.is_nofollow %}<span class="font-weight-bold">{{ u.follower_count }}</span> subscriber{{ 's' if u.follower_count != 1 else '' }} · {% endif %}joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ u.created_datetime }}" class="font-weight-bold">{{ u.created_date }}</span>
         </div>
           {% if u.bio_html %}
           <p class="text-muted">{{ u.bio_html | safe }}</p>
@@ -108,7 +108,7 @@
 
         <div class="d-flex justify-content-between align-items-center">
           <div>
-           {% if v and v.id != u.id  %}
+           {% if v and v.id != u.id and not u.is_nofollow %}
            <div id="button-unsub" {% if not is_following %}class="d-none"{% endif %}><a class="btn btn-secondary" href="javascript:void(0)" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Unsubscribe</a></div>
            <div id="button-sub" {% if is_following %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Subscribe</a></div>
            {% elif v and v.id == u.id %}
@@ -153,7 +153,7 @@
             <!--{% if u.over_18 %}
             <span class="badge badge-danger text-small align-middle mx-1">nsfw</span>
             {% endif %}-->
-            {% if v and v.has_follower(u) %}
+            {% if v and v.has_follower(u) and not v.is_nofollow %}
             <span class="badge badge-secondary text-small align-middle mx-1">Follows you</span>
             {% endif %}
           </h1>
@@ -162,7 +162,9 @@
         {% if u.bio_html %}
         <p class="text-muted text-break">{{ u.bio_html | safe }}</p>
         {% endif %}
+        {% if v and v.id != u.id and not u.is_nofollow %}
         <p class="font-weight-bold">{{ u.follower_count }} subscriber{{ 's' if u.follower_count != 1 else '' }}</p>
+        {% endif %}
         <div class="mb-3">
             {% for b in u.badges %}
             {% include "badge.html" %}
@@ -172,7 +174,7 @@
         {% if v and v.id == u.id %}
            <a href="/settings/profile" class="btn btn-secondary btn-sm">Edit profile</a>
         {% endif %}
-        {% if v and v.id != u.id %}
+        {% if v and v.id != u.id and not u.is_nofollow %}
         <div id="button-unsub-mobile" {% if not is_following %}class="d-none"{% endif %}><a class="btn btn-secondary" href="javascript:void(0)" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">Unsubscribe</a></div>
         <div id="button-sub-mobile" {% if is_following %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">Subscribe</a></div>
         {% endif %}

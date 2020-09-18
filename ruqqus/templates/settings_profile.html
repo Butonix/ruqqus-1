@@ -373,7 +373,24 @@
               </div>
 
             </div>
+             <div class="d-lg-flex">
 
+              <div class="title w-lg-25">
+                <label for="nofollowswitch">No Following</label>
+              </div>
+
+              <div class="body w-lg-100">
+
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="nofollowswitch" name="nofollow"{% if v.is_private%} checked{% endif %} onchange="post_toast('/settings/profile?nofollow='+document.getElementById('nofollowswitch').checked)">
+                  <label class="custom-control-label" for="nofollowswitch"></label>
+                </div>
+
+                <span class="text-small-extra text-muted">Prevent other users from Following you.</span>
+
+              </div>
+
+            </div>
           </div>
 
         </div>
