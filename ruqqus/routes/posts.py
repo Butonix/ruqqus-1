@@ -36,6 +36,7 @@ BUCKET="i.ruqqus.com"
 
 @app.route("/post_short/", methods=["GET"])
 @app.route("/post_short/<base36id>", methods=["GET"])
+@app.route("/post_short/<base36id>/", methods=["GET"])
 def incoming_post_shortlink(base36id=None):
 
     if not base36id: 
