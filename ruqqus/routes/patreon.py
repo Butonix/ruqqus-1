@@ -105,7 +105,7 @@ def patreon_redirect(v):
     #parse response for data
 
 
-    print(data)
+    #print(data)
 
     patreon_id = data["data"]["id"]
     existing=g.db.query(User).filter_by(patreon_id=patreon_id).first()
