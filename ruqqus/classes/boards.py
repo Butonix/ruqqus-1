@@ -397,7 +397,7 @@ class Board(Base, Stndrd, Age_times):
                 'banner_url':self.banner_url,
                 'profile_url':self.profile_url,
                 'color':"#"+self.color,
-                'guildmasters':self.mods
+                'guildmasters':[x.json for x in self.mods]
                 }
 
 

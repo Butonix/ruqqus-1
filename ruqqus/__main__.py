@@ -39,9 +39,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get("DATABASE_CONNECTION_POOL_URL", environ.get("DATABASE_URL"))
 
 app.config['SQLALCHEMY_READ_URIS']=[
-    environ.get("DATABASE_CONNECTION_POOL_READ_01_URL"),
-    environ.get("DATABASE_CONNECTION_POOL_READ_02_URL"),
-    environ.get("DATABASE_CONNECTION_POOL_READ_03_URL")
+    environ.get("DATABASE_CONNECTION_READ_01_URL"),
+    environ.get("DATABASE_CONNECTION_READ_02_URL"),
+    environ.get("DATABASE_CONNECTION_READ_03_URL")
     ]
 
 app.config['SECRET_KEY']=environ.get('MASTER_KEY')
@@ -77,9 +77,9 @@ app.config["SPAM_SIMILARITY_THRESHOLD"]=float(environ.get("SPAM_SIMILARITY_THRES
 app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]=int(environ.get("SPAM_SIMILAR_COUNT_THRESHOLD", 5))
 app.config["SPAM_URL_SIMILARITY_THRESHOLD"]=float(environ.get("SPAM_URL_SIMILARITY_THRESHOLD", 0.1))
     
-#app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL")
-#app.config["CACHE_DEFAULT_TIMEOUT"]=60
-#app.config["CACHE_KEY_PREFIX"]="flask_caching_"
+app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL").rstrip()
+app.config["CACHE_DEFAULT_TIMEOUT"]=60
+app.config["CACHE_KEY_PREFIX"]="flask_caching_"
 
 #app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 30))
 
@@ -100,7 +100,7 @@ cache=Cache(app)
 Compress(app)
 
 
-app.config["RATELIMIT_STORAGE_URL"]="memory://"  # environ.get("REDIS_URL", "memory://")
+app.config["RATELIMIT_STORAGE_URL"]=app.config["CACHE_REDIS_URL"]
 app.config["RATELIMIT_KEY_PREFIX"]="flask_limiting_"
 app.config["RATELIMIT_ENABLED"]=bool(int(environ.get("RATELIMIT_ENABLED", True)))
 
