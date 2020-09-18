@@ -146,7 +146,7 @@ def board_name(name, v):
 
     board=get_guild(name)
 
-    if not board.name==name:
+    if not board.name==name and not request.path.startswith('/api/v1'):
         return redirect(request.path.replace(name, board.name))
                                        
 

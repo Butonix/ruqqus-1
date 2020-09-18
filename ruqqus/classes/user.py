@@ -455,6 +455,7 @@ class User(Base, Stndrd, Age_times):
 
     
     @property
+    @cache.memoize(30)
     def notifications_count(self):
 
         return self.notifications.filter_by(read=False).join(Notification.comment).filter(Comment.is_banned==False, Comment.is_deleted==False).count()
