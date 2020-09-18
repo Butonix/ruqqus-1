@@ -382,7 +382,7 @@
               <div class="body w-lg-100">
 
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="nofollowswitch" name="nofollow"{% if v.nofollow%} checked{% endif %} onchange="post_toast('/settings/profile?nofollow='+document.getElementById('nofollowswitch').checked)">
+                  <input type="checkbox" class="custom-control-input" id="nofollowswitch" name="nofollow"{% if v.is_nofollow%} checked{% endif %} onchange="post_toast('/settings/profile?nofollow='+document.getElementById('nofollowswitch').checked)">
                   <label class="custom-control-label" for="nofollowswitch"></label>
                 </div>
 
