@@ -39,6 +39,25 @@ _allowed_tags_with_links=_allowed_tags+["a",
                                         "img"
                                         ]
 
+_allowed_tags_in_bio=[
+                    'a',
+                    'b',
+                    'blockquote',
+                    'br',
+                    'code',
+                    'del',
+                    'em',
+                    'i',
+                    'li',
+                    'ol',
+                    'p',
+                    'pre',
+                    'strong',
+                    'sub',
+                    'sup',
+                    'ul'
+                   ]
+
 _allowed_attributes={'a': ['href', 'title', "rel"],
                      'img':['src', 'class']
                      }
@@ -83,13 +102,27 @@ _clean_w_links = bleach.Cleaner(tags=_allowed_tags_with_links,
                                          ]
                                 )
 
+_clean_bio=bleach.Cleaner(tags=_allowed_tags_in_bio,
+                                attributes=_allowed_attributes,
+                                protocols=_allowed_protocols,
+                                filters=[partial(LinkifyFilter,
+                                                 skip_tags=["pre"],
+                                                 parse_email=False ,
+                                                 callbacks=[nofollow]
+                                                 )
+                                         ]
+                                )
 
-def sanitize(text, linkgen=False):
+
+def sanitize(text, bio=False, linkgen=False):
 
     text=text.replace("\ufeff","")
 
     if linkgen:
-        sanitized= _clean_w_links.clean(text)
+        if bio:
+            sanitized= _clean_bio.clean(text)
+        else:
+            sanitized= _clean_w_links.clean(text)
 
         soup=BeautifulSoup(sanitized, features="html.parser")
 
@@ -131,6 +164,7 @@ def sanitize(text, linkgen=False):
 
 
         sanitized=str(soup)
+
     else:
         sanitized= _clean_wo_links.clean(text)
 
