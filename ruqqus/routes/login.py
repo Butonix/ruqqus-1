@@ -435,7 +435,7 @@ def get_forgot():
 @app.route("/forgot", methods=["POST"])
 def post_forgot():
 
-    username = request.form.get("username")
+    username = request.form.get("username").lstrip('@')
     email = request.form.get("email")
 
     user = g.db.query(User).filter(User.username.ilike(username), User.email.ilike(email), User.is_deleted==False).first()
