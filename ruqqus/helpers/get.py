@@ -8,6 +8,8 @@ import re
 
 def get_user(username, v=None, nSession=None, graceful=False):
 
+    username=username.lstrip('@')
+
     username=username.replace('\\','')
     username=username.replace('_', '\_')
 
