@@ -165,8 +165,8 @@
                 <form action="/mod/{{ b.base36id }}/color" id="color-code-form" method="post">
                    <input type="hidden" name="formkey" value="{{ v.formkey }}">
 
-                   <input type="text" name="color" id="color-code" value="{{ b.color }}">
-                   <label class="btn btn-secondary text-capitalize mr-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
+                   <input class="form-control" type="text" name="color" id="color-code" value="{{ b.color }}">
+                   <label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
                 </form>
                 
               </div>
