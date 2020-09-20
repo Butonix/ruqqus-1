@@ -122,17 +122,7 @@
           </div>
           {% endif %}
 
-      <!-- No embed needed for now
-      {% if p.embed_url %}
-      <div class="row justify-content-center embed-lg mb-3">
-        <div class="col">
-          <div class="embed-responsive embed-responsive-16by9">
-            <iframe src="{{ p.embed_url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          </div>
-        </div>
-      </div>
-      {% endif %}
-  -->
+
 
   {% if p.thumb_url %}
   <div class="row post-img-lg mb-3">
@@ -214,16 +204,6 @@
 </div>
 
 </div>
-
-<!--- try removing this block
-{% if p.is_image and p.thumb_url and not p.embed_url %}
-<div class="row mobile-thumb-enlarged text-center mt-3">
-  <div class="col px-0">
-    <a target="_blank" href="{{ p.permalink }}" rel="nofollow noopener"><img src="{{ p.url }}" class="img-fluid" alt="post image"></a>
-  </div>
-</div>
-{% endif %}
---->
 
 <div class="card-footer d-block d-md-none mt-2">
   <div class="post-actions">
