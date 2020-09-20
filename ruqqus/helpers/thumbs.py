@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from PIL import Image as PILimage
 from flask import g
 from io import BytesIO
+import time
 
 from .get import *
 from ruqqus.__main__ import app, db_session
@@ -15,7 +16,12 @@ def thumbnail_thread(pid):
     
     db=db_session()
 
-    post=get_post(pid, session=db)
+    post=get_post(pid, graceful=True, session=db)
+    if not post:
+        #account for possible follower lag
+        time.sleep(60)
+        post=get_post(pid, session=db)
+
 
     #step 1: see if post is image
 
