@@ -27,7 +27,7 @@ from redis import BlockingConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.18.3"
+_version = "2.19.0"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -77,7 +77,7 @@ app.config["SPAM_SIMILARITY_THRESHOLD"]=float(environ.get("SPAM_SIMILARITY_THRES
 app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]=int(environ.get("SPAM_SIMILAR_COUNT_THRESHOLD", 5))
 app.config["SPAM_URL_SIMILARITY_THRESHOLD"]=float(environ.get("SPAM_URL_SIMILARITY_THRESHOLD", 0.1))
     
-app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL").rstrip()
+app.config["CACHE_REDIS_URL"]=environ.get("REDIS_URL").rstrip() if environ.get("REDIS_URL") else None
 app.config["CACHE_DEFAULT_TIMEOUT"]=60
 app.config["CACHE_KEY_PREFIX"]="flask_caching_"
 
@@ -100,7 +100,7 @@ cache=Cache(app)
 Compress(app)
 
 
-app.config["RATELIMIT_STORAGE_URL"]=app.config["CACHE_REDIS_URL"]
+app.config["RATELIMIT_STORAGE_URL"]='memory://' #app.config["CACHE_REDIS_URL"]
 app.config["RATELIMIT_KEY_PREFIX"]="flask_limiting_"
 app.config["RATELIMIT_ENABLED"]=bool(int(environ.get("RATELIMIT_ENABLED", True)))
 

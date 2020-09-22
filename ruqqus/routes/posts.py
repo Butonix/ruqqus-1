@@ -36,6 +36,7 @@ BUCKET="i.ruqqus.com"
 
 @app.route("/post_short/", methods=["GET"])
 @app.route("/post_short/<base36id>", methods=["GET"])
+@app.route("/post_short/<base36id>/", methods=["GET"])
 def incoming_post_shortlink(base36id=None):
 
     if not base36id: 
@@ -181,14 +182,16 @@ def submit_post(v):
         board=get_guild('general')
 
     if not title:
-        return render_template("submit.html",
+        return {"html":lambda:(render_template("submit.html",
                                v=v,
                                error="Please enter a better title.",
                                title=title,
                                url=url,
                                body=request.form.get("body",""),
                                b=board
-                               )
+                               ), 400),
+                "api":lambda:({"error":"Please enter a better title"}, 400)
+                }
 
     # if len(title)<10:
     #     return render_template("submit.html",
@@ -201,25 +204,29 @@ def submit_post(v):
     #                            )
     
     elif len(title)>500:
-        return render_template("submit.html",
+        return {"html":lambda:(render_template("submit.html",
                                v=v,
                                error="500 character limit for titles.",
                                title=title[0:500],
                                url=url,
                                body=request.form.get("body",""),
                                b=board
-                               )
+                               ), 400),
+                "api":lambda:({"error":"500 character limit for titles"}, 400)
+                }
 
     parsed_url=urlparse(url)
     if not (parsed_url.scheme and parsed_url.netloc) and not request.form.get("body") and not request.files.get("file",None):
-        return render_template("submit.html",
+        return {"html":lambda:(render_template("submit.html",
                                v=v,
-                               error="Please enter a URL or some text.",
+                               error="Please enter a url or some text.",
                                title=title,
                                url=url,
                                body=request.form.get("body",""),
                                b=board
-                               )
+                               ), 400),
+                "api":lambda:({"error":"`url` or `body` parameter required."}, 400)
+                }
     #sanitize title
     title=bleach.clean(title)
 
@@ -260,15 +267,17 @@ def submit_post(v):
     domain_obj=get_domain(domain)
     if domain_obj:
         if not domain_obj.can_submit:
-            return render_template("submit.html",
-                                   v=v,
-                                   error=BAN_REASONS[domain_obj.reason],
-                                   title=title,
-                                   url=url,
-                                   body=request.form.get("body",""),
-                                   b=get_guild(request.form.get("board","general"),
-                                           graceful=True)
-                                   )
+
+            return {"html":lambda:(render_template("submit.html",
+                               v=v,
+                               error=BAN_REASONS[domain_obj.reason],
+                               title=title,
+                               url=url,
+                               body=request.form.get("body",""),
+                               b=board
+                               ), 400),
+                "api":lambda:({"error":BAN_REASONS[domain_obj.reason]}, 400)
+                }
 
         #check for embeds
         if domain_obj.embed_function:
@@ -390,27 +399,29 @@ def submit_post(v):
     #catch too-long body
     if len(str(body))>10000:
 
-        return render_template("submit.html",
+        return {"html":lambda:(render_template("submit.html",
                                v=v,
-                               error="10000 character limit for text body",
+                               error="10000 character limit for text body.",
                                title=title,
-                               text=str(body)[0:10000],
                                url=url,
-                               b=get_guild(request.form.get("board","general"),
-                                           graceful=True
-                                           )
-                               ), 400
+                               body=request.form.get("body",""),
+                               b=board
+                               ), 400),
+                "api":lambda:({"error":"10000 character limit for text body."}, 400)
+                }
 
     if len(url)>2048:
 
-        return render_template("submit.html",
+        return {"html":lambda:(render_template("submit.html",
                                v=v,
-                               error="URLs cannot be over 2048 characters",
+                               error="2048 character limit for URLs.",
                                title=title,
-                               text=body[0:2000],
-                               b=get_guild(request.form.get("board","general"),
-                                           graceful=True)
-                               ), 400
+                               url=url,
+                               body=request.form.get("body",""),
+                               b=board
+                               ), 400),
+                "api":lambda:({"error":"2048 character limit for URLs."}, 400)
+                }
 
     #render text
 
@@ -446,14 +457,17 @@ def submit_post(v):
 
                 return redirect('/notifications')
             else:
-                return render_template("submit.html",
-                           v=v,
-                           error=f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}",
-                           title=title,
-                           text=body[0:2000],
-                           b=get_guild(request.form.get("board","general"),
-                                       graceful=True)
-                           ), 400
+
+                return {"html":lambda:(render_template("submit.html",
+                               v=v,
+                               error=f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}.",
+                               title=title,
+                               url=url,
+                               body=request.form.get("body",""),
+                               b=board
+                               ), 400),
+                    "api":lambda:({"error":f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}, 400)
+                    }
 
     #check for embeddable video
     domain=parsed_url.netloc

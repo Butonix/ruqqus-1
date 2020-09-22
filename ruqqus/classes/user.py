@@ -82,6 +82,8 @@ class User(Base, Stndrd, Age_times):
     patreon_pledge_cents=Column(Integer, default=0)
     patreon_name=Column(String(64), default='')
 
+    is_nofollow=Column(Boolean, default=False)
+
     moderates=relationship("ModRelationship", lazy="dynamic")
     banned_from=relationship("BanRelationship", primaryjoin="BanRelationship.user_id==User.id")
     subscriptions=relationship("Subscription", lazy="dynamic")
@@ -171,7 +173,7 @@ class User(Base, Stndrd, Age_times):
             posts = posts.filter_by(is_nsfl=False)
 
         board_ids=g.db.query(Subscription.board_id).filter_by(user_id=self.id, is_active=True).subquery()
-        user_ids =g.db.query(Follow.user_id).filter_by(user_id=self.id).join(Follow.target).filter(User.is_private==False).subquery()
+        user_ids =g.db.query(Follow.user_id).filter_by(user_id=self.id).join(Follow.target).filter(User.is_private==False, User.is_nofollow==False).subquery()
         
         posts=posts.filter(
             or_(

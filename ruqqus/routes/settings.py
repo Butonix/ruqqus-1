@@ -43,7 +43,11 @@ def settings_profile_post(v):
     if request.values.get("private", v.is_private) != v.is_private:
         updated=True
         v.is_private=request.values.get("private", None)=='true'
-        
+
+    if request.values.get("nofollow", v.is_nofollow) != v.is_nofollow:
+        updated=True
+        v.is_nofollow= request.values.get("nofollow", None)=='true'
+
     if request.values.get("bio") is not None:
         bio = request.values.get("bio")[0:256]
 
