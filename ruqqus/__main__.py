@@ -59,7 +59,7 @@ app.config["FORCE_HTTPS"]=int(environ.get("FORCE_HTTPS", 1))
 
 app.jinja_env.cache = {}
 
-app.config["UserAgent"]=f"Ruqqus webserver tools for Ruqqus v{_version} developed by Ruqqus LLC for ruqqus.com."
+app.config["UserAgent"]=f"Ruqqus title finder tool for Ruqqus v{_version} developed by Ruqqus LLC for ruqqus.com."
 
 if "localhost" in app.config["SERVER_NAME"]:
     app.config["CACHE_TYPE"]="null"
