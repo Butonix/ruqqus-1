@@ -43,7 +43,6 @@ _allowed_tags_in_bio=[
                     'a',
                     'b',
                     'blockquote',
-                    'br',
                     'code',
                     'del',
                     'em',
