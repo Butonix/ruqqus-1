@@ -6,7 +6,6 @@ source venv/bin/activate
 source env.sh
 cd ~/ruqqus
 pip3 install -r requirements.txt
-export domain=ruqqus.com
 export PYTHONPATH=$PYTHONPATH:~/ruqqus
 export S3_BUCKET_NAME=i.ruqqus.com
 export CACHE_TYPE="filesystem"
