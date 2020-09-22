@@ -147,7 +147,7 @@ def oauth_authorize_post(v):
     return redirect(f"{redirect_uri}?code={new_auth.oauth_code}&scopes={scopes_txt}&state={state}")
 
 
-@app.route("/oauth/grant", methods=["post"])
+@app.route("/oauth/grant", methods=["POST"])
 def oauth_grant():
 
     '''
