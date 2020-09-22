@@ -1,6 +1,6 @@
 server {
     
-    server_name ruqqus.com ruqq.us c.ruqq.us ruqqus.org ruqqus.win *.amazonaws.com;
+    server_name *.ruqqus.com ruqqus.com ruqq.us c.ruqq.us ruqqus.org ruqqus.win *.amazonaws.com;
 
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
