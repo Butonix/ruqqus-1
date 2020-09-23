@@ -14879,6 +14879,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   font-size: 16px;
   font-weight: 600;
   word-break: break-word;
+  overflow: hidden;
 }
 
 .post-title a {
