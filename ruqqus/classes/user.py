@@ -276,7 +276,7 @@ class User(Base, Stndrd, Age_times):
 
     @cache.memoize(300)
     def commentlisting(self, v=None, page=1):
-        comments=self.comments.filter(Comment.parent_submission is not None).join(Comment.post)
+        comments=self.comments.options(lazyload('*')).filter(Comment.parent_submission is not None).join(Comment.post)
 
         if not (v and v.over_18):
             comments=comments.filter_by(over_18=False)
@@ -300,10 +300,10 @@ class User(Base, Stndrd, Age_times):
             c=v.contributes.subquery()
             
             comments=comments.join(m,
-                                   m.c.board_id==Comment.board_id,
+                                   m.c.board_id==Submission.board_id,
                                    isouter=True
                          ).join(c,
-                                c.c.board_id==Comment.board_id,
+                                c.c.board_id==Submission.board_id,
                                 isouter=True
                                 ).join(Board, Board.id==Submission.board_id)
             comments=comments.filter(or_(Comment.author_id==v.id,
@@ -312,7 +312,7 @@ class User(Base, Stndrd, Age_times):
                                m.c.board_id != None,
                                c.c.board_id !=None))
         else:
-            comments=comments.filter(Submission.post_public==True)
+            comments=comments.join(Board, Board.id==Submission.board_id).filter(or_(Submission.post_public==True, Board.is_private==False))
 
         comments=comments.options(contains_eager(Comment.post))
 
