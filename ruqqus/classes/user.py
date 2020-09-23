@@ -279,19 +279,19 @@ class User(Base, Stndrd, Age_times):
         comments=self.comments.options(lazyload('*')).filter(Comment.parent_submission is not None).join(Comment.post)
 
         if not (v and v.over_18):
-            comments=comments.filter_by(over_18=False)
+            comments=comments.filter(Submission.over_18=False)
 
         if v and v.hide_offensive:
-            comments=comments.filter_by(is_offensive=False)
+            comments=comments.filter(Comment.is_offensive=False)
 
         if v and not v.show_nsfl:
-            comments=comments.filter_by(is_nsfl=False)
+            comments=comments.filter(Submission.is_nsfl=False)
 
         if (not v) or v.admin_level<3:
-            comments=comments.filter_by(is_deleted=False)
+            comments=comments.filter(Comment.is_deleted=False)
             
         if not (v and (v.admin_level >=3 or v.id==self.id)):
-            comments=comments.filter_by(is_banned=False)
+            comments=comments.filter(Comment.is_banned=False)
 
         if v and v.admin_level >= 4:
             pass
