@@ -162,7 +162,7 @@ def oauth_grant():
 
         code=request.values.get("code")
         if not code:
-            return jsonify({"oauth_error":"code required"})
+            return jsonify({"oauth_error":"code required"}), 400
 
         auth=g.db.query(ClientAuth).join(ClientAuth.application).filter(
             ClientAuth.oauth_code==code,
@@ -198,7 +198,7 @@ def oauth_grant():
 
         refresh_token=request.values.get('refresh_token')
         if not refresh_token:
-            return jsonify({"oauth_error":"refresh_token required"})
+            return jsonify({"oauth_error":"refresh_token required"}), 401
 
         auth=g.db.query(ClientAuth).join(ClientAuth.application).filter(
             ClientAuth.refresh_token==refresh_token,
@@ -224,7 +224,7 @@ def oauth_grant():
         return jsonify(data)
 
     else:
-        return jsonify({"oauth_error":"Invalid grant type"})
+        return jsonify({"oauth_error":"Invalid grant type"}), 400
 
 @app.route("/help/api_keys", methods=["POST"])
 @is_not_banned
