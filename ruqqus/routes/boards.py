@@ -213,7 +213,10 @@ def board_name(name, v):
                            is_subscribed=(v and board.has_subscriber(v)
                                           )
                                           ),
-            'api':lambda:jsonify({"data":[x.json for x in posts]})
+            'api':lambda:jsonify({"data":[x.json for x in posts],
+                        "next_exists":next_exists
+                    }
+                )
             }
 
 

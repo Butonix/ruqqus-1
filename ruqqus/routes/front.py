@@ -239,7 +239,10 @@ def home(v):
                                time_filter=t,
                                page=page,
                                only=only),
-                'api':lambda:jsonify({"data":[x.json for x in posts]})
+                'api':lambda:jsonify({"data":[x.json for x in posts],
+                            "next_exists":next_exists
+                        }
+                    )
                 }
     else:
         return front_all()
@@ -296,7 +299,10 @@ def front_all(v):
                                             v=v,
                                             listing=posts
                                             ),
-            'api':lambda:jsonify({"data":[x.json for x in posts]})
+            'api':lambda:jsonify({"data":[x.json for x in posts],
+                        "next_exists":next_exists
+                    }
+                )
             }
 
 @cache.memoize(600)
