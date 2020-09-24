@@ -205,7 +205,7 @@ def oauth_grant():
         if not refresh_token:
             return jsonify({"oauth_error":"refresh_token required"}), 401
 
-        auth=g.db.query(ClientAuth).join(ClientAuth.application).filter_by(
+        auth=g.db.query(ClientAuth).filter_by(
             refresh_token=refresh_token,
             oauth_code=None,
             oauth_client=application.id
