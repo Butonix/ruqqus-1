@@ -42,7 +42,7 @@ def oauth_authorize_prompt(v):
         return jsonify({"oauth_error":"Invalid `client_id`"}), 401
 
     if application.is_banned:
-        return jsonify({"oauth_error":"Banned `client_id`"}), 403
+        return jsonify({"oauth_error":f"Application `{application.app_name}` is suspended."}), 403
         
     scopes_txt = request.args.get('scope', "")
 
@@ -101,9 +101,9 @@ def oauth_authorize_post(v):
 
     application = get_application(client_id)
     if not application:
-        abort(404)
+        return jsonify({"oauth_error":"Invalid `client_id`"}), 401
     if application.is_banned:
-        abort(403)
+        return jsonify({"oauth_error":f"Application `{application.app_name}` is suspended."}), 403
 
     valid_redirect_uris = [x.lstrip().rstrip() for x in application.redirect_uri.split(",")]
     if redirect_uri not in valid_redirect_uris:
@@ -157,6 +157,12 @@ def oauth_grant():
     * client_secret - your client secret
     '''
 
+    application = g.db.query(OauthApp).filter_by(client_id=request.values.get("client_id"),client_secret=request.values.get("client_secret")).first()
+    if not application:
+        return jsonify({"oauth_error":"Invalid `client_id` or `client_secret`"}), 401
+    if application.is_banned:
+        return jsonify({"oauth_error":f"Application `{application.app_name}` is suspended."}), 403
+
 
     if request.values.get("grant_type")=="code":
 
@@ -164,15 +170,14 @@ def oauth_grant():
         if not code:
             return jsonify({"oauth_error":"code required"}), 400
 
-        auth=g.db.query(ClientAuth).join(ClientAuth.application).filter(
-            ClientAuth.oauth_code==code,
-            ClientAuth.access_token==None,
-            OauthApp.client_id==request.values.get("client_id"),
-            OauthApp.client_secret==request.values.get("client_secret")
-            ).options(contains_eager(ClientAuth.application)).first()
+        auth=g.db.query(ClientAuth).filter_by(
+            oauth_code=code,
+            access_token=None,
+            oauth_client=application.id
+            ).first()
 
         if not auth:
-            return jsonify({"oauth_error": "Invalid code, client ID, or secret"}), 401
+            return jsonify({"oauth_error": "Invalid code"}), 401
 
         auth.oauth_code=None
         auth.access_token=secrets.token_urlsafe(128)[0:128]
@@ -200,15 +205,14 @@ def oauth_grant():
         if not refresh_token:
             return jsonify({"oauth_error":"refresh_token required"}), 401
 
-        auth=g.db.query(ClientAuth).join(ClientAuth.application).filter(
-            ClientAuth.refresh_token==refresh_token,
-            ClientAuth.oauth_code==None,
-            OauthApp.client_id==request.values.get("client_id"),
-            OauthApp.client_secret==request.values.get("client_secret")
-            ).options(contains_eager(ClientAuth.application)).first()
+        auth=g.db.query(ClientAuth).join(ClientAuth.application).filter_by(
+            refresh_token=refresh_token,
+            oauth_code=None,
+            oauth_client=application.id
+            ).first()
 
         if not auth:
-            return jsonify({"oauth_error": "Invalid refresh_token, client ID, or secret"}), 401
+            return jsonify({"oauth_error": "Invalid refresh_token"}), 401
 
         auth.access_token=secrets.token_urlsafe(128)[0:128]
         auth.access_token_expire_utc = int(time.time())+60*60
@@ -224,7 +228,7 @@ def oauth_grant():
         return jsonify(data)
 
     else:
-        return jsonify({"oauth_error":"Invalid grant type"}), 400
+        return jsonify({"oauth_error":f"Invalid grant_type `{request.values.get('grant_type','')}`. Expected `code` or `refresh`."}), 400
 
 @app.route("/help/api_keys", methods=["POST"])
 @is_not_banned

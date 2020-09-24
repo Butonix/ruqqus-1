@@ -217,7 +217,8 @@ class User(Base, Stndrd, Age_times):
                 cutoff=now-31536000
             else:
                 cutoff=0
-                
+            posts=posts.filter(Submission.created_utc >= cutoff)
+
         gt = kwargs.get("gt")
         lt = kwargs.get("lt")
 
@@ -227,7 +228,6 @@ class User(Base, Stndrd, Age_times):
         if lt:
             posts=posts.filter(Submission.created_utc<lt)
             
-        posts=posts.filter(Submission.created_utc >= cutoff)
                 
             
 
