@@ -217,17 +217,17 @@ class User(Base, Stndrd, Age_times):
                 cutoff=now-31536000
             else:
                 cutoff=0
-        else:
-            gt = kwargs.get("gt")
-            lt = kwargs.get("lt")
-
-            if gt:
-                posts=posts.filter(Submission.created_utc>gt)
-
-            if lt:
-                posts=posts.filter(Submission.created_utc<lt)
                 
-            posts=posts.filter(Submission.created_utc >= cutoff)
+        gt = kwargs.get("gt")
+        lt = kwargs.get("lt")
+
+        if gt:
+            posts=posts.filter(Submission.created_utc>gt)
+
+        if lt:
+            posts=posts.filter(Submission.created_utc<lt)
+            
+        posts=posts.filter(Submission.created_utc >= cutoff)
                 
             
 

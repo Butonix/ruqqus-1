@@ -156,15 +156,15 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **k
         else:
             cutoff=0    
         posts=posts.filter(Submission.created_utc >= cutoff)
-    else:
-        gt = kwargs.get("gt")
-        lt = kwargs.get("lt")
 
-        if gt:
-            posts=posts.filter(Submission.created_utc>gt)
+    gt = kwargs.get("gt")
+    lt = kwargs.get("lt")
 
-        if lt:
-            posts=posts.filter(Submission.created_utc<lt)
+    if gt:
+        posts=posts.filter(Submission.created_utc>gt)
+
+    if lt:
+        posts=posts.filter(Submission.created_utc<lt)
 
     if sort=="hot":
         posts=posts.order_by(Submission.score_best.desc())
