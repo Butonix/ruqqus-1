@@ -166,8 +166,6 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **k
         if lt:
             posts=posts.filter(Submission.created_utc<lt)
 
-    if 
-
     if sort=="hot":
         posts=posts.order_by(Submission.score_best.desc())
     elif sort=="new":
