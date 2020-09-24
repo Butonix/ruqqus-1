@@ -159,6 +159,15 @@ class Board(Base, Stndrd, Age_times):
             else:
                 cutoff=0
             posts=posts.filter(Submission.created_utc >= cutoff)
+        else:
+            gt = kwargs.get("gt")
+            lt = kwargs.get("lt")
+
+            if gt:
+                posts=posts.filter(Submission.created_utc>gt)
+
+            if lt:
+                posts=posts.filter(Submission.created_utc<lt)
             
 
         if sort=="hot":

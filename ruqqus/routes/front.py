@@ -156,6 +156,17 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **k
         else:
             cutoff=0    
         posts=posts.filter(Submission.created_utc >= cutoff)
+    else:
+        gt = kwargs.get("gt")
+        lt = kwargs.get("lt")
+
+        if gt:
+            posts=posts.filter(Submission.created_utc>gt)
+
+        if lt:
+            posts=posts.filter(Submission.created_utc<lt)
+
+    if 
 
     if sort=="hot":
         posts=posts.order_by(Submission.score_best.desc())
@@ -169,6 +180,9 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **k
         posts=posts.order_by(Submission.score_activity.desc())
     else:
         abort(422)
+
+
+
 
     if ids_only:
         posts=[x.id for x in posts.offset(25*(page-1)).limit(26).all()]
@@ -198,7 +212,11 @@ def home(v):
 
                      #these arguments don't really do much but they exist for cache memoization differentiation
                      allow_nsfw=v.over_18,
-                     hide_offensive=v.hide_offensive
+                     hide_offensive=v.hide_offensive,
+
+                     #greater/less than
+                     gt=int(request.args.get("utc_greater_than",0)),
+                     lt=int(request.args.get("utc_less_than",0))
                      )
 
         next_exists=(len(ids)==26)
@@ -249,7 +267,9 @@ def front_all(v):
                     nsfw=(v and v.over_18 and not v.filter_nsfw),
                     t=t,
                     v=v,
-                    hide_offensive= v and v.hide_offensive
+                    hide_offensive= v and v.hide_offensive,
+                    gt=int(request.args.get("utc_greater_than",0)),
+                    lt=int(request.args.get("utc_less_than",0))
                     )
 
     #check existence of next page

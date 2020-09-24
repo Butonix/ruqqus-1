@@ -178,7 +178,9 @@ def board_name(name, v):
                     t=t,
                     page=page,
                     nsfw=(v and v.over_18) or session_over18(board),
-                    v=v
+                    v=v,
+                    gt=int(request.args.get("utc_greater_than",0)),
+                    lt=int(request.args.get("utc_less_than",0))
                     )
 
     next_exists=(len(ids)==26)
