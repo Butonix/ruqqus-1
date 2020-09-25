@@ -39,7 +39,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
     post=get_post(p_id, v=v)
 
     if comment.parent_submission != post.id:
-        abort(404)
+        return redirect(request.path.replace(p_id, comment.post.base36id))
 
     board=post.board
 
