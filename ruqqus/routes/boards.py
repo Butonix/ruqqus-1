@@ -1347,6 +1347,7 @@ def change_guild_category(v, board, bid, category):
     board.category=category
 
     try:
+        g.db.add(board)
         g.db.flush()
 
     except:

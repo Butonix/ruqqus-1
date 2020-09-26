@@ -1,5 +1,6 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred, lazyload
+from sqlalchemy.types import Enum
 import time
 
 from ruqqus.helpers.base36 import *
@@ -14,6 +15,22 @@ from .board_relationships import *
 from .comment import Comment
 from .mix_ins import *
 from ruqqus.__main__ import Base, cache
+
+class BoardCategory(Enum):
+
+    Arts="Arts"
+    Culture="Culture"
+    Discussion="Discussion"
+    Food="Food"
+    Entertainment="Entertainment"
+    Gaming="Gaming"
+    Hobby="Hobby"
+    Humor="Humor"
+    News="News"
+    Photography="Photography"
+    Politics="Politics"
+    Sports="Sports"
+    Technology="Technology"
 
 class Board(Base, Stndrd, Age_times):
 
@@ -53,6 +70,7 @@ class Board(Base, Stndrd, Age_times):
     #db side functions
     subscriber_count=deferred(Column(Integer, server_default=FetchedValue()))
     
+
     def __init__(self, **kwargs):
 
         kwargs["created_utc"]=int(time.time())
