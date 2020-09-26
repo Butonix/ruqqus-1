@@ -643,6 +643,7 @@ def embed_post_pid(pid):
     return render_template("embeds/submission.html", p=post)
 
 @app.route("/api/toggle_post_nsfw/<pid>", methods=["POST"])
+@app.route("/api/v1/toggle_post_nsfw/<pid>", methods=["POST"])
 @is_not_banned
 @api("update")
 @validate_formkey
@@ -663,6 +664,7 @@ def toggle_post_nsfw(pid, v):
     return "", 204
 
 @app.route("/api/toggle_post_nsfl/<pid>", methods=["POST"])
+@app.route("/api/v1/toggle_post_nsfl/<pid>", methods=["POST"])
 @is_not_banned
 @api("update")
 @validate_formkey
