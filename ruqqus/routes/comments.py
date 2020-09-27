@@ -28,6 +28,7 @@ def comment_cid(cid):
         abort(403)
     return redirect(comment.permalink)
 
+
 @app.route("/post/<p_id>/<anything>/<c_id>", methods=["GET"])
 @app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
 @auth_desired
@@ -355,6 +356,9 @@ def api_comment(v):
                      )
 
     g.db.add(vote)
+
+    c.post.score_activity=c.post.rank_activity
+    g.db.add(c.post)
 
     g.db.commit()
     
