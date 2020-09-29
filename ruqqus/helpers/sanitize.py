@@ -47,14 +47,11 @@ _allowed_tags_in_bio=[
                     'del',
                     'em',
                     'i',
-                    'li',
-                    'ol',
                     'p',
                     'pre',
                     'strong',
                     'sub',
-                    'sup',
-                    'ul'
+                    'sup'
                    ]
 
 _allowed_attributes={'a': ['href', 'title', "rel"],

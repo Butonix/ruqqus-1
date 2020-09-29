@@ -10,7 +10,7 @@ from flask import g
 
 class UserMention(SpanToken):
 
-    pattern=re.compile("(^|\W)@(\w{3,25})")
+    pattern=re.compile("(^|\s|\n)@(\w{3,25})")
     parse_inner=False
     
     def __init__(self, match_obj):
@@ -18,7 +18,7 @@ class UserMention(SpanToken):
 
 class BoardMention(SpanToken):
 
-    pattern=re.compile("(^|\W)\+(\w{3,25})")
+    pattern=re.compile("(^|\s|\n)\+(\w{3,25})")
     parse_inner=False
 
     def __init__(self, match_obj):
@@ -27,7 +27,7 @@ class BoardMention(SpanToken):
 
 class OpMention(SpanToken):
 
-    pattern=re.compile("(^|\W)@([Oo][Pp])\b")
+    pattern=re.compile("(^|\W|\s)@([Oo][Pp])\b")
     parse_inner=False
 
     def __init__(self, match_obj):

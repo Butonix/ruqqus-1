@@ -1336,3 +1336,20 @@ def board_comments(boardname, v):
                     standalone=True,
                     next_exists=next_exists),
             "api":lambda:jsonify({"data":[x.json for x in comments]})}
+
+
+@app.route("/mod/<bid>/category/<category>", methods=["POST"])
+@auth_required
+@is_guildmaster
+@validate_formkey
+def change_guild_category(v, board, bid, category):
+
+    board.category=category
+
+    try:
+        g.db.flush()
+
+    except:
+        return jsonify({"error":f"Invalid category `{category}`"}), 400
+
+    return jsonify({"message":f"Category changed to {category}"})
