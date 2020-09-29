@@ -112,7 +112,7 @@
 
           </div>
 
-          <h5 class="card-title post-title text-left w-lg-75 mb-0 mb-md-2"><a href="{{ p.permalink }}" class="stretched-link" {% if p.author.is_private %} rel="nofollow"{% endif %}>{{ p.title | safe }}</a></h5>
+          <h5 class="card-title post-title text-left w-lg-75 mb-0 pb-0 pb-md-1"><a href="{{ p.permalink }}" class="stretched-link" {% if p.author.is_private %} rel="nofollow"{% endif %}>{{ p.title | safe }}</a></h5>
 
           {% if p.body_html %}
           <div class="post-preview-lg">
