@@ -77,7 +77,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot"):
 @auth_desired
 def search(v, search_type="posts"):
 
-    query=request.args.get("q")
+    query=request.args.get("q",'')
 
 
     page=max(1, int(request.args.get("page", 1)))
