@@ -264,9 +264,44 @@ def api_comment(v):
     if post.is_archived or not post.board.can_comment(v):
         return jsonify({"error":"You can't comment on this."}), 403
 
-    #check spam - this is stupid slow for now
-    #similar_comments=g.db.query(Comment).filter(Comment.author_id==v.id, CommentAux.body.op('<->')(body)<0.5).options(contains_eager(Comment.comment_aux)).all()
-    #print(similar_comments)
+    #check spam - this should hopefully be faster
+    now=int(time.time())
+    cutoff=now-60*60*24
+
+    similar_comments=g.db.query(Comment
+        ).options(
+            lazyload('*')
+        ).join(Comment.comment_aux
+        ).filter(
+            Comment.author_id==v.id,
+            CommentAux.body.op('<->')(body) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+            Comment.created_utc > cutoff
+        ).options(contains_eager(Comment.comment_aux)).all()
+
+    threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
+    if v.age >= (60*60*24*30):
+        threshold *= 4
+    elif v.age >=(60*60*24*7):
+        threshold *= 3
+    elif v.age >=(60*60*24):
+        threshold *= 2
+
+
+    if len(similar_comments)> threshold:
+        text="Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+        send_notification(v, text)
+
+        v.ban(reason="Spamming.",
+          include_alts=True,
+          days=1)
+
+        for comment in similar_comments:
+            comment.is_banned=True
+            comment.ban_reason="Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
+            g.db.add(comment)
+
+        g.db.commit()
+        return jsonify({"error":"Too much spam!"}), 403
 
     for x in g.db.query(BadWord).all():
         if x.check(body):
