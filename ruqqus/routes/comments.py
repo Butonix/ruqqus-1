@@ -11,6 +11,7 @@ from ruqqus.helpers.embed import *
 from ruqqus.helpers.markdown import *
 from ruqqus.helpers.get import *
 from ruqqus.helpers.session import *
+from ruqqus.helpers.alerts import *
 from ruqqus.classes import *
 from flask import *
 from ruqqus.__main__ import app, limiter
