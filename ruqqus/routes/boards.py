@@ -983,7 +983,11 @@ def board_css(boardname, x):
     #of some odd behavior with css files
     scss=raw.replace("{boardcolor}", board.color)
     
-    resp=Response(sass.compile(string=scss), mimetype='text/css')
+    try:
+        resp=Response(sass.compile(string=scss), mimetype='text/css')
+    except sass.CompileError:
+        return redirect("/assets/style/main.css")
+
     resp.headers.add("Cache-Control", "public")
 
     return resp
@@ -1009,8 +1013,12 @@ def board_dark_css(boardname, x):
     #This doesn't use python's string formatting because
     #of some odd behavior with css files
     scss=raw.replace("{boardcolor}", board.color)
-    
-    resp=Response(sass.compile(string=scss), mimetype='text/css')
+
+    try:
+        resp=Response(sass.compile(string=scss), mimetype='text/css')
+    except sass.CompileError:
+        return redirect("/assets/style/main_dark.css")
+
     resp.headers.add("Cache-Control", "public")
     return resp
 

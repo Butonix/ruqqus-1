@@ -8,7 +8,7 @@
 <th>Key</th>
 <th>Value</th>
 </tr>
-{% for key in v.__dict__ if key not in ["passhash", "_lazy", "_sa_instance_state", "mfa_secret", "title"] %}
+{% for key in v.__dict__ if key not in ["passhash", "_lazy", "_sa_instance_state", "mfa_secret", "title", "patreon_access_token", "patreon_refresh_token"] %}
 <tr>
 <td>{{ key }}</td>
 <td>{{ v.__dict__[key] }}</td>
