@@ -2389,6 +2389,7 @@ div:hover .thumb-img-link-overlay {
     word-break: break-word;
     color: $black;
     overflow: hidden;
+    white-space: break-spaces;
 }
 
 .comment .comment-body .comment-image {
