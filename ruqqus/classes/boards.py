@@ -16,21 +16,37 @@ from .comment import Comment
 from .mix_ins import *
 from ruqqus.__main__ import Base, cache
 
-class BoardCategory(Enum):
+# class BoardCategory(Enum):
 
-    Arts="Arts"
-    Culture="Culture"
-    Discussion="Discussion"
-    Food="Food"
-    Entertainment="Entertainment"
-    Gaming="Gaming"
-    Hobby="Hobby"
-    Humor="Humor"
-    News="News"
-    Photography="Photography"
-    Politics="Politics"
-    Sports="Sports"
-    Technology="Technology"
+#     Arts="Arts"
+#     Culture="Culture"
+#     Discussion="Discussion"
+#     Food="Food"
+#     Entertainment="Entertainment"
+#     Gaming="Gaming"
+#     Hobby="Hobby"
+#     Humor="Humor"
+#     News="News"
+#     Photography="Photography"
+#     Politics="Politics"
+#     Sports="Sports"
+#     Technology="Technology"
+
+CATEGORIES={
+    1:  "Arts",
+    2:  "Culture",
+    3:  "Discussion",
+    4:  "Food",
+    5:  "Entertainment",
+    6:  "Gaming",
+    7:  "Hobby",
+    8:  "Humor",
+    9:  "News",
+    10: "Photography",
+    11: "Politics",
+    12: "Sports"
+    13: "Technology"
+}
 
 class Board(Base, Stndrd, Age_times):
 
@@ -58,6 +74,7 @@ class Board(Base, Stndrd, Age_times):
     rank_trending=Column(Float, default=0)
     stored_subscriber_count=Column(Integer, default=1)
     all_opt_out=Column(Boolean, default=False)
+    category=Column(Integer, default=0)
 
     moderators=relationship("ModRelationship")
     subscribers=relationship("Subscription", lazy="dynamic")

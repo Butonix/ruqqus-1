@@ -1352,6 +1352,8 @@ def board_comments(boardname, v):
 @validate_formkey
 def change_guild_category(v, board, bid, category):
 
+    category=int(category)
+
     board.category=category
 
     try:
@@ -1359,6 +1361,6 @@ def change_guild_category(v, board, bid, category):
         g.db.flush()
 
     except:
-        return jsonify({"error":f"Invalid category `{category}`"}), 400
+        return jsonify({"error":f"Invalid category ID"}), 400
 
-    return jsonify({"message":f"Category changed to {category}"})
+    return jsonify({"message":f"Category changed to {CATEGORIES[category]}"})
