@@ -84,6 +84,8 @@ class Board(Base, Stndrd, Age_times):
     postrels=relationship("PostRelationship", lazy="dynamic")
     trending_rank=deferred(Column(Float, server_default=FetchedValue()))
 
+    _categories=CATEGORIES
+
     #db side functions
     subscriber_count=deferred(Column(Integer, server_default=FetchedValue()))
     
