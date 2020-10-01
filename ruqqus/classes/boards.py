@@ -44,7 +44,7 @@ CATEGORIES={
     9:  "News",
     10: "Photography",
     11: "Politics",
-    12: "Sports"
+    12: "Sports",
     13: "Technology"
 }
 
