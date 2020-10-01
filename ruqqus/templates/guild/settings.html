@@ -200,8 +200,9 @@
               <div class="w-lg-100">
                 <div class="input-group mb-2">
                   <select name="category" class="form-control">
-                    <option value="1">Discussion</option>
-                    <option value="2">Politics</option>
+                    {% for category in categories %}
+                    <option value="{{ category }}"{% if board.category==category %} selected{% endif %}>{{ categories[category] }}</option>
+                    {% endfor %}
                   </select>
                 </div>
               </div>
