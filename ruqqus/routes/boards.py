@@ -723,7 +723,7 @@ def mod_edit_rule(bid, board, v):
 @is_guildmaster
 def board_about_settings(boardname, board, v):
 
-    return render_template("guild/settings.html", v=v, b=board)
+    return render_template("guild/settings.html", v=v, b=board, categories=ruqqus.classes.boards.CATEGORIES)
 
 @app.route("/+<boardname>/mod/appearance", methods=["GET"])
 @auth_required
