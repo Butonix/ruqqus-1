@@ -141,7 +141,8 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, t=None, ids_only=True, **k
     else:
         posts=posts.join(Submission.board).filter_by(all_opt_out=False).options(contains_eager(Submission.board))
 
-
+    if kwargs.get("categories"):
+        posts=posts.filter(Board.category.in_(kwargs.get("categories")))
 
     if t:
         now=int(time.time())
@@ -202,6 +203,11 @@ def home(v):
         
         page=max(int(request.args.get("page",1)),0)
         t=request.args.get('t', 'all')
+
+
+        #get active categories
+        categories=session.get("categories", [])
+
         
         ids=v.idlist(sort=sort,
                      page=page,
@@ -214,7 +220,9 @@ def home(v):
 
                      #greater/less than
                      gt=int(request.args.get("utc_greater_than",0)),
-                     lt=int(request.args.get("utc_less_than",0))
+                     lt=int(request.args.get("utc_less_than",0)),
+
+                     categories=categories
                      )
 
         next_exists=(len(ids)==26)
