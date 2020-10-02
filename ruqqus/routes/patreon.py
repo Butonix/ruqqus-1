@@ -122,7 +122,7 @@ def patreon_redirect(v):
     try:
         v.patreon_pledge_cents=data['included'][0]["attributes"]['currently_entitled_amount_cents']
     except Exception as e:
-        print(e)
+        #print(e)
         v.patreon_pledge_cents=0
 
 
