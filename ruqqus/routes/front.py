@@ -205,9 +205,6 @@ def home(v):
         t=request.args.get('t', 'all')
 
 
-        #get active categories
-        categories=session.get("categories", [])
-
         
         ids=v.idlist(sort=sort,
                      page=page,
@@ -222,7 +219,6 @@ def home(v):
                      gt=int(request.args.get("utc_greater_than",0)),
                      lt=int(request.args.get("utc_less_than",0)),
 
-                     categories=categories
                      )
 
         next_exists=(len(ids)==26)
@@ -270,6 +266,10 @@ def front_all(v):
     sort_method=request.args.get("sort", "hot")
     t=request.args.get('t','all')
 
+    #get active categories
+    categories=session.get("categories", [])
+
+
     #get list of ids
     ids = frontlist(sort=sort_method,
                     page=page,
@@ -278,7 +278,8 @@ def front_all(v):
                     v=v,
                     hide_offensive= v and v.hide_offensive,
                     gt=int(request.args.get("utc_greater_than",0)),
-                    lt=int(request.args.get("utc_less_than",0))
+                    lt=int(request.args.get("utc_less_than",0)),
+                    categories=categories
                     )
 
     #check existence of next page
