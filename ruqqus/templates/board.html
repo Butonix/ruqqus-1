@@ -306,7 +306,7 @@
           {% if b.is_nsfl %}
             <span class="badge badge-black text-small align-top">nsfl</span>
             {% endif %}
-            {% if b.restricted_posting or b.is_private %}
+            {% if b.is_private %}
             <span class="badge badge-warning text-small align-top" data-toggle="tooltip" data-placement="bottom" title="This guild is private. Content posted prior to the guild being set to private is visible to everyone.">private</span>
             {% endif %}
           </h1>
