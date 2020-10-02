@@ -199,7 +199,7 @@
 
               <div class="w-lg-100">
                 <div class="input-group mb-2">
-                  <select id="category-selector" name="category" class="form-control" onchange="x=document.getElementById('category-selector');mod_post('/mod/{{ b.base36id }}/category/'+x.options[x.selectedIndex].value)">
+                  <select id="category-selector" name="category" class="form-control" onchange="mod_post('/mod/{{ b.base36id }}/category/'+document.getElementById('category-selector').selectedOptions[0].value)">
                     {% for category in b._categories %}
                     <option value="{{ category }}"{% if b.category==category %} selected{% endif %}>{{ b._categories[category] }}</option>
                     {% endfor %}
