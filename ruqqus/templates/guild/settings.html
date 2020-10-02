@@ -201,7 +201,7 @@
                 <div class="input-group mb-2">
                   <select name="category" class="form-control">
                     {% for category in b._categories %}
-                    <option value="{{ category }}"{% if b.category==category %} selected{% endif %}>{{ categories[category] }}</option>
+                    <option value="{{ category }}"{% if b.category==category %} selected{% endif %}>{{ b._categories[category] }}</option>
                     {% endfor %}
                   </select>
                 </div>
