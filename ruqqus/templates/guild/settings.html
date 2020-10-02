@@ -199,7 +199,7 @@
 
               <div class="w-lg-100">
                 <div class="input-group mb-2">
-                  <select id="category-selector" name="category" class="form-control" onchange="mod_post('/mod/{{ b.base36id }}/category/'+document.getElementById('category-selector').selectedOptions[0].value)">
+                  <select id="category-selector" name="category" class="form-control" onchange="post_toast('/mod/{{ b.base36id }}/category/'+document.getElementById('category-selector').selectedOptions[0].value)">
                     {% for category in b._categories %}
                     <option value="{{ category }}"{% if b.category==category %} selected{% endif %}>{{ b._categories[category] }}</option>
                     {% endfor %}
@@ -321,7 +321,7 @@
               <div class="body w-lg-100">
 
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="guildoptout" name="opt_out"{% if b.all_opt_out %} checked{% endif %} onchange="post_toast('/mod/{{ b.base36id }}/settings/opt_out','guildoptout')">
+                  <input type="checkbox" class="custom-control-input" id="guildoptout" name="opt_out"{% if b.all_opt_out %} checked{% endif %} onchange="mod_post('/mod/{{ b.base36id }}/settings/opt_out','guildoptout')">
                   <label class="custom-control-label" for="guildoptout"></label>
                 </div>
 
