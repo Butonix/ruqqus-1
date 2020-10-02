@@ -453,6 +453,65 @@ def edit_comment(cid, v):
         else:
             c.is_offensive=False
 
+    #check badlinks
+    soup=BeautifulSoup(body_html, features="html.parser")
+    links=[x['href'] for x in soup.find_all('a') if x.get('href')]
+
+    for link in links:
+        parse_link=urlparse(link)
+        check_url=ParseResult(scheme="https",
+                            netloc=parse_link.netloc,
+                            path=parse_link.path,
+                            params=parse_link.params,
+                            query=parse_link.query,
+                            fragment='')
+        check_url=urlunparse(check_url)
+
+
+        badlink=g.db.query(BadLink).filter(literal(check_url).contains(BadLink.link)).first()
+
+        if badlink:
+            return jsonify({"error":f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason_text}"}), 403
+    
+    #check spam - this should hopefully be faster
+    now=int(time.time())
+    cutoff=now-60*60*24
+
+    similar_comments=g.db.query(Comment
+        ).options(
+            lazyload('*')
+        ).join(Comment.comment_aux
+        ).filter(
+            Comment.author_id==v.id,
+            CommentAux.body.op('<->')(body) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+            Comment.created_utc > cutoff
+        ).options(contains_eager(Comment.comment_aux)).all()
+
+    threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
+    if v.age >= (60*60*24*30):
+        threshold *= 4
+    elif v.age >=(60*60*24*7):
+        threshold *= 3
+    elif v.age >=(60*60*24):
+        threshold *= 2
+
+
+    if len(similar_comments)> threshold:
+        text="Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+        send_notification(v, text)
+
+        v.ban(reason="Spamming.",
+          include_alts=True,
+          days=1)
+
+        for comment in similar_comments:
+            comment.is_banned=True
+            comment.ban_reason="Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
+            g.db.add(comment)
+
+        g.db.commit()
+        return jsonify({"error":"Too much spam!"}), 403
+        
     c.body=body
     c.body_html=body_html
     c.edited_utc = int(time.time())
