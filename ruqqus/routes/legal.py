@@ -118,7 +118,7 @@ def dmca_post(v):
     new_post_aux=SubmissionAux(id=new_post.id,
                                url=None,
                                body=post_text,
-                               body_html=post_html_html,
+                               body_html=post_html,
                                embed_url=None,
                                title=f"DMCA {new_post.base36id}"
                                )
