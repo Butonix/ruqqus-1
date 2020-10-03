@@ -2,6 +2,7 @@ from flask import *
 from os import environ
 import requests
 from werkzeug.utils import secure_filename
+import mistletoe
 
 from ruqqus.helpers.get import *
 from ruqqus.helpers.wrappers import *
