@@ -124,7 +124,38 @@ def dmca_post(v):
                                )
 
     g.db.add(new_post_aux)
+    g.db.flush()
+
+    comment_text=f"##### Username\n\n@{v.username}\n\n##### Email\n\n{v.email}\n\n##### Address\n\n{data['address']}"
+    with CustomRenderer() as renderer:
+        c_html=renderer.render(mistletoe.Document(comment_text))
+    c_html=sanitize(c_html, linkgen=True)
+
+
+    c=Comment(author_id=1,
+              parent_submission=new_post.id,
+              parent_fullname=new_post.fullname,
+              parent_comment_id=None,
+              level=1,
+              over_18=False,
+              is_nsfl=False,
+              is_op=True,
+              is_offensive=False,
+              original_board_id=1000,
+              is_deleted=True
+              )
+    g.db.add(c)
+    g.db.flush()
+
+    c_aux=CommentAux(
+        id=c.id,
+        body_html=c_html,
+        body=comment_text
+        )
+
+    g.db.add(c_aux)
     g.db.commit()
+
 
     return render_template("/help/dmca.html",
                            msg="Your request has been saved.",
