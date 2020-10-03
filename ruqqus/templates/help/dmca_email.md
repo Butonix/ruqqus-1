@@ -1,10 +1,8 @@
 ##### Username
 
-<a href="{{ v.permalink }}">@{{ v.username }}</a>
+[@{{ v.username }}]({{ v.permalink | full_link }})
 
 ##### Email
-
-<a href="mailto:{{ v.email }}">@{{ v.email }}</a>
 
 ##### Your name
 
