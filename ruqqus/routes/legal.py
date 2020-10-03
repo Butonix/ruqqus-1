@@ -84,7 +84,7 @@ def dmca_post(v):
 
     with CustomRenderer() as renderer:
         email_html=renderer.render(mistletoe.Document(email_text))
-    email_html=sanitize(email_md, linkgen=True)
+    email_html=sanitize(email_html, linkgen=True)
     
     try:
         send_mail(environ.get("admin_email"),
@@ -99,7 +99,7 @@ def dmca_post(v):
     post_text=render_template("help/dmca_notice.md", v=v, **data)
     with CustomRenderer() as renderer:
         post_html=renderer.render(mistletoe.Document(post_text))
-    post_html=sanitize(post_md, linkgen=True)
+    post_html=sanitize(post_html, linkgen=True)
 
     #create +RuqqusDMCA post
     new_post=Submission(author_id=1,
