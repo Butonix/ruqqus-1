@@ -23,30 +23,34 @@ def guild_info(v, boardname):
 @api("read")
 def user_info(v, username):
 
-    user=get_user(username, v=v)
+    user = get_user(username, v=v)
     return jsonify(user.json)
+
 
 @app.route("/api/v1/post/<pid>", methods=["GET"])
 @auth_desired
 @api("read")
 def post_info(v, pid):
 
-    post=get_post(pid, v=v)
+    post = get_post(pid, v=v)
 
-    if not post.is_public and post.board.is_private and not post.board.can_view(v):
+    if not post.is_public and post.board.is_private and not post.board.can_view(
+            v):
         abort(403)
-        
+
     return jsonify(post.json)
+
 
 @app.route("/api/v1/comment/<cid>", methods=["GET"])
 @auth_desired
 @api("read")
 def comment_info(v, cid):
 
-    comment=get_comment(cid, v=v)
+    comment = get_comment(cid, v=v)
 
-    post=comment.post
-    if not post or not post.is_public and post.board.is_private and not post.board.can_view(v):
+    post = comment.post
+    if not post or not post.is_public and post.board.is_private and not post.board.can_view(
+            v):
         abort(403)
-        
+
     return jsonify(comment.json)
