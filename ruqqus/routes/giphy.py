@@ -4,7 +4,8 @@ import requests
 
 from ruqqus.__main__ import app
 
-GIPHY_KEY=environ.get('GIPHY_KEY').rstrip()
+GIPHY_KEY = environ.get('GIPHY_KEY').rstrip()
+
 
 @app.route("/giphy", methods=["GET"])
 @app.route("/giphy<path>", methods=["GET"])
@@ -19,4 +20,3 @@ def giphy():
     else:
         url = f"https://api.giphy.com/v1/gifs?api_key={GIPHY_KEY}&limit=48"
     return jsonify(requests.get(url).json())
-    

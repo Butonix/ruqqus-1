@@ -4,120 +4,117 @@ import redis
 from os import environ
 import hashlib
 
+
 class CustomCache(backends.rediscache.RedisCache):
 
+    def __init__(self, app, config, *args):
 
-	def __init__(self, app, config, *args):
+        self.caches = [
+            flask_caching.Cache(
+                app,
+                config={"CACHE_TYPE": 'redis',
+                        "CACHE_REDIS_URL": url}
+            ) for url in app.config['redis_urls']
+        ]
 
-		self.caches = [
-			flask_caching.Cache(
-				app,
-				config={"CACHE_TYPE":'redis',
-				"CACHE_REDIS_URL": url}
-				) for url in app.config['redis_urls']
-			]
+    def key_to_cache(self, key):
 
-	def key_to_cache(self, key):
+        return self.caches[self.key_to_cache_number(key)]
 
-		return self.caches[self.key_to_cache_number(key)]
+    def key_to_cache_number(self, key):
 
-	def key_to_cache_number(self, key):
+        return int(hashlib.md5(bytes(key, 'utf-8')).hexdigest()
+                   [-5:], 16) % len(self.caches)
 
-		return int(hashlib.md5(bytes(key, 'utf-8')).hexdigest()[-5:], 16) % len(self.caches)
+    def sharded_keys(self, keys, return_index=False):
 
-	def sharded_keys(self, keys, return_index=False):
+        sharded_keys = {i: [] for i in range(len(self.caches))}
+        idx = {}
+        for key in keys:
+            cache = self.key_to_cache_number(key)
+            sharded_keys[cache].append(key)
+            idx[key] = [cache, len(sharded_keys[cache]) - 1]
 
-		sharded_keys={i: [] for i in range(len(self.caches))}
-		idx={}
-		for key in keys:
-			cache=self.key_to_cache_number(key)
-			sharded_keys[cache].append(key)
-			idx[key]=[cache, len(sharded_keys[cache])-1]
+        if not return_index:
+            return sharded_keys
+        else:
+            return sharded_keys, idx
 
+    def get(self, key):
 
-		if not return_index:
-			return sharded_keys
-		else:
-			return sharded_keys, idx
+        cache = self.key_to_cache(key)
 
+        return cache.get(key)
 
-	def get(self, key):
+    def get_many(self, *keys):
 
-		cache=self.key_to_cache(key)
+        sharded_keys, idx = self.sharded_keys(keys, return_index=True)
 
-		return cache.get(key)
+        objects = {i: self.caches[i].get_many(
+            *sharded_keys[i]) for i in range(len(self.caches))}
 
-	def get_many(self, *keys):
+        output = [objects[idx[key][0]][idx[key][1]] for key in keys]
 
-		sharded_keys, idx =self.sharded_keys(keys, return_index=True)
+        return output
 
-		objects={i: self.caches[i].get_many(*sharded_keys[i]) for i in range(len(self.caches))}
+    def set(self, key, value, timeout=None):
+        cache = self.key_to_cache(key)
+        return cache.set(key, value, timeout=timeout)
 
-		output=[objects[idx[key][0]][idx[key][1]] for key in keys]
+    def add(self, key, value, timeout=None):
+        cache = self.key_to_cache(key)
+        return cache.add(key, value, timeout=timeout)
 
-		return output
+    def set_many(self, mapping, timeout=None):
 
+        caches = {i: {} for i in range(len(self.caches))}
+        for key in mapping:
+            caches[self.key_to_cache_number(key)][key] = mapping[key]
 
-	def set(self, key, value, timeout=None):
-		cache=self.key_to_cache(key)
-		return cache.set(key, value, timeout=timeout)
+        for i in caches:
+            self.caches[i].set_many(caches[i], timeout=timeout)
 
-	def add(self, key, value, timeout=None):
-		cache=self.key_to_cache(key)
-		return cache.add(key, value, timeout=timeout)
+    def delete(self, key):
 
-	def set_many(self, mapping, timeout=None):
+        cache = self.key_to_cache(key)
+        return cache.delete(key)
 
-		caches={i:{} for i in range(len(self.caches))}
-		for key in mapping:
-			caches[self.key_to_cache_number(key)][key]=mapping[key]
+    def delete_many(self, *keys):
 
-		for i in caches:
-			self.caches[i].set_many(caches[i], timeout=timeout)
+        if not keys:
+            return
 
-	def delete(self, key):
+        sharded_keys = self.sharded_keys(keys)
 
-		cache=self.key_to_cache(key)
-		return cache.delete(key)
+        for i in sharded_keys:
+            self.caches[i].delete_many(*sharded_keys[i])
 
-	def delete_many(self, *keys):
+        return True
 
-		if not keys:
-			return
+    def has(self, key):
+        cache = self.key_to_cache(key)
+        return cache.has(key)
 
-		sharded_keys=self.sharded_keys(keys)
+    def clear(self):
 
-		for i in sharded_keys:
-			self.caches[i].delete_many(*sharded_keys[i])
+        return any([i.clear() for i in self.caches])
 
-		return True
+    def inc(self, key, delta=1):
+        cache = self.key_to_cache(key)
+        cache.inc(key, delta=delta)
 
-	def has(self, key):
-		cache=self.key_to_cache(key)
-		return cache.has(key)
+    def dec(self, key, delta=1):
+        cache = self.key_to_cache(key)
+        cache.dec(key, delta=delta)
 
-	def clear(self):
+    def unlink(self, *keys):
 
-		return any([i.clear() for i in self.caches])
+        if not keys:
+            return
 
-	def inc(self, key, delta=1):
-		cache=self.key_to_cache(key)
-		cache.inc(key, delta=delta)
+        sharded_keys = self.sharded_keys(keys)
 
-	def dec(self, key, delta=1):
-		cache=self.key_to_cache(key)
-		cache.dec(key, delta=delta)
+        for i in sharded_keys:
+            self.caches[i].unlink(*sharded_keys[i])
 
-	def unlink(self, *keys):
-
-		if not keys:
-			return
-
-		sharded_keys=self.sharded_keys(keys)
-
-		for i in sharded_keys:
-			self.caches[i].unlink(*sharded_keys[i])
-
-		return True
-
-	
+        return True

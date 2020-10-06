@@ -7,9 +7,10 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.lazy import lazy
 from ruqqus.__main__ import Base, cache
 
+
 class Rules(Base, Stndrd, Age_times):
 
-    __tablename__="rules"
+    __tablename__ = "rules"
     id = Column(BigInteger, primary_key=True)
     board_id = Column(Integer, ForeignKey("boards.id"))
     rule_body = Column(String(256))
