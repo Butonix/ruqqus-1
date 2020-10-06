@@ -45,6 +45,7 @@ def api_vote_post(post_id, x, v):
         g.db.add(vote)
 
 
+
     try:
         g.db.flush()
     except:
