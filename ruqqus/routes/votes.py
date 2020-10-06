@@ -43,6 +43,14 @@ def api_vote_post(post_id, x, v):
                     )
 
         g.db.add(vote)
+
+    try:
+        g.db.flush()
+    except:
+        abort(500)
+
+    post.upvotes = post.ups
+    post.downvotes = post.downs
     g.db.flush()
 
     post.upvotes = post.ups
@@ -97,7 +105,10 @@ def api_vote_comment(comment_id, x, v):
                            )
 
         g.db.add(vote)
-    g.db.flush()
+    try:
+        g.db.flush()
+    except:
+        abort(500)
 
     comment.upvotes = comment.ups
     comment.downvotes = comment.downs
