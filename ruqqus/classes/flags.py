@@ -5,25 +5,26 @@ from .mix_ins import *
 
 class Flag(Base, Stndrd):
 
-    __tablename__="flags"
+    __tablename__ = "flags"
 
-    id=Column(Integer, primary_key=True)
-    post_id=Column(Integer, ForeignKey("submissions.id"))
-    user_id=Column(Integer, ForeignKey("users.id"))
-    created_utc=Column(Integer)
+    id = Column(Integer, primary_key=True)
+    post_id = Column(Integer, ForeignKey("submissions.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
+    created_utc = Column(Integer)
 
     def __repr__(self):
 
         return f"<Flag(id={self.id})>"
 
+
 class CommentFlag(Base, Stndrd):
 
-    __tablename__="commentflags"
+    __tablename__ = "commentflags"
 
-    id=Column(Integer, primary_key=True)
-    user_id=Column(Integer, ForeignKey("users.id"))
-    comment_id=Column(Integer, ForeignKey("comments.id"))
-    created_utc=Column(Integer)
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    comment_id = Column(Integer, ForeignKey("comments.id"))
+    created_utc = Column(Integer)
 
     def __repr__(self):
 
@@ -32,14 +33,14 @@ class CommentFlag(Base, Stndrd):
 
 class Report(Base):
 
-    __tablename__="reports"
+    __tablename__ = "reports"
 
-    id=Column(Integer, primary_key=True)
-    post_id=Column(Integer, ForeignKey("submissions.id"))
-    user_id=Column(Integer, ForeignKey("users.id"))
-    created_utc=Column(Integer)
+    id = Column(Integer, primary_key=True)
+    post_id = Column(Integer, ForeignKey("submissions.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
+    created_utc = Column(Integer)
 
-    board_id=Column(Integer, server_default=FetchedValue())
+    board_id = Column(Integer, server_default=FetchedValue())
 
     def __repr__(self):
 

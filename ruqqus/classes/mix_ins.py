@@ -8,7 +8,7 @@ from ruqqus.__main__ import cache
 
 
 class Stndrd:
-    
+
     @property
     @lazy
     def base36id(self):
@@ -22,15 +22,15 @@ class Stndrd:
     @property
     @lazy
     def created_datetime(self):
-        return time.strftime("%d %B %Y at %H:%M:%S", time.gmtime(self.created_utc))
+        return time.strftime("%d %B %Y at %H:%M:%S",
+                             time.gmtime(self.created_utc))
 
     @property
     @lazy
     def created_iso(self):
 
-        t=time.gmtime(self.created_utc)
-        return time.strftime("%Y-%m-%dT%H:%M:%S+00:00",t)
-    
+        t = time.gmtime(self.created_utc)
+        return time.strftime("%Y-%m-%dT%H:%M:%S+00:00", t)
 
 
 class Age_times:
@@ -38,9 +38,9 @@ class Age_times:
     @property
     def age(self):
 
-        now=int(time.time())
+        now = int(time.time())
 
-        return now-self.created_utc
+        return now - self.created_utc
 
     @property
     def created_date(self):
@@ -50,7 +50,8 @@ class Age_times:
     @property
     def created_datetime(self):
 
-        return time.strftime("%d %b %Y at %H:%M:%S", time.gmtime(self.created_utc))
+        return time.strftime("%d %b %Y at %H:%M:%S",
+                             time.gmtime(self.created_utc))
 
     @property
     def age_string(self):
@@ -72,11 +73,11 @@ class Age_times:
         now = time.gmtime()
         ctd = time.gmtime(self.created_utc)
 
-        #compute number of months
+        # compute number of months
         months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
-        #remove a month count if current day of month < creation day of month
+        # remove a month count if current day of month < creation day of month
         if now.tm_mday < ctd.tm_mday:
-            months-=1
+            months -= 1
 
         if months < 12:
             return f"{months} month{'s' if months > 1 else ''} ago"
@@ -120,17 +121,19 @@ class Age_times:
 
     @property
     def edited_datetime(self):
-        return time.strftime("%d %B %Y at %H:%M:%S", time.gmtime(self.edited_utc))
+        return time.strftime("%d %B %Y at %H:%M:%S",
+                             time.gmtime(self.edited_utc))
+
 
 class Scores:
 
     @property
     #@cache.memoize(timeout=60)
     def score_percent(self):
-##        try:
-##            return int((self.ups/(self.ups+self.downs))*100)
-##        except ZeroDivisionError:
-##            return 0
+        # try:
+        # return int((self.ups/(self.ups+self.downs))*100)
+        # except ZeroDivisionError:
+        # return 0
 
         return 101
 
@@ -139,21 +142,20 @@ class Scores:
     def score(self):
         return int(self.score_top) or 0
 
+
 class Fuzzing:
 
     @property
     #@cache.memoize(timeout=60)
     def score_fuzzed(self):
 
-
-        
         real = self.score_top if self.score_top else self.score
-        real=int(real)
+        real = int(real)
         if real <= 10:
             return real
 
-        k=0.01
-        
+        k = 0.01
+
         a = math.floor(real * (1 - k))
         b = math.ceil(real * (1 + k))
         return random.randint(a, b)
@@ -161,20 +163,20 @@ class Fuzzing:
     @property
     def upvotes_fuzzed(self):
 
-        if self.upvotes <=10 or self.is_archived:
+        if self.upvotes <= 10 or self.is_archived:
             return self.upvotes
 
         lower = int(self.upvotes * 0.99)
-        upper = int(self.upvotes * 1.01)+1
+        upper = int(self.upvotes * 1.01) + 1
 
         return random.randint(lower, upper)
 
     @property
     def downvotes_fuzzed(self):
-        if self.downvotes <=10 or self.is_archived:
+        if self.downvotes <= 10 or self.is_archived:
             return self.downvotes
 
         lower = int(self.downvotes * 0.99)
-        upper = int(self.downvotes * 1.01)+1
+        upper = int(self.downvotes * 1.01) + 1
 
         return random.randint(lower, upper)
