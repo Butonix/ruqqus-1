@@ -4,6 +4,8 @@
 
 ##### Email
 
+{{ v.email }}
+
 ##### Your name
 
 {{ name }}
