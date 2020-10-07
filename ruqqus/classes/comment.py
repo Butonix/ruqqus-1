@@ -260,6 +260,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'body': self.body,
                 'body_html': self.body_html,
                 'is_archived': self.is_archived,
+                'is_bot': self.is_bot,
                 'title': self.title.json if self.title else None,
                 'guild_name': self.board.name,
                 'created_utc': self.created_utc,
