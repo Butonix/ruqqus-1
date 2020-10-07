@@ -66,7 +66,8 @@ You may not use ruqqus.com to do any of the following:
 The following rules apply to clients interacting with Ruqqus in an automated manner.
 
 * Bots may not vote.
-* Bots must identify themselves with a unique `User-Agent` header.
+* Bots must use a unique `User-Agent` header.
+* Bots must include a `X-User-Type` header with a value of `Bot`.
 * Bots that post content must serve a useful function, such as looking up information or bridging to another service.
 
 {% endfilter %}
