@@ -268,44 +268,48 @@ def api_comment(v):
     if post.is_archived or not post.board.can_comment(v):
         return jsonify({"error": "You can't comment on this."}), 403
 
+    # get bot status
+    is_bot = request.headers.get("X-User-Type","")=="Bot"
+
     # check spam - this should hopefully be faster
-    now = int(time.time())
-    cutoff = now - 60 * 60 * 24
+    if not is_bot:
+        now = int(time.time())
+        cutoff = now - 60 * 60 * 24
 
-    similar_comments = g.db.query(Comment
-                                  ).options(
-        lazyload('*')
-    ).join(Comment.comment_aux
-           ).filter(
-        Comment.author_id == v.id,
-        CommentAux.body.op(
-            '<->')(body) < app.config["SPAM_SIMILARITY_THRESHOLD"],
-        Comment.created_utc > cutoff
-    ).options(contains_eager(Comment.comment_aux)).all()
+        similar_comments = g.db.query(Comment
+                                      ).options(
+            lazyload('*')
+        ).join(Comment.comment_aux
+               ).filter(
+            Comment.author_id == v.id,
+            CommentAux.body.op(
+                '<->')(body) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+            Comment.created_utc > cutoff
+        ).options(contains_eager(Comment.comment_aux)).all()
 
-    threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
-    if v.age >= (60 * 60 * 24 * 30):
-        threshold *= 4
-    elif v.age >= (60 * 60 * 24 * 7):
-        threshold *= 3
-    elif v.age >= (60 * 60 * 24):
-        threshold *= 2
+        threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
+        if v.age >= (60 * 60 * 24 * 30):
+            threshold *= 4
+        elif v.age >= (60 * 60 * 24 * 7):
+            threshold *= 3
+        elif v.age >= (60 * 60 * 24):
+            threshold *= 2
 
-    if len(similar_comments) > threshold:
-        text = "Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-        send_notification(v, text)
+        if len(similar_comments) > threshold:
+            text = "Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+            send_notification(v, text)
 
-        v.ban(reason="Spamming.",
-              include_alts=True,
-              days=1)
+            v.ban(reason="Spamming.",
+                  include_alts=True,
+                  days=1)
 
-        for comment in similar_comments:
-            comment.is_banned = True
-            comment.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
-            g.db.add(comment)
+            for comment in similar_comments:
+                comment.is_banned = True
+                comment.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
+                g.db.add(comment)
 
-        g.db.commit()
-        return jsonify({"error": "Too much spam!"}), 403
+            g.db.commit()
+            return jsonify({"error": "Too much spam!"}), 403
 
     for x in g.db.query(BadWord).all():
         if x.check(body):
@@ -345,7 +349,8 @@ def api_comment(v):
                 is_nsfl=post.is_nsfl,
                 is_op=(v.id == post.author_id),
                 is_offensive=is_offensive,
-                original_board_id=parent_post.board_id
+                original_board_id=parent_post.board_id,
+                is_bot=is_bot
                 )
 
     g.db.add(c)
