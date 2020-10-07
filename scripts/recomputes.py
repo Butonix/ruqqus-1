@@ -13,7 +13,7 @@ def recompute():
 
     while True:
 
-        print("beginning guild trend recompute")
+        #print("beginning guild trend recompute")
         x += 1
         boards = db.query(Board).options(
             lazyload('*')).filter_by(is_banned=False).order_by(Board.rank_trending.desc())
@@ -34,7 +34,7 @@ def recompute():
 
         cutoff = now - (60 * 60 * 24 * 180)
 
-        print("Beginning post recompute")
+        #print("Beginning post recompute")
         i = 0
         page = 1
         posts = True
@@ -84,9 +84,9 @@ def recompute():
 
             db.commit()
             page += 1
-            print(f"re-scored {post_count} posts")
+            #print(f"re-scored {post_count} posts")
 
-            # print(f"{i}/{total} - {post.base36id}")
+            # #print(f"{i}/{total} - {post.base36id}")
 
         db.commit()
 
