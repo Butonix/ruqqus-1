@@ -11,7 +11,7 @@ from ruqqus.__main__ import app
 
 REDIS_URL = os.environ.get('REDIS_CHAT_URL').lstrip().rstrip()
 
-app = Flask(__name__)
+#app = Flask(__name__)
 #app.debug = 'DEBUG' in os.environ
 
 sockets = Sockets(app)
