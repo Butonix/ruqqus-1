@@ -161,7 +161,7 @@ from ruqqus.routes import *
 import ruqqus.helpers.jinja2
 
 #import and bind chat function
-import ruqqus.chat
+from ruqqus.chat import *
 
 
 @app.before_first_request
