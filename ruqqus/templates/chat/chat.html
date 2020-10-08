@@ -5,6 +5,35 @@
     <link href="/assets/{{ b.name }}/main/{{ b.color_nonce }}.css" rel="stylesheet" media="screen">
     <!----<link href="static/css/application.css" rel="stylesheet" media="screen">--->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  </head>
+  <body>
+    <div class="container">
+      <div class="jumbotron">
+        <h1>Python Websockets Chat Demo</h1>
+        <hr />
+        <p>Chat proof of concept for +{{ b.name }}</p>
+      </div>
+      <form id="input-form" class="form-inline">
+        <div class="form-group">
+          <input id="input-handle" type="text" class="form-control" placeholder="Enter handle" autofocus />
+        </div>
+        <div class="form-group">
+          <input id="input-text" type="text" class="form-control" placeholder="Enter chat text here!" autofocus />
+        </div>
+        <button class="btn btn-primary" type="submit">Send</button>
+      </form>
+      <div class="page-header">
+        <h1>Chat Log</h1>
+      </div>
+      <div id="chat-text">
+      </div>
+    </div>
+
+    <a href="https://github.com/heroku-examples/python-websockets-chat"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="/assets/js/reconnecting-websocket.min.js"></script>
     <script>
       // Support TLS-specific URLs, when appropriate.
       if (window.location.protocol == "https:") {
@@ -44,34 +73,5 @@
         $("#input-text")[0].value = "";
       });
     </script>
-  </head>
-  <body>
-    <div class="container">
-      <div class="jumbotron">
-        <h1>Python Websockets Chat Demo</h1>
-        <hr />
-        <p>Chat proof of concept for +{{ b.name }}</p>
-      </div>
-      <form id="input-form" class="form-inline">
-        <div class="form-group">
-          <input id="input-handle" type="text" class="form-control" placeholder="Enter handle" autofocus />
-        </div>
-        <div class="form-group">
-          <input id="input-text" type="text" class="form-control" placeholder="Enter chat text here!" autofocus />
-        </div>
-        <button class="btn btn-primary" type="submit">Send</button>
-      </form>
-      <div class="page-header">
-        <h1>Chat Log</h1>
-      </div>
-      <div id="chat-text">
-      </div>
-    </div>
-
-    <a href="https://github.com/heroku-examples/python-websockets-chat"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
-
-    <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
-    <script type="text/javascript" src="/assets/js/reconnecting-websocket.min.js"></script>
-    <script type="text/javascript" src="/assets/js/application.js"></script>
   </body>
 </html>
