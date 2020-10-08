@@ -64,11 +64,11 @@ CHATS = {}
 
 
 @sockets.route('/<guildname>/chat_submit')
-@is_not_banned
-def inbox(*args):
+#@is_not_banned
+def inbox(ws):
     """Receives incoming chat messages, inserts them into Redis."""
 
-    print(args)
+    #print(args)
 
     guild=get_guild(guildname, graceful=True)
     if not guild or guild.is_banned:
@@ -89,7 +89,7 @@ def inbox(*args):
             redis.publish(guild.name, message)
 
 @sockets.route('/<guildname>/chat_receive')
-@is_not_banned
+#@is_not_banned
 def outbox(ws):
 
     guild=get_guild(guildname, graceful=True)
