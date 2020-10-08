@@ -41,8 +41,8 @@
       };
 
 
-      var inbox = new ReconnectingWebSocket(ws_scheme + location.host + "/{{ b.name }}/chat_receive");
-      var outbox = new ReconnectingWebSocket(ws_scheme + location.host + "/{{ b.name }}/chat_submit");
+      var inbox = new ReconnectingWebSocket(ws_scheme + location.host + "/+{{ b.name }}/chat_receive");
+      var outbox = new ReconnectingWebSocket(ws_scheme + location.host + "/+{{ b.name }}/chat_submit");
 
       inbox.onmessage = function(message) {
         var data = JSON.parse(message.data);

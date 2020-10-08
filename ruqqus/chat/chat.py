@@ -63,7 +63,7 @@ class ChatBackend(object):
 CHATS = {}
 
 
-@sockets.route('/<guildname>/chat_submit')
+@sockets.route('/+<guildname>/chat_submit')
 #@is_not_banned
 def inbox(ws):
     """Receives incoming chat messages, inserts them into Redis."""
@@ -88,7 +88,7 @@ def inbox(ws):
             #app.logger.info(f'Inserting message: {message}')
             redis.publish(guild.name, message)
 
-@sockets.route('/<guildname>/chat_receive')
+@sockets.route('/+<guildname>/chat_receive')
 #@is_not_banned
 def outbox(ws):
 
