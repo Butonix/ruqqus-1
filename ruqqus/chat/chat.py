@@ -7,14 +7,13 @@ from flask_sockets import Sockets
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
-from ruqqus.__main__ import app
+from ruqqus.__main__ import app, sockets
 
 REDIS_URL = os.environ.get('REDIS_CHAT_URL').lstrip().rstrip()
 
 #app = Flask(__name__)
 #app.debug = 'DEBUG' in os.environ
 
-sockets = Sockets(app)
 redis = redis.from_url(REDIS_URL)
 
 
