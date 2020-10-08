@@ -66,7 +66,7 @@ CHATS = {}
 def inbox(*args):
     """Receives incoming chat messages, inserts them into Redis."""
 
-    print(*args)
+    print(args)
 
     guild=get_guild(guildname, graceful=True)
     if not guild or guild.is_banned:
@@ -105,3 +105,14 @@ def outbox(ws):
     while not ws.closed:
         # Context switch while `ChatBackend.start` is running in the background.
         gevent.sleep(0.1)
+
+
+@app.route("/+<guildname>/chat", methods=["GET"])
+@is_not_banned
+def guild_chat_get(v, guildname):
+
+    return render_template(
+        "chat/chat.html",
+        v=v,
+        b=get_guild(guildname)
+        )
