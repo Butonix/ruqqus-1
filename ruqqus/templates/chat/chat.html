@@ -2,9 +2,48 @@
 <html>
   <head>
     <title>Python Websockets Chat Demo</title>
-    <link href="static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/assets/styles/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="static/css/application.css" rel="stylesheet" media="screen">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+      // Support TLS-specific URLs, when appropriate.
+      if (window.location.protocol == "https:") {
+        var ws_scheme = "wss://";
+      } else {
+        var ws_scheme = "ws://"
+      };
+
+
+      var inbox = new ReconnectingWebSocket(ws_scheme + location.host + "/{{ b.name }}/chat_receive");
+      var outbox = new ReconnectingWebSocket(ws_scheme + location.host + "/{{ b.name }}/chat_submit");
+
+      inbox.onmessage = function(message) {
+        var data = JSON.parse(message.data);
+        $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>" + $('<span/>').text(data.handle).html() + "</div><div class='panel-body'>" + $('<span/>').text(data.text).html() + "</div></div>");
+        $("#chat-text").stop().animate({
+          scrollTop: $('#chat-text')[0].scrollHeight
+        }, 800);
+      };
+
+      inbox.onclose = function(){
+          console.log('inbox closed');
+          this.inbox = new WebSocket(inbox.url);
+
+      };
+
+      outbox.onclose = function(){
+          console.log('outbox closed');
+          this.outbox = new WebSocket(outbox.url);
+      };
+
+      $("#input-form").on("submit", function(event) {
+        event.preventDefault();
+        var handle = $("#input-handle")[0].value;
+        var text   = $("#input-text")[0].value;
+        outbox.send(JSON.stringify({ handle: handle, text: text }));
+        $("#input-text")[0].value = "";
+      });
+    </script>
   </head>
   <body>
     <div class="container">
