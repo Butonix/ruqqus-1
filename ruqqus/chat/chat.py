@@ -5,6 +5,8 @@ import gevent
 from flask import Flask, render_template
 from flask_sockets import Sockets
 
+from ruqqus.helpers.wrappers import *
+from ruqqus.helpers.get import *
 from ruqqus.__main__ import app
 
 REDIS_URL = os.environ.get('REDIS_CHAT_URL').lstrip().rstrip()
