@@ -108,6 +108,8 @@ Markdown(app)
 cache = Cache(app)
 Compress(app)
 
+sockets=Sockets(app)
+
 
 # app.config["CACHE_REDIS_URL"]
 app.config["RATELIMIT_STORAGE_URL"] = 'memory://'
