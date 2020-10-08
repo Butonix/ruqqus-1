@@ -8,7 +8,6 @@ from flask_sockets import Sockets
 from ruqqus.__main__ import app
 
 REDIS_URL = os.environ.get('REDIS_CHAT_URL').lstrip().rstrip()
-REDIS_CHAN = 'chat'
 
 app = Flask(__name__)
 #app.debug = 'DEBUG' in os.environ
@@ -21,10 +20,10 @@ redis = redis.from_url(REDIS_URL)
 class ChatBackend(object):
     """Interface for registering and updating WebSocket clients."""
 
-    def __init__(self):
+    def __init__(self, guildname):
         self.clients = list()
         self.pubsub = redis.pubsub()
-        self.pubsub.subscribe(REDIS_CHAN)
+        self.pubsub.subscribe(guildname)
 
     def __iter_data(self):
         for message in self.pubsub.listen():
@@ -50,35 +49,56 @@ class ChatBackend(object):
         for data in self.__iter_data():
             for client in self.clients:
                 gevent.spawn(self.send, client, data)
+            if not self.clients:
+                gevent.sleep(10)
+                if not self.clients:
+                    break
 
     def start(self):
         """Maintains Redis subscription in the background."""
         gevent.spawn(self.run)
 
-chats = ChatBackend()
-chats.start()
+CHATS = {}
 
 
-@app.route('/')
-def hello():
-    return render_template('index.html')
-
-@sockets.route('/submit')
-def inbox(ws):
+@sockets.route('/<guildname>/chat_submit')
+@is_not_banned
+def inbox(v, guildname, ws):
     """Receives incoming chat messages, inserts them into Redis."""
+
+    guild=get_guild(guildname, graceful=True)
+    if not guild or guild.is_banned:
+        ws.close()
+        return
+
+    if guild.name not in CHATS:
+        CHATS[guild.name]=ChatBackend(guild.name)
+        CHATS[guild.name].start()
+
     while not ws.closed:
         # Sleep to prevent *constant* context-switches.
         gevent.sleep(0.1)
         message = ws.receive()
 
         if message:
-            app.logger.info(u'Inserting message: {}'.format(message))
-            redis.publish(REDIS_CHAN, message)
+            #app.logger.info(f'Inserting message: {message}')
+            redis.publish(guild.name, message)
 
-@sockets.route('/receive')
+@sockets.route('/<guildname>/chat_receive')
+@is_not_banned
 def outbox(ws):
+
+    guild=get_guild(guildname, graceful=True)
+    if not guild or guild.is_banned:
+        ws.close()
+        return
+
+    if guild.name not in CHATS:
+        CHATS[guild.name]=ChatBackend(guild.name)
+        CHATS[guild.name].start()
+
     """Sends outgoing chat messages, via `ChatBackend`."""
-    chats.register(ws)
+    CHATS[guild.name].register(ws)
 
     while not ws.closed:
         # Context switch while `ChatBackend.start` is running in the background.
