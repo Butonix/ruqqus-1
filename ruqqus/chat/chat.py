@@ -111,7 +111,7 @@ def outbox(ws):
 
 @app.route("/+<guildname>/chat", methods=["GET"])
 @is_not_banned
-def guild_chat_get(v, guildname):
+def guild_chat_get(guildname, v):
 
     return render_template(
         "chat/chat.html",
