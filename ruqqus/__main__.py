@@ -160,6 +160,9 @@ import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
 
+#import and bind chat function
+import ruqqus.chat
+
 
 @app.before_first_request
 def app_setup():

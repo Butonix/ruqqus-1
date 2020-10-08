@@ -5,11 +5,13 @@ import gevent
 from flask import Flask, render_template
 from flask_sockets import Sockets
 
-REDIS_URL = os.environ['REDIS_CHAT_URL']
+from ruqqus.__main__ import app
+
+REDIS_URL = os.environ.get('REDIS_CHAT_URL').lstrip().rstrip()
 REDIS_CHAN = 'chat'
 
 app = Flask(__name__)
-app.debug = 'DEBUG' in os.environ
+#app.debug = 'DEBUG' in os.environ
 
 sockets = Sockets(app)
 redis = redis.from_url(REDIS_URL)
