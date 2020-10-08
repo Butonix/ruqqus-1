@@ -113,8 +113,14 @@ def outbox(ws):
 @is_not_banned
 def guild_chat_get(guildname, v):
 
+    print('got funciton')
+
+    b=get_guild(guildname)
+
+    print("got guild")
+
     return render_template(
         "chat/chat.html",
         v=v,
-        b=get_guild(guildname)
+        b=b
         )
