@@ -17,6 +17,7 @@ from ruqqus.helpers.aws import check_csam_url
 from ruqqus.classes import *
 from .front import guild_ids
 from ruqqus.classes.rules import *
+from ruqqus.classes.boards import CATEGORIES
 from flask import *
 
 from ruqqus.__main__ import app, limiter, cache
