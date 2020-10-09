@@ -67,7 +67,7 @@ def inbox(ws):
     """Receives incoming chat messages, inserts them into Redis."""
 
     #guild=get_guild(guildname, graceful=True)
-    guild=get_guild('general')
+    guild=get_guild('general', graceful=True)
     #if not guild or guild.is_banned:
     #    ws.close()
     #    return
@@ -92,7 +92,7 @@ def outbox(ws):
 
     #guild=get_guild(guildname, graceful=True)
     
-    guild=get_guild('general')
+    guild=get_guild('general', graceful=True)
     #if not guild or guild.is_banned:
     #    ws.close()
     #    return
