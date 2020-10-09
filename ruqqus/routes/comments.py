@@ -314,12 +314,16 @@ def api_comment(v):
             g.db.commit()
             return jsonify({"error": "Too much spam!"}), 403
 
-    for x in g.db.query(BadWord).all():
-        if x.check(body):
-            is_offensive = True
-            break
-        else:
-            is_offensive = False
+    badwords=g.db.query(BadWord).all()
+    if badwords:
+        for x in badwords:
+            if x.check(body):
+                is_offensive = True
+                break
+            else:
+                is_offensive = False
+    else:
+        is_offensive=False
 
     # check badlinks
     soup = BeautifulSoup(body_html, features="html.parser")
