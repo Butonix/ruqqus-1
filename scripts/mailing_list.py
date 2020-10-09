@@ -10,10 +10,13 @@ title = input("Title: ")
 subject = input("Email subject: ")
 
 x = db.query(classes.user.User).filter(classes.user.User.is_banned==0, classes.user.User.email!=None)
-print(f"total mail to send: {x.count()}")
+total=x.count()
+print(f"total mail to send: {total}")
 
 #for user in x.order_by(classes.user.User.id.asc()).all():
+i=0
 for user in [get_user('captainmeta4', nSession=db)]:
+    i+=1
     # for user in db.query(classes.user.User).filter_by(id=7).all():
 
     try:
@@ -29,8 +32,8 @@ for user in [get_user('captainmeta4', nSession=db)]:
             subject=subject,
             html=html
         )
-        print(f"[{user.id}] @{user.username}")
+        print(f"{i}/{total} [{user.id}] @{user.username}")
     except BaseException:
-        print(f"unable - [{user.id}] @{user.username}")
+        print(f"{i}/{total} unable - [{user.id}] @{user.username}")
 
 print("all done")
