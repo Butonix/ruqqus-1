@@ -1,8 +1,10 @@
-from ruqqus.__main__ import app, db
+from ruqqus.__main__ import app, db_session
 from ruqqus import classes
 from ruqqus.mail import send_mail
 from ruqqus.helpers.get import get_user
 from flask import render_template
+
+db=db_session()
 
 title = input("Title: ")
 subject = input("Email subject: ")
