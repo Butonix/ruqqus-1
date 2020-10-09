@@ -162,7 +162,7 @@
         {% if u.bio_html %}
         <p class="text-muted text-break">{{ u.bio_html | safe }}</p>
         {% endif %}
-        {% if v and v.id != u.id and not u.is_nofollow %}
+        {% if u.follower_count >=1 and not u.is_nofollow %}
         <p class="font-weight-bold">{{ u.follower_count }} subscriber{{ 's' if u.follower_count != 1 else '' }}</p>
         {% endif %}
         <div class="mb-3">

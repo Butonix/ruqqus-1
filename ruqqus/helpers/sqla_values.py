@@ -2,6 +2,7 @@ from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.sql import column
 from sqlalchemy.sql.expression import FromClause
 
+
 class values(FromClause):
     named_with_column = True
 
@@ -20,14 +21,14 @@ def compile_values(element, compiler, asfrom=False, **kw):
     columns = element.columns
     v = "VALUES %s" % ", ".join(
         "(%s)" % ", ".join(
-                compiler.render_literal_value(elem, column.type)
-                for elem, column in zip(tup, columns))
+            compiler.render_literal_value(elem, column.type)
+            for elem, column in zip(tup, columns))
         for tup in element.list
     )
     if asfrom:
         if element.alias_name:
-            v = "(%s) AS %s (%s)" % (v, element.alias_name, (", ".join(c.name for c in element.columns)))
+            v = "(%s) AS %s (%s)" % (v, element.alias_name,
+                                     (", ".join(c.name for c in element.columns)))
         else:
             v = "(%s)" % v
     return v
-
