@@ -53,12 +53,12 @@
                         </div>
                     </div>
 
+                    <label for="select-category">Select Category</label>
                     <div class="input-group">
 
-                        <label for="select-category">Select Category</label>
                         <select id="select-category" name="category" class="form-control">
                             {% for category in _categories %}
-                            <option value="{{ category }}">{{ b._categories[category] }}</option>
+                            <option value="{{ category }}">{{ _categories[category] }}</option>
                             {% endfor %}
                         </select>
                     </div>
