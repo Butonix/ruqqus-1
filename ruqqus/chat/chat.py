@@ -3,7 +3,6 @@ import logging
 import redis
 import gevent
 from flask import Flask, render_template
-from flask_sockets import Sockets
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
@@ -64,10 +63,10 @@ CHATS = {}
 
 @sockets.route('/+<guildname>/chat_submit')
 #@is_not_banned
-def inbox(ws, guildname):
+def inbox(*args):
     """Receives incoming chat messages, inserts them into Redis."""
 
-    print("have submit")
+    print(args)
 
     guild=get_guild(guildname, graceful=True)
     if not guild or guild.is_banned:
@@ -89,8 +88,8 @@ def inbox(ws, guildname):
 
 @sockets.route('/+<guildname>/chat_receive')
 #@is_not_banned
-def outbox(ws, guildname):
-
+def outbox(*args):
+    print(args)
     guild=get_guild(guildname, graceful=True)
     if not guild or guild.is_banned:
         ws.close()
