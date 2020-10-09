@@ -11,7 +11,7 @@ x = db.query(classes.user.User).filter_by(is_activated=True, is_banned=0)
 print(f"total mail to send: {x.count()}")
 
 #for user in x.order_by(classes.user.User.id.asc()).all():
-for user in [get_user('captainmeta4')]
+for user in [get_user('captainmeta4')]:
     # for user in db.query(classes.user.User).filter_by(id=7).all():
 
     try:
