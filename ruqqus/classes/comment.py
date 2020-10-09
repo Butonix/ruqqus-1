@@ -237,7 +237,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def json(self):
         if self.is_banned:
-            return {'is_banned': True,
+            data= {'is_banned': True,
                     'ban_reason': self.ban_reason,
                     'id': self.base36id,
                     'post': self.post.base36id,
@@ -245,13 +245,15 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                     'parent': self.parent_fullname
                     }
         elif self.is_deleted:
-            return {'is_deleted': True,
+            data= {'is_deleted': True,
                     'id': self.base36id,
                     'post': self.post.base36id,
                     'level': self.level,
                     'parent': self.parent_fullname
                     }
-        return {'id': self.base36id,
+        else:
+            data= {
+                'id': self.base36id,
                 'fullname': self.fullname,
                 'post': self.post.base36id,
                 'level': self.level,
@@ -275,6 +277,14 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'upvotes': self.upvotes_fuzzed,
                 'downvotes': self.downvotes_fuzzed
                 }
+
+        if "replies" in self.__dict__:
+            data['replies']=[x.json for x in self.replies]
+
+
+        return data
+
+
 
     @property
     def voted(self):

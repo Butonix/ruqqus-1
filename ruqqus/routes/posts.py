@@ -54,6 +54,7 @@ def incoming_post_shortlink(base36id=None):
 @app.route("/post/<base36id>/", methods=["GET"])
 @app.route("/post/<base36id>/<anything>", methods=["GET"])
 @auth_desired
+@api("read")
 def post_base36id(base36id, anything=None, v=None):
 
     post = get_post_with_comments(
@@ -77,7 +78,11 @@ def post_base36id(base36id, anything=None, v=None):
                                board=post.board
                                )
 
-    return post.rendered_page(v=v)
+    return {
+        "html":lambda:post.rendered_page(v=v),
+        "api":lambda:jsonify({"data":post.json})
+        }
+
 
 
 @app.route("/submit", methods=["GET"])

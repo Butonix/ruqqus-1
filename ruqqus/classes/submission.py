@@ -351,6 +351,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'upvotes': self.upvotes_fuzzed,
                 'downvotes': self.downvotes_fuzzed
                 }
+        if "replies" in self.__dict__:
+            data["replies"]=[x.json for x in self.replies]
 
         if "_voted" in self.__dict__:
             data["voted"] = self._voted
