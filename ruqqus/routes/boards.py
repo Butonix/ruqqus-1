@@ -99,6 +99,14 @@ def create_board_post(v):
                                message="You can only create up to 2 guilds per day. Try again later."
                                ), 429
 
+    category=int(request.form.get("category"))
+    if not category:
+        return render_template("message.html",
+                               title="Category required.",
+                               message="You need to select a category."
+                               ), 400
+
+
     with CustomRenderer() as renderer:
         description_md = renderer.render(mistletoe.Document(description))
     description_html = sanitize(description_md, linkgen=True)
@@ -109,7 +117,8 @@ def create_board_post(v):
                       description=description,
                       description_html=description_html,
                       over_18=bool(request.form.get("over_18", "")),
-                      creator_id=v.id
+                      creator_id=v.id,
+                      category=category
                       )
 
     g.db.add(new_board)

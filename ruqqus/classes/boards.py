@@ -96,6 +96,9 @@ class Board(Base, Stndrd, Age_times):
 
         kwargs["created_utc"] = int(time.time())
 
+        if kwargs.get("category") not in CATEGORIES:
+            abort(400)
+
         super().__init__(**kwargs)
 
     def __repr__(self):
