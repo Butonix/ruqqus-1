@@ -68,9 +68,9 @@ def inbox(ws):
 
     #guild=get_guild(guildname, graceful=True)
     guild=get_guild('general')
-    if not guild or guild.is_banned:
-        ws.close()
-        return
+    #if not guild or guild.is_banned:
+    #    ws.close()
+    #    return
 
     if guild.name not in CHATS:
         CHATS[guild.name]=ChatBackend(guild.name)
