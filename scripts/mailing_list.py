@@ -9,7 +9,7 @@ db=db_session()
 title = input("Title: ")
 subject = input("Email subject: ")
 
-x = db.query(classes.user.User).filter_by(is_activated=True, is_banned=0)
+x = db.query(classes.user.User).filter(classes.user.User.is_banned==0, classes.user.User.email!=None)
 print(f"total mail to send: {x.count()}")
 
 #for user in x.order_by(classes.user.User.id.asc()).all():
