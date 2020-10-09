@@ -48,7 +48,7 @@ def create_board_get(v):
     return render_template(
         "make_board.html", 
         v=v,
-        categories=Board._categories
+        categories=CATEGORIES
         )
 
 
