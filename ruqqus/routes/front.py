@@ -163,8 +163,8 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False,
             all_opt_out=False)
 
     
-    if kwargs.get("categories"):
-            posts=posts.filter(Board.category.in_(tuple(kwargs.get("categories"))))
+    if categories:
+            posts=posts.filter(Board.category.in_(tuple(categories)))
 
     posts=posts.options(contains_eager(Submission.board))
 
@@ -291,7 +291,7 @@ def front_all(v):
     t = request.args.get('t', 'all')
 
 
-    categories=[int(x) for x in request.args.get("categories").split(',')] if request.args.get("categories") else []
+    categories = [int(x) for x in request.args.get("categories").split(',')] if request.args.get("categories") else []
 
 
     ids = frontlist(sort=sort_method,
