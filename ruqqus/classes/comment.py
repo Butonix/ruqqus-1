@@ -137,7 +137,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def children(self):
 
-        return g.db.query(Comment).filter_by(parent_comment=self.id).all()
+        return g.db.query(Comment).filter_by(parent_comment_id=self.id).all()
 
     @property
     def replies(self):

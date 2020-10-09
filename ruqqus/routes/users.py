@@ -42,7 +42,7 @@ def mfa_qr(secret, v):
 @app.route("/api/is_available/<name>", methods=["GET"])
 @app.route("/api/v1/is_available/<name>", methods=["GET"])
 @auth_desired
-@api()
+@api("read")
 def api_is_available(name, v):
     if get_user(name, graceful=True):
         return jsonify({name: False})
