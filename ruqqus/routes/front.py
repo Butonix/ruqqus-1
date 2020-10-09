@@ -291,7 +291,7 @@ def front_all(v):
     t = request.args.get('t', 'all')
 
 
-    categories=request.args.get("categories").split(',') if request.args.get("categories") else []
+    categories=[int(x) for x in request.args.get("categories").split(',')] if request.args.get("categories") else []
 
 
     ids = frontlist(sort=sort_method,
