@@ -68,7 +68,7 @@ def notifications(v):
 
 @cache.memoize(timeout=900)
 def frontlist(v=None, sort="hot", page=1, nsfw=False,
-              t=None, ids_only=True, **kwargs):
+              t=None, ids_only=True, categories=[], **kwargs):
 
     # cutoff=int(time.time())-(60*60*24*30)
 
@@ -85,10 +85,15 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False,
     else:
         abort(422)
 
-    posts = g.db.query(Submission
-                       ).options(lazyload('*')).filter_by(is_banned=False,
-                                                          is_deleted=False,
-                                                          stickied=False)
+    posts = g.db.query(
+        Submission
+        ).options(
+            lazyload('*')
+        ).filter_by(
+            is_banned=False,
+            is_deleted=False,
+            stickied=False
+        )
 
     if not nsfw:
         posts = posts.filter_by(over_18=False)
@@ -150,16 +155,18 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False,
                         is_active=True).subquery()
                 )
             )
-        ).options(contains_eager(Submission.board))
+        )
     else:
 
         posts = posts.join(
             Submission.board).filter_by(
-            all_opt_out=False).options(
-            contains_eager(
-                Submission.board))
-        if kwargs.get("categories"):
-            posts=posts.filter(Board.category.in_(kwargs.get("categories")))
+            all_opt_out=False)
+
+    
+    if kwargs.get("categories"):
+            posts=posts.filter(Board.category.in_(tuple(kwargs.get("categories"))))
+
+    posts=posts.options(contains_eager(Submission.board))
 
 
     if t:
@@ -221,6 +228,8 @@ def home(v):
         t=request.args.get('t', 'all')
 
 
+
+
         
         ids=v.idlist(sort=sort,
                      page=page,
@@ -235,6 +244,8 @@ def home(v):
                      gt=int(request.args.get("utc_greater_than",0)),
                      lt=int(request.args.get("utc_less_than",0)),
 
+                     categories=request.session.get("categories", [])
+
                      )
 
         next_exists=(len(ids)==26)
@@ -246,33 +257,6 @@ def home(v):
             if sticky:
                 ids=[sticky.id]+ids
 
-
-        page = max(int(request.args.get("page", 1)), 0)
-        t = request.args.get('t', 'all')
-
-        ids = v.idlist(sort=sort,
-                       page=page,
-                       only=only,
-                       t=t,
-
-                       # these arguments don't really do much but they exist for
-                       # cache memoization differentiation
-                       allow_nsfw=v.over_18,
-                       hide_offensive=v.hide_offensive,
-
-                       # greater/less than
-                       gt=int(request.args.get("utc_greater_than", 0)),
-                       lt=int(request.args.get("utc_less_than", 0))
-                       )
-
-        next_exists = (len(ids) == 26)
-        ids = ids[0:25]
-
-        # If page 1, check for sticky
-        if page == 1 and sort != "new":
-            sticky = g.db.query(Submission.id).filter_by(stickied=True).first()
-            if sticky:
-                ids = [sticky.id] + ids
 
         posts = get_posts(ids, sort=sort, v=v)
 
