@@ -20,6 +20,9 @@ from datetime import datetime
 
 
 @app.route("/comment/<cid>", methods=["GET"])
+@app.route("/comment/<cid>", methods=["GET"])
+@app.route("/post_short/<pid>/<cid>", methods=["GET"])
+@app.route("/post_short/<pid>/<cid>/", methods=["GET"])
 def comment_cid(cid):
 
     comment = get_comment(cid)
