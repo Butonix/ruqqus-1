@@ -45,7 +45,11 @@ def create_board_get(v):
                                message="You can only create up to 2 guilds per day. Try again later."
                                ), 429
 
-    return render_template("make_board.html", v=v)
+    return render_template(
+        "make_board.html", 
+        v=v,
+        categories=Board._categories
+        )
 
 
 @app.route("/api/board_available/<name>", methods=["GET"])
