@@ -244,8 +244,6 @@ def home(v):
                      gt=int(request.args.get("utc_greater_than",0)),
                      lt=int(request.args.get("utc_less_than",0)),
 
-                     categories=request.session.get("categories", [])
-
                      )
 
         next_exists=(len(ids)==26)
@@ -293,7 +291,7 @@ def front_all(v):
     t = request.args.get('t', 'all')
 
 
-    categories=session.get("categories", [])
+    categories=request.args.get("categories").split(',') if request.args.get("categories") else []
 
 
     ids = frontlist(sort=sort_method,
