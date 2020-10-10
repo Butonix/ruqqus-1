@@ -6,6 +6,8 @@ from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.aws import delete_file
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.alerts import *
+from ruqqus.helpers.sanitize import *
+from ruqqus.helpers.markdown import *
 from urllib.parse import urlparse
 from secrets import token_hex
 import matplotlib.pyplot as plt
@@ -83,9 +85,15 @@ def ban_post(post_id, v):
     post.is_approved = 0
     post.approved_utc = 0
     post.stickied = False
-    post.stickied = False
-    post.ban_reason = request.form.get("reason", None)
+    post.pinned = False
 
+    ban_reason=request.form.get("reason", None)
+    with CustomRenderer() as renderer:
+        ban_reason = renderer.render(mistletoe.Document(ban_reason))
+    ban_reason = sanitize(ban_reason, linkgen=True)
+
+    post.ban_reason = ban_reason
+    
     g.db.add(post)
 
     cache.delete_memoized(Board.idlist, post.board)
