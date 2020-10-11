@@ -31,7 +31,13 @@ def thumbnail_thread(pid):
 
     if domain_obj and domain_obj.show_thumbnail:
 
-        x = requests.get(post.url, headers=headers)
+        try:
+            x = requests.get(post.url, headers=headers)
+        except:
+            return
+
+        if x.status_code>=400:
+            return
 
         if x.headers.get("Content-Type", "/").split("/")[0] == "image":
             # image post, using submitted url
@@ -52,7 +58,10 @@ def thumbnail_thread(pid):
             db.commit()
             return
 
-    x = requests.get(post.url, headers=headers)
+    try:
+        x = requests.get(post.url, headers=headers)
+    except:
+        return
 
     if x.status_code != 200 or not x.headers["Content-Type"].startswith(
             ("text/html", "image/")):
