@@ -366,7 +366,7 @@ def admin_apps_list(v):
     apps = g.db.query(OauthApp).options(
         joinedload(
             OauthApp.author)).filter(
-        OauthApp.client_id is None).order_by(
+        OauthApp.client_id==None).order_by(
                 OauthApp.id.desc()).all()
 
     return render_template("admin/apps.html", v=v, apps=apps)
