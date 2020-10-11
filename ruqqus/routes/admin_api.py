@@ -87,13 +87,13 @@ def ban_post(post_id, v):
     post.stickied = False
     post.pinned = False
 
-    ban_reason=request.form.get("reason", None)
+    ban_reason=request.form.get("reason", "")
     with CustomRenderer() as renderer:
         ban_reason = renderer.render(mistletoe.Document(ban_reason))
     ban_reason = sanitize(ban_reason, linkgen=True)
 
     post.ban_reason = ban_reason
-    
+
     g.db.add(post)
 
     cache.delete_memoized(Board.idlist, post.board)
