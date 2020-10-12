@@ -59,7 +59,20 @@ def user_uid(uid):
     else:
         abort(404)
 
-
+# Allow Id of user to be queryied, and then redirect the bot to the
+# actual user api endpoint.
+# So they get the data and then there will be no need to reinvent
+# the wheel.
+@app.route("/api/v1/user/by_id/<uid>", methods=["GET"])
+@auth_desired
+@api("read")
+def user_by_uid(uid, v=None):
+    user=g.db.query(User).filter_by(id=base36decode(uid)).first()
+    if user == None:
+      abort(404)
+    
+    return redirect(f"/api/v1/user/{user.username}")
+        
 @app.route("/u/<username>", methods=["GET"])
 def redditor_moment_redirect(username):
 
