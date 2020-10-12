@@ -409,25 +409,17 @@ def my_subs(v):
     if kind == "guilds":
 
         b = g.db.query(Board)
-        contribs = v.contributes.subquery()
-        m = v.moderates.filter_by(accepted=True).subquery()
-        s = v.subscriptions.filter_by(is_active=True).subquery()
+        contribs = g.db.query(ContributorRelationship).filter_by(user_id=v.id).subquery()
+        m = g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, accepted=True).subquery()
+        s = g.db.query(Subscription.board_id).filter_by(user_id=v.id, is_active=True).subquery()
 
-        content = b.join(s,
-                         Board.id == s.c.board_id,
-                         isouter=True
-                         ).join(contribs,
-                                contribs.c.board_id == Board.id,
-                                isouter=True
-                                ).join(m,
-                                       m.c.board_id == Board.id,
-                                       isouter=True)
-
-        content = content.filter(or_(s.c.id is not None,
-                                     contribs.c.id is not None,
-                                     m.c.id is not None
-                                     )
-                                 )
+        content = b.filter(
+            or_(
+                Board.id.in_(contribs),
+                Board.id.in_(m),
+                Board.id.in_(s)
+                )
+            )
         content = content.order_by(Board.stored_subscriber_count.desc())
 
         content = [x for x in content.offset(25 * (page - 1)).limit(26)]
