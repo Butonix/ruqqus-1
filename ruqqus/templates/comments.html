@@ -194,8 +194,13 @@
           {% endif %}
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ c.permalink  }}"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-link"></i>Permalink</a>
           </li>
-          <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i><span>Copy link</span></a>
+          <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i>Copy link</a>
           </li>
+
+          {% if v.admin_level>=3 and request.path.startswith ('/admin') %}
+            <li class="list-inline-item text-muted d-none d-md-inline-block" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times fa-width-rem"></i>Remove</li>
+            <li class="list-inline-item text-muted d-none d-md-inline-block"  href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-comment-check fa-width-rem"></i>Approve</li>
+          {% endif %}
           <li class="list-inline-item d-none d-md-inline-block">
             <div class="dropdown show">
               <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true"
@@ -238,7 +243,7 @@
                 {% if not c.is_banned %}
                   <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times fa-width-rem"></i>Remove</a>
                 {% endif %}
-                {% if c.is_banned or '/admin/' in request.path %}
+                {% if c.is_banned or request.path.startswith('/admin/') %}
                   <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-comment-check fa-width-rem"></i>Approve</a>
                 {% endif %}
               {% endif %}
