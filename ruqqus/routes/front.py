@@ -409,7 +409,7 @@ def my_subs(v):
     if kind == "guilds":
 
         b = g.db.query(Board)
-        contribs = g.db.query(ContributorRelationship).filter_by(user_id=v.id).subquery()
+        contribs = g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id).subquery()
         m = g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, accepted=True).subquery()
         s = g.db.query(Subscription.board_id).filter_by(user_id=v.id, is_active=True).subquery()
 
