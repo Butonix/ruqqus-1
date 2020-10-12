@@ -514,7 +514,7 @@ class User(Base, Stndrd, Age_times):
     @property
     def comment_count(self):
 
-        return self.comments.filter(Comment.parent_submission is not None).filter_by(
+        return self.comments.filter(Comment.parent_submission!=None).filter_by(
             is_banned=False, is_deleted=False).count()
 
     @property
