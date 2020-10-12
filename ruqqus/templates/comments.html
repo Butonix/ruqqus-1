@@ -197,7 +197,7 @@
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i>Copy link</a>
           </li>
 
-          {% if v.admin_level>=3 and request.path.startswith ('/admin') %}
+          {% if v and v.admin_level>=3 and request.path.startswith ('/admin') %}
             <li class="list-inline-item text-muted d-none d-md-inline-block" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times fa-width-rem"></i>Remove</li>
             <li class="list-inline-item text-muted d-none d-md-inline-block"  href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-comment-check fa-width-rem"></i>Approve</li>
           {% endif %}
