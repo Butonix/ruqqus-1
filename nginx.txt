@@ -39,7 +39,7 @@ server {
     }
     
     if ($host == fa.ruqqus.com) {
-        alias ~/fa/
+        alias ~/fa/;
     }
 
     location / {
