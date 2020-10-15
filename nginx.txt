@@ -1,6 +1,6 @@
 server {
     
-    server_name fa.ruqqus.com dev.ruqqus.com ruqqus.com ruqq.us c.ruqq.us ruqqus.org ruqqus.win *.amazonaws.com;
+    server_name dev.ruqqus.com ruqqus.com ruqq.us c.ruqq.us ruqqus.org ruqqus.win *.amazonaws.com;
 
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
@@ -37,12 +37,20 @@ server {
     if ($host = *.amazonaws.com) {
         return 404;
     }
-    
-    if ($host == fa.ruqqus.com) {
-        alias ~/fa/;
-    }
 
     location / {
         proxy_pass http://127.0.0.1:5000;
+    }
+}
+
+server {
+
+    listen 80;
+    listen [::]:80;
+    
+    server_name fa.ruqqus.com;
+    
+    location / {
+        alias ~/fa;
     }
 }
