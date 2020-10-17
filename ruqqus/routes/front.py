@@ -65,7 +65,6 @@ def notifications(v):
                            render_replies=True,
                            is_notification_page=True)
 
-
 @cache.memoize(timeout=900)
 def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
               t=None, ids_only=True, **kwargs):
@@ -94,7 +93,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
         posts = posts.filter_by(over_18=False)
     
     if not nsfl:
-		posts = posts.filter_by(is_nsfl=False)
+	    posts = posts.filter_by(is_nsfl=False)
 
     if v and v.hide_offensive:
         posts = posts.filter_by(is_offensive=False)
@@ -127,7 +126,6 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
         blocked = g.db.query(
             UserBlock.user_id).filter_by(
             target_id=v.id).subquery()
-
         posts = posts.filter(
             Submission.author_id.notin_(blocking),
             Submission.author_id.notin_(blocked)
