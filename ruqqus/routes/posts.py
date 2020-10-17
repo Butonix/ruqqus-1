@@ -78,6 +78,7 @@ def post_base36id(base36id, anything=None, v=None):
                                board=post.board
                                ),
                 "api":lambda:(jsonify({"error":"Must be 18+ to view"}), 451)
+                }
 
     return {
         "html":lambda:post.rendered_page(v=v),
