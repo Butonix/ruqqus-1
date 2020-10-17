@@ -71,12 +71,13 @@ def post_base36id(base36id, anything=None, v=None):
 
     if post.over_18 and not (v and v.over_18) and not session_over18(board):
         t = int(time.time())
-        return render_template("errors/nsfw.html",
+        return {"html":lambda:render_template("errors/nsfw.html",
                                v=v,
                                t=t,
                                lo_formkey=make_logged_out_formkey(t),
                                board=post.board
-                               )
+                               ),
+                "api":lambda:(jsonify({"error":"Must be 18+ to view"}), 451)
 
     return {
         "html":lambda:post.rendered_page(v=v),
