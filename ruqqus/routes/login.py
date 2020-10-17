@@ -287,15 +287,15 @@ def sign_up_post(v):
 
     # check for tokens
 # if now-int(form_timestamp)>120:
-# print(f"signup fail - {username } - form expired")
+# #print(f"signup fail - {username } - form expired")
 
         return new_signup("There was a problem. Please try again.")
     if now - int(form_timestamp) < 5:
-        print(f"signup fail - {username } - too fast")
+        #print(f"signup fail - {username } - too fast")
         return new_signup("There was a problem. Please try again.")
 
     if not hmac.compare_digest(correct_formkey, form_formkey):
-        print(f"signup fail - {username } - mismatched formkeys")
+        #print(f"signup fail - {username } - mismatched formkeys")
         return new_signup("There was a problem. Please try again.")
 
     # check for matched passwords
@@ -305,11 +305,11 @@ def sign_up_post(v):
 
     # check username/pass conditions
     if not re.match(valid_username_regex, request.form.get("username")):
-        print(f"signup fail - {username } - mismatched passwords")
+        #print(f"signup fail - {username } - mismatched passwords")
         return new_signup("Invalid username")
 
     if not re.match(valid_password_regex, request.form.get("password")):
-        print(f"signup fail - {username } - invalid password")
+        #print(f"signup fail - {username } - invalid password")
         return new_signup("Password must be between 8 and 100 characters.")
 
     # if not re.match(valid_email_regex, request.form.get("email")):
@@ -328,7 +328,7 @@ def sign_up_post(v):
 
     if existing_account or (email and g.db.query(
             User).filter(User.email.ilike(email)).first()):
-        # print(f"signup fail - {username } - email already exists")
+        # #print(f"signup fail - {username } - email already exists")
         return new_signup(
             "An account with that username or email already exists.")
 
@@ -359,7 +359,7 @@ def sign_up_post(v):
         x = requests.post(url, data=data)
 
         if not x.json()["success"]:
-            print(x.json())
+            #print(x.json())
             return new_signup("Unable to verify captcha [2].")
 
     # kill tokens
@@ -388,7 +388,7 @@ def sign_up_post(v):
                         )
 
     except Exception as e:
-        print(e)
+        #print(e)
         return new_signup("Please enter a valid email")
 
     g.db.add(new_user)
@@ -426,7 +426,7 @@ And since we're committed to [open-source](https://github.com/ruqqus/ruqqus) tra
 
     redir = request.form.get("redirect", None)
 
-    # print(f"Signup event: @{new_user.username}")
+    # #print(f"Signup event: @{new_user.username}")
 
     return redirect("/browse?onboarding=true")
 
