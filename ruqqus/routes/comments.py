@@ -31,11 +31,11 @@ def comment_cid(cid, pid=None):
     return redirect(comment.permalink)
 
 
-@app.route("/post/<p_id>/<anything>/<c_id>", methods=["GET"])
-@app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
+@app.route("/+<boardname>/post/<p_id>/<anything>/<c_id>", methods=["GET"])
+@app.route("/api/v1/+<boardname>/post/<p_id>/comment/<c_id>", methods=["GET"])
 @auth_desired
 @api("read")
-def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
+def post_pid_comment_cid(boardname, p_id, c_id, anything=None, v=None):
 
     comment = get_comment(c_id, v=v)
 
@@ -45,6 +45,9 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
         return redirect(request.path.replace(p_id, comment.post.base36id))
 
     board = post.board
+    #if guild name is incorrect, fix it
+    if not board.name == boardname:
+        return redirect(request.path.replace(boardname, board.name))
 
     if board.is_banned and not (v and v.admin_level > 3):
         return {'html': lambda: render_template("board_banned.html",
@@ -197,6 +200,25 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
     return {'html': lambda: post.rendered_page(v=v, comment=top_comment, comment_info=comment_info),
             'api': lambda: top_comment.json
             }
+
+#if the guild name is missing, add it to the url and redirect
+@app.route("/post/<p_id>/<anything>/<c_id>", methods=["GET"])
+@app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
+@auth_desired
+@api("read")
+def post_pid_comment_cid_noboard(p_id, c_id, anything=None, v=None):
+    comment=get_comment(c_id, v=v)
+
+    post=get_post(p_id, v=v)
+
+    if comment.parent_submission != post.id:
+        return redirect(request.path.replace(p_id, comment.post.base36id))
+
+    board=post.board
+    if anything:
+        return redirect(f"/+{board.name}/post/{post.base36id}/{anything}/{c_id}")
+    else:
+        return redirect(f"/+{board.name}/post/{post.base36id}/{c_id}")
 
 
 @app.route("/api/comment", methods=["POST"])
