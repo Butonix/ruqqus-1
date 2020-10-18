@@ -49,19 +49,18 @@ def incoming_post_shortlink(base36id=None):
     post = get_post(base36id)
     return redirect(post.permalink)
 
-
-@app.route("/post/<base36id>", methods=["GET"])
-@app.route("/post/<base36id>/", methods=["GET"])
-@app.route("/post/<base36id>/<anything>", methods=["GET"])
+@app.route("/+<boardname>/post/<base36id>", methods=["GET"])
+@app.route("/+<boardname>/post/<base36id>/", methods=["GET"])
+@app.route("/+<boardname>/post/<base36id>/<anything>", methods=["GET"])
 @auth_desired
-@api("read")
-def post_base36id(base36id, anything=None, v=None):
+def post_base36id(boardname, base36id, anything=None, v=None):
+    
+    post=get_post_with_comments(base36id, v=v, sort_type=request.args.get("sort","top"))
 
-    post = get_post_with_comments(
-        base36id, v=v, sort_type=request.args.get(
-            "sort", "top"))
-
-    board = post.board
+    board=post.board
+    #if the guild name is incorrect, fix the link and redirect
+    if not boardname == board.name:
+        return redirect(f"/+{board.name}/post/{base36id}")
 
     if board.is_banned and not (v and v.admin_level > 3):
         return render_template("board_banned.html",
@@ -70,21 +69,27 @@ def post_base36id(base36id, anything=None, v=None):
                                p=True)
 
     if post.over_18 and not (v and v.over_18) and not session_over18(board):
-        t = int(time.time())
-        return {"html":lambda:render_template("errors/nsfw.html",
+        t=int(time.time())
+        return render_template("errors/nsfw.html",
                                v=v,
                                t=t,
                                lo_formkey=make_logged_out_formkey(t),
                                board=post.board
-                               ),
-                "api":lambda:(jsonify({"error":"Must be 18+ to view"}), 451)
-                }
+                               )
+        
+    return post.rendered_page(v=v)
 
-    return {
-        "html":lambda:post.rendered_page(v=v),
-        "api":lambda:jsonify({"data":post.json})
-        }
+#if the guild name is missing from the url, add it and redirect
+@app.route("/post/<base36id>", methods=["GET"])
+@app.route("/post/<base36id>/", methods=["GET"])
+@app.route("/post/<base36id>/<anything>", methods=["GET"])
+@auth_desired
+def post_base36id_noboard(base36id, anything=None, v=None):
+    
+    post=get_post_with_comments(base36id, v=v, sort_type=request.args.get("sort","top"))
 
+    board=post.board
+    return redirect(f"/+{board.name}/post/{base36id}")
 
 
 @app.route("/submit", methods=["GET"])
