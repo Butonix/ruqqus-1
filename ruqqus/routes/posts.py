@@ -70,15 +70,20 @@ def post_base36id(boardname, base36id, anything=None, v=None):
                                p=True)
 
     if post.over_18 and not (v and v.over_18) and not session_over18(board):
-        t=int(time.time())
-        return render_template("errors/nsfw.html",
+        t = int(time.time())
+        return {"html":lambda:render_template("errors/nsfw.html",
                                v=v,
                                t=t,
                                lo_formkey=make_logged_out_formkey(t),
                                board=post.board
-                               )
+                               ),
+                "api":lambda:(jsonify({"error":"Must be 18+ to view"}), 451)
+                }
         
-    return post.rendered_page(v=v)
+    return {
+        "html":lambda:post.rendered_page(v=v),
+        "api":lambda:jsonify({"data":post.json})
+        }
 
 #if the guild name is missing from the url, add it and redirect
 @app.route("/post/<base36id>", methods=["GET"])
