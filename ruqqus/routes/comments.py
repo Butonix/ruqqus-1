@@ -215,10 +215,7 @@ def post_pid_comment_cid_noboard(p_id, c_id, anything=None, v=None):
         return redirect(request.path.replace(p_id, comment.post.base36id))
 
     board=post.board
-    if anything:
-        return redirect(f"/+{board.name}/post/{post.base36id}/{anything}/{c_id}")
-    else:
-        return redirect(f"/+{board.name}/post/{post.base36id}/{c_id}")
+    return redirect(comment.permalink)
 
 
 @app.route("/api/comment", methods=["POST"])
