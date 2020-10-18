@@ -63,7 +63,7 @@ def post_base36id(boardname, base36id, anything=None, v=None):
     board = post.board
     #if the guild name is incorrect, fix the link and redirect
     if not boardname == board.name:
-        return redirect(f"/+{board.name}/post/{base36id}")
+        return redirect(post.permalink)
 
     if board.is_banned and not (v and v.admin_level > 3):
         return render_template("board_banned.html",
