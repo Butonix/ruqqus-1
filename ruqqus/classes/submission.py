@@ -173,7 +173,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         if not output:
             output = '-'
 
-        return f"/post/{self.base36id}/{output}"
+        return f"/+{self.board.name}/post/{self.base36id}/{output}"
 
     @property
     def is_archived(self):
