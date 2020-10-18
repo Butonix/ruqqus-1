@@ -97,8 +97,8 @@ def post_base36id_noboard(base36id, anything=None, v=None):
     
     post=get_post_with_comments(base36id, v=v, sort_type=request.args.get("sort","top"))
 
-    board=post.board
-    return redirect(f"/+{board.name}/post/{base36id}")
+    #board=post.board
+    return redirect(post.permalink)
 
 
 @app.route("/submit", methods=["GET"])
