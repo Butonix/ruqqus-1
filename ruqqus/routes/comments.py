@@ -208,13 +208,7 @@ def post_pid_comment_cid(boardname, p_id, c_id, anything=None, v=None):
 @api("read")
 def post_pid_comment_cid_noboard(p_id, c_id, anything=None, v=None):
     comment=get_comment(c_id, v=v)
-
-    post=get_post(p_id, v=v)
-
-    if comment.parent_submission != post.id:
-        return redirect(request.path.replace(p_id, comment.post.base36id))
-
-    board=post.board
+    
     return redirect(comment.permalink)
 
 
