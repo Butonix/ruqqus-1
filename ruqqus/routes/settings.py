@@ -121,7 +121,7 @@ def settings_security_post(v):
             return redirect("/settings/security?error=" +
                             escape("Invalid password."))
 
-        new_email = request.form.get("new_email")
+        new_email = request.form.get("new_email","").lstrip().rstrip()
         if new_email == v.email:
             return redirect("/settings/security?error=" +
                             escape("That email is already yours!"))
