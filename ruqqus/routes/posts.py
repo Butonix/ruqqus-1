@@ -56,9 +56,11 @@ def incoming_post_shortlink(base36id=None):
 @api("read")
 def post_base36id(boardname, base36id, anything=None, v=None):
     
-    post=get_post_with_comments(base36id, v=v, sort_type=request.args.get("sort","top"))
+    post = get_post_with_comments(
+        base36id, v=v, sort_type=request.args.get(
+            "sort", "top"))
 
-    board=post.board
+    board = post.board
     #if the guild name is incorrect, fix the link and redirect
     if not boardname == board.name:
         return redirect(f"/+{board.name}/post/{base36id}")
