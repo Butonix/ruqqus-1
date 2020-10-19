@@ -321,6 +321,14 @@ def sign_up_post(v):
     if not email:
         email = None
 
+    #counteract gmail username+2 and extra period tricks - convert submitted email to actual inbox
+    if email.endswith("@gmail.com"):
+        parts=re.split("\+.*@", email)
+        username=parts[0]
+        username=username.replace(".","")
+        email=f"{username}@gmail.com"
+
+
     existing_account = g.db.query(User).filter(
         User.username.ilike(request.form.get("username"))).first()
     if existing_account and existing_account.reserved:

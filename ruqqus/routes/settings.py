@@ -3,6 +3,7 @@ from sqlalchemy import func
 import time
 import threading
 import mistletoe
+import re
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
@@ -122,6 +123,12 @@ def settings_security_post(v):
                             escape("Invalid password."))
 
         new_email = request.form.get("new_email","").lstrip().rstrip()
+        #counteract gmail username+2 and extra period tricks - convert submitted email to actual inbox
+        if new_email.endswith("@gmail.com"):
+            parts=re.split("\+.*@", newemail)
+            username=parts[0]
+            username=username.replace(".","")
+            new_email=f"{username}@gmail.com"
         if new_email == v.email:
             return redirect("/settings/security?error=" +
                             escape("That email is already yours!"))
