@@ -377,16 +377,15 @@ def browse_guilds(v):
 
         # hit db for entries
 
-        boards = g.db.query(Board
-                            ).from_statement(
-            text(f"""
-                            select *
-                            from boards
-                            join (values {tups}) as x(id, n)
-                            on boards.id=x.id
-                            where x.n is not null
-                            order by x.n"""
-                 )).all()
+        boards = g.db.query(
+            Board).options(
+            lazyload(
+                '*'
+            )).filter(
+            Board.id.in_(ids)
+            ).all()
+
+        boards=sorted(boards, key=lambda x: ids.index(x.id))
     else:
         boards = []
 
