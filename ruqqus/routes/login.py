@@ -322,7 +322,7 @@ def sign_up_post(v):
         email = None
 
     #counteract gmail username+2 and extra period tricks - convert submitted email to actual inbox
-    if email.endswith("@gmail.com"):
+    if email and email.endswith("@gmail.com"):
         parts=re.split("\+.*@", email)
         username=parts[0]
         username=username.replace(".","")
