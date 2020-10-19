@@ -21,6 +21,10 @@ def api_vote_post(post_id, x, v):
     if x not in ["-1", "0", "1"]:
         abort(400)
 
+    # disallow bots
+    if request.headers.get("X-User-Type","") == "Bot":
+        abort(403)
+
     x = int(x)
 
     post = get_post(post_id)
@@ -81,6 +85,10 @@ def api_vote_comment(comment_id, x, v):
 
     if x not in ["-1", "0", "1"]:
         abort(400)
+
+    # disallow bots
+    if request.headers.get("X-User-Type","") == "Bot":
+        abort(403)
 
     x = int(x)
 
