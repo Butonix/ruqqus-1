@@ -172,6 +172,7 @@ def board_name(name, v):
     sort = request.args.get("sort", "hot")
     page = int(request.args.get("page", 1))
     t = request.args.get("t", "all")
+    ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
     ids = board.idlist(sort=sort,
                        t=t,
@@ -185,7 +186,7 @@ def board_name(name, v):
     next_exists = (len(ids) == 26)
     ids = ids[0:25]
 
-    if page == 1 and sort != "new":
+    if page == 1 and sort != "new" and not ignore_pinned:
         stickies = g.db.query(Submission.id).filter_by(board_id=board.id,
                                                        is_banned=False,
                                                        is_deleted=False,
