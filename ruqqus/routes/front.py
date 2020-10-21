@@ -215,6 +215,7 @@ def home(v):
 
         page = max(int(request.args.get("page", 1)), 0)
         t = request.args.get('t', 'all')
+	ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
         ids = v.idlist(sort=sort,
                        page=page,
@@ -235,7 +236,7 @@ def home(v):
         ids = ids[0:25]
 
         # If page 1, check for sticky
-        if page == 1 and sort != "new":
+        if page == 1 and sort != "new" and not ignore_pinned:
             sticky = g.db.query(Submission.id).filter_by(stickied=True).first()
             if sticky:
                 ids = [sticky.id] + ids
@@ -273,6 +274,7 @@ def front_all(v):
 
     sort_method = request.args.get("sort", "hot")
     t = request.args.get('t', 'all')
+    ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
     # get list of ids
     ids = frontlist(sort=sort_method,
@@ -291,7 +293,7 @@ def front_all(v):
     ids = ids[0:25]
 
    # If page 1, check for sticky
-    if page == 1:
+    if page == 1 and not ignore_pinned:
         sticky = []
         sticky = g.db.query(Submission.id).filter_by(stickied=True).first()
         if sticky:
