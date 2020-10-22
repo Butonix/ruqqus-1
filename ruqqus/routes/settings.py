@@ -15,6 +15,9 @@ from .front import frontlist
 from ruqqus.__main__ import app, cache
 
 
+valid_password_regex = re.compile("^.{8,100}$")
+
+
 @app.route("/settings/profile", methods=["POST"])
 @is_not_banned
 @validate_formkey
@@ -104,6 +107,11 @@ def settings_security_post(v):
                 "new_password") != request.form.get("cnf_password"):
             return redirect("/settings/security?error=" +
                             escape("Passwords do not match."))
+
+        if not re.match(valid_password_regex, request.form.get("password")):
+            #print(f"signup fail - {username } - invalid password")
+            return redirect("/settings/security?error=" + 
+                            escape("Password must be between 8 and 100 characters."))
 
         if not v.verifyPass(request.form.get("old_password")):
             return render_template(
