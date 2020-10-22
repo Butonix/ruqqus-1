@@ -1174,7 +1174,7 @@ def siege_guild(v):
                                ), 403
 
     # Cannot siege +general, +ruqqus, +ruqquspress, +ruqqusdmca
-    if guild.id in [1, 2, 10, 1000]:
+    if not guild.is_siegable:
         return render_template("message.html",
                                v=v,
                                title=f"Siege against +{guild.name} Failed",
