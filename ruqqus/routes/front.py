@@ -215,7 +215,7 @@ def home(v):
 
         page = max(int(request.args.get("page", 1)), 0)
         t = request.args.get('t', 'all')
-	ignore_pinned = bool(request.args.get("ignore_pinned", False))
+	   ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
         ids = v.idlist(sort=sort,
                        page=page,
