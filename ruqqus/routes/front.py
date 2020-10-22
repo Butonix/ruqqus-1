@@ -82,7 +82,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
     elif sort == "activity":
         sort_func = Submission.score_activity.desc
     else:
-        abort(422)
+        abort(400)
 
     posts = g.db.query(Submission
                        ).options(lazyload('*')).filter_by(is_banned=False,
@@ -193,7 +193,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
     elif sort == "activity":
         posts = posts.order_by(Submission.score_activity.desc())
     else:
-        abort(422)
+        abort(400)
 
     if ids_only:
         posts = [x.id for x in posts.offset(25 * (page - 1)).limit(26).all()]
@@ -338,7 +338,7 @@ def guild_ids(sort="subs", page=1, nsfw=False):
         guilds = guilds.order_by(Board.rank_trending.desc())
 
     else:
-        abort(422)
+        abort(400)
 
     guilds = [x.id for x in guilds.offset(25 * (page - 1)).limit(26).all()]
 
@@ -459,7 +459,7 @@ def my_subs(v):
                                kind="users")
 
     else:
-        abort(422)
+        abort(400)
 
 
 @app.route("/random/post", methods=["GET"])

@@ -226,7 +226,7 @@ def mod_kick_bid_pid(bid, pid, board, v):
     post = get_post(pid)
 
     if not post.board_id == board.id:
-        abort(422)
+        abort(400)
 
     post.board_id = 1
     post.guild_name = "general"
@@ -246,7 +246,7 @@ def mod_accept_bid_pid(bid, pid, board, v):
 
     post = get_post(pid)
     if not post.board_id == board.id:
-        abort(422)
+        abort(400)
 
     post.mod_approved = v.id
     g.db.add(post)
@@ -495,9 +495,9 @@ def mod_remove_username(bid, username, board, v):
     v_mod = board.has_mod(v)
 
     if not u_mod:
-        abort(422)
+        abort(400)
     elif not v_mod:
-        abort(422)
+        abort(400)
 
     if v_mod.id > u_mod.id:
         abort(403)
@@ -1305,12 +1305,12 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
     post = get_post(pid)
 
     if post.board_id != board.id:
-        abort(422)
+        abort(400)
 
     try:
         x = bool(int(x))
     except BaseException:
-        abort(422)
+        abort(400)
 
     if x and not board.can_pin_another:
         return jsonify({"error": f"+{board.name} already has the maximum number of pinned posts."}), 409
