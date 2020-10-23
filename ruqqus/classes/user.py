@@ -120,6 +120,11 @@ class User(Base, Stndrd, Age_times):
     _applications = relationship("OauthApp", lazy="dynamic")
     authorizations = relationship("ClientAuth", lazy="dynamic")
 
+    saved_posts=relationship(
+        "SaveRelationship",
+        lazy="dynamic",
+        primaryjoin="User.id==SaveRelationship.user_id")
+
     # properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
     comment_energy = deferred(Column(Integer, server_default=FetchedValue()))
@@ -790,3 +795,69 @@ class User(Base, Stndrd, Age_times):
     def applications(self):
         return [x for x in self._applications.order_by(
             OauthApp.id.asc()).all()]
+
+
+    def saved_idlist(self, page=1):
+
+        posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
+                                                                           is_deleted=False
+                                                                           )
+
+        if not self.over_18:
+            posts = posts.filter_by(over_18=False)
+
+        board_ids = g.db.query(
+            Subscription.board_id).filter_by(
+            user_id=self.id,
+            is_active=True).subquery()
+
+        user_ids = g.db.query(
+            Follow.user_id).filter_by(
+            user_id=self.id).join(
+            Follow.target).filter(
+                User.is_private == False,
+            User.is_nofollow == False).subquery()
+
+        posts = posts.filter(
+            or_(
+                Submission.board_id.in_(board_ids),
+                Submission.author_id.in_(user_ids)
+            )
+        )
+
+        if self.admin_level < 4:
+            # admins can see everything
+
+            m = g.db.query(
+                ModRelationship.board_id).filter_by(
+                user_id=self.id,
+                invite_rescinded=False).subquery()
+            c = g.db.query(
+                ContributorRelationship.board_id).filter_by(
+                user_id=self.id).subquery()
+            posts = posts.filter(
+                or_(
+                    Submission.author_id == self.id,
+                    Submission.post_public == True,
+                    Submission.board_id.in_(m),
+                    Submission.board_id.in_(c)
+                )
+            )
+
+            blocking = g.db.query(
+                UserBlock.target_id).filter_by(
+                user_id=self.id).subquery()
+            blocked = g.db.query(
+                UserBlock.user_id).filter_by(
+                target_id=self.id).subquery()
+
+            posts = posts.filter(
+                Submission.author_id.notin_(blocking),
+                Submission.author_id.notin_(blocked)
+            )
+
+        posts=posts.order_by(Submission.created_utc.desc())
+        
+        return [x[0] for x in posts.offset(25 * (page - 1)).limit(26).all()]
+
+
