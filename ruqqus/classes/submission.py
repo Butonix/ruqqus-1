@@ -452,3 +452,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def report_count(self):
         return len(self.reports)
+
+class SaveRelationship(Base, Stndrd):
+
+    __tablename__=="save_relationship"
+
+    id=Column(Integer, primary_key=true)
+    user_id=Column(Integer, ForeignKey("users.id"))
+    submission_id=Column(Integer, ForeignKey("submissions.id"))
