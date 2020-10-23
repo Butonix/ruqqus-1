@@ -11,7 +11,7 @@ class Title(Base):
 
     __tablename__ = "titles"
     id = Column(Integer, primary_key=True)
-    is_before = Column(Boolean, default=True)
+    #is_before = Column(Boolean, default=True)
     text = Column(String(64))
     qualification_expr = Column(String(256))
     requirement_string = Column(String(512))
