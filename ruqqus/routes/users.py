@@ -301,3 +301,29 @@ def api_agree_tos(v):
 def user_profile(username):
     x = get_user(username)
     return redirect(x.profile_url)
+
+
+@app.route("/saved", methods=["GET"]):
+@app.route("/api/v1/saved", methods=["GET"])
+@auth_required
+@api("read")
+def saved_listing(v):
+
+    page=int(request.args.get("page",1))
+
+    ids=v.saved_idlist(page=page)
+
+    next_exists=len(ids)==26
+
+    ids=ids[0:25]
+
+    listing = get_posts(ids, v=v, sort="new")
+
+    return {'html': lambda: render_template("home.html",
+                                            v=v,
+                                            listing=listing,
+                                            page=page,
+                                            next_exists=next_exists,
+                                            is_following=(v and u.has_follower(v))),
+            'api': lambda: jsonify({"data": [x.json for x in listing]})
+            }
