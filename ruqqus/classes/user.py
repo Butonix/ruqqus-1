@@ -861,3 +861,21 @@ class User(Base, Stndrd, Age_times):
         return [x[0] for x in posts.offset(25 * (page - 1)).limit(26).all()]
 
 
+
+    def guild_rep(self, guild):
+
+        posts=db.query(Submission.score_top).filter_by(
+            is_banned=False,
+            board_id=guild.id).all()
+
+        post_rep= sum([x[0] for x in posts])
+
+
+        comments=db.query(Comment.score_top).join(
+            Comment.post).filter(
+            Comment.is_banned==False,
+            Submission.board_id=guild.id).all()
+
+        comment_rep=sum([x[0] for x in comments])
+
+        return post_rep + comment_rep
