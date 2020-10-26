@@ -366,6 +366,8 @@ def delete_account(v):
     v.is_deleted = True
     v.login_nonce += 1
     v.delete_reason = request.form.get("delete_reason", "")
+    v.patreon_id=None
+    v.patreon_pledge_cents=0
     v.del_banner()
     v.del_profile()
     g.db.add(v)
