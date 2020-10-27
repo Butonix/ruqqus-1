@@ -484,7 +484,7 @@ def post_forgot():
 def get_reset():
 
     user_id = request.args.get("id")
-    timestamp = int(request.args.get("time"))
+    timestamp = int(request.args.get("time",0))
     token = request.args.get("token")
 
     now = int(time.time())
