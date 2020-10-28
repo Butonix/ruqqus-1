@@ -11,24 +11,56 @@ PAYPAL_SECRET=environ.get("PAYPAL_CLIENT_SECRET", "").rstrip()
 
 PAYPAL_URL="https://api.paypal.com"
 
-def paypal_get(url, data):
+class PayPalClient():
 
-	url=PAYPAL_URL+url
+	def __init__():
 
-	headers={"Content-Type":"application/json"}
+		self.paypal_token=None
+		self.token_expires=0
 
-	return requests.get(url, headers=headers, data=data)
+	def new_token():
+
+		url="https://api.paypal.com/v1/oauth2/token"
+
+		headers={
+			"Accept":"application/json"
+		}
+
+		data={
+			"grant_type":"client_credentials"
+		}
+
+		x=requests.post(url, headers=headers, data=data, auth=(PAYPAL_ID,PAYPAL_SECRET))
+
+		x=x.json()
+
+		self.paypal_token=x["access_token"]
+		self.token_expires=int(time.time())+int(x["expires_in"])
+
+	def _get(url, data):
+
+		if time.time()>self.token_expires:
+			new_token()
+
+		url=PAYPAL_URL+url
+
+		headers={"Content-Type":"application/json"}
+
+		return requests.get(url, headers=headers, data=data)
 
 
-def paypal_post(url, data):
+	def _post(url, data):
 
-	url=PAYPAL_URL+url
+		if time.time()>self.token_expires:
+			new_token()
 
-	headers={"Content-Type":"application/json"}
+		url=PAYPAL_URL+url
 
-	return requests.post(url, headers=headers, data=data)
+		headers={"Content-Type":"application/json"}
 
-class PayPal(Base):
+		return requests.post(url, headers=headers, data=data)
+
+class PayPalTxn(Base):
 
 	__tablename__="paypal"
 
@@ -38,7 +70,7 @@ class PayPal(Base):
 	paypal_id=Column(String)
 	usd_cents=Column(Integer)
 
-	status=Column(Integer, default=1) #1=created, 2=authorized, 3=captured, -1=failed, -2=reversed  
+	status=Column(Integer, default=0) #0=initialized 1=created, 2=authorized, 3=captured, -1=failed, -2=reversed  
 
 	def __init__(self, *args, **kwargs):
 
@@ -67,6 +99,7 @@ class PayPal(Base):
 
 		if x["status"]=="CREATED":
 			self.paypal_id=x["id"]
+			self.status=1
 
 
 	def authorize(self):
@@ -91,3 +124,13 @@ class PayPal(Base):
 	def paypal_url(self):
 
 		return f"{PAYPAL_URL}/v2/checkout/orders/{self.paypal_id}"
+
+
+	def refresh(self):
+
+		url=f"/v2/checkout/orders/{self.paypal_id}"
+
+		x=paypal_get(url)
+
+
+	
