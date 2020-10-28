@@ -198,6 +198,16 @@
                 {% if v.has_premium %}
                 <p class="text-small-extra text-muted">Next renewal: {{ v.renew_premium_time }}</p>
                 {% endif %}
+
+                <form action="/shop/buy_coins" method="post">
+                  <select name="coin_count" class="form_control">
+                    <option value="1">1 - $0.99</option>
+                    <option value="4">4 - $3.99</option>
+                    <option value="1">12 - $11.99</option>
+                    <option value="1">52 - $51.99</option>
+                  </select>
+                  <input type="submit" class="btn btn-primary">
+                </form>
               </div>
             </div>
           </div>
