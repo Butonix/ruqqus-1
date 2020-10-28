@@ -13,7 +13,7 @@ PAYPAL_URL="https://api.sandbox.paypal.com"
 
 class PayPalClient():
 
-	def __init__():
+	def __init__(self):
 
 		self.paypal_token=None
 		self.token_expires=0
