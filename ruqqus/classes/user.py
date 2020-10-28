@@ -810,3 +810,8 @@ class User(Base, Stndrd, Age_times):
         else:
             return False
     
+    @property
+    def renew_premium_time(self):
+        return time.strftime("%d %b %Y at %H:%M:%S",
+                             time.gmtime(self.premium_expires_utc))
+    
