@@ -93,14 +93,28 @@ class PayPalClient():
 
 		url=f"{txn.paypal_url}/authorize"
 
-		self._post(url)
+		x= self._post(url)
+		x=x.json()
+
+		status=x["status"]
+		if status in ["SAVED", "COMPLETED"]:
+			txn.status=2
+
+		return x["status"] in ["SAVED", "COMPLETED"]
 
 
 	def capture(self, txn):
 
 		url=f"{txn.paypal_url}/capture"
 
-		self._post(url)
+		x=self._post(url)
+		x=x.json()
+
+		status=x["status"]
+		if status=="COMPLETED":
+			txn.status=3
+
+		return status=="COMPLETED"
 
 
 class PayPalTxn(Base):
