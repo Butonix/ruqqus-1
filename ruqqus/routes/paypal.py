@@ -12,7 +12,7 @@ from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
 from ruqqus.__main__ import app
 
-CLIENT=PaypalClient()
+CLIENT=PayPalClient()
 
 
 @app.route("/shop/buy_coins", methods=["POST"])
