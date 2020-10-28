@@ -31,7 +31,7 @@ def shop_buy_coins(v)
 
     g.db.add(new_txn)
 
-    return_redirect(new_txn.approve_url)
+    return redirect(new_txn.approve_url)
 
 
 @app.route("/shop/buy_coins_completed", methods=["GET"])
