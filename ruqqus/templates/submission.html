@@ -302,11 +302,11 @@
           {% endif %}
           {% if p.is_guildmaster %}
 
-          {% if p.is_pinned %}
-          <button class="btn btn-link btn-block btn-lg text-success text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-center text-success mr-3"></i>Unpin</button>
-          {% elif p.board.can_pin_another %}
-          <button class="btn btn-link btn-block btn-lg text-success text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-center text-success mr-3"></i>Pin</button>
-          {% endif %}
+              {% if p.is_pinned %}
+              <button class="btn btn-link btn-block btn-lg text-success text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-center text-success mr-3"></i>Unpin</button>
+              {% elif p.board.can_pin_another %}
+              <button class="btn btn-link btn-block btn-lg text-success text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-center text-success mr-3"></i>Pin</button>
+              {% endif %}
 
           <button class="btn btn-link btn-block btn-lg text-danger text-left" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board.base36id }}/{{ p.base36id }}', callback=function(){window.location.reload(true)})"><i class="fas fa-sign-out fa-flip-horizontal text-center text-danger mr-3"></i>Kick</button>
           {% endif %}

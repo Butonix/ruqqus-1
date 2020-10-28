@@ -95,7 +95,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         vt = nSession.query(Vote).filter_by(
             user_id=v.id, submission_id=i).subquery()
         mod = nSession.query(ModRelationship).filter_by(
-            user_id=v.id, invite_rescinded=False).subquery()
+            user_id=v.id, accepted=True, invite_rescinded=False).subquery()
         boardblocks = nSession.query(
             BoardBlock).filter_by(user_id=v.id).subquery()
         blocking = v.blocking.subquery()
@@ -147,7 +147,7 @@ def get_posts(pids, sort="hot", v=None):
             vt = g.db.query(Vote).filter_by(
                 submission_id=pid, user_id=v.id).subquery()
             mod = g.db.query(ModRelationship).filter_by(
-                user_id=v.id, invite_rescinded=False).subquery()
+                user_id=v.id, accepted=True, invite_rescinded=False).subquery()
             boardblocks = g.db.query(BoardBlock).filter_by(
                 user_id=v.id).subquery()
             blocking = v.blocking.subquery()
