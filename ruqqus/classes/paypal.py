@@ -20,7 +20,7 @@ class PayPalClient():
 
 	def new_token(self):
 
-		url="https://api.paypal.com/v1/oauth2/token"
+		url=f"{PAYPAL_URL}/v1/oauth2/token"
 
 		headers={
 			"Accept":"application/json"
