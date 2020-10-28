@@ -66,6 +66,43 @@ class PayPalClient():
 
 		return requests.post(url, headers=headers, data=data)
 
+	def create(self, txn):
+
+		url="/v2/checkouts/orders"
+
+		data={
+			"intent":"CAPTURE",
+			"purchase_units":
+			[
+				"amount": {
+					"currency_code":"USD",
+					"value": str(txn.usd_cents/100)
+				}
+			]
+		}
+
+		r=self._post(url, data=data)
+
+		x=r.json()
+
+		if x["status"]=="CREATED":
+			txn.paypal_id=x["id"]
+			txn.status=1
+
+	def authorize(self, txn):
+
+		url=f"{txn.paypal_url}/authorize"
+
+		self._post(url)
+
+
+	def capture(self, txn):
+
+		url=f"{txn.paypal_url}/capture"
+
+		self._post(url)
+
+
 class PayPalTxn(Base):
 
 	__tablename__="paypal"
@@ -78,48 +115,9 @@ class PayPalTxn(Base):
 
 	status=Column(Integer, default=0) #0=initialized 1=created, 2=authorized, 3=captured, -1=failed, -2=reversed  
 
-	def __init__(self, *args, **kwargs):
-
-		super().__init__(*args, **kwargs)
-
-		self.create()
-
-	def create(self):
-
-		url="/v2/checkouts/orders"
-
-		data={
-			"intent":"CAPTURE",
-			"purchase_units":
-			[
-				"amount": {
-					"currency_code":"USD",
-					"value": str(self.usd_cents/100)
-				}
-			]
-		}
-
-		r=paypal_post(url, data=data)
-
-		x=r.json()
-
-		if x["status"]=="CREATED":
-			self.paypal_id=x["id"]
-			self.status=1
 
 
-	def authorize(self):
 
-		url=f"{self.paypal_url}/authorize"
-
-		paypal_post(url)
-
-
-	def capture(self):
-
-		url=f"{self.paypal_url}/capture"
-
-		paypal_post(url)
 
 	@property
 	def approve_url(self):
@@ -130,13 +128,3 @@ class PayPalTxn(Base):
 	def paypal_url(self):
 
 		return f"{PAYPAL_URL}/v2/checkout/orders/{self.paypal_id}"
-
-
-	def refresh(self):
-
-		url=f"/v2/checkout/orders/{self.paypal_id}"
-
-		x=paypal_get(url)
-
-
-	
