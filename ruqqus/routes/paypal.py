@@ -17,7 +17,7 @@ CLIENT=PaypalClient()
 
 @app.route("/shop/buy_coins", methods=["POST"])
 @is_not_banned
-def shop_buy_coins(v)
+def shop_buy_coins(v):
 
     coin_count=int(request.args.get("coin_count",1))
 
@@ -36,7 +36,7 @@ def shop_buy_coins(v)
 
 @app.route("/shop/buy_coins_completed", methods=["GET"])
 @is_not_banned
-def shop_buy_coins_completed(v)
+def shop_buy_coins_completed(v):
 
     #look up most recent txn
     txn=g.db.query(PayPalTxn).filter_by(user_id=v.id, status=1).first()
