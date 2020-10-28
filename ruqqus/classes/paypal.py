@@ -40,7 +40,7 @@ class PayPalClient():
 	def _get(self, url, data):
 
 		if time.time()>self.token_expires:
-			new_token()
+			self.new_token()
 
 		url=PAYPAL_URL+url
 
@@ -55,7 +55,7 @@ class PayPalClient():
 	def _post(self, url, data):
 
 		if time.time()>self.token_expires:
-			new_token()
+			self.new_token()
 
 		url=PAYPAL_URL+url
 
