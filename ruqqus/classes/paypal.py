@@ -18,7 +18,7 @@ class PayPalClient():
 		self.paypal_token=None
 		self.token_expires=0
 
-	def new_token():
+	def new_token(self):
 
 		url="https://api.paypal.com/v1/oauth2/token"
 
@@ -37,7 +37,7 @@ class PayPalClient():
 		self.paypal_token=x["access_token"]
 		self.token_expires=int(time.time())+int(x["expires_in"])
 
-	def _get(url, data):
+	def _get(self, url, data):
 
 		if time.time()>self.token_expires:
 			new_token()
@@ -52,7 +52,7 @@ class PayPalClient():
 		return requests.get(url, headers=headers, data=data)
 
 
-	def _post(url, data):
+	def _post(self, url, data):
 
 		if time.time()>self.token_expires:
 			new_token()
