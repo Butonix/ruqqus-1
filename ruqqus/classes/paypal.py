@@ -74,9 +74,11 @@ class PayPalClient():
 			"intent":"CAPTURE",
 			"purchase_units":
 			[
+				{
 				"amount": {
 					"currency_code":"USD",
 					"value": str(txn.usd_cents/100)
+					}
 				}
 			]
 		}
