@@ -9,7 +9,7 @@ from ruqqus.__main__ import Base
 PAYPAL_ID=environ.get("PAYPAL_CLIENT_ID", "").rstrip()
 PAYPAL_SECRET=environ.get("PAYPAL_CLIENT_SECRET", "").rstrip()
 
-PAYPAL_URL="https://api.paypal.com"
+PAYPAL_URL="https://api.sandbox.paypal.com"
 
 class PayPalClient():
 

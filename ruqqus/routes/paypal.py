@@ -42,7 +42,7 @@ def shop_buy_coins_completed(v)
     txn=g.db.query(PayPalTxn).filter_by(user_id=v.id, status=1).first()
 
     if not txn:
-        abort(402)
+        abort(400)
 
     if not CLIENT.authorize(txn):
         abort(402)

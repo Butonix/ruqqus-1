@@ -86,11 +86,10 @@ class User(Base, Stndrd, Age_times):
     delete_reason = Column(String(500), default='')
     filter_nsfw = Column(Boolean, default=False)
 
-    #patreon_id = Column(String(64), default=None)
-    #patreon_access_token = Column(String(128), default='')
-    #patreon_refresh_token = Column(String(128), default='')
+    coin_balance=Column(Integer, default=0)
+    premium_expires_utc=Column(Integer, default=0)
+
     patreon_pledge_cents = Column(Integer, default=0)
-    #patreon_name = Column(String(64), default='')
 
     is_nofollow = Column(Boolean, default=False)
 
@@ -790,3 +789,24 @@ class User(Base, Stndrd, Age_times):
     def applications(self):
         return [x for x in self._applications.order_by(
             OauthApp.id.asc()).all()]
+
+
+    @property
+    def has_premium(self):
+        
+        now=int(time.time())
+
+        if self.premium_expires_utc > now:
+            return True
+
+        elif self.coin_balance >=1:
+            self.coin_balance -=1
+            self.premium_expires_utc = now + 60*60*24*7
+
+            g.db.add(self)
+
+            return True
+
+        else:
+            return False
+    
