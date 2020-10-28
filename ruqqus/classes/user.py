@@ -86,11 +86,11 @@ class User(Base, Stndrd, Age_times):
     delete_reason = Column(String(500), default='')
     filter_nsfw = Column(Boolean, default=False)
 
-    patreon_id = Column(String(64), default=None)
-    patreon_access_token = Column(String(128), default='')
-    patreon_refresh_token = Column(String(128), default='')
+    #patreon_id = Column(String(64), default=None)
+    #patreon_access_token = Column(String(128), default='')
+    #patreon_refresh_token = Column(String(128), default='')
     patreon_pledge_cents = Column(Integer, default=0)
-    patreon_name = Column(String(64), default='')
+    #patreon_name = Column(String(64), default='')
 
     is_nofollow = Column(Boolean, default=False)
 
