@@ -157,4 +157,4 @@ class PayPalTxn(Base):
 	@property
 	def paypal_url(self):
 
-		return f"{PAYPAL_URL}/v2/checkout/orders/{self.paypal_id}"
+		return f"/v2/checkout/orders/{self.paypal_id}"
