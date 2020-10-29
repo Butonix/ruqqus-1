@@ -17,14 +17,14 @@ CLIENT=PayPalClient()
 def coins_to_price_ea(n):
 
     if n>=52:
-        return 80
+        return 94
 
     elif n >= 12:
         return 99
     elif n>=4:
-        return 119
+        return 109
     else:
-        return 139
+        return 119
 
 @app.route("/shop/get_price", methods=["GET"])
 def shop_get_price():
