@@ -72,7 +72,7 @@ class PayPalClient():
 		#	"Accept":"application/json",
 			"Authorization":f"Bearer {self.paypal_token}"
 			}
-
+		self.print(url)
 		self.print(headers)
 		self.print(data)
 
