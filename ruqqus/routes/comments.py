@@ -38,16 +38,24 @@ def comment_cid(cid, pid=None):
 def post_pid_comment_cid(boardname, p_id, c_id, anything=None, v=None):
 
     comment = get_comment(c_id, v=v)
-
     post = get_post(p_id, v=v)
-
+    board = post.board
+    
     if comment.parent_submission != post.id:
         return redirect(request.path.replace(p_id, comment.post.base36id))
+        return redirect(url_for("post_pid_comment_cid-api" if request.path.startswith('/api/v1') else "post_pid_comment_cid",
+                                boardname=board.name,
+                                p_id=comment.post.base36id,
+                                c_id=c_id,
+                                anything=anything))
 
-    board = post.board
     #if guild name is incorrect, fix it
     if not board.name == boardname:
-        return redirect(url_for("post_pid_comment_cid-api" if request.path.startswith('/api/v1') else "post_pid_comment_cid", boardname=board.name, p_id=p_id, c_id=c_id))
+        return redirect(url_for("post_pid_comment_cid-api" if request.path.startswith('/api/v1') else "post_pid_comment_cid",
+                                boardname=board.name,
+                                p_id=p_id,
+                                c_id=c_id,
+                                anything=anything))
 
     if board.is_banned and not (v and v.admin_level > 3):
         return {'html': lambda: render_template("board_banned.html",
