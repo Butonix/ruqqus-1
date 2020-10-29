@@ -263,7 +263,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'body_html': self.body_html,
                 'is_archived': self.is_archived,
                 'is_bot': self.is_bot,
-                'guild': self.board.json,
                 'created_utc': self.created_utc,
                 'edited_utc': self.edited_utc or 0,
                 'is_banned': False,
