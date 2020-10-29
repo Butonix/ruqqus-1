@@ -192,11 +192,19 @@
                 <label for="buypremium">Ruq Buqs</label>
               </div>
               <div class="body w-lg-100">
-                <p>Ruq Buqs are auto-redeemed for one week of premium account time</p>
-                <p class="text-small-extra text-muted">Current balance: {{ v.coin_balance }} Ruq Buq{{ '' if v.coin_balance==1 else 's' }}</p>
+                <p>Ruq Buqs are auto-redeemed for one week of premium account time.</p>
 
-                {% if v.has_premium %}
-                <p class="text-small-extra text-muted">Next renewal: {{ v.renew_premium_time }}</p>
+                {% if v.has_premium and v.coin_balance >=1 %}
+                <p class="text-small-extra text-muted">Current balance: {{ v.coin_balance }} Ruq Buq{{ '' if v.coin_balance==1 else 's' }}</p>
+                <p class="text-small-extra text-muted">Next renewal after: {{ v.renew_premium_time }}</p>
+
+                {% elif v.has_premium %}
+                <p class="text-small-extra text-muted">Current balance: {{ v.coin_balance }} Ruq Buq{{ '' if v.coin_balance==1 else 's' }}</p>
+                <p class="text-small-extra text-muted">Premium expires: {{ v.renew_premium_time }}. Buy some Ruq Buqs to continue with Premium.</p>
+
+                {% else %}
+                <p class="text-small-extra text-muted">Current balance: 0 Ruq Buqs</p>
+                <p class="text-small-extra text-muted">Buy some Ruq Buqs to enjoy Ruqqus Premium.</p>
                 {% endif %}
 
                 <form action="/shop/buy_coins" method="post">
