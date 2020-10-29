@@ -41,7 +41,7 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
     
     # prevent api shenanigans
     if not p_id:
-        p_id = comment.parent_submission
+        p_id = base36encode(comment.parent_submission)
     
     post = get_post(p_id, v=v)
     board = post.board
