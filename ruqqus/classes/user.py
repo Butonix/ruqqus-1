@@ -814,3 +814,7 @@ class User(Base, Stndrd, Age_times):
         return time.strftime("%d %b %Y at %H:%M:%S",
                              time.gmtime(self.premium_expires_utc))
     
+    @property
+    def has_negative_balance(self):
+        return self.coin_balance < 0
+    
