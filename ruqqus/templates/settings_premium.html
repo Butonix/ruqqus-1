@@ -25,7 +25,7 @@
                 <label for="buypremium">Account Balance</label>
               </div>
               <div class="body w-lg-100">
-                  <p>Account balance: -${{ v.negative_balance_cents/100 }}</p>
+                  <p class="font-weight-bold text-danger">-${{ v.negative_balance_cents/100 }}</p>
                   <p>Your account balance is negative. You will not be able to participate on Ruqqus until you bring your balance up to zero.</p>
                   <form action="/shop/negative_balance" method="post">
                     <input type="hidden" name="formkey" value="{{ v.formkey }}">
