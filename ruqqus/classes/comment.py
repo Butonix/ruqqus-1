@@ -236,7 +236,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     @property
     def json(self):
-        if self.parent.parent:
+        if self.parent.json.parent:
             self.parent.json.pop("parent", None)
             
         if self.is_banned:
