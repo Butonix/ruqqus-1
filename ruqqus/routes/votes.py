@@ -53,7 +53,7 @@ def api_vote_post(post_id, x, v):
     try:
         g.db.flush()
     except:
-        abort(500)
+        return jsonify({"error":"Vote already exists."}), 500
         
     post.upvotes = post.ups
     post.downvotes = post.downs
@@ -116,7 +116,7 @@ def api_vote_comment(comment_id, x, v):
     try:
         g.db.flush()
     except:
-        abort(500)
+        return jsonify({"error":"Vote already exists."}), 500
 
     comment.upvotes = comment.ups
     comment.downvotes = comment.downs
