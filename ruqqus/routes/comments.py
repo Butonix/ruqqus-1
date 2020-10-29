@@ -42,7 +42,6 @@ def post_pid_comment_cid(boardname, p_id, c_id, anything=None, v=None):
     board = post.board
     
     if comment.parent_submission != post.id:
-        return redirect(request.path.replace(p_id, comment.post.base36id))
         return redirect(url_for("post_pid_comment_cid-api" if request.path.startswith('/api/v1') else "post_pid_comment_cid",
                                 boardname=board.name,
                                 p_id=comment.post.base36id,
