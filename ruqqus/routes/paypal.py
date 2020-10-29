@@ -21,9 +21,9 @@ def coins_to_price_cents(n):
     elif n>=26:
         return 100*n-401
     elif n>=12:
-        return 100*n-1
+        return 100*n-101
     elif n >=4:
-        return 100*n+29
+        return 100*n-1
     else:
         return 100*n+49
 
