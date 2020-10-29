@@ -408,7 +408,7 @@ def mod_take_pid(pid, v):
     # notify user
     if post.author_id != v.id:
         author = get_account(post.author_id)
-        send_notification(author, f"Your post [\"{post.title}\"]({post.permalink}) has been yanked to +{board.name}. You can revert this by visiting the post and clicking the \"Remove from {board.name}\" button.")
+        send_notification(author, f"Your post [\"{post.title}\"]({post.permalink}) has been yanked to +{board.name}.")
 
     return "", 204
 
