@@ -19,7 +19,7 @@ CLIENT=PayPalClient()
 @is_not_banned
 def shop_buy_coins(v):
 
-    coin_count=int(request.args.get("coin_count",1))
+    coin_count=int(request.form.get("coin_count",1))
 
     new_txn=PayPalTxn(
         user_id=v.id,
