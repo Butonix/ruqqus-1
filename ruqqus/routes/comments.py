@@ -30,7 +30,7 @@ def comment_cid(cid, pid=None):
         abort(403)
     return redirect(comment.permalink)
 
-@app.route("/api/v1/comment/<_cid>", methods=["GET"])
+@app.route("/api/v1/comment/<c_id>", methods=["GET"])
 @app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
 @app.route("/+<boardname>/post/<p_id>/<anything>/<c_id>", methods=["GET"])
 @auth_desired
