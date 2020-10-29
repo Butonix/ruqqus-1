@@ -99,8 +99,6 @@ class PayPalClient():
 
 		x=r.json()
 
-		self.print(x)
-
 		if x["status"]=="CREATED":
 			txn.paypal_id=x["id"]
 			txn.status=1
@@ -111,8 +109,6 @@ class PayPalClient():
 
 		x= self._post(url)
 		x=x.json()
-
-		self.print(x)
 
 		status=x["status"]
 		if status in ["SAVED", "COMPLETED"]:
@@ -127,8 +123,6 @@ class PayPalClient():
 
 		x=self._post(url)
 		x=x.json()
-
-		self.print(x)
 		
 		status=x["status"]
 		if status=="COMPLETED":
