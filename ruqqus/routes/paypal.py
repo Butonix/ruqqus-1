@@ -14,24 +14,25 @@ from ruqqus.__main__ import app
 
 CLIENT=PayPalClient()
 
-def coins_to_price_ea(n):
+def coins_to_price_cents(n):
 
     if n>=52:
-        return 94
-
-    elif n >= 12:
-        return 99
-    elif n>=4:
-        return 109
+        return 100*n - 1001
+    elif n>=26:
+        return 100*n-401
+    elif n>=12:
+        return 100*n-1
+    elif n >=4:
+        return 100*n+29
     else:
-        return 119
+        return 100*n+49
 
 @app.route("/shop/get_price", methods=["GET"])
 def shop_get_price():
 
     coins=int(request.args.get("coins"))
 
-    return jsonify({"price":coins*coins_to_price_ea(coins)/100})
+    return jsonify({"price":coins_to_price_cents(coins)/100})
 
 
 @app.route("/shop/buy_coins", methods=["POST"])
@@ -40,13 +41,11 @@ def shop_buy_coins(v):
 
     coin_count=int(request.form.get("coin_count",1))
 
-    price_ea_cents = coins_to_price_ea(coin_count)
-
     new_txn=PayPalTxn(
         user_id=v.id,
         created_utc=int(time.time()),
         coin_count=coin_count,
-        usd_cents=price_ea_cents * coin_count
+        usd_cents=coins_to_price_cents(coin_count)
         )
 
     CLIENT.create(new_txn)

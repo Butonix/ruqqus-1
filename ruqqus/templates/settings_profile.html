@@ -210,13 +210,13 @@
 
 
                 <form action="/shop/buy_coins" method="post">
-                  <select name="coin_count" class="form-control">
-                    <option value="1">1 - $0.99</option>
-                    <option value="4">4 - $3.99</option>
-                    <option value="12">12 - $11.99</option>
-                    <option value="52">52 - $51.99</option>
+                  <select id="select-coins" name="coin_count" class="form-control">
+                    <option value="1">1 Coin</option>
+                    <option value="4">4 Coins</option>
+                    <option value="12">22 Coins + 4 Free</option>
+                    <option value="52">42 Coins + 10 Free</option>
                   </select>
-                  <input type="submit" class="btn btn-primary" value="Buy Ruq Buqs">
+                  <input id="buy-coin-btn" type="submit" class="btn btn-primary" value="Buy Ruq Buqs">
                 </form>
                 <p class="text-small-extra text-muted">Ruq Buqs have no cash value and cannot be redeemed for anything other than Premium membership time. All sales final.</p>
               </div>
