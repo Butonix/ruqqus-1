@@ -41,6 +41,8 @@ class PayPalClient():
 
 		x=x.json()
 
+		self._print(x)
+
 		self.paypal_token=x["access_token"]
 		self.token_expires=int(time.time())+int(x["expires_in"])
 
