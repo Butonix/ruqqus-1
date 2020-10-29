@@ -30,6 +30,7 @@ def shop_buy_coins(v):
     CLIENT.create(new_txn)
 
     g.db.add(new_txn)
+    g.db.commit()
 
     return redirect(new_txn.approve_url)
 
