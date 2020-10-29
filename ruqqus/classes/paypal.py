@@ -94,7 +94,7 @@ class PayPalClient():
 
 		x=r.json()
 
-
+		self.print(x)
 
 		if x["status"]=="CREATED":
 			txn.paypal_id=x["id"]
