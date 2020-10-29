@@ -622,8 +622,7 @@ class User(Base, Stndrd, Age_times):
 
     @property
     def can_make_guild(self):
-        return (self.true_score >= 250 or self.created_utc <= 1592974538 and self.true_score >= 50 or (
-            self.patreon_pledge_cents and self.patreon_pledge_cents >= 500)) and len(self.boards_modded) < 10
+        return (self.has_premium or self.true_score >= 250 or (self.created_utc <= 1592974538 and self.true_score >= 50)) and len(self.boards_modded) < 10
 
     @property
     def can_join_gms(self):
@@ -642,16 +641,16 @@ class User(Base, Stndrd, Age_times):
 
     @property
     def can_submit_image(self):
-        return (self.patreon_pledge_cents and self.patreon_pledge_cents >= 500) or self.true_score >= 1000 or (
+        return self.has_premium or self.true_score >= 1000 or (
             self.created_utc <= 1592974538 and self.true_score >= 500)
 
     @property
     def can_upload_avatar(self):
-        return self.patreon_pledge_cents or self.true_score >= 300 or self.created_utc <= 1592974538
+        return self.has_premium or self.true_score >= 300 or self.created_utc <= 1592974538
 
     @property
     def can_upload_banner(self):
-        return self.patreon_pledge_cents or self.true_score >= 500 or self.created_utc <= 1592974538
+        return self.has_premium or self.true_score >= 500 or self.created_utc <= 1592974538
 
     @property
     def json(self):
