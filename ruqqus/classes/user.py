@@ -796,7 +796,10 @@ class User(Base, Stndrd, Age_times):
         
         now=int(time.time())
 
-        if self.premium_expires_utc > now and self.coin_balance >= 0:
+        if self.negative_balance_cents:
+            return False
+
+        elif self.premium_expires_utc > now:
             return True
 
         elif self.coin_balance >=1:
@@ -814,8 +817,4 @@ class User(Base, Stndrd, Age_times):
     def renew_premium_time(self):
         return time.strftime("%d %b %Y at %H:%M:%S",
                              time.gmtime(self.premium_expires_utc))
-    
-    @property
-    def has_negative_balance(self):
-        return self.coin_balance < 0
     

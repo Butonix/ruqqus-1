@@ -182,7 +182,7 @@ def no_negative_balance(s):
 
             v=kwargs["v"]
 
-            if v.coin_balance < 0:
+            if v.negative_balance_cents:
                 if s=="toast":
                     return jsonify({"error":"You can't do that while your Coin balance is negative."}), 402
                 elif s=="html":

@@ -37,6 +37,7 @@ def shop_get_price():
 
 @app.route("/shop/buy_coins", methods=["POST"])
 @is_not_banned
+@no_negative_balance("html")
 @validate_formkey
 def shop_buy_coins(v):
 
@@ -56,6 +57,25 @@ def shop_buy_coins(v):
 
     return redirect(new_txn.approve_url)
 
+
+@app.route("/shop/negative_balance", methods=["POST"])
+@is_not_banned
+@validate_formkey
+def shop_negative_balance(v):
+
+    new_txn=PayPalTxn(
+        user_id=v.id,
+        created_utc=int(time.time()),
+        coin_count=coin_count,
+        usd_cents=v.negative_balance_cents
+        )
+
+    CLIENT.create(new_txn)
+
+    g.db.add(new_txn)
+    g.db.commit()
+
+    return redirect(new_txn.approve_url)
 
 @app.route("/shop/buy_coins_completed", methods=["GET"])
 @is_not_banned
@@ -85,3 +105,24 @@ def shop_buy_coins_completed(v):
 def paypal_webhook_handler():
     print(request.method)
     pprint.pprint(request.body)
+
+    data=request.json()
+    
+    #Reversals
+    if data["event_type"] in ["PAYMENT.SALE.REVERSED", "PAYMENT.SALE.REFUNDED", "PAYMENT.CAPTURE.REVERSED", "PAYMENT.CAPTURE.REFUNDED"]:
+
+        txn=get_txn(data["resource"]["id"])
+
+        amount_cents=int(float(data["resource"]["amount"]["value"])*100)
+
+        txn.user.negative_balance_cents+=amount_cents
+
+        txn.status=-2
+
+        g.db.add(txn)
+        g.db.add(txn.user)
+
+        g.db.flush()
+
+
+

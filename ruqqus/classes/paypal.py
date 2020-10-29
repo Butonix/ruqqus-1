@@ -142,8 +142,9 @@ class PayPalTxn(Base):
 	usd_cents=Column(Integer)
 	coin_count=Column(Integer)
 
-	status=Column(Integer, default=0) #0=initialized 1=created, 2=authorized, 3=captured, -1=failed, -2=reversed  
+	status=Column(Integer, default=0) #0=initialized 1=created, 2=authorized, 3=captured, -1=failed, -2=reversed 
 
+	user=relationship(User, lazy="dynamic")
 	@property
 	def approve_url(self):
 
