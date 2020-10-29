@@ -104,6 +104,7 @@ def submit_get(v):
 
 @app.route("/edit_post/<pid>", methods=["POST"])
 @is_not_banned
+@no_negative_balance
 @validate_formkey
 def edit_post(pid, v):
 
@@ -173,6 +174,7 @@ def get_post_title(v):
 @app.route("/api/v1/submit", methods=["POST"])
 @limiter.limit("6/minute")
 @is_not_banned
+@no_negative_balance
 @tos_agreed
 @validate_formkey
 @api("create")
