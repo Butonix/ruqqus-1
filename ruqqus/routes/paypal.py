@@ -57,3 +57,5 @@ def shop_buy_coins_completed(v):
     v.coin_balance += coins
 
     g.db.add(v)
+
+    return redirect("/settings/profile#ruqqus-premium")
