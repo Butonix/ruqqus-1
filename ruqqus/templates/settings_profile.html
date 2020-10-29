@@ -199,8 +199,8 @@
                 <p class="text-small-extra text-muted">Next renewal: {{ v.renew_premium_time }}</p>
                 {% endif %}
 
-                <form action="/shop/buy_coins" method="post" class="form-control">
-                  <select name="coin_count" class="form_control">
+                <form action="/shop/buy_coins" method="post">
+                  <select name="coin_count" class="form-control">
                     <option value="1">1 - $0.99</option>
                     <option value="4">4 - $3.99</option>
                     <option value="12">12 - $11.99</option>
