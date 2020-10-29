@@ -47,7 +47,7 @@ def post_pid_comment_cid(boardname, p_id, c_id, anything=None, v=None):
     board = post.board
     #if guild name is incorrect, fix it
     if not board.name == boardname:
-        return redirect(request.path.replace(boardname, board.name))
+        return redirect(url_for(post_pid_comment_cid, boardname=board.name, p_id=p_id, c_id=c_id))
 
     if board.is_banned and not (v and v.admin_level > 3):
         return {'html': lambda: render_template("board_banned.html",
