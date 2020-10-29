@@ -735,7 +735,8 @@ function post_toast(url, callback) {
   xhr.withCredentials=true;
 
   xhr.onload = function() {
-    if (xhr.status >= 200 && xhr.status < 300) {
+    if (xhr.status==204) {}
+    else if (xhr.status >= 200 && xhr.status < 300) {
       $('#toast-post-success').toast('dispose');
       $('#toast-post-success').toast('show');
       document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
@@ -972,10 +973,7 @@ var upvote = function(event) {
     }
   }
 
-  for (var n = 0; n < 1; n++) {
-    callback=function() {
-    }
-    post("/api/vote/" + type + "/" + id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
+  post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection)
   }
 }
 
@@ -1024,10 +1022,7 @@ var downvote = function(event) {
     }
   }
 
-  for (var n = 0; n < 1; n++) {
-    callback=function() {
-    }
-    post("/api/vote/" + type + "/" + id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
+  post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection)
   }
 }
 

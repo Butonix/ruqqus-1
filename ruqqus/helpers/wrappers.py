@@ -170,23 +170,31 @@ def premium_required(f):
     wrapper.__name__=f.__name__
     return wrapper
 
-def no_negative_balance(f):
+def no_negative_balance(s):
+
+    def wrapper_maker(f):
 
     #decorator that enforces valid premium status
     #use under auth_required or is_not_banned
 
-    def wrapper(*args, **kwargs):
+        def wrapper(*args, **kwargs):
 
-        v=kwargs["v"]
+            v=kwargs["v"]
 
-        if v.coin_balance < 0:
-            abort(403)
+            if v.coin_balance < 0:
+                if s=="toast":
+                    return jsonify({"error":"You can't do that while your Coin balance is negative."}), 402
+                elif s=="html":
+                    abort(402)
+                else:
+                    abort(402)
 
-        return f(*args, **kwargs)
+            return f(*args, **kwargs)
 
-    wrapper.__name__=f.__name__
-    return wrapper
+        wrapper.__name__=f.__name__
+        return wrapper
 
+    return wrapper_maker
 
 def is_guildmaster(f):
     # decorator that enforces guildmaster status
