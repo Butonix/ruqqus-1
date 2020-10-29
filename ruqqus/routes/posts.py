@@ -88,8 +88,8 @@ def post_base36id(base36id, anything=None, v=None):
 
 
 @app.route("/submit", methods=["GET"])
-@no_negative_balance("html")
 @is_not_banned
+@no_negative_balance("html")
 def submit_get(v):
 
     board = request.args.get("guild", "general")
