@@ -126,3 +126,4 @@ def paypal_webhook_handler():
 
 
 
+    return "", 204
