@@ -1845,7 +1845,7 @@ coin_quote = function() {
   xhr.open('get', '/shop/get_price?coins='+coin_count)
 
   xhr.onload=function(){
-    var s = 'Buy '+ coin_count + 'Coin';
+    var s = 'Buy '+ coin_count + ' Coin';
 
     if (coin_count > 1){s = s+'s'};
 
