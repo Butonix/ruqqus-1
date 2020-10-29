@@ -153,6 +153,23 @@ def tos_agreed(f):
     wrapper.__name__ = f.__name__
     return wrapper
 
+def premium_required(f):
+
+    #decorator that enforces valid premium status
+    #use under auth_required or is_not_banned
+
+    def wrapper(*args, **kwargs):
+
+        v=kwargs["v"]
+
+        if not v.has_premium:
+            abort(403)
+
+        return f(*args, **kwargs)
+
+    wrapper.__name__=f.__name__
+    return wrapper
+
 
 def is_guildmaster(f):
     # decorator that enforces guildmaster status
