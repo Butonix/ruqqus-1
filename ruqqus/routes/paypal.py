@@ -53,7 +53,7 @@ def shop_buy_coins_completed(v):
 
     #successful payment - award coins
 
-    coins=int(txn.usd_cents+1)/100
+    coins=int((txn.usd_cents+1)/100)
 
     v.coin_balance += coins
 
