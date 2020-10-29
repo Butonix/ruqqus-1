@@ -57,7 +57,7 @@ class PayPalClient():
 			"Authorization":f"Bearer {self.paypal_token}"
 			}
 
-		return requests.get(url, headers=headers, body=data)
+		return requests.get(url, headers=headers, json=data)
 
 
 	def _post(self, url, data):
@@ -76,7 +76,7 @@ class PayPalClient():
 		self.print(headers)
 		self.print(data)
 
-		return requests.post(url, headers=headers, body=data)
+		return requests.post(url, headers=headers, json=data)
 
 	def create(self, txn):
 
