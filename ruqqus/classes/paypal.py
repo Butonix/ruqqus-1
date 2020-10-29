@@ -53,7 +53,7 @@ class PayPalClient():
 
 		headers={
 			"Content-Type":"application/json",
-			"Accept":"application/json",
+		#	"Accept":"application/json",
 			"Authorization":f"Bearer {self.paypal_token}"
 			}
 
@@ -69,7 +69,7 @@ class PayPalClient():
 
 		headers={
 			"Content-Type":"application/json",
-			"Accept":"application/json",
+		#	"Accept":"application/json",
 			"Authorization":f"Bearer {self.paypal_token}"
 			}
 
