@@ -203,7 +203,7 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
 @app.route("/api/v1/comment", methods=["POST"])
 @limiter.limit("6/minute")
 @is_not_banned
-@no_negative_balance
+@no_negative_balance('html')
 @tos_agreed
 @validate_formkey
 @api("create")
