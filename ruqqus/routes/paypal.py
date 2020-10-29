@@ -16,11 +16,11 @@ CLIENT=PayPalClient()
 
 def coins_to_price_ea(n):
 
-    if coin_count<4:
+    if n<4:
         return 149
-    elif coin_count <12:
+    elif n <12:
         return 109
-    elif coin_count < 52:
+    elif n < 52:
         return 104
     else:
         return 99
