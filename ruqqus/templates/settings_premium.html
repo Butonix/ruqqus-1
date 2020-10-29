@@ -42,6 +42,7 @@
 
 
                 <form action="/shop/buy_coins" method="post">
+                  <input type="hidden" name="formkey" value="{{ v.formkey }}">
                   <select id="select-coins" name="coin_count" class="form-control" onchange="coin_quote()">
                     {% if v.coin_balance < 0 %}<option value="{{ -1 * v.coin_balance }}">{{ -1 * v.coin_balance }} Coin{{ 's' if v.coin_balance < -1 else '' }} - Fix negative balance</option>{% endif %}
                     <option value="1">1 Coin</option>

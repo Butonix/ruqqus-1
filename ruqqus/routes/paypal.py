@@ -37,6 +37,7 @@ def shop_get_price():
 
 @app.route("/shop/buy_coins", methods=["POST"])
 @is_not_banned
+@validate_formkey
 def shop_buy_coins(v):
 
     coin_count=int(request.form.get("coin_count",1))
