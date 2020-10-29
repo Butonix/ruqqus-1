@@ -18,6 +18,13 @@ class PayPalClient():
 		self.paypal_token=None
 		self.token_expires=0
 
+	def print(self, x):
+
+		try:
+			print(x)
+		except OSError:
+			pass
+
 	def new_token(self):
 
 		url=f"{PAYPAL_URL}/v1/oauth2/token"
@@ -86,6 +93,8 @@ class PayPalClient():
 		r=self._post(url, data=data)
 
 		x=r.json()
+
+
 
 		if x["status"]=="CREATED":
 			txn.paypal_id=x["id"]
