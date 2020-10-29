@@ -196,11 +196,11 @@
 
                 {% if v.has_premium and v.coin_balance >=1 %}
                 <p class="text-small-extra text-muted">Current balance: {{ v.coin_balance }} Ruq Buq{{ '' if v.coin_balance==1 else 's' }}</p>
-                <p class="text-small-extra text-muted">Next renewal after: {{ v.renew_premium_time }}</p>
+                <p class="text-small-extra text-muted">Next renewal after: {{ v.renew_premium_time }} UTC</p>
 
                 {% elif v.has_premium %}
                 <p class="text-small-extra text-muted">Current balance: {{ v.coin_balance }} Ruq Buq{{ '' if v.coin_balance==1 else 's' }}</p>
-                <p class="text-small-extra text-muted">Premium expires: {{ v.renew_premium_time }}. Buy some Ruq Buqs to continue with Premium.</p>
+                <p class="text-small-extra text-muted">Premium expires: {{ v.renew_premium_time }} UTC. Buy some Ruq Buqs to continue with Premium.</p>
 
                 {% else %}
                 <p class="text-small-extra text-muted">Current balance: 0 Ruq Buqs</p>
