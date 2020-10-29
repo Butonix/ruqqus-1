@@ -68,7 +68,7 @@ class PayPalClient():
 
 	def create(self, txn):
 
-		url="/v2/checkouts/orders"
+		url="/v2/checkout/orders"
 
 		data={
 			"intent":"CAPTURE",
