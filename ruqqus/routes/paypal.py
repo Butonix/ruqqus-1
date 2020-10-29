@@ -45,13 +45,14 @@ def shop_buy_coins_completed(v):
     if not txn:
         abort(400)
 
-    if not CLIENT.authorize(txn):
-        abort(402)
-
     if not CLIENT.capture(txn):
         abort(402)
 
+    g.db.add(txn)
+    g.db.flush()
+
     #successful payment - award coins
+
     coins=int(usd_cents+1)
 
     v.coin_balance += coins
