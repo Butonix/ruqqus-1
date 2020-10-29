@@ -973,8 +973,8 @@ var upvote = function(event) {
     }
   }
 
-  post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection)
-  }
+  post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection);
+  
 }
 
 var downvote = function(event) {
@@ -1022,8 +1022,8 @@ var downvote = function(event) {
     }
   }
 
-  post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection)
-  }
+  post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection);
+  
 }
 
 var upvoteButtons = document.getElementsByClassName('upvote-button')
