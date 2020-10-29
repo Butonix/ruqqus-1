@@ -234,6 +234,11 @@ def mod_kick_bid_pid(bid, pid, board, v):
     g.db.add(post)
 
     cache.delete_memoized(Board.idlist, board)
+    
+    # notify user
+    if post.author_id != v.id:
+        author = get_account(post.author_id)
+        send_notification(author, f"Your post [\"{post.title}\"]({post.permalink}) has been kicked from +{board.name}.")
 
     return "", 204
 
@@ -399,6 +404,11 @@ def mod_take_pid(pid, v):
 
     # clear board's listing caches
     cache.delete_memoized(Board.idlist, board)
+                      
+    # notify user
+    if post.author_id != v.id:
+        author = get_account(post.author_id)
+        send_notification(author, f"Your post [\"{post.title}\"]({post.permalink}) has been yanked to +{board.name}.")
 
     return "", 204
 
