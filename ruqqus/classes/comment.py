@@ -236,9 +236,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     @property
     def json(self):
-        if self.parent.json.parent:
-            self.parent.json.pop("parent", None)
-            
         if self.is_banned:
             data= {'is_banned': True,
                     'ban_reason': self.ban_reason,
@@ -260,7 +257,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'fullname': self.fullname,
                 'post': self.post.json,
                 'level': self.level,
-                'parent': self.parent.json if not self.parent_fullname.startswith('t2') else None,
+                'parent_id': self.parent.id if not self.parent_fullname.startswith('t2') else None,
                 'author': self.author.json if not self.author.is_deleted else None,
                 'body': self.body,
                 'body_html': self.body_html,
