@@ -66,7 +66,7 @@ def shop_negative_balance(v):
     new_txn=PayPalTxn(
         user_id=v.id,
         created_utc=int(time.time()),
-        coin_count=None
+        coin_count=None,
         usd_cents=v.negative_balance_cents
         )
 
@@ -95,7 +95,10 @@ def shop_buy_coins_completed(v):
 
     #successful payment - award coins
 
-    v.coin_balance += txn.coin_count
+    if txn.coin_count:
+        v.coin_balance += txn.coin_count
+    else:
+        v.negative_balance_cents -= txn.usd_cents
 
     g.db.add(v)
 
