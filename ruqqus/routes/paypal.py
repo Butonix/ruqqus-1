@@ -78,4 +78,4 @@ def shop_buy_coins_completed(v):
 
     g.db.add(v)
 
-    return redirect("/settings/profile#ruqqus-premium")
+    return redirect("/settings/premium")

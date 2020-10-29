@@ -88,6 +88,7 @@ def post_base36id(base36id, anything=None, v=None):
 
 
 @app.route("/submit", methods=["GET"])
+@no_negative_balance("html")
 @is_not_banned
 def submit_get(v):
 

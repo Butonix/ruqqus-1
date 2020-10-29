@@ -21,6 +21,13 @@ def error_401(e):
     else:
         return redirect(output)
 
+@app.errorhandler(402)
+@auth_desired
+@api()
+def error_402(e, v):
+    return{"html": lambda: (render_template('errors/402.html', v=v), 402),
+           "api": lambda: (jsonify({"error": "402 Payment Required"}), 402)
+           }
 
 @app.errorhandler(403)
 @auth_desired
