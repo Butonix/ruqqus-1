@@ -28,7 +28,7 @@ def coins_to_price_ea(n):
 @app.route("/shop/get_price", methods=["GET"])
 def shop_get_price():
 
-    coins=request.args.get("coins")
+    coins=int(request.args.get("coins"))
 
     return jsonify({"price":coins*coins_to_price_ea(coins)/100})
 
