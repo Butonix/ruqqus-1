@@ -20,7 +20,7 @@ def coins_to_price_ea(n):
         return 149
     elif coin_count <12:
         return 109
-    elif coin_count < 52
+    elif coin_count < 52:
         return 104
     else:
         return 99
