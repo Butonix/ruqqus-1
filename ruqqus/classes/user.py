@@ -88,6 +88,7 @@ class User(Base, Stndrd, Age_times):
 
     coin_balance=Column(Integer, default=0)
     premium_expires_utc=Column(Integer, default=0)
+    negative_balance_cents=Column(Integer, default=0)
 
     patreon_pledge_cents = Column(Integer, default=0)
 

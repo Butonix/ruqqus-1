@@ -559,3 +559,7 @@ def get_from_fullname(fullname, v=None, graceful=False):
         return get_comment(b36, v=v, graceful=graceful)
     elif kind == 't4':
         return get_board(b36, v=v, graceful=graceful)
+
+def get_txn(paypal_id):
+
+    return g.db.query(PayPalTxn).filter_by(paypal_id=paypal_id).first()
