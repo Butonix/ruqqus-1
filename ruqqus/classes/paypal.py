@@ -60,7 +60,7 @@ class PayPalClient():
 		return requests.get(url, headers=headers, json=data)
 
 
-	def _post(self, url, data):
+	def _post(self, url, data=None):
 
 		if time.time()>self.token_expires:
 			self.new_token()
@@ -112,6 +112,8 @@ class PayPalClient():
 		x= self._post(url)
 		x=x.json()
 
+		self.print(x)
+
 		status=x["status"]
 		if status in ["SAVED", "COMPLETED"]:
 			txn.status=2
@@ -126,6 +128,8 @@ class PayPalClient():
 		x=self._post(url)
 		x=x.json()
 
+		self.print(x)
+		
 		status=x["status"]
 		if status=="COMPLETED":
 			txn.status=3
