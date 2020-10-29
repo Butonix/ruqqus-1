@@ -26,6 +26,7 @@ valid_board_regex = re.compile("^[a-zA-Z0-9][a-zA-Z0-9_]{2,24}$")
 
 @app.route("/create_guild", methods=["GET"])
 @is_not_banned
+@no_negative_balance("html")
 def create_board_get(v):
     if not v.can_make_guild:
         return render_template("message.html",
@@ -61,6 +62,7 @@ def api_board_available(name, v):
 
 @app.route("/create_guild", methods=["POST"])
 @is_not_banned
+@no_negative_balance("html")
 @validate_formkey
 def create_board_post(v):
     if not v.can_make_guild:
