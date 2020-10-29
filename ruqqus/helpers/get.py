@@ -562,7 +562,7 @@ def get_from_fullname(fullname, v=None, graceful=False):
 
 def get_txn(paypal_id):
 
-    txn= g.db.query(PayPalTxn).options(joinedload(PayPalTxn.user)).filter_by(paypal_id=paypal_id).first()
+    txn= g.db.query(PayPalTxn).filter_by(paypal_id=paypal_id).first()
 
     if not txn:
         abort(404)
