@@ -795,7 +795,7 @@ class User(Base, Stndrd, Age_times):
         
         now=int(time.time())
 
-        if self.premium_expires_utc > now:
+        if self.premium_expires_utc > now and self.coin_balance >= 0:
             return True
 
         elif self.coin_balance >=1:
