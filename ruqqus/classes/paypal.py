@@ -54,7 +54,7 @@ class PayPalClient():
 		headers={
 			"Content-Type":"application/json",
 			"Accept":"application/json",
-			"Authorization":f"Basic {PAYPAL_ID}:{PAYPAL_SECRET}"
+			"Authorization":f"Bearer {self.paypal_token}"
 			}
 
 		return requests.get(url, headers=headers, data=data)
@@ -70,7 +70,7 @@ class PayPalClient():
 		headers={
 			"Content-Type":"application/json",
 			"Accept":"application/json",
-			"Authorization":f"Basic {PAYPAL_ID}:{PAYPAL_SECRET}"
+			"Authorization":f"Bearer {self.paypal_token}"
 			}
 
 		self.print(headers)
