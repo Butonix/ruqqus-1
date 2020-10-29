@@ -25,7 +25,8 @@ def coins_to_price_ea(n):
     else:
         return 99
 
-@app.route("/shop/get_price", methods=["GET"]):
+@app.route("/shop/get_price", methods=["GET"])
+def shop_get_price():
 
     coins=request.args.get("coins")
 
