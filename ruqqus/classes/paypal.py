@@ -135,7 +135,7 @@ class PayPalClient():
 
 class PayPalTxn(Base):
 
-	__tablename__="paypal"
+	__tablename__="paypal_txns"
 
 	id=Column(Integer, primary_key=True)
 	user_id=Column(Integer, ForeignKey("users.id"))
