@@ -170,6 +170,21 @@ def premium_required(f):
     wrapper.__name__=f.__name__
     return wrapper
 
+
+class PaymentRequired(Exception):
+    status_code=402
+    def __init__(self):
+        Exception.__init__(self)
+        self.status_code=402
+
+@app.errorhandler(PaymentRequired)
+@auth_desired
+@api()
+def error_402(e, v):
+    return{"html": lambda: (render_template('errors/402.html', v=v), 402),
+           "api": lambda: (jsonify({"error": "402 Payment Required"}), 402)
+           }
+
 def no_negative_balance(s):
 
     def wrapper_maker(f):
@@ -185,9 +200,9 @@ def no_negative_balance(s):
                 if s=="toast":
                     return jsonify({"error":"You can't do that while your Coin balance is negative."}), 402
                 elif s=="html":
-                    abort(402)
+                    raise(PaymentRequired)
                 else:
-                    abort(402)
+                    raise(PaymentRequired)
 
             return f(*args, **kwargs)
 
