@@ -106,26 +106,33 @@ def shop_buy_coins_completed(v):
 
 @app.route("/shop/paypal_webhook")
 def paypal_webhook_handler():
+    print(request.path)
     print(request.method)
-    
+
     data=request.get_json()
     pprint.pprint(data)
     
     #Reversals
-    if data["event_type"] in ["PAYMENT.SALE.REVERSED", "PAYMENT.SALE.REFUNDED", "PAYMENT.CAPTURE.REVERSED", "PAYMENT.CAPTURE.REFUNDED"]:
+    if data["event_type"] in ["PAYMENT.SALE.REVERSED", "PAYMENT.SALE.REFUNDED"]:
+
+        txn=get_txn(data["resource"]["id"])
+
+        amount_cents=int(float(data["resource"]["amount"]["total"])*100)
+
+    elif data["event_type"] in ["PAYMENT.CAPTURE.REVERSED", "PAYMENT.CAPTURE.REFUNDED"]
 
         txn=get_txn(data["resource"]["id"])
 
         amount_cents=int(float(data["resource"]["amount"]["value"])*100)
 
-        txn.user.negative_balance_cents+=amount_cents
+    txn.user.negative_balance_cents+=amount_cents
 
-        txn.status=-2
+    txn.status=-2
 
-        g.db.add(txn)
-        g.db.add(txn.user)
+    g.db.add(txn)
+    g.db.add(txn.user)
 
-        g.db.flush()
+    g.db.flush()
 
 
 
