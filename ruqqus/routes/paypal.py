@@ -200,7 +200,7 @@ def gift_post_pid(pid, v):
 
     send_notification(post.author, f"@{v.username} liked [your post]({post.permalink}) and has awarded you a Coin!")
 
-    return jsonify("message":f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining.")
+    return jsonify({"message": f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining."})
 
 @app.route("/gift_comment/<cid>", methods=["POST"])
 @is_not_banned
