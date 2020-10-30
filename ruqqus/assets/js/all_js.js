@@ -1863,7 +1863,18 @@ var tipModal = function(event) {
   document.getElementsByClassName("tip-content-type").innerText = type;
 
   button.onclick = function() {
-    post('/api/flag/post/' + id,
+
+    var coins = "0";
+
+    var coinOptions = document.getElementsByClassName("tip-coin-count");
+
+    for (i=0; i< coinOptions.length; i++) {
+      if (coinOptions[i].checked) {
+        coins = coinOptions[i].value
+      }
+    }
+
+    post_toast('/gift_post/' + id + '?coins='+coins,
       callback = function() {
         if(window.location == link) {
           location.reload();
@@ -1928,3 +1939,4 @@ for (var i = 0; i < tipModalButtons.length; i++) {
     }
   }, false)
 }
+
