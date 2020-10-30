@@ -389,11 +389,6 @@ def api_comment(v):
     g.db.add(c_aux)
     g.db.flush()
 
-    #images for premium
-    if v.has_premium:
-        file=request.files.get("image")
-        if file:
-
     notify_users = set()
 
     # queue up notification for parent author
