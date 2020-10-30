@@ -109,7 +109,7 @@ def paypal_webhook_handler():
     print(request.method)
     pprint.pprint(request.body)
 
-    data=request.json()
+    data=request.get_json()
     
     #Reversals
     if data["event_type"] in ["PAYMENT.SALE.REVERSED", "PAYMENT.SALE.REFUNDED", "PAYMENT.CAPTURE.REVERSED", "PAYMENT.CAPTURE.REFUNDED"]:
