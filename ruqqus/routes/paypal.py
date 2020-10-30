@@ -120,7 +120,7 @@ def paypal_webhook_handler():
 
     x=CLIENT._post("/v1/notifications/verify-webhook-signature", data=data)
 
-    print x.get_json()
+    print(x.get_json())
 
     data=request.get_json()
     pprint.pprint(data)
