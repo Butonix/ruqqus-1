@@ -297,7 +297,7 @@
   <div id="reply-to-{{ c.base36id }}" class="d-none">
     
     <div id="comment-form-space-{{ c.fullname }}" class="comment-write collapsed child">
-      <form id="reply-to-t3_{{ c.base36id }}" action="/api/comment" method="post" class="input-group"> 
+      <form id="reply-to-t3_{{ c.base36id }}" action="/api/comment" method="post" class="input-group" enctype="multipart/form-data"> 
         <input type="hidden" name="formkey" value="{{ v.formkey }}"> 
         <input type="hidden" name="parent_fullname" value="{{ c.fullname }}"> 
         <input id="reply-form-submission-{{ c.fullname }}" type="hidden" name="submission" value="{{ c.post.base36id }}"> 
@@ -317,6 +317,11 @@
           <small class="format">
             <span class="font-weight-bolder text-uppercase" onclick="getGif();commentForm('reply-form-body-{{ c.fullname }}')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF">GIF</span>
           </small> 
+          <label class="format btn btn-secondary m-0" for="file-upload-reply-{{ c.base36id }}">
+                <div id="filename-show-reply-{{ c.base36id }}">Select Image</div>
+                <input id="file-upload-reply-{{ c.base36id }}" type="file" name="file" accept="image/*" class="" onchange="document.getElementById('filename-show-reply-{{ c.base36id }}').innerHTML=document.getElementById('file-upload-reply-{{ c.base36id }}').files[0].name;" hidden>
+              </label>
+
           <a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{ c.base36id }}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
           <a class="btn btn-primary text-white ml-2" onclick="post_comment('{{ c.fullname }}');" href="javascript:void(0)">Comment</a> 
         </div> 

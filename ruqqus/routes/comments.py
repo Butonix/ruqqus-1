@@ -12,11 +12,14 @@ from ruqqus.helpers.markdown import *
 from ruqqus.helpers.get import *
 from ruqqus.helpers.session import *
 from ruqqus.helpers.alerts import *
+from ruqqus.helpers.aws import *
 from ruqqus.classes import *
 from flask import *
 from ruqqus.__main__ import app, limiter
 from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
+
+BUCKET="i.ruqqus.com"
 
 
 @app.route("/comment/<cid>", methods=["GET"])
@@ -363,6 +366,20 @@ def api_comment(v):
 
     g.db.add(c)
     g.db.flush()
+
+    if v.has_premium:
+        if request.files.get("file"):
+            file=request.files["file"]
+            name = f'comment/{c.base36id}/{secrets.token_urlsafe(8)}'
+            upload_file(name, file)
+
+            body += f"\n\n![](https://{BUCKET}/{name})"
+
+            with CustomRenderer(post_id=parent_id) as renderer:
+                body_md = renderer.render(mistletoe.Document(body))
+            body_html = sanitize(body_md, linkgen=True)
+
+
 
     c_aux = CommentAux(
         id=c.id,
