@@ -1867,7 +1867,7 @@ var tipModal = function(event) {
 
     var coins = "0";
 
-    var coinOptions = document.getElementsByClassName("tip-coin-count");
+    var coinOptions = document.getElementsByClassName("tip-coin-radio");
 
     for (i=0; i< coinOptions.length; i++) {
       if (coinOptions[i].checked) {
