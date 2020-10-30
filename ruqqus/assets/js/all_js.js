@@ -1868,7 +1868,15 @@ var tipModal = function(event) {
   document.getElementsByClassName("tip-content-type").innerText = content
 
   document.getElementById("sendTipButton").onclick = function() {
-    post_toast('/gift_post/' + id + '?coins=1')
+    post_toast('/gift_post/' + id + '?coins=1',
+      callback = function() {
+        if(window.location == link) {
+          location.reload();
+        } else {
+          location.href = link
+        }
+      }
+      )
   }
 
   console.log(senderPFP, recipientPFP, id, type, link)
