@@ -1933,7 +1933,7 @@ for (var i = 0; i < tipButtons.length; i++) {
 }
 
 for (var i = 0; i < tipModalButtons.length; i++) {
-  tipModalButtons[i].addEventListener('click', tip, false);
+  tipModalButtons[i].addEventListener('click', tipModal, false);
   tipModalButtons[i].addEventListener('keydown', function(event) {
     if (event.keyCode === 13) {
       tip(event)
