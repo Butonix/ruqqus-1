@@ -119,7 +119,7 @@ def paypal_webhook_handler():
 
         amount_cents=int(float(data["resource"]["amount"]["total"])*100)
 
-    elif data["event_type"] in ["PAYMENT.CAPTURE.REVERSED", "PAYMENT.CAPTURE.REFUNDED"]
+    elif data["event_type"] in ["PAYMENT.CAPTURE.REVERSED", "PAYMENT.CAPTURE.REFUNDED"]:
 
         txn=get_txn(data["resource"]["id"])
 
