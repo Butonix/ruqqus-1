@@ -184,7 +184,7 @@ def no_negative_balance(s):
 
             if v.negative_balance_cents:
                 if s=="toast":
-                    return jsonify({"error":"You can't do that while your Coin balance is negative."}), 402
+                    return jsonify({"error":"You can't do that while your account balance is negative. Visit your account settings to bring your balance up to zero."}), 402
                 elif s=="html":
                     raise(PaymentRequired)
                 else:
