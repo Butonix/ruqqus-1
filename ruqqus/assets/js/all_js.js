@@ -1887,13 +1887,12 @@ var tipModal = function(event) {
 
 var tip  = function(event) {
   console.log('tip button pressed, tip function triggered')
-  var coinCount = document.getElementsByClassName("tip-coin-count")
-  var coinText = document.getElementsByClassName("tip-coin-text")
-  var durationText = document.getElementsByClassName("tip-duration-text")
-  var button = document.getElementById("sendTipButton")
+  const coinCount = document.getElementsByClassName("tip-coin-count")
+  const coinText = document.getElementsByClassName("tip-coin-text")
+  const durationText = document.getElementsByClassName("tip-duration-text")
 
-  var coins = 1;
-  var coinOptions = document.querySelectorAll("tip-coin-radio")
+  let coins = 1;
+  const coinOptions = document.querySelectorAll("tip-coin-radio")
 
   for (i=0; i< coinOptions.length; i++) {
     if (coinOptions[i].checked) {
@@ -1911,9 +1910,7 @@ var tip  = function(event) {
     durationText.innerText = "week"
   }
 
-  button.disabled = false
-
-  console.log(coins, coinCount, coinText, durationText)
+  console.log(coins)
 
 }
 
