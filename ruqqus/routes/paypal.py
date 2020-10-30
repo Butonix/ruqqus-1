@@ -160,7 +160,7 @@ def paypal_webhook_handler():
 
 @app.route("/gift_post/<pid>", methods=["POST"])
 @is_not_banned
-@no_negative_balance
+@no_negative_balance("toast")
 @validate_formkey
 def gift_post_pid(pid, v):
 
@@ -204,7 +204,7 @@ def gift_post_pid(pid, v):
 
 @app.route("/gift_comment/<cid>", methods=["POST"])
 @is_not_banned
-@no_negative_balance
+@no_negative_balance("toast")
 @validate_formkey
 def gift_comment_pid(cid, v):
 
