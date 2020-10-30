@@ -373,7 +373,7 @@ def api_comment(v):
             name = f'comment/{c.base36id}/{secrets.token_urlsafe(8)}'
             upload_file(name, file)
 
-            body += f"\n\n![](https://{BUCKET}/{name})"
+            body = request.form.get("body") + f"\n\n![](https://{BUCKET}/{name})"
 
             with CustomRenderer(post_id=parent_id) as renderer:
                 body_md = renderer.render(mistletoe.Document(body))
