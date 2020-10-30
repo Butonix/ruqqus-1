@@ -1866,17 +1866,6 @@ var tipModal = function(event) {
   document.getElementsByClassName("tip-content-type").innerText = type;
 
   button.onclick = function() {
-
-    var coins = "0";
-
-    var coinOptions = document.getElementsByClassName("tip-coin-radio");
-
-    for (i=0; i< coinOptions.length; i++) {
-      if (coinOptions[i].checked) {
-        coins = coinOptions[i].value
-      }
-    }
-
     post_toast('/gift_post/' + id + '?coins='+coins,
       callback = function() {
         if(window.location == link) {
@@ -1900,23 +1889,6 @@ var tip  = function(event) {
   var oneCoinButton = document.getElementById("oneCoinButton")
   var fiveCoinButton = document.getElementById("fiveCoinButton")
   var tenCoinButton = document.getElementById("tenCoinButton")
-
-
-  var coins_str = "0";
-
-/*  var coinOptions = document.getElementsByClassName("tip-coin-radio");
-
-  for (i=0; i< coinOptions.length; i++) {
-    if (coinOptions[i].checked) {
-      coins_str = coinOptions[i].value
-    }
-  }
-
-  var coins = parseInt(coins_str)
-  var balance=parseInt(document.getElementById('coin-balance').innerText)*/
-
-
-  button.disabled = false;
 
   if (oneCoinButton.classList.contains('active')) {
     coinCount.innerText = 1
