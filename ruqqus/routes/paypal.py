@@ -202,7 +202,7 @@ def gift_post_pid(pid, v):
     g.db.add(v)
     g.db.add(u)
 
-    send_notification(u, f"@{v.username} liked [your post]({post.permalink}) and has awarded you a Coin!")
+    send_notification(u, f"@{v.username} liked [your post]({post.permalink}) and has given you a Coin!")
 
     g.db.commit()
 
@@ -217,7 +217,7 @@ def gift_post_pid(pid, v):
     except:
         pass
 
-    return "", 204
+    return jsonify({"message":"Tip Successful!"})
 
 @app.route("/gift_comment/<cid>", methods=["POST"])
 @is_not_banned
@@ -262,7 +262,7 @@ def gift_comment_pid(cid, v):
     g.db.add(v)
     g.db.add(u)
 
-    send_notification(u, f"@{v.username} liked [your comment]({comment.permalink}) and has awarded you a Coin!")
+    send_notification(u, f"@{v.username} liked [your comment]({comment.permalink}) and has given you a Coin!")
 
     g.db.commit()
 
@@ -277,4 +277,4 @@ def gift_comment_pid(cid, v):
     except:
         pass
 
-    return "", 204
+    return jsonify({"message":"Tip Successful!"})

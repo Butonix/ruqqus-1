@@ -412,6 +412,7 @@
                     <li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link }}"><i class="fas fa-copy"></i>Copy link</a></li>
 
                     {% if v and not v.id==p.author_id %}
+                    <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#tipModal" data-content-link="{{ p.permalink }}" data-content-id="{{ p.base36id }}" data-content-type="post" class="tip-modal-button"><i class="fas fa-star"></i>Tip Post</a></li>
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{ p.base36id }}', '{{ p.author.username }}','{{ p.board.name }}')"><i class="fas fa-flag"></i>Flag</a></li>
                     {% endif %}
 
@@ -666,6 +667,8 @@
 
 {% if v and v.id==p.author_id %}
 {% include "delete_post_modal.html" %}
+{% else %}
+{% include "tip_modal.html" %}
 {% endif %}
 
 {% include "delete_comment_modal.html" %}
