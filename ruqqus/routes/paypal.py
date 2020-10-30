@@ -183,12 +183,14 @@ def gift_post_pid(pid, v):
     if v.is_blocked(post.author):
         return jsonify({"error":"You can't give awards to someone that's blocking you."})
 
-    if not v.coin_balance>=1:
-        return jsonify({"error":"You don't have coins to give!"})
+    coins=int(request.args.get("coins",1))
 
-    v.coin_balance -= 1
+    if not v.coin_balance>=coins:
+        return jsonify({"error":"You don't have that many coins to give!"})
 
-    post.author.coins_balance +=1
+    v.coin_balance -= coins
+
+    post.author.coins_balance += coins
 
     g.db.add(v)
     g.db.add(post.author)
@@ -222,12 +224,14 @@ def gift_comment_pid(cid, v):
     if v.is_blocked(comment.author):
         return jsonify({"error":"You can't give awards to someone that's blocking you."})
 
-    if not v.coin_balance>=1:
-        return jsonify({"error":"You don't have coins to give!"})
+    coins=int(request.args.get("coins",1))
 
-    v.coin_balance -= 1
+    if not v.coin_balance>=coins:
+        return jsonify({"error":"You don't have that many coins to give!"})
 
-    comment.author.coins_balance +=1
+    v.coin_balance -= coins
+
+    post.author.coins_balance += coins
 
     g.db.add(v)
     g.db.add(comment.author)
