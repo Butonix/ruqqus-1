@@ -34,6 +34,11 @@ def shop_get_price():
 
     return jsonify({"price":coins_to_price_cents(coins)/100})
 
+@app.route("/shop/coin_balance" methods=["GET"])
+@auth_required
+def shop_coin_balance(v):
+    return jsonify({"balance":v.coin_balance})
+
 
 @app.route("/shop/buy_coins", methods=["POST"])
 @is_not_banned
