@@ -7,48 +7,70 @@
 					<span aria-hidden="true"><i class="far fa-times"></i></span>
 				</button>
 			</div>
-			<div class="modal-body bg-gray-100 text-center d-lg-flex align-items-center">
+			<div class="modal-body bg-gray-100 text-center d-lg-flex align-items-center px-md-4">
 
-				<!-- Left half -->
-				<div>
-					<!-- Tipping icon -->
-					<div>
-						<span class="fa-stack fa-2x text-muted mb-2" style="font-size: 2rem;">
-							<i class="fas fa-circle text-warning fa-stack-2x" style=""></i>
-							<i class="fad text-white fa-coins fa-stack-1x"></i>
-						</span>
-					</div>
-					<!-- Description -->
-					<p class="mb-0">Give the author of this <span class="tip-content-type">post</span> 1 coin, redeemable for 1 week of Ruqqus Premium. Also shows a sweet award badge near the <span class="tip-content-type">post</span>.</p>
+				<div class="w-100">
+
+					<div class="d-flex align-items-center justify-content-around w-25 mx-auto mb-2">
+
+						<img id="tip-sender-pfp" src="" class="profile-pic-50">
+						<i class="far fa-long-arrow-right text-muted text-lg mx-3"></i>
+						<img id="tip-recipient-pfp" src="" class="profile-pic-50">
+
+					</div><div class="h5 mb-3">Give <span class="tip-username">this ruqqie</span> a tip</div>
+
+					<div class="bg-white shadow-sm rounded-lg text-left">
+						<div class="px-5 py-4">
+							<div class="font-weight-bold text-muted mb-2">You are tipping</div>
+							<div class="h3 mb-0"><i class="fas fa-coin text-warning mr-2 mb-0 h4"></i>1 <span class="text-muted text-lg">coin</span></div></div><hr class="my-0" style="border-style: dashed;"><div class="px-5 py-4">
+								<div class="mb-3">
+									<div class="text-muted">Recipient:</div>
+									<div class="font-weight-bold tip-username">@username</div>
+								</div><div class="mb-3">
+									<div class="text-muted">Premium duration:</div>
+									<div class="font-weight-bold">1 week</div>
+								</div>
+
+								<div class="mb-md-3">
+									<div class="text-muted">Content awarded:</div>
+									<div class="font-weight-bold text-capitalize tip-content">Post</div>
+								</div>
+								<div class="d-none d-md-block"><div class="text-muted">Perks:</div>
+								<ul class="mb-0 pl-0 no-bullets font-weight-bold">
+									<li class="py-1"><span class="fa-stack fa-1x mr-2">
+										<i class="fas fa-square fa-stack-2x" style="color: #dabef9!important; font-size: 2rem!important;"></i>
+										<i class="fas fa-image fa-stack-1x text-primary text-base fa-inverse"></i>
+									</span>Direct image uploads in comments
+								</li>
+								<li class="py-1"><span class="fa-stack fa-1x mr-2">
+									<i class="fas fa-square fa-stack-2x" style="color: #f9efbe!important; font-size: 2rem!important;"></i>
+									<i class="fas fa-star fa-stack-1x text-warning text-base fa-inverse"></i>
+								</span>Exclusive membership cosmetics
+							</li>
+							<li class="py-1"><span class="fa-stack fa-1x mr-2">
+								<i class="fas fa-square fa-stack-2x" style="color: #bef9cc!important; font-size: 2rem!important;"></i>
+								<i class="fas fa-hand-peace fa-stack-1x text-success text-base fa-inverse"></i>
+							</span>Keeping the ruqqus servers alive
+						</li>
+					</ul>
 				</div>
 
-				<!-- Right half
-				<div class="w-100 border-left p-4 bg-white rounded shadow-sm">
-					<label for="tip_amount" class="text-left d-block">Tip Amount</label>
-					<div id="tip_amount" class="btn-group btn-group-toggle w-100" data-toggle="buttons">
-						<div class="btn btn-outline-secondary text-black tip-button active" for="oneCoin">
-							<input type="radio" name="options" id="oneCoin" value="1" class="tip-coin-radio" checked> <i class="fad fa-coin text-warning mr-2"></i> 1 coin
-						</div>
-						<div class="btn btn-outline-secondary text-black tip-button" for="fiveCoin">
-							<input type="radio" name="options" id="fiveCoin" value="5" class="tip-coin-radio"> <i class="fad fa-coins text-warning mr-2"></i> 5 coins
-						</div>
-						<div class="btn btn-outline-secondary text-black tip-button" for="tenCoin">
-							<input type="radio" name="options" id="tenCoin" value="10" class="tip-coin-radio"> <i class="fad fa-sack text-warning mr-2"></i> 10 coins
-						</div>
-					</div>
-					<div class="text-small-extra text-muted mt-4 text-left">Have ideas for Ruqqus tipping? <a href="/+betafeedback">Share your feedback!</a></div>
-				</div>
-				-->
 			</div>
-			<!-- Footer -->
-			<div class="modal-footer bg-white border-top" style="background-image: none!important">
-				<div class="text-small text-muted font-weight-bold">Coin balance:<span class="text-muted"><i class="fas fa-coin text-warning pl-2 pr-1"></i>{{ v.coin_balance }}</span><a href="/settings/premium" class="font-weight-normal ml-2" target="_blank">Get more coins</a>
-				</div>
-				<button type="button" class="btn btn-link text-muted ml-auto" data-dismiss="modal">Cancel</button>
-				<button type="button" id="sendTipButton" class="btn btn-warning" data-dismiss="modal">Send Tip</button>
-			</div>
+
 		</div>
 	</div>
-	<!-- Coin balance -->
-	<span id="coin-balance" data-model="balance" class="d-none">{{ v.coin_balance }}</span>
+
+
+</div>
+<!-- Footer -->
+<div class="modal-footer bg-white border-top" style="background-image: none!important">
+	<div class="text-small text-muted font-weight-bold">Coin balance:<span class="text-muted"><i class="fas fa-coin text-warning pl-2 pr-1"></i>{{ v.coin_balance }}</span><a href="/settings/premium" class="font-weight-normal ml-2">Get more coins</a>
+	</div>
+	<button type="button" class="btn btn-link text-muted ml-auto" data-dismiss="modal">Cancel</button>
+	<button type="button" id="sendTipButton" class="btn btn-warning">Send Tip<span class="tip-content-type"></span></button>
+</div>
+</div>
+</div>
+<!-- Coin balance -->
+<span id="coin-balance" data-model="balance" class="d-none">{{ v.coin_balance }}</span>
 </div>
