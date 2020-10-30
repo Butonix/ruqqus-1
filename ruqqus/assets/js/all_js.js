@@ -1860,6 +1860,8 @@ var tipModal = function(event) {
   var content = event.target.dataset.contentType;
   var link = event.target.dataset.contentLink;
 
+  var recipient = event.target.dataset.authorUsername;
+
   var senderPFP = event.target.dataset.vAvatar;
   var recipientPFP = event.target.dataset.authorAvatar;
 
@@ -1867,6 +1869,8 @@ var tipModal = function(event) {
   document.getElementById('tip-recipient-pfp').src = recipientPFP;
 
   document.getElementsByClassName("tip-content").innerText = content
+  document.getElementsByClassName("tip-recipient").innerText = recipient
+
 
   document.getElementById("sendTipButton").onclick = function() {
     post_toast('/gift_post/' + id + '?coins=1',
@@ -1876,7 +1880,7 @@ var tipModal = function(event) {
       )
   }
 
-  console.log(senderPFP, recipientPFP, id, content, link)
+  console.log(senderPFP, recipientPFP, id, content, link, recipient)
 }
 
 var tipModalButtons = document.getElementsByClassName('tip-modal-button')
