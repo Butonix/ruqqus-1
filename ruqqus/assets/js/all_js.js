@@ -1890,6 +1890,7 @@ var tip  = function(event) {
   var coinCount = document.getElementsByClassName("tip-coin-count")
   var coinText = document.getElementsByClassName("tip-coin-text")
   var durationText = document.getElementsByClassName("tip-duration-text")
+  var button = document.getElementById("sendTipButton")
 
   var coins = 1;
   var coinOptions = document.querySelectorAll("tip-coin-radio")
@@ -1909,6 +1910,8 @@ var tip  = function(event) {
     coinText.innerText= "coin"
     durationText.innerText = "week"
   }
+
+  button.disabled = false
 
   console.log(coins, coinCount, coinText, durationText)
 
