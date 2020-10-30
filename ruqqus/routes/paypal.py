@@ -34,7 +34,7 @@ def shop_get_price():
 
     return jsonify({"price":coins_to_price_cents(coins)/100})
 
-@app.route("/shop/coin_balance" methods=["GET"])
+@app.route("/shop/coin_balance", methods=["GET"])
 @auth_required
 def shop_coin_balance(v):
     return jsonify({"balance":v.coin_balance})
@@ -160,7 +160,7 @@ def paypal_webhook_handler():
 
 @app.route("/gift_post/<pid>", methods=["POST"])
 @is_not_banned
-@no_negative_balance
+@no_negative_balance("toast")
 @validate_formkey
 def gift_post_pid(pid, v):
 
@@ -200,11 +200,11 @@ def gift_post_pid(pid, v):
 
     send_notification(post.author, f"@{v.username} liked [your post]({post.permalink}) and has awarded you a Coin!")
 
-    return jsonify("message":f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining.")
+    return jsonify({"message": f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining."})
 
 @app.route("/gift_comment/<cid>", methods=["POST"])
 @is_not_banned
-@no_negative_balance
+@no_negative_balance("toast")
 @validate_formkey
 def gift_comment_pid(cid, v):
 
@@ -244,4 +244,4 @@ def gift_comment_pid(cid, v):
 
     send_notification(comment.author, f"@{v.username} liked [your comment]({comment.permalink}) and has awarded you a Coin!")
 
-    return jsonify("message":f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining.")
+    return jsonify({"message":f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining."})
