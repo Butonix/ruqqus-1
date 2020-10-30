@@ -1856,12 +1856,16 @@ coin_quote = function() {
 var tipModal = function(event) {
   console.log('opened modal, tipModal function triggered')
   var id = event.target.dataset.contentId;
-  var type = event.target.dataset.contentType;
+  var content = event.target.dataset.contentType;
   var link = event.target.dataset.contentLink;
 
-  console.log(id, type, link)
+  var senderPFP = event.target.dataset.vAvatar;
+  var recipientPFP = event.target.dataset.authorAvatar;
 
-  document.getElementsByClassName("tip-content-type").innerText = type;
+  document.getElementById('tip-sender-pfp').src = senderPFP;
+  document.getElementById('tip-recipient-pfp').src = recipientPFP;
+
+  document.getElementsByClassName("tip-content-type").innerText = content
 
   document.getElementById("sendTipButton").onclick = function() {
     post_toast('/gift_post/' + id + '?coins=1',
@@ -1874,6 +1878,8 @@ var tipModal = function(event) {
       }
       )
   }
+
+  console.log(senderPFP, recipientPFP, id, type, link)
 }
 
 var tipModalButtons = document.getElementsByClassName('tip-modal-button')
