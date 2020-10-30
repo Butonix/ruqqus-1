@@ -457,4 +457,4 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     @property
     def award_count(self):
-        return self.awards.count()
+        return len(self.awards)

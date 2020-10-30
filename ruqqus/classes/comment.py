@@ -354,7 +354,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     @property
     def award_count(self):
-        return self.awards.count()
+        return len(self.awards)
     
 
 
