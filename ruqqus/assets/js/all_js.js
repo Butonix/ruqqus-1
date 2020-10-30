@@ -1859,6 +1859,8 @@ var tipModal = function(event) {
   var type = event.target.dataset.contentType
   var link = event.target.dataset.contentLink
 
+  console.log(id, type, link)
+
   var button = document.getElementById("sendTipButton");
 
   document.getElementsByClassName("tip-content-type").innerText = type;
@@ -1889,7 +1891,6 @@ var tipModal = function(event) {
 
 var tip  = function(event) {
   console.log('tip button pressed, tip function triggered')
-  var id = event.target.dataset.id;
 
   var button = document.getElementById("sendTipButton")
   var coinCount = document.getElementsByClassName("tip-coin-count")
