@@ -2,7 +2,7 @@
 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header d-flex">
-				<h5 class="modal-title">Give this <span data-model="contentType">post</span> a tip!</h5>
+				<h5 class="modal-title">Give this ruqqie a tip!</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true"><i class="far fa-times"></i></span>
 				</button>
@@ -26,15 +26,15 @@
 				<!-- Right half -->
 				<div class="w-100 border-left p-4 bg-white rounded shadow-sm">
 					<label for="tip_amount" class="text-left d-block">Tip Amount</label>
-					<div id="tip_amount" class="btn-group btn-group-toggle" data-toggle="buttons">
-						<label class="btn btn-outline-secondary text-black" style="width: 8.5rem;">
-							<input type="radio" name="options" id="option1" checked=""> <i class="fad fa-coin text-warning mr-2"></i> 1 coin
+					<div id="tip_amount" class="btn-group btn-group-toggle w-100" data-toggle="buttons">
+						<label class="btn btn-outline-secondary text-black">
+							<input type="radio" name="options" id="oneCoin" checked="" class="oneCoinButton"> <i class="fad fa-coin text-warning mr-2"></i> 1 coin
 						</label>
-						<label class="btn btn-outline-secondary text-black" style="width: 8.5rem;">
-							<input type="radio" name="options" id="option1" checked=""> <i class="fad fa-coins text-warning mr-2"></i> 5 coins
+						<label class="btn btn-outline-secondary text-black">
+							<input type="radio" name="options" id="fiveCoin" checked="" class="fiveCoinButton"> <i class="fad fa-coins text-warning mr-2"></i> 5 coins
 						</label>
-						<label class="btn btn-outline-secondary text-black" style="width: 8.5rem;">
-							<input type="radio" name="options" id="option1" checked=""> <i class="fad fa-sack text-warning mr-2"></i> 10 coins
+						<label class="btn btn-outline-secondary text-black">
+							<input type="radio" name="options" id="tenCoin" checked="" class="tenCoinButton"> <i class="fad fa-sack text-warning mr-2"></i> 10 coins
 						</label>
 					</div>
 					<div class="text-small-extra text-muted mt-4 text-left">Have ideas for Ruqqus tipping? <a href="#">Share your feedback!</a></div>
@@ -45,7 +45,7 @@
 				<div class="text-small text-muted font-weight-bold">Coin balance:<span class="text-muted"><i class="fas fa-coin text-warning pl-2 pr-1"></i>{{ v.coin_balance }}</span><a href="/settings/premium" class="font-weight-normal ml-2">Get more coins</a>
 				</div>
 				<button type="button" class="btn btn-link text-muted ml-auto" data-dismiss="modal">Cancel</button>
-				<button type="button" id="sendTipButton" class="btn btn-warning" style="">Tip <span class="tip-content-type"></span></button>
+				<button type="button" id="sendTipButton" class="btn btn-warning" style="">Send Tip<span class="tip-content-type"></span></button>
 			</div>
 		</div>
 	</div>
