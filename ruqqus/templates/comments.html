@@ -111,6 +111,7 @@
         {% if c.edited_utc %}
         <span class="time-edited"><span>&#183;</span> <span class="font-italic">Edited {{ c.edited_string }}</span></span>
         {% endif %}
+        {% if c.award_count %} · <i class="fad fa-award text-warning"></i>×{{ c.award_count }}{% endif %}
 
         <span class="comment-collapse d-md-none" onclick="collapse_comment('{{ c.base36id }}')"></span>
 
