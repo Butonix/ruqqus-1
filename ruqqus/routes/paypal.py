@@ -10,6 +10,7 @@ from flask import *
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
+from ruqqus.helpers.alerts import send_notification
 from ruqqus.__main__ import app
 
 CLIENT=PayPalClient()
