@@ -115,16 +115,17 @@ def paypal_webhook_handler():
         "transmission_sig":request.headers.get("PAYPAL-TRANSMISSION-SIG"),
         "transmission_time":request.headers.get("PAYPAL-TRANSMISSION-TIME"),
         "webhook_id":CLIENT.webhook_id,
-        "webhook_event":request.get_json()
-    }
+        "webhook_event":request.json()
+        }
+
 
     x=CLIENT._post("/v1/notifications/verify-webhook-signature", data=data)
 
-    print(x.json())
-
-    data=request.json()
-    pprint.pprint(data)
+    if x.json().get("verification_status") != "SUCCESS":
+        abort(403)
     
+    data=request.json()
+
     #Reversals
     if data["event_type"] in ["PAYMENT.SALE.REVERSED", "PAYMENT.SALE.REFUNDED"]:
 
