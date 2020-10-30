@@ -156,3 +156,82 @@ def paypal_webhook_handler():
 
 
     return "", 204
+
+
+@app.route("/gift_post/<pid>", methods=["POST"])
+@is_not_banned
+@no_negative_balance
+@validate_formkey
+def gift_post_pid(pid, v):
+
+    post=get_post(pid, v=v)
+
+    if post.is_deleted:
+        return jsonify({"error":"You can't give awards to deleted posts"})
+
+    if post.is_banned:
+        return jsonify({"error":"You can't give awards to removed posts"})
+
+    if post.author.is_deleted:
+        return jsonify({"error":"You can't give awards to deleted accounts"})
+
+    if post.author.is_banned and not post.author.unban_utc:
+        return jsonify({"error":"You can't give awards to banned accounts"})
+
+    if v.is_blocking(post.author):
+        return jsonify({"error":"You can't give awards to someone you're blocking."})
+    if v.is_blocked(post.author):
+        return jsonify({"error":"You can't give awards to someone that's blocking you."})
+
+    if not v.coin_balance>=1:
+        return jsonify({"error":"You don't have coins to give!"})
+
+    v.coin_balance -= 1
+
+    post.author.coins_balance +=1
+
+    g.db.add(v)
+    g.db.add(post.author)
+
+    send_notification(post.author, f"@{v.username} liked [your post]({post.permalink}) and has awarded you a Coin!")
+
+    return jsonify("message":f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining.")
+
+@app.route("/gift_comment/<cid>", methods=["POST"])
+@is_not_banned
+@no_negative_balance
+@validate_formkey
+def gift_comment_pid(cid, v):
+
+    comment=get_comment(cid, v=v)
+
+    if comment.is_deleted:
+        return jsonify({"error":"You can't give awards to deleted posts"})
+
+    if comment.is_banned:
+        return jsonify({"error":"You can't give awards to removed posts"})
+
+    if comment.author.is_deleted:
+        return jsonify({"error":"You can't give awards to deleted accounts"})
+
+    if comment.author.is_banned and not comment.author.unban_utc:
+        return jsonify({"error":"You can't give awards to banned accounts"})
+
+    if v.is_blocking(comment.author):
+        return jsonify({"error":"You can't give awards to someone you're blocking."})
+    if v.is_blocked(comment.author):
+        return jsonify({"error":"You can't give awards to someone that's blocking you."})
+
+    if not v.coin_balance>=1:
+        return jsonify({"error":"You don't have coins to give!"})
+
+    v.coin_balance -= 1
+
+    comment.author.coins_balance +=1
+
+    g.db.add(v)
+    g.db.add(comment.author)
+
+    send_notification(comment.author, f"@{v.username} liked [your comment]({comment.permalink}) and has awarded you a Coin!")
+
+    return jsonify("message":f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining.")
