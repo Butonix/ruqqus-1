@@ -196,7 +196,7 @@ def gift_post_pid(pid, v):
 
     v.coin_balance -= coins
 
-    post.author.coins_balance += coins
+    post.author.coin_balance += coins
 
     g.db.add(v)
     g.db.add(post.author)
