@@ -217,7 +217,7 @@ def gift_post_pid(pid, v):
     except:
         pass
 
-    return jsonify({"message": f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining."})
+    return "", 204
 
 @app.route("/gift_comment/<cid>", methods=["POST"])
 @is_not_banned
@@ -277,4 +277,4 @@ def gift_comment_pid(cid, v):
     except:
         pass
 
-    return jsonify({"message":f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining."})
+    return "", 204
