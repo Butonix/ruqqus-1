@@ -1864,7 +1864,7 @@ var tipModal = function(event) {
   document.getElementsByClassName("tip-content-type").innerText = type;
 
   document.getElementById("sendTipButton").onclick = function() {
-    post_toast('/gift_post/' + id + '?coins=1')
+    post_toast('/gift_post/' + id + '?coins=1', callback=function(){window.location.href=link})
   }
 }
 
