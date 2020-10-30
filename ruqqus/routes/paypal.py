@@ -167,26 +167,29 @@ def gift_post_pid(pid, v):
     post=get_post(pid, v=v)
 
     if post.is_deleted:
-        return jsonify({"error":"You can't give awards to deleted posts"})
+        return jsonify({"error":"You can't give awards to deleted posts"}), 403
 
     if post.is_banned:
-        return jsonify({"error":"You can't give awards to removed posts"})
+        return jsonify({"error":"You can't give awards to removed posts"}), 403
 
     if post.author.is_deleted:
-        return jsonify({"error":"You can't give awards to deleted accounts"})
+        return jsonify({"error":"You can't give awards to deleted accounts"}), 403
 
     if post.author.is_banned and not post.author.unban_utc:
-        return jsonify({"error":"You can't give awards to banned accounts"})
+        return jsonify({"error":"You can't give awards to banned accounts"}), 403
 
     if v.is_blocking(post.author):
-        return jsonify({"error":"You can't give awards to someone you're blocking."})
+        return jsonify({"error":"You can't give awards to someone you're blocking."}), 403
     if v.is_blocked(post.author):
-        return jsonify({"error":"You can't give awards to someone that's blocking you."})
+        return jsonify({"error":"You can't give awards to someone that's blocking you."}), 403
 
     coins=int(request.args.get("coins",1))
 
+    if not coins:
+        return jsonify({"error":"You need to actually give coins."}), 400
+
     if not v.coin_balance>=coins:
-        return jsonify({"error":"You don't have that many coins to give!"})
+        return jsonify({"error":"You don't have that many coins to give!"}), 403
 
     v.coin_balance -= coins
 
@@ -208,26 +211,29 @@ def gift_comment_pid(cid, v):
     comment=get_comment(cid, v=v)
 
     if comment.is_deleted:
-        return jsonify({"error":"You can't give awards to deleted posts"})
+        return jsonify({"error":"You can't give awards to deleted posts"}), 403
 
     if comment.is_banned:
-        return jsonify({"error":"You can't give awards to removed posts"})
+        return jsonify({"error":"You can't give awards to removed posts"}), 403
 
     if comment.author.is_deleted:
-        return jsonify({"error":"You can't give awards to deleted accounts"})
+        return jsonify({"error":"You can't give awards to deleted accounts"}), 403
 
     if comment.author.is_banned and not comment.author.unban_utc:
-        return jsonify({"error":"You can't give awards to banned accounts"})
+        return jsonify({"error":"You can't give awards to banned accounts"}), 403
 
     if v.is_blocking(comment.author):
-        return jsonify({"error":"You can't give awards to someone you're blocking."})
+        return jsonify({"error":"You can't give awards to someone you're blocking."}), 403
     if v.is_blocked(comment.author):
-        return jsonify({"error":"You can't give awards to someone that's blocking you."})
+        return jsonify({"error":"You can't give awards to someone that's blocking you."}), 403
 
     coins=int(request.args.get("coins",1))
 
+    if not coins:
+        return jsonify({"error":"You need to actually give coins."}), 400
+
     if not v.coin_balance>=coins:
-        return jsonify({"error":"You don't have that many coins to give!"})
+        return jsonify({"error":"You don't have that many coins to give!"}), 403
 
     v.coin_balance -= coins
 
