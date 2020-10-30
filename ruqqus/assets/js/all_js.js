@@ -1904,7 +1904,7 @@ var tip  = function(event) {
 
   var coins_str = "0";
 
-  var coinOptions = document.getElementsByClassName("tip-coin-radio");
+/*  var coinOptions = document.getElementsByClassName("tip-coin-radio");
 
   for (i=0; i< coinOptions.length; i++) {
     if (coinOptions[i].checked) {
@@ -1913,10 +1913,10 @@ var tip  = function(event) {
   }
 
   var coins = parseInt(coins_str)
-  var balance=parseInt(document.getElementById('coin-balance').innerText)
+  var balance=parseInt(document.getElementById('coin-balance').innerText)*/
 
 
-  button.disabled = (balance >= coins);
+  button.disabled = false;
 
   if (oneCoinButton.classList.contains('active')) {
     coinCount.innerText = 1
