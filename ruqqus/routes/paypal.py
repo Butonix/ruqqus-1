@@ -107,9 +107,9 @@ def shop_buy_coins_completed(v):
 @app.route("/shop/paypal_webhook")
 def paypal_webhook_handler():
     print(request.method)
-    pprint.pprint(request.body)
-
+    
     data=request.get_json()
+    pprint.pprint(data)
     
     #Reversals
     if data["event_type"] in ["PAYMENT.SALE.REVERSED", "PAYMENT.SALE.REFUNDED", "PAYMENT.CAPTURE.REVERSED", "PAYMENT.CAPTURE.REFUNDED"]:
