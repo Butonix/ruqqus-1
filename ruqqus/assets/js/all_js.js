@@ -1856,24 +1856,15 @@ coin_quote = function() {
 var tipModal = function(event) {
   console.log('opened modal, tipModal function triggered')
   var id = event.target.dataset.contentId;
-  var type = event.target.dataset.contentType
-  var link = event.target.dataset.contentLink
-  const coinOptions = document.getElementsByClassName("tip-coin-radio")
+  var type = event.target.dataset.contentType;
+  var link = event.target.dataset.contentLink;
 
   console.log(id, type, link)
 
   document.getElementsByClassName("tip-content-type").innerText = type;
 
-  var coins = 1;
-
-  for (var i = 0, length = coinOptions.length; i < length; i++) {
-    if (coinOptions[i].checked) {
-      coins = coinOptions[i].value
-    }
-  }
-
   document.getElementById("sendTipButton").onclick = function() {
-    post_toast('/gift_post/' + id + '?coins='+coins,
+    post_toast('/gift_post/' + id + '?coins=1',
       callback = function() {
         if(window.location == link) {
           location.reload();
@@ -1885,46 +1876,7 @@ var tipModal = function(event) {
   }
 }
 
-var tip  = function(event) {
-  console.log('tip button pressed, tip function triggered')
-  const coinCount = document.getElementsByClassName("tip-coin-count")
-  const coinText = document.getElementsByClassName("tip-coin-text")
-  const durationText = document.getElementsByClassName("tip-duration-text")
-  const coinOptions = document.getElementsByClassName("tip-coin-radio")
-
-  var coins = 1;
-
-  for (var i = 0, length = coinOptions.length; i < length; i++) {
-    if (coinOptions[i].checked) {
-      coins = coinOptions[i].value
-    }
-  }
-
-  coinCount.innerText = parseInt(coins)
-
-  if (coins > 1) {
-    coinText.innerText = "coins"
-    durationText.innerText = "weeks"
-  } else {
-    coinText.innerText= "coin"
-    durationText.innerText = "week"
-  }
-
-  console.log(coins)
-
-}
-
 var tipModalButtons = document.getElementsByClassName('tip-modal-button')
-var tipButtons = document.getElementsByClassName('tip-button')
-
-for (var i = 0; i < tipButtons.length; i++) {
-  tipButtons[i].addEventListener('click', tip, false);
-  tipButtons[i].addEventListener('keydown', function(event) {
-    if (event.keyCode === 13) {
-      tip(event)
-    }
-  }, false)
-}
 
 for (var i = 0; i < tipModalButtons.length; i++) {
   tipModalButtons[i].addEventListener('click', tipModal, false);

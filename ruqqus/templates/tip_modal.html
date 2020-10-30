@@ -1,5 +1,5 @@
 <div class="modal fade" id="tipModal" tabindex="-1" role="dialog" aria-labelledby="deletePostModalTitle" aria-modal="true">
-	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header d-flex">
 				<h5 class="modal-title">Give this ruqqie a tip!</h5>
@@ -10,7 +10,7 @@
 			<div class="modal-body bg-gray-100 text-center d-lg-flex align-items-center">
 
 				<!-- Left half -->
-				<div class="pb-3 pb-lg-0 pr-lg-3">
+				<div>
 					<!-- Tipping icon -->
 					<div>
 						<span class="fa-stack fa-2x text-muted mb-2" style="font-size: 2rem;">
@@ -19,32 +19,29 @@
 						</span>
 					</div>
 					<!-- Description -->
-					<p>Give the author of this <span class="tip-content-type">post</span> <span class="tip-coin-count">1</span> <span class="tip-coin-text">coin</span>, redeemable for <span class="tip-coin-count">1</span> <span class="tip-duration-text">week</span> of Ruqqus Premium. Also shows a sweet award badge near the <span class="tip-content-type">post</span>!</p>
+					<p class="mb-0">Give the author of this <span class="tip-content-type">post</span> 1 coin, redeemable for 1 week of Ruqqus Premium. Also shows a sweet award badge near the <span class="tip-content-type">post</span>.</p>
 				</div>
 
-
-				<!-- Right half -->
+				<!-- Right half
 				<div class="w-100 border-left p-4 bg-white rounded shadow-sm">
 					<label for="tip_amount" class="text-left d-block">Tip Amount</label>
 					<div id="tip_amount" class="btn-group btn-group-toggle w-100" data-toggle="buttons">
-						<div class="custom-control custom-radio">
-							<input type="radio" id="oneCoin" name="tipRadio" value="1" class="custom-control-input tip-coin-radio" checked>
-							<label class="custom-control-label" for="oneCoin"><i class="fad fa-coin text-warning mr-2"></i> 1 coin</label>
+						<div class="btn btn-outline-secondary text-black tip-button active" for="oneCoin">
+							<input type="radio" name="options" id="oneCoin" value="1" class="tip-coin-radio" checked> <i class="fad fa-coin text-warning mr-2"></i> 1 coin
 						</div>
-						<div class="custom-control custom-radio">
-							<input type="radio" id="fiveCoin" name="tipRadio" value="5" class="custom-control-input tip-coin-radio" checked>
-							<label class="custom-control-label" for="fiveCoin"><i class="fad fa-coin text-warning mr-2"></i> 5 coins</label>
+						<div class="btn btn-outline-secondary text-black tip-button" for="fiveCoin">
+							<input type="radio" name="options" id="fiveCoin" value="5" class="tip-coin-radio"> <i class="fad fa-coins text-warning mr-2"></i> 5 coins
 						</div>
-						<div class="custom-control custom-radio">
-							<input type="radio" id="tenCoin" name="tipRadio" value="10" class="custom-control-input tip-coin-radio" checked>
-							<label class="custom-control-label" for="tenCoin"><i class="fad fa-coin text-warning mr-2"></i> 10 coins</label>
+						<div class="btn btn-outline-secondary text-black tip-button" for="tenCoin">
+							<input type="radio" name="options" id="tenCoin" value="10" class="tip-coin-radio"> <i class="fad fa-sack text-warning mr-2"></i> 10 coins
 						</div>
 					</div>
 					<div class="text-small-extra text-muted mt-4 text-left">Have ideas for Ruqqus tipping? <a href="/+betafeedback">Share your feedback!</a></div>
 				</div>
+				-->
 			</div>
 			<!-- Footer -->
-			<div class="modal-footer bg-white border-top" style="background-image: none">
+			<div class="modal-footer bg-white border-top" style="background-image: none!important">
 				<div class="text-small text-muted font-weight-bold">Coin balance:<span class="text-muted"><i class="fas fa-coin text-warning pl-2 pr-1"></i>{{ v.coin_balance }}</span><a href="/settings/premium" class="font-weight-normal ml-2">Get more coins</a>
 				</div>
 				<button type="button" class="btn btn-link text-muted ml-auto" data-dismiss="modal">Cancel</button>
