@@ -178,9 +178,12 @@ def gift_post_pid(pid, v):
     if post.author.is_banned and not post.author.unban_utc:
         return jsonify({"error":"You can't give awards to banned accounts"}), 403
 
-    if v.is_blocking(post.author):
+    u=get_user(post.author.username, v=v)
+
+    if u.is_blocking:
         return jsonify({"error":"You can't give awards to someone you're blocking."}), 403
-    if v.is_blocked(post.author):
+
+    if u.is_blocked:
         return jsonify({"error":"You can't give awards to someone that's blocking you."}), 403
 
     coins=int(request.args.get("coins",1))
@@ -222,9 +225,12 @@ def gift_comment_pid(cid, v):
     if comment.author.is_banned and not comment.author.unban_utc:
         return jsonify({"error":"You can't give awards to banned accounts"}), 403
 
-    if v.is_blocking(comment.author):
+    u=get_user(comment.author.username, v=v)
+
+    if u.is_blocking:
         return jsonify({"error":"You can't give awards to someone you're blocking."}), 403
-    if v.is_blocked(comment.author):
+
+    if u.is_blocked:
         return jsonify({"error":"You can't give awards to someone that's blocking you."}), 403
 
     coins=int(request.args.get("coins",1))
@@ -237,7 +243,7 @@ def gift_comment_pid(cid, v):
 
     v.coin_balance -= coins
 
-    post.author.coins_balance += coins
+    post.author.coin_balance += coins
 
     g.db.add(v)
     g.db.add(comment.author)
