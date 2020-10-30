@@ -317,7 +317,7 @@
           <small class="format">
             <span class="font-weight-bolder text-uppercase" onclick="getGif();commentForm('reply-form-body-{{ c.fullname }}')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF">GIF</span>
           </small> 
-          <label class="format btn btn-secondary m-0{% if not v.has_premium %} d-none{% endif %}" for="file-upload-reply-{{ c.base36id }}">
+          <label class="format btn btn-secondary m-0{% if not v.has_premium %} d-none{% endif %}" for="file-upload-reply-{{ c.fullname }}">
                 <div id="filename-show-reply-{{ c.base36id }}">Select Image</div>
                 <input id="file-upload-reply-{{ c.fullname }}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{ c.base36id }}').innerHTML=document.getElementById('file-upload-reply-{{ c.fullname }}').files[0].name;" hidden>
           </label>
