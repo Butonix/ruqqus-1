@@ -1890,7 +1890,7 @@ var tip  = function(event) {
   const coinCount = document.getElementsByClassName("tip-coin-count")
   const coinText = document.getElementsByClassName("tip-coin-text")
   const durationText = document.getElementsByClassName("tip-duration-text")
-  const coinOptions = document.querySelectorAll("tip-coin-radio")
+  const coinOptions = document.getElementsByClassName("tip-coin-radio")
 
   var coins = 1;
 
