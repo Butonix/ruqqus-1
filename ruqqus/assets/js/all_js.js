@@ -1901,7 +1901,22 @@ var tip  = function(event) {
   var fiveCoinButton = document.getElementById("fiveCoinButton")
   var tenCoinButton = document.getElementById("tenCoinButton")
 
-  button.disabled = false;
+
+  var coins_str = "0";
+
+  var coinOptions = document.getElementsByClassName("tip-coin-radio");
+
+  for (i=0; i< coinOptions.length; i++) {
+    if (coinOptions[i].checked) {
+      coins_str = coinOptions[i].value
+    }
+  }
+
+  var coins = parseInt(coins_str)
+  var balance=parseInt(document.getElementById('coin-balance').innerText)
+
+
+  button.disabled = (coins >= balance);
 
   if (oneCoinButton.classList.contains('active')) {
     coinCount.innerText = 1
