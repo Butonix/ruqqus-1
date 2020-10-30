@@ -66,7 +66,7 @@ def shop_negative_balance(v):
     new_txn=PayPalTxn(
         user_id=v.id,
         created_utc=int(time.time()),
-        coin_count=None,
+        coin_count=0,
         usd_cents=v.negative_balance_cents
         )
 
