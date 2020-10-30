@@ -1,0 +1,54 @@
+<div class="modal fade modal-sm-bottom show" id="tipModal" tabindex="-1" role="dialog" aria-labelledby="deletePostModalTitle" aria-modal="true" style="display: block;">
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header d-flex">
+				<h5 class="modal-title">Give this <span data-model="contentType">post</span> a tip!</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true"><i class="far fa-times"></i></span>
+				</button>
+			</div>
+			<div class="modal-body bg-gray-100 text-center d-lg-flex align-items-center">
+
+				<!-- Left half -->
+				<div class="pb-3 pb-lg-0 pr-lg-3">
+					<!-- Tipping icon -->
+					<div>
+						<span class="fa-stack fa-2x text-muted mb-2" style="font-size: 2rem;">
+							<i class="fas fa-circle text-warning fa-stack-2x" style=""></i>
+							<i class="fad text-white fa-coins fa-stack-1x"></i>
+						</span>
+					</div>
+					<!-- Description -->
+					<p>Give the author of this <span class="tip-content-type"></span> <span class="tip-coin-count"></span> <span class="tip-coin-text"></span>, redeemable for <span class="tip-coin-count"></span> <span class="tip-duration-text"></span> of Ruqqus Premium. Also shows a sweet award badge near the <span class="tip-content-type"></span>!</p>
+				</div>
+
+
+				<!-- Right half -->
+				<div class="w-100 border-left p-4 bg-white rounded shadow-sm">
+					<label for="tip_amount" class="text-left d-block">Tip Amount</label>
+					<div id="tip_amount" class="btn-group btn-group-toggle" data-toggle="buttons">
+						<label class="btn btn-outline-secondary text-black" style="width: 8.5rem;">
+							<input type="radio" name="options" id="option1" checked=""> <i class="fad fa-coin text-warning mr-2"></i> 1 coin
+						</label>
+						<label class="btn btn-outline-secondary text-black" style="width: 8.5rem;">
+							<input type="radio" name="options" id="option1" checked=""> <i class="fad fa-coins text-warning mr-2"></i> 5 coins
+						</label>
+						<label class="btn btn-outline-secondary text-black" style="width: 8.5rem;">
+							<input type="radio" name="options" id="option1" checked=""> <i class="fad fa-sack text-warning mr-2"></i> 10 coins
+						</label>
+					</div>
+					<div class="text-small-extra text-muted mt-4 text-left">Have ideas for Ruqqus tipping? <a href="#">Share your feedback!</a></div>
+				</div>
+			</div>
+			<!-- Footer -->
+			<div class="modal-footer d-flex bg-white border-top">
+				<div class="text-small text-muted font-weight-bold">Coin balance:<span class="text-muted"><i class="fas fa-coin text-warning pl-2 pr-1"></i>{{ v.coin_balance }}</span><a href="/settings/premium" class="font-weight-normal ml-2">Get more coins</a>
+				</div>
+				<button type="button" class="btn btn-link text-muted ml-auto" data-dismiss="modal">Cancel</button>
+				<button type="button" id="sendTipButton" class="btn btn-warning" style="">Tip <span class="tip-content-type"></span></button>
+			</div>
+		</div>
+	</div>
+	<!-- Coin balance -->
+	<span data-model="balance" class="d-none">{{ v.coin_balance }}</span>
+</div>
