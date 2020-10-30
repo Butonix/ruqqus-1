@@ -1876,7 +1876,7 @@ var tipModal = function(event) {
       )
   }
 
-  console.log(senderPFP, recipientPFP, id, type, link)
+  console.log(senderPFP, recipientPFP, id, content, link)
 }
 
 var tipModalButtons = document.getElementsByClassName('tip-modal-button')
