@@ -1866,7 +1866,7 @@ var tipModal = function(event) {
   document.getElementById('tip-sender-pfp').src = senderPFP;
   document.getElementById('tip-recipient-pfp').src = recipientPFP;
 
-  document.getElementsByClassName("tip-content-type").innerText = content
+  document.getElementsByClassName("tip-content").innerText = content
 
   document.getElementById("sendTipButton").onclick = function() {
     post_toast('/gift_post/' + id + '?coins=1',
