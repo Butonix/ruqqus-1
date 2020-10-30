@@ -1919,6 +1919,8 @@ var tip  = function(event) {
     durationText.innerText = "week"
   }
 
+  console.log(coinCount, coinText, durationText)
+
 }
 
 var tipModalButtons = document.getElementsByClassName('tip-modal-button')
