@@ -120,9 +120,9 @@ def paypal_webhook_handler():
 
     x=CLIENT._post("/v1/notifications/verify-webhook-signature", data=data)
 
-    print(x.get_json())
+    print(x.json())
 
-    data=request.get_json()
+    data=request.json()
     pprint.pprint(data)
     
     #Reversals
