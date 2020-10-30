@@ -1890,11 +1890,11 @@ var tip  = function(event) {
   const coinCount = document.getElementsByClassName("tip-coin-count")
   const coinText = document.getElementsByClassName("tip-coin-text")
   const durationText = document.getElementsByClassName("tip-duration-text")
-
-  let coins = 1;
   const coinOptions = document.querySelectorAll("tip-coin-radio")
 
-  for (i=0; i< coinOptions.length; i++) {
+  var coins = 1;
+
+  for (var i = 0, length = coinOptions.length; i < length; i++) {
     if (coinOptions[i].checked) {
       coins = coinOptions[i].value
     }
