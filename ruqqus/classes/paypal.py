@@ -166,5 +166,5 @@ class AwardRelationship(Base):
 	id=Column(Integer, primary_key=True)
 
 	user_id=Column(Integer, ForeignKey("users.id"))
-	submission_id=Column(Integer, ForeignKey("submissions.id"))
-	comment_id=Column(Integer, ForeignKey("comments.id"))
+	submission_id=Column(Integer, ForeignKey("submissions.id"), default=None)
+	comment_id=Column(Integer, ForeignKey("comments.id"), default=None)
