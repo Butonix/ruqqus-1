@@ -1902,21 +1902,21 @@ var tip  = function(event) {
   var tenCoinButton = document.getElementById("tenCoinButton")
 
 
-  var coins_str = "0";
+  //var coins_str = "0";
 
-  var coinOptions = document.getElementsByClassName("tip-coin-radio");
+  //var coinOptions = document.getElementsByClassName("tip-coin-radio");
 
-  for (i=0; i< coinOptions.length; i++) {
-    if (coinOptions[i].checked) {
-      coins_str = coinOptions[i].value
-    }
-  }
+  //for (i=0; i< coinOptions.length; i++) {
+  // if (coinOptions[i].checked) {
+  //    coins_str = coinOptions[i].value
+  //  }
+  //}
 
-  var coins = parseInt(coins_str)
-  var balance=parseInt(document.getElementById('coin-balance').innerText)
+  //var coins = parseInt(coins_str)
+  //var balance=parseInt(document.getElementById('coin-balance').innerText)
 
 
-  button.disabled = (coins >= balance);
+  //button.disabled = (coins >= balance);
 
   if (oneCoinButton.classList.contains('active')) {
     coinCount.innerText = 1
