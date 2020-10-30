@@ -197,12 +197,12 @@ def gift_post_pid(pid, v):
 
     v.coin_balance -= coins
 
-    post.author.coin_balance += coins
+    u.coin_balance += coins
 
     g.db.add(v)
-    g.db.add(post.author)
+    g.db.add(u)
 
-    send_notification(post.author, f"@{v.username} liked [your post]({post.permalink}) and has awarded you a Coin!")
+    send_notification(u, f"@{v.username} liked [your post]({post.permalink}) and has awarded you a Coin!")
 
     return jsonify({"message": f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining."})
 
@@ -244,11 +244,11 @@ def gift_comment_pid(cid, v):
 
     v.coin_balance -= coins
 
-    post.author.coin_balance += coins
+    u.coin_balance += coins
 
     g.db.add(v)
-    g.db.add(comment.author)
+    g.db.add(u)
 
-    send_notification(comment.author, f"@{v.username} liked [your comment]({comment.permalink}) and has awarded you a Coin!")
+    send_notification(u, f"@{v.username} liked [your comment]({comment.permalink}) and has awarded you a Coin!")
 
     return jsonify({"message":f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining."})
