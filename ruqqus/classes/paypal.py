@@ -123,10 +123,13 @@ class PayPalClient():
 		x=self._post(url)
 		x=x.json()
 		
-		status=x["status"]
-		if status=="COMPLETED":
-			txn.status=3
-
+		try:
+			status=x["status"]
+			if status=="COMPLETED":
+				txn.status=3
+		except KeyError:
+			abort(403)
+			
 		return status=="COMPLETED"
 
 
