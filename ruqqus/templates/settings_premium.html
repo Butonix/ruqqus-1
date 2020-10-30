@@ -49,7 +49,7 @@
                   <p class="text-small-extra text-muted">Next renewal after: {{ v.renew_premium_time }} UTC</p>
 
                   {% elif v.has_premium %}
-                  <p class="text-small-extra text-muted">Current balance: {{ v.coin_balance }} Coin{{ '' if v.coin_balance==1 else 's' }}</p>
+                  <p class="text-small-extra text-muted">Current balance: 0 Coins</p>
                   <p class="text-small-extra text-muted">Premium expires: {{ v.renew_premium_time }} UTC. Buy some Coins to continue with Premium.</p>
 
                   {% else %}
