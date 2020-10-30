@@ -108,7 +108,7 @@ def settings_security_post(v):
             return redirect("/settings/security?error=" +
                             escape("Passwords do not match."))
 
-        if not re.match(valid_password_regex, request.form.get("password")):
+        if not re.match(valid_password_regex, request.form.get("new_password")):
             #print(f"signup fail - {username } - invalid password")
             return redirect("/settings/security?error=" + 
                             escape("Password must be between 8 and 100 characters."))
