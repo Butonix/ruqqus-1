@@ -8,6 +8,7 @@ from ruqqus.__main__ import Base
 
 PAYPAL_ID=environ.get("PAYPAL_CLIENT_ID", "").rstrip()
 PAYPAL_SECRET=environ.get("PAYPAL_CLIENT_SECRET", "").rstrip()
+PAYPAL_WEBHOOK_ID=environ.get("PAYPAL_WEBHOOK_ID", "").rstrip()
 
 PAYPAL_URL="https://api.paypal.com"
 
@@ -17,6 +18,7 @@ class PayPalClient():
 
 		self.paypal_token=None
 		self.token_expires=0
+		self.webhook_id=PAYPAL_WEBHOOK_ID
 
 	def print(self, x):
 
@@ -72,9 +74,6 @@ class PayPalClient():
 		#	"Accept":"application/json",
 			"Authorization":f"Bearer {self.paypal_token}"
 			}
-		self.print(url)
-		self.print(headers)
-		self.print(data)
 
 		return requests.post(url, headers=headers, json=data)
 

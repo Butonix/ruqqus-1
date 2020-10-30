@@ -106,8 +106,21 @@ def shop_buy_coins_completed(v):
 
 @app.route("/shop/paypal_webhook")
 def paypal_webhook_handler():
-    print(request.path)
-    print(request.method)
+    
+    #Verify paypal signature
+    data={
+        "auth_algo":request.headers.get("PAYPAL-AUTH-ALGO"),
+        "cert_url":request.headers.get("PAYPAL-CERT-URL"),
+        "transmission_id":request.headers.get("PAYPAL-TRANSMISSION-ID")
+        "transmission_sig":request.headers.get("PAYPAL-TRANSMISSION-SIG")
+        "transmission_time":request.headers.get("PAYPAL-TRANSMISSION-TIME")
+        "webhook_id":CLIENT.webhook_id
+        "webhook_event":request.get_json()
+    }
+
+    x=CLIENT._post("/v1/notifications/verify-webhook-signature", data=data)
+
+    print x.get_json()
 
     data=request.get_json()
     pprint.pprint(data)
