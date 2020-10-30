@@ -244,4 +244,4 @@ def gift_comment_pid(cid, v):
 
     send_notification(comment.author, f"@{v.username} liked [your comment]({comment.permalink}) and has awarded you a Coin!")
 
-    return jsonify("message":f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining.")
+    return jsonify({"message":f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining."})
