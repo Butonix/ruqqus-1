@@ -157,3 +157,14 @@ class PayPalTxn(Base):
 	def paypal_url(self):
 
 		return f"/v2/checkout/orders/{self.paypal_id}"
+
+
+class AwardRelationship(Base):
+
+	__tablename__="award_relationships"
+
+	id=Column(Integer, primary_key=True)
+
+	user_id=Column(Integer, ForeignKey("users.id"))
+	submission_id=Column(Integer, ForeignKey("submissions.id"))
+	comment_id=Column(Integer, ForeignKey("comments.id"))

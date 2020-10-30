@@ -204,6 +204,19 @@ def gift_post_pid(pid, v):
 
     send_notification(u, f"@{v.username} liked [your post]({post.permalink}) and has awarded you a Coin!")
 
+    g.db.commit()
+
+    #create record - uniqueness constraints prevent duplicate award counting
+    new_rel = AwardRelationship(
+        user_id=v.id,
+        submission_id=post.id
+        )
+    try:
+        g.db.add(new_rel)
+        g.db.flush()
+    except:
+        pass
+
     return jsonify({"message": f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining."})
 
 @app.route("/gift_comment/<cid>", methods=["POST"])
@@ -250,5 +263,18 @@ def gift_comment_pid(cid, v):
     g.db.add(u)
 
     send_notification(u, f"@{v.username} liked [your comment]({comment.permalink}) and has awarded you a Coin!")
+
+    g.db.commit()
+
+    #create record - uniqe prevents duplicates
+    new_rel = AwardRelationship(
+        user_id=v.id,
+        submission_id=post.id
+        )
+    try:
+        g.db.add(new_rel)
+        g.db.flush()
+    except:
+        pass
 
     return jsonify({"message":f"Success. {v.coin_balance} Coin{'' if v.coin_balance==1 else 's'} remaining."})

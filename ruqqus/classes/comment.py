@@ -79,6 +79,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     parent_comment = relationship("Comment", remote_side=[id])
     child_comments = relationship("Comment", remote_side=[parent_comment_id])
 
+    awards = relationship("AwardRelationship", lazy="joined")
+
     # These are virtual properties handled as postgres functions server-side
     # There is no difference to SQLAlchemy, but they cannot be written to
     ups = deferred(Column(Integer, server_default=FetchedValue()))
@@ -349,6 +351,11 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def flag_count(self):
         return len(self.flags)
+
+    @property
+    def award_count(self):
+        return self.awards.count()
+    
 
 
 class Notification(Base):

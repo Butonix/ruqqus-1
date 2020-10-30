@@ -119,6 +119,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     score = deferred(Column(Float, server_default=FetchedValue()))
     #is_public=deferred(Column(Boolean, server_default=FetchedValue()))
 
+    awards = relationship("AwardRelationship", lazy="joined")
+
     rank_hot = deferred(Column(Float, server_default=FetchedValue()))
     rank_fiery = deferred(Column(Float, server_default=FetchedValue()))
     rank_activity = deferred(Column(Float, server_default=FetchedValue()))
@@ -452,3 +454,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def report_count(self):
         return len(self.reports)
+
+    @property
+    def award_count(self):
+        return self.awards.count()
