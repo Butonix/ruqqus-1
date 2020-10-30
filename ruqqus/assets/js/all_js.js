@@ -736,24 +736,24 @@ function post_toast(url, callback) {
 
   xhr.onload = function() {
     if (xhr.status==204) {}
-    else if (xhr.status >= 200 && xhr.status < 300) {
-      $('#toast-post-success').toast('dispose');
-      $('#toast-post-success').toast('show');
-      document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
-      callback(xhr)
+      else if (xhr.status >= 200 && xhr.status < 300) {
+        $('#toast-post-success').toast('dispose');
+        $('#toast-post-success').toast('show');
+        document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+        callback(xhr)
 
-    } else if (xhr.status >= 300 && xhr.status < 400) {
-      window.location.href = JSON.parse(xhr.response)["redirect"]
-    } else {
-      $('#toast-post-error').toast('dispose');
-      $('#toast-post-error').toast('show');
-      document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];
-    }
-  };
+      } else if (xhr.status >= 300 && xhr.status < 400) {
+        window.location.href = JSON.parse(xhr.response)["redirect"]
+      } else {
+        $('#toast-post-error').toast('dispose');
+        $('#toast-post-error').toast('show');
+        document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];
+      }
+    };
 
-  xhr.send(form);
+    xhr.send(form);
 
-}
+  }
 
 
 //Admin post modding
@@ -1819,9 +1819,9 @@ filter_guild=function() {
         window.location.reload(true);
       }
       else {
-      $('#toast-exile-error').toast('dispose');
-      $('#toast-exile-error').toast('show');
-      exileError.textContent = JSON.parse(xhr.response)["error"];
+        $('#toast-exile-error').toast('dispose');
+        $('#toast-exile-error').toast('show');
+        exileError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
     xhr.send(f)
@@ -1861,11 +1861,18 @@ var tipModal = function(event) {
 
   console.log(id, type, link)
 
-  var button = document.getElementById("sendTipButton");
-
   document.getElementsByClassName("tip-content-type").innerText = type;
 
-  button.onclick = function() {
+  var coins = 1;
+  var coinOptions = document.querySelectorAll("tip-coin-radio")
+
+  for (i=0; i< coinOptions.length; i++) {
+    if (coinOptions[i].checked) {
+      coins = coinOptions[i].value
+    }
+  }
+
+  document.getElementById("sendTipButton").onclick = function() {
     post_toast('/gift_post/' + id + '?coins='+coins,
       callback = function() {
         if(window.location == link) {
@@ -1880,25 +1887,22 @@ var tipModal = function(event) {
 
 var tip  = function(event) {
   console.log('tip button pressed, tip function triggered')
-
-  var button = document.getElementById("sendTipButton")
   var coinCount = document.getElementsByClassName("tip-coin-count")
   var coinText = document.getElementsByClassName("tip-coin-text")
   var durationText = document.getElementsByClassName("tip-duration-text")
 
-  var oneCoinButton = document.getElementById("oneCoinButton")
-  var fiveCoinButton = document.getElementById("fiveCoinButton")
-  var tenCoinButton = document.getElementById("tenCoinButton")
+  var coins = 1;
+  var coinOptions = document.querySelectorAll("tip-coin-radio")
 
-  if (oneCoinButton.classList.contains('active')) {
-    coinCount.innerText = 1
-  } else if (fiveCoinButton.classList.contains('active')) {
-    coinCount.innerText = 5
-  } else {
-    coinCount.innerText = 10
+  for (i=0; i< coinOptions.length; i++) {
+    if (coinOptions[i].checked) {
+      coins = coinOptions[i].value
+    }
   }
 
-  if (coinCount > 1) {
+  coinCount.innerText = parseInt(coins)
+
+  if (coins > 1) {
     coinText.innerText = "coins"
     durationText.innerText = "weeks"
   } else {
@@ -1906,7 +1910,7 @@ var tip  = function(event) {
     durationText.innerText = "week"
   }
 
-  console.log(coinCount, coinText, durationText)
+  console.log(coins, coinCount, coinText, durationText)
 
 }
 
