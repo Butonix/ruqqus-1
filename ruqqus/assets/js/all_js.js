@@ -1854,6 +1854,7 @@ coin_quote = function() {
 // Tipping
 
 var tipModal = function(event) {
+  console.log('opened modal, tipModal function triggered')
   var id = event.target.dataset.contentId;
   var type = event.target.dataset.contentType
   var link = event.target.dataset.contentLink
@@ -1887,7 +1888,7 @@ var tipModal = function(event) {
 }
 
 var tip  = function(event) {
-
+  console.log('tip button pressed, tip function triggered')
   var id = event.target.dataset.id;
 
   var button = document.getElementById("sendTipButton")
