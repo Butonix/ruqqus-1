@@ -1916,7 +1916,7 @@ var tip  = function(event) {
   var balance=parseInt(document.getElementById('coin-balance').innerText)
 
 
-  button.disabled = (coins >= balance);
+  button.disabled = (balance >= coins);
 
   if (oneCoinButton.classList.contains('active')) {
     coinCount.innerText = 1
