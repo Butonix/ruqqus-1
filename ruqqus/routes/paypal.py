@@ -243,7 +243,7 @@ def gift_comment_pid(cid, v):
 
     v.coin_balance -= coins
 
-    post.author.coins_balance += coins
+    post.author.coin_balance += coins
 
     g.db.add(v)
     g.db.add(comment.author)
