@@ -1858,15 +1858,15 @@ var tipModal = function(event) {
   var id = event.target.dataset.contentId;
   var type = event.target.dataset.contentType
   var link = event.target.dataset.contentLink
+  const coinOptions = document.getElementsByClassName("tip-coin-radio")
 
   console.log(id, type, link)
 
   document.getElementsByClassName("tip-content-type").innerText = type;
 
   var coins = 1;
-  var coinOptions = document.querySelectorAll("tip-coin-radio")
 
-  for (i=0; i< coinOptions.length; i++) {
+  for (var i = 0, length = coinOptions.length; i < length; i++) {
     if (coinOptions[i].checked) {
       coins = coinOptions[i].value
     }
