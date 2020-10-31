@@ -1872,7 +1872,7 @@ var tipModal = function(event) {
   document.getElementById("tip-recipient-username").innerText = recipient
 
   document.getElementById("sendTipButton").onclick = function() {
-    post_toast('/gift_post/' + id + '?coins=1',
+    post_toast('/gift_'+ content +'/' + id + '?coins=1',
       callback = function() {
         location.href = link
       }
