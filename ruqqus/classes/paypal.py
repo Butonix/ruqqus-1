@@ -80,6 +80,9 @@ class PayPalClient():
 
 	def create(self, txn):
 
+		if not txn.id:
+			raise ValueError("txn must be flushed first")
+
 		url="/v2/checkout/orders"
 
 		data={
@@ -94,7 +97,7 @@ class PayPalClient():
 				}
 			],
 			"application_context":{
-				"return_url":f"https://{app.config['SERVER_NAME']}/shop/buy_coins_completed"
+				"return_url":f"https://{app.config['SERVER_NAME']}/shop/buy_coins_completed?txid={txn.base36id}"
 			}
 		}
 
@@ -137,7 +140,7 @@ class PayPalClient():
 		return status=="COMPLETED"
 
 
-class PayPalTxn(Base):
+class PayPalTxn(Base, Stndrd):
 
 	__tablename__="paypal_txns"
 

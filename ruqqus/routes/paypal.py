@@ -11,6 +11,7 @@ from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.alerts import send_notification
+from ruqqus.helpers.base36 import *
 from ruqqus.__main__ import app
 
 CLIENT=PayPalClient()
@@ -56,6 +57,9 @@ def shop_buy_coins(v):
         usd_cents=coins_to_price_cents(coin_count)
         )
 
+    g.db.add(new_txn)
+    g.db.flush()
+
     CLIENT.create(new_txn)
 
     g.db.add(new_txn)
@@ -76,6 +80,9 @@ def shop_negative_balance(v):
         usd_cents=v.negative_balance_cents
         )
 
+    g.db.add(new_txn)
+    g.db.flush()
+
     CLIENT.create(new_txn)
 
     g.db.add(new_txn)
@@ -87,8 +94,12 @@ def shop_negative_balance(v):
 @is_not_banned
 def shop_buy_coins_completed(v):
 
-    #look up most recent txn
-    txn=g.db.query(PayPalTxn).filter_by(user_id=v.id, status=1).first()
+    #look up the txn
+    id=request.args.get("txid")
+    if not id:
+        abort(400)
+    id=base36decode(id)
+    txn=g.db.query(PayPalTxn).filter_by(user_id=v.id, id=id, status=1).first()
 
     if not txn:
         abort(400)
