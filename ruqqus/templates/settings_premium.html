@@ -45,17 +45,36 @@
               <div class="body w-lg-100">
                   <p>Coins are auto-redeemed for one week of premium account time.</p>
                   {% if v.has_premium and v.coin_balance >=1 %}
-                  <p class="text-small-extra text-muted">Current balance: {{ v.coin_balance }} Coin{{ '' if v.coin_balance==1 else 's' }}</p>
-                  <p class="text-small-extra text-muted">Next renewal after: {{ v.renew_premium_time }} UTC</p>
+                  <p class="text-small text-muted">Current balance: <span class="text-black font-weight-bold">{{ v.coin_balance }} Coin{{ '' if v.coin_balance==1 else 's' }}</span></p>
+                  <p class="text-small text-muted">Next renewal after: <span class="text-black font-weight-bold">{{ v.renew_premium_time }} UTC</span></p>
 
                   {% elif v.has_premium %}
-                  <p class="text-small-extra text-muted">Current balance: 0 Coins</p>
-                  <p class="text-small-extra text-muted">Premium expires: {{ v.renew_premium_time }} UTC. Buy some Coins to continue with Premium.</p>
+                  <p class="text-small text-muted">Current balance: <span class="text-black font-weight-bold">0 Coins</span></p>
+                  <p class="text-small text-muted">Premium expires: <span class="text-black font-weight-bold">{{ v.renew_premium_time }} UTC</span>. Buy some Coins to continue with Premium.</p>
 
                   {% else %}
-                  <p class="text-small-extra text-muted">Current balance: 0 Coins</p>
-                  <p class="text-small-extra text-muted">Buy some Coins to enjoy Ruqqus Premium.</p>
+                  <p class="text-small text-muted">Current balance: <span class="text-black font-weight-bold">0 Coins</span></p>
+                  <p class="text-small text-muted">Buy some Coins to enjoy Ruqqus Premium.</p>
                   {% endif %}
+                  <div class="d-none d-md-block"><div class="text-muted">Perks:</div>
+                    <ul class="mb-0 pl-0 no-bullets font-weight-bold">
+                      <li class="py-1"><span class="fa-stack fa-1x mr-2">
+                      <i class="fas fa-square fa-stack-2x" style="color: #dabef9!important; font-size: 2rem!important;"></i>
+                      <i class="fas fa-image fa-stack-1x text-primary text-base fa-inverse"></i>
+                      </span>Direct image uploads in comments
+                      </li>
+                      <li class="py-1"><span class="fa-stack fa-1x mr-2">
+                      <i class="fas fa-square fa-stack-2x" style="color: #f9efbe!important; font-size: 2rem!important;"></i>
+                      <i class="fas fa-star fa-stack-1x text-warning text-base fa-inverse"></i>
+                      </span>Exclusive membership cosmetics
+                      </li>
+                      <li class="py-1"><span class="fa-stack fa-1x mr-2">
+                      <i class="fas fa-square fa-stack-2x" style="color: #bef9cc!important; font-size: 2rem!important;"></i>
+                      <i class="fas fa-hand-peace fa-stack-1x text-success text-base fa-inverse"></i>
+                      </span>Keeping the ruqqus servers alive
+                      </li>
+                    </ul>
+                  </div>
                   <form action="/shop/buy_coins" method="post">
                     <input type="hidden" name="formkey" value="{{ v.formkey }}">
                     <select id="select-coins" name="coin_count" class="form-control" onchange="coin_quote()">
@@ -67,26 +86,6 @@
                     </select>
                     <input id="buy-coin-btn" type="submit" class="btn btn-primary mt-2" value="Buy Coins">
                   </form>
-
-                <div class="d-none d-md-block"><div class="text-muted">Perks:</div>
-                  <ul class="mb-0 pl-0 no-bullets font-weight-bold">
-                    <li class="py-1"><span class="fa-stack fa-1x mr-2">
-                    <i class="fas fa-square fa-stack-2x" style="color: #dabef9!important; font-size: 2rem!important;"></i>
-                    <i class="fas fa-image fa-stack-1x text-primary text-base fa-inverse"></i>
-                    </span>Direct image uploads in comments
-                    </li>
-                    <li class="py-1"><span class="fa-stack fa-1x mr-2">
-                    <i class="fas fa-square fa-stack-2x" style="color: #f9efbe!important; font-size: 2rem!important;"></i>
-                    <i class="fas fa-star fa-stack-1x text-warning text-base fa-inverse"></i>
-                    </span>Exclusive membership cosmetics
-                    </li>
-                    <li class="py-1"><span class="fa-stack fa-1x mr-2">
-                    <i class="fas fa-square fa-stack-2x" style="color: #bef9cc!important; font-size: 2rem!important;"></i>
-                    <i class="fas fa-hand-peace fa-stack-1x text-success text-base fa-inverse"></i>
-                    </span>Keeping the ruqqus servers alive
-                    </li>
-                  </ul>
-                </div>
                 <p class="text-small-extra text-muted">Coins have no cash value and cannot be redeemed for anything other than Premium membership time. All sales final.</p>
 
 
