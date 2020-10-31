@@ -259,7 +259,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'fullname': self.fullname,
                 'post': self.post.json,
                 'level': self.level,
-                'parent_id': self.parent.id if not self.parent_fullname.startswith('t2') else None,
+                'parent_id': self.parent.base36id if not self.parent_fullname.startswith('t2') else None,
                 'author': self.author.json if not self.author.is_deleted else None,
                 'body': self.body,
                 'body_html': self.body_html,
