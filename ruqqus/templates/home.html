@@ -259,6 +259,7 @@
     </div>
     {% endif %}
 
+    {% if not v.has_premium %}
     <div class="sidebar-section">
       <div class="title">
         <i class="fas fa-heart mr-2"></i>Support Ruqqus
@@ -294,7 +295,15 @@
           </span>Donate Cash or Crypto
         </a>
 
+        <a href="/settings/premium" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #F7931A!important">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #FEEBC8!important; font-size: 2rem!important;"></i>
+            <i class="fab fa-coins fa-stack-1x text-base fa-inverse" style="color: #F7931A!important;"></i>
+          </span>Ruqqus Premium
+        </a>
+
       </div>
     </div>
+    {% endif %}
 
     {% endblock %}
