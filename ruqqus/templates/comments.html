@@ -192,7 +192,7 @@
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ c.permalink | full_link }}?context=3"><i class="fas fa-book-open"></i>Context</a>
           </li>
           {% endif %}
-          {% if not v.id==p.author_id %}
+          {% if not v.id==c.author_id %}
           <li class="list-inline-item text-muted"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#tipModal" data-content-link="{{ c.permalink }}" data-content-id="{{ c.base36id }}" data-content-type="comment" data-v-avatar="{{ v.profile_url }}" data-author-username="{{ c.author.username }}" data-author-avatar="{{ c.author.profile_url }}" class="tip-modal-button"><i class="fas fa-star"></i>Tip Comment</a></li>
           {% endif %}
           {% endif %}
