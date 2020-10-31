@@ -45,16 +45,16 @@
               <div class="body w-lg-100">
                   <p>Coins are auto-redeemed for one week of premium account time.</p>
                   {% if v.has_premium and v.coin_balance >=1 %}
-                  <p class="text-small text-muted">Current balance: <span class="text-black font-weight-bold">{{ v.coin_balance }} Coin{{ '' if v.coin_balance==1 else 's' }}</span></p>
-                  <p class="text-small text-muted">Next renewal after: <span class="text-black font-weight-bold">{{ v.renew_premium_time }} UTC</span></p>
+                  <p class="text-muted">Current balance: <span class="text-black font-weight-bold">{{ v.coin_balance }} Coin{{ '' if v.coin_balance==1 else 's' }}</span></p>
+                  <p class="text-muted">Next renewal after: <span class="text-black font-weight-bold">{{ v.renew_premium_time }} UTC</span></p>
 
                   {% elif v.has_premium %}
-                  <p class="text-small text-muted">Current balance: <span class="text-black font-weight-bold">0 Coins</span></p>
-                  <p class="text-small text-muted">Premium expires: <span class="text-black font-weight-bold">{{ v.renew_premium_time }} UTC</span>. Buy some Coins to continue with Premium.</p>
+                  <p class="text-muted">Current balance: <span class="text-black font-weight-bold">0 Coins</span></p>
+                  <p class="text-muted">Premium expires: <span class="text-black font-weight-bold">{{ v.renew_premium_time }} UTC</span>. Buy some Coins to continue with Premium.</p>
 
                   {% else %}
-                  <p class="text-small text-muted">Current balance: <span class="text-black font-weight-bold">0 Coins</span></p>
-                  <p class="text-small text-muted">Buy some Coins to enjoy Ruqqus Premium.</p>
+                  <p class="text-muted">Current balance: <span class="text-black font-weight-bold">0 Coins</span></p>
+                  <p class="text-muted">Buy some Coins to enjoy Ruqqus Premium.</p>
                   {% endif %}
                   <div class="d-none d-md-block"><div class="text-muted">Perks:</div>
                     <ul class="mb-0 pl-0 no-bullets font-weight-bold">
