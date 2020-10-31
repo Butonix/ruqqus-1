@@ -119,6 +119,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     score = deferred(Column(Float, server_default=FetchedValue()))
     #is_public=deferred(Column(Boolean, server_default=FetchedValue()))
 
+    awards = relationship("AwardRelationship", lazy="joined")
+
     rank_hot = deferred(Column(Float, server_default=FetchedValue()))
     rank_fiery = deferred(Column(Float, server_default=FetchedValue()))
     rank_activity = deferred(Column(Float, server_default=FetchedValue()))
@@ -173,7 +175,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         if not output:
             output = '-'
 
-        return f"/post/{self.base36id}/{output}"
+        return f"/+{self.board.name}/post/{self.base36id}/{output}"
 
     @property
     def is_archived(self):
@@ -323,7 +325,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                     'permalink': self.permalink,
                     'guild_name': self.board.name
                     }
-        data = {'author': self.author.username if not self.author.is_deleted else None,
+        data = {'author': self.author.json if not self.author.is_deleted else None,
                 'permalink': self.permalink,
                 'is_banned': False,
                 'is_deleted': False,
@@ -341,15 +343,15 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'body_html': self.body_html,
                 'created_utc': self.created_utc,
                 'edited_utc': self.edited_utc or 0,
-                'guild_name': self.board.name,
+                'guild': self.board.json,
                 'embed_url': self.embed_url,
                 'is_archived': self.is_archived,
-                'author_title': self.author.title.json if self.author.title else None,
-                'original_guild_name': self.original_board.name,
+                'original_guild': self.original_board.json if not self.board.name == self.original_board.name else None,
                 'comment_count': self.comment_count,
                 'score': self.score_fuzzed,
                 'upvotes': self.upvotes_fuzzed,
-                'downvotes': self.downvotes_fuzzed
+                'downvotes': self.downvotes_fuzzed,
+                'award_count': self.award_count
                 }
         if "replies" in self.__dict__:
             data["replies"]=[x.json for x in self.replies]
@@ -452,3 +454,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def report_count(self):
         return len(self.reports)
+
+    @property
+    def award_count(self):
+        return len(self.awards)

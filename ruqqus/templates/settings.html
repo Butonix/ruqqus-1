@@ -106,6 +106,9 @@
           <a class="nav-link{% if request.path=='/settings/security' %} active{% endif %}" href="/settings/security">Security</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link{% if request.path=='/settings/premium' %} active{% endif %}" href="/settings/premium">Premium</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link{% if request.path=='/settings/blocks' %} active{% endif %}" href="/settings/blocks">Block Users</a>
         </li>
         <li class="nav-item">
@@ -128,6 +131,9 @@
         </li>
         <li class="nav-item">
           <a class="nav-link{% if request.path=='/settings/security' %} active{% endif %}" href="/settings/security"><i class="fas fa-lock-alt text-lg mr-0"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if request.path=='/settings/premium' %} active{% endif %}" href="/settings/premium"><i class="fas fa-star text-lg mr-0"></i></a>
         </li>
         <li class="nav-item">
           <a class="nav-link{% if request.path=='/settings/blocks' %} active{% endif %}" href="/settings/blocks"><i class="fas fa-user-minus text-lg mr-0"></i></a>
@@ -213,6 +219,8 @@
 </div>
 
 <script src="/assets/js/all_js.js"></script>
+
+{% block onload %}{% endblock %}
 
 </body>
 

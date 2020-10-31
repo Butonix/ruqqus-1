@@ -111,6 +111,8 @@
         {% if c.edited_utc %}
         <span class="time-edited"><span>&#183;</span> <span class="font-italic">Edited {{ c.edited_string }}</span></span>
         {% endif %}
+        {% if c.award_count %}<span style="color: #604c1b;background-color: #c1971b;
+        background-image: linear-gradient(135deg, #ffc107 0%, #c1971b 100%);" class="badge text-small ml-1"><i class="fas fa-coin mr-2"></i>{{ c.award_count }}</span>{% endif %}
 
         <span class="comment-collapse d-md-none" onclick="collapse_comment('{{ c.base36id }}')"></span>
 
@@ -190,6 +192,9 @@
           {% if request.path=="/notifications" %}
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ c.permalink | full_link }}?context=3"><i class="fas fa-book-open"></i>Context</a>
           </li>
+          {% endif %}
+          {% if not v.id==c.author_id %}
+          <li class="list-inline-item text-muted"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#tipModal" data-content-link="{{ c.permalink }}" data-content-id="{{ c.base36id }}" data-content-type="comment" data-v-avatar="{{ v.profile_url }}" data-author-username="{{ c.author.username }}" data-author-avatar="{{ c.author.profile_url }}" class="tip-modal-button"><i class="fas fa-star"></i>Tip</a></li>
           {% endif %}
           {% endif %}
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ c.permalink  }}"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-link"></i>Permalink</a>
@@ -296,7 +301,7 @@
   <div id="reply-to-{{ c.base36id }}" class="d-none">
     
     <div id="comment-form-space-{{ c.fullname }}" class="comment-write collapsed child">
-      <form id="reply-to-t3_{{ c.base36id }}" action="/api/comment" method="post" class="input-group"> 
+      <form id="reply-to-t3_{{ c.base36id }}" action="/api/comment" method="post" class="input-group" enctype="multipart/form-data"> 
         <input type="hidden" name="formkey" value="{{ v.formkey }}"> 
         <input type="hidden" name="parent_fullname" value="{{ c.fullname }}"> 
         <input id="reply-form-submission-{{ c.fullname }}" type="hidden" name="submission" value="{{ c.post.base36id }}"> 
@@ -316,6 +321,11 @@
           <small class="format">
             <span class="font-weight-bolder text-uppercase" onclick="getGif();commentForm('reply-form-body-{{ c.fullname }}')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF">GIF</span>
           </small> 
+          <label class="format btn btn-secondary m-0{% if not v.has_premium %} d-none{% endif %}" for="file-upload-reply-{{ c.fullname }}">
+                <div id="filename-show-reply-{{ c.base36id }}"><i class="far fa-image"></i></div>
+                <input id="file-upload-reply-{{ c.fullname }}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{ c.base36id }}').innerHTML=document.getElementById('file-upload-reply-{{ c.fullname }}').files[0].name;" hidden>
+          </label>
+
           <a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{ c.base36id }}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
           <a class="btn btn-primary text-white ml-2" onclick="post_comment('{{ c.fullname }}');" href="javascript:void(0)">Comment</a> 
         </div> 
@@ -365,6 +375,9 @@
           <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
 
           {% if v and not v.id==c.author_id %}
+          <!--
+          <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#tipModal" data-content-link="{{ c.permalink }}" data-content-id="{{ c.base36id }}" data-content-type="comment" data-v-avatar="{{ v.profile_url }}" data-author-username="{{ c.author.username }}" data-author-avatar="{{ c.author.profile_url }}" class="tip-modal-button"><i class="fas fa-star"></i>Tip</a></li>
+          -->
           <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author.username if not c.author.is_deleted else '[is_deleted]' }}')" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
           {% endif %}
 

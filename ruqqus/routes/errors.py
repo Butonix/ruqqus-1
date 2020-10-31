@@ -1,11 +1,14 @@
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.session import *
+from ruqqus.classes.custom_errors import *
 from flask import *
 from urllib.parse import quote, urlencode
 import time
 from ruqqus.__main__ import app
 
 # Errors
+
+
 
 
 @app.errorhandler(401)
@@ -21,6 +24,13 @@ def error_401(e):
     else:
         return redirect(output)
 
+@app.errorhandler(PaymentRequired)
+@auth_desired
+@api()
+def error_402(e, v):
+    return{"html": lambda: (render_template('errors/402.html', v=v), 402),
+           "api": lambda: (jsonify({"error": "402 Payment Required"}), 402)
+           }
 
 @app.errorhandler(403)
 @auth_desired

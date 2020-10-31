@@ -112,6 +112,14 @@ def settings_security(v):
                            msg=request.args.get("msg") or None
                            )
 
+@app.route("/settings/premium", methods=["GET"])
+@auth_required
+def settings_premium(v):
+    return render_template("settings_premium.html",
+                           v=v,
+                           error=request.args.get("error") or None,
+                           msg=request.args.get("msg") or None
+                           )
 
 @app.route("/assets/favicon.ico", methods=["GET"])
 def favicon():

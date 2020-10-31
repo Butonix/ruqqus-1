@@ -2,6 +2,9 @@ from urllib.parse import urlparse
 import mistletoe
 from sqlalchemy import func, literal
 from bs4 import BeautifulSoup
+from werkzeug.contrib.atom import AtomFeed
+from datetime import datetime
+import secrets
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -12,11 +15,13 @@ from ruqqus.helpers.markdown import *
 from ruqqus.helpers.get import *
 from ruqqus.helpers.session import *
 from ruqqus.helpers.alerts import *
+from ruqqus.helpers.aws import *
 from ruqqus.classes import *
 from flask import *
 from ruqqus.__main__ import app, limiter
-from werkzeug.contrib.atom import AtomFeed
-from datetime import datetime
+
+
+BUCKET="i.ruqqus.com"
 
 
 @app.route("/comment/<cid>", methods=["GET"])
@@ -30,21 +35,31 @@ def comment_cid(cid, pid=None):
         abort(403)
     return redirect(comment.permalink)
 
-
-@app.route("/post/<p_id>/<anything>/<c_id>", methods=["GET"])
 @app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
+def comment_cid_api_redirect(c_id=None, p_id=None):
+    redirect(f'/api/v1/comment/<c_id>')
+
+@app.route("/api/v1/comment/<c_id>", methods=["GET"])
+@app.route("/+<boardname>/post/<p_id>/<anything>/<c_id>", methods=["GET"])
 @auth_desired
 @api("read")
-def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
+def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None):
 
     comment = get_comment(c_id, v=v)
-
+    
+    # prevent api shenanigans
+    if not p_id:
+        p_id = base36encode(comment.parent_submission)
+    
     post = get_post(p_id, v=v)
-
-    if comment.parent_submission != post.id:
-        return redirect(request.path.replace(p_id, comment.post.base36id))
-
     board = post.board
+    
+    if not boardname:
+        boardname = board.name
+    
+    # fix incorrect boardname and pid
+    if board.name != boardname or comment.parent_submission != post.id:
+        return redirect(comment.permalink)
 
     if board.is_banned and not (v and v.admin_level > 3):
         return {'html': lambda: render_template("board_banned.html",
@@ -198,11 +213,22 @@ def post_pid_comment_cid(p_id, c_id, anything=None, v=None):
             'api': lambda: top_comment.json
             }
 
+#if the guild name is missing, add it to the url and redirect
+@app.route("/post/<p_id>/<anything>/<c_id>", methods=["GET"])
+@app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
+@auth_desired
+@api("read")
+def post_pid_comment_cid_noboard(p_id, c_id, anything=None, v=None):
+    comment=get_comment(c_id, v=v)
+    
+    return redirect(comment.permalink)
+
 
 @app.route("/api/comment", methods=["POST"])
 @app.route("/api/v1/comment", methods=["POST"])
 @limiter.limit("6/minute")
 @is_not_banned
+@no_negative_balance('toast')
 @tos_agreed
 @validate_formkey
 @api("create")
@@ -362,6 +388,20 @@ def api_comment(v):
 
     g.db.add(c)
     g.db.flush()
+
+    if v.has_premium:
+        if request.files.get("file"):
+            file=request.files["file"]
+            name = f'comment/{c.base36id}/{secrets.token_urlsafe(8)}'
+            upload_file(name, file)
+
+            body = request.form.get("body") + f"\n\n![](https://{BUCKET}/{name})"
+
+            with CustomRenderer(post_id=parent_id) as renderer:
+                body_md = renderer.render(mistletoe.Document(body))
+            body_html = sanitize(body_md, linkgen=True)
+
+
 
     c_aux = CommentAux(
         id=c.id,

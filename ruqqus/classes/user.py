@@ -86,11 +86,11 @@ class User(Base, Stndrd, Age_times):
     delete_reason = Column(String(500), default='')
     filter_nsfw = Column(Boolean, default=False)
 
-    #patreon_id = Column(String(64), default=None)
-    #patreon_access_token = Column(String(128), default='')
-    #patreon_refresh_token = Column(String(128), default='')
+    coin_balance=Column(Integer, default=0)
+    premium_expires_utc=Column(Integer, default=0)
+    negative_balance_cents=Column(Integer, default=0)
+
     patreon_pledge_cents = Column(Integer, default=0)
-    #patreon_name = Column(String(64), default='')
 
     is_nofollow = Column(Boolean, default=False)
 
@@ -623,8 +623,7 @@ class User(Base, Stndrd, Age_times):
 
     @property
     def can_make_guild(self):
-        return (self.true_score >= 250 or self.created_utc <= 1592974538 and self.true_score >= 50 or (
-            self.patreon_pledge_cents and self.patreon_pledge_cents >= 500)) and len(self.boards_modded) < 10
+        return (self.has_premium or self.true_score >= 250 or (self.created_utc <= 1592974538 and self.true_score >= 50)) and len(self.boards_modded) < 10
 
     @property
     def can_join_gms(self):
@@ -643,16 +642,16 @@ class User(Base, Stndrd, Age_times):
 
     @property
     def can_submit_image(self):
-        return (self.patreon_pledge_cents and self.patreon_pledge_cents >= 500) or self.true_score >= 1000 or (
+        return self.has_premium or self.true_score >= 1000 or (
             self.created_utc <= 1592974538 and self.true_score >= 500)
 
     @property
     def can_upload_avatar(self):
-        return self.patreon_pledge_cents or self.true_score >= 300 or self.created_utc <= 1592974538
+        return self.has_premium or self.true_score >= 300 or self.created_utc <= 1592974538
 
     @property
     def can_upload_banner(self):
-        return self.patreon_pledge_cents or self.true_score >= 500 or self.created_utc <= 1592974538
+        return self.has_premium or self.true_score >= 500 or self.created_utc <= 1592974538
 
     @property
     def json(self):
@@ -790,3 +789,32 @@ class User(Base, Stndrd, Age_times):
     def applications(self):
         return [x for x in self._applications.order_by(
             OauthApp.id.asc()).all()]
+
+
+    @property
+    def has_premium(self):
+        
+        now=int(time.time())
+
+        if self.negative_balance_cents:
+            return False
+
+        elif self.premium_expires_utc > now:
+            return True
+
+        elif self.coin_balance >=1:
+            self.coin_balance -=1
+            self.premium_expires_utc = now + 60*60*24*7
+
+            g.db.add(self)
+
+            return True
+
+        else:
+            return False
+    
+    @property
+    def renew_premium_time(self):
+        return time.strftime("%d %b %Y at %H:%M:%S",
+                             time.gmtime(self.premium_expires_utc))
+    

@@ -79,6 +79,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     parent_comment = relationship("Comment", remote_side=[id])
     child_comments = relationship("Comment", remote_side=[parent_comment_id])
 
+    awards = relationship("AwardRelationship", lazy="joined")
+
     # These are virtual properties handled as postgres functions server-side
     # There is no difference to SQLAlchemy, but they cannot be written to
     ups = deferred(Column(Integer, server_default=FetchedValue()))
@@ -255,16 +257,14 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             data= {
                 'id': self.base36id,
                 'fullname': self.fullname,
-                'post': self.post.base36id,
+                'post': self.post.json,
                 'level': self.level,
-                'parent': self.parent_fullname,
-                'author': self.author.username if not self.author.is_deleted else None,
+                'parent_id': self.parent.id if not self.parent_fullname.startswith('t2') else None,
+                'author': self.author.json if not self.author.is_deleted else None,
                 'body': self.body,
                 'body_html': self.body_html,
                 'is_archived': self.is_archived,
                 'is_bot': self.is_bot,
-                'title': self.title.json if self.title else None,
-                'guild_name': self.board.name,
                 'created_utc': self.created_utc,
                 'edited_utc': self.edited_utc or 0,
                 'is_banned': False,
@@ -275,7 +275,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'permalink': self.permalink,
                 'score': self.score_fuzzed,
                 'upvotes': self.upvotes_fuzzed,
-                'downvotes': self.downvotes_fuzzed
+                'downvotes': self.downvotes_fuzzed,
+                'award_count': self.award_count
                 }
 
         if "replies" in self.__dict__:
@@ -349,6 +350,11 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def flag_count(self):
         return len(self.flags)
+
+    @property
+    def award_count(self):
+        return len(self.awards)
+    
 
 
 class Notification(Base):

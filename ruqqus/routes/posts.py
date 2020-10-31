@@ -49,19 +49,21 @@ def incoming_post_shortlink(base36id=None):
     post = get_post(base36id)
     return redirect(post.permalink)
 
-
-@app.route("/post/<base36id>", methods=["GET"])
-@app.route("/post/<base36id>/", methods=["GET"])
-@app.route("/post/<base36id>/<anything>", methods=["GET"])
+@app.route("/+<boardname>/post/<base36id>", methods=["GET"])
+@app.route("/+<boardname>/post/<base36id>/", methods=["GET"])
+@app.route("/+<boardname>/post/<base36id>/<anything>", methods=["GET"])
 @auth_desired
 @api("read")
-def post_base36id(base36id, anything=None, v=None):
-
+def post_base36id(boardname, base36id, anything=None, v=None):
+    
     post = get_post_with_comments(
         base36id, v=v, sort_type=request.args.get(
             "sort", "top"))
 
     board = post.board
+    #if the guild name is incorrect, fix the link and redirect
+    if not boardname == board.name:
+        return redirect(post.permalink)
 
     if board.is_banned and not (v and v.admin_level > 3):
         return render_template("board_banned.html",
@@ -79,16 +81,29 @@ def post_base36id(base36id, anything=None, v=None):
                                ),
                 "api":lambda:(jsonify({"error":"Must be 18+ to view"}), 451)
                 }
-
+        
     return {
         "html":lambda:post.rendered_page(v=v),
         "api":lambda:jsonify({"data":post.json})
         }
 
+#if the guild name is missing from the url, add it and redirect
+@app.route("/post/<base36id>", methods=["GET"])
+@app.route("/post/<base36id>/", methods=["GET"])
+@app.route("/post/<base36id>/<anything>", methods=["GET"])
+@auth_desired
+@api("read")
+def post_base36id_noboard(base36id, anything=None, v=None):
+    
+    post=get_post_with_comments(base36id, v=v, sort_type=request.args.get("sort","top"))
+
+    #board=post.board
+    return redirect(post.permalink)
 
 
 @app.route("/submit", methods=["GET"])
 @is_not_banned
+@no_negative_balance("html")
 def submit_get(v):
 
     board = request.args.get("guild", "general")
@@ -104,6 +119,7 @@ def submit_get(v):
 
 @app.route("/edit_post/<pid>", methods=["POST"])
 @is_not_banned
+@no_negative_balance("html")
 @validate_formkey
 def edit_post(pid, v):
 
@@ -140,6 +156,7 @@ def edit_post(pid, v):
 @app.route("/api/submit/title", methods=['GET'])
 @limiter.limit("3/minute")
 @is_not_banned
+@no_negative_balance("html")
 #@tos_agreed
 #@validate_formkey
 def get_post_title(v):
@@ -173,6 +190,7 @@ def get_post_title(v):
 @app.route("/api/v1/submit", methods=["POST"])
 @limiter.limit("6/minute")
 @is_not_banned
+@no_negative_balance('html')
 @tos_agreed
 @validate_formkey
 @api("create")
