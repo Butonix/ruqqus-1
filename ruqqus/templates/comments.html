@@ -371,6 +371,7 @@
           <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
 
           {% if v and not v.id==c.author_id %}
+          <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#tipModal" data-content-link="{{ p.permalink }}" data-content-id="{{ p.base36id }}" data-content-type="post" data-v-avatar="{{ v.profile_url }}" data-author-username="{{ p.author.username }}" data-author-avatar="{{ p.author.profile_url }}" class="tip-modal-button"><i class="fas fa-star"></i>Tip Post</a></li>
           <li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{ c.base36id }}','{{ c.author.username if not c.author.is_deleted else '[is_deleted]' }}')" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
           {% endif %}
 
