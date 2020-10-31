@@ -277,7 +277,7 @@ def gift_comment_pid(cid, v):
     #create record - uniqe prevents duplicates
     new_rel = AwardRelationship(
         user_id=v.id,
-        submission_id=post.id
+        comment_id=comment.id
         )
     try:
         g.db.add(new_rel)
