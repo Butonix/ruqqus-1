@@ -4,7 +4,7 @@ import time
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
 
-from ruqqus.__main__ import Base
+from ruqqus.__main__ import Base, app
 
 PAYPAL_ID=environ.get("PAYPAL_CLIENT_ID", "").rstrip()
 PAYPAL_SECRET=environ.get("PAYPAL_CLIENT_SECRET", "").rstrip()
@@ -93,7 +93,7 @@ class PayPalClient():
 				}
 			],
 			"application_context":{
-				"return_url":f"https://ruqqus.com/shop/buy_coins_completed"
+				"return_url":f"https://{app.config['SERVER_NAME']}/shop/buy_coins_completed"
 			}
 		}
 
