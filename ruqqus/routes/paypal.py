@@ -206,7 +206,7 @@ def gift_post_pid(pid, v):
     g.db.add(u)
 
     if not g.db.query(AwardRelationship).filter_by(user_id=v.id, submission_id=post.id).first():
-        send_notification(u, f"@{v.username} liked [your post]({post.permalink}) and has given you a Coin!")
+        send_notification(u, f"Someone liked [your post]({post.permalink}) and has given you a Coin!")
 
     g.db.commit()
 
@@ -270,7 +270,7 @@ def gift_comment_pid(cid, v):
     g.db.add(u)
 
     if not g.db.query(AwardRelationship).filter_by(user_id=v.id, comment_id=comment.id).first():
-        send_notification(u, f"@{v.username} liked [your comment]({comment.permalink}) and has given you a Coin!")
+        send_notification(u, f"Someone liked [your comment]({comment.permalink}) and has given you a Coin!")
 
     g.db.commit()
 
