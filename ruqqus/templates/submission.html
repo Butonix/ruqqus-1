@@ -618,7 +618,7 @@
           <small class="format"><span class="font-weight-bolder text-uppercase" onclick="getGif();commentForm('reply-form-body-{{ p.fullname }}')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Add GIF">GIF</span></small> 
           <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
           <label class="format btn btn-secondary m-0{% if not v.has_premium %} d-none{% endif %}" for="file-upload-reply-{{ p.fullname }}">
-                <div id="filename-show-reply-{{ p.base36id }}">Select Image</div>
+                <div id="filename-show-reply-{{ p.base36id }}"><i class="far fa-image"></i></div>
                 <input id="file-upload-reply-{{ p.fullname }}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{ p.base36id }}').innerHTML=document.getElementById('file-upload-reply-{{ p.fullname }}').files[0].name;" hidden>
           </label>
           <a href="javascript:void(0)" form="reply-to-{{ p.fullname }}" class="btn btn-primary text-whitebtn ml-auto" onclick="post_comment('{{ p.fullname }}')">Comment</a>
