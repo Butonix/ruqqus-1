@@ -556,23 +556,6 @@ def mod_bid_settings_optout(bid, board, v):
     return "", 204
 
 
-@app.route("/mod/<bid>/settings/downdisable", methods=["POST"])
-@auth_required
-@is_guildmaster
-@validate_formkey
-def mod_bid_settings_downdisable(bid, board, v):
-
-    # disable downvoting
-    board.downvotes_disabled = bool(
-        request.form.get(
-            "downdisable",
-            False) == 'true')
-
-    g.db.add(board)
-
-    return "", 204
-
-
 @app.route("/mod/<bid>/settings/restricted", methods=["POST"])
 @auth_required
 @is_guildmaster
