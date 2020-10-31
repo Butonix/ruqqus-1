@@ -167,6 +167,9 @@ def gift_post_pid(pid, v):
 
     post=get_post(pid, v=v)
 
+    if post.author_id==v.id:
+        return jsonify({"error":"You can't give awards to yourself."}), 403   
+
     if post.is_deleted:
         return jsonify({"error":"You can't give awards to deleted posts"}), 403
 
@@ -228,6 +231,9 @@ def gift_comment_pid(cid, v):
 
     comment=get_comment(cid, v=v)
 
+    if comment.author_id==v.id:
+        return jsonify({"error":"You can't give awards to yourself."}), 403      
+
     if comment.is_deleted:
         return jsonify({"error":"You can't give awards to deleted posts"}), 403
 
@@ -271,7 +277,7 @@ def gift_comment_pid(cid, v):
     #create record - uniqe prevents duplicates
     new_rel = AwardRelationship(
         user_id=v.id,
-        submission_id=post.id
+        comment_id=comment.id
         )
     try:
         g.db.add(new_rel)
