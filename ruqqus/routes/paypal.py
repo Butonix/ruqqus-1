@@ -167,7 +167,7 @@ def gift_post_pid(pid, v):
 
     post=get_post(pid, v=v)
 
-    if p.author_id==v.id:
+    if post.author_id==v.id:
         return jsonify({"error":"You can't give awards to yourself."}), 403   
 
     if post.is_deleted:
@@ -231,7 +231,7 @@ def gift_comment_pid(cid, v):
 
     comment=get_comment(cid, v=v)
 
-    if c.author_id==v.id:
+    if comment.author_id==v.id:
         return jsonify({"error":"You can't give awards to yourself."}), 403      
 
     if comment.is_deleted:
