@@ -275,7 +275,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'permalink': self.permalink,
                 'score': self.score_fuzzed,
                 'upvotes': self.upvotes_fuzzed,
-                'downvotes': self.downvotes_fuzzed
+                'downvotes': self.downvotes_fuzzed,
+                'award_count': self.award_count
                 }
 
         if "replies" in self.__dict__:
