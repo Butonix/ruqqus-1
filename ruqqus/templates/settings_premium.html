@@ -35,7 +35,12 @@
             </div>
           </div>
                 {% else %}
+
           <h2 id="ruqqus-premium" class="h5">Ruqqus Premium</h2>
+
+          {% if request.args.get('msg')=="success" %}
+          <p>Your purchase was successful. A receipt will be emailed to you from Paypal.</p>
+          {% endif %}
 
           <div class="settings-section rounded">
             <div class="d-lg-flex border-bottom">

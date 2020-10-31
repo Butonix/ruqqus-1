@@ -108,7 +108,7 @@ def shop_buy_coins_completed(v):
 
     g.db.add(v)
 
-    return redirect("/settings/premium")
+    return redirect("/settings/premium?msg=success")
 
 @app.route("/shop/paypal_webhook")
 def paypal_webhook_handler():
