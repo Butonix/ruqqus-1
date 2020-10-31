@@ -91,7 +91,10 @@ class PayPalClient():
 					"value": str(txn.usd_cents/100)
 					}
 				}
-			]
+			],
+			"application_context":{
+				"return_url":f"https://ruqqus.com/shop/buy_coins_completed"
+			}
 		}
 
 		r=self._post(url, data=data)
