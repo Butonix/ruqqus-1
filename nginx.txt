@@ -38,6 +38,12 @@ server {
         return 404;
     }
 
+    error 502 /error/502
+
+    location /error {
+        root ~/ruqqus/ruqqus/templates/errors
+    }
+
     location / {
         proxy_pass http://127.0.0.1:5000;
     }
