@@ -25,21 +25,10 @@
 
 	<!-- Ruqqus CSS -->
 	
-	
-
-	
 	<link id="css-link" rel="stylesheet" href="/assets/style/main.css">
 	
-
-	
-
 	<!-- Font Awesome -->
-	<link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
-
-	
-	
-
-	
+	<link href="https://fa.ruqqus.com/assets/fontawesome/css/all.css" rel="stylesheet">
 
 </head>
 
@@ -77,24 +66,10 @@
 
 	<!-- Page Content -->
 
-	
-	
-
-	
-	
-
 	<div class="container">
 		<div class="row justify-content-around" id="main-content-row">
 
 			<div class="col h-100 custom-gutters mt-0 mt-md-3" id="main-content-col">
-
-				
-				
-
-				
-				
-
-				
 <div class="row justify-content-center">
 	<div class="col-10">
 		<div class="text-center px-3">
@@ -104,14 +79,10 @@
 			</span>
 			<h1 class="h5">503 Service Unavailable</h1>
 			<p class="text-muted">Ruqqus is currently down. Please try again later.</p>
-            <p class="text-muted">The servers are getting hugged to death, and we are working on fixing that.</p>
-
-			<p class="text-muted">In the meantime, why not <a href="https://discord.gg/uMu6MC3" target="_blank">join our Discord server</a>? You can also help us run more server infrastructure by <a href="/help/donate" target="_blank">donating</a>.</p>
+			<p class="text-muted">In the meantime, why not <a href="https://discord.gg/uMu6MC3" target="_blank">join our Discord server</a>?</p>
 			<button class="btn btn-primary" onclick="window.top.location.reload()">
 			 	Refresh
 			</button>
-			<p>We also run development livestreams; if there's one going on it will be shown below.</p>
-<iframe src="https://player.twitch.tv/?channel=captainmeta4&parent=ruqqus.com&parent=docs.ruqqus.com" height="691" width="716" frameborder="0" scrolling="false" allowfullscreen="true">
 		</div>
 	</div>
 </div>
@@ -121,8 +92,6 @@
 				
 
 			</div>
-
-			<!-- Right Sidebar (hidden on devices smaller than "large") -->
 
 			
 		</div>
@@ -159,33 +128,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous" type="37cef32129ec2b1bc32e9226-text/javascript"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous" type="37cef32129ec2b1bc32e9226-text/javascript"></script>
 
-<script src="/assets/js/collapse.js" type="37cef32129ec2b1bc32e9226-text/javascript"></script>
-<script src="/assets/js/comment_form.js" type="37cef32129ec2b1bc32e9226-text/javascript"></script>
-
-
-
-<!-- ClipboardJS -->
-
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" type="37cef32129ec2b1bc32e9226-text/javascript"></script>
-
-<!-- Instantiate clipboard by passing a string selector -->
-<script type="37cef32129ec2b1bc32e9226-text/javascript">
-	var clipboard = new ClipboardJS('.copy-link');
-	clipboard.on('success', function(e) {
-
-		jQuery(function($) {
-			$('#toast-success').toast('show');
-		})
-		console.log(e);
-	});
-	clipboard.on('error', function(e) {
-
-		jQuery(function($) {
-			$('#toast-error').toast('show');
-		})
-		console.log(e);
-	});
-</script>
 
 <!-- Initialize BS 4 tool tips -->
 
