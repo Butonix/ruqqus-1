@@ -559,11 +559,15 @@ def submit_post(v):
     g.db.add(vote)
     g.db.flush()
 
-    g.db.commit()
     g.db.refresh(new_post)
 
     # check for uploaded image
     if request.files.get('file'):
+
+        #check file size
+        if request.content_length > 16 * 1024 * 1024 and not v.has_premium:
+            g.db.rollback()
+            abort(413)
 
         file = request.files['file']
 
@@ -578,7 +582,8 @@ def submit_post(v):
         new_post.is_image = True
         new_post.domain_ref = 1  # id of i.ruqqus.com domain
         g.db.add(new_post)
-        g.db.commit()
+    
+    g.db.commit()
 
     # spin off thumbnail generation and csam detection as  new threads
     if new_post.url or request.files.get('file'):

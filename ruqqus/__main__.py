@@ -27,7 +27,7 @@ from redis import BlockingConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.21.0"
+_version = "2.21.1"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -52,7 +52,7 @@ app.config["SERVER_NAME"] = environ.get(
         "SERVER_NAME", None)).rstrip()
 app.config["SESSION_COOKIE_NAME"] = "session_ruqqus"
 app.config["VERSION"] = _version
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024
 app.config["SESSION_COOKIE_SECURE"] = environ.get(
     "SESSION_COOKIE_SECURE", "true").lower() != "false"
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
