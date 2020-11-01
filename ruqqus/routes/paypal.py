@@ -156,6 +156,11 @@ def paypal_webhook_handler():
 
         amount_cents=int(float(data["resource"]["amount"]["value"])*100)
 
+    #increase to cover extra round of paypal fees
+    amount_cents += 30
+    amount_cents /= (1-0.029)
+    amount_cents = int(amount_cents)
+
     txn.user.negative_balance_cents+=amount_cents
 
     txn.status=-2
