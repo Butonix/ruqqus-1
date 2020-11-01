@@ -211,6 +211,7 @@ def participation_stats(v):
             "private_users": g.db.query(User).filter_by(is_deleted=False, is_private=False).filter(User.is_banned > 0, or_(User.unban_utc > now, User.unban_utc == 0)).count(),
             "banned_users": g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).count(),
             "deleted_users": g.db.query(User).filter_by(is_deleted=True).count(),
+            "locked_negative_users": g.db.query(User).filter(User.negative_balance_cents>0).count()
             "total_posts": g.db.query(Submission).count(),
             "posting_users": g.db.query(Submission.author_id).distinct().count(),
             "listed_posts": g.db.query(Submission).filter_by(is_banned=False, is_deleted=False).count(),
@@ -230,7 +231,8 @@ def participation_stats(v):
             "comment_voting_users": g.db.query(CommentVote.user_id).distinct().count(),
             "coins_redeemed_last_24_hrs": g.db.query(User).filter(User.premium_expires_utc>now+60*60*24*6).count(),
             "coins_redeemed_last_week": g.db.query(User).filter(User.premium_expires_utc>now).count(),
-            "coins_in_circulation": g.db.query(func.sum(User.coin_balance)).filter(User.is_deleted==False, or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc>0))).scalar()
+            "coins_in_circulation": g.db.query(func.sum(User.coin_balance)).filter(User.is_deleted==False, or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc>0))).scalar(),
+            "receivables_outstanding_cents": g.db.query(func.sum(User.negative_balance_cents)).filter(User.is_deleted==False, or_(User.is_banned == 0, and_(User.is_banned > 0, User.unban_utc > 0))).scalar()
             }
 
     data = {x: f"{data[x]:,}" for x in data}
