@@ -40,7 +40,7 @@ server {
 
     error_page 502 /error_page/502.html;
     location = /error_page/ {
-        alias ~/ruqqus/ruqqus/templates/errors/;
+        alias /home/ubuntu/ruqqus/ruqqus/templates/errors/;
     }
 
 
