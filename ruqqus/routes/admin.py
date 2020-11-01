@@ -1,5 +1,6 @@
 from urllib.parse import urlparse
 import time
+from sqlalchemy import func
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.alerts import *
@@ -226,7 +227,10 @@ def participation_stats(v):
             "post_votes": g.db.query(Vote).count(),
             "post_voting_users": g.db.query(Vote.user_id).distinct().count(),
             "comment_votes": g.db.query(CommentVote).count(),
-            "comment_voting_users": g.db.query(CommentVote.user_id).distinct().count()
+            "comment_voting_users": g.db.query(CommentVote.user_id).distinct().count(),
+            "coins_redeemed_last_24_hrs": g.db.query(User).filter(Userpremium_expires_utc>now+60*60*24*6).count(),
+            "coins_redeemed_last_week": g.db.query(User).filter(Userpremium_expires_utc>now).count(),
+            "coins_in_circulation": g.db.query(func.sum(User.coin_balance)).filter(User.is_deleted==False, or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc>0))).scalar()
             }
 
     data = {x: f"{data[x]:,}" for x in data}
