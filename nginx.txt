@@ -38,7 +38,11 @@ server {
         return 404;
     }
 
-    error_page 502 ~/ruqqus/ruqqus/templates/errors/502.html;
+    error_page 502 /error_page/502.html;
+    location = /error_page/502.html {
+        alias ~/ruqqus/ruqqus/templates/errors/502.html
+    }
+
 
     location / {
         proxy_pass http://127.0.0.1:5000;
