@@ -275,7 +275,7 @@
         <ul class="list-group post-actions">
           <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
           {% if v and not v.id==p.author_id %}
-          <button class="btn btn-link btn-block btn-lg text-left text-warning tip-modal-button" data-dismiss="modal" data-toggle="modal" data-target="#tipModal" data-content-link="{{ p.permalink }}" data-content-id="{{ p.base36id }}" data-content-type="post" data-v-avatar="{{ v.profile_url }}" data-author-username="{{ p.author.username }}" data-author-avatar="{{ p.author.profile_url }}"><i class="far fa-star text-center text-warning mr-3"></i>Tip</button>
+          <button class="btn btn-link btn-block btn-lg text-left text-warning tip-modal-button" data-dismiss="modal" data-toggle="modal" data-target="#tipModal" onclick="tipModal2('{{ p.base36id }}','post','{{ p.permalink }}','{{ p.author.username }}','{{ p.author.profile_url }}')"><i class="far fa-star text-center text-warning mr-3"></i>Tip</button>
           <button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{ p.base36id }}','{{ '@'+p.author.username if not p.author.is_deleted else '[deleted account]'}}','{{ p.board.name }}')" class="d-block"><i class="far fa-flag text-center text-muted mr-3"></i>Flag</button>
           {% endif %}
           {% if v and v.id==p.author_id %}
@@ -415,7 +415,7 @@
                     <li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link }}"><i class="fas fa-copy"></i>Copy link</a></li>
 
                     {% if v and not v.id==p.author_id %}
-                    <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#tipModal" data-content-link="{{ p.permalink }}" data-content-id="{{ p.base36id }}" data-content-type="post" data-v-avatar="{{ v.profile_url }}" data-author-username ="{{ p.author.username }}" data-author-avatar="{{ p.author.profile_url }}" class="tip-modal-button"><i class="fas fa-star"></i>Tip</a></li>
+                    <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#tipModal" onclick="tipModal2('{{ c.base36id }}','comment','{{ c.permalink }}','{{ c.author.username }}','{{ c.author.profile_url }}')"><i class="fas fa-star"></i>Tip</a></li>
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{ p.base36id }}', '{{ p.author.username }}','{{ p.board.name }}')"><i class="fas fa-flag"></i>Flag</a></li>
                     {% endif %}
 

@@ -1882,6 +1882,26 @@ var tipModal = function(event) {
   console.log(senderPFP, recipientPFP, id, content, link, recipient)
 }
 
+
+var tipModal2 = function(id, content, link, recipient, recipientPFP) {
+  console.log('opened modal, tipModal2 function triggered')
+
+  document.getElementById('tip-recipient-pfp').src = recipientPFP;
+
+  document.getElementById("tip-content-type").innerText = content
+  document.getElementById("tip-recipient-username").innerText = recipient
+
+  document.getElementById("sendTipButton").onclick = function() {
+    post_toast('/gift_'+ content +'/' + id + '?coins=1',
+      callback = function() {
+        location.href = link
+      }
+      )
+  }
+
+  console.log(senderPFP, recipientPFP, id, content, link, recipient)
+}
+
 var tipModalButtons = document.getElementsByClassName('tip-modal-button')
 
 for (var i = 0; i < tipModalButtons.length; i++) {
