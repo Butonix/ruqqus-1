@@ -195,5 +195,5 @@ def allow_nsfl_logged_out(bid, v):
 def error_all_preview(eid, v):
 
      eid=int(eid)
-     return render_template(f"error/{eid}.html", v=v)
+     return render_template(f"errors/{eid}.html", v=v)
 
