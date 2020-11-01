@@ -192,7 +192,7 @@ def allow_nsfl_logged_out(bid, v):
 
 @app.route("/error/<eid>", methods=["GET"])
 @auth_desired
-def error_all_preview(eid, v)
+def error_all_preview(eid, v):
 
      eid=int(eid)
      try:
