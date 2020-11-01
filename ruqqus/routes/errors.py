@@ -188,3 +188,12 @@ def allow_nsfl_logged_out(bid, v):
     session["show_nsfl"][bid] = cutoff
 
     return redirect(request.form.get("redir"))
+
+
+@app.route("/error/<eid>", methods=["GET"])
+@auth_desired
+def error_all_preview(eid, v)
+
+     eid=int(eid)
+     try:
+          return render_template(f"/error/{eid}.html", v=v)
