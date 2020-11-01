@@ -624,9 +624,6 @@
                 <div id="filename-show-reply-{{ p.base36id }}"><i class="far fa-image"></i></div>
                 <input id="file-upload-reply-{{ p.fullname }}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{ p.base36id }}').innerHTML=document.getElementById('file-upload-reply-{{ p.fullname }}').files[0].name;" hidden>
           </label>
-          <div id="filename-show-reply-{{ p.base36id }}"><i class="far fa-image"></i></div>
-          <input id="file-upload-reply-{{ p.fullname }}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{ p.base36id }}').innerHTML=document.getElementById('file-upload-reply-{{ p.fullname }}').files[0].name;" hidden>
-        </label>
         <a href="javascript:void(0)" form="reply-to-{{ p.fullname }}" class="btn btn-primary text-whitebtn ml-auto" onclick="post_comment('{{ p.fullname }}')">Comment</a>
       </div>
     </form>
