@@ -194,7 +194,7 @@
           </li>
           {% endif %}
           {% if not v.id==c.author_id %}
-          <li class="list-inline-item text-muted"><a href="javascript:void(0)" data-toggle="modal" data-target="#tipModal" data-content-link="{{ c.permalink }}" data-content-id="{{ c.base36id }}" data-content-type="comment" data-v-avatar="{{ v.profile_url }}" data-author-username ="{{ c.author.username }}" data-author-avatar="{{ c.author.profile_url }}" class="tip-modal-button"><i class="fas fa-star"></i><span class="d-none d-md-inline-block">Tip</span></a></li>
+          <li class="list-inline-item text-muted"><a href="javascript:void(0)" data-toggle="modal" data-target="#tipModal" data-content-link="{{ c.permalink }}" data-content-id="{{ c.base36id }}" data-content-type="comment" data-v-avatar="{{ v.profile_url }}" data-author-username ="{{ c.author.username }}" data-author-avatar="{{ c.author.profile_url }}" class="tip-modal-button"><i class="fas fa-star"></i>Tip</a></li>
           {% endif %}
           {% endif %}
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ c.permalink  }}"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-link"></i>Permalink</a>
