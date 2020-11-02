@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 import secrets
+import threading
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -403,6 +404,10 @@ def api_comment(v):
             with CustomRenderer(post_id=parent_id) as renderer:
                 body_md = renderer.render(mistletoe.Document(body))
             body_html = sanitize(body_md, linkgen=True)
+            
+            #csam detection
+            csam_thread=threading.Thread(check_csam_url, args=(f"https://{BUCKET}/{name}", v, lambda:delete_file(name)))
+            csam_thread.start()
 
 
 
