@@ -406,7 +406,18 @@ def api_comment(v):
             body_html = sanitize(body_md, linkgen=True)
             
             #csam detection
-            csam_thread=threading.Thread(check_csam_url, args=(f"https://{BUCKET}/{name}", v, lambda:delete_file(name)))
+            def del_function():
+                delete_file(name)
+                c.is_banned=True
+                g.db.add(c)
+                g.db.commit()
+                
+            csam_thread=threading.Thread(target=check_csam_url, 
+                                         args=(f"https://{BUCKET}/{name}", 
+                                               v, 
+                                               del_function
+                                              )
+                                        )
             csam_thread.start()
 
 
