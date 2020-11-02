@@ -570,6 +570,17 @@ def submit_post(v):
             abort(413)
 
         file = request.files['file']
+        if not file.content_type.startswith('image/'):
+            return {"html": lambda: (render_template("submit.html",
+                                                         v=v,
+                                                         error=f"Image files only.",
+                                                         title=title,
+                                                         body=request.form.get(
+                                                             "body", ""),
+                                                         b=board
+                                                         ), 400),
+                        "api": lambda: ({"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}, 400)
+                        }
 
         name = f'post/{new_post.base36id}/{secrets.token_urlsafe(8)}'
         upload_file(name, file)
