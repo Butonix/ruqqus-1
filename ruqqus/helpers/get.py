@@ -526,10 +526,12 @@ def get_from_permalink(link, v=None):
 
     if "+" in link:
 
-        name = re.search("/\+(\w+)", link).match(1)
+        x = re.search("/\+(\w+)$", link)
+        if x:
+            name=x.match(1)
         return get_guild(name)
 
-    ids = re.search("://[^/]+/post/(\w+)/[^/]+(/(\w+))?", link)
+    ids = re.search("://[^/]+/\+\w+/post/(\w+)/[^/]+(/(\w+))?", link)
 
     post_id = ids.group(1)
     comment_id = ids.group(3)
