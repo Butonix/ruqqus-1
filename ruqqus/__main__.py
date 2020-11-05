@@ -184,7 +184,7 @@ class RetryingQuery(_Query):
                     raise
                 self.session.rollback()
 
-            except InternalError:
+            except:
 
                 self.session.rollback()
 
