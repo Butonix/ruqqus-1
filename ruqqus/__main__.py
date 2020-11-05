@@ -15,7 +15,7 @@ from time import sleep
 
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.ext import OperationalError, StatementError
+from sqlalchemy.exc import OperationalError, StatementError
 from sqlalchemy.orm import Session, sessionmaker, scoped_session, Query as _Query
 from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
