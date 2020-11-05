@@ -15,7 +15,7 @@ from time import sleep
 
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.exc import OperationalError, StatementError
+from sqlalchemy.exc import OperationalError, StatementError, InternalError
 from sqlalchemy.orm import Session, sessionmaker, scoped_session, Query as _Query
 from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
@@ -182,6 +182,10 @@ class RetryingQuery(_Query):
             except StatementError as ex:
                 if "reconnect until invalid transaction is rolled back" not in str(ex):
                     raise
+                self.session.rollback()
+
+            except InternalError:
+
                 self.session.rollback()
 
 
