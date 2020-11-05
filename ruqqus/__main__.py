@@ -15,7 +15,8 @@ from time import sleep
 
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, sessionmaker, scoped_session
+from sqlalchemy.ext import OperationalError, StatementError
+from sqlalchemy.orm import Session, sessionmaker, scoped_session, Query as _Query
 from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
 import threading
@@ -137,6 +138,8 @@ engines = {
 }
 
 
+#These two classes monkey patch sqlalchemy
+
 class RoutingSession(Session):
     def get_bind(self, mapper=None, clause=None):
         try:
@@ -150,8 +153,39 @@ class RoutingSession(Session):
             else:
                 return random.choice(engines['followers'])
 
+class RetryingQuery(_Query):
+    __max_retry_count__ = 3
 
-db_session = scoped_session(sessionmaker(class_=RoutingSession))
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def __iter__(self):
+        attempts = 0
+        while True:
+            attempts += 1
+            try:
+                return super().__iter__()
+            except OperationalError as ex:
+                if "server closed the connection unexpectedly" not in str(ex):
+                    raise
+                if attempts <= self.__max_retry_count__:
+                    sleep_for = 2 ** (attempts - 1)
+             #       logging.error(
+             #           "/!\ Database connection error: retrying Strategy => sleeping for {}s"
+             #       " and will retry (attempt #{} of {}) \n Detailed query impacted: {}".format(
+             #           sleep_for, attempts, self.__max_retry_count__, ex)
+             #   )
+                    sleep(sleep_for)
+                    continue
+                else:
+                    raise
+            except StatementError as ex:
+                if "reconnect until invalid transaction is rolled back" not in str(ex):
+                    raise
+                self.session.rollback()
+
+
+db_session = scoped_session(sessionmaker(class_=RoutingSession, query_cls=RetryingQuery))
 # db_session=scoped_session(sessionmaker(bind=engines["leader"]))
 
 Base = declarative_base()
