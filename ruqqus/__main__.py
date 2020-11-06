@@ -157,17 +157,18 @@ class RoutingSession(Session):
 def retry(f):
     def wrapper(self, *args, **kwargs):
         i=0
-        while i<=3:
+        while i<=5:
             i+=1
 
             try:
                 return f(self, *args, **kwargs)
 
-            except OperationalError:
-                sleep(2**i)
+            #except OperationalError:
+            #    sleep(2**i)
 
             except:
                 self.session.rollback()
+                self.session.close()
                 sleep(2**i)
 
         abort(500)
@@ -176,7 +177,6 @@ def retry(f):
 
 
 class RetryingQuery(_Query):
-    __max_retry_count__ = 3
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -200,7 +200,7 @@ class RetryingQuery(_Query):
 
 
 
-db_session = scoped_session(sessionmaker(class_=RoutingSession)) #, query_cls=RetryingQuery))
+db_session = scoped_session(sessionmaker(class_=RoutingSession, query_cls=RetryingQuery))
 # db_session=scoped_session(sessionmaker(bind=engines["leader"]))
 
 Base = declarative_base()
