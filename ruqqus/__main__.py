@@ -153,25 +153,7 @@ class RoutingSession(Session):
             else:
                 return random.choice(engines['followers'])
 
-def retry(f):
-    def wrapper(*args, **kwargs):
-        i=0
-        while i<=3
-            i+=1
 
-            try:
-                return f(*args, **kwargs)
-
-            except OperationalError:
-                sleep(2**i)
-
-            except:
-                self.session.rollback()
-
-        abort(500)
-
-    wrapper.__name__=f.__name__
-    return wrapper
 
 class RetryingQuery(_Query):
     __max_retry_count__ = 3
@@ -179,19 +161,39 @@ class RetryingQuery(_Query):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    @retry
+    def retry(f):
+        def wrapper(*args, **kwargs):
+            i=0
+            while i<=3
+                i+=1
+
+                try:
+                    return f(*args, **kwargs)
+
+                except OperationalError:
+                    sleep(2**i)
+
+                except:
+                    self.session.rollback()
+
+            abort(500)
+
+    wrapper.__name__=f.__name__
+    return wrapper
+
+    @self.retry
     def all(self):
         return super().all()
 
-    @retry
+    @self.retry
     def count(self):
         return super().count()
 
-    @retry
+    @self.retry
     def first(self):
         return super().firszt()
 
-    @retry
+    @self.retry
     def distinct(self):
         return super().distict()
 
