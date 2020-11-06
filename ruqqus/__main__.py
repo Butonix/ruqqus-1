@@ -179,19 +179,19 @@ class RetryingQuery(_Query):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    @self.retry
+    @retry
     def all(self):
         return super().all()
 
-    @self.retry
+    @retry
     def count(self):
         return super().count()
 
-    @self.retry
+    @retry
     def first(self):
         return super().firszt()
 
-    @self.retry
+    @retry
     def distinct(self):
         return super().distict()
 
