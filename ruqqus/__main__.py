@@ -193,10 +193,6 @@ class RetryingQuery(_Query):
     def first(self):
         return super().first()
 
-    @retry
-    def distinct(self):
-        return super().distict()
-
 
 
 
