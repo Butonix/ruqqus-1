@@ -355,6 +355,7 @@ def update_announcement(v):
 
 @app.route("/settings/delete_account", methods=["POST"])
 @is_not_banned
+@no_negative_balance("html")
 @validate_formkey
 def delete_account(v):
 
