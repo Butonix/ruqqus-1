@@ -155,8 +155,6 @@ class RoutingSession(Session):
 
 
 
-    wrapper.__name__=f.__name__
-    return wrapper
 
 class RetryingQuery(_Query):
     __max_retry_count__ = 3
@@ -180,6 +178,8 @@ class RetryingQuery(_Query):
                     self.session.rollback()
 
             abort(500)
+        wrapper.__name__=f.__name__
+        return wrapper
 
     @retry
     def all(self):
