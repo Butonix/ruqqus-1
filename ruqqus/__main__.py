@@ -168,6 +168,7 @@ def retry(f):
 
             except:
                 self.session.rollback()
+                sleep(2**i)
 
         abort(500)
     wrapper.__name__=f.__name__
@@ -199,7 +200,7 @@ class RetryingQuery(_Query):
 
 
 
-db_session = scoped_session(sessionmaker(class_=RoutingSession, query_cls=RetryingQuery))
+db_session = scoped_session(sessionmaker(class_=RoutingSession)) #, query_cls=RetryingQuery))
 # db_session=scoped_session(sessionmaker(bind=engines["leader"]))
 
 Base = declarative_base()
