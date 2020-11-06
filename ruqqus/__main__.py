@@ -178,8 +178,8 @@ class RetryingQuery(_Query):
 
             abort(500)
 
-    wrapper.__name__=f.__name__
-    return wrapper
+        wrapper.__name__=f.__name__
+        return wrapper
 
     @self.retry
     def all(self):
