@@ -154,24 +154,7 @@ class RoutingSession(Session):
                 return random.choice(engines['followers'])
 
 
-def retry(f):
-    def wrapper(self, *args, **kwargs):
-        i=0
-        while i<=3:
-            i+=1
 
-            try:
-                return f(self, *args, **kwargs)
-
-            except OperationalError:
-                sleep(2**i)
-
-            except:
-                self.session.rollback()
-
-        abort(500)
-    wrapper.__name__=f.__name__
-    return wrapper
 
 
 class RetryingQuery(_Query):
@@ -179,6 +162,26 @@ class RetryingQuery(_Query):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def retry(f):
+        def wrapper(self, *args, **kwargs):
+            i=0
+            while i<=3:
+                i+=1
+
+                try:
+                    return f(self, *args, **kwargs)
+
+                except OperationalError:
+                    sleep(2**i)
+
+                except:
+                    self.session.rollback()
+
+            return f(self, *args, **kwargs)
+            
+        wrapper.__name__=f.__name__
+        return wrapper
 
     @retry
     def all(self):
