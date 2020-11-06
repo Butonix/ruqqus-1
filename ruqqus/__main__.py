@@ -156,22 +156,14 @@ class RoutingSession(Session):
 
 def retry(f):
     def wrapper(self, *args, **kwargs):
-        i=0
-        while i<=5:
-            i+=1
 
-            try:
-                return f(self, *args, **kwargs)
+        try:
+            return f(self, *args, **kwargs)
 
-            #except OperationalError:
-            #    sleep(2**i)
+        except:
+            self.session.rollback()
+            return f(self, *args, **kwargs)
 
-            except:
-                self.session.rollback()
-                self.session.close()
-                sleep(2**i)
-
-        abort(500)
     wrapper.__name__=f.__name__
     return wrapper
 
