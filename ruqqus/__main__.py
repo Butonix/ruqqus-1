@@ -179,7 +179,7 @@ class RetryingQuery(_Query):
                     self.session.rollback()
 
             return f(self, *args, **kwargs)
-            
+
         wrapper.__name__=f.__name__
         return wrapper
 
@@ -193,7 +193,7 @@ class RetryingQuery(_Query):
 
     @retry
     def first(self):
-        return super().firszt()
+        return super().first()
 
     @retry
     def distinct(self):
