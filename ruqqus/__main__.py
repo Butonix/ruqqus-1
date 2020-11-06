@@ -161,7 +161,7 @@ def retry(f):
             i+=1
 
             try:
-                return f(*args, **kwargs)
+                return f(self, *args, **kwargs)
 
             except OperationalError:
                 sleep(2**i)
