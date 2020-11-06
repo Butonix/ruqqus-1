@@ -164,7 +164,7 @@ class RetryingQuery(_Query):
     def retry(f):
         def wrapper(*args, **kwargs):
             i=0
-            while i<=3
+            while i<=3:
                 i+=1
 
                 try:
