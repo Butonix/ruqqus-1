@@ -740,7 +740,14 @@ def board_about_exiled(boardname, board, v):
     next_exists = (len(bans) == 26)
     bans = bans[0:25]
 
-    return render_template("guild/bans.html", v=v, b=board, bans=bans)
+    return render_template(
+        "guild/bans.html", 
+        v=v, 
+        b=board, 
+        bans=bans,
+        page=page,
+        next_exists=next_exists
+        )
 
 
 @app.route("/+<boardname>/mod/contributors", methods=["GET"])
