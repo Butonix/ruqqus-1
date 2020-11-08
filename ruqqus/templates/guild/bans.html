@@ -89,6 +89,24 @@
 					{% endfor %}
 				</tbody>
 			</table>
+			<nav aria-label="Page navigation">
+			  <ul class="pagination pagination-sm mb-0">
+			    {% if page>1 %}
+			    <li class="page-item">
+			      <small><a class="page-link" href="page={{ page-1 }}" tabindex="-1">Prev</a></small>
+			    </li>
+			    {% else %}
+			    <li class="page-item disabled"><span class="page-link">Prev</span></li>
+			    {% endif %}
+			    {% if next_exists %}
+			    <li class="page-item">
+			      <small><a class="page-link" href="?page={{ page+1 }}">Next</a></small>
+			    </li>
+			    {% else %}
+			    <li class="page-item disabled"><span class="page-link">Next</span></li>
+			    {% endif %}
+			  </ul>
+			</nav>
 		</div>
 		{% else %}
 		<div class="text-center border-md rounded py-7">
@@ -96,26 +114,6 @@
 			<p class="font-weight-bold text-gray-500 mb-0">No users exiled from +{{ b.name }}</p>
 		</div>
 		{% endif %}
-
-		<nav aria-label="Page navigation">
-		  <ul class="pagination pagination-sm mb-0">
-		    {% if page>1 %}
-		    <li class="page-item">
-		      <small><a class="page-link" href="page={{ page-1 }}" tabindex="-1">Prev</a></small>
-		    </li>
-		    {% else %}
-		    <li class="page-item disabled"><span class="page-link">Prev</span></li>
-		    {% endif %}
-		    {% if next_exists %}
-		    <li class="page-item">
-		      <small><a class="page-link" href="?page={{ page+1 }}">Next</a></small>
-		    </li>
-		    {% else %}
-		    <li class="page-item disabled"><span class="page-link">Next</span></li>
-		    {% endif %}
-		  </ul>
-		</nav>
-
 	</div>
 
 </div>
