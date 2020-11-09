@@ -59,8 +59,10 @@ def jinja_is_mod(uid, bid):
 
     return bool(get_mod(uid, bid))
 
-@app.template_filter("coins_redeemed")
+@app.template_filter("coin_goal")
 @cache.memoize(600)
-def coins_redeemed(x):
+def coin_goal(x):
     
-    return g.db.query(User).filter(User.premium_expires_utc > x+60*60*24*6).count()
+    coins= g.db.query(User).filter(User.premium_expires_utc > x+60*60*24*6).count()
+
+    return int(coins/125)
