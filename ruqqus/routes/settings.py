@@ -50,6 +50,10 @@ def settings_profile_post(v):
         updated = True
         v.is_private = request.values.get("private", None) == 'true'
 
+    if request.values.get("politics", v.is_hiding_politics) != v.is_hiding_politics:
+        updated = True
+        v.is_hiding_politics = request.values.get("politics", None) == 'true'
+
     if request.values.get("nofollow", v.is_nofollow) != v.is_nofollow:
         updated = True
         v.is_nofollow = request.values.get("nofollow", None) == 'true'
