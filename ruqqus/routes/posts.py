@@ -188,7 +188,7 @@ def get_post_title(v):
 
 @app.route("/submit", methods=['POST'])
 @app.route("/api/v1/submit", methods=["POST"])
-@limiter.limit("6/minute")
+#@limiter.limit("6/minute")
 @is_not_banned
 @no_negative_balance('html')
 @tos_agreed
