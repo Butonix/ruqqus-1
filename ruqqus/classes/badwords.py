@@ -20,7 +20,7 @@ class BadWord(Base):
                     )
 
 
-class PoliticsWords(Base):
+class PoliticsWord(Base):
 
     __tablename__ = "politicswords"
 

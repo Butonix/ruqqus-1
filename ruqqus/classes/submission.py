@@ -306,6 +306,15 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         else:
             self.is_offensive = False
 
+    def determine_politics(self):
+
+        for x in g.db.query(PoliticsWord).all():
+            if (self.body and x.check(self.body)) or x.check(self.title):
+                self.is_politics = True
+                break
+        else:
+            self.is_offensive = False
+
     @property
     def json(self):
 

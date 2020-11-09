@@ -525,6 +525,13 @@ def submit_post(v):
             is_offensive = True
             break
 
+    #politics
+    is_politics=False
+    for x in g.db.query(PoliticsWord).all():
+        if (body and x.check(body)) or x.check(title):
+            is_politics = True
+            break
+
     new_post = Submission(author_id=v.id,
                           domain_ref=domain_obj.id if domain_obj else None,
                           board_id=board.id,
@@ -536,7 +543,8 @@ def submit_post(v):
                                       "")) or board.over_18),
                           post_public=not board.is_private,
                           repost_id=repost.id if repost else None,
-                          is_offensive=is_offensive
+                          is_offensive=is_offensive,
+                          is_politics=is_politics
                           )
 
     g.db.add(new_post)
