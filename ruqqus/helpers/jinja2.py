@@ -65,4 +65,4 @@ def coin_goal(x):
     
     coins= g.db.query(User).filter(User.premium_expires_utc > x).count()
 
-    return int(100*coins/125)
+    return int(100*coins/250)
