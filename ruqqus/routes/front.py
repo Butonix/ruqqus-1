@@ -284,7 +284,7 @@ def front_all(v):
     ids = frontlist(sort=sort_method,
                     page=page,
                     nsfw=(v and v.over_18 and not v.filter_nsfw),
-                    nsfl=(v and v.show_nsfl and v.over_18),
+                    nsfl=(v and v.show_nsfl),
                     t=t,
                     v=v,
                     hide_offensive=(v and v.hide_offensive) or not v,
