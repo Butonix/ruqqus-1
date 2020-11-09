@@ -191,6 +191,9 @@ class User(Base, Stndrd, Age_times):
         if not self.show_nsfl:
             posts = posts.filter_by(is_nsfl=False)
 
+        if self.is_hiding_politics:
+            posts=posts.filter_by(is_politics=False)
+
         board_ids = g.db.query(
             Subscription.board_id).filter_by(
             user_id=self.id,

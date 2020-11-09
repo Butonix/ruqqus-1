@@ -82,6 +82,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     score_activity = Column(Float, default=0)
     is_offensive = Column(Boolean, default=False)
     is_nsfl = Column(Boolean, default=False)
+    is_politics = Column(Boolean, default=False)
     board = relationship(
         "Board",
         lazy="joined",
