@@ -287,8 +287,8 @@ def front_all(v):
                     nsfl=(v and v.show_nsfl and v.over_18),
                     t=t,
                     v=v,
-                    hide_offensive=v and v.hide_offensive,
-                    hide_politics=v and v.is_hiding_politics,
+                    hide_offensive=(v and v.hide_offensive) or not v,
+                    hide_politics=(v and v.is_hiding_politics) or not v,
                     gt=int(request.args.get("utc_greater_than", 0)),
                     lt=int(request.args.get("utc_less_than", 0))
                     )
