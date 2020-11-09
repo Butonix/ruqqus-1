@@ -150,6 +150,16 @@ def edit_post(pid, v):
             p.is_offensive = True
             break
 
+    # politics
+    p.is_politics = False
+    for x in g.db.query(PoliticsWord).all():
+        if (p.body and x.check(p.body)) or x.check(p.title):
+            p.is_politics = True
+            break
+
+    g.db.add(p)
+
+
     return redirect(p.permalink)
 
 
