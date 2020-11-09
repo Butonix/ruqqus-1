@@ -302,7 +302,7 @@
           </span>Ruqqus Premium
         </a>
         <div data-toggle="tooltip" data-placement="bottom" title="Based on coins redeemed in the last 24 hours">
-          <div class="text-center">{{ g.timestamp | coins_redeemed }}% of 24-hour goal</div>
+          <div class="text-center text-small">{{ g.timestamp | coins_redeemed }}% of 24-hour goal</div>
           <div class="progress" style="border-radius: 3px;">
             <div class="progress-bar bg-primary" role="progressbar" style="width: {{ g.timestamp | coins_redeemed }}%;" aria-valuenow="{{ g.timestamp | coins_redeemed }}" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
