@@ -302,8 +302,8 @@
           </span>Ruqqus Premium
         </a>
         <div class="text-center">{{ g.timestamp | coins_redeemed }}% of daily goal</div>
-        <div class="progress">
-          <div class="progress-bar bg-success" role="progressbar" style="width: {{ g.timestamp | coins_redeemed }}%; border-radius: 3px;" aria-valuenow="{{ g.timestamp | coins_redeemed }}" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress" style="border-radius: 3px;">
+          <div class="progress-bar bg-success" role="progressbar" style="width: {{ g.timestamp | coins_redeemed }}%;" aria-valuenow="{{ g.timestamp | coins_redeemed }}" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
       </div>
 
