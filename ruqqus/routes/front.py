@@ -98,7 +98,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
     if v and v.hide_offensive:
         posts = posts.filter_by(is_offensive=False)
 
-    if v and v.is_hiding_politics:
+    if (v and v.is_hiding_politics) or not v:
         posts = posts.filter_by(is_politics=False)
 
     if v and v.admin_level >= 4:
@@ -284,11 +284,11 @@ def front_all(v):
     ids = frontlist(sort=sort_method,
                     page=page,
                     nsfw=(v and v.over_18 and not v.filter_nsfw),
-                    nsfl=(v and v.show_nsfl and v.over_18),
+                    nsfl=(v and v.show_nsfl),
                     t=t,
                     v=v,
-                    hide_offensive=v and v.hide_offensive,
-                    hide_politics=v and v.is_hiding_politics,
+                    hide_offensive=(v and v.hide_offensive) or not v,
+                    hide_politics=(v and v.is_hiding_politics) or not v,
                     gt=int(request.args.get("utc_greater_than", 0)),
                     lt=int(request.args.get("utc_less_than", 0))
                     )
