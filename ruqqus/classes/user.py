@@ -77,6 +77,7 @@ class User(Base, Stndrd, Age_times):
     last_siege_utc = Column(Integer, default=0)
     mfa_secret = deferred(Column(String(16), default=None))
     hide_offensive = Column(Boolean, default=False)
+    is_hiding_politics=Column(Boolean, default=False)
     show_nsfl = Column(Boolean, default=False)
     is_private = Column(Boolean, default=False)
     read_announcement_utc = Column(Integer, default=0)
@@ -189,6 +190,9 @@ class User(Base, Stndrd, Age_times):
 
         if not self.show_nsfl:
             posts = posts.filter_by(is_nsfl=False)
+
+        if self.is_hiding_politics:
+            posts=posts.filter_by(is_politics=False)
 
         board_ids = g.db.query(
             Subscription.board_id).filter_by(

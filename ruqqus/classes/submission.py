@@ -82,6 +82,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     score_activity = Column(Float, default=0)
     is_offensive = Column(Boolean, default=False)
     is_nsfl = Column(Boolean, default=False)
+    is_politics = Column(Boolean, default=False)
     board = relationship(
         "Board",
         lazy="joined",
@@ -301,6 +302,15 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         for x in g.db.query(BadWord).all():
             if (self.body and x.check(self.body)) or x.check(self.title):
                 self.is_offensive = True
+                break
+        else:
+            self.is_offensive = False
+
+    def determine_politics(self):
+
+        for x in g.db.query(PoliticsWord).all():
+            if (self.body and x.check(self.body)) or x.check(self.title):
+                self.is_politics = True
                 break
         else:
             self.is_offensive = False

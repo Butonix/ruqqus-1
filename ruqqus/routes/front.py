@@ -98,6 +98,9 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
     if v and v.hide_offensive:
         posts = posts.filter_by(is_offensive=False)
 
+    if v and v.is_hiding_politics:
+        posts = posts.filter_by(is_politics=False)
+
     if v and v.admin_level >= 4:
         board_blocks = g.db.query(
             BoardBlock.board_id).filter_by(
@@ -226,6 +229,7 @@ def home(v):
                        # cache memoization differentiation
                        allow_nsfw=v.over_18,
                        hide_offensive=v.hide_offensive,
+                       hide_politics=v and v.is_hiding_politics,
 
                        # greater/less than
                        gt=int(request.args.get("utc_greater_than", 0)),
@@ -284,6 +288,7 @@ def front_all(v):
                     t=t,
                     v=v,
                     hide_offensive=v and v.hide_offensive,
+                    hide_politics=v and v.is_hiding_politics,
                     gt=int(request.args.get("utc_greater_than", 0)),
                     lt=int(request.args.get("utc_less_than", 0))
                     )
