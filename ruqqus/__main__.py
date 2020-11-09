@@ -258,6 +258,8 @@ def before_request():
     if not session.get("session_id"):
         session["session_id"] = secrets.token_hex(16)
 
+    g.timestamp = int(time.time())
+
     # g.db.begin_nested()
 
 
