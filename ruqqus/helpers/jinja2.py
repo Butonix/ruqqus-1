@@ -63,6 +63,6 @@ def jinja_is_mod(uid, bid):
 @cache.memoize(600)
 def coin_goal(x):
     
-    coins= g.db.query(User).filter(User.premium_expires_utc > x+60*60*24*6).count()
+    coins= g.db.query(User).filter(User.premium_expires_utc > x).count()
 
     return int(coins/125)
