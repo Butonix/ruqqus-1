@@ -98,7 +98,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
     if v and v.hide_offensive:
         posts = posts.filter_by(is_offensive=False)
 
-    if v and v.is_hiding_politics:
+    if (v and v.is_hiding_politics) or not v:
         posts = posts.filter_by(is_politics=False)
 
     if v and v.admin_level >= 4:
