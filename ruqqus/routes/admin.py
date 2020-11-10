@@ -1,5 +1,6 @@
 from urllib.parse import urlparse
 import time
+import calendar
 from sqlalchemy import func
 
 from ruqqus.helpers.wrappers import *
@@ -240,7 +241,22 @@ def participation_stats(v):
 @admin_level_required(2)
 def money_stats(v):
 
+    now = time.gmtime()
+    midnight_year_start = time.struct_time((now.tm_year,
+                                              1,
+                                              1,
+                                              0,
+                                              0,
+                                              0,
+                                              now.tm_wday,
+                                              now.tm_yday,
+                                              0)
+                                             )
+    midnight_year_start = calendar.timegm(midnight_year_start)
+
     now=int(time.time())
+    intake=sum([int(x - (x*0.029)- 30 )  for x in g.db.query(PayPalTxn.usd_cents).filter(PayPalTxn.status==3, PayPalTxn.created_utc>midnight_year_start).all()])
+    loss=sum([x for x in g.db.query(PayPalTxn.usd_cents).filter(PayPalTxn.status<0, PayPalTxn.created_utc>midnight_year_start).all()])
 
     data={
         "cents_received_last_24h":g.db.query(func.sum(PayPalTxn.usd_cents)).filter(PayPalTxn.status==3, PayPalTxn.created_utc>now-60*60*24).scalar(),
@@ -252,7 +268,8 @@ def money_stats(v):
         "coins_redeemed_last_24_hrs": g.db.query(User).filter(User.premium_expires_utc>now+60*60*24*6, User.premium_expires_utc < now+60*60*24*7).count(),
         "coins_redeemed_last_week": g.db.query(User).filter(User.premium_expires_utc>now, User.premium_expires_utc < now+60*60*24*7).count(),
         "coins_in_circulation": g.db.query(func.sum(User.coin_balance)).filter(User.is_deleted==False, or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc>0))).scalar(),
-        "receivables_outstanding_cents": g.db.query(func.sum(User.negative_balance_cents)).filter(User.is_deleted==False, or_(User.is_banned == 0, and_(User.is_banned > 0, User.unban_utc > 0))).scalar()
+        "receivables_outstanding_cents": g.db.query(func.sum(User.negative_balance_cents)).filter(User.is_deleted==False, or_(User.is_banned == 0, and_(User.is_banned > 0, User.unban_utc > 0))).scalar(),
+        "revenue_cents_ytd":intake-loss
     }
 
     return render_template("admin/content_stats.html", v=v, title="Financial Statistics", data=data)
