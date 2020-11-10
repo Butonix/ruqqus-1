@@ -255,7 +255,8 @@ def money_stats(v):
     midnight_year_start = calendar.timegm(midnight_year_start)
 
     now=int(time.time())
-    intake=sum([int(x - (x*0.029)- 30 )  for x in g.db.query(PayPalTxn.usd_cents).filter(PayPalTxn.status==3, PayPalTxn.created_utc>midnight_year_start).all()])
+    intake=[x for x in g.db.query(PayPalTxn.usd_cents).filter(PayPalTxn.status==3, PayPalTxn.created_utc>midnight_year_start).all()]
+    intake=sum([int(x - (x*0.029)- 30 ) for x in intake])
     loss=sum([x for x in g.db.query(PayPalTxn.usd_cents).filter(PayPalTxn.status<0, PayPalTxn.created_utc>midnight_year_start).all()])
 
     data={
