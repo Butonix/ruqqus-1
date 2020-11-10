@@ -256,7 +256,7 @@ def money_stats(v):
 
     now=int(time.time())
     intake=sum([int(x[0] - (x[0] * 0.029) - 30 )  for x in g.db.query(PayPalTxn.usd_cents).filter(PayPalTxn.status==3, PayPalTxn.created_utc>midnight_year_start).all()])
-    loss=sum([x for x in g.db.query(PayPalTxn.usd_cents).filter(PayPalTxn.status<0, PayPalTxn.created_utc>midnight_year_start).all()])
+    loss=sum([x[0] for x in g.db.query(PayPalTxn.usd_cents).filter(PayPalTxn.status<0, PayPalTxn.created_utc>midnight_year_start).all()])
 
     data={
         "cents_received_last_24h":g.db.query(func.sum(PayPalTxn.usd_cents)).filter(PayPalTxn.status==3, PayPalTxn.created_utc>now-60*60*24).scalar(),
