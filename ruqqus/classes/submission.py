@@ -470,3 +470,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def award_count(self):
         return len(self.awards)
+
+    @property
+    def embed_template(self):
+        return f"site_embeds/{self.domain_obj.embed_template}.html"
+    

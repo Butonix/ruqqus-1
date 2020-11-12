@@ -1,9 +1,14 @@
 import re
 from urllib.parse import *
+import requests
 from ruqqus.__main__ import app
 
 youtube_regex = re.compile(
     "^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*")
+
+ruqqus_regex = re.compile("^.*ruqqus.com/post/+\w+/(\w+)(/\w+/(\w+))?")
+
+twitter_regex=re.compile("/status/(\d+)")
 
 
 def youtube_embed(url):
@@ -25,9 +30,6 @@ def youtube_embed(url):
         return f"https://youtube.com/embed/{yt_id}"
 
 
-ruqqus_regex = re.compile("^.*ruqqus.com/post/(\w+)(/comment/(\w+))?")
-
-
 def ruqqus_embed(url):
 
     matches = re.match(ruqqus_regex, url)
@@ -39,3 +41,25 @@ def ruqqus_embed(url):
         return f"https://{app.config['SERVER_NAME']}/embed/comment/{comment_id}"
     else:
         return f"https://{app.config['SERVER_NAME']}/embed/post/{post_id}"
+
+
+def bitchute_embed(url):
+
+    return url.replace("/video/", "/embed/")
+
+def twitter_embed(url):
+
+
+    oembed_url=f"https://publish.twitter.com/oembed"
+    params={
+        "url":url,
+        "omit_script":"t"
+        }
+
+    headers={
+        "User-Agent":"Ruqqus tweet embedder by @ruqqus"
+    }
+    x=requests.get(oembed_url, params=params)
+
+    return x.json()["html"]
+
