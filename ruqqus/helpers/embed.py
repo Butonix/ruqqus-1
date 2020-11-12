@@ -54,5 +54,7 @@ def twitter_embed(url):
 
     x=requests.get(url)
 
+    print(x.content)
+
     return x.json()["html"]
 
