@@ -77,4 +77,6 @@ def instagram_embed(url):
 
     x=requests.get(oembed_url, params=params, headers=headers)
 
+    print(x.json())
+
     return x.json()["html"]
