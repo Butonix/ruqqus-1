@@ -196,7 +196,6 @@ Base = declarative_base()
 # import and bind all routing functions
 import ruqqus.classes
 from ruqqus.routes import *
-from ruqqus.helpers.embed import twitter_embed_proxy
 import ruqqus.helpers.jinja2
 
 
