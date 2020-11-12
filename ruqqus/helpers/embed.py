@@ -53,3 +53,12 @@ def twitter_embed(url):
     tweetid=matches.group(1)
 
     return f"https://platform.twitter.com/embed/index.html?id={tweetid}"
+
+@app.route("/embed_proxy/twitter/<tid>")
+def twitter_embed_proxy(tid)
+    
+    url="https://platform.twitter.com/embed/index.html?id={tid}"
+
+    x=requests.get(url)
+
+    return x.content
