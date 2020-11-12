@@ -6,6 +6,10 @@ from ruqqus.__main__ import app
 youtube_regex = re.compile(
     "^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*")
 
+ruqqus_regex = re.compile("^.*ruqqus.com/post/+\w+/(\w+)(/\w+/(\w+))?")
+
+twitter_regex=re.compile("/status/(\d+)")
+
 
 def youtube_embed(url):
 
@@ -26,9 +30,6 @@ def youtube_embed(url):
         return f"https://youtube.com/embed/{yt_id}"
 
 
-ruqqus_regex = re.compile("^.*ruqqus.com/post/(\w+)(/comment/(\w+))?")
-
-
 def ruqqus_embed(url):
 
     matches = re.match(ruqqus_regex, url)
@@ -45,3 +46,11 @@ def ruqqus_embed(url):
 def bitchute_embed(url):
 
     return url.replace("/video/", "/embed/")
+
+def twitter_embed(url):
+
+    matches=re.match(twitter_regex, url)
+    tweetid=matches.group(1)
+
+    return f"https://platform.twitter.com/embed/index.html?dnt=false&embedId=twitter-widget-0&frame=false&hideCard=false&hideThread=false&id={tweetid}&lang=en&origin=https%3A%2F%2Fpublish.twitter.com%2F%23&theme=light&widgetsVersion=ed20a2b%3A1601588405575&width=550px"
+
