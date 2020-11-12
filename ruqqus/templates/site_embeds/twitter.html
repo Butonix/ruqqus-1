@@ -3,6 +3,7 @@
 </iframe>
 <script>
   function resizeIframe() {
-    document.getElementById('twitter-widget-0').style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+  	var obj = document.getElementById('twitter-widget-0');
+    obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
   }
 </script>
