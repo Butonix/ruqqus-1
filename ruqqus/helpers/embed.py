@@ -56,9 +56,12 @@ def twitter_embed(url):
 
 @app.route("/embed/twitter/<tid>")
 def twitter_embed_proxy(tid):
-    
-    url="https://platform.twitter.com/embed/index.html?id={tid}"
 
+    try:
+        tid=int(tid)
+        url="https://platform.twitter.com/embed/index.html?id={tid}"
+    except:
+        url="https://platform.twitter.com/embed/{tid}"
     print(url)
 
     x=requests.get(url)
