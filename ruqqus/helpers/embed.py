@@ -52,9 +52,9 @@ def twitter_embed(url):
     matches=re.match(twitter_regex, url)
     tweetid=matches.group(1)
 
-    return f"https://platform.twitter.com/embed/index.html?id={tweetid}"
+    return f"/embed/twitter/{tweetid}"
 
-@app.route("/embed_proxy/twitter/<tid>")
+@app.route("/embed/twitter/<tid>")
 def twitter_embed_proxy(tid):
     
     url="https://platform.twitter.com/embed/index.html?id={tid}"
