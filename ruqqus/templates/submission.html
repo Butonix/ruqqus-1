@@ -382,7 +382,7 @@
             {{ p.body_html | safe }}
 
             {% if p.embed_url %}
-
+            {% include p.embed_template %}
             {% endif %}
 
           </div>
