@@ -56,7 +56,10 @@ def twitter_embed(url):
         "omit_script":"t"
         }
 
-    x=requests.get(oembed_url)
+    headers={
+        "User-Agent":"Ruqqus tweet embedder by @ruqqus"
+    }
+    x=requests.get(oembed_url, params=params)
 
     return x.json()["html"]
 
