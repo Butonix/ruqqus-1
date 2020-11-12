@@ -1,5 +1,6 @@
 import re
 from urllib.parse import *
+import requests
 from ruqqus.__main__ import app
 
 youtube_regex = re.compile(
@@ -39,3 +40,8 @@ def ruqqus_embed(url):
         return f"https://{app.config['SERVER_NAME']}/embed/comment/{comment_id}"
     else:
         return f"https://{app.config['SERVER_NAME']}/embed/post/{post_id}"
+
+
+def bitchute_embed(url):
+
+    return url.replace("/video/", "/embed/")
