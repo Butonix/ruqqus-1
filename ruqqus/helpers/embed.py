@@ -50,7 +50,11 @@ def bitchute_embed(url):
 def twitter_embed(url):
 
 
-    oembed_url=f"https://publish.twitter.com/oembed?omit_script=t&url={url}"
+    oembed_url=f"https://publish.twitter.com/oembed"
+    params={
+        "url":url,
+        "omit_script":"t"
+        }
 
     x=requests.get(oembed_url)
 
