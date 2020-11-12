@@ -382,9 +382,7 @@
             {{ p.body_html | safe }}
 
             {% if p.embed_url %}
-            <div class="embed-responsive embed-responsive-16by9 mb-3">
-              <iframe src="{{ p.embed_url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
+
             {% endif %}
 
           </div>
