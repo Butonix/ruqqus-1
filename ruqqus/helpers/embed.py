@@ -52,7 +52,7 @@ def twitter_embed(url):
 
     oembed_url=f"https://publish.twitter.com/oembed?omit_script=t&url={url}"
 
-    x=requests.get(embed_url)
+    x=requests.get(oembed_url)
 
     return x.json()["html"]
 
