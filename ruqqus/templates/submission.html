@@ -381,7 +381,7 @@
 
             {{ p.body_html | safe }}
 
-            {% if p.embed_url %}
+            {% if p.embed_url and p.embed_template %}
             {% include p.embed_template %}
             {% endif %}
 
