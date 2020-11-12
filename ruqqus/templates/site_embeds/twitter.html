@@ -1,9 +1,3 @@
-<script>
-  function resizeIframe() {
-  	var obj = document.getElementById('twitter-widget-0');
-    obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
-  }
+{{ p.embed_url | safe }}
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8">
 </script>
-<iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="" onload="resizeIframe" style="position: static; visibility: visible; width: 550px;  display: block; flex-grow: 1;" title="Twitter Tweet" src="{{ p.embed_url }}">
-	
-</iframe>

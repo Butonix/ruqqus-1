@@ -49,21 +49,10 @@ def bitchute_embed(url):
 
 def twitter_embed(url):
 
-    matches=re.match(twitter_regex, url)
-    tweetid=matches.group(1)
 
-    return f"/embed/twitter/{tweetid}"
-
-@app.route("/embed/twitter/<tid>")
-def twitter_embed_proxy(tid):
-
-    try:
-        tid=int(tid)
-        url=f"https://platform.twitter.com/embed/index.html?id={tid}"
-    except:
-        url=f"https://platform.twitter.com/embed/{tid}"
-    print(url)
+    oembed_url=f"https://publish.twitter.com/oembed?omit_script=t&url={url}"
 
     x=requests.get(url)
 
-    return x.content
+    return x.json()["html"]
+
