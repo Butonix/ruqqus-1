@@ -76,6 +76,8 @@ def instagram_embed(url):
         "User-Agent":"Instagram embedder for Ruqqus"
     }
 
+    print(params)
+
     x=requests.get(oembed_url, params=params, headers=headers)
 
     print(x.json())
