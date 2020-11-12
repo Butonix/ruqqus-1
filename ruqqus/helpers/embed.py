@@ -52,5 +52,4 @@ def twitter_embed(url):
     matches=re.match(twitter_regex, url)
     tweetid=matches.group(1)
 
-    return f"https://platform.twitter.com/embed/index.html?dnt=false&embedId=twitter-widget-0&frame=false&hideCard=false&hideThread=false&id={tweetid}&lang=en&origin=https%3A%2F%2Fpublish.twitter.com%2F%23&theme=light&widgetsVersion=ed20a2b%3A1601588405575&width=550px"
-
+    return f"https://platform.twitter.com/embed/index.html?id={tweetid}"
