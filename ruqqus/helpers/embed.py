@@ -12,6 +12,7 @@ ruqqus_regex = re.compile("^.*ruqqus.com/post/+\w+/(\w+)(/\w+/(\w+))?")
 twitter_regex=re.compile("/status/(\d+)")
 
 FACEBOOK_TOKEN=environ.get("FACEBOOK_TOKEN","").lstrip().rstrip()
+print(FACEBOOK_TOKEN)
 
 
 def youtube_embed(url):
@@ -76,7 +77,6 @@ def instagram_embed(url):
     }
 
     x=requests.get(oembed_url, params=params, headers=headers)
-
 
     print(x.json())
 
