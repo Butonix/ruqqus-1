@@ -1,6 +1,7 @@
 import re
 from urllib.parse import *
 import requests
+from os import environ
 from ruqqus.__main__ import app
 
 youtube_regex = re.compile(
@@ -9,6 +10,9 @@ youtube_regex = re.compile(
 ruqqus_regex = re.compile("^.*ruqqus.com/post/+\w+/(\w+)(/\w+/(\w+))?")
 
 twitter_regex=re.compile("/status/(\d+)")
+
+FACEBOOK_TOKEN=environ.get("FACEBOOK_TOKEN","").lstrip().rstrip()
+print(FACEBOOK_TOKEN)
 
 
 def youtube_embed(url):
@@ -55,11 +59,25 @@ def twitter_embed(url):
         "url":url,
         "omit_script":"t"
         }
-
-    headers={
-        "User-Agent":"Ruqqus tweet embedder by @ruqqus"
-    }
     x=requests.get(oembed_url, params=params)
 
     return x.json()["html"]
 
+def instagram_embed(url):
+
+    oembed_url=f"https://graph.facebook.com/v9.0/instagram_oembed"
+    params={
+        "url":url,
+        "access_token":FACEBOOK_TOKEN,
+        "omitscript":'true'
+    }
+
+    headers={
+        "User-Agent":"Instagram embedder for Ruqqus"
+    }
+
+    x=requests.get(oembed_url, params=params, headers=headers)
+
+    print(x.json())
+
+    return x.json()["html"]
