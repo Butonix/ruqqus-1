@@ -59,6 +59,8 @@ def twitter_embed_proxy(tid):
     
     url="https://platform.twitter.com/embed/index.html?id={tid}"
 
+    print(url)
+
     x=requests.get(url)
 
     return x.content
