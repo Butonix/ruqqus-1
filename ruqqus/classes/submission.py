@@ -473,5 +473,5 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     @property
     def embed_template(self):
-        return render_template(f"site_embeds/{self.domain_object.embed_template}.html", v=v, p=self)
+        return render_template(f"site_embeds/{self.domain_obj.embed_template}.html", v=v, p=self)
     
