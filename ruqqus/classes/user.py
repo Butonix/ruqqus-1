@@ -59,6 +59,11 @@ class User(Base, Stndrd, Age_times):
         "Notification",
         lazy="dynamic",
         backref="user")
+
+    unread_notifications_relationship=relationship(
+        "Notification",
+        primaryjoin="Notification.user_id==User.id and Notification.read==False")
+
     referred_by = Column(Integer, default=None)
     is_banned = Column(Integer, default=0)
     unban_utc = Column(Integer, default=0)
@@ -513,8 +518,7 @@ class User(Base, Stndrd, Age_times):
     @cache.memoize(30)
     def notifications_count(self):
 
-        return self.notifications.filter_by(read=False).join(Notification.comment).filter(
-            Comment.is_banned == False, Comment.is_deleted == False).count()
+        return len(self.unread_notifications_relationship)
 
     @property
     def post_count(self):
