@@ -367,6 +367,7 @@ class Notification(Base):
     read = Column(Boolean, default=False)
 
     comment = relationship("Comment", lazy="joined", innerjoin=True)
+    user=relationship("User", lazy="dynamic")
 
     # Server side computed values (copied from corresponding comment)
     created_utc = Column(Integer, server_default=FetchedValue())
