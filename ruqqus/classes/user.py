@@ -518,6 +518,8 @@ class User(Base, Stndrd, Age_times):
     @cache.memoize(30)
     def notifications_count(self):
 
+        print(self.unread_notifications_relationship)
+
         return len(self.unread_notifications_relationship)
 
     @property
