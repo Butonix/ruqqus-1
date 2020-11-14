@@ -39,12 +39,11 @@ def get_logged_in_user():
         nonce = session.get("login_nonce", 0)
         if not uid:
             return None, None
-
         v = g.db.query(User).options(
             joinedload(User.moderates).joinedload(ModRelationship.board), #joinedload(Board.reports),
-            joinedload(User.subscriptions).joinedload(Subscription.board)
-            ).filter_by(id=uid).join(Notification, and_(Notification.user_id==User.id, Notification.read==True)
-            ).options(contains_eager(User.unread_notifications_relationship)).first()
+            joinedload(User.subscriptions).joinedload(Subscription.board),
+            joinedload(User.unread_notifications_relationship)
+            ).filter_by(id=uid).first()
         if v and nonce < v.login_nonce:
             return None, None
         else:
