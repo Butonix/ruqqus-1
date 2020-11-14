@@ -211,7 +211,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
 @api("read")
 def home(v):
 
-    if v and v.subscriptions.filter_by(is_active=True).count():
+    if v and any([i for i in v.subscriptions if i.is_active=True]):
 
         only = request.args.get("only", None)
         sort = request.args.get("sort", "hot")
