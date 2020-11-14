@@ -62,7 +62,7 @@ class User(Base, Stndrd, Age_times):
 
     unread_notifications_relationship=relationship(
         "Notification",
-        primaryjoin="Notification.user_id==User.id and Notification.read==False")
+        primaryjoin="and_(Notification.user_id==User.id, Notification.read==False)")
 
     referred_by = Column(Integer, default=None)
     is_banned = Column(Integer, default=0)
