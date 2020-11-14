@@ -515,7 +515,6 @@ class User(Base, Stndrd, Age_times):
         return output
 
     @property
-    @cache.memoize(30)
     def notifications_count(self):
 
         print(self.unread_notifications_relationship)
