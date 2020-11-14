@@ -40,7 +40,7 @@ def get_logged_in_user():
         if not uid:
             return None, None
         v = g.db.query(User).options(
-            joinedload(User.moderates).joinedload(ModRelationship.board).joinedload(Board.reports),
+            joinedload(User.moderates).joinedload(ModRelationship.board), #joinedload(Board.reports),
             joinedload(User.subscriptions),
             joinedload(User.notifications)
             ).filter_by(id=uid).first()
