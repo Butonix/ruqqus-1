@@ -56,7 +56,9 @@ class User(Base, Stndrd, Age_times):
     badges = relationship("Badge", lazy="dynamic", backref="user")
     real_id = Column(String, default=None)
     notifications = relationship(
-        "Notification")
+        "Notification",
+        lazy="dynamic",
+        backref="user")
     referred_by = Column(Integer, default=None)
     is_banned = Column(Integer, default=0)
     unban_utc = Column(Integer, default=0)
