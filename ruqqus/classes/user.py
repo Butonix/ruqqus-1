@@ -95,7 +95,7 @@ class User(Base, Stndrd, Age_times):
 
     is_nofollow = Column(Boolean, default=False)
 
-    moderates = relationship("ModRelationship", lazy="dynamic")
+    moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
                                primaryjoin="BanRelationship.user_id==User.id")
     subscriptions = relationship("Subscription", lazy="dynamic")
