@@ -71,7 +71,7 @@
               </ul>
             </div>
 
-            {% if v and v.subscriptions.filter_by(is_active=True).count() %}
+            {% if v and v.subscribes_to_anything %}
             <div class="mb-4">
               <div class="sidebar-collapsed-hidden">
                 <div class="d-flex justify-content-between align-items-center mb-3">

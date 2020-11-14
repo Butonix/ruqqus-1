@@ -381,6 +381,12 @@ class User(Base, Stndrd, Age_times):
 
         return bool([i for i in self.moderates if i.accepted])
 
+
+    @property
+    @lazy
+    def subscribed_to_anything(self):
+        return bool([i for i in self.subscriptions if i.is_active])
+
     @property
     def boards_modded(self):
 
