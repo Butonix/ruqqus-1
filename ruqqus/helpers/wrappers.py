@@ -39,7 +39,11 @@ def get_logged_in_user():
         nonce = session.get("login_nonce", 0)
         if not uid:
             return None, None
-        v = g.db.query(User).options(lazyload('*')).filter_by(id=uid).first()
+        v = g.db.query(User).options(
+            joinedload(User.moderates).joinedload(ModRelationship.Board).joinedload(Board.reports),
+            joinedload(User.subscriptions),
+            joinedload(User.notifications)
+            ).filter_by(id=uid).first()
         if v and nonce < v.login_nonce:
             return None, None
         else:
