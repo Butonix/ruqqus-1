@@ -379,7 +379,7 @@ class User(Base, Stndrd, Age_times):
     @lazy
     def mods_anything(self):
 
-        return any([i for i in self.moderates if i.accepted])
+        return bool([i for i in self.moderates if i.accepted])
 
     @property
     def boards_modded(self):
