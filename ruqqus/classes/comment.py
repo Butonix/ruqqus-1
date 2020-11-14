@@ -373,7 +373,7 @@ class Notification(Base):
 
     def __repr__(self):
 
-        return f"<Notification(id={self.id})"
+        return f"<Notification(id={self.id})>"
 
     @property
     def voted(self):

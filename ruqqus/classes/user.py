@@ -517,7 +517,7 @@ class User(Base, Stndrd, Age_times):
     @property
     def notifications_count(self):
 
-        print(self.unread_notifications_relationship)
+        #print(self.unread_notifications_relationship)
 
         return len(self.unread_notifications_relationship)
 
