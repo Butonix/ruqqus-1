@@ -98,7 +98,7 @@ class User(Base, Stndrd, Age_times):
     moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
                                primaryjoin="BanRelationship.user_id==User.id")
-    subscriptions = relationship("Subscription", lazy="dynamic")
+    subscriptions = relationship("Subscription")
     boards_created = relationship("Board", lazy="dynamic")
     contributes = relationship(
         "ContributorRelationship",
