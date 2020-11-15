@@ -166,10 +166,10 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
     #print(filter_words)
     if v and filter_words:
         words = [i.rstrip() for i in filter_words.split('\n')]
-        print(words)
+        #print(words)
         posts=posts.join(Submission.submission_aux)
         for word in words:
-            print(word)
+            #print(word)
             posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
 
     if t:
@@ -234,6 +234,8 @@ def home(v):
                        page=page,
                        only=only,
                        t=t,
+
+                       filter_words=v.custom_filter_list,
 
                        # these arguments don't really do much but they exist for
                        # cache memoization differentiation

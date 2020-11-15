@@ -181,7 +181,7 @@ class User(Base, Stndrd, Age_times):
         return int(time.time()) - self.created_utc
 
     @cache.memoize(timeout=300)
-    def idlist(self, sort="hot", page=1, t=None, **kwargs):
+    def idlist(self, sort="hot", page=1, t=None, filter_list="", **kwargs):
 
         posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
                                                                            is_deleted=False,
@@ -248,6 +248,14 @@ class User(Base, Stndrd, Age_times):
                 Submission.author_id.notin_(blocking),
                 Submission.author_id.notin_(blocked)
             )
+
+        if filter_words:
+            words = [i.rstrip() for i in filter_words.split('\n')]
+            #print(words)
+            posts=posts.join(Submission.submission_aux)
+            for word in words:
+                #print(word)
+                posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
 
         if t:
             now = int(time.time())
