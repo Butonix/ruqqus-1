@@ -141,7 +141,10 @@ def login_post():
 
     #dev server - primo only
     if app.config["SERVER_NAME"]=="dev.ruqqus.com" and not account.has_premium:
-        return render_template("login_premium.html", i=random_image())
+        return render_template(
+            "login_premium.html", 
+            i=random_image()
+            )
 
 
     # set session and user id
