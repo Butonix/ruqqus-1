@@ -165,8 +165,10 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
     #custom filter
     if v and kwargs.get('filter_words', ''):
         filter_words = kwargs.get('filter_words', '').split('\n')
+        print(filter_words)
         posts=posts.join(Submission.submission_aux)
         for word in filter_words:
+            print(word)
             posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
 
     if t:
