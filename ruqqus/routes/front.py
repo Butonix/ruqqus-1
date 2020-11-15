@@ -165,7 +165,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
     #custom filter
     #print(filter_words)
     if v and filter_words:
-        words = filter_words.split('\n')
+        words = [i.rstrip() for i in filter_words.split('\n')]
         print(words)
         posts=posts.join(Submission.submission_aux)
         for word in words:
