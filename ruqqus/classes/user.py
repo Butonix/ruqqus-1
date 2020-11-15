@@ -99,6 +99,8 @@ class User(Base, Stndrd, Age_times):
 
     is_nofollow = Column(Boolean, default=False)
 
+    custom_filter_list=deferred(Column(String(1000), default=""))
+
     moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
                                primaryjoin="BanRelationship.user_id==User.id")
