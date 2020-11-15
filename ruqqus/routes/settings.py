@@ -89,7 +89,7 @@ def settings_profile_post(v):
         g.db.add(v)
         return render_template("settings_profile.html",
                                v=v,
-                               msg="Your bio has been updated.")
+                               msg="Your custom filters have been updated.")
 
 
 
