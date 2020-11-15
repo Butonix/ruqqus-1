@@ -67,7 +67,7 @@ def notifications(v):
 
 @cache.memoize(timeout=900)
 def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
-              t=None, ids_only=True, **kwargs):
+              t=None, ids_only=True, filter_words='', **kwargs):
 
     # cutoff=int(time.time())-(60*60*24*30)
 
@@ -163,13 +163,13 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
                 Submission.board))
 
     #custom filter
-    print(kwargs.get('filter_words','no filter'))
+    #print(kwargs.get('filter_words','no filter'))
     if v and kwargs.get('filter_words', ''):
         filter_words = kwargs.get('filter_words', '').split('\n')
-        print(filter_words)
+        #print(filter_words)
         posts=posts.join(Submission.submission_aux)
         for word in filter_words:
-            print(word)
+            #print(word)
             posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
 
     if t:
