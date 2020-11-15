@@ -162,6 +162,12 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
             contains_eager(
                 Submission.board))
 
+    #custom filter
+    if v and v.custom_filter_list:
+        filter_words = v.custom_filter_list.split('\n')
+        for word in filter_words:
+            posts=posts.filter(not_(SubmissionAux.ilike(word)))
+
     if t:
         now = int(time.time())
         if t == 'day':
