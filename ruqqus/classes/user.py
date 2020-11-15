@@ -60,9 +60,9 @@ class User(Base, Stndrd, Age_times):
         lazy="dynamic",
         backref="user")
 
-    unread_notifications_relationship=relationship(
-        "Notification",
-        primaryjoin="and_(Notification.user_id==User.id, Notification.read==False)")
+    #unread_notifications_relationship=relationship(
+    #    "Notification",
+    #    primaryjoin="and_(Notification.user_id==User.id, Notification.read==False)")
 
     referred_by = Column(Integer, default=None)
     is_banned = Column(Integer, default=0)
@@ -515,11 +515,10 @@ class User(Base, Stndrd, Age_times):
         return output
 
     @property
+    @lazy
     def notifications_count(self):
 
-        #print(self.unread_notifications_relationship)
-
-        return len(self.unread_notifications_relationship)
+        return self.notifications.options(joinedload(Notification.comment)).filter(Notification.read==False, Comment.is_banned==False, Comment.is_deleted==False).count()
 
     @property
     def post_count(self):
