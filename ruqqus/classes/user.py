@@ -352,7 +352,7 @@ class User(Base, Stndrd, Age_times):
         if v and v.admin_level >= 4:
             pass
         elif v:
-            m = v.moderates.filter_by(invite_rescinded=False).subquery()
+            m = g.db.query(ModRelationship).filter_by(user_id=self.id, invite_rescinded=False).subquery()
             c = v.contributes.subquery()
 
             comments = comments.join(m,
