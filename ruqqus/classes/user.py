@@ -518,7 +518,7 @@ class User(Base, Stndrd, Age_times):
     @lazy
     def notifications_count(self):
 
-        return self.notifications.options(joinedload(Notification.comment)).filter(Notification.read==False, Comment.is_banned==False, Comment.is_deleted==False).count()
+        return self.notifications.join(Notification.comment).filter(Notification.read==False, Comment.is_banned==False, Comment.is_deleted==False).count()
 
     @property
     def post_count(self):
