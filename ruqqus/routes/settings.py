@@ -76,6 +76,23 @@ def settings_profile_post(v):
                                v=v,
                                msg="Your bio has been updated.")
 
+    if request.values.get("filters") is not None:
+
+        filters=request.values.get("filters")[0:1000]
+
+        if filters==v.custom_filter_list:
+            return render_template("settings_profile.html",
+                                   v=v,
+                                   error="You didn't change anything")
+
+        v.custom_filter_list=filters
+        g.db.add(v)
+        return render_template("settings_profile.html",
+                               v=v,
+                               msg="Your bio has been updated.")
+
+
+
     x = request.values.get("title_id", None)
     if x:
         x = int(x)
