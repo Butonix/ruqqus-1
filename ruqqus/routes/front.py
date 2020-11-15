@@ -165,10 +165,10 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
     #custom filter
     if v and filter_words:
         words = filter_words.split('\n')
-        #print(filter_words)
+        print(filter_words)
         posts=posts.join(Submission.submission_aux)
         for word in words:
-            #print(word)
+            print(word)
             posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
 
     if t:
