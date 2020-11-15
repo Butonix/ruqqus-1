@@ -17652,3 +17652,8 @@ div.deleted.banned {
 }
 
 /*# sourceMappingURL=main_dark.css.map */
+
+.in-comment-image {
+  max-height: 100px !important;
+  max-width: 100px !important;
+}
