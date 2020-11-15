@@ -532,25 +532,6 @@ class User(Base, Stndrd, Age_times):
             is_banned=False, is_deleted=False).count()
 
     @property
-    #@cache.memoize(timeout=60)
-    def badge_pairs(self):
-
-        output = []
-
-        badges = [x for x in self.badges.all()]
-
-        while badges:
-
-            to_append = [badges.pop(0)]
-
-            if badges:
-                to_append.append(badges.pop(0))
-
-            output.append(to_append)
-
-        return output
-
-    @property
     def alts(self):
 
         alts1 = g.db.query(User).join(
