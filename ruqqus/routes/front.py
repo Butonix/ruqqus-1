@@ -166,7 +166,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
     if v and v.custom_filter_list:
         filter_words = v.custom_filter_list.split('\n')
         for word in filter_words:
-            posts=posts.filter(not_(SubmissionAux.ilike(word)))
+            posts=posts.filter(not_(SubmissionAux.title.contains(word)))
 
     if t:
         now = int(time.time())
