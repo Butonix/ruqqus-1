@@ -42,7 +42,7 @@ def get_logged_in_user():
         v = g.db.query(User).options(
             joinedload(User.moderates).joinedload(ModRelationship.board), #joinedload(Board.reports),
             joinedload(User.subscriptions).joinedload(Subscription.board),
-            joinedload(User.unread_notifications_relationship)
+            joinedload(User.notifications)
             ).filter_by(id=uid).first()
         if v and nonce < v.login_nonce:
             return None, None
