@@ -167,7 +167,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
         filter_words = kwargs.get('filter_words', '').split('\n')
         posts=posts.join(Submission.submission_aux)
         for word in filter_words:
-            posts=posts.filter(not_(SubmissionAux.title.contains(word)))
+            posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
 
     if t:
         now = int(time.time())
