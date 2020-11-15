@@ -165,6 +165,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
     #custom filter
     if v and v.custom_filter_list:
         filter_words = v.custom_filter_list.split('\n')
+        posts=posts.join(Submission.submission_aux)
         for word in filter_words:
             posts=posts.filter(not_(SubmissionAux.title.contains(word)))
 
