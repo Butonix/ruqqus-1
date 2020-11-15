@@ -57,8 +57,7 @@ class User(Base, Stndrd, Age_times):
     real_id = Column(String, default=None)
     notifications = relationship(
         "Notification",
-        lazy="dynamic",
-        backref="user")
+        lazy="dynamic")
 
     #unread_notifications_relationship=relationship(
     #    "Notification",
