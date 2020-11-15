@@ -152,7 +152,7 @@ def get_posts(pids, sort="hot", v=None):
                 user_id=v.id).subquery()
             blocking = v.blocking.subquery()
             blocked = v.blocked.subquery()
-            subs = v.subscriptions.filter_by(is_active=True).subquery()
+            subs = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
 
             query = g.db.query(
                 Submission,

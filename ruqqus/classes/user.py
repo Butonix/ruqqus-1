@@ -57,8 +57,12 @@ class User(Base, Stndrd, Age_times):
     real_id = Column(String, default=None)
     notifications = relationship(
         "Notification",
-        lazy="dynamic",
-        backref="user")
+        lazy="dynamic")
+
+    #unread_notifications_relationship=relationship(
+    #    "Notification",
+    #    primaryjoin="and_(Notification.user_id==User.id, Notification.read==False)")
+
     referred_by = Column(Integer, default=None)
     is_banned = Column(Integer, default=0)
     unban_utc = Column(Integer, default=0)
@@ -95,10 +99,10 @@ class User(Base, Stndrd, Age_times):
 
     is_nofollow = Column(Boolean, default=False)
 
-    moderates = relationship("ModRelationship", lazy="dynamic")
+    moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
                                primaryjoin="BanRelationship.user_id==User.id")
-    subscriptions = relationship("Subscription", lazy="dynamic")
+    subscriptions = relationship("Subscription")
     boards_created = relationship("Board", lazy="dynamic")
     contributes = relationship(
         "ContributorRelationship",
@@ -379,7 +383,13 @@ class User(Base, Stndrd, Age_times):
     @lazy
     def mods_anything(self):
 
-        return bool(self.moderates.filter_by(accepted=True).first())
+        return bool([i for i in self.moderates if i.accepted])
+
+
+    @property
+    @lazy
+    def subscribed_to_anything(self):
+        return bool([i for i in self.subscriptions if i.is_active])
 
     @property
     def boards_modded(self):
@@ -504,11 +514,10 @@ class User(Base, Stndrd, Age_times):
         return output
 
     @property
-    @cache.memoize(30)
+    @lazy
     def notifications_count(self):
 
-        return self.notifications.filter_by(read=False).join(Notification.comment).filter(
-            Comment.is_banned == False, Comment.is_deleted == False).count()
+        return self.notifications.join(Notification.comment).filter(Notification.read==False, Comment.is_banned==False, Comment.is_deleted==False).count()
 
     @property
     def post_count(self):
@@ -520,25 +529,6 @@ class User(Base, Stndrd, Age_times):
 
         return self.comments.filter(Comment.parent_submission!=None).filter_by(
             is_banned=False, is_deleted=False).count()
-
-    @property
-    #@cache.memoize(timeout=60)
-    def badge_pairs(self):
-
-        output = []
-
-        badges = [x for x in self.badges.all()]
-
-        while badges:
-
-            to_append = [badges.pop(0)]
-
-            if badges:
-                to_append.append(badges.pop(0))
-
-            output.append(to_append)
-
-        return output
 
     @property
     def alts(self):
