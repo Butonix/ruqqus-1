@@ -163,8 +163,8 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
                 Submission.board))
 
     #custom filter
-    if v and v.custom_filter_list:
-        filter_words = v.custom_filter_list.split('\n')
+    if v and kwargs.get('filter_words', ''):
+        filter_words = kwargs.get('filter_words', '').split('\n')
         posts=posts.join(Submission.submission_aux)
         for word in filter_words:
             posts=posts.filter(not_(SubmissionAux.title.contains(word)))
@@ -297,7 +297,8 @@ def front_all(v):
                     hide_offensive=(v and v.hide_offensive) or not v,
                     hide_politics=(v and v.is_hiding_politics) or not v,
                     gt=int(request.args.get("utc_greater_than", 0)),
-                    lt=int(request.args.get("utc_less_than", 0))
+                    lt=int(request.args.get("utc_less_than", 0)),
+                    filter_words=v.custom_filter_list if v else ''
                     )
 
     # check existence of next page
