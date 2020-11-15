@@ -163,6 +163,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
                 Submission.board))
 
     #custom filter
+    print(filter_words)
     if v and filter_words:
         words = filter_words.split('\n')
         print(filter_words)
