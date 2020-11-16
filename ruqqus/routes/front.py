@@ -301,7 +301,7 @@ def front_all(v):
                     hide_politics=(v and v.is_hiding_politics) or not v,
                     gt=int(request.args.get("utc_greater_than", 0)),
                     lt=int(request.args.get("utc_less_than", 0)),
-                    filter_words=v.filter_words if v else ''
+                    filter_words=v.filter_words if v else []
                     )
 
     # check existence of next page
