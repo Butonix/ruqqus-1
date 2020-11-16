@@ -281,13 +281,13 @@
                 <div class="body w-lg-100">
                   <form id="custom-filter" action="/settings/profile" method="post">
                     <input type="hidden" name="formkey" value="{{ v.formkey }}">
+                      <small>Hides matching content from Home, All, and Trending, and collapses matching comments.</small>
                     <div class="input-group mb-2">
                       <textarea class="form-control rounded" id="filters-text" aria-label="With textarea"
                       placeholder="Add your own custom content filters."
                       rows="3" name="filters" form="custom-filter" maxlength="1000">{{ v.custom_filter_list }}</textarea>
                     </div>
                     <div class="d-flex">
-                      <small>Hides matching content from Home, All, and Trending, and collapses matching comments.</small>
                       <small>Use a new line for each filter entry. Limit of 1000 characters.</small>
                       <input class="btn btn-primary ml-auto" id="bioSave" type="submit" value="Save Changes">
                     </div>
