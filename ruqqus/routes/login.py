@@ -140,7 +140,7 @@ def login_post():
         account.unban()
 
     #dev server - primo only
-    if app.config["SERVER_NAME"]=="dev.ruqqus.com" and not account.has_premium:
+    if app.config["SERVER_NAME"]=="dev.ruqqus.com" and account.admin_level < 2 and not account.has_premium:
         return render_template(
             "login_premium.html", 
             i=random_image()

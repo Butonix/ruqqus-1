@@ -30,7 +30,7 @@ def get_logged_in_user():
             ClientAuth.access_token_expire_utc > int(time.time())
         ).first()
 
-        if app.config["SERVER_NAME"]=="dev.ruqqus.com" and not client.user.has_premium:
+        if app.config["SERVER_NAME"]=="dev.ruqqus.com" and client.user.admin_level < 2 and not client.user.has_premium:
             x=(None, None)
         else:
             x = (client.user, client) if client else (None, None)
@@ -48,7 +48,7 @@ def get_logged_in_user():
         #    joinedload(User.notifications)
             ).filter_by(id=uid).first()
 
-        if app.config["SERVER_NAME"]=="dev.ruqqus.com" and not v.has_premium:
+        if app.config["SERVER_NAME"]=="dev.ruqqus.com" and v.admin_level < 2 and not v.has_premium:
             return None, None
 
         if v and nonce < v.login_nonce:
