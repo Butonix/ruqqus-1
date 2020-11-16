@@ -165,10 +165,8 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
     #custom filter
     #print(filter_words)
     if v and filter_words:
-        words = [i.rstrip() for i in filter_words.split('\n')]
-        #print(words)
         posts=posts.join(Submission.submission_aux)
-        for word in words:
+        for word in filter_words:
             #print(word)
             posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
 
@@ -235,7 +233,7 @@ def home(v):
                        only=only,
                        t=t,
 
-                       filter_words=v.custom_filter_list,
+                       filter_words=v.filter_words,
 
                        # these arguments don't really do much but they exist for
                        # cache memoization differentiation
@@ -303,7 +301,7 @@ def front_all(v):
                     hide_politics=(v and v.is_hiding_politics) or not v,
                     gt=int(request.args.get("utc_greater_than", 0)),
                     lt=int(request.args.get("utc_less_than", 0)),
-                    filter_words=v.custom_filter_list if v else ''
+                    filter_words=v.filter_words
                     )
 
     # check existence of next page

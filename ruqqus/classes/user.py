@@ -250,10 +250,8 @@ class User(Base, Stndrd, Age_times):
             )
 
         if filter_words:
-            words = [i.rstrip() for i in filter_words.split('\n')]
-            #print(words)
             posts=posts.join(Submission.submission_aux)
-            for word in words:
+            for word in filter_words:
                 #print(word)
                 posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
 
@@ -821,4 +819,8 @@ class User(Base, Stndrd, Age_times):
     def renew_premium_time(self):
         return time.strftime("%d %b %Y at %H:%M:%S",
                              time.gmtime(self.premium_expires_utc))
+    
+    @property
+    def filter_words(self):
+        return self.custom_filter_list.split()
     
