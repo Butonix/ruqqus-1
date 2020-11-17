@@ -212,7 +212,8 @@ CREATE TABLE public.users (
     coin_balance integer DEFAULT 0,
     premium_expires_utc integer DEFAULT 0,
     negative_balance_cents integer DEFAULT 0,
-    is_hiding_politics boolean DEFAULT false
+    is_hiding_politics boolean DEFAULT false,
+    custom_filter_list character varying(1000) DEFAULT ''::character varying
 );
 
 
@@ -3725,6 +3726,13 @@ CREATE INDEX notifications_comment_idx ON public.notifications USING btree (comm
 --
 
 CREATE INDEX notifications_user_index ON public.notifications USING btree (user_id);
+
+
+--
+-- Name: notifs_user_read_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX notifs_user_read_idx ON public.notifications USING btree (user_id, read);
 
 
 --
