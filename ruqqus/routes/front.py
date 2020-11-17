@@ -67,7 +67,7 @@ def notifications(v):
 
 @cache.memoize(timeout=900)
 def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
-              t=None, ids_only=True, **kwargs):
+              t=None, ids_only=True, filter_words='', **kwargs):
 
     # cutoff=int(time.time())-(60*60*24*30)
 
@@ -162,6 +162,14 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
             contains_eager(
                 Submission.board))
 
+    #custom filter
+    #print(filter_words)
+    if v and filter_words:
+        posts=posts.join(Submission.submission_aux)
+        for word in filter_words:
+            #print(word)
+            posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
+
     if t:
         now = int(time.time())
         if t == 'day':
@@ -224,6 +232,8 @@ def home(v):
                        page=page,
                        only=only,
                        t=t,
+
+                       filter_words=v.filter_words,
 
                        # these arguments don't really do much but they exist for
                        # cache memoization differentiation
@@ -290,7 +300,8 @@ def front_all(v):
                     hide_offensive=(v and v.hide_offensive) or not v,
                     hide_politics=(v and v.is_hiding_politics) or not v,
                     gt=int(request.args.get("utc_greater_than", 0)),
-                    lt=int(request.args.get("utc_less_than", 0))
+                    lt=int(request.args.get("utc_less_than", 0)),
+                    filter_words=v.filter_words if v else []
                     )
 
     # check existence of next page

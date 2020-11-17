@@ -16,7 +16,7 @@ import ruqqus.helpers.aws as aws
 from .votes import Vote
 from .alts import Alt
 from .titles import Title
-from .submission import Submission
+from .submission import Submission, SubmissionAux
 from .comment import Comment, Notification
 from .boards import Board
 from .board_relationships import *
@@ -99,6 +99,8 @@ class User(Base, Stndrd, Age_times):
 
     is_nofollow = Column(Boolean, default=False)
 
+    custom_filter_list=Column(String(1000), default="")
+
     moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
                                primaryjoin="BanRelationship.user_id==User.id")
@@ -179,7 +181,7 @@ class User(Base, Stndrd, Age_times):
         return int(time.time()) - self.created_utc
 
     @cache.memoize(timeout=300)
-    def idlist(self, sort="hot", page=1, t=None, **kwargs):
+    def idlist(self, sort="hot", page=1, t=None, filter_words="", **kwargs):
 
         posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
                                                                            is_deleted=False,
@@ -246,6 +248,12 @@ class User(Base, Stndrd, Age_times):
                 Submission.author_id.notin_(blocking),
                 Submission.author_id.notin_(blocked)
             )
+
+        if filter_words:
+            posts=posts.join(Submission.submission_aux)
+            for word in filter_words:
+                #print(word)
+                posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
 
         if t:
             now = int(time.time())
@@ -812,3 +820,6 @@ class User(Base, Stndrd, Age_times):
         return time.strftime("%d %b %Y at %H:%M:%S",
                              time.gmtime(self.premium_expires_utc))
     
+    @property
+    def filter_words(self):
+        return [i.lstrip().rstrip() for i in self.custom_filter_list.split('\n')] if self.custom_filter_list else []
