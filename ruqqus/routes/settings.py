@@ -78,7 +78,7 @@ def settings_profile_post(v):
 
     if request.values.get("filters") is not None:
 
-        filters=request.values.get("filters")[0:1000]
+        filters=request.values.get("filters")[0:1000].lstrip().rstrip()
 
         if filters==v.custom_filter_list:
             return render_template("settings_profile.html",
