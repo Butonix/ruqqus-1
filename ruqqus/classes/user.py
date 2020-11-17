@@ -814,6 +814,21 @@ class User(Base, Stndrd, Age_times):
 
         else:
             return False
+
+    @property
+    def has_premium_no_renew(self):
+        
+        now=int(time.time())
+
+        if self.negative_balance_cents:
+            return False
+        elif self.premium_expires_utc > now:
+            return True
+        elif self.coin_balance>=1:
+            return True
+        else:
+            return False
+    
     
     @property
     def renew_premium_time(self):
