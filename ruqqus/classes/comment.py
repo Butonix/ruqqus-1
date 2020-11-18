@@ -45,6 +45,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     edited_utc = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
     distinguish_level = Column(Integer, default=0)
+    gm_distinguish = Column(Integer, default=None)
     is_deleted = Column(Boolean, default=False)
     is_approved = Column(Integer, default=0)
     approved_utc = Column(Integer, default=0)

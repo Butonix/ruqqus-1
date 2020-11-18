@@ -218,6 +218,40 @@ def board_name(name, v):
                                    )
             }
 
+@app.route("/mod/distinguish_post/<pid>", methods=["POST"])
+@auth_required
+@is_guildmaster
+def mod_distinguish_post(pid, board, v):
+
+    post = get_post(pid)
+
+    if post.author_id != v.id:
+        abort(403)
+
+    if post.gm_distinguish:
+        post.gm_distinguish = 0
+    else:
+        post.gm_distinguish = board.id
+    g.db.add(post)
+
+    return "", 204
+
+@app.route("/mod/distinguish_comment/<cid>", methods=["POST"])
+@auth_required
+@is_guildmaster
+def mod_distinguish_comment(cid, board, v):
+
+    comment = get_comment(cid)
+
+    if comment.author_id != v.id:
+        abort(403)
+
+    if comment.gm_distinguish:
+        comment.gm_distinguish = 0
+    else:
+        comment.gm_distinguish = board.id
+
+    return "", 204
 
 @app.route("/mod/kick/<bid>/<pid>", methods=["POST"])
 @auth_required
