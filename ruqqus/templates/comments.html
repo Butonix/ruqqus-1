@@ -376,12 +376,8 @@
       </div>
       <div class="modal-body">
         <ul class="list-group comment-actions">
-          {% if v and v.id == c.author_id %}
-          {% for x in v.boards_modded %}
-          {% if x.id == c.post.board_id %}
+          {% if v and v.id==c.author_id and c.post.board_id in v.boards_modded_ids %}
           <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/mod/distinguish_comment/{{ c.board.base36id }}/{{ c.base36id }}', callback=function(){window.location.href = '{{c.permalink}}';})"><i class="fas fa-chess-rook"></i><span>Herald</span></a></li>
-          {% endif %}
-          {% endfor %}
           {% endif %}
 
           <li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i><span>Copy Link</span></a></li>
