@@ -840,3 +840,8 @@ class User(Base, Stndrd, Age_times):
         l= [i.lstrip().rstrip() for i in self.custom_filter_list.split('\n')] if self.custom_filter_list else []
         l=[i for i in l if i]
         return l
+                             
+    @property
+    def boards_modded_ids(self):
+        return [x.id for x in self.boards_modded]
+                             
