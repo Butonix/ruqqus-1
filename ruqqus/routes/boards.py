@@ -218,12 +218,14 @@ def board_name(name, v):
                                    )
             }
 
-@app.route("/mod/distinguish_post/<pid>", methods=["POST"])
+@app.route("/mod/distinguish_post/<bid>/<pid>", methods=["POST"])
 @auth_required
 @is_guildmaster
-def mod_distinguish_post(pid, board, v):
+def mod_distinguish_post(bid, pid, board, v):
 
-    post = get_post(pid)
+    print(pid, board, v)
+
+    post = get_post(pid, v=v)
 
     if post.author_id != v.id:
         abort(403)
@@ -236,12 +238,12 @@ def mod_distinguish_post(pid, board, v):
 
     return "", 204
 
-@app.route("/mod/distinguish_comment/<cid>", methods=["POST"])
+@app.route("/mod/distinguish_comment/<bid>/<cid>", methods=["POST"])
 @auth_required
 @is_guildmaster
-def mod_distinguish_comment(cid, board, v):
+def mod_distinguish_comment(bid, cid, board, v):
 
-    comment = get_comment(cid)
+    comment = get_comment(cid, v=v)
 
     if comment.author_id != v.id:
         abort(403)

@@ -205,6 +205,14 @@
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i>Copy link</a>
           </li>
 
+          {% if v and v.id == c.author_id %}
+          {% for x in v.boards_modded %}
+          {% if x.id == c.post.board_id %}
+          <li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/mod/distinguish_comment/{{ c.board.base36id }}/{{ c.base36id }}', callback=function(){window.location.href = '{{c.permalink}}';})"><i class="fas fa-chess-rook"></i>Herald</a></li>
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+
           {% if v and v.admin_level>=3 and request.path.startswith ('/admin') %}
             <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times fa-width-rem"></i>Remove</a></li>
             <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-comment-check fa-width-rem"></i>Approve</a></li>
