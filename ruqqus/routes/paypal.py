@@ -291,6 +291,7 @@ def gift_comment_pid(cid, v):
     g.db.add(u)
 
     if not g.db.query(AwardRelationship).filter_by(user_id=v.id, comment_id=comment.id).first():
+        text=f"Someone liked [your comment]({comment.permalink}) and has given you a Coin!\n\n"
         if u.has_premium_no_renew:
             text+="Your Coin has been automatically redeemed for one week of [Ruqqus Premium](/settings/premium)."
         else:

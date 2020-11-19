@@ -95,6 +95,9 @@
         {% if c.distinguish_level %}
         <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>
         {% endif %}
+        {% if c.gm_distinguish %}
+        <i class="fad fa-chess-rook {% if c.gm_distinguish==c.post.board_id %}text-primary{% else %}text-muted{% endif %}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Guildmaster of +{{ c.distinguished_board.name }}"></i>
+        {% endif %}
         {% if c.author_id==c.post.author_id and not c.post.is_deleted and not c.author.is_deleted %}
         <i class="fas fa-microphone-stand text-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Submitter"></i>
         {% endif %}
@@ -201,6 +204,10 @@
           </li>
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i>Copy link</a>
           </li>
+
+          {% if v and v.id==c.author_id and c.post.board_id in v.boards_modded_ids %}
+          <li class="list-inline-item d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post('/mod/distinguish_comment/{{ c.board.base36id }}/{{ c.base36id }}', callback=function(){window.location.href = '{{c.permalink}}';})"><i class="fas fa-chess-rook"></i><span class="d-none d-md-inline-block">Herald</span></a></li>
+          {% endif %}
 
           {% if v and v.admin_level>=3 and request.path.startswith ('/admin') %}
             <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times fa-width-rem"></i>Remove</a></li>
@@ -365,6 +372,10 @@
       </div>
       <div class="modal-body">
         <ul class="list-group comment-actions">
+          {% if v and v.id==c.author_id and c.post.board_id in v.boards_modded_ids %}
+          <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/mod/distinguish_comment/{{ c.board.base36id }}/{{ c.base36id }}', callback=function(){window.location.href = '{{c.permalink}}';})"><i class="fas fa-chess-rook"></i><span>Herald</span></a></li>
+          {% endif %}
+
           <li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i><span>Copy Link</span></a></li>
 
           <li class="list-group-item"><a href="{{ c.permalink }}"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-link"></i>Permalink</a></li>

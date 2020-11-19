@@ -53,6 +53,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     is_banned = Column(Boolean, default=False)
     is_deleted = Column(Boolean, default=False)
     distinguish_level = Column(Integer, default=0)
+    gm_distinguish = Column(Integer, ForeignKey("boards.id"), default=0)
+    distinguished_board = relationship("Board", lazy="joined", primaryjoin="Board.id==Submission.gm_distinguish")
     created_str = Column(String(255), default=None)
     stickied = Column(Boolean, default=False)
     _comments = relationship(
