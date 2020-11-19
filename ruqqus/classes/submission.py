@@ -159,6 +159,14 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @lazy
     def fullname(self):
         return f"t2_{self.base36id}"
+    
+    @property
+    def has_pinned_comment(self):
+        pinned_comment = [x for x in self.replies if x.is_pinned]
+        if len(pinned_comment) == 1:
+            return True
+        else:
+            return False
 
     @property
     @lazy
@@ -215,6 +223,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         # return template
         is_allowed_to_comment = self.board.can_comment(
             v) and not self.is_archived
+        
+        if request.args.get("sort", "Hot") != "new":
+            self.replies = [x for x in self.replies if x.is_pinned] + [x for x in self.replies if not x.is_pinned]
 
         return render_template(template,
                                v=v,
