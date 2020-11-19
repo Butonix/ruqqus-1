@@ -223,7 +223,7 @@ def board_name(name, v):
 @is_guildmaster
 def mod_distinguish_post(bid, pid, board, v):
 
-    print(pid, board, v)
+    #print(pid, board, v)
 
     post = get_post(pid, v=v)
 
