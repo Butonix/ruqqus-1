@@ -223,7 +223,7 @@ def gift_post_pid(pid, v):
 
     if not g.db.query(AwardRelationship).filter_by(user_id=v.id, submission_id=post.id).first():
         text=f"Someone liked [your post]({post.permalink}) and has given you a Coin!\n\n"
-        if u.has_premium_no_renew:
+        if not u.has_premium_no_renew:
             text+="Your Coin has been automatically redeemed for one week of [Ruqqus Premium](/settings/premium)."
         else:
             text+="Since you already have Ruqqus Premium, the Coin has been added to your balance. You can keep it for yourself, or give it to someone else."
@@ -292,7 +292,7 @@ def gift_comment_pid(cid, v):
 
     if not g.db.query(AwardRelationship).filter_by(user_id=v.id, comment_id=comment.id).first():
         text=f"Someone liked [your comment]({comment.permalink}) and has given you a Coin!\n\n"
-        if u.has_premium_no_renew:
+        if not u.has_premium_no_renew:
             text+="Your Coin has been automatically redeemed for one week of [Ruqqus Premium](/settings/premium)."
         else:
             text+="Since you already have Ruqqus Premium, the Coin has been added to your balance. You can keep it for yourself, or give it to someone else."
