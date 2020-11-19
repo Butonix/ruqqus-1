@@ -199,7 +199,7 @@
           {% endif %}
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ c.permalink  }}"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-link"></i>Permalink</a>
           </li>
-          <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i>Copy link</a>
+          <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i>Copy link</a></li>
           {% if c.is_top_level and v and c.board.has_mod(v) %}
           {% if c.is_pinned %}
           <li class="list-inline-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack text-info fa-rotate--45"></i><span class="d-none d-md-inline-block text-info">Unpin</span></a>
@@ -209,7 +209,6 @@
           </li>
           {% endif %}
           {% endif %}
-          </li>
 
           {% if v and v.admin_level>=3 and request.path.startswith ('/admin') %}
             <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times fa-width-rem"></i>Remove</a></li>
