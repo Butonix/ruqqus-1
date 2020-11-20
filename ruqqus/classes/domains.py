@@ -21,6 +21,7 @@ class Domain(Base):
     show_thumbnail = Column(Boolean, default=False)
     embed_function = Column(String(64), default=None)
     embed_template = Column(String(32), default=None)
+    sandbox_embed = Column(Boolean, default=False)
 
     @property
     def reason_text(self):
