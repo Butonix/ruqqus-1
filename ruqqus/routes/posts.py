@@ -767,3 +767,14 @@ def retry_thumbnail(pid, v):
                                   )
     new_thread.start()
     return jsonify({"message": "Thumbnail Retry Queued"})
+
+
+@app.route("/embedded_twitter/<pid>", methods=["GET"])
+def embedded_frame_content_pid(pid):
+
+    post=get_post(pid)
+
+    if not post.domain_obj:
+        abort(404)
+
+    return render_template(post.domain_obj.embed_template, p=post)
