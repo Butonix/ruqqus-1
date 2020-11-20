@@ -777,4 +777,4 @@ def embedded_frame_content_pid(pid):
     if not post.domain_obj:
         abort(404)
 
-    return render_template(post.domain_obj.embed_template, p=post)
+    return render_template(f"site_embeds/{post.domain_obj.embed_template}.html", p=post)
