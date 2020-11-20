@@ -303,7 +303,7 @@ def after_request(response):
                          "geolocation 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'none'; fullscreen 'none'; payment")
     if not request.path.startswith("/embed/"):
         response.headers.add("X-Frame-Options",
-                             "deny")
+                             "SAMEORIGIN")
 
     # signups - hit discord webhook
     if request.method == "POST" and response.status_code in [
