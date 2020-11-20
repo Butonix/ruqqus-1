@@ -385,7 +385,11 @@
             {{ p.body_html | safe }}
 
             {% if p.embed_url and p.domain_obj and p.domain_obj.embed_template %}
-              {% include p.embed_template %}
+              {% if p.domain_obj.sandbox_embed %}
+                {% include "site_embeds/embed_frame.html" %}
+              {% else %}
+                {% include p.embed_template %}
+              {% endif %}
             {% endif %}
 
           </div>
