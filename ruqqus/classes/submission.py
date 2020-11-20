@@ -159,15 +159,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @lazy
     def fullname(self):
         return f"t2_{self.base36id}"
-    
-    @property
-    def has_pinned_comment(self):
-        pinned_comment = [x for x in self.replies if x.is_pinned]
-        if len(pinned_comment) == 1:
-            return True
-        else:
-            return False
-
+        
     @property
     @lazy
     def permalink(self):
