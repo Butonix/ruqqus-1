@@ -1,0 +1,9 @@
+<script>
+	adjustFrame=function(){
+		var x = document.getElementById('embedded-content-frame')
+
+		x.height = x.window.Document.height
+	}
+</script>
+<iframe id="embedded-content-frame" src="/embed_frame/{{ p.base36id }}" onload="adjustFrame()" sandbox="allow-scripts">
+</iframe>
