@@ -479,7 +479,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     
 class SaveRelationship(Base, Stndrd):
 
-    __tablename__=="save_relationship"
+    __tablename__="save_relationship"
 
     id=Column(Integer, primary_key=true)
     user_id=Column(Integer, ForeignKey("users.id"))
