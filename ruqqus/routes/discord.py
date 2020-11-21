@@ -93,10 +93,12 @@ def discord_redirect(v):
         'Authorization': f"Bot {BOT_TOKEN}",
         'Content-Type': "application/json"
     }
+    print(headers)
     data={
         "access_token":token,
         "nick":v.username
     }
+    print(data)
 
     x=requests.put(url, headers=headers, data=data)
 
