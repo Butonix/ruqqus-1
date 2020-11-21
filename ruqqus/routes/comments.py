@@ -641,3 +641,36 @@ def embed_comment_cid(cid, pid=None):
         abort(410)
 
     return render_template("embeds/comment.html", c=comment)
+
+@app.route("/mod/comment_pin/<bid>/<cid>/<x>", methods=["POST"])
+@auth_required
+@is_guildmaster
+@validate_formkey
+def mod_toggle_comment_pin(bid, cid, x, board, v):
+
+    comment = get_comment(cid)
+
+    if comment.post.board_id != board.id:
+        abort(400)
+
+    try:
+        x = bool(int(x))
+    except BaseException:
+        abort(400)
+        
+    #remove previous pin (if exists)
+    if x:
+        previous_sticky = g.db.query(Comment).filter(
+            and_(
+                Comment.parent_submission == comment.post.id, 
+                Comment.is_pinned == True
+                )
+            ).first()
+        if previous_sticky:
+            previous_sticky.is_pinned = False
+            g.db.add(previous_sticky)
+
+    comment.is_pinned = x
+
+    g.db.add(comment)
+
