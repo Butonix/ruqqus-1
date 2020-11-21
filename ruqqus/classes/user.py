@@ -875,7 +875,7 @@ class User(Base, Stndrd, Age_times):
         comments=db.query(Comment.score_top).join(
             Comment.post).filter(
             Comment.is_banned==False,
-            Submission.board_id=guild.id).all()
+            Submission.board_id==guild.id).all()
 
         comment_rep=sum([x[0] for x in comments])
 
