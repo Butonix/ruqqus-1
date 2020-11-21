@@ -45,7 +45,7 @@ def discord_redirect(v):
     state=request.args.get('state','')
 
     if not validate_hash(f"{session.get('session_id')}+{v.id}+discord", state):
-        abort(403)
+        abort(400)
 
     #get discord token
     code = request.args.get("code","")
