@@ -81,6 +81,22 @@ def discord_redirect(v):
     }
     x=requests.get(url, headers=headers)
 
-    return jsonify(x.json())
+    x=x.json()
+
+    v.discord_id=x["id"]
+    g.db.add(v)
+
+    #add user to discord
+    url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{x['id']}"
+    headers={
+        'Authorization': f"Bot {BOT_TOKEN}"
+    }
+    data={
+        "access_token":token
+        "nick":v.username
+    }
+
+    x=requests.put(url, headers=headers, data=data)
+    return redirect(f"https://discord.com/channels/{SERVER_ID}")
 
 
