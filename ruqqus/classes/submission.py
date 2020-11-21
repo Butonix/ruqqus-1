@@ -218,8 +218,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         is_allowed_to_comment = self.board.can_comment(
             v) and not self.is_archived
         
-        if request.args.get("sort", "Hot") != "new":
-            self.replies = [x for x in self.replies if x.is_pinned] + [x for x in self.replies if not x.is_pinned]
+    #    if request.args.get("sort", "Hot") != "new":
+    #        self.replies = [x for x in self.replies if x.is_pinned] + [x for x in self.replies if not x.is_pinned]
 
         return render_template(template,
                                v=v,
@@ -248,8 +248,14 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
         comments = self._preloaded_comments
 
+        pinned_comment=[]
+
         index = {}
         for c in comments:
+
+            if c.is_pinned and c.parent_fullname==self.fullname:
+                pinned_comment=[c]
+
             if c.parent_fullname in index:
                 index[c.parent_fullname].append(c)
             else:
@@ -261,7 +267,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         if comment:
             self.__dict__["replies"] = [comment]
         else:
-            self.__dict__["replies"] = index.get(self.fullname, [])
+            self.__dict__["replies"] = pinned_comment + index.get(self.fullname, [])
 
     @property
     def active_flags(self):
