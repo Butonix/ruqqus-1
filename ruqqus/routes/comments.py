@@ -674,3 +674,5 @@ def mod_toggle_comment_pin(bid, cid, x, board, v):
 
     g.db.add(comment)
 
+    return "", 204
+
