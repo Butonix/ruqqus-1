@@ -19,6 +19,7 @@ DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
 #Discord role IDs
 BANNED_ID="700694275905814591"
 MEMBER_ID="727255602648186970"
+NICK_ID="730493039176450170"
 
 
 
@@ -105,7 +106,19 @@ def discord_redirect(v):
 
     x=requests.put(url, headers=headers, json=data)
 
-    #pprint.pprint(x.json())
+    #check on if they are already there
+    
+
+    if x.status_code==204:
+
+        ##if user is already a member, remove old roles and update nick
+        discord_no_nick_role(v)
+
+        url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{v.discord_id}"
+        data={
+            "nick": v.username
+        }
+        requests.patch(url, headers=headers, json=data)
 
     return redirect(f"https://discord.com/channels/{SERVER_ID}")
 
@@ -130,6 +143,17 @@ def discord_unban_role(user):
         return
 
     url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{BANNED_ID}"
+    headers={
+        "Authorization": f"Bot {BOT_TOKEN}"
+    }
+    requests.delete(url, headers=headers)
+
+def discord_no_nick_role(user)
+
+    if not user.discord_id:
+        return
+
+    url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{NICK_ID}"
     headers={
         "Authorization": f"Bot {BOT_TOKEN}"
     }
