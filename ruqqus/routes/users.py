@@ -303,7 +303,7 @@ def user_profile(username):
     return redirect(x.profile_url)
 
 
-@app.route("/saved", methods=["GET"]):
+@app.route("/saved", methods=["GET"])
 @app.route("/api/v1/saved", methods=["GET"])
 @auth_required
 @api("read")
