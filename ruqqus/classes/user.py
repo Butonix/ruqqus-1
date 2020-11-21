@@ -829,7 +829,7 @@ class User(Base, Stndrd, Age_times):
             )
         )
 
-        saved=g.db.query(SaveRelationship).filter(user_id=self.id).subquery
+        saved=g.db.query(SaveRelationship).filter_by(user_id=self.id).subquery()
         posts=posts.filter(Submission.id.in_(saved))
 
 
