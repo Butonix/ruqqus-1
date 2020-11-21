@@ -100,7 +100,7 @@ def discord_redirect(v):
     }
     print(data)
 
-    x=requests.put(url, headers=headers, data=data)
+    x=requests.put(url, headers=headers, json=data)
 
     return jsonify(x.json())
 
