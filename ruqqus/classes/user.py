@@ -824,7 +824,6 @@ class User(Base, Stndrd, Age_times):
             or_(
                 Submission.board_id.in_(board_ids),
                 Submission.board_id.in_(mod_ids),
-                Submission.author_id.in_(user_ids),
                 Board.is_private==False,
                 Submission.is_public==True
             )
