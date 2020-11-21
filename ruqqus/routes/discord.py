@@ -148,7 +148,7 @@ def discord_unban_role(user):
     }
     requests.delete(url, headers=headers)
 
-def discord_no_nick_role(user)
+def discord_no_nick_role(user):
 
     if not user.discord_id:
         return
