@@ -90,6 +90,7 @@ def discord_redirect(v):
     url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{x['id']}"
     headers={
         'Authorization': f"Bot {BOT_TOKEN}"
+        'Content-Type': "application/json"
     }
     data={
         "access_token":token,
