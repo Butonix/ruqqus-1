@@ -87,7 +87,7 @@ def discord_redirect(v):
     g.db.add(v)
 
     #add user to discord
-    url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{x['id']}"
+    url=f"https://discord.com/api/v8/guilds/{SERVER_ID}/members/{x['id']}"
     print(url)
     headers={
         'Authorization': f"Bot {BOT_TOKEN}",
