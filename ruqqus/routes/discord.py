@@ -46,7 +46,7 @@ def discord_redirect(v):
         abort(403)
 
     #get discord token
-    code=request.args.get("code","")
+    code = request.args.get("code","")
     if not code:
         abort(400)
 
