@@ -8,6 +8,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.alerts import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.markdown import *
+from ruqqus.routes.discord import discord_ban_role, discord_unban_role
 from urllib.parse import urlparse
 from secrets import token_hex
 import matplotlib.pyplot as plt
@@ -46,6 +47,8 @@ def ban_user(user_id, v):
             text = "Your Ruqqus account has been permanently suspended due to a Terms of Service violation."
 
         user.ban(admin=v, reason=reason)
+
+
 
     send_notification(user, text)
 
