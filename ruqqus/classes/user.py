@@ -16,7 +16,7 @@ import ruqqus.helpers.aws as aws
 from .votes import Vote
 from .alts import Alt
 from .titles import Title
-from .submission import Submission, SubmissionAux
+from .submission import Submission, SubmissionAux, SaveRelationship
 from .comment import Comment, Notification
 from .boards import Board
 from .board_relationships import *
