@@ -112,4 +112,20 @@ def discord_redirect(v):
 
     return redirect(f"https://discord.com/channels/{SERVER_ID}")
 
+def discord_ban_role(user):
+
+    url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{BANNED_ID}"
+    headers={
+        "Authorization": f"Bot {BOT_TOKEN}"
+    }
+    requests.put(url, headers=headers)
+
+def discord_unban_role(user):
+
+    url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{BANNED_ID}"
+    headers={
+        "Authorization": f"Bot {BOT_TOKEN}"
+    }
+    requests.delete(url, headers=headers)
+
 
