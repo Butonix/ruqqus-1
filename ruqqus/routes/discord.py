@@ -1,5 +1,6 @@
 from os import environ
 import requests
+import pprint
 
 from flask import *
 
@@ -101,6 +102,8 @@ def discord_redirect(v):
     #print(data)
 
     x=requests.put(url, headers=headers, json=data)
+
+    pprint.pprint(x.json())
 
     return redirect(f"https://discord.com/channels/{SERVER_ID}")
 
