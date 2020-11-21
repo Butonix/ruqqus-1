@@ -324,6 +324,6 @@ def saved_listing(v):
                                             listing=listing,
                                             page=page,
                                             next_exists=next_exists
-                                            )
+                                            ),
             'api': lambda: jsonify({"data": [x.json for x in listing]})
             }
