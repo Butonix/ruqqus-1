@@ -30,9 +30,9 @@ def guilded_server():
 @auth_required
 def join_discord(v):
 
-	state=generate_hash(f"{session.get('session_id')}+{v.id}+discord")
+    state=generate_hash(f"{session.get('session_id')}+{v.id}+discord")
 
-	return redirect(f"https://discord.com/api/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri=https%3A%2F%2F{app.config['SERVER_NAME']}%2Fdiscord_redirect&response_type=code&scope=identify%20guilds.join&state={state}")
+    return redirect(f"https://discord.com/api/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri=https%3A%2F%2F{app.config['SERVER_NAME']}%2Fdiscord_redirect&response_type=code&scope=identify%20guilds.join&state={state}")
 
 @app.route("/discord_redirect", methods=["GET"])
 @auth_required
@@ -40,10 +40,10 @@ def discord_redirect(v):
 
 
     #validate state
-	state=request.args.get('state','')
+    state=request.args.get('state','')
 
-	if not validate_hash(f"{session.get('session_id')}+{v.id}+discord", state):
-		abort(403)
+    if not validate_hash(f"{session.get('session_id')}+{v.id}+discord", state):
+        abort(403)
 
     #get discord token
     code=request.args.get("code","")
