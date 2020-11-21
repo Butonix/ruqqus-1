@@ -119,7 +119,9 @@ def discord_redirect(v):
             "nick": v.username
         }
 
-        requests.patch(url, headers=headers, json=data)
+        req=requests.patch(url, headers=headers, json=data)
+
+        print(req.status_code)
         print(url)
 
     return redirect(f"https://discord.com/channels/{SERVER_ID}")
