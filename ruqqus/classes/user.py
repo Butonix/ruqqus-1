@@ -809,25 +809,6 @@ class User(Base, Stndrd, Age_times):
         if not self.over_18:
             posts = posts.filter_by(over_18=False)
 
-        board_ids = g.db.query(
-            ContributorRelationship.board_id).filter_by(
-            user_id=self.id,
-            is_active=True).subquery()
-
-        mod_ids = g.db.query(
-            ModRelationship.board_id).filter_by(
-            user_id=self.id,
-            accepted=True).subquery()
-
-
-        posts = posts.filter(
-            or_(
-                Submission.board_id.in_(board_ids),
-                Submission.board_id.in_(mod_ids),
-                Board.is_private==False,
-                Submission.is_public==True
-            )
-        )
 
         saved=g.db.query(SaveRelationship.submission_id).filter_by(user_id=self.id).subquery()
         posts=posts.filter(Submission.id.in_(saved))
