@@ -804,27 +804,36 @@ class User(Base, Stndrd, Age_times):
                                                                            is_deleted=False
                                                                            )
 
+        posts=posts.join(Submission.board)
+
         if not self.over_18:
             posts = posts.filter_by(over_18=False)
 
         board_ids = g.db.query(
-            Subscription.board_id).filter_by(
+            ContributorRelationship.board_id).filter_by(
             user_id=self.id,
             is_active=True).subquery()
 
-        user_ids = g.db.query(
-            Follow.user_id).filter_by(
-            user_id=self.id).join(
-            Follow.target).filter(
-                User.is_private == False,
-            User.is_nofollow == False).subquery()
+        mod_ids = g.db.query(
+            ModRelationship.board_id).filter_by(
+            user_id=self.id,
+            accepted=True).subquery()
+
 
         posts = posts.filter(
             or_(
                 Submission.board_id.in_(board_ids),
-                Submission.author_id.in_(user_ids)
+                Submission.board_id.in_(mod_ids),
+                Submission.author_id.in_(user_ids),
+                Board.is_private==False,
+                Submission.is_public==True
             )
         )
+
+        saved=g.db.query(SaveRelationship).filter(user_id=self.id).subquery
+        posts=posts.filter(Submission.id.in_(saved))
+
+
 
         if self.admin_level < 4:
             # admins can see everything
