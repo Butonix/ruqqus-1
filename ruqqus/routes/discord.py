@@ -97,6 +97,7 @@ def discord_redirect(v):
     }
 
     x=requests.put(url, headers=headers, data=data)
+
     return redirect(f"https://discord.com/channels/{SERVER_ID}")
 
 
