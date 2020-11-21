@@ -28,8 +28,7 @@ def guilded_server():
 
 @app.route("/join_discord", methods=["GET"])
 @auth_required
-def join_discord():
+def join_discord(v):
 
 	return redirect(f"https://discord.com/api/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri=https%3A%2F%2Fdev.ruqqus.com%2Fdiscord_redirect&response_type=code&scope=identify%20guilds%20guilds.join")
 
-	
