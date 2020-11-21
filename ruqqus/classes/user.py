@@ -730,8 +730,6 @@ class User(Base, Stndrd, Age_times):
         self.unban_utc = 0
 
         g.db.add(self)
-        if self.discord_id:
-            discord_unban_role(self)
 
 
     @property
