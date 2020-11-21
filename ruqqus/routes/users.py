@@ -317,6 +317,8 @@ def saved_listing(v):
 
     ids=ids[0:25]
 
+    print(ids)
+
     listing = get_posts(ids, v=v, sort="new")
 
     return {'html': lambda: render_template("home.html",
