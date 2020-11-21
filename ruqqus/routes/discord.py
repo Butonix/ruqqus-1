@@ -38,11 +38,33 @@ def join_discord(v):
 @auth_required
 def discord_redirect(v):
 
+
+    #validate state
 	state=request.args.get('state','')
 
 	if not validate_hash(f"{session.get('session_id')}+{v.id}+discord", state):
 		abort(403)
 
-	return ('so far so good')
+    #get discord token
+    code=request.args.get("code","")
+    if not code:
+        abort(400)
+
+    data={
+        "client_id":CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
+        'grant_type': 'authorization_code',
+        'code': code,
+        'redirect_uri': f"https://{app.config['SERVER_NAME']}/discord_redirect",
+        'scope': 'identify guilds.join'
+    }
+    headers={
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    url="https://discord.com/api/oauth2/token"
+
+    x=requests.post(url, headers=headers, data=data)
+
+    return jsonify(x.json())
 
 
