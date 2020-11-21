@@ -21,17 +21,13 @@ BANNED_ID="700694275905814591"
 MEMBER_ID="727255602648186970"
 
 
-@app.route("/discord", methods=["GET"])
-def discord_server():
-    return redirect("https://discord.gg/3Y5Dd4Y")
-
 
 @app.route("/guilded", methods=["GET"])
 def guilded_server():
     return redirect("https://www.guilded.gg/i/VEvjaraE")
 
 
-@app.route("/join_discord", methods=["GET"])
+@app.route("/discord", methods=["GET"])
 @auth_required
 def join_discord(v):
 
