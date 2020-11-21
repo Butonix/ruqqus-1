@@ -381,9 +381,6 @@
       </div>
       <div class="modal-body">
         <ul class="list-group comment-actions">
-          {% if v and v.id==c.author_id and c.post.board_id in v.boards_modded_ids %}
-          <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/mod/distinguish_comment/{{ c.board.base36id }}/{{ c.base36id }}', callback=function(){window.location.href = '{{c.permalink}}';})" class="text-warning"><i class="fas fa-crown text-warning"></i><span>Herald</span></a></li>
-          {% endif %}
 
           <li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i><span>Copy Link</span></a></li>
 
@@ -425,6 +422,10 @@
                     <a class="d-block" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ c.author.username }}')"><i class="fas fa-user-slash text-danger"></i>Block user</a>
                   </li>
               {% endif %}
+          {% endif %}
+          
+          {% if v and v.id==c.author_id and c.post.board_id in v.boards_modded_ids %}
+          <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/mod/distinguish_comment/{{ c.board.base36id }}/{{ c.base36id }}', callback=function(){window.location.href = '{{c.permalink}}';})" class="text-warning"><i class="fas fa-crown text-warning"></i><span>Herald</span></a></li>
           {% endif %}
             
           {% if c.is_top_level and v and c.board.has_mod(v) %}
