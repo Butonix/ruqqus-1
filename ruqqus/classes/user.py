@@ -808,7 +808,7 @@ class User(Base, Stndrd, Age_times):
             posts = posts.filter_by(over_18=False)
 
 
-        saved=g.db.query(SaveRelationship.submission_id).filter(SaveRelationship.user_id=self.id).subquery()
+        saved=g.db.query(SaveRelationship.submission_id).filter(SaveRelationship.user_id==self.id).subquery()
         posts=posts.filter(Submission.id.in_(saved))
 
 
