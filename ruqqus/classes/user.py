@@ -804,13 +804,11 @@ class User(Base, Stndrd, Age_times):
                                                                            is_deleted=False
                                                                            )
 
-        posts=posts.join(Submission.board)
-
         if not self.over_18:
             posts = posts.filter_by(over_18=False)
 
 
-        saved=g.db.query(SaveRelationship.submission_id).filter_by(user_id=self.id).subquery()
+        saved=g.db.query(SaveRelationship.submission_id).filter(SaveRelationship.user_id=self.id).subquery()
         posts=posts.filter(Submission.id.in_(saved))
 
 
