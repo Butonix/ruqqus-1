@@ -11,7 +11,6 @@ import pyotp
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import lazy
-from ruqqus.routes.discord import discord_ban_role, discord_unban_role
 import ruqqus.helpers.aws as aws
 #from ruqqus.helpers.alerts import send_notification
 from .votes import Vote
