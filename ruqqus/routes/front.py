@@ -65,10 +65,9 @@ def notifications(v):
                            render_replies=True,
                            is_notification_page=True)
 
-
 @cache.memoize(timeout=900)
-def frontlist(v=None, sort="hot", page=1, nsfw=False,
-              t=None, ids_only=True, **kwargs):
+def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
+              t=None, ids_only=True, filter_words='', **kwargs):
 
     # cutoff=int(time.time())-(60*60*24*30)
 
@@ -83,7 +82,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False,
     elif sort == "activity":
         sort_func = Submission.score_activity.desc
     else:
-        abort(422)
+        abort(400)
 
     posts = g.db.query(Submission
                        ).options(lazyload('*')).filter_by(is_banned=False,
@@ -92,9 +91,15 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False,
 
     if not nsfw:
         posts = posts.filter_by(over_18=False)
+    
+    if not nsfl:
+	    posts = posts.filter_by(is_nsfl=False)
 
     if v and v.hide_offensive:
-        posts.filter_by(is_offensive=False)
+        posts = posts.filter_by(is_offensive=False)
+
+    if (v and v.is_hiding_politics) or not v:
+        posts = posts.filter_by(is_politics=False)
 
     if v and v.admin_level >= 4:
         board_blocks = g.db.query(
@@ -124,7 +129,6 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False,
         blocked = g.db.query(
             UserBlock.user_id).filter_by(
             target_id=v.id).subquery()
-
         posts = posts.filter(
             Submission.author_id.notin_(blocking),
             Submission.author_id.notin_(blocked)
@@ -157,6 +161,14 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False,
             all_opt_out=False).options(
             contains_eager(
                 Submission.board))
+
+    #custom filter
+    #print(filter_words)
+    if v and filter_words:
+        posts=posts.join(Submission.submission_aux)
+        for word in filter_words:
+            #print(word)
+            posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
 
     if t:
         now = int(time.time())
@@ -192,7 +204,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False,
     elif sort == "activity":
         posts = posts.order_by(Submission.score_activity.desc())
     else:
-        abort(422)
+        abort(400)
 
     if ids_only:
         posts = [x.id for x in posts.offset(25 * (page - 1)).limit(26).all()]
@@ -207,23 +219,27 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False,
 @api("read")
 def home(v):
 
-    if v and v.subscriptions.filter_by(is_active=True).count():
+    if v and [i for i in v.subscriptions if i.is_active]:
 
         only = request.args.get("only", None)
         sort = request.args.get("sort", "hot")
 
         page = max(int(request.args.get("page", 1)), 0)
         t = request.args.get('t', 'all')
+        ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
         ids = v.idlist(sort=sort,
                        page=page,
                        only=only,
                        t=t,
 
+                       filter_words=v.filter_words,
+
                        # these arguments don't really do much but they exist for
                        # cache memoization differentiation
                        allow_nsfw=v.over_18,
                        hide_offensive=v.hide_offensive,
+                       hide_politics=v and v.is_hiding_politics,
 
                        # greater/less than
                        gt=int(request.args.get("utc_greater_than", 0)),
@@ -234,7 +250,7 @@ def home(v):
         ids = ids[0:25]
 
         # If page 1, check for sticky
-        if page == 1 and sort != "new":
+        if page == 1 and sort != "new" and not ignore_pinned:
             sticky = g.db.query(Submission.id).filter_by(stickied=True).first()
             if sticky:
                 ids = [sticky.id] + ids
@@ -272,16 +288,20 @@ def front_all(v):
 
     sort_method = request.args.get("sort", "hot")
     t = request.args.get('t', 'all')
+    ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
     # get list of ids
     ids = frontlist(sort=sort_method,
                     page=page,
                     nsfw=(v and v.over_18 and not v.filter_nsfw),
+                    nsfl=(v and v.show_nsfl),
                     t=t,
                     v=v,
-                    hide_offensive=v and v.hide_offensive,
+                    hide_offensive=(v and v.hide_offensive) or not v,
+                    hide_politics=(v and v.is_hiding_politics) or not v,
                     gt=int(request.args.get("utc_greater_than", 0)),
-                    lt=int(request.args.get("utc_less_than", 0))
+                    lt=int(request.args.get("utc_less_than", 0)),
+                    filter_words=v.filter_words if v else []
                     )
 
     # check existence of next page
@@ -289,7 +309,7 @@ def front_all(v):
     ids = ids[0:25]
 
    # If page 1, check for sticky
-    if page == 1:
+    if page == 1 and not ignore_pinned:
         sticky = []
         sticky = g.db.query(Submission.id).filter_by(stickied=True).first()
         if sticky:
@@ -334,7 +354,7 @@ def guild_ids(sort="subs", page=1, nsfw=False):
         guilds = guilds.order_by(Board.rank_trending.desc())
 
     else:
-        abort(422)
+        abort(400)
 
     guilds = [x.id for x in guilds.offset(25 * (page - 1)).limit(26).all()]
 
@@ -375,16 +395,15 @@ def browse_guilds(v):
 
         # hit db for entries
 
-        boards = g.db.query(Board
-                            ).from_statement(
-            text(f"""
-                            select *
-                            from boards
-                            join (values {tups}) as x(id, n)
-                            on boards.id=x.id
-                            where x.n is not null
-                            order by x.n"""
-                 )).all()
+        boards = g.db.query(
+            Board).options(
+            lazyload(
+                '*'
+            )).filter(
+            Board.id.in_(ids)
+            ).all()
+
+        boards=sorted(boards, key=lambda x: ids.index(x.id))
     else:
         boards = []
 
@@ -456,7 +475,7 @@ def my_subs(v):
                                kind="users")
 
     else:
-        abort(422)
+        abort(400)
 
 
 @app.route("/random/post", methods=["GET"])

@@ -15,7 +15,8 @@ from time import sleep
 
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, sessionmaker, scoped_session
+from sqlalchemy.exc import OperationalError, StatementError, InternalError
+from sqlalchemy.orm import Session, sessionmaker, scoped_session, Query as _Query
 from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
 import threading
@@ -27,13 +28,14 @@ from redis import BlockingConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.20.0"
+_version = "2.25.0"
 
 app = Flask(__name__,
             template_folder='./templates',
             static_folder='./static'
             )
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
+app.url_map.strict_slashes = False
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get(
@@ -52,9 +54,8 @@ app.config["SERVER_NAME"] = environ.get(
         "SERVER_NAME", None)).rstrip()
 app.config["SESSION_COOKIE_NAME"] = "session_ruqqus"
 app.config["VERSION"] = _version
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config["SESSION_COOKIE_SECURE"] = environ.get(
-    "SESSION_COOKIE_SECURE", "true").lower() != "false"
+app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024
+app.config["SESSION_COOKIE_SECURE"] = bool(int(environ.get("FORCE_HTTPS", 1)))
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
 app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 365
@@ -136,6 +137,8 @@ engines = {
 }
 
 
+#These two classes monkey patch sqlalchemy
+
 class RoutingSession(Session):
     def get_bind(self, mapper=None, clause=None):
         try:
@@ -150,7 +153,41 @@ class RoutingSession(Session):
                 return random.choice(engines['followers'])
 
 
-db_session = scoped_session(sessionmaker(class_=RoutingSession))
+def retry(f):
+    def wrapper(self, *args, **kwargs):
+
+        try:
+            return f(self, *args, **kwargs)
+
+        except:
+            self.session.rollback()
+            return f(self, *args, **kwargs)
+
+    wrapper.__name__=f.__name__
+    return wrapper
+
+
+class RetryingQuery(_Query):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    @retry
+    def all(self):
+        return super().all()
+
+    @retry
+    def count(self):
+        return super().count()
+
+    @retry
+    def first(self):
+        return super().first()
+
+
+
+
+db_session = scoped_session(sessionmaker(class_=RoutingSession, query_cls=RetryingQuery))
 # db_session=scoped_session(sessionmaker(bind=engines["leader"]))
 
 Base = declarative_base()
@@ -219,6 +256,8 @@ def before_request():
 
     if not session.get("session_id"):
         session["session_id"] = secrets.token_hex(16)
+
+    g.timestamp = int(time.time())
 
     # g.db.begin_nested()
 

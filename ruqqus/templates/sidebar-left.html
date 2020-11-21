@@ -71,7 +71,7 @@
               </ul>
             </div>
 
-            {% if v and v.subscriptions.filter_by(is_active=True).count() %}
+            {% if v and v.subscribed_to_anything %}
             <div class="mb-4">
               <div class="sidebar-collapsed-hidden">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -110,9 +110,8 @@
                 {% endfor %}
               </ul>
             </div>
-            {% endif %}
 
-            {% if v and not v.subscriptions.filter_by(is_active=True).count() %}
+            {% elif v and not v.subscribed_to_anything %}
             <div class="sidebar-collapsed-hidden">
               <div class="mb-3">
                 <div class="text-small font-weight-bold text-muted text-uppercase" style="letter-spacing: 0.025rem;">My guilds</div>

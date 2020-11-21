@@ -3881,3 +3881,8 @@ div.deleted.banned {
 .text-admin {
     color: $admin
 }
+
+.in-comment-image {
+  max-height: 100px !important;
+  max-width: 100px !important;
+}

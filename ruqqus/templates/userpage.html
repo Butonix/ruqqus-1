@@ -185,65 +185,13 @@
 {% endblock %}
 
 {% block sidebarblock %}
-<!-- Hide other sidebar content for now
-<div class="sidebar-section sidebar-profile-stats">
- <div class="title">Profile</div>
- <div class="body">
-   <div class="text-muted text-small"><i class="fas fa-medal fa-width-rem text-muted mr-2"></i><span data-toggle="tooltip" data-placement="bottom" title="Post Rep">{{ u.karma }}</span> • <span data-toggle="tooltip" data-placement="bottom" title="Comment Rep">{{ u.comment_karma }}</span></div>
-   <div class="text-muted text-small mt-2"><i class="fas fa-feather-alt fa-width-rem text-muted mr-2"></i>{{ u.post_count }} Post{{ 's' if u.post_count!=1 else '' }}
-   </div>
-   <div class="text-muted text-small mt-2"><i class="fas fa-comment-dots fa-width-rem text-muted mr-2"></i>{{ u.comment_count }} Comment{{ 's' if u.comment_count !=1 else '' }}
-   </div>
-   {% if u.follower_count >=1 %}<div class="text-muted text-small mt-2"><i class="fas fa-user-friends fa-width-rem text-muted mr-2"></i>{{ u.follower_count }} Subscriber{{ 's' if u.follower_count !=1 else '' }}
-   </div>{% endif %}
-   <div class="text-muted text-small mt-2"><i class="fas fa-birthday-cake fa-width-rem text-muted mr-2"></i>User since {{ u.created_date }}
-   </div>
-
-   {% if v and v.has_follower(u) %}
-   <div class="text-info text-small mt-2"><i class="fas fa-user-friends fa-width-rem text-info mr-2"></i>Subscribed to you</div>
-   {% endif %}
-
- </div>
-</div>
-
-<div class="sidebar-section sidebar-profile-badges">
-  <div class="title">Badges</div>
-  <div class="body">
-    {% for b in u.badges %}
-    {% include "badge.html" %}
-    {% else %}
-    <p class="text-small text-muted">Nothing yet!</p>
-    {% endfor %}
-  </div>
-</div>
--->
-
+    {% if not v.has_premium %}
     <div class="sidebar-section">
       <div class="title">
         <i class="fas fa-heart mr-2"></i>Support Ruqqus
       </div>
       <div class="body">
-        <p>Exclusive patron titles, merch, and more. Support Ruqqus today!</p>
-
-        {% if v %}
-
-        <a href="/settings#patreon" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
-            <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
-          </span>Unlock Patron Titles
-        </a>
-
-        {% else %}
-
-        <a href="https://patreon.com/ruqqus" target="blank" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
-            <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
-          </span>Become a Patron
-        </a>
-
-        {% endif %}
+        <p>Merch and more. Support Ruqqus today!</p>
 
         <a href="https://www.bonfire.com/store/ruqqus/" target="blank" class="btn btn-block btn-link text-info text-left text-decoration-none px-1 mt-0">
           <span class="fa-stack fa-1x ml-n1 mr-2">
@@ -266,17 +214,29 @@
           </span>Contribute Code
         </a>
 
-        <a href="https://github.com/ruqqus/ruqqus#sponsors" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #F7931A!important">
+        <a href="/help/donate" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #F7931A!important">
           <span class="fa-stack fa-1x ml-n1 mr-2">
             <i class="fas fa-square fa-stack-2x" style="color: #FEEBC8!important; font-size: 2rem!important;"></i>
             <i class="fab fa-bitcoin fa-stack-1x text-base fa-inverse" style="color: #F7931A!important;"></i>
-          </span>Donate Crypto
+          </span>Donate Cash or Crypto
         </a>
 
+        <a href="/settings/premium" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #805ad5!important">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #dabef9!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-coins fa-stack-1x text-base fa-inverse" style="color: #805ad5!important;"></i>
+          </span>Ruqqus Premium
+        </a>
+        <div data-toggle="tooltip" data-placement="bottom" title="Based on coins redeemed in the last 7 days">
+          <div class="text-center text-small">{{ g.timestamp | coin_goal }}% of goal</div>
+          <div class="progress" style="border-radius: 3px;">
+            <div class="progress-bar bg-primary" role="progressbar" style="width: {{ g.timestamp | coin_goal }}%;" aria-valuenow="{{ g.timestamp | coin_goal }}" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
       </div>
+
     </div>
-
-
+    {% endif %}
 {% endblock %}
 
 {% block adminpanel %}

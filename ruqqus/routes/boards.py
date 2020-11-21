@@ -26,6 +26,7 @@ valid_board_regex = re.compile("^[a-zA-Z0-9][a-zA-Z0-9_]{2,24}$")
 
 @app.route("/create_guild", methods=["GET"])
 @is_not_banned
+@no_negative_balance("html")
 def create_board_get(v):
     if not v.can_make_guild:
         return render_template("message.html",
@@ -61,6 +62,7 @@ def api_board_available(name, v):
 
 @app.route("/create_guild", methods=["POST"])
 @is_not_banned
+@no_negative_balance("html")
 @validate_formkey
 def create_board_post(v):
     if not v.can_make_guild:
@@ -172,6 +174,7 @@ def board_name(name, v):
     sort = request.args.get("sort", "hot")
     page = int(request.args.get("page", 1))
     t = request.args.get("t", "all")
+    ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
     ids = board.idlist(sort=sort,
                        t=t,
@@ -185,7 +188,7 @@ def board_name(name, v):
     next_exists = (len(ids) == 26)
     ids = ids[0:25]
 
-    if page == 1 and sort != "new":
+    if page == 1 and sort != "new" and not ignore_pinned:
         stickies = g.db.query(Submission.id).filter_by(board_id=board.id,
                                                        is_banned=False,
                                                        is_deleted=False,
@@ -215,6 +218,42 @@ def board_name(name, v):
                                    )
             }
 
+@app.route("/mod/distinguish_post/<bid>/<pid>", methods=["POST"])
+@auth_required
+@is_guildmaster
+def mod_distinguish_post(bid, pid, board, v):
+
+    #print(pid, board, v)
+
+    post = get_post(pid, v=v)
+
+    if post.author_id != v.id:
+        abort(403)
+
+    if post.gm_distinguish:
+        post.gm_distinguish = 0
+    else:
+        post.gm_distinguish = board.id
+    g.db.add(post)
+
+    return "", 204
+
+@app.route("/mod/distinguish_comment/<bid>/<cid>", methods=["POST"])
+@auth_required
+@is_guildmaster
+def mod_distinguish_comment(bid, cid, board, v):
+
+    comment = get_comment(cid, v=v)
+
+    if comment.author_id != v.id:
+        abort(403)
+
+    if comment.gm_distinguish:
+        comment.gm_distinguish = 0
+    else:
+        comment.gm_distinguish = board.id
+
+    return "", 204
 
 @app.route("/mod/kick/<bid>/<pid>", methods=["POST"])
 @auth_required
@@ -225,7 +264,7 @@ def mod_kick_bid_pid(bid, pid, board, v):
     post = get_post(pid)
 
     if not post.board_id == board.id:
-        abort(422)
+        abort(400)
 
     post.board_id = 1
     post.guild_name = "general"
@@ -245,7 +284,7 @@ def mod_accept_bid_pid(bid, pid, board, v):
 
     post = get_post(pid)
     if not post.board_id == board.id:
-        abort(422)
+        abort(400)
 
     post.mod_approved = v.id
     g.db.add(post)
@@ -360,11 +399,13 @@ def user_kick_pid(pid, v):
 
 
 @app.route("/mod/take/<pid>", methods=["POST"])
+@app.route("/api/v1/mod/take/<pid>")
 @auth_required
 @validate_formkey
+@api("guildmaster")
 def mod_take_pid(pid, v):
 
-    bid = request.form.get("board_id", None)
+    bid = request.form.get("board_id", request.form.get("guild", None))
     if not bid:
         abort(400)
 
@@ -494,9 +535,9 @@ def mod_remove_username(bid, username, board, v):
     v_mod = board.has_mod(v)
 
     if not u_mod:
-        abort(422)
+        abort(400)
     elif not v_mod:
-        abort(422)
+        abort(400)
 
     if v_mod.id > u_mod.id:
         abort(403)
@@ -547,23 +588,6 @@ def mod_bid_settings_optout(bid, board, v):
 
     # nsfw
     board.all_opt_out = bool(request.form.get("opt_out", False) == 'true')
-
-    g.db.add(board)
-
-    return "", 204
-
-
-@app.route("/mod/<bid>/settings/downdisable", methods=["POST"])
-@auth_required
-@is_guildmaster
-@validate_formkey
-def mod_bid_settings_downdisable(bid, board, v):
-
-    # disable downvoting
-    board.downvotes_disabled = bool(
-        request.form.get(
-            "downdisable",
-            False) == 'true')
 
     g.db.add(board)
 
@@ -752,7 +776,14 @@ def board_about_exiled(boardname, board, v):
     next_exists = (len(bans) == 26)
     bans = bans[0:25]
 
-    return render_template("guild/bans.html", v=v, b=board, bans=bans)
+    return render_template(
+        "guild/bans.html", 
+        v=v, 
+        b=board, 
+        bans=bans,
+        page=page,
+        next_exists=next_exists
+        )
 
 
 @app.route("/+<boardname>/mod/contributors", methods=["GET"])
@@ -877,8 +908,7 @@ def all_mod_queue(v):
     page = int(request.args.get("page", 1))
 
     board_ids = [
-        x.board_id for x in v.moderates.filter_by(
-            accepted=True).all()]
+        x.id for x in v.boards_modded]
 
     ids = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.board_id.in_(board_ids),
                                                                   Submission.mod_approved is None,
@@ -1173,7 +1203,7 @@ def siege_guild(v):
                                ), 403
 
     # Cannot siege +general, +ruqqus, +ruqquspress, +ruqqusdmca
-    if guild.id in [1, 2, 10, 1000]:
+    if not guild.is_siegable:
         return render_template("message.html",
                                v=v,
                                title=f"Siege against +{guild.name} Failed",
@@ -1304,12 +1334,12 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
     post = get_post(pid)
 
     if post.board_id != board.id:
-        abort(422)
+        abort(400)
 
     try:
         x = bool(int(x))
     except BaseException:
-        abort(422)
+        abort(400)
 
     if x and not board.can_pin_another:
         return jsonify({"error": f"+{board.name} already has the maximum number of pinned posts."}), 409

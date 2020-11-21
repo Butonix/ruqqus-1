@@ -80,7 +80,7 @@
 </div>
 {% endif %}
 
-<div id="comment-{{ c.base36id }}" class="comment rounded{% if standalone and level==1 %} mt-0{% endif %}{% if c.is_offensive and not standalone and v and v.hide_offensive %} collapsed{% endif %}">
+<div id="comment-{{ c.base36id }}" class="comment rounded{% if standalone and level==1 %} mt-0{% endif %}{% if (not standalone) and c.collapse_for_user(v) %} collapsed{% endif %}">
 
 
   <span class="mr-2 d-block d-md-none"><a href="{{ c.author.permalink }}"><img src="{{ c.author.profile_url }}" class="profile-pic-25"></a></span>
@@ -94,6 +94,9 @@
       <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %}{% if c.author.is_deleted %}[deleted account]{% else %}<a href="/@{{ c.author.username }}" class="user-name {% if c.is_op and not c.post.is_deleted %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.title %}{{ c.title.rendered | safe }}{% endif %}{% endif %}
         {% if c.distinguish_level %}
         <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>
+        {% endif %}
+        {% if c.gm_distinguish %}
+        <i class="fad fa-crown {% if c.gm_distinguish==c.post.board_id %}text-warning{% else %}text-muted{% endif %}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Guildmaster of +{{ c.distinguished_board.name }}"></i>
         {% endif %}
         {% if c.author_id==c.post.author_id and not c.post.is_deleted and not c.author.is_deleted %}
         <i class="fas fa-microphone-stand text-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Submitter"></i>
@@ -111,6 +114,8 @@
         {% if c.edited_utc %}
         <span class="time-edited"><span>&#183;</span> <span class="font-italic">Edited {{ c.edited_string }}</span></span>
         {% endif %}
+        {% if c.award_count %}<span style="color: #604c1b;background-color: #c1971b;
+        background-image: linear-gradient(135deg, #ffc107 0%, #c1971b 100%);" class="badge text-small ml-1"><i class="fas fa-coin mr-2"></i>{{ c.award_count }}</span>{% endif %}
 
         <span class="comment-collapse d-md-none" onclick="collapse_comment('{{ c.base36id }}')"></span>
 
@@ -191,11 +196,18 @@
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ c.permalink | full_link }}?context=3"><i class="fas fa-book-open"></i>Context</a>
           </li>
           {% endif %}
+          {% if not v.id==c.author_id %}
+          <li class="list-inline-item text-muted"><a href="javascript:void(0)" data-toggle="modal" data-target="#tipModal" onclick="tipModal2('{{ c.base36id }}','comment','{{ c.permalink }}','{{ c.author.username }}','{{ c.author.profile_url }}')"><i class="fas fa-star"></i><span class="d-none d-md-inline-block">Tip</span></a></li>
+          {% endif %}
           {% endif %}
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ c.permalink  }}"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-link"></i>Permalink</a>
           </li>
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i>Copy link</a>
           </li>
+
+          {% if v and v.id==c.author_id and c.post.board_id in v.boards_modded_ids %}
+          <li class="list-inline-item d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post('/mod/distinguish_comment/{{ c.board.base36id }}/{{ c.base36id }}', callback=function(){window.location.href = '{{c.permalink}}';})"><i class="fas fa-chess-rook"></i><span class="d-none d-md-inline-block">Herald</span></a></li>
+          {% endif %}
 
           {% if v and v.admin_level>=3 and request.path.startswith ('/admin') %}
             <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times fa-width-rem"></i>Remove</a></li>
@@ -296,7 +308,7 @@
   <div id="reply-to-{{ c.base36id }}" class="d-none">
     
     <div id="comment-form-space-{{ c.fullname }}" class="comment-write collapsed child">
-      <form id="reply-to-t3_{{ c.base36id }}" action="/api/comment" method="post" class="input-group"> 
+      <form id="reply-to-t3_{{ c.base36id }}" action="/api/comment" method="post" class="input-group" enctype="multipart/form-data"> 
         <input type="hidden" name="formkey" value="{{ v.formkey }}"> 
         <input type="hidden" name="parent_fullname" value="{{ c.fullname }}"> 
         <input id="reply-form-submission-{{ c.fullname }}" type="hidden" name="submission" value="{{ c.post.base36id }}"> 
@@ -310,12 +322,14 @@
           <small class="format">
             <i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote('reply-form-body-{{ c.fullname }}')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i>
           </small> 
-          <small class="format d-none">
-            <i class="fas fa-link" aria-hidden="true"></i>
-          </small> 
-          <small class="format">
-            <span class="font-weight-bolder text-uppercase" onclick="getGif();commentForm('reply-form-body-{{ c.fullname }}')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF">GIF</span>
-          </small> 
+          <label class="btn btn-secondary format d-inline-block m-0" for="gif-reply-btn-{{ c.fullname }}">
+            <span id="gif-reply-btn-{{ c.fullname }}" class="font-weight-bolder text-uppercase" onclick="getGif();commentForm('reply-form-body-{{ c.fullname }}')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF">GIF</span>
+          </label> 
+          <label class="format btn btn-secondary m-0 ml-1 {% if v.has_premium %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-reply-{{ c.fullname }}">
+                <div id="filename-show-reply-{{ c.base36id }}"><i class="far fa-image"></i></div>
+                <input id="file-upload-reply-{{ c.fullname }}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{ c.base36id }}').innerHTML=document.getElementById('file-upload-reply-{{ c.fullname }}').files[0].name;" hidden>
+          </label>
+
           <a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{ c.base36id }}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
           <a class="btn btn-primary text-white ml-2" onclick="post_comment('{{ c.fullname }}');" href="javascript:void(0)">Comment</a> 
         </div> 
@@ -358,6 +372,10 @@
       </div>
       <div class="modal-body">
         <ul class="list-group comment-actions">
+          {% if v and v.id==c.author_id and c.post.board_id in v.boards_modded_ids %}
+          <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/mod/distinguish_comment/{{ c.board.base36id }}/{{ c.base36id }}', callback=function(){window.location.href = '{{c.permalink}}';})"><i class="fas fa-chess-rook"></i><span>Herald</span></a></li>
+          {% endif %}
+
           <li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i><span>Copy Link</span></a></li>
 
           <li class="list-group-item"><a href="{{ c.permalink }}"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-link"></i>Permalink</a></li>

@@ -156,52 +156,6 @@
 
           </div>
 
-          <h2 class="h5" name="linkouts">Linked Accounts</h2>
-
-          <p class="text-small text-muted">Link other services to your Ruqqus account</p>
-
-          <div class="settings-section rounded">
-
-            <div class="d-lg-flex">
-
-              <div class="title w-lg-25">
-                <label for="patreon_link">Patreon</label>
-              </div>
-
-              <div class="body w-lg-100">
-
-                {% if not v.patreon_id %}
-
-                <a href="/patreon_authorize" id="patreon"><button class="btn btn-secondary"><i class="fab fa-patreon text-small mr-2"></i>Link Patreon</button></a>
-
-                <div class="text-small-extra text-muted mt-3">Link your Patreon account to unlock exclusive <a href="/help/titles#SupporterTitles">titles</a> and <a href="/help/badges#SupporterBadges">badges</a> for supporting Ruqqus.</div>
-
-                <div class="d-none d-md-block py-4">
-                  <p class="text-small mb-2">How you would appear with the Gold Patron title. Pretty sweet!</p>
-
-                  <div class="p-3 bg-light rounded">
-                    <div class="post-meta text-left"><span class="post-meta-guild"><span class="font-weight-bold"><a href="/+ruqqus" class="text-black"><img src="https://i.ruqqus.com/board/ruqqus/profile-3.png" class="profile-pic-20 align-top mr-1">+Ruqqus</a></span> · </span><span>20 min ago</span> by <a href="/{{ v.username }}" class="user-name">{{ v.username }}</a><a href="/patreon_authorize"><span class="badge font-weight-normal text-small ml-1" style="color: #502e0e; background-color: #ce9632; background-image: linear-gradient(5deg, #ce9632 0%, #f7ce68 100%); box-shadow: 0 1px 2px rgba(216, 178, 84, 0.5); text-shadow: 1px 1px 2px rgb(240, 188, 120)">Gold Patron</span></a> · (i.ruqqus.com)
-                    </div>
-                  </div>
-
-                </div>
-
-                {% else %}
-
-                <p class="text-muted">Connected as {{ v.patreon_name }}</p>
-                <form action="/patreon_unauthorize" method="post">
-                  <input type="hidden" name="formkey" value="{{ v.formkey }}">
-                  <input type="submit" class="btn btn-secondary text-capitalize" value="Unlink patreon">
-                </form>
-                {% endif %}
-
-              </div>
-
-            </div>
-
-          </div>
-
-
           <h2 class="h5" name="referral">RSS Feed</h2>
 
           <p class="text-small text-muted">Subscribe to your own personal ruqqus rss feed.</p>
@@ -282,7 +236,7 @@
 
               </div>
 
-              <div class="d-lg-flex">
+              <div class="d-lg-flex border-bottom">
 
                 <div class="title w-lg-25">
                   <label for="hideoffensive">Hide offensive speech</label>
@@ -300,7 +254,49 @@
                 </div>
 
               </div>
+              <div class="d-lg-flex">
 
+                <div class="title w-lg-25">
+                  <label for="hidepolitics">Hide politics</label>
+                </div>
+
+                <div class="body w-lg-100">
+
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="hidepolitics" name="politics"{% if v.is_hiding_politics %} checked{% endif %} onchange="post_toast('/settings/profile?politics='+document.getElementById('hidepolitics').checked)">
+                    <label class="custom-control-label" for="hidepolitics"></label>
+                  </div>
+
+                  <span class="text-small-extra text-muted">We'll try to keep political content out of your All and Trending views. The current list of keywords used to identify political content can be found <a href="/politics.txt" target="_blank">here</a>.</span>
+
+                </div>
+
+              </div>
+              <div class="d-lg-flex">
+
+                <div class="title w-lg-25">
+                  <label for="filters-text">Custom Filters</label>
+                </div>
+
+                <div class="body w-lg-100">
+                  <form id="custom-filter" action="/settings/profile" method="post">
+                    <input type="hidden" name="formkey" value="{{ v.formkey }}">
+                      <small>Hides matching content from Home, All, and Trending, and collapses matching comments.</small>
+                    <div class="input-group mb-2">
+                      <textarea class="form-control rounded" id="filters-text" aria-label="With textarea"
+                      placeholder="Add your own custom content filters."
+                      rows="3" name="filters" form="custom-filter" maxlength="1000">{{ v.custom_filter_list }}</textarea>
+                    </div>
+                    <div class="d-flex">
+                      <small>Use a new line for each filter entry. Limit of 1000 characters.</small>
+                      <input class="btn btn-primary ml-auto" id="bioSave" type="submit" value="Save Changes">
+                    </div>
+                  </form>
+
+
+                </div>
+
+              </div>
 
 
             </div>

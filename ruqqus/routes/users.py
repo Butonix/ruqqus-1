@@ -94,7 +94,7 @@ def u_username(username, v=None):
     # check for wrong cases
 
     if username != u.username:
-        return redirect(u.url)
+        return redirect(request.path.replace(username, u.username))
 
     if u.reserved:
         return {'html': lambda: render_template("userpage_reserved.html",

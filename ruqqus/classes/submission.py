@@ -53,6 +53,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     is_banned = Column(Boolean, default=False)
     is_deleted = Column(Boolean, default=False)
     distinguish_level = Column(Integer, default=0)
+    gm_distinguish = Column(Integer, ForeignKey("boards.id"), default=0)
+    distinguished_board = relationship("Board", lazy="joined", primaryjoin="Board.id==Submission.gm_distinguish")
     created_str = Column(String(255), default=None)
     stickied = Column(Boolean, default=False)
     _comments = relationship(
@@ -82,6 +84,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     score_activity = Column(Float, default=0)
     is_offensive = Column(Boolean, default=False)
     is_nsfl = Column(Boolean, default=False)
+    is_politics = Column(Boolean, default=False)
     board = relationship(
         "Board",
         lazy="joined",
@@ -118,6 +121,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     #report_count=deferred(Column(Integer, server_default=FetchedValue()))
     score = deferred(Column(Float, server_default=FetchedValue()))
     #is_public=deferred(Column(Boolean, server_default=FetchedValue()))
+
+    awards = relationship("AwardRelationship", lazy="joined")
 
     rank_hot = deferred(Column(Float, server_default=FetchedValue()))
     rank_fiery = deferred(Column(Float, server_default=FetchedValue()))
@@ -173,7 +178,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         if not output:
             output = '-'
 
-        return f"/post/{self.base36id}/{output}"
+        return f"/+{self.board.name}/post/{self.base36id}/{output}"
 
     @property
     def is_archived(self):
@@ -303,6 +308,15 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         else:
             self.is_offensive = False
 
+    def determine_politics(self):
+
+        for x in g.db.query(PoliticsWord).all():
+            if (self.body and x.check(self.body)) or x.check(self.title):
+                self.is_politics = True
+                break
+        else:
+            self.is_offensive = False
+
     @property
     def json(self):
 
@@ -323,7 +337,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                     'permalink': self.permalink,
                     'guild_name': self.board.name
                     }
-        data = {'author': self.author.username if not self.author.is_deleted else None,
+        data = {'author': self.author.json if not self.author.is_deleted else None,
                 'permalink': self.permalink,
                 'is_banned': False,
                 'is_deleted': False,
@@ -341,15 +355,17 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'body_html': self.body_html,
                 'created_utc': self.created_utc,
                 'edited_utc': self.edited_utc or 0,
-                'guild_name': self.board.name,
+                'guild': self.board.json,
                 'embed_url': self.embed_url,
                 'is_archived': self.is_archived,
-                'author_title': self.author.title.json if self.author.title else None,
-                'original_guild_name': self.original_board.name,
+                'original_guild': self.original_board.json if not self.board.name == self.original_board.name else None,
                 'comment_count': self.comment_count,
                 'score': self.score_fuzzed,
                 'upvotes': self.upvotes_fuzzed,
-                'downvotes': self.downvotes_fuzzed
+                'downvotes': self.downvotes_fuzzed,
+                'award_count': self.award_count,
+                'is_offensive': self.is_offensive,
+                'is_politics': self.is_politics
                 }
         if "replies" in self.__dict__:
             data["replies"]=[x.json for x in self.replies]
@@ -453,6 +469,14 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def report_count(self):
         return len(self.reports)
 
+    @property
+    def award_count(self):
+        return len(self.awards)
+
+    @property
+    def embed_template(self):
+        return f"site_embeds/{self.domain_obj.embed_template}.html"
+    
 class SaveRelationship(Base, Stndrd):
 
     __tablename__=="save_relationship"

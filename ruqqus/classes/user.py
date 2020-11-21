@@ -16,7 +16,7 @@ import ruqqus.helpers.aws as aws
 from .votes import Vote
 from .alts import Alt
 from .titles import Title
-from .submission import Submission
+from .submission import Submission, SubmissionAux
 from .comment import Comment, Notification
 from .boards import Board
 from .board_relationships import *
@@ -57,8 +57,12 @@ class User(Base, Stndrd, Age_times):
     real_id = Column(String, default=None)
     notifications = relationship(
         "Notification",
-        lazy="dynamic",
-        backref="user")
+        lazy="dynamic")
+
+    #unread_notifications_relationship=relationship(
+    #    "Notification",
+    #    primaryjoin="and_(Notification.user_id==User.id, Notification.read==False)")
+
     referred_by = Column(Integer, default=None)
     is_banned = Column(Integer, default=0)
     unban_utc = Column(Integer, default=0)
@@ -77,6 +81,7 @@ class User(Base, Stndrd, Age_times):
     last_siege_utc = Column(Integer, default=0)
     mfa_secret = deferred(Column(String(16), default=None))
     hide_offensive = Column(Boolean, default=False)
+    is_hiding_politics=Column(Boolean, default=False)
     show_nsfl = Column(Boolean, default=False)
     is_private = Column(Boolean, default=False)
     read_announcement_utc = Column(Integer, default=0)
@@ -86,18 +91,20 @@ class User(Base, Stndrd, Age_times):
     delete_reason = Column(String(500), default='')
     filter_nsfw = Column(Boolean, default=False)
 
-    patreon_id = Column(String(64), default=None)
-    patreon_access_token = Column(String(128), default='')
-    patreon_refresh_token = Column(String(128), default='')
+    coin_balance=Column(Integer, default=0)
+    premium_expires_utc=Column(Integer, default=0)
+    negative_balance_cents=Column(Integer, default=0)
+
     patreon_pledge_cents = Column(Integer, default=0)
-    patreon_name = Column(String(64), default='')
 
     is_nofollow = Column(Boolean, default=False)
 
-    moderates = relationship("ModRelationship", lazy="dynamic")
+    custom_filter_list=Column(String(1000), default="")
+
+    moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
                                primaryjoin="BanRelationship.user_id==User.id")
-    subscriptions = relationship("Subscription", lazy="dynamic")
+    subscriptions = relationship("Subscription")
     boards_created = relationship("Board", lazy="dynamic")
     contributes = relationship(
         "ContributorRelationship",
@@ -179,7 +186,7 @@ class User(Base, Stndrd, Age_times):
         return int(time.time()) - self.created_utc
 
     @cache.memoize(timeout=300)
-    def idlist(self, sort="hot", page=1, t=None, **kwargs):
+    def idlist(self, sort="hot", page=1, t=None, filter_words="", **kwargs):
 
         posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
                                                                            is_deleted=False,
@@ -194,6 +201,9 @@ class User(Base, Stndrd, Age_times):
 
         if not self.show_nsfl:
             posts = posts.filter_by(is_nsfl=False)
+
+        if self.is_hiding_politics:
+            posts=posts.filter_by(is_politics=False)
 
         board_ids = g.db.query(
             Subscription.board_id).filter_by(
@@ -243,6 +253,12 @@ class User(Base, Stndrd, Age_times):
                 Submission.author_id.notin_(blocking),
                 Submission.author_id.notin_(blocked)
             )
+
+        if filter_words:
+            posts=posts.join(Submission.submission_aux)
+            for word in filter_words:
+                #print(word)
+                posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
 
         if t:
             now = int(time.time())
@@ -349,7 +365,7 @@ class User(Base, Stndrd, Age_times):
         if v and v.admin_level >= 4:
             pass
         elif v:
-            m = v.moderates.filter_by(invite_rescinded=False).subquery()
+            m = g.db.query(ModRelationship).filter_by(user_id=self.id, invite_rescinded=False).subquery()
             c = v.contributes.subquery()
 
             comments = comments.join(m,
@@ -380,7 +396,13 @@ class User(Base, Stndrd, Age_times):
     @lazy
     def mods_anything(self):
 
-        return bool(self.moderates.filter_by(accepted=True).first())
+        return bool([i for i in self.moderates if i.accepted])
+
+
+    @property
+    @lazy
+    def subscribed_to_anything(self):
+        return bool([i for i in self.subscriptions if i.is_active])
 
     @property
     def boards_modded(self):
@@ -505,11 +527,10 @@ class User(Base, Stndrd, Age_times):
         return output
 
     @property
-    @cache.memoize(30)
+    @lazy
     def notifications_count(self):
 
-        return self.notifications.filter_by(read=False).join(Notification.comment).filter(
-            Comment.is_banned == False, Comment.is_deleted == False).count()
+        return self.notifications.join(Notification.comment).filter(Notification.read==False, Comment.is_banned==False, Comment.is_deleted==False).count()
 
     @property
     def post_count(self):
@@ -521,25 +542,6 @@ class User(Base, Stndrd, Age_times):
 
         return self.comments.filter(Comment.parent_submission!=None).filter_by(
             is_banned=False, is_deleted=False).count()
-
-    @property
-    #@cache.memoize(timeout=60)
-    def badge_pairs(self):
-
-        output = []
-
-        badges = [x for x in self.badges.all()]
-
-        while badges:
-
-            to_append = [badges.pop(0)]
-
-            if badges:
-                to_append.append(badges.pop(0))
-
-            output.append(to_append)
-
-        return output
 
     @property
     def alts(self):
@@ -628,8 +630,7 @@ class User(Base, Stndrd, Age_times):
 
     @property
     def can_make_guild(self):
-        return (self.true_score >= 250 or self.created_utc <= 1592974538 and self.true_score >= 50 or (
-            self.patreon_pledge_cents and self.patreon_pledge_cents >= 500)) and len(self.boards_modded) < 10
+        return (self.has_premium or self.true_score >= 250 or (self.created_utc <= 1592974538 and self.true_score >= 50)) and len(self.boards_modded) < 10
 
     @property
     def can_join_gms(self):
@@ -648,16 +649,16 @@ class User(Base, Stndrd, Age_times):
 
     @property
     def can_submit_image(self):
-        return (self.patreon_pledge_cents and self.patreon_pledge_cents >= 500) or self.true_score >= 1000 or (
+        return self.has_premium or self.true_score >= 1000 or (
             self.created_utc <= 1592974538 and self.true_score >= 500)
 
     @property
     def can_upload_avatar(self):
-        return self.patreon_pledge_cents or self.true_score >= 300 or self.created_utc <= 1592974538
+        return self.has_premium or self.true_score >= 300 or self.created_utc <= 1592974538
 
     @property
     def can_upload_banner(self):
-        return self.patreon_pledge_cents or self.true_score >= 500 or self.created_utc <= 1592974538
+        return self.has_premium or self.true_score >= 500 or self.created_utc <= 1592974538
 
     @property
     def json(self):
@@ -879,3 +880,55 @@ class User(Base, Stndrd, Age_times):
         comment_rep=sum([x[0] for x in comments])
 
         return post_rep + comment_rep
+
+    @property
+    def has_premium(self):
+        
+        now=int(time.time())
+
+        if self.negative_balance_cents:
+            return False
+
+        elif self.premium_expires_utc > now:
+            return True
+
+        elif self.coin_balance >=1:
+            self.coin_balance -=1
+            self.premium_expires_utc = now + 60*60*24*7
+
+            g.db.add(self)
+
+            return True
+
+        else:
+            return False
+
+    @property
+    def has_premium_no_renew(self):
+        
+        now=int(time.time())
+
+        if self.negative_balance_cents:
+            return False
+        elif self.premium_expires_utc > now:
+            return True
+        elif self.coin_balance>=1:
+            return True
+        else:
+            return False
+    
+    
+    @property
+    def renew_premium_time(self):
+        return time.strftime("%d %b %Y at %H:%M:%S",
+                             time.gmtime(self.premium_expires_utc))
+    
+    @property
+    def filter_words(self):
+        l= [i.lstrip().rstrip() for i in self.custom_filter_list.split('\n')] if self.custom_filter_list else []
+        l=[i for i in l if i]
+        return l
+                             
+    @property
+    def boards_modded_ids(self):
+        return [x.id for x in self.boards_modded]

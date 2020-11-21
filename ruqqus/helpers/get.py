@@ -95,7 +95,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         vt = nSession.query(Vote).filter_by(
             user_id=v.id, submission_id=i).subquery()
         mod = nSession.query(ModRelationship).filter_by(
-            user_id=v.id, invite_rescinded=False).subquery()
+            user_id=v.id, accepted=True, invite_rescinded=False).subquery()
         boardblocks = nSession.query(
             BoardBlock).filter_by(user_id=v.id).subquery()
         blocking = v.blocking.subquery()
@@ -147,12 +147,12 @@ def get_posts(pids, sort="hot", v=None):
             vt = g.db.query(Vote).filter_by(
                 submission_id=pid, user_id=v.id).subquery()
             mod = g.db.query(ModRelationship).filter_by(
-                user_id=v.id, invite_rescinded=False).subquery()
+                user_id=v.id, accepted=True, invite_rescinded=False).subquery()
             boardblocks = g.db.query(BoardBlock).filter_by(
                 user_id=v.id).subquery()
             blocking = v.blocking.subquery()
             blocked = v.blocked.subquery()
-            subs = v.subscriptions.filter_by(is_active=True).subquery()
+            subs = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
 
             query = g.db.query(
                 Submission,
@@ -526,10 +526,12 @@ def get_from_permalink(link, v=None):
 
     if "+" in link:
 
-        name = re.search("/\+(\w+)", link).match(1)
-        return get_guild(name)
+        x = re.search("/\+(\w+)$", link)
+        if x:
+            name=x.match(1)
+            return get_guild(name)
 
-    ids = re.search("://[^/]+/post/(\w+)/[^/]+(/(\w+))?", link)
+    ids = re.search("://[^/]+/\+\w+/post/(\w+)/[^/]+(/(\w+))?", link)
 
     post_id = ids.group(1)
     comment_id = ids.group(3)
@@ -559,3 +561,13 @@ def get_from_fullname(fullname, v=None, graceful=False):
         return get_comment(b36, v=v, graceful=graceful)
     elif kind == 't4':
         return get_board(b36, v=v, graceful=graceful)
+
+def get_txn(paypal_id):
+
+    txn= g.db.query(PayPalTxn).filter_by(paypal_id=paypal_id).first()
+
+    if not txn:
+        abort(404)
+
+    return txn
+

@@ -1,5 +1,7 @@
 from urllib.parse import urlparse
 import time
+import calendar
+from sqlalchemy import func
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.alerts import *
@@ -210,6 +212,7 @@ def participation_stats(v):
             "private_users": g.db.query(User).filter_by(is_deleted=False, is_private=False).filter(User.is_banned > 0, or_(User.unban_utc > now, User.unban_utc == 0)).count(),
             "banned_users": g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).count(),
             "deleted_users": g.db.query(User).filter_by(is_deleted=True).count(),
+            "locked_negative_users": g.db.query(User).filter(User.negative_balance_cents>0).count(),
             "total_posts": g.db.query(Submission).count(),
             "posting_users": g.db.query(Submission.author_id).distinct().count(),
             "listed_posts": g.db.query(Submission).filter_by(is_banned=False, is_deleted=False).count(),
@@ -229,9 +232,48 @@ def participation_stats(v):
             "comment_voting_users": g.db.query(CommentVote.user_id).distinct().count()
             }
 
-    data = {x: f"{data[x]:,}" for x in data}
+    #data = {x: f"{data[x]:,}" for x in data}
 
-    return render_template("admin/content_stats.html", v=v, data=data)
+    return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=data)
+
+
+@app.route("/admin/money", methods=["GET"])
+@admin_level_required(2)
+def money_stats(v):
+
+    now = time.gmtime()
+    midnight_year_start = time.struct_time((now.tm_year,
+                                              1,
+                                              1,
+                                              0,
+                                              0,
+                                              0,
+                                              now.tm_wday,
+                                              now.tm_yday,
+                                              0)
+                                             )
+    midnight_year_start = calendar.timegm(midnight_year_start)
+
+    now=int(time.time())
+    intake=sum([int(x[0] - (x[0] * 0.029) - 30 )  for x in g.db.query(PayPalTxn.usd_cents).filter(PayPalTxn.status==3, PayPalTxn.created_utc>midnight_year_start).all()])
+    loss=sum([x[0] for x in g.db.query(PayPalTxn.usd_cents).filter(PayPalTxn.status<0, PayPalTxn.created_utc>midnight_year_start).all()])
+    revenue=str(intake-loss)
+
+    data={
+        "cents_received_last_24h":g.db.query(func.sum(PayPalTxn.usd_cents)).filter(PayPalTxn.status==3, PayPalTxn.created_utc>now-60*60*24).scalar(),
+        "cents_received_last_week":g.db.query(func.sum(PayPalTxn.usd_cents)).filter(PayPalTxn.status==3, PayPalTxn.created_utc>now-60*60*24*7).scalar(),
+        "sales_count_last_24h":g.db.query(PayPalTxn).filter(PayPalTxn.status==3, PayPalTxn.created_utc>now-60*60*24).count(),
+        "sales_count_last_week":g.db.query(PayPalTxn).filter(PayPalTxn.status==3, PayPalTxn.created_utc>now-60*60*24*7).count(),
+        "receivables_outstanding_cents": g.db.query(func.sum(User.negative_balance_cents)).filter(User.is_deleted==False, or_(User.is_banned == 0, and_(User.is_banned > 0, User.unban_utc > 0))).scalar(),
+        "cents_written_off":g.db.query(func.sum(User.negative_balance_cents)).filter(or_(User.is_deleted==True, User.unban_utc > 0)).scalar(),
+        "coins_redeemed_last_24_hrs": g.db.query(User).filter(User.premium_expires_utc>now+60*60*24*6, User.premium_expires_utc < now+60*60*24*7).count(),
+        "coins_redeemed_last_week": g.db.query(User).filter(User.premium_expires_utc>now, User.premium_expires_utc < now+60*60*24*7).count(),
+        "coins_in_circulation": g.db.query(func.sum(User.coin_balance)).filter(User.is_deleted==False, or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc>0))).scalar(),
+        "receivables_outstanding_cents": g.db.query(func.sum(User.negative_balance_cents)).filter(User.is_deleted==False, or_(User.is_banned == 0, and_(User.is_banned > 0, User.unban_utc > 0))).scalar(),
+        "coins_sold_ytd":g.db.query(func.sum(PayPalTxn.coin_count)).filter(PayPalTxn.status==3).scalar(),
+        "revenue_usd_ytd":f"{revenue[0:-2]}.{revenue[-2:]}"
+    }
+    return render_template("admin/content_stats.html", v=v, title="Financial Statistics", data=data)
 
 
 @app.route("/admin/vote_info", methods=["GET"])

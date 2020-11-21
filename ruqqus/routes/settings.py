@@ -3,6 +3,7 @@ from sqlalchemy import func
 import time
 import threading
 import mistletoe
+import re
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
@@ -12,6 +13,9 @@ from ruqqus.helpers.aws import check_csam_url
 from ruqqus.mail import *
 from .front import frontlist
 from ruqqus.__main__ import app, cache
+
+
+valid_password_regex = re.compile("^.{8,100}$")
 
 
 @app.route("/settings/profile", methods=["POST"])
@@ -46,6 +50,10 @@ def settings_profile_post(v):
         updated = True
         v.is_private = request.values.get("private", None) == 'true'
 
+    if request.values.get("politics", v.is_hiding_politics) != v.is_hiding_politics:
+        updated = True
+        v.is_hiding_politics = request.values.get("politics", None) == 'true'
+
     if request.values.get("nofollow", v.is_nofollow) != v.is_nofollow:
         updated = True
         v.is_nofollow = request.values.get("nofollow", None) == 'true'
@@ -67,6 +75,23 @@ def settings_profile_post(v):
         return render_template("settings_profile.html",
                                v=v,
                                msg="Your bio has been updated.")
+
+    if request.values.get("filters") is not None:
+
+        filters=request.values.get("filters")[0:1000].lstrip().rstrip()
+
+        if filters==v.custom_filter_list:
+            return render_template("settings_profile.html",
+                                   v=v,
+                                   error="You didn't change anything")
+
+        v.custom_filter_list=filters
+        g.db.add(v)
+        return render_template("settings_profile.html",
+                               v=v,
+                               msg="Your custom filters have been updated.")
+
+
 
     x = request.values.get("title_id", None)
     if x:
@@ -104,6 +129,11 @@ def settings_security_post(v):
             return redirect("/settings/security?error=" +
                             escape("Passwords do not match."))
 
+        if not re.match(valid_password_regex, request.form.get("new_password")):
+            #print(f"signup fail - {username } - invalid password")
+            return redirect("/settings/security?error=" + 
+                            escape("Password must be between 8 and 100 characters."))
+
         if not v.verifyPass(request.form.get("old_password")):
             return render_template(
                 "settings_security.html", v=v, error="Incorrect password")
@@ -121,7 +151,13 @@ def settings_security_post(v):
             return redirect("/settings/security?error=" +
                             escape("Invalid password."))
 
-        new_email = request.form.get("new_email")
+        new_email = request.form.get("new_email","").lstrip().rstrip()
+        #counteract gmail username+2 and extra period tricks - convert submitted email to actual inbox
+        if new_email.endswith("@gmail.com"):
+            parts=re.split("\+.*@", newemail)
+            username=parts[0]
+            username=username.replace(".","")
+            new_email=f"{username}@gmail.com"
         if new_email == v.email:
             return redirect("/settings/security?error=" +
                             escape("That email is already yours!"))
@@ -340,6 +376,7 @@ def update_announcement(v):
 
 @app.route("/settings/delete_account", methods=["POST"])
 @is_not_banned
+@no_negative_balance("html")
 @validate_formkey
 def delete_account(v):
 
@@ -351,6 +388,8 @@ def delete_account(v):
     v.is_deleted = True
     v.login_nonce += 1
     v.delete_reason = request.form.get("delete_reason", "")
+    v.patreon_id=None
+    v.patreon_pledge_cents=0
     v.del_banner()
     v.del_profile()
     g.db.add(v)

@@ -42,6 +42,7 @@ class Board(Base, Stndrd, Age_times):
     rank_trending = Column(Float, default=0)
     stored_subscriber_count = Column(Integer, default=1)
     all_opt_out = Column(Boolean, default=False)
+    is_siegable=Column(Boolean, default=True)
 
     moderators = relationship("ModRelationship")
     subscribers = relationship("Subscription", lazy="dynamic")
@@ -245,7 +246,7 @@ class Board(Base, Stndrd, Age_times):
             return False
 
         return self.id in [
-            x.board_id for x in user.subscriptions.all() if x.is_active]
+            x.board_id for x in user.subscriptions if x.is_active]
 
     def has_contributor(self, user):
 
@@ -415,7 +416,8 @@ class Board(Base, Stndrd, Age_times):
                 'banner_url': self.banner_url,
                 'profile_url': self.profile_url,
                 'color': "#" + self.color,
-                'guildmasters': [x.json for x in self.mods]
+                'guildmasters': [x.json for x in self.mods],
+                'is_siege_protected': not self.is_siegable
                 }
 
     @property
