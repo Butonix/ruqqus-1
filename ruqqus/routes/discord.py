@@ -89,7 +89,7 @@ def discord_redirect(v):
     #add user to discord
     url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{x['id']}"
     headers={
-        'Authorization': f"Bot {BOT_TOKEN}"
+        'Authorization': f"Bot {BOT_TOKEN}",
         'Content-Type': "application/json"
     }
     data={
