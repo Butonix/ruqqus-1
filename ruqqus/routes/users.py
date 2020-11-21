@@ -323,7 +323,7 @@ def saved_listing(v):
                                             v=v,
                                             listing=listing,
                                             page=page,
-                                            next_exists=next_exists,
-                                            is_following=(v and u.has_follower(v))),
+                                            next_exists=next_exists
+                                            )
             'api': lambda: jsonify({"data": [x.json for x in listing]})
             }
