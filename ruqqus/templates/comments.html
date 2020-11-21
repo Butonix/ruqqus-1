@@ -91,7 +91,7 @@
 
     <div id="comment-{{ c.base36id }}-only" class="{% if c.is_banned %} banned{% endif %}{% if c.is_deleted %} deleted{% endif %}">
 
-      <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %} {% if c.is_pinned %}<i class="text-success fas fa-thumbtack fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Pinned comment"></i> · {% endif %} {% if c.author.is_deleted %}[deleted account]{% else %}<a href="/@{{ c.author.username }}" class="user-name {% if c.is_op and not c.post.is_deleted %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.title %}{{ c.title.rendered | safe }}{% endif %}{% endif %}
+      <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %} {% if c.is_pinned %}<i class="text-warning fas fa-thumbtack fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Pinned comment"></i> · {% endif %} {% if c.author.is_deleted %}[deleted account]{% else %}<a href="/@{{ c.author.username }}" class="user-name {% if c.is_op and not c.post.is_deleted %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.title %}{{ c.title.rendered | safe }}{% endif %}{% endif %}
         {% if c.distinguish_level %}
         <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>
         {% endif %}
@@ -269,9 +269,9 @@
             {% if c.is_top_level and v and c.board.has_mod(v) %}
             <div class="dropdown-divider"></div>
             {% if c.is_pinned %}
-            <a class="dropdown-item text-danger" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-width-rem text-danger"></i>Unpin</a>
+            <a class="dropdown-item text-warning" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-width-rem text-warning"></i>Unpin</a>
             {% else %}
-            <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-width-rem text-info"></i>Pin</a>
+            <a class="dropdown-item text-warning" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-width-rem text-warning"></i>Pin</a>
             {% endif %}
             {% endif %}
 
@@ -423,17 +423,17 @@
                   </li>
               {% endif %}
           {% endif %}
-          
+
           {% if v and v.id==c.author_id and c.post.board_id in v.boards_modded_ids %}
           <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/mod/distinguish_comment/{{ c.board.base36id }}/{{ c.base36id }}', callback=function(){window.location.href = '{{c.permalink}}';})" class="text-warning"><i class="fas fa-crown text-warning"></i><span>Herald</span></a></li>
           {% endif %}
             
           {% if c.is_top_level and v and c.board.has_mod(v) %}
           {% if c.is_pinned %}
-          <li class="list-group-item"><a class="d-block text-danger" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack text-danger"></i>Unpin</a>
+          <li class="list-group-item"><a class="d-block text-warning" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack text-warning"></i>Unpin</a>
           </li>
           {% else %}
-          <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack text-info"></i>Pin</a>
+          <li class="list-group-item"><a class="d-block text-warning" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack text-warning"></i>Pin</a>
           </li>
           {% endif %}
           {% endif %}  
