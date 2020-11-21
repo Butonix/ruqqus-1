@@ -48,6 +48,13 @@ def ban_user(user_id, v):
 
         user.ban(admin=v, reason=reason)
 
+    discord_ban_role(user)
+
+    for x in user.alts:
+        x.ban(admin=v, reason=reason)
+        discord_ban_role(x)
+
+
 
 
     send_notification(user, text)
@@ -70,6 +77,8 @@ def unban_user(user_id, v):
 
     send_notification(user,
                       "Your Ruqqus account has been reinstated. Please carefully review and abide by the [terms of service](/help/terms) and [content policy](/help/rules) to ensure that you don't get suspended again.")
+
+    discord_unban_role(user)
 
     return (redirect(user.url), user)
 

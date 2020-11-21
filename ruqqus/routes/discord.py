@@ -114,6 +114,9 @@ def discord_redirect(v):
 
 def discord_ban_role(user):
 
+    if not user.discord_id:
+        return
+
     url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{BANNED_ID}"
     headers={
         "Authorization": f"Bot {BOT_TOKEN}"
@@ -121,6 +124,9 @@ def discord_ban_role(user):
     requests.put(url, headers=headers)
 
 def discord_unban_role(user):
+
+    if not user.discord_id:
+        return
 
     url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{BANNED_ID}"
     headers={
