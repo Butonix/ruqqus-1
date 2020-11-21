@@ -95,11 +95,11 @@ class User(Base, Stndrd, Age_times):
     premium_expires_utc=Column(Integer, default=0)
     negative_balance_cents=Column(Integer, default=0)
 
-    patreon_pledge_cents = Column(Integer, default=0)
-
     is_nofollow = Column(Boolean, default=False)
 
     custom_filter_list=Column(String(1000), default="")
+
+    discord_id=Column(String(64), default=None)
 
     moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
