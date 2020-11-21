@@ -41,7 +41,7 @@ def discord_redirect(v):
 	state=request.args.get('state','')
 
 	if not validate_hash(state, f"{session.get('session_id')}+{v.id}+discord"):
-		abort(401)
+		return('hash not validated')
 
 	return ('so far so good')
 
