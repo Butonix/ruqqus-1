@@ -92,7 +92,7 @@ def discord_redirect(v):
         'Authorization': f"Bot {BOT_TOKEN}"
     }
     data={
-        "access_token":token
+        "access_token":token,
         "nick":v.username
     }
 
