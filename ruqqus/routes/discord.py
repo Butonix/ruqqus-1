@@ -107,7 +107,7 @@ def discord_redirect(v):
     x=requests.put(url, headers=headers, json=data)
 
     #check on if they are already there
-    
+    print(x.status_code)
 
     if x.status_code==204:
 
