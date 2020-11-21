@@ -119,7 +119,7 @@ def discord_redirect(v):
             "nick": v.username
         }
 
-        req=requests.patch(url, headers=headers, json=data)
+        req=requests.patch(url, headers=headers, data=data)
 
         print(req.status_code)
         print(url)
