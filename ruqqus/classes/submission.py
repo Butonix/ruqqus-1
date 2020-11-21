@@ -255,6 +255,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
             if c.is_pinned and c.parent_fullname==self.fullname:
                 pinned_comment=[c]
+                continue
 
             if c.parent_fullname in index:
                 index[c.parent_fullname].append(c)
