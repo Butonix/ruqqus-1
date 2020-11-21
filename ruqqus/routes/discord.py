@@ -50,6 +50,8 @@ def discord_redirect(v):
     if not code:
         abort(400)
 
+    print(code)
+
     data={
         "client_id":CLIENT_ID,
         'client_secret': CLIENT_SECRET,
