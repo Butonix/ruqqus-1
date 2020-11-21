@@ -86,6 +86,7 @@ def discord_redirect(v):
 
     v.discord_id=x["id"]
     g.db.add(v)
+    g.db.commit()
 
     #add user to discord
     url=f"https://discord.com/api/v8/guilds/{SERVER_ID}/members/{x['id']}"
