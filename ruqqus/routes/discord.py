@@ -50,8 +50,6 @@ def discord_redirect(v):
     if not code:
         abort(400)
 
-    print(code)
-
     data={
         "client_id":CLIENT_ID,
         'client_secret': CLIENT_SECRET,
@@ -66,6 +64,22 @@ def discord_redirect(v):
     url="https://discord.com/api/oauth2/token"
 
     x=requests.post(url, headers=headers, data=data)
+
+    x=x.json()
+
+
+    try:
+        token=x["access_token"]
+    except KeyError:
+        abort(403)
+
+
+    #get user ID
+    url="https://discord.com/api/users/@me"
+    headers={
+        'Authorization': f"Bearer {token}"
+    }
+    x=requests.get(url, headers=headers)
 
     return jsonify(x.json())
 
