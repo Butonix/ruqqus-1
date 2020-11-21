@@ -85,24 +85,29 @@ def discord_redirect(v):
 
     x=x.json()
 
-    v.discord_id=x["id"]
-    g.db.add(v)
-    g.db.commit()
+
 
     #add user to discord
-    url=f"https://discord.com/api/v8/guilds/{SERVER_ID}/members/{x['id']}"
-    #print(url)
     headers={
         'Authorization': f"Bot {BOT_TOKEN}",
         'Content-Type': "application/json"
     }
-    #print(headers)
+
+    #remove existing user if applicable
+    if v.discord_id:
+        url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{v.discord_id}"
+        requests.delete(url, headers=headers)
+
+    v.discord_id=x["id"]
+    g.db.add(v)
+    g.db.commit()
+
+    url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{x['id']}"
     data={
         "access_token":token,
         "nick":v.username,
         "roles": [BANNED_ID] if v.is_banned and v.unban_utc==0 else []
     }
-    #print(data)
 
     x=requests.put(url, headers=headers, json=data)
 
@@ -123,6 +128,8 @@ def discord_redirect(v):
 
         #print(req.status_code)
         #print(url)
+
+        print
 
     return redirect(f"https://discord.com/channels/{SERVER_ID}")
 
