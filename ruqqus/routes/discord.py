@@ -118,7 +118,9 @@ def discord_redirect(v):
         data={
             "nick": v.username
         }
+
         requests.patch(url, headers=headers, json=data)
+        print(url)
 
     return redirect(f"https://discord.com/channels/{SERVER_ID}")
 
@@ -152,6 +154,8 @@ def discord_no_nick_role(user):
 
     if not user.discord_id:
         return
+
+    print("discord no nick")
 
     url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{NICK_ID}"
     headers={
