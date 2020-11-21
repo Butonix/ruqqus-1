@@ -18,6 +18,7 @@ DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
 
 #Discord role IDs
 BANNED_ID="700694275905814591"
+MEMBER_ID="727255602648186970"
 
 
 @app.route("/discord", methods=["GET"])
@@ -122,6 +123,10 @@ def discord_ban_role(user):
         "Authorization": f"Bot {BOT_TOKEN}"
     }
     requests.put(url, headers=headers)
+
+    url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{MEMBER_ID}"
+    requests.delete(url, headers=headers)
+
 
 def discord_unban_role(user):
 
