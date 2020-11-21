@@ -8,6 +8,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.alerts import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.markdown import *
+from ruqqus.routes.discord import discord_ban_role, discord_unban_role
 from urllib.parse import urlparse
 from secrets import token_hex
 import matplotlib.pyplot as plt
@@ -47,6 +48,15 @@ def ban_user(user_id, v):
 
         user.ban(admin=v, reason=reason)
 
+    discord_ban_role(user)
+
+    for x in user.alts:
+        x.ban(admin=v, reason=reason)
+        discord_ban_role(x)
+
+
+
+
     send_notification(user, text)
 
     return (redirect(user.url), user)
@@ -62,11 +72,12 @@ def unban_user(user_id, v):
     if not user:
         abort(400)
 
-    alts = request.form.get("alts", False)
-    user.unban(include_alts=alts)
+    user.unban()
 
     send_notification(user,
                       "Your Ruqqus account has been reinstated. Please carefully review and abide by the [terms of service](/help/terms) and [content policy](/help/rules) to ensure that you don't get suspended again.")
+
+    discord_unban_role(user)
 
     return (redirect(user.url), user)
 

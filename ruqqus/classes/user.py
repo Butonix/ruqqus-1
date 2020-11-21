@@ -95,11 +95,11 @@ class User(Base, Stndrd, Age_times):
     premium_expires_utc=Column(Integer, default=0)
     negative_balance_cents=Column(Integer, default=0)
 
-    patreon_pledge_cents = Column(Integer, default=0)
-
     is_nofollow = Column(Boolean, default=False)
 
     custom_filter_list=Column(String(1000), default="")
+
+    discord_id=Column(String(64), default=None)
 
     moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
@@ -701,7 +701,7 @@ class User(Base, Stndrd, Age_times):
         # return self.referral_count or self.has_earned_darkmode or
         # self.has_badge(16) or self.has_badge(17)
 
-    def ban(self, admin=None, reason=None, include_alts=True, days=0):
+    def ban(self, admin=None, reason=None,  days=0):
 
         if days > 0:
             ban_time = int(time.time()) + (days * 86400)
@@ -721,25 +721,8 @@ class User(Base, Stndrd, Age_times):
 
         g.db.add(self)
 
-        if include_alts:
-            for alt in self.alts:
 
-                if alt.is_banned:
-                    continue
-
-                # suspend alts
-                if days:
-                    alt.ban(
-                        admin=admin,
-                        reason=reason,
-                        include_alts=False,
-                        days=days)
-
-                # ban alts
-                else:
-                    alt.ban(admin=admin, include_alts=False)
-
-    def unban(self, include_alts=False):
+    def unban(self):
 
         # Takes care of all functions needed for account reinstatement.
 
@@ -748,10 +731,6 @@ class User(Base, Stndrd, Age_times):
 
         g.db.add(self)
 
-        if include_alts:
-            for alt in self.alts:
-                # ban alts
-                alt.unban()
 
     @property
     def is_suspended(self):
