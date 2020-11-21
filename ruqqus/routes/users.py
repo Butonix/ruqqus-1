@@ -309,6 +309,8 @@ def user_profile(username):
 @api("read")
 def saved_listing(v):
 
+    print("saved listing")
+
     page=int(request.args.get("page",1))
 
     ids=v.saved_idlist(page=page)
