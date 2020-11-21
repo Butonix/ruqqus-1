@@ -107,7 +107,7 @@ def discord_redirect(v):
     x=requests.put(url, headers=headers, json=data)
 
     #check on if they are already there
-    print(x.status_code)
+    #print(x.status_code)
 
     if x.status_code==204:
 
@@ -121,8 +121,8 @@ def discord_redirect(v):
 
         req=requests.patch(url, headers=headers, data=data)
 
-        print(req.status_code)
-        print(url)
+        #print(req.status_code)
+        #print(url)
 
     return redirect(f"https://discord.com/channels/{SERVER_ID}")
 
@@ -157,7 +157,7 @@ def discord_no_nick_role(user):
     if not user.discord_id:
         return
 
-    print("discord no nick")
+    #print("discord no nick")
 
     url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{NICK_ID}"
     headers={
