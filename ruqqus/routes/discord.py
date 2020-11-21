@@ -16,6 +16,9 @@ CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET",'').rstrip()
 BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN").rstrip()
 DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
 
+#Discord role IDs
+BANNED_ID="700694275905814591"
+
 
 @app.route("/discord", methods=["GET"])
 def discord_server():
@@ -98,7 +101,8 @@ def discord_redirect(v):
     #print(headers)
     data={
         "access_token":token,
-        "nick":v.username
+        "nick":v.username,
+        "roles": [BANNED_ID] if v.is_banned and v.unban_utc==0 else []
     }
     #print(data)
 
