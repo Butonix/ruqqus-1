@@ -7,6 +7,7 @@ CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET",'').rstrip()
 DISCORD_ENDPOINT = "https://discordapp.com/api"
 BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN",'').rstrip()
 
+
 ROLES={
     "banned":  "700694275905814591",
     "member":  "727255602648186970",
@@ -34,12 +35,14 @@ def discord_wrap(f):
 @discord_wrap
 def add_role(user, role_name):
 
+    print(BOT_TOKEN)
+
     role_id = ROLES[role_name]
     url = f"{DISCORD_ENDPOINT}/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{role_id}"
     headers = {"Authorization": f"Bot {BOT_TOKEN}"}
-    print(url)
+    #print(url)
     x=requests.put(url)
-    print(x.status_code)
+    #print(x.status_code)
     return True
 
 @discord_wrap
@@ -47,7 +50,7 @@ def delete_role(user, role_name):
     role_id = ROLES[role_name]
     url = f"{DISCORD_ENDPOINT}/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{role_id}"
     headers = {"Authorization": f"Bot {BOT_TOKEN}"}
-    print(url)
+    #print(url)
     x=requests.delete(url)
-    print(x.status_code)
+    #print(x.status_code)
     return True
