@@ -16,12 +16,14 @@ CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET",'').rstrip()
 BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN").rstrip()
 DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
 
-#Discord role IDs
+#Discord IDs
 BANNED_ID="700694275905814591"
 MEMBER_ID="727255602648186970"
 NICK_ID="730493039176450170"
 VERIFY_ID="779872346219610123"
 REAL_ID="779904545194508290"
+
+WELCOME_CHANNEL="727361062470418472"
 
 
 
@@ -146,7 +148,7 @@ def discord_redirect(v):
 
         print
 
-    return redirect(f"https://discord.com/channels/{SERVER_ID}")
+    return redirect(f"https://discord.com/channels/{SERVER_ID}/{WELCOME_CHANNEL}")
 
 def discord_ban_role(user):
 
