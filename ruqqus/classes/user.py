@@ -791,11 +791,19 @@ class User(Base, Stndrd, Age_times):
             self.coin_balance -=1
             self.premium_expires_utc = now + 60*60*24*7
 
+            add_role(self, "premium")
+
             g.db.add(self)
 
             return True
 
         else:
+
+            if self.premium_expires_utc:
+                remove_role(self, "premium")
+                self.premium_expires_utc=0
+                g.db.add(self)
+                
             return False
 
     @property
