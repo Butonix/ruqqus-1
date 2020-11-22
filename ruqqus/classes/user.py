@@ -12,7 +12,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import lazy
 import ruqqus.helpers.aws as aws
-from ruqqus.helpers.discord import add_role, delete_role
+from ruqqus.helpers.discord import add_role, remove_role
 #from ruqqus.helpers.alerts import send_notification
 from .votes import Vote
 from .alts import Alt
@@ -803,7 +803,7 @@ class User(Base, Stndrd, Age_times):
                 remove_role(self, "premium")
                 self.premium_expires_utc=0
                 g.db.add(self)
-                
+
             return False
 
     @property
