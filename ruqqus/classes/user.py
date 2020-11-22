@@ -12,7 +12,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import lazy
 import ruqqus.helpers.aws as aws
-from ruqqus.helpers.discord import add_role, remove_role
+from ruqqus.helpers.discord import add_role, delete_role
 #from ruqqus.helpers.alerts import send_notification
 from .votes import Vote
 from .alts import Alt
@@ -731,7 +731,7 @@ class User(Base, Stndrd, Age_times):
         self.is_banned = 0
         self.unban_utc = 0
 
-        remove_role(self, "banned")
+        delete_role(self, "banned")
 
         g.db.add(self)
 
@@ -800,7 +800,7 @@ class User(Base, Stndrd, Age_times):
         else:
 
             if self.premium_expires_utc:
-                remove_role(self, "premium")
+                delete_role(self, "premium")
                 self.premium_expires_utc=0
                 g.db.add(self)
 
