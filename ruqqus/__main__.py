@@ -286,11 +286,10 @@ def log_event(name, link):
 @app.after_request
 def after_request(response):
 
-    if g.db.dirty:
-        try:
-            g.db.commit()
-        except BaseException:
-            pass  # g.db.close()
+    try:
+        g.db.commit()
+    except BaseException:
+        pass  # g.db.close()
 
     response.headers.add('Access-Control-Allow-Headers',
                          "Origin, X-Requested-With, Content-Type, Accept, x-auth"
