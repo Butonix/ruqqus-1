@@ -1,11 +1,11 @@
 from os import environ
 import requests
 
-SERVER_ID = environ.get("DISCORD_SERVER_ID")
-CLIENT_ID = environ.get("DISCORD_CLIENT_ID")
-CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET")
+SERVER_ID = environ.get("DISCORD_SERVER_ID",'').rstrip()
+CLIENT_ID = environ.get("DISCORD_CLIENT_ID",'').rstrip()
+CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET",'').rstrip()
 DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
-BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN")
+BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN",'').rstrip()
 
 ROLES={
     "banned":  "700694275905814591",
