@@ -116,6 +116,9 @@ def discord_redirect(v):
     if v.is_banned and v.unban_utc==0:
         add_role(v, "banned")
 
+    if v.has_premium:
+    	add_role(v, "premium")
+
     #check on if they are already there
     #print(x.status_code)
 
