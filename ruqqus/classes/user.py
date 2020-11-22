@@ -716,6 +716,7 @@ class User(Base, Stndrd, Age_times):
                 self.del_profile()
 
             add_role(self, "banned")
+            delete_role(self, "member")
 
         self.is_banned = admin.id if admin else 1
         if reason:
