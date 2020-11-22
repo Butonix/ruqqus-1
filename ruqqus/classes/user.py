@@ -12,6 +12,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import lazy
 import ruqqus.helpers.aws as aws
+from ruqqus.helpers.discord import add_role, delete_role
 #from ruqqus.helpers.alerts import send_notification
 from .votes import Vote
 from .alts import Alt
@@ -85,7 +86,6 @@ class User(Base, Stndrd, Age_times):
     show_nsfl = Column(Boolean, default=False)
     is_private = Column(Boolean, default=False)
     read_announcement_utc = Column(Integer, default=0)
-    #discord_id=Column(Integer, default=None)
     unban_utc = Column(Integer, default=0)
     is_deleted = Column(Boolean, default=False)
     delete_reason = Column(String(500), default='')
@@ -715,6 +715,8 @@ class User(Base, Stndrd, Age_times):
             if self.has_profile:
                 self.del_profile()
 
+            add_role(self, "banned")
+
         self.is_banned = admin.id if admin else 1
         if reason:
             self.ban_reason = reason
@@ -728,6 +730,8 @@ class User(Base, Stndrd, Age_times):
 
         self.is_banned = 0
         self.unban_utc = 0
+
+        remove_role(self, "banned")
 
         g.db.add(self)
 

@@ -7,7 +7,7 @@ from flask import *
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
-import ruqqus.helpers.discord
+from ruqqus.helpers.discord import add_role, delete_role
 from ruqqus.__main__ import app
 
 SERVER_ID = environ.get("DISCORD_SERVER_ID",'').rstrip()
@@ -16,12 +16,6 @@ CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET",'').rstrip()
 BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN").rstrip()
 DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
 
-#Discord IDs
-BANNED_ID="700694275905814591"
-MEMBER_ID="727255602648186970"
-NICK_ID="730493039176450170"
-VERIFY_ID="779872346219610123"
-REAL_ID="779904545194508290"
 
 WELCOME_CHANNEL="727361062470418472"
 
@@ -108,12 +102,8 @@ def discord_redirect(v):
 
     url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{x['id']}"
 
-    roles=[VERIFY_ID]
     name=v.username
-    if v.is_banned and v.unban_utc==0:
-        roles.append(BANNED_ID)
     if v.real_id:
-        roles.append(REAL_ID)
         name+= f" | {v.real_id}"
 
     data={
@@ -123,6 +113,8 @@ def discord_redirect(v):
     }
 
     x=requests.put(url, headers=headers, json=data)
+    if v.is_banned and v.unban_utc==0:
+        add_role(v, "banned")
 
     #check on if they are already there
     #print(x.status_code)
@@ -130,11 +122,11 @@ def discord_redirect(v):
     if x.status_code==204:
 
         ##if user is already a member, remove old roles and update nick
-        discord_no_nick_role(v)
-        discord_linked_role(v)
+        delete_role(v, "nick")
+        add_role(v, "linked")
 
         if v.real_id:
-            discord_real_role(v)
+            add_role(v, "realid")
 
 
         url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{v.discord_id}"
@@ -150,66 +142,3 @@ def discord_redirect(v):
         print
 
     return redirect(f"https://discord.com/channels/{SERVER_ID}/{WELCOME_CHANNEL}")
-
-def discord_ban_role(user):
-
-    if not user.discord_id:
-        return
-
-    url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{BANNED_ID}"
-    headers={
-        "Authorization": f"Bot {BOT_TOKEN}"
-    }
-    requests.put(url, headers=headers)
-
-    url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{MEMBER_ID}"
-    requests.delete(url, headers=headers)
-
-
-def discord_unban_role(user):
-
-    if not user.discord_id:
-        return
-
-    url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{BANNED_ID}"
-    headers={
-        "Authorization": f"Bot {BOT_TOKEN}"
-    }
-    requests.delete(url, headers=headers)
-
-def discord_no_nick_role(user):
-
-    if not user.discord_id:
-        return
-
-    #print("discord no nick")
-
-    url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{NICK_ID}"
-    headers={
-        "Authorization": f"Bot {BOT_TOKEN}"
-    }
-    requests.delete(url, headers=headers)
-
-def discord_real_role(user):
-
-    if not user.discord_id:
-        return
-
-    url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{REAL_ID}"
-    headers={
-        "Authorization": f"Bot {BOT_TOKEN}"
-    }
-    requests.put(url, headers=headers)
-
-def discord_linked_role(user):
-
-    if not user.discord_id:
-        return
-
-    url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{VERIFY_ID}"
-    headers={
-        "Authorization": f"Bot {BOT_TOKEN}"
-    }
-    requests.put(url, headers=headers)
-
-
