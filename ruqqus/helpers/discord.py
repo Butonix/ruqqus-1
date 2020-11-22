@@ -37,7 +37,8 @@ def add_role(user, role_name):
     role_id = ROLES[role_name]
     url = f"{DISCORD_ENDPOINT}/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{role_id}"
     headers = {"Authorization": f"Bot {BOT_TOKEN}"}
-    requests.put(url)
+    x=requests.put(url)
+    print(x.status_code)
     return True
 
 @discord_wrap
@@ -45,5 +46,6 @@ def delete_role(user, role_name):
     role_id = ROLES[role_name]
     url = f"{DISCORD_ENDPOINT}/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{role_id}"
     headers = {"Authorization": f"Bot {BOT_TOKEN}"}
-    requests.delete(url)
+    x=requests.delete(url)
+    print(x.status_code)
     return True
