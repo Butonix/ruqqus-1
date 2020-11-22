@@ -131,6 +131,7 @@ def discord_redirect(v):
 
         ##if user is already a member, remove old roles and update nick
         discord_no_nick_role(v)
+        discord_linked_role(v)
 
         if v.real_id:
             discord_real_role(v)
@@ -195,6 +196,17 @@ def discord_real_role(user):
         return
 
     url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{REAL_ID}"
+    headers={
+        "Authorization": f"Bot {BOT_TOKEN}"
+    }
+    requests.put(url, headers=headers)
+
+def discord_linked_role(user):
+
+    if not user.discord_id:
+        return
+
+    url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{VERIFY_ID}"
     headers={
         "Authorization": f"Bot {BOT_TOKEN}"
     }
