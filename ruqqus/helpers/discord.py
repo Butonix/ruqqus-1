@@ -50,7 +50,7 @@ def delete_role(user, role_name):
     requests.delete(url, headers=headers)
 
 @discord_wrap
-def remove_user(user)
+def remove_user(user):
     url=f"{DISCORD_ENDPOINT}/guilds/{SERVER_ID}/members/{user.discord_id}"
     headers = {"Authorization": f"Bot {BOT_TOKEN}"}
     requests.delete(url, headers=headers)
