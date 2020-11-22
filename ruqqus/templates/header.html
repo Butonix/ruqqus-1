@@ -28,12 +28,6 @@
   <div class="collapse navbar-collapse" id="navbarResponsive">
     <ul class="navbar-nav ml-auto d-none d-md-flex">
 
-      {% if v %}
-      <li class="nav-item d-flex align-items-center justify-content-center text-center mx-1" data-toggle="modal" data-target="#announcementsModalScrollable" >
-        <div class="nav-link" onclick="post('/settings/read_announcement')" role="button" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Announcements"><i class="fas fa-sparkles{% if v and not v.read_announcement_utc %} text-purple{% endif %}"></i></div>
-      </li>
-      {% endif %}
-
       {% if v and v.mods_anything %}
       <li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
         <a class="nav-link" href="{{ '/+'+b.name if b and b.has_mod(v) else '' }}/mod/queue" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Guildmaster tools"><i class="fas fa-crown{% if v.has_report_queue %} text-success{% endif %}"></i></a>
