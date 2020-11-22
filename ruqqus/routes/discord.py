@@ -109,7 +109,6 @@ def discord_redirect(v):
     data={
         "access_token":token,
         "nick":name,
-        "roles": roles
     }
 
     x=requests.put(url, headers=headers, json=data)
