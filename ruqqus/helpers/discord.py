@@ -4,7 +4,7 @@ import requests
 SERVER_ID = environ.get("DISCORD_SERVER_ID",'').rstrip()
 CLIENT_ID = environ.get("DISCORD_CLIENT_ID",'').rstrip()
 CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET",'').rstrip()
-DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
+DISCORD_ENDPOINT = "https://discordapp.com/api"
 BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN",'').rstrip()
 
 ROLES={
