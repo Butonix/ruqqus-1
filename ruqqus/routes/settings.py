@@ -9,6 +9,7 @@ from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.markdown import *
+from ruqqus.helpers.discord import remove_user
 from ruqqus.helpers.aws import check_csam_url
 from ruqqus.mail import *
 from .front import frontlist
@@ -384,6 +385,9 @@ def delete_account(v):
             v.mfa_secret and not v.validate_2fa(request.form.get("twofactor", ""))):
         return render_template("settings_security.html", v=v,
                                error="Invalid password or token" if v.mfa_secret else "Invalid password")
+
+
+    remove_user(v)
 
     v.is_deleted = True
     v.login_nonce += 1

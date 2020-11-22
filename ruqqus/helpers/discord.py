@@ -1,5 +1,6 @@
 from os import environ
 import requests
+import threading
 
 SERVER_ID = environ.get("DISCORD_SERVER_ID",'').rstrip()
 CLIENT_ID = environ.get("DISCORD_CLIENT_ID",'').rstrip()
@@ -25,7 +26,9 @@ def discord_wrap(f):
         if not user.discord_id:
             return
 
-        return f(*args, **kwargs)
+
+        thread=threading.Thread(target=f, args=args, kwargs=kwargs)
+        thread.start()
 
     wrapper.__name__=f.__name__
     return wrapper
@@ -37,13 +40,17 @@ def add_role(user, role_name):
     role_id = ROLES[role_name]
     url = f"{DISCORD_ENDPOINT}/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{role_id}"
     headers = {"Authorization": f"Bot {BOT_TOKEN}"}
-    x=requests.put(url, headers=headers)
-    return True
+    requests.put(url, headers=headers)
 
 @discord_wrap
 def delete_role(user, role_name):
     role_id = ROLES[role_name]
     url = f"{DISCORD_ENDPOINT}/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{role_id}"
     headers = {"Authorization": f"Bot {BOT_TOKEN}"}
-    x=requests.delete(url, headers=headers)
-    return True
+    requests.delete(url, headers=headers)
+
+@discord_wrap
+def remove_user(user)
+    url=f"{DISCORD_ENDPOINT}/guilds/{SERVER_ID}/members/{user.discord_id}"
+    headers = {"Authorization": f"Bot {BOT_TOKEN}"}
+    requests.delete(url, headers=headers)
