@@ -98,7 +98,7 @@ def discord_redirect(v):
     }
 
     #remove existing user if applicable
-    if v.discord_id:
+    if v.discord_id and v.discord_id != x['id']:
         url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{v.discord_id}"
         requests.delete(url, headers=headers)
 
