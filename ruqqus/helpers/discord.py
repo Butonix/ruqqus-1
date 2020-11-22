@@ -5,7 +5,7 @@ SERVER_ID = environ.get("DISCORD_SERVER_ID")
 CLIENT_ID = environ.get("DISCORD_CLIENT_ID")
 CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET")
 DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
-BOT_TOKEN = environ.get("BOT_TOKEN")
+BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN")
 
 ROLES={
     "banned":  "700694275905814591",
