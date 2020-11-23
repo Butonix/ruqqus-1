@@ -108,12 +108,12 @@ def discord_redirect(v):
         url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{v.discord_id}"
         requests.delete(url, headers=headers)
 
-    try:
-        v.discord_id=x["id"]
-        g.db.add(v)
-        g.db.commit()
-    except:
-    	return render_template("message.html", title="Discord account already linked.", error="That Discord account is already in use by another user.", v=v)
+    if g.db.query(User).filter(User.id!=v.id, User.discord_id==x["id"]).first():
+        return render_template("message.html", title="Discord account already linked.", error="That Discord account is already in use by another user.", v=v)
+
+    v.discord_id=x["id"]
+    g.db.add(v)
+    g.db.commit()
 
     url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{x['id']}"
 
