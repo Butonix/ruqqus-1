@@ -127,14 +127,19 @@ def discord_redirect(v):
     }
 
     x=requests.put(url, headers=headers, json=data)
-                    
-    add_role(v, "linked")
-                    
-    if v.is_banned and v.unban_utc==0:
-        add_role(v, "banned")
 
-    if v.has_premium:
-        add_role(v, "premium")
+    if x.status_code in [201, 204]:
+                    
+        add_role(v, "linked")
+                        
+        if v.is_banned and v.unban_utc==0:
+            add_role(v, "banned")
+
+        if v.has_premium:
+            add_role(v, "premium")
+
+    else:
+        return jsonify(x.json())
 
     #check on if they are already there
     #print(x.status_code)
@@ -157,7 +162,5 @@ def discord_redirect(v):
 
         #print(req.status_code)
         #print(url)
-
-        print
 
     return redirect(f"https://discord.com/channels/{SERVER_ID}/{WELCOME_CHANNEL}")
