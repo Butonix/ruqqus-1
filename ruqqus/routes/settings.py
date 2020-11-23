@@ -559,3 +559,9 @@ def settings_remove_discord(v):
     g.db.commit()
 
     return redirect("/settings/profile")
+
+@app.route("/settings/content", methods=["GET"])
+@auth_required
+def settings_content_get(v):
+
+    return render_template("settings_filters.html", v=v)
