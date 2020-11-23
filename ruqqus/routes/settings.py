@@ -545,3 +545,17 @@ def settings_unblock_guild(v):
 def settings_apps(v):
 
     return render_template("settings_apps.html", v=v)
+
+
+@app.route("/settings/remove_discord", methods=["POST"])
+@auth_required
+@validate_formkey
+def settings_remove_discord(v):
+
+    remove_user(v)
+
+    v.discord_id=None
+    g.db.add(v)
+    g.db.commit()
+
+    return redirect("/settings/profile")
