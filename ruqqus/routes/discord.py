@@ -127,6 +127,9 @@ def discord_redirect(v):
     }
 
     x=requests.put(url, headers=headers, json=data)
+                    
+    add_role(v, "linked")
+                    
     if v.is_banned and v.unban_utc==0:
         add_role(v, "banned")
 
@@ -140,7 +143,6 @@ def discord_redirect(v):
 
         ##if user is already a member, remove old roles and update nick
         delete_role(v, "nick")
-        add_role(v, "linked")
 
         if v.real_id:
             add_role(v, "realid")
