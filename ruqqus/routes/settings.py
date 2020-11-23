@@ -389,6 +389,7 @@ def delete_account(v):
 
     remove_user(v)
 
+    v.discord_id=None
     v.is_deleted = True
     v.login_nonce += 1
     v.delete_reason = request.form.get("delete_reason", "")
