@@ -53,6 +53,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     is_banned = Column(Boolean, default=False)
     is_deleted = Column(Boolean, default=False)
     distinguish_level = Column(Integer, default=0)
+    gm_distinguish = Column(Integer, ForeignKey("boards.id"), default=0)
+    distinguished_board = relationship("Board", lazy="joined", primaryjoin="Board.id==Submission.gm_distinguish")
     created_str = Column(String(255), default=None)
     stickied = Column(Boolean, default=False)
     _comments = relationship(
@@ -82,6 +84,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     score_activity = Column(Float, default=0)
     is_offensive = Column(Boolean, default=False)
     is_nsfl = Column(Boolean, default=False)
+    is_politics = Column(Boolean, default=False)
     board = relationship(
         "Board",
         lazy="joined",
@@ -158,7 +161,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @lazy
     def fullname(self):
         return f"t2_{self.base36id}"
-
+        
     @property
     @lazy
     def permalink(self):
@@ -214,6 +217,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         # return template
         is_allowed_to_comment = self.board.can_comment(
             v) and not self.is_archived
+        
+    #    if request.args.get("sort", "Hot") != "new":
+    #        self.replies = [x for x in self.replies if x.is_pinned] + [x for x in self.replies if not x.is_pinned]
 
         return render_template(template,
                                v=v,
@@ -242,8 +248,15 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
         comments = self._preloaded_comments
 
+        pinned_comment=[]
+
         index = {}
         for c in comments:
+
+            if c.is_pinned and c.parent_fullname==self.fullname:
+                pinned_comment=[c]
+                continue
+
             if c.parent_fullname in index:
                 index[c.parent_fullname].append(c)
             else:
@@ -255,7 +268,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         if comment:
             self.__dict__["replies"] = [comment]
         else:
-            self.__dict__["replies"] = index.get(self.fullname, [])
+            self.__dict__["replies"] = pinned_comment + index.get(self.fullname, [])
 
     @property
     def active_flags(self):
@@ -301,6 +314,15 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         for x in g.db.query(BadWord).all():
             if (self.body and x.check(self.body)) or x.check(self.title):
                 self.is_offensive = True
+                break
+        else:
+            self.is_offensive = False
+
+    def determine_politics(self):
+
+        for x in g.db.query(PoliticsWord).all():
+            if (self.body and x.check(self.body)) or x.check(self.title):
+                self.is_politics = True
                 break
         else:
             self.is_offensive = False
@@ -351,7 +373,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'score': self.score_fuzzed,
                 'upvotes': self.upvotes_fuzzed,
                 'downvotes': self.downvotes_fuzzed,
-                'award_count': self.award_count
+                'award_count': self.award_count,
+                'is_offensive': self.is_offensive,
+                'is_politics': self.is_politics
                 }
         if "replies" in self.__dict__:
             data["replies"]=[x.json for x in self.replies]
@@ -458,3 +482,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def award_count(self):
         return len(self.awards)
+
+    @property
+    def embed_template(self):
+        return f"site_embeds/{self.domain_obj.embed_template}.html"
+    

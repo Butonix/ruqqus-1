@@ -30,7 +30,10 @@ def get_logged_in_user():
             ClientAuth.access_token_expire_utc > int(time.time())
         ).first()
 
-        x = (client.user, client) if client else (None, None)
+        if app.config["SERVER_NAME"]=="dev.ruqqus.com" and client.user.admin_level < 2 and not client.user.has_premium:
+            x=(None, None)
+        else:
+            x = (client.user, client) if client else (None, None)
         return x
 
     elif "user_id" in session:
@@ -39,7 +42,15 @@ def get_logged_in_user():
         nonce = session.get("login_nonce", 0)
         if not uid:
             return None, None
-        v = g.db.query(User).options(lazyload('*')).filter_by(id=uid).first()
+        v = g.db.query(User).options(
+            joinedload(User.moderates).joinedload(ModRelationship.board), #joinedload(Board.reports),
+            joinedload(User.subscriptions).joinedload(Subscription.board)
+        #    joinedload(User.notifications)
+            ).filter_by(id=uid).first()
+
+        if app.config["SERVER_NAME"]=="dev.ruqqus.com" and v.admin_level < 2 and not v.has_premium:
+            return None, None
+
         if v and nonce < v.login_nonce:
             return None, None
         else:
@@ -298,7 +309,7 @@ def no_cors(f):
 
         origin = request.headers.get("Origin", None)
 
-        if origin and origin != "https://" + app.config["SERVER_NAME"]:
+        if origin and origin != "https://" + app.config["SERVER_NAME"] and app.config["FORCE_HTTPS"]==1:
 
             return "This page may not be embedded in other webpages.", 403
 

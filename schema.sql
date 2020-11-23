@@ -93,7 +93,8 @@ CREATE TABLE public.comments (
     original_board_id integer,
     upvotes integer,
     downvotes integer,
-    is_bot boolean DEFAULT false
+    is_bot boolean DEFAULT false,
+    is_pinned boolean DEFAULT false
 );
 
 
@@ -144,7 +145,8 @@ CREATE TABLE public.submissions (
     repost_id integer,
     score_best double precision,
     upvotes integer,
-    downvotes integer
+    downvotes integer,
+    is_politics boolean DEFAULT false
 );
 
 
@@ -203,15 +205,16 @@ CREATE TABLE public.users (
     unban_utc integer,
     is_deleted boolean,
     delete_reason character varying(1000),
-    patreon_id character(64),
-    patreon_access_token character(128),
-    patreon_refresh_token character(128),
     patreon_pledge_cents integer,
-    patreon_name character varying(64),
     is_enrolled boolean,
     roulette_wins integer,
     filter_nsfw boolean,
-    is_nofollow boolean DEFAULT false
+    is_nofollow boolean DEFAULT false,
+    coin_balance integer DEFAULT 0,
+    premium_expires_utc integer DEFAULT 0,
+    negative_balance_cents integer DEFAULT 0,
+    is_hiding_politics boolean DEFAULT false,
+    custom_filter_list character varying(1000) DEFAULT ''::character varying
 );
 
 
@@ -255,7 +258,8 @@ CREATE TABLE public.boards (
     stored_subscriber_count integer,
     avg_score double precision,
     all_opt_out boolean,
-    category integer DEFAULT 0
+    category integer DEFAULT 0,
+    is_siegable boolean DEFAULT true
 );
 
 
@@ -1050,6 +1054,38 @@ ALTER SEQUENCE public.alts_id_seq OWNED BY public.alts.id;
 
 
 --
+-- Name: award_relationships; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.award_relationships (
+    id integer NOT NULL,
+    user_id integer,
+    submission_id integer,
+    comment_id integer
+);
+
+
+--
+-- Name: award_relationships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.award_relationships_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: award_relationships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.award_relationships_id_seq OWNED BY public.award_relationships.id;
+
+
+--
 -- Name: badge_defs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1603,7 +1639,8 @@ CREATE TABLE public.domains (
     can_comment boolean,
     reason integer,
     show_thumbnail boolean,
-    embed_function character varying(64)
+    embed_function character varying(64),
+    embed_template character varying(32) DEFAULT NULL::character varying
 );
 
 
@@ -1741,6 +1778,38 @@ CREATE SEQUENCE public.ips_id_seq
 --
 
 ALTER SEQUENCE public.ips_id_seq OWNED BY public.ips.id;
+
+
+--
+-- Name: lodges; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.lodges (
+    id integer NOT NULL,
+    created_utc integer,
+    board_id integer,
+    name character varying(32)
+);
+
+
+--
+-- Name: lodges_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.lodges_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: lodges_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.lodges_id_seq OWNED BY public.lodges.id;
 
 
 --
@@ -1901,6 +1970,72 @@ ALTER SEQUENCE public.oauth_apps_id_seq OWNED BY public.oauth_apps.id;
 
 
 --
+-- Name: paypal_txns; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.paypal_txns (
+    id integer NOT NULL,
+    user_id integer,
+    created_utc integer,
+    paypal_id character varying(64),
+    usd_cents integer,
+    status integer DEFAULT 0,
+    coin_count integer DEFAULT 1 NOT NULL
+);
+
+
+--
+-- Name: paypal_txns_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.paypal_txns_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: paypal_txns_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.paypal_txns_id_seq OWNED BY public.paypal_txns.id;
+
+
+--
+-- Name: politicswords; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.politicswords (
+    id integer NOT NULL,
+    keyword character varying(64),
+    regex character varying(256)
+);
+
+
+--
+-- Name: politicswords_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.politicswords_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: politicswords_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.politicswords_id_seq OWNED BY public.politicswords.id;
+
+
+--
 -- Name: postrels; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1952,6 +2087,37 @@ ALTER SEQUENCE public.reports_id_seq OWNED BY public.reports.id;
 
 
 --
+-- Name: save_relationship; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.save_relationship (
+    id integer NOT NULL,
+    submission_id integer,
+    user_id integer
+);
+
+
+--
+-- Name: save_relationship_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.save_relationship_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: save_relationship_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.save_relationship_id_seq OWNED BY public.save_relationship.id;
+
+
+--
 -- Name: submissions_aux; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1961,7 +2127,7 @@ CREATE TABLE public.submissions_aux (
     url character varying(2083),
     body character varying(10000),
     body_html character varying(20000),
-    embed_url character varying(256),
+    embed_url character varying(10000),
     ban_reason character varying(128),
     key_id integer NOT NULL
 );
@@ -2240,6 +2406,13 @@ ALTER TABLE ONLY public.alts ALTER COLUMN id SET DEFAULT nextval('public.alts_id
 
 
 --
+-- Name: award_relationships id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.award_relationships ALTER COLUMN id SET DEFAULT nextval('public.award_relationships_id_seq'::regclass);
+
+
+--
 -- Name: badge_defs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2394,6 +2567,13 @@ ALTER TABLE ONLY public.ips ALTER COLUMN id SET DEFAULT nextval('public.ips_id_s
 
 
 --
+-- Name: lodges id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.lodges ALTER COLUMN id SET DEFAULT nextval('public.lodges_id_seq'::regclass);
+
+
+--
 -- Name: message_notifications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2429,6 +2609,20 @@ ALTER TABLE ONLY public.oauth_apps ALTER COLUMN id SET DEFAULT nextval('public.o
 
 
 --
+-- Name: paypal_txns id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.paypal_txns ALTER COLUMN id SET DEFAULT nextval('public.paypal_txns_id_seq'::regclass);
+
+
+--
+-- Name: politicswords id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.politicswords ALTER COLUMN id SET DEFAULT nextval('public.politicswords_id_seq'::regclass);
+
+
+--
 -- Name: postrels id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2440,6 +2634,13 @@ ALTER TABLE ONLY public.postrels ALTER COLUMN id SET DEFAULT nextval('public.pos
 --
 
 ALTER TABLE ONLY public.reports ALTER COLUMN id SET DEFAULT nextval('public.reports_id_seq'::regclass);
+
+
+--
+-- Name: save_relationship id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.save_relationship ALTER COLUMN id SET DEFAULT nextval('public.save_relationship_id_seq'::regclass);
 
 
 --
@@ -2511,6 +2712,38 @@ ALTER TABLE ONLY public.votes ALTER COLUMN id SET DEFAULT nextval('public.votes_
 
 ALTER TABLE ONLY public.alts
     ADD CONSTRAINT alts_pkey PRIMARY KEY (user1, user2);
+
+
+--
+-- Name: award_relationships award_comment_constraint; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.award_relationships
+    ADD CONSTRAINT award_comment_constraint UNIQUE (user_id, comment_id);
+
+
+--
+-- Name: award_relationships award_constraint; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.award_relationships
+    ADD CONSTRAINT award_constraint UNIQUE (user_id, submission_id, comment_id);
+
+
+--
+-- Name: award_relationships award_post_constraint; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.award_relationships
+    ADD CONSTRAINT award_post_constraint UNIQUE (user_id, submission_id);
+
+
+--
+-- Name: award_relationships award_relationships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.award_relationships
+    ADD CONSTRAINT award_relationships_pkey PRIMARY KEY (id);
 
 
 --
@@ -2730,6 +2963,22 @@ ALTER TABLE ONLY public.ips
 
 
 --
+-- Name: lodges lodge_constraint; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.lodges
+    ADD CONSTRAINT lodge_constraint UNIQUE (board_id, name);
+
+
+--
+-- Name: lodges lodges_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.lodges
+    ADD CONSTRAINT lodges_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: message_notifications message_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2810,11 +3059,19 @@ ALTER TABLE ONLY public.votes
 
 
 --
--- Name: users patreon_unique; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: paypal_txns paypal_txns_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT patreon_unique UNIQUE (patreon_id);
+ALTER TABLE ONLY public.paypal_txns
+    ADD CONSTRAINT paypal_txns_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: politicswords politicswords_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.politicswords
+    ADD CONSTRAINT politicswords_pkey PRIMARY KEY (id);
 
 
 --
@@ -2839,6 +3096,22 @@ ALTER TABLE ONLY public.postrels
 
 ALTER TABLE ONLY public.reports
     ADD CONSTRAINT reports_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: save_relationship save_constraint; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.save_relationship
+    ADD CONSTRAINT save_constraint UNIQUE (submission_id, user_id);
+
+
+--
+-- Name: save_relationship save_relationship_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.save_relationship
+    ADD CONSTRAINT save_relationship_pkey PRIMARY KEY (id);
 
 
 --
@@ -3020,6 +3293,27 @@ CREATE INDEX alts_user1_idx ON public.alts USING btree (user1);
 --
 
 CREATE INDEX alts_user2_idx ON public.alts USING btree (user2);
+
+
+--
+-- Name: award_comment_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX award_comment_idx ON public.award_relationships USING btree (comment_id);
+
+
+--
+-- Name: award_post_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX award_post_idx ON public.award_relationships USING btree (submission_id);
+
+
+--
+-- Name: award_user_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX award_user_idx ON public.award_relationships USING btree (user_id);
 
 
 --
@@ -3366,6 +3660,27 @@ CREATE INDEX follow_user_id_index ON public.follows USING btree (user_id);
 
 
 --
+-- Name: lodge_board_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX lodge_board_idx ON public.lodges USING btree (board_id);
+
+
+--
+-- Name: lodge_name_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX lodge_name_idx ON public.lodges USING btree (name);
+
+
+--
+-- Name: lodge_name_trgm_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX lodge_name_trgm_idx ON public.lodges USING gin (name public.gin_trgm_ops);
+
+
+--
 -- Name: message_user_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3412,6 +3727,41 @@ CREATE INDEX notifications_comment_idx ON public.notifications USING btree (comm
 --
 
 CREATE INDEX notifications_user_index ON public.notifications USING btree (user_id);
+
+
+--
+-- Name: notifs_user_read_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX notifs_user_read_idx ON public.notifications USING btree (user_id, read);
+
+
+--
+-- Name: paypal_txn_created_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX paypal_txn_created_idx ON public.paypal_txns USING btree (created_utc DESC);
+
+
+--
+-- Name: paypal_txn_paypalid_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX paypal_txn_paypalid_idx ON public.paypal_txns USING btree (paypal_id);
+
+
+--
+-- Name: paypal_txn_user_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX paypal_txn_user_id_idx ON public.paypal_txns USING btree (user_id);
+
+
+--
+-- Name: politics_keyword_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX politics_keyword_idx ON public.politicswords USING btree (keyword);
 
 
 --
@@ -3702,13 +4052,6 @@ CREATE INDEX user_del_idx ON public.users USING btree (is_deleted);
 
 
 --
--- Name: user_patreon_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX user_patreon_idx ON public.users USING btree (patreon_id);
-
-
---
 -- Name: user_privacy_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3730,10 +4073,38 @@ CREATE INDEX userblocks_both_idx ON public.userblocks USING btree (user_id, targ
 
 
 --
+-- Name: users_coin_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX users_coin_idx ON public.users USING btree (coin_balance);
+
+
+--
 -- Name: users_created_utc_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX users_created_utc_index ON public.users USING btree (created_utc);
+
+
+--
+-- Name: users_neg_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX users_neg_idx ON public.users USING btree (negative_balance_cents);
+
+
+--
+-- Name: users_premium_expire_utc_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX users_premium_expire_utc_idx ON public.users USING btree (premium_expires_utc DESC);
+
+
+--
+-- Name: users_premium_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX users_premium_idx ON public.users USING btree (premium_expires_utc);
 
 
 --
@@ -3871,14 +4242,6 @@ ALTER TABLE ONLY public.reports
 
 ALTER TABLE ONLY public.submissions
     ADD CONSTRAINT submissions_board_id_fkey FOREIGN KEY (board_id) REFERENCES public.boards(id);
-
-
---
--- Name: submissions submissions_domain_ref_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.submissions
-    ADD CONSTRAINT submissions_domain_ref_fkey FOREIGN KEY (domain_ref) REFERENCES public.domains(id);
 
 
 --

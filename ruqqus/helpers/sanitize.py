@@ -55,6 +55,7 @@ _allowed_tags_in_bio = [
 ]
 
 _allowed_attributes = {'a': ['href', 'title', "rel"],
+                       'i': [],
                        'img': ['src', 'class']
                        }
 

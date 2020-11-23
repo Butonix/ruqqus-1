@@ -35,6 +35,13 @@ def slurs():
     resp.headers.add("Content-Type", "text/plain")
     return resp
 
+@app.route("/politics.txt", methods=["GET"])
+def politics_keywords():
+    resp = make_response('\n'.join([x.keyword for x in g.db.query(
+        PoliticsWord).order_by(PoliticsWord.keyword.asc()).all()]))
+    resp.headers.add("Content-Type", "text/plain")
+    return resp
+
 
 @app.route("/settings", methods=["GET"])
 @auth_required

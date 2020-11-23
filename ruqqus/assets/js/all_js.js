@@ -1853,7 +1853,7 @@ coin_quote = function() {
 }
 
 // Tipping
-
+/*
 var tipModal = function(event) {
   console.log('opened modal, tipModal function triggered')
   var id = event.target.dataset.contentId;
@@ -1881,6 +1881,7 @@ var tipModal = function(event) {
 
   console.log(senderPFP, recipientPFP, id, content, link, recipient)
 }
+*/
 
 
 var tipModal2 = function(id, content, link, recipient, recipientPFP) {
@@ -1902,6 +1903,7 @@ var tipModal2 = function(id, content, link, recipient, recipientPFP) {
   console.log(recipientPFP, id, content, link, recipient)
 }
 
+/*
 var tipModalButtons = document.getElementsByClassName('tip-modal-button')
 
 for (var i = 0; i < tipModalButtons.length; i++) {
@@ -1912,4 +1914,4 @@ for (var i = 0; i < tipModalButtons.length; i++) {
     }
   }, false)
 }
-
+*/

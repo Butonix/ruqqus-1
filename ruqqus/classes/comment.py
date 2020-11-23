@@ -45,6 +45,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     edited_utc = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
     distinguish_level = Column(Integer, default=0)
+    gm_distinguish = Column(Integer, ForeignKey("boards.id"), default=0)
+    distinguished_board = relationship("Board", lazy="joined", primaryjoin="Comment.gm_distinguish==Board.id")
     is_deleted = Column(Boolean, default=False)
     is_approved = Column(Integer, default=0)
     approved_utc = Column(Integer, default=0)
@@ -61,6 +63,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     is_offensive = Column(Boolean, default=False)
     is_nsfl = Column(Boolean, default=False)
     is_bot = Column(Boolean, default=False)
+    is_pinned = Column(Boolean, default=False)
 
     post = relationship("Submission")
     flags = relationship("CommentFlag", backref="comment")
@@ -354,6 +357,20 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def award_count(self):
         return len(self.awards)
+
+    def collapse_for_user(self, v):
+
+        if not v:
+            return False
+
+        if self.is_offensive and v.hide_offensive:
+            return True
+
+        if any([x in self.body for x in v.filter_words]):
+            return True
+
+        return False
+
     
 
 
@@ -367,13 +384,14 @@ class Notification(Base):
     read = Column(Boolean, default=False)
 
     comment = relationship("Comment", lazy="joined", innerjoin=True)
+    user=relationship("User", innerjoin=True)
 
     # Server side computed values (copied from corresponding comment)
     created_utc = Column(Integer, server_default=FetchedValue())
 
     def __repr__(self):
 
-        return f"<Notification(id={self.id})"
+        return f"<Notification(id={self.id})>"
 
     @property
     def voted(self):

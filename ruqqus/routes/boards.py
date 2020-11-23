@@ -218,6 +218,42 @@ def board_name(name, v):
                                    )
             }
 
+@app.route("/mod/distinguish_post/<bid>/<pid>", methods=["POST"])
+@auth_required
+@is_guildmaster
+def mod_distinguish_post(bid, pid, board, v):
+
+    #print(pid, board, v)
+
+    post = get_post(pid, v=v)
+
+    if post.author_id != v.id:
+        abort(403)
+
+    if post.gm_distinguish:
+        post.gm_distinguish = 0
+    else:
+        post.gm_distinguish = board.id
+    g.db.add(post)
+
+    return "", 204
+
+@app.route("/mod/distinguish_comment/<bid>/<cid>", methods=["POST"])
+@auth_required
+@is_guildmaster
+def mod_distinguish_comment(bid, cid, board, v):
+
+    comment = get_comment(cid, v=v)
+
+    if comment.author_id != v.id:
+        abort(403)
+
+    if comment.gm_distinguish:
+        comment.gm_distinguish = 0
+    else:
+        comment.gm_distinguish = board.id
+
+    return "", 204
 
 @app.route("/mod/kick/<bid>/<pid>", methods=["POST"])
 @auth_required
@@ -740,7 +776,14 @@ def board_about_exiled(boardname, board, v):
     next_exists = (len(bans) == 26)
     bans = bans[0:25]
 
-    return render_template("guild/bans.html", v=v, b=board, bans=bans)
+    return render_template(
+        "guild/bans.html", 
+        v=v, 
+        b=board, 
+        bans=bans,
+        page=page,
+        next_exists=next_exists
+        )
 
 
 @app.route("/+<boardname>/mod/contributors", methods=["GET"])
@@ -865,8 +908,7 @@ def all_mod_queue(v):
     page = int(request.args.get("page", 1))
 
     board_ids = [
-        x.board_id for x in v.moderates.filter_by(
-            accepted=True).all()]
+        x.id for x in v.boards_modded]
 
     ids = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.board_id.in_(board_ids),
                                                                   Submission.mod_approved is None,

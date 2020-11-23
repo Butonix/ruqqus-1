@@ -9,6 +9,7 @@ from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.markdown import *
+from ruqqus.helpers.discord import remove_user
 from ruqqus.helpers.aws import check_csam_url
 from ruqqus.mail import *
 from .front import frontlist
@@ -50,6 +51,10 @@ def settings_profile_post(v):
         updated = True
         v.is_private = request.values.get("private", None) == 'true'
 
+    if request.values.get("politics", v.is_hiding_politics) != v.is_hiding_politics:
+        updated = True
+        v.is_hiding_politics = request.values.get("politics", None) == 'true'
+
     if request.values.get("nofollow", v.is_nofollow) != v.is_nofollow:
         updated = True
         v.is_nofollow = request.values.get("nofollow", None) == 'true'
@@ -71,6 +76,23 @@ def settings_profile_post(v):
         return render_template("settings_profile.html",
                                v=v,
                                msg="Your bio has been updated.")
+
+    if request.values.get("filters") is not None:
+
+        filters=request.values.get("filters")[0:1000].lstrip().rstrip()
+
+        if filters==v.custom_filter_list:
+            return render_template("settings_profile.html",
+                                   v=v,
+                                   error="You didn't change anything")
+
+        v.custom_filter_list=filters
+        g.db.add(v)
+        return render_template("settings_profile.html",
+                               v=v,
+                               msg="Your custom filters have been updated.")
+
+
 
     x = request.values.get("title_id", None)
     if x:
@@ -364,6 +386,10 @@ def delete_account(v):
         return render_template("settings_security.html", v=v,
                                error="Invalid password or token" if v.mfa_secret else "Invalid password")
 
+
+    remove_user(v)
+
+    v.discord_id=None
     v.is_deleted = True
     v.login_nonce += 1
     v.delete_reason = request.form.get("delete_reason", "")
@@ -519,3 +545,26 @@ def settings_unblock_guild(v):
 def settings_apps(v):
 
     return render_template("settings_apps.html", v=v)
+
+
+@app.route("/settings/remove_discord", methods=["POST"])
+@auth_required
+@validate_formkey
+def settings_remove_discord(v):
+
+    if v.admin_level>1:
+        return render_template("settings_filters.html", v=v, error="Admins can't disconnect Discord.")
+
+    remove_user(v)
+
+    v.discord_id=None
+    g.db.add(v)
+    g.db.commit()
+
+    return redirect("/settings/profile")
+
+@app.route("/settings/content", methods=["GET"])
+@auth_required
+def settings_content_get(v):
+
+    return render_template("settings_filters.html", v=v)

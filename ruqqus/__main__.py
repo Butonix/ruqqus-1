@@ -28,7 +28,7 @@ from redis import BlockingConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.21.1"
+_version = "2.26.2"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -55,8 +55,7 @@ app.config["SERVER_NAME"] = environ.get(
 app.config["SESSION_COOKIE_NAME"] = "session_ruqqus"
 app.config["VERSION"] = _version
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024
-app.config["SESSION_COOKIE_SECURE"] = environ.get(
-    "SESSION_COOKIE_SECURE", "true").lower() != "false"
+app.config["SESSION_COOKIE_SECURE"] = bool(int(environ.get("FORCE_HTTPS", 1)))
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
 app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 365
@@ -257,6 +256,8 @@ def before_request():
 
     if not session.get("session_id"):
         session["session_id"] = secrets.token_hex(16)
+
+    g.timestamp = int(time.time())
 
     # g.db.begin_nested()
 

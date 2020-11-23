@@ -67,7 +67,7 @@ def notifications(v):
 
 @cache.memoize(timeout=900)
 def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
-              t=None, ids_only=True, **kwargs):
+              t=None, ids_only=True, filter_words='', **kwargs):
 
     # cutoff=int(time.time())-(60*60*24*30)
 
@@ -97,6 +97,9 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
 
     if v and v.hide_offensive:
         posts = posts.filter_by(is_offensive=False)
+
+    if (v and v.is_hiding_politics) or not v:
+        posts = posts.filter_by(is_politics=False)
 
     if v and v.admin_level >= 4:
         board_blocks = g.db.query(
@@ -159,6 +162,14 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
             contains_eager(
                 Submission.board))
 
+    #custom filter
+    #print(filter_words)
+    if v and filter_words:
+        posts=posts.join(Submission.submission_aux)
+        for word in filter_words:
+            #print(word)
+            posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
+
     if t:
         now = int(time.time())
         if t == 'day':
@@ -208,7 +219,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
 @api("read")
 def home(v):
 
-    if v and v.subscriptions.filter_by(is_active=True).count():
+    if v and [i for i in v.subscriptions if i.is_active]:
 
         only = request.args.get("only", None)
         sort = request.args.get("sort", "hot")
@@ -222,10 +233,13 @@ def home(v):
                        only=only,
                        t=t,
 
+                       filter_words=v.filter_words,
+
                        # these arguments don't really do much but they exist for
                        # cache memoization differentiation
                        allow_nsfw=v.over_18,
                        hide_offensive=v.hide_offensive,
+                       hide_politics=v and v.is_hiding_politics,
 
                        # greater/less than
                        gt=int(request.args.get("utc_greater_than", 0)),
@@ -280,12 +294,14 @@ def front_all(v):
     ids = frontlist(sort=sort_method,
                     page=page,
                     nsfw=(v and v.over_18 and not v.filter_nsfw),
-                    nsfl=(v and v.show_nsfl and v.over_18),
+                    nsfl=(v and v.show_nsfl),
                     t=t,
                     v=v,
-                    hide_offensive=v and v.hide_offensive,
+                    hide_offensive=(v and v.hide_offensive) or not v,
+                    hide_politics=(v and v.is_hiding_politics) or not v,
                     gt=int(request.args.get("utc_greater_than", 0)),
-                    lt=int(request.args.get("utc_less_than", 0))
+                    lt=int(request.args.get("utc_less_than", 0)),
+                    filter_words=v.filter_words if v else []
                     )
 
     # check existence of next page

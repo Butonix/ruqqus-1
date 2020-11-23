@@ -139,6 +139,14 @@ def login_post():
     if account.is_banned and account.unban_utc > 0 and time.time() > account.unban_utc:
         account.unban()
 
+    #dev server - primo only
+    if app.config["SERVER_NAME"]=="dev.ruqqus.com" and account.admin_level < 2 and not account.has_premium:
+        return render_template(
+            "login_premium.html", 
+            i=random_image()
+            )
+
+
     # set session and user id
     session["user_id"] = account.id
     session["session_id"] = token_hex(16)
