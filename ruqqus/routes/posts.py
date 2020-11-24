@@ -423,8 +423,10 @@ def submit_post(v):
         send_notification(v, text)
 
         v.ban(reason="Spamming.",
-              include_alts=True,
               days=1)
+
+        for alt in v.alts:
+            alt.ban(reason="Spamming.", days=1)
 
         for post in similar_posts + similar_urls:
             post.is_banned = True

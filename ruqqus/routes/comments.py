@@ -330,8 +330,10 @@ def api_comment(v):
             send_notification(v, text)
 
             v.ban(reason="Spamming.",
-                  include_alts=True,
                   days=1)
+
+            for alt in v.alts:
+                alt.ban(reason="Spamming.", days=1)
 
             for comment in similar_comments:
                 comment.is_banned = True
