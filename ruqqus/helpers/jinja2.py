@@ -60,7 +60,7 @@ def jinja_is_mod(uid, bid):
     return bool(get_mod(uid, bid))
 
 @app.template_filter("coin_goal")
-@cache.memoize(600)
+@cache.cached(timeout=600, key_prefix="premium_coin_goal")
 def coin_goal(x):
     
     coins= g.db.query(User).filter(User.premium_expires_utc > x, User.premium_expires_utc < x+60*60*24*7).count()
