@@ -124,15 +124,22 @@ def thumbnail_thread(pid, debug=False):
                 x = requests.get(img['content'], headers=headers)
             except BaseException:
                 if debug:
-                    print("unable to load image")
+                    print("unable to connect")
                 continue
             break
 
-        print("out of meta tags, looking for image")
+        if debug:
+            print(img)
+            print(x)
 
         if not img or not x or x.status_code != 200:
 
+            if debug:
+                print("no meta tags, looking for img")
+
             imgs = soup.find_all('img', src=True)
+            if debug:
+                print(f"found {len(imgs)} img elements")
             if imgs:
                 #print("using <img> elements")
                 pass
@@ -196,6 +203,9 @@ def thumbnail_thread(pid, debug=False):
                     continue
 
                 break
+        else:
+            if debug:
+                print("meta tag found, no need to look for img tags")
 
     name = f"posts/{post.base36id}/thumb.png"
     tempname = name.replace("/", "_")
