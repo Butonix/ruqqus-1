@@ -474,3 +474,17 @@ def admin_removed(v):
                            page=page,
                            next_exists=next_exists
                            )
+
+@app.route("/admin/gm", methods=["GET"])
+@admin_level_required(3)
+def admin_gm(v):
+    
+    username=request.args.get("user")
+    if username:
+        user=get_user(username)
+        
+        total=len(user.boards_modded)
+        for alt in user.alts:
+            total += len(alt.boards_modded)
+           
+        return jsonify({username:total})
