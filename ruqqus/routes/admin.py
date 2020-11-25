@@ -483,8 +483,15 @@ def admin_gm(v):
     if username:
         user=get_user(username)
         
-        total=len(user.boards_modded)
+        boards=[x.name for x in user.boards_modded]
         for alt in user.alts:
-            total += len(alt.boards_modded)
+            for b in alt.boards_modded:
+                if b.name not in boards:
+                    boards.append(b.name)
            
-        return jsonify({username:total})
+        return jsonify({"username":username,
+                        "total":len(boards),
+                       "boards":boards})
+    
+    else:
+        return jsonify({username:'Not found'})
