@@ -486,7 +486,7 @@ def admin_gm(v):
         boards=[x.name for x in user.boards_modded]
 
         alts=user.alts
-        earliest=v
+        earliest=user
         for alt in alts:
 
             if alt.created_utc < earliest.created_utc:
