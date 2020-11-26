@@ -500,13 +500,13 @@ def admin_gm(v):
                     boards.append(b)
 
            
-        return render_tempalte("admin/alt_gms.html",
+        return render_template("admin/alt_gms.html",
             v=v,
             user=user,
             first=earliest,
             boards=boards
             )
     else:
-        return render_tempalte("admin/alt_gms.html",
+        return render_template("admin/alt_gms.html",
             v=v)
     
