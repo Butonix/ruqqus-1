@@ -483,29 +483,28 @@ def admin_gm(v):
     if username:
         user=get_user(username)
         
-        boards=[x.name for x in user.boards_modded]
+        boards=user.boards_modded
 
         alts=user.alts
         earliest=user
         for alt in alts:
 
-            if alt.created_utc < earliest.created_utc:
-                earlest=alt
-
             if not alt.is_valid:
                 continue
 
+            if alt.created_utc < earliest.created_utc:
+                earlest=alt
+
             for b in alt.boards_modded:
-                if b.name not in boards:
-                    boards.append(b.name)
+                if b not in boards:
+                    boards.append(b)
 
            
-        return jsonify(
-            {"earliest":earliest.username,
-            "username":username,
-            "total":len(boards),
-            "boards":boards
-            }
+        return render_tempalte("admin/alt_gms.html",
+            v=v,
+            user=user,
+            first=earliest,
+            boards=boards
             )
     
     else:
