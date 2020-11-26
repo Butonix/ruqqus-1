@@ -481,7 +481,7 @@ def admin_gm(v):
     
     username=request.args.get("user")
 
-    include_banned=request.args.get("with_banned")
+    include_banned=int(request.args.get("with_banned",0))
 
     if username:
         user=get_user(username)
