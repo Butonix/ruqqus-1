@@ -506,6 +506,7 @@ def admin_gm(v):
             first=earliest,
             boards=boards
             )
-    
     else:
-        return jsonify({username:'Not found'})
+        return render_tempalte("admin/alt_gms.html",
+            v=v)
+    
