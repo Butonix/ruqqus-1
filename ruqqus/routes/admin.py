@@ -484,16 +484,29 @@ def admin_gm(v):
         user=get_user(username)
         
         boards=[x.name for x in user.boards_modded]
-        for alt in user.alts:
+
+        alts=user.alts
+        earliest=v
+        for alt in alts:
+
+            if alt.created_utc < earliest.created_utc:
+                earlest=alt
+
             if not alt.is_valid:
                 continue
+
             for b in alt.boards_modded:
                 if b.name not in boards:
                     boards.append(b.name)
+
            
-        return jsonify({"username":username,
-                        "total":len(boards),
-                       "boards":boards})
+        return jsonify(
+            {"earliest":earliest.username,
+            "username":username,
+            "total":len(boards),
+            "boards":boards
+            }
+            )
     
     else:
         return jsonify({username:'Not found'})
