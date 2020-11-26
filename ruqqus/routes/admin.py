@@ -480,6 +480,9 @@ def admin_removed(v):
 def admin_gm(v):
     
     username=request.args.get("user")
+
+    include_banned=request.args.get("with_banned")
+
     if username:
         user=get_user(username)
         
@@ -489,7 +492,7 @@ def admin_gm(v):
         earliest=user
         for alt in alts:
 
-            if not alt.is_valid:
+            if not alt.is_valid and not include_banned:
                 continue
 
             if alt.created_utc < earliest.created_utc:
