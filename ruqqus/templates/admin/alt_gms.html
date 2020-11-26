@@ -20,8 +20,9 @@
 {% if user %}
 
 
-<h2>Analysis</h2>
+<h2>Results</h2>
 
+<p><b>Submitted Account: </b><a href="{{ user.permalink }}">@{{ user.username }}</a></p>
 <p><b>First Account: </b><a href="{{ first.permalink }}">@{{ first.username }}</a></p>
 <p><b>Total Guilds: </b>{{ boards | length }}</p>
 
