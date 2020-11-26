@@ -485,6 +485,8 @@ def admin_gm(v):
         
         boards=[x.name for x in user.boards_modded]
         for alt in user.alts:
+            if not alt.is_valid:
+                continue
             for b in alt.boards_modded:
                 if b.name not in boards:
                     boards.append(b.name)

@@ -701,6 +701,18 @@ class User(Base, Stndrd, Age_times):
         # return self.referral_count or self.has_earned_darkmode or
         # self.has_badge(16) or self.has_badge(17)
 
+    @property
+    def is_valid(self):
+        if self.is_banned and self.unban_utc==0:
+            return False
+
+        elif self.is_deleted:
+            return False
+
+        else:
+            return True
+    
+
     def ban(self, admin=None, reason=None,  days=0):
 
         if days > 0:
