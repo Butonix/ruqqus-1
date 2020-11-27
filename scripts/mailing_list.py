@@ -1,3 +1,5 @@
+from sqlalchemy import *
+
 from ruqqus.__main__ import app, db_session
 from ruqqus import classes
 from ruqqus.mail import send_mail
@@ -6,12 +8,12 @@ from flask import render_template
 
 db=db_session()
 
-#title = input("Title: ")
+title = input("Title: ")
 subject = input("Email subject: ")
 
 x = db.query(classes.user.User).filter(
+    classes.user.User.is_activated==True,
     or_(
-        classes.user.User.is_activated==True,
         classes.user.User.is_banned==0, 
         classes.user.User.unban_utc>0
         ),
@@ -29,9 +31,9 @@ for user in x.order_by(classes.user.User.id.asc()).all():
     try:
         with app.app_context():
             html = render_template(
-                "email/mailing.html" #,
-   #             title=title,
-   #             user=user
+                "email/mailing.html",
+                title=title,
+                user=user
             )
 
         send_mail(
