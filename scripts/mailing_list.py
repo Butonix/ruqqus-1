@@ -11,7 +11,7 @@ subject = input("Email subject: ")
 
 x = db.query(classes.user.User).filter(
     or_(
-        classes.user.User.is_activated==True
+        classes.user.User.is_activated==True,
         classes.user.User.is_banned==0, 
         classes.user.User.unban_utc>0
         ),
