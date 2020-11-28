@@ -15,6 +15,17 @@ def get_logged_in_user():
 
         token = request.headers.get("Authorization")
         if not token:
+
+            #let admins hit api/v1 from browser
+            # x=request.session.get('user_id')
+            # nonce=request.session.get('login_nonce')
+            # if not x or not nonce:
+            #     return None, None
+            # user=g.db.query(User).filter_by(id=x).first()
+            # if not user:
+            #     return None, None
+            # if user.admin_level >=3 and nonce>=user.login_nonce:
+            #     return user, None
             return None, None
 
         token = token.split()

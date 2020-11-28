@@ -676,7 +676,7 @@ class User(Base, Stndrd, Age_times):
         return {'username': self.username,
                 'permalink': self.permalink,
                 'is_banned': False,
-                'is_premium': self.premium_expires_utc > g.timestamp,
+                'is_premium': self.premium_expires_utc > int(time.time()),
                 'created_utc': self.created_utc,
                 'post_rep': int(self.karma),
                 'comment_rep': int(self.comment_karma),
