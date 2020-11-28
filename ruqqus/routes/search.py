@@ -168,15 +168,16 @@ def search(v, search_type="posts"):
 def search_guild(name, v, search_type="posts"):
 
 
+    query=request.args.get("q")
+
+    if query.startswith("+"):
+        return redirect(f"/search?q={quote(query)}")
+
     b = get_guild(name, graceful=True)
     if not b:
         abort(404)
 
-    query=request.args.get("q")
-
-
     page=max(1, int(request.args.get("page", 1)))
-
 
     sort=request.args.get("sort", "hot").lower()
 
