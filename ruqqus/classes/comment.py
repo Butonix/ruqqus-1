@@ -262,7 +262,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'fullname': self.fullname,
                 'post': self.post.json,
                 'level': self.level,
-                'parent_id': self.parent.base36id if not self.parent_fullname.startswith('t2') else None,
+                'parent': self.parent.json_rec if not self.parent_fullname.startswith('t2') else None,
                 'author': self.author.json if not self.author.is_deleted else None,
                 'body': self.body,
                 'body_html': self.body_html,
@@ -288,8 +288,20 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
         return data
 
-
-
+    
+    
+    @property
+    def json_rec(self):
+        if not self.is_banned and not self.is_deleted:
+            data = self.json
+            
+            data.pop('parent')
+            data.pop('post')
+            
+            return data
+        else:
+            return self.json
+        
     @property
     def voted(self):
 
