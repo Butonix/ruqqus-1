@@ -1,6 +1,6 @@
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
-from urllib import quote
+from urllib.parse import quote
 
 from sqlalchemy import *
 
