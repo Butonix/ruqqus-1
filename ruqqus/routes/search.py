@@ -22,11 +22,9 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot", b=None):
                     contains_eager(Submission.submission_aux),
         contains_eager(Submission.author))
 
-    
 
     if b:
         posts=posts.filter(Submission.board_id==b.id)
-    
 
     if not (v and v.over_18):
         posts = posts.filter(Submission.over_18 == False)
