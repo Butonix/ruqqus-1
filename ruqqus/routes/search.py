@@ -11,12 +11,6 @@ from ruqqus.__main__ import app, cache
 @cache.memoize(300)
 def searchlisting(q, v=None, page=1, t="None", sort="hot", b=None):
 
-    posts = g.db.query(Submission).join(Submission.submission_aux).join(Submission.author).filter(SubmissionAux.title.ilike('%'+q+'%')).options(contains_eager(Submission.submission_aux), contains_eager(Submission.author))
-
-    print(b)
-
-    if b:
-        posts=posts.filter(Submission.board_id==b.id)
         
     posts = g.db.query(Submission).join(
         Submission.submission_aux).join(
@@ -27,6 +21,11 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot", b=None):
                 '%')).options(
                     contains_eager(Submission.submission_aux),
         contains_eager(Submission.author))
+
+    
+
+    if b:
+        posts=posts.filter(Submission.board_id==b.id)
     
 
     if not (v and v.over_18):
