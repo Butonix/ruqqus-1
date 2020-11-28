@@ -14,9 +14,9 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot", b=None):
     posts = g.db.query(Submission).join(Submission.submission_aux).join(Submission.author).filter(SubmissionAux.title.ilike('%'+q+'%')).options(contains_eager(Submission.submission_aux), contains_eager(Submission.author))
 
     print(b)
-    
+
     if b:
-        posts=posts.filter_by(Submission.board_id==b.id)
+        posts=posts.filter(Submission.board_id==b.id)
         
     posts = g.db.query(Submission).join(
         Submission.submission_aux).join(
