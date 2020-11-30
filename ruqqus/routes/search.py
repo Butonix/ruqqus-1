@@ -102,7 +102,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot", b=None):
 @auth_desired
 def search(v, search_type="posts"):
 
-    query = request.args.get("q", '')
+    query = request.args.get("q", '').lstrip().rstrip()
 
     page = max(1, int(request.args.get("page", 1)))
 
@@ -168,7 +168,7 @@ def search(v, search_type="posts"):
 def search_guild(name, v, search_type="posts"):
 
 
-    query=request.args.get("q")
+    query=request.args.get("q").lstrip().rstrip()
 
     if query.startswith("+"):
         return redirect(f"/search?q={quote(query)}")
