@@ -29,8 +29,12 @@ def api_vote_post(post_id, x, v):
 
     post = get_post(post_id)
 
-    if post.is_banned or post.is_deleted or post.is_archived:
-        abort(403)
+    if post.is_banned:
+        return jsonify({"error":"That post has been removed."}), 403
+    elif post.is_deleted:
+        return jsonify({"error":"That post has been deleted."}), 403
+    elif post.is_archived:
+        return jsonify({"error":"That post is archived and can no longer be voted on."}), 403
 
     # check for existing vote
     existing = g.db.query(Vote).filter_by(
@@ -53,7 +57,7 @@ def api_vote_post(post_id, x, v):
     try:
         g.db.flush()
     except:
-        return jsonify({"error":"Vote already exists."}), 500
+        return jsonify({"error":"Vote already exists."}), 422
         
     post.upvotes = post.ups
     post.downvotes = post.downs
@@ -95,8 +99,12 @@ def api_vote_comment(comment_id, x, v):
 
     comment = get_comment(comment_id)
 
-    if comment.is_banned or comment.is_deleted or comment.post.is_archived:
-        abort(403)
+    if comment.is_banned:
+        return jsonify({"error":"That comment has been removed."}), 403
+    elif comment.is_deleted:
+        return jsonify({"error":"That comment has been deleted."}), 403
+    elif comment.post.is_archived:
+        return jsonify({"error":"This post and its comments are archived and can no longer be voted on."}), 403
 
     # check for existing vote
     existing = g.db.query(CommentVote).filter_by(
@@ -116,7 +124,7 @@ def api_vote_comment(comment_id, x, v):
     try:
         g.db.flush()
     except:
-        return jsonify({"error":"Vote already exists."}), 500
+        return jsonify({"error":"Vote already exists."}), 422
 
     comment.upvotes = comment.ups
     comment.downvotes = comment.downs
