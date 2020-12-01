@@ -121,7 +121,7 @@ def shop_buy_coins_completed(v):
 
     return redirect("/settings/premium?msg=success")
 
-@app.route("/shop/paypal_webhook")
+@app.route("/shop/paypal_webhook", methods=["POST"])
 def paypal_webhook_handler():
     
     #Verify paypal signature
