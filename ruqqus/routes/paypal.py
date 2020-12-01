@@ -132,7 +132,7 @@ def paypal_webhook_handler():
         "transmission_sig":request.headers.get("PAYPAL-TRANSMISSION-SIG"),
         "transmission_time":request.headers.get("PAYPAL-TRANSMISSION-TIME"),
         "webhook_id":CLIENT.webhook_id,
-        "webhook_event":request.json()
+        "webhook_event":request.json
         }
 
 
