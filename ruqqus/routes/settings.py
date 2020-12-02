@@ -155,7 +155,7 @@ def settings_security_post(v):
         new_email = request.form.get("new_email","").lstrip().rstrip()
         #counteract gmail username+2 and extra period tricks - convert submitted email to actual inbox
         if new_email.endswith("@gmail.com"):
-            parts=re.split("\+.*@", newemail)
+            parts=re.split("\+.*@", new_email)
             username=parts[0]
             username=username.replace(".","")
             new_email=f"{username}@gmail.com"

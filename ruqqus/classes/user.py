@@ -672,10 +672,11 @@ class User(Base, Stndrd, Age_times):
                     'is_deleted': True,
                     'id': self.base36id
                     }
-
+        
         return {'username': self.username,
                 'permalink': self.permalink,
                 'is_banned': False,
+                'is_premium': self.premium_expires_utc > int(time.time()),
                 'created_utc': self.created_utc,
                 'post_rep': int(self.karma),
                 'comment_rep': int(self.comment_karma),
@@ -839,6 +840,7 @@ class User(Base, Stndrd, Age_times):
         return time.strftime("%d %b %Y at %H:%M:%S",
                              time.gmtime(self.premium_expires_utc))
     
+
     @property
     def filter_words(self):
         l= [i.lstrip().rstrip() for i in self.custom_filter_list.split('\n')] if self.custom_filter_list else []
@@ -848,4 +850,4 @@ class User(Base, Stndrd, Age_times):
     @property
     def boards_modded_ids(self):
         return [x.id for x in self.boards_modded]
-                             
+                            

@@ -792,6 +792,7 @@ def board_about_exiled(boardname, board, v):
 def board_about_contributors(boardname, board, v):
 
     page = int(request.args.get("page", 1))
+
     contributors = board.contributors.filter_by(is_active=True).order_by(
         ContributorRelationship.created_utc.desc()).offset(25 * (page - 1)).limit(26)
 
@@ -1154,6 +1155,7 @@ def mod_unapprove_bid_user(bid, board, v):
     x.is_active = False
 
     g.db.add(x)
+    g.db.commit()
 
     return "", 204
 

@@ -262,8 +262,9 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'fullname': self.fullname,
                 'post': self.post.json,
                 'level': self.level,
-                'parent_id': self.parent.base36id if not self.parent_fullname.startswith('t2') else None,
-                'author': self.author.json if not self.author.is_deleted else None,
+                'parent': self.parent.json_rec if not self.parent_fullname.startswith('t2') else None,
+                'parent_comment_id': self.parent_comment_id,
+                'author_name': self.author.username if not self.author.is_deleted else None,
                 'body': self.body,
                 'body_html': self.body_html,
                 'is_archived': self.is_archived,
@@ -288,8 +289,39 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
         return data
 
-
-
+    
+    
+    @property
+    def json_rec(self):
+        if not self.is_banned and not self.is_deleted:
+            data= {
+                'id': self.base36id,
+                'fullname': self.fullname,
+                'level': self.level,
+                'parent': self.parent.json_rec if not self.parent_fullname.startswith('t2') else None,
+                'parent_comment_id': self.parent_comment_id,
+                'author_name': self.author.username if not self.author.is_deleted else None,
+                'body': self.body,
+                'body_html': self.body_html,
+                'is_archived': self.is_archived,
+                'is_bot': self.is_bot,
+                'created_utc': self.created_utc,
+                'edited_utc': self.edited_utc or 0,
+                'is_banned': False,
+                'is_deleted': False,
+                'is_nsfw': self.over_18,
+                'is_offensive': self.is_offensive,
+                'is_nsfl': self.is_nsfl,
+                'permalink': self.permalink,
+                'score': self.score_fuzzed,
+                'upvotes': self.upvotes_fuzzed,
+                'downvotes': self.downvotes_fuzzed,
+                'award_count': self.award_count
+                }
+            return data
+        else:
+            return self.json
+        
     @property
     def voted(self):
 

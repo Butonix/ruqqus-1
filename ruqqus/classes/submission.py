@@ -230,7 +230,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                                comment_info=comment_info,
                                is_allowed_to_comment=is_allowed_to_comment,
                                render_replies=True,
-                               is_guildmaster=self.board.has_mod(v)
+                               is_guildmaster=self.board.has_mod(v),
+                               b=self.board
                                )
 
     @property
@@ -347,7 +348,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                     'permalink': self.permalink,
                     'guild_name': self.board.name
                     }
-        data = {'author': self.author.json if not self.author.is_deleted else None,
+        data = {'author_name': self.author.username if not self.author.is_deleted else None,
                 'permalink': self.permalink,
                 'is_banned': False,
                 'is_deleted': False,

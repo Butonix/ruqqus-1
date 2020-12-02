@@ -50,7 +50,7 @@ You may not upload to, embed within, or link out from ruqqus.com:
 
 1. Sexual or sexually suggestive material not marked "NSFW"
 2. Sexual or sexually suggestive material involving individuals under the age of 18, including fictitious content
-3 Sexual or sexually suggestive material involving individuals who did not consent to its creation and distribution (commonly called "revenge pornography" or "involuntary pornography")
+3. Sexual or sexually suggestive material involving individuals who did not consent to its creation and distribution (commonly called "revenge pornography" or "involuntary pornography")
 
 ## 5: IRL Safety
 
@@ -63,12 +63,13 @@ You may not use ruqqus.com to do any of the following:
 
 ## 6: Bots
 
-The following rules apply to clients interacting with Ruqqus in an automated manner.
+The following rules apply to clients interacting with Ruqqus in an automated manner ("Bots").
 
 1. Bots may not vote.
 2. Bots must use a unique `User-Agent` header.
 3. Bots must include a `X-User-Type` header with a value of `Bot`.
 4. Bots that post content must serve a useful function, such as looking up information or bridging to another service.
+5. Bots must authenticate with an OAuth2 token and use `/api/v1` endpoints whenever possible.
 
 {% endfilter %}
 {% endblock %}
