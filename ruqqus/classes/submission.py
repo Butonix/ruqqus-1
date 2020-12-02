@@ -102,7 +102,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     upvotes = Column(Integer, default=1)
     downvotes = Column(Integer, default=0)
 
-    app_id=Column(Integer, ForeignKey("oauth_apps.id"))
+    app_id=Column(Integer, ForeignKey("oauth_apps.id"), default=None)
     oauth_app=relationship("OauthApp")
 
     approved_by = relationship(
