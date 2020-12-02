@@ -136,7 +136,7 @@ def paypal_webhook_handler():
         }
 
 
-    x=CLIENT._post("/v1/notifications/verify-webhook-signature", json=data)
+    x=CLIENT._post("/v1/notifications/verify-webhook-signature", data=data)
 
     if x.json().get("verification_status") != "SUCCESS":
         abort(403)
