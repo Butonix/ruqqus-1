@@ -65,6 +65,9 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     is_bot = Column(Boolean, default=False)
     is_pinned = Column(Boolean, default=False)
 
+    app_id = Column(Integer, ForeignKey("oauth_apps.id"))
+    oauth_app=relationship("OauthApp")
+
     post = relationship("Submission")
     flags = relationship("CommentFlag", backref="comment")
     author = relationship(
