@@ -158,8 +158,7 @@ def paypal_webhook_handler():
         amount_cents=int(float(data["resource"]["amount"]["value"])*100)
 
     else:
-        pprint.pprint(data)
-        abort(500)
+        return "", 204
 
 
     #increase to cover extra round of paypal fees
