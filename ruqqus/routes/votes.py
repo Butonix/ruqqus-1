@@ -47,7 +47,8 @@ def api_vote_post(post_id, x, v):
         vote = Vote(user_id=v.id,
                     vote_type=x,
                     submission_id=base36decode(post_id),
-                    creation_ip=request.remote_addr
+                    creation_ip=request.remote_addr,
+                    app_id=v.client.application.id if v.client else None
                     )
 
         g.db.add(vote)
@@ -117,7 +118,8 @@ def api_vote_comment(comment_id, x, v):
         vote = CommentVote(user_id=v.id,
                            vote_type=x,
                            comment_id=base36decode(comment_id),
-                           creation_ip=request.remote_addr
+                           creation_ip=request.remote_addr,
+                           app_id=v.client.application.id if v.client else None
                            )
 
         g.db.add(vote)
