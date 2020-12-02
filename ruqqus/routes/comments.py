@@ -386,7 +386,8 @@ def api_comment(v):
                 is_op=(v.id == post.author_id),
                 is_offensive=is_offensive,
                 original_board_id=parent_post.board_id,
-                is_bot=is_bot
+                is_bot=is_bot,
+                app_id=v.client.application.id if v.client else None
                 )
 
     g.db.add(c)

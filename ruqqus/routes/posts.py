@@ -556,7 +556,8 @@ def submit_post(v):
                           post_public=not board.is_private,
                           repost_id=repost.id if repost else None,
                           is_offensive=is_offensive,
-                          is_politics=is_politics
+                          is_politics=is_politics,
+                          app_id=v.client.application.id if v.client else None
                           )
 
     g.db.add(new_post)
