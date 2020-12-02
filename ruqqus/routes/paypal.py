@@ -4,6 +4,7 @@ import urllib
 import hmac
 import pprint
 import time
+import pprint
 
 from flask import *
 
@@ -155,6 +156,11 @@ def paypal_webhook_handler():
         txn=get_txn(data["resource"]["id"])
 
         amount_cents=int(float(data["resource"]["amount"]["value"])*100)
+
+    else:
+        pprint.pprint(data)
+        abort(500)
+
 
     #increase to cover extra round of paypal fees
     amount_cents += 30
