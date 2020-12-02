@@ -65,7 +65,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     is_bot = Column(Boolean, default=False)
     is_pinned = Column(Boolean, default=False)
 
-    app_id = Column(Integer, ForeignKey("oauth_apps.id"))
+    app_id = Column(Integer, ForeignKey("oauth_apps.id"), default=None)
     oauth_app=relationship("OauthApp")
 
     post = relationship("Submission")

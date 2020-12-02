@@ -514,3 +514,25 @@ def admin_gm(v):
         return render_template("admin/alt_gms.html",
             v=v)
     
+
+
+@app.route("/admin/appdata", methods=["GET"])
+@admin_level_required(4)
+def admin_appdata(v):
+
+    url=request.args.get("link")
+
+    if url:
+
+        thing = get_from_permalink(url, v=v)
+
+        return render_template(
+            "admin/app_data.html",
+            v=v,
+            thing=thing
+            )
+
+    else:
+        return render_template(
+            "admin/app_data.html",
+            v=v)
