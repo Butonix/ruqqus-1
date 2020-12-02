@@ -141,7 +141,7 @@ def paypal_webhook_handler():
     if x.json().get("verification_status") != "SUCCESS":
         abort(403)
     
-    data=request.json()
+    data=request.json
 
     #Reversals
     if data["event_type"] in ["PAYMENT.SALE.REVERSED", "PAYMENT.SALE.REFUNDED"]:

@@ -544,11 +544,12 @@ def get_from_permalink(link, v=None):
     if "@" in link:
 
         name = re.search("/@(\w+)", link).match(1)
-        return get_user(name)
+        if name:
+            return get_user(name)
 
     if "+" in link:
 
-        x = re.search("/\+(\w+)$", link)
+        x = re.search("/\+(\w+)$", link).match(1)
         if x:
             name=x.match(1)
             return get_guild(name)
