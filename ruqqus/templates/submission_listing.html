@@ -170,6 +170,10 @@
           <li class="list-inline-item"><a id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="fas fa-ban"></i>Remove</a></li>
           {% endif %}
           {% endif %}
+
+          {% if v.admin_level >= 4 and p.oauth_app %}
+          <li class="list-inline-item"><a href="{{ p.oauth_app.permalink }}" ><i class="fas fa-code"></i>API App</a></li>
+          {% endif %}
           {% endif %}
 
           {% if v %}
@@ -318,6 +322,11 @@
           <button class="btn btn-link btn-block btn-lg text-left text-danger" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="far fa-ban fa-fw text-center text-danger mr-3"></i>Remove</button>
           {% endif %}
           {% endif %}
+
+          {% if v.admin_level >= 4 and p.oauth_app %}
+          <li class="list-inline-item"><a href="{{ p.oauth_app.permalink }}" ><i class="fas fa-code"></i>API App</a></li>
+          {% endif %}
+          
           {% endif %}
 
 
