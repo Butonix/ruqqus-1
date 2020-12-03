@@ -54,6 +54,13 @@
 </div>
 
 </div>
+
+{% if listing %}
+    {% include "submission_listing.html" %}
+{% elif comments %}
+    {% include "comments.html" %}
+{% endif %}
+
 </div>
 </div>
 
