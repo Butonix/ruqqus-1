@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship, lazyload
 
 from .mix_ins import Stndrd
 from .submission import Submission
+from .comment import Comment
 from ruqqus.__main__ import app, Base
 
 
