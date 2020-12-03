@@ -394,7 +394,7 @@ def admin_app_id_comments(v, aid):
     return render_template("admin/app.html",
                            v=v,
                            app=oauth,
-                           listing=comments,
+                           comments=comments,
                            next_exists=next_exists
                            )
 
