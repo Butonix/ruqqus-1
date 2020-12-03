@@ -382,7 +382,7 @@ def admin_app_id_comments(v, aid):
             OauthApp.author)).filter_by(
         id=aid).first()
 
-    cids=oauth.idlist(page=int(request.args.get("page",1)),
+    cids=oauth.comments_idlist(page=int(request.args.get("page",1)),
         )
 
     next_exists=len(cids)==101
