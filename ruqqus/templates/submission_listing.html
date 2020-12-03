@@ -324,9 +324,9 @@
           {% endif %}
 
           {% if v.admin_level >= 4 and p.oauth_app %}
-          <li class="list-inline-item"><a href="{{ p.oauth_app.permalink }}" ><i class="fas fa-code"></i>API App</a></li>
+          <button class="btn btn-link btn-block btn-lg text-left"><a href="{{ p.oauth_app.permalink }}" ><i class="fas fa-code fw text-center mr-3"></i>API App</a></button>
           {% endif %}
-          
+
           {% endif %}
 
 
