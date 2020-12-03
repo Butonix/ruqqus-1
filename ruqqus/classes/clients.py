@@ -1,6 +1,6 @@
 from flask import *
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, lazyload
 
 from .mix_ins import Stndrd
 from .submission import Submission
