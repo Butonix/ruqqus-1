@@ -323,7 +323,7 @@
           {% endif %}
 
           {% if v.admin_level >=4 and p.oauth_app %}
-          <button class="btn btn-link btn-block btn-lg text-muted text-left"  href="{{ p.oauth_app.permalink }}"><i class="far fa-code text-center text-muted mr-3"></i>API App</button>
+          <button class="btn btn-link btn-block btn-lg text-muted text-left"  href="{{ p.oauth_app.permalink }}"><a href="{{ p.oauth_app.permalink }}"><i class="far fa-code text-center text-muted mr-3"></i>API App</a></button>
           {% endif %}
 
           {% endif %}
