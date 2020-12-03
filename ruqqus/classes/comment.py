@@ -65,6 +65,9 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     is_bot = Column(Boolean, default=False)
     is_pinned = Column(Boolean, default=False)
 
+    app_id = Column(Integer, ForeignKey("oauth_apps.id"), default=None)
+    oauth_app=relationship("OauthApp")
+
     post = relationship("Submission")
     flags = relationship("CommentFlag", backref="comment")
     author = relationship(
@@ -264,7 +267,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'level': self.level,
                 'parent': self.parent.json_rec if not self.parent_fullname.startswith('t2') else None,
                 'parent_comment_id': self.parent_comment_id,
-                'author': self.author.json if not self.author.is_deleted else None,
+                'author_name': self.author.username if not self.author.is_deleted else None,
                 'body': self.body,
                 'body_html': self.body_html,
                 'is_archived': self.is_archived,
@@ -297,11 +300,10 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             data= {
                 'id': self.base36id,
                 'fullname': self.fullname,
-                'post': self.post.json,
                 'level': self.level,
                 'parent': self.parent.json_rec if not self.parent_fullname.startswith('t2') else None,
                 'parent_comment_id': self.parent_comment_id,
-                'author': self.author.json if not self.author.is_deleted else None,
+                'author_name': self.author.username if not self.author.is_deleted else None,
                 'body': self.body,
                 'body_html': self.body_html,
                 'is_archived': self.is_archived,

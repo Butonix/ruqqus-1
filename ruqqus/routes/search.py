@@ -102,7 +102,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot", b=None):
 @auth_desired
 def search(v, search_type="posts"):
 
-    query = request.args.get("q", '')
+    query = request.args.get("q", '').lstrip().rstrip()
 
     page = max(1, int(request.args.get("page", 1)))
 
@@ -168,7 +168,7 @@ def search(v, search_type="posts"):
 def search_guild(name, v, search_type="posts"):
 
 
-    query=request.args.get("q")
+    query=request.args.get("q").lstrip().rstrip()
 
     if query.startswith("+"):
         return redirect(f"/search?q={quote(query)}")
@@ -180,10 +180,13 @@ def search_guild(name, v, search_type="posts"):
     page=max(1, int(request.args.get("page", 1)))
 
     sort=request.args.get("sort", "hot").lower()
+	
+	
+    t = request.args.get('t', 'all').lower()
 
     #posts search
 
-    total, ids = searchlisting(query, v=v, page=page, sort=sort, b=b)
+    total, ids = searchlisting(query, v=v, page=page, t=t, sort=sort, b=b)
 
     next_exists=(len(ids)==26)
     ids=ids[0:25]
@@ -198,5 +201,6 @@ def search_guild(name, v, search_type="posts"):
 		           listing=posts,
 	                   sort_method=sort,
                            next_exists=next_exists,
+			   time_filter=t,
                            b=b
 		           )

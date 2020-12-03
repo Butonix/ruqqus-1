@@ -45,14 +45,14 @@ def get_logged_in_user():
             x=(None, None)
         else:
             x = (client.user, client) if client else (None, None)
-        return x
+
 
     elif "user_id" in session:
 
         uid = session.get("user_id")
         nonce = session.get("login_nonce", 0)
         if not uid:
-            return None, None
+            x= (None, None)
         v = g.db.query(User).options(
             joinedload(User.moderates).joinedload(ModRelationship.board), #joinedload(Board.reports),
             joinedload(User.subscriptions).joinedload(Subscription.board)
@@ -60,16 +60,20 @@ def get_logged_in_user():
             ).filter_by(id=uid).first()
 
         if app.config["SERVER_NAME"]=="dev.ruqqus.com" and v.admin_level < 2 and not v.has_premium:
-            return None, None
+            x= (None, None)
 
         if v and nonce < v.login_nonce:
-            return None, None
+            x= (None, None)
         else:
-            return v, None
+            x=(v, None)
 
     else:
-        return None, None
+        x=(None, None)
 
+    if x[0]:
+        x[0].client=x[1]
+
+    return x
 
 # Wrappers
 def auth_desired(f):

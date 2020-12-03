@@ -108,7 +108,12 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             blocking.c.id
         ).options(
             joinedload(Submission.author).joinedload(User.title)
-        ).filter(Submission.id == i
+        )
+
+        if v.admin_level>=4:
+            items=items.options(joinedload(Submission.oauth_app))
+
+        items=items.filter(Submission.id == i
                  ).join(vt, vt.c.submission_id == Submission.id, isouter=True
                         ).join(mod, mod.c.board_id == Submission.board_id, isouter=True
                                ).join(boardblocks, boardblocks.c.board_id == Submission.board_id, isouter=True
@@ -163,7 +168,11 @@ def get_posts(pids, sort="hot", v=None):
                 blocked.c.id,
                 subs.c.id
             ).options(joinedload(Submission.author).joinedload(User.title)
-                      ).filter_by(id=pid
+                      )
+            if v.admin_level>=4:
+                query=query.options(joinedload(Submission.oauth_app))
+
+            query=query.filter_by(id=pid
                                   ).join(vt, vt.c.submission_id == Submission.id, isouter=True
                                          ).join(mod, mod.c.board_id == Submission.board_id, isouter=True
                                                 ).join(boardblocks, boardblocks.c.board_id == Submission.board_id, isouter=True
@@ -229,7 +238,11 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             blocked.c.id
         ).options(
             joinedload(Comment.author).joinedload(User.title)
-        ).filter(
+        )
+        if v.admin_level >=4:
+            comms=comms.options(joinedload(Comment.oauth_app))
+
+        comms=comms.filter(
             Comment.parent_submission == post.id,
             Comment.level <= 6
         ).join(
@@ -318,7 +331,12 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 
         items = g.db.query(Comment, vt.c.vote_type).options(
             joinedload(Comment.author).joinedload(User.title)
-        ).filter(
+        )
+
+        if v.admin_level >=4:
+            items=items.options(joinedload(Comment.oauth_app))
+
+        items=items.filter(
             Comment.id == i
         ).join(
             vt, vt.c.comment_id == Comment.id, isouter=True
@@ -377,6 +395,10 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
                 joinedload(Comment.author).joinedload(User.title),
                 joinedload(Comment.post).joinedload(Submission.board)
             )
+
+            if v.admin_level >=4:
+                query=query.options(joinedload(Comment.oauth_app))
+
             if load_parent:
                 query = query.options(
                     joinedload(
@@ -521,8 +543,10 @@ def get_from_permalink(link, v=None):
 
     if "@" in link:
 
-        name = re.search("/@(\w+)", link).match(1)
-        return get_user(name)
+        name = re.search("/@(\w+)", link)
+        if name:
+            name=name.match(1)
+            return get_user(name)
 
     if "+" in link:
 

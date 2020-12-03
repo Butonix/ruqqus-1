@@ -341,8 +341,7 @@ def sign_up_post(v):
             email=parts[0]
 
 
-    existing_account = g.db.query(User).filter(
-        User.username.ilike(request.form.get("username"))).first()
+    existing_account = get_user(request.form.get("username"), graceful=True)
     if existing_account and existing_account.reserved:
         return redirect(existing_account.permalink)
 
