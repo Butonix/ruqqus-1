@@ -40,12 +40,6 @@
 			<label for="edit-{{ thing.oauth_app.id }}-name" class="mb-0 w-lg-25">App Name</label>
 			<input id="edit-{{ thing.oauth_app.id }}-name" class="form-control" type="text" name="name" value="{{ thing.oauth_app.app_name }}" readonly=readonly>
 
-			{% if thing.oauth_app.client_secret %}
-			<label for="edit-{{ thing.oauth_app.id }}-client-id" class="mb-0 w-lg-25">Client ID</label>
-			<input id="edit-{{ thing.oauth_app.id }}-client-id" class="form-control" type="text" name="name" value="{{ thing.oauth_app.client_id }}" readonly="readonly">
-			{% endif %}
-
-
 			<label for="edit-{{ thing.oauth_app.id }}-redirect" class="mb-0 w-lg-25">Redirect URI</label>
 			<input id="edit-{{ thing.oauth_app.id }}-redirect" class="form-control" type="text" name="redirect_uri" value="{{ thing.oauth_app.redirect_uri }}" readonly="readonly">
 			<label for="edit-{{ thing.oauth_app.id }}-desc" class="mb-0 w-lg-25">Description</label>
@@ -67,6 +61,14 @@
 		</div>
 	</div>
 </div>
+
+{% if listing %}
+	{% include "submission_listing.html" %}
+{% elif comments %}
+	{% include "comments.html" %}
+{% endif %}
+
+
 
 {% endif %}
 

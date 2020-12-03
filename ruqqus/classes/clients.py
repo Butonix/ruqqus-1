@@ -29,6 +29,28 @@ class OauthApp(Base, Stndrd):
 
         return f"/admin/app/{self.base36id}"
 
+    def idlist(self, page=1, **kwargs):
+
+        posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(app_id=self.id)
+        
+        posts=posts.order_by(Submission.created_utc.desc())
+
+        posts=posts.offset(100*(page-1)).limit(101)
+
+        return [x[0] for x in posts.all()]
+
+    def comments_idlist(self, page=1, **kwargs):
+
+        posts = g.db.query(Comment.id).options(lazyload('*')).filter_by(app_id=self.id)
+        
+        posts=posts.order_by(Comment.created_utc.desc())
+
+        posts=posts.offset(100*(page-1)).limit(101)
+
+        return [x[0] for x in posts.all()]
+
+
+
 
 class ClientAuth(Base, Stndrd):
 
