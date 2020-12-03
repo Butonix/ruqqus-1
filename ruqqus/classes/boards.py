@@ -416,7 +416,7 @@ class Board(Base, Stndrd, Age_times):
                 'banner_url': self.banner_url,
                 'profile_url': self.profile_url,
                 'color': "#" + self.color,
-                'guildmasters': [x.json for x in self.mods],
+                'guildmasters': [x.username for x in self.mods],
                 'is_siege_protected': not self.is_siegable
                 }
 
