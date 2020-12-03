@@ -373,7 +373,7 @@ def admin_app_id(v, aid):
 
 @app.route("/admin/app/<aid>/comments", methods=["GET"])
 @admin_level_required(3)
-def admin_app_id(v, aid):
+def admin_app_id_comments(v, aid):
 
     aid=base36decode(aid)
 
