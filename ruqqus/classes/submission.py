@@ -369,7 +369,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'body_html': self.body_html,
                 'created_utc': self.created_utc,
                 'edited_utc': self.edited_utc or 0,
-                'guild': self.board.json,
+                'guild_name': self.board.name,
                 'embed_url': self.embed_url,
                 'is_archived': self.is_archived,
                 'original_guild': self.original_board.json if not self.board.name == self.original_board.name else None,
