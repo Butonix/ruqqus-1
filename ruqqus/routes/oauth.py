@@ -395,7 +395,8 @@ def admin_app_id_comments(v, aid):
                            v=v,
                            app=oauth,
                            comments=comments,
-                           next_exists=next_exists
+                           next_exists=next_exists,
+                           standalone=True
                            )
 
 
