@@ -3,6 +3,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
 from .mix_ins import Stndrd
+from .submissions import Submission
 from ruqqus.__main__ import app, Base
 
 
