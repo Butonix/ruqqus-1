@@ -70,7 +70,7 @@ def nofollow(attrs, new=False):
         attrs[(None, "onclick")]=""
 
     raw_url=attrs.get((None, "href"), None)
-    if raw_url.startswith("javascript"):
+    if raw_url and raw_url.startswith("javascript"):
         attrs[(None, "href")]=""
     elif raw_url:
         parsed_url = urlparse(raw_url)
