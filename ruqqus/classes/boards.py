@@ -389,7 +389,7 @@ class Board(Base, Stndrd, Age_times):
         return self.n_pins < 4
 
     @property
-    def json(self):
+    def json_core(self):
 
         if self.is_banned:
             return {'name': self.name,
@@ -402,8 +402,6 @@ class Board(Base, Stndrd, Age_times):
                 'profile_url': self.profile_url,
                 'banner_url': self.banner_url,
                 'created_utc': self.created_utc,
-                'mods_count': self.mods_count,
-                'subscriber_count': self.subscriber_count,
                 'permalink': self.permalink,
                 'description': self.description,
                 'description_html': self.description_html,
@@ -416,9 +414,20 @@ class Board(Base, Stndrd, Age_times):
                 'banner_url': self.banner_url,
                 'profile_url': self.profile_url,
                 'color': "#" + self.color,
-                'guildmasters': [x.username for x in self.mods],
                 'is_siege_protected': not self.is_siegable
                 }
+
+    @property
+    def json(self):
+        data=self.json_core
+
+        if self.is_banned:
+            return data
+
+
+        data['guildmasters']=[x.json_core for x in self.mods]
+        data['subscriber_count']= self.subscriber_count
+    
 
     @property
     def show_settings_icons(self):
