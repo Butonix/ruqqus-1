@@ -111,7 +111,7 @@ class CommentVote(Base):
     def json_core(self):
         data={
             "user_id": self.user_id,
-            "comment_":self.comment_id,
+            "comment_id":self.comment_id,
             "created_utc": self.created_utc,
             "vote_type":self.vote_type
             }
