@@ -381,6 +381,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'is_offensive': self.is_offensive,
                 'is_politics': self.is_politics
                 }
+        return data
 
     @property
     def json(self):
@@ -391,7 +392,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         data["author"]=self.author.json_core
         data["guild"]=self.board.json_core
         data["original_guild"]=self.original_guild.json_core if not self.board_id==self.original_board_id else None
-        
+
     
         if "replies" in self.__dict__:
             data["replies"]=[x.json_core for x in self.replies]
