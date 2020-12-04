@@ -54,7 +54,7 @@ def create_board_get(v):
 @auth_desired
 @api()
 def api_board_available(name, v):
-    if get_guild(name, graceful=True):
+    if get_guild(name, graceful=True) or not re.match(valid_board_regex, name):
         return jsonify({"board": name, "available": False})
     else:
         return jsonify({"board": name, "available": True})
