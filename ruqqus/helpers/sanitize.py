@@ -66,25 +66,30 @@ _allowed_protocols = ['http', 'https']
 
 def nofollow(attrs, new=False):
 
-    try:
-        parsed_url = urlparse(attrs[(None, "href")])
-    except KeyError:
-        parsed_url = urlparse("https://")
-    domain = parsed_url.netloc
-    if domain and not domain.endswith(("ruqqus.com", "ruqq.us")):
-        attrs[(None, "rel")] = "nofollow noopener"
-        attrs[(None, "target")] = "_blank"
+    if attrs.get((None, "onclick")):
+        attrs[(None, "onclick")]=""
 
-        # Force https for all external links in comments
-        # (Ruqqus already forces its own https)
-        new_url = ParseResult(scheme="https",
-                              netloc=parsed_url.netloc,
-                              path=parsed_url.path,
-                              params=parsed_url.params,
-                              query=parsed_url.query,
-                              fragment=parsed_url.fragment)
+    raw_url=attrs.get((None, "href"), None)
+    if raw_url.startswith("javascript"):
+        attrs[(None, "href")]=""
+    elif raw_url:
+        parsed_url = urlparse(raw_url)
 
-        attrs[(None, "href")] = urlunparse(new_url)
+        domain = parsed_url.netloc
+        if domain and not domain.endswith(("ruqqus.com", "ruqq.us")):
+            attrs[(None, "rel")] = "nofollow noopener"
+            attrs[(None, "target")] = "_blank"
+
+            # Force https for all external links in comments
+            # (Ruqqus already forces its own https)
+            new_url = ParseResult(scheme="https",
+                                  netloc=parsed_url.netloc,
+                                  path=parsed_url.path,
+                                  params=parsed_url.params,
+                                  query=parsed_url.query,
+                                  fragment=parsed_url.fragment)
+
+            attrs[(None, "href")] = urlunparse(new_url)
 
     return attrs
 
