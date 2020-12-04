@@ -66,7 +66,10 @@ _allowed_protocols = ['http', 'https']
 
 def nofollow(attrs, new=False):
 
-    parsed_url = urlparse(attrs[(None, "href")])
+    try:
+        parsed_url = urlparse(attrs[(None, "href")])
+    except KeyError:
+        parsed_url = urlparse("https://")
     domain = parsed_url.netloc
     if domain and not domain.endswith(("ruqqus.com", "ruqq.us")):
         attrs[(None, "rel")] = "nofollow noopener"
