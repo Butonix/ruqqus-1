@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 import time
 import calendar
 from sqlalchemy import func
+from sqlalchemy.orm import lazyload
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.alerts import *
@@ -460,8 +461,10 @@ def admin_removed(v):
 
     page = int(request.args.get("page", 1))
 
-    ids = g.db.query(Submission.id).filter_by(is_banned=True).order_by(
-        Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+    ids = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=True).order_by(
+        Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
+
+    ids=[x[0] for x in ids]
 
     next_exists = len(ids) == 26
 
