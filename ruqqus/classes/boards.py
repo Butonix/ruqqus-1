@@ -427,6 +427,8 @@ class Board(Base, Stndrd, Age_times):
 
         data['guildmasters']=[x.json_core for x in self.mods]
         data['subscriber_count']= self.subscriber_count
+
+        return data
     
 
     @property
