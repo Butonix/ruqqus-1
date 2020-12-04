@@ -16,7 +16,11 @@ def filter_comment_html(html_text):
 
     for link in links:
 
-        domain = urlparse(link["href"]).netloc
+        href=link.get("href", None)
+        if not href:
+            continue
+
+        domain = urlparse(href).netloc
 
         # parse domain into all possible subdomains
         parts = domain.split(".")
