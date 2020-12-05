@@ -299,6 +299,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
         data["author"]=self.author.json_core
         data["post"]=self.post.json_core
+        data["guild"]=self.post.board.json_core
 
         if "replies" in self.__dict__:
             data['replies']=[x.json_core for x in self.replies]
