@@ -656,12 +656,13 @@ class User(Base, Stndrd, Age_times):
         return self.has_premium or self.true_score >= 500 or self.created_utc <= 1592974538
 
     @property
-    def json(self):
+    def json_core(self):
 
         if self.is_banned:
             return {'username': self.username,
                     'permalink': self.permalink,
                     'is_banned': True,
+                    'is_permanent_ban':not bool(self.unban_utc),
                     'ban_reason': self.ban_reason,
                     'id': self.base36id
                     }
@@ -678,10 +679,8 @@ class User(Base, Stndrd, Age_times):
                 'is_banned': False,
                 'is_premium': self.premium_expires_utc > int(time.time()),
                 'created_utc': self.created_utc,
-                'post_rep': int(self.karma),
-                'comment_rep': int(self.comment_karma),
-                'badges': [x.json for x in self.badges],
                 'id': self.base36id,
+                'is_private': self.is_private,
                 'profile_url': self.profile_url,
                 'banner_url': self.banner_url,
                 'post_count': self.post_count,
@@ -690,6 +689,22 @@ class User(Base, Stndrd, Age_times):
                 'bio': self.bio,
                 'bio_html': self.bio_html
                 }
+
+    @property
+    def json(self):
+        data= self.json_core
+
+        if self.is_deleted or self.is_banned:
+            return data
+
+        data["badges"]=[x.json_core for x in self.badges]
+        data['post_rep']= int(self.karma)
+        data['comment_rep']= int(self.comment_karma)
+        data['post_count']=self.post_count
+        data['comment_count']=self.comment_count
+
+        return data
+    
 
     @property
     def total_karma(self):

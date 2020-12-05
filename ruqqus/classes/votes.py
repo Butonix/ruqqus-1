@@ -48,6 +48,24 @@ class Vote(Base):
 
         g.db.add(self)
 
+    @property
+    def json_core(self):
+        data={
+            "user_id": self.user_id,
+            "submission_id":self.submission_id,
+            "created_utc": self.created_utc,
+            "vote_type":self.vote_type
+            }
+        return data
+
+    @property
+    def json(self):
+        data=self.json_core
+        data["user"]=self.user.json_core
+        data["post"]=self.post.json_core
+    
+        return data
+
 
 class CommentVote(Base):
 
@@ -88,3 +106,21 @@ class CommentVote(Base):
         self.created_utc = int(time())
 
         g.db.add(self)
+
+    @property
+    def json_core(self):
+        data={
+            "user_id": self.user_id,
+            "comment_id":self.comment_id,
+            "created_utc": self.created_utc,
+            "vote_type":self.vote_type
+            }
+        return data
+
+    @property
+    def json(self):
+        data=self.json_core
+        data["user"]=self.user.json_core
+        data["comment"]=self.comment.json_core
+    
+        return data

@@ -332,7 +332,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             self.is_offensive = False
 
     @property
-    def json(self):
+    def json_core(self):
 
         if self.is_banned:
             return {'is_banned': True,
@@ -372,7 +372,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'guild_name': self.board.name,
                 'embed_url': self.embed_url,
                 'is_archived': self.is_archived,
-                'original_guild': self.original_board.json if not self.board.name == self.original_board.name else None,
+                'original_guild_name': self.original_board.name if not self.board_id == self.original_board_id else None,
                 'comment_count': self.comment_count,
                 'score': self.score_fuzzed,
                 'upvotes': self.upvotes_fuzzed,
@@ -381,8 +381,21 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'is_offensive': self.is_offensive,
                 'is_politics': self.is_politics
                 }
+        return data
+
+    @property
+    def json(self):
+        data=self.json_core
+        if self.is_deleted or self.is_banned:
+            return data
+
+        data["author"]=self.author.json_core
+        data["guild"]=self.board.json_core
+        data["original_guild"]=self.original_guild.json_core if not self.board_id==self.original_board_id else None
+
+    
         if "replies" in self.__dict__:
-            data["replies"]=[x.json for x in self.replies]
+            data["replies"]=[x.json_core for x in self.replies]
 
         if "_voted" in self.__dict__:
             data["voted"] = self._voted

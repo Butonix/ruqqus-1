@@ -26,6 +26,15 @@ class BadgeDef(Base):
 
         return f"/assets/images/badges/{self.icon}"
 
+    @property
+    def json_core(self):
+        data={
+            "name": self.name
+            "description": self.description
+            "icon": self.icon
+        }
+    
+
 
 class Badge(Base):
 
@@ -69,10 +78,14 @@ class Badge(Base):
         return render_template("badge.html", b=self)
 
     @property
-    def json(self):
+    def json_core(self):
 
         return {'text': self.text,
                 'name': self.name,
                 'created_utc': self.created_utc,
                 'url': self.url
                 }
+
+    property
+    def json(self):
+        return self.json_core
