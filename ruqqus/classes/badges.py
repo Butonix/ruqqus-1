@@ -26,6 +26,15 @@ class BadgeDef(Base):
 
         return f"/assets/images/badges/{self.icon}"
 
+    @property
+    def json_core(self):
+        data={
+            "name": self.name
+            "description": self.description
+            "icon": self.icon
+        }
+    
+
 
 class Badge(Base):
 
