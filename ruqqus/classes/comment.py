@@ -264,7 +264,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'id': self.base36id,
                 'fullname': self.fullname,
                 'level': self.level,
-                'parent': self.parent.json_core if not self.parent_fullname.startswith('t2') else None,
                 'parent_comment_id': self.parent_comment_id,
                 'author_name': self.author.username if not self.author.is_deleted else None,
                 'body': self.body,
@@ -300,6 +299,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         data["author"]=self.author.json_core
         data["post"]=self.post.json_core
         data["guild"]=self.post.board.json_core
+        data["parent"]=self.parent.json_core if not self.parent_fullname.startswith('t2') else None,
 
         if "replies" in self.__dict__:
             data['replies']=[x.json_core for x in self.replies]
