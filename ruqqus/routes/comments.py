@@ -680,7 +680,6 @@ def mod_toggle_comment_pin(bid, cid, x, board, v):
     return "", 204
 
 @app.route("/api/v1/post/<pid>/comments")
-@app.route("/test_endpoint/<pid>")
 @auth_desired
 @api("read")
 def api_v1_post_pid_comment(pid, v):
