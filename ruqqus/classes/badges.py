@@ -29,8 +29,8 @@ class BadgeDef(Base):
     @property
     def json_core(self):
         data={
-            "name": self.name
-            "description": self.description
+            "name": self.name,
+            "description": self.description,
             "icon": self.icon
         }
     
