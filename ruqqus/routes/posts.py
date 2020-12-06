@@ -475,7 +475,7 @@ def submit_post(v):
     bans = filter_comment_html(body_html)
     if bans:
         ban = bans[0]
-        reason = f"Remove the {ban.domain} link from your comment and try again."
+        reason = f"Remove the {ban.domain} link from your post and try again."
         if ban.reason:
             reason += f" {ban.reason_text}"
         return {"html": lambda: (render_template("submit.html",
