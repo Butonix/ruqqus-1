@@ -789,3 +789,38 @@ def retry_thumbnail(pid, v):
                                   )
     new_thread.start()
     return jsonify({"message": "Thumbnail Retry Queued"})
+
+
+@app.route("/save_post/<pid>", methods=["POST"])
+@auth_required
+@validate_formkey
+def save_post(pid, v):
+
+    post=get_post(pid)
+
+    new_save=SaveRelationship(
+        user_id=v.id,
+        submission_id=post.id)
+
+    g.db.add(new_save)
+
+    try:
+        g.db.flush()
+    except:
+        abort(422)
+
+    return "", 204
+
+
+@app.route("/unsave_post/<pid>", methods=["POST"])
+@auth_required
+@validate_formkey
+def unsave_post(pid, v):
+
+    post=get_post(pid)
+
+    save=g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id).first()
+
+    g.db.delete(save)
+
+    return "", 204

@@ -17,7 +17,7 @@ from ruqqus.helpers.discord import add_role, delete_role
 from .votes import Vote
 from .alts import Alt
 from .titles import Title
-from .submission import Submission, SubmissionAux
+from .submission import Submission, SubmissionAux, SaveRelationship
 from .comment import Comment, Notification
 from .boards import Board
 from .board_relationships import *
@@ -126,6 +126,11 @@ class User(Base, Stndrd, Age_times):
 
     _applications = relationship("OauthApp", lazy="dynamic")
     authorizations = relationship("ClientAuth", lazy="dynamic")
+
+    saved_posts=relationship(
+        "SaveRelationship",
+        lazy="dynamic",
+        primaryjoin="User.id==SaveRelationship.user_id")
 
     # properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
@@ -805,6 +810,76 @@ class User(Base, Stndrd, Age_times):
             OauthApp.id.asc()).all()]
 
 
+    def saved_idlist(self, page=1):
+
+        posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
+                                                                           is_deleted=False
+                                                                           )
+
+        if not self.over_18:
+            posts = posts.filter_by(over_18=False)
+
+
+        saved=g.db.query(SaveRelationship.submission_id).filter(SaveRelationship.user_id==self.id).subquery()
+        posts=posts.filter(Submission.id.in_(saved))
+
+
+
+        if self.admin_level < 4:
+            # admins can see everything
+
+            m = g.db.query(
+                ModRelationship.board_id).filter_by(
+                user_id=self.id,
+                invite_rescinded=False).subquery()
+            c = g.db.query(
+                ContributorRelationship.board_id).filter_by(
+                user_id=self.id).subquery()
+            posts = posts.filter(
+                or_(
+                    Submission.author_id == self.id,
+                    Submission.post_public == True,
+                    Submission.board_id.in_(m),
+                    Submission.board_id.in_(c)
+                )
+            )
+
+            blocking = g.db.query(
+                UserBlock.target_id).filter_by(
+                user_id=self.id).subquery()
+            blocked = g.db.query(
+                UserBlock.user_id).filter_by(
+                target_id=self.id).subquery()
+
+            posts = posts.filter(
+                Submission.author_id.notin_(blocking),
+                Submission.author_id.notin_(blocked)
+            )
+
+        posts=posts.order_by(Submission.created_utc.desc())
+        
+        return [x[0] for x in posts.offset(25 * (page - 1)).limit(26).all()]
+
+
+
+    def guild_rep(self, guild):
+
+        posts=db.query(Submission.score_top).filter_by(
+            is_banned=False,
+            board_id=guild.id).all()
+
+        post_rep= sum([x[0] for x in posts])
+
+
+        comments=db.query(Comment.score_top).join(
+            Comment.post).filter(
+            Comment.is_banned==False,
+            Submission.board_id==guild.id).all()
+
+        comment_rep=sum([x[0] for x in comments])
+
+        return post_rep + comment_rep
+
     @property
     def has_premium(self):
         
@@ -865,4 +940,3 @@ class User(Base, Stndrd, Age_times):
     @property
     def boards_modded_ids(self):
         return [x.id for x in self.boards_modded]
-                            

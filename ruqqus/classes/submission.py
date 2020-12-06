@@ -504,3 +504,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def embed_template(self):
         return f"site_embeds/{self.domain_obj.embed_template}.html"
     
+class SaveRelationship(Base, Stndrd):
+
+    __tablename__="save_relationship"
+
+    id=Column(Integer, primary_key=true)
+    user_id=Column(Integer, ForeignKey("users.id"))
+    submission_id=Column(Integer, ForeignKey("submissions.id"))

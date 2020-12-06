@@ -489,3 +489,8 @@ class Board(Base, Stndrd, Age_times):
             25 * (page - 1)).limit(26).all()
 
         return [x.id for x in comments]
+
+
+    def user_guild_rep(self, user):
+
+        return user.guild_rep(self)
