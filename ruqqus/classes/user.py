@@ -12,6 +12,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import lazy
 import ruqqus.helpers.aws as aws
+from ruqqus.helpers.discord import add_role, delete_role
 #from ruqqus.helpers.alerts import send_notification
 from .votes import Vote
 from .alts import Alt
@@ -85,7 +86,6 @@ class User(Base, Stndrd, Age_times):
     show_nsfl = Column(Boolean, default=False)
     is_private = Column(Boolean, default=False)
     read_announcement_utc = Column(Integer, default=0)
-    #discord_id=Column(Integer, default=None)
     unban_utc = Column(Integer, default=0)
     is_deleted = Column(Boolean, default=False)
     delete_reason = Column(String(500), default='')
@@ -95,11 +95,11 @@ class User(Base, Stndrd, Age_times):
     premium_expires_utc=Column(Integer, default=0)
     negative_balance_cents=Column(Integer, default=0)
 
-    patreon_pledge_cents = Column(Integer, default=0)
-
     is_nofollow = Column(Boolean, default=False)
 
     custom_filter_list=Column(String(1000), default="")
+
+    discord_id=Column(String(64), default=None)
 
     moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
@@ -661,12 +661,13 @@ class User(Base, Stndrd, Age_times):
         return self.has_premium or self.true_score >= 500 or self.created_utc <= 1592974538
 
     @property
-    def json(self):
+    def json_core(self):
 
         if self.is_banned:
             return {'username': self.username,
                     'permalink': self.permalink,
                     'is_banned': True,
+                    'is_permanent_ban':not bool(self.unban_utc),
                     'ban_reason': self.ban_reason,
                     'id': self.base36id
                     }
@@ -677,15 +678,14 @@ class User(Base, Stndrd, Age_times):
                     'is_deleted': True,
                     'id': self.base36id
                     }
-
+        
         return {'username': self.username,
                 'permalink': self.permalink,
                 'is_banned': False,
+                'is_premium': self.premium_expires_utc > int(time.time()),
                 'created_utc': self.created_utc,
-                'post_rep': int(self.karma),
-                'comment_rep': int(self.comment_karma),
-                'badges': [x.json for x in self.badges],
                 'id': self.base36id,
+                'is_private': self.is_private,
                 'profile_url': self.profile_url,
                 'banner_url': self.banner_url,
                 'post_count': self.post_count,
@@ -694,6 +694,22 @@ class User(Base, Stndrd, Age_times):
                 'bio': self.bio,
                 'bio_html': self.bio_html
                 }
+
+    @property
+    def json(self):
+        data= self.json_core
+
+        if self.is_deleted or self.is_banned:
+            return data
+
+        data["badges"]=[x.json_core for x in self.badges]
+        data['post_rep']= int(self.karma)
+        data['comment_rep']= int(self.comment_karma)
+        data['post_count']=self.post_count
+        data['comment_count']=self.comment_count
+
+        return data
+    
 
     @property
     def total_karma(self):
@@ -706,7 +722,19 @@ class User(Base, Stndrd, Age_times):
         # return self.referral_count or self.has_earned_darkmode or
         # self.has_badge(16) or self.has_badge(17)
 
-    def ban(self, admin=None, reason=None, include_alts=True, days=0):
+    @property
+    def is_valid(self):
+        if self.is_banned and self.unban_utc==0:
+            return False
+
+        elif self.is_deleted:
+            return False
+
+        else:
+            return True
+    
+
+    def ban(self, admin=None, reason=None,  days=0):
 
         if days > 0:
             ban_time = int(time.time()) + (days * 86400)
@@ -720,43 +748,27 @@ class User(Base, Stndrd, Age_times):
             if self.has_profile:
                 self.del_profile()
 
+            add_role(self, "banned")
+            delete_role(self, "member")
+
         self.is_banned = admin.id if admin else 1
         if reason:
             self.ban_reason = reason
 
         g.db.add(self)
 
-        if include_alts:
-            for alt in self.alts:
 
-                if alt.is_banned:
-                    continue
-
-                # suspend alts
-                if days:
-                    alt.ban(
-                        admin=admin,
-                        reason=reason,
-                        include_alts=False,
-                        days=days)
-
-                # ban alts
-                else:
-                    alt.ban(admin=admin, include_alts=False)
-
-    def unban(self, include_alts=False):
+    def unban(self):
 
         # Takes care of all functions needed for account reinstatement.
 
         self.is_banned = 0
         self.unban_utc = 0
 
+        delete_role(self, "banned")
+
         g.db.add(self)
 
-        if include_alts:
-            for alt in self.alts:
-                # ban alts
-                alt.unban()
 
     @property
     def is_suspended(self):
@@ -883,11 +895,19 @@ class User(Base, Stndrd, Age_times):
             self.coin_balance -=1
             self.premium_expires_utc = now + 60*60*24*7
 
+            add_role(self, "premium")
+
             g.db.add(self)
 
             return True
 
         else:
+
+            if self.premium_expires_utc:
+                delete_role(self, "premium")
+                self.premium_expires_utc=0
+                g.db.add(self)
+
             return False
 
     @property
@@ -910,6 +930,7 @@ class User(Base, Stndrd, Age_times):
         return time.strftime("%d %b %Y at %H:%M:%S",
                              time.gmtime(self.premium_expires_utc))
     
+
     @property
     def filter_words(self):
         l= [i.lstrip().rstrip() for i in self.custom_filter_list.split('\n')] if self.custom_filter_list else []

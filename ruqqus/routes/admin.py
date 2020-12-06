@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 import time
 import calendar
 from sqlalchemy import func
+from sqlalchemy.orm import lazyload
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.alerts import *
@@ -269,8 +270,9 @@ def money_stats(v):
         "coins_redeemed_last_24_hrs": g.db.query(User).filter(User.premium_expires_utc>now+60*60*24*6, User.premium_expires_utc < now+60*60*24*7).count(),
         "coins_redeemed_last_week": g.db.query(User).filter(User.premium_expires_utc>now, User.premium_expires_utc < now+60*60*24*7).count(),
         "coins_in_circulation": g.db.query(func.sum(User.coin_balance)).filter(User.is_deleted==False, or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc>0))).scalar(),
+        "coins_vanished": g.db.query(func.sum(User.coin_balance)).filter(or_(User.is_deleted==True, and_(User.is_banned>0, User.unban_utc==0))).scalar(),
         "receivables_outstanding_cents": g.db.query(func.sum(User.negative_balance_cents)).filter(User.is_deleted==False, or_(User.is_banned == 0, and_(User.is_banned > 0, User.unban_utc > 0))).scalar(),
-        "coins_sold_ytd":g.db.query(func.sum(PayPalTxn.coin_count)).filter(PayPalTxn.status==3).scalar(),
+        "coins_sold_ytd":g.db.query(func.sum(PayPalTxn.coin_count)).filter(PayPalTxn.status==3, PayPalTxn.created_utc>midnight_year_start).scalar(),
         "revenue_usd_ytd":f"{revenue[0:-2]}.{revenue[-2:]}"
     }
     return render_template("admin/content_stats.html", v=v, title="Financial Statistics", data=data)
@@ -459,8 +461,10 @@ def admin_removed(v):
 
     page = int(request.args.get("page", 1))
 
-    ids = g.db.query(Submission.id).filter_by(is_banned=True).order_by(
-        Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+    ids = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=True).order_by(
+        Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
+
+    ids=[x[0] for x in ids]
 
     next_exists = len(ids) == 26
 
@@ -474,3 +478,64 @@ def admin_removed(v):
                            page=page,
                            next_exists=next_exists
                            )
+
+@app.route("/admin/gm", methods=["GET"])
+@admin_level_required(3)
+def admin_gm(v):
+    
+    username=request.args.get("user")
+
+    include_banned=int(request.args.get("with_banned",0))
+
+    if username:
+        user=get_user(username)
+        
+        boards=user.boards_modded
+
+        alts=user.alts
+        earliest=user
+        for alt in alts:
+
+            if not alt.is_valid and not include_banned:
+                continue
+
+            if alt.created_utc < earliest.created_utc:
+                earlest=alt
+
+            for b in alt.boards_modded:
+                if b not in boards:
+                    boards.append(b)
+
+           
+        return render_template("admin/alt_gms.html",
+            v=v,
+            user=user,
+            first=earliest,
+            boards=boards
+            )
+    else:
+        return render_template("admin/alt_gms.html",
+            v=v)
+    
+
+
+@app.route("/admin/appdata", methods=["GET"])
+@admin_level_required(4)
+def admin_appdata(v):
+
+    url=request.args.get("link")
+
+    if url:
+
+        thing = get_from_permalink(url, v=v)
+
+        return render_template(
+            "admin/app_data.html",
+            v=v,
+            thing=thing
+            )
+
+    else:
+        return render_template(
+            "admin/app_data.html",
+            v=v)

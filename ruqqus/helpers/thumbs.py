@@ -13,7 +13,7 @@ from ruqqus.__main__ import app, db_session
 headers = {"User-Agent": app.config["UserAgent"]}
 
 
-def thumbnail_thread(pid):
+def thumbnail_thread(pid, debug=False):
 
     db = db_session()
 
@@ -29,11 +29,21 @@ def thumbnail_thread(pid):
 
     domain_obj = post.domain_obj
 
+    if debug:
+        print(f"domain_obj {domain_obj}")
+        if domain_obj:
+            print(f"show thumb {domain_obj.show_thumbnail}")
+
     if domain_obj and domain_obj.show_thumbnail:
+
+        if debug:
+            print("trying direct url as image")
 
         try:
             x = requests.get(post.url, headers=headers)
         except:
+            if debug:
+                print("error connecting")
             return
 
         if x.status_code>=400:
@@ -58,21 +68,33 @@ def thumbnail_thread(pid):
             db.commit()
             return
 
+    if debug:
+        print("not direct image")
     try:
         x = requests.get(post.url, headers=headers)
+
     except:
+        if debug:
+            print("error connecting")
         return
 
     if x.status_code != 200 or not x.headers["Content-Type"].startswith(
             ("text/html", "image/")):
-        # print(f'not html post, status {x.status_code}')
+        if debug:
+            print(f'not html post, status {x.status_code}')
         return
 
     if x.headers["Content-Type"].startswith("image/"):
+
+        if debug:
+            print("submitted url is image, use that")
         pass
         # submitted url is image
 
     elif x.headers["Content-Type"].startswith("text/html"):
+
+        if debug:
+            print("parsing html doc")
 
         soup = BeautifulSoup(x.content, 'html.parser')
 
@@ -84,6 +106,9 @@ def thumbnail_thread(pid):
 
         for meta in metas:
 
+            if debug:
+                print(f"Looking for meta tag: {meta}")
+
             img = soup.find('meta', attrs={"name": meta, "content": True})
             if not img:
                 img = soup.find(
@@ -94,14 +119,27 @@ def thumbnail_thread(pid):
             if not img:
                 continue
             try:
+                if debug:
+                    print(f"image load attempt from meta tag {meta}")
                 x = requests.get(img['content'], headers=headers)
             except BaseException:
+                if debug:
+                    print("unable to connect")
                 continue
             break
 
+        if debug:
+            print(img)
+            print(x)
+
         if not img or not x or x.status_code != 200:
 
+            if debug:
+                print("no meta tags, looking for img")
+
             imgs = soup.find_all('img', src=True)
+            if debug:
+                print(f"found {len(imgs)} img elements")
             if imgs:
                 #print("using <img> elements")
                 pass
@@ -133,27 +171,41 @@ def thumbnail_thread(pid):
                 #print("full src: "+src)
 
                 # load asset
+
+                if debug:
+                    print(f"attempting asset load {src}")
                 x = requests.get(src, headers=headers)
 
                 if x.status_code != 200:
+                    if debug:
+                        print(f"status code {x.status_code}, try next")
                     #print('not 200, next')
                     continue
 
                 type = x.headers.get("Content-Type", "")
 
                 if not type.startswith("image/"):
+                    if debug:
+                        print(f"bad type {type}, try next")
                     #print("not an image, next")
                     continue
 
                 if type.startswith("image/svg"):
+                    if debug:
+                        print("svg, try next")
                     #print("svg image, next")
                     continue
 
                 i = PILimage.open(BytesIO(x.content))
                 if i.width < 30 or i.height < 30:
+                    if debug:
+                        print("image too small, next")
                     continue
 
                 break
+        else:
+            if debug:
+                print("meta tag found, no need to look for img tags")
 
     name = f"posts/{post.base36id}/thumb.png"
     tempname = name.replace("/", "_")

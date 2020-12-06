@@ -349,14 +349,55 @@ def admin_app_reject(v, aid):
 @admin_level_required(3)
 def admin_app_id(v, aid):
 
+    aid=base36decode(aid)
+
     oauth = g.db.query(OauthApp).options(
         joinedload(
             OauthApp.author)).filter_by(
-        id=base36decode(aid)).first()
+        id=aid).first()
+
+    pids=oauth.idlist(page=int(request.args.get("page",1)),
+        )
+
+    next_exists=len(pids)==101
+    pids=pids[0:100]
+
+    posts=get_posts(pids, v=v)
 
     return render_template("admin/app.html",
                            v=v,
-                           app=oauth)
+                           app=oauth,
+                           listing=posts,
+                           next_exists=next_exists
+                           )
+
+@app.route("/admin/app/<aid>/comments", methods=["GET"])
+@admin_level_required(3)
+def admin_app_id_comments(v, aid):
+
+    aid=base36decode(aid)
+
+    oauth = g.db.query(OauthApp).options(
+        joinedload(
+            OauthApp.author)).filter_by(
+        id=aid).first()
+
+    cids=oauth.comments_idlist(page=int(request.args.get("page",1)),
+        )
+
+    next_exists=len(cids)==101
+    cids=cids[0:100]
+
+    comments=get_comments(cids, v=v)
+
+
+    return render_template("admin/app.html",
+                           v=v,
+                           app=oauth,
+                           comments=comments,
+                           next_exists=next_exists,
+                           standalone=True
+                           )
 
 
 @app.route("/admin/apps", methods=["GET"])

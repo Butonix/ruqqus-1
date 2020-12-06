@@ -93,7 +93,8 @@ CREATE TABLE public.comments (
     original_board_id integer,
     upvotes integer,
     downvotes integer,
-    is_bot boolean DEFAULT false
+    is_bot boolean DEFAULT false,
+    is_pinned boolean DEFAULT false
 );
 
 

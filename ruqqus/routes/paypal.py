@@ -4,6 +4,7 @@ import urllib
 import hmac
 import pprint
 import time
+import pprint
 
 from flask import *
 
@@ -121,7 +122,7 @@ def shop_buy_coins_completed(v):
 
     return redirect("/settings/premium?msg=success")
 
-@app.route("/shop/paypal_webhook")
+@app.route("/shop/paypal_webhook", methods=["POST"])
 def paypal_webhook_handler():
     
     #Verify paypal signature
@@ -132,16 +133,16 @@ def paypal_webhook_handler():
         "transmission_sig":request.headers.get("PAYPAL-TRANSMISSION-SIG"),
         "transmission_time":request.headers.get("PAYPAL-TRANSMISSION-TIME"),
         "webhook_id":CLIENT.webhook_id,
-        "webhook_event":request.json()
+        "webhook_event":request.json
         }
 
 
-    x=CLIENT._post("/v1/notifications/verify-webhook-signature", json=data)
+    x=CLIENT._post("/v1/notifications/verify-webhook-signature", data=data)
 
     if x.json().get("verification_status") != "SUCCESS":
         abort(403)
     
-    data=request.json()
+    data=request.json
 
     #Reversals
     if data["event_type"] in ["PAYMENT.SALE.REVERSED", "PAYMENT.SALE.REFUNDED"]:
@@ -155,6 +156,10 @@ def paypal_webhook_handler():
         txn=get_txn(data["resource"]["id"])
 
         amount_cents=int(float(data["resource"]["amount"]["value"])*100)
+
+    else:
+        return "", 204
+
 
     #increase to cover extra round of paypal fees
     amount_cents += 30

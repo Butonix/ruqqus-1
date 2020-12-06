@@ -63,6 +63,10 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     is_offensive = Column(Boolean, default=False)
     is_nsfl = Column(Boolean, default=False)
     is_bot = Column(Boolean, default=False)
+    is_pinned = Column(Boolean, default=False)
+
+    app_id = Column(Integer, ForeignKey("oauth_apps.id"), default=None)
+    oauth_app=relationship("OauthApp")
 
     post = relationship("Submission")
     flags = relationship("CommentFlag", backref="comment")
@@ -239,7 +243,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             self.is_offensive = False
 
     @property
-    def json(self):
+    def json_core(self):
         if self.is_banned:
             data= {'is_banned': True,
                     'ban_reason': self.ban_reason,
@@ -259,10 +263,9 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             data= {
                 'id': self.base36id,
                 'fullname': self.fullname,
-                'post': self.post.json,
                 'level': self.level,
-                'parent_id': self.parent.base36id if not self.parent_fullname.startswith('t2') else None,
-                'author': self.author.json if not self.author.is_deleted else None,
+                'parent_comment_id': self.parent_comment_id,
+                'author_name': self.author.username if not self.author.is_deleted else None,
                 'body': self.body,
                 'body_html': self.body_html,
                 'is_archived': self.is_archived,
@@ -275,20 +278,35 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'is_offensive': self.is_offensive,
                 'is_nsfl': self.is_nsfl,
                 'permalink': self.permalink,
+                'post_id': self.post.base36id,
                 'score': self.score_fuzzed,
                 'upvotes': self.upvotes_fuzzed,
                 'downvotes': self.downvotes_fuzzed,
                 'award_count': self.award_count
                 }
 
-        if "replies" in self.__dict__:
-            data['replies']=[x.json for x in self.replies]
-
 
         return data
 
+    @property
+    def json(self):
+    
+        data=self.json_core
 
+        if self.is_deleted or self.is_banned:
+            return data
 
+        data["author"]=self.author.json_core
+        data["post"]=self.post.json_core
+        data["guild"]=self.post.board.json_core
+        data["parent"]=self.parent.json_core if not self.parent_fullname.startswith('t2') else None,
+
+        if "replies" in self.__dict__:
+            data['replies']=[x.json_core for x in self.replies]
+
+        return data
+
+        
     @property
     def voted(self):
 

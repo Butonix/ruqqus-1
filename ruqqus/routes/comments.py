@@ -330,8 +330,10 @@ def api_comment(v):
             send_notification(v, text)
 
             v.ban(reason="Spamming.",
-                  include_alts=True,
                   days=1)
+
+            for alt in v.alts:
+                alt.ban(reason="Spamming.", days=1)
 
             for comment in similar_comments:
                 comment.is_banned = True
@@ -384,7 +386,8 @@ def api_comment(v):
                 is_op=(v.id == post.author_id),
                 is_offensive=is_offensive,
                 original_board_id=parent_post.board_id,
-                is_bot=is_bot
+                is_bot=is_bot,
+                app_id=v.client.application.id if v.client else None
                 )
 
     g.db.add(c)
@@ -641,3 +644,48 @@ def embed_comment_cid(cid, pid=None):
         abort(410)
 
     return render_template("embeds/comment.html", c=comment)
+
+@app.route("/mod/comment_pin/<bid>/<cid>/<x>", methods=["POST"])
+@auth_required
+@is_guildmaster
+@validate_formkey
+def mod_toggle_comment_pin(bid, cid, x, board, v):
+
+    comment = get_comment(cid)
+
+    if comment.post.board_id != board.id:
+        abort(400)
+
+    try:
+        x = bool(int(x))
+    except BaseException:
+        abort(400)
+        
+    #remove previous pin (if exists)
+    if x:
+        previous_sticky = g.db.query(Comment).filter(
+            and_(
+                Comment.parent_submission == comment.post.id, 
+                Comment.is_pinned == True
+                )
+            ).first()
+        if previous_sticky:
+            previous_sticky.is_pinned = False
+            g.db.add(previous_sticky)
+
+    comment.is_pinned = x
+
+    g.db.add(comment)
+
+    return "", 204
+
+@app.route("/api/v1/post/<pid>/comments")
+@auth_desired
+@api("read")
+def api_v1_post_pid_comment(pid, v):
+
+    post=get_post_with_comments(pid, v=v)
+
+    post.tree_comments()
+
+    return jsonify(post.json)

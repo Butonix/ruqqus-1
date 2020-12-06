@@ -102,6 +102,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     upvotes = Column(Integer, default=1)
     downvotes = Column(Integer, default=0)
 
+    app_id=Column(Integer, ForeignKey("oauth_apps.id"), default=None)
+    oauth_app=relationship("OauthApp")
+
     approved_by = relationship(
         "User",
         uselist=False,
@@ -161,7 +164,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @lazy
     def fullname(self):
         return f"t2_{self.base36id}"
-
+        
     @property
     @lazy
     def permalink(self):
@@ -217,6 +220,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         # return template
         is_allowed_to_comment = self.board.can_comment(
             v) and not self.is_archived
+        
+    #    if request.args.get("sort", "Hot") != "new":
+    #        self.replies = [x for x in self.replies if x.is_pinned] + [x for x in self.replies if not x.is_pinned]
 
         return render_template(template,
                                v=v,
@@ -227,7 +233,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                                comment_info=comment_info,
                                is_allowed_to_comment=is_allowed_to_comment,
                                render_replies=True,
-                               is_guildmaster=self.board.has_mod(v)
+                               is_guildmaster=self.board.has_mod(v),
+                               b=self.board
                                )
 
     @property
@@ -245,8 +252,15 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
         comments = self._preloaded_comments
 
+        pinned_comment=[]
+
         index = {}
         for c in comments:
+
+            if c.is_pinned and c.parent_fullname==self.fullname:
+                pinned_comment=[c]
+                continue
+
             if c.parent_fullname in index:
                 index[c.parent_fullname].append(c)
             else:
@@ -258,7 +272,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         if comment:
             self.__dict__["replies"] = [comment]
         else:
-            self.__dict__["replies"] = index.get(self.fullname, [])
+            self.__dict__["replies"] = pinned_comment + index.get(self.fullname, [])
 
     @property
     def active_flags(self):
@@ -318,7 +332,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             self.is_offensive = False
 
     @property
-    def json(self):
+    def json_core(self):
 
         if self.is_banned:
             return {'is_banned': True,
@@ -337,7 +351,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                     'permalink': self.permalink,
                     'guild_name': self.board.name
                     }
-        data = {'author': self.author.json if not self.author.is_deleted else None,
+        data = {'author_name': self.author.username if not self.author.is_deleted else None,
                 'permalink': self.permalink,
                 'is_banned': False,
                 'is_deleted': False,
@@ -355,10 +369,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'body_html': self.body_html,
                 'created_utc': self.created_utc,
                 'edited_utc': self.edited_utc or 0,
-                'guild': self.board.json,
+                'guild_name': self.board.name,
                 'embed_url': self.embed_url,
                 'is_archived': self.is_archived,
-                'original_guild': self.original_board.json if not self.board.name == self.original_board.name else None,
+                'original_guild_name': self.original_board.name if not self.board_id == self.original_board_id else None,
                 'comment_count': self.comment_count,
                 'score': self.score_fuzzed,
                 'upvotes': self.upvotes_fuzzed,
@@ -367,8 +381,21 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'is_offensive': self.is_offensive,
                 'is_politics': self.is_politics
                 }
+        return data
+
+    @property
+    def json(self):
+        data=self.json_core
+        if self.is_deleted or self.is_banned:
+            return data
+
+        data["author"]=self.author.json_core
+        data["guild"]=self.board.json_core
+        data["original_guild"]=self.original_guild.json_core if not self.board_id==self.original_board_id else None
+
+    
         if "replies" in self.__dict__:
-            data["replies"]=[x.json for x in self.replies]
+            data["replies"]=[x.json_core for x in self.replies]
 
         if "_voted" in self.__dict__:
             data["voted"] = self._voted

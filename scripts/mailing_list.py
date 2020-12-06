@@ -1,3 +1,5 @@
+from sqlalchemy import *
+
 from ruqqus.__main__ import app, db_session
 from ruqqus import classes
 from ruqqus.mail import send_mail
@@ -10,6 +12,7 @@ title = input("Title: ")
 subject = input("Email subject: ")
 
 x = db.query(classes.user.User).filter(
+    classes.user.User.is_activated==True,
     or_(
         classes.user.User.is_banned==0, 
         classes.user.User.unban_utc>0

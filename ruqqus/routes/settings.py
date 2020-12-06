@@ -9,6 +9,7 @@ from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.markdown import *
+from ruqqus.helpers.discord import remove_user
 from ruqqus.helpers.aws import check_csam_url
 from ruqqus.mail import *
 from .front import frontlist
@@ -154,7 +155,7 @@ def settings_security_post(v):
         new_email = request.form.get("new_email","").lstrip().rstrip()
         #counteract gmail username+2 and extra period tricks - convert submitted email to actual inbox
         if new_email.endswith("@gmail.com"):
-            parts=re.split("\+.*@", newemail)
+            parts=re.split("\+.*@", new_email)
             username=parts[0]
             username=username.replace(".","")
             new_email=f"{username}@gmail.com"
@@ -385,6 +386,10 @@ def delete_account(v):
         return render_template("settings_security.html", v=v,
                                error="Invalid password or token" if v.mfa_secret else "Invalid password")
 
+
+    remove_user(v)
+
+    v.discord_id=None
     v.is_deleted = True
     v.login_nonce += 1
     v.delete_reason = request.form.get("delete_reason", "")
@@ -540,3 +545,26 @@ def settings_unblock_guild(v):
 def settings_apps(v):
 
     return render_template("settings_apps.html", v=v)
+
+
+@app.route("/settings/remove_discord", methods=["POST"])
+@auth_required
+@validate_formkey
+def settings_remove_discord(v):
+
+    if v.admin_level>1:
+        return render_template("settings_filters.html", v=v, error="Admins can't disconnect Discord.")
+
+    remove_user(v)
+
+    v.discord_id=None
+    g.db.add(v)
+    g.db.commit()
+
+    return redirect("/settings/profile")
+
+@app.route("/settings/content", methods=["GET"])
+@auth_required
+def settings_content_get(v):
+
+    return render_template("settings_filters.html", v=v)
