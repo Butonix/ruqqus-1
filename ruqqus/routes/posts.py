@@ -471,6 +471,25 @@ def submit_post(v):
         body_md = renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
 
+    # Run safety filter
+    bans = filter_comment_html(body_html)
+    if bans:
+        ban = bans[0]
+        reason = f"Remove the {ban.domain} link from your comment and try again."
+        if ban.reason:
+            reason += f" {ban.reason_text}"
+        return {"html": lambda: (render_template("submit.html",
+                                                 v=v,
+                                                 error=reason,
+                                                 title=title,
+                                                 url=url,
+                                                 body=request.form.get(
+                                                     "body", ""),
+                                                 b=board
+                                                 ), 403),
+                "api": lambda: ({"error": reason}, 403)
+                }
+
     # check spam
     soup = BeautifulSoup(body_html, features="html.parser")
     links = [x['href'] for x in soup.find_all('a') if x.get('href')]
