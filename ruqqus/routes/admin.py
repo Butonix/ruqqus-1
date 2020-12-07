@@ -3,6 +3,7 @@ import time
 import calendar
 from sqlalchemy import func
 from sqlalchemy.orm import lazyload
+import threading
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.alerts import *
@@ -574,7 +575,7 @@ def admin_ban_analysis(v):
 
         send_notification(v, f"There are {len(uniques)} unique banned accounts")
 
-    thread=Threading.thread(banned_count)
+    thread=threading.Thread(banned_count)
     thread.start()
 
     return "Count started"
