@@ -568,6 +568,7 @@ def admin_ban_analysis(v):
                 else:
                     print(f"Repeat - @{user.username}")
                     seen_so_far.add(user.id)
+                    continue
 
                 alts=user.alts
                 print(f"{len(alts)} alts")
