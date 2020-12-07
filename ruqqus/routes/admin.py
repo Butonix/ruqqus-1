@@ -582,7 +582,7 @@ def admin_deploy(v):
 
     def reload_function():
         time.sleep(3)
-        subprocess.run(". ~/go.sh")
+        subprocess.run(". ~/go.sh", shell=True)
 
     thread=threading.Thread(target=reload_function, daemon=True)
     thread.start()
@@ -594,4 +594,4 @@ def admin_deploy(v):
 def admin_test(v):
 
 
-    return "2"
+    return "1"
