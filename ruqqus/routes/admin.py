@@ -544,26 +544,37 @@ def admin_appdata(v):
 @admin_level_required(3)
 def admin_ban_analysis(v):
 
-    banned_accounts = g.db.query(User).filter(User.is_banned>0, User.unban_utc==0).all()
 
-    uniques=set()
+    def banned_count():
+        banned_accounts = g.db.query(User).filter(User.is_banned>0, User.unban_utc==0).all()
 
-    seen_so_far=set()
+        uniques=set()
 
-    for user in banned_accounts:
+        seen_so_far=set()
 
-        if user.id not in seen_so_far:
-
-            uniques.add(user.id)
-
-        else:
-            seen_so_far.add(user.id)
+        for user in banned_accounts:
 
 
-        for alt in user.alts:
+            if user.id not in seen_so_far:
 
-            seen_so_far.add(alt.id)
+                print(f"Unique - @{user.username}")
+
+                uniques.add(user.id)
+
+            else:
+                print(f"Repeat - @{user.username}")
+                seen_so_far.add(user.id)
+
+            alts=user.alts
+            print(f"{len(alts)} alts")
+
+            for alt in user.alts:
+                seen_so_far.add(alt.id)
 
 
-    return str(len(uniques))
+        send_notification(v, f"There are {len(uniques)} unique banned accounts")
 
+    thread=Threading.thread(banned_count)
+    thread.start()
+
+    return "Count started"
