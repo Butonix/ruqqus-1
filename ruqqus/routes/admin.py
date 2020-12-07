@@ -4,6 +4,7 @@ import calendar
 from sqlalchemy import func
 from sqlalchemy.orm import lazyload
 import threading
+import os.system
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.alerts import *
@@ -572,3 +573,19 @@ def admin_ban_analysis(v):
 
 
     return str(len(uniques))
+
+
+
+@app.route('/admin/deploy', methods=["GET"])
+@admin_level_required(3)
+def admin_deploy(v):
+
+    def reload_function():
+        time.sleep(3)
+        os.system('cd ~')
+        os.system('source go.sh')
+
+    thread=threading.Thread(target=reload_function, daemon=True)
+    thread.start()
+    
+    return 'reloading'
