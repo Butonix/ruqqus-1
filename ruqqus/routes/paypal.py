@@ -219,13 +219,6 @@ def gift_post_pid(pid, v):
     if not v.coin_balance>=coins:
         return jsonify({"error":"You don't have that many coins to give!"}), 403
 
-    v.coin_balance -= coins
-
-    u.coin_balance += coins
-
-    g.db.add(v)
-    g.db.add(u)
-
     if not g.db.query(AwardRelationship).filter_by(user_id=v.id, submission_id=post.id).first():
         text=f"Someone liked [your post]({post.permalink}) and has given you a Coin!\n\n"
         if not u.has_premium_no_renew:
@@ -234,6 +227,11 @@ def gift_post_pid(pid, v):
             text+="Since you already have Ruqqus Premium, the Coin has been added to your balance. You can keep it for yourself, or give it to someone else."
         send_notification(u, text)
 
+    v.coin_balance -= coins
+    u.coin_balance += coins
+
+    g.db.add(v)
+    g.db.add(u)
     g.db.commit()
 
     #create record - uniqueness constraints prevent duplicate award counting
@@ -288,13 +286,6 @@ def gift_comment_pid(cid, v):
     if not v.coin_balance>=coins:
         return jsonify({"error":"You don't have that many coins to give!"}), 403
 
-    v.coin_balance -= coins
-
-    u.coin_balance += coins
-
-    g.db.add(v)
-    g.db.add(u)
-
     if not g.db.query(AwardRelationship).filter_by(user_id=v.id, comment_id=comment.id).first():
         text=f"Someone liked [your comment]({comment.permalink}) and has given you a Coin!\n\n"
         if not u.has_premium_no_renew:
@@ -303,7 +294,12 @@ def gift_comment_pid(cid, v):
             text+="Since you already have Ruqqus Premium, the Coin has been added to your balance. You can keep it for yourself, or give it to someone else."
 
         send_notification(u, text)
+        
+    v.coin_balance -= coins
+    u.coin_balance += coins
 
+    g.db.add(v)
+    g.db.add(u)
     g.db.commit()
 
     #create record - uniqe prevents duplicates
