@@ -589,3 +589,10 @@ def admin_deploy(v):
     thread.start()
 
     return 'Reloading!'
+
+@app.route('/admin/test', methods=["GET"])
+@admin_level_required(3)
+def admin_test(v):
+
+
+    return "1"
