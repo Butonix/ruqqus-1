@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 cd ~/
 sudo cp ruqqus/nginx.txt /etc/nginx/sites-available/ruqqus.com.conf
 sudo nginx -s reload
