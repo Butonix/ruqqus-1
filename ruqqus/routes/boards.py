@@ -1132,6 +1132,7 @@ def mod_approve_bid_user(bid, board, v):
                                               is_active=True,
                                               approving_mod_id=v.id)
         g.db.add(new_contrib)
+        g.db.commit()
 
         if user.id != v.id:
             text = f"You have added as an approved contributor to +{board.name}."
