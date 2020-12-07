@@ -568,3 +568,10 @@ def settings_remove_discord(v):
 def settings_content_get(v):
 
     return render_template("settings_filters.html", v=v)
+
+
+@app.route("/settings/json", methods=["GET"])
+@auth_required
+def settings_json_get(v):
+
+    return jsonify(v.settings_json)

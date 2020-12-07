@@ -940,3 +940,11 @@ class User(Base, Stndrd, Age_times):
     @property
     def boards_modded_ids(self):
         return [x.id for x in self.boards_modded]
+
+    @property
+    def settings_json(self):
+
+    	data={
+    		"over_18": self.over_18,
+    		"custom_filters": self.filter_words
+    	}
