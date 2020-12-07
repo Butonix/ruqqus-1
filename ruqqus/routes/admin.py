@@ -545,7 +545,7 @@ def admin_appdata(v):
 @admin_level_required(3)
 def admin_ban_analysis(v):
 
-    banned_accounts = db.query(User).filter(User.is_banned>0, User.unban_utc==0).all()
+    banned_accounts = g.db.query(User).filter(User.is_banned>0, User.unban_utc==0).all()
 
     uniques=set()
 
