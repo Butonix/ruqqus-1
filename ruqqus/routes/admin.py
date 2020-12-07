@@ -594,4 +594,4 @@ def admin_deploy(v):
 def admin_test(v):
 
 
-    return "2"
+    return "1"
