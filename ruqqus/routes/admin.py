@@ -540,7 +540,7 @@ def admin_appdata(v):
             "admin/app_data.html",
             v=v)
 
-@app.route("admin/ban_analysis")
+@app.route("/admin/ban_analysis")
 @admin_level_required(3)
 def admin_ban_analysis(v):
 
