@@ -575,7 +575,7 @@ def admin_ban_analysis(v):
 
         send_notification(v, f"There are {len(uniques)} unique banned accounts")
 
-    thread=threading.Thread(banned_count)
+    thread=threading.Thread(target=banned_count)
     thread.start()
 
     return "Count started"
