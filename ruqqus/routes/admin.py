@@ -582,7 +582,7 @@ def admin_deploy(v):
 
     def reload_function():
         time.sleep(3)
-        os.system('cd ~')
+        os.system('cd ~/')
         os.system('source go.sh')
 
     thread=threading.Thread(target=reload_function, daemon=True)
