@@ -576,22 +576,22 @@ def admin_ban_analysis(v):
 
 
 
-@app.route('/admin/deploy', methods=["GET"])
-@admin_level_required(3)
-def admin_deploy(v):
+# @app.route('/admin/deploy', methods=["GET"])
+# @admin_level_required(3)
+# def admin_deploy(v):
 
-    def reload_function():
-        time.sleep(3)
-        subprocess.run(". ~/go.sh", shell=True)
+#     def reload_function():
+#         time.sleep(3)
+#         subprocess.run(". ~/go.sh", shell=True)
 
-    thread=threading.Thread(target=reload_function, daemon=True)
-    thread.start()
+#     thread=threading.Thread(target=reload_function, daemon=True)
+#     thread.start()
 
-    return 'Reloading!'
+#     return 'Reloading!'
 
-@app.route('/admin/test', methods=["GET"])
-@admin_level_required(3)
-def admin_test(v):
+# @app.route('/admin/test', methods=["GET"])
+# @admin_level_required(3)
+# def admin_test(v):
 
 
-    return "1"
+#     return "1"
