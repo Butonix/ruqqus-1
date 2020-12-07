@@ -4,7 +4,7 @@ import calendar
 from sqlalchemy import func
 from sqlalchemy.orm import lazyload
 import threading
-import os.system
+import os
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.alerts import *
@@ -587,5 +587,5 @@ def admin_deploy(v):
 
     thread=threading.Thread(target=reload_function, daemon=True)
     thread.start()
-    
+
     return 'reloading'
