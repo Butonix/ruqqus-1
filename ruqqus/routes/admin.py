@@ -588,4 +588,4 @@ def admin_deploy(v):
     thread=threading.Thread(target=reload_function, daemon=True)
     thread.start()
 
-    return 'reloading'
+    return 'Reloading!'
