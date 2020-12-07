@@ -4,7 +4,7 @@ import calendar
 from sqlalchemy import func
 from sqlalchemy.orm import lazyload
 import threading
-import os
+import subprocess
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.alerts import *
@@ -582,7 +582,7 @@ def admin_deploy(v):
 
     def reload_function():
         time.sleep(3)
-        os.system('source ~/go.sh')
+        subprocess.run(". ~/go.sh")
 
     thread=threading.Thread(target=reload_function, daemon=True)
     thread.start()
