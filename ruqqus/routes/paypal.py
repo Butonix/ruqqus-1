@@ -216,6 +216,9 @@ def gift_post_pid(pid, v):
     if not coins:
         return jsonify({"error":"You need to actually give coins."}), 400
 
+    if coins <0:
+        return jsonify({"error":"What are you doing, trying to *charge* someone coins?."}), 400
+
     if not v.coin_balance>=coins:
         return jsonify({"error":"You don't have that many coins to give!"}), 403
 
@@ -282,6 +285,9 @@ def gift_comment_pid(cid, v):
 
     if not coins:
         return jsonify({"error":"You need to actually give coins."}), 400
+
+    if coins <0:
+        return jsonify({"error":"What are you doing, trying to *charge* someone coins?."}), 400
 
     if not v.coin_balance>=coins:
         return jsonify({"error":"You don't have that many coins to give!"}), 403
