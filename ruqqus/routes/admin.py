@@ -571,4 +571,4 @@ def admin_ban_analysis(v):
             seen_so_far.add(alt.id)
 
 
-    return len(uniques)
+    return str(len(uniques))
