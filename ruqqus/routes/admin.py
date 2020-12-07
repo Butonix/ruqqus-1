@@ -554,15 +554,15 @@ def admin_ban_analysis(v):
 
         if user.id not in seen_so_far:
 
-            uniques.append(user.id)
+            uniques.add(user.id)
 
         else:
-            seen_so_far.append(user.id)
+            seen_so_far.add(user.id)
 
 
         for alt in user.alts:
 
-            seen_so_far.append(alt.id)
+            seen_so_far.add(alt.id)
 
 
     return str(len(uniques))
