@@ -546,8 +546,8 @@ def admin_appdata(v):
 def admin_ban_analysis(v):
 
 
-    def banned_count():
-        banned_accounts = g.db.query(User).filter(User.is_banned>0, User.unban_utc==0).all()
+    def banned_count(db):
+        banned_accounts = db.query(User).filter(User.is_banned>0, User.unban_utc==0).all()
 
         uniques=set()
 
@@ -575,7 +575,7 @@ def admin_ban_analysis(v):
 
         send_notification(v, f"There are {len(uniques)} unique banned accounts")
 
-    thread=threading.Thread(target=banned_count)
+    thread=threading.Thread(target=banned_count, args=(g.db,))
     thread.start()
 
     return "Count started"
