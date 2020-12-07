@@ -539,3 +539,31 @@ def admin_appdata(v):
         return render_template(
             "admin/app_data.html",
             v=v)
+
+@app.route("admin/ban_analysis")
+@admin_level_required(3)
+def admin_ban_analysis(v):
+
+    banned_accounts = g.db.query(User).filter(User.is_banned>0, User.unban_utc==0).all()
+
+    uniques=set()
+
+    seen_so_far=set()
+
+    for user in banned_accounts:
+
+        if user.id not in seen_so_far:
+
+            uniques.append(user.id)
+
+        else:
+            seen_so_far.append(user.id)
+
+
+        for alt in user.alts:
+
+            seen_so_far.append(alt.id)
+
+
+    return str(len(uniques))
+
