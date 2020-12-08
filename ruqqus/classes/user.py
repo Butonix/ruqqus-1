@@ -682,7 +682,7 @@ class User(Base, Stndrd, Age_times):
         return {'username': self.username,
                 'permalink': self.permalink,
                 'is_banned': False,
-                'is_premium': self.is_premium_no_renew,
+                'is_premium': self.has_premium_no_renew,
                 'created_utc': self.created_utc,
                 'id': self.base36id,
                 'is_private': self.is_private,
