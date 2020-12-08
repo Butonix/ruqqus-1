@@ -370,7 +370,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'created_utc': self.created_utc,
                 'edited_utc': self.edited_utc or 0,
                 'guild_name': self.board.name,
-                'embed_url': self.embed_url,
                 'is_archived': self.is_archived,
                 'original_guild_name': self.original_board.name if not self.board_id == self.original_board_id else None,
                 'comment_count': self.comment_count,
@@ -392,6 +391,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         data["author"]=self.author.json_core
         data["guild"]=self.board.json_core
         data["original_guild"]=self.original_board.json_core if not self.board_id==self.original_board_id else None
+        data["comment_count"]: self.comment_count
 
     
         if "replies" in self.__dict__:
