@@ -156,9 +156,9 @@ def settings_security_post(v):
         #counteract gmail username+2 and extra period tricks - convert submitted email to actual inbox
         if new_email.endswith("@gmail.com"):
             parts=re.split("\+.*@", new_email)
-            username=parts[0]
-            username=username.replace(".","")
-            new_email=f"{username}@gmail.com"
+            gmail_username=parts[0]
+            gmail_username=username.replace(".","")
+            new_email=f"{gmail_username}@gmail.com"
         if new_email == v.email:
             return redirect("/settings/security?error=" +
                             escape("That email is already yours!"))
