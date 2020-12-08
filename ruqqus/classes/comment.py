@@ -264,7 +264,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'id': self.base36id,
                 'fullname': self.fullname,
                 'level': self.level,
-                'parent_comment_id': base36encode(self.parent_comment_id),
                 'author_name': self.author.username if not self.author.is_deleted else None,
                 'body': self.body,
                 'body_html': self.body_html,
@@ -284,6 +283,9 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                 'downvotes': self.downvotes_fuzzed,
                 'award_count': self.award_count
                 }
+
+            if self.level>=2:
+                data['parent_comment_id']= base36encode(self.parent_comment_id),
 
 
         return data
