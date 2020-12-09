@@ -204,11 +204,31 @@ class PromoCode(Base):
 				cents -= self.flat_cents_off
 			return cents
 
-		elif self.flat_cents_off:
-			return cents-self.flat_cents_off
-
 		else:
 			return cents
+
+	@property
+	def display_flat_off(self):
+		s=str(self.flat_cents_off)
+		d=s[0:-2]
+		c=s[-2:]
+		return f"${d}.{c}"
+
+	@property
+	def display_flat_min(self):
+		s=str(self.flat_cents_min)
+		d=s[0:-2]
+		c=s[-2:]
+		return f"${d}.{c}"
+
+	@property
+	def promo_text(self):
+
+		if self.percent_off:
+			return f"Save {self.percent_off}% on all purchases."
+
+		elif self.flat_cents_off and self.flat_cents_min:
+			return f"Save {self.display_flat_off} on any purchase over {self.display_flat_min}."
 	
 
 

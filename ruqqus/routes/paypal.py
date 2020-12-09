@@ -47,9 +47,15 @@ def shop_get_price():
 
     coins=int(request.args.get("coins"))
 
-    code=request.args.get("promo",None)
+    code=request.args.get("promo","")
+    promo=get_promocode(code)
 
-    return jsonify({"price":coins_to_price_cents(coins, code=code)/100})
+    data={
+        "price":coins_to_price_cents(coins, code=promo)/100,
+        "promo": promo.promo_text if promo else ''
+        }
+
+    return jsonify(data)
 
 @app.route("/shop/coin_balance", methods=["GET"])
 @auth_required
