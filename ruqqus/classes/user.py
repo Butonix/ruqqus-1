@@ -26,6 +26,7 @@ from .subscriptions import *
 from .userblock import *
 from .badges import *
 from .clients import *
+from .paypal import PayPalTxn
 from ruqqus.__main__ import Base, cache
 
 
@@ -131,6 +132,11 @@ class User(Base, Stndrd, Age_times):
         "SaveRelationship",
         lazy="dynamic",
         primaryjoin="User.id==SaveRelationship.user_id")
+
+    _transactions = relationship(
+        "PayPalTxn",
+        lazy="dynamic",
+        primaryjoin="PayPalTxn.user_id==User.id")
 
     # properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
@@ -938,3 +944,9 @@ class User(Base, Stndrd, Age_times):
     @property
     def boards_modded_ids(self):
         return [x.id for x in self.boards_modded]
+
+    @property
+    def txn_history(self):
+        
+        return self._transactions.filter_by(status=3).order_by(PayPalTxn.created_utc.desc()).all()
+    

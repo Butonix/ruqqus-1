@@ -595,3 +595,21 @@ def get_txn(paypal_id):
 
     return txn
 
+def get_txid(txid):
+
+    txn= g.db.query(PayPalTxn).filter_by(id=base36decode(txid), status=3).first()
+
+    if not txn:
+        abort(404)
+
+    return txn
+
+
+def get_promocode(code):
+
+    code = code.replace('\\', '')
+    code = code.replace("_", "\_")
+
+    code = g.db.query(PromoCode).filter(PromoCode.code.ilike(code)).first()
+
+    return code

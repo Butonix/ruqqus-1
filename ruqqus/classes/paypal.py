@@ -141,7 +141,7 @@ class PayPalClient():
 		return status=="COMPLETED"
 
 
-class PayPalTxn(Base, Stndrd):
+class PayPalTxn(Base, Stndrd, Age_times):
 
 	__tablename__="paypal_txns"
 
@@ -151,10 +151,12 @@ class PayPalTxn(Base, Stndrd):
 	paypal_id=Column(String)
 	usd_cents=Column(Integer)
 	coin_count=Column(Integer)
+	promo_id=Column(Integer, ForeignKey("promocodes.id"))
 
 	status=Column(Integer, default=0) #0=initialized 1=created, 2=authorized, 3=captured, -1=failed, -2=reversed 
 
 	user=relationship("User", lazy="joined")
+	promo=relationship("PromoCode", lazy="joined")
 
 	@property
 	def approve_url(self):
@@ -165,6 +167,87 @@ class PayPalTxn(Base, Stndrd):
 	def paypal_url(self):
 
 		return f"/v2/checkout/orders/{self.paypal_id}"
+
+	@property
+	def permalink(self):
+		return f"/paypaltxn/{self.base36id}"
+
+	@property
+	def display_usd(self):
+		s=str(self.usd_cents)
+		d=s[0:-2] or '0'
+		c=s[-2:]
+		return f"${d}.{c}"
+
+class PromoCode(Base):
+
+	__tablename__="promocodes"
+
+	id=Column(Integer, primary_key=True)
+	code=Column(String(64))
+	is_active=Column(Boolean)
+	percent_off=Column(Integer, default=None)
+	flat_cents_off=Column(Integer, default=None)
+	flat_cents_min=Column(Integer, default=None)
+	promo_start_utc=Column(Integer, default=None)
+	promo_end_utc=Column(Integer, default=None)
+
+	def adjust_price(self, cents):
+
+		now=int(time.time())
+
+		if self.promo_start_utc and now < self.promo_start_utc:
+			return cents
+
+		elif self.promo_end_utc and now > self.promo_end_utc:
+			return cents
+
+		if not self.is_active:
+			return cents
+
+		if self.percent_off:
+			x = (100-self.percent_off)/100
+			return int(cents * x)
+
+		if self.flat_cents_off:
+			if cents >= self.flat_cents_min:
+				cents -= self.flat_cents_off
+			return cents
+
+		else:
+			return cents
+
+	@property
+	def display_flat_off(self):
+		s=str(self.flat_cents_off)
+		d=s[0:-2] or '0'
+		c=s[-2:]
+		return f"${d}.{c}"
+
+	@property
+	def display_flat_min(self):
+		s=str(self.flat_cents_min)
+		d=s[0:-2] or '0'
+		c=s[-2:]
+		return f"${d}.{c}"
+
+	@property
+	def promo_text(self):
+
+		now=int(time.time())
+
+		if self.promo_start_utc and now < self.promo_start_utc:
+			return f"This promotion hasn't started yet. Try again later."
+
+		if self.promo_end_utc and now > self.promo_end_utc:
+			return f"This promotion has already ended. Sorry about that."
+
+		if self.percent_off:
+			return f"Save {self.percent_off}% on all purchases with code {self.code}"
+
+		elif self.flat_cents_off and self.flat_cents_min:
+			return f"Save {self.display_flat_off} on any purchase over {self.display_flat_min} with code {self.code}"
+	
 
 
 class AwardRelationship(Base):

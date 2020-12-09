@@ -1834,11 +1834,13 @@ coin_quote = function() {
 
   var coins = document.getElementById('select-coins');
   var btn = document.getElementById('buy-coin-btn')
+  var promo=document.getElementById('promo-code')
+  var promotext=document.getElementById('promo-text')
 
   coin_count = coins.selectedOptions[0].value
 
   var xhr = new XMLHttpRequest();
-  xhr.open('get', '/shop/get_price?coins='+coin_count)
+  xhr.open('get', '/shop/get_price?coins='+coin_count+'&promo='+promo.value)
 
   xhr.onload=function(){
     var s = 'Buy '+ coin_count + ' Coin';
@@ -1848,6 +1850,8 @@ coin_quote = function() {
     s=s+': $'+JSON.parse(xhr.response)["price"];
 
     btn.value=s;
+
+    promotext.innerText=JSON.parse(xhr.response)["promo"];
   }
   xhr.send()
 }

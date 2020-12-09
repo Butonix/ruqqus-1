@@ -13,29 +13,49 @@ from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.alerts import send_notification
 from ruqqus.helpers.base36 import *
+from ruqqus.helpers.get import *
 from ruqqus.__main__ import app
 
 CLIENT=PayPalClient()
 
-def coins_to_price_cents(n):
+def coins_to_price_cents(n, code=None):
 
     if n>=52:
-        return 100*n - 1001
+        price= 100*n - 1001
     elif n>=26:
-        return 100*n-401
+        price= 100*n-401
     elif n>=12:
-        return 100*n-101
+        price= 100*n-101
     elif n >=4:
-        return 100*n-1
+        price= 100*n-1
     else:
-        return 100*n+49
+        price= 100*n+49
+
+    if code:
+        if isinstance(code, str):
+            promo=get_promocode(code)
+        else:
+            promo=code
+
+        if promo:
+            price=promo.adjust_price(price)
+
+    return price
 
 @app.route("/shop/get_price", methods=["GET"])
 def shop_get_price():
 
     coins=int(request.args.get("coins"))
 
-    return jsonify({"price":coins_to_price_cents(coins)/100})
+    code=request.args.get("promo","")
+    promo=get_promocode(code)
+
+    data={
+        "price":coins_to_price_cents(coins, code=promo)/100,
+        "promo": promo.promo_text if promo and promo.is_active else ''
+        }
+
+    return jsonify(data)
 
 @app.route("/shop/coin_balance", methods=["GET"])
 @auth_required
@@ -51,11 +71,15 @@ def shop_buy_coins(v):
 
     coin_count=int(request.form.get("coin_count",1))
 
+    code=request.form.get("promo","")
+    promo=get_promocode(code)
+
     new_txn=PayPalTxn(
         user_id=v.id,
         created_utc=int(time.time()),
         coin_count=coin_count,
-        usd_cents=coins_to_price_cents(coin_count)
+        usd_cents=coins_to_price_cents(coin_count, code=promo),
+        promo_id= promo.id if promo else None
         )
 
     g.db.add(new_txn)
@@ -107,6 +131,8 @@ def shop_buy_coins_completed(v):
 
     if not CLIENT.capture(txn):
         abort(402)
+
+    txn.created_utc=int(time.time())
 
     g.db.add(txn)
     g.db.flush()
@@ -320,3 +346,15 @@ def gift_comment_pid(cid, v):
         pass
 
     return jsonify({"message":"Tip Successful!"})
+
+
+@app.route("/paypaltxn/<txid>")
+@auth_required
+def paypaltxn_txid(txid, v):
+
+    txn = get_txid(txid)
+
+    if txn.user_id != v.id and v.admin_level<4:
+        abort(403)
+
+    return render_template("single_txn.html", v=v, txns=[txn])
