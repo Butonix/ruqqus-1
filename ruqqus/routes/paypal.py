@@ -320,3 +320,15 @@ def gift_comment_pid(cid, v):
         pass
 
     return jsonify({"message":"Tip Successful!"})
+
+
+@app.route("/paypaltxn/<txid>")
+@auth_required
+def paypaltxn_txid(txid, v)
+
+    txn = get_txid(txid)
+
+    if txn.user_id != v.id and v.admin_level<4:
+        abort(403)
+
+    return render_template("single_txn.html", v=v, txns=[txn])
