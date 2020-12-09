@@ -175,7 +175,7 @@ class PayPalTxn(Base, Stndrd, Age_times):
 	@property
 	def display_usd(self):
 		s=str(self.usd_cents)
-		d=s[0:-2]
+		d=s[0:-2] or '0'
 		c=s[-2:]
 		return f"${d}.{c}"
 
@@ -210,14 +210,14 @@ class PromoCode(Base):
 	@property
 	def display_flat_off(self):
 		s=str(self.flat_cents_off)
-		d=s[0:-2]
+		d=s[0:-2] or '0'
 		c=s[-2:]
 		return f"${d}.{c}"
 
 	@property
 	def display_flat_min(self):
 		s=str(self.flat_cents_min)
-		d=s[0:-2]
+		d=s[0:-2] or '0'
 		c=s[-2:]
 		return f"${d}.{c}"
 
