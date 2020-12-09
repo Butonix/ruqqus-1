@@ -236,10 +236,10 @@ class PromoCode(Base):
 
 		now=int(time.time())
 
-		if self.promo_start_utc and now < promo_start_utc:
+		if self.promo_start_utc and now < self.promo_start_utc:
 			return f"This promotion hasn't started yet. Try again later."
 
-		if self.promo_end_utc and now > promo_end_utc:
+		if self.promo_end_utc and now > self.promo_end_utc:
 			return f"This promotion has already ended. Sorry about that."
 
 		if self.percent_off:
