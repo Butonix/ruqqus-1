@@ -32,7 +32,11 @@ def coins_to_price_cents(n, code=None):
         price= 100*n+49
 
     if code:
-        promo=get_promocode(code)
+        if isinstance(code, str):
+            promo=get_promocode(code)
+        else:
+            promo=code
+
         if promo:
             price=promo.adjust_price(price)
 
@@ -62,12 +66,14 @@ def shop_buy_coins(v):
     coin_count=int(request.form.get("coin_count",1))
 
     code=request.args.get("promo",None)
+    promo=get_promocode(code)
 
     new_txn=PayPalTxn(
         user_id=v.id,
         created_utc=int(time.time()),
         coin_count=coin_count,
-        usd_cents=coins_to_price_cents(coin_count, code=code)
+        usd_cents=coins_to_price_cents(coin_count, code=promo),
+        promo_id= promo.id if promo else None
         )
 
     g.db.add(new_txn)
