@@ -225,10 +225,10 @@ class PromoCode(Base):
 	def promo_text(self):
 
 		if self.percent_off:
-			return f"Save {self.percent_off}% on all purchases."
+			return f"Save {self.percent_off}% on all purchases with code {self.code}"
 
 		elif self.flat_cents_off and self.flat_cents_min:
-			return f"Save {self.display_flat_off} on any purchase over {self.display_flat_min}."
+			return f"Save {self.display_flat_off} on any purchase over {self.display_flat_min} with code {self.code}"
 	
 
 
