@@ -110,7 +110,7 @@
                       <option value="52">42 Coins + 10 Free</option>
                     </select>
                     <label for="promo-code">Promo Code</label>
-                    <input id="promo-code" type="text" placeholder="Optional" name="promo" onchange="coin_quote()">
+                    <input id="promo-code" class="form-control" type="text" placeholder="Optional" name="promo" onchange="coin_quote()">
                 {% if not v.has_premium %}
                   <p class="text-small-extra text-muted">Note that the first coin of your purchase will be automatically redeemed.</p>
                 {% endif %}
