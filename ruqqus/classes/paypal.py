@@ -234,6 +234,8 @@ class PromoCode(Base):
 	@property
 	def promo_text(self):
 
+		now=int(time.time())
+
 		if self.promo_start_utc and now < promo_start_utc:
 			return f"This promotion hasn't started yet. Try again later."
 
