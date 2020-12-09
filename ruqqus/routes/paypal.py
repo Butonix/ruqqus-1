@@ -324,7 +324,7 @@ def gift_comment_pid(cid, v):
 
 @app.route("/paypaltxn/<txid>")
 @auth_required
-def paypaltxn_txid(txid, v)
+def paypaltxn_txid(txid, v):
 
     txn = get_txid(txid)
 
