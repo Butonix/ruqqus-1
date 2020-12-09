@@ -151,10 +151,12 @@ class PayPalTxn(Base, Stndrd, Age_times):
 	paypal_id=Column(String)
 	usd_cents=Column(Integer)
 	coin_count=Column(Integer)
+	promo_id=Column(Integer, ForeignKey("promocodes.id"))
 
 	status=Column(Integer, default=0) #0=initialized 1=created, 2=authorized, 3=captured, -1=failed, -2=reversed 
 
 	user=relationship("User", lazy="joined")
+	promo=relationship("PromoCode", lazy="joined")
 
 	@property
 	def approve_url(self):
