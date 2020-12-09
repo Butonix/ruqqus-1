@@ -106,7 +106,7 @@ class Age_times:
             return f"{days} day{'s' if days > 1 else ''} ago"
 
         now = time.gmtime()
-        ctd = time.gmtime(self.created_utc)
+        ctd = time.gmtime(self.edited_utc)
         months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
 
         if months < 12:
