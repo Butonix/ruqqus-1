@@ -65,7 +65,7 @@ def shop_buy_coins(v):
 
     coin_count=int(request.form.get("coin_count",1))
 
-    code=request.args.get("promo","")
+    code=request.form.get("promo","")
     promo=get_promocode(code)
 
     new_txn=PayPalTxn(
