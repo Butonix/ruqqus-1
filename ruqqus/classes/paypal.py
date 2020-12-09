@@ -199,7 +199,7 @@ class PromoCode(Base):
 			x = (100-self.percent_off)/100
 			return int(cents * x)
 
-		elif self.flat_cents_off and self.flat_cents_min:
+		if self.flat_cents_off:
 			if cents >= self.flat_cents_min:
 				cents -= self.flat_cents_off
 			return cents
