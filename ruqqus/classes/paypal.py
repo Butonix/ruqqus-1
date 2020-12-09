@@ -176,7 +176,35 @@ class PayPalTxn(Base, Stndrd, Age_times):
 		d=s[0:-2]
 		c=s[-2:]
 		return f"${d}.{c}"
-	
+
+class PromoCode(Base):
+
+	id=Column(Integer, primary_key=True)
+	code=Column(String(64))
+	is_active=Column(Boolean)
+	percent_off=Column(Integer, default=None)
+	flat_cents_off=Column(Integer, default=None)
+	flat_cents_min=Column(Integer, default=None)
+
+	def adjust_price(self, cents):
+
+		if not self.is_active:
+			return cents
+
+		if self.percent_off:
+			x = (100-self.percent_off)/100
+			return int(cents * x)
+
+		elif self.flat_cents_off and self.flat_cents_min:
+			if cents >= self.flat_cents_min:
+				cents -= self.flat_cents_off
+			return cents
+
+		elif self.flat_cents_off:
+			return cents-self.flat_cents_off
+
+		else:
+			return cents
 	
 
 
