@@ -52,7 +52,7 @@ def shop_get_price():
 
     data={
         "price":coins_to_price_cents(coins, code=promo)/100,
-        "promo": promo.promo_text if promo else ''
+        "promo": promo.promo_text if promo and promo.is_active else ''
         }
 
     return jsonify(data)
