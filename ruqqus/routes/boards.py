@@ -375,9 +375,6 @@ def user_kick_pid(pid, v):
 
     post = get_post(pid)
 
-    if not post.board_id==board.id:
-        abort(400)
-
     current_board = post.board
 
     if not post.author_id == v.id:
