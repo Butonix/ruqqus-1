@@ -1,6 +1,8 @@
+
+
 {% for t in txns %}
 
-<div id="post-{{ p.base36id }}" class="card{% if p.is_banned %} banned{% endif %}{% if p.is_deleted %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}{% if p.is_nsfl %} nsfl {% endif %}">
+<div id="post-{{ p.base36id }}" class="card">
 
   <div class="d-flex flex-row-reverse flex-md-row flex-nowrap justify-content-end"> 
 
@@ -8,11 +10,11 @@
 
           <div style="height: 21px" class="d-block d-md-none mb-1">
 
-            <div class="post-meta text-left x-scroll" style="overflow-x: scroll;">Transaction ID: {{ t.base36id }} · <span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ t.created_date }}">{{ t.age_string }}</span> by <a href="/@{{ p.author.username }}" class="user-name">{{ p.author.username }}</a>{% if p.author.title %}{{ p.author.title.rendered | safe }}
+            <div class="post-meta text-left x-scroll" style="overflow-x: scroll;">Transaction ID: {{ t.base36id }} · <span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ t.created_date }}">{{ t.age_string }}</span> by <a href="/@{{ p.author.username }}" class="user-name">{{ p.author.username }}</a>{% if p.author.title %}{{ p.author.title.rendered | safe }}{% endif %}
           </div>
         </div>
 
-        <div class="post-meta text-left d-none d-md-block mb-md-2">Transaction ID: {{ t.base36id }}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ t.created_datetime }}">{{ t.age_string }}</span> by <a href="/@{{ p.author.username }}" class="user-name">{{ p.author.username }}</a>{% if p.author.title %}{{ p.author.title.rendered | safe }}
+        <div class="post-meta text-left d-none d-md-block mb-md-2">Transaction ID: {{ t.base36id }}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ t.created_datetime }}">{{ t.age_string }}</span> by <a href="/@{{ p.author.username }}" class="user-name">{{ p.author.username }}</a>{% if p.author.title %}{{ p.author.title.rendered | safe }}{% endif %}
 
       </div>
 
