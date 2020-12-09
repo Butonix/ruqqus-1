@@ -227,6 +227,9 @@ def mod_distinguish_post(bid, pid, board, v):
 
     post = get_post(pid, v=v)
 
+    if not post.board_id==board.id:
+        abort(400)
+
     if post.author_id != v.id:
         abort(403)
 
@@ -244,6 +247,9 @@ def mod_distinguish_post(bid, pid, board, v):
 def mod_distinguish_comment(bid, cid, board, v):
 
     comment = get_comment(cid, v=v)
+
+    if not comment.post.board_id==board.id:
+        abort(400)
 
     if comment.author_id != v.id:
         abort(403)
@@ -537,6 +543,12 @@ def mod_remove_username(bid, username, board, v):
     if not u_mod:
         abort(400)
     elif not v_mod:
+        abort(400)
+
+    if not u_mod.board_id==board.id:
+        abort(400)
+
+    if not v_mod.board_id==board.id:
         abort(400)
 
     if v_mod.id > u_mod.id:
@@ -1152,6 +1164,9 @@ def mod_unapprove_bid_user(bid, board, v):
     x = board.has_contributor(user)
     if not x:
         abort(409)
+
+    if not x.board_id==board.id:
+        abort(400)
 
     x.is_active = False
 
