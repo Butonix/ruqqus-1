@@ -126,6 +126,8 @@ def shop_buy_coins_completed(v):
     if not CLIENT.capture(txn):
         abort(402)
 
+    txn.created_utc=int(time.time())
+
     g.db.add(txn)
     g.db.flush()
 
