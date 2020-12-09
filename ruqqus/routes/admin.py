@@ -575,6 +575,21 @@ def admin_ban_analysis(v):
     return str(len(uniques))
 
 
+@app.route("/admin/paypaltxns", methods=["GET"])
+@admin_level_required(4)
+def admin_paypaltxns(v):
+
+    page=int(request.args.get("page",1))
+
+    txns = g.db.query(PayPalTxn).filter_by(status=3).order_by(PayPalTxn.created_utc.desc())
+
+    txns = [x for x in txns.offset(100*(page-1)).limit(101).all()]
+
+    next_exists=len(txns)==101
+    txns=txns[0:100]
+
+    return render_template("single_txn.html", v=v, txns=txns, next_exists=next_exists)
+
 
 # @app.route('/admin/deploy', methods=["GET"])
 # @admin_level_required(3)
