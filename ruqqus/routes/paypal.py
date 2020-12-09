@@ -13,29 +13,39 @@ from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.alerts import send_notification
 from ruqqus.helpers.base36 import *
+from ruqqus.helpers.get import *
 from ruqqus.__main__ import app
 
 CLIENT=PayPalClient()
 
-def coins_to_price_cents(n):
+def coins_to_price_cents(n, code=None):
 
     if n>=52:
-        return 100*n - 1001
+        price= 100*n - 1001
     elif n>=26:
-        return 100*n-401
+        price= 100*n-401
     elif n>=12:
-        return 100*n-101
+        price= 100*n-101
     elif n >=4:
-        return 100*n-1
+        price= 100*n-1
     else:
-        return 100*n+49
+        price= 100*n+49
+
+    if code:
+        promo=get_promocode(code)
+        if promo:
+            price=promo.adjust_price(price)
+
+    return price
 
 @app.route("/shop/get_price", methods=["GET"])
 def shop_get_price():
 
     coins=int(request.args.get("coins"))
 
-    return jsonify({"price":coins_to_price_cents(coins)/100})
+    code=request.args.get("promo",None)
+
+    return jsonify({"price":coins_to_price_cents(coins, code=code)/100})
 
 @app.route("/shop/coin_balance", methods=["GET"])
 @auth_required

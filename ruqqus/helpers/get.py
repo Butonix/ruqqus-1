@@ -604,3 +604,12 @@ def get_txid(txid):
 
     return txn
 
+
+def get_promocode(code):
+
+    code = code.replace('\\', '')
+    code = code.replace("_", "\_")
+
+    code = g.db.query(PromoCode).filter(PromoCode.code.ilike(code)).first()
+
+    return code

@@ -179,6 +179,8 @@ class PayPalTxn(Base, Stndrd, Age_times):
 
 class PromoCode(Base):
 
+	__tablename__="promocodes"
+
 	id=Column(Integer, primary_key=True)
 	code=Column(String(64))
 	is_active=Column(Boolean)
