@@ -132,6 +132,11 @@ class User(Base, Stndrd, Age_times):
         lazy="dynamic",
         primaryjoin="User.id==SaveRelationship.user_id")
 
+    _transactions = relationship(
+        "PayPalTxn",
+        lazy="dynamic",
+        primaryjoin="PayPalTxn.user_id==User.id")
+
     # properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
     comment_energy = deferred(Column(Integer, server_default=FetchedValue()))
@@ -938,3 +943,9 @@ class User(Base, Stndrd, Age_times):
     @property
     def boards_modded_ids(self):
         return [x.id for x in self.boards_modded]
+
+    @property
+    def txn_history(self):
+        
+        return self._transactions.filter_by(status=3).order_by(txns.created_utc.desc()).all()
+    

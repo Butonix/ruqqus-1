@@ -568,3 +568,9 @@ def settings_remove_discord(v):
 def settings_content_get(v):
 
     return render_template("settings_filters.html", v=v)
+
+@app.route("/settings/purchase_history", methods=["GET"])
+@auth_required
+def settings_purchase_history(v):
+
+    return render_template("settings_txnlist.html", v=v)
