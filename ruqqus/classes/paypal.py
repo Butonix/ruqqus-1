@@ -193,13 +193,16 @@ class PromoCode(Base):
 	def adjust_price(self, cents):
 
 		if not self.is_active:
+			print('inactive')
 			return cents
 
 		if self.percent_off:
+			print('percent')
 			x = (100-self.percent_off)/100
 			return int(cents * x)
 
 		if self.flat_cents_off:
+			print('flat')
 			if cents >= self.flat_cents_min:
 				cents -= self.flat_cents_off
 			return cents
