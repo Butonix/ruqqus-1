@@ -1851,7 +1851,7 @@ coin_quote = function() {
 
     btn.value=s;
 
-    promotext.innerText=JSON.parse(xhr.respose)["promo"];
+    promotext.innerText=JSON.parse(xhr.response)["promo"];
   }
   xhr.send()
 }
