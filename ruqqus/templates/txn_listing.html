@@ -2,7 +2,7 @@
 
 {% for t in txns %}
 
-<div id="post-{{ t.base36id }}" class="card">
+<div id="txn-{{ t.base36id }}" class="card">
 
   <div class="d-flex flex-row-reverse flex-md-row flex-nowrap justify-content-end"> 
 
@@ -10,11 +10,11 @@
 
           <div style="height: 21px" class="d-block d-md-none mb-1">
 
-            <div class="post-meta text-left x-scroll" style="overflow-x: scroll;">Transaction ID: {{ t.base36id }} · <span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ t.created_date }}">{{ t.age_string }}</span> by <a href="/@{{ t.user.username }}" class="user-name">{{ t.user.username }}</a>{% if t.user.title %}{{ t.user.title.rendered | safe }}{% endif %}
+            <div class="post-meta text-left x-scroll" style="overflow-x: scroll;"><span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ t.created_date }}">{{ t.age_string }}</span> by <a href="/@{{ t.user.username }}" class="user-name">{{ t.user.username }}</a>{% if t.user.title %}{{ t.user.title.rendered | safe }}{% endif %}
           </div>
         </div>
 
-        <div class="post-meta text-left d-none d-md-block mb-md-2">Transaction ID: {{ t.base36id }}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ t.created_datetime }}">{{ t.age_string }}</span> by <a href="/@{{ t.user.username }}" class="user-name">{{ t.user.username }}</a>{% if t.user.title %}{{ t.user.title.rendered | safe }}{% endif %}
+        <div class="post-meta text-left d-none d-md-block mb-md-2"><span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ t.created_datetime }}">{{ t.age_string }}</span> by <a href="/@{{ t.user.username }}" class="user-name">{{ t.user.username }}</a>{% if t.user.title %}{{ t.user.title.rendered | safe }}{% endif %}
 
       </div>
 
@@ -24,7 +24,7 @@
 
 
 
-      <div class="post-actions mt-2 d-none d-md-block">
+      <div class="post-actions mt-2 d-block">
         <ul class="list-inline text-right d-flex">
 
           <li class="list-inline-item"><a href="{{ t.permalink }}"><i class="fas fa-link"></i>Permalink</a></li>
