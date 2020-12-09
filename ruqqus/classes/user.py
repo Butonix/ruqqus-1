@@ -26,6 +26,7 @@ from .subscriptions import *
 from .userblock import *
 from .badges import *
 from .clients import *
+from .paypal import PayPalTxn
 from ruqqus.__main__ import Base, cache
 
 
