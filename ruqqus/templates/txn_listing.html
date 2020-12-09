@@ -1,0 +1,56 @@
+{% for t in txns %}
+
+<div id="post-{{ p.base36id }}" class="card{% if p.is_banned %} banned{% endif %}{% if p.is_deleted %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}{% if p.is_nsfl %} nsfl {% endif %}">
+
+  <div class="d-flex flex-row-reverse flex-md-row flex-nowrap justify-content-end"> 
+
+        <div class="card-block text-left x-scroll-parent my-md-auto w-100">
+
+          <div style="height: 21px" class="d-block d-md-none mb-1">
+
+            <div class="post-meta text-left x-scroll" style="overflow-x: scroll;">Transaction ID: {{ t.base36id }} · <span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ t.created_date }}">{{ t.age_string }}</span> by <a href="/@{{ p.author.username }}" class="user-name">{{ p.author.username }}</a>{% if p.author.title %}{{ p.author.title.rendered | safe }}
+          </div>
+        </div>
+
+        <div class="post-meta text-left d-none d-md-block mb-md-2">Transaction ID: {{ t.base36id }}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ t.created_datetime }}">{{ t.age_string }}</span> by <a href="/@{{ p.author.username }}" class="user-name">{{ p.author.username }}</a>{% if p.author.title %}{{ p.author.title.rendered | safe }}
+
+      </div>
+
+      <h5 class="card-title post-title text-left w-lg-75 mb-0 pb-0 pb-md-1">{{ t.coin_count }} Coins</h5>
+      <h5 class="card-title post-title text-left w-lg-75 mb-0 pb-0 pb-md-1">{{ t.display_usd }}</h5>
+
+
+
+
+      <div class="post-actions mt-2 d-none d-md-block">
+        <ul class="list-inline text-right d-flex">
+
+          <li class="list-inline-item"><a href="{{ p.permalink }}"><i class="fas fa-link"></i>Permalink</a></li>
+
+          <li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link }}"><i class="fas fa-copy"></i>Copy link</a></li>
+
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+
+</div>
+
+{% else %}
+
+
+<div class="row no-gutters">   
+  <div class="col">      
+    <div class="text-center py-7">
+      <div class="h4 p-2">You haven't bought any Coins yet. (<a href="/settings/premium">But you can change that!</a>)</div>
+    </div>       
+  </div>  
+</div>
+
+
+
+{% endfor %}
+

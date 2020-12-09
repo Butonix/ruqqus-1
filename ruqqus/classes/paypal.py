@@ -141,7 +141,7 @@ class PayPalClient():
 		return status=="COMPLETED"
 
 
-class PayPalTxn(Base, Stndrd):
+class PayPalTxn(Base, Stndrd, Age_times):
 
 	__tablename__="paypal_txns"
 
@@ -165,6 +165,19 @@ class PayPalTxn(Base, Stndrd):
 	def paypal_url(self):
 
 		return f"/v2/checkout/orders/{self.paypal_id}"
+
+	@property
+	def permalink(self):
+		return f"/paypaltxn/{self.base36id}"
+
+	@property
+	def display_usd(self):
+		s=str(self.usd_cents)
+		d=s[0:-2]
+		c=s[-2:]
+		return f"${d}.{c}"
+	
+	
 
 
 class AwardRelationship(Base):
