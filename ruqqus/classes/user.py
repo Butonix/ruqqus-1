@@ -947,5 +947,5 @@ class User(Base, Stndrd, Age_times):
     @property
     def txn_history(self):
         
-        return self._transactions.filter_by(status=3).order_by(txns.created_utc.desc()).all()
+        return self._transactions.filter_by(status=3).order_by(PayPalTxn.created_utc.desc()).all()
     
