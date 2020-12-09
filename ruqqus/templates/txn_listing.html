@@ -21,6 +21,10 @@
       <h5 class="card-title post-title text-left w-lg-75 mb-0 pb-0 pb-md-1">{{ t.coin_count }} Coin{{ 's' if t.coin_count >1 else '' }}</h5>
       <h5 class="card-title post-title text-left w-lg-75 mb-0 pb-0 pb-md-1">{{ t.display_usd }}</h5>
 
+      {% if t.promo %}
+      <div class="text-left text-muted">with promo code <code>{{ t.promo.code }}</code></div>
+      {% endif %}
+
 
 
 
