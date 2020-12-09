@@ -588,7 +588,13 @@ def admin_paypaltxns(v):
     next_exists=len(txns)==101
     txns=txns[0:100]
 
-    return render_template("single_txn.html", v=v, txns=txns, next_exists=next_exists)
+    return render_template(
+        "single_txn.html", 
+        v=v, 
+        txns=txns, 
+        next_exists=next_exists,
+        page=page
+        )
 
 
 # @app.route('/admin/deploy', methods=["GET"])
