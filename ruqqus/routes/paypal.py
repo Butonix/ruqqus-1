@@ -38,6 +38,7 @@ def coins_to_price_cents(n, code=None):
             promo=code
 
         if promo:
+            print(f"adjusting price with code {promo.code}")
             price=promo.adjust_price(price)
 
     return price
