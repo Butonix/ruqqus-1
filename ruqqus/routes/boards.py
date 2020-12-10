@@ -418,6 +418,14 @@ def mod_take_pid(pid, v):
     board = get_board(bid)
     post = get_post(pid)
 
+    #check cooldowns
+    if post.original_board_id != board.id:
+        if g.timestamp <  v.last_yank_utc + 3600:
+            return jsonify({'error':f"You've yanked a post recently. You need to wait 1 hour between yanks."}), 401
+        elif g.timestamp <  board.last_yank_utc + 3600:
+            return jsonify({'error':f"+{board.name} has yanked a post recently. The Guild needs to wait 1 hour between yanks."}), 401
+
+
     if board.is_banned:
         return jsonify({'error': f"+{board.name} is banned. You can't yank anything there."}), 403
 
