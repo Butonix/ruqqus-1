@@ -102,6 +102,8 @@ class User(Base, Stndrd, Age_times):
 
     discord_id=Column(String(64), default=None)
 
+    last_siege_utc=Column(Integer, default=0)
+
     moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
                                primaryjoin="BanRelationship.user_id==User.id")
