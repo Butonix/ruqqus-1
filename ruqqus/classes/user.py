@@ -97,12 +97,9 @@ class User(Base, Stndrd, Age_times):
     negative_balance_cents=Column(Integer, default=0)
 
     is_nofollow = Column(Boolean, default=False)
-
     custom_filter_list=Column(String(1000), default="")
-
     discord_id=Column(String(64), default=None)
-
-    last_siege_utc=Column(Integer, default=0)
+    last_yank_utc=Column(Integer, default=0)
 
     moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
