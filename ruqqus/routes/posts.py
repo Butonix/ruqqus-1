@@ -53,6 +53,7 @@ def incoming_post_shortlink(base36id=None):
 @app.route("/+<boardname>/post/<base36id>/", methods=["GET"])
 @app.route("/+<boardname>/post/<base36id>/<anything>", methods=["GET"])
 @app.route("/api/v1/post/<pid>")
+@app.route("/test/post/<pid>")
 @auth_desired
 @api("read")
 def post_base36id(boardname, base36id, anything=None, v=None):
@@ -63,7 +64,7 @@ def post_base36id(boardname, base36id, anything=None, v=None):
 
     board = post.board
     #if the guild name is incorrect, fix the link and redirect
-    
+
     if not boardname == board.name:
         return redirect(post.permalink)
 
