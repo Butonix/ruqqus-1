@@ -420,7 +420,7 @@ def mod_take_pid(pid, v):
 
     #check cooldowns
     now=int(time.time())
-    if post.original_board_id != board.id:
+    if post.original_board_id != board.id and post.author_id != v.id:
         if now <  v.last_yank_utc + 3600:
             return jsonify({'error':f"You've yanked a post recently. You need to wait 1 hour between yanks."}), 401
         elif now <  board.last_yank_utc + 3600:
