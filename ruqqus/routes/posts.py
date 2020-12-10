@@ -56,7 +56,7 @@ def incoming_post_shortlink(base36id=None):
 @app.route("/test/post/<base36id>")
 @auth_desired
 @api("read")
-def post_base36id(boardname, base36id, anything=None, v=None):
+def post_base36id(base36id, boardname=None, anything=None, v=None):
     
     post = get_post_with_comments(
         base36id, v=v, sort_type=request.args.get(
@@ -65,7 +65,7 @@ def post_base36id(boardname, base36id, anything=None, v=None):
     board = post.board
     #if the guild name is incorrect, fix the link and redirect
 
-    if not boardname == board.name:
+    if boardname and not boardname == board.name:
         return redirect(post.permalink)
 
     if board.is_banned and not (v and v.admin_level > 3):
