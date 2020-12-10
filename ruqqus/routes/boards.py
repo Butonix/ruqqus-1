@@ -419,10 +419,11 @@ def mod_take_pid(pid, v):
     post = get_post(pid)
 
     #check cooldowns
+    now=int(time.time())
     if post.original_board_id != board.id:
-        if g.timestamp <  v.last_yank_utc + 3600:
+        if now <  v.last_yank_utc + 3600:
             return jsonify({'error':f"You've yanked a post recently. You need to wait 1 hour between yanks."}), 401
-        elif g.timestamp <  board.last_yank_utc + 3600:
+        elif now <  board.last_yank_utc + 3600:
             return jsonify({'error':f"+{board.name} has yanked a post recently. The Guild needs to wait 1 hour between yanks."}), 401
 
 
@@ -452,11 +453,12 @@ def mod_take_pid(pid, v):
     g.db.add(post)
 
     if post.original_board_id != board.id:
-        board.last_yank_utc=g.timestamp
-        v.last_yank_utc=g.timestamp
+        board.last_yank_utc=now
+        v.last_yank_utc=now
 
         g.db.add(board)
         g.db.add(v)
+        g.db.commit()
 
     # clear board's listing caches
     cache.delete_memoized(Board.idlist, board)
