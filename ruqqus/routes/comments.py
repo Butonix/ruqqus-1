@@ -678,14 +678,3 @@ def mod_toggle_comment_pin(bid, cid, x, board, v):
     g.db.add(comment)
 
     return "", 204
-
-@app.route("/api/v1/post/<pid>/comments")
-@auth_desired
-@api("read")
-def api_v1_post_pid_comment(pid, v):
-
-    post=get_post_with_comments(pid, v=v)
-
-    post.tree_comments()
-
-    return jsonify(post.json)
