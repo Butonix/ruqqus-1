@@ -458,6 +458,9 @@ def mod_take_pid(pid, v):
 
         g.db.add(board)
         g.db.add(v)
+
+        notif_text=f"Your post [{post.title}]({post.permalink}) has been Yanked from +general to +{board.name}.\n\nIf you don't want it there, just click `Remove from +{board.name}` on the post."
+        send_notification(post.author, notif_text)
         g.db.commit()
 
     # clear board's listing caches
