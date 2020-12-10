@@ -452,7 +452,7 @@ def mod_take_pid(pid, v):
     post.guild_name = board.name
     g.db.add(post)
 
-    if post.original_board_id != board.id:
+    if post.original_board_id != board.id and post.author_id != v.id:
         board.last_yank_utc=now
         v.last_yank_utc=now
 
