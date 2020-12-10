@@ -451,6 +451,13 @@ def mod_take_pid(pid, v):
     post.guild_name = board.name
     g.db.add(post)
 
+    if post.original_board_id != board.id:
+        board.last_yank_utc=g.timestamp
+        v.last_yank_utc=g.timestamp
+
+        g.db.add(board)
+        g.db.add(v)
+
     # clear board's listing caches
     cache.delete_memoized(Board.idlist, board)
 
