@@ -150,7 +150,11 @@ def search(v, search_type="posts"):
 	
 	now=int(time.time())
 	users=g.db.query(User).filter(
-		User.username.ilike(f'%{term}%'),
+		User.username.ilike(f'%{term}%'))
+	
+	
+	if not (v and v.admin_level >= 3):
+	    users=users.filter(
 		User.is_private==False,
 		User.is_deleted==False,
 		or_(
