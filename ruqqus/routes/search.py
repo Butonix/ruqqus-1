@@ -9,7 +9,7 @@ from ruqqus.__main__ import app, cache
 
 
 @cache.memoize(300)
-def searchlisting(q, v=None, page=1, t="None", sort="hot", b=None):
+def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
         
     posts = g.db.query(Submission).join(
@@ -110,9 +110,13 @@ def search(v, search_type="posts"):
 
         # guild search stuff here
         sort = request.args.get("sort", "subs").lower()
+	
+	term=query.lstrip('+')
+	term=term.replace('\\','')
+	term=term.replace('_','\_')
 
         boards = g.db.query(Board).filter(
-            Board.name.ilike('%' + query.lstrip("+") + '%'))
+            Board.name.ilike(f'%{term}%'))
 
         if not(v and v.over_18):
             boards = boards.filter_by(over_18=False)
@@ -138,8 +142,45 @@ def search(v, search_type="posts"):
                                next_exists=next_exists
                                )
 
+    elif query.startswith("@"):
+		
+	term=query.lstrip('@')
+	term=term.replace('\\','')
+	term=term.replace('_','\_')
+	
+	now=int(time.time())
+	users=g.db.query(User).filter(
+		User.username.ilike(f'%{term}%'),
+		User.is_private==False,
+		User.is_deleted==False,
+		or_(
+			User.is_banned==0,
+			User.unban_utc<now
+		)
+	)
+	
+	total=users.count()
+	
+	users=[x for x in users.offset(25 * (page-1)).limit(26)]
+	next_exists=(len(users)==26)
+	users=users[0:25]
+	
+	
+	
+	return_render_template("search_users.html",
+			       v=v,
+			       query=query,
+			       total=total,
+			       page=page,
+			       users=users,
+			       sort_method=sort,
+			       next_exists=next_exists
+			      )
+			       
+	
+
     else:
-        sort = request.args.get("sort", "hot").lower()
+        sort = request.args.get("sort", "top").lower()
         t = request.args.get('t', 'all').lower()
 
         # posts search
