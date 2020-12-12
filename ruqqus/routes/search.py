@@ -172,7 +172,7 @@ def search(v, search_type="posts"):
         
         
         
-        return_render_template("search_users.html",
+        return render_template("search_users.html",
                        v=v,
                        query=query,
                        total=total,
@@ -216,7 +216,7 @@ def search_guild(name, v, search_type="posts"):
 
     query=request.args.get("q").lstrip().rstrip()
 
-    if query.startswith("+"):
+    if query.startswith(("+","@")):
         return redirect(f"/search?q={quote(query)}")
 
     b = get_guild(name, graceful=True)
