@@ -162,7 +162,7 @@ def search(v, search_type="posts"):
                 User.unban_utc<now
             )
         )
-        users=users.order_by(User.stored_karma.desc())
+        users=users.order_by(User.stored_subscriber_count.desc())
         
         total=users.count()
         
