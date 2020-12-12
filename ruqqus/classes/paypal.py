@@ -202,6 +202,7 @@ class PromoCode(Base):
 	flat_cents_min=Column(Integer, default=None)
 	promo_start_utc=Column(Integer, default=None)
 	promo_end_utc=Column(Integer, default=None)
+	promo_info=Column(String(64), default=None)
 
 	def adjust_price(self, cents):
 
@@ -250,14 +251,19 @@ class PromoCode(Base):
 		if self.promo_start_utc and now < self.promo_start_utc:
 			return f"This promotion hasn't started yet. Try again later."
 
-		if self.promo_end_utc and now > self.promo_end_utc:
+		elif self.promo_end_utc and now > self.promo_end_utc:
 			return f"This promotion has already ended. Sorry about that."
 
-		if self.percent_off:
-			return f"Save {self.percent_off}% on all purchases with code {self.code}"
+		elif self.percent_off:
+			text= f"Save {self.percent_off}% on all purchases with code {self.code}"
 
 		elif self.flat_cents_off and self.flat_cents_min:
-			return f"Save {self.display_flat_off} on any purchase over {self.display_flat_min} with code {self.code}"
+			text= f"Save {self.display_flat_off} on any purchase over {self.display_flat_min} with code {self.code}"
+
+		if self.promo_info:
+			text += f" Your purchase will also support {self.promo_info}."
+
+		return text
 	
 
 
