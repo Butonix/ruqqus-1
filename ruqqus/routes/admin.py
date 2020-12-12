@@ -582,7 +582,7 @@ def admin_paypaltxns(v):
     page=int(request.args.get("page",1))
     user=request.args.get('user','')
 
-    txns = g.db.query(PayPalTxn).filter_by(status=3)
+    txns = g.db.query(PayPalTxn).filter(PayPalTxn.status!=1)
 
     if user:
         user=get_user(user)
