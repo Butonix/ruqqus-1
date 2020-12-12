@@ -14,6 +14,13 @@ PAYPAL_WEBHOOK_ID=environ.get("PAYPAL_WEBHOOK_ID", "").rstrip()
 
 PAYPAL_URL="https://api.paypal.com"
 
+STATUSES={
+	1:"CREATED",
+	2:"AUTHORIZED",
+	3:"CAPTURED",
+	-2:"REVERSED"
+}
+
 class PayPalClient():
 
 	def __init__(self):
@@ -178,6 +185,10 @@ class PayPalTxn(Base, Stndrd, Age_times):
 		d=s[0:-2] or '0'
 		c=s[-2:]
 		return f"${d}.{c}"
+
+	@property
+	def status_text(self):
+		return STATUSES[self.status]
 
 class PromoCode(Base):
 
