@@ -362,4 +362,9 @@ def paypaltxn_txid(txid, v):
     if txn.user_id != v.id and v.admin_level<4:
         abort(403)
 
-    return render_template("single_txn.html", v=v, txns=[txn])
+    return render_template(
+        "single_txn.html", 
+        v=v, 
+        txns=[txn],
+        msg=request.args.get("msg","")
+        )
