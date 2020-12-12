@@ -12,7 +12,7 @@
           <a class="card-title text-break stretched-link h5 mb-0" href="{{ u.permalink }}">@{{ u.username }}</a>
 
           {% if v %}
-          {% if not v.is_private and nto v.is_nofollow %}
+          {% if not v.is_private and not v.is_nofollow %}
           <div id="button-sub-{{ u.base36id }}" style="z-index: 2" class="{% if u.has_follower(v) %}d-none{% endif %}"><a class="btn btn-primary btn-sm" href="javascript:void(0)" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-{{ u.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ u.base36id }}').classList.toggle('d-none');})">Subscribe</a></div>
           <div id="button-unsub-{{ u.base36id }}" style="z-index: 2" class="{% if not u.has_follower(v) %} d-none{% endif %}"><a class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-{{ u.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ u.base36id }}').classList.toggle('d-none');})">Unsubscribe</a></div>
           {% endif %}
