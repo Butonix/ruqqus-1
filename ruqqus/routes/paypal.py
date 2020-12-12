@@ -365,6 +365,5 @@ def paypaltxn_txid(txid, v):
     return render_template(
         "single_txn.html", 
         v=v, 
-        txns=[txn],
-        msg=request.args.get("msg","")
+        txns=[txn]
         )
