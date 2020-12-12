@@ -178,7 +178,6 @@ def search(v, search_type="posts"):
                        total=total,
                        page=page,
                        users=users,
-                       sort_method=sort,
                        next_exists=next_exists
                       )
                    
