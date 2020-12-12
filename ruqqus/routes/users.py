@@ -259,6 +259,10 @@ def follow_user(username, v):
                         target_id=target.id)
 
     g.db.add(new_follow)
+    g.db.flush()
+    target.stored_subscriber_count=target.follower_count
+    g.db.add(target)
+    g.db.commit()
 
     cache.delete_memoized(User.idlist, v, kind="user")
 

@@ -91,6 +91,8 @@ class User(Base, Stndrd, Age_times):
     is_deleted = Column(Boolean, default=False)
     delete_reason = Column(String(500), default='')
     filter_nsfw = Column(Boolean, default=False)
+    stored_karma = Column(Integer, default=0)
+    stored_subscriber_count=Column(Integer, default=0)
 
     coin_balance=Column(Integer, default=0)
     premium_expires_utc=Column(Integer, default=0)
@@ -431,7 +433,12 @@ class User(Base, Stndrd, Age_times):
     @property
     @cache.memoize(timeout=3600)
     def true_score(self):
-        return max((self.karma + self.comment_karma), -5)
+
+        self.stored_karma=max((self.karma + self.comment_karma), -5)
+
+        g.db.add(self)
+        g.db.commit()
+        return self.stored_karma
 
     @property
     def base36id(self):
