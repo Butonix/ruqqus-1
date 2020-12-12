@@ -255,10 +255,10 @@ class PromoCode(Base):
 			return f"This promotion has already ended. Sorry about that."
 
 		elif self.percent_off:
-			text= f"Save {self.percent_off}% on all purchases with code {self.code}"
+			text= f"Save {self.percent_off}% on all purchases with code {self.code}."
 
 		elif self.flat_cents_off and self.flat_cents_min:
-			text= f"Save {self.display_flat_off} on any purchase over {self.display_flat_min} with code {self.code}"
+			text= f"Save {self.display_flat_off} on any purchase over {self.display_flat_min} with code {self.code}."
 
 		if self.promo_info:
 			text += f" Your purchase will also support {self.promo_info}."

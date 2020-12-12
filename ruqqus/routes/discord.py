@@ -41,6 +41,10 @@ def join_discord(v):
 @app.route("/discord_redirect", methods=["GET"])
 @auth_required
 def discord_redirect(v):
+    try:
+        print(f"discord redirect for {v.username}")
+    except:
+        pass
 
 
     #validate state
@@ -52,14 +56,26 @@ def discord_redirect(v):
     state=state[1]
 
     if int(timestamp) < now-600:
+        try:
+            print("too slow")
+        except:
+            pass
         abort(400)
 
     if not validate_hash(f"{timestamp}+{v.id}+discord", state):
+        try:
+            print("bad state")
+        except:
+            pass
         abort(400)
 
     #get discord token
     code = request.args.get("code","")
     if not code:
+        try:
+            print("code not provided")
+        except:
+            pass
         abort(400)
 
     data={
@@ -83,6 +99,10 @@ def discord_redirect(v):
     try:
         token=x["access_token"]
     except KeyError:
+        try:
+            print("unable to get access token")
+        except:
+            pass
         abort(403)
 
 
@@ -109,6 +129,10 @@ def discord_redirect(v):
         requests.delete(url, headers=headers)
 
     if g.db.query(User).filter(User.id!=v.id, User.discord_id==x["id"]).first():
+        try:
+            print("account already linked")
+        except:
+            pass
         return render_template("message.html", title="Discord account already linked.", error="That Discord account is already in use by another user.", v=v)
 
     v.discord_id=x["id"]
@@ -129,6 +153,11 @@ def discord_redirect(v):
     x=requests.put(url, headers=headers, json=data)
 
     if x.status_code in [201, 204]:
+
+        try:
+            print("join successful")
+        except:
+            pass
                     
         add_role(v, "linked")
                         
@@ -139,12 +168,21 @@ def discord_redirect(v):
             add_role(v, "premium")
 
     else:
+        try:
+            print("could not join user")
+        except:
+            pass
         return jsonify(x.json())
 
     #check on if they are already there
     #print(x.status_code)
 
     if x.status_code==204:
+
+        try:
+            print("user already present")
+        except:
+            pass
 
         ##if user is already a member, remove old roles and update nick
         delete_role(v, "nick")
@@ -162,5 +200,11 @@ def discord_redirect(v):
 
         #print(req.status_code)
         #print(url)
+
+
+    try:
+        print("all successful - redirecting to discord")
+    except:
+        pass
 
     return redirect(f"https://discord.com/channels/{SERVER_ID}/{WELCOME_CHANNEL}")
