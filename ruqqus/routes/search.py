@@ -111,9 +111,9 @@ def search(v, search_type="posts"):
         # guild search stuff here
         sort = request.args.get("sort", "subs").lower()
     
-    term=query.lstrip('+')
-    term=term.replace('\\','')
-    term=term.replace('_','\_')
+        term=query.lstrip('+')
+        term=term.replace('\\','')
+        term=term.replace('_','\_')
 
         boards = g.db.query(Board).filter(
             Board.name.ilike(f'%{term}%'))
