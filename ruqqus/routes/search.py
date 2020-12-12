@@ -110,10 +110,10 @@ def search(v, search_type="posts"):
 
         # guild search stuff here
         sort = request.args.get("sort", "subs").lower()
-	
-	term=query.lstrip('+')
-	term=term.replace('\\','')
-	term=term.replace('_','\_')
+    
+    term=query.lstrip('+')
+    term=term.replace('\\','')
+    term=term.replace('_','\_')
 
         boards = g.db.query(Board).filter(
             Board.name.ilike(f'%{term}%'))
@@ -143,46 +143,46 @@ def search(v, search_type="posts"):
                                )
 
     elif query.startswith("@"):
-		
-	term=query.lstrip('@')
-	term=term.replace('\\','')
-	term=term.replace('_','\_')
-	
-	now=int(time.time())
-	users=g.db.query(User).filter(
-		User.username.ilike(f'%{term}%'))
-	
-	
-	if not (v and v.admin_level >= 3):
-	    users=users.filter(
-		User.is_private==False,
-		User.is_deleted==False,
-		or_(
-			User.is_banned==0,
-			User.unban_utc<now
-		)
-	)
-	users=users.order_by(User.username.asc())
-	
-	total=users.count()
-	
-	users=[x for x in users.offset(25 * (page-1)).limit(26)]
-	next_exists=(len(users)==26)
-	users=users[0:25]
-	
-	
-	
-	return_render_template("search_users.html",
-			       v=v,
-			       query=query,
-			       total=total,
-			       page=page,
-			       users=users,
-			       sort_method=sort,
-			       next_exists=next_exists
-			      )
-			       
-	
+            
+        term=query.lstrip('@')
+        term=term.replace('\\','')
+        term=term.replace('_','\_')
+        
+        now=int(time.time())
+        users=g.db.query(User).filter(
+            User.username.ilike(f'%{term}%'))
+        
+        
+        if not (v and v.admin_level >= 3):
+            users=users.filter(
+            User.is_private==False,
+            User.is_deleted==False,
+            or_(
+                User.is_banned==0,
+                User.unban_utc<now
+            )
+        )
+        users=users.order_by(User.username.asc())
+        
+        total=users.count()
+        
+        users=[x for x in users.offset(25 * (page-1)).limit(26)]
+        next_exists=(len(users)==26)
+        users=users[0:25]
+        
+        
+        
+        return_render_template("search_users.html",
+                       v=v,
+                       query=query,
+                       total=total,
+                       page=page,
+                       users=users,
+                       sort_method=sort,
+                       next_exists=next_exists
+                      )
+                   
+    
 
     else:
         sort = request.args.get("sort", "top").lower()
@@ -226,8 +226,8 @@ def search_guild(name, v, search_type="posts"):
     page=max(1, int(request.args.get("page", 1)))
 
     sort=request.args.get("sort", "hot").lower()
-	
-	
+    
+    
     t = request.args.get('t', 'all').lower()
 
     #posts search
@@ -240,13 +240,13 @@ def search_guild(name, v, search_type="posts"):
     posts=get_posts(ids, v=v)
 
     return render_template("search.html",
-		           v=v,
-		           query=query,
-		           total=total,
-		           page=page,
-		           listing=posts,
-	                   sort_method=sort,
+                   v=v,
+                   query=query,
+                   total=total,
+                   page=page,
+                   listing=posts,
+                       sort_method=sort,
                            next_exists=next_exists,
-			   time_filter=t,
+               time_filter=t,
                            b=b
-		           )
+                   )
