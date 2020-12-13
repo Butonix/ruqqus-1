@@ -124,7 +124,7 @@ def search(v, search_type="posts"):
         if not (v and v.admin_level >= 3):
             boards = boards.filter_by(is_banned=False)
 
-        boards = boards.order_by(Board.stored_subscriber_count.desc())
+        boards = boards.order_by(Board.name.ilike(term).desc(), Board.stored_subscriber_count.desc())
 
         total = boards.count()
 
@@ -162,7 +162,7 @@ def search(v, search_type="posts"):
                 User.unban_utc<now
             )
         )
-        users=users.order_by(User.stored_subscriber_count.desc())
+        users=users.order_by(User.username.ilike(term).desc(), User.stored_subscriber_count.desc())
         
         total=users.count()
         
