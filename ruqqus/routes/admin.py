@@ -2,6 +2,9 @@ from urllib.parse import urlparse
 import time
 import calendar
 from sqlalchemy import func
+from sqlalchemy.orm import lazyload
+import threading
+import subprocess
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.alerts import *
@@ -460,8 +463,10 @@ def admin_removed(v):
 
     page = int(request.args.get("page", 1))
 
-    ids = g.db.query(Submission.id).filter_by(is_banned=True).order_by(
-        Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+    ids = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=True).order_by(
+        Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
+
+    ids=[x[0] for x in ids]
 
     next_exists = len(ids) == 26
 
@@ -536,3 +541,86 @@ def admin_appdata(v):
         return render_template(
             "admin/app_data.html",
             v=v)
+
+@app.route("/admin/ban_analysis")
+@admin_level_required(3)
+def admin_ban_analysis(v):
+
+    banned_accounts = g.db.query(User).filter(User.is_banned>0, User.unban_utc==0).all()
+
+    uniques=set()
+
+    seen_so_far=set()
+
+    for user in banned_accounts:
+
+
+        if user.id not in seen_so_far:
+
+            print(f"Unique - @{user.username}")
+
+            uniques.add(user.id)
+
+        else:
+            print(f"Repeat - @{user.username}")
+            continue
+
+        alts=user.alts
+        print(f"{len(alts)} alts")
+
+        for alt in user.alts:
+            seen_so_far.add(alt.id)
+
+
+    return str(len(uniques))
+
+
+@app.route("/admin/paypaltxns", methods=["GET"])
+@admin_level_required(4)
+def admin_paypaltxns(v):
+
+    page=int(request.args.get("page",1))
+    user=request.args.get('user','')
+
+    txns = g.db.query(PayPalTxn).filter(PayPalTxn.status!=1)
+
+    if user:
+        user=get_user(user)
+        txns=txns.filter_by(user_id=user.id)
+
+
+    txns=txns.order_by(PayPalTxn.created_utc.desc())
+
+    txns = [x for x in txns.offset(100*(page-1)).limit(101).all()]
+
+    next_exists=len(txns)==101
+    txns=txns[0:100]
+
+    return render_template(
+        "single_txn.html", 
+        v=v, 
+        txns=txns, 
+        next_exists=next_exists,
+        page=page
+        )
+
+
+# @app.route('/admin/deploy', methods=["GET"])
+# @admin_level_required(3)
+# def admin_deploy(v):
+
+#     def reload_function():
+#         time.sleep(3)
+#         subprocess.run(". ~/go.sh", shell=True)
+
+#     thread=threading.Thread(target=reload_function, daemon=True)
+#     thread.start()
+
+#     return 'Reloading!'
+
+# @app.route('/admin/test', methods=["GET"])
+# @admin_level_required(3)
+# def admin_test(v):
+
+
+#     return "1"

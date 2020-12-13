@@ -54,7 +54,7 @@ def create_board_get(v):
 @auth_desired
 @api()
 def api_board_available(name, v):
-    if get_guild(name, graceful=True):
+    if get_guild(name, graceful=True) or not re.match(valid_board_regex, name):
         return jsonify({"board": name, "available": False})
     else:
         return jsonify({"board": name, "available": True})
@@ -227,6 +227,9 @@ def mod_distinguish_post(bid, pid, board, v):
 
     post = get_post(pid, v=v)
 
+    if not post.board_id==board.id:
+        abort(400)
+
     if post.author_id != v.id:
         abort(403)
 
@@ -244,6 +247,9 @@ def mod_distinguish_post(bid, pid, board, v):
 def mod_distinguish_comment(bid, cid, board, v):
 
     comment = get_comment(cid, v=v)
+
+    if not comment.post.board_id==board.id:
+        abort(400)
 
     if comment.author_id != v.id:
         abort(403)
@@ -412,6 +418,15 @@ def mod_take_pid(pid, v):
     board = get_board(bid)
     post = get_post(pid)
 
+    #check cooldowns
+    now=int(time.time())
+    if post.original_board_id != board.id and post.author_id != v.id:
+        if now <  v.last_yank_utc + 3600:
+            return jsonify({'error':f"You've yanked a post recently. You need to wait 1 hour between yanks."}), 401
+        elif now <  board.last_yank_utc + 3600:
+            return jsonify({'error':f"+{board.name} has yanked a post recently. The Guild needs to wait 1 hour between yanks."}), 401
+
+
     if board.is_banned:
         return jsonify({'error': f"+{board.name} is banned. You can't yank anything there."}), 403
 
@@ -436,6 +451,17 @@ def mod_take_pid(pid, v):
     post.board_id = board.id
     post.guild_name = board.name
     g.db.add(post)
+
+    if post.original_board_id != board.id and post.author_id != v.id:
+        board.last_yank_utc=now
+        v.last_yank_utc=now
+
+        g.db.add(board)
+        g.db.add(v)
+
+        notif_text=f"Your post [{post.title}]({post.permalink}) has been Yanked from +general to +{board.name}.\n\nIf you don't want it there, just click `Remove from +{board.name}` on the post."
+        send_notification(post.author, notif_text)
+        g.db.commit()
 
     # clear board's listing caches
     cache.delete_memoized(Board.idlist, board)
@@ -537,6 +563,12 @@ def mod_remove_username(bid, username, board, v):
     if not u_mod:
         abort(400)
     elif not v_mod:
+        abort(400)
+
+    if not u_mod.board_id==board.id:
+        abort(400)
+
+    if not v_mod.board_id==board.id:
         abort(400)
 
     if v_mod.id > u_mod.id:
@@ -1132,6 +1164,7 @@ def mod_approve_bid_user(bid, board, v):
                                               is_active=True,
                                               approving_mod_id=v.id)
         g.db.add(new_contrib)
+        g.db.commit()
 
         if user.id != v.id:
             text = f"You have added as an approved contributor to +{board.name}."
@@ -1151,6 +1184,9 @@ def mod_unapprove_bid_user(bid, board, v):
     x = board.has_contributor(user)
     if not x:
         abort(409)
+
+    if not x.board_id==board.id:
+        abort(400)
 
     x.is_active = False
 

@@ -17,7 +17,7 @@ from ruqqus.helpers.discord import add_role, delete_role
 from .votes import Vote
 from .alts import Alt
 from .titles import Title
-from .submission import Submission, SubmissionAux
+from .submission import Submission, SubmissionAux, SaveRelationship
 from .comment import Comment, Notification
 from .boards import Board
 from .board_relationships import *
@@ -26,6 +26,7 @@ from .subscriptions import *
 from .userblock import *
 from .badges import *
 from .clients import *
+from .paypal import PayPalTxn
 from ruqqus.__main__ import Base, cache
 
 
@@ -90,16 +91,17 @@ class User(Base, Stndrd, Age_times):
     is_deleted = Column(Boolean, default=False)
     delete_reason = Column(String(500), default='')
     filter_nsfw = Column(Boolean, default=False)
+    stored_karma = Column(Integer, default=0)
+    stored_subscriber_count=Column(Integer, default=0)
 
     coin_balance=Column(Integer, default=0)
     premium_expires_utc=Column(Integer, default=0)
     negative_balance_cents=Column(Integer, default=0)
 
     is_nofollow = Column(Boolean, default=False)
-
     custom_filter_list=Column(String(1000), default="")
-
     discord_id=Column(String(64), default=None)
+    last_yank_utc=Column(Integer, default=0)
 
     moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
@@ -126,6 +128,16 @@ class User(Base, Stndrd, Age_times):
 
     _applications = relationship("OauthApp", lazy="dynamic")
     authorizations = relationship("ClientAuth", lazy="dynamic")
+
+    saved_posts=relationship(
+        "SaveRelationship",
+        lazy="dynamic",
+        primaryjoin="User.id==SaveRelationship.user_id")
+
+    _transactions = relationship(
+        "PayPalTxn",
+        lazy="dynamic",
+        primaryjoin="PayPalTxn.user_id==User.id")
 
     # properties defined as SQL server-side functions
     energy = deferred(Column(Integer, server_default=FetchedValue()))
@@ -421,7 +433,12 @@ class User(Base, Stndrd, Age_times):
     @property
     @cache.memoize(timeout=3600)
     def true_score(self):
-        return max((self.karma + self.comment_karma), -5)
+
+        self.stored_karma=max((self.karma + self.comment_karma), -5)
+
+        g.db.add(self)
+        g.db.commit()
+        return self.stored_karma
 
     @property
     def base36id(self):
@@ -656,12 +673,13 @@ class User(Base, Stndrd, Age_times):
         return self.has_premium or self.true_score >= 500 or self.created_utc <= 1592974538
 
     @property
-    def json(self):
+    def json_core(self):
 
         if self.is_banned:
             return {'username': self.username,
                     'permalink': self.permalink,
                     'is_banned': True,
+                    'is_permanent_ban':not bool(self.unban_utc),
                     'ban_reason': self.ban_reason,
                     'id': self.base36id
                     }
@@ -676,20 +694,32 @@ class User(Base, Stndrd, Age_times):
         return {'username': self.username,
                 'permalink': self.permalink,
                 'is_banned': False,
-                'is_premium': self.premium_expires_utc > int(time.time()),
+                'is_premium': self.has_premium_no_renew,
                 'created_utc': self.created_utc,
-                'post_rep': int(self.karma),
-                'comment_rep': int(self.comment_karma),
-                'badges': [x.json for x in self.badges],
                 'id': self.base36id,
+                'is_private': self.is_private,
                 'profile_url': self.profile_url,
                 'banner_url': self.banner_url,
-                'post_count': self.post_count,
-                'comment_count': self.comment_count,
                 'title': self.title.json if self.title else None,
                 'bio': self.bio,
                 'bio_html': self.bio_html
                 }
+
+    @property
+    def json(self):
+        data= self.json_core
+
+        if self.is_deleted or self.is_banned:
+            return data
+
+        data["badges"]=[x.json_core for x in self.badges]
+        data['post_rep']= int(self.karma)
+        data['comment_rep']= int(self.comment_karma)
+        data['post_count']=self.post_count
+        data['comment_count']=self.comment_count
+
+        return data
+    
 
     @property
     def total_karma(self):
@@ -790,6 +820,76 @@ class User(Base, Stndrd, Age_times):
             OauthApp.id.asc()).all()]
 
 
+    def saved_idlist(self, page=1):
+
+        posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
+                                                                           is_deleted=False
+                                                                           )
+
+        if not self.over_18:
+            posts = posts.filter_by(over_18=False)
+
+
+        saved=g.db.query(SaveRelationship.submission_id).filter(SaveRelationship.user_id==self.id).subquery()
+        posts=posts.filter(Submission.id.in_(saved))
+
+
+
+        if self.admin_level < 4:
+            # admins can see everything
+
+            m = g.db.query(
+                ModRelationship.board_id).filter_by(
+                user_id=self.id,
+                invite_rescinded=False).subquery()
+            c = g.db.query(
+                ContributorRelationship.board_id).filter_by(
+                user_id=self.id).subquery()
+            posts = posts.filter(
+                or_(
+                    Submission.author_id == self.id,
+                    Submission.post_public == True,
+                    Submission.board_id.in_(m),
+                    Submission.board_id.in_(c)
+                )
+            )
+
+            blocking = g.db.query(
+                UserBlock.target_id).filter_by(
+                user_id=self.id).subquery()
+            blocked = g.db.query(
+                UserBlock.user_id).filter_by(
+                target_id=self.id).subquery()
+
+            posts = posts.filter(
+                Submission.author_id.notin_(blocking),
+                Submission.author_id.notin_(blocked)
+            )
+
+        posts=posts.order_by(Submission.created_utc.desc())
+        
+        return [x[0] for x in posts.offset(25 * (page - 1)).limit(26).all()]
+
+
+
+    def guild_rep(self, guild):
+
+        posts=db.query(Submission.score_top).filter_by(
+            is_banned=False,
+            board_id=guild.id).all()
+
+        post_rep= sum([x[0] for x in posts])
+
+
+        comments=db.query(Comment.score_top).join(
+            Comment.post).filter(
+            Comment.is_banned==False,
+            Submission.board_id==guild.id).all()
+
+        comment_rep=sum([x[0] for x in comments])
+
+        return post_rep + comment_rep
+
     @property
     def has_premium(self):
         
@@ -850,4 +950,9 @@ class User(Base, Stndrd, Age_times):
     @property
     def boards_modded_ids(self):
         return [x.id for x in self.boards_modded]
-                            
+
+    @property
+    def txn_history(self):
+        
+        return self._transactions.filter(PayPalTxn.status!=1).order_by(PayPalTxn.created_utc.desc()).all()
+    

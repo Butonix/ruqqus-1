@@ -9,7 +9,7 @@ from ruqqus.__main__ import app, cache
 
 
 @cache.memoize(300)
-def searchlisting(q, v=None, page=1, t="None", sort="hot", b=None):
+def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
         
     posts = g.db.query(Submission).join(
@@ -110,9 +110,13 @@ def search(v, search_type="posts"):
 
         # guild search stuff here
         sort = request.args.get("sort", "subs").lower()
+    
+        term=query.lstrip('+')
+        term=term.replace('\\','')
+        term=term.replace('_','\_')
 
         boards = g.db.query(Board).filter(
-            Board.name.ilike('%' + query.lstrip("+") + '%'))
+            Board.name.ilike(f'%{term}%'))
 
         if not(v and v.over_18):
             boards = boards.filter_by(over_18=False)
@@ -138,8 +142,49 @@ def search(v, search_type="posts"):
                                next_exists=next_exists
                                )
 
+    elif query.startswith("@"):
+            
+        term=query.lstrip('@')
+        term=term.replace('\\','')
+        term=term.replace('_','\_')
+        
+        now=int(time.time())
+        users=g.db.query(User).filter(
+            User.username.ilike(f'%{term}%'))
+        
+        
+        if not (v and v.admin_level >= 3):
+            users=users.filter(
+            User.is_private==False,
+            User.is_deleted==False,
+            or_(
+                User.is_banned==0,
+                User.unban_utc<now
+            )
+        )
+        users=users.order_by(User.stored_subscriber_count.desc())
+        
+        total=users.count()
+        
+        users=[x for x in users.offset(25 * (page-1)).limit(26)]
+        next_exists=(len(users)==26)
+        users=users[0:25]
+        
+        
+        
+        return render_template("search_users.html",
+                       v=v,
+                       query=query,
+                       total=total,
+                       page=page,
+                       users=users,
+                       next_exists=next_exists
+                      )
+                   
+    
+
     else:
-        sort = request.args.get("sort", "hot").lower()
+        sort = request.args.get("sort", "top").lower()
         t = request.args.get('t', 'all').lower()
 
         # posts search
@@ -170,7 +215,7 @@ def search_guild(name, v, search_type="posts"):
 
     query=request.args.get("q").lstrip().rstrip()
 
-    if query.startswith("+"):
+    if query.startswith(("+","@")):
         return redirect(f"/search?q={quote(query)}")
 
     b = get_guild(name, graceful=True)
@@ -180,8 +225,8 @@ def search_guild(name, v, search_type="posts"):
     page=max(1, int(request.args.get("page", 1)))
 
     sort=request.args.get("sort", "hot").lower()
-	
-	
+    
+    
     t = request.args.get('t', 'all').lower()
 
     #posts search
@@ -194,13 +239,13 @@ def search_guild(name, v, search_type="posts"):
     posts=get_posts(ids, v=v)
 
     return render_template("search.html",
-		           v=v,
-		           query=query,
-		           total=total,
-		           page=page,
-		           listing=posts,
-	                   sort_method=sort,
+                   v=v,
+                   query=query,
+                   total=total,
+                   page=page,
+                   listing=posts,
+                       sort_method=sort,
                            next_exists=next_exists,
-			   time_filter=t,
+               time_filter=t,
                            b=b
-		           )
+                   )

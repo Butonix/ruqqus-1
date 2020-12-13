@@ -241,7 +241,7 @@ def api_comment(v):
     # get parent item info
     parent_id = parent_fullname.split("_")[1]
     if parent_fullname.startswith("t2"):
-        parent_post = get_post(parent_id)
+        parent_post = get_post(parent_id, v=v)
         parent = parent_post
         parent_comment_id = None
         level = 1
@@ -678,4 +678,3 @@ def mod_toggle_comment_pin(bid, cid, x, board, v):
     g.db.add(comment)
 
     return "", 204
-

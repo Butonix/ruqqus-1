@@ -52,9 +52,10 @@ def incoming_post_shortlink(base36id=None):
 @app.route("/+<boardname>/post/<base36id>", methods=["GET"])
 @app.route("/+<boardname>/post/<base36id>/", methods=["GET"])
 @app.route("/+<boardname>/post/<base36id>/<anything>", methods=["GET"])
+@app.route("/api/v1/post/<base36id>")
 @auth_desired
 @api("read")
-def post_base36id(boardname, base36id, anything=None, v=None):
+def post_base36id(base36id, boardname=None, anything=None, v=None):
     
     post = get_post_with_comments(
         base36id, v=v, sort_type=request.args.get(
@@ -62,7 +63,8 @@ def post_base36id(boardname, base36id, anything=None, v=None):
 
     board = post.board
     #if the guild name is incorrect, fix the link and redirect
-    if not boardname == board.name:
+
+    if boardname and not boardname == board.name:
         return redirect(post.permalink)
 
     if board.is_banned and not (v and v.admin_level > 3):
@@ -81,10 +83,12 @@ def post_base36id(boardname, base36id, anything=None, v=None):
                                ),
                 "api":lambda:(jsonify({"error":"Must be 18+ to view"}), 451)
                 }
-        
+    
+    if request.path.startswith('/api/v1/'):
+        post.tree_comments()
     return {
         "html":lambda:post.rendered_page(v=v),
-        "api":lambda:jsonify({"data":post.json})
+        "api":lambda:jsonify(post.json)
         }
 
 #if the guild name is missing from the url, add it and redirect
@@ -471,6 +475,25 @@ def submit_post(v):
         body_md = renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
 
+    # Run safety filter
+    bans = filter_comment_html(body_html)
+    if bans:
+        ban = bans[0]
+        reason = f"Remove the {ban.domain} link from your post and try again."
+        if ban.reason:
+            reason += f" {ban.reason_text}"
+        return {"html": lambda: (render_template("submit.html",
+                                                 v=v,
+                                                 error=reason,
+                                                 title=title,
+                                                 url=url,
+                                                 body=request.form.get(
+                                                     "body", ""),
+                                                 b=board
+                                                 ), 403),
+                "api": lambda: ({"error": reason}, 403)
+                }
+
     # check spam
     soup = BeautifulSoup(body_html, features="html.parser")
     links = [x['href'] for x in soup.find_all('a') if x.get('href')]
@@ -770,3 +793,38 @@ def retry_thumbnail(pid, v):
                                   )
     new_thread.start()
     return jsonify({"message": "Thumbnail Retry Queued"})
+
+
+@app.route("/save_post/<pid>", methods=["POST"])
+@auth_required
+@validate_formkey
+def save_post(pid, v):
+
+    post=get_post(pid)
+
+    new_save=SaveRelationship(
+        user_id=v.id,
+        submission_id=post.id)
+
+    g.db.add(new_save)
+
+    try:
+        g.db.flush()
+    except:
+        abort(422)
+
+    return "", 204
+
+
+@app.route("/unsave_post/<pid>", methods=["POST"])
+@auth_required
+@validate_formkey
+def unsave_post(pid, v):
+
+    post=get_post(pid)
+
+    save=g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id).first()
+
+    g.db.delete(save)
+
+    return "", 204

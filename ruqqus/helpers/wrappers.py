@@ -397,6 +397,8 @@ def api(*scopes, no_ban=False):
 
                 if request.path.startswith('/inpage/'):
                     return result['inpage']()
+                elif request.path.startswith('/test/'):
+                    return result['api']()
                 else:
                     return result['html']()
 

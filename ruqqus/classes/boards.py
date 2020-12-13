@@ -43,7 +43,8 @@ class Board(Base, Stndrd, Age_times):
     stored_subscriber_count = Column(Integer, default=1)
     all_opt_out = Column(Boolean, default=False)
     is_siegable=Column(Boolean, default=True)
-
+    last_yank_utc=Column(Integer, default=0)
+ 
     moderators = relationship("ModRelationship")
     subscribers = relationship("Subscription", lazy="dynamic")
     submissions = relationship("Submission",
@@ -389,7 +390,7 @@ class Board(Base, Stndrd, Age_times):
         return self.n_pins < 4
 
     @property
-    def json(self):
+    def json_core(self):
 
         if self.is_banned:
             return {'name': self.name,
@@ -402,8 +403,6 @@ class Board(Base, Stndrd, Age_times):
                 'profile_url': self.profile_url,
                 'banner_url': self.banner_url,
                 'created_utc': self.created_utc,
-                'mods_count': self.mods_count,
-                'subscriber_count': self.subscriber_count,
                 'permalink': self.permalink,
                 'description': self.description,
                 'description_html': self.description_html,
@@ -416,9 +415,22 @@ class Board(Base, Stndrd, Age_times):
                 'banner_url': self.banner_url,
                 'profile_url': self.profile_url,
                 'color': "#" + self.color,
-                'guildmasters': [x.json for x in self.mods],
                 'is_siege_protected': not self.is_siegable
                 }
+
+    @property
+    def json(self):
+        data=self.json_core
+
+        if self.is_banned:
+            return data
+
+
+        data['guildmasters']=[x.json_core for x in self.mods]
+        data['subscriber_count']= self.subscriber_count
+
+        return data
+    
 
     @property
     def show_settings_icons(self):
@@ -478,3 +490,8 @@ class Board(Base, Stndrd, Age_times):
             25 * (page - 1)).limit(26).all()
 
         return [x.id for x in comments]
+
+
+    def user_guild_rep(self, user):
+
+        return user.guild_rep(self)
