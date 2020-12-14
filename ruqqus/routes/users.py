@@ -347,10 +347,11 @@ def convert_file(html):
     if not isinstance(html, str):
         return html
 
+    print(len(html))
 
-    soup=BeautifulSoup(html)
+    soup=BeautifulSoup(html, 'html.parser')
 
-    for thing in soup.findall('link', rel="stylesheet"):
+    for thing in soup.find_all('link', rel="stylesheet"):
 
         thing["href"]=f"//{app.config['SERVER_NAME']}{thing['href']}"
 
