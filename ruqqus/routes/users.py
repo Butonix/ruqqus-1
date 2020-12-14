@@ -414,7 +414,7 @@ def info_packet(db, user, method="html"):
     #     "json":lambda:[x.json_core for x in users]
     # }
 
-    zip=zipfile.ZipFile(open(f"zip/{user.username}", mode="x"))
+    zip=zipfile.ZipFile(open(f"zip/{user.username}", mode="w+"))
 
     for entry in packet:
 
@@ -448,7 +448,7 @@ def my_info_put(v):
     if not v.is_activated:
         return redirect("/settings/security")
 
-    thread=threading.Thread(target=info_packet, args=(g.db, v), kwargs={'method':'html'},daemon=True)
+    thread=threading.Thread(target=info_packet, args=(g.db, v), kwargs={'method':'html'}, daemon=True)
     thread.start()
 
     return "started"
