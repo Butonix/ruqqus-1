@@ -412,7 +412,7 @@ def info_packet(db, user, method="html"):
     #     "json":lambda:[x.json_core for x in users]
     # }
 
-    zip=zipfile.ZipFile(open(f"zip_{user.username}", mode="w+"))
+    zip=zipfile.ZipFile(f"zip/{user.username}", mode='x')
 
     for entry in packet:
 
