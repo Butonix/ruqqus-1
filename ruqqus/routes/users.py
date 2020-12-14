@@ -343,13 +343,13 @@ def saved_listing(v):
             }
 
 
-def info_packet(db, user, method="html", req=request):
+def info_packet(db, user, method="html"):
 
     print(f"starting {user.username}")
 
     packet={}
 
-    with app.request_context(req):
+    with app.test_request_context("/my_info"):
 
         g.db=db
 
@@ -450,7 +450,7 @@ def my_info_put(v):
     if not v.is_activated:
         return redirect("/settings/security")
 
-    thread=threading.Thread(target=info_packet, args=(g.db, v), kwargs={'method':'html', "req":request}, daemon=True)
+    thread=threading.Thread(target=info_packet, args=(g.db, v), kwargs={'method':'html'}, daemon=True)
     thread.start()
 
     return "started"
