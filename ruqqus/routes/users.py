@@ -358,7 +358,7 @@ def info_packet(db, user, method="html"):
     comment_ids=db.query(Comment).filter_by(author_id=user.id).order_by(Comment.id.desc()).all()
     comemnts=get_comments(list(comment_ids), v=user)
     packet["comments"]={
-        'html':lambda:render_template("userpage_comments.html", v=None, u=user, comments=comments, page=1, next_exists=False)
+        'html':lambda:render_template("userpage_comments.html", v=None, u=user, comments=comments, page=1, next_exists=False),
         'json':lambda:[x.self_download_json for x in comments]
     }
 
@@ -382,14 +382,14 @@ def info_packet(db, user, method="html"):
     upvote_query=db.query(CommentVote.comment_id).filter_by(user_id=user.id, vote_type=1).order_by(CommentVote.id.desc()).all()
     upvote_comments=get_comments([i[0] for i in upvote_query], v=user)
     packet["upvoted_comments"]={
-        'html':lambda:render_template("notifications.html", v=None, comments=upvote_comments, page=1, next_exists=False)
+        'html':lambda:render_template("notifications.html", v=None, comments=upvote_comments, page=1, next_exists=False),
         'json':lambda:[x.json_core for x in upvote_comments]
         }
 
     downvote_query=db.query(CommentVote.comment_id).filter_by(user_id=user.id, vote_type=-1).order_by(CommentVote.id.desc()).all()
     downvote_comments=get_comments([i[0] for i in downvote_query], v=user)
     packet["downvoted_comments"]={
-        'html':lambda:render_template("notifications.html", v=None, comments=downvote_comments, page=1, next_exists=False)
+        'html':lambda:render_template("notifications.html", v=None, comments=downvote_comments, page=1, next_exists=False),
         'json':lambda:[x.json_core for x in downvote_comments]
         }
 
