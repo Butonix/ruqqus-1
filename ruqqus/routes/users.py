@@ -363,7 +363,7 @@ def info_packet(db, user, method="html"):
     }
 
     upvote_query=db.query(Vote.submission_id).filter_by(user_id=user.id, vote_type=1).order_by(Vote.id.desc()).all()
-    upvote_posts=get_posts([i[0] for i in upvote_query]), v=user)
+    upvote_posts=get_posts([i[0] for i in upvote_query], v=user)
     upvote_posts=[i for i in upvote_posts]
     for post in upvote_posts:
         post.__dict__['voted']=1
