@@ -353,6 +353,7 @@ def info_packet(db, user, method="html"):
 
         g.db=db
 
+        print('submissions')
         #submissions
         post_ids=db.query(Submission.id).filter_by(author_id=user.id).order_by(Submission.id.desc()).all()
         posts=get_posts(list(post_ids), v=user)
@@ -361,6 +362,7 @@ def info_packet(db, user, method="html"):
             'json':lambda:[x.self_download_json for x in posts]
         }
 
+        print('comments')
         comment_ids=db.query(Comment).filter_by(author_id=user.id).order_by(Comment.id.desc()).all()
         comemnts=get_comments(list(comment_ids), v=user)
         packet["comments"]={
@@ -368,6 +370,7 @@ def info_packet(db, user, method="html"):
             'json':lambda:[x.self_download_json for x in comments]
         }
 
+        print('post upvotes')
         upvote_query=db.query(Vote.submission_id).filter_by(user_id=user.id, vote_type=1).order_by(Vote.id.desc()).all()
         upvote_posts=get_posts([i[0] for i in upvote_query], v=user)
         upvote_posts=[i for i in upvote_posts]
@@ -376,28 +379,31 @@ def info_packet(db, user, method="html"):
         packet['upvoted_posts']={
             'html':lambda:render_template("home.html", v=None, listing=posts, page=1, next_exists=False),
             'json':lambda:[x.json_core for x in upvote_posts]
-            }
+        }
 
+        print('post downvotes')
         downvote_query=db.query(Vote.submission_id).filter_by(user_id=user.id, vote_type=-1).order_by(Vote.id.desc()).all()
         downvote_posts=get_posts([i[0] for i in downvote_query], v=user)
         packet['downvoted_posts']={
             'html':lambda:render_template("home.html", v=None, listing=posts, page=1, next_exists=False),
             'json':lambda:[x.json_core for x in downvote_posts]
-            }
+        }
 
+        print('comment_upvotes')
         upvote_query=db.query(CommentVote.comment_id).filter_by(user_id=user.id, vote_type=1).order_by(CommentVote.id.desc()).all()
         upvote_comments=get_comments([i[0] for i in upvote_query], v=user)
         packet["upvoted_comments"]={
             'html':lambda:render_template("notifications.html", v=None, comments=upvote_comments, page=1, next_exists=False),
             'json':lambda:[x.json_core for x in upvote_comments]
-            }
+        }
 
+        print('comment_downvotes')
         downvote_query=db.query(CommentVote.comment_id).filter_by(user_id=user.id, vote_type=-1).order_by(CommentVote.id.desc()).all()
         downvote_comments=get_comments([i[0] for i in downvote_query], v=user)
         packet["downvoted_comments"]={
             'html':lambda:render_template("notifications.html", v=None, comments=downvote_comments, page=1, next_exists=False),
             'json':lambda:[x.json_core for x in downvote_comments]
-            }
+        }
 
     # blocked_users=db.query(UserBlock.target_id).filter_by(user_id=user.id).order_by(UserBlock.id.desc()).all()
     # users=[get_account(base36encode(x[0])) for x in blocked_users]
@@ -429,6 +435,8 @@ def info_packet(db, user, method="html"):
 
 
     os.remove(f"zip/{user.username}")
+
+    print("finished")
 
 
 
