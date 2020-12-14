@@ -356,15 +356,15 @@ def info_packet(db, user, method="html"):
         print('submissions')
         #submissions
         post_ids=db.query(Submission.id).filter_by(author_id=user.id).order_by(Submission.id.desc()).all()
-        posts=get_posts(list(post_ids), v=user)
+        posts=get_posts([i[0] for i in post_ids], v=user)
         packet["posts"]={
             'html':lambda:render_template("userpage.html", v=None, u=user, listing=posts, page=1, next_exists=False),
             'json':lambda:[x.self_download_json for x in posts]
         }
 
         print('comments')
-        comment_ids=db.query(Comment).filter_by(author_id=user.id).order_by(Comment.id.desc()).all()
-        comemnts=get_comments(list(comment_ids), v=user)
+        comment_ids=db.query(Comment.id).filter_by(author_id=user.id).order_by(Comment.id.desc()).all()
+        comemnts=get_comments([i[0] for i in comment_ids], v=user)
         packet["comments"]={
             'html':lambda:render_template("userpage_comments.html", v=None, u=user, comments=comments, page=1, next_exists=False),
             'json':lambda:[x.self_download_json for x in comments]
