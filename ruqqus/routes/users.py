@@ -349,10 +349,9 @@ def info_packet(db, user, method="html"):
 
     packet={}
 
-    with app.request_context():
+    with app.app_context():
 
         g.db=db
-
 
         print('submissions')
         #submissions
@@ -413,24 +412,24 @@ def info_packet(db, user, method="html"):
     #     "json":lambda:[x.json_core for x in users]
     # }
 
-    zip=zipfile.ZipFile(f"zip_{user.username}", mode='x')
+        zip=zipfile.ZipFile(f"zip_{user.username}", mode='x')
 
-    for entry in packet:
+        for entry in packet:
 
-        zip.writestr(entry, packet[entry][method]())
+            zip.writestr(entry, packet[entry][method]())
 
-    zip.close()
+        zip.close()
 
 
-    send_mail(
-        user.email,
-        "Your Ruqqus Data",
-        "Your Ruqqus data is attached.",
-        "Your Ruqqus data is attached.",
-        files={
-            f"Data for {v.username}":zip
-        }
-    )
+        send_mail(
+            user.email,
+            "Your Ruqqus Data",
+            "Your Ruqqus data is attached.",
+            "Your Ruqqus data is attached.",
+            files={
+                f"Data for {v.username}":zip
+            }
+        )
 
 
     os.remove(f"zip/{user.username}")
