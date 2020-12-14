@@ -347,8 +347,6 @@ def convert_file(html):
     if not isinstance(html, str):
         return html
 
-    print(len(html))
-
     soup=BeautifulSoup(html, 'html.parser')
 
     for thing in soup.find_all('link', rel="stylesheet"):
