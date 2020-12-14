@@ -421,10 +421,6 @@ def info_packet(db, user, method="html"):
             files={f"{user.username}_{entry}.{method}": io.StringIO(packet[entry][method]()) for entry in packet}
         )
 
-        zip.close()
-
-
-    os.remove(filename)
 
     print("finished")
 
