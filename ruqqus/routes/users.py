@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 import pyotp
 import qrcode
 import io
+import threading
+import zipfile
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -14,6 +16,7 @@ from ruqqus.helpers.embed import *
 from ruqqus.helpers.markdown import *
 from ruqqus.helpers.get import *
 from ruqqus.classes import *
+from ruqqus.mail import *
 from flask import *
 from ruqqus.__main__ import app, cache, limiter
 
@@ -338,3 +341,100 @@ def saved_listing(v):
                                             ),
             'api': lambda: jsonify({"data": [x.json for x in listing]})
             }
+
+
+def info_packet(db, user, method="html"):
+
+    packet={}
+
+    #submissions
+    post_ids=db.query(Submission.id).filter_by(author_id=user.id).order_by(Submission.id.desc()).all()
+    posts=get_posts(list(post_ids), v=user)
+    packet["posts"]={
+        'html':lambda:render_template("userpage.html", v=None, u=user, listing=posts, page=1, next_exists=False),
+        'json':lambda:[x.self_download_json for x in posts]
+    }
+
+    comment_ids=db.query(Comment).filter_by(author_id=user.id).order_by(Comment.id.desc()).all()
+    comemnts=get_comments(list(comment_ids), v=user)
+    packet["comments"]={
+        'html':lambda:render_template("userpage_comments.html", v=None, u=user, comments=comments, page=1, next_exists=False)
+        'json':lambda:[x.self_download_json for x in comments]
+    }
+
+    upvote_query=db.query(Vote.submission_id).filter_by(user_id=user.id, vote_type=1).order_by(Vote.id.desc()).all()
+    upvote_posts=get_posts([i[0] for i in upvote_query]), v=user)
+    upvote_posts=[i for i in upvote_posts]
+    for post in upvote_posts:
+        post.__dict__['voted']=1
+    packet['upvoted_posts']={
+        'html':lambda:render_template("home.html", v=None, listing=posts, page=1, next_exists=False),
+        'json':lambda:[x.json_core for x in upvote_posts]
+        }
+
+    downvote_query=db.query(Vote.submission_id).filter_by(user_id=user.id, vote_type=-1).order_by(Vote.id.desc()).all()
+    downvote_posts=get_posts([i[0] for i in downvote_query], v=user)
+    packet['downvoted_posts']={
+        'html':lambda:render_template("home.html", v=None, listing=posts, page=1, next_exists=False),
+        'json':lambda:[x.json_core for x in downvote_posts]
+        }
+
+    upvote_query=db.query(CommentVote.comment_id).filter_by(user_id=user.id, vote_type=1).order_by(CommentVote.id.desc()).all()
+    upvote_comments=get_comments([i[0] for i in upvote_query], v=user)
+    packet["upvoted_comments"]={
+        'html':lambda:render_template("notifications.html", v=None, comments=upvote_comments, page=1, next_exists=False)
+        'json':lambda:[x.json_core for x in upvote_comments]
+        }
+
+    downvote_query=db.query(CommentVote.comment_id).filter_by(user_id=user.id, vote_type=-1).order_by(CommentVote.id.desc()).all()
+    downvote_comments=get_comments([i[0] for i in downvote_query], v=user)
+    packet["downvoted_comments"]={
+        'html':lambda:render_template("notifications.html", v=None, comments=downvote_comments, page=1, next_exists=False)
+        'json':lambda:[x.json_core for x in downvote_comments]
+        }
+
+    # blocked_users=db.query(UserBlock.target_id).filter_by(user_id=user.id).order_by(UserBlock.id.desc()).all()
+    # users=[get_account(base36encode(x[0])) for x in blocked_users]
+    # packet["blocked_users"]={
+    #     "html":lambda:render_template
+    #     "json":lambda:[x.json_core for x in users]
+    # }
+
+    output = {f"{name}.{method}": packet[name][method]() for name in packet}
+
+    zip=zipfile.ZipFile(open(f"zip/{user.username}", mode="x"))
+
+    for entry in output:
+
+        zip.writestr(entry, output[entry])
+
+    zip.close()
+
+
+    send_mail(
+        user.email,
+        "Your Ruqqus Data",
+        "Your Ruqqus data is attached.",
+        "Your Ruqqus data is attached.",
+        files={
+            f"Data for {v.username}":zip
+        }
+    )
+
+
+    os.remove(f"zip/{user.username}")
+
+
+
+@app.route("/my_info", methods=["PUT"])
+@auth_required
+@validate_formkey
+def my_info_put(v):
+
+    if not v.is_activated:
+        return redirect("/settings/security")
+
+    thread=threading.Thread(target=info_packet, args=(g.db, v), kwargs={'method':'html'},daemon=True)
+    thread.start()
+
+    return "started"

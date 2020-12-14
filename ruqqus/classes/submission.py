@@ -370,7 +370,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'created_utc': self.created_utc,
                 'edited_utc': self.edited_utc or 0,
                 'guild_name': self.board.name,
-                'is_archived': self.is_archived,
                 'original_guild_name': self.original_board.name if not self.board_id == self.original_board_id else None,
                 'comment_count': self.comment_count,
                 'score': self.score_fuzzed,
@@ -503,6 +502,31 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def embed_template(self):
         return f"site_embeds/{self.domain_obj.embed_template}.html"
+
+    @property
+    def self_download_json(self):
+
+        #This property should never be served to anyone but author and admin
+        if not self.is_banned and not self.is_banned:
+            return self.json_core
+
+        return {
+            "title":self.title
+            "author": self.author.name,
+            "url": self.url,
+            "body": self.body,
+            "body_html": self.body_html,
+            "is_banned": bool(self.is_banned),
+            "is_deleted": self.is_deleted,
+            'created_utc': self.created_utc,
+            'id': self.base36id,
+            'fullname': self.fullname,
+            'guild_name': self.board.name,
+            'original_guild_name': self.original_board.name if not self.board_id == self.original_board_id else None,
+            'comment_count': self.comment_count,
+            'permalink': self.permalink
+        }
+    
     
 class SaveRelationship(Base, Stndrd):
 

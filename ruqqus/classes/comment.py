@@ -392,6 +392,30 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
         return False
 
+    @property
+    def self_download_json(self):
+
+        #This property should never be served to anyone but author and admin
+        if not self.is_banned and not self.is_banned:
+            return self.json_core
+
+        data= {
+            "author": self.author.name,
+            "body": self.body,
+            "body_html": self.body_html,
+            "is_banned": bool(self.is_banned),
+            "is_deleted": self.is_deleted,
+            'created_utc': self.created_utc,
+            'id': self.base36id,
+            'fullname': self.fullname,
+            'permalink': self.permalink,
+            'post_id': self.post.base36id,
+            'level': self.level
+        }
+        if self.level>=2:
+            data['parent_comment_id']= base36encode(self.parent_comment_id)
+
+        return data
     
 
 
