@@ -417,7 +417,7 @@ def info_packet(db, user, method="html"):
 
     for entry in packet:
 
-            zip.writestr(entry, packet[entry][method]())
+        zip.writestr(entry, packet[entry][method]())
 
     zip.close()
 
