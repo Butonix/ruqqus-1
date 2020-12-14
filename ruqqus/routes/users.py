@@ -355,7 +355,7 @@ def convert_file(html):
 
         thing["href"]=f"//{app.config['SERVER_NAME']}{thing['href']}"
 
-    for thing in soup.findall('a', href=True):
+    for thing in soup.find_all('a', href=True):
 
         if thing["href"].startswith('/') and not thing["href"].startswith(("javascript",'//')):
             thing["href"]=f"//{app.config['SERVER_NAME']}{thing['href']}"
