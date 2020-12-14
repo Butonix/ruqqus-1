@@ -580,8 +580,16 @@ def admin_ban_analysis(v):
 def admin_paypaltxns(v):
 
     page=int(request.args.get("page",1))
+    user=request.args.get('user','')
 
-    txns = g.db.query(PayPalTxn).filter_by(status=3).order_by(PayPalTxn.created_utc.desc())
+    txns = g.db.query(PayPalTxn).filter(PayPalTxn.status!=1)
+
+    if user:
+        user=get_user(user)
+        txns=txns.filter_by(user_id=user.id)
+
+
+    txns=txns.order_by(PayPalTxn.created_utc.desc())
 
     txns = [x for x in txns.offset(100*(page-1)).limit(101).all()]
 

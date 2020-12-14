@@ -4,9 +4,33 @@
 {% block navbar %}{% endblock %}
 
 {% block content %}
+
     <div class="row no-gutters mt-md-3">
 
       <div class="col-12">
+
+        {% if error %}
+          <div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+            <i class="fas fa-exclamation-circle my-auto"></i>
+            <span>
+              {{ error }}
+            </span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true"><i class="far fa-times"></i></span>
+            </button>
+          </div>
+        {% endif %}
+        {% if msg %}
+          <div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+            <i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
+            <span>
+              {{ msg }}
+            </span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true"><i class="far fa-times"></i></span>
+            </button>
+          </div>
+        {% endif %}
 
         <div class="posts" id="posts">
 

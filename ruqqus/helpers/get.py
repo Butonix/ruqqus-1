@@ -597,9 +597,11 @@ def get_txn(paypal_id):
 
 def get_txid(txid):
 
-    txn= g.db.query(PayPalTxn).filter_by(id=base36decode(txid), status=3).first()
+    txn= g.db.query(PayPalTxn).filter_by(id=base36decode(txid)).first()
 
     if not txn:
+        abort(404)
+    elif txn.status==1:
         abort(404)
 
     return txn

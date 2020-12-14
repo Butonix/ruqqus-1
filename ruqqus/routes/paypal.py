@@ -146,7 +146,12 @@ def shop_buy_coins_completed(v):
 
     g.db.add(v)
 
-    return redirect("/settings/premium?msg=success")
+    return render_template(
+        "single_txn.html", 
+        v=v, 
+        txns=[txn],
+        msg="The Royal Bank has minted your Coins. Here is a copy of your order."
+        )
 
 @app.route("/shop/paypal_webhook", methods=["POST"])
 def paypal_webhook_handler():
@@ -357,4 +362,8 @@ def paypaltxn_txid(txid, v):
     if txn.user_id != v.id and v.admin_level<4:
         abort(403)
 
-    return render_template("single_txn.html", v=v, txns=[txn])
+    return render_template(
+        "single_txn.html", 
+        v=v, 
+        txns=[txn]
+        )
