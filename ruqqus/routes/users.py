@@ -460,6 +460,6 @@ def my_info_put(v):
     #thread=threading.Thread(target=info_packet, args=(g.db, v), kwargs={'method':'html'}, daemon=True)
     #thread.start()
 
-    info_packet()
+    info_packet(g.db, v)
 
     return "started"
