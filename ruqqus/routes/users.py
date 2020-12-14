@@ -432,7 +432,7 @@ def info_packet(db, user, method="html"):
             "Your Ruqqus data is attached.",
             "Your Ruqqus data is attached.",
             files={
-                f"Data for {v.username}":zip
+                f"Data for {user.username}":zip
             }
         )
 
