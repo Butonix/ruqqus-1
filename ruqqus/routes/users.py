@@ -351,12 +351,20 @@ def convert_file(html):
 
     for thing in soup.find_all('link', rel="stylesheet"):
 
-        thing["href"]=f"//{app.config['SERVER_NAME']}{thing['href']}"
+        if not thing['href'].startswith('https'):
+
+            if app.config["FORCE_HTTPS"]:
+                thing["href"]=f"https://{app.config['SERVER_NAME']}{thing['href']}"
+            else: 
+                thing["href"]=f"https://{app.config['SERVER_NAME']}{thing['href']}"
 
     for thing in soup.find_all('a', href=True):
 
         if thing["href"].startswith('/') and not thing["href"].startswith(("javascript",'//')):
-            thing["href"]=f"//{app.config['SERVER_NAME']}{thing['href']}"
+            if app.config["FORCE_HTTPS"]:
+                thing["href"]=f"https://{app.config['SERVER_NAME']}{thing['href']}"
+            else:
+                thing["href"]=f"http://{app.config['SERVER_NAME']}{thing['href']}"
 
 
     return str(soup)
