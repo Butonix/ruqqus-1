@@ -511,7 +511,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             return self.json_core
 
         return {
-            "title":self.title
+            "title":self.title,
             "author": self.author.name,
             "url": self.url,
             "body": self.body,
