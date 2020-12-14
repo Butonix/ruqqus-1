@@ -6,7 +6,6 @@ import pyotp
 import qrcode
 import io
 import threading
-import zipfile
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -371,7 +370,7 @@ def info_packet(db, user, method="html"):
             'json':lambda:[x.self_download_json for x in comments]
         }
 
-        print('post upvotes')
+        print('post_upvotes')
         upvote_query=db.query(Vote.submission_id).filter_by(user_id=user.id, vote_type=1).order_by(Vote.id.desc()).all()
         upvote_posts=get_posts([i[0] for i in upvote_query], v=user)
         upvote_posts=[i for i in upvote_posts]
@@ -382,7 +381,7 @@ def info_packet(db, user, method="html"):
             'json':lambda:[x.json_core for x in upvote_posts]
         }
 
-        print('post downvotes')
+        print('post_downvotes')
         downvote_query=db.query(Vote.submission_id).filter_by(user_id=user.id, vote_type=-1).order_by(Vote.id.desc()).all()
         downvote_posts=get_posts([i[0] for i in downvote_query], v=user)
         packet['downvoted_posts']={
@@ -412,18 +411,6 @@ def info_packet(db, user, method="html"):
     #     "html":lambda:render_template
     #     "json":lambda:[x.json_core for x in users]
     # }
-        filename=f"zip_{user.username}"
-        try:
-            zip=zipfile.ZipFile(filename, mode='x')
-        except FileExistsError:
-            os.remove(filename)
-            zip=zipfile.ZipFile(filename, mode='x')
-
-        for entry in packet:
-
-            zip.writestr(entry, packet[entry][method]())
-
-        zip.close()
 
 
         send_mail(
@@ -431,10 +418,10 @@ def info_packet(db, user, method="html"):
             "Your Ruqqus Data",
             "Your Ruqqus data is attached.",
             "Your Ruqqus data is attached.",
-            files={
-                f"Data for {user.username}":zip
-            }
+            files={f"{user.username}_{entry}.{method}": io.StringIO(packet[entry][method]()) for entry in packet}
         )
+
+        zip.close()
 
 
     os.remove(filename)
