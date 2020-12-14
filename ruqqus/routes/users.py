@@ -352,12 +352,12 @@ def convert_file(html):
 
     for thing in soup.findall('link', rel="stylesheet"):
 
-        thing["href"]=f"//{app.config["SERVER_NAME"]}{thing['href']}"
+        thing["href"]=f"//{app.config['SERVER_NAME']}{thing['href']}"
 
     for thing in soup.findall('a', href=True):
 
         if thing["href"].startswith('/') and not thing["href"].startswith(("javascript",'//')):
-            thing["href"]=f"//{app.config["SERVER_NAME"]}{thing['href']}"
+            thing["href"]=f"//{app.config['SERVER_NAME']}{thing['href']}"
 
 
     return str(soup)
