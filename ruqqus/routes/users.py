@@ -365,7 +365,7 @@ def info_packet(db, user, method="html"):
 
         print('comments')
         comment_ids=db.query(Comment.id).filter_by(author_id=user.id).order_by(Comment.id.desc()).all()
-        comemnts=get_comments([i[0] for i in comment_ids], v=user)
+        comments=get_comments([i[0] for i in comment_ids], v=user)
         packet["comments"]={
             'html':lambda:render_template("userpage_comments.html", v=None, u=user, comments=comments, page=1, next_exists=False),
             'json':lambda:[x.self_download_json for x in comments]
