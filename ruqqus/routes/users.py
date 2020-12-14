@@ -411,8 +411,12 @@ def info_packet(db, user, method="html"):
     #     "html":lambda:render_template
     #     "json":lambda:[x.json_core for x in users]
     # }
-
-        zip=zipfile.ZipFile(f"zip_{user.username}", mode='x')
+        filename=f"zip_{user.username}"
+        try:
+            zip=zipfile.ZipFile(filename, mode='x')
+        except FileExistsError:
+            os.remove(filename)
+            zip=zipfile.ZipFile(filename, mode='x')
 
         for entry in packet:
 
@@ -432,7 +436,7 @@ def info_packet(db, user, method="html"):
         )
 
 
-    os.remove(f"zip/{user.username}")
+    os.remove(filename)
 
     print("finished")
 
