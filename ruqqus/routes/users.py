@@ -353,7 +353,7 @@ def info_packet(db, user, method="html"):
 
         g.db=db
 
-        print('submission ids')
+        print('submissions')
         #submissions
         post_ids=db.query(Submission.id).filter_by(author_id=user.id).order_by(Submission.id.desc()).all()
         posts=get_posts([i[0] for i in post_ids], v=user)
@@ -412,7 +412,7 @@ def info_packet(db, user, method="html"):
     #     "json":lambda:[x.json_core for x in users]
     # }
 
-    zip=zipfile.ZipFile(f"zip/{user.username}", mode='x')
+    zip=zipfile.ZipFile(f"zip_{user.username}", mode='x')
 
     for entry in packet:
 
