@@ -349,7 +349,7 @@ def info_packet(db, user, method="html"):
 
     packet={}
 
-    with app.app_context():
+    with app.request_context("/my_info"):
 
         g.db=db
 
