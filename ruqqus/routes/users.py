@@ -353,10 +353,12 @@ def info_packet(db, user, method="html"):
 
         g.db=db
 
-        print('submissions')
+        print('submission ids')
         #submissions
         post_ids=db.query(Submission.id).filter_by(author_id=user.id).order_by(Submission.id.desc()).all()
+        print('getting posts')
         posts=get_posts([i[0] for i in post_ids], v=user)
+        print('assembling json')
         packet["posts"]={
             'html':lambda:render_template("userpage.html", v=None, u=user, listing=posts, page=1, next_exists=False),
             'json':lambda:[x.self_download_json for x in posts]
@@ -412,13 +414,11 @@ def info_packet(db, user, method="html"):
     #     "json":lambda:[x.json_core for x in users]
     # }
 
-    output = {f"{name}.{method}": packet[name][method]() for name in packet}
-
     zip=zipfile.ZipFile(open(f"zip/{user.username}", mode="x"))
 
-    for entry in output:
+    for entry in packet:
 
-        zip.writestr(entry, output[entry])
+        zip.writestr(entry, packet[entry][method]())
 
     zip.close()
 
