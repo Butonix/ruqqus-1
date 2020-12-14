@@ -428,7 +428,7 @@ def info_packet(db, user, method="html"):
 
 
 
-@app.route("/my_info", methods=["PUT"])
+@app.route("/my_info", methods=["POST"])
 @auth_required
 @validate_formkey
 def my_info_put(v):

@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>My Info</h1>
-<form action="/my_info" method="put">
+<form action="/my_info" method="post">
 	<input type="hidden" name="formkey" value="{{ v.formkey }}">
 
 	<input type="submit" value="Request HTML data">
