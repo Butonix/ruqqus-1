@@ -345,6 +345,8 @@ def saved_listing(v):
 
 def info_packet(db, user, method="html"):
 
+    print(f"starting {user.username}")
+
     packet={}
 
     #submissions
