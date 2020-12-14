@@ -342,6 +342,27 @@ def saved_listing(v):
             }
 
 
+def convert_file(html):
+
+    if not isinstance(html, str):
+        return html
+
+
+    soup=BeautifulSoup(html)
+
+    for thing in soup.findall('link', rel="stylesheet"):
+
+        thing["href"]=f"//{app.config["SERVER_NAME"]}{thing['href']}"
+
+    for thing in soup.findall('a', href=True):
+
+        if thing["href"].startswith('/') and not thing["href"].startswith(("javascript",'//')):
+            thing["href"]=f"//{app.config["SERVER_NAME"]}{thing['href']}"
+
+
+    return str(soup)
+
+
 def info_packet(db, user, method="html"):
 
     print(f"starting {user.username}")
@@ -413,13 +434,15 @@ def info_packet(db, user, method="html"):
     # }
 
 
-        send_mail(
-            user.email,
-            "Your Ruqqus Data",
-            "Your Ruqqus data is attached.",
-            "Your Ruqqus data is attached.",
-            files={f"{user.username}_{entry}.{method}": io.StringIO(packet[entry][method]()) for entry in packet}
-        )
+
+
+    send_mail(
+        user.email,
+        "Your Ruqqus Data",
+        "Your Ruqqus data is attached.",
+        "Your Ruqqus data is attached.",
+        files={f"{user.username}_{entry}.{method}": io.StringIO(convert_file(packet[entry][method]()) for entry in packet}
+    )
 
 
     print("finished")
@@ -434,7 +457,9 @@ def my_info_put(v):
     if not v.is_activated:
         return redirect("/settings/security")
 
-    thread=threading.Thread(target=info_packet, args=(g.db, v), kwargs={'method':'html'}, daemon=True)
-    thread.start()
+    #thread=threading.Thread(target=info_packet, args=(g.db, v), kwargs={'method':'html'}, daemon=True)
+    #thread.start()
+
+    info_packet()
 
     return "started"
