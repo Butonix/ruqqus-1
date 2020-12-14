@@ -349,9 +349,10 @@ def info_packet(db, user, method="html"):
 
     packet={}
 
-    with app.app_context():
+    with app.request_context():
 
         g.db=db
+
 
         print('submissions')
         #submissions
@@ -416,7 +417,7 @@ def info_packet(db, user, method="html"):
 
     for entry in packet:
 
-        zip.writestr(entry, packet[entry][method]())
+            zip.writestr(entry, packet[entry][method]())
 
     zip.close()
 
