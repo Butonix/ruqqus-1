@@ -272,6 +272,10 @@ def api_comment(v):
         reason = f"Remove the {ban.domain} link from your comment and try again."
         if ban.reason:
             reason += f" {ban.reason_text}"
+            
+        #auto ban for digitally malicious content
+        if any([x.reason==4 for x in bans]):
+            v.ban(days=30, reason="Digitally malicious content is not allowed.")
         return jsonify({"error": reason}), 401
 
     # check existing
