@@ -386,7 +386,7 @@ def info_packet(username, method="html"):
 
     packet={}
 
-    with app.request_context("/my_info"):
+    with app.test_request_context("/my_info"):
 
         db=db_session()
         g.timestamp=int(time.time())
