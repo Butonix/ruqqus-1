@@ -17,7 +17,7 @@ from ruqqus.helpers.get import *
 from ruqqus.classes import *
 from ruqqus.mail import *
 from flask import *
-from ruqqus.__main__ import app, cache, limiter
+from ruqqus.__main__ import app, cache, limiter, db_session
 
 BAN_REASONS = ['',
                "URL shorteners are not permitted."
@@ -380,7 +380,7 @@ def convert_file(html):
     return str(soup)
 
 
-def info_packet(db, user, method="html"):
+def info_packet(user, method="html"):
 
     print(f"starting {user.username}")
 
@@ -388,7 +388,7 @@ def info_packet(db, user, method="html"):
 
     with app.test_request_context("/my_info"):
 
-        g.db=db
+        g.db=db_session()
         g.timestamp=int(time.time())
 
         print('submissions')
@@ -478,7 +478,7 @@ def my_info_put(v):
     if method not in ['html','json']:
         abort(400)
 
-    thread=threading.Thread(target=info_packet, args=(g.db, v), kwargs={'method':method}, daemon=True)
+    thread=threading.Thread(target=info_packet, args=(v), kwargs={'method':method}, daemon=True)
     thread.start()
 
     #info_packet(g.db, v)
