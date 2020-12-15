@@ -513,6 +513,20 @@ def edit_comment(cid, v):
     bans = filter_comment_html(body_html)
 
     if bans:
+        
+        ban = bans[0]
+        reason = f"Remove the {ban.domain} link from your comment and try again."
+
+        #auto ban for digitally malicious content
+        if any([x.reason==4 for x in bans]):
+            v.ban(days=30, reason="Digitally malicious content is not allowed.")
+            return jsonify({"error":"Digitally malicious content is not allowed."})
+        
+        if ban.reason:
+            reason += f" {ban.reason_text}"    
+          
+        return jsonify({"error": reason}), 401
+    
         return {'html': lambda: render_template("comment_failed.html",
                                                 action=f"/edit_comment/{c.base36id}",
                                                 badlinks=[
