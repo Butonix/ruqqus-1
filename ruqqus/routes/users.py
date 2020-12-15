@@ -366,6 +366,16 @@ def convert_file(html):
             else:
                 thing["href"]=f"http://{app.config['SERVER_NAME']}{thing['href']}"
 
+    for thing in soup.find_all('img', src=True):
+
+        if thing["src"].startswith('/') and not thing["src"].startswith('//'):
+            if app.config["FORCE_HTTPS"]:
+                thing["src"]=f"https://{app.config['SERVER_NAME']}{thing['src']}"
+            else:
+                thing["src"]=f"http://{app.config['SERVER_NAME']}{thing['src']}"
+
+
+
 
     return str(soup)
 
@@ -464,9 +474,13 @@ def my_info_put(v):
     if not v.is_activated:
         return redirect("/settings/security")
 
-    #thread=threading.Thread(target=info_packet, args=(g.db, v), kwargs={'method':'html'}, daemon=True)
-    #thread.start()
+    method=request.values.get("method","html")
+    if method not in ['html','json']:
+        abort(400)
 
-    info_packet(g.db, v)
+    thread=threading.Thread(target=info_packet, args=(g.db, v), kwargs={'method':method}, daemon=True)
+    thread.start()
+
+    #info_packet(g.db, v)
 
     return "started"
