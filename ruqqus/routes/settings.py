@@ -157,7 +157,7 @@ def settings_security_post(v):
         if new_email.endswith("@gmail.com"):
             parts=re.split("\+.*@", new_email)
             gmail_username=parts[0]
-            gmail_username=username.replace(".","")
+            gmail_username=gmail_username.replace(".","")
             new_email=f"{gmail_username}@gmail.com"
         if new_email == v.email:
             return redirect("/settings/security?error=" +
