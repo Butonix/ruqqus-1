@@ -478,7 +478,7 @@ def my_info_put(v):
     if method not in ['html','json']:
         abort(400)
 
-    thread=threading.Thread(target=info_packet, args=(v), kwargs={'method':method}, daemon=True)
+    thread=threading.Thread(target=info_packet, args=(v,, kwargs={'method':method}, daemon=True)
     thread.start()
 
     #info_packet(g.db, v)
