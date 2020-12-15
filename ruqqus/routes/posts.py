@@ -482,6 +482,12 @@ def submit_post(v):
         reason = f"Remove the {ban.domain} link from your post and try again."
         if ban.reason:
             reason += f" {ban.reason_text}"
+            
+        #auto ban for digitally malicious content
+        if any([x.reason==4 for x in bans]):
+            v.ban(days=30, reason="Digitally malicious content is not allowed.")
+            abort(403)
+            
         return {"html": lambda: (render_template("submit.html",
                                                  v=v,
                                                  error=reason,
