@@ -380,9 +380,9 @@ def convert_file(html):
     return str(soup)
 
 
-def info_packet(user, method="html"):
+def info_packet(username, method="html"):
 
-    print(f"starting {user.username}")
+    print(f"starting {username}")
 
     packet={}
 
@@ -391,6 +391,8 @@ def info_packet(user, method="html"):
         db=db_session()
         g.timestamp=int(time.time())
         g.db=db
+
+        user=get_user(username)
 
         print('submissions')
         #submissions
@@ -479,7 +481,7 @@ def my_info_put(v):
     if method not in ['html','json']:
         abort(400)
 
-    thread=threading.Thread(target=info_packet, args=(v,), kwargs={'method':method}, daemon=True)
+    thread=threading.Thread(target=info_packet, args=(v.username,), kwargs={'method':method}, daemon=True)
     thread.start()
 
     #info_packet(g.db, v)
