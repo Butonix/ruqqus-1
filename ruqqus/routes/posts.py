@@ -312,6 +312,9 @@ def submit_post(v):
     domain_obj = get_domain(domain)
     if domain_obj:
         if not domain_obj.can_submit:
+          
+            if domain_obj.reason==4:
+                v.ban(days=30, reason="Digitally malicious content is not allowed")
 
             return {"html": lambda: (render_template("submit.html",
                                                      v=v,
