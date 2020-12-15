@@ -453,13 +453,13 @@ def info_packet(db, user, method="html"):
 
 
 
-    send_mail(
-        user.email,
-        "Your Ruqqus Data",
-        "Your Ruqqus data is attached.",
-        "Your Ruqqus data is attached.",
-        files={f"{user.username}_{entry}.{method}": io.StringIO(convert_file(packet[entry][method]())) for entry in packet}
-    )
+        send_mail(
+            user.email,
+            "Your Ruqqus Data",
+            "Your Ruqqus data is attached.",
+            "Your Ruqqus data is attached.",
+            files={f"{user.username}_{entry}.{method}": io.StringIO(convert_file(packet[entry][method]())) for entry in packet}
+        )
 
 
     print("finished")
