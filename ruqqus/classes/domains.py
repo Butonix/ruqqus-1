@@ -17,7 +17,7 @@ class Domain(Base):
     domain = Column(String)
     can_submit = Column(Boolean, default=False)
     can_comment = Column(Boolean, default=False)
-    reason = Column(String)
+    reason = Column(Integer)
     show_thumbnail = Column(Boolean, default=False)
     embed_function = Column(String(64), default=None)
     embed_template = Column(String(32), default=None)
