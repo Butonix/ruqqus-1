@@ -388,8 +388,9 @@ def info_packet(user, method="html"):
 
     with app.test_request_context("/my_info"):
 
-        g.db=db_session()
+        db=db_session()
         g.timestamp=int(time.time())
+        g.db=db
 
         print('submissions')
         #submissions
