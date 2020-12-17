@@ -1167,7 +1167,7 @@ def mod_approve_bid_user(bid, board, v):
         g.db.commit()
 
         if user.id != v.id:
-            text = f"You have added as an approved contributor to +{board.name}."
+            text = f"You have been added as an approved contributor to +{board.name}."
             send_notification(user, text)
 
     return "", 204
