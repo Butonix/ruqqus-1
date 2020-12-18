@@ -675,7 +675,8 @@ class User(Base, Stndrd, Age_times):
     @property
     def json_core(self):
 
-        if self.is_banned:
+    	now=int(time.time())
+        if self.is_banned and now < self.unban_utc:
             return {'username': self.username,
                     'permalink': self.permalink,
                     'is_banned': True,
