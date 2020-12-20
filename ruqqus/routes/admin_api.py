@@ -546,7 +546,7 @@ def admin_ban_domain(v):
     if d:
         d.can_submit=False
         d.can_comment=False
-        reason=reason
+        d.reason=reason
     else:
         d=Domain(
             domain=domain,
