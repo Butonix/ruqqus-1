@@ -542,8 +542,8 @@ def admin_ban_domain(v):
     reason=int(request.form.get("reason",0))
 
     d_query=domain.replace("_","\_")
-    d==g.db.query(Domain).filter_by(domain=d_query).first()
-    if existing:
+    d=g.db.query(Domain).filter_by(domain=d_query).first()
+    if d:
         d.can_submit=False
         d.can_comment=False,
         reason=reason
