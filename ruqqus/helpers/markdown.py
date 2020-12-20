@@ -53,6 +53,8 @@ class CustomRenderer(HTMLRenderer):
 
         user = get_user(target, graceful=True)
 
+        print(user)
+
         try:
             if g.v.admin_level == 0 and g.dv.any_block_exists(user):
                 return f"{space}@{target}"
