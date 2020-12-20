@@ -37,9 +37,9 @@
     <input type="hidden" name="formkey" value="{{ v.formkey }}">
     <label for="reason_select">Ban reason</label>
     <select id="reason_select" name="reason">
-
+        <option value="0">---Select Ban Reason---</option>
         {% for i in reasons %}
-            <option value="{{ i }}">{{ reasons[i] }}</option>
+            <option value="{{ i }}"{% if i==domain.reason %} selected{% endif %}>{{ reasons[i] }}</option>
         {% endfor %}
     </select>
     <input type="submit" class="btn btn-primary" value="Ban {{ domain_name }}">
