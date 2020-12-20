@@ -540,7 +540,7 @@ def admin_ban_domain(v):
         abort(400)
 
     d_query=domain.replace("_","\_")
-    existing=g.db.query(Domain).filter_by(domain=d_query)
+    existing=g.db.query(Domain).filter_by(domain=d_query).first()
     if existing:
         abort(409)
 
