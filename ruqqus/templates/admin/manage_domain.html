@@ -9,6 +9,10 @@
 {% endblock %}
 
 {% block content %}
+
+<input id="domainget" type="text" class="form-control" placeholder="Enter domain name" value="{{ domain_name }}">
+<a class="btn btn-primary" href="javascript:void(0)" onclick="window.location.href='/admin/domain/'+document.getElementById('domainget').value">Get Domain Record</a>
+
 <h1>{{ domain_name }}</h2>
 
 <h2>Current</h2>
