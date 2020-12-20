@@ -541,7 +541,7 @@ def admin_ban_domain(v):
         abort(400)
 
     d_query=domain.replace("_","\_")
-    existing=g.db.query(Domain).filter(domain=d_query)
+    existing=g.db.query(Domain).filter_by(domain=d_query)
     if existing:
         abort(409)
 
@@ -562,23 +562,4 @@ def admin_ban_domain(v):
     g.db.add(d)
     g.db.commit()
     return redirect(domain.permalink)
-
-
-@app.route("/admin/domain/<domain_name>", methods=["GET"])
-@admin_level_required(4)
-def admin_domain_domain(domain_name, v):
-
-    d_query=domain_name.replace("_","\_")
-    domain=g.db.query(Domain).filter_by(domain=d_query).first()
-
-    if not domain:
-        domain=Domain(domain=domain_name)
-
-    return render_template(
-        "admin/manage_domain.html",
-        v=v,
-        domain_name=domain_name,
-        domain=domain,
-        reasons=REASONS
-        )
 
