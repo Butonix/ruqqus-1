@@ -577,6 +577,7 @@ def admin_domain_domain(domain_name, v):
     return render_template(
         "admin/manage_domain.html",
         v=v,
+        domain_name=domain_name,
         domain=domain,
         reasons=REASONS
         )
