@@ -13,7 +13,7 @@ from secrets import token_hex
 import matplotlib.pyplot as plt
 import imagehash
 
-import ruqqus.classes.domains.reasons
+from ruqqus.classes.domains import reasons as REASONS
 from ruqqus.__main__ import app, cache
 from os import remove
 
@@ -578,6 +578,6 @@ def admin_domain_domain(domian_name, v):
         "admin/manage_domain.html",
         v=v,
         domain=domain,
-        reasons=ruqqus.classes.domains.reasons
+        reasons=REASONS
         )
 
