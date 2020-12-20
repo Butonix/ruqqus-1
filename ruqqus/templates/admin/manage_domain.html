@@ -1,0 +1,46 @@
+{% extends "docs_default.html" %}
+
+{% block sidebarblock %}{% endblock %}
+{% block sidebarLeftblock %}{% endblock %}
+
+{% block title %}
+<title>Ruqqus - Help</title>
+<meta name="description" content="Ruqqus Help">
+{% endblock %}
+
+{% block content %}
+<h1>{{ domain_name }}</h2>
+
+<h2>Current</h2>
+
+<h3 class="h5 pt-2">can_submit</h3>
+<p>{{ domain.can_submit }}</p>
+
+<h3 class="h5 pt-2">can_comment</h3>
+<p>{{ domain.can_comment }}</p>
+
+<h3 class="h5 pt-2">reason</h3>
+<p>{{ domain.reason_text }}</p>
+
+<h3 class="h5 pt-2">show_thumbnail</h3>
+<p>{{ domain.show_thumbnail }}</p>
+
+<h3 class="h5 pt-2">embed_function</h3>
+<p>{{ domain.embed_function }}</p>
+
+<h3 class="h5 pt-2">embed_template</h3>
+<p>{{ domain.embed_template }}</p>
+
+<h2>Actions</h2>
+
+<form action="/admin/ban_domain" method="post">
+    <input type="hidden" name="formkey" value="{{ v.formkey }}">
+    <select name="reason">
+        {% for i in reasons %}
+            <option value="{{ i }}">{{ reasons[i] }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" class="btn btn-primary" value="Ban {{ domain_name }}">
+</form>
+
+{% endblock %}

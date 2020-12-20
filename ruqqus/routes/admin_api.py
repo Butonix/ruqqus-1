@@ -13,6 +13,7 @@ from secrets import token_hex
 import matplotlib.pyplot as plt
 import imagehash
 
+import ruqqus.classes.domains.reasons
 from ruqqus.__main__ import app, cache
 from os import remove
 
@@ -526,3 +527,57 @@ def admin_dump_cache(v):
     cache.clear()
 
     return jsonify({"message": "Internal cache cleared."})
+
+
+
+@app.route("/admin/ban_domain", methods=["POST"])
+@admin_level_required(4)
+@validate_formkey
+def admin_ban_domain(v):
+
+    domain=request.form.get("domain",'').lstrip().rstrip()
+
+    if not domain:
+        abort(400)
+
+    d_query=domain.replace("_","\_")
+    existing=g.db.query(Domain).filter(domain=d_query)
+    if existing:
+        abort(409)
+
+    reason=int(request.form.get("reason",0))
+    if not reason:
+        abort(400)
+
+    d=Domain(
+        domain=domain,
+        can_submit=False,
+        can_comment=False,
+        reason=reason,
+        show_thumbnail=False,
+        embed_function=None,
+        embed_template=None
+        )
+
+    g.db.add(d)
+    g.db.commit()
+    return "",204
+
+
+@app.route("/admin/domain/<domain_name>", methods=["GET"])
+@admin_level_required(4)
+def admin_domain_domain(domian_name, v):
+
+    d_query=domain.replace("_","\_")
+    domain=g.db.query(Domain).filter(domain=d_query).first()
+
+    if not domain:
+        domain=Domain(domain=domain_name)
+
+    return render_template(
+        "admin/manage_domain.html",
+        v=v,
+        domain=domain,
+        reasons=ruqqus.classes.domains.reasons
+        )
+
