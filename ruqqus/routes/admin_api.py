@@ -13,7 +13,6 @@ from secrets import token_hex
 import matplotlib.pyplot as plt
 import imagehash
 
-from ruqqus.classes.domains import reasons as REASONS
 from ruqqus.__main__ import app, cache
 from os import remove
 
