@@ -560,5 +560,5 @@ def admin_ban_domain(v):
 
     g.db.add(d)
     g.db.commit()
-    return redirect(domain.permalink)
+    return redirect(d.permalink)
 
