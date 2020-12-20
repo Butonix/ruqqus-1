@@ -568,7 +568,7 @@ def admin_ban_domain(v):
 @admin_level_required(4)
 def admin_domain_domain(domain_name, v):
 
-    d_query=domain.replace("_","\_")
+    d_query=domain_name.replace("_","\_")
     domain=g.db.query(Domain).filter(domain=d_query).first()
 
     if not domain:
