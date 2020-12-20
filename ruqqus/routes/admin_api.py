@@ -561,7 +561,7 @@ def admin_ban_domain(v):
 
     g.db.add(d)
     g.db.commit()
-    return "",204
+    return redirect(domain.permalink)
 
 
 @app.route("/admin/domain/<domain_name>", methods=["GET"])

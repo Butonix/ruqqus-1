@@ -26,6 +26,11 @@ class Domain(Base):
     def reason_text(self):
         return reasons.get(self.reason)
 
+    @property
+    def permalink(self):
+        return f"/admin/domain/{domain}"
+    
+
 
 class BadLink(Base):
 
