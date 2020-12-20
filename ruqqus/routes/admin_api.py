@@ -539,24 +539,24 @@ def admin_ban_domain(v):
     if not domain:
         abort(400)
 
-    d_query=domain.replace("_","\_")
-    existing=g.db.query(Domain).filter_by(domain=d_query).first()
-    if existing:
-        abort(409)
-
     reason=int(request.form.get("reason",0))
-    if not reason:
-        abort(400)
 
-    d=Domain(
-        domain=domain,
-        can_submit=False,
-        can_comment=False,
-        reason=reason,
-        show_thumbnail=False,
-        embed_function=None,
-        embed_template=None
-        )
+    d_query=domain.replace("_","\_")
+    d==g.db.query(Domain).filter_by(domain=d_query).first()
+    if existing:
+        d.can_submit=False
+        d.can_comment=False,
+        reason=reason
+    else:
+        d=Domain(
+            domain=domain,
+            can_submit=False,
+            can_comment=False,
+            reason=reason,
+            show_thumbnail=False,
+            embed_function=None,
+            embed_template=None
+            )
 
     g.db.add(d)
     g.db.commit()
