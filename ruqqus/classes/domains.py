@@ -28,7 +28,7 @@ class Domain(Base):
 
     @property
     def permalink(self):
-        return f"/admin/domain/{domain}"
+        return f"/admin/domain/{self.domain}"
     
 
 
