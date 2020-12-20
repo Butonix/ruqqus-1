@@ -35,6 +35,7 @@
 
 <form action="/admin/ban_domain" method="post">
     <input type="hidden" name="formkey" value="{{ v.formkey }}">
+    <input type="hidden" name="domain" value="{{ domain_name }}">
     <label for="reason_select">Ban reason</label>
     <select id="reason_select" class="form-control" name="reason">
         <option value="0">---Select Ban Reason---</option>
