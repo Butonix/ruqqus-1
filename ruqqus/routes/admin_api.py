@@ -569,7 +569,7 @@ def admin_ban_domain(v):
 def admin_domain_domain(domain_name, v):
 
     d_query=domain_name.replace("_","\_")
-    domain=g.db.query(Domain).filter(domain=d_query).first()
+    domain=g.db.query(Domain).filter_by(domain=d_query).first()
 
     if not domain:
         domain=Domain(domain=domain_name)
