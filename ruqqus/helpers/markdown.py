@@ -54,7 +54,7 @@ class CustomRenderer(HTMLRenderer):
         user = get_user(target, graceful=True)
 
         try:
-            if g.v.admin_level == 0 and g.dv.any_block - exists(user):
+            if g.v.admin_level == 0 and g.dv.any_block_exists(user):
                 return f"{space}@{target}"
         except BaseException:
             pass
