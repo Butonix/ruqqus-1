@@ -170,7 +170,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
 
     
     if categories:
-        posts=posts.filter(Board.category.in_(tuple(categories)))
+        posts=posts.filter(Board.subcat.in_(tuple(categories)))
 
     posts=posts.options(contains_eager(Submission.board))
 
@@ -333,13 +333,6 @@ def front_all(v):
         session['cats']=cats
 
 
-
-
-
-
-    
-
-
     ids = frontlist(sort=sort_method,
                     page=page,
                     nsfw=(v and v.over_18 and not v.filter_nsfw),
@@ -351,7 +344,7 @@ def front_all(v):
                     gt=int(request.args.get("utc_greater_than", 0)),
                     lt=int(request.args.get("utc_less_than", 0)),
                     filter_words=v.filter_words if v else [],
-                    categories=categories
+                    categories=cats
                     )
 
     # check existence of next page
