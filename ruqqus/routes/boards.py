@@ -106,8 +106,8 @@ def create_board_post(v):
                                message="You can only create up to 2 guilds per day. Try again later."
                                ), 429
 
-    category=int(request.form.get("category"))
-    if not category or category not in CATEGORIES:
+    subcat=int(request.form.get("category"))
+    if not subcat or subcat not in SUBCATS:
         return render_template("message.html",
                                title="Category required.",
                                message="You need to select a category."
@@ -125,7 +125,7 @@ def create_board_post(v):
                       description_html=description_html,
                       over_18=bool(request.form.get("over_18", "")),
                       creator_id=v.id,
-                      category=category
+                      subcat=subcat
                       )
 
     g.db.add(new_board)
