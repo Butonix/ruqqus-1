@@ -634,7 +634,7 @@ CATEGORIES=[
           'subCats': [{'name': 'left'}, {'name': 'right'}, {'name': 'authoritarian'}, {'name': 'libertarian'}, {'name': 'activism'}, {'name': 'offbeat'}, {'name': 'news'}],
           'icon': 'fa-university',
           'color': 'purple-400',
-          'visible': True
+          'visible': False
         },
         { id: 13,
           'name': 'science',

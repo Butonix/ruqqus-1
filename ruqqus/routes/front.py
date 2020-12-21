@@ -292,6 +292,16 @@ def home(v):
         return front_all()
 
 
+def default_cat_cookie():
+
+    output=[]
+    for x in CATEGORIES:
+        if x['visible']:
+            for y in x['subCats']:
+                output.append(y['name'])
+    return output
+
+
 @app.route("/all", methods=["GET"])
 @app.route("/api/v1/all/listing", methods=["GET"])
 @app.route("/inpage/all")
@@ -309,23 +319,25 @@ def front_all(v):
     ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
 
-    #cat adjustments
-    add_cat = request.args.get("add_cat")
-    rm_cat = request.args.get('rm_cat')
+    cats=session.get("cats")
+    if not cats:
+        cats=default_cat_cookie()
+        session['cats']=cats
 
-    categories = session.get("categories", [True]*len(CATEGORIES))
-    if add_cat:
-        add_cat=int(add_cat)
-        categories[add_cat]=True
-        session["categories"]=categories
-    if rm_cat:
-        rm_cat=int(rm_cat)
-        categories[rm_cat]=False
-        session["categories"]=categories
-
+    add_cat=request.args.get("add_cat")
+    if add_cat in SUBCATS and add_cat not in cats:
+        cats.append(add_cat)
+        session['cats']=cats
+    if rm_cat in cats:
+        cats.remove(rm_cat)
+        session['cats']=cats
 
 
-    cats = [i for i in range(len(CATEGORIES)) if categories[i]]
+
+
+
+
+    
 
 
     ids = frontlist(sort=sort_method,
