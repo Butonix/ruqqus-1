@@ -517,13 +517,13 @@ class Board(Base, Stndrd, Age_times):
 
 
 CATEGORIES=[
-        { id: 0,
-          'name': 'all guilds',
-          'subCats': [],
-          'icon': 'fa-globe',
-          'color': null,
-          'visible': True
-        },
+  #      { id: 0,
+  #        'name': 'all guilds',
+  #        'subCats': [],
+  #        'icon': 'fa-globe',
+  #        'color': null,
+  #        'visible': True
+  #      },
         { id: 1,
           'name': 'arts',
           'subCats': [{'name': 'animation'}, {'name': 'production'}, {'name': 'photography'}, {'name': 'crafts'}],
