@@ -1454,9 +1454,9 @@ def change_guild_category(v, board, bid, category):
     try:
         g.db.add(board)
         g.db.flush()
-
+        return jsonify({"message":f"Category changed to {CATEGORIES[category]}"})
 
     except:
         return jsonify({"error":f"Invalid category ID"}), 400
 
-    return jsonify({"message":f"Category changed to {CATEGORIES[category]}"})
+
