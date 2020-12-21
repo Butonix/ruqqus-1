@@ -1448,13 +1448,8 @@ def board_comments(boardname, v):
 @validate_formkey
 def change_guild_category(v, board, bid, category):
 
-    try:
-        board.category=SUBCATS.index(category)
-        g.db.add(board)
-        g.db.flush()
-        return jsonify({"message":f"Category changed to {category}"})
+    if category not in SUBCATS:
+        return jsonify({"error": f"Invalid category `{category}`"}), 400
 
-    except:
-        return jsonify({"error":f"Invalid category `{category}`"}), 400
-
+    board.subcat=category
 
