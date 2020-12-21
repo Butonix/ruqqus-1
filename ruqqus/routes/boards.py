@@ -790,7 +790,8 @@ def board_about_settings(boardname, board, v):
         "guild/settings.html",
         v=v,
         b=board,
-        categories=CATEGORIES)
+        categories=CATEGORIES,
+        SUBCATS=SUBCATS)
 
 
 @app.route("/+<boardname>/mod/appearance", methods=["GET"])
