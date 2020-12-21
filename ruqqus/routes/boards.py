@@ -1451,12 +1451,12 @@ def change_guild_category(v, board, bid, category):
     board.category=SUBCATS.index(category)
     
 
-    try:
-        g.db.add(board)
-        g.db.flush()
-        return jsonify({"message":f"Category changed to {CATEGORIES[category]}"})
+    #try:
+    g.db.add(board)
+    g.db.flush()
+    return jsonify({"message":f"Category changed to {CATEGORIES[category]}"})
 
-    except:
-        return jsonify({"error":f"Invalid category `{category}`"}), 400
+    #except:
+    #    return jsonify({"error":f"Invalid category `{category}`"}), 400
 
 
