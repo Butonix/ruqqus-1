@@ -1447,7 +1447,7 @@ def board_comments(boardname, v):
 @validate_formkey
 def change_guild_category(v, board, bid, category):
 
-    category=int(category)
+    category=int(category)-1
 
     board.category=category
 
