@@ -200,6 +200,9 @@
               <div class="w-lg-100">
                 <div class="input-group mb-2">
                   <select id="category-selector" name="category" class="form-control" onchange="post_toast('/mod/{{ b.base36id }}/category/'+document.getElementById('category-selector').selectedOptions[0].value)">
+                    {% if not b.category %}
+                      <option value="0" selected>===Select a category===</option>
+                    {% endif %}
                     {% for category in categories %}
                       {% if category != None %}
                         <option value="{{ loop.index }}" {% if b.category==loop.index %} selected{% endif %}>{{ category }}</option>
