@@ -250,6 +250,7 @@ def sign_up_get(v):
 @no_cors
 @auth_desired
 def sign_up_post(v):
+
     if v:
         abort(403)
 
@@ -293,11 +294,9 @@ def sign_up_post(v):
 
         return redirect(f"/signup?{urlencode(args)}")
 
-    # check for tokens
-# if now-int(form_timestamp)>120:
-# #print(f"signup fail - {username } - form expired")
+    if app.config["DISABLE_SIGNUPS"]:
+        return new_signup("New account registration is currently closed. Please come back later.")
 
-        return new_signup("There was a problem. Please try again.")
     if now - int(form_timestamp) < 5:
         #print(f"signup fail - {username } - too fast")
         return new_signup("There was a problem. Please try again.")
