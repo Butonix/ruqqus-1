@@ -32,21 +32,24 @@ from ruqqus.__main__ import Base, cache
 #     Sports="Sports"
 #     Technology="Technology"
 
-CATEGORIES={
-    1:  "Arts",
-    2:  "Culture",
-    3:  "Discussion",
-    4:  "Food",
-    5:  "Entertainment",
-    6:  "Gaming",
-    7:  "Hobby",
-    8:  "Humor",
-    9:  "News",
-    10: "Photography",
-    11: "Politics",
-    12: "Sports",
-    13: "Technology"
-}
+CATEGORIES=[
+    "Arts",
+    "Culture",
+    "Discussion",
+    "Food",
+    "Entertainment",
+    "Gaming",
+    "Hobby",
+    "Humor",
+    "News",
+    "Offensive",
+    "Photography",
+    "Politics",
+    "Science",
+    "Sports",
+    "Technology"
+    ]
+
 
 class Board(Base, Stndrd, Age_times):
 

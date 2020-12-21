@@ -57,8 +57,10 @@
                     <div class="input-group">
 
                         <select id="select-category" name="category" class="form-control">
-                            {% for category in _categories %}
-                            <option value="{{ category }}">{{ _categories[category] }}</option>
+                            {% for category in categories %}
+                                {% if category is not None %}
+                                    <option value="{{ loop.index + 1 }}">{{ category }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>
