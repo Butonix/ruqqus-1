@@ -57,10 +57,13 @@
                     <div class="input-group">
 
                         <select id="select-category" name="category" class="form-control">
+                            <option value="0" selected disabled>===Select a category===</option>
                             {% for category in categories %}
-                                {% if category != None %}
-                                    <option value="{{ loop.index }}">{{ category }}</option>
-                                {% endif %}
+                                <option disabled>{{ category['name'] | capitalize }}</option>
+
+                                {% for subcat in category['subCats'] %}
+                                  <option value="{{ subcat['name'] }}"> - {{ subcat['name'] | capitalize }}</option>
+                                {% endfor %}
                             {% endfor %}
                         </select>
                     </div>
