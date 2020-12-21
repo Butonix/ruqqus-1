@@ -1456,6 +1456,6 @@ def change_guild_category(v, board, bid, category):
         return jsonify({"message":f"Category changed to {CATEGORIES[category]}"})
 
     except:
-        return jsonify({"error":f"Invalid category `category`"}), 400
+        return jsonify({"error":f"Invalid category `{category}`"}), 400
 
 
