@@ -9,6 +9,7 @@ from ruqqus.helpers.get import *
 
 from ruqqus.__main__ import app, cache
 from ruqqus.classes.submission import Submission
+from ruqqus.classes.boards import CATEGORIES
 
 
 @app.route("/post/", methods=["GET"])
@@ -308,7 +309,23 @@ def front_all(v):
     ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
 
-    categories = [int(x) for x in request.args.get("categories").split(',')] if request.args.get("categories") else []
+    #cat adjustments
+    add_cat = request.args.get("add_cat")
+    rm_cat = request.args.get('rm_cat')
+
+    categories = session.get("categories", [True]*len(CATEGORIES))
+    if add_cat:
+        add_cat=int(add_cat)
+        categories[add_cat]=True
+        session["categories"]=categories
+    if rm_cat:
+        rm_cat=int(rm_cat)
+        categories[rm_cat]=False
+        session["categories"]=categories
+
+
+
+    cats = [i for i in range(len(CATEGORIES)) if categories[i]]
 
 
     ids = frontlist(sort=sort_method,
