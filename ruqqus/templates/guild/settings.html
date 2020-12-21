@@ -204,10 +204,10 @@
                       <option value="0" selected>===Select a category===</option>
                     {% endif %}
                     {% for category in categories %}
-                        <option disabled>{{ category['name'] }}</option>
+                        <option disabled>{{ category['name'] | capitalize }}</option>
 
                         {% for subcat in category['subCats'] %}
-                          <option value="{{ subcat['name'] }}">{{ subcat ['name'] | capitalize }}</option>
+                          <option value="{{ subcat['name'] }}"> - {{ subcat ['name'] | capitalize }}</option>
                         {% endfor %}
                     {% endfor %}
                   </select>
