@@ -60,7 +60,7 @@ class Board(Base, Stndrd, Age_times):
     rank_trending=Column(Float, default=0)
     stored_subscriber_count=Column(Integer, default=1)
     all_opt_out=Column(Boolean, default=False)
-    category=Column(Integer, default=0)
+    subcat=Column(String(32), default=None)
 
     moderators=relationship("ModRelationship")
     subscribers=relationship("Subscription", lazy="dynamic")
