@@ -58,7 +58,7 @@
 
                         <select id="select-category" name="category" class="form-control">
                             {% for category in categories %}
-                                {% if category is not None %}
+                                {% if category != None %}
                                     <option value="{{ loop.index + 1 }}">{{ category }}</option>
                                 {% endif %}
                             {% endfor %}
