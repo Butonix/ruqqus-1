@@ -99,7 +99,7 @@ class CustomRenderer(HTMLRenderer):
     
 def preprocess(text):
     
-    text=re.sub(enter_re, text, "\n\n")
+    text=re.sub(enter_re, "\n\n", text)
     
     return text
     
