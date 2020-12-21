@@ -210,7 +210,7 @@ def get_post_title(v):
 @api("create")
 def submit_post(v):
 
-    title = request.form.get("title", "")
+    title = request.form.get("title", "").lstrip().rstrip()
 
     title = title.lstrip().rstrip()
     title = title.replace("\n", "")
