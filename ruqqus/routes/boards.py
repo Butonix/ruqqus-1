@@ -1449,6 +1449,9 @@ def change_guild_category(v, board, bid, category):
 
     category=int(category)-1
 
+    if category<0:
+        return jsonify({"error":"Invalid category ID"}), 400
+
     board.category=category
 
     try:
