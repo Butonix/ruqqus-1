@@ -107,7 +107,7 @@ def create_board_post(v):
                                ), 429
 
     category=int(request.form.get("category"))
-    if not category or category not in Board._categories:
+    if not category or category not in CATEGORIES:
         return render_template("message.html",
                                title="Category required.",
                                message="You need to select a category."
