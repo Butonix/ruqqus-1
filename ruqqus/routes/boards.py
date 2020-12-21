@@ -17,7 +17,7 @@ from ruqqus.helpers.aws import check_csam_url
 from ruqqus.classes import *
 from .front import guild_ids
 from ruqqus.classes.rules import *
-from ruqqus.classes.boards import CATEGORIES
+from ruqqus.classes.boards import CATEGORIES, SUBCATS
 from flask import *
 
 from ruqqus.__main__ import app, limiter, cache
@@ -1447,19 +1447,15 @@ def board_comments(boardname, v):
 @validate_formkey
 def change_guild_category(v, board, bid, category):
 
-    category=int(category)-1
-
-    if category<0:
-        return jsonify({"error":"Invalid category ID"}), 400
-
-    board.category=category
+    
 
     try:
+        board.category=SUBCATS.index(category)
         g.db.add(board)
         g.db.flush()
         return jsonify({"message":f"Category changed to {CATEGORIES[category]}"})
 
     except:
-        return jsonify({"error":f"Invalid category ID"}), 400
+        return jsonify({"error":f"Invalid category `category`"}), 400
 
 

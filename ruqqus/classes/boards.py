@@ -658,3 +658,9 @@ CATEGORIES=[
           'visible': True
         }
     ]
+
+
+SUBCATS = []
+for x in CATEGORIES:
+    for y in x['subCats']:
+        SUBCATS.append(y['name'])

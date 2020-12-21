@@ -9,7 +9,7 @@ from ruqqus.helpers.get import *
 
 from ruqqus.__main__ import app, cache
 from ruqqus.classes.submission import Submission
-from ruqqus.classes.boards import CATEGORIES
+from ruqqus.classes.boards import CATEGORIES, SUBCATS
 
 
 @app.route("/post/", methods=["GET"])
