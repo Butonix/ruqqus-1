@@ -259,7 +259,8 @@ def api_comment(v):
     #process and sanitize
     body = request.form.get("body", "")[0:10000]
     body = body.lstrip().rstrip()
-
+    
+    body=preprocess(body)
     with CustomRenderer(post_id=parent_id) as renderer:
         body_md = renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
@@ -407,7 +408,7 @@ def api_comment(v):
             upload_file(name, file)
 
             body = request.form.get("body") + f"\n\n![](https://{BUCKET}/{name})"
-
+            body=preprocess(body)
             with CustomRenderer(post_id=parent_id) as renderer:
                 body_md = renderer.render(mistletoe.Document(body))
             body_html = sanitize(body_md, linkgen=True)
@@ -505,6 +506,7 @@ def edit_comment(cid, v):
         abort(403)
 
     body = request.form.get("body", "")[0:10000]
+    body=preprocess(body)
     with CustomRenderer(post_id=c.post.base36id) as renderer:
         body_md = renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)

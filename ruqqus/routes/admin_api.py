@@ -526,3 +526,39 @@ def admin_dump_cache(v):
     cache.clear()
 
     return jsonify({"message": "Internal cache cleared."})
+
+
+
+@app.route("/admin/ban_domain", methods=["POST"])
+@admin_level_required(4)
+@validate_formkey
+def admin_ban_domain(v):
+
+    domain=request.form.get("domain",'').lstrip().rstrip()
+
+    if not domain:
+        abort(400)
+
+    reason=int(request.form.get("reason",0))
+
+    d_query=domain.replace("_","\_")
+    d=g.db.query(Domain).filter_by(domain=d_query).first()
+    if d:
+        d.can_submit=False
+        d.can_comment=False
+        d.reason=reason
+    else:
+        d=Domain(
+            domain=domain,
+            can_submit=False,
+            can_comment=False,
+            reason=reason,
+            show_thumbnail=False,
+            embed_function=None,
+            embed_template=None
+            )
+
+    g.db.add(d)
+    g.db.commit()
+    return redirect(d.permalink)
+

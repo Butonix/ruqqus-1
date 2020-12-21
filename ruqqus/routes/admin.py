@@ -12,6 +12,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.get import *
 from ruqqus.classes import *
+from ruqqus.classes.domains import reasons as REASONS
 from ruqqus.routes.admin_api import create_plot, user_stat_data
 from flask import *
 from ruqqus.__main__ import app
@@ -602,6 +603,24 @@ def admin_paypaltxns(v):
         txns=txns, 
         next_exists=next_exists,
         page=page
+        )
+
+@app.route("/admin/domain/<domain_name>", methods=["GET"])
+@admin_level_required(4)
+def admin_domain_domain(domain_name, v):
+
+    d_query=domain_name.replace("_","\_")
+    domain=g.db.query(Domain).filter_by(domain=d_query).first()
+
+    if not domain:
+        domain=Domain(domain=domain_name)
+
+    return render_template(
+        "admin/manage_domain.html",
+        v=v,
+        domain_name=domain_name,
+        domain=domain,
+        reasons=REASONS
         )
 
 
