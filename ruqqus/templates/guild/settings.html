@@ -207,7 +207,7 @@
                         <option disabled>{{ category['name'] | capitalize }}</option>
 
                         {% for subcat in category['subCats'] %}
-                          <option value="{{ subcat['name'] }}"{% if subcat['name'])==b.subcat %} selected{% endif %}> - {{ subcat['name'] | capitalize }}</option>
+                          <option value="{{ subcat['name'] }}"{% if subcat['name']==b.subcat %} selected{% endif %}> - {{ subcat['name'] | capitalize }}</option>
                         {% endfor %}
                     {% endfor %}
                   </select>
