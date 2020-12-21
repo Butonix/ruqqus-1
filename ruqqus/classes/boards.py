@@ -521,7 +521,7 @@ CATEGORIES=[
           'name': 'all guilds',
           'subCats': [],
           'icon': 'fa-globe',
-          color: null,
+          'color': null,
           'visible': True
         },
         { id: 1,
