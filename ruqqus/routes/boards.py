@@ -1447,10 +1447,11 @@ def board_comments(boardname, v):
 @validate_formkey
 def change_guild_category(v, board, bid, category):
 
+
+    board.category=SUBCATS.index(category)
     
 
     try:
-        board.category=SUBCATS.index(category)
         g.db.add(board)
         g.db.flush()
         return jsonify({"message":f"Category changed to {CATEGORIES[category]}"})
