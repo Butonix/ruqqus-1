@@ -27,6 +27,7 @@ valid_board_regex = re.compile("^[a-zA-Z0-9][a-zA-Z0-9_]{2,24}$")
 
 @app.route("/create_guild", methods=["GET"])
 @is_not_banned
+@no_negative_balance("html")
 def create_board_get(v):
     if not v.can_make_guild:
         return render_template("message.html",
@@ -58,7 +59,7 @@ def create_board_get(v):
 @auth_desired
 @api()
 def api_board_available(name, v):
-    if get_guild(name, graceful=True):
+    if get_guild(name, graceful=True) or not re.match(valid_board_regex, name):
         return jsonify({"board": name, "available": False})
     else:
         return jsonify({"board": name, "available": True})
@@ -66,6 +67,7 @@ def api_board_available(name, v):
 
 @app.route("/create_guild", methods=["POST"])
 @is_not_banned
+@no_negative_balance("html")
 @validate_formkey
 def create_board_post(v):
     if not v.can_make_guild:
@@ -186,6 +188,7 @@ def board_name(name, v):
     sort = request.args.get("sort", "hot")
     page = int(request.args.get("page", 1))
     t = request.args.get("t", "all")
+    ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
     ids = board.idlist(sort=sort,
                        t=t,
@@ -199,7 +202,7 @@ def board_name(name, v):
     next_exists = (len(ids) == 26)
     ids = ids[0:25]
 
-    if page == 1 and sort != "new":
+    if page == 1 and sort != "new" and not ignore_pinned:
         stickies = g.db.query(Submission.id).filter_by(board_id=board.id,
                                                        is_banned=False,
                                                        is_deleted=False,
@@ -229,6 +232,48 @@ def board_name(name, v):
                                    )
             }
 
+@app.route("/mod/distinguish_post/<bid>/<pid>", methods=["POST"])
+@auth_required
+@is_guildmaster
+def mod_distinguish_post(bid, pid, board, v):
+
+    #print(pid, board, v)
+
+    post = get_post(pid, v=v)
+
+    if not post.board_id==board.id:
+        abort(400)
+
+    if post.author_id != v.id:
+        abort(403)
+
+    if post.gm_distinguish:
+        post.gm_distinguish = 0
+    else:
+        post.gm_distinguish = board.id
+    g.db.add(post)
+
+    return "", 204
+
+@app.route("/mod/distinguish_comment/<bid>/<cid>", methods=["POST"])
+@auth_required
+@is_guildmaster
+def mod_distinguish_comment(bid, cid, board, v):
+
+    comment = get_comment(cid, v=v)
+
+    if not comment.post.board_id==board.id:
+        abort(400)
+
+    if comment.author_id != v.id:
+        abort(403)
+
+    if comment.gm_distinguish:
+        comment.gm_distinguish = 0
+    else:
+        comment.gm_distinguish = board.id
+
+    return "", 204
 
 @app.route("/mod/kick/<bid>/<pid>", methods=["POST"])
 @auth_required
@@ -239,7 +284,7 @@ def mod_kick_bid_pid(bid, pid, board, v):
     post = get_post(pid)
 
     if not post.board_id == board.id:
-        abort(422)
+        abort(400)
 
     post.board_id = 1
     post.guild_name = "general"
@@ -259,7 +304,7 @@ def mod_accept_bid_pid(bid, pid, board, v):
 
     post = get_post(pid)
     if not post.board_id == board.id:
-        abort(422)
+        abort(400)
 
     post.mod_approved = v.id
     g.db.add(post)
@@ -374,16 +419,27 @@ def user_kick_pid(pid, v):
 
 
 @app.route("/mod/take/<pid>", methods=["POST"])
+@app.route("/api/v1/mod/take/<pid>")
 @auth_required
 @validate_formkey
+@api("guildmaster")
 def mod_take_pid(pid, v):
 
-    bid = request.form.get("board_id", None)
+    bid = request.form.get("board_id", request.form.get("guild", None))
     if not bid:
         abort(400)
 
     board = get_board(bid)
     post = get_post(pid)
+
+    #check cooldowns
+    now=int(time.time())
+    if post.original_board_id != board.id and post.author_id != v.id:
+        if now <  v.last_yank_utc + 3600:
+            return jsonify({'error':f"You've yanked a post recently. You need to wait 1 hour between yanks."}), 401
+        elif now <  board.last_yank_utc + 3600:
+            return jsonify({'error':f"+{board.name} has yanked a post recently. The Guild needs to wait 1 hour between yanks."}), 401
+
 
     if board.is_banned:
         return jsonify({'error': f"+{board.name} is banned. You can't yank anything there."}), 403
@@ -409,6 +465,17 @@ def mod_take_pid(pid, v):
     post.board_id = board.id
     post.guild_name = board.name
     g.db.add(post)
+
+    if post.original_board_id != board.id and post.author_id != v.id:
+        board.last_yank_utc=now
+        v.last_yank_utc=now
+
+        g.db.add(board)
+        g.db.add(v)
+
+        notif_text=f"Your post [{post.title}]({post.permalink}) has been Yanked from +general to +{board.name}.\n\nIf you don't want it there, just click `Remove from +{board.name}` on the post."
+        send_notification(post.author, notif_text)
+        g.db.commit()
 
     # clear board's listing caches
     cache.delete_memoized(Board.idlist, board)
@@ -508,9 +575,15 @@ def mod_remove_username(bid, username, board, v):
     v_mod = board.has_mod(v)
 
     if not u_mod:
-        abort(422)
+        abort(400)
     elif not v_mod:
-        abort(422)
+        abort(400)
+
+    if not u_mod.board_id==board.id:
+        abort(400)
+
+    if not v_mod.board_id==board.id:
+        abort(400)
 
     if v_mod.id > u_mod.id:
         abort(403)
@@ -561,23 +634,6 @@ def mod_bid_settings_optout(bid, board, v):
 
     # nsfw
     board.all_opt_out = bool(request.form.get("opt_out", False) == 'true')
-
-    g.db.add(board)
-
-    return "", 204
-
-
-@app.route("/mod/<bid>/settings/downdisable", methods=["POST"])
-@auth_required
-@is_guildmaster
-@validate_formkey
-def mod_bid_settings_downdisable(bid, board, v):
-
-    # disable downvoting
-    board.downvotes_disabled = bool(
-        request.form.get(
-            "downdisable",
-            False) == 'true')
 
     g.db.add(board)
 
@@ -766,7 +822,14 @@ def board_about_exiled(boardname, board, v):
     next_exists = (len(bans) == 26)
     bans = bans[0:25]
 
-    return render_template("guild/bans.html", v=v, b=board, bans=bans)
+    return render_template(
+        "guild/bans.html", 
+        v=v, 
+        b=board, 
+        bans=bans,
+        page=page,
+        next_exists=next_exists
+        )
 
 
 @app.route("/+<boardname>/mod/contributors", methods=["GET"])
@@ -775,6 +838,7 @@ def board_about_exiled(boardname, board, v):
 def board_about_contributors(boardname, board, v):
 
     page = int(request.args.get("page", 1))
+
     contributors = board.contributors.filter_by(is_active=True).order_by(
         ContributorRelationship.created_utc.desc()).offset(25 * (page - 1)).limit(26)
 
@@ -891,8 +955,7 @@ def all_mod_queue(v):
     page = int(request.args.get("page", 1))
 
     board_ids = [
-        x.board_id for x in v.moderates.filter_by(
-            accepted=True).all()]
+        x.id for x in v.boards_modded]
 
     ids = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.board_id.in_(board_ids),
                                                                   Submission.mod_approved is None,
@@ -1115,9 +1178,10 @@ def mod_approve_bid_user(bid, board, v):
                                               is_active=True,
                                               approving_mod_id=v.id)
         g.db.add(new_contrib)
+        g.db.commit()
 
         if user.id != v.id:
-            text = f"You have added as an approved contributor to +{board.name}."
+            text = f"You have been added as an approved contributor to +{board.name}."
             send_notification(user, text)
 
     return "", 204
@@ -1135,9 +1199,13 @@ def mod_unapprove_bid_user(bid, board, v):
     if not x:
         abort(409)
 
+    if not x.board_id==board.id:
+        abort(400)
+
     x.is_active = False
 
     g.db.add(x)
+    g.db.commit()
 
     return "", 204
 
@@ -1187,7 +1255,7 @@ def siege_guild(v):
                                ), 403
 
     # Cannot siege +general, +ruqqus, +ruqquspress, +ruqqusdmca
-    if guild.id in [1, 2, 10, 1000]:
+    if not guild.is_siegable:
         return render_template("message.html",
                                v=v,
                                title=f"Siege against +{guild.name} Failed",
@@ -1318,12 +1386,12 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
     post = get_post(pid)
 
     if post.board_id != board.id:
-        abort(422)
+        abort(400)
 
     try:
         x = bool(int(x))
     except BaseException:
-        abort(422)
+        abort(400)
 
     if x and not board.can_pin_another:
         return jsonify({"error": f"+{board.name} already has the maximum number of pinned posts."}), 409

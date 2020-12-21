@@ -1,5 +1,6 @@
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
+from urllib.parse import quote
 
 from sqlalchemy import *
 
@@ -8,8 +9,9 @@ from ruqqus.__main__ import app, cache
 
 
 @cache.memoize(300)
-def searchlisting(q, v=None, page=1, t="None", sort="hot"):
+def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
+        
     posts = g.db.query(Submission).join(
         Submission.submission_aux).join(
         Submission.author).filter(
@@ -17,10 +19,12 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot"):
                 '%' +
                 q +
                 '%')).options(
-                    contains_eager(
-                        Submission.submission_aux),
-        contains_eager(
-                        Submission.author))
+                    contains_eager(Submission.submission_aux),
+        contains_eager(Submission.author))
+
+
+    if b:
+        posts=posts.filter(Submission.board_id==b.id)
 
     if not (v and v.over_18):
         posts = posts.filter(Submission.over_18 == False)
@@ -98,7 +102,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="hot"):
 @auth_desired
 def search(v, search_type="posts"):
 
-    query = request.args.get("q", '')
+    query = request.args.get("q", '').lstrip().rstrip()
 
     page = max(1, int(request.args.get("page", 1)))
 
@@ -106,9 +110,13 @@ def search(v, search_type="posts"):
 
         # guild search stuff here
         sort = request.args.get("sort", "subs").lower()
+    
+        term=query.lstrip('+')
+        term=term.replace('\\','')
+        term=term.replace('_','\_')
 
         boards = g.db.query(Board).filter(
-            Board.name.ilike('%' + query.lstrip("+") + '%'))
+            Board.name.ilike(f'%{term}%'))
 
         if not(v and v.over_18):
             boards = boards.filter_by(over_18=False)
@@ -116,7 +124,7 @@ def search(v, search_type="posts"):
         if not (v and v.admin_level >= 3):
             boards = boards.filter_by(is_banned=False)
 
-        boards = boards.order_by(Board.stored_subscriber_count.desc())
+        boards = boards.order_by(Board.name.ilike(term).desc(), Board.stored_subscriber_count.desc())
 
         total = boards.count()
 
@@ -134,8 +142,49 @@ def search(v, search_type="posts"):
                                next_exists=next_exists
                                )
 
+    elif query.startswith("@"):
+            
+        term=query.lstrip('@')
+        term=term.replace('\\','')
+        term=term.replace('_','\_')
+        
+        now=int(time.time())
+        users=g.db.query(User).filter(
+            User.username.ilike(f'%{term}%'))
+        
+        
+        if not (v and v.admin_level >= 3):
+            users=users.filter(
+            User.is_private==False,
+            User.is_deleted==False,
+            or_(
+                User.is_banned==0,
+                User.unban_utc<now
+            )
+        )
+        users=users.order_by(User.username.ilike(term).desc(), User.stored_subscriber_count.desc())
+        
+        total=users.count()
+        
+        users=[x for x in users.offset(25 * (page-1)).limit(26)]
+        next_exists=(len(users)==26)
+        users=users[0:25]
+        
+        
+        
+        return render_template("search_users.html",
+                       v=v,
+                       query=query,
+                       total=total,
+                       page=page,
+                       users=users,
+                       next_exists=next_exists
+                      )
+                   
+    
+
     else:
-        sort = request.args.get("sort", "hot").lower()
+        sort = request.args.get("sort", "top").lower()
         t = request.args.get('t', 'all').lower()
 
         # posts search
@@ -157,3 +206,46 @@ def search(v, search_type="posts"):
                                time_filter=t,
                                next_exists=next_exists
                                )
+
+
+@app.route("/+<name>/search", methods=["GET"])
+@auth_desired
+def search_guild(name, v, search_type="posts"):
+
+
+    query=request.args.get("q").lstrip().rstrip()
+
+    if query.startswith(("+","@")):
+        return redirect(f"/search?q={quote(query)}")
+
+    b = get_guild(name, graceful=True)
+    if not b:
+        abort(404)
+
+    page=max(1, int(request.args.get("page", 1)))
+
+    sort=request.args.get("sort", "hot").lower()
+    
+    
+    t = request.args.get('t', 'all').lower()
+
+    #posts search
+
+    total, ids = searchlisting(query, v=v, page=page, t=t, sort=sort, b=b)
+
+    next_exists=(len(ids)==26)
+    ids=ids[0:25]
+
+    posts=get_posts(ids, v=v)
+
+    return render_template("search.html",
+                   v=v,
+                   query=query,
+                   total=total,
+                   page=page,
+                   listing=posts,
+                       sort_method=sort,
+                           next_exists=next_exists,
+               time_filter=t,
+                           b=b
+                   )

@@ -87,10 +87,8 @@ class Board(Base, Stndrd, Age_times):
 
     _categories=CATEGORIES
 
-    #db side functions
-    subscriber_count=deferred(Column(Integer, server_default=FetchedValue()))
-    
-
+    # db side functions
+    subscriber_count = deferred(Column(Integer, server_default=FetchedValue()))
 
     def __init__(self, **kwargs):
 
@@ -272,6 +270,9 @@ class Board(Base, Stndrd, Age_times):
 
         if user is None:
             return None
+        
+        if user.admin_level >=2:
+            return None
 
         return g.db.query(BanRelationship).filter_by(
             board_id=self.id, user_id=user.id, is_active=True).first()
@@ -282,7 +283,7 @@ class Board(Base, Stndrd, Age_times):
             return False
 
         return self.id in [
-            x.board_id for x in user.subscriptions.all() if x.is_active]
+            x.board_id for x in user.subscriptions if x.is_active]
 
     def has_contributor(self, user):
 
@@ -425,7 +426,7 @@ class Board(Base, Stndrd, Age_times):
         return self.n_pins < 4
 
     @property
-    def json(self):
+    def json_core(self):
 
         if self.is_banned:
             return {'name': self.name,
@@ -438,8 +439,6 @@ class Board(Base, Stndrd, Age_times):
                 'profile_url': self.profile_url,
                 'banner_url': self.banner_url,
                 'created_utc': self.created_utc,
-                'mods_count': self.mods_count,
-                'subscriber_count': self.subscriber_count,
                 'permalink': self.permalink,
                 'description': self.description,
                 'description_html': self.description_html,
@@ -452,8 +451,22 @@ class Board(Base, Stndrd, Age_times):
                 'banner_url': self.banner_url,
                 'profile_url': self.profile_url,
                 'color': "#" + self.color,
-                'guildmasters': [x.json for x in self.mods]
+                'is_siege_protected': not self.is_siegable
                 }
+
+    @property
+    def json(self):
+        data=self.json_core
+
+        if self.is_banned:
+            return data
+
+
+        data['guildmasters']=[x.json_core for x in self.mods]
+        data['subscriber_count']= self.subscriber_count
+
+        return data
+    
 
     @property
     def show_settings_icons(self):
@@ -513,3 +526,8 @@ class Board(Base, Stndrd, Age_times):
             25 * (page - 1)).limit(26).all()
 
         return [x.id for x in comments]
+
+
+    def user_guild_rep(self, user):
+
+        return user.guild_rep(self)

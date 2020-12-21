@@ -55,6 +55,7 @@ _allowed_tags_in_bio = [
 ]
 
 _allowed_attributes = {'a': ['href', 'title', "rel"],
+                       'i': [],
                        'img': ['src', 'class']
                        }
 
@@ -65,22 +66,25 @@ _allowed_protocols = ['http', 'https']
 
 def nofollow(attrs, new=False):
 
-    parsed_url = urlparse(attrs[(None, "href")])
-    domain = parsed_url.netloc
-    if domain and not domain.endswith(("ruqqus.com", "ruqq.us")):
-        attrs[(None, "rel")] = "nofollow noopener"
-        attrs[(None, "target")] = "_blank"
+    raw_url=attrs.get((None, "href"), None)
+    if raw_url:
+        parsed_url = urlparse(raw_url)
 
-        # Force https for all external links in comments
-        # (Ruqqus already forces its own https)
-        new_url = ParseResult(scheme="https",
-                              netloc=parsed_url.netloc,
-                              path=parsed_url.path,
-                              params=parsed_url.params,
-                              query=parsed_url.query,
-                              fragment=parsed_url.fragment)
+        domain = parsed_url.netloc
+        if domain and not domain.endswith(("ruqqus.com", "ruqq.us")):
+            attrs[(None, "rel")] = "nofollow noopener"
+            attrs[(None, "target")] = "_blank"
 
-        attrs[(None, "href")] = urlunparse(new_url)
+            # Force https for all external links in comments
+            # (Ruqqus already forces its own https)
+            new_url = ParseResult(scheme="https",
+                                  netloc=parsed_url.netloc,
+                                  path=parsed_url.path,
+                                  params=parsed_url.params,
+                                  query=parsed_url.query,
+                                  fragment=parsed_url.fragment)
+
+            attrs[(None, "href")] = urlunparse(new_url)
 
     return attrs
 

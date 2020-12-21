@@ -6,6 +6,8 @@ from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.aws import delete_file
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.alerts import *
+from ruqqus.helpers.sanitize import *
+from ruqqus.helpers.markdown import *
 from urllib.parse import urlparse
 from secrets import token_hex
 import matplotlib.pyplot as plt
@@ -45,6 +47,13 @@ def ban_user(user_id, v):
 
         user.ban(admin=v, reason=reason)
 
+
+    for x in user.alts:
+        x.ban(admin=v, reason=reason)
+
+
+
+
     send_notification(user, text)
 
     return (redirect(user.url), user)
@@ -60,11 +69,11 @@ def unban_user(user_id, v):
     if not user:
         abort(400)
 
-    alts = request.form.get("alts", False)
-    user.unban(include_alts=alts)
+    user.unban()
 
     send_notification(user,
                       "Your Ruqqus account has been reinstated. Please carefully review and abide by the [terms of service](/help/terms) and [content policy](/help/rules) to ensure that you don't get suspended again.")
+
 
     return (redirect(user.url), user)
 
@@ -83,8 +92,14 @@ def ban_post(post_id, v):
     post.is_approved = 0
     post.approved_utc = 0
     post.stickied = False
-    post.stickied = False
-    post.ban_reason = request.form.get("reason", None)
+    post.pinned = False
+
+    ban_reason=request.form.get("reason", "")
+    with CustomRenderer() as renderer:
+        ban_reason = renderer.render(mistletoe.Document(ban_reason))
+    ban_reason = sanitize(ban_reason, linkgen=True)
+
+    post.ban_reason = ban_reason
 
     g.db.add(post)
 
@@ -511,3 +526,39 @@ def admin_dump_cache(v):
     cache.clear()
 
     return jsonify({"message": "Internal cache cleared."})
+
+
+
+@app.route("/admin/ban_domain", methods=["POST"])
+@admin_level_required(4)
+@validate_formkey
+def admin_ban_domain(v):
+
+    domain=request.form.get("domain",'').lstrip().rstrip()
+
+    if not domain:
+        abort(400)
+
+    reason=int(request.form.get("reason",0))
+
+    d_query=domain.replace("_","\_")
+    d=g.db.query(Domain).filter_by(domain=d_query).first()
+    if d:
+        d.can_submit=False
+        d.can_comment=False
+        d.reason=reason
+    else:
+        d=Domain(
+            domain=domain,
+            can_submit=False,
+            can_comment=False,
+            reason=reason,
+            show_thumbnail=False,
+            embed_function=None,
+            embed_template=None
+            )
+
+    g.db.add(d)
+    g.db.commit()
+    return redirect(d.permalink)
+

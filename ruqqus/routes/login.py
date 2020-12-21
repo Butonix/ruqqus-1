@@ -139,6 +139,14 @@ def login_post():
     if account.is_banned and account.unban_utc > 0 and time.time() > account.unban_utc:
         account.unban()
 
+    #dev server - primo only
+    if app.config["SERVER_NAME"]=="dev.ruqqus.com" and account.admin_level < 2 and not account.has_premium:
+        return render_template(
+            "login_premium.html", 
+            i=random_image()
+            )
+
+
     # set session and user id
     session["user_id"] = account.id
     session["session_id"] = token_hex(16)
@@ -242,6 +250,7 @@ def sign_up_get(v):
 @no_cors
 @auth_desired
 def sign_up_post(v):
+
     if v:
         abort(403)
 
@@ -285,17 +294,15 @@ def sign_up_post(v):
 
         return redirect(f"/signup?{urlencode(args)}")
 
-    # check for tokens
-# if now-int(form_timestamp)>120:
-# print(f"signup fail - {username } - form expired")
+    if app.config["DISABLE_SIGNUPS"]:
+        return new_signup("New account registration is currently closed. Please come back later.")
 
-        return new_signup("There was a problem. Please try again.")
     if now - int(form_timestamp) < 5:
-        print(f"signup fail - {username } - too fast")
+        #print(f"signup fail - {username } - too fast")
         return new_signup("There was a problem. Please try again.")
 
     if not hmac.compare_digest(correct_formkey, form_formkey):
-        print(f"signup fail - {username } - mismatched formkeys")
+        #print(f"signup fail - {username } - mismatched formkeys")
         return new_signup("There was a problem. Please try again.")
 
     # check for matched passwords
@@ -305,11 +312,11 @@ def sign_up_post(v):
 
     # check username/pass conditions
     if not re.match(valid_username_regex, request.form.get("username")):
-        print(f"signup fail - {username } - mismatched passwords")
+        #print(f"signup fail - {username } - mismatched passwords")
         return new_signup("Invalid username")
 
     if not re.match(valid_password_regex, request.form.get("password")):
-        print(f"signup fail - {username } - invalid password")
+        #print(f"signup fail - {username } - invalid password")
         return new_signup("Password must be between 8 and 100 characters.")
 
     # if not re.match(valid_email_regex, request.form.get("email")):
@@ -321,14 +328,25 @@ def sign_up_post(v):
     if not email:
         email = None
 
-    existing_account = g.db.query(User).filter(
-        User.username.ilike(request.form.get("username"))).first()
+    #counteract gmail username+2 and extra period tricks - convert submitted email to actual inbox
+    if email and email.endswith("@gmail.com"):
+        parts=re.split("\+.*@", email)
+        if len(parts)>1:
+            gmail_username=parts[0]
+            gmail_username=gmail_username.replace(".","")
+         
+            email=f"{gmail_username}@gmail.com"
+        else:
+            email=parts[0]
+
+
+    existing_account = get_user(request.form.get("username"), graceful=True)
     if existing_account and existing_account.reserved:
         return redirect(existing_account.permalink)
 
     if existing_account or (email and g.db.query(
             User).filter(User.email.ilike(email)).first()):
-        # print(f"signup fail - {username } - email already exists")
+        # #print(f"signup fail - {username } - email already exists")
         return new_signup(
             "An account with that username or email already exists.")
 
@@ -359,7 +377,7 @@ def sign_up_post(v):
         x = requests.post(url, data=data)
 
         if not x.json()["success"]:
-            print(x.json())
+            #print(x.json())
             return new_signup("Unable to verify captcha [2].")
 
     # kill tokens
@@ -388,7 +406,7 @@ def sign_up_post(v):
                         )
 
     except Exception as e:
-        print(e)
+        #print(e)
         return new_signup("Please enter a valid email")
 
     g.db.add(new_user)
@@ -426,7 +444,7 @@ And since we're committed to [open-source](https://github.com/ruqqus/ruqqus) tra
 
     redir = request.form.get("redirect", None)
 
-    # print(f"Signup event: @{new_user.username}")
+    # #print(f"Signup event: @{new_user.username}")
 
     return redirect("/browse?onboarding=true")
 
@@ -472,7 +490,7 @@ def post_forgot():
 def get_reset():
 
     user_id = request.args.get("id")
-    timestamp = int(request.args.get("time"))
+    timestamp = int(request.args.get("time",0))
     token = request.args.get("token")
 
     now = int(time.time())

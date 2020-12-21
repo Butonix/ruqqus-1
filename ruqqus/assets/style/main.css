@@ -17161,3 +17161,13 @@ div.deleted.banned {
 }
 
 /*# sourceMappingURL=main.css.map */
+
+
+.in-comment-image {
+  max-height: 100px !important;
+  max-width: 100px !important;
+}
+
+.sidebar-left .btn:focus {
+  box-shadow: none;
+}
