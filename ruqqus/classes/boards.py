@@ -61,6 +61,7 @@ class Board(Base, Stndrd, Age_times):
     stored_subscriber_count=Column(Integer, default=1)
     all_opt_out=Column(Boolean, default=False)
     subcat=Column(String(32), default=None)
+    is_siegable = Column(Boolean, default=True)
 
     moderators=relationship("ModRelationship")
     subscribers=relationship("Subscription", lazy="dynamic")
