@@ -1704,7 +1704,7 @@ def board_mod_log(boardname, v):
 
     return render_template("guild/modlog.html",
         v=v,
-        b=board
+        b=board,
         actions=actions,
         next_exists=next_exists,
         page=page
