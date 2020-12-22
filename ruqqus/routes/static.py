@@ -209,7 +209,7 @@ def info_image_hosts():
     resp.mimetype = "text/plain"
     return resp
 
-@app.route("/cookie", methods=["GET"])
+@app.route("/show_cookie", methods=["GET"])
 def cookie_show():
 
     #resp=make_response(pprint.pformat({i:session[i] for i in session}))
