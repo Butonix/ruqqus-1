@@ -433,9 +433,3 @@
 {% endfor %}
 
 {% include "delete_post_modal.html" %}
-
-{% if request.path.startswith('/inpage/') %}
-  <script>
-    register_votes();
-  </script>
-{% endif %}

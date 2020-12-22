@@ -194,13 +194,23 @@ def users_list(v):
     next_exists = (len(users) == 26)
     users = users[0:25]
 
-    data = user_stat_data().get_json()
-
     return render_template("admin/new_users.html",
                            v=v,
                            users=users,
                            next_exists=next_exists,
                            page=page,
+                           )
+
+@app.route("/admin/data", methods=["GET"])
+@admin_level_required(2)
+def admin_data(v):
+
+    data = user_stat_data().get_json()
+
+    return render_template("admin/new_users.html",
+                           v=v,
+                           next_exists=False,
+                           page=1,
                            single_plot=data['single_plot'],
                            multi_plot=data['multi_plot']
                            )
