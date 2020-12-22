@@ -201,13 +201,13 @@
                 <div class="input-group mb-2">
                   <select id="category-selector" name="category" class="form-control" onchange="post_toast('/mod/{{ b.base36id }}/category/'+document.getElementById('category-selector').selectedOptions[0].value)">
                     {% if not b.subcat %}
-                      <option value="0" selected disabled>===Select a category===</option>
+                      <option value="0" selected disabled>Select a Category</option>
                     {% endif %}
                     {% for category in categories %}
-                        <option disabled>{{ category['name'] | capitalize }}</option>
+                        <option disabled>{{ category['name'] }}</option>
 
                         {% for subcat in category['subCats'] %}
-                          <option value="{{ subcat['name'] }}"{% if subcat['name']==b.subcat %} selected{% endif %}> - {{ subcat['name'] | capitalize }}</option>
+                          <option value="{{ subcat['name'] }}"{% if subcat['name']==b.subcat %} selected{% endif %}> - {{ subcat['name'] }}</option>
                         {% endfor %}
                     {% endfor %}
                   </select>
