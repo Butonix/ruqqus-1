@@ -324,13 +324,13 @@ def front_all(v):
         cats=default_cat_cookie()
         session['cats']=cats
 
-    add_cat=request.args.get("add_cat")
-    if add_cat in SUBCATS and add_cat not in cats:
+    toggle_cat=request.args.get("toggle_cat")
+    if toggle_cat in SUBCATS and toggle_cat not in cats:
         cats.append(add_cat)
         session['cats']=cats
         session.modified=True
-    if rm_cat in cats:
-        cats.remove(rm_cat)
+    elif toggle_cat in cats:
+        cats.remove(toggle_cat)
         session['cats']=cats
         session.modified=True
 
