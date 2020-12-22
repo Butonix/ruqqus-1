@@ -1621,6 +1621,14 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
 
     g.db.add(post)
 
+    ma=ModAction(
+        kind="pin_post" if post.is_pinned else "unpin_post",
+        user_id=v.id,
+        board_id=board.id,
+        target_submission_id=post.id
+    )
+    g.db.add(ma)
+
     return "", 204
 
 
@@ -1668,6 +1676,14 @@ def change_guild_category(v, board, bid, category):
     board.subcat=category
     g.db.add(board)
     g.db.flush()
+
+    ma=ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"set category to {board.subcat}"
+    )
+    g.db.add(ma)
 
     return jsonify({"message": f"Category changed to `{category}`"})
 
