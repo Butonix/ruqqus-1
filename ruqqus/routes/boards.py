@@ -254,13 +254,12 @@ def mod_distinguish_post(bid, pid, board, v):
     g.db.add(post)
 
     ma=ModAction(
-        kind="distinguish_post",
+        kind="distinguish_post" if post.gm_distinguish else "undistinguish_post",
         user_id=v.id,
-        target_submission_id=post.id
+        target_submission_id=post.id,
+        board_id=board.id
         )
     g.db.add(ma)
-
-    g.db.commit()
 
     return "", 204
 
