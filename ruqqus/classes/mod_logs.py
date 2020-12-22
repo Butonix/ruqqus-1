@@ -40,39 +40,86 @@ class ModAction(Base, Stndrd, Age_times):
         return f"<ModAction(id={self.base36id})>"
 
     @property
-    def str_mod(self):
-        return ACTIONTYPES[self.kind]["str_mod"].format()
-
-    @property
-    def str_user(self):
-        return ACTIONTYPES[self.kind]["str_user"].format()
-
-
-
+    def str(self):
+        return ACTIONTYPES[self.kind]["str"].format()
 
 
 ACTIONTYPES={
     "kick_post":{
-        "str_mod":"[@{self.user.username}]({self.user.permalink}) kicked post [{self.target_post.title}]({self.target_post.url})",
-        "str_user":"A Guildmaster kicked post [{self.target_post.title}]({self.target_post.url})"
+        "str":"kicked post [{self.target_post.title}]({self.target_post.url})",
+        "icon":"fa-sign-out fa-flip-horizontal text-warning"
     },
     "yank_post":{
-        "str_mod":"[@{self.user.username}]({self.user.permalink}) yanked post [{self.target_post.title}]({self.target_post.url})",
-        "str_user":"A Guildmaster yanked post [{self.target_post.title}]({self.target_post.url})"
+        "str":"yanked post [{self.target_post.title}]({self.target_post.url})",
+        "icon":"fa-hand-lizard text-muted"
     },
     "exile_user":{
-        "str_mod":"[@{self.user.username}]({self.user.permalink}) exiled user [@{self.target_user.username}]({self.target_user.permalink})",
-        "str_user":"A Guildmaster exiled user [@{self.target_user.username}]({self.target_user.permalink})"
+        "str":"exiled user [@{self.target_user.username}]({self.target_user.permalink})",
+        "icon":"fa-user-slash text-warning"
     },
-    "unexile_user":{},
-    "contrib_user":{},
-    "uncontrib_user":{},
-    "herald_comment":{},
-    "herald_post":{},
-    "unherald_comment":{},
-    "unherald_post":{},
-    "pin_comment":{},
-    "unpin_comment":{},
-    "pin_post":{},
-    "unpin_post":{}
+    "unexile_user":{
+        "str":"un-exiled user [@{self.target_user.username}]({self.target_user.permalink})",
+        "icon": "fa-user-slash text-muted"
+    },
+    "contrib_user":{
+        "str":"added [@{self.target_user.username}]({self.target_user.permalink}) as an approved contributor",
+        "icon": "fa-user-plus text-info"
+    },
+    "uncontrib_user":{
+        "str":"[@{self.user.username}]({self.user.permalink}) added [@{self.target_user.username}]({self.target_user.permalink}) as an approved contributor",
+        "icon": "fa-user-plus text-muted"
+    },
+    "herald_comment":{
+        "str":"heralded their [comment]({self.target_comment.permalink})",
+        "icon": "fa-crown text-warning",
+        "show_mod":True
+    },
+    "herald_post":{
+        "str_mod":"heralded their post [{self.target_post.title}]({self.target_post.permalink})",
+        "icon": "fa-crown text-warning",
+        "show_mod":True
+    },
+    "unherald_comment":{
+        "str":"un-heralded their [comment]({self.target_comment.permalink})",
+        "icon": "fa-crown text-muted",
+        "show_mod":True
+        },
+    "unherald_post":{
+        "str":"un-heralded their post [{self.target_post.title}]({self.target_post.permalink})",
+        "icon": "fa-crown text-muted",
+        "show_mod":True
+    },
+    "pin_comment":{
+        "str":"pinned a [comment]({self.target_comment.permalink})",
+        "icon":"fa-thumbtack fa-rotate--45 text-info",
+    },
+    "unpin_comment":{
+        "str":"un-pinned a [comment]({self.target_comment.permalink})",
+        "icon":"fa-thumbtack fa-rotate--45 text-muted",
+    },
+    "pin_post":{
+        "str":"pinned a [post]({self.target_post.permalink})",
+        "icon":"fa-thumbtack fa-rotate--45 text-info",
+    },
+    "unpin_post":{
+        "str":"un-pinned a [post]({self.target_post.permalink})",
+        "icon":"fa-thumbtack fa-rotate--45 text-muted",
+    },
+    "invite_mod":{
+        "str":"invited [@{self.target_user.username}]({self.target_user.permalink}) as a Guildmaster"
+        "icon":"fa-crown text-info"
+    },
+    "uninvite_mod":{
+        "str":"rescinded Guildmaster invitation to [@{self.target_user.username}]({self.target_user.permalink})"
+        "icon":"fa-crown text-muted"
+    },
+    "remove_mod":{
+        "str":"removed Guildmaster [@{self.target_user.username}]({self.target_user.permalink})"
+        "icon":"fa-crown text-warning"
+    },
+    "add_mod":{
+        "str":"added [@{self.target_user.username}]({self.target_user.permalink}) as a Guildmaster"
+        "icon":"fa-crown text-success",
+        "show_mod":True
+    }
 }
