@@ -335,11 +335,16 @@ def front_all(v):
         cats.append(add_cat)
         session['cats']=cats
         session.modified=True
+    elif add_cat=="all":
+        cats=SUBCATS
+        session['cats']=cats
+        session.modified=True
+
     if rm_cat in cats:
         cats.remove(rm_cat)
         session['cats']=cats
         session.modified=True
-    elif rm_cat = "all"
+    elif rm_cat == "all"
         cats=[]
         session['cats']=[]
         session.modified=True
