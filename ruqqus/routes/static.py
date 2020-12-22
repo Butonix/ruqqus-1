@@ -1,6 +1,7 @@
 import time
 import jinja2
 import pyotp
+import pprint
 from flask import *
 
 from ruqqus.helpers.wrappers import *
@@ -193,7 +194,7 @@ def press_inquiry(v):
                            v=v)
 
 
-@app.route("/info/image_hosts")
+@app.route("/info/image_hosts", methods=["GET"])
 def info_image_hosts():
 
     sites = g.db.query(Domain).filter_by(
@@ -207,3 +208,7 @@ def info_image_hosts():
     resp = make_response(text)
     resp.mimetype = "text/plain"
     return resp
+
+@app.route("/cookie", methods=["GET"])
+def cookie_show():
+    return pprint.pformat(session)
