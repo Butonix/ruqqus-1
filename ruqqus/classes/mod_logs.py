@@ -13,7 +13,7 @@ class ModAction(Base, Stndrd, Age_times):
 
     user_id = Column(Integer, ForeignKey("users.id"))
     board_id = Column(Integer, ForeignKey("boards.id"))
-    kind = Column(Integer, ForeignKey("kinds.id"))
+    kind = Column(String(32), ForeignKey("kinds.id"))
     target_user_id = Column(Integer, ForeignKey("users.id"), default=0)
     target_submission_id = Column(Integer, ForeignKey("submissions.id"), default=0)
     target_comment_id = Column(Integer, ForeignKey("comments.id"), default=0)
@@ -30,7 +30,6 @@ class ModAction(Base, Stndrd, Age_times):
     #target_rule = relationship("Rule", lazy="joined")
     target_post = relationship("Submission", lazy="joined")
     target_comment = relationship("Comment", lazy="joined")
-    kind_rel = relationship("kind", lazy="joined")
 
 
     def __init__(self, *args, **kwargs):
@@ -40,8 +39,8 @@ class ModAction(Base, Stndrd, Age_times):
     def __repr__(self):
         return f"<ModAction(id={self.base36id})>"
 
-
-    def __str__(self):
+    @property
+    def str_mod(self):
         # user actions
         if kind >= 1 and kind <= 100:
             return f"{self.user.username} {self.kind_rel.description} {self.target_user.username} at {self.created_date}"
@@ -61,18 +60,26 @@ class ModAction(Base, Stndrd, Age_times):
         elif kind >= 401 and kind <= 500:
             return f"{self.user.username} {self.kind_rel.description} {self.target_post.id} at {self.created_date}"
 
+    @property
+    def str_user(self):
 
 
 
-class kind(Base, Stndrd, Age_times):
-    __tablename__ = "kinds"
-    id = Column(BigInteger, primary_key=True)
-    description = Column(String(250), default="")
-    user_id = Column(Integer, ForeignKey("users.id"))
-    board_id = Column(Integer, ForeignKey("boards.id"))
-    created_utc = Column(Integer, default=0)
 
-    def __init__(self, *args, **kwargs):
-        if "created_utc" not in kwargs:
-            kwargs["created_utc"] = int(time.time())
 
+ACTIONTYPES={
+    "kick_post":{},
+    "yank_post":{},
+    "exile_user":{},
+    "unexile_user":{},
+    "contrib_user":{},
+    "uncontrib_user":{},
+    "herald_comment":{},
+    "herald_post":{},
+    "unherald_comment":{},
+    "unherald_post":{},
+    "pin_comment":{},
+    "unpin_comment":{},
+    "pin_post":{},
+    "unpin_post":{}
+}
