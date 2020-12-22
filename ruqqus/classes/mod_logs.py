@@ -47,7 +47,7 @@ class ModAction(Base, Stndrd, Age_times):
     def str_user(self):
         output =  self.actiontype["str"].format()
         if self.actiontype.get("show_mod"):
-            output = f"[@{self.user.username}]({self.user.permalink}) {output}."
+            output = f'<a href="{self.user.permalink}" target="_blank">@{self.user.username}</a> {output}.'
         else:
             output = f"A Guildmaster {output}."
 
@@ -56,9 +56,14 @@ class ModAction(Base, Stndrd, Age_times):
     @property
     def str_mod(self):
         output =  self.actiontype["str"].format()
-        output = f"[@{self.user.username}]({self.user.permalink}) {output}."
+        output = f'<a href="{self.user.permalink}" target="_blank">@{self.user.username}</a> {output}.'
 
         return output
+
+    @property
+    def icon(self):
+        return self.actiontype['icon']
+    
     
 
 
@@ -88,7 +93,7 @@ ACTIONTYPES={
         "icon": "fa-user-plus text-muted"
     },
     "herald_comment":{
-        "str":"heralded their [comment]({self.target_comment.permalink})",
+        "str":'heralded their <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
         "icon": "fa-crown text-warning",
         "show_mod":True
     },
@@ -98,7 +103,7 @@ ACTIONTYPES={
         "show_mod":True
     },
     "unherald_comment":{
-        "str":"un-heralded their [comment]({self.target_comment.permalink})",
+        "str":'un-heralded their <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
         "icon": "fa-crown text-muted",
         "show_mod":True
         },
@@ -108,11 +113,11 @@ ACTIONTYPES={
         "show_mod":True
     },
     "pin_comment":{
-        "str":"pinned a [comment]({self.target_comment.permalink})",
+        "str":'pinned a <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
         "icon":"fa-thumbtack fa-rotate--45 text-info",
     },
     "unpin_comment":{
-        "str":"un-pinned a [comment]({self.target_comment.permalink})",
+        "str":'un-pinned a <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
         "icon":"fa-thumbtack fa-rotate--45 text-muted",
     },
     "pin_post":{
