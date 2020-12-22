@@ -277,7 +277,7 @@
               <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>Pin</a>
               {% endif %}
               {% if v.id!=c.author_id %}
-                <a class="dropdown-item text-info" id="exile-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post_toast()"><i class="fas fa-user-minus fa-fw text-warning"></i>Exile</a>
+                <a class="dropdown-item text-danger" id="exile-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post_toast()"><i class="fas fa-user-minus fa-fw text-danger"></i>Exile</a>
               {% endif %}
             {% endif %}
 
