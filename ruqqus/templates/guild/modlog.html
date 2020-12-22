@@ -1,0 +1,43 @@
+{% extends "guild/guild_settings.html" %}
+
+{% block pagetitle %}+{{ b.name }} Settings - Ruqqus Guildmaster Tools{% endblock %}
+
+{% block stylesheets %}
+
+{% if v and v.referral_count and session.get("dark_mode_enabled") %}
+<link id="css-link" rel="stylesheet" href="/+{{ p.board.name }}/dark.css">
+{% else %}
+<link id="css-link" rel="stylesheet" href="/+{{ p.board.name }}/main.css">
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-around">
+
+  <div class="col h-100">
+
+
+    {% if v and b.has_mod(v) %}
+      {% for ma in actions %}
+        <div class="row">
+
+          <i class="fas {{ ma.icon }} fa-fw"></i>{{ ma.str_mod | safe }}
+
+        </div>
+
+      {% endfor %}
+    {% else %}
+      {% for ma in actions %}
+        <div class="row">
+
+          <i class="fas {{ ma.icon }} fa-fw"></i>{{ ma.str_user | safe }}
+
+        </div>
+
+      {% endfor %}
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}
