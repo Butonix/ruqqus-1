@@ -87,6 +87,10 @@ app.config["SPAM_SIMILAR_COUNT_THRESHOLD"] = int(
     environ.get("SPAM_SIMILAR_COUNT_THRESHOLD", 5))
 app.config["SPAM_URL_SIMILARITY_THRESHOLD"] = float(
     environ.get("SPAM_URL_SIMILARITY_THRESHOLD", 0.1))
+app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"] = float(
+    environ.get("COMMENT_SPAM_SIMILAR_THRESHOLD", 0.5))
+app.config["COMMENT_SPAM_COUNT_THRESHOLD"] = int(
+    environ.get("COMMENT_SPAM_COUNT_THRESHOLD", 5))
 
 app.config["CACHE_REDIS_URL"] = environ.get(
     "REDIS_URL").rstrip() if environ.get("REDIS_URL") else None
