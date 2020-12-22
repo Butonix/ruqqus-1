@@ -325,7 +325,7 @@ def front_all(v):
         session['cats']=cats
 
     add_cat=request.args.get("add_cat")
-    if ',' in add_cat:
+    if add_cat and ',' in add_cat:
         add_cat = [i for i in add_cat.split(',') if i in SUBCATS]
     else:
         add_cat = add_cat if add_cat in SUBCATS else None
