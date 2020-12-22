@@ -64,27 +64,27 @@ class ModAction(Base, Stndrd, Age_times):
 
 ACTIONTYPES={
     "kick_post":{
-        "str":"kicked post [{self.target_post.title}]({self.target_post.url})",
+        "str":'kicked post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-sign-out fa-flip-horizontal text-warning"
     },
     "yank_post":{
-        "str":"yanked post [{self.target_post.title}]({self.target_post.url})",
+        "str":'yanked post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-hand-lizard text-muted"
     },
     "exile_user":{
-        "str":"exiled user [@{self.target_user.username}]({self.target_user.permalink})",
+        "str":'exiled user <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon":"fa-user-slash text-warning"
     },
     "unexile_user":{
-        "str":"un-exiled user [@{self.target_user.username}]({self.target_user.permalink})",
+        "str":'un-exiled user <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon": "fa-user-slash text-muted"
     },
     "contrib_user":{
-        "str":"added contributor [@{self.target_user.username}]({self.target_user.permalink})",
+        "str":'added contributor <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon": "fa-user-plus text-info"
     },
     "uncontrib_user":{
-        "str":"removed contributor[@{self.target_user.username}]({self.target_user.permalink})",
+        "str":'removed contributor <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon": "fa-user-plus text-muted"
     },
     "herald_comment":{
@@ -93,7 +93,7 @@ ACTIONTYPES={
         "show_mod":True
     },
     "herald_post":{
-        "str_mod":"heralded their post [{self.target_post.title}]({self.target_post.permalink})",
+        "str_mod":'heralded their post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
         "icon": "fa-crown text-warning",
         "show_mod":True
     },
@@ -103,7 +103,7 @@ ACTIONTYPES={
         "show_mod":True
         },
     "unherald_post":{
-        "str":"un-heralded their post [{self.target_post.title}]({self.target_post.permalink})",
+        "str":'un-heralded their post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
         "icon": "fa-crown text-muted",
         "show_mod":True
     },
@@ -116,27 +116,32 @@ ACTIONTYPES={
         "icon":"fa-thumbtack fa-rotate--45 text-muted",
     },
     "pin_post":{
-        "str":"pinned a [post]({self.target_post.permalink})",
+        "str":'pinned post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-thumbtack fa-rotate--45 text-info",
     },
     "unpin_post":{
-        "str":"un-pinned a [post]({self.target_post.permalink})",
+        "str":'un-pinned post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-thumbtack fa-rotate--45 text-muted",
     },
     "invite_mod":{
-        "str":"invited [@{self.target_user.username}]({self.target_user.permalink}) as a Guildmaster"
+        "str":'invited Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>'
         "icon":"fa-crown text-info"
     },
     "uninvite_mod":{
-        "str":"rescinded Guildmaster invitation to [@{self.target_user.username}]({self.target_user.permalink})"
+        "str":'rescinded Guildmaster invitation to <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>'
         "icon":"fa-crown text-muted"
     },
+    "accept_mod_invite":{
+        "str":'accepted Guildmaster invitation'
+        "icon":"fa-crown text-warning",
+        "show_mod":True
+    },
     "remove_mod":{
-        "str":"removed Guildmaster [@{self.target_user.username}]({self.target_user.permalink})"
-        "icon":"fa-crown text-warning"
+        "str":'removed Guildmaster [@{self.target_user.username}]({self.target_user.permalink})'
+        "icon":"fa-crown text-danger"
     },
     "add_mod":{
-        "str":"added [@{self.target_user.username}]({self.target_user.permalink}) as a Guildmaster"
+        "str":'added Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>'
         "icon":"fa-crown text-success",
         "show_mod":True
     }
