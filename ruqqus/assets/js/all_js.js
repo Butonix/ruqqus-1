@@ -1897,4 +1897,5 @@ var togglecat=function(cat) {
     var l = document.getElementById('posts');
     l.innerHTML=xhr.response;
   }
+  xhr.send()
 }
