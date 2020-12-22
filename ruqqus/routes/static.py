@@ -211,4 +211,6 @@ def info_image_hosts():
 
 @app.route("/cookie", methods=["GET"])
 def cookie_show():
-    return pprint.pformat(session)
+    resp=make_response(pprint.pformat({i:session[i] for i in session}))
+    resp.headers.set("Content-Type","text/plain")
+    return resp
