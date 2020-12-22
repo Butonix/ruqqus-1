@@ -330,7 +330,7 @@ def mod_ban_bid_user(bid, board, v):
         return jsonify({"error": f"@{user.username} is already exiled from +{board.name}."}), 409
 
     if board.has_contributor(user):
-        return jsonify({"error": f"@{user.username} is an approved contributor to +{board.name} and can't currently be banned."}), 409
+        return jsonify({"error": f"@{user.username} is an approved contributor to +{board.name} and can't currently be exiled."}), 409
 
     if board.has_mod(user):
         return jsonify({"error": "You can't exile other guildmasters."}), 409
