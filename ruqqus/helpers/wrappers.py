@@ -223,10 +223,11 @@ def no_negative_balance(s):
 
     return wrapper_maker
 
-def is_guildmaster(x):
+def is_guildmaster(perm):
     # decorator that enforces guildmaster status and verifies permissions
     # use under auth_required
-    def wrapper_maker(f)
+    def wrapper_maker(f):
+
         def wrapper(*args, **kwargs):
 
             v = kwargs["v"]
@@ -238,7 +239,7 @@ def is_guildmaster(x):
             else:
                 board = get_board(board_id)
 
-            if not board.has_mod(v, x):
+            if not board.has_mod(v, perm=perm):
                 abort(403)
 
             if v.is_banned and not v.unban_utc:

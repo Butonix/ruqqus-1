@@ -16,9 +16,9 @@ class ModRelationship(Base):
     accepted = Column(Boolean, default=False)
     invite_rescinded = Column(Boolean, default=False)
 
-    perm_queue = Column(Boolean, default=False)
+    perm_content = Column(Boolean, default=False)
     perm_appearance = Column(Boolean, default=False)
-    # permOther = Column(Boolean, default=False)
+     perm_config = Column(Boolean, default=False)
     perm_access = Column(Boolean, default=False)
     perm_full = Column(Boolean, default=False)
     #permRules = Column(Boolean, default=False)

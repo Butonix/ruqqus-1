@@ -214,7 +214,7 @@ class Board(Base, Stndrd, Age_times):
 
         return posts
 
-    def has_mod(self, user, type):
+    def has_mod(self, user, perm=None):
 
         if user is None:
             return None
@@ -224,25 +224,10 @@ class Board(Base, Stndrd, Age_times):
 
         for x in user.moderates:
             if x.board_id == self.id and x.accepted and not x.invite_rescinded:
-                if x.fullAccess:
-                    return x
-                elif type == "user" and x.permsUser:
-                    return x
-                elif type == "access" and x.permsAccess:
-                    return x
-                elif type == "lodge" and x.permsLodges:
-                    return x
-                elif type == "full" and x.permsFull:
-                    return x
-                elif type == "access" and x.permsAccess:
-                    return x
-                elif type == "appearance" and x.permsAppearance:
-                    return x
-                elif type == "rules" and x.permsRules:
-                    return x
-                elif type == "rules" and x.permsTitles:
-                    return x
-                elif type == "other" and x.permsOther:
+                
+                if perm:
+                    return x if x.__dict__[f"perm_{perm}"] else False
+                else:
                     return x
 
 
