@@ -19,7 +19,7 @@ class ModAction(Base, Stndrd, Age_times):
     target_comment_id = Column(Integer, ForeignKey("comments.id"), default=0)
     #targetLodge = Column(Integer, ForeignKey("lodges.id"), default=0)
     #targetRule = Column(Boolean, ForeignKey("rules.id"), default=False)
-
+    note=Column(String(64), default=None)
     created_utc = Column(Integer, default=0)
 
 
@@ -74,6 +74,10 @@ ACTIONTYPES={
         "str":'kicked post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-sign-out fa-flip-horizontal text-warning"
     },
+    "approve_post":{
+        "str":'approved post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "icon":"fa-check text-success"
+    },    
     "yank_post":{
         "str":'yanked post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-hand-lizard text-muted"
@@ -150,6 +154,16 @@ ACTIONTYPES={
     "add_mod":{
         "str":'added Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon":"fa-crown text-success",
+        "show_mod":True
+    },
+    "update_settings":{
+        "str":'updated setting ({self.note})',
+        "icon":"fa-cog text-info",
+        "show_mod":True
+    },
+    "update_appearance":{
+        "str":'updated appearance ({self.note})',
+        "icon":"fa-palette text-info",
         "show_mod":True
     }
 }

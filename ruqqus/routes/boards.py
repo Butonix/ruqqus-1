@@ -281,6 +281,16 @@ def mod_distinguish_comment(bid, cid, board, v):
     else:
         comment.gm_distinguish = board.id
 
+    g.db.add(comment)
+
+    ma=ModAction(
+        kind="distinguish_comment" if comment.gm_distinguish else "undistinguish_comment",
+        user_id=v.id,
+        target_comment_id=comment.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
+
     return "", 204
 
 @app.route("/mod/kick/<bid>/<pid>", methods=["POST"])
@@ -301,6 +311,14 @@ def mod_kick_bid_pid(bid, pid, board, v):
 
     cache.delete_memoized(Board.idlist, board)
 
+    ma=ModAction(
+        kind="kick_post",
+        user_id=v.id,
+        target_submission_id=post.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
+
     return "", 204
 
 
@@ -316,6 +334,14 @@ def mod_accept_bid_pid(bid, pid, board, v):
 
     post.mod_approved = v.id
     g.db.add(post)
+
+    ma=ModAction(
+        kind="approve_post",
+        user_id=v.id,
+        target_submission_id=post.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
 
     return "", 204
 
@@ -365,6 +391,15 @@ def mod_ban_bid_user(bid, board, v):
         text = f"You have been exiled from +{board.name}.\n\nNone of your existing posts or comments have been removed, however, you will not be able to make any new posts or comments in +{board.name}."
         send_notification(user, text)
 
+    ma=ModAction(
+        kind="exile_user",
+        user_id=v.id,
+        target_user_id=user.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
+
+
     if request.args.get("toast"):
         return jsonify({"message": f"@{user.username} exiled from +{board.name}"})
     else:
@@ -386,6 +421,14 @@ def mod_unban_bid_user(bid, board, v):
     x.is_active = False
 
     g.db.add(x)
+
+    ma=ModAction(
+        kind="unexile_user",
+        user_id=v.id,
+        target_user_id=user.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
 
     return "", 204
 
@@ -491,6 +534,14 @@ def mod_take_pid(pid, board, v):
     # clear board's listing caches
     cache.delete_memoized(Board.idlist, board)
 
+    ma=ModAction(
+        kind="yank_post",
+        user_id=v.id,
+        target_submission_id=post.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
+
     return "", 204
 
 
@@ -530,6 +581,14 @@ def mod_invite_username(bid, board, v):
 
         g.db.add(new_mod)
 
+    ma=ModAction(
+        kind="invite_mod",
+        user_id=v.id,
+        target_user_id=user.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
+
     return "", 204
 
 
@@ -550,7 +609,13 @@ def mod_rescind_bid_username(bid, username, board, v):
     invitation.invite_rescinded = True
 
     g.db.add(invitation)
-
+    ma=ModAction(
+        kind="uninvite_mod",
+        user_id=v.id,
+        target_user_id=user.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
     return "", 204
 
 
@@ -570,6 +635,14 @@ def mod_accept_board(bid, v):
 
     x.accepted = True
     g.db.add(x)
+
+    ma=ModAction(
+        kind="accept_mod_invite",
+        user_id=v.id,
+        target_user_id=v.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
 
     return "", 204
 
@@ -600,6 +673,14 @@ def mod_remove_username(bid, username, board, v):
         abort(403)
 
     g.db.delete(u_mod)
+
+    ma=ModAction(
+        kind="remove_mod",
+        user_id=v.id,
+        target_user_id=user.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
 
     return "", 204
 
@@ -634,6 +715,13 @@ def mod_bid_settings_nsfw(bid, board, v):
 
     g.db.add(board)
 
+    ma=ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"over_18={board.over_18}"
+        )
+    g.db.add(ma)
     return "", 204
 
 
@@ -648,6 +736,13 @@ def mod_bid_settings_optout(bid, board, v):
 
     g.db.add(board)
 
+    ma=ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"all_opt_out={board.all_opt_out}"
+        )
+    g.db.add(ma)
     return "", 204
 
 
@@ -665,6 +760,13 @@ def mod_bid_settings_restricted(bid, board, v):
 
     g.db.add(board)
 
+    ma=ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"restricted={board.restricted_posting}"
+        )
+    g.db.add(ma)
     return "", 204
 
 
@@ -679,6 +781,13 @@ def mod_bid_settings_private(bid, board, v):
 
     g.db.add(board)
 
+    ma=ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"private={board.is_private}"
+        )
+    g.db.add(ma)
     return "", 204
 
 
@@ -694,6 +803,14 @@ def mod_bid_settings_name(bid, board, v):
         board.name = new_name
         g.db.add(board)
 
+
+        ma=ModAction(
+            kind="update_settings",
+            user_id=v.id,
+            board_id=board.id,
+            note=f"name={board.name}"
+            )
+        g.db.add(ma)
         return "", 204
     else:
         return "", 422
@@ -715,6 +832,13 @@ def mod_bid_settings_description(bid, board, v):
 
     g.db.add(board)
 
+    ma=ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"update description"
+        )
+    g.db.add(ma)
     return "", 204
 
 
@@ -730,7 +854,6 @@ def mod_settings_toggle_banner(bid, board, v):
             False) == 'true')
 
     g.db.add(board)
-
     return "", 204
 
 
@@ -1016,6 +1139,14 @@ def mod_board_images_profile(bid, board, v):
                                   )
     new_thread.start()
 
+    ma=ModAction(
+        kind="update_appearance",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"uploaded profile image"
+        )
+    g.db.add(ma)
+
     return redirect(f"/+{board.name}/mod/appearance?msg=Success#images")
 
 
@@ -1035,6 +1166,15 @@ def mod_board_images_banner(bid, board, v):
                                         )
                                   )
     new_thread.start()
+
+    ma=ModAction(
+        kind="update_appearance",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"uploaded banner image"
+        )
+    g.db.add(ma)
+
     return redirect(f"/+{board.name}/mod/appearance?msg=Success#images")
 
 
@@ -1046,6 +1186,14 @@ def mod_board_images_delete_profile(bid, board, v):
 
     board.del_profile()
 
+    ma=ModAction(
+        kind="update_appearance",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"removed profile image"
+        )
+    g.db.add(ma)
+
     return redirect(f"/+{board.name}/mod/appearance?msg=Success#images")
 
 
@@ -1056,6 +1204,14 @@ def mod_board_images_delete_profile(bid, board, v):
 def mod_board_images_delete_banner(bid, board, v):
 
     board.del_banner()
+
+    ma=ModAction(
+        kind="update_appearance",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"removed banner image"
+        )
+    g.db.add(ma)
 
     return redirect(f"/+{board.name}/mod/appearance?msg=Success#images")
 
@@ -1161,6 +1317,14 @@ def mod_board_color(bid, board, v):
     except BaseException:
         pass
 
+    ma=ModAction(
+        kind="update_appearance",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"set theme color #{board.color}"
+        )
+    g.db.add(ma)
+
     return redirect(f"/+{board.name}/mod/appearance?msg=Success")
 
 
@@ -1200,6 +1364,14 @@ def mod_approve_bid_user(bid, board, v):
             text = f"You have been added as an approved contributor to +{board.name}."
             send_notification(user, text)
 
+    ma=ModAction(
+        kind="contrib_user",
+        user_id=v.id,
+        board_id=board.id,
+        target_user_id=user.id
+        )
+    g.db.add(ma)
+
     return "", 204
 
 
@@ -1222,7 +1394,13 @@ def mod_unapprove_bid_user(bid, board, v):
 
     g.db.add(x)
     g.db.commit()
-
+    ma=ModAction(
+        kind="uncontrib_user",
+        user_id=v.id,
+        board_id=board.id,
+        target_user_id=user.id
+        )
+    g.db.add(ma)
     return "", 204
 
 
@@ -1378,6 +1556,24 @@ def siege_guild(v):
         if x.accepted:
             send_notification(x.user,
                               f"You have been overthrown from +{guild.name}.")
+
+
+            ma=ModAction(
+                kind="remove_mod",
+                user_id=1,
+                board_id=guild.id,
+                target_user_id=x.user_id
+            )
+            g.db.add(ma)
+        else:
+            ma=ModAction(
+                kind="uninvite_mod",
+                user_id=1,
+                board_id=guild.id,
+                target_user_id=x.user_id
+            )
+            g.db.add(ma)
+
         g.db.delete(x)
 
     # add new mod if user is not already
@@ -1389,6 +1585,13 @@ def siege_guild(v):
                                   )
 
         g.db.add(new_mod)
+        ma=ModAction(
+            kind="add_mod",
+            user_id=1,
+            board_id=guild.id,
+            target_user_id=v.id
+        )
+        g.db.add(ma)
 
     return redirect(f"/+{guild.name}/mod/mods")
 
