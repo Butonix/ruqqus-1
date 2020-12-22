@@ -696,5 +696,11 @@ def mod_toggle_comment_pin(bid, cid, x, board, v):
     comment.is_pinned = x
 
     g.db.add(comment)
-
+    ma=ModAction(
+        kind="pin_comment" if comment.is_pinned else "unpin_comment",
+        user_id=v.id,
+        board_id=board.id,
+        target_comment_id=comment.id
+    )
+    g.db.add(ma)
     return "", 204
