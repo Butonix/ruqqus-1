@@ -1901,6 +1901,7 @@ var togglecat=function(cat) {
   xhr.onload=function(){
     var l = document.getElementById('posts');
     l.innerHTML=xhr.response;
+    register_votes();
   }
   xhr.send()
 }
