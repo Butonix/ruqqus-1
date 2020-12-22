@@ -1879,8 +1879,18 @@ var tipModal2 = function(id, content, link, recipient, recipientPFP) {
 
 var togglecat=function(cat) {
 
+  ele=document.getElementById('cat-'+cat);
+
+  var url='/inpage/all?';
+  if (ele.checked) {
+    url=url+'add_cat=';
+  }
+  else {
+    url=url+'rm_cat=';
+  }
+
   xhr = new XMLHttpRequest();
-  xhr.open('get', '/inpage/front?toggle_cat='+cat);
+  xhr.open('get', url+cat);
   xhr.withCredentials=true;
 
   xhr.onload=function(){
