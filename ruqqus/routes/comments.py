@@ -667,7 +667,7 @@ def embed_comment_cid(cid, pid=None):
 
 @app.route("/mod/comment_pin/<bid>/<cid>/<x>", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("content")
 @validate_formkey
 def mod_toggle_comment_pin(bid, cid, x, board, v):
 

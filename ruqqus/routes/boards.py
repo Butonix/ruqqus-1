@@ -234,7 +234,7 @@ def board_name(name, v):
 
 @app.route("/mod/distinguish_post/<bid>/<pid>", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("content")
 def mod_distinguish_post(bid, pid, board, v):
 
     #print(pid, board, v)
