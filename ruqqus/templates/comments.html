@@ -280,7 +280,7 @@
                 {% endif %}
               {% endif %}
               {% if v.id!=c.author_id %}
-                <a class="dropdown-item text-danger" id="exile-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post_toast()"><i class="fas fa-user-minus fa-fw text-danger"></i>Exile</a>
+                <a class="dropdown-item text-danger" id="exile-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post_toast('/mod/exile/{{ c.post.board.base36id }}?username={{ c.author.username }}&toast=1')"><i class="fas fa-user-minus fa-fw text-danger"></i>Exile</a>
               {% endif %}
             {% endif %}
 
