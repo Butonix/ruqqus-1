@@ -442,7 +442,7 @@ def browse_guilds(v):
         sort=sort_method, 
         page=page, 
         nsfw=(v and v.over_18),
-        cats=request.args.get("cats","").split(',')
+        cats=request.args.get("cats").split(',') if request.args.get("cats") else None
         )
 
     # check existence of next page
