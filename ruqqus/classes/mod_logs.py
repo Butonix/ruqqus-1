@@ -39,9 +39,27 @@ class ModAction(Base, Stndrd, Age_times):
     def __repr__(self):
         return f"<ModAction(id={self.base36id})>"
 
+    @property()
+    def actiontype(self):
+        return ACTIONTYPES[self.kind]
+
     @property
-    def str(self):
-        return ACTIONTYPES[self.kind]["str"].format()
+    def str_user(self):
+        output =  self.actiontype["str"].format()
+        if self.actiontype.get("show_mod"):
+            output = f"[@{self.user.username}]({self.user.permalink}) {output}."
+        else:
+            output = f"A Guildmaster {output}."
+
+        return output
+
+    @property
+    def str_mod(self):
+        output =  self.actiontype["str"].format()
+        output = f"[@{self.user.username}]({self.user.permalink}) {output}."
+
+        return output
+    
 
 
 ACTIONTYPES={
@@ -62,11 +80,11 @@ ACTIONTYPES={
         "icon": "fa-user-slash text-muted"
     },
     "contrib_user":{
-        "str":"added [@{self.target_user.username}]({self.target_user.permalink}) as an approved contributor",
+        "str":"added contributor [@{self.target_user.username}]({self.target_user.permalink})",
         "icon": "fa-user-plus text-info"
     },
     "uncontrib_user":{
-        "str":"[@{self.user.username}]({self.user.permalink}) added [@{self.target_user.username}]({self.target_user.permalink}) as an approved contributor",
+        "str":"removed contributor[@{self.target_user.username}]({self.target_user.permalink})",
         "icon": "fa-user-plus text-muted"
     },
     "herald_comment":{
