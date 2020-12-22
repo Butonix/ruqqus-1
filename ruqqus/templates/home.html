@@ -286,7 +286,7 @@
             <i class="fab fa-github fa-stack-1x text-black text-base fa-inverse"></i>
           </span>Contribute Code
         </a>
-        
+
         {% if not v.has_premium %}
         <a href="/help/donate" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #F7931A!important">
           <span class="fa-stack fa-1x ml-n1 mr-2">
@@ -320,5 +320,21 @@
       </div>
 
     </div>
+
+    {% if request.path=="/all"%}
+    <div class="sidebar-section">
+      <div class="title">
+        <i class="fas fa-filter mr-2"></i>Filters
+      </div>
+      <div class="body">
+        {% for c in CATEGORIES %}
+          <h5>{{ c['name'] }}</h5>
+          {% for subcat in c['subCats'] %}
+            <input type="checkbox" id="cat-{{ subcat['name'] }}" onchange="togglecat('{{ subcat['name'] }}')"><label for="cat-{{ subcat['name'] }}">{{ subcat['name'] }}</label>
+          {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
 
     {% endblock %}
