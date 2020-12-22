@@ -344,7 +344,7 @@ def front_all(v):
         cats.remove(rm_cat)
         session['cats']=cats
         session.modified=True
-    elif rm_cat == "all"
+    elif rm_cat == "all":
         cats=[]
         session['cats']=[]
         session.modified=True
