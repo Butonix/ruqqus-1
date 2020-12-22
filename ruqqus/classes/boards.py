@@ -62,6 +62,7 @@ class Board(Base, Stndrd, Age_times):
     all_opt_out=Column(Boolean, default=False)
     subcat=Column(String(32), default=None)
     is_siegable=Column(Boolean, default=True)
+    last_yank_utc=Column(Integer, default=0)
 
 
     moderators=relationship("ModRelationship")
