@@ -41,36 +41,29 @@ class ModAction(Base, Stndrd, Age_times):
 
     @property
     def str_mod(self):
-        # user actions
-        if kind >= 1 and kind <= 100:
-            return f"{self.user.username} {self.kind_rel.description} {self.target_user.username} at {self.created_date}"
-        # lodge actions
-        elif kind >= 101 and kind <= 200:
-            return f"{self.user.username} {self.kind_rel.description} {self.target_lodge.name} at {self.created_date}"
-
-        # rule actions
-        elif kind >= 201 and kind <= 300:
-            return f"{self.user.usernamee} {self.kind_rel.description} {self.targetRule.id} at {self.created_date}"
-
-        # comment actions
-        elif kind >= 301 and kind <= 400:
-            return f"{self.user.username} {self.kind_rel.description} {self.target_comment.id} at {self.created_date}"
-
-        # post actions
-        elif kind >= 401 and kind <= 500:
-            return f"{self.user.username} {self.kind_rel.description} {self.target_post.id} at {self.created_date}"
+        return ACTIONTYPES[self.kind]["str_mod"].format()
 
     @property
     def str_user(self):
+        return ACTIONTYPES[self.kind]["str_user"].format()
 
 
 
 
 
 ACTIONTYPES={
-    "kick_post":{},
-    "yank_post":{},
-    "exile_user":{},
+    "kick_post":{
+        "str_mod":"[@{self.user.username}]({self.user.permalink}) kicked post [{self.target_post.title}]({self.target_post.url})",
+        "str_user":"A Guildmaster kicked post [{self.target_post.title}]({self.target_post.url})"
+    },
+    "yank_post":{
+        "str_mod":"[@{self.user.username}]({self.user.permalink}) yanked post [{self.target_post.title}]({self.target_post.url})",
+        "str_user":"A Guildmaster yanked post [{self.target_post.title}]({self.target_post.url})"
+    },
+    "exile_user":{
+        "str_mod":"[@{self.user.username}]({self.user.permalink}) exiled user [@{self.target_user.username}]({self.target_user.permalink})",
+        "str_user":"A Guildmaster exiled user [@{self.target_user.username}]({self.target_user.permalink})"
+    },
     "unexile_user":{},
     "contrib_user":{},
     "uncontrib_user":{},
