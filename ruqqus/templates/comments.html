@@ -269,12 +269,15 @@
             ><i class="fas fa-user-slash text-danger fa-fw"></i>Block user</a>
             {% endif %}
             
-            {% if c.is_top_level and v and c.post.board_id in v.boards_modded_ids %}
+
+            {% if v and c.post.board_id in v.boards_modded_ids %}
             <div class="dropdown-divider"></div>
-              {% if c.is_pinned %}
-              <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>Unpin</a>
-              {% else %}
-              <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>Pin</a>
+              {% if c.is_top_level %}
+                {% if c.is_pinned %}
+                <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>Unpin</a>
+                {% else %}
+                <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>Pin</a>
+                {% endif %}
               {% endif %}
               {% if v.id!=c.author_id %}
                 <a class="dropdown-item text-danger" id="exile-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post_toast()"><i class="fas fa-user-minus fa-fw text-danger"></i>Exile</a>
