@@ -328,9 +328,11 @@ def front_all(v):
     if add_cat in SUBCATS and add_cat not in cats:
         cats.append(add_cat)
         session['cats']=cats
+        session.modified=True
     if rm_cat in cats:
         cats.remove(rm_cat)
         session['cats']=cats
+        session.modified=True
 
 
     ids = frontlist(sort=sort_method,
@@ -366,8 +368,8 @@ def front_all(v):
                                             next_exists=next_exists,
                                             sort_method=sort_method,
                                             time_filter=t,
-                                            page=page  # ,
-                                            #   trending_boards = trending_boards(n=5)
+                                            page=page,
+                                            CATEGORIES=CATEGORIES
                                             ),
             'inpage': lambda: render_template("submission_listing.html",
                                               v=v,
