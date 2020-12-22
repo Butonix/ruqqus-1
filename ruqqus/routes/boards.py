@@ -318,7 +318,7 @@ def mod_accept_bid_pid(bid, pid, board, v):
 @validate_formkey
 def mod_ban_bid_user(bid, board, v):
 
-    user = get_user(request.form.get("username"), graceful=True)
+    user = get_user(request.values.get("username"), graceful=True)
 
     if not user:
         return jsonify({"error": "That user doesn't exist."}), 404
