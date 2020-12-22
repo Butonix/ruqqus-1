@@ -328,9 +328,9 @@
       </div>
       <div class="body">
         {% for c in CATEGORIES %}
-          <h5>{{ c['name'] }}</h5>
+          <h5><i class="fa {{ c['icon']}} fa-fw"></i> {{ c['name'] }}</h5>
           {% for subcat in c['subCats'] %}
-            <input type="checkbox" id="cat-{{ subcat['name'] }}" onchange="togglecat('{{ subcat['name'] }}')"{% if subcat['name'] in session.get('cats',[]) %} checked{% endif %}><label for="cat-{{ subcat['name'] }}">{{ subcat['name'] }}</label><br>
+            <input type="checkbox" id="cat-{{ subcat['name'] }}" onchange="togglecat('{{ subcat['name'] }}')"{% if subcat['name'] in session.get('cats',[]) %} checked{% endif %}><label for="cat-{{ subcat['name'] }}"> {{ subcat['name'] }}</label><br>
           {% endfor %}
         {% endfor %}
       </div>
