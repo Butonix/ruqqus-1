@@ -398,13 +398,16 @@ def front_all(v):
 
 
 @cache.memoize(600)
-def guild_ids(sort="subs", page=1, nsfw=False):
+def guild_ids(sort="subs", page=1, nsfw=False, cats=[]):
     # cutoff=int(time.time())-(60*60*24*30)
 
     guilds = g.db.query(Board).filter_by(is_banned=False)
 
     if not nsfw:
         guilds = guilds.filter_by(over_18=False)
+
+    if cats:
+        guilds=guilds.filter(Board.subcat.in_(tuple(cats)))
 
     if sort == "subs":
         guilds = guilds.order_by(Board.stored_subscriber_count.desc())
@@ -435,7 +438,12 @@ def browse_guilds(v):
     sort_method = request.args.get("sort", "trending")
 
     # get list of ids
-    ids = guild_ids(sort=sort_method, page=page, nsfw=(v and v.over_18))
+    ids = guild_ids(
+        sort=sort_method, 
+        page=page, 
+        nsfw=(v and v.over_18),
+        cats=request.args.get("cats","").split(',')
+        )
 
     # check existence of next page
     next_exists = (len(ids) == 26)
