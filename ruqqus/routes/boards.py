@@ -357,7 +357,10 @@ def mod_ban_bid_user(bid, board, v):
         text = f"You have been exiled from +{board.name}.\n\nNone of your existing posts or comments have been removed, however, you will not be able to make any new posts or comments in +{board.name}."
         send_notification(user, text)
 
-    return "", 204
+    if request.args.get("toast"):
+        return jsonify({"message": f"@{user.username} exiled from +{board.name}"})
+    else:
+        return "", 204
 
 
 @app.route("/mod/unexile/<bid>", methods=["POST"])
