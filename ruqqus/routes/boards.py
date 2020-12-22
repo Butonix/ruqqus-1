@@ -427,7 +427,7 @@ def user_kick_pid(pid, v):
 @is_guildmaster("content")
 @validate_formkey
 @api("guildmaster")
-def mod_take_pid(pid, board v):
+def mod_take_pid(pid, board, v):
 
     bid = request.form.get("board_id", request.form.get("guild", None))
     if not bid:
