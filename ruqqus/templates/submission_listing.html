@@ -435,5 +435,8 @@
 {% include "delete_post_modal.html" %}
 
 {% if request.path.startswith('/inpage/') %}
-  {% include "bootstrap.html" %}
+  <script>
+    upvote();
+    downvote();
+  </script>
 {% endif %}
