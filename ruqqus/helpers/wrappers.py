@@ -223,35 +223,36 @@ def no_negative_balance(s):
 
     return wrapper_maker
 
-def is_guildmaster(f):
-    # decorator that enforces guildmaster status
+def is_guildmaster(x):
+    # decorator that enforces guildmaster status and verifies permissions
     # use under auth_required
+    def wrapper_maker(f)
+        def wrapper(*args, **kwargs):
 
-    def wrapper(*args, **kwargs):
+            v = kwargs["v"]
+            boardname = kwargs.get("boardname")
+            board_id = kwargs.get("bid")
 
-        v = kwargs["v"]
-        boardname = kwargs.get("boardname")
-        board_id = kwargs.get("bid")
+            if boardname:
+                board = get_guild(boardname)
+            else:
+                board = get_board(board_id)
 
-        if boardname:
-            board = get_guild(boardname)
-        else:
-            board = get_board(board_id)
+            if not board.has_mod(v, x):
+                abort(403)
 
-        if not board.has_mod(v):
-            abort(403)
+            if v.is_banned and not v.unban_utc:
+                abort(403)
 
-        if v.is_banned and not v.unban_utc:
-            abort(403)
+            return f(*args, board=board, **kwargs)
 
-        return f(*args, board=board, **kwargs)
+        wrapper.__name__ = f.__name__
+        return wrapper
 
-    wrapper.__name__ = f.__name__
-    return wrapper
+    return wrapper_maker
+
 
 # this wrapper takes args and is a bit more complicated
-
-
 def admin_level_required(x):
 
     def wrapper_maker(f):
