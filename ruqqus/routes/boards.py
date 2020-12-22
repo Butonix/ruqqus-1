@@ -1687,3 +1687,24 @@ def change_guild_category(v, board, bid, category):
 
     return jsonify({"message": f"Category changed to `{category}`"})
 
+
+
+@app.route("/+<boardname>/mod/log", methods=["GET"])
+@auth_desired
+def board_mod_log(boardname, v):
+
+    page=int(request.args.get("page",1))
+    board=get_guild(boardname)
+
+    actions=g.db.query(ModAction).filter_by(board_id=board.id).order_by(ModAction.id.desc()).offset(50*(page-1)).limit(51).all()
+    actions=[i for i in actions]
+
+    next_exists=len(actions)==50
+    actions=actions[0:50]
+
+    return render_template("guild/modlog.html",
+        v=v,
+        actions=actions,
+        next_exists=next_exists,
+        page=page
+        )
