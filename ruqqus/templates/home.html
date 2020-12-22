@@ -324,15 +324,31 @@
     {% if request.path=="/all"%}
     <div class="sidebar-section">
       <div class="title">
-        <i class="fas fa-filter mr-2"></i>Filters
+        <i class="fas fa-filter mr-2"></i><i class="fas fa-shapes mr-2"></i>Categories
       </div>
       <div class="body">
-        {% for c in CATEGORIES %}
-          <h5><i class="fa {{ c['icon']}} fa-fw"></i> {{ c['name'] }}</h5>
-          {% for subcat in c['subCats'] %}
-            <input type="checkbox" id="cat-{{ subcat['name'] }}" onchange="togglecat('{{ subcat['name'] }}')"{% if subcat['name'] in session.get('cats',[]) %} checked{% endif %}><label for="cat-{{ subcat['name'] }}"> {{ subcat['name'] }}</label><br>
+        <div class="accordion" id="accordionCats">
+
+          {% for c in CATEGORIES %}
+          <div class="card">
+            <div class="card-header" id="heading-{{ loop.index }}">
+              <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left text-muted" type="button" data-toggle="collapse" data-target="#collapse-{{ loop.index }}" aria-expanded="true" aria-controls="collapse-{{ loop.index }}"><i class="fas {{ c['icon'] }} fa-fw ml-n1 mr-1"></i>{{ c['name']}}</button>
+              </h2>
+            </div>
+            <div id="collapse-{{ loop.index }}" class="collapse show" aria-labelledby="header-{{ loop.index }}" data-parent="#accordionCats">
+              <div class="card-body">
+                {% for subcat in c['subCATS'] %}
+                  <div class="custom-control custom-checkbox mb-2">
+                    <input type="checkbox" class="custom-control-input" id="cat-{{ subcat['name'] }}" onchange="togglecat('{{ subcat['name'] }}')"{% if subcat['name'] in session.get('cats',[]) %} checked{% endif %}>
+                    <label class="custom-control-label" for="cat-{{ subcat['name'] }}">{{ subcat['name'] }}</label>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
           {% endfor %}
-        {% endfor %}
+        </div>
       </div>
     </div>
     {% endif %}
