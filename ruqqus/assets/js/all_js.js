@@ -1026,29 +1026,34 @@ var downvote = function(event) {
   
 }
 
-var upvoteButtons = document.getElementsByClassName('upvote-button')
 
-var downvoteButtons = document.getElementsByClassName('downvote-button')
+var register_votes = function() {
+  var upvoteButtons = document.getElementsByClassName('upvote-button')
 
-var voteDirection = 0
+  var downvoteButtons = document.getElementsByClassName('downvote-button')
 
-for (var i = 0; i < upvoteButtons.length; i++) {
-  upvoteButtons[i].addEventListener('click', upvote, false);
-  upvoteButtons[i].addEventListener('keydown', function(event) {
-    if (event.keyCode === 13) {
-      upvote(event)
-    }
-  }, false)
-};
+  var voteDirection = 0
 
-for (var i = 0; i < downvoteButtons.length; i++) {
-  downvoteButtons[i].addEventListener('click', downvote, false);
-  downvoteButtons[i].addEventListener('keydown', function(event) {
-    if (event.keyCode === 13) {
-      downvote(event)
-    }
-  }, false)
-};
+  for (var i = 0; i < upvoteButtons.length; i++) {
+    upvoteButtons[i].addEventListener('click', upvote, false);
+    upvoteButtons[i].addEventListener('keydown', function(event) {
+      if (event.keyCode === 13) {
+        upvote(event)
+      }
+    }, false)
+  };
+
+  for (var i = 0; i < downvoteButtons.length; i++) {
+    downvoteButtons[i].addEventListener('click', downvote, false);
+    downvoteButtons[i].addEventListener('keydown', function(event) {
+      if (event.keyCode === 13) {
+        downvote(event)
+      }
+    }, false)
+  };
+}
+
+register_votes()
 
 /*
 
