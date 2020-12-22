@@ -269,13 +269,19 @@
             ><i class="fas fa-user-slash text-danger fa-fw"></i>Block user</a>
             {% endif %}
             
-            {% if c.is_top_level and v and c.board.has_mod(v) %}
+
+            {% if v and c.post.board_id in v.boards_modded_ids %}
             <div class="dropdown-divider"></div>
-            {% if c.is_pinned %}
-            <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>Unpin</a>
-            {% else %}
-            <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>Pin</a>
-            {% endif %}
+              {% if c.is_top_level %}
+                {% if c.is_pinned %}
+                <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>Unpin</a>
+                {% else %}
+                <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>Pin</a>
+                {% endif %}
+              {% endif %}
+              {% if v.id!=c.author_id %}
+                <a class="dropdown-item text-danger" id="exile-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post_toast('/mod/exile/{{ c.post.board.base36id }}?username={{ c.author.username }}&toast=1')"><i class="fas fa-user-minus fa-fw text-danger"></i>Exile @{{ c.author.username }}</a>
+              {% endif %}
             {% endif %}
 
             </div>
@@ -434,14 +440,19 @@
           <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/mod/distinguish_comment/{{ c.board.base36id }}/{{ c.base36id }}', callback=function(){window.location.href = '{{c.permalink}}';})" class="text-warning"><i class="fas fa-crown text-warning"></i><span>Herald</span></a></li>
           {% endif %}
             
-          {% if c.is_top_level and v and c.board.has_mod(v) %}
-          {% if c.is_pinned %}
-          <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Unpin</a>
-          </li>
-          {% else %}
-          <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Pin</a>
-          </li>
-          {% endif %}
+          {% if v and c.post.board_id in v.boards_modded_ids %}
+            {% if c.is_top_level %}
+              {% if c.is_pinned %}
+              <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Unpin</a>
+              </li>
+              {% else %}
+              <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Pin</a>
+              </li>
+              {% endif %}
+            {% endif %}
+            {% if c.author_id != v.id %}
+              <li class="list-group-item"><a class="d-block text-danger" id="exile-comment2-{{ c.base36id }}" href="javascript:void(0)" onclick="post_toast('/mod/exile/{{ c.post.board.base36id }}?username={{ c.author.username }}&toast=1')"><i class="fas fa-user-minus fa-fw text-danger"></i>Exile @{{ c.author.username }}</a></li>
+            {% endif %}
           {% endif %}  
 
         </ul>

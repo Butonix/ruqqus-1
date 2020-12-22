@@ -133,10 +133,10 @@ def favicon():
     return send_file("./assets/images/logo/favicon.png")
 
 
-@app.route("/my_info", methods=["GET"])
-@auth_required
-def my_info(v):
-    return render_template("my_info.html", v=v)
+#@app.route("/my_info", methods=["GET"])
+#@auth_required
+#def my_info(v):
+#    return render_template("my_info.html", v=v)
 
 
 @app.route("/about/<path:path>")

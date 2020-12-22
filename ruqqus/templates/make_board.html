@@ -53,6 +53,21 @@
                         </div>
                     </div>
 
+                    <label for="select-category">Select Category</label>
+                    <div class="input-group">
+
+                        <select id="select-category" name="category" class="form-control">
+                            <option value="0" selected disabled>Select a category</option>
+                            {% for category in categories %}
+                                <option disabled>{{ category['name'] }}</option>
+
+                                {% for subcat in category['subCats'] %}
+                                  <option value="{{ subcat['name'] }}"> - {{ subcat['name'] }}</option>
+                                {% endfor %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
                     <label for="over_18" class="text-danger mt-3">NSFW?</label>
                     <div class="custom-control custom-checkbox">
                         <input type="checkbox" class="custom-control-input" id="nsfwCheck" name="over_18" value="true">

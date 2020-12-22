@@ -9,6 +9,7 @@ from ruqqus.helpers.get import *
 
 from ruqqus.__main__ import app, cache
 from ruqqus.classes.submission import Submission
+from ruqqus.classes.boards import CATEGORIES, SUBCATS
 
 
 @app.route("/post/", methods=["GET"])
@@ -66,8 +67,9 @@ def notifications(v):
                            is_notification_page=True)
 
 @cache.memoize(timeout=900)
+
 def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
-              t=None, ids_only=True, filter_words='', **kwargs):
+              t=None, ids_only=True, categories=[], filter_words='', **kwargs):
 
     # cutoff=int(time.time())-(60*60*24*30)
 
@@ -84,10 +86,15 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
     else:
         abort(400)
 
-    posts = g.db.query(Submission
-                       ).options(lazyload('*')).filter_by(is_banned=False,
-                                                          is_deleted=False,
-                                                          stickied=False)
+    posts = g.db.query(
+        Submission
+        ).options(
+            lazyload('*')
+        ).filter_by(
+            is_banned=False,
+            is_deleted=False,
+            stickied=False
+        )
 
     if not nsfw:
         posts = posts.filter_by(over_18=False)
@@ -154,13 +161,19 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
                         is_active=True).subquery()
                 )
             )
-        ).options(contains_eager(Submission.board))
+        )
     else:
+
         posts = posts.join(
             Submission.board).filter_by(
-            all_opt_out=False).options(
-            contains_eager(
-                Submission.board))
+            all_opt_out=False)
+
+    
+    if categories:
+        posts=posts.filter(Board.subcat.in_(tuple(categories)))
+
+    posts=posts.options(contains_eager(Submission.board))
+
 
     #custom filter
     #print(filter_words)
@@ -221,39 +234,44 @@ def home(v):
 
     if v and [i for i in v.subscriptions if i.is_active]:
 
-        only = request.args.get("only", None)
-        sort = request.args.get("sort", "hot")
+        only=request.args.get("only",None)
+        sort=request.args.get("sort","hot")
+        
+        page=max(int(request.args.get("page",1)),0)
+        t=request.args.get('t', 'all')
 
-        page = max(int(request.args.get("page", 1)), 0)
-        t = request.args.get('t', 'all')
         ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
-        ids = v.idlist(sort=sort,
-                       page=page,
-                       only=only,
-                       t=t,
+        
+        ids=v.idlist(sort=sort,
+                     page=page,
+                     only=only,
+                     t=t,
+                     filter_words=v.filter_words,
 
-                       filter_words=v.filter_words,
-
-                       # these arguments don't really do much but they exist for
-                       # cache memoization differentiation
+                     # these arguments don't really do much but they exist for
+                     # cache memoization differentiation
                        allow_nsfw=v.over_18,
-                       hide_offensive=v.hide_offensive,
-                       hide_politics=v and v.is_hiding_politics,
+                     hide_offensive=v.hide_offensive,
+                     hide_politics=v and v.is_hiding_politics,
 
-                       # greater/less than
-                       gt=int(request.args.get("utc_greater_than", 0)),
-                       lt=int(request.args.get("utc_less_than", 0))
-                       )
+                     #greater/less than
+                     gt=int(request.args.get("utc_greater_than",0)),
+                     lt=int(request.args.get("utc_less_than",0)),
 
-        next_exists = (len(ids) == 26)
-        ids = ids[0:25]
+                     )
+
+        next_exists=(len(ids)==26)
+        ids=ids[0:25]
 
         # If page 1, check for sticky
         if page == 1 and sort != "new" and not ignore_pinned:
             sticky = g.db.query(Submission.id).filter_by(stickied=True).first()
+
+
             if sticky:
-                ids = [sticky.id] + ids
+                ids=[sticky.id]+ids
+
 
         posts = get_posts(ids, sort=sort, v=v)
 
@@ -274,6 +292,16 @@ def home(v):
         return front_all()
 
 
+def default_cat_cookie():
+
+    output=[]
+    for x in CATEGORIES:
+        if x['visible']:
+            for y in x['subCats']:
+                output.append(y['name'])
+    return output
+
+
 @app.route("/all", methods=["GET"])
 @app.route("/api/v1/all/listing", methods=["GET"])
 @app.route("/inpage/all")
@@ -290,7 +318,38 @@ def front_all(v):
     t = request.args.get('t', 'all')
     ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
-    # get list of ids
+
+    cats=session.get("cats")
+    if not cats:
+        cats=default_cat_cookie()
+        session['cats']=cats
+
+    add_cat=request.args.get("add_cat")
+    if add_cat and ',' in add_cat:
+        add_cat = [i for i in add_cat.split(',') if i in SUBCATS]
+    else:
+        add_cat = add_cat if add_cat in SUBCATS else None
+
+    rm_cat=request.args.get("rm_cat")
+    if add_cat not in cats:
+        cats.append(add_cat)
+        session['cats']=cats
+        session.modified=True
+    elif add_cat=="all":
+        cats=SUBCATS
+        session['cats']=cats
+        session.modified=True
+
+    if rm_cat in cats:
+        cats.remove(rm_cat)
+        session['cats']=cats
+        session.modified=True
+    elif rm_cat == "all":
+        cats=[]
+        session['cats']=[]
+        session.modified=True
+
+
     ids = frontlist(sort=sort_method,
                     page=page,
                     nsfw=(v and v.over_18 and not v.filter_nsfw),
@@ -301,7 +360,8 @@ def front_all(v):
                     hide_politics=(v and v.is_hiding_politics) or not v,
                     gt=int(request.args.get("utc_greater_than", 0)),
                     lt=int(request.args.get("utc_less_than", 0)),
-                    filter_words=v.filter_words if v else []
+                    filter_words=v.filter_words if v else [],
+                    categories=cats
                     )
 
     # check existence of next page
@@ -323,8 +383,8 @@ def front_all(v):
                                             next_exists=next_exists,
                                             sort_method=sort_method,
                                             time_filter=t,
-                                            page=page  # ,
-                                            #   trending_boards = trending_boards(n=5)
+                                            page=page,
+                                            CATEGORIES=CATEGORIES
                                             ),
             'inpage': lambda: render_template("submission_listing.html",
                                               v=v,

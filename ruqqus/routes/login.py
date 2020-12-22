@@ -297,6 +297,9 @@ def sign_up_post(v):
     if app.config["DISABLE_SIGNUPS"]:
         return new_signup("New account registration is currently closed. Please come back later.")
 
+    if g.db.query(User).filter(User.created_utc>int(time.time())-60*60).count() > 10:
+        return new_signup("We have reached our threshold for new user signups. Please come back later.")
+
     if now - int(form_timestamp) < 5:
         #print(f"signup fail - {username } - too fast")
         return new_signup("There was a problem. Please try again.")

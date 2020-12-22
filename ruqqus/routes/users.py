@@ -469,9 +469,9 @@ def info_packet(username, method="html"):
 
 
 
-@app.route("/my_info", methods=["POST"])
-@auth_required
-@validate_formkey
+#@app.route("/my_info", methods=["POST"])
+#@auth_required
+#@validate_formkey
 def my_info_put(v):
 
     if not v.is_activated:

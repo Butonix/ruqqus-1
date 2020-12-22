@@ -17,6 +17,7 @@ from ruqqus.helpers.aws import check_csam_url
 from ruqqus.classes import *
 from .front import guild_ids
 from ruqqus.classes.rules import *
+from ruqqus.classes.boards import CATEGORIES, SUBCATS
 from flask import *
 
 from ruqqus.__main__ import app, limiter, cache
@@ -46,7 +47,11 @@ def create_board_get(v):
                                message="You can only create up to 2 guilds per day. Try again later."
                                ), 429
 
-    return render_template("make_board.html", v=v)
+    return render_template(
+        "make_board.html", 
+        v=v,
+        categories=CATEGORIES
+        )
 
 
 @app.route("/api/board_available/<name>", methods=["GET"])
@@ -101,6 +106,14 @@ def create_board_post(v):
                                message="You can only create up to 2 guilds per day. Try again later."
                                ), 429
 
+    subcat=int(request.form.get("category"))
+    if not subcat or subcat not in SUBCATS:
+        return render_template("message.html",
+                               title="Category required.",
+                               message="You need to select a category."
+                               ), 400
+
+
     with CustomRenderer() as renderer:
         description_md = renderer.render(mistletoe.Document(description))
     description_html = sanitize(description_md, linkgen=True)
@@ -111,7 +124,8 @@ def create_board_post(v):
                       description=description,
                       description_html=description_html,
                       over_18=bool(request.form.get("over_18", "")),
-                      creator_id=v.id
+                      creator_id=v.id,
+                      subcat=subcat
                       )
 
     g.db.add(new_board)
@@ -304,7 +318,7 @@ def mod_accept_bid_pid(bid, pid, board, v):
 @validate_formkey
 def mod_ban_bid_user(bid, board, v):
 
-    user = get_user(request.form.get("username"), graceful=True)
+    user = get_user(request.values.get("username"), graceful=True)
 
     if not user:
         return jsonify({"error": "That user doesn't exist."}), 404
@@ -316,7 +330,7 @@ def mod_ban_bid_user(bid, board, v):
         return jsonify({"error": f"@{user.username} is already exiled from +{board.name}."}), 409
 
     if board.has_contributor(user):
-        return jsonify({"error": f"@{user.username} is an approved contributor to +{board.name} and can't currently be banned."}), 409
+        return jsonify({"error": f"@{user.username} is an approved contributor to +{board.name} and can't currently be exiled."}), 409
 
     if board.has_mod(user):
         return jsonify({"error": "You can't exile other guildmasters."}), 409
@@ -343,7 +357,10 @@ def mod_ban_bid_user(bid, board, v):
         text = f"You have been exiled from +{board.name}.\n\nNone of your existing posts or comments have been removed, however, you will not be able to make any new posts or comments in +{board.name}."
         send_notification(user, text)
 
-    return "", 204
+    if request.args.get("toast"):
+        return jsonify({"message": f"@{user.username} exiled from +{board.name}"})
+    else:
+        return "", 204
 
 
 @app.route("/mod/unexile/<bid>", methods=["POST"])
@@ -772,7 +789,12 @@ def mod_edit_rule(bid, board, v):
 @is_guildmaster
 def board_about_settings(boardname, board, v):
 
-    return render_template("guild/settings.html", v=v, b=board)
+    return render_template(
+        "guild/settings.html",
+        v=v,
+        b=board,
+        categories=CATEGORIES,
+        SUBCATS=SUBCATS)
 
 
 @app.route("/+<boardname>/mod/appearance", methods=["GET"])
@@ -918,7 +940,7 @@ def board_mod_queue(boardname, board, v):
 
     ids = ids.order_by(Submission.id.desc()).offset((page - 1) * 25).limit(26)
 
-    ids = [x for x in ids]
+    ids = [x[0] for x in ids]
 
     next_exists = (len(ids) == 26)
 
@@ -1429,12 +1451,12 @@ def board_comments(boardname, v):
 @validate_formkey
 def change_guild_category(v, board, bid, category):
 
-    board.category = category
-
-    try:
-        g.db.flush()
-
-    except BaseException:
+    if category not in SUBCATS:
         return jsonify({"error": f"Invalid category `{category}`"}), 400
 
-    return jsonify({"message": f"Category changed to {category}"})
+    board.subcat=category
+    g.db.add(board)
+    g.db.flush()
+
+    return jsonify({"message": f"Category changed to `{category}`"})
+
