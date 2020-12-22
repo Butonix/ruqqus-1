@@ -39,7 +39,7 @@ class ModAction(Base, Stndrd, Age_times):
     def __repr__(self):
         return f"<ModAction(id={self.base36id})>"
 
-    @property()
+    @property
     def actiontype(self):
         return ACTIONTYPES[self.kind]
 
