@@ -146,7 +146,7 @@ ACTIONTYPES={
         "icon":"fa-crown text-danger"
     },
     "add_mod":{
-        "str":'added Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>'
+        "str":'added Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon":"fa-crown text-success",
         "show_mod":True
     }
