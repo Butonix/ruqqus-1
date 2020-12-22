@@ -129,20 +129,20 @@ ACTIONTYPES={
         "icon":"fa-thumbtack fa-rotate--45 text-muted",
     },
     "invite_mod":{
-        "str":'invited Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>'
+        "str":'invited Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon":"fa-crown text-info"
     },
     "uninvite_mod":{
-        "str":'rescinded Guildmaster invitation to <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>'
+        "str":'rescinded Guildmaster invitation to <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon":"fa-crown text-muted"
     },
     "accept_mod_invite":{
-        "str":'accepted Guildmaster invitation'
+        "str":'accepted Guildmaster invitation',
         "icon":"fa-crown text-warning",
         "show_mod":True
     },
     "remove_mod":{
-        "str":'removed Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>'
+        "str":'removed Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon":"fa-crown text-danger"
     },
     "add_mod":{
