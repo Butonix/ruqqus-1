@@ -253,6 +253,13 @@ def mod_distinguish_post(bid, pid, board, v):
         post.gm_distinguish = board.id
     g.db.add(post)
 
+    ma=ModAction(
+        kind="distinguish_post",
+        user_id=v.id,
+        target_submission_id=post.id
+        )
+    g.db.add(ma)
+
     return "", 204
 
 @app.route("/mod/distinguish_comment/<bid>/<cid>", methods=["POST"])
