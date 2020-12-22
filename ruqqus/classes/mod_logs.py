@@ -26,22 +26,22 @@ class ModLog(Base, Stndrd, Age_times):
 
     def __str__(self):
         # user actions
-        if type >= 1 and type < 21:
+        if type >= 1 and type <= 100:
             return f"{self.user_id.name} {self.type.description} {self.targetUser.name} at {self.created_date}"
         # lodge actions
-        elif type >= 21 and type < 41:
+        elif type >= 101 and type <= 200:
             return f"{self.user_id.name} {self.type.description} {self.targetLodge.name} at {self.created_date}"
 
         # rule actions
-        elif type >= 41 and type < 61:
+        elif type >= 201 and type <= 300:
             return f"{self.user_id.name} {self.type.description} {self.targetRule.id} at {self.created_date}"
 
         # comment actions
-        elif type >= 61 and type < 81:
+        elif type >= 301 and type <= 400:
             return f"{self.user_id.name} {self.type.description} {self.targetComment.id} at {self.created_date}"
 
         # post actions
-        elif type >= 61 and type < 81:
+        elif type >= 401 and type <= 500:
             return f"{self.user_id.name} {self.type.description} {self.targetPost.id} at {self.created_date}"
 
 
