@@ -18,7 +18,7 @@ class ModRelationship(Base):
 
     perm_content = Column(Boolean, default=False)
     perm_appearance = Column(Boolean, default=False)
-     perm_config = Column(Boolean, default=False)
+    perm_config = Column(Boolean, default=False)
     perm_access = Column(Boolean, default=False)
     perm_full = Column(Boolean, default=False)
     #permRules = Column(Boolean, default=False)
