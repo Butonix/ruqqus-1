@@ -233,11 +233,16 @@ def is_guildmaster(perm):
             v = kwargs["v"]
             boardname = kwargs.get("boardname")
             board_id = kwargs.get("bid")
+            bid=request.values.get("bid")
 
             if boardname:
                 board = get_guild(boardname)
-            else:
+            elif board_id:
                 board = get_board(board_id)
+            elif bid:
+                board = get_board(board_id)
+            else:
+                abort(400)
 
             if not board.has_mod(v, perm=perm):
                 abort(403)
