@@ -542,14 +542,14 @@ CATEGORIES=[
         },
         { id: 3,
           'name': 'Culture',
-          'subCats': [{'name': 'History'}, {'name': 'Language'}],
+          'subCats': [{'name': 'History'}, {'name': 'Language'}, {'name': 'Religion'}],
           'icon': 'fa-users',
           'color': 'purple-400',
           'visible': True
         },
         { id: 4,
           'name': 'Discussion',
-          'subCats': [{'name': 'Casual Discussion'}, {'name': 'Serious'}, {'name': 'Ruqqus Meta'}, {'name': 'Q&A'}],
+          'subCats': [{'name': 'Casual Discussion'}, {'name': 'Serious'}, {'name': 'Drama'}, {'name': 'Ruqqus Meta'}, {'name': 'Q&A'}],
           'icon': 'fa-podium',
           'color': 'purple-400',
           'visible': True
@@ -563,7 +563,7 @@ CATEGORIES=[
         },
         { id: 6,
           'name': 'Gaming',
-          'subCats': [{'name': 'PC'}, {'name': 'Console'}, {'name': 'Gaming news'}, {'name': 'Development'}],
+          'subCats': [{'name': 'PC'}, {'name': 'Console'}, {'name': 'Tabletop'}, {'name': 'Gaming news'}, {'name': 'Development'}],
           'icon': 'fa-alien-monster',
           'color': 'purple-400',
           'visible': True
