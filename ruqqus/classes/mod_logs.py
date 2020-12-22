@@ -36,6 +36,8 @@ class ModAction(Base, Stndrd, Age_times):
         if "created_utc" not in kwargs:
             kwargs["created_utc"] = int(time.time())
 
+        super().__init__(*args, **kwargs)
+
     def __repr__(self):
         return f"<ModAction(id={self.base36id})>"
 
