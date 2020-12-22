@@ -57,3 +57,19 @@ class ModLog(Base, Stndrd, Age_times):
         # post actions
         elif type >= 401 and type <= 500:
             return f"{self.user.username} {self.type_rel.description} {self.target_post.id} at {self.created_date}"
+
+
+
+
+class Type(Base, Stndrd, Age_times):
+    __tablename__ = "types"
+    id = Column(BigInteger, primary_key=True)
+    description = Column(String(250), default="")
+    user_id = Column(Integer, ForeignKey("users.id"))
+    board_id = Column(Integer, ForeignKey("boards.id"))
+    created_utc = Column(Integer, default=0)
+
+    def __init__(self, *args, **kwargs):
+        if "created_utc" not in kwargs:
+            kwargs["created_utc"] = int(time.time())
+
