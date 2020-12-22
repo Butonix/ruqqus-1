@@ -1681,7 +1681,7 @@ def change_guild_category(v, board, bid, category):
         kind="update_settings",
         user_id=v.id,
         board_id=board.id,
-        note=f"set category to {board.subcat}"
+        note=f"category={board.subcat}"
     )
     g.db.add(ma)
 
