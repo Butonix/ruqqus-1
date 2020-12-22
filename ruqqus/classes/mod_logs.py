@@ -142,7 +142,7 @@ ACTIONTYPES={
         "show_mod":True
     },
     "remove_mod":{
-        "str":'removed Guildmaster [@{self.target_user.username}]({self.target_user.permalink})'
+        "str":'removed Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>'
         "icon":"fa-crown text-danger"
     },
     "add_mod":{
