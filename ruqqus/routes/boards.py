@@ -728,7 +728,7 @@ def mod_settings_toggle_banner(bid, board, v):
 
 @app.route("/mod/<bid>/settings/add_rule", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("full")
 @validate_formkey
 def mod_add_rule(bid, board, v):
     # board description
@@ -755,7 +755,7 @@ def mod_add_rule(bid, board, v):
 
 @app.route("/mod/<bid>/settings/edit_rule", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("full")
 @validate_formkey
 def mod_edit_rule(bid, board, v):
     r = base36decode(request.form.get("rid"))
