@@ -549,7 +549,7 @@ CATEGORIES=[
         },
         { id: 4,
           'name': 'Discussion',
-          'subCats': [{'name': 'Casual Discussion'}, {'name': 'Serious'}, {'name': 'Q&A'}],
+          'subCats': [{'name': 'Casual Discussion'}, {'name': 'Serious'}, {'name': 'Ruqqus Meta'}, {'name': 'Q&A'}],
           'icon': 'fa-podium',
           'color': 'purple-400',
           'visible': True
