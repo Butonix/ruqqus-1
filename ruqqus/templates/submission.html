@@ -328,12 +328,12 @@
 
           {% endif %}
 
-          {% if v and not v.id==p.author_id and not p.author.is_deleted %}
+          {% if v and not v.id==p.author_id and not p.is_deleted and not p.author.is_deleted %}
           <button id="block-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if p.is_blocking %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/block?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{ p.base36id }}').classList.toggle('d-none');})"
           ><i class="fas fa-user-slash text-danger mr-3"></i>Block @{{ p.author.username }}</button>
           <button id="unblock-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if not p.is_blocking %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/unblock?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{ p.base36id }}').classList.toggle('d-none');})"
           ><i class="fas fa-user-slash text-danger mr-3"></i>Unblock @{{ p.author.username }}</button>
-          <button id="exile-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger" onclick="post_toast('/mod/exile/{{ p.board.base36id }}?username={{ p.author.username }}&toast=1')"><i class="fas fa-user-minus fa-fw text-danger"></i>Exile @{{ p.author.username }}</a></button>
+          <button id="exile-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger" onclick="post_toast('/mod/exile/{{ p.board.base36id }}?username={{ p.author.username }}&toast=1')"><i class="fas fa-user-minus mr-3 text-danger"></i>Exile @{{ p.author.username }}</a></button>
           {% endif %}
         </ul>
       </div>
@@ -495,6 +495,11 @@
                         ><i class="fas fa-user-slash text-danger"></i>Block user</a>
                         <a id="unblock-user-{{ p.base36id }}" class="dropdown-item text-danger{% if not p.is_blocking %} d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/settings/unblock?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-{{ p.base36id }}').classList.toggle('d-none');})"
                         ><i class="fas fa-user-slash text-danger"></i>Unblock user</a>
+
+                        {% if p.board_id in v.boards_modded_ids and not p.is_deleted and not p.author.is_deleted%}
+                        <a id="exile2-user-{{ p.base36id }}" class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/mod/exile/{{ p.board.base36id }}?username={{ p.author.username }}&toast=1')"
+                        ><i class="fas fa-user-slash text-danger"></i>Exile @{{ p.author.username }}</a>
+                        {% endif %}
                       </div>
                     </div>
                   </li>
