@@ -260,6 +260,8 @@ def mod_distinguish_post(bid, pid, board, v):
         )
     g.db.add(ma)
 
+    g.db.commit()
+
     return "", 204
 
 @app.route("/mod/distinguish_comment/<bid>/<cid>", methods=["POST"])
