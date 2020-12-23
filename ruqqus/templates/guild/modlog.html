@@ -40,7 +40,7 @@
                <a href="{{ ma.user.permalink }}" class="font-weight-bold text-black" target="_self">@{{ ma.user.username }}</a>
                <span>{{ ma.str | safe }}</span>
              </div>
-             <div class="text-gray-500">{{ ma.age_string }} <a href="{{ ma.permalink }}"><i class="far fa-link ml-1 text-muted"></i></a></div>
+             <div class="text-gray-500">{{ ma.age_string }} <a href="{{ ma.permalink }}"><i class="far fa-link ml-1 text-muted"></i></a> <i class="far fa-copy ml-1 text-muted copy-link" data-clipboard-text="{{ ma-permalink }}" role="button"></i></div>
            </div>
          </div>
        </div>
