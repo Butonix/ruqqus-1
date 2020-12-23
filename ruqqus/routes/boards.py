@@ -254,7 +254,7 @@ def mod_distinguish_post(bid, pid, board, v):
     g.db.add(post)
 
     ma=ModAction(
-        kind="distinguish_post" if post.gm_distinguish else "undistinguish_post",
+        kind="herald_post" if post.gm_distinguish else "unherald_post",
         user_id=v.id,
         target_submission_id=post.id,
         board_id=board.id
@@ -284,7 +284,7 @@ def mod_distinguish_comment(bid, cid, board, v):
     g.db.add(comment)
 
     ma=ModAction(
-        kind="distinguish_comment" if comment.gm_distinguish else "undistinguish_comment",
+        kind="herald_comment" if comment.gm_distinguish else "unherald_comment",
         user_id=v.id,
         target_comment_id=comment.id,
         board_id=board.id
