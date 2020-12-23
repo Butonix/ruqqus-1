@@ -669,6 +669,7 @@ def mod_step_down(bid, board, v):
         board_id=board.id
         )
     g.db.add(ma) 
+    return "", 204
 
 
 
