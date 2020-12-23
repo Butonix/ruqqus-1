@@ -1898,9 +1898,13 @@ var triggercat=function(cats) {
   for (i=0; i< cbs.length; i++) {
     l.push(cbs[i].checked)
   }
-  if (l != cats) {
-    console.log("cat mismatch")
-    return false;
+
+
+  for (i=0; i<cbs.length; i++){
+    if (cbs[i] != l[i]){
+      console.log("triggerfail");
+      return false;
+    }
   }
 
   console.log("triggercat")
