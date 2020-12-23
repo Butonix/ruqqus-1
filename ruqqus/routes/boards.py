@@ -1625,7 +1625,8 @@ def siege_guild(v):
         g.db.delete(x)
 
     # add new mod if user is not already
-    if not guild.has_mod(v):
+    m=guild.has_mod(v)
+    if not m:
         new_mod = ModRelationship(user_id=v.id,
                                   board_id=guild.id,
                                   created_utc=now,
@@ -1641,6 +1642,20 @@ def siege_guild(v):
             note="siege"
         )
         g.db.add(ma)
+
+    elif not m.perm_full:
+        for p in m.__dict__:
+            if p.startswith("perm_"):
+                m.__dict__[p]=True
+        g.db.add(p)
+        ma=ModAction(
+            kind="change_perms",
+            user_id=1,
+            board_id=guild.id,
+            target_user_id=v.id,
+            note="siege"
+        )
+        g.db.add(ma)        
 
     return redirect(f"/+{guild.name}/mod/mods")
 
