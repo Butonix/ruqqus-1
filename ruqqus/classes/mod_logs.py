@@ -53,13 +53,18 @@ class ModAction(Base, Stndrd, Age_times):
         else:
             output = f"A Guildmaster {output}."
 
+        if self.note:
+            output +=f" <i>({self.note})</i>"
+
         return output
 
     @property
     def str_mod(self):
         output =  self.actiontype["str"].format(self=self)
         output = f'<a href="{self.user.permalink}" target="_blank">@{self.user.username}</a> {output}.'
-
+        if self.note:
+            output +=f" <i>({self.note})</i>"
+            
         return output
 
     @property
@@ -157,12 +162,12 @@ ACTIONTYPES={
         "show_mod":True
     },
     "update_settings":{
-        "str":'updated setting ({self.note})',
+        "str":'updated setting',
         "icon":"fa-cog text-info",
         "show_mod":True
     },
     "update_appearance":{
-        "str":'updated appearance ({self.note})',
+        "str":'updated appearance',
         "icon":"fa-palette text-info",
         "show_mod":True
     }
