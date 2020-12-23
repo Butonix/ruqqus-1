@@ -141,12 +141,17 @@
             <li class="nav-item">
               <a class="nav-link{% if request.path.endswith('/mod/log') %} active{% endif %}" href="/+{{ b.name }}/mod/log"><i class="fas fa-scroll-old text-lg mr-0"></i></a>
             </li>
-            {% if mod and mod.perm_access}
+            {% if mod and mod.perm_access %}
             <li class="nav-item">
               <a class="nav-link{% if request.path.endswith('/mod/exiled') %} active{% endif %}" href="/+{{ b.name }}/mod/exiled"><i class="fas fa-user-slash text-lg mr-0"></i></a>
             </li>
+              {% if b.restricted_posting or b.is_private %}
+              <li class="nav-item">
+                <a class="nav-link{% if request.path.endswith('/mod/contributors') %} active{% endif %}" href="/+{{ b.name }}/mod/contributors"><i class="fas fa-user-check text-lg mr-0"></i></a>
+              </li>
+              {% endif %}
             {% endif %}
-            {% if mod and mod.perm_content}
+            {% if mod and mod.perm_content %}
             <li class="nav-item">
               <a class="nav-link{% if request.path.endswith('/mod/queue') %} active{% endif %}" href="/+{{ b.name }}/mod/queue"><i class="fas fa-flag text-lg mr-0"></i></a>
             </li>

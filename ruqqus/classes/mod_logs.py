@@ -83,11 +83,11 @@ ACTIONTYPES={
     },
     "contrib_user":{
         "str":'added contributor <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
-        "icon": "fa-user-plus text-info"
+        "icon": "fa-user-check text-info"
     },
     "uncontrib_user":{
         "str":'removed contributor <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
-        "icon": "fa-user-plus text-muted"
+        "icon": "fa-user-check text-muted"
     },
     "herald_comment":{
         "str":'heralded their <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
