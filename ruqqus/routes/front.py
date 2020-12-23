@@ -319,7 +319,7 @@ def front_all(v):
     ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
 
-    cats=session.get("cats")
+    cats=session.get("cats",[])
     if not cats:
         session['cats']=cats
         session.modified=True
