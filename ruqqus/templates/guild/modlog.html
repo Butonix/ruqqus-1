@@ -27,23 +27,31 @@
         <button class="btn btn-primary" data-toggle="modal" data-target="#guildmasterExileModal">Exile user</button>
       </div>
     </div>
-    <table class="mx-auto">
 
       {% for ma in actions %}
-        <tr>
-          <td class="px-2">{{ ma.age_string }}</td>
-          <td class="px-2"><a href="{{ ma.user.permalink }}">{{ ma.user.username }}</td>
-          <td class="px-2"><i class="fas {{ ma.icon }} fa-fw"></i></td>
-          <td class="px-2">{{ ma.str | safe }}</td>
-          <td class="px-2>"><a href="{{ ma.permalink }}"><i class="fas fa-link text-muted"></i></a></td>
-        </tr>
+        <div class="position-relative d-flex justify-content-between flex-wrap align-items-center h-min-16 px-3 py-3 rounded bg-white border">
+         <div class="d-flex flex-grow-1 align-items-center">
+          <div class="d-flex align-items-center justify-content-center {{ ma.color }} mr-4 rounded-lg flex-shrink-0" style="width: 32px;height: 32px;"><i class="far text-center {{ ma.icon }} text-lg text-white fa-fw"></i></div>
+          <div class="d-flex align-items-center">
+            <span class="rounded">
+             <img src="{{ ma.user.profile_url }}" alt="avatar" style="width: 42px;height: 42px;" class="rounded-circle">
+           </span>
+             <div class="text-muted pl-3">
+              <div>
+               <a href="{{ ma.user.permalink }}" class="font-weight-bold text-black" target="_self">@{{ ma.user.username }}</a>
+               <span>{{ ma.str | safe }}</span>
+             </div>
+             <div class="text-gray-500">{{ ma.age_string }}</div>
+           </div>
+         </div>
+       </div>
+      </div>
+
+
       {% else %}
-      <tr>
-        <td>Nothing here right now.</td>
-      </tr>
+      <div>There's nothing here right now.</div>
       {% endfor %}
 
-    </table>
 
     <nav aria-label="Page navigation" class="mb-5">
       <ul class="pagination pagination-sm mb-0">
