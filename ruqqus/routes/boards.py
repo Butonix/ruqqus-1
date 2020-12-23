@@ -1746,6 +1746,9 @@ def mod_log_item(boardname, aid, v):
 
     action=g.db.query(ModAction).filter_by(id=base36decode(aid)).first()
 
+    if not action:
+        abort(404)
+
     if request.path != action.permalink:
         return redirect(action.permalink)
 
