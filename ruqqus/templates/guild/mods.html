@@ -139,23 +139,18 @@
             <tr>
               <th scope="col">User</th>
               <th scope="col">Permissions</th>
-              <th scope="col">Status</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody class="text-muted">
 
-            {% for user in b.invited_mods %}
+            {% for m in b.mod_invites %}
             <tr>
               <td>
                 <a href="{{ user.permalink }}">
-                  <img src="{{ user.profile_url }}" class="profile-pic-20 align-top mr-2">@{{ user.username }}</a>
+                  <img src="{{ user.profile_url }}" class="profile-pic-20 align-top mr-2">@{{ m.user.username }}</a>
                 </td>
-                <td>Full</td>
-                <td>
-                  <i class="fas fa-circle text-warning text-small-extra mr-2"></i>
-                  Pending
-                </td>
+                <td>{{ m.permchangelist }}</td>
                 <td>
                   <div class="dropdown float-right dropdown-actions">
                     <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="line-height: 0;">
