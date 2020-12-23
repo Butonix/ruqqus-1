@@ -340,7 +340,7 @@
               <div class="card-body">
                 {% for subcat in c['subCats'] %}
                   <div class="custom-control custom-checkbox mb-2">
-                    <input type="checkbox" class="custom-control-input" id="cat-{{ subcat['name'] }}" onchange="togglecat('{{ subcat['name'] }}')"{% if subcat['name'] in session.get('cats',[]) %} checked{% endif %}>
+                    <input type="checkbox" class="custom-control-input cat-check" id="cat-{{ subcat['name'] }}" onchange="togglecat('{{ subcat['name'] }}')"{% if subcat['name'] in session.get('cats',[]) %} checked{% endif %}>
                     <label class="custom-control-label" for="cat-{{ subcat['name'] }}">{{ subcat['name'] }}</label>
                   </div>
                 {% endfor %}
