@@ -126,8 +126,8 @@ ACTIONTYPES={
     },
     "pin_comment":{
         "str":'pinned a <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
-        "icon":"fa-thumbtack",
-        "color": "bg-info fa-rotate--45"
+        "icon":"fa-thumbtack fa-rotate--45",
+        "color": "bg-info"
     },
     "unpin_comment":{
         "str":'un-pinned a <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
