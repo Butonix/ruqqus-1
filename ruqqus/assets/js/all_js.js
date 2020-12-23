@@ -1904,7 +1904,7 @@ var triggercat=function(cats) {
   console.log("triggercat")
 
   var catlist=[]
-  for (i=0, i< cbs.length, i++) {
+  for (i=0; i< cbs.length; i++) {
     catlist.push(cbs[i].dataset.cat)
   }
 
