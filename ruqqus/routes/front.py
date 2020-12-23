@@ -325,7 +325,7 @@ def front_all(v):
         session.modified=True
 
     if "cats" in request.args:
-        cats=request.args.get('cats').split(',')
+        cats=request.args.get('cats','').split(',')
         session['cats']=cats
         session.modified=True
 
