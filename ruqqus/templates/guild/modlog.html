@@ -21,10 +21,10 @@
 
       {% for ma in actions %}
         <tr>
-          <td>{{ ma.age_string }}</td>
-          <td><a href="{{ ma.user.permalink }}">{{ ma.user.username }}</td>
-          <td><i class="fas {{ ma.icon }} fa-fw mx-1"></i></td>
-          <td>{{ ma.str | safe }}</td>
+          <td class="px-2">{{ ma.age_string }}</td>
+          <td class="px-2"><a href="{{ ma.user.permalink }}">{{ ma.user.username }}</td>
+          <td class="px-2"><i class="fas {{ ma.icon }} fa-fw"></i></td>
+          <td class="px-2">{{ ma.str | safe }}</td>
         </tr>
       {% else %}
       <tr>
