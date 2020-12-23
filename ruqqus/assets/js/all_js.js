@@ -1902,7 +1902,7 @@ var triggercat=function(cats) {
 
 
   for (var i=0; i<l.length; i++){
-    if (cbs[i] != l[i]){
+    if (cats[i] != l[i]){
       console.log("triggerfail");
       return false;
     }
