@@ -125,18 +125,21 @@ def unban_post(post_id, v):
     if not post:
         abort(400)
 
+    if post.is_banned:
+        ma=ModAction(
+            kind="unban_post",
+            user_id=v.id,
+            target_submission_id=post.id,
+            board_id=post.board_id,
+        )
+        g.db.add(ma)
+        
     post.is_banned = False
     post.is_approved = v.id
     post.approved_utc = int(time.time())
 
     g.db.add(post)
-    ma=ModAction(
-        kind="unban_post",
-        user_id=v.id,
-        target_submission_id=post.id,
-        board_id=post.board_id,
-        )
-    g.db.add(ma)
+
     return (redirect(post.permalink), post)
 
 
@@ -220,16 +223,19 @@ def api_unban_comment(c_id, v):
         abort(404)
     g.db.add(comment)
 
+    if comment.is_banned
+        ma=ModAction(
+            kind="unban_comment",
+            user_id=v.id,
+            target_comment_id=comment.id,
+            board_id=comment.post.board_id,
+            )
+        g.db.add(ma)
+
     comment.is_banned = False
     comment.is_approved = v.id
     comment.approved_utc = int(time.time())
-    ma=ModAction(
-        kind="unban_comment",
-        user_id=v.id,
-        target_comment_id=comment.id,
-        board_id=comment.post.board_id,
-        )
-    g.db.add(ma)
+
 
     return "", 204
 
