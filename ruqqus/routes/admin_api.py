@@ -133,7 +133,7 @@ def unban_post(post_id, v):
             board_id=post.board_id,
         )
         g.db.add(ma)
-        
+
     post.is_banned = False
     post.is_approved = v.id
     post.approved_utc = int(time.time())
@@ -223,7 +223,7 @@ def api_unban_comment(c_id, v):
         abort(404)
     g.db.add(comment)
 
-    if comment.is_banned
+    if comment.is_banned:
         ma=ModAction(
             kind="unban_comment",
             user_id=v.id,
