@@ -1912,7 +1912,9 @@ var triggercat=function(cats) {
 
   var catlist=[]
   for (var i=0; i< cbs.length; i++) {
-    catlist.push(cbs[i].dataset.cat)
+    if(cats[i]){
+      catlist.push(cbs[i].dataset.cat);
+    }
   }
 
   var url='/inpage/all?cats=' + catlist.join(',');
