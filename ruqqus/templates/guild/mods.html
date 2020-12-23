@@ -78,7 +78,7 @@
         {% if me %}
         <a href="javascript:void(0)" class="btn btn-outline-primary mr-2" data-toggle="modal" data-target="#stepDownModal" onclick="step_downModal('{{ v.username }}')">Dethrone yourself</a>
         {% endif %}
-        {% if b.has_mod(v) %}
+        {% if me and me.perm_full %}
         <a href="javascript:void(0)" class="btn btn-primary" data-toggle="modal" data-target="#guildmasterInviteModal"><i class="fas fa-plus mr-2"></i>Add guildmaster</a>
         {% endif %}
       </div>
@@ -102,7 +102,7 @@
               <a href="{{ mod.user.permalink }}">
                 <img src="{{ mod.user.profile_url }}" class="profile-pic-20 align-top mr-2">@{{ mod.user.username }}</a>
               </td>
-              <td>Full</td>
+              <td>{{ mod.permlist }}</td>
 
               <td>
                 {% if me and me.id < mod.id %}
