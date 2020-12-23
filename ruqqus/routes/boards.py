@@ -651,7 +651,7 @@ def mod_accept_board(bid, v):
 
 @app.route("/mod/<bid>/remove/<username>", methods=["POST"])
 @auth_required
-@is_guildmaster("full")
+@is_guildmaster(None)
 @validate_formkey
 def mod_remove_username(bid, username, board, v):
 
