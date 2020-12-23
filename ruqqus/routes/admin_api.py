@@ -111,7 +111,7 @@ def ban_post(post_id, v):
         target_submission_id=post.id,
         note="admin_action")
     g.db.add(ma)
-
+    g.db.commit()
     return (redirect(post.permalink), post)
 
 
@@ -136,6 +136,7 @@ def unban_post(post_id, v):
         target_submission_id=post.id,
         note="admin_action")
     g.db.add(ma)
+    g.db.commit()
     return (redirect(post.permalink), post)
 
 
