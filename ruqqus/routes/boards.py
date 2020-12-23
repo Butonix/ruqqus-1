@@ -412,7 +412,6 @@ def mod_ban_bid_user(bid, board, v):
         note=note
         )
     g.db.add(ma)
-    g.db.commit()
 
 
     if request.args.get("toast"):
