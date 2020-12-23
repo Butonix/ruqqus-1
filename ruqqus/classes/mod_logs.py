@@ -46,22 +46,8 @@ class ModAction(Base, Stndrd, Age_times):
         return ACTIONTYPES[self.kind]
 
     @property
-    def str_user(self):
+    def str(self):
         output =  self.actiontype["str"].format(self=self)
-        if self.user_id==1 or self.actiontype.get("show_mod"):
-            output = f'<a href="{self.user.permalink}" target="_blank">@{self.user.username}</a> {output}.'
-        else:
-            output = f"A Guildmaster {output}."
-
-        if self.note:
-            output +=f" <i>({self.note})</i>"
-
-        return output
-
-    @property
-    def str_mod(self):
-        output =  self.actiontype["str"].format(self=self)
-        output = f'<a href="{self.user.permalink}" target="_blank">@{self.user.username}</a> {output}.'
         if self.note:
             output +=f" <i>({self.note})</i>"
 
