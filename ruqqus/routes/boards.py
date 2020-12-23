@@ -415,7 +415,7 @@ def mod_unban_bid_user(bid, board, v):
     user = get_user(request.values.get("username"))
 
     x =  g.db.query(BanRelationship).filter_by(board_id=board.id, user_id=user.id, is_active=True).first()
-    
+
     if not x:
         abort(409)
 
@@ -1348,7 +1348,7 @@ def mod_board_color(bid, board, v):
         kind="update_appearance",
         user_id=v.id,
         board_id=board.id,
-        note=f"set theme color #{board.color}"
+        note=f"color=#{board.color}"
         )
     g.db.add(ma)
 
