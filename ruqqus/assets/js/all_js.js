@@ -1888,6 +1888,7 @@ var togglecat = function() {
     l.push(cbs[i].checked)
   }
   setTimeout(function(){triggercat(l)}, 1000)
+  return l;
 }
 
 var triggercat=function(cats) {
