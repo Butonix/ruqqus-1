@@ -648,10 +648,33 @@ def mod_accept_board(bid, v):
 
     return "", 204
 
+@app.route("/mod/<bid>/step_down", methods=["POST"])
+@auth_required
+@is_guildmaster(None)
+@validate_formkey
+def mod_step_down(bid, board, v):
+
+
+    v_mod = board.has_mod(v)
+
+    if not v_mod:
+        abort(404)
+
+    g.db.delete(v_mod)
+
+    ma=ModAction(
+        kind="dethrone_self",
+        user_id=v.id,
+        target_user_id=v.id,
+        board_id=board.id
+        )
+    g.db.add(ma) 
+
+
 
 @app.route("/mod/<bid>/remove/<username>", methods=["POST"])
 @auth_required
-@is_guildmaster(None)
+@is_guildmaster("full")
 @validate_formkey
 def mod_remove_username(bid, username, board, v):
 
@@ -677,7 +700,7 @@ def mod_remove_username(bid, username, board, v):
     g.db.delete(u_mod)
 
     ma=ModAction(
-        kind="dethrone_self" if v.id==user.id else "remove_mod",
+        kind="remove_mod",
         user_id=v.id,
         target_user_id=user.id,
         board_id=board.id
