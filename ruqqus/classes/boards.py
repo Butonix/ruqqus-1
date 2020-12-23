@@ -116,6 +116,13 @@ class Board(Base, Stndrd, Age_times):
         return z
 
     @property
+    def mod_invites(self):
+        z = [x for x in self.moderators if x.accepted ==
+             False and x.invite_rescinded == False]
+        z = sorted(z, key=lambda x: x.id)
+        return z
+
+    @property
     def mods_count(self):
 
         return len(
