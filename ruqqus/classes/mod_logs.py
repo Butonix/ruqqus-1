@@ -155,11 +155,11 @@ ACTIONTYPES={
     },
     "set_nsfw":{
         "str":'set nsfw on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
-        "icon":"fa-evil-eye text-danger"
+        "icon":"fa-eye-evil text-danger"
     },
     "unset_nsfw":{
         "str":'unset nsfw on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
-        "icon":"fa-evil-eye text-muted"
+        "icon":"fa-eye-evil text-muted"
     },
     "set_nsfl":{
         "str":'set nsfl on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
