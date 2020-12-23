@@ -257,5 +257,11 @@ ACTIONTYPES={
         "icon":"fa-comment",
         "color": "bg-muted",
         "title": "reinstated comment"
+    },
+    "change_perms":{
+        "str": 'changed guildmaster permissions on <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
+        "icon":"fa-user-cog",
+        "color": "bg-info",
+        "title": "changed permissions on {self.target_user.username}"
     }
 }
