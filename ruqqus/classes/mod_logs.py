@@ -19,7 +19,7 @@ class ModAction(Base, Stndrd, Age_times):
     target_comment_id = Column(Integer, ForeignKey("comments.id"), default=0)
     #targetLodge = Column(Integer, ForeignKey("lodges.id"), default=0)
     #targetRule = Column(Boolean, ForeignKey("rules.id"), default=False)
-    note=Column(String(64), default=None)
+    note=Column(String(256), default=None)
     created_utc = Column(Integer, default=0)
 
 
