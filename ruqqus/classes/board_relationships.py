@@ -44,8 +44,11 @@ class ModRelationship(Base):
 
         output=[]
         for p in self.__dict__:
+            print(f'checking property {p}')
             if p.startswith("perm_"):
+                print('starts with perm')
                 if self.__dict__[p]:
+                    print("it's true")
                     output.append(p.split("perm_")[1])
 
         return output.join(', ')
