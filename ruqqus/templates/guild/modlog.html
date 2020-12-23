@@ -17,27 +17,31 @@
 
   <div class="col h-100">
 
+    <table>
 
     {% if v and b.has_mod(v) %}
       {% for ma in actions %}
-        <div class="row">
-
-          <p class="py-1 my-0"><i class="fas {{ ma.icon }} fa-fw mx-1"></i><span>{{ ma.age_string }}</span>, {{ ma.str_mod | safe }}</p>
-
-        </div>
+        <tr>
+          <td>{{ ma.age_string }}</td>
+          <td><a href="{{ ma.user.permalink }}">{{ ma.user.username }}</td>
+          <td><i class="fas {{ ma.icon }} fa-fw mx-1"></i></td>
+          <td>{{ ma.str_mod | safe }}</td>
+        </tr>
 
       {% endfor %}
     {% else %}
       {% for ma in actions %}
-        <div class="row">
-
-          <p class="py-1 my-0"><i class="fas {{ ma.icon }} fa-fw mx-1"></i><span>{{ ma.age_string }}</span>, {{ ma.str_user | safe }}</p>
-
-        </div>
+        <tr>
+          <td>{{ ma.age_string }}</td>
+          <td>{% if ma.actiontype.get('show_mod') %}<a href="{{ ma.user.permalink }}">{{ ma.user.username }}</a>{% else %}a guildmaster{% endif %}</td>
+          <td><i class="fas {{ ma.icon }} fa-fw mx-1"></i></td>
+          <td>{{ ma.str_mod | safe }}</td>
+        </tr>
 
       {% endfor %}
     {% endif %}
 
+    </table>
 
     <nav aria-label="Page navigation" class="mb-5">
       <ul class="pagination pagination-sm mb-0">
