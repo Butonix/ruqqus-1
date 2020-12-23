@@ -110,7 +110,7 @@ def ban_post(post_id, v):
         user_id=v.id,
         target_submission_id=post.id,
         board_id=post.board_id,
-        note="admin_action")
+        )
     g.db.add(ma)
     return (redirect(post.permalink), post)
 
@@ -135,7 +135,7 @@ def unban_post(post_id, v):
         user_id=v.id,
         target_submission_id=post.id,
         board_id=post.board_id,
-        note="admin_action")
+        )
     g.db.add(ma)
     return (redirect(post.permalink), post)
 
@@ -206,7 +206,7 @@ def api_ban_comment(c_id, v):
         user_id=v.id,
         target_comment_id=comment.id,
         board_id=comment.post.board_id,
-        note="admin_action")
+        )
     g.db.add(ma)
     return "", 204
 
@@ -228,7 +228,7 @@ def api_unban_comment(c_id, v):
         user_id=v.id,
         target_comment_id=comment.id,
         board_id=comment.post.board_id,
-        note="admin_action")
+        )
     g.db.add(ma)
 
     return "", 204
