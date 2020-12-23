@@ -1573,7 +1573,7 @@ def siege_guild(v):
                 kind="uninvite_mod",
                 user_id=1,
                 board_id=guild.id,
-                target_user_id=x.user_id
+                target_user_id=x.user_id,
                 note="siege"
             )
             g.db.add(ma)
@@ -1593,7 +1593,7 @@ def siege_guild(v):
             kind="add_mod",
             user_id=1,
             board_id=guild.id,
-            target_user_id=v.id
+            target_user_id=v.id,
             note="siege"
         )
         g.db.add(ma)
