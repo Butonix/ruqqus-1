@@ -127,21 +127,21 @@ ACTIONTYPES={
     "pin_comment":{
         "str":'pinned a <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
         "icon":"fa-thumbtack",
-        "color": "bg-danger"
+        "color": "bg-info fa-rotate--45"
     },
     "unpin_comment":{
         "str":'un-pinned a <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
-        "icon":"fa-thumbtack",
+        "icon":"fa-thumbtack fa-rotate--45",
         "color": "bg-muted"
     },
     "pin_post":{
         "str":'pinned post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
-        "icon":"fa-thumbtack fa-rotate--45 text-info",
-        "color": "bg-info"
+        "icon":"fa-thumbtack fa-rotate--45",
+        "color": "bg-success"
     },
     "unpin_post":{
         "str":'un-pinned post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
-        "icon":"fa-thumbtack",
+        "icon":"fa-thumbtack fa-rotate--45",
         "color": "bg-muted"
     },
     "invite_mod":{
