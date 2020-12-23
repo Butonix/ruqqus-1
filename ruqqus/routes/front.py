@@ -321,11 +321,12 @@ def front_all(v):
 
     cats=session.get("cats",[])
     if not cats:
-        session['cats']=cats
+        session['cats']=default_cat_cookie()
         session.modified=True
 
-    if "cats" in request.args:
-        cats=request.args.get('cats','').split(',')
+    new_cats=request.args.get('cats','')
+    if new_cats:
+        new_cats=new_cats.split(',')
         session['cats']=cats
         session.modified=True
 
