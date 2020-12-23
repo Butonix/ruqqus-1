@@ -1899,6 +1899,7 @@ var triggercat=function(cats) {
     l.push(cbs[i].checked)
   }
   if (l != cats) {
+    console.log("cat mismatch")
     return false;
   }
 
