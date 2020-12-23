@@ -163,7 +163,7 @@ ACTIONTYPES={
     },
     "set_nsfl":{
         "str":'set nsfl on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
-        "icon":"fa-skull text-danger"
+        "icon":"fa-skull text-black"
     },
     "unset_nsfl":{
         "str":'unset nsfl on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
