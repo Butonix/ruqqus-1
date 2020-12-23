@@ -64,7 +64,7 @@ class ModAction(Base, Stndrd, Age_times):
         output = f'<a href="{self.user.permalink}" target="_blank">@{self.user.username}</a> {output}.'
         if self.note:
             output +=f" <i>({self.note})</i>"
-            
+
         return output
 
     @property
@@ -155,6 +155,11 @@ ACTIONTYPES={
     "remove_mod":{
         "str":'removed Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon":"fa-crown text-danger"
+    },
+    "dethrone_self":{
+        "str":'stepped down as guildmaster',
+        "icon":"fa-crown text-danger",
+        "show_mod":True
     },
     "add_mod":{
         "str":'added Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
