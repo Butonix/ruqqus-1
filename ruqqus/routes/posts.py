@@ -47,10 +47,10 @@ def incoming_post_shortlink(base36id=None):
         return redirect('/robots.txt')
 
     try:
-        x=base36decode(bsae36id)
+        x=base36decode(base36id)
     except:
         abort(400)
-        
+
     post = get_post(base36id)
     return redirect(post.permalink)
 
