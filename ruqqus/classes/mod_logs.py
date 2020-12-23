@@ -233,5 +233,29 @@ ACTIONTYPES={
         "icon":"fa-skull",
         "color": "bg-muted",
         "title": 'un-set nsfw on post {self.target_post.title}'
+    },
+    "ban_post":{
+        "str": 'removed post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a> <i>(admin action)</i>',
+        "icon":"fa-feather-alt",
+        "color": "bg-danger",
+        "title": "removed post {self.target_post.title}"
+    },
+    "unban_post":{
+        "str": 'reinstated post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a> <i>(admin action)</i>',
+        "icon":"fa-feather-alt",
+        "color": "bg-muted",
+        "title": "reinstated post {self.target_post.title}"
+    },
+    "ban_comment":{
+        "str": 'removed <a href="{self.target_comment.permalink}" target="_blank">comment</a> <i>(admin action)</i>',
+        "icon":"fa-comment",
+        "color": "bg-danger",
+        "title": "removed comment"
+    },
+    "unban_comment":{
+        "str": 'reinstated <a href="{self.target_comment.permalink}" target="_blank">comment</a> <i>(admin action)</i>',
+        "icon":"fa-comment",
+        "color": "bg-muted",
+        "title": "reinstated comment"
     }
 }

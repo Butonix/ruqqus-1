@@ -445,7 +445,13 @@ def submit_post(v):
             post.is_banned = True
             post.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
             g.db.add(post)
-
+            ma=ModAction(
+                    user_id=1,
+                    target_post_id=comment.id,
+                    kind="ban_post",
+                    note="spam"
+                    )
+            g.db.add(ma)
         g.db.commit()
         return redirect("/notifications")
 

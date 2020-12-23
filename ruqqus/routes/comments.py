@@ -344,6 +344,13 @@ def api_comment(v):
                 comment.is_banned = True
                 comment.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
                 g.db.add(comment)
+                ma=ModAction(
+                    user_id=1,
+                    target_comment_id=comment.id,
+                    kind="ban_comment",
+                    note="spam"
+                    )
+                g.db.add(ma)
 
             g.db.commit()
             return jsonify({"error": "Too much spam!"}), 403
