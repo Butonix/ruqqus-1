@@ -323,6 +323,7 @@ def front_all(v):
     if not cats:
         cats=default_cat_cookie()
         session['cats']=cats
+        session.modified=True
 
     cats_req = request.args.get("cats","").split(",")
     if cats_req!=[] and cats_req != cats:
