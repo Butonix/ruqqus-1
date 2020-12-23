@@ -75,7 +75,7 @@ ACTIONTYPES={
     },
     "exile_user":{
         "str":'exiled user <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
-        "icon":"fa-user-slash text-warning"
+        "icon":"fa-user-slash text-danger"
     },
     "unexile_user":{
         "str":'un-exiled user <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
