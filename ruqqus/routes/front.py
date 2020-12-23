@@ -319,9 +319,15 @@ def front_all(v):
     ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
 
-    cats=default_cat_cookie()
-    session['cats']=cats
-    session.modified=True
+    cats=session.get("cats")
+    if not cats:
+        session['cats']=cats
+        session.modified=True
+
+    if "cats" in request.args:
+        cats=request.args.get('cats').split(',')
+        session['cats']=cats
+        session.modified=True
 
 
     ids = frontlist(sort=sort_method,
