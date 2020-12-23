@@ -147,8 +147,8 @@
             {% for m in b.mod_invites %}
             <tr>
               <td>
-                <a href="{{ user.permalink }}">
-                  <img src="{{ user.profile_url }}" class="profile-pic-20 align-top mr-2">@{{ m.user.username }}</a>
+                <a href="{{ m.user.permalink }}">
+                  <img src="{{ m.user.profile_url }}" class="profile-pic-20 align-top mr-2">@{{ m.user.username }}</a>
                 </td>
                 <td>{{ m.permchangelist }}</td>
                 <td>
@@ -157,7 +157,7 @@
                       <i class="fas fa-ellipsis-h text-muted"></i>
                     </a>
                     <div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
-                      <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post('/mod/{{ b.base36id }}/rescind/{{ user.username }}', callback=function(){window.location.reload(true)})"><i class="fas fa-times text-danger"></i>Cancel invite</a>
+                      <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post('/mod/{{ b.base36id }}/rescind/{{ m.user.username }}', callback=function(){window.location.reload(true)})"><i class="fas fa-times text-danger"></i>Cancel invite</a>
                     </div>
                   </div>
                 </td>
