@@ -1757,5 +1757,6 @@ def mod_log_item(boardname, aid, v):
         b=action.board,
         actions=[action],
         next_exists=False,
-        page=1
+        page=1,
+        action=action
         )
