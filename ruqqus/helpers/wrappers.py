@@ -223,35 +223,48 @@ def no_negative_balance(s):
 
     return wrapper_maker
 
-def is_guildmaster(f):
-    # decorator that enforces guildmaster status
+def is_guildmaster(perm=None):
+    # decorator that enforces guildmaster status and verifies permissions
     # use under auth_required
+    def wrapper_maker(f):
 
-    def wrapper(*args, **kwargs):
+        def wrapper(*args, **kwargs):
 
-        v = kwargs["v"]
-        boardname = kwargs.get("boardname")
-        board_id = kwargs.get("bid")
+            v = kwargs["v"]
+            boardname = kwargs.get("boardname")
+            board_id = kwargs.get("bid")
+            bid=request.values.get("bid", request.values.get("board_id"))
 
-        if boardname:
-            board = get_guild(boardname)
-        else:
-            board = get_board(board_id)
+            if boardname:
+                board = get_guild(boardname)
+            elif board_id:
+                board = get_board(board_id)
+            elif bid:
+                board = get_board(bid)
+            else:
+                return jsonify({"error": f"no guild specified"}), 400
 
-        if not board.has_mod(v):
-            abort(403)
+            m=board.has_mod(v)
+            if not m:
+                return jsonify({"error":f"You aren't a guildmaster of +{board.name}"}), 403
 
-        if v.is_banned and not v.unban_utc:
-            abort(403)
+        #    if perm:
+        #        if not m.__dict__.get(f"perm_{perm}"):
+        #            return jsonify({"error":f"Permission `{perm}` required"}), 403
 
-        return f(*args, board=board, **kwargs)
 
-    wrapper.__name__ = f.__name__
-    return wrapper
+            if v.is_banned and not v.unban_utc:
+                abort(403)
+
+            return f(*args, board=board, **kwargs)
+
+        wrapper.__name__ = f.__name__
+        return wrapper
+
+    return wrapper_maker
+
 
 # this wrapper takes args and is a bit more complicated
-
-
 def admin_level_required(x):
 
     def wrapper_maker(f):

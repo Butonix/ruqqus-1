@@ -163,7 +163,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     @lazy
     def fullname(self):
-        return f"t2_{self.base36id}"
+        return f"t2_{self.base36id}"    
         
     @property
     @lazy

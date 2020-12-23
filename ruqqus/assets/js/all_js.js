@@ -1881,21 +1881,47 @@ var tipModal2 = function(id, content, link, recipient, recipientPFP) {
   console.log(recipientPFP, id, content, link, recipient)
 }
 
-
-var togglecat=function(cat) {
-
-  ele=document.getElementById('cat-'+cat);
-
-  var url='/inpage/all?';
-  if (ele.checked) {
-    url=url+'add_cat=';
+var togglecat = function() {
+  var cbs = document.getElementsByClassName('cat-check');
+  var l = []
+  for (var i=0; i< cbs.length; i++) {
+    l.push(cbs[i].checked)
   }
-  else {
-    url=url+'rm_cat=';
+  setTimeout(function(){triggercat(l)}, 1000)
+  return l;
+}
+
+var triggercat=function(cats) {
+
+  var cbs = document.getElementsByClassName('cat-check');
+  var l = []
+  for (var i=0; i< cbs.length; i++) {
+    l.push(cbs[i].checked)
   }
+
+
+
+  for (var i=0; i<l.length; i++){
+    if (cats[i] != l[i]){
+      console.log("triggerfail");
+      return false;
+    }
+  }
+
+  console.log("triggercat")
+
+  var catlist=[]
+  for (var i=0; i< cbs.length; i++) {
+    if(cats[i]){
+      catlist.push(cbs[i].dataset.cat);
+    }
+  }
+
+  var url='/inpage/all?cats=' + catlist.join(',');
+  
 
   xhr = new XMLHttpRequest();
-  xhr.open('get', url+cat);
+  xhr.open('get', url);
   xhr.withCredentials=true;
 
   xhr.onload=function(){

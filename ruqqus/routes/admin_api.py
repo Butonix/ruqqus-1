@@ -278,8 +278,22 @@ def mod_self_to_guild(v, bid):
     if not board.has_mod(v):
         mr = ModRelationship(user_id=v.id,
                              board_id=board.id,
-                             accepted=True)
+                             accepted=True,
+                             perm_full=True,
+                             perm_access=True,
+                             perm_config=True,
+                             perm_appearance=True,
+                             perm_content=True)
         g.db.add(mr)
+
+        ma=ModAction(
+            kind="add_mod",
+            user_id=v.id,
+            target_user_id=v.id,
+            board_id=board.id,
+            note="admin action"
+        )
+        g.db.add(ma)
 
     return redirect(f"/+{board.name}/mod/mods")
 

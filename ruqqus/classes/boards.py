@@ -215,7 +215,7 @@ class Board(Base, Stndrd, Age_times):
 
         return posts
 
-    def has_mod(self, user):
+    def has_mod(self, user, perm=None):
 
         if user is None:
             return None
@@ -225,7 +225,12 @@ class Board(Base, Stndrd, Age_times):
 
         for x in user.moderates:
             if x.board_id == self.id and x.accepted and not x.invite_rescinded:
-                return x
+                
+                if perm:
+                    return x if x.__dict__[f"perm_{perm}"] else False
+                else:
+                    return x
+
 
         return False
 

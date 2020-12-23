@@ -234,7 +234,7 @@ def board_name(name, v):
 
 @app.route("/mod/distinguish_post/<bid>/<pid>", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("content")
 def mod_distinguish_post(bid, pid, board, v):
 
     #print(pid, board, v)
@@ -253,11 +253,19 @@ def mod_distinguish_post(bid, pid, board, v):
         post.gm_distinguish = board.id
     g.db.add(post)
 
+    ma=ModAction(
+        kind="herald_post" if post.gm_distinguish else "unherald_post",
+        user_id=v.id,
+        target_submission_id=post.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
+
     return "", 204
 
 @app.route("/mod/distinguish_comment/<bid>/<cid>", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster('content')
 def mod_distinguish_comment(bid, cid, board, v):
 
     comment = get_comment(cid, v=v)
@@ -273,11 +281,21 @@ def mod_distinguish_comment(bid, cid, board, v):
     else:
         comment.gm_distinguish = board.id
 
+    g.db.add(comment)
+
+    ma=ModAction(
+        kind="herald_comment" if comment.gm_distinguish else "unherald_comment",
+        user_id=v.id,
+        target_comment_id=comment.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
+
     return "", 204
 
 @app.route("/mod/kick/<bid>/<pid>", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster('content')
 @validate_formkey
 def mod_kick_bid_pid(bid, pid, board, v):
 
@@ -293,12 +311,20 @@ def mod_kick_bid_pid(bid, pid, board, v):
 
     cache.delete_memoized(Board.idlist, board)
 
+    ma=ModAction(
+        kind="kick_post",
+        user_id=v.id,
+        target_submission_id=post.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
+
     return "", 204
 
 
 @app.route("/mod/accept/<bid>/<pid>", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster('content')
 @validate_formkey
 def mod_accept_bid_pid(bid, pid, board, v):
 
@@ -309,12 +335,20 @@ def mod_accept_bid_pid(bid, pid, board, v):
     post.mod_approved = v.id
     g.db.add(post)
 
+    ma=ModAction(
+        kind="approve_post",
+        user_id=v.id,
+        target_submission_id=post.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
+
     return "", 204
 
 
 @app.route("/mod/exile/<bid>", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster('access')
 @validate_formkey
 def mod_ban_bid_user(bid, board, v):
 
@@ -357,6 +391,15 @@ def mod_ban_bid_user(bid, board, v):
         text = f"You have been exiled from +{board.name}.\n\nNone of your existing posts or comments have been removed, however, you will not be able to make any new posts or comments in +{board.name}."
         send_notification(user, text)
 
+    ma=ModAction(
+        kind="exile_user",
+        user_id=v.id,
+        target_user_id=user.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
+
+
     if request.args.get("toast"):
         return jsonify({"message": f"@{user.username} exiled from +{board.name}"})
     else:
@@ -365,19 +408,28 @@ def mod_ban_bid_user(bid, board, v):
 
 @app.route("/mod/unexile/<bid>", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster('access')
 @validate_formkey
 def mod_unban_bid_user(bid, board, v):
 
     user = get_user(request.values.get("username"))
 
-    x = board.has_ban(user)
+    x =  g.db.query(BanRelationship).filter_by(board_id=board.id, user_id=user.id, is_active=True).first()
+
     if not x:
         abort(409)
 
     x.is_active = False
 
     g.db.add(x)
+
+    ma=ModAction(
+        kind="unexile_user",
+        user_id=v.id,
+        target_user_id=user.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
 
     return "", 204
 
@@ -424,16 +476,18 @@ def user_kick_pid(pid, v):
 @app.route("/mod/take/<pid>", methods=["POST"])
 @app.route("/api/v1/mod/take/<pid>")
 @auth_required
+@is_guildmaster("content")
 @validate_formkey
 @api("guildmaster")
-def mod_take_pid(pid, v):
+def mod_take_pid(pid, board, v):
 
     bid = request.form.get("board_id", request.form.get("guild", None))
     if not bid:
         abort(400)
 
-    board = get_board(bid)
-    post = get_post(pid)
+    post = get_post(pid, graceful=True)
+    if not post:
+        return jsonify({"error": "invalid post id"}), 404
 
     #check cooldowns
     now=int(time.time())
@@ -483,12 +537,20 @@ def mod_take_pid(pid, v):
     # clear board's listing caches
     cache.delete_memoized(Board.idlist, board)
 
+    ma=ModAction(
+        kind="yank_post",
+        user_id=v.id,
+        target_submission_id=post.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
+
     return "", 204
 
 
 @app.route("/mod/invite_mod/<bid>", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("full")
 @validate_formkey
 def mod_invite_username(bid, board, v):
 
@@ -522,12 +584,20 @@ def mod_invite_username(bid, board, v):
 
         g.db.add(new_mod)
 
+    ma=ModAction(
+        kind="invite_mod",
+        user_id=v.id,
+        target_user_id=user.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
+
     return "", 204
 
 
 @app.route("/mod/<bid>/rescind/<username>", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("full")
 @validate_formkey
 def mod_rescind_bid_username(bid, username, board, v):
 
@@ -542,7 +612,13 @@ def mod_rescind_bid_username(bid, username, board, v):
     invitation.invite_rescinded = True
 
     g.db.add(invitation)
-
+    ma=ModAction(
+        kind="uninvite_mod",
+        user_id=v.id,
+        target_user_id=user.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
     return "", 204
 
 
@@ -563,12 +639,44 @@ def mod_accept_board(bid, v):
     x.accepted = True
     g.db.add(x)
 
+    ma=ModAction(
+        kind="accept_mod_invite",
+        user_id=v.id,
+        target_user_id=v.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
+
     return "", 204
+
+@app.route("/mod/<bid>/step_down", methods=["POST"])
+@auth_required
+@is_guildmaster()
+@validate_formkey
+def mod_step_down(bid, board, v):
+
+
+    v_mod = board.has_mod(v)
+
+    if not v_mod:
+        abort(404)
+
+    g.db.delete(v_mod)
+
+    ma=ModAction(
+        kind="dethrone_self",
+        user_id=v.id,
+        target_user_id=v.id,
+        board_id=board.id
+        )
+    g.db.add(ma) 
+    return "", 204
+
 
 
 @app.route("/mod/<bid>/remove/<username>", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("full")
 @validate_formkey
 def mod_remove_username(bid, username, board, v):
 
@@ -593,12 +701,20 @@ def mod_remove_username(bid, username, board, v):
 
     g.db.delete(u_mod)
 
+    ma=ModAction(
+        kind="remove_mod",
+        user_id=v.id,
+        target_user_id=user.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
+
     return "", 204
 
 
 @app.route("/mod/is_banned/<bid>/<username>", methods=["GET"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("access")
 @validate_formkey
 def mod_is_banned_board_username(bid, username, board, v):
 
@@ -617,7 +733,7 @@ def mod_is_banned_board_username(bid, username, board, v):
 
 @app.route("/mod/<bid>/settings/over_18", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("config")
 @validate_formkey
 def mod_bid_settings_nsfw(bid, board, v):
 
@@ -626,12 +742,19 @@ def mod_bid_settings_nsfw(bid, board, v):
 
     g.db.add(board)
 
+    ma=ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"over_18={board.over_18}"
+        )
+    g.db.add(ma)
     return "", 204
 
 
 @app.route("/mod/<bid>/settings/opt_out", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("config")
 @validate_formkey
 def mod_bid_settings_optout(bid, board, v):
 
@@ -640,12 +763,19 @@ def mod_bid_settings_optout(bid, board, v):
 
     g.db.add(board)
 
+    ma=ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"all_opt_out={board.all_opt_out}"
+        )
+    g.db.add(ma)
     return "", 204
 
 
 @app.route("/mod/<bid>/settings/restricted", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("config")
 @validate_formkey
 def mod_bid_settings_restricted(bid, board, v):
 
@@ -657,12 +787,19 @@ def mod_bid_settings_restricted(bid, board, v):
 
     g.db.add(board)
 
+    ma=ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"restricted={board.restricted_posting}"
+        )
+    g.db.add(ma)
     return "", 204
 
 
 @app.route("/mod/<bid>/settings/private", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("config")
 @validate_formkey
 def mod_bid_settings_private(bid, board, v):
 
@@ -671,12 +808,19 @@ def mod_bid_settings_private(bid, board, v):
 
     g.db.add(board)
 
+    ma=ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"private={board.is_private}"
+        )
+    g.db.add(ma)
     return "", 204
 
 
 @app.route("/mod/<bid>/settings/name", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("config")
 @validate_formkey
 def mod_bid_settings_name(bid, board, v):
     # name capitalization
@@ -686,6 +830,14 @@ def mod_bid_settings_name(bid, board, v):
         board.name = new_name
         g.db.add(board)
 
+
+        ma=ModAction(
+            kind="update_settings",
+            user_id=v.id,
+            board_id=board.id,
+            note=f"name={board.name}"
+            )
+        g.db.add(ma)
         return "", 204
     else:
         return "", 422
@@ -693,7 +845,7 @@ def mod_bid_settings_name(bid, board, v):
 
 @app.route("/mod/<bid>/settings/description", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("config")
 @validate_formkey
 def mod_bid_settings_description(bid, board, v):
     # board description
@@ -707,12 +859,19 @@ def mod_bid_settings_description(bid, board, v):
 
     g.db.add(board)
 
+    ma=ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"update description"
+        )
+    g.db.add(ma)
     return "", 204
 
 
 @app.route("/mod/<bid>/settings/banner", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("appearance")
 @validate_formkey
 def mod_settings_toggle_banner(bid, board, v):
     # toggle show/hide banner
@@ -722,13 +881,12 @@ def mod_settings_toggle_banner(bid, board, v):
             False) == 'true')
 
     g.db.add(board)
-
     return "", 204
 
 
 @app.route("/mod/<bid>/settings/add_rule", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("full")
 @validate_formkey
 def mod_add_rule(bid, board, v):
     # board description
@@ -755,7 +913,7 @@ def mod_add_rule(bid, board, v):
 
 @app.route("/mod/<bid>/settings/edit_rule", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("full")
 @validate_formkey
 def mod_edit_rule(bid, board, v):
     r = base36decode(request.form.get("rid"))
@@ -786,7 +944,7 @@ def mod_edit_rule(bid, board, v):
 
 @app.route("/+<boardname>/mod/settings", methods=["GET"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("config")
 def board_about_settings(boardname, board, v):
 
     return render_template(
@@ -799,7 +957,7 @@ def board_about_settings(boardname, board, v):
 
 @app.route("/+<boardname>/mod/appearance", methods=["GET"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("appearance")
 def board_about_appearance(boardname, board, v):
 
     return render_template("guild/appearance.html", v=v, b=board)
@@ -818,7 +976,7 @@ def board_about_mods(boardname, v):
 
 @app.route("/+<boardname>/mod/exiled", methods=["GET"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("access")
 def board_about_exiled(boardname, board, v):
 
     page = int(request.args.get("page", 1))
@@ -842,7 +1000,7 @@ def board_about_exiled(boardname, board, v):
 
 @app.route("/+<boardname>/mod/contributors", methods=["GET"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("access")
 def board_about_contributors(boardname, board, v):
 
     page = int(request.args.get("page", 1))
@@ -925,7 +1083,7 @@ def unsubscribe_board(boardname, v):
 
 @app.route("/+<boardname>/mod/queue", methods=["GET"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("content")
 def board_mod_queue(boardname, board, v):
 
     page = int(request.args.get("page", 1))
@@ -993,7 +1151,7 @@ def all_mod_queue(v):
 
 @app.route("/mod/<bid>/images/profile", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("appearance")
 @validate_formkey
 def mod_board_images_profile(bid, board, v):
 
@@ -1008,12 +1166,20 @@ def mod_board_images_profile(bid, board, v):
                                   )
     new_thread.start()
 
+    ma=ModAction(
+        kind="update_appearance",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"uploaded profile image"
+        )
+    g.db.add(ma)
+
     return redirect(f"/+{board.name}/mod/appearance?msg=Success#images")
 
 
 @app.route("/mod/<bid>/images/banner", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("appearance")
 @validate_formkey
 def mod_board_images_banner(bid, board, v):
 
@@ -1027,27 +1193,52 @@ def mod_board_images_banner(bid, board, v):
                                         )
                                   )
     new_thread.start()
+
+    ma=ModAction(
+        kind="update_appearance",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"uploaded banner image"
+        )
+    g.db.add(ma)
+
     return redirect(f"/+{board.name}/mod/appearance?msg=Success#images")
 
 
 @app.route("/mod/<bid>/delete/profile", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("appearance")
 @validate_formkey
 def mod_board_images_delete_profile(bid, board, v):
 
     board.del_profile()
+
+    ma=ModAction(
+        kind="update_appearance",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"removed profile image"
+        )
+    g.db.add(ma)
 
     return redirect(f"/+{board.name}/mod/appearance?msg=Success#images")
 
 
 @app.route("/mod/<bid>/delete/banner", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("appearance")
 @validate_formkey
 def mod_board_images_delete_banner(bid, board, v):
 
     board.del_banner()
+
+    ma=ModAction(
+        kind="update_appearance",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"removed banner image"
+        )
+    g.db.add(ma)
 
     return redirect(f"/+{board.name}/mod/appearance?msg=Success#images")
 
@@ -1116,7 +1307,7 @@ def board_dark_css(boardname, x):
 
 @app.route("/mod/<bid>/color", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("appearance")
 @validate_formkey
 def mod_board_color(bid, board, v):
 
@@ -1153,12 +1344,20 @@ def mod_board_color(bid, board, v):
     except BaseException:
         pass
 
+    ma=ModAction(
+        kind="update_appearance",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"color=#{board.color}"
+        )
+    g.db.add(ma)
+
     return redirect(f"/+{board.name}/mod/appearance?msg=Success")
 
 
 @app.route("/mod/approve/<bid>", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("access")
 @validate_formkey
 def mod_approve_bid_user(bid, board, v):
 
@@ -1192,12 +1391,20 @@ def mod_approve_bid_user(bid, board, v):
             text = f"You have been added as an approved contributor to +{board.name}."
             send_notification(user, text)
 
+    ma=ModAction(
+        kind="contrib_user",
+        user_id=v.id,
+        board_id=board.id,
+        target_user_id=user.id
+        )
+    g.db.add(ma)
+
     return "", 204
 
 
 @app.route("/mod/unapprove/<bid>", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("access")
 @validate_formkey
 def mod_unapprove_bid_user(bid, board, v):
 
@@ -1214,7 +1421,13 @@ def mod_unapprove_bid_user(bid, board, v):
 
     g.db.add(x)
     g.db.commit()
-
+    ma=ModAction(
+        kind="uncontrib_user",
+        user_id=v.id,
+        board_id=board.id,
+        target_user_id=user.id
+        )
+    g.db.add(ma)
     return "", 204
 
 
@@ -1370,6 +1583,26 @@ def siege_guild(v):
         if x.accepted:
             send_notification(x.user,
                               f"You have been overthrown from +{guild.name}.")
+
+
+            ma=ModAction(
+                kind="remove_mod",
+                user_id=1,
+                board_id=guild.id,
+                target_user_id=x.user_id,
+                note="siege"
+            )
+            g.db.add(ma)
+        else:
+            ma=ModAction(
+                kind="uninvite_mod",
+                user_id=1,
+                board_id=guild.id,
+                target_user_id=x.user_id,
+                note="siege"
+            )
+            g.db.add(ma)
+
         g.db.delete(x)
 
     # add new mod if user is not already
@@ -1381,13 +1614,21 @@ def siege_guild(v):
                                   )
 
         g.db.add(new_mod)
+        ma=ModAction(
+            kind="add_mod",
+            user_id=1,
+            board_id=guild.id,
+            target_user_id=v.id,
+            note="siege"
+        )
+        g.db.add(ma)
 
     return redirect(f"/+{guild.name}/mod/mods")
 
 
 @app.route("/mod/post_pin/<bid>/<pid>/<x>", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("content")
 @validate_formkey
 def mod_toggle_post_pin(bid, pid, x, board, v):
 
@@ -1409,6 +1650,14 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
     cache.delete_memoized(Board.idlist, post.board)
 
     g.db.add(post)
+
+    ma=ModAction(
+        kind="pin_post" if post.is_pinned else "unpin_post",
+        user_id=v.id,
+        board_id=board.id,
+        target_submission_id=post.id
+    )
+    g.db.add(ma)
 
     return "", 204
 
@@ -1447,7 +1696,7 @@ def board_comments(boardname, v):
 
 @app.route("/mod/<bid>/category/<category>", methods=["POST"])
 @auth_required
-@is_guildmaster
+@is_guildmaster("config")
 @validate_formkey
 def change_guild_category(v, board, bid, category):
 
@@ -1458,5 +1707,55 @@ def change_guild_category(v, board, bid, category):
     g.db.add(board)
     g.db.flush()
 
+    ma=ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"category={board.subcat}"
+    )
+    g.db.add(ma)
+
     return jsonify({"message": f"Category changed to `{category}`"})
 
+
+
+@app.route("/+<boardname>/mod/log", methods=["GET"])
+@auth_desired
+def board_mod_log(boardname, v):
+
+    page=int(request.args.get("page",1))
+    board=get_guild(boardname)
+
+    actions=g.db.query(ModAction).filter_by(board_id=board.id).order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
+    actions=[i for i in actions]
+
+    next_exists=len(actions)==26
+    actions=actions[0:25]
+
+    return render_template("guild/modlog.html",
+        v=v,
+        b=board,
+        actions=actions,
+        next_exists=next_exists,
+        page=page
+        )
+
+@app.route("/+<boardname>/mod/log/<aid>", methods=["GET"])
+@auth_desired
+def mod_log_item(boardname, aid, v):
+
+    action=g.db.query(ModAction).filter_by(id=base36decode(aid)).first()
+
+    if not action:
+        abort(404)
+
+    if request.path != action.permalink:
+        return redirect(action.permalink)
+
+    return render_template("guild/modlog.html",
+        v=v,
+        b=action.board,
+        actions=[action],
+        next_exists=False,
+        page=1
+        )

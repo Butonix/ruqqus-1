@@ -90,6 +90,10 @@ def recompute():
 
         db.commit()
 
+        for action in db.query(ModAction).filter(ModAction.created_utc<int(time.time())-60*60*24*90).all():
+            db.delete(action)
+        db.commit()
+
 
 with daemon.DaemonContext():
     recompute()

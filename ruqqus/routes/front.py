@@ -321,32 +321,16 @@ def front_all(v):
 
     cats=session.get("cats")
     if not cats:
-        cats=default_cat_cookie()
-        session['cats']=cats
-
-    add_cat=request.args.get("add_cat")
-    if add_cat and ',' in add_cat:
-        add_cat = [i for i in add_cat.split(',') if i in SUBCATS]
-    else:
-        add_cat = add_cat if add_cat in SUBCATS else None
-
-    rm_cat=request.args.get("rm_cat")
-    if add_cat not in cats:
-        cats.append(add_cat)
-        session['cats']=cats
-        session.modified=True
-    elif add_cat=="all":
-        cats=SUBCATS
-        session['cats']=cats
+        #print('no cats')
+        session['cats']=default_cat_cookie()
         session.modified=True
 
-    if rm_cat in cats:
-        cats.remove(rm_cat)
-        session['cats']=cats
-        session.modified=True
-    elif rm_cat == "all":
-        cats=[]
-        session['cats']=[]
+    new_cats=request.args.get('cats','')
+    if new_cats:
+        #print('overwrite cats')
+        new_cats=new_cats.split(',')
+        session['cats']=new_cats
+        cats=new_cats
         session.modified=True
 
 
@@ -398,13 +382,16 @@ def front_all(v):
 
 
 @cache.memoize(600)
-def guild_ids(sort="subs", page=1, nsfw=False):
+def guild_ids(sort="subs", page=1, nsfw=False, cats=[]):
     # cutoff=int(time.time())-(60*60*24*30)
 
     guilds = g.db.query(Board).filter_by(is_banned=False)
 
     if not nsfw:
         guilds = guilds.filter_by(over_18=False)
+
+    if cats:
+        guilds=guilds.filter(Board.subcat.in_(tuple(cats)))
 
     if sort == "subs":
         guilds = guilds.order_by(Board.stored_subscriber_count.desc())
@@ -435,7 +422,12 @@ def browse_guilds(v):
     sort_method = request.args.get("sort", "trending")
 
     # get list of ids
-    ids = guild_ids(sort=sort_method, page=page, nsfw=(v and v.over_18))
+    ids = guild_ids(
+        sort=sort_method, 
+        page=page, 
+        nsfw=(v and v.over_18),
+        cats=request.args.get("cats").split(',') if request.args.get("cats") else None
+        )
 
     # check existence of next page
     next_exists = (len(ids) == 26)

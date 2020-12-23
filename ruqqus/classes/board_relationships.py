@@ -16,6 +16,15 @@ class ModRelationship(Base):
     accepted = Column(Boolean, default=False)
     invite_rescinded = Column(Boolean, default=False)
 
+    perm_content = Column(Boolean, default=False)
+    perm_appearance = Column(Boolean, default=False)
+    perm_config = Column(Boolean, default=False)
+    perm_access = Column(Boolean, default=False)
+    perm_full = Column(Boolean, default=False)
+    #permRules = Column(Boolean, default=False)
+    #permTitles = Column(Boolean, default=False)
+    #permLodges = Column(Boolean, default=False)
+
     user = relationship("User", lazy="joined")
     board = relationship("Board", lazy="joined")
 
