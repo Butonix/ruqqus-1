@@ -1884,7 +1884,7 @@ var tipModal2 = function(id, content, link, recipient, recipientPFP) {
 var togglecat = function() {
   var cbs = document.getElementsByClassName('cat-check');
   var l = []
-  for (i=0, i< cbs.length, i++) {
+  for (i=0; i< cbs.length; i++) {
     l.push(cbs[i].checked)
   }
   setTimeout(function(){triggercat(l)}, 1000)
@@ -1894,7 +1894,7 @@ var triggercat=function(cats) {
 
   var cbs = document.getElementsByClassName('cat-check');
   var l = []
-  for (i=0, i< cbs.length, i++) {
+  for (i=0; i< cbs.length; i++) {
     l.push(cbs[i].checked)
   }
   if (l != cats) {
