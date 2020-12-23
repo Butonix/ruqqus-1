@@ -70,17 +70,17 @@ class ModAction(Base, Stndrd, Age_times):
 
 ACTIONTYPES={
     "kick_post":{
-        "str":'kicked post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'kicked post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-sign-out fa-flip-horizontal",
         "color": "bg-danger"
     },
     "approve_post":{
-        "str":'approved post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'approved post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-check",
         "color": "bg-success"
     },    
     "yank_post":{
-        "str":'yanked post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'yanked post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-hand-lizard",
         "color": "bg-muted"
     },
