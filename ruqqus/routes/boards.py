@@ -650,7 +650,7 @@ def mod_accept_board(bid, v):
 
 @app.route("/mod/<bid>/step_down", methods=["POST"])
 @auth_required
-@is_guildmaster(None)
+@is_guildmaster()
 @validate_formkey
 def mod_step_down(bid, board, v):
 

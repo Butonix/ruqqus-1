@@ -223,7 +223,7 @@ def no_negative_balance(s):
 
     return wrapper_maker
 
-def is_guildmaster(perm):
+def is_guildmaster(perm=None):
     # decorator that enforces guildmaster status and verifies permissions
     # use under auth_required
     def wrapper_maker(f):
