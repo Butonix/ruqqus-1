@@ -48,7 +48,7 @@ class ModRelationship(Base):
                 output.append(p)
 
         
-        return ", ".join(output)
+        return ", ".join(output) if output else "none"
     
 
 
