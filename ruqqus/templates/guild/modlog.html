@@ -1,6 +1,6 @@
 {% extends "guild/guild_settings.html" %}
 
-{% block pagetitle %}+{{ b.name }} Settings - Ruqqus Guildmaster Tools{% endblock %}
+{% block pagetitle %}+{{ b.name }} Moderation Log{% endblock %}
 
 {% block stylesheets %}
 
@@ -17,6 +17,16 @@
 
   <div class="col h-100">
 
+    <div class="d-md-flex justify-content-between mb-3">
+
+      <div>
+        <h2 class="h5" name="guild_name">+{{ b.name }} Moderation Log</h2>
+        <p class="text-small text-muted mb-md-0">This is a log of moderator actions performed in +{{ b.name }}.</p>
+      </div>
+      <div class="mt-auto">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#guildmasterExileModal">Exile user</button>
+      </div>
+    </div>
     <table class="mx-auto">
 
       {% for ma in actions %}
