@@ -72,7 +72,7 @@ class ModAction(Base, Stndrd, Age_times):
 ACTIONTYPES={
     "kick_post":{
         "str":'kicked post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
-        "icon":"fa-sign-out fa-flip-horizontal text-warning"
+        "icon":"fa-sign-out fa-flip-horizontal text-danger"
     },
     "approve_post":{
         "str":'approved post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
