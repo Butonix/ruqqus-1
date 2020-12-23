@@ -325,7 +325,7 @@ def front_all(v):
         session['cats']=cats
 
     cats_req = request.args.get("cats","").split(",")
-    if cats_req and cats_req != cats:
+    if cats_req!=[] and cats_req != cats:
         session['cats']=cats_req
         session.modified=True
 
