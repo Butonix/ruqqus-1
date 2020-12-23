@@ -484,7 +484,9 @@ def mod_take_pid(pid, board, v):
     if not bid:
         abort(400)
 
-    post = get_post(pid)
+    post = get_post(pid, graceful=True)
+    if not post:
+        return jsonify({"error": "invalid post id"}), 404
 
     #check cooldowns
     now=int(time.time())
