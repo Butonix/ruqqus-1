@@ -677,7 +677,7 @@ def mod_remove_username(bid, username, board, v):
     g.db.delete(u_mod)
 
     ma=ModAction(
-        kind="remove_mod",
+        kind="dethrone_self" if v.id==user.id else "remove_mod",
         user_id=v.id,
         target_user_id=user.id,
         board_id=board.id
