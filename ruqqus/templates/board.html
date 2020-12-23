@@ -59,15 +59,16 @@
       <small class="text-muted">No guildmasters</small>
       {% endfor %}
     </div>
-    {% if b.show_settings_icons %}
+
     <div class="text-small font-weight-bold text-muted text-uppercase mb-2 mt-3" style="letter-spacing: 0.025rem;">Settings</div>
     <div class="text-primary">
+      <i class="fas fa-filter"data-toggle="tooltip" data-placement="bottom" title="Category: {{ b.subcat }}"></i>
       {% if b.is_private %}<i class="fas fa-eye-slash"data-toggle="tooltip" data-placement="bottom" title="Private mode."></i>{% endif %}
       {% if b.restricted_posting %}<i class="fas fa-user-lock"data-toggle="tooltip" data-placement="bottom" title="Restricted posting mode."></i>{% endif %}
       {% if b.over_18 %}<i class="fas fa-eye-evil"data-toggle="tooltip" data-placement="bottom" title="NSFW"></i>{% endif %}
       {% if b.all_opt_out %}<span class="fa-stack" data-toggle="tooltip" data-placement="bottom" title="Opted out of All/Trending"><i class="fad fa-list fa-stack-1x"></i><i class="fas fa-times fa-stack-1x"></i></span>{% endif %}        
     </div>
-    {% endif %}
+
   </div>
 </div>
 
