@@ -244,8 +244,14 @@ def is_guildmaster(perm):
             else:
                 return jsonify({"error": f"no guild specified"}), 400
 
-            if not board.has_mod(v, perm=perm):
+            m=board.has_mod(v)
+            if not m:
                 abort(403)
+
+            if perm:
+                if not m.__dict__.get(f"perm_{perm}"):
+                    return jsonify({"error":f"Permission `{perm}` required"})
+
 
             if v.is_banned and not v.unban_utc:
                 abort(403)
