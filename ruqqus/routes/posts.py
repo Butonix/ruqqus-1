@@ -754,8 +754,9 @@ def toggle_post_nsfw(pid, v):
 
     post = get_post(pid)
 
-    if not post.author_id == v.id and not v.admin_level >= 3 and not post.board.has_mod(
-            v):
+    mod=post.board.has_mod(v)
+
+    if not post.author_id == v.id and not v.admin_level >= 3 and not mod:
         abort(403)
 
     if post.board.over_18 and post.over_18:
@@ -763,6 +764,17 @@ def toggle_post_nsfw(pid, v):
 
     post.over_18 = not post.over_18
     g.db.add(post)
+
+    if post.author_id!=v.id:
+        ma=ModAction(
+            kind="set_nsfw" if post.over_18 else "unset_nsfw",
+            user_id=v.id,
+            target_submission_id=post.id,
+            board_id=post.board.id,
+            note = None if mod else "admin action"
+            )
+        g.db.add(ma)
+
 
     return "", 204
 
@@ -785,6 +797,16 @@ def toggle_post_nsfl(pid, v):
 
     post.is_nsfl = not post.is_nsfl
     g.db.add(post)
+
+    if post.author_id!=v.id:
+        ma=ModAction(
+            kind="set_nsfl" if post.is_nsfl else "unset_nsfl",
+            user_id=v.id,
+            target_submission_id=post.id,
+            board_id=post.board.id,
+            note = None if mod else "admin action"
+            )
+        g.db.add(ma)
 
     return "", 204
 
