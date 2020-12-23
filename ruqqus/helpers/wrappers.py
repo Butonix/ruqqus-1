@@ -235,15 +235,12 @@ def is_guildmaster(perm):
             board_id = kwargs.get("bid")
             bid=request.values.get("bid", request.values.get("board_id"))
 
-            print(boardname, board_id, bid)
-            print(bool(boardname), bool(board_id), bool(bid))
-
             if boardname:
                 board = get_guild(boardname)
             elif board_id:
                 board = get_board(board_id)
             elif bid:
-                board = get_board(board_id)
+                board = get_board(bid)
             else:
                 return jsonify({"error": f"no guild specified"}), 400
 
