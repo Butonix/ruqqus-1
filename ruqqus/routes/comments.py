@@ -348,6 +348,7 @@ def api_comment(v):
                     user_id=1,
                     target_comment_id=comment.id,
                     kind="ban_comment",
+                    board_id=comment.post.board_id,
                     note="spam"
                     )
                 g.db.add(ma)

@@ -449,6 +449,7 @@ def submit_post(v):
                     user_id=1,
                     target_post_id=comment.id,
                     kind="ban_post",
+                    board_id=post.board_id,
                     note="spam"
                     )
             g.db.add(ma)
