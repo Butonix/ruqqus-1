@@ -43,10 +43,9 @@ class ModRelationship(Base):
             return "full"
 
         output=[]
-        for p in self.__dict__:
-            if p.startswith("perm_"):
-                if self.__dict__[p]:
-                    output.append(p.split("perm_")[1])
+        for p in ["access","appearance","config","content"]:
+            if self.__dict__[f"perm_{p}"]:
+                output.append(p)
 
         
         return ", ".join(output)
