@@ -46,11 +46,10 @@ class ModRelationship(Base):
         for p in self.__dict__:
             if p.startswith("perm_"):
                 if self.__dict__[p]:
-                    print(p.split("perm_"))
                     output.append(p.split("perm_")[1])
 
         
-        return output.join(', ')
+        return ", ".join(output)
     
 
 
