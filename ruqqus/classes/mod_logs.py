@@ -135,12 +135,12 @@ ACTIONTYPES={
         "color": "bg-muted"
     },
     "pin_post":{
-        "str":'pinned post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'pinned post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-thumbtack fa-rotate--45",
         "color": "bg-success"
     },
     "unpin_post":{
-        "str":'un-pinned post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'un-pinned post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-thumbtack fa-rotate--45",
         "color": "bg-muted"
     },
@@ -185,22 +185,22 @@ ACTIONTYPES={
         "color": "bg-info"
     },
     "set_nsfw":{
-        "str":'set nsfw on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'set nsfw on post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-eye-evil",
         "color": "bg-danger"
     },
     "unset_nsfw":{
-        "str":'unset nsfw on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'unset nsfw on post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-eye-evil",
         "color": "bg-muted"
     },
     "set_nsfl":{
-        "str":'set nsfl on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'set nsfl on post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-skull",
         "color": "bg-black"
     },
     "unset_nsfl":{
-        "str":'unset nsfl on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'unset nsfl on post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-skull",
         "color": "bg-muted"
     }
