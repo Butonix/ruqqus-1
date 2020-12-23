@@ -91,23 +91,19 @@ ACTIONTYPES={
     },
     "herald_comment":{
         "str":'heralded their <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
-        "icon": "fa-crown text-warning",
-        "show_mod":True
+        "icon": "fa-crown text-warning"
     },
     "herald_post":{
         "str":'heralded their post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
-        "icon": "fa-crown text-warning",
-        "show_mod":True
+        "icon": "fa-crown text-warning"
     },
     "unherald_comment":{
         "str":'un-heralded their <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
-        "icon": "fa-crown text-muted",
-        "show_mod":True
+        "icon": "fa-crown text-muted"
         },
     "unherald_post":{
         "str":'un-heralded their post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
-        "icon": "fa-crown text-muted",
-        "show_mod":True
+        "icon": "fa-crown text-muted"
     },
     "pin_comment":{
         "str":'pinned a <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
@@ -135,8 +131,7 @@ ACTIONTYPES={
     },
     "accept_mod_invite":{
         "str":'accepted Guildmaster invitation',
-        "icon":"fa-user-crown text-warning",
-        "show_mod":True
+        "icon":"fa-user-crown text-warning"
     },
     "remove_mod":{
         "str":'removed Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
@@ -144,22 +139,34 @@ ACTIONTYPES={
     },
     "dethrone_self":{
         "str":'stepped down as guildmaster',
-        "icon":"fa-user-crown text-danger",
-        "show_mod":True
+        "icon":"fa-user-crown text-danger"
     },
     "add_mod":{
         "str":'added Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
-        "icon":"fa-user-crown text-success",
-        "show_mod":True
+        "icon":"fa-user-crown text-success"
     },
     "update_settings":{
         "str":'updated setting',
-        "icon":"fa-cog text-info",
-        "show_mod":True
+        "icon":"fa-cog text-info"
     },
     "update_appearance":{
         "str":'updated appearance',
-        "icon":"fa-palette text-info",
-        "show_mod":True
+        "icon":"fa-palette text-info"
+    },
+    "set_nsfw":{
+        "str":'set nsfw on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "icon":"fa-evil-eye text-danger"
+    },
+    "unset_nsfw":{
+        "str":'unset nsfw on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "icon":"fa-evil-eye text-muted"
+    },
+    "set_nsfl":{
+        "str":'set nsfl on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "icon":"fa-skull text-danger"
+    },
+    "unset_nsfl":{
+        "str":'unset nsfl on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "icon":"fa-skull text-muted"
     }
 }
