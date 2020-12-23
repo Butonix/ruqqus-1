@@ -25,7 +25,7 @@ class ModAction(Base, Stndrd, Age_times):
 
     user = relationship("User", lazy="joined", primaryjoin="User.id==ModAction.user_id")
     target_user = relationship("User", lazy="joined", primaryjoin="User.id==ModAction.target_user_id")
-    target_board = relationship("Board", lazy="joined")
+    board = relationship("Board", lazy="joined")
     #target_lodge = relationship("Lodge", lazy="joined")
     #target_rule = relationship("Rule", lazy="joined")
     target_post = relationship("Submission", lazy="joined")
@@ -56,6 +56,10 @@ class ModAction(Base, Stndrd, Age_times):
     @property
     def icon(self):
         return self.actiontype['icon']
+
+    @property
+    def permalink(self):
+        return f"{self.board.permalink}/mod/log/{self.base36id}"
     
     
 

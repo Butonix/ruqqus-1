@@ -1739,3 +1739,20 @@ def board_mod_log(boardname, v):
         next_exists=next_exists,
         page=page
         )
+
+@app.route("/+<boardname>/mod/log/<aid>", methods=["GET"])
+@auth_desired
+def mod_log_item(boardname, aid, v):
+
+    action=g.db.query(ModAction).filter_by(id=base36decode(aid)).first()
+
+    if request.path != action.permalink:
+        return redirect(action.permalink)
+
+    return render_template("guild/modlog.html",
+        v=v,
+        b=action.board,
+        actions=[action],
+        next_exists=False,
+        page=1
+        )
