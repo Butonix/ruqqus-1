@@ -108,7 +108,7 @@ def ban_post(post_id, v):
     ma=ModAction(
         kind="ban_post",
         user_id=v.id,
-        target_post_id=post.id,
+        target_submission_id=post.id,
         note="admin_action")
     g.db.add(ma)
 
@@ -133,7 +133,7 @@ def unban_post(post_id, v):
     ma=ModAction(
         kind="unban_post",
         user_id=v.id,
-        target_post_id=post.id,
+        target_submission_id=post.id,
         note="admin_action")
     g.db.add(ma)
     return (redirect(post.permalink), post)
