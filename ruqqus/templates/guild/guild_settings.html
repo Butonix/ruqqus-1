@@ -91,13 +91,14 @@
                   <li class="nav-item">
                     <a class="nav-link{% if request.path.endswith('/mod/mods') %} active{% endif %}" href="/+{{ b.name }}/mod/mods"><i class="fas fa-crown"></i>Guildmasters</a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link{% if request.path.endswith('/mod/log') %} active{% endif %}" href="/+{{ b.name }}/mod/log"><i class="fas fa-scroll-old"></i>Mod Log</a> 
+                  </li>
                   {% if mod and mod.perm_access %}
                   <li class="nav-item">
                     <a class="nav-link{% if request.path.endswith('/mod/exiled') %} active{% endif %}" href="/+{{ b.name }}/mod/exiled"><i class="fas fa-user-slash"></i>Exiled Users</a> 
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link{% if request.path.endswith('/mod/log') %} active{% endif %}" href="/+{{ b.name }}/mod/log"><i class="fas fa-scroll-old"></i>Mod Log</a> 
-                  </li>
+                  {% endif $}
 
                     {% if b.restricted_posting or b.is_private%}
                     <li class="nav-item">
