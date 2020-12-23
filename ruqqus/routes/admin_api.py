@@ -105,6 +105,13 @@ def ban_post(post_id, v):
 
     cache.delete_memoized(Board.idlist, post.board)
 
+    ma=ModAction(
+        kind="ban_post",
+        user_id=v.id,
+        target_submission_id=post.id,
+        board_id=post.board_id,
+        )
+    g.db.add(ma)
     return (redirect(post.permalink), post)
 
 
@@ -117,6 +124,15 @@ def unban_post(post_id, v):
 
     if not post:
         abort(400)
+
+    if post.is_banned:
+        ma=ModAction(
+            kind="unban_post",
+            user_id=v.id,
+            target_submission_id=post.id,
+            board_id=post.board_id,
+        )
+        g.db.add(ma)
 
     post.is_banned = False
     post.is_approved = v.id
@@ -188,7 +204,13 @@ def api_ban_comment(c_id, v):
     comment.approved_utc = 0
 
     g.db.add(comment)
-
+    ma=ModAction(
+        kind="ban_comment",
+        user_id=v.id,
+        target_comment_id=comment.id,
+        board_id=comment.post.board_id,
+        )
+    g.db.add(ma)
     return "", 204
 
 
@@ -199,12 +221,21 @@ def api_unban_comment(c_id, v):
     comment = g.db.query(Comment).filter_by(id=base36decode(c_id)).first()
     if not comment:
         abort(404)
+    g.db.add(comment)
+
+    if comment.is_banned:
+        ma=ModAction(
+            kind="unban_comment",
+            user_id=v.id,
+            target_comment_id=comment.id,
+            board_id=comment.post.board_id,
+            )
+        g.db.add(ma)
 
     comment.is_banned = False
     comment.is_approved = v.id
     comment.approved_utc = int(time.time())
 
-    g.db.add(comment)
 
     return "", 204
 

@@ -31,6 +31,11 @@ BUCKET="i.ruqqus.com"
 @app.route("/post_short/<pid>/<cid>/", methods=["GET"])
 def comment_cid(cid, pid=None):
 
+    try:
+        x=base36decode(cid)
+    except:
+        abort(400)
+        
     comment = get_comment(cid)
     if not comment.parent_submission:
         abort(403)
@@ -344,6 +349,14 @@ def api_comment(v):
                 comment.is_banned = True
                 comment.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
                 g.db.add(comment)
+                ma=ModAction(
+                    user_id=1,
+                    target_comment_id=comment.id,
+                    kind="ban_comment",
+                    board_id=comment.post.board_id,
+                    note="spam"
+                    )
+                g.db.add(ma)
 
             g.db.commit()
             return jsonify({"error": "Too much spam!"}), 403

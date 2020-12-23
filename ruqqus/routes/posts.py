@@ -46,6 +46,11 @@ def incoming_post_shortlink(base36id=None):
     if base36id == "robots.txt":
         return redirect('/robots.txt')
 
+    try:
+        x=base36decode(base36id)
+    except:
+        abort(400)
+
     post = get_post(base36id)
     return redirect(post.permalink)
 
@@ -440,7 +445,14 @@ def submit_post(v):
             post.is_banned = True
             post.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
             g.db.add(post)
-
+            ma=ModAction(
+                    user_id=1,
+                    target_post_id=comment.id,
+                    kind="ban_post",
+                    board_id=post.board_id,
+                    note="spam"
+                    )
+            g.db.add(ma)
         g.db.commit()
         return redirect("/notifications")
 

@@ -1,6 +1,6 @@
 {% extends "guild/guild_settings.html" %}
 
-{% block pagetitle %}+{{ b.name }} Moderation Log{% endblock %}
+{% block pagetitle %}{% if action %}{{ action.title_text }}{% else %}+{{ b.name }} Moderation Log{% endif %}{% endblock %}
 
 {% block stylesheets %}
 
@@ -23,15 +23,13 @@
         <h2 class="h5" name="guild_name">+{{ b.name }} Moderation Log</h2>
         <p class="text-small text-muted mb-md-0">This is a log of moderator actions performed in +{{ b.name }}.</p>
       </div>
-      <div class="mt-auto">
-        <button class="btn btn-primary" data-toggle="modal" data-target="#guildmasterExileModal">Exile user</button>
-      </div>
+
     </div>
 
     <div class="rounded border bg-white mx-auto">
       {% for ma in actions %}
 
-        <div id="log-{{ ma.base36id }}" class="position-relative d-flex justify-content-between flex-wrap align-items-center h-min-16 px-3 py-3 mb-3 mb-md-2 bg-white border-bottom">
+        <div id="action-{{ ma.base36id }}" class="position-relative d-flex justify-content-between flex-wrap align-items-center h-min-16 px-3 py-3 mb-3 mb-md-2 bg-white{% if loop.index > 1 %} border-top{% endif %}">
 
          <div class="d-flex flex-grow-1 align-items-center">
           <div class="d-flex align-items-center justify-content-center {{ ma.color }} mr-3 rounded-lg flex-shrink-0" style="width: 32px;height: 32px;"><i class="far text-center {{ ma.icon }} text-lg text-white fa-fw"></i></div>
@@ -45,7 +43,7 @@
                <span>{{ ma.str | safe }}</span>
              </div>
 
-             <div class="text-gray-500">{{ ma.age_string }} <a href="{{ ma.permalink }}"><i class="far fa-link"></i></a></div>
+             <div class="text-gray-500">{{ ma.age_string }} <a href="{{ ma.permalink }}"><i class="far fa-link ml-1 text-muted"></i></a> <a href="javascript:void(0)" class="copy-link" role="button"data-clipboard-text="{{ ma.permalink | full_link }}"><i class="far fa-copy ml-1 text-muted"></i></a></div>
 
            </div>
          </div>

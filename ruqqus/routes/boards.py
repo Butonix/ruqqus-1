@@ -391,11 +391,25 @@ def mod_ban_bid_user(bid, board, v):
         text = f"You have been exiled from +{board.name}.\n\nNone of your existing posts or comments have been removed, however, you will not be able to make any new posts or comments in +{board.name}."
         send_notification(user, text)
 
+    #check for post/comment
+    item = request.values.get("thing")
+    if item:
+        item=get_from_fullname(item)
+        if isinstance(item, Submission):
+            note=f'for <a href="{item.permalink}">post</a>'
+        elif isinstance(item, Comment):
+            note=f'for <a href="{item.permalink}">comment</a>'
+        else:
+            note=None
+    else:
+        note=None
+
     ma=ModAction(
         kind="exile_user",
         user_id=v.id,
         target_user_id=user.id,
-        board_id=board.id
+        board_id=board.id,
+        note=note
         )
     g.db.add(ma)
 
@@ -1757,5 +1771,6 @@ def mod_log_item(boardname, aid, v):
         b=action.board,
         actions=[action],
         next_exists=False,
-        page=1
+        page=1,
+        action=action
         )

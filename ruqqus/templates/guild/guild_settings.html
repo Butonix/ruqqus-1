@@ -67,6 +67,7 @@
   <!-- tabs container -->
   {% block subNav %}
 
+{% if '+' in request.path %}
   {% set mod = b.has_mod(v) %}
   <!-- Desktop -->
   <div class="container-fluid bg-white sticky d-none d-md-block">
@@ -162,6 +163,7 @@
       </div>
     </div>
   </div>
+  {% endif %}
   {% endblock %}
 
   <!-- Settings content -->

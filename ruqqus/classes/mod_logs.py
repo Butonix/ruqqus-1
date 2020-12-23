@@ -19,7 +19,7 @@ class ModAction(Base, Stndrd, Age_times):
     target_comment_id = Column(Integer, ForeignKey("comments.id"), default=0)
     #targetLodge = Column(Integer, ForeignKey("lodges.id"), default=0)
     #targetRule = Column(Boolean, ForeignKey("rules.id"), default=False)
-    note=Column(String(64), default=None)
+    note=Column(String(256), default=None)
     created_utc = Column(Integer, default=0)
 
 
@@ -64,144 +64,198 @@ class ModAction(Base, Stndrd, Age_times):
     @property
     def permalink(self):
         return f"{self.board.permalink}/mod/log/{self.base36id}"
+    @property
+    def title_text(self):
+        return f"@{self.user.username} {self.actiontype['title'].format(self=self)}"
     
     
 
 
 ACTIONTYPES={
     "kick_post":{
-        "str":'kicked post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'kicked post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-sign-out fa-flip-horizontal",
-        "color": "bg-danger"
+        "color": "bg-danger",
+        "title": 'kicked post {self.target_post.title}'
     },
     "approve_post":{
-        "str":'approved post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'approved post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-check",
-        "color": "bg-success"
+        "color": "bg-success",
+        "title": 'approved post {self.target_post.title}'
     },    
     "yank_post":{
-        "str":'yanked post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'yanked post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-hand-lizard",
-        "color": "bg-muted"
+        "color": "bg-muted",
+        "title": 'yanked post {self.target_post.title}'
     },
     "exile_user":{
         "str":'exiled user <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon":"fa-user-slash",
-        "color": "bg-danger"
+        "color": "bg-danger",
+        "title": 'exiled user {self.target_user.username}'
     },
     "unexile_user":{
         "str":'un-exiled user <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon": "fa-user-slash",
-        "color": "bg-muted"
+        "color": "bg-muted",
+        "title": 'un-exiled user {self.target_user.username}'
     },
     "contrib_user":{
         "str":'added contributor <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon": "fa-user-check",
-        "color": "bg-info"
+        "color": "bg-info",
+        "title": 'added contributor {self.target_user.username}'
     },
     "uncontrib_user":{
         "str":'removed contributor <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon": "fa-user-check",
-        "color": "bg-muted"
+        "color": "bg-muted",
+        "title": 'removed user {self.target_user.username}'
     },
     "herald_comment":{
         "str":'heralded their <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
         "icon": "fa-crown",
-        "color": "bg-warning"
+        "color": "bg-warning",
+        "title": 'heralded their comment'
     },
     "herald_post":{
         "str":'heralded their post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon": "fa-crown",
-        "color": "bg-warning"
+        "color": "bg-warning",
+        "title": 'heralded their post {self.target_post.title}'
     },
     "unherald_comment":{
         "str":'un-heralded their <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
         "icon": "fa-crown",
-        "color": "bg-muted"
+        "color": "bg-muted",
+        "title": 'un-heralded their comment'
         },
     "unherald_post":{
         "str":'un-heralded their post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon": "fa-crown",
-        "color": "bg-muted"
+        "color": "bg-muted",
+        "title": 'un-heralded their post {self.target_post.title}'
     },
     "pin_comment":{
         "str":'pinned a <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
-        "icon":"fa-thumbtack",
-        "color": "bg-info fa-rotate--45"
+        "icon":"fa-thumbtack fa-rotate--45",
+        "color": "bg-info",
+        "title": 'pinned a comment'
     },
     "unpin_comment":{
         "str":'un-pinned a <a href="{self.target_comment.permalink}" target="_blank">comment</a>',
         "icon":"fa-thumbtack fa-rotate--45",
-        "color": "bg-muted"
+        "color": "bg-muted",
+        "title": 'un-pinned a comment'
     },
     "pin_post":{
-        "str":'pinned post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'pinned post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-thumbtack fa-rotate--45",
-        "color": "bg-success"
+        "color": "bg-success",
+        "title": 'pinned post {self.target_post.title}'
     },
     "unpin_post":{
-        "str":'un-pinned post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'un-pinned post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-thumbtack fa-rotate--45",
-        "color": "bg-muted"
+        "color": "bg-muted",
+        "title": 'un-pinned post {self.target_post.title}'
     },
     "invite_mod":{
-        "str":'invited Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
+        "str":'invited guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon":"fa-user-crown",
-        "color": "bg-info"
+        "color": "bg-info",
+        "title": 'invited guildmaster @{self.target_user.username}'
     },
     "uninvite_mod":{
-        "str":'rescinded Guildmaster invitation to <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
+        "str":'rescinded guildmaster invitation to <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon":"fa-user-crown",
-        "color": "bg-muted"
+        "color": "bg-muted",
+        "title": 'rescinded guildmaster invitation to @{self.target_user.username}'
     },
     "accept_mod_invite":{
-        "str":'accepted Guildmaster invitation',
+        "str":'accepted guildmaster invitation',
         "icon":"fa-user-crown",
-        "color": "bg-warning"
+        "color": "bg-warning",
+        "title": 'accepted guildmaster invitation'
     },
     "remove_mod":{
-        "str":'removed Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
+        "str":'removed guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon":"fa-user-crown",
-        "color": "bg-danger"
+        "color": "bg-danger",
+        "title": 'removed guildmaster @{self.target_user.username}'
     },
     "dethrone_self":{
         "str":'stepped down as guildmaster',
         "icon":"fa-user-crown",
-        "color": "bg-danger"
+        "color": "bg-danger",
+        "title": 'stepped down as guildmaster'
     },
     "add_mod":{
-        "str":'added Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
+        "str":'added guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
         "icon":"fa-user-crown",
-        "color": "bg-success"
+        "color": "bg-success",
+        "title": 'added guildmaster @{self.target_user.username}'
     },
     "update_settings":{
         "str":'updated setting',
         "icon":"fa-cog",
-        "color": "bg-info"
+        "color": "bg-info",
+        "title": 'updated settings'
     },
     "update_appearance":{
         "str":'updated appearance',
         "icon":"fa-palette",
-        "color": "bg-info"
+        "color": "bg-info",
+        "title": 'updated appearance'
     },
     "set_nsfw":{
-        "str":'set nsfw on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'set nsfw on post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-eye-evil",
-        "color": "bg-danger"
+        "color": "bg-danger",
+        "title": 'set nsfw on post {self.target_post.title}'
     },
     "unset_nsfw":{
-        "str":'unset nsfw on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'un-set nsfw on post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-eye-evil",
-        "color": "bg-muted"
+        "color": "bg-muted",
+        "title": 'un-set nsfw on post {self.target_post.title}'
     },
     "set_nsfl":{
-        "str":'set nsfl on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'set nsfl on post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-skull",
-        "color": "bg-black"
+        "color": "bg-black",
+        "title": 'set nsfl on post {self.target_post.title}'
     },
     "unset_nsfl":{
-        "str":'unset nsfl on post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'un-set nsfl on post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon":"fa-skull",
-        "color": "bg-muted"
+        "color": "bg-muted",
+        "title": 'un-set nsfw on post {self.target_post.title}'
+    },
+    "ban_post":{
+        "str": 'removed post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a> <i>(admin action)</i>',
+        "icon":"fa-feather-alt",
+        "color": "bg-danger",
+        "title": "removed post {self.target_post.title}"
+    },
+    "unban_post":{
+        "str": 'reinstated post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a> <i>(admin action)</i>',
+        "icon":"fa-feather-alt",
+        "color": "bg-muted",
+        "title": "reinstated post {self.target_post.title}"
+    },
+    "ban_comment":{
+        "str": 'removed <a href="{self.target_comment.permalink}" target="_blank">comment</a> <i>(admin action)</i>',
+        "icon":"fa-comment",
+        "color": "bg-danger",
+        "title": "removed comment"
+    },
+    "unban_comment":{
+        "str": 'reinstated <a href="{self.target_comment.permalink}" target="_blank">comment</a> <i>(admin action)</i>',
+        "icon":"fa-comment",
+        "color": "bg-muted",
+        "title": "reinstated comment"
     }
 }
