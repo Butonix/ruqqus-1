@@ -285,7 +285,8 @@ def mod_self_to_guild(v, bid):
             kind="add_mod",
             user_id=v.id,
             target_user_id=v.id,
-            board_id=board.id
+            board_id=board.id,
+            note="admin action"
         )
         g.db.add(ma)
 

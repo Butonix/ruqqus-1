@@ -1564,7 +1564,8 @@ def siege_guild(v):
                 kind="remove_mod",
                 user_id=1,
                 board_id=guild.id,
-                target_user_id=x.user_id
+                target_user_id=x.user_id,
+                note="siege"
             )
             g.db.add(ma)
         else:
@@ -1573,6 +1574,7 @@ def siege_guild(v):
                 user_id=1,
                 board_id=guild.id,
                 target_user_id=x.user_id
+                note="siege"
             )
             g.db.add(ma)
 
@@ -1592,6 +1594,7 @@ def siege_guild(v):
             user_id=1,
             board_id=guild.id,
             target_user_id=v.id
+            note="siege"
         )
         g.db.add(ma)
 
