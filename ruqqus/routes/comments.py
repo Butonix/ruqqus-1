@@ -31,6 +31,11 @@ BUCKET="i.ruqqus.com"
 @app.route("/post_short/<pid>/<cid>/", methods=["GET"])
 def comment_cid(cid, pid=None):
 
+    try:
+        x=base36decode(cid)
+    except:
+        abort(400)
+        
     comment = get_comment(cid)
     if not comment.parent_submission:
         abort(403)
