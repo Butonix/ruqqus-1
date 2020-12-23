@@ -281,6 +281,14 @@ def mod_self_to_guild(v, bid):
                              accepted=True)
         g.db.add(mr)
 
+        ma=ModAction(
+            kind="add_mod",
+            user_id=v.id,
+            target_user_id=v.id,
+            board_id=board.id
+        )
+        g.db.add(ma)
+
     return redirect(f"/+{board.name}/mod/mods")
 
 
