@@ -235,6 +235,8 @@ def is_guildmaster(perm):
             board_id = kwargs.get("bid")
             bid=request.values.get("bid", request.values.get("board_id"))
 
+            print(boardname, board_id, bid)
+
             if boardname:
                 board = get_guild(boardname)
             elif board_id:
