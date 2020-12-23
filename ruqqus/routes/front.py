@@ -319,13 +319,15 @@ def front_all(v):
     ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
 
-    cats=session.get("cats",[])
+    cats=session.get("cats")
     if not cats:
+        print('no cats')
         session['cats']=default_cat_cookie()
         session.modified=True
 
     new_cats=request.args.get('cats','')
     if new_cats:
+        print('overwrite cats')
         new_cats=new_cats.split(',')
         session['cats']=cats
         session.modified=True
