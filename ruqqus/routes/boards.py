@@ -589,9 +589,16 @@ def mod_invite_username(bid, board, v):
         g.db.add(x)
 
     else:
-        new_mod = ModRelationship(user_id=user.id,
-                                  board_id=board.id,
-                                  accepted=False)
+        new_mod = ModRelationship(
+            user_id=user.id,
+            board_id=board.id,
+            accepted=False,
+            perm_full=True,
+            perm_content=True,
+            perm_appearance=True,
+            perm_access=True,
+            perm_config=True
+            )
 
         text = f"You have been invited to join +{board.name} as a guildmaster. You can [click here]({board.permalink}/mod/mods) and accept this invitation. Or, if you weren't expecting this, you can ignore it."
         send_notification(user, text)
@@ -603,11 +610,7 @@ def mod_invite_username(bid, board, v):
         user_id=v.id,
         target_user_id=user.id,
         board_id=board.id,
-        perm_full=True,
-        perm_content=True,
-        perm_appearance=True,
-        perm_access=True,
-        perm_config=True
+        note=new_mod.permchangelist
         )
     g.db.add(ma)
 
