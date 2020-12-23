@@ -602,7 +602,12 @@ def mod_invite_username(bid, board, v):
         kind="invite_mod",
         user_id=v.id,
         target_user_id=user.id,
-        board_id=board.id
+        board_id=board.id,
+        perm_full=True,
+        perm_content=True,
+        perm_appearance=True,
+        perm_access=True,
+        perm_config=True
         )
     g.db.add(ma)
 
