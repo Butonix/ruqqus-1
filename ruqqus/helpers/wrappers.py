@@ -236,6 +236,7 @@ def is_guildmaster(perm):
             bid=request.values.get("bid", request.values.get("board_id"))
 
             print(boardname, board_id, bid)
+            print(bool(boardname), bool(board_id), bool(bid))
 
             if boardname:
                 board = get_guild(boardname)
