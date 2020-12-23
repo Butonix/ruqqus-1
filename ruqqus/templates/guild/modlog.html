@@ -19,7 +19,6 @@
 
     <table>
 
-    {% if v and b.has_mod(v) %}
       {% for ma in actions %}
         <tr>
           <td>{{ ma.age_string }}</td>
@@ -27,19 +26,6 @@
           <td><i class="fas {{ ma.icon }} fa-fw mx-1"></i></td>
           <td>{{ ma.str | safe }}</td>
         </tr>
-
-      {% endfor %}
-    {% else %}
-      {% for ma in actions %}
-        <tr class="px-2">
-          <td>{{ ma.age_string }}</td>
-          <td>{% if ma.user_id==1 or ma.actiontype.get('show_mod') %}<a href="{{ ma.user.permalink }}">{{ ma.user.username }}</a>{% else %}a guildmaster{% endif %}</td>
-          <td><i class="fas {{ ma.icon }} fa-fw mx-1"></i></td>
-          <td>{{ ma.str | safe }}</td>
-        </tr>
-
-      {% endfor %}
-    {% endif %}
 
     </table>
 
