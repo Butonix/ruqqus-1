@@ -250,7 +250,7 @@ def is_guildmaster(perm):
 
             if perm:
                 if not m.__dict__.get(f"perm_{perm}"):
-                    return jsonify({"error":f"Permission `{perm}` required"})
+                    return jsonify({"error":f"Permission `{perm}` required"}), 403
 
 
             if v.is_banned and not v.unban_utc:
