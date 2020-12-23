@@ -1881,7 +1881,7 @@ var tipModal2 = function(id, content, link, recipient, recipientPFP) {
   console.log(recipientPFP, id, content, link, recipient)
 }
 
-var togglecat = function()) {
+var togglecat = function() {
   var cbs = document.getElementsByClassName('cat-check');
   var l = []
   for (i=0, i< cbs.length, i++) {
