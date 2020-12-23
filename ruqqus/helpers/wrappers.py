@@ -233,7 +233,7 @@ def is_guildmaster(perm):
             v = kwargs["v"]
             boardname = kwargs.get("boardname")
             board_id = kwargs.get("bid")
-            bid=request.values.get("bid")
+            bid=request.form.get("bid")
 
             if boardname:
                 board = get_guild(boardname)
@@ -242,7 +242,7 @@ def is_guildmaster(perm):
             elif bid:
                 board = get_board(board_id)
             else:
-                abort(400)
+                return jsonify("error": f"{boardname} / {board_id} / {bid}")
 
             if not board.has_mod(v, perm=perm):
                 abort(403)
