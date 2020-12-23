@@ -141,29 +141,29 @@ ACTIONTYPES={
     },
     "invite_mod":{
         "str":'invited Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
-        "icon":"fa-crown text-info"
+        "icon":"fa-user-crown text-info"
     },
     "uninvite_mod":{
         "str":'rescinded Guildmaster invitation to <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
-        "icon":"fa-crown text-muted"
+        "icon":"fa-user-crown text-muted"
     },
     "accept_mod_invite":{
         "str":'accepted Guildmaster invitation',
-        "icon":"fa-crown text-warning",
+        "icon":"fa-user-crown text-warning",
         "show_mod":True
     },
     "remove_mod":{
         "str":'removed Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
-        "icon":"fa-crown text-danger"
+        "icon":"fa-user-crown text-danger"
     },
     "dethrone_self":{
         "str":'stepped down as guildmaster',
-        "icon":"fa-crown text-danger",
+        "icon":"fa-user-crown text-danger",
         "show_mod":True
     },
     "add_mod":{
         "str":'added Guildmaster <a href="{self.target_user.permalink}" target="_blank">@{self.target_user.username}</a>',
-        "icon":"fa-crown text-success",
+        "icon":"fa-user-crown text-success",
         "show_mod":True
     },
     "update_settings":{
