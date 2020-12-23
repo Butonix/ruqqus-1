@@ -26,6 +26,10 @@
           <td><i class="fas {{ ma.icon }} fa-fw mx-1"></i></td>
           <td>{{ ma.str | safe }}</td>
         </tr>
+      {% else % }
+      <tr>
+        <td>Nothing here right now.</td>
+      </tr>
       {% endfor %}
 
     </table>
