@@ -1876,21 +1876,36 @@ var tipModal2 = function(id, content, link, recipient, recipientPFP) {
   console.log(recipientPFP, id, content, link, recipient)
 }
 
-
-var togglecat=function(cat) {
-
-  ele=document.getElementById('cat-'+cat);
-
-  var url='/inpage/all?';
-  if (ele.checked) {
-    url=url+'add_cat=';
+var togglecat() {
+  var cbs = document.getElementsByClassName('cat-check');
+  var l = []
+  for (i=0, i< cbs.length, i++) {
+    l.push(cbs[i].checked)
   }
-  else {
-    url=url+'rm_cat=';
+  setTimeout(function(){triggercat(l)}, 1000)
+}
+
+var triggercat=function(cats) {
+
+  var cbs = document.getElementsByClassName('cat-check');
+  var l = []
+  for (i=0, i< cbs.length, i++) {
+    l.push(cbs[i].checked)
   }
+  if (l != cats) {
+    return false;
+  }
+
+  var catlist=[]
+  for (i=0, i< cbs.length, i++) {
+    catlist.push(cbs[i].dataset.cat)
+  }
+
+  var url='/inpage/all?cats=' + catlist.join(',');
+  
 
   xhr = new XMLHttpRequest();
-  xhr.open('get', url+cat);
+  xhr.open('get', url);
   xhr.withCredentials=true;
 
   xhr.onload=function(){

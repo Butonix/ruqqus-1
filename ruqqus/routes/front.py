@@ -324,29 +324,9 @@ def front_all(v):
         cats=default_cat_cookie()
         session['cats']=cats
 
-    add_cat=request.args.get("add_cat")
-    if add_cat and ',' in add_cat:
-        add_cat = [i for i in add_cat.split(',') if i in SUBCATS]
-    else:
-        add_cat = add_cat if add_cat in SUBCATS else None
-
-    rm_cat=request.args.get("rm_cat")
-    if add_cat not in cats:
-        cats.append(add_cat)
-        session['cats']=cats
-        session.modified=True
-    elif add_cat=="all":
-        cats=SUBCATS
-        session['cats']=cats
-        session.modified=True
-
-    if rm_cat in cats:
-        cats.remove(rm_cat)
-        session['cats']=cats
-        session.modified=True
-    elif rm_cat == "all":
-        cats=[]
-        session['cats']=[]
+    cats_req = request.args.get("cats","").split(",")
+    if cats_req and cats_req != cats:
+        session['cats']=cats_req
         session.modified=True
 
 
