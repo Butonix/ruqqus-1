@@ -95,7 +95,7 @@ ACTIONTYPES={
         "show_mod":True
     },
     "herald_post":{
-        "str":'heralded their post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'heralded their post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon": "fa-crown text-warning",
         "show_mod":True
     },
@@ -105,7 +105,7 @@ ACTIONTYPES={
         "show_mod":True
         },
     "unherald_post":{
-        "str":'un-heralded their post <a href="{self.target_post.url}" target="_blank">{self.target_post.title}</a>',
+        "str":'un-heralded their post <a href="{self.target_post.permalink}" target="_blank">{self.target_post.title}</a>',
         "icon": "fa-crown text-muted",
         "show_mod":True
     },
