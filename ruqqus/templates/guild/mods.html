@@ -227,7 +227,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
-        <button id="stepDownButton" class="btn btn-danger" onclick="post('/mod/{{ b.base36id }}/step_down', callback=function(){window.location.reload(true)})">Step down</button>
+        <button class="btn btn-danger" onclick="post('/mod/{{ b.base36id }}/step_down', callback=function(){window.location.reload(true)})">Step down</button>
       </div>
 
     </div>
