@@ -1794,3 +1794,34 @@ def mod_log_item(boardname, aid, v):
         page=1,
         action=action
         )
+
+@app.route("/+<boardname>/mod/perms/<username>")
+@auth_required
+@is_guildmaster("full")
+def board_mod_perms_change(boardname, username, board, v):
+
+    user=get_user(username)
+
+    v_mod=board.has_mod(v)
+    u_mod=board.has_mod(user)
+
+    if v_mod.id > u_mod.id:
+        return jsonify({"error":"You can't change perms on guildmasters above you."}), 403
+
+
+    new_perms=request.form.get("perms")
+    for p in [x for x in u_mod.__dict__ if x.startswith('perm_')]:
+        u_mod.__dict__[p] = p.split("perm_")[1] in new_perms
+
+    g.db.add(u_mod)
+
+    ma=ModAction(
+        kind="change_perms",
+        user_id=v.id,
+        board_id=board.id,
+        target_user_id=user.id,
+        note=u_mod.permchangelist
+    )
+    g.db.add(ma)
+
+    return "", 204
