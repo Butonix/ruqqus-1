@@ -242,7 +242,7 @@ def is_guildmaster(perm):
             elif bid:
                 board = get_board(board_id)
             else:
-                return jsonify("error": f"{boardname} / {board_id} / {bid}")
+                return jsonify({"error": f"{boardname} / {board_id} / {bid}"})
 
             if not board.has_mod(v, perm=perm):
                 abort(403)
