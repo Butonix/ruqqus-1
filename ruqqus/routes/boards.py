@@ -480,8 +480,6 @@ def user_kick_pid(pid, v):
 @api("guildmaster")
 def mod_take_pid(pid, board, v):
 
-    print('in function')
-
     bid = request.form.get("board_id", request.form.get("guild", None))
     if not bid:
         abort(400)
@@ -489,8 +487,6 @@ def mod_take_pid(pid, board, v):
     post = get_post(pid, graceful=True)
     if not post:
         return jsonify({"error": "invalid post id"}), 404
-
-    print('have post')
 
     #check cooldowns
     now=int(time.time())
@@ -521,8 +517,6 @@ def mod_take_pid(pid, board, v):
 
     if board.is_private and post.original_board_id != board.id:
         return jsonify({'error': f"+{board.name} is private, so you can only yank content that started there."}), 403
-
-    print('tests passed')
 
     post.board_id = board.id
     post.guild_name = board.name
