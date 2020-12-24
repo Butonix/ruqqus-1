@@ -1945,3 +1945,28 @@ var permsEdit = function(username, permstring) {
   }
 
 }
+
+var permfull=function() {
+
+  cbs = document.getElementsByClassName('perm-box')
+
+  full = cbs[0]
+
+  if (full.checked) {
+    for (i=1; i< cbs.length; i++) {
+      cbs[i].checked = true;
+    }
+  }
+}
+var permother=function() {
+
+  cbs = document.getElementsByClassName('perm-box')
+
+  full = cbs[0]
+
+  for (i=1; i< cbs.length; i++) {
+    if(cbs[i].checked == false) {
+      full.checked=false;
+    }
+  }
+}
