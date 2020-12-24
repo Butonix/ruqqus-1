@@ -180,9 +180,11 @@
           style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
           <button class="dropdown-item" data-toggle="modal" data-target="#guildDetailsModal"><i class="fas fa-info-circle"></i>Guild details</button>
           <a class="dropdown-item" href="{{ b.permalink }}/mod/log"><i class="fas fa-scroll-old"></i>Moderation log</a>
-          {% if p.is_guildmaster %}
+
+          {% if p.is_guildmaster('config') %}
           <a class="dropdown-item" href="{{ p.board.permalink }}/mod/settings"><i class="fas fa-cog"></i>Guild settings</a>
           {% endif %}
+
           {% if v and not v.has_blocked_guild(p.board) %}
           <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block_guild?board={{ p.board.name }}')"><i class="fas fa-eye-slash text-danger"></i>Hide from /all</a>
           {% elif v %}
@@ -284,7 +286,7 @@
           <button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{ p.base36id }}')"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Delete</button>
           {% endif %}
 
-          {% if v and (v.id==p.author_id or v.admin_level>=3 or p.is_guildmaster) %}
+          {% if v and (v.id==p.author_id or v.admin_level>=3 or p.is_guildmaster('content')) %}
           {% if not p.board.over_18 %}
           <button class="btn btn-link btn-block btn-lg text-left text-muted" onclick="post('/api/toggle_post_nsfw/{{ p.base36id }}', function(){window.location.reload(true);})"><i class="far fa-eye-evil text-center text-muted mr-3"></i>Toggle NSFW</button>
           {% endif %}
@@ -298,43 +300,47 @@
           <button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#yankPostModal" onclick="yank_postModal('{{ p.base36id }}','{{ '@'+p.author.username if not p.author.is_deleted else '[deleted account]'}}','{{ p.comment_count }}','{{ p.thumb_url }}','{{ p.title | js_str_escape }}','{{ p.author.permalink }}','{{ p.domain | js_str_escape }}','{{ p.age_string }}')" class="d-block"><i class="far fa-hand-lizard text-center text-muted mr-3"></i>Yank</button>
           {% endif %}
           {% if v %}
-          {% if v.id==p.author_id and p.board_id not in [1, p.original_board_id] %}
-          <button class="btn btn-link btn-block btn-lg text-danger text-left" onclick="post('/user/kick/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="far fa-chess-rook text-center text-muted mr-3"></i>Remove from +{{ p.board.name }}</button>
-          {% endif %}
-          {% if p.is_guildmaster %}
+            {% if v.id==p.author_id and p.board_id not in [1, p.original_board_id] %}
+            <button class="btn btn-link btn-block btn-lg text-danger text-left" onclick="post('/user/kick/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="far fa-chess-rook text-center text-muted mr-3"></i>Remove from +{{ p.board.name }}</button>
+            {% endif %}
 
-          {% if v.id == p.author_id %}
-          <button class="btn btn-link btn-block btn-lg text-left text-warning" onclick="post('/mod/distinguish_post/{{ p.board.base36id }}/{{ p.base36id }}', callback=function(){window.location.href = '{{p.permalink}}';})"><i class="far fa-crown text-center text-warning mr-3"></i>Herald</button>
-          {% endif %}
+            {% if p.is_guildmaster('content') %}
 
-          {% if p.is_pinned %}
-          <button class="btn btn-link btn-block btn-lg text-info text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="far fa-thumbtack fa-fw fa-rotate--45 text-center text-info mr-3"></i>Unpin</button>
-          {% elif p.board.can_pin_another %}
-          <button class="btn btn-link btn-block btn-lg text-info text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="far fa-thumbtack fa-fw fa-rotate--45 text-center text-info mr-3"></i>Pin</button>
-          {% endif %}
+              {% if v.id == p.author_id %}
+              <button class="btn btn-link btn-block btn-lg text-left text-warning" onclick="post('/mod/distinguish_post/{{ p.board.base36id }}/{{ p.base36id }}', callback=function(){window.location.href = '{{p.permalink}}';})"><i class="far fa-crown text-center text-warning mr-3"></i>Herald</button>
+              {% endif %}
 
-          <button class="btn btn-link btn-block btn-lg text-danger text-left" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board.base36id }}/{{ p.base36id }}', callback=function(){window.location.reload(true)})"><i class="far fa-sign-out fa-flip-horizontal text-center text-danger mr-3"></i>Kick</button>
-          {% endif %}
-          {% if v.admin_level >=3 %}
-          {% if p.is_banned %}
-          <button class="btn btn-link btn-block btn-lg text-success text-left" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="far fa-check text-center text-success mr-3"></i>Approve</button>
-          {% else %}
-          <button class="btn btn-link btn-block btn-lg text-danger text-left" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="far fa-ban text-center text-danger mr-3"></i>Remove</button>
-          {% endif %}
-          {% endif %}
+              {% if p.is_pinned %}
+              <button class="btn btn-link btn-block btn-lg text-info text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="far fa-thumbtack fa-fw fa-rotate--45 text-center text-info mr-3"></i>Unpin</button>
+              {% elif p.board.can_pin_another %}
+              <button class="btn btn-link btn-block btn-lg text-info text-left" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="far fa-thumbtack fa-fw fa-rotate--45 text-center text-info mr-3"></i>Pin</button>
+              {% endif %}
 
-          {% if v.admin_level >=4 and p.oauth_app %}
-          <button class="btn btn-link btn-block btn-lg text-muted text-left"  href="{{ p.oauth_app.permalink }}"><a href="{{ p.oauth_app.permalink }}"><i class="far fa-code text-center text-muted mr-3"></i>API App</a></button>
-          {% endif %}
+              <button class="btn btn-link btn-block btn-lg text-danger text-left" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board.base36id }}/{{ p.base36id }}', callback=function(){window.location.reload(true)})"><i class="far fa-sign-out fa-flip-horizontal text-center text-danger mr-3"></i>Kick</button>
+            {% endif %}
+
+            {% if v.admin_level >=3 %}
+              {% if p.is_banned %}
+              <button class="btn btn-link btn-block btn-lg text-success text-left" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="approvePost('{{ p.base36id }}')"><i class="far fa-check text-center text-success mr-3"></i>Approve</button>
+              {% else %}
+              <button class="btn btn-link btn-block btn-lg text-danger text-left" id="moderate-post-{{ p.base36id }}" href="javascript:void(0)" onclick="removePost('{{ p.base36id }}')"><i class="far fa-ban text-center text-danger mr-3"></i>Remove</button>
+              {% endif %}
+            {% endif %}
+
+            {% if v.admin_level >=4 and p.oauth_app %}
+              <button class="btn btn-link btn-block btn-lg text-muted text-left"  href="{{ p.oauth_app.permalink }}"><a href="{{ p.oauth_app.permalink }}"><i class="far fa-code text-center text-muted mr-3"></i>API App</a></button>
+            {% endif %}
 
           {% endif %}
 
           {% if v and not v.id==p.author_id and not p.is_deleted and not p.author.is_deleted %}
-          <button id="block-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if p.is_blocking %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/block?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{ p.base36id }}').classList.toggle('d-none');})"
-          ><i class="fas fa-user-slash text-danger mr-3"></i>Block @{{ p.author.username }}</button>
-          <button id="unblock-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if not p.is_blocking %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/unblock?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{ p.base36id }}').classList.toggle('d-none');})"
-          ><i class="fas fa-user-slash text-danger mr-3"></i>Unblock @{{ p.author.username }}</button>
-          <button id="exile-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger" onclick="post_toast('/mod/exile/{{ p.board.base36id }}?username={{ p.author.username }}&toast=1&thing={{ p.fullname }}')"><i class="fas fa-user-minus mr-3 text-danger"></i>Exile @{{ p.author.username }}</a></button>
+            <button id="block-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if p.is_blocking %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/block?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{ p.base36id }}').classList.toggle('d-none');})"
+            ><i class="fas fa-user-slash text-danger mr-3"></i>Block @{{ p.author.username }}</button>
+            <button id="unblock-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if not p.is_blocking %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/unblock?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{ p.base36id }}').classList.toggle('d-none');})"
+            ><i class="fas fa-user-slash text-danger mr-3"></i>Unblock @{{ p.author.username }}</button>
+            {% if p.is_guildmaster('access')%}
+              <button id="exile-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger" onclick="post_toast('/mod/exile/{{ p.board.base36id }}?username={{ p.author.username }}&toast=1&thing={{ p.fullname }}')"><i class="fas fa-user-minus mr-3 text-danger"></i>Exile @{{ p.author.username }}</a></button>
+            {% endif %}
           {% endif %}
         </ul>
       </div>
@@ -433,7 +439,7 @@
                     <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
                     {% endif %}
 
-                    {% if v and (v.id==p.author_id or v.admin_level>=3 or p.is_guildmaster) %}
+                    {% if v and (v.id==p.author_id or v.admin_level>=3 or p.is_guildmaster('content')) %}
 
                     {% if not p.board.over_18 %}
                     <li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/toggle_post_nsfw/{{ p.base36id }}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle NSFW</a></li>
@@ -454,7 +460,7 @@
                     <li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/user/kick/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="fas fa-chess-rook"></i>Remove from +{{ p.board.name }}</a></li>
                     {% endif %}
 
-                    {% if p.is_guildmaster %}
+                    {% if p.is_guildmaster('content') %}
 
                     {% if p.is_pinned %}
                     <li class="list-inline-item"><a class="d-block text-info" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-fw text-info fa-rotate--45"></i>Unpin</a></li>
@@ -497,7 +503,7 @@
                         <a id="unblock-user-{{ p.base36id }}" class="dropdown-item text-danger{% if not p.is_blocking %} d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/settings/unblock?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-{{ p.base36id }}').classList.toggle('d-none');})"
                         ><i class="fas fa-user-slash text-danger"></i>Unblock user</a>
 
-                        {% if p.board_id in v.boards_modded_ids and not p.is_deleted and not p.author.is_deleted%}
+                        {% if p.is_guildmaster('access') and not p.is_deleted and not p.author.is_deleted%}
                         <a id="exile2-user-{{ p.base36id }}" class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/mod/exile/{{ p.board.base36id }}?username={{ p.author.username }}&toast=1&thing={{ p.fullname }}')"
                         ><i class="fas fa-user-slash text-danger"></i>Exile @{{ p.author.username }}</a>
                         {% endif %}
