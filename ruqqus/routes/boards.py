@@ -1645,7 +1645,12 @@ def siege_guild(v):
         new_mod = ModRelationship(user_id=v.id,
                                   board_id=guild.id,
                                   created_utc=now,
-                                  accepted=True
+                                  accepted=True,
+                                  perm_full=True,
+                                  perm_access=True,
+                                  perm_appearance=True,
+                                  perm_content=True,
+                                  perm_config=True
                                   )
 
         g.db.add(new_mod)
