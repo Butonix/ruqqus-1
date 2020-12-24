@@ -241,6 +241,24 @@ class Board(Base, Stndrd, Age_times):
 
         return False
 
+    def has_mod_record(self, user, perm=None):
+
+        if user is None:
+            return None
+
+        if self.is_banned:
+            return False
+
+        for x in user.moderates:
+            if x.board_id == self.id and not x.invite_rescinded:
+                
+                if perm:
+                    return x if x.__dict__[f"perm_{perm}"] else False
+                else:
+                    return x
+
+
+        return False
     def can_invite_mod(self, user):
 
         return user.id not in [
