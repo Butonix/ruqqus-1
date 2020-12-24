@@ -296,8 +296,8 @@ def default_cat_cookie():
 
     output=[]
     for x in CATEGORIES:
-        if x['visible']:
-            for y in x['subCats']:
+        for y in x['subCats']:
+            if y.get('visible', x['visible']):
                 output.append(y['name'])
     return output
 

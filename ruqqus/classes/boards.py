@@ -640,7 +640,7 @@ CATEGORIES=[
         },
         { id: 10,
           'name': 'Memes',
-          'subCats': [{'name': 'Casual'}, {'name': 'Dank'}, {'name': 'Political'}],
+          'subCats': [{'name': 'Casual'}, {'name': 'Dank'}, {'name': 'Political'}, {'name': 'Offensive', 'visible':False}],
           'icon': 'fa-grin',
           'color': 'purple-400',
           'visible': True
@@ -675,7 +675,7 @@ CATEGORIES=[
         },
         { id: 15,
           'name': 'Technology',
-          'subCats': [{'name': 'Gadgets'}, {'name': 'Programming'}, {'name': 'Hardware'}, {'name': 'Software'}, {'name': 'Design'}, {'name': 'Tech News'}],
+          'subCats': [{'name': 'Gadgets'}, {'name': 'Programming'}, {'name': 'Hardware'}, {'name': 'Software'}, {'name': 'Design'}, {'name': 'Tech News'}, {'name': 'Tech Help'}],
           'icon': 'fa-microchip',
           'color': 'purple-400',
           'visible': True
