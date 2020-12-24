@@ -1818,7 +1818,7 @@ def board_mod_perms_change(boardname, board, v):
     u_mod.perm_access       = bool(request.form.get("perm_access"       , False))
     u_mod.perm_appearance   = bool(request.form.get("perm_appearance"   , False))
     u_mod.perm_config       = bool(request.form.get("perm_config"       , False))
-    u_mod.perm_content      = bool(request.form.get("perm_fontent"      , False))
+    u_mod.perm_content      = bool(request.form.get("perm_content"      , False))
 
     g.db.add(u_mod)
     g.db.commit()
