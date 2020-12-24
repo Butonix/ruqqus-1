@@ -1815,12 +1815,11 @@ def board_mod_perms_change(boardname, board, v):
     #print({x:request.form.get(x) for x in request.form})
 
     for p in [x for x in u_mod.__dict__ if x.startswith('perm_')]:
-        print(p)
-        print(bool(request.form.get(p, False)))
         u_mod.__dict__[p] = bool(request.form.get(p, False))
 
 
     g.db.add(u_mod)
+    g.db.commit()
 
     ma=ModAction(
         kind="change_perms",
