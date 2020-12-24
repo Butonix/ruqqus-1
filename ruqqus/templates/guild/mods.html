@@ -111,7 +111,7 @@
                     <i class="fas fa-ellipsis-h text-muted"></i>
                   </a>
                   <div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
-                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#editPermsModal" onclick="permsEdit('{{ m.user.username }}','{{ m.permlist }}')"><i class="fas fa-user-cog fa-fw"></i>Edit permissions</a>
+                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#editPermsModal" onclick="permsEdit('{{ mod.user.username }}','{{ mod.permlist }}')"><i class="fas fa-user-cog fa-fw"></i>Edit permissions</a>
                     <a class="dropdown-item" href="javascript:void(0)" onclick="post('/mod/{{ b.base36id }}/remove/{{ mod.user.username }}', callback=function(){window.location.reload(true)})"><i class="fas fa-trash-alt"></i>Remove guildmaster</a>
                   </div>
                 </div>
