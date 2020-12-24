@@ -1824,7 +1824,7 @@ def board_mod_perms_change(boardname, board, v):
     g.db.commit()
 
     ma=ModAction(
-        kind="change_perms",
+        kind="change_perms" if u_mod.accepted else "change_invite",
         user_id=v.id,
         board_id=board.id,
         target_user_id=user.id,
