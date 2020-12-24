@@ -621,7 +621,7 @@ class User(Base, Stndrd, Age_times):
     @property
     def profile_url(self):
 
-        if self.has_profile:
+        if self.has_profile and not self.is_deleted:
             return f"https://i.ruqqus.com/users/{self.username}/profile-{self.profile_nonce}.png"
         else:
             return "/assets/images/profiles/default-profile-pic.png"

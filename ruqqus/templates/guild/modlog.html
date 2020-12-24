@@ -39,7 +39,12 @@
            </span>
              <div class="text-muted pl-3">
               <div>
-               <a href="{{ ma.user.permalink }}" class="font-weight-bold text-black" target="_self">@{{ ma.user.username }}</a>
+                {% if not ma.user.is_deleted %}
+                  <a href="{{ ma.user.permalink }}" class="font-weight-bold text-black" target="_self">@{{ ma.user.username }}</a>
+                {% else %}
+                  [deleted user]
+                {% endif %}
+
                <span>{{ ma.str | safe }}</span>
              </div>
 
