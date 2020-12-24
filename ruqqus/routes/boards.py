@@ -1801,7 +1801,7 @@ def mod_log_item(boardname, aid, v):
 @app.route("/+<boardname>/mod/edit_perms", methods=["POST"])
 @auth_required
 @is_guildmaster("full")
-def board_mod_perms_change(boardname, username, board, v):
+def board_mod_perms_change(boardname, board, v):
 
     user=get_user(request.form.get("username"))
 
