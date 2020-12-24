@@ -1937,7 +1937,7 @@ var permsEdit = function(username, permstring) {
 
   document.getElementById('permedit-user').innerText = username
 
-  cbs = document.getElementsById('perm-box')
+  cbs = document.getElementsByClassName('perm-box')
 
   for (i=0; i< cbs.length; i++) {
     cbs[i].checked = permstring.includes(cbs[i].dataset.perm) || permstring.includes('full')
