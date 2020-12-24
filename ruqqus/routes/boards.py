@@ -402,7 +402,6 @@ def mod_ban_bid_user(bid, board, v):
         send_notification(user, text)
 
     if item:
-        item=get_from_fullname(item)
         if isinstance(item, Submission):
             note=f'for <a href="{item.permalink}">post</a>'
         elif isinstance(item, Comment):
