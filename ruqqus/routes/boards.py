@@ -1814,10 +1814,11 @@ def board_mod_perms_change(boardname, board, v):
 
     #print({x:request.form.get(x) for x in request.form})
 
-    for p in [x for x in u_mod.__dict__ if x.startswith('perm_')]:
-        u_mod.__dict__[p] = bool(request.form.get(p, False))
-
-    print(u_mod.__dict__)
+    u_mod.perm_full         = bool(request.form.get("perm_full"         , False))
+    u_mod.perm_access       = bool(request.form.get("perm_access"       , False))
+    u_mod.perm_appearance   = bool(request.form.get("perm_appearance"   , False))
+    u_mod.perm_config       = bool(request.form.get("perm_config"       , False))
+    u_mod.perm_content      = bool(request.form.get("perm_fontent"      , False))
 
     g.db.add(u_mod)
     g.db.commit()
