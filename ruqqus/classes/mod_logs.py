@@ -277,7 +277,7 @@ ACTIONTYPES={
         "title": "reinstated comment"
     },
     "change_perms":{
-        "str": 'changed permissions on guildmaster {self.target_link}>',
+        "str": 'changed permissions on guildmaster {self.target_link}',
         "icon":"fa-user-cog",
         "color": "bg-info",
         "title": "changed permissions on {self.target_user.username}"
