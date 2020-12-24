@@ -605,7 +605,7 @@ CATEGORIES=[
         },
         { id: 5,
           'name': 'Entertainment',
-          'subCats': [{'name': 'Celebrities'}, {'name': 'Entertainment news'}, {'name': 'Film & TV'}],
+          'subCats': [{'name': 'Celebrities'}, {'name': 'Entertainment news'}, {'name': 'Film and TV'}],
           'icon': 'fa-theater-masks',
           'color': 'purple-400',
           'visible': True
