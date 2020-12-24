@@ -1881,17 +1881,17 @@ var tipModal2 = function(id, content, link, recipient, recipientPFP) {
   console.log(recipientPFP, id, content, link, recipient)
 }
 
-var togglecat = function() {
+var togglecat = function(sort) {
   var cbs = document.getElementsByClassName('cat-check');
   var l = []
   for (var i=0; i< cbs.length; i++) {
     l.push(cbs[i].checked)
   }
-  setTimeout(function(){triggercat(l)}, 1000)
+  setTimeout(function(){sort, triggercat(l)}, 1000)
   return l;
 }
 
-var triggercat=function(cats) {
+var triggercat=function(sort, cats) {
 
   var cbs = document.getElementsByClassName('cat-check');
   var l = []
@@ -1917,7 +1917,7 @@ var triggercat=function(cats) {
     }
   }
 
-  var url='/inpage/all?cats=' + catlist.join(',');
+  var url='/inpage/all?sort='+ sort +'&cats=' + catlist.join(',');
   
 
   xhr = new XMLHttpRequest();
