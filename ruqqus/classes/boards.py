@@ -241,7 +241,9 @@ class Board(Base, Stndrd, Age_times):
             return False
                     
         if perm:
+
             return m if (m.perm_full or m.__dict__[f"perm_{perm}"]) else False
+
         else:
             return m
 

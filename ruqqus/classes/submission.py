@@ -472,6 +472,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
         return mod.perm_full or mod.__dict__[f"perm_{perm}"]
 
+
     @property
     def is_blocking_guild(self):
         return self.__dict__.get('_is_blocking_guild', False)
