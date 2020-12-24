@@ -598,14 +598,14 @@ CATEGORIES=[
         },
         { id: 4,
           'name': 'Discussion',
-          'subCats': [{'name': 'Casual Discussion'}, {'name': 'Serious'}, {'name': 'Drama'}, {'name': 'Ruqqus Meta'}, {'name': 'Q and A'}],
+          'subCats': [{'name': 'Casual Discussion'}, {'name': 'Serious'}, {'name': 'Drama'}, {'name': 'Ruqqus Meta'}, {'name': 'Q&A'}],
           'icon': 'fa-podium',
           'color': 'purple-400',
           'visible': True
         },
         { id: 5,
           'name': 'Entertainment',
-          'subCats': [{'name': 'Celebrities'}, {'name': 'Entertainment news'}, {'name': 'Film and TV'}],
+          'subCats': [{'name': 'Celebrities'}, {'name': 'Entertainment news'}, {'name': 'Film & TV'}],
           'icon': 'fa-theater-masks',
           'color': 'purple-400',
           'visible': True
