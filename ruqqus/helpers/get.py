@@ -2,7 +2,7 @@ from .base36 import *
 from .sqla_values import *
 from ruqqus.classes import *
 from flask import g
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, aliased
 
 import re
 
@@ -103,7 +103,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         items = nSession.query(
             Submission,
             vt.c.vote_type,
-            mod,
+            aliased(ModRelationship, mod),
             boardblocks.c.id,
             blocking.c.id
         ).options(
@@ -162,7 +162,7 @@ def get_posts(pids, sort="hot", v=None):
             query = g.db.query(
                 Submission,
                 vt.c.vote_type,
-                mod,
+                aliased(ModRelationship, mod),
                 boardblocks.c.id,
                 blocking.c.id,
                 blocked.c.id,
