@@ -230,13 +230,18 @@ class Board(Base, Stndrd, Age_times):
         if self.is_banned:
             return False
 
-        for x in user.moderates:
-            if x.board_id == self.id and x.accepted and not x.invite_rescinded:
-                
-                if perm:
-                    return x if x.__dict__[f"perm_{perm}"] else False
-                else:
-                    return x
+        m=self.__dict__.get("_mod")
+        if not m:
+            for x in user.moderates:
+                if x.board_id == self.id and x.accepted and not x.invite_rescinded:
+                    self.__dict__["mod"]=m
+
+
+                    
+        if perm:
+            return m if m.__dict__[f"perm_{perm}"] else False
+        else:
+            return m
 
 
         return False
@@ -547,6 +552,15 @@ class Board(Base, Stndrd, Age_times):
     def user_guild_rep(self, user):
 
         return user.guild_rep(self)
+
+    def is_guildmaster(self, perm=None):
+        mod=self.__dict__.get('_is_guildmaster', False)
+        if not mod:
+            return False
+        if not perm:
+            return True
+
+        return mod.__dict__[f"perm_{perm}"]
 
 
 CATEGORIES=[
