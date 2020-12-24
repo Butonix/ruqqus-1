@@ -102,8 +102,8 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 
         items = nSession.query(
             Submission,
-            ModRelationship,
             vt.c.vote_type,
+            mod,
             boardblocks.c.id,
             blocking.c.id
         ).options(
@@ -124,8 +124,8 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             abort(404)
 
         x = items[0]
-        x._voted = items[2] or 0
-        x._is_guildmaster = items[1] or 0
+        x._voted = items[1] or 0
+        x._is_guildmaster = items[2] or 0
         x._is_blocking_guild = items[3] or 0
         x._is_blocking = items[4] or 0
 
@@ -161,8 +161,8 @@ def get_posts(pids, sort="hot", v=None):
 
             query = g.db.query(
                 Submission,
-                ModRelationship,
                 vt.c.vote_type,
+                mod,
                 boardblocks.c.id,
                 blocking.c.id,
                 blocked.c.id,
@@ -193,8 +193,8 @@ def get_posts(pids, sort="hot", v=None):
 
         output = [p[0] for p in posts]
         for i in range(len(output)):
-            output[i]._voted = posts[i][2] or 0
-            output[i]._is_guildmaster = posts[i][1] or 0
+            output[i]._voted = posts[i][1] or 0
+            output[i]._is_guildmaster = posts[i][2] or 0
             output[i]._is_blocking_guild = posts[i][3] or 0
             output[i]._is_blocking = posts[i][4] or 0
             output[i]._is_blocked = posts[i][5] or 0
