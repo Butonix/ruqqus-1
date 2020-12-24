@@ -1940,7 +1940,7 @@ var permsEdit = function(username, permstring) {
   cbs = document.getElementsById('perm-box')
 
   for (i=0; i< cbs.length; i++) {
-    cbs[i].checked = permstring.includes(cbs[i].dataset.perm)
+    cbs[i].checked = permstring.includes(cbs[i].dataset.perm) || permstring.includes('full')
   }
 
 }
