@@ -322,7 +322,8 @@ def front_all(v):
     cats=session.get("cats")
     if not cats:
         #print('no cats')
-        session['cats']=default_cat_cookie()
+        cats=default_cat_cookie()
+        session['cats']=cats
         session.modified=True
 
     new_cats=request.args.get('cats','')
@@ -333,7 +334,7 @@ def front_all(v):
         cats=new_cats
         session.modified=True
 
-    print(cats)
+    #print(cats)
 
     ids = frontlist(sort=sort_method,
                     page=page,
