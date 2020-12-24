@@ -248,11 +248,26 @@
       <div class="modal-body">
         <input name="formkey" type="hidden" value="{{ v.formkey }}">
         <input id="edit-perm-username" name="username" type="hidden" value="">
-        <input type="checkbox" class="custom-control-input perm-box" onchange="permfull()"  data-perm="full" name="perm_full" value="full"> <label class="custom-control-label" for="check-perm-full">full</label>
-        <input type="checkbox" class="custom-control-input perm-box" onchange="permother()" data-perm="access" name="perm_access" value="access"> <label class="custom-control-label" for="check-perm-full">access</label>
-        <input type="checkbox" class="custom-control-input perm-box" onchange="permother()" data-perm="appearance" name="perm_appearance" value="appearance"> <label class="custom-control-label" for="check-perm-full">appearance</label>
-        <input type="checkbox" class="custom-control-input perm-box" onchange="permother()" data-perm="config" name="perm_config" value="config"> <label class="custom-control-label" for="check-perm-full">config</label>
-        <input type="checkbox" class="custom-control-input perm-box" onchange="permother()" data-perm="content" name="perm_content" value="content"> <label class="custom-control-label" for="check-perm-full">content</label>
+        <div class="custom-control custom-checkbox mb-2">
+          <input type="checkbox" class="custom-control-input perm-box" onchange="permfull()"  data-perm="full" name="perm_full" value="full">
+          <label class="custom-control-label" for="check-perm-full">full</label>
+        </div>
+        <div class="custom-control custom-checkbox mb-2">
+          <input type="checkbox" class="custom-control-input perm-box" onchange="permother()" data-perm="access" name="perm_access" value="access"> 
+          <label class="custom-control-label" for="check-perm-full">access</label>
+        </div>
+        <div class="custom-control custom-checkbox mb-2">
+          <input type="checkbox" class="custom-control-input perm-box" onchange="permother()" data-perm="appearance" name="perm_appearance" value="appearance">
+          <label class="custom-control-label" for="check-perm-full">appearance</label>
+        </div>
+        <div class="custom-control custom-checkbox mb-2">
+          <input type="checkbox" class="custom-control-input perm-box" onchange="permother()" data-perm="config" name="perm_config" value="config">
+          <label class="custom-control-label" for="check-perm-full">config</label>
+        </div>
+        <div class="custom-control custom-checkbox mb-2">
+          <input type="checkbox" class="custom-control-input perm-box" onchange="permother()" data-perm="content" name="perm_content" value="content">
+          <label class="custom-control-label" for="check-perm-full">content</label>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
