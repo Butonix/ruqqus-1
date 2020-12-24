@@ -128,7 +128,7 @@
         </table>
       </div>
 
-      {% if b.has_mod(v) %}
+
 
       <h2 class="h5" name="guild_name">Pending guildmasters</h2>
 
@@ -166,13 +166,14 @@
                     {% endif %}
                 </td>
               </tr>
+              {% else %}
+                <td>There are no guildmaster invitations.</td>
               {% endfor %}
 
             </tbody>
           </table>
         </div>
 
-        {% endif %}
 
       </div>
 
