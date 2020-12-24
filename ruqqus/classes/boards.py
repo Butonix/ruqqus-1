@@ -235,8 +235,9 @@ class Board(Base, Stndrd, Age_times):
             for x in user.moderates:
                 if x.board_id == self.id and x.accepted and not x.invite_rescinded:
                     self.__dict__["mod"]=m
-
-
+        
+        if not m:
+            return False
                     
         if perm:
             return m if m.__dict__[f"perm_{perm}"] else False
