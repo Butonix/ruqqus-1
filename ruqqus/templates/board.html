@@ -84,7 +84,7 @@
       <li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/log"><i class="fas fa-scroll-old fa-fw text-center mr-2"></i>Mod Log</a></li>
       {% if b.has_mod(v, 'config') %}<li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/exiled"><i class="fas fa-user-slash fa-fw text-center mr-2"></i>Exiles</a></li>{% endif %}
       {% if b.has_mod(v, 'config') %}<li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/queue"><i class="fas fa-flag fa-fw text-center mr-2"></i>Reports</a></li>{% endif %}
-      {% if b.has_mod(v, 'access') %} and (b.restricted_posting or b.is_private) %}<li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/contributors"><i class="fas fa-user-check fa-fw text-center mr-2"></i>Approved users</a></li>{% endif %}
+      {% if b.has_mod(v, 'access') and (b.restricted_posting or b.is_private) %}<li class="mb-2"><a class="text-muted" href="/+{{ b.name }}/mod/contributors"><i class="fas fa-user-check fa-fw text-center mr-2"></i>Approved users</a></li>{% endif %}
     </ul>
   </div>
 </div>
