@@ -234,7 +234,8 @@ class Board(Base, Stndrd, Age_times):
         if not m:
             for x in user.moderates:
                 if x.board_id == self.id and x.accepted and not x.invite_rescinded:
-                    self.__dict__["mod"]=m
+                    self.__dict__["mod"]=x
+                    m=x
         
         if not m:
             return False
