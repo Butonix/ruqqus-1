@@ -103,7 +103,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         items = nSession.query(
             Submission,
             vt.c.vote_type,
-            mod.c.id,
+            mod,
             boardblocks.c.id,
             blocking.c.id
         ).options(
@@ -162,7 +162,7 @@ def get_posts(pids, sort="hot", v=None):
             query = g.db.query(
                 Submission,
                 vt.c.vote_type,
-                mod.c.id,
+                mod,
                 boardblocks.c.id,
                 blocking.c.id,
                 blocked.c.id,
