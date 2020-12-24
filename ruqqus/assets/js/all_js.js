@@ -1936,6 +1936,7 @@ var triggercat=function(cats) {
 var permsEdit = function(username, permstring) {
 
   document.getElementById('permedit-user').innerText = username
+  document.getElementById('edit-perm-username').value = username
 
   cbs = document.getElementsByClassName('perm-box')
 
