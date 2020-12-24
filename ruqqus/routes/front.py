@@ -73,6 +73,8 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
 
     # cutoff=int(time.time())-(60*60*24*30)
 
+    print(categories)
+
     if sort == "hot":
         sort_func = Submission.score_hot.desc
     elif sort == "new":
