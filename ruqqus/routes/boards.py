@@ -1812,10 +1812,13 @@ def board_mod_perms_change(boardname, board, v):
     if v_mod.id > u_mod.id:
         return jsonify({"error":"You can't change perms on guildmasters above you."}), 403
 
-    print({x:request.form.get(x) for x in request.form})
+    #print({x:request.form.get(x) for x in request.form})
 
     for p in [x for x in u_mod.__dict__ if x.startswith('perm_')]:
+        print(p)
+        print(bool(request.form.get(p, False))
         u_mod.__dict__[p] = bool(request.form.get(p, False))
+
 
     g.db.add(u_mod)
 
