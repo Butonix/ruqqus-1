@@ -54,7 +54,7 @@ class ModRelationship(Base):
     def permchangelist(self):
         output=[]
         for p in ["full", "access","appearance","config","content"]:
-            if self.__dict__[f"perm_{p}"]:
+            if self.__dict__.get(f"perm_{p}"):
                 output.append(f"+{p}")
             else:
                 output.append(f"-{p}")
