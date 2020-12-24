@@ -135,7 +135,12 @@ def create_board_post(v):
     # add user as mod
     mod = ModRelationship(user_id=v.id,
                           board_id=new_board.id,
-                          accepted=True)
+                          accepted=True,
+                          perm_full=True,
+                          perm_access=True,
+                          perm_content=True,
+                          perm_appearance=True,
+                          perm_config=True)
     g.db.add(mod)
 
     # add subscription for user
