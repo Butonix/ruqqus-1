@@ -105,12 +105,13 @@
               <td>{{ mod.permlist }}</td>
 
               <td>
-                {% if me and me.id < mod.id %}
+                {% if me and me.perm_full and me.id < mod.id %}
                 <div class="dropdown float-right dropdown-actions">
                   <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="line-height: 0;">
                     <i class="fas fa-ellipsis-h text-muted"></i>
                   </a>
                   <div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
+                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#editPermsModal" onclick="permsEdit('{{ m.user.username }}','{{ m.permlist }}')"><i class="fas fa-user-cog fa-fw"></i>Edit permissions</a>
                     <a class="dropdown-item" href="javascript:void(0)" onclick="post('/mod/{{ b.base36id }}/remove/{{ mod.user.username }}', callback=function(){window.location.reload(true)})"><i class="fas fa-trash-alt"></i>Remove guildmaster</a>
                   </div>
                 </div>
