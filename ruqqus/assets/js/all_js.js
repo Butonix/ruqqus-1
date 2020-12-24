@@ -1887,7 +1887,7 @@ var togglecat = function(sort) {
   for (var i=0; i< cbs.length; i++) {
     l.push(cbs[i].checked)
   }
-  setTimeout(function(){sort, triggercat(l)}, 1000)
+  setTimeout(function(){triggercat(sort, l)}, 1000)
   return l;
 }
 
