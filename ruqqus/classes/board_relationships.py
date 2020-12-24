@@ -37,6 +37,32 @@ class ModRelationship(Base):
     def __repr__(self):
         return f"<Mod(id={self.id}, uid={self.user_id}, board_id={self.board_id})>"
 
+    @property
+    def permlist(self):
+        if self.perm_full:
+            return "full"
+
+        output=[]
+        for p in ["access","appearance","config","content"]:
+            if self.__dict__[f"perm_{p}"]:
+                output.append(p)
+
+        
+        return ", ".join(output) if output else "none"
+
+    @property
+    def permchangelist(self):
+        output=[]
+        for p in ["full", "access","appearance","config","content"]:
+            if self.__dict__.get(f"perm_{p}"):
+                output.append(f"+{p}")
+            else:
+                output.append(f"-{p}")
+
+        return ", ".join(output)
+    
+    
+
 
 class BanRelationship(Base, Stndrd, Age_times):
 

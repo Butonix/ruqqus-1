@@ -1931,3 +1931,42 @@ var triggercat=function(cats) {
   }
   xhr.send()
 }
+
+
+var permsEdit = function(username, permstring) {
+
+  document.getElementById('permedit-user').innerText = username
+  document.getElementById('edit-perm-username').value = username
+
+  cbs = document.getElementsByClassName('perm-box')
+
+  for (i=0; i< cbs.length; i++) {
+    cbs[i].checked = permstring.includes(cbs[i].dataset.perm) || permstring.includes('full')
+  }
+
+}
+
+var permfull=function() {
+
+  cbs = document.getElementsByClassName('perm-box')
+
+  full = cbs[0]
+
+  if (full.checked) {
+    for (i=1; i< cbs.length; i++) {
+      cbs[i].checked = true;
+    }
+  }
+}
+var permother=function() {
+
+  cbs = document.getElementsByClassName('perm-box')
+
+  full = cbs[0]
+
+  for (i=1; i< cbs.length; i++) {
+    if(cbs[i].checked == false) {
+      full.checked=false;
+    }
+  }
+}

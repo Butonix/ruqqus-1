@@ -589,9 +589,16 @@ def mod_invite_username(bid, board, v):
         g.db.add(x)
 
     else:
-        new_mod = ModRelationship(user_id=user.id,
-                                  board_id=board.id,
-                                  accepted=False)
+        new_mod = ModRelationship(
+            user_id=user.id,
+            board_id=board.id,
+            accepted=False,
+            perm_full=True,
+            perm_content=True,
+            perm_appearance=True,
+            perm_access=True,
+            perm_config=True
+            )
 
         text = f"You have been invited to join +{board.name} as a guildmaster. You can [click here]({board.permalink}/mod/mods) and accept this invitation. Or, if you weren't expecting this, you can ignore it."
         send_notification(user, text)
@@ -603,11 +610,7 @@ def mod_invite_username(bid, board, v):
         user_id=v.id,
         target_user_id=user.id,
         board_id=board.id,
-        perm_full=True,
-        perm_content=True,
-        perm_appearance=True,
-        perm_access=True,
-        perm_config=True
+        note=new_mod.permchangelist
         )
     g.db.add(ma)
 
@@ -1625,7 +1628,8 @@ def siege_guild(v):
         g.db.delete(x)
 
     # add new mod if user is not already
-    if not guild.has_mod(v):
+    m=guild.has_mod(v)
+    if not m:
         new_mod = ModRelationship(user_id=v.id,
                                   board_id=guild.id,
                                   created_utc=now,
@@ -1641,6 +1645,20 @@ def siege_guild(v):
             note="siege"
         )
         g.db.add(ma)
+
+    elif not m.perm_full:
+        for p in m.__dict__:
+            if p.startswith("perm_"):
+                m.__dict__[p]=True
+        g.db.add(p)
+        ma=ModAction(
+            kind="change_perms",
+            user_id=1,
+            board_id=guild.id,
+            target_user_id=v.id,
+            note="siege"
+        )
+        g.db.add(ma)        
 
     return redirect(f"/+{guild.name}/mod/mods")
 
@@ -1779,3 +1797,39 @@ def mod_log_item(boardname, aid, v):
         page=1,
         action=action
         )
+
+@app.route("/+<boardname>/mod/edit_perms", methods=["POST"])
+@auth_required
+@is_guildmaster("full")
+@validate_formkey
+def board_mod_perms_change(boardname, board, v):
+
+    user=get_user(request.form.get("username"))
+
+    v_mod=board.has_mod(v)
+    u_mod=board.has_mod_record(user)
+
+    if v_mod.id > u_mod.id:
+        return jsonify({"error":"You can't change perms on guildmasters above you."}), 403
+
+    #print({x:request.form.get(x) for x in request.form})
+
+    u_mod.perm_full         = bool(request.form.get("perm_full"         , False))
+    u_mod.perm_access       = bool(request.form.get("perm_access"       , False))
+    u_mod.perm_appearance   = bool(request.form.get("perm_appearance"   , False))
+    u_mod.perm_config       = bool(request.form.get("perm_config"       , False))
+    u_mod.perm_content      = bool(request.form.get("perm_content"      , False))
+
+    g.db.add(u_mod)
+    g.db.commit()
+
+    ma=ModAction(
+        kind="change_perms" if u_mod.accepted else "change_invite",
+        user_id=v.id,
+        board_id=board.id,
+        target_user_id=user.id,
+        note=u_mod.permchangelist
+    )
+    g.db.add(ma)
+
+    return redirect(f"{board.permalink}/mod/mods")
