@@ -354,6 +354,11 @@ def mod_ban_bid_user(bid, board, v):
 
     user = get_user(request.values.get("username"), graceful=True)
 
+    #check for post/comment
+    item = request.values.get("thing")
+    if item:
+        item=get_from_fullname(item)
+
     if not user:
         return jsonify({"error": "That user doesn't exist."}), 404
 
@@ -389,10 +394,13 @@ def mod_ban_bid_user(bid, board, v):
         g.db.add(new_ban)
 
         text = f"You have been exiled from +{board.name}.\n\nNone of your existing posts or comments have been removed, however, you will not be able to make any new posts or comments in +{board.name}."
+        if item:
+            text+= "\n\nYou were exiled for [this "
+            text+= "comment" if isinstance(item, Comment) else "post"
+            text+= f"]({item.permalink})."
+
         send_notification(user, text)
 
-    #check for post/comment
-    item = request.values.get("thing")
     if item:
         item=get_from_fullname(item)
         if isinstance(item, Submission):
