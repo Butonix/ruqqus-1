@@ -1827,4 +1827,4 @@ def board_mod_perms_change(boardname, board, v):
     )
     g.db.add(ma)
 
-    return "", 204
+    return redirect(f"{board.permalink}/mod/mods")
