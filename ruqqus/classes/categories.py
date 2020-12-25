@@ -17,7 +17,7 @@ class Category(Base, Stndrd, Age_times):
     visible = Column(Boolean, default=True)
     created_utc = Column(Integer, default=0)
 
-    sub_cats = relationship("User", lazy="joined", primaryjoin="SubCategory.id==Category.id")
+    sub_cats = relationship("SubCategory", lazy="joined", primaryjoin="SubCategory.id==Category.id")
 
     def __init__(self, *args, **kwargs):
         if "created_utc" not in kwargs:
