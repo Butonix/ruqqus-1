@@ -1500,6 +1500,9 @@ def siege_guild(v):
     # update siege date
     v.last_siege_utc = now
     g.db.add(v)
+    for alt in v.alts:
+        alt.last_siege_utc = now
+        g.db.add(v)
 
     # check guild count
     if not v.can_join_gms and guild not in v.boards_modded:
@@ -1530,13 +1533,7 @@ def siege_guild(v):
     # Assemble list of mod ids to check
     # skip any user with a perm site-wide ban
     # skip any deleted mod
-    mods = []
-    for user in guild.mods:
-        if user.id == v.id:
-            break
-        if not (user.is_banned and user.unban_utc ==
-                0) and not user.is_deleted:
-            mods.append(user)
+    mods = [x for x in guild.mods if not x.is_deleted]
 
     # if no mods, skip straight to success
     if mods:
