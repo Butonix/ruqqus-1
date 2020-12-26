@@ -506,14 +506,17 @@ def admin_gm(v):
         boards=user.boards_modded
 
         alts=user.alts
-        earliest=user
+        main=user
+        main_count=user.submissions.count() + user.comments.count()
         for alt in alts:
 
             if not alt.is_valid and not include_banned:
                 continue
 
-            if alt.created_utc < earliest.created_utc:
-                earlest=alt
+            count = alt.submissions.count() + alt.comments.count()
+            if count > main_count:
+                main_count=count
+                main=alt
 
             for b in alt.boards_modded:
                 if b not in boards:
@@ -523,7 +526,7 @@ def admin_gm(v):
         return render_template("admin/alt_gms.html",
             v=v,
             user=user,
-            first=earliest,
+            first=main,
             boards=boards
             )
     else:
