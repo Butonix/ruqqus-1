@@ -1754,6 +1754,9 @@ def change_guild_category(v, board, bid, category):
     if category not in SUBCATS:
         return jsonify({"error": f"Invalid category `{category}`"}), 400
 
+    if board.is_locked_category:
+        return jsonify({"error": "You can't do that right now."}), 400
+
     board.subcat=category
     g.db.add(board)
     g.db.flush()
