@@ -37,16 +37,14 @@ class Category(Base, Stndrd, Age_times):
 
 
 class SubCategory(Base, Stndrd, Age_times):
-    __tablename__ = "sub_categories"
+    __tablename__ = "subcategories"
     id = Column(BigInteger, primary_key=True)
-    board_id = Column(Integer, ForeignKey("boards.id"), default=0)
     cat_id = Column(Integer, ForeignKey("categories.id"), default=0)
     name = Column(String(20), default="")
     description = Column(String(250), default="")
     created_utc = Column(Integer, default=0)
 
     category = relationship("Category", lazy="joined")
-    board = relationship("Board", lazy="joined")
 
     def __init__(self, *args, **kwargs):
         if "created_utc" not in kwargs:
