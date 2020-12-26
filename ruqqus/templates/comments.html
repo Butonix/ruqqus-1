@@ -281,7 +281,7 @@
               {% endif %}
             {% endif %}
             {% if v and c.post and c.post.is_guildmaster('access') %}
-              {% if v.id!=c.author_id %}
+              {% if v.id!=c.author_id and not c.author.is_deleted %}
                 <a class="dropdown-item text-danger" id="exile-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post_toast('/mod/exile/{{ c.post.board.base36id }}?username={{ c.author.username }}&toast=1&thing={{ c.fullname }}')"><i class="fas fa-user-minus fa-fw text-danger"></i>Exile @{{ c.author.username }}</a>
               {% endif %}
             {% endif %}
@@ -454,7 +454,7 @@
             {% endif %}
           {% endif %}
           {% if v and c.post and c.post.is_guildmaster('access') %}
-            {% if c.author_id != v.id %}
+            {% if c.author_id != v.id and not c.author.is_deleted %}
               <li class="list-group-item"><a class="d-block text-danger" id="exile-comment2-{{ c.base36id }}" href="javascript:void(0)" onclick="post_toast('/mod/exile/{{ c.post.board.base36id }}?username={{ c.author.username }}&toast=1&thing={{ c.fullname }}')"><i class="fas fa-user-minus fa-fw text-danger"></i>Exile @{{ c.author.username }}</a></li>
             {% endif %}
           {% endif %}  
