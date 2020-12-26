@@ -63,6 +63,7 @@ class Board(Base, Stndrd, Age_times):
     subcat=Column(String(32), default=None)
     is_siegable=Column(Boolean, default=True)
     last_yank_utc=Column(Integer, default=0)
+    is_locked_category = Column(Boolean, default=False)
 
 
     moderators=relationship("ModRelationship")
