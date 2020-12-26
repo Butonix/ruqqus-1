@@ -427,7 +427,7 @@ def mod_ban_bid_user(bid, board, v):
 
 
     if request.args.get("toast"):
-        return jsonify({"message": f"@{user.username} exiled from +{board.name}"})
+        return jsonify({"message": f"@{user.username} was exiled from +{board.name}"})
     else:
         return "", 204
 
