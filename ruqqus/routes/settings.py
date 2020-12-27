@@ -20,7 +20,6 @@ valid_password_regex = re.compile("^.{8,100}$")
 
 
 @app.route("/settings/profile", methods=["POST"])
-@is_not_banned
 @validate_formkey
 def settings_profile_post(v):
 
@@ -120,7 +119,6 @@ def settings_profile_post(v):
 
 
 @app.route("/settings/security", methods=["POST"])
-@is_not_banned
 @validate_formkey
 def settings_security_post(v):
 
@@ -376,7 +374,6 @@ def update_announcement(v):
 
 
 @app.route("/settings/delete_account", methods=["POST"])
-@is_not_banned
 @no_negative_balance("html")
 @validate_formkey
 def delete_account(v):
