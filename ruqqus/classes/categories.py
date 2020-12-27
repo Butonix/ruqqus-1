@@ -72,8 +72,6 @@ class SubCategory(Base, Stndrd, Age_times):
 
 CATEGORIES = [i for i in db_session().query(Category).order_by(Category.name.desc()).all()]
 
-SUBCATS = [x.id for x in [y.subcats for y in CATEGORIES]]
-
 # class GuildCategory(Base, Stndrd, Age_times):
 #     __tablename__ = "guildcategories"
 #     id = Column(BigInteger, primary_key=True)
