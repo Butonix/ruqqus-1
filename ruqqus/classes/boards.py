@@ -63,7 +63,7 @@ class Board(Base, Stndrd, Age_times):
     is_siegable=Column(Boolean, default=True)
     last_yank_utc=Column(Integer, default=0)
     is_locked_category = Column(Boolean, default=False)
-    subcat_id=Column(Integer, ForeignKey("subcategories.id"), default=None)
+    subcat_id=Column(Integer, ForeignKey("subcategories.id"), default=0)
 
 
     subcat=relationship("SubCategory", lazy="joined")
