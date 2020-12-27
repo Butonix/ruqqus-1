@@ -61,16 +61,20 @@ class SubCategory(Base, Stndrd, Age_times):
             "created_date": self.created_date
         }
 
-class GuildCategory(Base, Stndrd, Age_times):
-    __tablename__ = "guildcategories"
-    id = Column(BigInteger, primary_key=True)
-    subcat_id = Column(Integer, ForeignKey("subcategories.id"), default=0)
-    board_id = Column(Integer, ForeignKey("boards.id"), default=0)
-    created_utc = Column(integer, default=0)
 
-    subcat = relationship("SubCategory", lazy="joined")
-    board = relationship("Board", lazy="joined")
 
-    def __init__(self, *args, **kwargs):
-        if "created_utc" not in kwargs:
-            kwargs["created_utc"] = int(time.time())
+
+
+# class GuildCategory(Base, Stndrd, Age_times):
+#     __tablename__ = "guildcategories"
+#     id = Column(BigInteger, primary_key=True)
+#     subcat_id = Column(Integer, ForeignKey("subcategories.id"), default=0)
+#     board_id = Column(Integer, ForeignKey("boards.id"), default=0)
+#     created_utc = Column(integer, default=0)
+
+#     subcat = relationship("SubCategory", lazy="joined")
+#     board = relationship("Board", lazy="joined")
+
+#     def __init__(self, *args, **kwargs):
+#         if "created_utc" not in kwargs:
+#             kwargs["created_utc"] = int(time.time())
