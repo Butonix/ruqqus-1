@@ -17,7 +17,7 @@ from ruqqus.helpers.aws import check_csam_url
 from ruqqus.classes import *
 from .front import guild_ids
 from ruqqus.classes.rules import *
-from ruqqus.classes.boards import CATEGORIES, SUBCATS
+from ruqqus.classes.categories import CATEGORIES
 from flask import *
 
 from ruqqus.__main__ import app, limiter, cache
@@ -106,7 +106,7 @@ def create_board_post(v):
                                message="You can only create up to 2 guilds per day. Try again later."
                                ), 429
 
-    subcat=request.form.get("category")
+    subcat=int(request.form.get("category",0))
     if not subcat or subcat not in SUBCATS:
         return render_template("message.html",
                                title="Category required.",
@@ -125,7 +125,7 @@ def create_board_post(v):
                       description_html=description_html,
                       over_18=bool(request.form.get("over_18", "")),
                       creator_id=v.id,
-                      subcat=subcat
+                      subcat_id=subcat
                       )
 
     g.db.add(new_board)
