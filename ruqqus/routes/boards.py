@@ -1769,11 +1769,11 @@ def change_guild_category(v, board, bid, category):
         kind="update_settings",
         user_id=v.id,
         board_id=board.id,
-        note=f"category={sc.category.name} / {cat.name}"
+        note=f"category={sc.category.name} / {sc.name}"
     )
     g.db.add(ma)
 
-    return jsonify({"message": f"Category changed to {sc.category.name} / {cat.name}"})
+    return jsonify({"message": f"Category changed to {sc.category.name} / {sc.name}"})
 
 
 
