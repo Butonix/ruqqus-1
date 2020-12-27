@@ -170,7 +170,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
 
     
     if categories:
-        posts=posts.filter(Board.subcat.in_(tuple(categories)))
+        posts=posts.filter(Board.subcat_id.in_(tuple(categories)))
 
     posts=posts.options(contains_eager(Submission.board))
 
