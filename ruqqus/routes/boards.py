@@ -107,7 +107,8 @@ def create_board_post(v):
                                ), 429
 
     subcat=int(request.form.get("category",0))
-    if not subcat or subcat not in SUBCATS:
+    subcat=g.db.query(SubCategory).filter_by(id=subcat).first()
+    if not subcat:
         return render_template("message.html",
                                title="Category required.",
                                message="You need to select a category."
@@ -985,8 +986,8 @@ def board_about_settings(boardname, board, v):
         "guild/settings.html",
         v=v,
         b=board,
-        categories=CATEGORIES,
-        SUBCATS=SUBCATS)
+        categories=CATEGORIES
+        )
 
 
 @app.route("/+<boardname>/mod/appearance", methods=["GET"])
