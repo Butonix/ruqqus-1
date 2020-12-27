@@ -13,7 +13,7 @@ class Category(Base, Stndrd, Age_times):
     name = Column(String(20), default="")
     description = Column(String(250), default="")
     icon = Column(String(256), default="")
-    color = Column(String(128), default="")
+    color = Column(String(128), default="805ad5")
     visible = Column(Boolean, default=True)
     created_utc = Column(Integer, default=0)
 
@@ -22,6 +22,8 @@ class Category(Base, Stndrd, Age_times):
     def __init__(self, *args, **kwargs):
         if "created_utc" not in kwargs:
             kwargs["created_utc"] = int(time.time())
+
+        super().__init__(*args, **kwargs)
 
     @property
     def json(self):
@@ -39,10 +41,11 @@ class Category(Base, Stndrd, Age_times):
 class SubCategory(Base, Stndrd, Age_times):
     __tablename__ = "subcategories"
     id = Column(BigInteger, primary_key=True)
-    cat_id = Column(Integer, ForeignKey("categories.id"), default=0)
+    cat_id = Column(Integer, ForeignKey("categories.id"))
     name = Column(String(20), default="")
     description = Column(String(250), default="")
     created_utc = Column(Integer, default=0)
+    _visible = Column(Boolean, default=0)
 
     category = relationship("Category", lazy="joined")
 
@@ -50,6 +53,12 @@ class SubCategory(Base, Stndrd, Age_times):
         if "created_utc" not in kwargs:
             kwargs["created_utc"] = int(time.time())
 
+        super().__init__(*args, **kwargs)
+
+    @property
+    def visible(self):
+        return self._visible if self._visible in [True, False] else self.category.visible
+    
     @property
     def json(self):
         return {
@@ -60,8 +69,6 @@ class SubCategory(Base, Stndrd, Age_times):
             "description": self.description,
             "created_date": self.created_date
         }
-
-
 
 
 
