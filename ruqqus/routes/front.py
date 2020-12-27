@@ -334,7 +334,7 @@ def front_all(v):
         cats=new_cats
         session.modified=True
 
-    #print(cats)
+    print(cats)
 
     ids = frontlist(sort=sort_method,
                     page=page,
