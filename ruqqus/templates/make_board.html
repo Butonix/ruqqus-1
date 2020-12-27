@@ -55,17 +55,16 @@
 
                     <label for="select-category">Select Category</label>
                     <div class="input-group">
+                      <select id="category-selector" name="category" class="form-control" onchange="post_toast('/mod/{{ b.base36id }}/category/'+document.getElementById('category-selector').selectedOptions[0].value)" {% if b.is_locked_category %}disabled{% endif %}>
+                        <option value="0" selected disabled>Select a Category</option>
+                        {% for category in categories %}
+                            <option disabled>{{ category.name }}</option>
 
-                        <select id="select-category" name="category" class="form-control">
-                            <option value="0" selected disabled>Select a category</option>
-                            {% for category in categories %}
-                                <option disabled>{{ category['name'] }}</option>
-
-                                {% for subcat in category['subCats'] %}
-                                  <option value="{{ subcat['name'] }}"> - {{ subcat['name'] }}</option>
-                                {% endfor %}
+                            {% for subcat in category.subcats %}
+                              <option value="{{ subcat.id }}"{% if subcat.id==b.subcat_id %} selected{% endif %}> - {{ subcat.name }}</option>
                             {% endfor %}
-                        </select>
+                        {% endfor %}
+                      </select>
                     </div>
 
                     <label for="over_18" class="text-danger mt-3">NSFW?</label>

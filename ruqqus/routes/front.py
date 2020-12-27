@@ -9,7 +9,7 @@ from ruqqus.helpers.get import *
 
 from ruqqus.__main__ import app, cache
 from ruqqus.classes.submission import Submission
-from ruqqus.classes.boards import CATEGORIES, SUBCATS
+from ruqqus.classes.categories import CATEGORIES
 
 
 @app.route("/post/", methods=["GET"])
@@ -170,7 +170,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
 
     
     if categories:
-        posts=posts.filter(Board.subcat.in_(tuple(categories)))
+        posts=posts.filter(Board.subcat_id.in_(tuple(categories)))
 
     posts=posts.options(contains_eager(Submission.board))
 
@@ -295,10 +295,10 @@ def home(v):
 def default_cat_cookie():
 
     output=[]
-    for x in CATEGORIES:
-        for y in x['subCats']:
-            if y.get('visible', x['visible']):
-                output.append(y['name'])
+    for cat in CATEGORIES:
+        for subcat in cat.subcats:
+            if subcat.visible:
+                output.append(subcat.id)
     return output
 
 
@@ -319,18 +319,18 @@ def front_all(v):
     ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
 
-    cats=session.get("cats")
+    cats=session.get("catids")
     if not cats:
         #print('no cats')
         cats=default_cat_cookie()
-        session['cats']=cats
+        session['catids']=cats
         session.modified=True
 
     new_cats=request.args.get('cats','')
     if new_cats:
         #print('overwrite cats')
-        new_cats=new_cats.split(',')
-        session['cats']=new_cats
+        new_cats=[int(x) for x in new_cats.split(',')]
+        session['catids']=new_cats
         cats=new_cats
         session.modified=True
 

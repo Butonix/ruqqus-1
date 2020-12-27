@@ -17,7 +17,7 @@ from ruqqus.helpers.aws import check_csam_url
 from ruqqus.classes import *
 from .front import guild_ids
 from ruqqus.classes.rules import *
-from ruqqus.classes.boards import CATEGORIES, SUBCATS
+from ruqqus.classes.categories import CATEGORIES
 from flask import *
 
 from ruqqus.__main__ import app, limiter, cache
@@ -106,8 +106,9 @@ def create_board_post(v):
                                message="You can only create up to 2 guilds per day. Try again later."
                                ), 429
 
-    subcat=request.form.get("category")
-    if not subcat or subcat not in SUBCATS:
+    subcat=int(request.form.get("category",0))
+    subcat=g.db.query(SubCategory).filter_by(id=subcat).first()
+    if not subcat:
         return render_template("message.html",
                                title="Category required.",
                                message="You need to select a category."
@@ -125,7 +126,7 @@ def create_board_post(v):
                       description_html=description_html,
                       over_18=bool(request.form.get("over_18", "")),
                       creator_id=v.id,
-                      subcat=subcat
+                      subcat_id=subcat
                       )
 
     g.db.add(new_board)
@@ -985,8 +986,8 @@ def board_about_settings(boardname, board, v):
         "guild/settings.html",
         v=v,
         b=board,
-        categories=CATEGORIES,
-        SUBCATS=SUBCATS)
+        categories=CATEGORIES
+        )
 
 
 @app.route("/+<boardname>/mod/appearance", methods=["GET"])
@@ -1751,13 +1752,16 @@ def board_comments(boardname, v):
 @validate_formkey
 def change_guild_category(v, board, bid, category):
 
-    if category not in SUBCATS:
-        return jsonify({"error": f"Invalid category `{category}`"}), 400
+    category = int(category)
+
+    sc=g.db.query(SubCategory).filter_by(id=category).first()
+    if not sc:
+        return jsonify({"error": f"Invalid category id"}), 400
 
     if board.is_locked_category:
         return jsonify({"error": "You can't do that right now."}), 403
 
-    board.subcat=category
+    board.subcat_id=sc.id
     g.db.add(board)
     g.db.flush()
 
@@ -1765,11 +1769,11 @@ def change_guild_category(v, board, bid, category):
         kind="update_settings",
         user_id=v.id,
         board_id=board.id,
-        note=f"category={board.subcat}"
+        note=f"category={sc.category.name} / {sc.name}"
     )
     g.db.add(ma)
 
-    return jsonify({"message": f"Category changed to `{category}`"})
+    return jsonify({"message": f"Category changed to {sc.category.name} / {sc.name}"})
 
 
 
