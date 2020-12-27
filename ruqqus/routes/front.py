@@ -329,7 +329,7 @@ def front_all(v):
     new_cats=request.args.get('cats','')
     if new_cats:
         #print('overwrite cats')
-        new_cats=new_cats.split(',')
+        new_cats=[int(x) for x in new_cats.split(',')]
         session['catids']=new_cats
         cats=new_cats
         session.modified=True
