@@ -19,12 +19,6 @@ class Category(Base, Stndrd):
 
     _subcats = relationship("SubCategory", lazy="joined", primaryjoin="SubCategory.cat_id==Category.id")
 
-    def __init__(self, *args, **kwargs):
-        if "created_utc" not in kwargs:
-            kwargs["created_utc"] = int(time.time())
-
-        super().__init__(*args, **kwargs)
-
     @property
     @lazy
     def subcats(self):
@@ -55,12 +49,6 @@ class SubCategory(Base, Stndrd):
     _visible = Column(Boolean, default=0)
 
     category = relationship("Category", lazy="joined")
-
-    def __init__(self, *args, **kwargs):
-        if "created_utc" not in kwargs:
-            kwargs["created_utc"] = int(time.time())
-
-        super().__init__(*args, **kwargs)
 
     @property
     def visible(self):
