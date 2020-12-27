@@ -31,7 +31,7 @@ class Category(Base, Stndrd, Age_times):
     def subcats(self):
         l=[i for i in self._subcats]
 
-        return l.sorted(key=lambda x:x.name)
+        return l.sort(key=lambda x:x.name)
     
 
     @property
