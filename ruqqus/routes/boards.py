@@ -1754,7 +1754,7 @@ def change_guild_category(v, board, bid, category):
 
     category = int(category)
 
-    sc=g.db.query(SubCategory).filter_by(id=category).first
+    sc=g.db.query(SubCategory).filter_by(id=category).first()
     if not sc:
         return jsonify({"error": f"Invalid category id"}), 400
 
