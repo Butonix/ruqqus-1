@@ -64,9 +64,10 @@ class Board(Base, Stndrd, Age_times):
     last_yank_utc=Column(Integer, default=0)
     is_locked_category = Column(Boolean, default=False)
     subcat_id=Column(Integer, ForeignKey("subcategories.id"), default=0)
+    subcat=Column(String)
 
 
-    subcat=relationship("SubCategory", lazy="joined")
+    #subcat=relationship("SubCategory", lazy="joined")
     moderators=relationship("ModRelationship")
     subscribers=relationship("Subscription", lazy="dynamic")
     submissions=relationship("Submission", primaryjoin="Board.id==Submission.board_id")
