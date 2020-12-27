@@ -60,12 +60,13 @@ class Board(Base, Stndrd, Age_times):
     rank_trending=Column(Float, default=0)
     stored_subscriber_count=Column(Integer, default=1)
     all_opt_out=Column(Boolean, default=False)
-    subcat=Column(String(32), default=None)
     is_siegable=Column(Boolean, default=True)
     last_yank_utc=Column(Integer, default=0)
     is_locked_category = Column(Boolean, default=False)
+    subcat_id=Column(Integer, default=None)
 
 
+    subcat=Relationship("SubCategory", lazy="joined")
     moderators=relationship("ModRelationship")
     subscribers=relationship("Subscription", lazy="dynamic")
     submissions=relationship("Submission", primaryjoin="Board.id==Submission.board_id")
@@ -568,123 +569,3 @@ class Board(Base, Stndrd, Age_times):
         return mod.__dict__[f"perm_{perm}"]
 
 
-CATEGORIES=[
-  #      { id: 0,
-  #        'name': 'all guilds',
-  #        'subCats': [],
-  #        'icon': 'fa-globe',
-  #        'color': null,
-  #        'visible': True
-  #      },
-        { id: 1,
-          'name': 'Arts',
-          'subCats': [{'name': 'Animation'}, {'name': 'Production'}, {'name': 'Photography'}, {'name': 'Music'}],
-          'icon': 'fa-palette',
-          'color': 'purple-400',
-          'visible': True
-        },
-        { id: 2,
-          'name': 'Business',
-          'subCats': [{'name': 'Finance'}, {'name': 'Cryptocurrency'}, {'name': 'Entrepreneurship'}],
-          'icon': 'fa-chart-line',
-          'color': 'purple-400',
-          'visible': True
-        },
-        { id: 3,
-          'name': 'Culture',
-          'subCats': [{'name': 'History'}, {'name': 'Language'}, {'name': 'Religion'}],
-          'icon': 'fa-users',
-          'color': 'purple-400',
-          'visible': True
-        },
-        { id: 4,
-          'name': 'Discussion',
-          'subCats': [{'name': 'Casual Discussion'}, {'name': 'Serious'}, {'name': 'Drama'}, {'name': 'Ruqqus Meta'}, {'name': 'Q&A'}],
-          'icon': 'fa-podium',
-          'color': 'purple-400',
-          'visible': True
-        },
-        { id: 5,
-          'name': 'Entertainment',
-          'subCats': [{'name': 'Celebrities'}, {'name': 'Entertainment news'}, {'name': 'Film & TV'}],
-          'icon': 'fa-theater-masks',
-          'color': 'purple-400',
-          'visible': True
-        },
-        { id: 6,
-          'name': 'Gaming',
-          'subCats': [{'name': 'PC'}, {'name': 'Console'}, {'name': 'Tabletop'}, {'name': 'Gaming news'}, {'name': 'Development'}],
-          'icon': 'fa-alien-monster',
-          'color': 'purple-400',
-          'visible': True
-        },
-        { id: 7,
-          'name': 'Hobby',
-          'subCats': [{'name': 'Crafts'}, {'name': 'Outdoors'}, {'name': 'DIY'}, {'name': 'Niche'}],
-          'icon': 'fa-wrench',
-          'color': 'purple-400',
-          'visible': True
-        },
-        { id: 8,
-          'name': 'Health',
-          'subCats': [{'name': 'Medical'}, {'name': 'Fitness'}, {'name': 'Mental Health'}],
-          'icon': 'fa-heart',
-          'color': 'purple-400',
-          'visible': True
-        },
-        { id: 9,
-          'name': 'Lifestyle',
-          'subCats': [{'name': 'Fashion'}, {'name': 'Beauty'}, {'name': 'Food'}, {'name': 'Relationships'}],
-          'icon': 'fa-tshirt',
-          'color': 'purple-400',
-          'visible': True
-        },
-        { id: 10,
-          'name': 'Memes',
-          'subCats': [{'name': 'Casual'}, {'name': 'Dank'}, {'name': 'Political'}, {'name': 'Offensive', 'visible':False}],
-          'icon': 'fa-grin',
-          'color': 'purple-400',
-          'visible': True
-        },
-        { id: 11,
-          'name': 'News',
-          'subCats': [{'name': 'Local'}, {'name': 'North America'}, {'name': 'World'}, {'name': 'Upbeat'}],
-          'icon': 'fa-newspaper',
-          'color': 'purple-400',
-          'visible': True
-        },
-        { id: 12,
-          'name': 'Politics',
-          'subCats': [{'name': 'Left'}, {'name': 'Right'}, {'name': 'Authoritarian'}, {'name': 'Libertarian'}, {'name': 'Activism'}, {'name': 'Offbeat'}, {'name': 'Political News'}],
-          'icon': 'fa-university',
-          'color': 'purple-400',
-          'visible': False
-        },
-        { id: 13,
-          'name': 'Science',
-          'subCats': [{'name': 'Biology'}, {'name': 'Physics'}, {'name': 'AI'}, {'name': 'Space'}, {'name': 'Science News'}],
-          'icon': 'fa-flask',
-          'color': 'purple-400',
-          'visible': True
-        },
-        { id: 14,
-          'name': 'Sports',
-          'subCats': [{'name': 'Baseball'}, {'name': 'Basketball'}, {'name': 'American Football'}, {'name': 'Soccer'}, {'name': 'Tennis'}, {'name': 'Hockey'}, {'name': 'Martial Arts'}, {'name': 'Sports News'}],
-          'icon': 'fa-baseball-ball',
-          'color': 'purple-400',
-          'visible': True
-        },
-        { id: 15,
-          'name': 'Technology',
-          'subCats': [{'name': 'Gadgets'}, {'name': 'Programming'}, {'name': 'Hardware'}, {'name': 'Software'}, {'name': 'Design'}, {'name': 'Tech News'}, {'name': 'Tech Help'}],
-          'icon': 'fa-microchip',
-          'color': 'purple-400',
-          'visible': True
-        }
-    ]
-
-
-SUBCATS = []
-for x in CATEGORIES:
-    for y in x['subCats']:
-        SUBCATS.append(y['name'])
