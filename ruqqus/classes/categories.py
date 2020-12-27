@@ -17,13 +17,21 @@ class Category(Base, Stndrd, Age_times):
     visible = Column(Boolean, default=True)
     created_utc = Column(Integer, default=0)
 
-    subcats = relationship("SubCategory", lazy="joined", primaryjoin="SubCategory.cat_id==Category.id")
+    _subcats = relationship("SubCategory", lazy="joined", primaryjoin="SubCategory.cat_id==Category.id")
 
     def __init__(self, *args, **kwargs):
         if "created_utc" not in kwargs:
             kwargs["created_utc"] = int(time.time())
 
         super().__init__(*args, **kwargs)
+
+    @property
+    @lazy
+    def subcats(self):
+        l=[i for i in self._subcats]
+
+        return l.sorted(key=lambda x:x.name)
+    
 
     @property
     def json(self):
@@ -70,7 +78,7 @@ class SubCategory(Base, Stndrd, Age_times):
             "created_date": self.created_date
         }
 
-CATEGORIES = [i for i in db_session().query(Category).order_by(Category.name.desc()).all()]
+CATEGORIES = [i for i in db_session().query(Category).order_by(Category.name.asc()).all()]
 
 # class GuildCategory(Base, Stndrd, Age_times):
 #     __tablename__ = "guildcategories"
