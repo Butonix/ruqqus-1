@@ -333,15 +333,15 @@
           <div class="card">
             <div class="card-header" id="heading-{{ loop.index }}">
               <h2 class="mb-0">
-                <button class="btn btn-link btn-block text-left text-muted collapsed" type="button" data-toggle="collapse" data-target="#collapse-{{ loop.index }}" aria-expanded="true" aria-controls="collapse-{{ loop.index }}"><i class="fas {{ c['icon'] }} fa-fw ml-n1 mr-2"></i>{{ c['name']}}</button>
+                <button class="btn btn-link btn-block text-left text-muted collapsed" type="button" data-toggle="collapse" data-target="#collapse-{{ loop.index }}" aria-expanded="true" aria-controls="collapse-{{ loop.index }}"><i class="fas {{ c['icon'] }} fa-fw ml-n1 mr-2"></i>{{ c.name }}</button>
               </h2>
             </div>
             <div id="collapse-{{ loop.index }}" class="collapse" aria-labelledby="header-{{ loop.index }}" data-parent="#accordionCats">
               <div class="card-body">
-                {% for subcat in c['subCats'] %}
+                {% for subcat in c.subcats %}
                   <div class="custom-control custom-checkbox mb-2">
-                    <input type="checkbox" class="custom-control-input cat-check" id="cat-{{ subcat['name'] }}" data-cat="{{ subcat['name'] | urlencode }}" onchange="togglecat('{{ sort_method }}')"{% if subcat['name'] in session.get('cats',[]) %} checked{% endif %}>
-                    <label class="custom-control-label" for="cat-{{ subcat['name'] }}">{{ subcat['name'] }}</label>
+                    <input type="checkbox" class="custom-control-input cat-check" id="cat-{{ subcat.base36id }}" data-cat="{{ subcat.id }}" onchange="togglecat('{{ sort_method }}')"{% if subcat.name in session.get('catids',[]) %} checked{% endif %}>
+                    <label class="custom-control-label" for="cat-{{ subcat.base36id }}">{{ subcat.name }}</label>
                   </div>
                 {% endfor %}
               </div>
