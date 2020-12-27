@@ -1751,13 +1751,16 @@ def board_comments(boardname, v):
 @validate_formkey
 def change_guild_category(v, board, bid, category):
 
-    if category not in SUBCATS:
-        return jsonify({"error": f"Invalid category `{category}`"}), 400
+    category = int(category)
+
+    sc=g.db.query(SubCategory).filter_by(id=category).first
+    if not sc:
+        return jsonify({"error": f"Invalid category id"}), 400
 
     if board.is_locked_category:
         return jsonify({"error": "You can't do that right now."}), 403
 
-    board.subcat=category
+    board.subcat_id=sc.id
     g.db.add(board)
     g.db.flush()
 
@@ -1765,11 +1768,11 @@ def change_guild_category(v, board, bid, category):
         kind="update_settings",
         user_id=v.id,
         board_id=board.id,
-        note=f"category={board.subcat}"
+        note=f"category={sc.category.name} / {cat.name}"
     )
     g.db.add(ma)
 
-    return jsonify({"message": f"Category changed to `{category}`"})
+    return jsonify({"message": f"Category changed to {sc.category.name} / {cat.name}"})
 
 
 
