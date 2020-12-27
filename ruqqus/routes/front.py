@@ -9,7 +9,7 @@ from ruqqus.helpers.get import *
 
 from ruqqus.__main__ import app, cache
 from ruqqus.classes.submission import Submission
-from ruqqus.classes.boards import CATEGORIES, SUBCATS
+from ruqqus.classes.categories import CATEGORIES
 
 
 @app.route("/post/", methods=["GET"])
@@ -295,10 +295,10 @@ def home(v):
 def default_cat_cookie():
 
     output=[]
-    for x in CATEGORIES:
-        for y in x['subCats']:
-            if y.get('visible', x['visible']):
-                output.append(y['name'])
+    for cat in CATEGORIES:
+        for subcat in cat.subcats:
+            if subcat.visible:
+                output.append(subcat.id)
     return output
 
 
