@@ -348,6 +348,10 @@
             </div>
           </div>
           {% endfor %}
+          <div class="custom-control custom-checkbox mb-2">
+            <input type="checkbox" class="custom-control-input cat-check" id="cat-0" data-cat="0" onchange="togglecat('{{ sort_method }}')"{% if 0 in session.get('catids',[]) %} checked{% endif %}>
+            <label class="custom-control-label" for="cat-0">Uncategorized</label>
+          </div>
         </div>
       </div>
     </div>
