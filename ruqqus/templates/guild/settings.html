@@ -206,7 +206,7 @@
                     {% for category in categories %}
                         <option disabled>{{ category.name }}</option>
 
-                        {% for subcat in category. %}
+                        {% for subcat in category.subcats %}
                           <option value="{{ subcat.id }}"{% if subcat.id==b.subcat_id %} selected{% endif %}> - {{ subcat. }}</option>
                         {% endfor %}
                     {% endfor %}
