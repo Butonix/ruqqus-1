@@ -192,6 +192,10 @@ class User(Base, Stndrd, Age_times):
     def age(self):
         return int(time.time()) - self.created_utc
 
+    @property
+    def active_queue(self):
+        return self.submissions.filter(Submission.created_utc >= int(time.time())).count()
+
     @cache.memoize(timeout=300)
     def idlist(self, sort="hot", page=1, t=None, filter_words="", **kwargs):
 
