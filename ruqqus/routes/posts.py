@@ -367,7 +367,19 @@ def submit_post(v):
     board_name = board_name.rstrip()
 
     board = get_guild(board_name, graceful=True)
-    if queue_time and board and not board.can_queue:
+    if queue_time and board and not board.has_mod(v):
+        return {"html": lambda: (render_template("submit.html",
+                                                 v=v,
+                                                 error=f"Only Guildmasters can queue posts in this guild.",
+                                                 title=title,
+                                                 url=url, body=request.form.get(
+                "body", ""),
+                                                 b=get_guild("general",
+                                                             graceful=True)
+                                                 ), 401),
+                "api": lambda: (jsonify({"error": f"Only Guildmasters can queue posts in this guild."}))
+                }
+    if queue_time and board and not board.can_queue(v):
         return {"html": lambda: (render_template("submit.html",
                                                  v=v,
                                                  error=f"{v.username}'s post queue is currently full.",
