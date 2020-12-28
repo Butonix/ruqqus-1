@@ -338,6 +338,9 @@ def mod_accept_bid_pid(bid, pid, board, v):
     if not post.board_id == board.id:
         abort(400)
 
+    if post.mod_approved:
+        return ({"error":"Already approved"})
+
     post.mod_approved = v.id
     g.db.add(post)
 
