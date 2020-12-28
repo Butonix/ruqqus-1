@@ -205,7 +205,16 @@ def get_post_title(v):
     except BaseException:
         return jsonify({"error": f"Could not find a title"}), 400
 
-
+times = {
+    "10m": 10*60,
+    "30m": 30*60,
+    "1h": 60*60,
+    "3h":3*60*60,
+    "6h": 6*60*60,
+    "12h": 12*60*60,
+    "1d": 24*60*60,
+    "3d":3*24*60*60
+}
 @app.route("/submit", methods=['POST'])
 @app.route("/api/v1/submit", methods=["POST"])
 #@limiter.limit("6/minute")
@@ -224,6 +233,13 @@ def submit_post(v):
     title = title.replace("\t", "")
 
     url = request.form.get("url", "")
+
+    queue_time = request.form.get("queue", "")
+    if queue_time in times.keys():
+        created_time = int(time.time()) + times[queue_time]
+    else:
+        created_time = int(time.time())
+
 
     board = get_guild(request.form.get('board', 'general'), graceful=True)
     if not board:
@@ -603,7 +619,8 @@ def submit_post(v):
                           repost_id=repost.id if repost else None,
                           is_offensive=is_offensive,
                           is_politics=is_politics,
-                          app_id=v.client.application.id if v.client else None
+                          app_id=v.client.application.id if v.client else None,
+                          created_utc=created_time
                           )
 
     g.db.add(new_post)
