@@ -235,9 +235,10 @@ def submit_post(v):
     url = request.form.get("url", "")
 
     queue_time = request.form.get("queue", "")
-    if queue_time in times.keys():
+    if queue_time and queue_time in times.keys():
         created_time = int(time.time()) + times[queue_time]
     else:
+        queue_time = None
         created_time = int(time.time())
 
 
