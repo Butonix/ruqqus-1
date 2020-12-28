@@ -367,7 +367,18 @@ def submit_post(v):
     board_name = board_name.rstrip()
 
     board = get_guild(board_name, graceful=True)
-
+    if queue_time and board and not board.can_queue:
+        return {"html": lambda: (render_template("submit.html",
+                                                 v=v,
+                                                 error=f"{v.username}'s post queue is currently full.",
+                                                 title=title,
+                                                 url=url, body=request.form.get(
+                                                     "body", ""),
+                                                 b=get_guild("general",
+                                                             graceful=True)
+                                                 ), 400),
+                "api": lambda: (jsonify({"error": f"{v.username}'s post queue is currently full."}))
+                }
     if not board:
         board = get_guild('general')
 
