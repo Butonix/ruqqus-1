@@ -150,6 +150,9 @@ class Board(Base, Stndrd, Age_times):
                 return True
         return False
 
+    @property
+    def active_queue(self):
+        return self.submissions.filter(Submission.created_utc >= int(time.time())).count()
 
     @cache.memoize(timeout=60)
     def idlist(self, sort="hot", page=1, t=None,
