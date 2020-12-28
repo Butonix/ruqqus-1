@@ -126,7 +126,7 @@ def create_board_post(v):
                       description_html=description_html,
                       over_18=bool(request.form.get("over_18", "")),
                       creator_id=v.id,
-                      subcat_id=subcat
+                      subcat_id=subcat.id
                       )
 
     g.db.add(new_board)
