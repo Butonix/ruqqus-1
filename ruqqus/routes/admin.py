@@ -14,6 +14,7 @@ from ruqqus.helpers.get import *
 from ruqqus.classes import *
 from ruqqus.classes.domains import reasons as REASONS
 from ruqqus.routes.admin_api import create_plot, user_stat_data
+from ruqqus.classes.categories import CATEGORIES
 from flask import *
 from ruqqus.__main__ import app
 
@@ -634,6 +635,54 @@ def admin_domain_domain(domain_name, v):
         domain_name=domain_name,
         domain=domain,
         reasons=REASONS
+        )
+
+@app.route("/admin/category", methods=["POST"])
+@admin_level_required(4)
+@validate_formkey
+def admin_category_lock(v):
+
+    board=get_guild(request.form.get("board"))
+
+    cat_id=int(request.form.get("category"))
+
+    sc=g.db.query(SubCategory).filter_by(id=cat_id).first()
+    if not sc:
+        abort(400)
+
+    board.subcat_id=cat_id
+    board.is_locked_category=True
+
+    g.db.add(board)
+
+    ma1=ModAction(
+        board_id=board.id,
+        user_id=v.id,
+        kind="update_settings",
+        note=f"category={sc.category.name} / {sc.name} | admin action"
+        )
+    g.db.add(ma1)
+    ma2=ModAction(
+        board_id=board.id,
+        user_id=v.id,
+        kind="update_settings",
+        note=f"category_locked=True | admin action"
+        )
+
+    g.db.add(ma2)
+
+    return redirect(f"{board.permalink}/mod/log")
+
+
+@app.route("/admin/category", methods=["GET"])
+@admin_level_required(4)
+def admin_category_get(v):
+
+    return render_template(
+        "admin/category.html", 
+        v=v,
+        categories=CATEGORIES,
+        b=get_board(request.args.get("guild"), graceful=True)
         )
 
 

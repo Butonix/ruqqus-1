@@ -126,7 +126,7 @@ def create_board_post(v):
                       description_html=description_html,
                       over_18=bool(request.form.get("over_18", "")),
                       creator_id=v.id,
-                      subcat_id=subcat
+                      subcat_id=subcat.id
                       )
 
     g.db.add(new_board)
@@ -338,6 +338,9 @@ def mod_accept_bid_pid(bid, pid, board, v):
     if not post.board_id == board.id:
         abort(400)
 
+    if post.mod_approved:
+        return ({"error":"Already approved"})
+
     post.mod_approved = v.id
     g.db.add(post)
 
@@ -371,7 +374,7 @@ def mod_ban_bid_user(bid, board, v):
     if user.id == v.id:
         return jsonify({"error": "You can't exile yourself."}), 409
 
-    if board.has_ban(user):
+    if g.db.query(BanRelationship).filter_by(user_id=user.id, board_id=board.id, is_active=True).first():
         return jsonify({"error": f"@{user.username} is already exiled from +{board.name}."}), 409
 
     if board.has_contributor(user):
@@ -602,7 +605,7 @@ def mod_invite_username(bid, board, v):
         g.db.add(x)
 
     else:
-        new_mod = ModRelationship(
+        x = ModRelationship(
             user_id=user.id,
             board_id=board.id,
             accepted=False,
@@ -616,14 +619,14 @@ def mod_invite_username(bid, board, v):
         text = f"You have been invited to join +{board.name} as a guildmaster. You can [click here]({board.permalink}/mod/mods) and accept this invitation. Or, if you weren't expecting this, you can ignore it."
         send_notification(user, text)
 
-        g.db.add(new_mod)
+        g.db.add(x)
 
     ma=ModAction(
         kind="invite_mod",
         user_id=v.id,
         target_user_id=user.id,
         board_id=board.id,
-        note=new_mod.permchangelist
+        note=x.permchangelist
         )
     g.db.add(ma)
 

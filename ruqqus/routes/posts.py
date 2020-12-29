@@ -399,25 +399,43 @@ def submit_post(v):
     # similarity check
     now = int(time.time())
     cutoff = now - 60 * 60 * 24
+
+
     similar_posts = g.db.query(Submission).options(
         lazyload('*')
-    ).join(Submission.submission_aux
-           ).filter(
-        Submission.author_id == v.id,
-        SubmissionAux.title.op(
-            '<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
-        Submission.created_utc > cutoff
+        ).join(
+            Submission.submission_aux
+        ).filter(
+            or_(
+                and_(
+                    Submission.author_id == v.id,
+                    SubmissionAux.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+                    Submission.created_utc > cutoff
+                ),
+                and_(
+                    SubmissionAux.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"]/2,
+                    Submission.created_utc > cutoff
+                )
+            )
     ).all()
 
     if url:
         similar_urls = g.db.query(Submission).options(
             lazyload('*')
-        ).join(Submission.submission_aux
-               ).filter(
-            Submission.author_id == v.id,
-            SubmissionAux.url.op(
-                '<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
-            Submission.created_utc > cutoff
+        ).join(
+            Submission.submission_aux
+        ).filter(
+            or_(
+                and_(
+                    Submission.author_id == v.id,
+                    SubmissionAux.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
+                    Submission.created_utc > cutoff
+                ),
+                and_(
+                    SubmissionAux.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"]/2,
+                    Submission.created_utc > cutoff
+                )
+            )
         ).all()
     else:
         similar_urls = []
@@ -447,7 +465,7 @@ def submit_post(v):
             g.db.add(post)
             ma=ModAction(
                     user_id=1,
-                    target_post_id=comment.id,
+                    target_post_id=post.id,
                     kind="ban_post",
                     board_id=post.board_id,
                     note="spam"
