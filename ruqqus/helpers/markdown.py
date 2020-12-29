@@ -8,7 +8,7 @@ from flask import g
 
 #preprocess re
 
-enter_re=re.compile("(\n\r?){3,}")
+enter_re=re.compile("(\n\r?\w+){3,}")
 
 
 
@@ -98,6 +98,8 @@ class CustomRenderer(HTMLRenderer):
 
     
 def preprocess(text):
+
+    text=text.lstrip().rstrip()
     
     text=re.sub(enter_re, "\n\n", text)
     
