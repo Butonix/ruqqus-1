@@ -657,14 +657,14 @@ def admin_category_lock(v):
     ma1=ModAction(
         board_id=board.id,
         user_id=v.id,
-        kind="update_settings"
+        kind="update_settings",
         note=f"category={sc.category.name} / {sc.name} | admin action"
         )
     g.db.add(ma1)
     ma2=ModAction(
         board_id=board.id,
         user_id=v.id,
-        kind="update_settings"
+        kind="update_settings",
         note=f"category_locked=True | admin action"
         )
 
