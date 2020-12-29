@@ -680,7 +680,8 @@ def admin_category_get(v):
     return render_template(
         "admin/category.html", 
         v=v,
-        categories=CATEGORIES
+        categories=CATEGORIES,
+        b=get_board(request.args.get("guild"), graceful=True)
         )
 
 
