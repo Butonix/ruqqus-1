@@ -374,7 +374,7 @@ def mod_ban_bid_user(bid, board, v):
     if user.id == v.id:
         return jsonify({"error": "You can't exile yourself."}), 409
 
-    if board.has_ban(user):
+    if g.db.query(BanRelationship).filter_by(user_id=user.id, board_id=board.id, is_active=True).first():
         return jsonify({"error": f"@{user.username} is already exiled from +{board.name}."}), 409
 
     if board.has_contributor(user):
