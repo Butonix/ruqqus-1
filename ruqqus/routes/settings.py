@@ -62,6 +62,8 @@ def settings_profile_post(v):
     if request.values.get("bio") is not None:
         bio = request.values.get("bio")[0:256]
 
+        bio=preprocess(bio)
+
         if bio == v.bio:
             return render_template("settings_profile.html",
                                    v=v,
