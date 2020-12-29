@@ -411,23 +411,31 @@ def submit_post(v):
                     Submission.author_id == v.id,
                     SubmissionAux.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
                     Submission.created_utc > cutoff
-                    ),
+                ),
                 and_(
                     SubmissionAux.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"]/2,
                     Submission.created_utc > cutoff
-                    )
                 )
+            )
     ).all()
 
     if url:
         similar_urls = g.db.query(Submission).options(
             lazyload('*')
-        ).join(Submission.submission_aux
-               ).filter(
-            Submission.author_id == v.id,
-            SubmissionAux.url.op(
-                '<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
-            Submission.created_utc > cutoff
+        ).join(
+            Submission.submission_aux
+        ).filter(
+            or_(
+                and_(
+                    Submission.author_id == v.id,
+                    SubmissionAux.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
+                    Submission.created_utc > cutoff
+                ),
+                and_(
+                    SubmissionAux.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"]/2,
+                    Submission.created_utc > cutoff
+                )
+            )
         ).all()
     else:
         similar_urls = []
