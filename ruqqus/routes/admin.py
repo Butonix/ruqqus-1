@@ -651,6 +651,7 @@ def admin_category_lock(v):
         abort(400)
 
     board.subcat_id=cat_id
+    board.is_locked_category=True
 
     g.db.add(board)
 
