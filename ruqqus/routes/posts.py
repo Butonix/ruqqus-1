@@ -399,14 +399,24 @@ def submit_post(v):
     # similarity check
     now = int(time.time())
     cutoff = now - 60 * 60 * 24
+
+
     similar_posts = g.db.query(Submission).options(
         lazyload('*')
-    ).join(Submission.submission_aux
-           ).filter(
-        Submission.author_id == v.id,
-        SubmissionAux.title.op(
-            '<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
-        Submission.created_utc > cutoff
+        ).join(
+            Submission.submission_aux
+        ).filter(
+            or_(
+                and_(
+                    Submission.author_id == v.id,
+                    SubmissionAux.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+                    Submission.created_utc > cutoff
+                    ),
+                and_(
+                    SubmissionAux.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"]/2,
+                    Submission.created_utc > cutoff
+                    )
+                )
     ).all()
 
     if url:
