@@ -1989,5 +1989,6 @@ var cattoggle=function(id){
 
   header=document.getElementById('cat-head-'+id)
   header.classList.toggle('bg-primary');
-  header.classList.toggle('text-white')
+  header.classList.toggle('text-muted');
+  header.classList.toggle('text-white');
 }
