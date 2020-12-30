@@ -1,0 +1,19 @@
+{% extends "home.html" %}
+
+{% block PseudoSubmitForm %}{% endblock %}
+{% block sidebarblock %}{% endblock %}
+
+{% block content %}
+<div class="card-columns">
+{% for cat in categories %}
+	<div class="card">
+		<div class="card-body">
+			<h4 class="card-title"><i class="fas {{ cat.icon }}"></i>{{ cat.name }}</h4>
+			{% for sc in cat.subcats %}
+			<p>{{ sc.name }}</p>
+			{% endfor %}
+		</div>
+	</div>
+{% endfor %}
+</div>
+{% endblock %}
