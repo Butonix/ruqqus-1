@@ -318,10 +318,12 @@ def front_all(v):
 
     cats=session.get("catids")
     if not cats:
-        return render_template(
-            "categorylisting.html",
-            v=v,
-            categories=CATEGORIES
+        return make_response(
+            render_template(
+                "categorylisting.html",
+                v=v,
+                categories=CATEGORIES
+                )
             )
 
     new_cats=request.args.get('cats','')
