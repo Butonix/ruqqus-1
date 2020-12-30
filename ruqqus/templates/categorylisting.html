@@ -12,12 +12,10 @@
   <div class="card-columns">
   {% for cat in categories %}
     <div class="card">
-      <div class="card-header m-0 p-0" id="cat-head-{{ cat.base36id }}" onclick="document.getElementById('group-{{ cat.base36id }}').click()">
-        <h2 class="m-0 p-0">
-        <button class="btn btn-link btn-block text-left text-muted collapsed px-4 py-2" type="button" data-toggle="collapse" data-target="#collapse-cat-{{ cat.base36id }}" aria-expanded="true" aria-controls="collapse-3"><i class="fas {{ cat.icon }} fa-fw ml-n1 mr-2"></i>{{ cat.name }}
-        </button>
+      <button class="card-header btn btn-link btn-block text-left text-muted px-4 py-2" id="cat-head-{{ cat.base36id }}" onclick="document.getElementById('group-{{ cat.base36id }}').click()">
+        <h2 class="m-0 p-0"><i class="fas {{ cat.icon }} fa-fw ml-n1 mr-2"></i>{{ cat.name }}
         </h2>
-      </div>
+      </button>
       <input type="checkbox" class="d-none" id="group-{{ cat.base36id }}">
       <div class="d-none">
         <ul class="list-group list-group-flush">
