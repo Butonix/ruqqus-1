@@ -4,13 +4,17 @@
 {% block sidebarblock %}{% endblock %}
 
 {% block content %}
+<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+  <i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
+  <span>Welcome to Ruqqus! Pick some topics that interest you to get started.</span>
+</div>
 <div class="card-columns">
 {% for cat in categories %}
   <div class="card">
     <div class="card-body">
       <h4 class="card-title text-primary"><i class="fas {{ cat.icon }} fa-fw pr-1"></i>{{ cat.name }}</h4>
       {% for subcat in cat.subcats %}
-        <div class="custom-control custom-checkbox mb-2">
+        <div class="custom-control custom-checkbox mb-1">
           <input type="checkbox" class="custom-control-input cat-check" id="cat-{{ subcat.base36id }}" data-cat="{{ subcat.id }}">
           <label class="custom-control-label" for="cat-{{ subcat.base36id }}">{{ subcat.name }}</label>
         </div>
@@ -20,6 +24,7 @@
 {% endfor %}
 </div>
 <div class="card">
+<a href="javascript:void()" onclick="var x=document.getElementsByClassName('cat-check');for(i=0;i<x.length;i++){x[i].checked=true};togglecat('hot')" class="btn btn-secondary">No thanks</a>
 <a href="javascript:void()" onclick="togglecat('hot')" class="btn btn-primary">Apply Selections</a>
 </div>
 {% endblock %}
