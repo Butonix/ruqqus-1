@@ -318,13 +318,16 @@ def front_all(v):
 
     cats=session.get("catids")
     if not cats:
-        return make_response(
-            render_template(
-                "categorylisting.html",
-                v=v,
-                categories=CATEGORIES
-                )
-            )
+        cats=default_cat_cookie()
+        session['catids']=cats
+        session.modified=True
+        # return make_response(
+        #     render_template(
+        #         "categorylisting.html",
+        #         v=v,
+        #         categories=CATEGORIES
+        #         )
+        #     )
 
     new_cats=request.args.get('cats','')
     if new_cats:
