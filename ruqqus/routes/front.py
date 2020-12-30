@@ -300,6 +300,16 @@ def default_cat_cookie():
     output += [0]
     return output
 
+@app.route("/categories", methods=["GET"])
+@auth_desired
+def categories_select(v):
+    render_template(
+        "categorylisting.html",
+        v=v,
+        categories=CATEGORIES
+        )
+    )
+    
 
 @app.route("/all", methods=["GET"])
 @app.route("/api/v1/all/listing", methods=["GET"])
