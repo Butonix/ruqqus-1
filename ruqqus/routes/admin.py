@@ -651,7 +651,7 @@ def admin_category_lock(v):
         abort(400)
 
     board.subcat_id=cat_id
-    board.is_locked_category=True
+    lock=bool(request.form.get("lock"))
 
     g.db.add(board)
 
@@ -662,14 +662,16 @@ def admin_category_lock(v):
         note=f"category={sc.category.name} / {sc.name} | admin action"
         )
     g.db.add(ma1)
-    ma2=ModAction(
-        board_id=board.id,
-        user_id=v.id,
-        kind="update_settings",
-        note=f"category_locked=True | admin action"
-        )
 
-    g.db.add(ma2)
+    if lock != board.is_locked_category:
+        board.is_locked_category = lock
+        ma2=ModAction(
+            board_id=board.id,
+            user_id=v.id,
+            kind="update_settings",
+            note=f"category_locked={lock} | admin action"
+            )
+        g.db.add(ma2)
 
     return redirect(f"{board.permalink}/mod/log")
 
