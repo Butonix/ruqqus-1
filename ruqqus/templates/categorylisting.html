@@ -12,7 +12,7 @@
   <div class="card-columns">
   {% for cat in categories %}
     <div class="card">
-      <button class="card-header btn btn-link btn-block text-left text-muted px-4 py-2" id="cat-head-{{ cat.base36id }}" onclick="document.getElementById('group-{{ cat.base36id }}').click()">
+      <button class="card-header btn btn-link btn-block text-left text-muted px-4 py-2" id="cat-head-{{ cat.base36id }}" onclick="cattoggle('{{ cat.base36id }}')">
         <h2 class="m-0 p-0"><i class="fas {{ cat.icon }} fa-fw ml-n1 mr-2"></i>{{ cat.name }}
         </h2>
       </button>
