@@ -1881,17 +1881,17 @@ var tipModal2 = function(id, content, link, recipient, recipientPFP) {
   console.log(recipientPFP, id, content, link, recipient)
 }
 
-var togglecat = function(sort) {
+var togglecat = function(sort, reload=false) {
   var cbs = document.getElementsByClassName('cat-check');
   var l = []
   for (var i=0; i< cbs.length; i++) {
     l.push(cbs[i].checked)
   }
-  setTimeout(function(){triggercat(sort, l)}, 1000)
+  setTimeout(function(){triggercat(sort, l, reload)}, 1000)
   return l;
 }
 
-var triggercat=function(sort, cats) {
+var triggercat=function(sort, cats, reload) {
 
   var cbs = document.getElementsByClassName('cat-check');
   var l = []
@@ -1925,9 +1925,14 @@ var triggercat=function(sort, cats) {
   xhr.withCredentials=true;
 
   xhr.onload=function(){
-    var l = document.getElementById('posts');
-    l.innerHTML=xhr.response;
-    register_votes();
+    if (reload){
+      document.location.href='/trending'
+    }
+    else {
+      var l = document.getElementById('posts');
+      l.innerHTML=xhr.response;
+      register_votes();
+    }
   }
   xhr.send()
 }
