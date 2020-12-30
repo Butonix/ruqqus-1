@@ -9,7 +9,7 @@
   <div class="card">
     <div class="card-body">
       <h4 class="card-title text-primary"><i class="fas {{ cat.icon }} fa-fw pr-1"></i>{{ cat.name }}</h4>
-      {% for sc in cat.subcats %}
+      {% for subcat in cat.subcats %}
         <div class="custom-control custom-checkbox mb-2">
           <input type="checkbox" class="custom-control-input cat-check" id="cat-{{ subcat.base36id }}" data-cat="{{ subcat.id }}">
           <label class="custom-control-label" for="cat-{{ subcat.base36id }}">{{ subcat.name }}</label>
