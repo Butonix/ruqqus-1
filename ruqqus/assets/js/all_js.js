@@ -1989,5 +1989,4 @@ var cattoggle=function(id){
 
   card=document.getElementById('cat-card-'+id)
   card.classList.toggle('selected');
-  card.classList.toggle('text-white');
 }
