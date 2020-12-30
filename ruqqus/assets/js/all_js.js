@@ -1987,8 +1987,8 @@ var cattoggle=function(id){
     x[i].checked=check.checked
   }
 
-  header=document.getElementById('cat-head-'+id)
-  header.classList.toggle('bg-primary');
-  header.classList.toggle('text-muted');
-  header.classList.toggle('text-white');
+  card=document.getElementById('cat-card-'+id)
+  card.classList.toggle('selected');
+  card.classList.toggle('text-muted');
+  card.classList.toggle('text-white');
 }

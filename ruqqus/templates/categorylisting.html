@@ -12,7 +12,7 @@
   </div>
   <div class="card-columns">
   {% for cat in categories %}
-    <div class="card shadow rounded-lg text-primary border-0 overflow-hidden onboarding-card" onclick="cattoggle('{{ cat.base36id }}')">
+    <div class="card shadow rounded-lg text-primary border-0 overflow-hidden onboarding-card" onclick="cattoggle('{{ cat.base36id }}')" id="cat-card-{{ cat.base36id }}">
       <img src="https://i.pinimg.com/originals/eb/8a/2b/eb8a2b140e4b4540866d2f2e51c9a31a.gif" class="card-img h-100" alt="...">
       <div class="card-img-overlay onboarding-card-overlay d-flex justify-content-center align-items-center">
         <h5 class="card-title h4 mb-0"><i class="fas {{ cat.icon }} fa-fw mr-1"></i>{{ cat.name }}</h5>
