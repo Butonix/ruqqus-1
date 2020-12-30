@@ -13,16 +13,24 @@
   {% for cat in categories %}
     <div class="card">
       <div class="card-body">
-        <div class="card-title custom-control custom-checkbox mb-1">
-          <input type="checkbox" class="custom-control-input" id="group-{{ cat.base36id }}" onclick="var x=document.getElementsByClassName('group-{{ cat.base36id }}');for(i=0;i<x.length;i++){x[i].checked=document.getElementById('group-{{ cat.base36id }}').checked}">
-          <h4 class="custom-control-label" for="group-{{ cat.base36id }}"><i class="fas {{ cat.icon }} fa-fw pr-1"></i>{{ cat.name }}</h4>
+        <img class="card-img-top">
+        <div class="card-title">
+          <i class="fas {{ cat.icon }} fa-fw pr-1"></i>{{ cat.name }}
         </div>
+        <div class="card-subtitle custom-control custom-checkbox mb-1">
+          <input type="checkbox" class="custom-control-input" id="group-{{ cat.base36id }}" onclick="var x=document.getElementsByClassName('group-{{ cat.base36id }}');for(i=0;i<x.length;i++){x[i].checked=document.getElementById('group-{{ cat.base36id }}').checked}">
+          <label> class="custom-control-label" for="group-{{ cat.base36id }}">{{ cat.name }}</label>
+        </div>
+        <ul class="list-group list-group-flush">
         {% for subcat in cat.subcats %}
-          <div class="custom-control custom-checkbox mb-1">
-            <input type="checkbox" class="custom-control-input cat-check group-{{ cat.base36id }}" id="cat-{{ subcat.base36id }}" data-cat="{{ subcat.id }}">
-            <label class="custom-control-label" for="cat-{{ subcat.base36id }}">{{ subcat.name }}</label>
-          </div>
+          <li class="list-group-item">
+            <div class="custom-control custom-checkbox mb-1">
+              <input type="checkbox" class="custom-control-input cat-check group-{{ cat.base36id }}" id="cat-{{ subcat.base36id }}" data-cat="{{ subcat.id }}">
+              <label class="custom-control-label" for="cat-{{ subcat.base36id }}">{{ subcat.name }}</label>
+            </div>
+          </li>
         {% endfor %}
+        </ul>
       </div>
     </div>
   {% endfor %}
