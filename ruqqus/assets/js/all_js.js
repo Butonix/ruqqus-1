@@ -1978,7 +1978,7 @@ var permother=function() {
 
 var cattoggle=function(id){
 
-  var check = document.getElementById('group'+id);
+  var check = document.getElementById('group-'+id);
 
   check.click()
 
