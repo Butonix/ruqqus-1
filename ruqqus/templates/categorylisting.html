@@ -1,5 +1,6 @@
 {% extends "home.html" %}
 
+{% block content %}
 <div class="card-columns">
 {% for cat in categories %}
 	<div class="card">
@@ -12,5 +13,6 @@
 	</div>
 {% endfor %}
 </div>
+{% endblock %}
 
-{% block sidebar %}{% endblock %}
+{% block sidebarblock %}{% endblock %}
