@@ -35,7 +35,9 @@
   </div>
 </div>
 <div class="row">
-  <a href="javascript:void(0)" onclick="var x=document.getElementsByClassName('cat-check');for(i=0;i<x.length;i++){x[i].checked=true};togglecat('hot', reload=true)" class="btn btn-secondary ml-auto mr-2">No thanks</a>
-  <a href="javascript:void(0)" onclick="togglecat('hot', reload=true)" class="btn btn-primary">Apply Selections</a>
+  <div class="mr-2">
+    <a href="javascript:void(0)" onclick="var x=document.getElementsByClassName('cat-check');for(i=0;i<x.length;i++){x[i].checked=true};togglecat('hot', reload=true)" class="btn btn-secondary ml-auto mr-2">No thanks</a>
+    <a href="javascript:void(0)" onclick="togglecat('hot', reload=true)" class="btn btn-primary">Apply Selections</a>
+  </div>
 </div>
 {% endblock %}
