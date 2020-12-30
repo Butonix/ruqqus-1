@@ -1926,7 +1926,7 @@ var triggercat=function(sort, cats, reload) {
 
   xhr.onload=function(){
     if (reload){
-      document.location.href='/trending'
+      document.location.href='/all'
     }
     else {
       var l = document.getElementById('posts');

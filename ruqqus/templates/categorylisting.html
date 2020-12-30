@@ -7,7 +7,7 @@
 <div id="posts">
   <div class="alert alert-success alert-dismissible fade show my-3" role="alert">
     <i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
-    <span>Welcome to Ruqqus! Pick some topics that interest you to get started.</span>
+    <span>Welcome to Ruqqus! Pick some topics that interest you to get started. (You can always change these later.)</span>
   </div>
   <div class="card-columns">
   {% for cat in categories %}
@@ -27,6 +27,6 @@
 </div>
 <div class="row">
   <a href="javascript:void(0)" onclick="var x=document.getElementsByClassName('cat-check');for(i=0;i<x.length;i++){x[i].checked=true};togglecat('hot')" class="btn btn-secondary ml-auto mr-2">No thanks</a>
-  <a href="javascript:void(0)" onclick="togglecat('hot')" class="btn btn-primary">Apply Selections</a>
+  <a href="javascript:void(0)" onclick="togglecat('hot', reload=true)" class="btn btn-primary">Apply Selections</a>
 </div>
 {% endblock %}
