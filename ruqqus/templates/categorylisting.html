@@ -1,5 +1,16 @@
-{% for u in users %}
+{% extends "home.html" %}
 
-
-
+<div class="card-columns">
+{% for cat in categories %}
+	<div class="card">
+		<div class="card-body">
+			<h4 class="card-title">{{ cat.name }}</h4>
+			{% for sc in cat.subcats %}
+			<p>{{ sc.name }}</p>
+			{% endif %}
+		</div>
+	</div>
 {% endfor %}
+</div>
+
+{% block sidebar %}{% endblock %}
