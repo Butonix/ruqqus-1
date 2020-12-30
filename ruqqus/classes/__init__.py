@@ -20,4 +20,5 @@ from .titles import *
 from .paypal import *
 from .mod_logs import *
 from .categories import *
+from .strikes import *
 #from lodges import *
