@@ -296,6 +296,8 @@ def default_cat_cookie():
         for subcat in cat.subcats:
             if subcat.visible:
                 output.append(subcat.id)
+
+    output += [0]
     return output
 
 
