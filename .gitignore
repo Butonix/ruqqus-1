@@ -112,3 +112,4 @@ package-lock.json
 *.map
 tee_dee_templates/
 local.txt
+*.scssc
