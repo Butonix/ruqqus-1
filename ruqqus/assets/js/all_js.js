@@ -1975,3 +1975,19 @@ var permother=function() {
     }
   }
 }
+
+var cattoggle=function(id){
+
+  var check = document.getElementById('group'+id);
+
+  check.click()
+
+  var x=document.getElementsByClassName('group-{{ cat.base36id }}');
+  for (i=0;i<x.length;i++) {
+    x[i].checked=check.checked
+  }
+
+  header=document.getElementById('cat-head-'+id)
+  header.classList.toggle('bg-primary');
+  header.classList.toggle('text-white')
+}
