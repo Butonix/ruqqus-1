@@ -328,7 +328,8 @@ def front_all(v):
 
 
     cats=session.get("catids")
-    if not cats:
+    new_cats=request.args.get('cats','')
+    if not cats and not new_cats:
         return make_response(
             render_template(
                 "categorylisting.html",
@@ -338,7 +339,6 @@ def front_all(v):
             )
 
 
-    new_cats=request.args.get('cats','')
     if new_cats:
         #print('overwrite cats')
         new_cats=[int(x) for x in new_cats.split(',')]
