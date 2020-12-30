@@ -23,10 +23,7 @@
       <ul class="list-group list-group-flush">
       {% for subcat in cat.subcats %}
         <li class="list-group-item">
-          <div class="custom-control custom-checkbox mb-1">
-            <input type="checkbox" class="custom-control-input cat-check group-{{ cat.base36id }}" id="cat-{{ subcat.base36id }}" data-cat="{{ subcat.id }}">
-            <label class="custom-control-label" for="cat-{{ subcat.base36id }}">{{ subcat.name }}</label>
-          </div>
+          <input type="checkbox" class="cat-check group-{{ cat.base36id }}" id="cat-{{ subcat.base36id }}" data-cat="{{ subcat.id }}">
         </li>
       {% endfor %}
       </ul>
