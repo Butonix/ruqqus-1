@@ -1982,7 +1982,7 @@ var cattoggle=function(id){
 
   check.click()
 
-  var x=document.getElementsByClassName('group-{{ cat.base36id }}');
+  var x=document.getElementsByClassName('group-'+id);
   for (i=0;i<x.length;i++) {
     x[i].checked=check.checked
   }
