@@ -13,10 +13,14 @@
   <div class="card-columns">
   {% for cat in categories %}
     <div class="card p-0 border-0">
-      <button class="card-header btn btn-link btn-block text-left text-muted px-4 py-3 border-1 border-light rounded" id="cat-head-{{ cat.base36id }}" onclick="cattoggle('{{ cat.base36id }}')">
-        <h4 class="m-0 p-0"><i class="fas {{ cat.icon }} fa-fw mr-2"></i>{{ cat.name }}
-        </h4>
-      </button>
+                  <div class="col mb-4">
+                    <div class="card shadow rounded-lg text-white border-0 overflow-hidden onboarding-card" onclick="cattoggle('{{ cat.base36id }}')" data-cat="arts">
+                      <img src="https://i.pinimg.com/originals/eb/8a/2b/eb8a2b140e4b4540866d2f2e51c9a31a.gif" class="card-img h-100" alt="...">
+                      <div class="card-img-overlay onboarding-card-overlay d-flex justify-content-center align-items-center">
+                        <h5 class="card-title h4 mb-0"><i class="fas {{ cat.icon }} fa-fw mr-1"></i>{{ cat.name }}</h5>
+                      </div>
+                    </div>
+                  </div>
       <input type="checkbox" class="d-none" id="group-{{ cat.base36id }}">
       <div class="d-none">
         <ul class="list-group list-group-flush">
