@@ -18,11 +18,10 @@
         </button>
         </h2>
       </div>
-      <div>
-        <div class="card-subtitle custom-control custom-checkbox mb-1">
-          <input type="checkbox" class="custom-control-input" id="group-{{ cat.base36id }}" onclick="var x=document.getElementsByClassName('group-{{ cat.base36id }}');for(i=0;i<x.length;i++){x[i].checked=document.getElementById('group-{{ cat.base36id }}').checked}">
-          <label class="custom-control-label" for="group-{{ cat.base36id }}">{{ cat.name }}</label>
-        </div>
+      <div class="card-subtitle custom-control custom-checkbox mb-1">
+        <input type="checkbox" class="custom-control-input" id="group-{{ cat.base36id }}" onclick="var x=document.getElementsByClassName('group-{{ cat.base36id }}');for(i=0;i<x.length;i++){x[i].checked=document.getElementById('group-{{ cat.base36id }}').checked}">
+        <label class="custom-control-label" for="group-{{ cat.base36id }}">{{ cat.name }}</label>
+      </div>
       <div class="card-body">
         <ul class="list-group list-group-flush">
         {% for subcat in cat.subcats %}
