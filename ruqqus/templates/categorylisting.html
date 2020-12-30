@@ -4,15 +4,16 @@
 {% block sidebarblock %}{% endblock %}
 
 {% block content %}
-<div id="posts">
+<div>
   <div class="alert alert-success alert-dismissible fade show my-3" role="alert">
     <i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
     <span>Welcome to Ruqqus! Pick some topics that interest you to get started. (You can always change these later.)</span>
   </div>
   <div class="card-columns">
   {% for cat in categories %}
-      <button class="card btn btn-link btn-block text-left text-muted px-4 py-2" id="cat-head-{{ cat.base36id }}" onclick="cattoggle('{{ cat.base36id }}')">
-        <h2 class="m-0 p-0"><i class="fas {{ cat.icon }} fa-fw ml-n1 mr-2"></i>{{ cat.name }}
+    <div class="card p-0">
+      <button class="card-header btn btn-link btn-block text-left text-muted px-4 py-2" id="cat-head-{{ cat.base36id }}" onclick="cattoggle('{{ cat.base36id }}')">
+        <h2 class="m-0 p-0"><i class="fas {{ cat.icon }} fa-fw mr-2"></i>{{ cat.name }}
         </h2>
       </button>
       <input type="checkbox" class="d-none" id="group-{{ cat.base36id }}">
@@ -28,6 +29,7 @@
         {% endfor %}
         </ul>
       </div>
+    </div>
   {% endfor %}
   </div>
 </div>
