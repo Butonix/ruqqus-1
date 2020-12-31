@@ -12,7 +12,7 @@
     <i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
     <span>Welcome to Ruqqus! Pick some topics that interest you to get started. (You can always change these later.)</span>
   </div>
-  <div class="card-columns">
+  <div class="card-columns bg-white p-md-4 rounded-md">
   {% for cat in categories %}
     <div class="card rounded-lg text-primary border-0 overflow-hidden onboarding-card text-white" onclick="cattoggle('{{ cat.base36id }}')" id="cat-card-{{ cat.base36id }}">
       <img src="/assets/images/categories/{{ cat.name | lower }}.gif" class="card-img h-100" alt="...">
