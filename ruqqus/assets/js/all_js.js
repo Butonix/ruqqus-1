@@ -2006,7 +2006,7 @@ var all_cats=function() {
   };
   var y=document.getElementsByClassName('cat-group');
   for(i=0;i<y.length;i++){
-    y[i].checked=true
+    y[i].checked=true;
   };
   togglecat('hot', reload=true)  
 }
