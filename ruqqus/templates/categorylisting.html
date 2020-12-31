@@ -22,19 +22,15 @@
     </div>
     <input type="checkbox" class="d-none" id="group-{{ cat.base36id }}">
     <div class="d-none">
-      <ul class="list-group list-group-flush">
       {% for subcat in cat.subcats %}
-        <li class="list-group-item">
           <input type="checkbox" class="cat-check group-{{ cat.base36id }}" id="cat-{{ subcat.base36id }}" data-cat="{{ subcat.id }}">
-        </li>
       {% endfor %}
-      </ul>
     </div>
   {% endfor %}
   </div>
   <div class="row">
     <div class="mr-3 ml-auto mb-5">
-      <a href="javascript:void(0)" onclick="var x=document.getElementsByClassName('cat-check');for(i=0;i<x.length;i++){x[i].checked=true};togglecat('hot', reload=true)" class="btn btn-secondary ml-auto mr-2">No thanks</a>
+      <a href="javascript:void(0)" onclick="var x=document.getElementsByClassName('cat-check');for(i=0;i<x.length;i++){x[i].checked=true};togglecat('hot', reload=true)" class="btn btn-secondary ml-auto mr-2">Show all</a>
       <a href="javascript:void(0)" onclick="togglecat('hot', reload=true)" class="btn btn-primary">Apply Selections</a>
     </div>
   </div>
