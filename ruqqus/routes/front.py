@@ -296,7 +296,18 @@ def default_cat_cookie():
         for subcat in cat.subcats:
             if subcat.visible:
                 output.append(subcat.id)
+
+    output += [0]
     return output
+
+@app.route("/categories", methods=["GET"])
+@auth_desired
+def categories_select(v):
+    return render_template(
+        "categorylisting.html",
+        v=v,
+        categories=CATEGORIES
+        )
 
 
 @app.route("/all", methods=["GET"])
@@ -317,24 +328,28 @@ def front_all(v):
 
 
     cats=session.get("catids")
-    if not cats:
-        cats=default_cat_cookie()
-        session['catids']=cats
-        session.modified=True
-        # return make_response(
-        #     render_template(
-        #         "categorylisting.html",
-        #         v=v,
-        #         categories=CATEGORIES
-        #         )
-        #     )
-
     new_cats=request.args.get('cats','')
+    if not cats and not new_cats:
+        return make_response(
+            render_template(
+                "categorylisting.html",
+                v=v,
+                categories=CATEGORIES
+                )
+            )
+
+
     if new_cats:
         #print('overwrite cats')
         new_cats=[int(x) for x in new_cats.split(',')]
         session['catids']=new_cats
         cats=new_cats
+        session.modified=True
+
+    #handle group cookie
+    groups = request.args.get("groups")
+    if groups:
+        session['groupids']=[int(x) for x in groups.split(',')]
         session.modified=True
 
     #print(cats)

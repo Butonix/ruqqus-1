@@ -3890,3 +3890,26 @@ div.deleted.banned {
 .sidebar-left .btn:focus {
   box-shadow: none;
 }
+
+.onboarding-card {
+    height: 180px;
+    .onboarding-card-overlay {
+        background-color: rgba(0,0,0,0.65);
+    }
+    &.selected {
+        .onboarding-card-overlay {
+            background-color: rgba($purple, .65);
+        }
+    }
+}
+
+.object-cover {
+    object-fit: cover;
+}
+
+.cat-item {
+    display: none;
+    &.selected {
+        display: block;
+    }
+}

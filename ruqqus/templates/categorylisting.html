@@ -1,19 +1,43 @@
 {% extends "home.html" %}
 
 {% block PseudoSubmitForm %}{% endblock %}
-{% block sidebarblock %}{% endblock %}
+{% block sidebar %}{% endblock %}
+{% block leftSidebarBlock %}{% endblock %}
+{% block navbar %}{% endblock %}
+{% block mobilenavbar %}{% endblock %}
 
 {% block content %}
-<div class="card-columns">
-{% for cat in categories %}
-	<div class="card">
-		<div class="card-body">
-			<h4 class="card-title"><i class="fas {{ cat.icon }}"></i>{{ cat.name }}</h4>
-			{% for sc in cat.subcats %}
-			<p>{{ sc.name }}</p>
-			{% endfor %}
-		</div>
-	</div>
-{% endfor %}
+<div class="col col-md-8 col-xl-6 mx-auto mt-n5 mt-md-0">
+  <div class="">
+    {% if request.path=="/" %}
+      <h1>Welcome to Ruqqus</h1>
+      <p class="text-muted">To get started, pick some topics that interest you. (You can always change these later.)</p>
+    {% else %}
+      <h1>Select Categories</h1>
+      <p class="text-muted">Customize your Trending feed by selecting categories that you are interested in.</p>
+    {% endif %}
+  </div>
+  <div class="card-columns bg-white p-md-4 rounded">
+  {% for cat in categories %}
+    <div class="card rounded-lg text-primary border-0 overflow-hidden onboarding-card text-white{% if cat.id in session.get('groupids',[]) %} selected{% endif %}" onclick="cattoggle('{{ cat.base36id }}')" id="cat-card-{{ cat.base36id }}">
+      <img src="/assets/images/categories/{{ cat.name | lower }}.gif" class="card-img h-100" alt="...">
+      <div class="card-img-overlay onboarding-card-overlay d-flex justify-content-center align-items-center">
+        <h5 class="card-title h4 mb-0">{{ cat.name }}</h5>
+      </div>
+    </div>
+    <input type="checkbox" class="d-none cat-group" id="group-{{ cat.base36id }}" data-group="{{ cat.id }}"{% if cat.id in session.get('groupids',[]) %} checked{% endif %}>
+    <div class="d-none">
+      {% for subcat in cat.subcats %}
+          <input type="checkbox" class="cat-check group-{{ cat.base36id }}" id="cat-{{ subcat.base36id }}" data-cat="{{ subcat.id }}"{% if cat.id in session.get('groupids',[]) %} checked{% endif %}>
+      {% endfor %}
+    </div>
+  {% endfor %}
+  </div>
+  <div class="row">
+    <div class="mr-3 ml-auto mb-5">
+      <a href="javascript:void(0)" onclick="all_cats()" class="btn btn-secondary ml-auto mr-2">Show all</a>
+      <a href="javascript:void(0)" onclick="togglecat('hot', reload=true)" class="btn btn-primary">Apply Selections</a>
+    </div>
+  </div>
 </div>
 {% endblock %}
