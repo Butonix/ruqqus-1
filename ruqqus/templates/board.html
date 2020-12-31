@@ -2,9 +2,9 @@
 
 {% block stylesheets %}
 {% if v and session.get("dark_mode_enabled") %}
-<link id="css-link" rel="stylesheet" href="{{ b.css_dark_url }}">
+<link id="css-link" rel="stylesheet" href="{{ b.css_dark_url }}?v=2.29.6.3">
 {% else %}
-<link id="css-link" rel="stylesheet" href="{{ b.css_url }}">
+<link id="css-link" rel="stylesheet" href="{{ b.css_url }}?v=2.29.6.3">
 {% endif %}
 {% endblock %}
 
@@ -65,8 +65,8 @@
       <i class="fas fa-filter"data-toggle="tooltip" data-placement="bottom" title="Category: {% if b.subcat %}{{ b.subcat.category.name }} / {{ b.subcat.name }}{% else %}Uncategorized{% endif %}"></i>
       {% if b.is_private %}<i class="fas fa-eye-slash"data-toggle="tooltip" data-placement="bottom" title="Private mode."></i>{% endif %}
       {% if b.restricted_posting %}<i class="fas fa-user-lock"data-toggle="tooltip" data-placement="bottom" title="Restricted posting mode."></i>{% endif %}
-      {% if b.over_18 %}<i class="fas fa-eye-evil"data-toggle="tooltip" data-placement="bottom" title="NSFW"></i>{% endif %}
-      {% if b.all_opt_out %}<span class="fa-stack" data-toggle="tooltip" data-placement="bottom" title="Opted out of All/Trending"><i class="fad fa-list fa-stack-1x"></i><i class="fas fa-times fa-stack-1x"></i></span>{% endif %}        
+      {% if b.over_18 %}<i class="fas fa-eye-evil" data-toggle="tooltip" data-placement="bottom" title="NSFW"></i>{% endif %}
+      {% if b.all_opt_out %}<i class="fad fa-list" data-toggle="tooltip" data-placement="bottom" title="Opted out of All/Trending"></i>{% endif %}        
     </div>
 
   </div>
@@ -98,11 +98,11 @@
     css = document.getElementById("css-link");
     dswitch = document.getElementById("dark-switch");
 
-    if (css.href.endsWith("{{ b.css_url }}")) {
+    if (css.href.endsWith("{{ b.css_url }}?v=2.29.6.3")) {
       
       post("/settings/dark_mode/1",
         callback=function(){
-          css.href="{{ b.css_dark_url }}";
+          css.href="{{ b.css_dark_url }}?v=2.29.6.3";
           dswitch.classList.remove("fa-toggle-off");
           dswitch.classList.add("fa-toggle-on");
         }
@@ -111,7 +111,7 @@
     else {
       post("/settings/dark_mode/0",
         callback=function(){
-          css.href="{{ b.css_url }}";
+          css.href="{{ b.css_url }}?v=2.29.6.3";
           dswitch.classList.remove("fa-toggle-on");
           dswitch.classList.add("fa-toggle-off");
         }
