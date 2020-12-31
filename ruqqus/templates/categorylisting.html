@@ -17,7 +17,7 @@
       <p class="text-muted">Customize your Trending feed by selecting categories that you are interested in.</p>
     {% endif %}
   </div>
-  <div class="card-columns bg-white p-4 rounded">
+  <div class="card-columns bg-white p-md-4 rounded">
   {% for cat in categories %}
     <div class="card rounded-lg text-primary border-0 overflow-hidden onboarding-card text-white{% if cat.id in session.get('groupids',[]) %} selected{% endif %}" onclick="cattoggle('{{ cat.base36id }}')" id="cat-card-{{ cat.base36id }}">
       <img src="/assets/images/categories/{{ cat.name | lower }}.gif" class="card-img h-100" alt="...">
