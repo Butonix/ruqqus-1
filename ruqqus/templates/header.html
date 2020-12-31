@@ -183,22 +183,7 @@
     </li>
     {% endif %}
     <li class="nav-item border-top mt-2 pt-2">
-      <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})">Log out</a>
-    </li>
-    <li class="nav-item border-top mt-2 pt-2">
-      <a class="nav-link text-small-extra" href="/help/about">About</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-small-extra" href="/help/terms">Terms</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-small-extra" href="/help/privacy">Privacy</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-small-extra" href="mailto:info@ruqqus.com">Contact</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">Github</a>
+      <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})"><i class="fas fa-sign-out fa-fw mr-3 text-danger"></i>Log out</a>
     </li>
     {% else %}
     <li class="nav-item d-flex align-items-center justify-content-center pb-3">
@@ -207,6 +192,7 @@
     <li class="nav-item d-flex align-items-center justify-content-center">
       <a class="btn btn-purple btn-block" href="/signup?redirect={{ request.path | urlencode}}">Sign up</a>
     </li>
+    {% endif %}
     <li class="nav-item mt-2">
       <a class="nav-link text-small-extra" href="/help/about">About</a>
     </li>
@@ -221,8 +207,6 @@
     </li>
     <li class="nav-item">
       <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">Github</a>
-    </li>
-    {% endif %}
   </ul>
 
 </div>
