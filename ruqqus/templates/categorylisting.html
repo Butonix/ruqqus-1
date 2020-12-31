@@ -12,7 +12,7 @@
   </div>
   <div class="card-columns">
   {% for cat in categories %}
-    <div class="card shadow rounded-lg text-primary border-0 overflow-hidden onboarding-card text-white" onclick="cattoggle('{{ cat.base36id }}')" id="cat-card-{{ cat.base36id }}">
+    <div class="card rounded-lg text-primary border-0 overflow-hidden onboarding-card text-white" onclick="cattoggle('{{ cat.base36id }}')" id="cat-card-{{ cat.base36id }}">
       <img src="/assets/images/categories/{{ cat.name | lower }}.gif" class="card-img h-100" alt="...">
       <div class="card-img-overlay onboarding-card-overlay d-flex justify-content-center align-items-center">
         <h5 class="card-title h4 mb-0"><i class="fas {{ cat.icon }} fa-fw mr-1"></i>{{ cat.name }}</h5>
@@ -31,7 +31,7 @@
   {% endfor %}
   </div>
   <div class="row">
-    <div class="mr-2">
+    <div class="mr-3 ml-auto">
       <a href="javascript:void(0)" onclick="var x=document.getElementsByClassName('cat-check');for(i=0;i<x.length;i++){x[i].checked=true};togglecat('hot', reload=true)" class="btn btn-secondary ml-auto mr-2">No thanks</a>
       <a href="javascript:void(0)" onclick="togglecat('hot', reload=true)" class="btn btn-primary">Apply Selections</a>
     </div>
