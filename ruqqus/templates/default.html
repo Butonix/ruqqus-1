@@ -390,22 +390,28 @@
         <a class="nav-link" href="/settings"><i class="fas fa-cog fa-width-rem mr-3"></i>My account</a>
       </li>
 	{% block darkswitchMobile %}
-      {% if v and v.can_use_darkmode and session.get("dark_mode_enabled")%}
+      {% if session.get("dark_mode_enabled")%}
       <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
-      {% elif v and v.can_use_darkmode %}
-      <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
       {% else %}
-      <li class="nav-item"><a class="nav-link" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem mr-3"></i>Dark mode</a></li>
+      <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
       {% endif %}
-          {% if v and v.can_make_guild %}
-    <li class="nav-item">
-      <a class="nav-link" href="/create_guild"><i class="fas fa-chess-rook fa-width-rem mr-3"></i>Create Guild</a>
-    </li>
-    {% endif %}
+      {% if v and v.can_make_guild %}
+      <li class="nav-item">
+        <a class="nav-link" href="/create_guild"><i class="fas fa-chess-rook fa-width-rem mr-3"></i>Create Guild</a>
+      </li>
+      {% endif %}
 	{% endblock %}
       <li class="nav-item border-top mt-2 pt-2">
         <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})">Log out</a>
       </li>
+      {% else %}
+      <li class="nav-item d-flex align-items-center justify-content-center pb-3">
+        <a class="btn btn-outline-purple btn-block" href="/login?redirect={{ request.path | urlencode}}">Sign in</a>
+      </li>
+      <li class="nav-item d-flex align-items-center justify-content-center">
+        <a class="btn btn-purple btn-block" href="/signup?redirect={{ request.path | urlencode}}">Sign up</a>
+      </li>
+      {% endif %}
       <li class="nav-item border-top mt-2 pt-2">
         <a class="nav-link text-small-extra" href="/help/about">About</a>
       </li>
@@ -421,29 +427,6 @@
       <li class="nav-item">
         <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">Github</a>
       </li>
-      {% else %}
-      <li class="nav-item d-flex align-items-center justify-content-center pb-3">
-        <a class="btn btn-outline-purple btn-block" href="/login?redirect={{ request.path | urlencode}}">Sign in</a>
-      </li>
-      <li class="nav-item d-flex align-items-center justify-content-center">
-        <a class="btn btn-purple btn-block" href="/signup?redirect={{ request.path | urlencode}}">Sign up</a>
-      </li>
-      <li class="nav-item mt-2">
-        <a class="nav-link text-small-extra" href="/help/about">About</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-small-extra" href="/help/terms">Terms</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-small-extra" href="/help/privacy">Privacy</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-small-extra" href="mailto:info@ruqqus.com">Contact</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">Github</a>
-      </li>
-      {% endif %}
     </ul>
 
   </div>
