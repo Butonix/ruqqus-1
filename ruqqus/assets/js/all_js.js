@@ -1912,7 +1912,7 @@ var triggercat=function(sort, cats, reload) {
 
   var catlist=[]
   for (var i=0; i< cbs.length; i++) {
-    if(cats[i]){
+    if(cbs[i].checked){
       catlist.push(cbs[i].dataset.cat);
     }
   }
