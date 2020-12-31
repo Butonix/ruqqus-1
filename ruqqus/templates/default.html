@@ -394,6 +394,9 @@
             <a class="nav-link" href="/create_guild"><i class="fas fa-chess-rook fa-fw mr-3"></i>Create Guild</a>
           </li>
         {% endif %}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-shapes fa-fw mr-3"></i>Categories</a>
+      </li>
       {% block darkswitchMobile %}
         {% if session.get("dark_mode_enabled")%}
           <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-fw mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
@@ -402,13 +405,10 @@
         {% endif %}
       {% endblock %}
       {% endif %}
-      <li class="nav-item">
-        <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-shapes fa-fw mr-3"></i>Categories</a>
-      </li>
 
       {% if v %}
       <li class="nav-item border-top mt-2 pt-2">
-        <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})">Log out</a>
+        <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})"><i class="fas fa-exit fa-fw mr-3">Log out</a>
       </li>
       {% else %}
       <li class="nav-item d-flex align-items-center justify-content-center pb-3">
