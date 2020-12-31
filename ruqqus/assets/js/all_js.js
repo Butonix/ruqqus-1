@@ -1917,11 +1917,11 @@ var triggercat=function(sort, cats, reload) {
     }
   }
 
-  var groups = document.getElementsByClassName('cat-group')
-  var grouplist=[]
+  var groups = document.getElementsByClassName('cat-group');
+  var grouplist=[];
   for var(i=0; i<groups.length; i++){
     if(groups[i].checked){
-      grouplist.push(groups[i].dataset.group)
+      grouplist.push(groups[i].dataset.group);
     }
   }
 
