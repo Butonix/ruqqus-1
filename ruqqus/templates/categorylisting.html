@@ -33,7 +33,7 @@
     </div>
   {% endfor %}
   {% if request.path=="/categories" %}
-    <div class="card rounded-lg text-primary border-0 overflow-hidden onboarding-card text-white d-lg-none {% if 0 in session.get('groupids',[]) %} selected{% endif %}" onclick="cattoggle('0')" id="cat-card-0">
+    <div class="card rounded-lg text-primary border-0 overflow-hidden onboarding-card text-white{% if 0 in session.get('groupids',[]) %} selected{% endif %}" onclick="cattoggle('0')" id="cat-card-0">
       <img src="/assets/images/categories/uncategorized.gif" class="card-img h-100" alt="...">
       <div class="card-img-overlay onboarding-card-overlay d-flex justify-content-center align-items-center">
         <h5 class="card-title h4 mb-0">Uncategorized</h5>
