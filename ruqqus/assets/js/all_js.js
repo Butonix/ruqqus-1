@@ -1998,3 +1998,15 @@ var cattoggle=function(id){
   card=document.getElementById('cat-card-'+id)
   card.classList.toggle('selected');
 }
+
+var all_cats=function() {
+  var x=document.getElementsByClassName('cat-check');
+  for(i=0;i<x.length;i++){
+    x[i].checked=true
+  };
+  var y=document.getElementsByClassName('cat-group');
+  for(i=0;i<y.length;i++){
+    y[i].checked=true
+  };
+  togglecat('hot', reload=true)  
+}
