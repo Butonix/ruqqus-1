@@ -15,7 +15,7 @@
     <div class="card rounded-lg text-primary border-0 overflow-hidden onboarding-card text-white" onclick="cattoggle('{{ cat.base36id }}')" id="cat-card-{{ cat.base36id }}">
       <img src="/assets/images/categories/{{ cat.name | lower }}.gif" class="card-img h-100" alt="...">
       <div class="card-img-overlay onboarding-card-overlay d-flex justify-content-center align-items-center">
-        <h5 class="card-title h4 mb-0"><i class="fas {{ cat.icon }} fa-fw mr-1"></i>{{ cat.name }}</h5>
+        <h5 class="card-title h4 mb-0">{{ cat.name }}</h5>
       </div>
     </div>
     <input type="checkbox" class="d-none" id="group-{{ cat.base36id }}">
