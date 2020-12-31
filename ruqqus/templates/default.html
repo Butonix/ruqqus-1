@@ -375,32 +375,34 @@
         </form>
       </li>
       {% if v %}
-      <li class="nav-item">
-        <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem mr-3"></i>@{{ v.username }}</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {% if v.notifications_count %}position-relative{% endif %}" href="/notifications{% if not v.notifications_count %}?all=true{% endif %}">
-          <i class="fas fa-envelope fa-width-rem mr-3"></i>Inbox
-          {% if v.notifications_count %}
-          <i class="fas fa-circle text-danger position-absolute" style="left: 19px; top: 5px; font-size: 10px;"></i>
-          {% endif %}
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/settings"><i class="fas fa-cog fa-width-rem mr-3"></i>My account</a>
-      </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem mr-3"></i>@{{ v.username }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if v.notifications_count %}position-relative{% endif %}" href="/notifications{% if not v.notifications_count %}?all=true{% endif %}">
+            <i class="fas fa-envelope fa-width-rem mr-3"></i>Inbox
+            {% if v.notifications_count %}
+            <i class="fas fa-circle text-danger position-absolute" style="left: 19px; top: 5px; font-size: 10px;"></i>
+            {% endif %}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/settings"><i class="fas fa-cog fa-width-rem mr-3"></i>My account</a>
+        </li>
+        {% if v.can_make_guild %}
+          <li class="nav-item">
+            <a class="nav-link" href="/create_guild"><i class="fas fa-chess-rook fa-width-rem mr-3"></i>Create Guild</a>
+          </li>
+        {% endif %}
+      {% endif %}
 	{% block darkswitchMobile %}
       {% if session.get("dark_mode_enabled")%}
       <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
       {% else %}
       <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
       {% endif %}
-      {% if v and v.can_make_guild %}
-      <li class="nav-item">
-        <a class="nav-link" href="/create_guild"><i class="fas fa-chess-rook fa-width-rem mr-3"></i>Create Guild</a>
-      </li>
-      {% endif %}
 	{% endblock %}
+      {% if v %}
       <li class="nav-item border-top mt-2 pt-2">
         <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})">Log out</a>
       </li>
