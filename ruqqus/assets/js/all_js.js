@@ -1881,13 +1881,13 @@ var tipModal2 = function(id, content, link, recipient, recipientPFP) {
   console.log(recipientPFP, id, content, link, recipient)
 }
 
-var togglecat = function(sort, reload=false) {
+var togglecat = function(sort, reload=false, delay=1000) {
   var cbs = document.getElementsByClassName('cat-check');
   var l = []
   for (var i=0; i< cbs.length; i++) {
     l.push(cbs[i].checked)
   }
-  setTimeout(function(){triggercat(sort, l, reload)}, 1000)
+  setTimeout(function(){triggercat(sort, l, reload)}, delay)
   return l;
 }
 
@@ -2010,5 +2010,5 @@ var all_cats=function() {
     y[i].checked=true;
   };
 
-  togglecat('hot', reload=true)  
+  togglecat('hot', reload=true, delay=0)  
 }
