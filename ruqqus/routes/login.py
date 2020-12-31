@@ -449,7 +449,7 @@ And since we're committed to [open-source](https://github.com/ruqqus/ruqqus) tra
 
     # #print(f"Signup event: @{new_user.username}")
 
-    return redirect("/browse?onboarding=true")
+    return redirect("/")
 
 
 @app.route("/forgot", methods=["GET"])
