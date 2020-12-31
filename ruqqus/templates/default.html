@@ -320,24 +320,25 @@
           <div class="px-2">
             <a class="dropdown-item" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-fw text-left mr-3"></i>My
               profile</a>
-              {% if v.notifications_count %}
+            {% if v.notifications_count %}
               <a class="dropdown-item" href="/notifications"><i class="fas fa-inbox fa-fw text-left mr-3"></i>Inbox<span
                 class="badge badge-danger rounded-circle align-top ml-1">{{ v.notifications_count }}</span></a>
-                {% else %}
-                <a class="dropdown-item" href="/notifications?all=true"><i class="fas fa-inbox fa-fw text-left mr-3"></i>Inbox</a>
-                {% endif %}
-                <a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-fw text-left mr-3"></i>Settings</a>
+            {% else %}
+              <a class="dropdown-item" href="/notifications?all=true"><i class="fas fa-inbox fa-fw text-left mr-3"></i>Inbox</a>
+            {% endif %}
+            <a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-fw text-left mr-3"></i>Settings</a>
+            <a class="dropdown-item d-lg-none" href="/categories"><i class="fas fa-shapes fa-fw text-left mr-3" id="dark-switch"></i>Categories</a>
 
-                {% block darkswitch %}
-                {% if v and v.can_use_darkmode and session.get("dark_mode_enabled")%}
+            {% block darkswitch %}
+              {% if v and v.can_use_darkmode and session.get("dark_mode_enabled")%}
                 <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-fw text-left mr-3" id="dark-switch"></i>Dark mode</a>
-                {% elif v and v.can_use_darkmode %}
+              {% elif v and v.can_use_darkmode %}
                 <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-fw text-left mr-3" id="dark-switch"></i>Dark mode</a>
-                {% else %}
+              {% else %}
                 <a class="dropdown-item" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-fw text-left mr-3"></i>Dark mode</a>
-                {% endif %}
-                {% endblock %}
-              </div>
+              {% endif %}
+            {% endblock %}
+          </div>
               <hr class="my-2">
               <div class="px-2">
                 <button class="dropdown-item copy-link" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}"><i class="fad fa-user-friends fa-fw text-left mr-3"></i>Invite friends</button>
