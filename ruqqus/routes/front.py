@@ -349,7 +349,7 @@ def front_all(v):
     #handle group cookie
     groups = request.args.get("groups")
     if groups:
-        session['groupids']=groups.split(',')
+        session['groupids']=[int(x) for x in groups.split(',')]
         session.modified=True
 
     #print(cats)
