@@ -346,6 +346,12 @@ def front_all(v):
         cats=new_cats
         session.modified=True
 
+    #handle group cookie
+    groups = request.args.get("groups")
+    if groups:
+        session['groupids']=groups.split(',')
+        session.modified=True
+
     #print(cats)
 
     ids = frontlist(sort=sort_method,

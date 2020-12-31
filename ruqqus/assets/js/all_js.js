@@ -1917,7 +1917,15 @@ var triggercat=function(sort, cats, reload) {
     }
   }
 
-  var url='/inpage/all?sort='+ sort +'&cats=' + catlist.join(',');
+  var groups = document.getElementsByClassName('cat-group')
+  var grouplist=[]
+  for var(i=0; i<groups.length; i++){
+    if(groups[i].checked){
+      grouplist.push(groups[i].dataset.group)
+    }
+  }
+
+  var url='/inpage/all?sort='+ sort +'&cats=' + catlist.join(',') + '&groups=' + grouplist.join(',');
   
 
   xhr = new XMLHttpRequest();
