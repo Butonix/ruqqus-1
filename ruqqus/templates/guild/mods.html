@@ -120,7 +120,7 @@
               </td>
             </tr>
             {% else %}
-            <td>There are no guildmasters. You may be able to <a href="/help/siege">siege</a> this community and become guildmaster.</td>
+            <td>There are no guildmasters.{% if b.is_siegable %} You may be able to <a href="/help/siege">siege</a> this community and become guildmaster.{% endif %}</td>
             {% endfor %}
 
           </tbody>
