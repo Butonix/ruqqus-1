@@ -43,8 +43,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
     posts = g.db.query(Submission).options(
             lazyload('*')
         ).join(
-            Submission.submission_aux).join(
-            Submission.author
+            Submission.submission_aux
         ).filter(
         SubmissionAux.title.ilike(
             '%' +
@@ -54,10 +53,19 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
         )
 
     if 'author' in criteria:
-        posts=posts.filter(User.username==criteria['author'], User.is_private==False)
+        posts=posts.join(
+            Submission.author\
+            ).filter(
+                User.username==criteria['author'],
+                User.is_private==False
+                )
 
     if 'guild' in criteria:
-        posts=posts.join(Submission.board).filter(Board.name==criteria['guild'])
+        posts=posts.join(
+            Submission.board
+            ).filter(
+            Board.name==criteria['guild']
+            )
     elif b:
         posts=posts.filter(Submission.board_id==b.id)
 
