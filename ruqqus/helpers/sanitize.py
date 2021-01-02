@@ -110,7 +110,7 @@ _clean_bio = bleach.Cleaner(tags=_allowed_tags_in_bio,
                             filters=[partial(LinkifyFilter,
                                              skip_tags=["pre"],
                                              parse_email=False,
-                                             callbacks=[nofollow]
+                                             callbacks=[a_modify]
                                              )
                                      ]
                             )
