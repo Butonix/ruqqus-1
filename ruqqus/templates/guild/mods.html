@@ -71,7 +71,6 @@
 
         <div>
          <h2 class="h5" name="guild_name">Guildmasters of +{{ b.name }}</h2>
-         <p class="text-small text-muted mb-md-0">Note: all guildmasters share the same permissions.</p>
        </div>
 
        <div class="mt-auto">
@@ -121,7 +120,7 @@
               </td>
             </tr>
             {% else %}
-            <td>There are no guildmasters. You may be able to <a href="/help/siege">siege</a> this community and become guildmaster.</td>
+            <td>There are no guildmasters.{% if b.is_siegable and b.id>1%} You may be able to <a href="/help/siege">siege</a> this community and become guildmaster.{% endif %}</td>
             {% endfor %}
 
           </tbody>

@@ -52,7 +52,7 @@ def send_verification_email(user, email=None):
 
 
 @app.route("/api/verify_email", methods=["POST"])
-@auth_required
+@is_not_banned
 def api_verify_email(v):
 
     send_verification_email(v)

@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="col col-md-8 col-xl-6 mx-auto mt-n5 mt-md-0">
-  <div class="">
+  <div class="mt-4 text-center">
     {% if request.path=="/" %}
       <h1>Welcome to Ruqqus</h1>
       <p class="text-muted">To get started, pick some topics that interest you. (You can always change these later.)</p>
@@ -20,7 +20,7 @@
   <div class="card-columns bg-white p-md-4 pb-md-3 rounded">
   {% for cat in categories %}
     <div class="card rounded-lg text-primary border-0 overflow-hidden onboarding-card text-white{% if cat.id in session.get('groupids',[]) %} selected{% endif %}" onclick="cattoggle('{{ cat.base36id }}')" id="cat-card-{{ cat.base36id }}">
-      <img src="/assets/images/categories/{{ cat.name | lower }}.gif" class="card-img h-100" alt="...">
+      <img src="/assets/images/categories/{{ cat.name | lower }}.gif" class="card-img h-100 object-cover" alt="{{ cat.name }}">
       <div class="card-img-overlay onboarding-card-overlay d-flex justify-content-center align-items-center">
         <h5 class="card-title h4 mb-0">{{ cat.name }}</h5>
       </div>
