@@ -31,11 +31,7 @@ class Category(Base, Stndrd):
         return {
             "id": self.id,
             "name": self.name,
-            "description": self.description,
-            "icon": self.icon,
-            "color": self.color,
-            "visible": self.visible,
-            "created_date": self.created_date
+            "subcategories": [x.json for x in self.subcats]
         }
 
 
@@ -57,11 +53,8 @@ class SubCategory(Base, Stndrd):
     def json(self):
         return {
             "id": self.id,
-            "board_id": self.board_id,
-            "cat_id": self.cat_id,
-            "name": self.name,
-            "description": self.description,
-            "created_date": self.created_date
+            "category_id": self.cat_id,
+            "name": self.name
         }
 
 CATEGORIES = [i for i in db_session().query(Category).order_by(Category.name.asc()).all()]
