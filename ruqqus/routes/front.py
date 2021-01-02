@@ -329,7 +329,7 @@ def front_all(v):
 
     cats=session.get("catids")
     new_cats=request.args.get('cats','')
-    if not cats and not new_cats:
+    if not cats and not new_cats and not request.path.startswith('/api/'):
         return make_response(
             render_template(
                 "categorylisting.html",
@@ -364,7 +364,7 @@ def front_all(v):
                     gt=int(request.args.get("utc_greater_than", 0)),
                     lt=int(request.args.get("utc_less_than", 0)),
                     filter_words=v.filter_words if v else [],
-                    categories=cats
+                    categories=[] if request.path.startswith("/api/") else cats
                     )
 
     # check existence of next page
@@ -734,3 +734,15 @@ def all_comments(v):
                                             standalone=True,
                                             next_exists=next_exists),
             "api": lambda: jsonify({"data": [x.json for x in comments]})}
+
+
+@app.route("/api/v1/categories", methods=["GET"])
+@auth_desired
+@api()
+def categories(v)
+
+    return make_response(
+        jsonify(
+            {"data":[x.json for x in CATEGORIES]}
+            )
+        )
