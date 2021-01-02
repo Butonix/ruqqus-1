@@ -62,7 +62,8 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
             Submission.author
             ).filter(
                 User.username==criteria['author'],
-                User.is_private==False
+                User.is_private==False,
+                User.is_deleted==False
             ).options(
                 contains_eager(Submission.author)
             )
