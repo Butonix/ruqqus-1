@@ -1,6 +1,7 @@
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from urllib.parse import quote
+import re
 
 from sqlalchemy import *
 
@@ -8,23 +9,67 @@ from flask import *
 from ruqqus.__main__ import app, cache
 
 
+
+query_regex=re.compile("(\w+):(\w+)")
+valid_params=[
+    'author',
+    'guild',
+    'url'
+]
+
+def searchparse(text):
+
+    #takes test in filter:term format and returns data
+
+    criteria = {x[0]:x[1] for x in rx.findall(text)}
+
+    for x in criteria:
+        if x in valid_params:
+            term = term.replace(f"{x}:{criteria[x]}", "")
+
+    term=term.lstrip().rstrip()
+
+    criteria['q']=term
+
+    return criteria
+
+
+
 @cache.memoize(300)
 def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
-        
-    posts = g.db.query(Submission).join(
-        Submission.submission_aux).join(
-        Submission.author).filter(
-            SubmissionAux.title.ilike(
-                '%' +
-                q +
-                '%')).options(
-                    contains_eager(Submission.submission_aux),
-        contains_eager(Submission.author))
+    criteria = searchparse(q)
 
+    posts = g.db.query(Submission).options(
+            lazyload('*')
+        ).join(
+            Submission.submission_aux).join(
+            Submission.author
+        ).filter(
+        SubmissionAux.title.ilike(
+            '%' +
+            criteria['q'] +
+            '%'
+            )
+        )
 
-    if b:
+    if 'author' in criteria:
+        posts=posts.filter(User.username==criteria['author'])
+
+    if 'guild' in criteria:
+        posts=posts.join(Submission.board).filter(Board.name==criteria['guild'])
+    elif b:
         posts=posts.filter(Submission.board_id==b.id)
+
+    if 'url' in criteria:
+        posts=posts.filter(SubmissionAux.url.ilike("%"+criteria['url']+"%"))
+
+
+    posts=posts.options(
+            contains_eager(Submission.submission_aux),
+            contains_eager(Submission.author)
+        )
+
 
     if not (v and v.over_18):
         posts = posts.filter(Submission.over_18 == False)
@@ -186,6 +231,8 @@ def search(v, search_type="posts"):
     else:
         sort = request.args.get("sort", "top").lower()
         t = request.args.get('t', 'all').lower()
+
+
 
         # posts search
 
