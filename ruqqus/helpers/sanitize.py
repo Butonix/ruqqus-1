@@ -167,10 +167,7 @@ def sanitize(text, bio=False, linkgen=False):
 
         #disguised link preventer
         for tag in soup.find_all("a"):
-            print(tag)
-            print(tag.string)
             if str(tag.string).startswith(("https://","http://")):
-                print("replace")
                 tag.string = tag["href"]
 
         sanitized = str(soup)
