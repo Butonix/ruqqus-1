@@ -54,7 +54,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
         )
 
     if 'author' in criteria:
-        posts=posts.filter(User.username==criteria['author'])
+        posts=posts.filter(User.username==criteria['author'], User.is_private=False)
 
     if 'guild' in criteria:
         posts=posts.join(Submission.board).filter(Board.name==criteria['guild'])
