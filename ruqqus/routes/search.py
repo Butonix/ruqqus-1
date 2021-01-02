@@ -58,7 +58,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
     if 'author' in criteria:
         posts=posts.join(
-            Submission.author\
+            Submission.author
             ).filter(
                 User.username==criteria['author'],
                 User.is_private==False
