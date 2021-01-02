@@ -72,20 +72,22 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
         posts=posts.filter(Submission.board_id==b.id)
     elif 'guild' in criteria:
         posts=posts.join(
-            Submission.board
+                Submission.board
             ).filter(
-            Board.name==criteria['guild']
+                Board.name==criteria['guild']
             ).options(
                 contains_eager(Submission.board)
             )
 
     if 'url' in criteria:
-        posts=posts.filter(SubmissionAux.url.ilike("%"+criteria['url']+"%"))
+        posts=posts.filter(
+            SubmissionAux.url.ilike("%"+criteria['url']+"%")
+            )
 
 
     posts=posts.options(
             contains_eager(Submission.submission_aux)
-        )
+            )
 
 
     if not (v and v.over_18):
