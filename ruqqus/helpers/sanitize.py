@@ -64,7 +64,7 @@ _allowed_protocols = ['http', 'https']
 # filter to make all links show domain on hover
 
 
-def nofollow(attrs, new=False):
+def a_modify(attrs, new=False):
 
     raw_url=attrs.get((None, "href"), None)
     if raw_url:
@@ -99,7 +99,7 @@ _clean_w_links = bleach.Cleaner(tags=_allowed_tags_with_links,
                                 filters=[partial(LinkifyFilter,
                                                  skip_tags=["pre"],
                                                  parse_email=False,
-                                                 callbacks=[nofollow]
+                                                 callbacks=[a_modify]
                                                  )
                                          ]
                                 )
@@ -126,8 +126,10 @@ def sanitize(text, bio=False, linkgen=False):
         else:
             sanitized = _clean_w_links.clean(text)
 
+        #soupify
         soup = BeautifulSoup(sanitized, features="html.parser")
 
+        #img elements - embed
         for tag in soup.find_all("img"):
 
             url = tag.get("src", "")
@@ -162,6 +164,11 @@ def sanitize(text, bio=False, linkgen=False):
                 new_tag["href"] = tag["src"]
                 new_tag["rel"] = "nofollow noopener"
                 tag.replace_with(new_tag)
+
+            #disguised link preventer
+            for tag in soup.find_all("a"):
+                if tag.string.startswith(("https://","http://")):
+                    tag.string.replace_with(tag["href"])
 
         sanitized = str(soup)
 
