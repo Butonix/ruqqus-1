@@ -63,7 +63,9 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
             ).filter(
                 User.username==criteria['author'],
                 User.is_private==False
-                )
+            ).options(
+                contains_eager(Submission.author)
+            )
 
     if b:
         posts=posts.filter(Submission.board_id==b.id)
@@ -72,6 +74,8 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
             Submission.board
             ).filter(
             Board.name==criteria['guild']
+            ).options(
+                contains_eager(Submission.board)
             )
 
     if 'url' in criteria:
@@ -79,8 +83,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
 
     posts=posts.options(
-            contains_eager(Submission.submission_aux),
-            contains_eager(Submission.author)
+            contains_eager(Submission.submission_aux)
         )
 
 
