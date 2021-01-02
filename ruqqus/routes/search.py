@@ -192,7 +192,7 @@ def search(v, search_type="posts"):
         next_exists = (len(boards) == 26)
         boards = boards[0:25]
 
-        return render_template("search_boards.html",
+        return {"html":lambda:render_template("search_boards.html",
                                v=v,
                                query=query,
                                total=total,
@@ -200,7 +200,9 @@ def search(v, search_type="posts"):
                                boards=boards,
                                sort_method=sort,
                                next_exists=next_exists
-                               )
+                               ),
+                "api":lambda:jsonfy({"data":[x.json for x in boards]})
+                }
 
     elif query.startswith("@"):
             
@@ -232,14 +234,16 @@ def search(v, search_type="posts"):
         
         
         
-        return render_template("search_users.html",
+        return {"html":lambda:render_template("search_users.html",
                        v=v,
                        query=query,
                        total=total,
                        page=page,
                        users=users,
                        next_exists=next_exists
-                      )
+                      ),
+                "api":lambda:jsonify({"data":[x.json for x in users]})
+                }
                    
     
 
@@ -258,7 +262,7 @@ def search(v, search_type="posts"):
 
         posts = get_posts(ids, v=v)
 
-        return render_template("search.html",
+        return {"html":lambda:render_template("search.html",
                                v=v,
                                query=query,
                                total=total,
@@ -267,7 +271,9 @@ def search(v, search_type="posts"):
                                sort_method=sort,
                                time_filter=t,
                                next_exists=next_exists
-                               )
+                               ),
+                "api":lambda:jsonify({"data":[x.json for x in posts]})
+                }
 
 
 @app.route("/+<name>/search", methods=["GET"])
