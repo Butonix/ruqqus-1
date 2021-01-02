@@ -29,7 +29,8 @@ def searchparse(text):
 
     text=text.lstrip().rstrip()
 
-    criteria['q']=text
+    if text:
+        criteria['q']=text
 
     return criteria
 
@@ -44,7 +45,10 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
             lazyload('*')
         ).join(
             Submission.submission_aux
-        ).filter(
+        )
+
+    if 'q' in criteria:
+        posts=posts.filter(
         SubmissionAux.title.ilike(
             '%' +
             criteria['q'] +
@@ -60,14 +64,14 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
                 User.is_private==False
                 )
 
-    if 'guild' in criteria:
+    if b:
+        posts=posts.filter(Submission.board_id==b.id)
+    elif 'guild' in criteria:
         posts=posts.join(
             Submission.board
             ).filter(
             Board.name==criteria['guild']
             )
-    elif b:
-        posts=posts.filter(Submission.board_id==b.id)
 
     if 'url' in criteria:
         posts=posts.filter(SubmissionAux.url.ilike("%"+criteria['url']+"%"))
