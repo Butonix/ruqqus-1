@@ -40,6 +40,7 @@ def searchparse(text):
 def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
     criteria = searchparse(q)
+    print(criteria)
 
     posts = g.db.query(Submission).options(
             lazyload('*')
