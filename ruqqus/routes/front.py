@@ -739,7 +739,7 @@ def all_comments(v):
 @app.route("/api/v1/categories", methods=["GET"])
 @auth_desired
 @api()
-def categories(v)
+def categories(v):
 
     return make_response(
         jsonify(
