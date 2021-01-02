@@ -165,13 +165,13 @@ def sanitize(text, bio=False, linkgen=False):
                 new_tag["rel"] = "nofollow noopener"
                 tag.replace_with(new_tag)
 
-            #disguised link preventer
-            for tag in soup.find_all("a"):
-                print(tag)
-                print(tag.string)
-                if str(tag.string).startswith(("https://","http://")):
-                    print("replace")
-                    tag.string = tag["href"]
+        #disguised link preventer
+        for tag in soup.find_all("a"):
+            print(tag)
+            print(tag.string)
+            if str(tag.string).startswith(("https://","http://")):
+                print("replace")
+                tag.string = tag["href"]
 
         sanitized = str(soup)
 
