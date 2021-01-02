@@ -29,7 +29,7 @@ def api_vote_post(post_id, x, v):
 
     if x==-1:
         count=g.db.query(Vote).filter(Vote.created_utc > int(time())-3600, Vote.vote_type==-1)
-        count=count.count():
+        count=count.count()
         if count >=15:
             return jsonify({"error": "You're doing that too much. Try again later."}), 403
 
