@@ -34,6 +34,11 @@ app = Flask(__name__,
             template_folder='./templates',
             static_folder='./static'
             )
+
+@app.context_processor
+def hide_score_time():
+    return dict(hide_score_time=int(time.time()) - (30*60))
+
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 app.url_map.strict_slashes = False
 
