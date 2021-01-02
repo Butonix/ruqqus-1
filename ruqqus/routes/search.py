@@ -10,7 +10,7 @@ from ruqqus.__main__ import app, cache
 
 
 
-query_regex=re.compile("(\w+):(\w+)")
+query_regex=re.compile("(\w+):(\S+)")
 valid_params=[
     'author',
     'guild',
@@ -21,7 +21,7 @@ def searchparse(text):
 
     #takes test in filter:term format and returns data
 
-    criteria = {x[0]:x[1] for x in rx.findall(text)}
+    criteria = {x[0]:x[1] for x in query_regex.findall(text)}
 
     for x in criteria:
         if x in valid_params:
