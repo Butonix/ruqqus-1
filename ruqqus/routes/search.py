@@ -25,11 +25,11 @@ def searchparse(text):
 
     for x in criteria:
         if x in valid_params:
-            term = term.replace(f"{x}:{criteria[x]}", "")
+            text = text.replace(f"{x}:{criteria[x]}", "")
 
-    term=term.lstrip().rstrip()
+    text=text.lstrip().rstrip()
 
-    criteria['q']=term
+    criteria['q']=text
 
     return criteria
 
