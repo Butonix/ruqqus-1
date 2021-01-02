@@ -40,7 +40,6 @@ def searchparse(text):
 def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
     criteria = searchparse(q)
-    print(criteria)
 
     posts = g.db.query(Submission).options(
             lazyload('*')
@@ -58,25 +57,17 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
         )
 
     if 'author' in criteria:
-        posts=posts.join(
-            Submission.author
-            ).filter(
-                User.username==criteria['author'],
+        posts=posts.filter(
+                User.id==get_user(criteria['author']).id,
                 User.is_private==False,
                 User.is_deleted==False
-            ).options(
-                contains_eager(Submission.author)
             )
 
     if b:
         posts=posts.filter(Submission.board_id==b.id)
     elif 'guild' in criteria:
-        posts=posts.join(
-                Submission.board
-            ).filter(
-                Board.name==criteria['guild']
-            ).options(
-                contains_eager(Submission.board)
+        posts=posts.filter(
+                Board.id==get_guild(criteria['guild']).id
             )
 
     if 'url' in criteria:
