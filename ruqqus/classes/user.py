@@ -568,8 +568,8 @@ class User(Base, Stndrd, Age_times):
         alts = g.db.query(User).join(
             subq, 
             or_(
-                alts.c.user1 == User.id,
-                alts.c.user2 == User.id
+                subq.c.user1 == User.id,
+                subq.c.user2 == User.id
                 )
             ).order_by(User.username.asc()).all()
 
