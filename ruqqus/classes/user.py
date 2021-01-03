@@ -558,15 +558,22 @@ class User(Base, Stndrd, Age_times):
     @property
     def alts(self):
 
-        alts1 = g.db.query(User).join(
-            Alt, Alt.user2 == User.id).filter(
-            Alt.user1 == self.id).all()
-        alts2 = g.db.query(User).join(
-            Alt, Alt.user1 == User.id).filter(
-            Alt.user2 == self.id).all()
+        subq = g.db.query(Alt).filter(
+            or_(
+                Alt.user1==self.id,
+                Alt.user2==self.id
+                )
+            ).subquery()
 
-        output = list(set([x for x in alts1] + [y for y in alts2]))
-        output = sorted(output, key=lambda x: x.username)
+        alts = g.db.query(User).join(
+            subq, 
+            or_(
+                Alt.user1 == User.id,
+                Alt.user2 == User.id
+                )
+            ).order_by(User.username.asc()).all()
+
+        return [x for x in alts]
 
         return output
 
