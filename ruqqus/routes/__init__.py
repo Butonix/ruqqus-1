@@ -1,6 +1,5 @@
 from .admin import *
 from .admin_api import *
-from .api import *
 from .boards import *
 from .comments import *
 from .discord import *
