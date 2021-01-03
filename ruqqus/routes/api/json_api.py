@@ -27,20 +27,6 @@ def user_info(v, username):
     return jsonify(user.json)
 
 
-@app.route("/api/v1/post/<pid>", methods=["GET"])
-@auth_desired
-@api("read")
-def post_info(v, pid):
-
-    post = get_post(pid, v=v)
-
-    if not post.is_public and post.board.is_private and not post.board.can_view(
-            v):
-        abort(403)
-
-    return jsonify(post.json)
-
-
 @app.route("/api/v1/comment/<cid>", methods=["GET"])
 @auth_desired
 @api("read")
