@@ -661,7 +661,7 @@ class User(Base, Stndrd, Age_times):
     @property
     def can_siege(self):
 
-        if self.is_banned:
+        if self.is_suspended:
             return False
 
         now = int(time.time())
