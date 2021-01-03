@@ -384,6 +384,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def json(self):
         data=self.json_core
+        
         if self.is_deleted or self.is_banned:
             return data
 
