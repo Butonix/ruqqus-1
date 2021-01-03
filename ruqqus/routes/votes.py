@@ -29,7 +29,10 @@ def api_vote_post(post_id, x, v):
 
     if x==-1:
         count=g.db.query(Vote).filter(
-            Vote.user_id==v.id,
+            Vote.user_id.in_(
+                tuple(
+                    [v.id]+[x.id for x in v.alts]
+                    ),
             Vote.created_utc > (int(time.time())-3600), 
             Vote.vote_type==-1
             ).count()

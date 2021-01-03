@@ -556,6 +556,7 @@ class User(Base, Stndrd, Age_times):
             is_banned=False, is_deleted=False).count()
 
     @property
+    @lazy
     def alts(self):
 
         subq = g.db.query(Alt).filter(
