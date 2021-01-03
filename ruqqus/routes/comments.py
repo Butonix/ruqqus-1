@@ -47,6 +47,7 @@ def comment_cid_api_redirect(c_id=None, p_id=None):
 
 @app.route("/api/v1/comment/<c_id>", methods=["GET"])
 @app.route("/+<boardname>/post/<p_id>/<anything>/<c_id>", methods=["GET"])
+@app.route("/test/coment/<c_id>")
 @auth_desired
 @api("read")
 def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None):
