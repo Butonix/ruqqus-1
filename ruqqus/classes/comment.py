@@ -287,6 +287,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             if self.level>=2:
                 data['parent_comment_id']= base36encode(self.parent_comment_id),
 
+        if "replies" in self.__dict__:
+            data['replies']=[x.json_core for x in self.replies]
 
         return data
 
@@ -305,8 +307,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         if self.level >= 2:
             data["parent"]=self.parent.json_core
 
-        if "replies" in self.__dict__:
-            data['replies']=[x.json_core for x in self.replies]
 
         return data
 
