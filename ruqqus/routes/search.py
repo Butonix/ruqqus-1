@@ -281,7 +281,7 @@ def search(v, search_type="posts"):
 def search_guild(name, v, search_type="posts"):
 
 
-    query=request.args.get("q").lstrip().rstrip()
+    query=request.args.get("q","").lstrip().rstrip()
 
     if query.startswith(("+","@")):
         return redirect(f"/search?q={quote(query)}")
