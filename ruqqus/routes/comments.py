@@ -218,6 +218,8 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
 
     post.tree_comments()
 
+    post.replies=[top_comment]
+
     return {'html': lambda: post.rendered_page(v=v, comment=top_comment, comment_info=comment_info),
             'api': lambda: top_comment.json
             }
