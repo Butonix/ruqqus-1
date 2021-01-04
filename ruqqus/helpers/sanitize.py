@@ -181,7 +181,7 @@ def sanitize(text, bio=False, linkgen=False):
 
         #clean up tags in code
         for tag in soup.find_all("code"):
-            tag.contents=[x.string for x in tag.contents]
+            tag.contents=[x.string for x in tag.contents if x.string]
 
         sanitized = str(soup)
 
