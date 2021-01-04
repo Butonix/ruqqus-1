@@ -171,7 +171,7 @@ def sanitize(text, bio=False, linkgen=False):
             tag.contents=[x.string for x in tag.children]
 
             display=''.join(tag.contents)
-            display=re.sub("\s",'')
+            display=re.sub("\s",'', display)
 
             if re.match("https?://\S+", display):
                 try:
