@@ -24,7 +24,7 @@
       {% endif %}
 
       <!-- Hide score on new post -->
-      {% if p.created_utc is <= hide_score_time %}
+      {% if p.created_utc <= hide_score_time %}
       <span id="post-score-{{ p.base36id }}" class="score post-score-{{ p.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-toggle="tooltip" data-placement="right" data-original-title="+{{ ups }} | -{{ downs }}"{% endif %}>{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
       {% else %}
       <span>&#8226;</span>
@@ -39,7 +39,7 @@
       <div id="post-{{ p.base36id }}-up" tabindex="0" data-id-up="{{ p.base36id }}" data-content-type="post" class="mx-auto arrow-up upvote-button post-{{ p.base36id }}-up {% if voted==1 %}active{% endif %}"></div>
 
       <!-- Hide score on new post -->
-      {% if p.created_utc is <= hide_score_time %}
+      {% if p.created_utc <= hide_score_time %}
       <span id="post-score-{{ p.base36id }}" class="score post-score-{{ p.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-toggle="tooltip" data-placement="right" data-original-title="+{{ ups }} | -{{ downs }}"{% endif %}>{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
       {% else %}
       <span>&#8226;</span>
@@ -52,7 +52,7 @@
       <div id="post-{{ p.base36id }}-up" tabindex="0" class="mx-auto arrow-up" onclick="location.href='/login';"></div>
 
       <!-- Hide score on new post -->
-      {% if p.created_utc is <= hide_score_time %}
+      {% if p.created_utc <= hide_score_time %}
       <span id="post-{{ p.base36id }}-score-none" class="score"{% if not p.is_banned %} data-toggle="tooltip" data-placement="right" data-original-title="+{{ ups }} | -{{ downs }}"{% endif %}>{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
       {% else %}
       <span>&#8226;</span>
@@ -251,7 +251,7 @@
         {% endif %}
 
         <!-- Hide score on new post -->
-        {% if p.created_utc is <= hide_score_time %}
+        {% if p.created_utc <= hide_score_time %}
         <span id="post-score-{{ p.base36id }}-mobile" class="score post-score-{{ p.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-toggle="tooltip" data-placement="top" data-original-title="+{{ ups }} | -{{ downs }}"{% endif %}>{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
         {% else %}
         <span>&#8226;</span>
@@ -271,7 +271,7 @@
         </span>
 
         <!-- Hide score on new post -->
-        {% if p.created_utc is <= hide_score_time %}
+        {% if p.created_utc <= hide_score_time %}
         <span id="post-score-{{ p.base36id }}-mobile" class="score post-score-{{ p.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-toggle="tooltip" data-placement="top" data-original-title="+{{ ups }} | -{{ downs }}"{% endif %}>{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
         {% else %}
         <span>&#8226;</span>
@@ -288,7 +288,7 @@
         </span>
 
         <!-- Hide score on new posts -->
-        {% if p.created_utc is <= hide_score_time %}
+        {% if p.created_utc <= hide_score_time %}
         <span id="post-score-{{ p.base36id }}-mobile" class="score"{% if not p.is_banned %} data-toggle="tooltip" data-placement="top" data-original-title="+{{ ups }} | -{{ downs }}"{% endif %}>{{ score }}</span>
         {% else %}
         <span>&#8226;</span>
