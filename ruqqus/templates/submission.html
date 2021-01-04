@@ -546,7 +546,7 @@
             {% if p.created_utc <= hide_score_time %}
             <span id="post-{{ p.base36id }}-score-none" class="score text-muted"{% if not p.is_banned %} data-toggle="tooltip" data-placement="right" data-original-title="+{{ ups }} | -{{ downs }}"{% endif %}>{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
             {% else %}
-            <span id="post-{{ p.base36id }}-score-none" class="score text-muted"{% if not p.is_banned %}>&#8226;</span>
+            <span id="post-{{ p.base36id }}-score-none" class="score text-muted">&#8226;</span>
             {% endif %}
 
             <div id="post-{{ p.base36id }}-down" tabindex="0" class="arrow-down mx-auto" onclick="location.href='/login?redirect={{ request.path | urlencode}}';">
