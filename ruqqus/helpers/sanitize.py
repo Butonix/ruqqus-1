@@ -168,7 +168,7 @@ def sanitize(text, bio=False, linkgen=False):
         #disguised link preventer
         for tag in soup.find_all("a"):
 
-            tag.contents=[x.string for x in tag.contents]
+            tag.contents=[x.string for x in tag.contents if x.string]
 
             display=''.join(tag.contents)
             display=re.sub("\s",'', display)
