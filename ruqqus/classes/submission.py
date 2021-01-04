@@ -215,8 +215,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             # load and tree comments
             # calling this function with a comment object will do a comment
             # permalink thing
-            if "replies" not in self.__dict__ and "_preloaded_comments" in self.__dict:
-                self.tree_comments(comment=comment)
+            self.tree_comments(comment=comment)
 
         # return template
         is_allowed_to_comment = self.board.can_comment(

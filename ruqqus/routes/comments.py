@@ -214,8 +214,6 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
 
         post._preloaded_comments += output
 
-        post.tree_comments()
-
         current_ids = [x.id for x in output]
 
     return {'html': lambda: post.rendered_page(v=v, comment=top_comment, comment_info=comment_info),
