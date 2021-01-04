@@ -170,7 +170,7 @@ def sanitize(text, bio=False, linkgen=False):
 
             tag.contents=[x if x.name=='img' else x.string if x.string else '' for x in tag.contents]
 
-            display=''.join(tag.contents)
+            display=''.join([x.string for x in tag.contents if x.string])
             display=re.sub("\s",'', display)
 
             if re.match("https?://\S+", display):
