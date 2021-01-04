@@ -1050,8 +1050,14 @@ def board_about_contributors(boardname, board, v):
     next_exists = (len(contributors) == 26)
     contributors = contributors[0:25]
 
-    return render_template("guild/contributors.html", v=v,
-                           b=board, contributors=contributors)
+    return render_template(
+        "guild/contributors.html", 
+        v=v,
+        b=board, 
+        contributors=contributors,
+        page=page,
+        next_exists=next_exists
+        )
 
 
 @app.route("/api/subscribe/<boardname>", methods=["POST"])
