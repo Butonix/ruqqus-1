@@ -466,7 +466,7 @@ def submit_post(v):
             g.db.add(post)
             ma=ModAction(
                     user_id=1,
-                    target_post_id=post.id,
+                    target_submission_id=post.id,
                     kind="ban_post",
                     board_id=post.board_id,
                     note="spam"
