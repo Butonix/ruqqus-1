@@ -254,6 +254,11 @@
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input type="submit" class="btn btn-success" value="Unban user">
 </form>
+<form action="/admin/nuke_user" method="post">
+  <input type="hidden" name="formkey", value="{{ v.formkey }}">
+  <input type="hidden" name="user" value="{{ u.username }}">
+  <input type="submit" class="btn btn-danger" value="Nuke User's Content">
+</form>
 {% else %}
 <form action="/api/ban_user/{{ u.id }}", method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">

@@ -607,3 +607,34 @@ def admin_ban_domain(v):
     g.db.commit()
     return redirect(d.permalink)
 
+
+@app.route("/admin/nuke_user", methods=["POST"])
+@admin_level_required(4)
+@validate_formkey
+def admin_nuke_user(v):
+
+    user=get_user(request.form.get("user"))
+
+    for post in g.db.query(Submission).filter_by(author_id=user.id).all():
+        post.is_banned=True
+        g.db.add(post)
+
+        ma=ModAction(
+            type="ban_post",
+            user_id=v.id,
+            target_submission_id=post.id,
+            note="admin action"
+            )
+        g.db.add(ma)
+
+    for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
+        comment.is_banned=True
+        g.db.add(comment)
+
+        ma=ModAction(
+            type="ban_comment",
+            user_id=v.id,
+            target_comment_id=comment.id,
+            note="admin action"
+            )
+        g.db.add(ma)
