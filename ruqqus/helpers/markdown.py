@@ -103,7 +103,7 @@ def preprocess(text):
     
     text=re.sub(enter_re, "\n\n", text)
 
-    text=re.sub("\u200[b-d]",'', text)
+    text=re.sub("(\u200b|\u200c|\u200d)",'', text)
     
     return text
     
