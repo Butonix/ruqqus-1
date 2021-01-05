@@ -627,6 +627,9 @@ def admin_nuke_user(v):
     user=get_user(request.form.get("user"))
 
     for post in g.db.query(Submission).filter_by(author_id=user.id).all():
+        if post.is_banned:
+            continue
+            
         post.is_banned=True
         g.db.add(post)
 
@@ -640,6 +643,9 @@ def admin_nuke_user(v):
         g.db.add(ma)
 
     for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
+        if comment.is_banned:
+            continue
+
         comment.is_banned=True
         g.db.add(comment)
 
