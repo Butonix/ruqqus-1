@@ -623,6 +623,7 @@ def admin_nuke_user(v):
             type="ban_post",
             user_id=v.id,
             target_submission_id=post.id,
+            board_id=post.board_id
             note="admin action"
             )
         g.db.add(ma)
@@ -635,6 +636,7 @@ def admin_nuke_user(v):
             type="ban_comment",
             user_id=v.id,
             target_comment_id=comment.id,
+            board_id=comment.post.board_id
             note="admin action"
             )
         g.db.add(ma)
