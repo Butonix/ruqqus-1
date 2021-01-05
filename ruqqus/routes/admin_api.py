@@ -640,3 +640,5 @@ def admin_nuke_user(v):
             note="admin action"
             )
         g.db.add(ma)
+
+    return redirect(user.permalink)
