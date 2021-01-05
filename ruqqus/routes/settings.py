@@ -8,6 +8,7 @@ from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.sanitize import *
+from ruqqus.helpers.filters import filter_comment_html
 from ruqqus.helpers.markdown import *
 from ruqqus.helpers.discord import remove_user
 from ruqqus.helpers.aws import check_csam_url
@@ -69,11 +70,27 @@ def settings_profile_post(v):
                                    v=v,
                                    error="You didn't change anything")
 
-        v.bio = bio
 
         with CustomRenderer() as renderer:
-            v.bio_html = renderer.render(mistletoe.Document(bio))
-        v.bio_html = sanitize(v.bio_html, linkgen=True)
+            bio_html = renderer.render(mistletoe.Document(bio))
+        bio_html = sanitize(bio_html, linkgen=True)
+
+        # Run safety filter
+        bans = filter_comment_html(body_html)
+
+        if bans:
+            ban = bans[0]
+            reason = f"Remove the {ban.domain} link from your bio and try again."
+            if ban.reason:
+                reason += f" {ban.reason_text}"
+                
+            #auto ban for digitally malicious content
+            if any([x.reason==4 for x in bans]):
+                v.ban(days=30, reason="Digitally malicious content is not allowed.")
+            return jsonify({"error": reason}), 401
+
+        v.bio = bio
+        v.bio_html=bio_html
         g.db.add(v)
         return render_template("settings_profile.html",
                                v=v,
