@@ -102,6 +102,8 @@ def preprocess(text):
     text=text.lstrip().rstrip()
     
     text=re.sub(enter_re, "\n\n", text)
+
+    text=re.sub("\u200[b-d]",'', text)
     
     return text
     
