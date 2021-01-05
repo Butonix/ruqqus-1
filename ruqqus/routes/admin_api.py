@@ -110,6 +110,7 @@ def ban_post(post_id, v):
         user_id=v.id,
         target_submission_id=post.id,
         board_id=post.board_id,
+        note="admin action"
         )
     g.db.add(ma)
     return (redirect(post.permalink), post)
@@ -131,6 +132,7 @@ def unban_post(post_id, v):
             user_id=v.id,
             target_submission_id=post.id,
             board_id=post.board_id,
+            note="admin action"
         )
         g.db.add(ma)
 
@@ -209,6 +211,7 @@ def api_ban_comment(c_id, v):
         user_id=v.id,
         target_comment_id=comment.id,
         board_id=comment.post.board_id,
+        note="admin action"
         )
     g.db.add(ma)
     return "", 204
@@ -229,6 +232,7 @@ def api_unban_comment(c_id, v):
             user_id=v.id,
             target_comment_id=comment.id,
             board_id=comment.post.board_id,
+            note="admin action"
             )
         g.db.add(ma)
 
@@ -544,6 +548,13 @@ def admin_csam_nuke(pid, v):
     post.is_banned = True
     post.ban_reason = "CSAM [1]"
     g.db.add(post)
+    ma=ModAction(
+        user_id=1,
+        target_submission_id=post.id,
+        board_id=post.board_id,
+        kind="ban_post",
+        note="CSAM detected"
+        )
 
     user = post.author
     user.is_banned = v.id
