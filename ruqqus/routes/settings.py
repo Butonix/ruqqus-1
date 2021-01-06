@@ -76,7 +76,7 @@ def settings_profile_post(v):
         bio_html = sanitize(bio_html, linkgen=True)
 
         # Run safety filter
-        bans = filter_comment_html(body_html)
+        bans = filter_comment_html(bio_html)
 
         if bans:
             ban = bans[0]
