@@ -20,4 +20,6 @@ from .titles import *
 from .paypal import *
 from .mod_logs import *
 from .categories import *
+from .favorites import *
 #from lodges import *
+
