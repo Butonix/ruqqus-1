@@ -32,7 +32,6 @@
       {% endfor %}
     </div>
   {% endfor %}
-  {% if request.path=="/categories" %}
     <div class="card rounded-lg text-primary border-0 overflow-hidden onboarding-card text-white{% if 0 in session.get('groupids',[]) %} selected{% endif %}" onclick="cattoggle('0')" id="cat-card-0">
       <img src="/assets/images/categories/uncategorized.gif" class="card-img h-100" alt="...">
       <div class="card-img-overlay onboarding-card-overlay d-flex justify-content-center align-items-center">
@@ -43,7 +42,6 @@
     <div class="d-none">
     <input type="checkbox" class="cat-check group-0" id="cat-0" data-cat="0"{% if 0 in session.get('groupids',[]) %} checked{% endif %}>
     </div>
-  {% endif %}
   </div>
   <div class="row">
     <div class="mr-3 ml-auto mb-5 mt-3">
