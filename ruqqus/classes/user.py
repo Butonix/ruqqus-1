@@ -652,11 +652,11 @@ class User(Base, Stndrd, Age_times):
 
     @property
     def can_make_guild(self):
-        return (self.has_premium or self.true_score >= 250 or (self.created_utc <= 1592974538 and self.true_score >= 50)) and len(self.boards_modded) < 10
+        return (self.has_premium or self.true_score >= 250 or (self.created_utc <= 1592974538 and self.true_score >= 50)) and len([x for x in self.boards_modded if x.is_siegable]) < 10
 
     @property
     def can_join_gms(self):
-        return len(self.boards_modded) < 10
+        return len([x for x in self.boards_modded if x.is_siegable]) < 10
 
     @property
     def can_siege(self):
