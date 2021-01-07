@@ -450,9 +450,9 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 def get_board(bid, graceful=False):
 
     x = g.db.query(Board).options(
-        joinedload(
-            Board.moderators).joinedload(
-            ModRelationship.user)).filter_by(
+        joinedload(Board.moderators).joinedload(ModRelationship.user),
+        joinedload(Board.subcat).joinedload(SubCategory.category)
+        ).filter_by(
                 id=base36decode(bid)).first()
     if not x:
         if graceful:
@@ -470,10 +470,11 @@ def get_guild(name, graceful=False):
     name = name.replace('_', '\_')
 
     x = g.db.query(Board).options(
-        joinedload(
-            Board.moderators).joinedload(
-            ModRelationship.user)).filter(
-                Board.name.ilike(name)).first()
+        joinedload(Board.moderators).joinedload(ModRelationship.user),
+        joinedload(Board.subcat).joinedload(SubCategory.category)
+            ).filter(
+                Board.name.ilike(name)
+                ).first()
     if not x:
         if not graceful:
             abort(404)
