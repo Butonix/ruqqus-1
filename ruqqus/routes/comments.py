@@ -333,9 +333,7 @@ def api_comment(v):
         ).options(contains_eager(Comment.comment_aux)).all()
 
         threshold = app.config["COMMENT_SPAM_COUNT_THRESHOLD"]
-        if v.age >= (60 * 60 * 24 * 30):
-            threshold *= 4
-        elif v.age >= (60 * 60 * 24 * 7):
+        if v.age >= (60 * 60 * 24 * 7):
             threshold *= 3
         elif v.age >= (60 * 60 * 24):
             threshold *= 2
