@@ -64,6 +64,8 @@ CHATS = {}
 @sockets.route('/+<guildname>/chat_submit')
 #@is_not_banned
 def inbox(ws):
+
+    print('submit websocket')
     """Receives incoming chat messages, inserts them into Redis."""
 
     #guild=get_guild(guildname, graceful=True)
