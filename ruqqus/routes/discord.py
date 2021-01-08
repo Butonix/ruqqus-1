@@ -164,3 +164,9 @@ def discord_redirect(v):
         #print(url)
 
     return redirect(f"https://discord.com/channels/{SERVER_ID}/{WELCOME_CHANNEL}")
+
+
+#guilded redirect
+@app.route("/guilded", methods=["GET"])
+def guilded():
+    return redirect("https://www.guilded.gg/i/Y2VP1L8p")
