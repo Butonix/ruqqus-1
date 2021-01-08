@@ -51,7 +51,7 @@ app.config['SQLALCHEMY_READ_URIS'] = [
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
 app.config["SERVER_NAME"] = environ.get(
     "domain", environ.get(
-        "SERVER_NAME", None)).rstrip()
+        "SERVER_NAME", None)).lstrip().rstrip()
 app.config["SESSION_COOKIE_NAME"] = "session_ruqqus"
 app.config["VERSION"] = _version
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024
