@@ -186,6 +186,38 @@
           </div>
         </div>
 
+        <div id="category">
+          <h2 class="h5" id="guild_category">Guild Category</h2>
+
+          <p class="text-small text-muted">Select the category of content this guild is for. Selecting the correct category will improve visibility for people who might be interested in joining.</p>
+
+          <div class="settings-section rounded">
+            <div class="body d-lg-flex">
+
+              <label for="category-select" class="text-black w-lg-25">Category</label>
+
+
+              <div class="w-lg-100">
+                <div class="input-group mb-2">
+                  <select id="category-selector" name="category" class="form-control" onchange="post_toast('/mod/{{ b.base36id }}/category/'+document.getElementById('category-selector').selectedOptions[0].value)" {% if b.is_locked_category %}disabled{% endif %}>
+                    {% if not b.subcat %}
+                      <option value="0" selected disabled>Select a Category</option>
+                    {% endif %}
+                    {% for category in categories %}
+                        <option disabled>{{ category.name }}</option>
+
+                        {% for subcat in category.subcats %}
+                          <option value="{{ subcat.id }}"{% if subcat.id==b.subcat_id %} selected{% endif %}> - {{ subcat.name }}</option>
+                        {% endfor %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
         <div id="nsfw">
 
           <h2 class="h5">Age-Restricted Content</h2>

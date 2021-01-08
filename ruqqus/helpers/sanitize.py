@@ -55,6 +55,7 @@ _allowed_tags_in_bio = [
 ]
 
 _allowed_attributes = {'a': ['href', 'title', "rel"],
+                       'i': [],
                        'img': ['src', 'class']
                        }
 
@@ -63,24 +64,27 @@ _allowed_protocols = ['http', 'https']
 # filter to make all links show domain on hover
 
 
-def nofollow(attrs, new=False):
+def a_modify(attrs, new=False):
 
-    parsed_url = urlparse(attrs[(None, "href")])
-    domain = parsed_url.netloc
-    if domain and not domain.endswith(("ruqqus.com", "ruqq.us")):
-        attrs[(None, "rel")] = "nofollow noopener"
-        attrs[(None, "target")] = "_blank"
+    raw_url=attrs.get((None, "href"), None)
+    if raw_url:
+        parsed_url = urlparse(raw_url)
 
-        # Force https for all external links in comments
-        # (Ruqqus already forces its own https)
-        new_url = ParseResult(scheme="https",
-                              netloc=parsed_url.netloc,
-                              path=parsed_url.path,
-                              params=parsed_url.params,
-                              query=parsed_url.query,
-                              fragment=parsed_url.fragment)
+        domain = parsed_url.netloc
+        if domain and not domain.endswith(("ruqqus.com", "ruqq.us")):
+            attrs[(None, "rel")] = "nofollow noopener"
+            attrs[(None, "target")] = "_blank"
 
-        attrs[(None, "href")] = urlunparse(new_url)
+            # Force https for all external links in comments
+            # (Ruqqus already forces its own https)
+            new_url = ParseResult(scheme="https",
+                                  netloc=parsed_url.netloc,
+                                  path=parsed_url.path,
+                                  params=parsed_url.params,
+                                  query=parsed_url.query,
+                                  fragment=parsed_url.fragment)
+
+            attrs[(None, "href")] = urlunparse(new_url)
 
     return attrs
 
@@ -95,7 +99,7 @@ _clean_w_links = bleach.Cleaner(tags=_allowed_tags_with_links,
                                 filters=[partial(LinkifyFilter,
                                                  skip_tags=["pre"],
                                                  parse_email=False,
-                                                 callbacks=[nofollow]
+                                                 callbacks=[a_modify]
                                                  )
                                          ]
                                 )
@@ -106,7 +110,7 @@ _clean_bio = bleach.Cleaner(tags=_allowed_tags_in_bio,
                             filters=[partial(LinkifyFilter,
                                              skip_tags=["pre"],
                                              parse_email=False,
-                                             callbacks=[nofollow]
+                                             callbacks=[a_modify]
                                              )
                                      ]
                             )
@@ -122,8 +126,10 @@ def sanitize(text, bio=False, linkgen=False):
         else:
             sanitized = _clean_w_links.clean(text)
 
+        #soupify
         soup = BeautifulSoup(sanitized, features="html.parser")
 
+        #img elements - embed
         for tag in soup.find_all("img"):
 
             url = tag.get("src", "")
@@ -158,6 +164,24 @@ def sanitize(text, bio=False, linkgen=False):
                 new_tag["href"] = tag["src"]
                 new_tag["rel"] = "nofollow noopener"
                 tag.replace_with(new_tag)
+
+        #disguised link preventer
+        for tag in soup.find_all("a"):
+
+            tag.contents=[x if x.name=='img' else x.string if x.string else '' for x in tag.contents]
+
+            display=''.join([x.string for x in tag.contents if x.string])
+            display=re.sub("\s",'', display)
+
+            if re.match("https?://\S+", display):
+                try:
+                    tag.string = tag["href"]
+                except:
+                    tag.string = ""
+
+        #clean up tags in code
+        for tag in soup.find_all("code"):
+            tag.contents=[x.string for x in tag.contents if x.string]
 
         sanitized = str(soup)
 

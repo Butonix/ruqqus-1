@@ -2,21 +2,9 @@
 
 {% block content %}
 <h1>My Info</h1>
-<p>This table shows the private information associated with your Ruqqus account. For security reasons, authentication-related data is not shown.</p>
-<table>
-<tr>
-<th>Key</th>
-<th>Value</th>
-</tr>
-{% for key in v.__dict__ if key not in ["passhash", "_lazy", "_sa_instance_state", "mfa_secret", "title", "patreon_access_token", "patreon_refresh_token"] %}
-<tr>
-<td>{{ key }}</td>
-<td>{{ v.__dict__[key] }}</td>
-</tr>
-{% endfor %}
-<tr>
-<td>fullname</td>
-<td>{{ v.fullname }}</td>
-</tr>
-</table>
+<form action="/my_info" method="post">
+	<input type="hidden" name="formkey" value="{{ v.formkey }}">
+
+	<input type="submit" class="btn btn-primary" value="Request HTML data">
+</form>
 {% endblock %}

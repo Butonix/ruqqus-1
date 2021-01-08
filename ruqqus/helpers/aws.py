@@ -199,3 +199,5 @@ def check_csam_url(url, v, delete_content_function):
         g.db.add(alt)
 
     delete_content_function()
+
+    g.db.commit()

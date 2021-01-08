@@ -264,27 +264,7 @@
         <i class="fas fa-heart mr-2"></i>Support Ruqqus
       </div>
       <div class="body">
-        <p>Exclusive patron titles, merch, and more. Support Ruqqus today!</p>
-
-        {% if v %}
-
-        <a href="/settings#patreon" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
-            <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
-          </span>Unlock Patron Titles
-        </a>
-
-        {% else %}
-
-        <a href="https://patreon.com/ruqqus" target="blank" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
-            <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
-          </span>Become a Patron
-        </a>
-
-        {% endif %}
+        <p>Merch and more. Support Ruqqus today!</p>
 
         <a href="https://www.bonfire.com/store/ruqqus/" target="blank" class="btn btn-block btn-link text-info text-left text-decoration-none px-1 mt-0">
           <span class="fa-stack fa-1x ml-n1 mr-2">
@@ -307,14 +287,85 @@
           </span>Contribute Code
         </a>
 
-        <a href="https://github.com/ruqqus/ruqqus#sponsors" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #F7931A!important">
+        {% if not v.has_premium %}
+        <a href="/help/donate" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #F7931A!important">
           <span class="fa-stack fa-1x ml-n1 mr-2">
             <i class="fas fa-square fa-stack-2x" style="color: #FEEBC8!important; font-size: 2rem!important;"></i>
             <i class="fab fa-bitcoin fa-stack-1x text-base fa-inverse" style="color: #F7931A!important;"></i>
-          </span>Donate Crypto
+          </span>Donate Cash or Crypto
+        </a>
+        {% endif %}
+
+        <a href="/settings/premium" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #805ad5!important">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #dabef9!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-coins fa-stack-1x text-base fa-inverse" style="color: #805ad5!important;"></i>
+          </span>Ruqqus Premium
         </a>
 
+        <a href="https://github.com/ruqqus/ruqqus/issues" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #DC143C!important">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #FC8181!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-bug fa-stack-1x text-base fa-inverse" style="color: #DC143C!important;"></i>
+          </span>Report Bugs
+        </a>
+
+        <div data-toggle="tooltip" data-placement="bottom" title="Based on coins redeemed in the last 7 days">
+          <div class="text-center text-small">{{ g.timestamp | coin_goal }}% of goal</div>
+          <div class="progress" style="border-radius: 3px;">
+            <div class="progress-bar bg-primary" role="progressbar" style="width: {{ g.timestamp | coin_goal }}%;" aria-valuenow="{{ g.timestamp | coin_goal }}" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    {% if request.path=="/all" or (request.path=="/" and not v) %}
+    <div class="sidebar-section">
+      <div class="title">
+        <i class="fas fa-shapes mr-2"></i>Categories
+      </div>
+      <div class="body">
+        <div class="accordion" id="accordionCats">
+
+          {% for c in CATEGORIES %}
+          <div class="card">
+            <div class="card-header" id="heading-{{ loop.index }}">
+              <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left text-muted collapsed" type="button" data-toggle="collapse" data-target="#collapse-{{ loop.index }}" aria-expanded="true" aria-controls="collapse-{{ loop.index }}"><i class="fas {{ c.icon }} fa-fw ml-n1 mr-2"></i>{{ c.name }}</button>
+              </h2>
+            </div>
+            <div id="collapse-{{ loop.index }}" class="collapse" aria-labelledby="header-{{ loop.index }}" data-parent="#accordionCats">
+              <div class="card-body">
+                {% for subcat in c.subcats %}
+                  <div class="custom-control custom-checkbox mb-2">
+                    <input type="checkbox" class="custom-control-input cat-check" id="cat-{{ subcat.base36id }}" data-cat="{{ subcat.id }}" onchange="togglecat('{{ sort_method }}')"{% if subcat.id in session.get('catids',[]) %} checked{% endif %}>
+                    <label class="custom-control-label" for="cat-{{ subcat.base36id }}">{{ subcat.name }}</label>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          <div class="card">
+            <div class="card-header" id="heading-0">
+              <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left text-muted collapsed" type="button" data-toggle="collapse" data-target="#collapse-0" aria-expanded="true" aria-controls="collapse-0"><i class="fas fa-question-circle fa-fw ml-n1 mr-2"></i>Uncategorized</button>
+              </h2>
+            </div>
+            <div id="collapse-0" class="collapse" aria-labelledby="header-0" data-parent="#accordionCats">
+              <div class="card-body">
+                <div class="custom-control custom-checkbox mb-2">
+                  <input type="checkbox" class="custom-control-input cat-check" id="cat-0" data-cat="0" onchange="togglecat('{{ sort_method }}')"{% if 0 in session.get('catids',[]) %} checked{% endif %}>
+                  <label class="custom-control-label" for="cat-0">Uncategorized</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+    {% endif %}
 
     {% endblock %}

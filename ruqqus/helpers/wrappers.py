@@ -15,6 +15,17 @@ def get_logged_in_user():
 
         token = request.headers.get("Authorization")
         if not token:
+
+            #let admins hit api/v1 from browser
+            # x=request.session.get('user_id')
+            # nonce=request.session.get('login_nonce')
+            # if not x or not nonce:
+            #     return None, None
+            # user=g.db.query(User).filter_by(id=x).first()
+            # if not user:
+            #     return None, None
+            # if user.admin_level >=3 and nonce>=user.login_nonce:
+            #     return user, None
             return None, None
 
         token = token.split()
@@ -30,24 +41,39 @@ def get_logged_in_user():
             ClientAuth.access_token_expire_utc > int(time.time())
         ).first()
 
-        x = (client.user, client) if client else (None, None)
-        return x
+        if app.config["SERVER_NAME"]=="dev.ruqqus.com" and client.user.admin_level < 2 and not client.user.has_premium:
+            x=(None, None)
+        else:
+            x = (client.user, client) if client else (None, None)
+
 
     elif "user_id" in session:
 
         uid = session.get("user_id")
         nonce = session.get("login_nonce", 0)
         if not uid:
-            return None, None
-        v = g.db.query(User).options(lazyload('*')).filter_by(id=uid).first()
+            x= (None, None)
+        v = g.db.query(User).options(
+            joinedload(User.moderates).joinedload(ModRelationship.board), #joinedload(Board.reports),
+            joinedload(User.subscriptions).joinedload(Subscription.board)
+        #    joinedload(User.notifications)
+            ).filter_by(id=uid).first()
+
+        if app.config["SERVER_NAME"]=="dev.ruqqus.com" and v.admin_level < 2 and not v.has_premium:
+            x= (None, None)
+
         if v and nonce < v.login_nonce:
-            return None, None
+            x= (None, None)
         else:
-            return v, None
+            x=(v, None)
 
     else:
-        return None, None
+        x=(None, None)
 
+    if x[0]:
+        x[0].client=x[1]
+
+    return x
 
 # Wrappers
 def auth_desired(f):
@@ -153,36 +179,92 @@ def tos_agreed(f):
     wrapper.__name__ = f.__name__
     return wrapper
 
+def premium_required(f):
 
-def is_guildmaster(f):
-    # decorator that enforces guildmaster status
-    # use under auth_required
+    #decorator that enforces valid premium status
+    #use under auth_required or is_not_banned
 
     def wrapper(*args, **kwargs):
 
-        v = kwargs["v"]
-        boardname = kwargs.get("boardname")
-        board_id = kwargs.get("bid")
+        v=kwargs["v"]
 
-        if boardname:
-            board = get_guild(boardname)
-        else:
-            board = get_board(board_id)
-
-        if not board.has_mod(v):
+        if not v.has_premium:
             abort(403)
 
-        if v.is_banned and not v.unban_utc:
-            abort(403)
+        return f(*args, **kwargs)
 
-        return f(*args, board=board, **kwargs)
-
-    wrapper.__name__ = f.__name__
+    wrapper.__name__=f.__name__
     return wrapper
 
+
+def no_negative_balance(s):
+
+    def wrapper_maker(f):
+
+    #decorator that enforces valid premium status
+    #use under auth_required or is_not_banned
+
+        def wrapper(*args, **kwargs):
+
+            v=kwargs["v"]
+
+            if v.negative_balance_cents:
+                if s=="toast":
+                    return jsonify({"error":"You can't do that while your account balance is negative. Visit your account settings to bring your balance up to zero."}), 402
+                elif s=="html":
+                    raise(PaymentRequired)
+                else:
+                    raise(PaymentRequired)
+
+            return f(*args, **kwargs)
+
+        wrapper.__name__=f.__name__
+        return wrapper
+
+    return wrapper_maker
+
+def is_guildmaster(perm=None):
+    # decorator that enforces guildmaster status and verifies permissions
+    # use under auth_required
+    def wrapper_maker(f):
+
+        def wrapper(*args, **kwargs):
+
+            v = kwargs["v"]
+            boardname = kwargs.get("boardname")
+            board_id = kwargs.get("bid")
+            bid=request.values.get("bid", request.values.get("board_id"))
+
+            if boardname:
+                board = get_guild(boardname)
+            elif board_id:
+                board = get_board(board_id)
+            elif bid:
+                board = get_board(bid)
+            else:
+                return jsonify({"error": f"no guild specified"}), 400
+
+            m=board.has_mod(v)
+            if not m:
+                return jsonify({"error":f"You aren't a guildmaster of +{board.name}"}), 403
+
+            if perm:
+                if not m.__dict__.get(f"perm_{perm}"):
+                    return jsonify({"error":f"Permission `{perm}` required"}), 403
+
+
+            if v.is_banned and not v.unban_utc:
+                abort(403)
+
+            return f(*args, board=board, **kwargs)
+
+        wrapper.__name__ = f.__name__
+        return wrapper
+
+    return wrapper_maker
+
+
 # this wrapper takes args and is a bit more complicated
-
-
 def admin_level_required(x):
 
     def wrapper_maker(f):
@@ -255,7 +337,7 @@ def no_cors(f):
 
         origin = request.headers.get("Origin", None)
 
-        if origin and origin != "https://" + app.config["SERVER_NAME"]:
+        if origin and origin != "https://" + app.config["SERVER_NAME"] and app.config["FORCE_HTTPS"]==1:
 
             return "This page may not be embedded in other webpages.", 403
 
@@ -328,6 +410,8 @@ def api(*scopes, no_ban=False):
 
                 if request.path.startswith('/inpage/'):
                     return result['inpage']()
+                elif request.path.startswith('/test/'):
+                    return result['api']()
                 else:
                     return result['html']()
 

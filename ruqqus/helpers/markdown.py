@@ -6,6 +6,12 @@ import re
 
 from flask import g
 
+#preprocess re
+
+enter_re=re.compile("(\n\r?\w+){3,}")
+
+
+
 # add token/rendering for @username mentions
 
 
@@ -53,13 +59,14 @@ class CustomRenderer(HTMLRenderer):
 
         user = get_user(target, graceful=True)
 
+
         try:
-            if g.v.admin_level == 0 and g.dv.any_block - exists(user):
+            if g.v.admin_level == 0 and g.dv.any_block_exists(user):
                 return f"{space}@{target}"
         except BaseException:
             pass
 
-        if (not user or user.is_banned or user.is_deleted):
+        if (not user or (user.is_banned and not user.unban_utc) or user.is_deleted):
             return f"{space}@{target}"
 
         return f'{space}<a href="{user.permalink}" class="d-inline-block"><img src="/@{user.username}/pic/profile" class="profile-pic-20 mr-1">@{user.username}</a>'
@@ -88,3 +95,15 @@ class CustomRenderer(HTMLRenderer):
         post = get_submission(self.post_id)
         user = post.author
         return f'{space}<a href="{user.permalink}" class="d-inline-block"><img src="/@{user.username}/pic/profile" class="profile-pic-20 mr-1">@{user.username}</a>'
+
+    
+def preprocess(text):
+
+    text=text.lstrip().rstrip()
+    
+    text=re.sub(enter_re, "\n\n", text)
+
+    text=re.sub("(\u200b|\u200c|\u200d)",'', text)
+    
+    return text
+    

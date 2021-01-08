@@ -17,6 +17,7 @@ class Vote(Base):
     submission_id = Column(Integer, ForeignKey("submissions.id"))
     created_utc = Column(Integer, default=0)
     creation_ip = Column(String, default=None)
+    app_id = Column(Integer, ForeignKey("oauth_apps.id"), default=None)
 
     user = relationship("User", lazy="subquery")
     post = relationship("Submission", lazy="subquery")
@@ -47,6 +48,24 @@ class Vote(Base):
 
         g.db.add(self)
 
+    @property
+    def json_core(self):
+        data={
+            "user_id": self.user_id,
+            "submission_id":self.submission_id,
+            "created_utc": self.created_utc,
+            "vote_type":self.vote_type
+            }
+        return data
+
+    @property
+    def json(self):
+        data=self.json_core
+        data["user"]=self.user.json_core
+        data["post"]=self.post.json_core
+    
+        return data
+
 
 class CommentVote(Base):
 
@@ -58,6 +77,7 @@ class CommentVote(Base):
     comment_id = Column(Integer, ForeignKey("comments.id"))
     created_utc = Column(Integer, default=0)
     creation_ip = Column(String, default=None)
+    app_id = Column(Integer, ForeignKey("oauth_apps.id"), default=None)
 
     user = relationship("User", lazy="subquery")
     comment = relationship("Comment", lazy="subquery")
@@ -86,3 +106,21 @@ class CommentVote(Base):
         self.created_utc = int(time())
 
         g.db.add(self)
+
+    @property
+    def json_core(self):
+        data={
+            "user_id": self.user_id,
+            "comment_id":self.comment_id,
+            "created_utc": self.created_utc,
+            "vote_type":self.vote_type
+            }
+        return data
+
+    @property
+    def json(self):
+        data=self.json_core
+        data["user"]=self.user.json_core
+        data["comment"]=self.comment.json_core
+    
+        return data

@@ -53,6 +53,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     is_banned = Column(Boolean, default=False)
     is_deleted = Column(Boolean, default=False)
     distinguish_level = Column(Integer, default=0)
+    gm_distinguish = Column(Integer, ForeignKey("boards.id"), default=0)
+    distinguished_board = relationship("Board", lazy="joined", primaryjoin="Board.id==Submission.gm_distinguish")
     created_str = Column(String(255), default=None)
     stickied = Column(Boolean, default=False)
     _comments = relationship(
@@ -82,6 +84,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     score_activity = Column(Float, default=0)
     is_offensive = Column(Boolean, default=False)
     is_nsfl = Column(Boolean, default=False)
+    is_politics = Column(Boolean, default=False)
     board = relationship(
         "Board",
         lazy="joined",
@@ -98,6 +101,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     upvotes = Column(Integer, default=1)
     downvotes = Column(Integer, default=0)
+
+    app_id=Column(Integer, ForeignKey("oauth_apps.id"), default=None)
+    oauth_app=relationship("OauthApp")
 
     approved_by = relationship(
         "User",
@@ -118,6 +124,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     #report_count=deferred(Column(Integer, server_default=FetchedValue()))
     score = deferred(Column(Float, server_default=FetchedValue()))
     #is_public=deferred(Column(Boolean, server_default=FetchedValue()))
+
+    awards = relationship("AwardRelationship", lazy="joined")
 
     rank_hot = deferred(Column(Float, server_default=FetchedValue()))
     rank_fiery = deferred(Column(Float, server_default=FetchedValue()))
@@ -155,8 +163,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     @lazy
     def fullname(self):
-        return f"t2_{self.base36id}"
-
+        return f"t2_{self.base36id}"    
+        
     @property
     @lazy
     def permalink(self):
@@ -173,7 +181,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         if not output:
             output = '-'
 
-        return f"/post/{self.base36id}/{output}"
+        return f"/+{self.board.name}/post/{self.base36id}/{output}"
 
     @property
     def is_archived(self):
@@ -207,11 +215,15 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             # load and tree comments
             # calling this function with a comment object will do a comment
             # permalink thing
-            self.tree_comments(comment=comment)
+            if "replies" not in self.__dict__ and "_preloaded_comments" in self.__dict__:
+                self.tree_comments(comment=comment)
 
         # return template
         is_allowed_to_comment = self.board.can_comment(
             v) and not self.is_archived
+        
+    #    if request.args.get("sort", "Hot") != "new":
+    #        self.replies = [x for x in self.replies if x.is_pinned] + [x for x in self.replies if not x.is_pinned]
 
         return render_template(template,
                                v=v,
@@ -222,7 +234,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                                comment_info=comment_info,
                                is_allowed_to_comment=is_allowed_to_comment,
                                render_replies=True,
-                               is_guildmaster=self.board.has_mod(v)
+                               is_guildmaster=self.board.has_mod(v),
+                               b=self.board
                                )
 
     @property
@@ -240,8 +253,15 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
         comments = self._preloaded_comments
 
+        pinned_comment=[]
+
         index = {}
         for c in comments:
+
+            if c.is_pinned and c.parent_fullname==self.fullname:
+                pinned_comment=[c]
+                continue
+
             if c.parent_fullname in index:
                 index[c.parent_fullname].append(c)
             else:
@@ -253,7 +273,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         if comment:
             self.__dict__["replies"] = [comment]
         else:
-            self.__dict__["replies"] = index.get(self.fullname, [])
+            self.__dict__["replies"] = pinned_comment + index.get(self.fullname, [])
 
     @property
     def active_flags(self):
@@ -303,8 +323,17 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         else:
             self.is_offensive = False
 
+    def determine_politics(self):
+
+        for x in g.db.query(PoliticsWord).all():
+            if (self.body and x.check(self.body)) or x.check(self.title):
+                self.is_politics = True
+                break
+        else:
+            self.is_offensive = False
+
     @property
-    def json(self):
+    def json_core(self):
 
         if self.is_banned:
             return {'is_banned': True,
@@ -323,7 +352,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                     'permalink': self.permalink,
                     'guild_name': self.board.name
                     }
-        data = {'author': self.author.username if not self.author.is_deleted else None,
+        data = {'author_name': self.author.username if not self.author.is_deleted else None,
                 'permalink': self.permalink,
                 'is_banned': False,
                 'is_deleted': False,
@@ -342,15 +371,32 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'created_utc': self.created_utc,
                 'edited_utc': self.edited_utc or 0,
                 'guild_name': self.board.name,
-                'embed_url': self.embed_url,
-                'is_archived': self.is_archived,
-                'author_title': self.author.title.json if self.author.title else None,
-                'original_guild_name': self.original_board.name,
+                'original_guild_name': self.original_board.name if not self.board_id == self.original_board_id else None,
                 'comment_count': self.comment_count,
                 'score': self.score_fuzzed,
                 'upvotes': self.upvotes_fuzzed,
-                'downvotes': self.downvotes_fuzzed
+                'downvotes': self.downvotes_fuzzed,
+                'award_count': self.award_count,
+                'is_offensive': self.is_offensive,
+                'is_politics': self.is_politics
                 }
+        return data
+
+    @property
+    def json(self):
+        data=self.json_core
+        
+        if self.is_deleted or self.is_banned:
+            return data
+
+        data["author"]=self.author.json_core
+        data["guild"]=self.board.json_core
+        data["original_guild"]=self.original_board.json_core if not self.board_id==self.original_board_id else None
+        data["comment_count"]: self.comment_count
+
+    
+        if "replies" in self.__dict__:
+            data["replies"]=[x.json_core for x in self.replies]
 
         if "_voted" in self.__dict__:
             data["voted"] = self._voted
@@ -419,9 +465,15 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         self.submission_aux.embed_url = x
         g.db.add(self.submission_aux)
 
-    @property
-    def is_guildmaster(self):
-        return self.__dict__.get('_is_guildmaster', False)
+    def is_guildmaster(self, perm=None):
+        mod=self.__dict__.get('_is_guildmaster', False)
+        if not mod:
+            return False
+        if not perm:
+            return True
+
+        return mod.perm_full or mod.__dict__[f"perm_{perm}"]
+
 
     @property
     def is_blocking_guild(self):
@@ -450,3 +502,44 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     @property
     def report_count(self):
         return len(self.reports)
+
+    @property
+    def award_count(self):
+        return len(self.awards)
+
+    @property
+    def embed_template(self):
+        return f"site_embeds/{self.domain_obj.embed_template}.html"
+
+    @property
+    def self_download_json(self):
+
+        #This property should never be served to anyone but author and admin
+        if not self.is_banned and not self.is_banned:
+            return self.json_core
+
+        return {
+            "title":self.title,
+            "author": self.author.name,
+            "url": self.url,
+            "body": self.body,
+            "body_html": self.body_html,
+            "is_banned": bool(self.is_banned),
+            "is_deleted": self.is_deleted,
+            'created_utc': self.created_utc,
+            'id': self.base36id,
+            'fullname': self.fullname,
+            'guild_name': self.board.name,
+            'original_guild_name': self.original_board.name if not self.board_id == self.original_board_id else None,
+            'comment_count': self.comment_count,
+            'permalink': self.permalink
+        }
+    
+    
+class SaveRelationship(Base, Stndrd):
+
+    __tablename__="save_relationship"
+
+    id=Column(Integer, primary_key=true)
+    user_id=Column(Integer, ForeignKey("users.id"))
+    submission_id=Column(Integer, ForeignKey("submissions.id"))

@@ -2,7 +2,7 @@ from flask import render_template
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
-from ruqqus.__main__ import Base
+from ruqqus.__main__ import Base, app
 
 
 class BadgeDef(Base):
@@ -25,6 +25,15 @@ class BadgeDef(Base):
     def path(self):
 
         return f"/assets/images/badges/{self.icon}"
+
+    @property
+    def json_core(self):
+        data={
+            "name": self.name,
+            "description": self.description,
+            "icon": self.icon
+        }
+    
 
 
 class Badge(Base):
@@ -69,10 +78,15 @@ class Badge(Base):
         return render_template("badge.html", b=self)
 
     @property
-    def json(self):
+    def json_core(self):
 
         return {'text': self.text,
                 'name': self.name,
                 'created_utc': self.created_utc,
-                'url': self.url
+                'url': self.url,
+                'icon_url':f"https://{app.config['SERVER_NAME']}{self.path}"
                 }
+
+    property
+    def json(self):
+        return self.json_core

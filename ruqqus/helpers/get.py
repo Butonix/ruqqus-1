@@ -2,7 +2,7 @@ from .base36 import *
 from .sqla_values import *
 from ruqqus.classes import *
 from flask import g
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, aliased
 
 import re
 
@@ -95,7 +95,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         vt = nSession.query(Vote).filter_by(
             user_id=v.id, submission_id=i).subquery()
         mod = nSession.query(ModRelationship).filter_by(
-            user_id=v.id, invite_rescinded=False).subquery()
+            user_id=v.id, accepted=True, invite_rescinded=False).subquery()
         boardblocks = nSession.query(
             BoardBlock).filter_by(user_id=v.id).subquery()
         blocking = v.blocking.subquery()
@@ -103,12 +103,17 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         items = nSession.query(
             Submission,
             vt.c.vote_type,
-            mod.c.id,
+            aliased(ModRelationship, alias=mod),
             boardblocks.c.id,
             blocking.c.id
         ).options(
             joinedload(Submission.author).joinedload(User.title)
-        ).filter(Submission.id == i
+        )
+
+        if v.admin_level>=4:
+            items=items.options(joinedload(Submission.oauth_app))
+
+        items=items.filter(Submission.id == i
                  ).join(vt, vt.c.submission_id == Submission.id, isouter=True
                         ).join(mod, mod.c.board_id == Submission.board_id, isouter=True
                                ).join(boardblocks, boardblocks.c.board_id == Submission.board_id, isouter=True
@@ -147,23 +152,27 @@ def get_posts(pids, sort="hot", v=None):
             vt = g.db.query(Vote).filter_by(
                 submission_id=pid, user_id=v.id).subquery()
             mod = g.db.query(ModRelationship).filter_by(
-                user_id=v.id, invite_rescinded=False).subquery()
+                user_id=v.id, accepted=True, invite_rescinded=False).subquery()
             boardblocks = g.db.query(BoardBlock).filter_by(
                 user_id=v.id).subquery()
             blocking = v.blocking.subquery()
             blocked = v.blocked.subquery()
-            subs = v.subscriptions.filter_by(is_active=True).subquery()
+            subs = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
 
             query = g.db.query(
                 Submission,
                 vt.c.vote_type,
-                mod.c.id,
+                aliased(ModRelationship, alias=mod),
                 boardblocks.c.id,
                 blocking.c.id,
                 blocked.c.id,
                 subs.c.id
             ).options(joinedload(Submission.author).joinedload(User.title)
-                      ).filter_by(id=pid
+                      )
+            if v.admin_level>=4:
+                query=query.options(joinedload(Submission.oauth_app))
+
+            query=query.filter_by(id=pid
                                   ).join(vt, vt.c.submission_id == Submission.id, isouter=True
                                          ).join(mod, mod.c.board_id == Submission.board_id, isouter=True
                                                 ).join(boardblocks, boardblocks.c.board_id == Submission.board_id, isouter=True
@@ -229,7 +238,11 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             blocked.c.id
         ).options(
             joinedload(Comment.author).joinedload(User.title)
-        ).filter(
+        )
+        if v.admin_level >=4:
+            comms=comms.options(joinedload(Comment.oauth_app))
+
+        comms=comms.filter(
             Comment.parent_submission == post.id,
             Comment.level <= 6
         ).join(
@@ -318,7 +331,12 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 
         items = g.db.query(Comment, vt.c.vote_type).options(
             joinedload(Comment.author).joinedload(User.title)
-        ).filter(
+        )
+
+        if v.admin_level >=4:
+            items=items.options(joinedload(Comment.oauth_app))
+
+        items=items.filter(
             Comment.id == i
         ).join(
             vt, vt.c.comment_id == Comment.id, isouter=True
@@ -377,6 +395,10 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
                 joinedload(Comment.author).joinedload(User.title),
                 joinedload(Comment.post).joinedload(Submission.board)
             )
+
+            if v.admin_level >=4:
+                query=query.options(joinedload(Comment.oauth_app))
+
             if load_parent:
                 query = query.options(
                     joinedload(
@@ -428,9 +450,9 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 def get_board(bid, graceful=False):
 
     x = g.db.query(Board).options(
-        joinedload(
-            Board.moderators).joinedload(
-            ModRelationship.user)).filter_by(
+        joinedload(Board.moderators).joinedload(ModRelationship.user),
+        joinedload(Board.subcat).joinedload(SubCategory.category)
+        ).filter_by(
                 id=base36decode(bid)).first()
     if not x:
         if graceful:
@@ -448,10 +470,11 @@ def get_guild(name, graceful=False):
     name = name.replace('_', '\_')
 
     x = g.db.query(Board).options(
-        joinedload(
-            Board.moderators).joinedload(
-            ModRelationship.user)).filter(
-                Board.name.ilike(name)).first()
+        joinedload(Board.moderators).joinedload(ModRelationship.user),
+        joinedload(Board.subcat).joinedload(SubCategory.category)
+            ).filter(
+                Board.name.ilike(name)
+                ).first()
     if not x:
         if not graceful:
             abort(404)
@@ -521,15 +544,19 @@ def get_from_permalink(link, v=None):
 
     if "@" in link:
 
-        name = re.search("/@(\w+)", link).match(1)
-        return get_user(name)
+        name = re.search("/@(\w+)", link)
+        if name:
+            name=name.match(1)
+            return get_user(name)
 
     if "+" in link:
 
-        name = re.search("/\+(\w+)", link).match(1)
-        return get_guild(name)
+        x = re.search("/\+(\w+)$", link)
+        if x:
+            name=x.match(1)
+            return get_guild(name)
 
-    ids = re.search("://[^/]+/post/(\w+)/[^/]+(/(\w+))?", link)
+    ids = re.search("://[^/]+/\+\w+/post/(\w+)/[^/]+(/(\w+))?", link)
 
     post_id = ids.group(1)
     comment_id = ids.group(3)
@@ -559,3 +586,33 @@ def get_from_fullname(fullname, v=None, graceful=False):
         return get_comment(b36, v=v, graceful=graceful)
     elif kind == 't4':
         return get_board(b36, v=v, graceful=graceful)
+
+def get_txn(paypal_id):
+
+    txn= g.db.query(PayPalTxn).filter_by(paypal_id=paypal_id).first()
+
+    if not txn:
+        abort(404)
+
+    return txn
+
+def get_txid(txid):
+
+    txn= g.db.query(PayPalTxn).filter_by(id=base36decode(txid)).first()
+
+    if not txn:
+        abort(404)
+    elif txn.status==1:
+        abort(404)
+
+    return txn
+
+
+def get_promocode(code):
+
+    code = code.replace('\\', '')
+    code = code.replace("_", "\_")
+
+    code = g.db.query(PromoCode).filter(PromoCode.code.ilike(code)).first()
+
+    return code

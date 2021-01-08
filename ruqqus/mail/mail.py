@@ -35,7 +35,7 @@ def send_verification_email(user, email=None):
     if not email:
         email = user.email
 
-    url = f"https://{environ.get('domain')}/activate"
+    url = f"https://{app.config['SERVER_NAME']}/activate"
     now = int(time.time())
 
     token = generate_hash(f"{email}+{user.id}+{now}")
@@ -52,7 +52,7 @@ def send_verification_email(user, email=None):
 
 
 @app.route("/api/verify_email", methods=["POST"])
-@auth_required
+@is_not_banned
 def api_verify_email(v):
 
     send_verification_email(v)

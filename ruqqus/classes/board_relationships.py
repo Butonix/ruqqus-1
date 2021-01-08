@@ -16,6 +16,15 @@ class ModRelationship(Base):
     accepted = Column(Boolean, default=False)
     invite_rescinded = Column(Boolean, default=False)
 
+    perm_content = Column(Boolean, default=False)
+    perm_appearance = Column(Boolean, default=False)
+    perm_config = Column(Boolean, default=False)
+    perm_access = Column(Boolean, default=False)
+    perm_full = Column(Boolean, default=False)
+    #permRules = Column(Boolean, default=False)
+    #permTitles = Column(Boolean, default=False)
+    #permLodges = Column(Boolean, default=False)
+
     user = relationship("User", lazy="joined")
     board = relationship("Board", lazy="joined")
 
@@ -27,6 +36,32 @@ class ModRelationship(Base):
 
     def __repr__(self):
         return f"<Mod(id={self.id}, uid={self.user_id}, board_id={self.board_id})>"
+
+    @property
+    def permlist(self):
+        if self.perm_full:
+            return "full"
+
+        output=[]
+        for p in ["access","appearance","config","content"]:
+            if self.__dict__[f"perm_{p}"]:
+                output.append(p)
+
+        
+        return ", ".join(output) if output else "none"
+
+    @property
+    def permchangelist(self):
+        output=[]
+        for p in ["full", "access","appearance","config","content"]:
+            if self.__dict__.get(f"perm_{p}"):
+                output.append(f"+{p}")
+            else:
+                output.append(f"-{p}")
+
+        return ", ".join(output)
+    
+    
 
 
 class BanRelationship(Base, Stndrd, Age_times):

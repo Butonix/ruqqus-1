@@ -1,5 +1,6 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred, lazyload
+from sqlalchemy.types import Enum
 import time
 
 from ruqqus.helpers.base36 import *
@@ -15,6 +16,22 @@ from .comment import Comment
 from .mix_ins import *
 from ruqqus.__main__ import Base, cache
 
+# class BoardCategory(Enum):
+
+#     Arts="Arts"
+#     Culture="Culture"
+#     Discussion="Discussion"
+#     Food="Food"
+#     Entertainment="Entertainment"
+#     Gaming="Gaming"
+#     Hobby="Hobby"
+#     Humor="Humor"
+#     News="News"
+#     Photography="Photography"
+#     Politics="Politics"
+#     Sports="Sports"
+#     Technology="Technology"
+
 
 class Board(Base, Stndrd, Age_times):
 
@@ -24,33 +41,39 @@ class Board(Base, Stndrd, Age_times):
     name = Column(String)
     created_utc = Column(Integer)
     description = Column(String)
-    description_html = Column(String)
-    over_18 = Column(Boolean, default=False)
-    is_nsfl = Column(Boolean, default=False)
-    is_banned = Column(Boolean, default=False)
-    has_banner = Column(Boolean, default=False)
-    has_profile = Column(Boolean, default=False)
-    creator_id = Column(Integer, ForeignKey("users.id"))
-    ban_reason = Column(String(256), default=None)
-    color = Column(String(8), default="805ad5")
-    restricted_posting = Column(Boolean, default=False)
-    hide_banner_data = Column(Boolean, default=False)
-    profile_nonce = Column(Integer, default=0)
-    banner_nonce = Column(Integer, default=0)
-    is_private = Column(Boolean, default=False)
-    color_nonce = Column(Integer, default=0)
-    rank_trending = Column(Float, default=0)
-    stored_subscriber_count = Column(Integer, default=1)
-    all_opt_out = Column(Boolean, default=False)
 
-    moderators = relationship("ModRelationship")
-    subscribers = relationship("Subscription", lazy="dynamic")
-    submissions = relationship("Submission",
-                               primaryjoin="Board.id==Submission.board_id")
-    contributors = relationship("ContributorRelationship", lazy="dynamic")
-    bans = relationship("BanRelationship", lazy="dynamic")
-    postrels = relationship("PostRelationship", lazy="dynamic")
-    trending_rank = deferred(Column(Float, server_default=FetchedValue()))
+    description_html=Column(String)
+    over_18=Column(Boolean, default=False)
+    is_nsfl=Column(Boolean, default=False)
+    is_banned=Column(Boolean, default=False)
+    has_banner=Column(Boolean, default=False)
+    has_profile=Column(Boolean, default=False)
+    creator_id=Column(Integer, ForeignKey("users.id"))
+    ban_reason=Column(String(256), default=None)
+    color=Column(String(8), default="805ad5")
+    restricted_posting=Column(Boolean, default=False)
+    hide_banner_data=Column(Boolean, default=False)
+    profile_nonce=Column(Integer, default=0)
+    banner_nonce=Column(Integer, default=0)
+    is_private=Column(Boolean, default=False)
+    color_nonce=Column(Integer, default=0)
+    rank_trending=Column(Float, default=0)
+    stored_subscriber_count=Column(Integer, default=1)
+    all_opt_out=Column(Boolean, default=False)
+    is_siegable=Column(Boolean, default=True)
+    last_yank_utc=Column(Integer, default=0)
+    is_locked_category = Column(Boolean, default=False)
+    subcat_id=Column(Integer, ForeignKey("subcategories.id"), default=0)
+
+
+    subcat=relationship("SubCategory")
+    moderators=relationship("ModRelationship")
+    subscribers=relationship("Subscription", lazy="dynamic")
+    submissions=relationship("Submission", primaryjoin="Board.id==Submission.board_id")
+    contributors=relationship("ContributorRelationship", lazy="dynamic")
+    bans=relationship("BanRelationship", lazy="dynamic")
+    postrels=relationship("PostRelationship", lazy="dynamic")
+    trending_rank=deferred(Column(Float, server_default=FetchedValue()))
 
     # db side functions
     subscriber_count = deferred(Column(Integer, server_default=FetchedValue()))
@@ -90,6 +113,13 @@ class Board(Base, Stndrd, Age_times):
     def invited_mods(self):
 
         z = [x.user for x in self.moderators if x.accepted ==
+             False and x.invite_rescinded == False]
+        z = sorted(z, key=lambda x: x.id)
+        return z
+
+    @property
+    def mod_invites(self):
+        z = [x for x in self.moderators if x.accepted ==
              False and x.invite_rescinded == False]
         z = sorted(z, key=lambda x: x.id)
         return z
@@ -194,7 +224,35 @@ class Board(Base, Stndrd, Age_times):
 
         return posts
 
-    def has_mod(self, user):
+    def has_mod(self, user, perm=None):
+
+        if user is None:
+            return None
+
+        if self.is_banned:
+            return False
+
+        m=self.__dict__.get("_mod")
+        if not m:
+            for x in user.moderates:
+                if x.board_id == self.id and x.accepted and not x.invite_rescinded:
+                    self.__dict__["mod"]=x
+                    m=x
+        
+        if not m:
+            return False
+                    
+        if perm:
+
+            return m if (m.perm_full or m.__dict__[f"perm_{perm}"]) else False
+
+        else:
+            return m
+
+
+        return False
+
+    def has_mod_record(self, user, perm=None):
 
         if user is None:
             return None
@@ -203,11 +261,15 @@ class Board(Base, Stndrd, Age_times):
             return False
 
         for x in user.moderates:
-            if x.board_id == self.id and x.accepted and not x.invite_rescinded:
-                return x
+            if x.board_id == self.id and not x.invite_rescinded:
+                
+                if perm:
+                    return x if x.__dict__[f"perm_{perm}"] else False
+                else:
+                    return x
+
 
         return False
-
     def can_invite_mod(self, user):
 
         return user.id not in [
@@ -235,6 +297,9 @@ class Board(Base, Stndrd, Age_times):
 
         if user is None:
             return None
+        
+        if user.admin_level >=2:
+            return None
 
         return g.db.query(BanRelationship).filter_by(
             board_id=self.id, user_id=user.id, is_active=True).first()
@@ -245,7 +310,7 @@ class Board(Base, Stndrd, Age_times):
             return False
 
         return self.id in [
-            x.board_id for x in user.subscriptions.all() if x.is_active]
+            x.board_id for x in user.subscriptions if x.is_active]
 
     def has_contributor(self, user):
 
@@ -388,7 +453,7 @@ class Board(Base, Stndrd, Age_times):
         return self.n_pins < 4
 
     @property
-    def json(self):
+    def json_core(self):
 
         if self.is_banned:
             return {'name': self.name,
@@ -401,8 +466,6 @@ class Board(Base, Stndrd, Age_times):
                 'profile_url': self.profile_url,
                 'banner_url': self.banner_url,
                 'created_utc': self.created_utc,
-                'mods_count': self.mods_count,
-                'subscriber_count': self.subscriber_count,
                 'permalink': self.permalink,
                 'description': self.description,
                 'description_html': self.description_html,
@@ -415,8 +478,22 @@ class Board(Base, Stndrd, Age_times):
                 'banner_url': self.banner_url,
                 'profile_url': self.profile_url,
                 'color': "#" + self.color,
-                'guildmasters': [x.json for x in self.mods]
+                'is_siege_protected': not self.is_siegable
                 }
+
+    @property
+    def json(self):
+        data=self.json_core
+
+        if self.is_banned:
+            return data
+
+
+        data['guildmasters']=[x.json_core for x in self.mods]
+        data['subscriber_count']= self.subscriber_count
+
+        return data
+    
 
     @property
     def show_settings_icons(self):
@@ -476,3 +553,19 @@ class Board(Base, Stndrd, Age_times):
             25 * (page - 1)).limit(26).all()
 
         return [x.id for x in comments]
+
+
+    def user_guild_rep(self, user):
+
+        return user.guild_rep(self)
+
+    def is_guildmaster(self, perm=None):
+        mod=self.__dict__.get('_is_guildmaster', False)
+        if not mod:
+            return False
+        if not perm:
+            return True
+
+        return mod.__dict__[f"perm_{perm}"]
+
+

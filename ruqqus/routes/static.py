@@ -1,6 +1,7 @@
 import time
 import jinja2
 import pyotp
+import pprint
 from flask import *
 
 from ruqqus.helpers.wrappers import *
@@ -32,6 +33,13 @@ def robots_txt():
 def slurs():
     resp = make_response('\n'.join([x.keyword for x in g.db.query(
         BadWord).order_by(BadWord.keyword.asc()).all()]))
+    resp.headers.add("Content-Type", "text/plain")
+    return resp
+
+@app.route("/politics.txt", methods=["GET"])
+def politics_keywords():
+    resp = make_response('\n'.join([x.keyword for x in g.db.query(
+        PoliticsWord).order_by(PoliticsWord.keyword.asc()).all()]))
     resp.headers.add("Content-Type", "text/plain")
     return resp
 
@@ -112,16 +120,24 @@ def settings_security(v):
                            msg=request.args.get("msg") or None
                            )
 
+@app.route("/settings/premium", methods=["GET"])
+@auth_required
+def settings_premium(v):
+    return render_template("settings_premium.html",
+                           v=v,
+                           error=request.args.get("error") or None,
+                           msg=request.args.get("msg") or None
+                           )
 
 @app.route("/assets/favicon.ico", methods=["GET"])
 def favicon():
     return send_file("./assets/images/logo/favicon.png")
 
 
-@app.route("/my_info", methods=["GET"])
-@auth_required
-def my_info(v):
-    return render_template("my_info.html", v=v)
+#@app.route("/my_info", methods=["GET"])
+#@auth_required
+#def my_info(v):
+#    return render_template("my_info.html", v=v)
 
 
 @app.route("/about/<path:path>")
@@ -178,7 +194,7 @@ def press_inquiry(v):
                            v=v)
 
 
-@app.route("/info/image_hosts")
+@app.route("/info/image_hosts", methods=["GET"])
 def info_image_hosts():
 
     sites = g.db.query(Domain).filter_by(

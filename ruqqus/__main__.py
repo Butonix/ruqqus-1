@@ -16,7 +16,8 @@ from time import sleep
 
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, sessionmaker, scoped_session
+from sqlalchemy.exc import OperationalError, StatementError, InternalError
+from sqlalchemy.orm import Session, sessionmaker, scoped_session, Query as _Query
 from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
 import threading
@@ -28,13 +29,16 @@ from redis import BlockingConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.20.0"
+_version = "2.29.7"
 
 app = Flask(__name__,
             template_folder='./templates',
             static_folder='./static'
             )
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
+app.url_map.strict_slashes = False
+
+app.config["SITE_NAME"]=environ.get("SITE_NAME", "ruqqus").lstrip().rstrip()
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get(
@@ -50,18 +54,18 @@ app.config['SQLALCHEMY_READ_URIS'] = [
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
 app.config["SERVER_NAME"] = environ.get(
     "domain", environ.get(
-        "SERVER_NAME", None)).rstrip()
+        "SERVER_NAME", None)).lstrip().rstrip()
 app.config["SESSION_COOKIE_NAME"] = "session_ruqqus"
 app.config["VERSION"] = _version
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config["SESSION_COOKIE_SECURE"] = environ.get(
-    "SESSION_COOKIE_SECURE", "true").lower() != "false"
+app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024
+app.config["SESSION_COOKIE_SECURE"] = bool(int(environ.get("FORCE_HTTPS", 1)))
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
 app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 365
-app.config["SESSION_REFRESH_EACH_REQUEST"] = False
+app.config["SESSION_REFRESH_EACH_REQUEST"] = True
 
 app.config["FORCE_HTTPS"] = int(environ.get("FORCE_HTTPS", 1))
+app.config["DISABLE_SIGNUPS"]=int(environ.get("DISABLE_SIGNUPS",0))
 
 app.jinja_env.cache = {}
 
@@ -78,6 +82,7 @@ app.config["CACHE_DIR"] = environ.get("CACHE_DIR", "ruqquscache")
 app.config["HCAPTCHA_SITEKEY"] = environ.get("HCAPTCHA_SITEKEY")
 app.config["HCAPTCHA_SECRET"] = environ.get(
     "HCAPTCHA_SECRET").lstrip().rstrip()
+app.config["SIGNUP_HOURLY_LIMIT"]=int(environ.get("SIGNUP_HOURLY_LIMIT",0))
 
 # antispam configs
 app.config["SPAM_SIMILARITY_THRESHOLD"] = float(
@@ -86,6 +91,10 @@ app.config["SPAM_SIMILAR_COUNT_THRESHOLD"] = int(
     environ.get("SPAM_SIMILAR_COUNT_THRESHOLD", 5))
 app.config["SPAM_URL_SIMILARITY_THRESHOLD"] = float(
     environ.get("SPAM_URL_SIMILARITY_THRESHOLD", 0.1))
+app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"] = float(
+    environ.get("COMMENT_SPAM_SIMILAR_THRESHOLD", 0.5))
+app.config["COMMENT_SPAM_COUNT_THRESHOLD"] = int(
+    environ.get("COMMENT_SPAM_COUNT_THRESHOLD", 5))
 
 app.config["CACHE_REDIS_URL"] = environ.get(
     "REDIS_URL").rstrip() if environ.get("REDIS_URL") else None
@@ -139,6 +148,8 @@ engines = {
 }
 
 
+#These two classes monkey patch sqlalchemy
+
 class RoutingSession(Session):
     def get_bind(self, mapper=None, clause=None):
         try:
@@ -153,7 +164,41 @@ class RoutingSession(Session):
                 return random.choice(engines['followers'])
 
 
-db_session = scoped_session(sessionmaker(class_=RoutingSession))
+def retry(f):
+    def wrapper(self, *args, **kwargs):
+
+        try:
+            return f(self, *args, **kwargs)
+
+        except:
+            self.session.rollback()
+            return f(self, *args, **kwargs)
+
+    wrapper.__name__=f.__name__
+    return wrapper
+
+
+class RetryingQuery(_Query):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    @retry
+    def all(self):
+        return super().all()
+
+    @retry
+    def count(self):
+        return super().count()
+
+    @retry
+    def first(self):
+        return super().first()
+
+
+
+
+db_session = scoped_session(sessionmaker(class_=RoutingSession, query_cls=RetryingQuery))
 # db_session=scoped_session(sessionmaker(bind=engines["leader"]))
 
 Base = declarative_base()
@@ -225,6 +270,8 @@ def before_request():
 
     if not session.get("session_id"):
         session["session_id"] = secrets.token_hex(16)
+
+    g.timestamp = int(time.time())
 
     # g.db.begin_nested()
 

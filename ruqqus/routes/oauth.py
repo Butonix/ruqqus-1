@@ -349,14 +349,55 @@ def admin_app_reject(v, aid):
 @admin_level_required(3)
 def admin_app_id(v, aid):
 
+    aid=base36decode(aid)
+
     oauth = g.db.query(OauthApp).options(
         joinedload(
             OauthApp.author)).filter_by(
-        id=base36decode(aid)).first()
+        id=aid).first()
+
+    pids=oauth.idlist(page=int(request.args.get("page",1)),
+        )
+
+    next_exists=len(pids)==101
+    pids=pids[0:100]
+
+    posts=get_posts(pids, v=v)
 
     return render_template("admin/app.html",
                            v=v,
-                           app=oauth)
+                           app=oauth,
+                           listing=posts,
+                           next_exists=next_exists
+                           )
+
+@app.route("/admin/app/<aid>/comments", methods=["GET"])
+@admin_level_required(3)
+def admin_app_id_comments(v, aid):
+
+    aid=base36decode(aid)
+
+    oauth = g.db.query(OauthApp).options(
+        joinedload(
+            OauthApp.author)).filter_by(
+        id=aid).first()
+
+    cids=oauth.comments_idlist(page=int(request.args.get("page",1)),
+        )
+
+    next_exists=len(cids)==101
+    cids=cids[0:100]
+
+    comments=get_comments(cids, v=v)
+
+
+    return render_template("admin/app.html",
+                           v=v,
+                           app=oauth,
+                           comments=comments,
+                           next_exists=next_exists,
+                           standalone=True
+                           )
 
 
 @app.route("/admin/apps", methods=["GET"])
@@ -366,7 +407,7 @@ def admin_apps_list(v):
     apps = g.db.query(OauthApp).options(
         joinedload(
             OauthApp.author)).filter(
-        OauthApp.client_id is None).order_by(
+        OauthApp.client_id==None).order_by(
                 OauthApp.id.desc()).all()
 
     return render_template("admin/apps.html", v=v, apps=apps)
@@ -409,3 +450,37 @@ def oauth_rescind_app(aid, v):
     g.db.delete(auth)
 
     return jsonify({"message": f"{auth.application.app_name} Revoked"})
+
+@app.route("/api/v1/release", methods=["POST"])
+@auth_required
+@api()
+def oauth_release_auth(v):
+
+    token=request.headers.get("Authorization").split()[1]
+
+    auth = g.db.query(ClientAuth).filter_by(user_id=v.id, access_token=token).first()
+    if not auth:
+        abort(404)
+
+    if not auth.refresh_token:
+        abort(400)
+
+    auth.access_token_expire_utc=0
+    g.db.add(auth)
+
+    return jsonify({"message":"Authorization released"})
+
+@app.route("/api/v1/kill", methods=["POST"])
+@auth_required
+@api()
+def oauth_kill_auth(v):
+
+    token=request.headers.get("Authorization").split()[1]
+
+    auth = g.db.query(ClientAuth).filter_by(user_id=v.id, access_token=token).first()
+    if not auth:
+        abort(404)
+
+    g.db.delete(auth)
+
+    return jsonify({"message":"Authorization released"})

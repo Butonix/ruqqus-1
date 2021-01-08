@@ -735,24 +735,25 @@ function post_toast(url, callback) {
   xhr.withCredentials=true;
 
   xhr.onload = function() {
-    if (xhr.status >= 200 && xhr.status < 300) {
-      $('#toast-post-success').toast('dispose');
-      $('#toast-post-success').toast('show');
-      document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
-      callback(xhr)
+    if (xhr.status==204) {}
+      else if (xhr.status >= 200 && xhr.status < 300) {
+        $('#toast-post-success').toast('dispose');
+        $('#toast-post-success').toast('show');
+        document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+        callback(xhr)
 
-    } else if (xhr.status >= 300 && xhr.status < 400) {
-      window.location.href = JSON.parse(xhr.response)["redirect"]
-    } else {
-      $('#toast-post-error').toast('dispose');
-      $('#toast-post-error').toast('show');
-      document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];
-    }
-  };
+      } else if (xhr.status >= 300 && xhr.status < 400) {
+        window.location.href = JSON.parse(xhr.response)["redirect"]
+      } else {
+        $('#toast-post-error').toast('dispose');
+        $('#toast-post-error').toast('show');
+        document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];
+      }
+    };
 
-  xhr.send(form);
+    xhr.send(form);
 
-}
+  }
 
 
 //Admin post modding
@@ -972,11 +973,8 @@ var upvote = function(event) {
     }
   }
 
-  for (var n = 0; n < 1; n++) {
-    callback=function() {
-    }
-    post("/api/vote/" + type + "/" + id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
-  }
+  post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection);
+  
 }
 
 var downvote = function(event) {
@@ -1024,36 +1022,38 @@ var downvote = function(event) {
     }
   }
 
-  for (var n = 0; n < 1; n++) {
-    callback=function() {
-    }
-    post("/api/vote/" + type + "/" + id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
-  }
+  post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection);
+  
 }
 
-var upvoteButtons = document.getElementsByClassName('upvote-button')
 
-var downvoteButtons = document.getElementsByClassName('downvote-button')
+var register_votes = function() {
+  var upvoteButtons = document.getElementsByClassName('upvote-button')
 
-var voteDirection = 0
+  var downvoteButtons = document.getElementsByClassName('downvote-button')
 
-for (var i = 0; i < upvoteButtons.length; i++) {
-  upvoteButtons[i].addEventListener('click', upvote, false);
-  upvoteButtons[i].addEventListener('keydown', function(event) {
-    if (event.keyCode === 13) {
-      upvote(event)
-    }
-  }, false)
-};
+  var voteDirection = 0
 
-for (var i = 0; i < downvoteButtons.length; i++) {
-  downvoteButtons[i].addEventListener('click', downvote, false);
-  downvoteButtons[i].addEventListener('keydown', function(event) {
-    if (event.keyCode === 13) {
-      downvote(event)
-    }
-  }, false)
-};
+  for (var i = 0; i < upvoteButtons.length; i++) {
+    upvoteButtons[i].addEventListener('click', upvote, false);
+    upvoteButtons[i].addEventListener('keydown', function(event) {
+      if (event.keyCode === 13) {
+        upvote(event)
+      }
+    }, false)
+  };
+
+  for (var i = 0; i < downvoteButtons.length; i++) {
+    downvoteButtons[i].addEventListener('click', downvote, false);
+    downvoteButtons[i].addEventListener('keydown', function(event) {
+      if (event.keyCode === 13) {
+        downvote(event)
+      }
+    }, false)
+  };
+}
+
+register_votes()
 
 /*
 
@@ -1728,6 +1728,7 @@ post_comment=function(fullname){
   form.append('parent_fullname', fullname);
   form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
   form.append('body', document.getElementById('reply-form-body-'+fullname).value);
+  form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
 
 
   var xhr = new XMLHttpRequest();
@@ -1824,12 +1825,190 @@ filter_guild=function() {
         window.location.reload(true);
       }
       else {
-      $('#toast-exile-error').toast('dispose');
-      $('#toast-exile-error').toast('show');
-      exileError.textContent = JSON.parse(xhr.response)["error"];
+        $('#toast-exile-error').toast('dispose');
+        $('#toast-exile-error').toast('show');
+        exileError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
     xhr.send(f)
   }
 
+}
+
+coin_quote = function() {
+
+  var coins = document.getElementById('select-coins');
+  var btn = document.getElementById('buy-coin-btn')
+  var promo=document.getElementById('promo-code')
+  var promotext=document.getElementById('promo-text')
+
+  coin_count = coins.selectedOptions[0].value
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('get', '/shop/get_price?coins='+coin_count+'&promo='+promo.value)
+
+  xhr.onload=function(){
+    var s = 'Buy '+ coin_count + ' Coin';
+
+    if (coin_count > 1){s = s+'s'};
+
+    s=s+': $'+JSON.parse(xhr.response)["price"];
+
+    btn.value=s;
+
+    promotext.innerText=JSON.parse(xhr.response)["promo"];
+  }
+  xhr.send()
+}
+
+
+var tipModal2 = function(id, content, link, recipient, recipientPFP) {
+  console.log('opened modal, tipModal2 function triggered')
+
+  document.getElementById('tip-recipient-pfp').src = recipientPFP;
+
+  document.getElementById("tip-content-type").innerText = content
+  document.getElementById("tip-recipient-username").innerText = recipient
+
+  document.getElementById("sendTipButton").onclick = function() {
+    post_toast('/gift_'+ content +'/' + id + '?coins=1',
+      callback = function() {
+        location.href = link
+      }
+      )
+  }
+
+  console.log(recipientPFP, id, content, link, recipient)
+}
+
+var togglecat = function(sort, reload=false, delay=1000) {
+  var cbs = document.getElementsByClassName('cat-check');
+  var l = []
+  for (var i=0; i< cbs.length; i++) {
+    l.push(cbs[i].checked)
+  }
+  setTimeout(function(){triggercat(sort, l, reload)}, delay)
+  return l;
+}
+
+var triggercat=function(sort, cats, reload) {
+
+  var cbs = document.getElementsByClassName('cat-check');
+  var l = []
+  for (var i=0; i< cbs.length; i++) {
+    l.push(cbs[i].checked)
+  }
+
+
+
+  for (var i=0; i<l.length; i++){
+    if (cats[i] != l[i]){
+      console.log("triggerfail");
+      return false;
+    }
+  }
+
+  console.log("triggercat")
+
+  var catlist=[]
+  for (var i=0; i< cbs.length; i++) {
+    if(cbs[i].checked){
+      catlist.push(cbs[i].dataset.cat);
+    }
+  }
+
+  var groups = document.getElementsByClassName('cat-group');
+  var grouplist=[];
+  for (i=0; i<groups.length; i++){
+    if(groups[i].checked){
+      grouplist.push(groups[i].dataset.group);
+    }
+  }
+
+  var url='/inpage/all?sort='+ sort +'&cats=' + catlist.join(',') + '&groups=' + grouplist.join(',');
+  
+
+  xhr = new XMLHttpRequest();
+  xhr.open('get', url);
+  xhr.withCredentials=true;
+
+  xhr.onload=function(){
+    if (reload){
+      document.location.href='/all'
+    }
+    else {
+      var l = document.getElementById('posts');
+      l.innerHTML=xhr.response;
+      register_votes();
+    }
+  }
+  xhr.send()
+}
+
+
+var permsEdit = function(username, permstring) {
+
+  document.getElementById('permedit-user').innerText = username
+  document.getElementById('edit-perm-username').value = username
+
+  cbs = document.getElementsByClassName('perm-box')
+
+  for (i=0; i< cbs.length; i++) {
+    cbs[i].checked = permstring.includes(cbs[i].dataset.perm) || permstring.includes('full')
+  }
+
+}
+
+var permfull=function() {
+
+  cbs = document.getElementsByClassName('perm-box')
+
+  full = cbs[0]
+
+  if (full.checked) {
+    for (i=1; i< cbs.length; i++) {
+      cbs[i].checked = true;
+    }
+  }
+}
+var permother=function() {
+
+  cbs = document.getElementsByClassName('perm-box')
+
+  full = cbs[0]
+
+  for (i=1; i< cbs.length; i++) {
+    if(cbs[i].checked == false) {
+      full.checked=false;
+    }
+  }
+}
+
+var cattoggle=function(id){
+
+  var check = document.getElementById('group-'+id);
+
+  check.click()
+
+  var x=document.getElementsByClassName('group-'+id);
+  for (i=0;i<x.length;i++) {
+    x[i].checked=check.checked
+  }
+
+  card=document.getElementById('cat-card-'+id)
+  card.classList.toggle('selected');
+}
+
+var all_cats=function() {
+  var x=document.getElementsByClassName('cat-check');
+  for(i=0;i<x.length;i++){
+    x[i].checked=true;
+  };
+  
+  var y=document.getElementsByClassName('cat-group');
+  for(i=0;i<y.length;i++){
+    y[i].checked=true;
+  };
+
+  togglecat('hot', reload=true, delay=0)  
 }

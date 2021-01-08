@@ -3871,3 +3871,35 @@ div.deleted.banned {
 .distinguish-mod .user-name::before {		
  content: "[M] "		
 }
+
+.in-comment-image {
+  max-height: 100px !important;
+  max-width: 100px !important;
+}
+
+.sidebar-left .btn:focus {
+  box-shadow: none;
+}
+
+.onboarding-card {
+    height: 180px;
+    .onboarding-card-overlay {
+        background-color: rgba(0,0,0,0.65);
+    }
+    &.selected {
+        .onboarding-card-overlay {
+            background-color: rgba($purple, .65);
+        }
+    }
+}
+
+.object-cover {
+    object-fit: cover;
+}
+
+.cat-item {
+    display: none;
+    &.selected {
+        display: block;
+    }
+}

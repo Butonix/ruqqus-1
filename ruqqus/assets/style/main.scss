@@ -1856,7 +1856,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-top-right-radius: $border-radius;
 }
 
-#frontpage .posts .card:last-of-type, #userpage .posts .card:last-of-type, #search .posts .card:last-of-type, #guild .posts .card:last-of-type, #settings-guild .posts .card:last-of-type  {
+#frontpage .posts .card:nth-last-of-type(2), #userpage .posts .card:nth-last-of-type(2), #search .posts .card:nth-last-of-type(2), #guild .posts .card:nth-last-of-type(2), #settings-guild .posts .card:last-of-type  {
     border-bottom-left-radius: $border-radius;
     border-bottom-right-radius: $border-radius;
     border-bottom: 1px solid $border-color;
@@ -3428,7 +3428,7 @@ body, #settings, #notifications, #submit{
     border-radius: 0;
 }
 
-#frontpage .posts .card:last-of-type, #search .posts .card:last-of-type {
+#frontpage .posts .card:nth-last-of-type(2), #search .posts .card:nth-last-of-type(2) {
     border-bottom: 1px solid $border-color;
 }
 
@@ -3801,4 +3801,36 @@ div.deleted.banned {
 }		
 .distinguish-mod .user-name::before {		
  content: "[M] "		
+}
+
+.in-comment-image {
+  max-height: 100px !important;
+  max-width: 100px !important;
+}
+
+.sidebar-left .btn:focus {
+  box-shadow: none;
+}
+
+.onboarding-card {
+    height: 180px;
+    .onboarding-card-overlay {
+        background-color: rgba(0,0,0,0.65);
+    }
+    &.selected {
+        .onboarding-card-overlay {
+            background-color: rgba($purple, .65);
+        }
+    }
+}
+
+.object-cover {
+    object-fit: cover;
+}
+
+.cat-item {
+    display: none;
+    &.selected {
+        display: block;
+    }
 }

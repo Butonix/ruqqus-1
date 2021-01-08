@@ -1,5 +1,10 @@
 from urllib.parse import urlparse
 import time
+import calendar
+from sqlalchemy import func
+from sqlalchemy.orm import lazyload
+import threading
+import subprocess
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.alerts import *
@@ -7,7 +12,9 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.get import *
 from ruqqus.classes import *
+from ruqqus.classes.domains import reasons as REASONS
 from ruqqus.routes.admin_api import create_plot, user_stat_data
+from ruqqus.classes.categories import CATEGORIES
 from flask import *
 from ruqqus.__main__ import app
 
@@ -188,13 +195,23 @@ def users_list(v):
     next_exists = (len(users) == 26)
     users = users[0:25]
 
-    data = user_stat_data().get_json()
-
     return render_template("admin/new_users.html",
                            v=v,
                            users=users,
                            next_exists=next_exists,
                            page=page,
+                           )
+
+@app.route("/admin/data", methods=["GET"])
+@admin_level_required(2)
+def admin_data(v):
+
+    data = user_stat_data().get_json()
+
+    return render_template("admin/new_users.html",
+                           v=v,
+                           next_exists=False,
+                           page=1,
                            single_plot=data['single_plot'],
                            multi_plot=data['multi_plot']
                            )
@@ -210,6 +227,7 @@ def participation_stats(v):
             "private_users": g.db.query(User).filter_by(is_deleted=False, is_private=False).filter(User.is_banned > 0, or_(User.unban_utc > now, User.unban_utc == 0)).count(),
             "banned_users": g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).count(),
             "deleted_users": g.db.query(User).filter_by(is_deleted=True).count(),
+            "locked_negative_users": g.db.query(User).filter(User.negative_balance_cents>0).count(),
             "total_posts": g.db.query(Submission).count(),
             "posting_users": g.db.query(Submission.author_id).distinct().count(),
             "listed_posts": g.db.query(Submission).filter_by(is_banned=False, is_deleted=False).count(),
@@ -229,9 +247,49 @@ def participation_stats(v):
             "comment_voting_users": g.db.query(CommentVote.user_id).distinct().count()
             }
 
-    data = {x: f"{data[x]:,}" for x in data}
+    #data = {x: f"{data[x]:,}" for x in data}
 
-    return render_template("admin/content_stats.html", v=v, data=data)
+    return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=data)
+
+
+@app.route("/admin/money", methods=["GET"])
+@admin_level_required(2)
+def money_stats(v):
+
+    now = time.gmtime()
+    midnight_year_start = time.struct_time((now.tm_year,
+                                              1,
+                                              1,
+                                              0,
+                                              0,
+                                              0,
+                                              now.tm_wday,
+                                              now.tm_yday,
+                                              0)
+                                             )
+    midnight_year_start = calendar.timegm(midnight_year_start)
+
+    now=int(time.time())
+    intake=sum([int(x[0] - (x[0] * 0.029) - 30 )  for x in g.db.query(PayPalTxn.usd_cents).filter(PayPalTxn.status==3, PayPalTxn.created_utc>midnight_year_start).all()])
+    loss=sum([x[0] for x in g.db.query(PayPalTxn.usd_cents).filter(PayPalTxn.status<0, PayPalTxn.created_utc>midnight_year_start).all()])
+    revenue=str(intake-loss)
+
+    data={
+        "cents_received_last_24h":g.db.query(func.sum(PayPalTxn.usd_cents)).filter(PayPalTxn.status==3, PayPalTxn.created_utc>now-60*60*24).scalar(),
+        "cents_received_last_week":g.db.query(func.sum(PayPalTxn.usd_cents)).filter(PayPalTxn.status==3, PayPalTxn.created_utc>now-60*60*24*7).scalar(),
+        "sales_count_last_24h":g.db.query(PayPalTxn).filter(PayPalTxn.status==3, PayPalTxn.created_utc>now-60*60*24).count(),
+        "sales_count_last_week":g.db.query(PayPalTxn).filter(PayPalTxn.status==3, PayPalTxn.created_utc>now-60*60*24*7).count(),
+        "receivables_outstanding_cents": g.db.query(func.sum(User.negative_balance_cents)).filter(User.is_deleted==False, or_(User.is_banned == 0, and_(User.is_banned > 0, User.unban_utc > 0))).scalar(),
+        "cents_written_off":g.db.query(func.sum(User.negative_balance_cents)).filter(or_(User.is_deleted==True, User.unban_utc > 0)).scalar(),
+        "coins_redeemed_last_24_hrs": g.db.query(User).filter(User.premium_expires_utc>now+60*60*24*6, User.premium_expires_utc < now+60*60*24*7).count(),
+        "coins_redeemed_last_week": g.db.query(User).filter(User.premium_expires_utc>now, User.premium_expires_utc < now+60*60*24*7).count(),
+        "coins_in_circulation": g.db.query(func.sum(User.coin_balance)).filter(User.is_deleted==False, or_(User.is_banned==0, and_(User.is_banned>0, User.unban_utc>0))).scalar(),
+        "coins_vanished": g.db.query(func.sum(User.coin_balance)).filter(or_(User.is_deleted==True, and_(User.is_banned>0, User.unban_utc==0))).scalar(),
+        "receivables_outstanding_cents": g.db.query(func.sum(User.negative_balance_cents)).filter(User.is_deleted==False, or_(User.is_banned == 0, and_(User.is_banned > 0, User.unban_utc > 0))).scalar(),
+        "coins_sold_ytd":g.db.query(func.sum(PayPalTxn.coin_count)).filter(PayPalTxn.status==3, PayPalTxn.created_utc>midnight_year_start).scalar(),
+        "revenue_usd_ytd":f"{revenue[0:-2]}.{revenue[-2:]}"
+    }
+    return render_template("admin/content_stats.html", v=v, title="Financial Statistics", data=data)
 
 
 @app.route("/admin/vote_info", methods=["GET"])
@@ -417,8 +475,10 @@ def admin_removed(v):
 
     page = int(request.args.get("page", 1))
 
-    ids = g.db.query(Submission.id).filter_by(is_banned=True).order_by(
-        Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+    ids = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=True).order_by(
+        Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
+
+    ids=[x[0] for x in ids]
 
     next_exists = len(ids) == 26
 
@@ -432,3 +492,218 @@ def admin_removed(v):
                            page=page,
                            next_exists=next_exists
                            )
+
+@app.route("/admin/gm", methods=["GET"])
+@admin_level_required(3)
+def admin_gm(v):
+    
+    username=request.args.get("user")
+
+    include_banned=int(request.args.get("with_banned",0))
+
+    if username:
+        user=get_user(username)
+        
+        boards=user.boards_modded
+
+        alts=user.alts
+        main=user
+        main_count=user.submissions.count() + user.comments.count()
+        for alt in alts:
+
+            if not alt.is_valid and not include_banned:
+                continue
+
+            count = alt.submissions.count() + alt.comments.count()
+            if count > main_count:
+                main_count=count
+                main=alt
+
+            for b in alt.boards_modded:
+                if b not in boards:
+                    boards.append(b)
+
+           
+        return render_template("admin/alt_gms.html",
+            v=v,
+            user=user,
+            first=main,
+            boards=boards
+            )
+    else:
+        return render_template("admin/alt_gms.html",
+            v=v)
+    
+
+
+@app.route("/admin/appdata", methods=["GET"])
+@admin_level_required(4)
+def admin_appdata(v):
+
+    url=request.args.get("link")
+
+    if url:
+
+        thing = get_from_permalink(url, v=v)
+
+        return render_template(
+            "admin/app_data.html",
+            v=v,
+            thing=thing
+            )
+
+    else:
+        return render_template(
+            "admin/app_data.html",
+            v=v)
+
+@app.route("/admin/ban_analysis")
+@admin_level_required(3)
+def admin_ban_analysis(v):
+
+    banned_accounts = g.db.query(User).filter(User.is_banned>0, User.unban_utc==0).all()
+
+    uniques=set()
+
+    seen_so_far=set()
+
+    for user in banned_accounts:
+
+
+        if user.id not in seen_so_far:
+
+            print(f"Unique - @{user.username}")
+
+            uniques.add(user.id)
+
+        else:
+            print(f"Repeat - @{user.username}")
+            continue
+
+        alts=user.alts
+        print(f"{len(alts)} alts")
+
+        for alt in user.alts:
+            seen_so_far.add(alt.id)
+
+
+    return str(len(uniques))
+
+
+@app.route("/admin/paypaltxns", methods=["GET"])
+@admin_level_required(4)
+def admin_paypaltxns(v):
+
+    page=int(request.args.get("page",1))
+    user=request.args.get('user','')
+
+    txns = g.db.query(PayPalTxn).filter(PayPalTxn.status!=1)
+
+    if user:
+        user=get_user(user)
+        txns=txns.filter_by(user_id=user.id)
+
+
+    txns=txns.order_by(PayPalTxn.created_utc.desc())
+
+    txns = [x for x in txns.offset(100*(page-1)).limit(101).all()]
+
+    next_exists=len(txns)==101
+    txns=txns[0:100]
+
+    return render_template(
+        "single_txn.html", 
+        v=v, 
+        txns=txns, 
+        next_exists=next_exists,
+        page=page
+        )
+
+@app.route("/admin/domain/<domain_name>", methods=["GET"])
+@admin_level_required(4)
+def admin_domain_domain(domain_name, v):
+
+    d_query=domain_name.replace("_","\_")
+    domain=g.db.query(Domain).filter_by(domain=d_query).first()
+
+    if not domain:
+        domain=Domain(domain=domain_name)
+
+    return render_template(
+        "admin/manage_domain.html",
+        v=v,
+        domain_name=domain_name,
+        domain=domain,
+        reasons=REASONS
+        )
+
+@app.route("/admin/category", methods=["POST"])
+@admin_level_required(4)
+@validate_formkey
+def admin_category_lock(v):
+
+    board=get_guild(request.form.get("board"))
+
+    cat_id=int(request.form.get("category"))
+
+    sc=g.db.query(SubCategory).filter_by(id=cat_id).first()
+    if not sc:
+        abort(400)
+
+    board.subcat_id=cat_id
+    lock=bool(request.form.get("lock"))
+
+    g.db.add(board)
+
+    ma1=ModAction(
+        board_id=board.id,
+        user_id=v.id,
+        kind="update_settings",
+        note=f"category={sc.category.name} / {sc.name} | admin action"
+        )
+    g.db.add(ma1)
+
+    if lock != board.is_locked_category:
+        board.is_locked_category = lock
+        ma2=ModAction(
+            board_id=board.id,
+            user_id=v.id,
+            kind="update_settings",
+            note=f"category_locked={lock} | admin action"
+            )
+        g.db.add(ma2)
+
+    return redirect(f"{board.permalink}/mod/log")
+
+
+@app.route("/admin/category", methods=["GET"])
+@admin_level_required(4)
+def admin_category_get(v):
+
+    return render_template(
+        "admin/category.html", 
+        v=v,
+        categories=CATEGORIES,
+        b=get_board(request.args.get("guild"), graceful=True)
+        )
+
+
+# @app.route('/admin/deploy', methods=["GET"])
+# @admin_level_required(3)
+# def admin_deploy(v):
+
+#     def reload_function():
+#         time.sleep(3)
+#         subprocess.run(". ~/go.sh", shell=True)
+
+#     thread=threading.Thread(target=reload_function, daemon=True)
+#     thread.start()
+
+#     return 'Reloading!'
+
+# @app.route('/admin/test', methods=["GET"])
+# @admin_level_required(3)
+# def admin_test(v):
+
+
+#     return "1"

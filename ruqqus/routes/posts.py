@@ -46,21 +46,32 @@ def incoming_post_shortlink(base36id=None):
     if base36id == "robots.txt":
         return redirect('/robots.txt')
 
+    try:
+        x=base36decode(base36id)
+    except:
+        abort(400)
+
     post = get_post(base36id)
     return redirect(post.permalink)
 
-
-@app.route("/post/<base36id>", methods=["GET"])
-@app.route("/post/<base36id>/", methods=["GET"])
-@app.route("/post/<base36id>/<anything>", methods=["GET"])
+@app.route("/+<boardname>/post/<base36id>", methods=["GET"])
+@app.route("/+<boardname>/post/<base36id>/", methods=["GET"])
+@app.route("/+<boardname>/post/<base36id>/<anything>", methods=["GET"])
+@app.route("/api/v1/post/<base36id>", methods=["GET"])
+@app.route("/test/post/<base36id>", methods=["GET"])
 @auth_desired
-def post_base36id(base36id, anything=None, v=None):
-
+@api("read")
+def post_base36id(base36id, boardname=None, anything=None, v=None):
+    
     post = get_post_with_comments(
         base36id, v=v, sort_type=request.args.get(
             "sort", "top"))
 
     board = post.board
+    #if the guild name is incorrect, fix the link and redirect
+
+    if boardname and not boardname == board.name:
+        return redirect(post.permalink)
 
     if board.is_banned and not (v and v.admin_level > 3):
         return render_template("board_banned.html",
@@ -70,18 +81,39 @@ def post_base36id(base36id, anything=None, v=None):
 
     if post.over_18 and not (v and v.over_18) and not session_over18(board):
         t = int(time.time())
-        return render_template("errors/nsfw.html",
+        return {"html":lambda:render_template("errors/nsfw.html",
                                v=v,
                                t=t,
                                lo_formkey=make_logged_out_formkey(t),
                                board=post.board
-                               )
+                               ),
+                "api":lambda:(jsonify({"error":"Must be 18+ to view"}), 451)
+                }
+    
+    post.tree_comments()
 
-    return post.rendered_page(v=v)
+    return {
+        "html":lambda:post.rendered_page(v=v),
+        "api":lambda:jsonify(post.json)
+        }
+
+#if the guild name is missing from the url, add it and redirect
+@app.route("/post/<base36id>", methods=["GET"])
+@app.route("/post/<base36id>/", methods=["GET"])
+@app.route("/post/<base36id>/<anything>", methods=["GET"])
+@auth_desired
+@api("read")
+def post_base36id_noboard(base36id, anything=None, v=None):
+    
+    post=get_post_with_comments(base36id, v=v, sort_type=request.args.get("sort","top"))
+
+    #board=post.board
+    return redirect(post.permalink)
 
 
 @app.route("/submit", methods=["GET"])
 @is_not_banned
+@no_negative_balance("html")
 def submit_get(v):
 
     board = request.args.get("guild", "general")
@@ -97,6 +129,7 @@ def submit_get(v):
 
 @app.route("/edit_post/<pid>", methods=["POST"])
 @is_not_banned
+@no_negative_balance("html")
 @validate_formkey
 def edit_post(pid, v):
 
@@ -112,6 +145,7 @@ def edit_post(pid, v):
         abort(403)
 
     body = request.form.get("body", "")
+    body=preprocess(body)
     with CustomRenderer() as renderer:
         body_md = renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
@@ -127,12 +161,23 @@ def edit_post(pid, v):
             p.is_offensive = True
             break
 
+    # politics
+    p.is_politics = False
+    for x in g.db.query(PoliticsWord).all():
+        if (p.body and x.check(p.body)) or x.check(p.title):
+            p.is_politics = True
+            break
+
+    g.db.add(p)
+
+
     return redirect(p.permalink)
 
 
 @app.route("/api/submit/title", methods=['GET'])
 @limiter.limit("3/minute")
 @is_not_banned
+@no_negative_balance("html")
 #@tos_agreed
 #@validate_formkey
 def get_post_title(v):
@@ -164,14 +209,15 @@ def get_post_title(v):
 
 @app.route("/submit", methods=['POST'])
 @app.route("/api/v1/submit", methods=["POST"])
-@limiter.limit("6/minute")
+#@limiter.limit("6/minute")
 @is_not_banned
+@no_negative_balance('html')
 @tos_agreed
 @validate_formkey
 @api("create")
 def submit_post(v):
 
-    title = request.form.get("title", "")
+    title = request.form.get("title", "").lstrip().rstrip()
 
     title = title.lstrip().rstrip()
     title = title.replace("\n", "")
@@ -273,6 +319,9 @@ def submit_post(v):
     domain_obj = get_domain(domain)
     if domain_obj:
         if not domain_obj.can_submit:
+          
+            if domain_obj.reason==4:
+                v.ban(days=30, reason="Digitally malicious content is not allowed")
 
             return {"html": lambda: (render_template("submit.html",
                                                      v=v,
@@ -351,33 +400,49 @@ def submit_post(v):
     # similarity check
     now = int(time.time())
     cutoff = now - 60 * 60 * 24
+
+
     similar_posts = g.db.query(Submission).options(
         lazyload('*')
-    ).join(Submission.submission_aux
-           ).filter(
-        Submission.author_id == v.id,
-        SubmissionAux.title.op(
-            '<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
-        Submission.created_utc > cutoff
+        ).join(
+            Submission.submission_aux
+        ).filter(
+            or_(
+                and_(
+                    Submission.author_id == v.id,
+                    SubmissionAux.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+                    Submission.created_utc > cutoff
+                ),
+                and_(
+                    SubmissionAux.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"]/2,
+                    Submission.created_utc > cutoff
+                )
+            )
     ).all()
 
     if url:
         similar_urls = g.db.query(Submission).options(
             lazyload('*')
-        ).join(Submission.submission_aux
-               ).filter(
-            Submission.author_id == v.id,
-            SubmissionAux.url.op(
-                '<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
-            Submission.created_utc > cutoff
+        ).join(
+            Submission.submission_aux
+        ).filter(
+            or_(
+                and_(
+                    Submission.author_id == v.id,
+                    SubmissionAux.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
+                    Submission.created_utc > cutoff
+                ),
+                and_(
+                    SubmissionAux.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"]/2,
+                    Submission.created_utc > cutoff
+                )
+            )
         ).all()
     else:
         similar_urls = []
 
     threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
-    if v.age >= (60 * 60 * 24 * 30):
-        threshold *= 4
-    elif v.age >= (60 * 60 * 24 * 7):
+    if v.age >= (60 * 60 * 24 * 7):
         threshold *= 3
     elif v.age >= (60 * 60 * 24):
         threshold *= 2
@@ -388,14 +453,23 @@ def submit_post(v):
         send_notification(v, text)
 
         v.ban(reason="Spamming.",
-              include_alts=True,
               days=1)
+
+        for alt in v.alts:
+            alt.ban(reason="Spamming.", days=1)
 
         for post in similar_posts + similar_urls:
             post.is_banned = True
             post.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
             g.db.add(post)
-
+            ma=ModAction(
+                    user_id=1,
+                    target_submission_id=post.id,
+                    kind="ban_post",
+                    board_id=post.board_id,
+                    note="spam"
+                    )
+            g.db.add(ma)
         g.db.commit()
         return redirect("/notifications")
 
@@ -430,9 +504,35 @@ def submit_post(v):
 
     # render text
 
+    body=preprocess(body)
     with CustomRenderer() as renderer:
         body_md = renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
+
+    # Run safety filter
+    bans = filter_comment_html(body_html)
+    if bans:
+        ban = bans[0]
+        reason = f"Remove the {ban.domain} link from your post and try again."
+        if ban.reason:
+            reason += f" {ban.reason_text}"
+            
+        #auto ban for digitally malicious content
+        if any([x.reason==4 for x in bans]):
+            v.ban(days=30, reason="Digitally malicious content is not allowed.")
+            abort(403)
+            
+        return {"html": lambda: (render_template("submit.html",
+                                                 v=v,
+                                                 error=reason,
+                                                 title=title,
+                                                 url=url,
+                                                 body=request.form.get(
+                                                     "body", ""),
+                                                 b=board
+                                                 ), 403),
+                "api": lambda: ({"error": reason}, 403)
+                }
 
     # check spam
     soup = BeautifulSoup(body_html, features="html.parser")
@@ -500,6 +600,13 @@ def submit_post(v):
             is_offensive = True
             break
 
+    #politics
+    is_politics=False
+    for x in g.db.query(PoliticsWord).all():
+        if (body and x.check(body)) or x.check(title):
+            is_politics = True
+            break
+
     new_post = Submission(author_id=v.id,
                           domain_ref=domain_obj.id if domain_obj else None,
                           board_id=board.id,
@@ -511,7 +618,9 @@ def submit_post(v):
                                       "")) or board.over_18),
                           post_public=not board.is_private,
                           repost_id=repost.id if repost else None,
-                          is_offensive=is_offensive
+                          is_offensive=is_offensive,
+                          is_politics=is_politics,
+                          app_id=v.client.application.id if v.client else None
                           )
 
     g.db.add(new_post)
@@ -534,13 +643,28 @@ def submit_post(v):
     g.db.add(vote)
     g.db.flush()
 
-    g.db.commit()
     g.db.refresh(new_post)
 
     # check for uploaded image
     if request.files.get('file'):
 
+        #check file size
+        if request.content_length > 16 * 1024 * 1024 and not v.has_premium:
+            g.db.rollback()
+            abort(413)
+
         file = request.files['file']
+        if not file.content_type.startswith('image/'):
+            return {"html": lambda: (render_template("submit.html",
+                                                         v=v,
+                                                         error=f"Image files only.",
+                                                         title=title,
+                                                         body=request.form.get(
+                                                             "body", ""),
+                                                         b=board
+                                                         ), 400),
+                        "api": lambda: ({"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}, 400)
+                        }
 
         name = f'post/{new_post.base36id}/{secrets.token_urlsafe(8)}'
         upload_file(name, file)
@@ -553,7 +677,32 @@ def submit_post(v):
         new_post.is_image = True
         new_post.domain_ref = 1  # id of i.ruqqus.com domain
         g.db.add(new_post)
-        g.db.commit()
+
+        #csam detection
+        def del_function():
+            delete_file(name)
+            new_post.is_banned=True
+            g.db.add(new_post)
+            g.db.commit()
+            ma=ModAction(
+                kind="ban_post",
+                user_id=1,
+                note="csam detected",
+                target_submission_id=new_post.id
+                )
+            g.db.add(ma)
+            g.db.commit()
+
+            
+        csam_thread=threading.Thread(target=check_csam_url, 
+                                     args=(f"https://{BUCKET}/{name}", 
+                                           v, 
+                                           del_function
+                                          )
+                                    )
+        csam_thread.start()
+    
+    g.db.commit()
 
     # spin off thumbnail generation and csam detection as  new threads
     if new_post.url or request.files.get('file'):
@@ -561,8 +710,7 @@ def submit_post(v):
                                       args=(new_post.base36id,)
                                       )
         new_thread.start()
-        csam_thread = threading.Thread(target=check_csam, args=(new_post,))
-        csam_thread.start()
+
 
     # expire the relevant caches: front page new, board new
     #cache.delete_memoized(frontlist, sort="new")
@@ -650,6 +798,7 @@ def embed_post_pid(pid):
 
 
 @app.route("/api/toggle_post_nsfw/<pid>", methods=["POST"])
+@app.route("/api/v1/toggle_post_nsfw/<pid>", methods=["POST"])
 @is_not_banned
 @api("update")
 @validate_formkey
@@ -657,8 +806,9 @@ def toggle_post_nsfw(pid, v):
 
     post = get_post(pid)
 
-    if not post.author_id == v.id and not v.admin_level >= 3 and not post.board.has_mod(
-            v):
+    mod=post.board.has_mod(v)
+
+    if not post.author_id == v.id and not v.admin_level >= 3 and not mod:
         abort(403)
 
     if post.board.over_18 and post.over_18:
@@ -667,10 +817,22 @@ def toggle_post_nsfw(pid, v):
     post.over_18 = not post.over_18
     g.db.add(post)
 
+    if post.author_id!=v.id:
+        ma=ModAction(
+            kind="set_nsfw" if post.over_18 else "unset_nsfw",
+            user_id=v.id,
+            target_submission_id=post.id,
+            board_id=post.board.id,
+            note = None if mod else "admin action"
+            )
+        g.db.add(ma)
+
+
     return "", 204
 
 
 @app.route("/api/toggle_post_nsfl/<pid>", methods=["POST"])
+@app.route("/api/v1/toggle_post_nsfl/<pid>", methods=["POST"])
 @is_not_banned
 @api("update")
 @validate_formkey
@@ -678,8 +840,9 @@ def toggle_post_nsfl(pid, v):
 
     post = get_post(pid)
 
-    if not post.author_id == v.id and not v.admin_level >= 3 and not post.board.has_mod(
-            v):
+    mod=post.board.has_mod(v)
+
+    if not post.author_id == v.id and not v.admin_level >= 3 and not mod:
         abort(403)
 
     if post.board.is_nsfl and post.is_nsfl:
@@ -687,6 +850,16 @@ def toggle_post_nsfl(pid, v):
 
     post.is_nsfl = not post.is_nsfl
     g.db.add(post)
+
+    if post.author_id!=v.id:
+        ma=ModAction(
+            kind="set_nsfl" if post.is_nsfl else "unset_nsfl",
+            user_id=v.id,
+            target_submission_id=post.id,
+            board_id=post.board.id,
+            note = None if mod else "admin action"
+            )
+        g.db.add(ma)
 
     return "", 204
 
@@ -706,3 +879,38 @@ def retry_thumbnail(pid, v):
                                   )
     new_thread.start()
     return jsonify({"message": "Thumbnail Retry Queued"})
+
+
+@app.route("/save_post/<pid>", methods=["POST"])
+@auth_required
+@validate_formkey
+def save_post(pid, v):
+
+    post=get_post(pid)
+
+    new_save=SaveRelationship(
+        user_id=v.id,
+        submission_id=post.id)
+
+    g.db.add(new_save)
+
+    try:
+        g.db.flush()
+    except:
+        abort(422)
+
+    return "", 204
+
+
+@app.route("/unsave_post/<pid>", methods=["POST"])
+@auth_required
+@validate_formkey
+def unsave_post(pid, v):
+
+    post=get_post(pid)
+
+    save=g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id).first()
+
+    g.db.delete(save)
+
+    return "", 204

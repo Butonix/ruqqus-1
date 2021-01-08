@@ -104,11 +104,10 @@ venv.bak/
 .mypy_cache/
 
 #custom
-.DS_Store
-teedee/.DS_Store
+*.DS_Store
 #node_modules/
 package-lock.json
-.css.map
+*.css.map
 *.map
-tee_dee_templates/
 local.txt
+*.scssc

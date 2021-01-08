@@ -1,17 +1,34 @@
-from ruqqus.__main__ import app, db
+from sqlalchemy import *
+
+from ruqqus.__main__ import app, db_session
 from ruqqus import classes
 from ruqqus.mail import send_mail
 from ruqqus.helpers.get import get_user
 from flask import render_template
 
+db=db_session()
+
 title = input("Title: ")
 subject = input("Email subject: ")
 
-x = db.query(classes.user.User).filter_by(is_activated=True, is_banned=0)
-print(f"total mail to send: {x.count()}")
+x = db.query(classes.user.User).filter(
+    classes.user.User.is_activated==True,
+    or_(
+        classes.user.User.is_banned==0, 
+        classes.user.User.unban_utc>0
+        ),
+    classes.user.User.is_deleted==False,
+    classes.user.User.email!=None)
+total=x.count()
+print(f"total mail to send: {total}")
 
-#for user in x.order_by(classes.user.User.id.asc()).all():
-for user in [get_user('captainmeta4')]
+
+i=0
+unable=0
+success=0
+for user in x.order_by(classes.user.User.id.asc()).all():
+#for user in [get_user('captainmeta4', nSession=db)]:
+    i+=1
     # for user in db.query(classes.user.User).filter_by(id=7).all():
 
     try:
@@ -27,8 +44,14 @@ for user in [get_user('captainmeta4')]
             subject=subject,
             html=html
         )
-        print(f"[{user.id}] @{user.username}")
+
+        print(f"{i}/{total} [{user.id}] @{user.username}")
+        success+=1
     except BaseException:
-        print(f"unable - [{user.id}] @{user.username}")
+        print(f"{i}/{total} unable - [{user.id}] @{user.username}")
+        unable+=1
 
 print("all done")
+print(f"attempt - {total}")
+print(f"success - {success}")
+print(f"failure - {unable}")
