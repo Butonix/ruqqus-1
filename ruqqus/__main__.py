@@ -37,7 +37,7 @@ app = Flask(__name__,
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 app.url_map.strict_slashes = False
 
-app.config["SITE_NAME"]=environ.get("SITE_NAME", "ruqqus")
+app.config["SITE_NAME"]=environ.get("SITE_NAME", "ruqqus").lstrip().rstrip()
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get(
