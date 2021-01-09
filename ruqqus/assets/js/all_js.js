@@ -2012,3 +2012,16 @@ var all_cats=function() {
 
   togglecat('hot', reload=true, delay=0)  
 }
+
+
+//mobile prompt
+if (("standalone" in window.navigator) &&       // Check if "standalone" property exists
+    window.navigator.standalone){               // Test if using standalone navigator
+
+    // Web page is loaded via app mode (full-screen mode)
+    // (window.navigator.standalone is TRUE if user accesses website via App Mode)
+
+} else {
+
+  document.getElementById('mobile-prompt-container').classList.remove('d-none');
+}
