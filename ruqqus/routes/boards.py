@@ -239,8 +239,10 @@ def board_name(name, v):
             }
 
 @app.route("/mod/distinguish_post/<bid>/<pid>", methods=["POST"])
+@app.route("/api/v1/distinguish_post/<bid>/<pid>", methods=["POST"])
 @auth_required
 @is_guildmaster("content")
+@api("guildmaster")
 def mod_distinguish_post(bid, pid, board, v):
 
     #print(pid, board, v)
@@ -270,8 +272,10 @@ def mod_distinguish_post(bid, pid, board, v):
     return "", 204
 
 @app.route("/mod/distinguish_comment/<bid>/<cid>", methods=["POST"])
+@app.route("/api/v1/distinguish_comment/<bid>/<cid>", methods=["POST"])
 @auth_required
 @is_guildmaster('content')
+@api("guildmaster")
 def mod_distinguish_comment(bid, cid, board, v):
 
     comment = get_comment(cid, v=v)
@@ -300,8 +304,10 @@ def mod_distinguish_comment(bid, cid, board, v):
     return "", 204
 
 @app.route("/mod/kick/<bid>/<pid>", methods=["POST"])
+@app.route("/api/v1/kick/<bid>/<pid>", methods=["POST"])
 @auth_required
 @is_guildmaster('content')
+@api("guildmaster")
 @validate_formkey
 def mod_kick_bid_pid(bid, pid, board, v):
 
@@ -329,8 +335,10 @@ def mod_kick_bid_pid(bid, pid, board, v):
 
 
 @app.route("/mod/accept/<bid>/<pid>", methods=["POST"])
+@app.route("/api/v1/accept/<bid>/<pid>", methods=["POST"])
 @auth_required
 @is_guildmaster('content')
+@api("guildmaster")
 @validate_formkey
 def mod_accept_bid_pid(bid, pid, board, v):
 
@@ -356,8 +364,10 @@ def mod_accept_bid_pid(bid, pid, board, v):
 
 
 @app.route("/mod/exile/<bid>", methods=["POST"])
+@app.route("/api/v1/exile/<bid>", methods=["POST"])
 @auth_required
 @is_guildmaster('access')
+@api("guildmaster")
 @validate_formkey
 def mod_ban_bid_user(bid, board, v):
 
@@ -437,8 +447,10 @@ def mod_ban_bid_user(bid, board, v):
 
 
 @app.route("/mod/unexile/<bid>", methods=["POST"])
+@app.route("/api/v1/unexile/<bid>", methods=["POST"])
 @auth_required
 @is_guildmaster('access')
+@api("guildmaster")
 @validate_formkey
 def mod_unban_bid_user(bid, board, v):
 
