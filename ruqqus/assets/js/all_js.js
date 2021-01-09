@@ -2021,6 +2021,7 @@ if (("standalone" in window.navigator) &&       // Check if "standalone" propert
     // Web page is loaded via app mode (full-screen mode)
     // (window.navigator.standalone is TRUE if user accesses website via App Mode)
 
-} else if (window.innerwidth <= 767) {
+} else {
+  document.getElementById('mobile-prompt-container').classList.remove('d-none');
   $('#mobile-prompt').tooltip('show')
 }
