@@ -85,6 +85,7 @@ class ModRelationship(Base):
         data["user"]=self.user
         data["guild"]=self.board
     
+        return data
     
     
 
@@ -119,6 +120,25 @@ class BanRelationship(Base, Stndrd, Age_times):
     def __repr__(self):
         return f"<Ban(id={self.id}, uid={self.uid}, board_id={self.board_id})>"
 
+    @property
+    def json_core(self):
+        return {
+            user_id:self.user_id,
+            board_id:self.board_id,
+            created_utc:self.created_utc,
+            mod_id=self.banning_mod_id
+        }
+
+
+    @property
+    def json(self):
+        data=self.json_core
+
+        data["user"]=self.user
+        data["mod"]=self.banning_mod
+        data["guild"]=self.board
+
+        return data
 
 class ContributorRelationship(Base, Stndrd, Age_times):
 

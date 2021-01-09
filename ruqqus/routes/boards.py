@@ -1030,8 +1030,10 @@ def board_about_mods(boardname, v):
 
 
 @app.route("/+<boardname>/mod/exiled", methods=["GET"])
+@app.route("/api/v1/<boardname>/mod/exiled", methods=["GET"])
 @auth_required
 @is_guildmaster("access")
+@api("read", "guildmaster")
 def board_about_exiled(boardname, board, v):
 
     page = int(request.args.get("page", 1))
@@ -1043,14 +1045,17 @@ def board_about_exiled(boardname, board, v):
     next_exists = (len(bans) == 26)
     bans = bans[0:25]
 
-    return render_template(
-        "guild/bans.html", 
-        v=v, 
-        b=board, 
-        bans=bans,
-        page=page,
-        next_exists=next_exists
-        )
+    return {
+        "html":lambda:render_template(
+            "guild/bans.html", 
+            v=v, 
+            b=board, 
+            bans=bans,
+            page=page,
+            next_exists=next_exists
+            ),
+        "api":lambda:jsonify({"data":[x.json for x in bans]})
+        }
 
 
 @app.route("/+<boardname>/mod/contributors", methods=["GET"])
