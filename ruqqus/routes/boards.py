@@ -149,6 +149,14 @@ def create_board_post(v):
                        board_id=new_board.id)
     g.db.add(sub)
 
+    #add guild creation mod log entry
+    ma = ModAction(
+        user_id=v.id,
+        board_id=new_board.id,
+        kind="create_guild",
+        )
+    g.db.add(ma)
+
     # clear cache
     cache.delete_memoized(guild_ids, sort="new")
 

@@ -287,5 +287,11 @@ ACTIONTYPES={
         "icon":"fa-user-cog",
         "color": "bg-muted",
         "title": "changed permissions on invitation to {self.target_user.username}"
+    },
+    "create_guild":{
+        "str": 'created +{self.board.name}',
+        "icon": "fa-chess-rook",
+        "color": "bg-primary",
+        "title": "created +{self.board.name}"
     }
 }
