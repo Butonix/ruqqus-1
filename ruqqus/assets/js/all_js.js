@@ -2022,6 +2022,8 @@ if (("standalone" in window.navigator) &&       // Check if "standalone" propert
     // (window.navigator.standalone is TRUE if user accesses website via App Mode)
 
 } else {
-  document.getElementById('mobile-prompt-container').classList.remove('d-none');
-  $('#mobile-prompt').tooltip('show')
+  if (window.innerWidth <= 737){
+    document.getElementById('mobile-prompt-container').classList.remove('d-none');
+    $('#mobile-prompt').tooltip('show')
+  }
 }
