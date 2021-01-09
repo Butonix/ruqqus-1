@@ -419,3 +419,28 @@ def api(*scopes, no_ban=False):
         return wrapper
 
     return wrapper_maker
+
+
+SANCTIONS=[
+    "cu",   #Cuba
+    "ir",   #Iran
+    "kp",   #North Korea
+    "sy",   #Syria
+    "tr",   #Turkey
+    "ve",   #Venezuela
+]
+
+def no_sanctions(f):
+
+    def wrapper(*args, **kwargs):
+
+        if request.headers.get("cf-ipcountry","").lower() in SANCTIONS:
+            abort(451)
+
+        return f(*args, **kwargs)
+
+    wrapper.__name__=f.__name__
+    return wrapper
+
+
+
