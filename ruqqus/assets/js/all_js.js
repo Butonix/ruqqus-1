@@ -2022,6 +2022,6 @@ if (("standalone" in window.navigator) &&       // Check if "standalone" propert
     // (window.navigator.standalone is TRUE if user accesses website via App Mode)
 
 } else {
-
   document.getElementById('mobile-prompt-container').classList.remove('d-none');
+  document.getElementById('mobile-prompt').tooltip('show')
 }
