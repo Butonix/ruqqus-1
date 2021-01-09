@@ -2023,5 +2023,5 @@ if (("standalone" in window.navigator) &&       // Check if "standalone" propert
 
 } else {
   document.getElementById('mobile-prompt-container').classList.remove('d-none');
-  document.getElementById('mobile-prompt').tooltip('show')
+  $('#mobile-prompt').tooltip('show')
 }

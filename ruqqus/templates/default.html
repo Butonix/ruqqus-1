@@ -188,9 +188,9 @@
 	{% block stylesheets %}
 
 	{% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
-	<link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.29.9">
+	<link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.29.9.1">
 	{% else %}
-	<link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.29.9">
+	<link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.29.9.1">
 	{% endif %}
 
 	{% endblock %}
@@ -637,7 +637,7 @@
 
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/all_js.js?v=2.29.9"></script>
+<script src="/assets/js/all_js.js?v=2.29.9.1"></script>
 
 <!-- ClipboardJS -->
 
@@ -664,9 +664,11 @@
 
 <!-- Mobile "install the app" tooltip -->
 
+{% if request.path=='/' %}
 <div id="mobile-prompt-container" class="d-none d-md-none">
   <div id="mobile-prompt" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Install the Ruqqus app by saving this page to your home screen!"></div>
 </div>
+{% endif %}
 
 </body>
 
