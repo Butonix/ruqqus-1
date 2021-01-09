@@ -1014,14 +1014,19 @@ def board_about_appearance(boardname, board, v):
 
 
 @app.route("/+<boardname>/mod/mods", methods=["GET"])
+@app.route("/api/v1/<boardname>/mod/mods", methods=["GET"])
 @auth_desired
+@api("read")
 def board_about_mods(boardname, v):
 
     board = get_guild(boardname)
 
     me = board.has_mod(v)
 
-    return render_template("guild/mods.html", v=v, b=board, me=me)
+    return {
+        "html":lambda:render_template("guild/mods.html", v=v, b=board, me=me),
+        "api":lambda:jsonify({"data":[x.json for x in board.mods_list]})
+        }
 
 
 @app.route("/+<boardname>/mod/exiled", methods=["GET"])

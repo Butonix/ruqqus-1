@@ -60,6 +60,31 @@ class ModRelationship(Base):
                 output.append(f"-{p}")
 
         return ", ".join(output)
+
+
+    @property
+    def json_core(self):
+        return {
+            user_id:self.user_id,
+            board_id:self.board_id,
+            created_utc:self.created_utc,
+            accepted:self.accepted,
+            invite_rescinded:self.invite_rescinded,
+            perm_content:self.perm_content,
+            perm_config:self.perm_config,
+            perm_access:self.perm_access,
+            perm_appearance:self.perm_appearance,
+            perm_full:self.perm_full
+        }
+
+
+    @property
+    def json(self):
+        data=self.json_core
+
+        data["user"]=self.user
+        data["guild"]=self.board
+    
     
     
 
