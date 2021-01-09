@@ -64,7 +64,7 @@ class Board(Base, Stndrd, Age_times):
     last_yank_utc=Column(Integer, default=0)
     is_locked_category = Column(Boolean, default=False)
     subcat_id=Column(Integer, ForeignKey("subcategories.id"), default=0)
-
+    secondary_color=Column(String(6), default="ffffff")
 
     subcat=relationship("SubCategory")
     moderators=relationship("ModRelationship")
