@@ -461,7 +461,9 @@ def get_forgot():
 def post_forgot():
 
     username = request.form.get("username").lstrip('@')
-    email = request.form.get("email")
+    email = request.form.get("email",'').lstrip().rstrip()
+
+    email=email.replace("_","\_")
 
     user = g.db.query(User).filter(
         User.username.ilike(username),
