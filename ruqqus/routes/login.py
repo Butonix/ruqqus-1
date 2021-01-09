@@ -402,7 +402,8 @@ def sign_up_post(v):
                         created_utc=int(time.time()),
                         creation_ip=request.remote_addr,
                         referred_by=ref_id or None,
-                        tos_agreed_utc=int(time.time())
+                        tos_agreed_utc=int(time.time()),
+                        creation_region=request.headers.get("cf-ipcountry")
                         )
 
     except Exception as e:

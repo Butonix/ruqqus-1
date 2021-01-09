@@ -408,7 +408,8 @@ def api_comment(v):
                 is_offensive=is_offensive,
                 original_board_id=parent_post.board_id,
                 is_bot=is_bot,
-                app_id=v.client.application.id if v.client else None
+                app_id=v.client.application.id if v.client else None,
+                creation_region=request.headers.get("cf-ipcountry")
                 )
 
     g.db.add(c)

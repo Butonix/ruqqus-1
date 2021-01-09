@@ -607,21 +607,25 @@ def submit_post(v):
             is_politics = True
             break
 
-    new_post = Submission(author_id=v.id,
-                          domain_ref=domain_obj.id if domain_obj else None,
-                          board_id=board.id,
-                          original_board_id=board.id,
-                          over_18=(
-                              bool(
-                                  request.form.get(
-                                      "over_18",
-                                      "")) or board.over_18),
-                          post_public=not board.is_private,
-                          repost_id=repost.id if repost else None,
-                          is_offensive=is_offensive,
-                          is_politics=is_politics,
-                          app_id=v.client.application.id if v.client else None
-                          )
+    new_post = Submission(
+        author_id=v.id,
+        domain_ref=domain_obj.id if domain_obj else None,
+        board_id=board.id,
+        original_board_id=board.id,
+        over_18=(
+            bool(
+                request.form.get(
+                    "over_18",
+                    "")
+                ) or board.over_18
+            ),
+        post_public=not board.is_private,
+        repost_id=repost.id if repost else None,
+        is_offensive=is_offensive,
+        is_politics=is_politics,
+        app_id=v.client.application.id if v.client else None,
+        creation_region=request.headers.get("cf-ipcountry")
+        )
 
     g.db.add(new_post)
     g.db.flush()
