@@ -374,7 +374,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'guild_name': self.board.name,
                 'original_guild_name': self.original_board.name if self.board_id != self.original_board_id else None,
                 'guild_id': base36encode(self.board_id),
-                'original_guild_id': base36encode(self.original_board_id) if  self.board_id != self.original_board_id else None
+                'original_guild_id': base36encode(self.original_board_id) if  self.board_id != self.original_board_id else None,
                 'comment_count': self.comment_count,
                 'score': self.score_fuzzed,
                 'upvotes': self.upvotes_fuzzed,
