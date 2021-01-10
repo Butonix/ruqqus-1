@@ -1881,17 +1881,17 @@ var tipModal2 = function(id, content, link, recipient, recipientPFP) {
   console.log(recipientPFP, id, content, link, recipient)
 }
 
-var togglecat = function(sort, reload=false, delay=1000) {
+var togglecat = function(sort, reload=false, delay=1000, page="/all") {
   var cbs = document.getElementsByClassName('cat-check');
   var l = []
   for (var i=0; i< cbs.length; i++) {
     l.push(cbs[i].checked)
   }
-  setTimeout(function(){triggercat(sort, l, reload)}, delay)
+  setTimeout(function(){triggercat(sort, l, reload, page)}, delay)
   return l;
 }
 
-var triggercat=function(sort, cats, reload) {
+var triggercat=function(sort, cats, reload, page) {
 
   var cbs = document.getElementsByClassName('cat-check');
   var l = []
@@ -1934,7 +1934,7 @@ var triggercat=function(sort, cats, reload) {
 
   xhr.onload=function(){
     if (reload){
-      document.location.href='/all'
+      document.location.href=page
     }
     else {
       var l = document.getElementById('posts');
@@ -1999,7 +1999,7 @@ var cattoggle=function(id){
   card.classList.toggle('selected');
 }
 
-var all_cats=function() {
+var all_cats=function(page) {
   var x=document.getElementsByClassName('cat-check');
   for(i=0;i<x.length;i++){
     x[i].checked=true;
@@ -2010,7 +2010,7 @@ var all_cats=function() {
     y[i].checked=true;
   };
 
-  togglecat('hot', reload=true, delay=0)  
+  togglecat('hot', reload=true, delay=0, page=page)  
 }
 
 
@@ -2029,6 +2029,6 @@ if (("standalone" in window.navigator) &&       // Check if "standalone" propert
       function(event){
         $('#mobile-prompt').tooltip('hide')
       }
-    )
+      )
   }
 }
