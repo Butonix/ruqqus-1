@@ -188,9 +188,9 @@
 	{% block stylesheets %}
 
 	{% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
-	<link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.29.8">
+	<link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.29.9.9">
 	{% else %}
-	<link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.29.8">
+	<link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.29.9.9">
 	{% endif %}
 
 	{% endblock %}
@@ -215,6 +215,15 @@
 </head>
 
 <body id="{% block pagetype %}frontpage{% endblock %}" class="">
+
+{% if request.path=='/' and g.timestamp>session.get('tooltip_last_dismissed',0)+60*60*24 and (g.system.endswith('/chrome') or g.system.endswith('/other')) %}
+<div class="row fixed-top" style="z-index:2000" id="mobile-prompt-row">
+  <div id="mobile-prompt-container" class="ml-auto mr-5">
+    <div id="mobile-prompt" href="javascript:void(0)" data-toggle="tooltip" data-container="#mobile-prompt-row" data-placement="top" data-trigger="click" title="" data-original-title="Install the Ruqqus webapp by saving this page to your home screen!">
+    </div>
+  </div>
+</div>
+{% endif %}
 
 
   <!--Header -->
@@ -637,7 +646,7 @@
 
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/all_js.js?v=2.29.8"></script>
+<script src="/assets/js/all_js.js?v=2.29.9.9"></script>
 
 <!-- ClipboardJS -->
 
@@ -661,6 +670,14 @@
 		console.log(e);
 	});
 </script>
+
+<!-- Mobile "install the app" tooltip -->
+
+{% if request.path=='/' and g.timestamp>session.get('tooltip_last_dismissed',0)+60*60*24 and (not g.system.endswith('/chrome') and not g.system.endswith('/other')) %}
+<div id="mobile-prompt-container" class="fixed-bottom">
+  <div id="mobile-prompt" href="javascript:void(0)" data-toggle="tooltip" data-container="#mobile-prompt-container" data-placement="top" data-trigger="click" title="Install the Ruqqus webapp by saving this page to your home screen!"></div>
+</div>
+{% endif %}
 
 </body>
 

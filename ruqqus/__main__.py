@@ -28,7 +28,7 @@ from redis import BlockingConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.29.8"
+_version = "2.29.9.9"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -266,6 +266,21 @@ def before_request():
         session["session_id"] = secrets.token_hex(16)
 
     g.timestamp = int(time.time())
+
+    ua=request.headers.get("User-Agent")
+    if "CriOS/" in ua:
+        g.system="ios/chrome"
+    elif "Version/" in ua:
+        g.system="android/webview"
+    elif "Mobile Safari/" in ua:
+        g.system="android/chrome"
+    elif "Safari/" in ua:
+        g.system="ios/safari"
+    elif "Mobile/" in ua:
+        g.system="ios/webview"
+    else:
+        g.system="other/other"
+
 
     # g.db.begin_nested()
 
