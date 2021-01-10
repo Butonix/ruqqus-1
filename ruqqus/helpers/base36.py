@@ -21,7 +21,10 @@ def base36encode(number, alphabet='0123456789abcdefghijklmnopqrstuvwxyz'):
 
 
 def base36decode(number):
-    return int(str(number), 36)
+    try:
+        return int(str(number), 36)
+    except ValueError:
+        abort(400)
 
 
 def base_encode(number, base):
