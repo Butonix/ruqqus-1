@@ -21,6 +21,9 @@
                 [{% if c.is_banned %}Removed by administrators{% elif c.is_deleted %}Deleted by author{% elif c.is_blocking %}You are blocking @{{ c.author.username }}{% elif c.is_blocked %}This user has blocked you{% endif %}]
             </div>
 
+        <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger">NSFW</span> {% endif %}
+                [{% if c.is_collapsed and not v.show_collapsed %}Collapsed by Guildmaster. Click <i>here<i> to view this comment.{%  endif %}]
+            </div>
 
             <div id="comment-banned-warning" class="comment-text text-danger text-small">
                 {% if c.is_banned and c.ban_reason %}Reason: {{ c.ban_reason }}{% endif %}
