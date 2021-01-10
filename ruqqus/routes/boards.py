@@ -1090,6 +1090,23 @@ def board_about_contributors(boardname, board, v):
         )
 
 
+@app.route("/api/collapse/<boardname>/<pid>", methods=["POST"])
+@auth_required
+@is_guildmaster("content")
+def subscribe_board(boardname, pid, v):
+    post = get_post(pid)
+    if not post:
+        abort(404)
+    if post.is_collapsed:
+        post.is_collapsed = False
+    else:
+        post.is_collapsed = True
+
+    g.db.add(post)
+    return jsonify({"msg": "success"}), 200
+
+
+
 @app.route("/api/subscribe/<boardname>", methods=["POST"])
 @auth_required
 def subscribe_board(boardname, v):

@@ -60,6 +60,12 @@ def settings_profile_post(v):
         updated = True
         v.is_nofollow = request.values.get("nofollow", None) == 'true'
 
+    if request.values.get("show_collapsed", None):
+        if v.show_collapsed:
+            v.collapsed = False
+        else:
+            v.show_collapsed = True
+
     if request.values.get("bio") is not None:
         bio = request.values.get("bio")[0:256]
 
