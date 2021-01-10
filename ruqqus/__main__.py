@@ -281,8 +281,6 @@ def before_request():
     else:
         g.system="other/other"
 
-    print(g.system)
-
 
     # g.db.begin_nested()
 
