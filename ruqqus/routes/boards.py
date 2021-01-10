@@ -1090,19 +1090,19 @@ def board_about_contributors(boardname, board, v):
         )
 
 
-@app.route("/api/collapse/<boardname>/<pid>", methods=["POST"])
+@app.route("/api/collapse_comment/<boardname>/<cid>", methods=["POST"])
 @auth_required
 @is_guildmaster("content")
-def subscribe_board(boardname, pid, v):
-    post = get_post(pid)
-    if not post:
+def subscribe_board(boardname, cid, v):
+    comment = get_comment(cid)
+    if not comment:
         abort(404)
-    if post.is_collapsed:
-        post.is_collapsed = False
+    if comment.is_collapsed:
+        comment.is_collapsed = False
     else:
-        post.is_collapsed = True
+        comment.is_collapsed = True
 
-    g.db.add(post)
+    g.db.add(comment)
     return jsonify({"msg": "success"}), 200
 
 

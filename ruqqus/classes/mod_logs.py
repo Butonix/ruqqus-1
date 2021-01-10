@@ -120,6 +120,18 @@ ACTIONTYPES={
         "color": "bg-muted",
         "title": 'un-exiled user {self.target_user.username}'
     },
+    "collapsed_comment":{
+        "str":'collapsed comment {self.target_link}',
+        "icon": "fa-user-slash",
+        "color": "bg-muted",
+        "title": 'collapsed comment  {self.target_link}'
+    },
+    "uncollapsed_comment": {
+        "str": 'un-collapsed comment {self.target_link}',
+        "icon": "fa-user-slash",
+        "color": "bg-muted",
+        "title": 'uncollapsed comment  {self.target_link}'
+    },
     "contrib_user":{
         "str":'added contributor {self.target_link}',
         "icon": "fa-user-check",
