@@ -66,6 +66,25 @@
               <div class="d-lg-flex border-bottom">
 
                 <div class="title w-lg-25">
+                  <label for="show_collapsed">View Collapsed Content</label>
+                </div>
+
+                <div class="body w-lg-100">
+
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="show_collapsed" name="show_collapsed"{% if v.show_collapsed %} checked{% endif %} onchange="post_toast('/settings/profile?show_collapsed='+document.getElementById('show_collapsed').checked)">
+                    <label class="custom-control-label" for="show_collapsed"></label>
+                  </div>
+
+                  <span class="text-small-extra text-muted">Enable if you are ok with viewing content that has been manually collapsed by Guildmasters. We recommend keeping this off if you are under 18.</span>
+
+                </div>
+
+              </div>
+
+              <div class="d-lg-flex border-bottom">
+
+                <div class="title w-lg-25">
                   <label for="hideoffensive">Hide offensive speech</label>
                 </div>
 
