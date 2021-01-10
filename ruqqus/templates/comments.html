@@ -21,8 +21,8 @@
                 [{% if c.is_banned %}Removed by administrators{% elif c.is_deleted %}Deleted by author{% elif c.is_blocking %}You are blocking @{{ c.author.username }}{% elif c.is_blocked %}This user has blocked you{% endif %}]
             </div>
 
-        <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger">NSFW</span> {% endif %}
-                [{% if c.is_collapsed and not v.show_collapsed %}Collapsed by Guildmaster. Click <i>here<i> to view this comment.{%  endif %}]
+            <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger">NSFW</span> {% endif %}
+                [{% if c.is_collapsed and not v.show_collapsed and not v.admin_level == 4 %}Collapsed by Guildmaster. Click <i>here<i> to view this comment.{%  endif %}]
             </div>
 
             <div id="comment-banned-warning" class="comment-text text-danger text-small">
@@ -120,6 +120,9 @@
         {% if c.edited_utc %}
         <span class="time-edited"><span>&#183;</span> <span class="font-italic">Edited {{ c.edited_string }}</span></span>
         {% endif %}
+        {% if c.is_collapsed and not v.show_collapsed and not v.admin_level == 4 %}
+        Collapsed by Guildmaster. Click <i>here<i> to view this comment.
+        {%  endif %}
         {% if c.award_count %}<span style="color: #604c1b;background-color: #c1971b;
         background-image: linear-gradient(135deg, #ffc107 0%, #c1971b 100%);" class="badge text-small ml-1"><i class="fas fa-coin mr-2"></i>{{ c.award_count }}</span>{% endif %}
 
