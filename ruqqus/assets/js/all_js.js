@@ -2023,7 +2023,6 @@ if (("standalone" in window.navigator) &&       // Check if "standalone" propert
 
 } else {
   if (window.innerWidth <= 737){
-    document.getElementById('mobile-prompt-container').classList.remove('d-none');
     $('#mobile-prompt').tooltip('show')
   }
 }
