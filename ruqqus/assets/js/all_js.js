@@ -2028,6 +2028,10 @@ if (("standalone" in window.navigator) &&       // Check if "standalone" propert
       'click', 
       function(event){
         $('#mobile-prompt').tooltip('hide')
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials=true;
+        xhr.open("POST", '/dismiss_mobile_tip', true);
+        xhr.send();
       }
       )
   }
