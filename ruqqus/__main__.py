@@ -267,6 +267,21 @@ def before_request():
 
     g.timestamp = int(time.time())
 
+    ua=request.headers.get("User-Agent")
+    if "CriOS/" in ua:
+        g.system="ios/chrome"
+    elif "Chrome/" in ua:
+        g.system="android/webview"
+    elif "Mobile Safari/" in ua:
+        g.system="android/chrome"
+    elif "Safari/" in ua:
+        g.system="ios/safari"
+    elif "Mobile/" in ua:
+        g.system="ios/webview"
+    else:
+        g.system="other/other"
+
+
     # g.db.begin_nested()
 
 
