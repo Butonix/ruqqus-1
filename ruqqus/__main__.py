@@ -270,7 +270,7 @@ def before_request():
     ua=request.headers.get("User-Agent")
     if "CriOS/" in ua:
         g.system="ios/chrome"
-    elif "Chrome/" in ua:
+    elif "Version/" in ua:
         g.system="android/webview"
     elif "Mobile Safari/" in ua:
         g.system="android/chrome"
@@ -280,6 +280,8 @@ def before_request():
         g.system="ios/webview"
     else:
         g.system="other/other"
+
+    print(g.system)
 
 
     # g.db.begin_nested()
