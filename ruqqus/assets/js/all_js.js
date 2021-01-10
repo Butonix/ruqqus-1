@@ -2024,5 +2024,11 @@ if (("standalone" in window.navigator) &&       // Check if "standalone" propert
 } else {
   if (window.innerWidth <= 737){
     $('#mobile-prompt').tooltip('show')
+    $('.tooltip')[0].addEventListener(
+      'click', 
+      function(event){
+        $('#mobile-prompt').tooltip('hide')
+      }
+    )
   }
 }
