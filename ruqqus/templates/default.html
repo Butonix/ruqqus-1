@@ -216,6 +216,12 @@
 
 <body id="{% block pagetype %}frontpage{% endblock %}" class="">
 
+{% if request.path=='/' and g.system.endswith('/chrome') or g.system.endswith('/other') %}
+<div id="mobile-prompt-container" class="fixed-top ml-auto">
+  <div id="mobile-prompt" href="javascript:void(0)" data-toggle="tooltip" data-container="#mobile-prompt-container" data-placement="top" data-trigger="click" title="Install the Ruqqus app by saving this page to your home screen!"></div>
+</div>
+{% endif %}
+
 
   <!--Header -->
   <!-- Navigation -->
@@ -664,7 +670,7 @@
 
 <!-- Mobile "install the app" tooltip -->
 
-{% if request.path=='/' %}
+{% if request.path=='/' and g.system.endswith('/safari') %}
 <div id="mobile-prompt-container" class="fixed-bottom">
   <div id="mobile-prompt" href="javascript:void(0)" data-toggle="tooltip" data-container="#mobile-prompt-container" data-placement="top" data-trigger="click" title="Install the Ruqqus app by saving this page to your home screen!"></div>
 </div>
