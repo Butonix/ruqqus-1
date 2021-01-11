@@ -152,11 +152,13 @@ def auth_required(f):
                         )
                     g.db.add(ma)
 
+                g.db.commit()
                 abort(403)
-                
+
             else:
                 v.ban_evade +=1
                 g.db.add(v)
+                g.db.commit()
 
 
 
