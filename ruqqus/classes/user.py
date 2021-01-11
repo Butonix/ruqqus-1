@@ -103,6 +103,7 @@ class User(Base, Stndrd, Age_times):
     discord_id=Column(String(64), default=None)
     last_yank_utc=Column(Integer, default=0)
     creation_region=Column(String(2), default=None)
+    ban_evade=column(Integer, default=0)
 
     moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",

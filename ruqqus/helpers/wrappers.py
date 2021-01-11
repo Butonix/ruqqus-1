@@ -3,9 +3,11 @@ from os import environ
 import requests
 from werkzeug.wrappers.response import Response as RespObj
 import time
+import random
 
 from ruqqus.classes import *
 from .get import *
+from .alerts import send_notification
 from ruqqus.__main__ import Base, app
 
 
@@ -111,6 +113,52 @@ def auth_required(f):
 
         if not v:
             abort(401)
+        elif v and v.ban_evade and request.method=="POST":
+            if random.randint(0,200) < v.ban_evade:
+                v.ban(reason="Evading a site-wide ban")
+                send_notification(v, "Your Ruqqus account has been permanently suspended for the following reason:\n\n> ban evasion")
+
+                for post in g.db.query(Submission).filter_by(author_id=user.id).all():
+                    if post.is_banned:
+                        continue
+                        
+                    post.is_banned=True
+                    post.ban_reason="Ban evasion. This submission's owner was was banned from Ruqqus on another account."
+                    g.db.add(post)
+
+                    ma=ModAction(
+                        kind="ban_post",
+                        user_id=1,
+                        target_submission_id=post.id,
+                        board_id=post.board_id,
+                        note="ban evasion"
+                        )
+                    g.db.add(ma)
+
+                for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
+                    if comment.is_banned:
+                        continue
+
+                    comment.is_banned=True
+                    comment.ban_reason="Ban evasion. This comment's owner was was banned from Ruqqus on another account."
+                    g.db.add(comment)
+
+                    ma=ModAction(
+                        kind="ban_comment",
+                        user_id=1,
+                        target_comment_id=comment.id,
+                        board_id=comment.post.board_id,
+                        note="ban evasion"
+                        )
+                    g.db.add(ma)
+
+                abort(403)
+                
+            else:
+                v.ban_evade +=1
+                g.db.add(v)
+
+
 
         if c:
             kwargs["c"] = c
