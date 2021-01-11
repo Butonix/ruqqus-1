@@ -189,7 +189,7 @@ def settings_security_post(v):
             return redirect("/settings/security?error=" +
                             escape("That email address is already in use."))
 
-        url = f"https://{environ.get('domain')}/activate"
+        url = f"https://{app.config['SERVER_NAME']}/activate"
 
         now = int(time.time())
 
