@@ -350,10 +350,6 @@ def sign_up_post(v):
         return new_signup(
             "An account with that username or email already exists.")
 
-    # check bans
-    #if any([x.is_banned for x in [g.db.query(User).filter_by(id=y).first()
-    #                              for y in session.get("history", [])] if x]):
-    #    abort(403)
 
     # ip ratelimit
     previous = g.db.query(User).filter_by(
@@ -403,7 +399,8 @@ def sign_up_post(v):
                         creation_ip=request.remote_addr,
                         referred_by=ref_id or None,
                         tos_agreed_utc=int(time.time()),
-                        creation_region=request.headers.get("cf-ipcountry")
+                        creation_region=request.headers.get("cf-ipcountry"),
+                        ban_evade =  int(any([x.is_banned for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x]))
                         )
 
     except Exception as e:
