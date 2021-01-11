@@ -268,6 +268,8 @@ def before_request():
     g.timestamp = int(time.time())
 
     ua=request.headers.get("User-Agent")
+    if not ua:
+        g.system="none/none"
     if "CriOS/" in ua:
         g.system="ios/chrome"
     elif "Version/" in ua:
