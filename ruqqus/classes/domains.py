@@ -6,7 +6,8 @@ reasons = {
     3: "Piracy is not allowed.",
     4: "Sites hosting digitally malicious content are not allowed.",
     5: "Spam",
-    6: "Doxxing is not allowed."
+    6: "Doxxing is not allowed.",
+    7: "Sexualizing minors is strictly prohibited."
 }
 
 
