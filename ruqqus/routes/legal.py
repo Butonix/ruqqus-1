@@ -147,7 +147,7 @@ def dmca_post(v):
                 is_op=True,
                 is_offensive=False,
                 original_board_id=1000,
-                is_deleted=True
+                deleted_utc=0
                 )
     g.db.add(c)
     g.db.flush()
