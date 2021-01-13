@@ -51,7 +51,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     edited_utc = Column(BigInteger, default=0)
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
-    is_deleted = Column(Boolean, default=False)
+    deleted_utc = Column(Integer, default=0)
     distinguish_level = Column(Integer, default=0)
     gm_distinguish = Column(Integer, ForeignKey("boards.id"), default=0)
     distinguished_board = relationship("Board", lazy="joined", primaryjoin="Board.id==Submission.gm_distinguish")

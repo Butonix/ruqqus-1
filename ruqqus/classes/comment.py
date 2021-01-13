@@ -47,7 +47,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     distinguish_level = Column(Integer, default=0)
     gm_distinguish = Column(Integer, ForeignKey("boards.id"), default=0)
     distinguished_board = relationship("Board", lazy="joined", primaryjoin="Comment.gm_distinguish==Board.id")
-    is_deleted = Column(Boolean, default=False)
+    deleted_utc = Column(Integer, default=0)
     is_approved = Column(Integer, default=0)
     approved_utc = Column(Integer, default=0)
     creation_ip = Column(String(64), default='')
