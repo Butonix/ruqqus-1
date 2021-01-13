@@ -64,6 +64,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     is_nsfl = Column(Boolean, default=False)
     is_bot = Column(Boolean, default=False)
     is_pinned = Column(Boolean, default=False)
+    is_purged = Column(Boolean, default=False)
     creation_region=Column(String(2), default=None)
 
     app_id = Column(Integer, ForeignKey("oauth_apps.id"), default=None)
