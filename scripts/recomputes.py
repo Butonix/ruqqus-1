@@ -42,7 +42,7 @@ def recompute():
         post_count = 0
         while posts:
             posts = db.query(Submission
-                             ).options(lazyload('*')).filter_by(is_banned=False, is_deleted=False
+                             ).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0
                                                                 ).filter(Submission.created_utc > cutoff
                                                                          ).order_by(Submission.id.asc()
                                                                                     ).offset(100 * (page - 1)).limit(100).all()
@@ -66,7 +66,7 @@ def recompute():
 
                 comment_count = 0
                 for comment in post._comments.filter_by(
-                        is_banned=False, is_deleted=False).all():
+                        is_banned=False, deleted_utc=0).all():
 
                     comment_count += 1
 
