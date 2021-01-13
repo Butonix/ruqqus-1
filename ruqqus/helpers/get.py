@@ -144,20 +144,26 @@ def get_posts(pids, sort="hot", v=None):
     if not pids:
         return []
 
+    pids=tuple(pids)
+
     queries = []
 
     if v:
-        for pid in pids:
+        vt = g.db.query(Vote).filter(
+            Vote.submission_id.in_(pids), 
+            Vote.user_id==v.id
+            ).subquery()
 
-            vt = g.db.query(Vote).filter_by(
-                submission_id=pid, user_id=v.id).subquery()
-            mod = g.db.query(ModRelationship).filter_by(
-                user_id=v.id, accepted=True, invite_rescinded=False).subquery()
-            boardblocks = g.db.query(BoardBlock).filter_by(
-                user_id=v.id).subquery()
-            blocking = v.blocking.subquery()
-            blocked = v.blocked.subquery()
-            subs = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
+        mod = g.db.query(ModRelationship).filter_by(
+            user_id=v.id, accepted=True, invite_rescinded=False).subquery()
+
+        boardblocks = g.db.query(BoardBlock).filter_by(
+            user_id=v.id).subquery()
+        blocking = v.blocking.subquery()
+        blocked = v.blocked.subquery()
+        subs = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
+
+        for pid in pids:
 
             query = g.db.query(
                 Submission,
