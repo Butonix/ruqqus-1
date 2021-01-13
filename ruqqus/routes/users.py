@@ -397,8 +397,9 @@ def info_packet(username, method="html"):
         print('submissions')
         #submissions
         post_ids=db.query(Submission.id).filter_by(author_id=user.id).order_by(Submission.created_utc.desc()).all()
-        print('have ids')
-        posts=get_posts([i[0] for i in post_ids], v=user)
+        post_ids=[i[0] for i in post_ids]
+        print(f'have {len(post_ids)} ids')
+        posts=get_posts(post_ids, v=user)
         print('have posts')
         packet["posts"]={
             'html':lambda:render_template("userpage.html", v=None, u=user, listing=posts, page=1, next_exists=False),
