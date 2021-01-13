@@ -175,7 +175,8 @@ def get_posts(pids, sort="hot", v=None):
             joinedload(Submission.author).joinedload(User.title)
             ).filter(
             Submission.id.in_(pids)
-            ).join(vt, vt.c.submission_id==Submission.id, isouter=True
+            ).join(
+            vt, vt.c.submission_id==Submission.id, isouter=True
             ).join(mod, mod.c.board_id == Submission.board_id, isouter=True
             ).join(boardblocks, boardblocks.c.board_id == Submission.board_id, isouter=True
             ).join(blocking, blocking.c.target_id == Submission.author_id, isouter=True
@@ -192,14 +193,14 @@ def get_posts(pids, sort="hot", v=None):
             output[i]._is_blocked = posts[i][5] or 0
             output[i]._is_subscribed = posts[i][6] or 0
     else:
-        for pid in pids:
-            query = g.db.query(Submission
-                               ).options(joinedload(Submission.author).joinedload(User.title)
-                                         ).filter(Submission.id.in_(pids)).order_by(None).all()
+        query = g.db.query(Submission
+        ).options(
+        joinedload(Submission.author).joinedload(User.title)
+        ).filter(Submission.id.in_(pids)
+        ).order_by(None).all()
 
-    output = sorted(output, key=lambda x: pids.index(x.id))
+    return sorted([x for x in query], key=lambda x: pids.index(x.id))
 
-    return output
 
 
 def get_post_with_comments(pid, sort_type="top", v=None):
