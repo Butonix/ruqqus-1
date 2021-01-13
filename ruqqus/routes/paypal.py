@@ -226,7 +226,7 @@ def gift_post_pid(pid, v):
     if post.author_id==v.id:
         return jsonify({"error":"You can't give awards to yourself."}), 403   
 
-    if post.is_deleted:
+    if post.deleted_utc > 0:
         return jsonify({"error":"You can't give awards to deleted posts"}), 403
 
     if post.is_banned:
@@ -297,7 +297,7 @@ def gift_comment_pid(cid, v):
     if comment.author_id==v.id:
         return jsonify({"error":"You can't give awards to yourself."}), 403      
 
-    if comment.is_deleted:
+    if comment.deleted_utc > 0:
         return jsonify({"error":"You can't give awards to deleted posts"}), 403
 
     if comment.is_banned:
