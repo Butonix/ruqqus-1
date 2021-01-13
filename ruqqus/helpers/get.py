@@ -375,8 +375,11 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
     queries = []
 
     if v:
-        vt = nSession.query(CommentVote).filter_by(
-            comment_id=cid, user_id=v.id).subquery()
+        vt = nSession.query(CommentVote).filter(
+            Vote.comment_id.in_(cids), 
+            Vote.user_id==v.id
+            ).subquery()
+
         query = nSession.query(
             Comment, 
             vt.c.vote_type
