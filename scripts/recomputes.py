@@ -106,6 +106,7 @@ def recompute():
             p.creation_ip = ""
             p.is_purged = True
             p.is_pinned = False
+            p.is_stickied = False
             db.add(p)
 
             if not x % 100:
