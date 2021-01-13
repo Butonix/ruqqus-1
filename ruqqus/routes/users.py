@@ -410,7 +410,7 @@ def info_packet(username, method="html"):
         comment_ids=db.query(Comment.id).filter_by(author_id=user.id).order_by(Comment.created_utc.desc()).all()
         comment_ids=[x[0] for x in comment_ids]
         print(f"have {len(comment_ids)} ids")
-        comments=get_comments([i[0] for i in comment_ids], v=user)
+        comments=get_comments(comment_ids, v=user)
         print('have comments')
         packet["comments"]={
             'html':lambda:render_template("userpage_comments.html", v=None, u=user, comments=comments, page=1, next_exists=False),
