@@ -33,6 +33,7 @@ def recompute():
         now = int(time.time())
 
         cutoff = now - (60 * 60 * 24 * 180)
+        cutoff_purge = now - (60 * 60 * 24 * 90)
 
         #print("Beginning post recompute")
         i = 0
@@ -82,7 +83,6 @@ def recompute():
 
             db.commit()
 
-            db.commit()
             page += 1
             #print(f"re-scored {post_count} posts")
 
@@ -93,6 +93,40 @@ def recompute():
         for action in db.query(ModAction).filter(ModAction.created_utc<int(time.time())-60*60*24*90).all():
             db.delete(action)
         db.commit()
+
+        x = 0
+
+        purge_posts = db.query(Submission).filter(Submission.deleted_utc < cutoff_purge).filter_by(is_purged=False).all()
+        for p in purge_posts:
+            x += 1
+            p.submission_aux.body = ""
+            p.submission_aux.body_html = ""
+            p.submission_aux.url = ""
+            p.submission_aux.embed_url = ""
+            p.creation_ip = ""
+            p.is_purged = True
+            p.is_pinned = False
+            db.add(p)
+
+            if not x % 100:
+                db.commit()
+
+        db.commit()
+
+        x = 0
+        purge_comments = db.query(Comment).filter(Comment.deleted_utc < cutoff_purge).filter_by(is_purged=False).all()
+        for c in purge_comments:
+            c += 1
+            c.comment_aux.body = ""
+            c.comment_aux.body_html = ""
+            c.creation_ip = ""
+            c.is_purged = True
+            c.is_pinned = False
+            db.add(c)
+
+            if not x % 100:
+                db.commit()
+
 
 
 with daemon.DaemonContext():
