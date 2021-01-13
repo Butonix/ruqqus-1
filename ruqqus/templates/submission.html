@@ -83,7 +83,7 @@
 <meta charset="utf-8" />
 <meta property="og:type" content="article" />
 
-{% if comment_info and not comment_info.is_banned and not linked_comment.is_deleted %}
+{% if comment_info and not comment_info.is_banned and not linked_comment.deleted_utc > 0 %}
 <title>{{ '@'+comment_info.author.username if not comment_info.author.is_deleted else '[deleted account]'}} comments in +{{ p.board.name }} on "{{ p.title }} - Ruqqus"</title>
 
 
@@ -258,7 +258,7 @@
 </form>
 {% endif %}
 {% endif %}
-{% if p.is_deleted or p.author.is_deleted and v.admin_level >=4 %}
+{% if p.deleted_utc > 0 or p.author.is_deleted and v.admin_level >=4 %}
 <p>Author: <a href="{{ p.author.permalink }}">@{{ p.author.username }}</a></p>
 {% endif %}
 {% endblock %}
@@ -333,7 +333,7 @@
 
           {% endif %}
 
-          {% if v and not v.id==p.author_id and not p.is_deleted and not p.author.is_deleted %}
+          {% if v and not v.id==p.author_id and  p.deleted_utc == 0 and not p.author.is_deleted %}
             <button id="block-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if p.is_blocking %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/block?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{ p.base36id }}').classList.toggle('d-none');})"
             ><i class="fas fa-user-slash text-danger mr-3"></i>Block @{{ p.author.username }}</button>
             <button id="unblock-user-button-{{ p.base36id }}" class="btn btn-link btn-block btn-lg text-left text-danger{% if not p.is_blocking %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/unblock?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-button-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{ p.base36id }}').classList.toggle('d-none');})"
@@ -501,7 +501,7 @@
                         <a id="unblock-user-{{ p.base36id }}" class="dropdown-item text-danger{% if not p.is_blocking %} d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/settings/unblock?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-{{ p.base36id }}').classList.toggle('d-none');})"
                         ><i class="fas fa-user-slash text-danger"></i>Unblock user</a>
 
-                        {% if p.is_guildmaster('access') and not p.is_deleted and not p.author.is_deleted%}
+                        {% if p.is_guildmaster('access') and p.deleted_utc == 0 and not p.author.is_deleted%}
                         <a id="exile2-user-{{ p.base36id }}" class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/mod/exile/{{ p.board.base36id }}?username={{ p.author.username }}&toast=1&thing={{ p.fullname }}')"
                         ><i class="fas fa-user-slash text-danger"></i>Exile @{{ p.author.username }}</a>
                         {% endif %}
@@ -678,7 +678,7 @@
    {% include "comments.html" %}
    {% endwith %}
  </div>
- {% elif not p.replies and not p.is_deleted %}
+ {% elif not p.replies and p.deleted_utc == 0 %}
  <div class="comment-section text-center py-7">
   <span class="fa-stack fa-2x text-muted mb-4">
     <i class="fas fa-square text-gray-500 opacity-25 fa-stack-2x"></i>
