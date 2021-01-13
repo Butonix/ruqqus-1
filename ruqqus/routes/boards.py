@@ -1095,8 +1095,7 @@ def board_about_contributors(boardname, board, v):
 @is_guildmaster("content")
 def subscribe_board(boardname, cid, v):
     comment = get_comment(cid)
-    if not comment:
-        abort(404)
+
     if comment.is_collapsed:
         comment.is_collapsed = False
     else:
