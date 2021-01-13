@@ -396,15 +396,17 @@ def info_packet(username, method="html"):
 
         print('submissions')
         #submissions
-        post_ids=db.query(Submission.id).filter_by(author_id=user.id).order_by(Submission.id.desc()).all()
+        post_ids=db.query(Submission.id).filter_by(author_id=user.id).order_by(Submission.created_utc.desc()).all()
+        print('have ids')
         posts=get_posts([i[0] for i in post_ids], v=user)
+        print('have posts')
         packet["posts"]={
             'html':lambda:render_template("userpage.html", v=None, u=user, listing=posts, page=1, next_exists=False),
             'json':lambda:[x.self_download_json for x in posts]
         }
 
         print('comments')
-        comment_ids=db.query(Comment.id).filter_by(author_id=user.id).order_by(Comment.id.desc()).all()
+        comment_ids=db.query(Comment.id).filter_by(author_id=user.id).order_by(Comment.created_utc.desc()).all()
         comments=get_comments([i[0] for i in comment_ids], v=user)
         packet["comments"]={
             'html':lambda:render_template("userpage_comments.html", v=None, u=user, comments=comments, page=1, next_exists=False),
@@ -469,10 +471,10 @@ def info_packet(username, method="html"):
 
 
 
-#@app.route("/my_info", methods=["POST"])
-#@auth_required
-#@validate_formkey
-def my_info_put(v):
+@app.route("/my_info", methods=["POST"])
+@auth_required
+@validate_formkey
+def my_info_post(v):
 
     if not v.is_activated:
         return redirect("/settings/security")
@@ -487,3 +489,9 @@ def my_info_put(v):
     #info_packet(g.db, v)
 
     return "started"
+
+
+@app.route("/my_info", methods=["GET"])
+@auth_required
+def my_info_get(v):
+    return render_template("my_info.html", v=v)
