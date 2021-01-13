@@ -163,39 +163,25 @@ def get_posts(pids, sort="hot", v=None):
         blocked = v.blocked.subquery()
         subs = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
 
-        for pid in pids:
-
-            query = g.db.query(
-                Submission,
-                vt.c.vote_type,
-                aliased(ModRelationship, alias=mod),
-                boardblocks.c.id,
-                blocking.c.id,
-                blocked.c.id,
-                subs.c.id
-            ).options(joinedload(Submission.author).joinedload(User.title)
-                      )
-            if v.admin_level>=4:
-                query=query.options(joinedload(Submission.oauth_app))
-
-            query=query.filter_by(id=pid
-                                  ).join(vt, vt.c.submission_id == Submission.id, isouter=True
-                                         ).join(mod, mod.c.board_id == Submission.board_id, isouter=True
-                                                ).join(boardblocks, boardblocks.c.board_id == Submission.board_id, isouter=True
-                                                       ).join(blocking, blocking.c.target_id == Submission.author_id, isouter=True
-                                                              ).join(blocked, blocked.c.user_id == Submission.author_id, isouter=True
-                                                                     ).join(subs, subs.c.board_id == Submission.board_id, isouter=True
-                                                                            )
-            queries.append(query)
-
-        queries = tuple(queries)
-        first_query = queries[0]
-        if len(queries) > 1:
-            other_queries = queries[1:len(queries)]
-        else:
-            other_queries = tuple()
-
-        posts = first_query.union_all(*other_queries).order_by(None).all()
+        query = g.db.query(
+            Submission,
+            vt.c.vote_type,
+            aliased(ModRelationship, alias=mod),
+            boardblocks.c.id,
+            blocking.c.id,
+            blocked.c.id,
+            subs.c.id
+            ).options(
+            joinedload(Submission.author).joinedload(User.title)
+            ).filter(
+            Submission.id.in_(pids)
+            ).join(vt, vt.c.submission_id==Submission.id, isouter=True
+            ).join(mod, mod.c.board_id == Submission.board_id, isouter=True
+            ).join(boardblocks, boardblocks.c.board_id == Submission.board_id, isouter=True
+            ).join(blocking, blocking.c.target_id == Submission.author_id, isouter=True
+            ).join(blocked, blocked.c.user_id == Submission.author_id, isouter=True
+            ).join(subs, subs.c.board_id == Submission.board_id, isouter=True
+            ).order_by(None).all()
 
         output = [p[0] for p in posts]
         for i in range(len(output)):
@@ -209,17 +195,7 @@ def get_posts(pids, sort="hot", v=None):
         for pid in pids:
             query = g.db.query(Submission
                                ).options(joinedload(Submission.author).joinedload(User.title)
-                                         ).filter_by(id=pid
-                                                     )
-            queries.append(query)
-
-        queries = tuple(queries)
-        first_query = queries[0]
-        if len(queries) > 1:
-            other_queries = queries[1:len(queries)]
-        else:
-            other_queries = tuple()
-        output = first_query.union_all(*other_queries).order_by(None).all()
+                                         ).filter(Submission.id.in_(pids)).order_by(None).all()
 
     output = sorted(output, key=lambda x: pids.index(x.id))
 
