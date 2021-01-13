@@ -118,7 +118,7 @@ def auth_required(f):
                 v.ban(reason="Evading a site-wide ban")
                 send_notification(v, "Your Ruqqus account has been permanently suspended for the following reason:\n\n> ban evasion")
 
-                for post in g.db.query(Submission).filter_by(author_id=user.id).all():
+                for post in g.db.query(Submission).filter_by(author_id=v.id).all():
                     if post.is_banned:
                         continue
                         
@@ -135,7 +135,7 @@ def auth_required(f):
                         )
                     g.db.add(ma)
 
-                for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
+                for comment in g.db.query(Comment).filter_by(author_id=v.id).all():
                     if comment.is_banned:
                         continue
 
