@@ -184,7 +184,9 @@ def get_posts(pids, sort="hot", v=None):
             ).join(subs, subs.c.board_id == Submission.board_id, isouter=True
             ).order_by(None).all()
 
-        output = [p[0] for p in posts]
+        posts=[x for x in query]
+
+        output = [p[0] for p in query]
         for i in range(len(output)):
             output[i]._voted = posts[i][1] or 0
             output[i]._is_guildmaster = posts[i][2] or 0
@@ -199,8 +201,9 @@ def get_posts(pids, sort="hot", v=None):
         ).filter(Submission.id.in_(pids)
         ).order_by(None).all()
 
-    return sorted([x for x in query], key=lambda x: pids.index(x.id))
+        output=[x for x in query]
 
+    return sorted(output, key=lambda x: pids.index(x.id))
 
 
 def get_post_with_comments(pid, sort_type="top", v=None):
