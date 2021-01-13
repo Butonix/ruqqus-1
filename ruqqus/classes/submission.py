@@ -197,7 +197,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def rendered_page(self, comment=None, comment_info=None, v=None):
 
         # check for banned
-        if self.is_deleted:
+        if self.deleted_utc > 0:
             template = "submission_deleted.html"
         elif v and v.admin_level >= 3:
             template = "submission.html"
@@ -340,16 +340,16 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
         if self.is_banned:
             return {'is_banned': True,
-                    'is_deleted': self.is_deleted,
+                    'deleted_utc': self.deleted_utc,
                     'ban_reason': self.ban_reason,
                     'id': self.base36id,
                     'title': self.title,
                     'permalink': self.permalink,
                     'guild_name': self.board.name
                     }
-        elif self.is_deleted:
+        elif self.deleted_utc > 0:
             return {'is_banned': bool(self.is_banned),
-                    'is_deleted': True,
+                    'deleted_utc': self.deleted_utc,
                     'id': self.base36id,
                     'title': self.title,
                     'permalink': self.permalink,
@@ -358,7 +358,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         data = {'author_name': self.author.username if not self.author.is_deleted else None,
                 'permalink': self.permalink,
                 'is_banned': False,
-                'is_deleted': False,
+                'deleted_utc': self.deleted_utc,
                 'created_utc': self.created_utc,
                 'id': self.base36id,
                 'fullname': self.fullname,
@@ -391,7 +391,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def json(self):
         data=self.json_core
         
-        if self.is_deleted or self.is_banned:
+        if self.deleted_utc > 0 or self.is_banned:
             return data
 
         data["author"]=self.author.json_core
@@ -520,7 +520,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def self_download_json(self):
 
         #This property should never be served to anyone but author and admin
-        if not self.is_banned and not self.is_deleted:
+        if not self.is_banned and self.deleted_utc == 0:
             return self.json_core
 
         return {
@@ -530,7 +530,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             "body": self.body,
             "body_html": self.body_html,
             "is_banned": bool(self.is_banned),
-            "is_deleted": self.is_deleted,
+            "deleted_utc": self.deleted_utc,
             'created_utc': self.created_utc,
             'id': self.base36id,
             'fullname': self.fullname,
