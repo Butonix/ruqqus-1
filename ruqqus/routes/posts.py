@@ -299,7 +299,7 @@ def submit_post(v):
     # check for duplicate
     dup = g.db.query(Submission).join(Submission.submission_aux).filter(
         Submission.author_id == v.id,
-        Submission.is_deleted == False,
+        Submission.deleted_utc == 0,
         Submission.board_id == board.id,
         SubmissionAux.title == title,
         SubmissionAux.url == url,
@@ -585,7 +585,7 @@ def submit_post(v):
         repost = g.db.query(Submission).join(Submission.submission_aux).filter(
             SubmissionAux.url.ilike(url),
             Submission.board_id == board.id,
-            Submission.is_deleted == False,
+            Submission.deleted_utc == 0,
             Submission.is_banned == False
         ).order_by(
             Submission.id.asc()
@@ -764,7 +764,7 @@ def delete_post_pid(pid, v):
     if not post.author_id == v.id:
         abort(403)
 
-    post.is_deleted = True
+    post.deleted_utc = int(time.time()) + (60 * 60 * 24 * 90)
     post.is_pinned = False
     post.stickied = False
 
