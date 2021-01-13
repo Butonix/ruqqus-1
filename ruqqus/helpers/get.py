@@ -368,65 +368,55 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
     if not cids:
         return []
 
+    cids=tuple(cids)
+
     nSession = nSession or kwargs.get('session') or g.db
 
     queries = []
 
     if v:
-        for cid in cids:
-            vt = nSession.query(CommentVote).filter_by(
-                comment_id=cid, user_id=v.id).subquery()
-            query = nSession.query(Comment, vt.c.vote_type
-                                   ).options(
-                joinedload(Comment.author).joinedload(User.title),
-                joinedload(Comment.post).joinedload(Submission.board)
+        vt = nSession.query(CommentVote).filter_by(
+            comment_id=cid, user_id=v.id).subquery()
+        query = nSession.query(
+            Comment, 
+            vt.c.vote_type
+            ).options(
+            joinedload(Comment.author).joinedload(User.title),
+            joinedload(Comment.post).joinedload(Submission.board)
             )
 
-            if v.admin_level >=4:
-                query=query.options(joinedload(Comment.oauth_app))
+        if v.admin_level >=4:
+            query=query.options(joinedload(Comment.oauth_app))
 
-            if load_parent:
-                query = query.options(
-                    joinedload(
-                        Comment.parent_comment).joinedload(
-                        Comment.author).joinedload(
-                        User.title))
-            query = query.filter_by(id=cid
-                                    ).join(
-                vt,
-                vt.c.comment_id == Comment.id,
-                isouter=True
-            )
+        if load_parent:
+            query = query.options(
+                joinedload(
+                    Comment.parent_comment).joinedload(
+                    Comment.author).joinedload(
+                    User.title))
 
-            queries.append(query)
-        queries = tuple(queries)
-        first_query = queries[0]
-        if len(queries) > 1:
-            other_queries = queries[1:len(queries)]
-        else:
-            other_queries = tuple()
-        comments = first_query.union_all(*other_queries).order_by(None).all()
+        query = query.filter(
+            Comment.id.in_(cids)
+            ).join(
+            vt,
+            vt.c.comment_id == Comment.id,
+            isouter=True
+        ).order_by(None).all()
 
-        output = [x[0] for x in comments]
+        output = [x[0] for x in query]
         for i in range(len(output)):
             output[i]._voted = comments[i][1] or 0
-    else:
-        for cid in cids:
-            query = nSession.query(Comment
-                                   ).options(
-                joinedload(Comment.author).joinedload(User.title),
-                joinedload(Comment.post).joinedload(Submission.board)
-            ).filter_by(id=cid
-                        )
-            queries.append(query)
 
-        queries = tuple(queries)
-        first_query = queries[0]
-        if len(queries) > 1:
-            other_queries = queries[1:len(queries)]
-        else:
-            other_queries = tuple()
-        output = first_query.union_all(*other_queries).order_by(None).all()
+    else:
+        query = nSession.query(
+            Comment
+            ).options(
+            joinedload(Comment.author).joinedload(User.title),
+            joinedload(Comment.post).joinedload(Submission.board)
+            ).filter(Comment.id.in_(cids)
+            ).order_by(None).all()
+
+        output=[x for x in query]
 
     output = sorted(output, key=lambda x: cids.index(x.id))
 
