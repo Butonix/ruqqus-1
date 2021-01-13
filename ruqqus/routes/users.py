@@ -408,7 +408,10 @@ def info_packet(username, method="html"):
 
         print('comments')
         comment_ids=db.query(Comment.id).filter_by(author_id=user.id).order_by(Comment.created_utc.desc()).all()
-        comments=get_comments([i[0] for i in comment_ids], v=user)
+        comment_ids=[x[0] for x in comment_ids]
+        print(f"have {len(comment_ids)} ids")
+        comments=get_comments(comment_ids, v=user)
+        print('have comments')
         packet["comments"]={
             'html':lambda:render_template("userpage_comments.html", v=None, u=user, comments=comments, page=1, next_exists=False),
             'json':lambda:[x.self_download_json for x in comments]
@@ -472,9 +475,9 @@ def info_packet(username, method="html"):
 
 
 
-@app.route("/my_info", methods=["POST"])
-@auth_required
-@validate_formkey
+#@app.route("/my_info", methods=["POST"])
+#@auth_required
+#@validate_formkey
 def my_info_post(v):
 
     if not v.is_activated:
@@ -492,7 +495,7 @@ def my_info_post(v):
     return "started"
 
 
-@app.route("/my_info", methods=["GET"])
-@auth_required
+#@app.route("/my_info", methods=["GET"])
+#@auth_required
 def my_info_get(v):
     return render_template("my_info.html", v=v)

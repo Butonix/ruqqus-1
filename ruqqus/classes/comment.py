@@ -220,7 +220,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             return self.flag_count
 
     def visibility_reason(self, v):
-        if self.author_id == v.id:
+        if not v or self.author_id == v.id:
             return "this is your content."
         elif not self.board:
             return None

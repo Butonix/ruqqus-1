@@ -304,7 +304,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     def visibility_reason(self, v):
 
-        if v and self.author_id == v.id:
+
+        if not v or self.author_id == v.id:
             return "this is your content."
         elif self.is_pinned:
             return "a guildmaster has pinned it."
