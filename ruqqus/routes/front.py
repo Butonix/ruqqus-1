@@ -92,9 +92,8 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
             lazyload('*')
         ).filter_by(
             is_banned=False,
-            is_deleted=False,
             stickied=False
-        )
+        ).filter(Submission.deleted_utc == 0)
 
     if not nsfw:
         posts = posts.filter_by(over_18=False)
@@ -556,7 +555,7 @@ def random_post(v):
     x = g.db.query(Submission).options(
         lazyload('board')).filter_by(
         is_banned=False,
-        is_deleted=False)
+        ).filter(Submission.deleted_utc == 0)
 
     now = int(time.time())
     cutoff = now - (60 * 60 * 24 * 180)
@@ -697,7 +696,7 @@ def comment_idlist(page=1, v=None, nsfw=False, **kwargs):
         )
 
     if not v or not v.admin_level >= 3:
-        comments = comments.filter_by(is_deleted=False, is_banned=False)
+        comments = comments.filter_by(is_banned=False).filter(Comment.deleted_utc == 0)
 
     comments = comments.join(posts, Comment.parent_submission == posts.c.id)
 
