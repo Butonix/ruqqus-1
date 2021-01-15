@@ -413,6 +413,12 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
 
         query = query.join(
+            vt,
+            vt.c.comment_id == Comment.id,
+            isouter=True
+            ).filter(
+            Comment.id.in_(cids)
+            ).join(
             Comment.post
             ).join(
             Submission.board
@@ -420,17 +426,11 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             mod,
             mod.c.board_id==Submission.board_id,
             isouter=True
-            ).join(
-            vt,
-            vt.c.comment_id == Comment.id,
-            isouter=True
-            ).filter(
-            Comment.id.in_(cids)
             ).options(
             contains_eager(Comment.post).contains_eager(Submission.board)
             ).order_by(None).all()
 
-        comments==[x for x in query]
+        comments=[x for x in query]
 
         output = [x[0] for x in comments]
         for i in range(len(output)):
