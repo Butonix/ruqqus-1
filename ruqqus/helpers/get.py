@@ -385,7 +385,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
         mod=nSession.query(ModRelationship
             ).filter_by(
-            user_id==v.id,
+            user_id=v.id,
             accepted=True
             ).subquery()
 
