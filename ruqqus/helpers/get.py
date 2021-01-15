@@ -394,8 +394,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             vt.c.vote_type,
             aliased(ModRelationship, alias=mod)
             ).options(
-            joinedload(Comment.author).joinedload(User.title),
-            joinedload(Comment.post).joinedload(Submission.board)
+            joinedload(Comment.author).joinedload(User.title)
             )
 
         if v.admin_level >=4:
@@ -416,9 +415,13 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             vt.c.comment_id == Comment.id,
             isouter=True
             ).join(
+            Comment.post
+            ).join(
             mod,
-            mod.c.board_id==Comment.post.board_id,
+            mod.c.board_id==Submission.board_id,
             isouter=True
+            ).options(
+            contains_eager(Comment.post).contains_eager(Submission.board)
             ).order_by(None).all()
 
         comments==[x for x in query]
