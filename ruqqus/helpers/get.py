@@ -415,6 +415,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         query = query.join(
             Comment.post
             ).join(
+            Submission.board
+            ).join(
             mod,
             mod.c.board_id==Submission.board_id,
             isouter=True
