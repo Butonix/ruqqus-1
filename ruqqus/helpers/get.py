@@ -248,9 +248,13 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             blocked.c.user_id == Comment.author_id,
             isouter=True
         ).join(
+            Comment.post
+        ).join(
             mod,
             mod.c.board_id == Submission.board_id,
             isouter=True
+        ).options(
+            contains_eager(Comment.post)
         )
 
         if sort_type == "hot":
