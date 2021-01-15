@@ -400,17 +400,6 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         if v.admin_level >=4:
             query=query.options(joinedload(Comment.oauth_app))
 
-        if load_parent:
-            query = query.options(
-                joinedload(
-                    Comment.parent_comment
-                    ).joinedload(
-                    Comment.author
-                    ).joinedload(
-                    User.title
-                    )
-                )
-
 
         query = query.join(
             vt,
@@ -428,7 +417,20 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             isouter=True
             ).options(
             contains_eager(Comment.post).contains_eager(Submission.board)
-            ).order_by(None).all()
+            )
+
+        if load_parent:
+            query = query.options(
+                joinedload(
+                    Comment.parent_comment
+                    ).joinedload(
+                    Comment.author
+                    ).joinedload(
+                    User.title
+                    )
+                )
+
+        query=query.order_by(None).all()
 
         comments=[x for x in query]
 
