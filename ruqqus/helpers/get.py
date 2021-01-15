@@ -454,9 +454,6 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
     output = sorted(output, key=lambda x: cids.index(x.id))
 
-    if v and v.admin_level:
-        print([x.post.is_guildmaster() for x in output])
-
     return output
 
 

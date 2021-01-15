@@ -82,7 +82,6 @@
 
 <div id="comment-{{ c.base36id }}" class="comment rounded{% if standalone and level==1 %} mt-0{% endif %}{% if (not standalone) and c.collapse_for_user(v) %} collapsed{% endif %}">
 
-  {% if v and v.admin_level %}<p>{{ c.post.is_guildmaster() }}</p>{% endif %}
 
 
   {% if not c.author.is_deleted %}<span class="mr-2 d-block d-md-none"><a href="{{ c.author.permalink }}"><img src="{{ c.author.profile_url }}" class="profile-pic-25"></a></span>{% endif %}
@@ -127,6 +126,10 @@
 
       {% if c.is_banned and c.ban_reason %}
       <div id="comment-banned-warning" class="comment-text text-danger text-small mb-0">Reason: {{ c.ban_reason }}</div>
+      {% endif %}
+      {% if v and v.admin_level %}
+        <p>{{ c.post.is_guildmaster('content') }}</p>
+        <p>{{ c.post.is_guildmaster('access') }}</p>
       {% endif %}
       <div id="comment-text-{{ c.base36id }}" class="comment-text mb-0">
         {{ c.body_html | safe }}
