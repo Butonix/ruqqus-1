@@ -692,7 +692,9 @@ def admin_category_get(v):
 def admin_user_data_get(v):
 
     user=request.values.get("username")
+    print(user)
     user=get_user(user, graceful=True)
+    print(user)
 
     if not user:
         return render_template("admin/user_data.html", v=v)
