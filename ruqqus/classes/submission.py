@@ -480,12 +480,14 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def is_guildmaster(self, perm=None):
         mod=self.__dict__.get('_is_guildmaster', False)
         if not mod:
-            return False
-        if not perm:
-            return True
+            output= False
+        elif not perm:
+            output= True
+        else:
+            output= mod.perm_full or mod.__dict__[f"perm_{perm}"]
 
-        return mod.perm_full or mod.__dict__[f"perm_{perm}"]
-
+        if g.v and g.v.admin_level:
+            print(output)
 
     @property
     def is_blocking_guild(self):
