@@ -437,6 +437,18 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         data["creation_region"] = self.creation_region
     
         return data
+
+    def is_guildmaster(self, perm=None):
+        mod=self.__dict__.get('_is_guildmaster', False)
+
+        if not mod:
+            return False
+        elif not perm:
+            return True
+        else:
+            return mod.perm_full or mod.__dict__[f"perm_{perm}"]
+
+        return output
     
 
 

@@ -266,6 +266,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             comment._voted = c[1] or 0
             comment._is_blocking = c[2] or 0
             comment._is_blocked = c[3] or 0
+            comment._is_guildmaster=post._is_guildmaster
             output.append(comment)
         post._preloaded_comments = output
 
@@ -437,7 +438,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         output = [x[0] for x in comments]
         for i in range(len(output)):
             output[i]._voted = comments[i][1] or 0
-            output[i].post._is_guildmaster = comments[i][2]
+            output[i]._is_guildmaster = comments[i][2]
 
 
 
