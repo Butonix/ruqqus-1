@@ -687,6 +687,27 @@ def admin_category_get(v):
         b=get_board(request.args.get("guild"), graceful=True)
         )
 
+@app.route("/admin/user_data", methods=["GET"])
+@admin_level_required(5)
+def admin_user_data_get(v):
+
+    user=request.values.get("username")
+    user=get_user(user, graceful=True)
+
+    if not user:
+        return render_template("admin/user_data.html", v=v)
+
+
+    return jsonify(
+        {
+        "submissions":[x.json_admin for x in user.submissions],
+        "comments":[x.json_admin for x in user.comments],
+        "user":user.json_admin
+            }
+        )
+        
+
+
 
 # @app.route('/admin/deploy', methods=["GET"])
 # @admin_level_required(3)
