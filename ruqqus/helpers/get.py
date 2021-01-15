@@ -403,23 +403,27 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         if load_parent:
             query = query.options(
                 joinedload(
-                    Comment.parent_comment).joinedload(
-                    Comment.author).joinedload(
-                    User.title))
+                    Comment.parent_comment
+                    ).joinedload(
+                    Comment.author
+                    ).joinedload(
+                    User.title
+                    )
+                )
 
 
-        query = query.filter(
-            Comment.id.in_(cids)
-            ).join(
-            vt,
-            vt.c.comment_id == Comment.id,
-            isouter=True
-            ).join(
+        query = query.join(
             Comment.post
             ).join(
             mod,
             mod.c.board_id==Submission.board_id,
             isouter=True
+            ).join(
+            vt,
+            vt.c.comment_id == Comment.id,
+            isouter=True
+            ).filter(
+            Comment.id.in_(cids)
             ).options(
             contains_eager(Comment.post).contains_eager(Submission.board)
             ).order_by(None).all()
