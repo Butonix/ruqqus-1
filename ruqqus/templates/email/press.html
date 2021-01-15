@@ -3,19 +3,3 @@
 {% block preheader %}Press Submission{% endblock %}
 
 {% block title %}Press Submission{% endblock %}
-
-{% block content %}
-
-<table>
-	<tr>
-		<th>Key</th>
-		<th>Value</th>
-	</tr>
-	{% for entry in data %}
-	<tr>
-		<td>{{ entry[0] }}</td>
-		<td>{{ entry[1] }}
-	</tr>
-	{% endfor %}
-</table>
-{% endblock %}
