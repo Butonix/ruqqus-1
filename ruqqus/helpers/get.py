@@ -217,11 +217,15 @@ def get_post_with_comments(pid, sort_type="top", v=None):
 
         blocked = v.blocked.subquery()
 
+        mod = g.db.query(ModRelationship).filter_by(
+            user_id=v.id, accepted=True, invite_rescinded=False).subquery()
+
         comms = g.db.query(
             Comment,
             votes.c.vote_type,
             blocking.c.id,
-            blocked.c.id
+            blocked.c.id,
+            aliased(ModRelationship, alias=mod)
         ).options(
             joinedload(Comment.author).joinedload(User.title)
         )
@@ -265,6 +269,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             comment._voted = c[1] or 0
             comment._is_blocking = c[2] or 0
             comment._is_blocked = c[3] or 0
+            comment.post._is_guildmaster=c[4] or 0
             output.append(comment)
         post._preloaded_comments = output
 
