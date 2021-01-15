@@ -243,7 +243,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         else:
             self.is_offensive = False
 
-    property
+    @property
     def json_raw(self):
         data= {
             'id': self.base36id,
@@ -432,8 +432,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def json_admin(self):
         data= self.json_raw
-
-        print(data)
 
         data["creation_ip"] = self.creation_ip
         data["creation_region"] = self.creation_region
