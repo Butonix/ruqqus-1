@@ -439,6 +439,9 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             output[i]._voted = comments[i][1] or 0
             output[i].post._is_guildmaster = comments[i][2]
 
+            if v and v.admin_level:
+                print(output[i].post._is_guildmaster, output[i].post.is_guildmaster())
+
     else:
         query = nSession.query(
             Comment
