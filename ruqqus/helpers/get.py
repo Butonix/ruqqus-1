@@ -221,8 +221,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             Comment,
             votes.c.vote_type,
             blocking.c.id,
-            blocked.c.id,
-            aliased(ModRelationship, alias=mod)
+            blocked.c.id
         ).options(
             joinedload(Comment.author).joinedload(User.title)
         )
