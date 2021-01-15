@@ -226,6 +226,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             joinedload(Comment.author).joinedload(User.title)
         )
         if v.admin_level >=4:
+            
             comms=comms.options(joinedload(Comment.oauth_app))
 
         comms=comms.filter(
