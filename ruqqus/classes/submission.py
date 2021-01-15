@@ -479,7 +479,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     def is_guildmaster(self, perm=None):
         mod=self.__dict__.get('_is_guildmaster', False)
-        if self.board_id=2:
+        if self.board_id==2:
             print(mod)
         if not mod:
             output= False
