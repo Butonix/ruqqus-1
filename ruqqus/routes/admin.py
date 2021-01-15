@@ -699,11 +699,18 @@ def admin_user_data_get(v):
     if not user:
         return render_template("admin/user_data.html", v=v)
 
+    post_ids = [x[0] for x in g.db.query(Submission.id).filter_by(author_id=user.id).order_by(Submission.created_utc.desc()).all()]
+    posts=get_posts(post_ids)
+
+    comment_ids=[x[0] for x in g.db.query(Comment.id).filter_by(author_id=user.id).order_by(Comment.created_utc.desc()).all()]
+    comments=get_comments(comment_ids)
+
+
 
     return jsonify(
         {
-        "submissions":[x.json_admin for x in user.submissions],
-        "comments":[x.json_admin for x in user.comments],
+        "submissions":[x.json_admin for x in posts],
+        "comments":[x.json_admin for x in comments],
         "user":user.json_admin
             }
         )
