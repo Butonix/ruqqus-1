@@ -226,7 +226,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             joinedload(Comment.author).joinedload(User.title)
         )
         if v.admin_level >=4:
-            
+
             comms=comms.options(joinedload(Comment.oauth_app))
 
         comms=comms.filter(
@@ -435,7 +435,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         output = [x[0] for x in comments]
         for i in range(len(output)):
             output[i]._voted = comments[i][1] or 0
-            output[i].post._is_guildmaster=comments[i][2] or None
+            output[i].post.__dict__["_is_guildmaster"]=comments[i][2] or None
 
     else:
         query = nSession.query(
