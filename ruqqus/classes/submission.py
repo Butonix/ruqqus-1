@@ -235,7 +235,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                                comment_info=comment_info,
                                is_allowed_to_comment=is_allowed_to_comment,
                                render_replies=True,
-                               is_guildmaster=self.board.has_mod(v),
                                b=self.board
                                )
 
@@ -481,13 +480,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         mod=self.__dict__.get('_is_guildmaster', False)
 
         if not mod:
-            output= False
+            return False
         elif not perm:
-            output= True
+            return True
         else:
-            output= mod.perm_full or mod.__dict__[f"perm_{perm}"]
-        if self.board_id==2:
-            print(output)
+            return mod.perm_full or mod.__dict__[f"perm_{perm}"]
+
         return output
 
     @property
