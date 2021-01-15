@@ -206,10 +206,11 @@ def get_post_title(v):
         return jsonify({"error": f"Could not find a title"}), 400
 
 times = {
+    "now": 0,
     "10m": 10*60,
     "30m": 30*60,
     "1h": 60*60,
-    "3h":3*60*60,
+    "3h": 3*60*60,
     "6h": 6*60*60,
     "12h": 12*60*60,
     "1d": 24*60*60,
