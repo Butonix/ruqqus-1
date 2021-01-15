@@ -417,7 +417,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             isouter=True
             ).join(
             mod,
-            mod.c.board_id==Submission.board_id
+            mod.c.board_id==Submission.board_id,
             isouter=True
             ).order_by(None).all()
 
