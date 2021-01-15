@@ -988,6 +988,6 @@ class User(Base, Stndrd, Age_times):
         data['creation_ip']=self.creation_ip
         data['creation_region']=self.creation_region
         data['email']=self.email
-        data['is_verified']=self.is_verified
+        data['email_verified']=self.is_activated
 
         return data
