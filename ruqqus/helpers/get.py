@@ -249,7 +249,8 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             isouter=True
         ).join(
             mod,
-            mod.c.board_id == Submission.board_id
+            mod.c.board_id == Submission.board_id,
+            isouter=True
         )
 
         if sort_type == "hot":
