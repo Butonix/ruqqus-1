@@ -691,7 +691,7 @@ def admin_category_get(v):
 @admin_level_required(5)
 def admin_user_data_get(v):
 
-    print(user)
+    user=request.values.get("username")
     user=get_user(user, graceful=True)
 
     if not user:
