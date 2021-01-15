@@ -355,9 +355,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'created_utc': self.created_utc,
                 'edited_utc': self.edited_utc or 0,
                 'guild_name': self.board.name,
-                'original_guild_name': self.original_board.name if self.board_id != self.original_board_id else None,
                 'guild_id': base36encode(self.board_id),
-                'original_guild_id': base36encode(self.original_board_id) if  self.board_id != self.original_board_id else None,
                 'comment_count': self.comment_count,
                 'score': self.score_fuzzed,
                 'upvotes': self.upvotes_fuzzed,
@@ -367,6 +365,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 }
         if self.ban_reason:
             data["ban_reason"]=self.ban_reason
+
+        if self.board_id != self.original_board_id:
+            data['original_guild_name'] = self.original_board.name
+            data['original_guild_id'] = base36encode(self.original_board_id)
         return data
 
     @property
