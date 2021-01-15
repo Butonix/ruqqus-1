@@ -64,6 +64,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     is_nsfl = Column(Boolean, default=False)
     is_bot = Column(Boolean, default=False)
     is_pinned = Column(Boolean, default=False)
+    creation_region=Column(String(2), default=None)
 
     app_id = Column(Integer, ForeignKey("oauth_apps.id"), default=None)
     oauth_app=relationship("OauthApp")
@@ -219,7 +220,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             return self.flag_count
 
     def visibility_reason(self, v):
-        if self.author_id == v.id:
+        if not v or self.author_id == v.id:
             return "this is your content."
         elif not self.board:
             return None
@@ -243,6 +244,38 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             self.is_offensive = False
 
     @property
+    def json_raw(self):
+        data= {
+            'id': self.base36id,
+            'fullname': self.fullname,
+            'level': self.level,
+            'author_name': self.author.username if not self.author.is_deleted else None,
+            'body': self.body,
+            'body_html': self.body_html,
+            'is_archived': self.is_archived,
+            'is_bot': self.is_bot,
+            'created_utc': self.created_utc,
+            'edited_utc': self.edited_utc or 0,
+            'is_banned': bool(self.is_banned),
+            'is_deleted': self.is_deleted,
+            'is_nsfw': self.over_18,
+            'is_offensive': self.is_offensive,
+            'is_nsfl': self.is_nsfl,
+            'permalink': self.permalink,
+            'post_id': self.post.base36id,
+            'score': self.score_fuzzed,
+            'upvotes': self.upvotes_fuzzed,
+            'downvotes': self.downvotes_fuzzed,
+            'award_count': self.award_count,
+            }
+
+        if self.ban_reason:
+            data["ban_reason"]=self.ban_reason
+
+        return data
+
+
+    @property
     def json_core(self):
         if self.is_banned:
             data= {'is_banned': True,
@@ -260,33 +293,14 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                     'parent': self.parent_fullname
                     }
         else:
-            data= {
-                'id': self.base36id,
-                'fullname': self.fullname,
-                'level': self.level,
-                'author_name': self.author.username if not self.author.is_deleted else None,
-                'body': self.body,
-                'body_html': self.body_html,
-                'is_archived': self.is_archived,
-                'is_bot': self.is_bot,
-                'created_utc': self.created_utc,
-                'edited_utc': self.edited_utc or 0,
-                'is_banned': False,
-                'is_deleted': False,
-                'is_nsfw': self.over_18,
-                'is_offensive': self.is_offensive,
-                'is_nsfl': self.is_nsfl,
-                'permalink': self.permalink,
-                'post_id': self.post.base36id,
-                'score': self.score_fuzzed,
-                'upvotes': self.upvotes_fuzzed,
-                'downvotes': self.downvotes_fuzzed,
-                'award_count': self.award_count
-                }
+            data=self.json_raw
+
 
             if self.level>=2:
                 data['parent_comment_id']= base36encode(self.parent_comment_id),
 
+        if "replies" in self.__dict__:
+            data['replies']=[x.json_core for x in self.replies]
 
         return data
 
@@ -305,8 +319,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         if self.level >= 2:
             data["parent"]=self.parent.json_core
 
-        if "replies" in self.__dict__:
-            data['replies']=[x.json_core for x in self.replies]
 
         return data
 
@@ -416,6 +428,27 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             data['parent_comment_id']= base36encode(self.parent_comment_id)
 
         return data
+
+    @property
+    def json_admin(self):
+        data= self.json_raw
+
+        data["creation_ip"] = self.creation_ip
+        data["creation_region"] = self.creation_region
+    
+        return data
+
+    def is_guildmaster(self, perm=None):
+        mod=self.__dict__.get('_is_guildmaster', False)
+
+        if not mod:
+            return False
+        elif not perm:
+            return True
+        else:
+            return mod.perm_full or mod.__dict__[f"perm_{perm}"]
+
+        return output
     
 
 

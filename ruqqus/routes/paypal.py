@@ -64,6 +64,7 @@ def shop_coin_balance(v):
 
 
 @app.route("/shop/buy_coins", methods=["POST"])
+@no_sanctions
 @is_not_banned
 @no_negative_balance("html")
 @validate_formkey
@@ -94,6 +95,7 @@ def shop_buy_coins(v):
 
 
 @app.route("/shop/negative_balance", methods=["POST"])
+@no_sanctions
 @is_not_banned
 @validate_formkey
 def shop_negative_balance(v):
@@ -116,6 +118,7 @@ def shop_negative_balance(v):
     return redirect(new_txn.approve_url)
 
 @app.route("/shop/buy_coins_completed", methods=["GET"])
+@no_sanctions
 @is_not_banned
 def shop_buy_coins_completed(v):
 
@@ -212,6 +215,7 @@ def paypal_webhook_handler():
 
 
 @app.route("/gift_post/<pid>", methods=["POST"])
+@no_sanctions
 @is_not_banned
 @no_negative_balance("toast")
 @validate_formkey
@@ -282,6 +286,7 @@ def gift_post_pid(pid, v):
     return jsonify({"message":"Tip Successful!"})
 
 @app.route("/gift_comment/<cid>", methods=["POST"])
+@no_sanctions
 @is_not_banned
 @no_negative_balance("toast")
 @validate_formkey

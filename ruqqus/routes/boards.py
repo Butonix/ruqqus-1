@@ -149,6 +149,14 @@ def create_board_post(v):
                        board_id=new_board.id)
     g.db.add(sub)
 
+    #add guild creation mod log entry
+    ma = ModAction(
+        user_id=v.id,
+        board_id=new_board.id,
+        kind="create_guild",
+        )
+    g.db.add(ma)
+
     # clear cache
     cache.delete_memoized(guild_ids, sort="new")
 
@@ -239,8 +247,10 @@ def board_name(name, v):
             }
 
 @app.route("/mod/distinguish_post/<bid>/<pid>", methods=["POST"])
+@app.route("/api/v1/distinguish_post/<bid>/<pid>", methods=["POST"])
 @auth_required
 @is_guildmaster("content")
+@api("guildmaster")
 def mod_distinguish_post(bid, pid, board, v):
 
     #print(pid, board, v)
@@ -270,8 +280,10 @@ def mod_distinguish_post(bid, pid, board, v):
     return "", 204
 
 @app.route("/mod/distinguish_comment/<bid>/<cid>", methods=["POST"])
+@app.route("/api/v1/distinguish_comment/<bid>/<cid>", methods=["POST"])
 @auth_required
 @is_guildmaster('content')
+@api("guildmaster")
 def mod_distinguish_comment(bid, cid, board, v):
 
     comment = get_comment(cid, v=v)
@@ -300,8 +312,10 @@ def mod_distinguish_comment(bid, cid, board, v):
     return "", 204
 
 @app.route("/mod/kick/<bid>/<pid>", methods=["POST"])
+@app.route("/api/v1/kick/<bid>/<pid>", methods=["POST"])
 @auth_required
 @is_guildmaster('content')
+@api("guildmaster")
 @validate_formkey
 def mod_kick_bid_pid(bid, pid, board, v):
 
@@ -329,8 +343,10 @@ def mod_kick_bid_pid(bid, pid, board, v):
 
 
 @app.route("/mod/accept/<bid>/<pid>", methods=["POST"])
+@app.route("/api/v1/accept/<bid>/<pid>", methods=["POST"])
 @auth_required
 @is_guildmaster('content')
+@api("guildmaster")
 @validate_formkey
 def mod_accept_bid_pid(bid, pid, board, v):
 
@@ -356,8 +372,10 @@ def mod_accept_bid_pid(bid, pid, board, v):
 
 
 @app.route("/mod/exile/<bid>", methods=["POST"])
+@app.route("/api/v1/exile/<bid>", methods=["POST"])
 @auth_required
 @is_guildmaster('access')
+@api("guildmaster")
 @validate_formkey
 def mod_ban_bid_user(bid, board, v):
 
@@ -374,7 +392,7 @@ def mod_ban_bid_user(bid, board, v):
     if user.id == v.id:
         return jsonify({"error": "You can't exile yourself."}), 409
 
-    if board.has_ban(user):
+    if g.db.query(BanRelationship).filter_by(user_id=user.id, board_id=board.id, is_active=True).first():
         return jsonify({"error": f"@{user.username} is already exiled from +{board.name}."}), 409
 
     if board.has_contributor(user):
@@ -437,8 +455,10 @@ def mod_ban_bid_user(bid, board, v):
 
 
 @app.route("/mod/unexile/<bid>", methods=["POST"])
+@app.route("/api/v1/unexile/<bid>", methods=["POST"])
 @auth_required
 @is_guildmaster('access')
+@api("guildmaster")
 @validate_formkey
 def mod_unban_bid_user(bid, board, v):
 
@@ -605,7 +625,7 @@ def mod_invite_username(bid, board, v):
         g.db.add(x)
 
     else:
-        new_mod = ModRelationship(
+        x = ModRelationship(
             user_id=user.id,
             board_id=board.id,
             accepted=False,
@@ -619,14 +639,14 @@ def mod_invite_username(bid, board, v):
         text = f"You have been invited to join +{board.name} as a guildmaster. You can [click here]({board.permalink}/mod/mods) and accept this invitation. Or, if you weren't expecting this, you can ignore it."
         send_notification(user, text)
 
-        g.db.add(new_mod)
+        g.db.add(x)
 
     ma=ModAction(
         kind="invite_mod",
         user_id=v.id,
         target_user_id=user.id,
         board_id=board.id,
-        note=new_mod.permchangelist
+        note=x.permchangelist
         )
     g.db.add(ma)
 
@@ -1002,19 +1022,26 @@ def board_about_appearance(boardname, board, v):
 
 
 @app.route("/+<boardname>/mod/mods", methods=["GET"])
+@app.route("/api/v1/<boardname>/mod/mods", methods=["GET"])
 @auth_desired
+@api("read")
 def board_about_mods(boardname, v):
 
     board = get_guild(boardname)
 
     me = board.has_mod(v)
 
-    return render_template("guild/mods.html", v=v, b=board, me=me)
+    return {
+        "html":lambda:render_template("guild/mods.html", v=v, b=board, me=me),
+        "api":lambda:jsonify({"data":[x.json for x in board.mods_list]})
+        }
 
 
 @app.route("/+<boardname>/mod/exiled", methods=["GET"])
+@app.route("/api/v1/<boardname>/mod/exiled", methods=["GET"])
 @auth_required
 @is_guildmaster("access")
+@api("read", "guildmaster")
 def board_about_exiled(boardname, board, v):
 
     page = int(request.args.get("page", 1))
@@ -1026,14 +1053,17 @@ def board_about_exiled(boardname, board, v):
     next_exists = (len(bans) == 26)
     bans = bans[0:25]
 
-    return render_template(
-        "guild/bans.html", 
-        v=v, 
-        b=board, 
-        bans=bans,
-        page=page,
-        next_exists=next_exists
-        )
+    return {
+        "html":lambda:render_template(
+            "guild/bans.html", 
+            v=v, 
+            b=board, 
+            bans=bans,
+            page=page,
+            next_exists=next_exists
+            ),
+        "api":lambda:jsonify({"data":[x.json for x in bans]})
+        }
 
 
 @app.route("/+<boardname>/mod/contributors", methods=["GET"])
@@ -1050,8 +1080,14 @@ def board_about_contributors(boardname, board, v):
     next_exists = (len(contributors) == 26)
     contributors = contributors[0:25]
 
-    return render_template("guild/contributors.html", v=v,
-                           b=board, contributors=contributors)
+    return render_template(
+        "guild/contributors.html", 
+        v=v,
+        b=board, 
+        contributors=contributors,
+        page=page,
+        next_exists=next_exists
+        )
 
 
 @app.route("/api/subscribe/<boardname>", methods=["POST"])

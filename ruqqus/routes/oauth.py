@@ -450,3 +450,37 @@ def oauth_rescind_app(aid, v):
     g.db.delete(auth)
 
     return jsonify({"message": f"{auth.application.app_name} Revoked"})
+
+@app.route("/api/v1/release", methods=["POST"])
+@auth_required
+@api()
+def oauth_release_auth(v):
+
+    token=request.headers.get("Authorization").split()[1]
+
+    auth = g.db.query(ClientAuth).filter_by(user_id=v.id, access_token=token).first()
+    if not auth:
+        abort(404)
+
+    if not auth.refresh_token:
+        abort(400)
+
+    auth.access_token_expire_utc=0
+    g.db.add(auth)
+
+    return jsonify({"message":"Authorization released"})
+
+@app.route("/api/v1/kill", methods=["POST"])
+@auth_required
+@api()
+def oauth_kill_auth(v):
+
+    token=request.headers.get("Authorization").split()[1]
+
+    auth = g.db.query(ClientAuth).filter_by(user_id=v.id, access_token=token).first()
+    if not auth:
+        abort(404)
+
+    g.db.delete(auth)
+
+    return jsonify({"message":"Authorization released"})

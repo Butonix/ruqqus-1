@@ -144,54 +144,49 @@ def get_posts(pids, sort="hot", v=None):
     if not pids:
         return []
 
+    pids=tuple(pids)
+
     queries = []
 
     if v:
-        for pid in pids:
+        vt = g.db.query(Vote).filter(
+            Vote.submission_id.in_(pids), 
+            Vote.user_id==v.id
+            ).subquery()
 
-            vt = g.db.query(Vote).filter_by(
-                submission_id=pid, user_id=v.id).subquery()
-            mod = g.db.query(ModRelationship).filter_by(
-                user_id=v.id, accepted=True, invite_rescinded=False).subquery()
-            boardblocks = g.db.query(BoardBlock).filter_by(
-                user_id=v.id).subquery()
-            blocking = v.blocking.subquery()
-            blocked = v.blocked.subquery()
-            subs = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
+        mod = g.db.query(ModRelationship).filter_by(
+            user_id=v.id, accepted=True, invite_rescinded=False).subquery()
 
-            query = g.db.query(
-                Submission,
-                vt.c.vote_type,
-                aliased(ModRelationship, alias=mod),
-                boardblocks.c.id,
-                blocking.c.id,
-                blocked.c.id,
-                subs.c.id
-            ).options(joinedload(Submission.author).joinedload(User.title)
-                      )
-            if v.admin_level>=4:
-                query=query.options(joinedload(Submission.oauth_app))
+        boardblocks = g.db.query(BoardBlock).filter_by(
+            user_id=v.id).subquery()
+        blocking = v.blocking.subquery()
+        blocked = v.blocked.subquery()
+        subs = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
 
-            query=query.filter_by(id=pid
-                                  ).join(vt, vt.c.submission_id == Submission.id, isouter=True
-                                         ).join(mod, mod.c.board_id == Submission.board_id, isouter=True
-                                                ).join(boardblocks, boardblocks.c.board_id == Submission.board_id, isouter=True
-                                                       ).join(blocking, blocking.c.target_id == Submission.author_id, isouter=True
-                                                              ).join(blocked, blocked.c.user_id == Submission.author_id, isouter=True
-                                                                     ).join(subs, subs.c.board_id == Submission.board_id, isouter=True
-                                                                            )
-            queries.append(query)
+        query = g.db.query(
+            Submission,
+            vt.c.vote_type,
+            aliased(ModRelationship, alias=mod),
+            boardblocks.c.id,
+            blocking.c.id,
+            blocked.c.id,
+            subs.c.id
+            ).options(
+            joinedload(Submission.author).joinedload(User.title)
+            ).filter(
+            Submission.id.in_(pids)
+            ).join(
+            vt, vt.c.submission_id==Submission.id, isouter=True
+            ).join(mod, mod.c.board_id == Submission.board_id, isouter=True
+            ).join(boardblocks, boardblocks.c.board_id == Submission.board_id, isouter=True
+            ).join(blocking, blocking.c.target_id == Submission.author_id, isouter=True
+            ).join(blocked, blocked.c.user_id == Submission.author_id, isouter=True
+            ).join(subs, subs.c.board_id == Submission.board_id, isouter=True
+            ).order_by(None).all()
 
-        queries = tuple(queries)
-        first_query = queries[0]
-        if len(queries) > 1:
-            other_queries = queries[1:len(queries)]
-        else:
-            other_queries = tuple()
+        posts=[x for x in query]
 
-        posts = first_query.union_all(*other_queries).order_by(None).all()
-
-        output = [p[0] for p in posts]
+        output = [p[0] for p in query]
         for i in range(len(output)):
             output[i]._voted = posts[i][1] or 0
             output[i]._is_guildmaster = posts[i][2] or 0
@@ -200,24 +195,15 @@ def get_posts(pids, sort="hot", v=None):
             output[i]._is_blocked = posts[i][5] or 0
             output[i]._is_subscribed = posts[i][6] or 0
     else:
-        for pid in pids:
-            query = g.db.query(Submission
-                               ).options(joinedload(Submission.author).joinedload(User.title)
-                                         ).filter_by(id=pid
-                                                     )
-            queries.append(query)
+        query = g.db.query(Submission
+        ).options(
+        joinedload(Submission.author).joinedload(User.title)
+        ).filter(Submission.id.in_(pids)
+        ).order_by(None).all()
 
-        queries = tuple(queries)
-        first_query = queries[0]
-        if len(queries) > 1:
-            other_queries = queries[1:len(queries)]
-        else:
-            other_queries = tuple()
-        output = first_query.union_all(*other_queries).order_by(None).all()
+        output=[x for x in query]
 
-    output = sorted(output, key=lambda x: pids.index(x.id))
-
-    return output
+    return sorted(output, key=lambda x: pids.index(x.id))
 
 
 def get_post_with_comments(pid, sort_type="top", v=None):
@@ -240,6 +226,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             joinedload(Comment.author).joinedload(User.title)
         )
         if v.admin_level >=4:
+
             comms=comms.options(joinedload(Comment.oauth_app))
 
         comms=comms.filter(
@@ -279,6 +266,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             comment._voted = c[1] or 0
             comment._is_blocking = c[2] or 0
             comment._is_blocked = c[3] or 0
+            comment._is_guildmaster=post._is_guildmaster
             output.append(comment)
         post._preloaded_comments = output
 
@@ -328,6 +316,8 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
         vt = g.db.query(CommentVote).filter(
             CommentVote.user_id == v.id,
             CommentVote.comment_id == i).subquery()
+
+
 
         items = g.db.query(Comment, vt.c.vote_type).options(
             joinedload(Comment.author).joinedload(User.title)
@@ -382,65 +372,86 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
     if not cids:
         return []
 
+    cids=tuple(cids)
+
     nSession = nSession or kwargs.get('session') or g.db
 
     queries = []
 
     if v:
-        for cid in cids:
-            vt = nSession.query(CommentVote).filter_by(
-                comment_id=cid, user_id=v.id).subquery()
-            query = nSession.query(Comment, vt.c.vote_type
-                                   ).options(
-                joinedload(Comment.author).joinedload(User.title),
-                joinedload(Comment.post).joinedload(Submission.board)
+        vt = nSession.query(CommentVote).filter(
+            CommentVote.comment_id.in_(cids), 
+            CommentVote.user_id==v.id
+            ).subquery()
+
+        mod=nSession.query(ModRelationship
+            ).filter_by(
+            user_id=v.id,
+            accepted=True
+            ).subquery()
+
+        query = nSession.query(
+            Comment, 
+            vt.c.vote_type,
+            aliased(ModRelationship, alias=mod)
+            ).options(
+            joinedload(Comment.author).joinedload(User.title)
             )
 
-            if v.admin_level >=4:
-                query=query.options(joinedload(Comment.oauth_app))
+        if v.admin_level >=4:
+            query=query.options(joinedload(Comment.oauth_app))
 
-            if load_parent:
-                query = query.options(
-                    joinedload(
-                        Comment.parent_comment).joinedload(
-                        Comment.author).joinedload(
-                        User.title))
-            query = query.filter_by(id=cid
-                                    ).join(
-                vt,
-                vt.c.comment_id == Comment.id,
-                isouter=True
+
+        query = query.join(
+            vt,
+            vt.c.comment_id == Comment.id,
+            isouter=True
+            ).filter(
+            Comment.id.in_(cids)
+            ).join(
+            Comment.post
+            ).join(
+            Submission.board
+            ).join(
+            mod,
+            mod.c.board_id==Submission.board_id,
+            isouter=True
+            ).options(
+            contains_eager(Comment.post).contains_eager(Submission.board)
             )
 
-            queries.append(query)
-        queries = tuple(queries)
-        first_query = queries[0]
-        if len(queries) > 1:
-            other_queries = queries[1:len(queries)]
-        else:
-            other_queries = tuple()
-        comments = first_query.union_all(*other_queries).order_by(None).all()
+        if load_parent:
+            query = query.options(
+                joinedload(
+                    Comment.parent_comment
+                    ).joinedload(
+                    Comment.author
+                    ).joinedload(
+                    User.title
+                    )
+                )
+
+        query=query.order_by(None).all()
+
+        comments=[x for x in query]
 
         output = [x[0] for x in comments]
         for i in range(len(output)):
             output[i]._voted = comments[i][1] or 0
-    else:
-        for cid in cids:
-            query = nSession.query(Comment
-                                   ).options(
-                joinedload(Comment.author).joinedload(User.title),
-                joinedload(Comment.post).joinedload(Submission.board)
-            ).filter_by(id=cid
-                        )
-            queries.append(query)
+            output[i]._is_guildmaster = comments[i][2]
 
-        queries = tuple(queries)
-        first_query = queries[0]
-        if len(queries) > 1:
-            other_queries = queries[1:len(queries)]
-        else:
-            other_queries = tuple()
-        output = first_query.union_all(*other_queries).order_by(None).all()
+
+
+    else:
+        query = nSession.query(
+            Comment
+            ).options(
+            joinedload(Comment.author).joinedload(User.title),
+            joinedload(Comment.post).joinedload(Submission.board)
+            ).filter(Comment.id.in_(cids)
+            ).order_by(None).all()
+
+        output=[x for x in query]
 
     output = sorted(output, key=lambda x: cids.index(x.id))
 
@@ -450,9 +461,9 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 def get_board(bid, graceful=False):
 
     x = g.db.query(Board).options(
-        joinedload(
-            Board.moderators).joinedload(
-            ModRelationship.user)).filter_by(
+        joinedload(Board.moderators).joinedload(ModRelationship.user),
+        joinedload(Board.subcat).joinedload(SubCategory.category)
+        ).filter_by(
                 id=base36decode(bid)).first()
     if not x:
         if graceful:
@@ -470,10 +481,11 @@ def get_guild(name, graceful=False):
     name = name.replace('_', '\_')
 
     x = g.db.query(Board).options(
-        joinedload(
-            Board.moderators).joinedload(
-            ModRelationship.user)).filter(
-                Board.name.ilike(name)).first()
+        joinedload(Board.moderators).joinedload(ModRelationship.user),
+        joinedload(Board.subcat).joinedload(SubCategory.category)
+            ).filter(
+                Board.name.ilike(name)
+                ).first()
     if not x:
         if not graceful:
             abort(404)

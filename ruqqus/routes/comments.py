@@ -47,6 +47,7 @@ def comment_cid_api_redirect(c_id=None, p_id=None):
 
 @app.route("/api/v1/comment/<c_id>", methods=["GET"])
 @app.route("/+<boardname>/post/<p_id>/<anything>/<c_id>", methods=["GET"])
+@app.route("/test/coment/<c_id>")
 @auth_desired
 @api("read")
 def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None):
@@ -215,6 +216,10 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
 
         current_ids = [x.id for x in output]
 
+    post.tree_comments()
+
+    post.replies=[top_comment]
+
     return {'html': lambda: post.rendered_page(v=v, comment=top_comment, comment_info=comment_info),
             'api': lambda: top_comment.json
             }
@@ -281,7 +286,9 @@ def api_comment(v):
             
         #auto ban for digitally malicious content
         if any([x.reason==4 for x in bans]):
-            v.ban(days=30, reason="Digitally malicious content is not allowed.")
+            v.ban(days=30, reason="Digitally malicious content")
+        if any([x.reason==7 for x in bans]):
+            v.ban( reason="Sexualizing minors")
         return jsonify({"error": reason}), 401
 
     # check existing
@@ -299,7 +306,7 @@ def api_comment(v):
         return jsonify(
             {"error": "You can't comment on things that have been deleted."}), 403
 
-    if parent.author.any_block_exists(v):
+    if parent.author.any_block_exists(v) and not v.admin_level>=3:
         return jsonify(
             {"error": "You can't reply to users who have blocked you, or users you have blocked."}), 403
 
@@ -328,9 +335,7 @@ def api_comment(v):
         ).options(contains_eager(Comment.comment_aux)).all()
 
         threshold = app.config["COMMENT_SPAM_COUNT_THRESHOLD"]
-        if v.age >= (60 * 60 * 24 * 30):
-            threshold *= 4
-        elif v.age >= (60 * 60 * 24 * 7):
+        if v.age >= (60 * 60 * 24 * 7):
             threshold *= 3
         elif v.age >= (60 * 60 * 24):
             threshold *= 2
@@ -405,7 +410,8 @@ def api_comment(v):
                 is_offensive=is_offensive,
                 original_board_id=parent_post.board_id,
                 is_bot=is_bot,
-                app_id=v.client.application.id if v.client else None
+                app_id=v.client.application.id if v.client else None,
+                creation_region=request.headers.get("cf-ipcountry")
                 )
 
     g.db.add(c)

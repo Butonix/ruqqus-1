@@ -208,3 +208,11 @@ def info_image_hosts():
     resp = make_response(text)
     resp.mimetype = "text/plain"
     return resp
+
+@app.route("/dismiss_mobile_tip", methods=["POST"])
+def dismiss_mobile_tip():
+
+    session["tooltip_last_dismissed"]=int(time.time())
+    session.modified=True
+
+    return "", 204

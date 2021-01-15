@@ -102,6 +102,8 @@ class User(Base, Stndrd, Age_times):
     custom_filter_list=Column(String(1000), default="")
     discord_id=Column(String(64), default=None)
     last_yank_utc=Column(Integer, default=0)
+    creation_region=Column(String(2), default=None)
+    ban_evade=Column(Integer, default=0)
 
     moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
@@ -372,7 +374,7 @@ class User(Base, Stndrd, Age_times):
         if v and v.admin_level >= 4:
             pass
         elif v:
-            m = g.db.query(ModRelationship).filter_by(user_id=self.id, invite_rescinded=False).subquery()
+            m = g.db.query(ModRelationship).filter_by(user_id=v.id, invite_rescinded=False).subquery()
             c = v.contributes.subquery()
 
             comments = comments.join(m,
@@ -556,17 +558,27 @@ class User(Base, Stndrd, Age_times):
             is_banned=False, is_deleted=False).count()
 
     @property
+    @lazy
     def alts(self):
 
-        alts1 = g.db.query(User).join(
-            Alt, Alt.user2 == User.id).filter(
-            Alt.user1 == self.id).all()
-        alts2 = g.db.query(User).join(
-            Alt, Alt.user1 == User.id).filter(
-            Alt.user2 == self.id).all()
+        subq = g.db.query(Alt).filter(
+            or_(
+                Alt.user1==self.id,
+                Alt.user2==self.id
+                )
+            ).subquery()
 
-        output = list(set([x for x in alts1] + [y for y in alts2]))
-        output = sorted(output, key=lambda x: x.username)
+        alts = g.db.query(User).join(
+            subq, 
+            or_(
+                subq.c.user1 == User.id,
+                subq.c.user2 == User.id
+                ),
+            ).filter(
+            User.id != self.id
+            ).order_by(User.username.asc()).all()
+
+        return [x for x in alts]
 
         return output
 
@@ -642,16 +654,16 @@ class User(Base, Stndrd, Age_times):
 
     @property
     def can_make_guild(self):
-        return (self.has_premium or self.true_score >= 250 or (self.created_utc <= 1592974538 and self.true_score >= 50)) and len(self.boards_modded) < 10
+        return (self.has_premium or self.true_score >= 250 or (self.created_utc <= 1592974538 and self.true_score >= 50)) and len([x for x in self.boards_modded if x.is_siegable]) < 10
 
     @property
     def can_join_gms(self):
-        return len(self.boards_modded) < 10
+        return len([x for x in self.boards_modded if x.is_siegable]) < 10
 
     @property
     def can_siege(self):
 
-        if self.is_banned:
+        if self.is_suspended:
             return False
 
         now = int(time.time())
@@ -673,6 +685,28 @@ class User(Base, Stndrd, Age_times):
         return self.has_premium or self.true_score >= 500 or self.created_utc <= 1592974538
 
     @property
+    def json_raw(self):
+        data= {'username': self.username,
+                'permalink': self.permalink,
+                'is_banned': bool(self.is_banned),
+                'is_premium': self.has_premium_no_renew,
+                'created_utc': self.created_utc,
+                'id': self.base36id,
+                'is_private': self.is_private,
+                'profile_url': self.profile_url,
+                'banner_url': self.banner_url,
+                'title': self.title.json if self.title else None,
+                'bio': self.bio,
+                'bio_html': self.bio_html
+                }
+
+        if self.real_id:
+            data['real_id']=self.real_id
+
+        return data
+    
+
+    @property
     def json_core(self):
 
         now=int(time.time())
@@ -691,20 +725,9 @@ class User(Base, Stndrd, Age_times):
                     'is_deleted': True,
                     'id': self.base36id
                     }
+        return self.json_raw
         
-        return {'username': self.username,
-                'permalink': self.permalink,
-                'is_banned': False,
-                'is_premium': self.has_premium_no_renew,
-                'created_utc': self.created_utc,
-                'id': self.base36id,
-                'is_private': self.is_private,
-                'profile_url': self.profile_url,
-                'banner_url': self.banner_url,
-                'title': self.title.json if self.title else None,
-                'bio': self.bio,
-                'bio_html': self.bio_html
-                }
+
 
     @property
     def json(self):
@@ -957,3 +980,14 @@ class User(Base, Stndrd, Age_times):
         
         return self._transactions.filter(PayPalTxn.status!=1).order_by(PayPalTxn.created_utc.desc()).all()
     
+
+    @property
+    def json_admin(self):
+        data=self.json_raw
+
+        data['creation_ip']=self.creation_ip
+        data['creation_region']=self.creation_region
+        data['email']=self.email
+        data['email_verified']=self.is_activated
+
+        return data

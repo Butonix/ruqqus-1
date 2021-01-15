@@ -297,9 +297,6 @@ def sign_up_post(v):
     if app.config["DISABLE_SIGNUPS"]:
         return new_signup("New account registration is currently closed. Please come back later.")
 
-    if g.db.query(User).filter(User.created_utc>int(time.time())-60*60).count() > 10:
-        return new_signup("We have reached our threshold for new user signups. Please come back later.")
-
     if now - int(form_timestamp) < 5:
         #print(f"signup fail - {username } - too fast")
         return new_signup("There was a problem. Please try again.")
@@ -333,14 +330,10 @@ def sign_up_post(v):
 
     #counteract gmail username+2 and extra period tricks - convert submitted email to actual inbox
     if email and email.endswith("@gmail.com"):
-        parts=re.split("\+.*@", email)
-        if len(parts)>1:
-            gmail_username=parts[0]
-            gmail_username=gmail_username.replace(".","")
-         
-            email=f"{gmail_username}@gmail.com"
-        else:
-            email=parts[0]
+        gmail_username=email.split('@')[0]
+        gmail_username=gmail_username.split('+')[0]
+        gmail_username=gmail_username.replace('.','')
+        email=f"{gmail_username}@gmail.com"
 
 
     existing_account = get_user(request.form.get("username"), graceful=True)
@@ -353,10 +346,6 @@ def sign_up_post(v):
         return new_signup(
             "An account with that username or email already exists.")
 
-    # check bans
-    if any([x.is_banned for x in [g.db.query(User).filter_by(id=y).first()
-                                  for y in session.get("history", [])] if x]):
-        abort(403)
 
     # ip ratelimit
     previous = g.db.query(User).filter_by(
@@ -405,7 +394,9 @@ def sign_up_post(v):
                         created_utc=int(time.time()),
                         creation_ip=request.remote_addr,
                         referred_by=ref_id or None,
-                        tos_agreed_utc=int(time.time())
+                        tos_agreed_utc=int(time.time()),
+                        creation_region=request.headers.get("cf-ipcountry"),
+                        ban_evade =  int(any([x.is_banned for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x]))
                         )
 
     except Exception as e:
@@ -449,7 +440,7 @@ And since we're committed to [open-source](https://github.com/ruqqus/ruqqus) tra
 
     # #print(f"Signup event: @{new_user.username}")
 
-    return redirect("/browse?onboarding=true")
+    return redirect("/")
 
 
 @app.route("/forgot", methods=["GET"])
@@ -464,7 +455,9 @@ def get_forgot():
 def post_forgot():
 
     username = request.form.get("username").lstrip('@')
-    email = request.form.get("email")
+    email = request.form.get("email",'').lstrip().rstrip()
+
+    email=email.replace("_","\_")
 
     user = g.db.query(User).filter(
         User.username.ilike(username),

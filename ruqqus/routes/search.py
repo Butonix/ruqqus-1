@@ -1,6 +1,7 @@
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from urllib.parse import quote
+import re
 
 from sqlalchemy import *
 
@@ -8,23 +9,80 @@ from flask import *
 from ruqqus.__main__ import app, cache
 
 
+
+query_regex=re.compile("(\w+):(\S+)")
+valid_params=[
+    'author',
+    'guild',
+    'url'
+]
+
+def searchparse(text):
+
+    #takes test in filter:term format and returns data
+
+    criteria = {x[0]:x[1] for x in query_regex.findall(text)}
+
+    for x in criteria:
+        if x in valid_params:
+            text = text.replace(f"{x}:{criteria[x]}", "")
+
+    text=text.lstrip().rstrip()
+
+    if text:
+        criteria['q']=text
+
+    return criteria
+
+
+
 @cache.memoize(300)
 def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
-        
-    posts = g.db.query(Submission).join(
-        Submission.submission_aux).join(
-        Submission.author).filter(
-            SubmissionAux.title.ilike(
-                '%' +
-                q +
-                '%')).options(
-                    contains_eager(Submission.submission_aux),
-        contains_eager(Submission.author))
+    criteria = searchparse(q)
 
+    posts = g.db.query(Submission).options(
+                lazyload('*')
+            ).join(
+                Submission.submission_aux,
+            ).join(
+                Submission.author
+            )
+
+    if 'q' in criteria:
+        posts=posts.filter(
+        SubmissionAux.title.ilike(
+            '%' +
+            criteria['q'] +
+            '%'
+            )
+        )
+
+    if 'author' in criteria:
+        posts=posts.filter(
+                Submission.author_id==get_user(criteria['author']).id,
+                User.is_private==False,
+                User.is_deleted==False
+            )
 
     if b:
         posts=posts.filter(Submission.board_id==b.id)
+    elif 'guild' in criteria:
+        posts=posts.filter(
+                Submission.board.id==get_guild(criteria['guild']).id
+            )
+
+    if 'url' in criteria:
+        posts=posts.filter(
+            SubmissionAux.url.ilike("%"+criteria['url']+"%")
+            )
+
+
+    posts=posts.options(
+            contains_eager(Submission.submission_aux),
+            contains_eager(Submission.author)
+            )
+
 
     if not (v and v.over_18):
         posts = posts.filter(Submission.over_18 == False)
@@ -99,7 +157,9 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
 
 @app.route("/search", methods=["GET"])
+@app.route("/api/v1/search", methods=["GET"])
 @auth_desired
+@api("read")
 def search(v, search_type="posts"):
 
     query = request.args.get("q", '').lstrip().rstrip()
@@ -132,7 +192,7 @@ def search(v, search_type="posts"):
         next_exists = (len(boards) == 26)
         boards = boards[0:25]
 
-        return render_template("search_boards.html",
+        return {"html":lambda:render_template("search_boards.html",
                                v=v,
                                query=query,
                                total=total,
@@ -140,7 +200,9 @@ def search(v, search_type="posts"):
                                boards=boards,
                                sort_method=sort,
                                next_exists=next_exists
-                               )
+                               ),
+                "api":lambda:jsonfy({"data":[x.json for x in boards]})
+                }
 
     elif query.startswith("@"):
             
@@ -172,20 +234,24 @@ def search(v, search_type="posts"):
         
         
         
-        return render_template("search_users.html",
+        return {"html":lambda:render_template("search_users.html",
                        v=v,
                        query=query,
                        total=total,
                        page=page,
                        users=users,
                        next_exists=next_exists
-                      )
+                      ),
+                "api":lambda:jsonify({"data":[x.json for x in users]})
+                }
                    
     
 
     else:
         sort = request.args.get("sort", "top").lower()
         t = request.args.get('t', 'all').lower()
+
+
 
         # posts search
 
@@ -196,7 +262,7 @@ def search(v, search_type="posts"):
 
         posts = get_posts(ids, v=v)
 
-        return render_template("search.html",
+        return {"html":lambda:render_template("search.html",
                                v=v,
                                query=query,
                                total=total,
@@ -205,7 +271,9 @@ def search(v, search_type="posts"):
                                sort_method=sort,
                                time_filter=t,
                                next_exists=next_exists
-                               )
+                               ),
+                "api":lambda:jsonify({"data":[x.json for x in posts]})
+                }
 
 
 @app.route("/+<name>/search", methods=["GET"])
@@ -213,7 +281,7 @@ def search(v, search_type="posts"):
 def search_guild(name, v, search_type="posts"):
 
 
-    query=request.args.get("q").lstrip().rstrip()
+    query=request.args.get("q","").lstrip().rstrip()
 
     if query.startswith(("+","@")):
         return redirect(f"/search?q={quote(query)}")

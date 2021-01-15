@@ -16,22 +16,6 @@ from .comment import Comment
 from .mix_ins import *
 from ruqqus.__main__ import Base, cache
 
-# class BoardCategory(Enum):
-
-#     Arts="Arts"
-#     Culture="Culture"
-#     Discussion="Discussion"
-#     Food="Food"
-#     Entertainment="Entertainment"
-#     Gaming="Gaming"
-#     Hobby="Hobby"
-#     Humor="Humor"
-#     News="News"
-#     Photography="Photography"
-#     Politics="Politics"
-#     Sports="Sports"
-#     Technology="Technology"
-
 
 class Board(Base, Stndrd, Age_times):
 
@@ -64,7 +48,7 @@ class Board(Base, Stndrd, Age_times):
     last_yank_utc=Column(Integer, default=0)
     is_locked_category = Column(Boolean, default=False)
     subcat_id=Column(Integer, ForeignKey("subcategories.id"), default=0)
-
+    secondary_color=Column(String(6), default="ffffff")
 
     subcat=relationship("SubCategory")
     moderators=relationship("ModRelationship")
@@ -127,8 +111,7 @@ class Board(Base, Stndrd, Age_times):
     @property
     def mods_count(self):
 
-        return len(
-            [x for x in self.moderators if x.accepted and not x.invite_rescinded])
+        return len(self.mods_list)
 
     @property
     def permalink(self):

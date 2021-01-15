@@ -28,7 +28,7 @@ from redis import BlockingConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.29.3"
+_version = "2.29.9.9"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -36,6 +36,8 @@ app = Flask(__name__,
             )
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=2)
 app.url_map.strict_slashes = False
+
+app.config["SITE_NAME"]=environ.get("SITE_NAME", "ruqqus").lstrip().rstrip()
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get(
@@ -51,7 +53,7 @@ app.config['SQLALCHEMY_READ_URIS'] = [
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
 app.config["SERVER_NAME"] = environ.get(
     "domain", environ.get(
-        "SERVER_NAME", None)).rstrip()
+        "SERVER_NAME", None)).lstrip().rstrip()
 app.config["SESSION_COOKIE_NAME"] = "session_ruqqus"
 app.config["VERSION"] = _version
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024
@@ -264,6 +266,21 @@ def before_request():
         session["session_id"] = secrets.token_hex(16)
 
     g.timestamp = int(time.time())
+
+    ua=request.headers.get("User-Agent","")
+    if "CriOS/" in ua:
+        g.system="ios/chrome"
+    elif "Version/" in ua:
+        g.system="android/webview"
+    elif "Mobile Safari/" in ua:
+        g.system="android/chrome"
+    elif "Safari/" in ua:
+        g.system="ios/safari"
+    elif "Mobile/" in ua:
+        g.system="ios/webview"
+    else:
+        g.system="other/other"
+
 
     # g.db.begin_nested()
 

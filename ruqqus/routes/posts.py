@@ -57,7 +57,8 @@ def incoming_post_shortlink(base36id=None):
 @app.route("/+<boardname>/post/<base36id>", methods=["GET"])
 @app.route("/+<boardname>/post/<base36id>/", methods=["GET"])
 @app.route("/+<boardname>/post/<base36id>/<anything>", methods=["GET"])
-@app.route("/api/v1/post/<base36id>")
+@app.route("/api/v1/post/<base36id>", methods=["GET"])
+@app.route("/test/post/<base36id>", methods=["GET"])
 @auth_desired
 @api("read")
 def post_base36id(base36id, boardname=None, anything=None, v=None):
@@ -89,8 +90,8 @@ def post_base36id(base36id, boardname=None, anything=None, v=None):
                 "api":lambda:(jsonify({"error":"Must be 18+ to view"}), 451)
                 }
     
-    if request.path.startswith('/api/v1/'):
-        post.tree_comments()
+    post.tree_comments()
+
     return {
         "html":lambda:post.rendered_page(v=v),
         "api":lambda:jsonify(post.json)
@@ -341,7 +342,9 @@ def submit_post(v):
         if not domain_obj.can_submit:
           
             if domain_obj.reason==4:
-                v.ban(days=30, reason="Digitally malicious content is not allowed")
+                v.ban(days=30, reason="Digitally malicious content")
+            elif domain_obj.reason==7:
+                v.ban(reason="Sexualizing minors")
 
             return {"html": lambda: (render_template("submit.html",
                                                      v=v,
@@ -449,33 +452,49 @@ def submit_post(v):
     # similarity check
     now = int(time.time())
     cutoff = now - 60 * 60 * 24
+
+
     similar_posts = g.db.query(Submission).options(
         lazyload('*')
-    ).join(Submission.submission_aux
-           ).filter(
-        Submission.author_id == v.id,
-        SubmissionAux.title.op(
-            '<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
-        Submission.created_utc > cutoff
+        ).join(
+            Submission.submission_aux
+        ).filter(
+            or_(
+                and_(
+                    Submission.author_id == v.id,
+                    SubmissionAux.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+                    Submission.created_utc > cutoff
+                ),
+                and_(
+                    SubmissionAux.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"]/2,
+                    Submission.created_utc > cutoff
+                )
+            )
     ).all()
 
     if url:
         similar_urls = g.db.query(Submission).options(
             lazyload('*')
-        ).join(Submission.submission_aux
-               ).filter(
-            Submission.author_id == v.id,
-            SubmissionAux.url.op(
-                '<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
-            Submission.created_utc > cutoff
+        ).join(
+            Submission.submission_aux
+        ).filter(
+            or_(
+                and_(
+                    Submission.author_id == v.id,
+                    SubmissionAux.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
+                    Submission.created_utc > cutoff
+                ),
+                and_(
+                    SubmissionAux.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"]/2,
+                    Submission.created_utc > cutoff
+                )
+            )
         ).all()
     else:
         similar_urls = []
 
     threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
-    if v.age >= (60 * 60 * 24 * 30):
-        threshold *= 4
-    elif v.age >= (60 * 60 * 24 * 7):
+    if v.age >= (60 * 60 * 24 * 7):
         threshold *= 3
     elif v.age >= (60 * 60 * 24):
         threshold *= 2
@@ -493,11 +512,12 @@ def submit_post(v):
 
         for post in similar_posts + similar_urls:
             post.is_banned = True
+            post.is_pinned = False
             post.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
             g.db.add(post)
             ma=ModAction(
                     user_id=1,
-                    target_post_id=comment.id,
+                    target_submission_id=post.id,
                     kind="ban_post",
                     board_id=post.board_id,
                     note="spam"
@@ -644,22 +664,27 @@ def submit_post(v):
             is_politics = True
             break
 
-    new_post = Submission(author_id=v.id,
-                          domain_ref=domain_obj.id if domain_obj else None,
-                          board_id=board.id,
-                          original_board_id=board.id,
-                          over_18=(
-                              bool(
-                                  request.form.get(
-                                      "over_18",
-                                      "")) or board.over_18),
-                          post_public=not board.is_private,
-                          repost_id=repost.id if repost else None,
-                          is_offensive=is_offensive,
-                          is_politics=is_politics,
-                          app_id=v.client.application.id if v.client else None,
-                          created_utc=created_time
-                          )
+
+    new_post = Submission(
+        author_id=v.id,
+        domain_ref=domain_obj.id if domain_obj else None,
+        board_id=board.id,
+        original_board_id=board.id,
+        over_18=(
+            bool(
+                request.form.get(
+                    "over_18",
+                    "")
+                ) or board.over_18
+            ),
+        post_public=not board.is_private,
+        repost_id=repost.id if repost else None,
+        is_offensive=is_offensive,
+        is_politics=is_politics,
+        app_id=v.client.application.id if v.client else None,
+        creation_region=request.headers.get("cf-ipcountry")
+        )
+
 
     g.db.add(new_post)
     g.db.flush()
@@ -716,6 +741,30 @@ def submit_post(v):
         new_post.is_image = True
         new_post.domain_ref = 1  # id of i.ruqqus.com domain
         g.db.add(new_post)
+
+        #csam detection
+        def del_function():
+            delete_file(name)
+            new_post.is_banned=True
+            g.db.add(new_post)
+            g.db.commit()
+            ma=ModAction(
+                kind="ban_post",
+                user_id=1,
+                note="csam detected",
+                target_submission_id=new_post.id
+                )
+            g.db.add(ma)
+            g.db.commit()
+
+            
+        csam_thread=threading.Thread(target=check_csam_url, 
+                                     args=(f"https://{BUCKET}/{name}", 
+                                           v, 
+                                           del_function
+                                          )
+                                    )
+        csam_thread.start()
     
     g.db.commit()
 
@@ -725,8 +774,7 @@ def submit_post(v):
                                       args=(new_post.base36id,)
                                       )
         new_thread.start()
-        csam_thread = threading.Thread(target=check_csam, args=(new_post,))
-        csam_thread.start()
+
 
     # expire the relevant caches: front page new, board new
     #cache.delete_memoized(frontlist, sort="new")

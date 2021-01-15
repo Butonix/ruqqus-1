@@ -71,12 +71,11 @@
 
         <div>
          <h2 class="h5" name="guild_name">Guildmasters of +{{ b.name }}</h2>
-         <p class="text-small text-muted mb-md-0">Note: all guildmasters share the same permissions.</p>
        </div>
 
        <div class="mt-auto">
         {% if me %}
-        <a href="javascript:void(0)" class="btn btn-outline-primary mr-2" data-toggle="modal" data-target="#stepDownModal" onclick="step_downModal('{{ v.username }}')">Dethrone yourself</a>
+        <a href="javascript:void(0)" class="btn btn-outline-primary mr-2" data-toggle="modal" data-target="#stepDownModal" onclick="step_downModal('{{ v.username }}')">Resign</a>
         {% endif %}
         {% if me and me.perm_full %}
         <a href="javascript:void(0)" class="btn btn-primary" data-toggle="modal" data-target="#guildmasterInviteModal"><i class="fas fa-plus mr-2"></i>Add guildmaster</a>
@@ -121,7 +120,7 @@
               </td>
             </tr>
             {% else %}
-            <td>There are no guildmasters. You may be able to <a href="/help/siege">siege</a> this community and become guildmaster.</td>
+            <td>There are no guildmasters.{% if b.is_siegable and b.id>1%} You may be able to <a href="/help/siege">siege</a> this community and become guildmaster.{% endif %}</td>
             {% endfor %}
 
           </tbody>

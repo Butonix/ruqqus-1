@@ -1,5 +1,5 @@
 from urllib.parse import urlparse
-from time import time
+import time
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -26,6 +26,19 @@ def api_vote_post(post_id, x, v):
         abort(403)
 
     x = int(x)
+
+    if x==-1:
+        count=g.db.query(Vote).filter(
+            Vote.user_id.in_(
+                tuple(
+                    [v.id]+[x.id for x in v.alts]
+                    )
+                ),
+            Vote.created_utc > (int(time.time())-3600), 
+            Vote.vote_type==-1
+            ).count()
+        if count >=15:
+            return jsonify({"error": "You're doing that too much. Try again later."}), 403
 
     post = get_post(post_id)
 

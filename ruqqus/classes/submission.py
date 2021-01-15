@@ -101,6 +101,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     upvotes = Column(Integer, default=1)
     downvotes = Column(Integer, default=0)
+    creation_region=Column(String(2), default=None)
 
     app_id=Column(Integer, ForeignKey("oauth_apps.id"), default=None)
     oauth_app=relationship("OauthApp")
@@ -215,7 +216,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             # load and tree comments
             # calling this function with a comment object will do a comment
             # permalink thing
-            self.tree_comments(comment=comment)
+            if "replies" not in self.__dict__ and "_preloaded_comments" in self.__dict__:
+                self.tree_comments(comment=comment)
 
         # return template
         is_allowed_to_comment = self.board.can_comment(
@@ -233,7 +235,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                                comment_info=comment_info,
                                is_allowed_to_comment=is_allowed_to_comment,
                                render_replies=True,
-                               is_guildmaster=self.board.has_mod(v),
                                b=self.board
                                )
 
@@ -302,7 +303,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     def visibility_reason(self, v):
 
-        if v and self.author_id == v.id:
+
+        if not v or self.author_id == v.id:
             return "this is your content."
         elif self.is_pinned:
             return "a guildmaster has pinned it."
@@ -332,6 +334,43 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             self.is_offensive = False
 
     @property
+    def json_raw(self):
+        data = {'author_name': self.author.username if not self.author.is_deleted else None,
+                'permalink': self.permalink,
+                'is_banned': bool(self.is_banned),
+                'is_deleted': self.is_deleted,
+                'created_utc': self.created_utc,
+                'id': self.base36id,
+                'fullname': self.fullname,
+                'title': self.title,
+                'is_nsfw': self.over_18,
+                'is_nsfl': self.is_nsfl,
+                'thumb_url': self.thumb_url,
+                'domain': self.domain,
+                'is_archived': self.is_archived,
+                'url': self.url,
+                'body': self.body,
+                'body_html': self.body_html,
+                'created_utc': self.created_utc,
+                'edited_utc': self.edited_utc or 0,
+                'guild_name': self.board.name,
+                'guild_id': base36encode(self.board_id),
+                'comment_count': self.comment_count,
+                'score': self.score_fuzzed,
+                'upvotes': self.upvotes_fuzzed,
+                'downvotes': self.downvotes_fuzzed,
+                'award_count': self.award_count,
+                'is_offensive': self.is_offensive
+                }
+        if self.ban_reason:
+            data["ban_reason"]=self.ban_reason
+
+        if self.board_id != self.original_board_id and self.original_board:
+            data['original_guild_name'] = self.original_board.name
+            data['original_guild_id'] = base36encode(self.original_board_id)
+        return data
+
+    @property
     def json_core(self):
 
         if self.is_banned:
@@ -351,39 +390,13 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                     'permalink': self.permalink,
                     'guild_name': self.board.name
                     }
-        data = {'author_name': self.author.username if not self.author.is_deleted else None,
-                'permalink': self.permalink,
-                'is_banned': False,
-                'is_deleted': False,
-                'created_utc': self.created_utc,
-                'id': self.base36id,
-                'fullname': self.fullname,
-                'title': self.title,
-                'is_nsfw': self.over_18,
-                'is_nsfl': self.is_nsfl,
-                'thumb_url': self.thumb_url,
-                'domain': self.domain,
-                'is_archived': self.is_archived,
-                'url': self.url,
-                'body': self.body,
-                'body_html': self.body_html,
-                'created_utc': self.created_utc,
-                'edited_utc': self.edited_utc or 0,
-                'guild_name': self.board.name,
-                'original_guild_name': self.original_board.name if not self.board_id == self.original_board_id else None,
-                'comment_count': self.comment_count,
-                'score': self.score_fuzzed,
-                'upvotes': self.upvotes_fuzzed,
-                'downvotes': self.downvotes_fuzzed,
-                'award_count': self.award_count,
-                'is_offensive': self.is_offensive,
-                'is_politics': self.is_politics
-                }
-        return data
+
+        return self.json_raw
 
     @property
     def json(self):
         data=self.json_core
+        
         if self.is_deleted or self.is_banned:
             return data
 
@@ -465,13 +478,15 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     def is_guildmaster(self, perm=None):
         mod=self.__dict__.get('_is_guildmaster', False)
+
         if not mod:
             return False
-        if not perm:
+        elif not perm:
             return True
+        else:
+            return mod.perm_full or mod.__dict__[f"perm_{perm}"]
 
-        return mod.perm_full or mod.__dict__[f"perm_{perm}"]
-
+        return output
 
     @property
     def is_blocking_guild(self):
@@ -513,7 +528,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def self_download_json(self):
 
         #This property should never be served to anyone but author and admin
-        if not self.is_banned and not self.is_banned:
+        if not self.is_banned and not self.is_deleted:
             return self.json_core
 
         return {
@@ -532,6 +547,17 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             'comment_count': self.comment_count,
             'permalink': self.permalink
         }
+
+    @property
+    def json_admin(self):
+
+        data=self.json_raw
+
+        data["creation_ip"]=self.creation_ip
+        data["creation_region"]=self.creation_region
+
+        return data
+
     
     
 class SaveRelationship(Base, Stndrd):

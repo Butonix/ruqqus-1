@@ -6,7 +6,7 @@
 {% set score=ups-downs %}
 
 <!--conditions under which a comment might be hidden-->
-{% if ((c.is_banned or c.is_deleted) and not (v and v.admin_level >=3)) or (c.is_blocking or (c.is_blocked and not (is_guildmaster and c.original_board_id==c.post.board_id)) and not c.distinguish_level and not (v and v.admin_level>=3)) %}
+{% if ((c.is_banned or c.is_deleted) or ((c.is_blocking or c.is_blocked) and not (c.is_guildmaster('content') and c.original_board_id==c.post.board_id))) and not c.distinguish_level and not (v and v.admin_level>=3) %}
 
 <div id="comment-{{ c.base36id }}" class="comment rounded">
 
@@ -83,6 +83,7 @@
 <div id="comment-{{ c.base36id }}" class="comment rounded{% if standalone and level==1 %} mt-0{% endif %}{% if (not standalone) and c.collapse_for_user(v) %} collapsed{% endif %}">
 
 
+
   {% if not c.author.is_deleted %}<span class="mr-2 d-block d-md-none"><a href="{{ c.author.permalink }}"><img src="{{ c.author.profile_url }}" class="profile-pic-25"></a></span>{% endif %}
 
   <span class="comment-collapse d-md-block d-none" onclick="collapse_comment('{{ c.base36id }}')"></span>
@@ -92,6 +93,7 @@
     <div id="comment-{{ c.base36id }}-only" class="{% if c.is_banned %} banned{% endif %}{% if c.is_deleted %} deleted{% endif %}">
 
       <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %} {% if c.is_pinned %}<i class="text-info fas fa-thumbtack fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Pinned comment"></i> · {% endif %} {% if c.author.is_deleted %}[deleted account]{% else %}<a href="/@{{ c.author.username }}" class="user-name {% if c.is_op and not c.post.is_deleted %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.title %}{{ c.title.rendered | safe }}{% endif %}{% endif %}
+
         {% if c.distinguish_level %}
         <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>
         {% endif %}
@@ -105,17 +107,18 @@
         <i class="fad fa-robot text-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Automaton"></i>
         {% endif %}
         {% if c.is_blocking %}
-        <i class="fas fa-user-minus text-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="You're blocking this user, but you can see this comment because it's in your guild."></i>
+        <i class="fas fa-user-minus text-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="You're blocking this user, but you can see this comment because {{ 'it\'s in your guild' if c.is_guildmaster('content') else 'it\'s an admin comment' if c.distinguish_level else 'you\'re an admin' }}."></i>
         {% endif %}
         {% if c.is_blocked %}
-        <i class="fas fa-user-minus text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="This user is blocking you, but you can see this comment because it's in your guild."></i>
+        <i class="fas fa-user-minus text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="This user is blocking you, but you can see this comment because {{ 'it\'s in your guild' if c.is_guildmaster('content') else 'it\'s an admin comment' if c.distinguish_level else 'you\'re an admin' }}."></i>
         {% endif %}
-        <span class="time-stamp"> · {{ c.age_string }}</span>{% if standalone and c.parent_submission and c.post.board.is_private and not c.post.post_public %} · <i class="fas fa-eye-slash text-muted" data-toggle="tooltip" data-placement="bottom" title="Private content, visible because {{ c.visibility_reason(v) }}"></i>{% endif %}
+        <span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ c.created_datetime }}" class="time-stamp"> · {{ c.age_string }}</span>
+        {% if standalone and c.parent_submission and c.post.board.is_private and not c.post.post_public %} · <i class="fas fa-eye-slash text-muted" data-toggle="tooltip" data-placement="bottom" title="Private content, visible because {{ c.visibility_reason(v) }}"></i>
+        {% endif %}
         {% if c.edited_utc %}
         <span class="time-edited"><span>&#183;</span> <span class="font-italic">Edited {{ c.edited_string }}</span></span>
         {% endif %}
-        {% if c.award_count %}<span style="color: #604c1b;background-color: #c1971b;
-        background-image: linear-gradient(135deg, #ffc107 0%, #c1971b 100%);" class="badge text-small ml-1"><i class="fas fa-coin mr-2"></i>{{ c.award_count }}</span>{% endif %}
+        {% if c.award_count %}<span><img src="/assets/images/icons/ruqqus-coin.png" style="width: 15px; margin-bottom: 3px;"/><span class="pl-1 text-warning font-weight-bold">{{ c.award_count }}</span></span>{% endif %}
 
         <span class="comment-collapse d-md-none" onclick="collapse_comment('{{ c.base36id }}')"></span>
 
@@ -124,6 +127,7 @@
       {% if c.is_banned and c.ban_reason %}
       <div id="comment-banned-warning" class="comment-text text-danger text-small mb-0">Reason: {{ c.ban_reason }}</div>
       {% endif %}
+
       <div id="comment-text-{{ c.base36id }}" class="comment-text mb-0">
         {{ c.body_html | safe }}
       </div>
@@ -205,7 +209,7 @@
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i>Copy link</a></li>
           
 
-          {% if v and v.id==c.author_id and c.post and c.post.is_guildmaster('content') %}
+          {% if v and v.id==c.author_id and c.post and c.is_guildmaster('content') %}
           <li class="list-inline-item d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post('/mod/distinguish_comment/{{ c.board.base36id }}/{{ c.base36id }}', callback=function(){window.location.href = '{{c.permalink}}';})" class="text-warning"><i class="fas fa-crown text-warning"></i><span class="d-none d-md-inline-block">Herald</span></a></li>
           {% endif %}
 
@@ -270,7 +274,7 @@
             {% endif %}
             
 
-            {% if v and c.post and c.post.is_guildmaster('content') %}
+            {% if v and c.post and c.is_guildmaster('content') %}
             <div class="dropdown-divider"></div>
               {% if c.is_top_level %}
                 {% if c.is_pinned %}
@@ -280,7 +284,7 @@
                 {% endif %}
               {% endif %}
             {% endif %}
-            {% if v and c.post and c.post.is_guildmaster('access') %}
+            {% if v and c.post and c.is_guildmaster('access') %}
               {% if v.id!=c.author_id and not c.author.is_deleted %}
                 <a class="dropdown-item text-danger" id="exile-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post_toast('/mod/exile/{{ c.post.board.base36id }}?username={{ c.author.username }}&toast=1&thing={{ c.fullname }}')"><i class="fas fa-user-minus fa-fw text-danger"></i>Exile @{{ c.author.username }}</a>
               {% endif %}
@@ -438,11 +442,11 @@
               {% endif %}
           {% endif %}
 
-          {% if v and v.id==c.author_id and c.post and c.post.is_guildmaster('content') %}
+          {% if v and v.id==c.author_id and c.post and c.is_guildmaster('content') %}
           <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/mod/distinguish_comment/{{ c.board.base36id }}/{{ c.base36id }}', callback=function(){window.location.href = '{{c.permalink}}';})" class="text-warning"><i class="fas fa-crown text-warning"></i><span>Herald</span></a></li>
           {% endif %}
             
-          {% if v and c.post and c.post.is_guildmaster('content') %}
+          {% if v and c.post and c.is_guildmaster('content') %}
             {% if c.is_top_level %}
               {% if c.is_pinned %}
               <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Unpin</a>
@@ -453,7 +457,7 @@
               {% endif %}
             {% endif %}
           {% endif %}
-          {% if v and c.post and c.post.is_guildmaster('access') %}
+          {% if v and c.post and c.is_guildmaster('access') %}
             {% if c.author_id != v.id and not c.author.is_deleted %}
               <li class="list-group-item"><a class="d-block text-danger" id="exile-comment2-{{ c.base36id }}" href="javascript:void(0)" onclick="post_toast('/mod/exile/{{ c.post.board.base36id }}?username={{ c.author.username }}&toast=1&thing={{ c.fullname }}')"><i class="fas fa-user-minus fa-fw text-danger"></i>Exile @{{ c.author.username }}</a></li>
             {% endif %}
