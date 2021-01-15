@@ -246,28 +246,29 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     property
     def json_raw(self):
         data= {
-                'id': self.base36id,
-                'fullname': self.fullname,
-                'level': self.level,
-                'author_name': self.author.username if not self.author.is_deleted else None,
-                'body': self.body,
-                'body_html': self.body_html,
-                'is_archived': self.is_archived,
-                'is_bot': self.is_bot,
-                'created_utc': self.created_utc,
-                'edited_utc': self.edited_utc or 0,
-                'is_banned': bool(self.is_banned),
-                'is_deleted': self.is_deleted,
-                'is_nsfw': self.over_18,
-                'is_offensive': self.is_offensive,
-                'is_nsfl': self.is_nsfl,
-                'permalink': self.permalink,
-                'post_id': self.post.base36id,
-                'score': self.score_fuzzed,
-                'upvotes': self.upvotes_fuzzed,
-                'downvotes': self.downvotes_fuzzed,
-                'award_count': self.award_count,
-                }
+            'id': self.base36id,
+            'fullname': self.fullname,
+            'level': self.level,
+            'author_name': self.author.username if not self.author.is_deleted else None,
+            'body': self.body,
+            'body_html': self.body_html,
+            'is_archived': self.is_archived,
+            'is_bot': self.is_bot,
+            'created_utc': self.created_utc,
+            'edited_utc': self.edited_utc or 0,
+            'is_banned': bool(self.is_banned),
+            'is_deleted': self.is_deleted,
+            'is_nsfw': self.over_18,
+            'is_offensive': self.is_offensive,
+            'is_nsfl': self.is_nsfl,
+            'permalink': self.permalink,
+            'post_id': self.post.base36id,
+            'score': self.score_fuzzed,
+            'upvotes': self.upvotes_fuzzed,
+            'downvotes': self.downvotes_fuzzed,
+            'award_count': self.award_count,
+            }
+
         if self.ban_reason:
             data["ban_reason"]=self.ban_reason
 
@@ -431,6 +432,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def json_admin(self):
         data= self.json_raw
+
+        print(data)
 
         data["creation_ip"] = self.creation_ip
         data["creation_region"] = self.creation_region
