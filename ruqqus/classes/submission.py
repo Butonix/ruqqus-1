@@ -366,7 +366,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         if self.ban_reason:
             data["ban_reason"]=self.ban_reason
 
-        if self.board_id != self.original_board_id:
+        if self.board_id != self.original_board_id and self.original_board:
             data['original_guild_name'] = self.original_board.name
             data['original_guild_id'] = base36encode(self.original_board_id)
         return data
