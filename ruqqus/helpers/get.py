@@ -422,7 +422,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             isouter=True
             ).options(
             contains_eager(Comment.post),
-            contains_eager(Submission.board)
+            contains_eager(Comment.post.board)
             ).order_by(None).all()
 
         comments==[x for x in query]
