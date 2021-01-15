@@ -432,9 +432,10 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     def json_admin(self):
         data= self.json_raw
 
-        data["creation_ip"]=self.creation_ip
-        data["creation_region"]=self.creation_region
+        data["creation_ip"] = self.creation_ip
+        data["creation_region"] = self.creation_region
     
+        return data
     
 
 
