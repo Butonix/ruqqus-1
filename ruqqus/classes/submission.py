@@ -485,6 +485,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             output= True
         else:
             output= mod.perm_full or mod.__dict__[f"perm_{perm}"]
+        print(output)
+        return output
 
     @property
     def is_blocking_guild(self):
