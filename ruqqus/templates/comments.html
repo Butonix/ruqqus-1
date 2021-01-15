@@ -127,10 +127,7 @@
       {% if c.is_banned and c.ban_reason %}
       <div id="comment-banned-warning" class="comment-text text-danger text-small mb-0">Reason: {{ c.ban_reason }}</div>
       {% endif %}
-      {% if v and v.admin_level %}
-        <p>{{ c.is_guildmaster('content') }}</p>
-        <p>{{ c.is_guildmaster('access') }}</p>
-      {% endif %}
+
       <div id="comment-text-{{ c.base36id }}" class="comment-text mb-0">
         {{ c.body_html | safe }}
       </div>
