@@ -546,7 +546,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         }
 
     @property
-    def self.json_admin(self):
+    def json_admin(self):
 
         data=self.json_raw
 
