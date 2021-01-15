@@ -122,7 +122,8 @@ def submit_get(v):
 
     return render_template("submit.html",
                            v=v,
-                           b=b
+                           b=b,
+                           times=times.keys()
                            )
 
 
@@ -278,7 +279,8 @@ def submit_post(v):
                                                  url=url,
                                                  body=request.form.get(
                                                      "body", ""),
-                                                 b=board
+                                                 b=board,
+                                                 times=times.keys()
                                                  ), 400),
                 "api": lambda: ({"error": "500 character limit for titles"}, 400)
                 }
@@ -293,7 +295,8 @@ def submit_post(v):
                                                  url=url,
                                                  body=request.form.get(
                                                      "body", ""),
-                                                 b=board
+                                                 b=board,
+                                                 times=times.keys()
                                                  ), 400),
                 "api": lambda: ({"error": "`url` or `body` parameter required."}, 400)
                 }
@@ -347,7 +350,8 @@ def submit_post(v):
                                                      url=url,
                                                      body=request.form.get(
                                                          "body", ""),
-                                                     b=board
+                                                     b=board,
+                                                     times=times.keys()
                                                      ), 400),
                     "api": lambda: ({"error": BAN_REASONS[domain_obj.reason]}, 400)
                     }
@@ -377,7 +381,8 @@ def submit_post(v):
                                                  url=url, body=request.form.get(
                 "body", ""),
                                                  b=get_guild("general",
-                                                             graceful=True)
+                                                             graceful=True),
+                                                 times=times.keys()
                                                  ), 401),
                 "api": lambda: (jsonify({"error": f"Only Guildmasters can queue posts in this guild."}))
                 }
@@ -389,7 +394,8 @@ def submit_post(v):
                                                  url=url, body=request.form.get(
                                                      "body", ""),
                                                  b=get_guild("general",
-                                                             graceful=True)
+                                                             graceful=True),
+                                                 times=times.keys()
                                                  ), 400),
                 "api": lambda: (jsonify({"error": f"{v.username}'s post queue is currently full."}))
                 }
@@ -404,7 +410,8 @@ def submit_post(v):
                                                  url=url, body=request.form.get(
                                                      "body", ""),
                                                  b=get_guild("general",
-                                                             graceful=True)
+                                                             graceful=True),
+                                                 times=times.keys()
                                                  ), 403),
                 "api": lambda: (jsonify({"error": f"403 Forbidden - +{board.name} has been banned."}))
                 }
@@ -416,7 +423,8 @@ def submit_post(v):
                                                  title=title,
                                                  url=url, body=request.form.get(
                                                      "body", ""),
-                                                 b=get_guild("general")
+                                                 b=get_guild("general"),
+                                                 times=times.keys()
                                                  ), 403),
                 "api": lambda: (jsonify({"error": f"403 Not Authorized - You are exiled from +{board.name}"}), 403)
                 }
@@ -432,7 +440,8 @@ def submit_post(v):
                                                      "body", ""),
                                                  b=get_guild(request.form.get("board", "general"),
                                                              graceful=True
-                                                             )
+                                                             ),
+                                                 times=times.keys()
                                                  ), 403),
                 "api": lambda: (jsonify({"error": f"403 Not Authorized - You are not an approved contributor for +{board.name}"}), 403)
                 }
@@ -507,7 +516,8 @@ def submit_post(v):
                                                  url=url,
                                                  body=request.form.get(
                                                      "body", ""),
-                                                 b=board
+                                                 b=board,
+                                                 times=times.keys()
                                                  ), 400),
                 "api": lambda: ({"error": "10000 character limit for text body."}, 400)
                 }
@@ -521,7 +531,8 @@ def submit_post(v):
                                                  url=url,
                                                  body=request.form.get(
                                                      "body", ""),
-                                                 b=board
+                                                 b=board,
+                                                 times=times.keys()
                                                  ), 400),
                 "api": lambda: ({"error": "2048 character limit for URLs."}, 400)
                 }
@@ -553,7 +564,8 @@ def submit_post(v):
                                                  url=url,
                                                  body=request.form.get(
                                                      "body", ""),
-                                                 b=board
+                                                 b=board,
+                                                 times=times.keys()
                                                  ), 403),
                 "api": lambda: ({"error": reason}, 403)
                 }
@@ -594,7 +606,8 @@ def submit_post(v):
                                                          url=url,
                                                          body=request.form.get(
                                                              "body", ""),
-                                                         b=board
+                                                         b=board,
+                                                         times=times.keys()
                                                          ), 400),
                         "api": lambda: ({"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}, 400)
                         }
@@ -681,13 +694,14 @@ def submit_post(v):
         file = request.files['file']
         if not file.content_type.startswith('image/'):
             return {"html": lambda: (render_template("submit.html",
-                                                         v=v,
-                                                         error=f"Image files only.",
-                                                         title=title,
-                                                         body=request.form.get(
-                                                             "body", ""),
-                                                         b=board
-                                                         ), 400),
+                                                     v=v,
+                                                     error=f"Image files only.",
+                                                     title=title,
+                                                     body=request.form.get(
+                                                         "body", ""),
+                                                     b=board,
+                                                     times=times.keys()
+                                                     ), 400),
                         "api": lambda: ({"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}, 400)
                         }
 
