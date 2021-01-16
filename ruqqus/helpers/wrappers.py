@@ -114,7 +114,7 @@ def auth_required(f):
         if not v:
             abort(401)
         elif v and v.ban_evade and request.method=="POST":
-            if random.randint(0,200) < v.ban_evade:
+            if random.randint(0,100) < v.ban_evade:
                 v.ban(reason="Evading a site-wide ban")
                 send_notification(v, "Your Ruqqus account has been permanently suspended for the following reason:\n\n> ban evasion")
 
