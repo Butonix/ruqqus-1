@@ -97,8 +97,10 @@ def create_board_post(v):
 
     # check # recent boards made by user
     cutoff = int(time.time()) - 60 * 60 * 24
+    alt_ids=[x.id for x in v.alts]
+    user_ids=[v.id]+alt_ids
     recent = g.db.query(Board).filter(
-        Board.creator_id == v.id,
+        Board.creator_id.in_(user_ids),
         Board.created_utc >= cutoff).all()
     if len([x for x in recent]) >= 2:
         return render_template("message.html",
