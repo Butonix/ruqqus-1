@@ -135,6 +135,7 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
     sort_type = request.args.get("sort", "hot")
     # children comments
 
+    current_ids = [comment.id]
     for i in range(6 - context):
         if v:
 
