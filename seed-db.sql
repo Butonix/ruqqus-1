@@ -15,12 +15,13 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 -- Insert test user (username = "ruqqie", password = "password")
-INSERT INTO public.users (id, username, email, passhash, created_utc, creation_ip, tos_agreed_utc, login_nonce, admin_level    )
-VALUES (NEXTVAL('public.users_id_seq'), 'ruqqie', 'ruqqie@ruqqus.com', 'pbkdf2:sha512:150000$vmPzuBFj$24cde8a6305b7c528b0428b1e87f256c65741bb035b4356549c13e745cc0581701431d5a2297d98501fcf20367791b4334dcd19cf063a6e60195abe8214f91e8',1592672337, '127.0.0.1', 1592672337, 1, 4);
+INSERT INTO public.users (id, username, email, passhash, created_utc, creation_ip, tos_agreed_utc, login_nonce, admin_level, has_banner, has_profile, is_nsfw, profile_nonce, banner_nonce )
+VALUES (NEXTVAL('public.users_id_seq'), 'ruqqie', 'ruqqie@ruqqus.com', 'pbkdf2:sha512:150000$vmPzuBFj$24cde8a6305b7c528b0428b1e87f256c65741bb035b4356549c13e745cc0581701431d5a2297d98501fcf20367791b4334dcd19cf063a6e60195abe8214f91e8',1592672337, '127.0.0.1', 1592672337, 1, 4, 'false', 'true', 'false', 0, 0);
 
-INSERT INTO public.boards(name, is_banned, created_utc, description, description_html, creator_id, color) VALUES('general', 'false', 1592984412, 'board description', '<p>general description</p>+', 1, '805ad5');
-INSERT INTO public.boards(name, is_banned, created_utc, description, description_html, creator_id, color) VALUES('ruqqus', 'false', 1592984412, 'board description', '<p>ruqqus description</p>+', 1, '805ad5');
-
+INSERT INTO public.boards(name, is_banned, created_utc, description, description_html, creator_id, color, has_banner, banner_nonce, has_profile, profile_nonce, color_nonce) VALUES('general', 'false', 1592984412, 'board description', '<p>general description</p>+', 1, '805ad5', 'false', 0, 'true', 0, 0);
+INSERT INTO public.boards(name, is_banned, created_utc, description, description_html, creator_id, color, has_banner, banner_nonce, has_profile, profile_nonce, color_nonce) VALUES('ruqqus', 'false', 1592984412, 'board description', '<p>ruqqus description</p>+', 1, '805ad5', 'false', 0, 'true', 0, 0);
+INSERT INTO public.categories(name, id, description, color, is_nsfw, visible, icon) VALUES('Finance', 1, 'the /biz/', '805ad5', False, 'true',  'fa-btc');
+INSERT INTO public.subcategories(name, id, cat_id, description, _visible) VALUES('CryptoCurrency', 1, 1, 'ANCAPS ONLY', 'true');
 
 COPY public.badge_defs (id, name, description, icon, kind, rank, qualification_expr) FROM stdin;
 3	Code Contributor	Contributed to Ruqqus source code	git.png	3	3	\N
@@ -42,10 +43,6 @@ COPY public.badge_defs (id, name, description, icon, kind, rank, qualification_e
 14	Charter Supporter	Financially supported Ruqqus during start-up	charter.png	4	4	\N
 19	Fire Extinguisher	Awarded to @mutageno and @AmoralAtBest for contributing highly advanced technical experience and wisdom during scale-up operations resulting from the flood of new users.	fire.png	5	5	\N
 20	Dumpster Arsonist	Awarded to 8535 tenacious users who managed to sign up for Ruqqus while the servers were getting crushed	dumpsterfire.png	5	6	\N
-21	Bronze Patron	Contributes at least $1/month	patreon-1.png	2	1	v.patreon_pledge_cents>=100 and v.patreon_pledge_cents<500
-22	Silver Patron	Contributes at least $5/month	patreon-2.png	2	2	v.patreon_pledge_cents>=500 and v.patreon_pledge_cents<2000
-23	Gold Patron	Contributes at least $20/month	patreon-3.png	2	3	v.patreon_pledge_cents>=2000 and v.patreon_pledge_cents<5000
-24	Diamond Patron	Contributes at least $50/month	patreon-4.png	2	4	v.patreon_pledge_cents>=5000
 \.
 
 
@@ -88,33 +85,33 @@ COPY public.titles (id, is_before, text, qualification_expr, requirement_string,
 \.
 
 
-COPY public.submissions (id, author_id, created_utc, is_banned, over_18, distinguish_level, created_str, stickied, board_id, is_deleted, domain_ref, is_approved, approved_utc, original_board_id, edited_utc, creation_ip, mod_approved, is_image, has_thumb, accepted_utc, post_public, score_hot, score_top, score_activity, score_disputed, is_offensive, is_pinned, is_nsfl, repost_id, score_best) FROM stdin;
-1	1	1595380651	f	f	0	01:17 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-3	1	1595380697	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-4	1	1595380717	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-5	1	1595380731	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-6	1	1595380747	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-7	1	1595380777	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-8	1	1595380788	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-9	1	1595380824	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-10	1	1595380838	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-11	1	1595380850	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-12	1	1595380860	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-13	1	1595380870	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-14	1	1595380886	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-15	1	1595380923	f	f	0	01:22 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-16	1	1595380938	f	f	0	01:22 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	3	0
-2	1	1595380669	f	t	0	01:17 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-17	1	1595381019	f	t	0	01:23 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-18	1	1595381047	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-19	1	1595381058	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-20	1	1595381078	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-21	1	1595381090	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-22	1	1595381111	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-23	1	1595381123	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-24	1	1595381133	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-25	1	1595381144	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-26	1	1595381156	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+COPY public.submissions (id, upvotes, downvotes, author_id, created_utc, is_banned, over_18, distinguish_level, created_str, stickied, board_id, is_deleted, domain_ref, is_approved, approved_utc, original_board_id, edited_utc, creation_ip, mod_approved, is_image, has_thumb, accepted_utc, post_public, score_hot, score_top, score_activity, score_disputed, is_offensive, is_pinned, is_nsfl, repost_id, score_best) FROM stdin;
+1	10	0	1	1595380651	f	f	0	01:17 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+3	10	0	1	1595380697	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+4	10	0	1	1595380717	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+5	10	0	1	1595380731	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+6	10	0	1	1595380747	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+7	10	0	1	1595380777	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+8	10	0	1	1595380788	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+9	10	0	1	1595380824	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+10	10	0	1	1595380838	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+11	10	0	1	1595380850	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+12	10	0	1	1595380860	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+13	10	0	1	1595380870	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+14	10	0	1	1595380886	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+15	10	0	1	1595380923	f	f	0	01:22 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+16	10	0	1	1595380938	f	f	0	01:22 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	3	0
+2	10	0	1	1595380669	f	t	0	01:17 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+17	10	0	1	1595381019	f	t	0	01:23 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+18	10	0	1	1595381047	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+19	10	0	1	1595381058	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+20	10	0	1	1595381078	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+21	10	0	1	1595381090	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+22	10	0	1	1595381111	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+23	10	0	1	1595381123	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+24	10	0	1	1595381133	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+25	10	0	1	1595381144	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+26	10	0	1	1595381156	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
 \.
 
 
