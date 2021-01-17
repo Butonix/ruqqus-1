@@ -142,12 +142,18 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
 
             blocking = v.blocking.subquery()
             blocked = v.blocked.subquery()
+            mod=nSession.query(ModRelationship
+                ).filter_by(
+                user_id=v.id,
+                accepted=True
+                ).subquery()
 
             comms = g.db.query(
                 Comment,
                 votes.c.vote_type,
                 blocking.c.id,
-                blocked.c.id
+                blocked.c.id,
+                aliased(ModRelationship, alias=mod)
             ).select_from(Comment).options(
                 joinedload(Comment.author).joinedload(User.title)
             ).filter(
@@ -186,6 +192,7 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
                 comment._voted = c[1] or 0
                 comment._is_blocking = c[2] or 0
                 comment._is_blocked = c[3] or 0
+                comment._is_guildmaster=c[4] or None
                 output.append(comment)
         else:
 
