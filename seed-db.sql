@@ -1,10 +1,3 @@
---
--- PostgreSQL database dump
---
-
--- Dumped from database version 12.3 (Ubuntu 12.3-1.pgdg16.04+1)
--- Dumped by pg_dump version 12.3
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -18,100 +11,16 @@ SET row_security = off;
 
 SET default_tablespace = '';
 
+
 SET default_table_access_method = heap;
 
---
--- Name: badge_defs; Type: TABLE; Schema: public; Owner: -
---
+-- Insert test user (username = "ruqqie", password = "password")
+INSERT INTO public.users (id, username, email, passhash, created_utc, creation_ip, tos_agreed_utc, login_nonce, admin_level    )
+VALUES (NEXTVAL('public.users_id_seq'), 'ruqqie', 'ruqqie@ruqqus.com', 'pbkdf2:sha512:150000$vmPzuBFj$24cde8a6305b7c528b0428b1e87f256c65741bb035b4356549c13e745cc0581701431d5a2297d98501fcf20367791b4334dcd19cf063a6e60195abe8214f91e8',1592672337, '127.0.0.1', 1592672337, 1, 4);
 
-CREATE TABLE public.badge_defs (
-    id integer NOT NULL,
-    name character varying(64),
-    description character varying(256),
-    icon character varying(64),
-    kind integer DEFAULT 1,
-    rank integer DEFAULT 1,
-    qualification_expr character varying(128)
-);
+INSERT INTO public.boards(name, is_banned, created_utc, description, description_html, creator_id, color) VALUES('general', 'false', 1592984412, 'board description', '<p>general description</p>+', 1, '805ad5');
+INSERT INTO public.boards(name, is_banned, created_utc, description, description_html, creator_id, color) VALUES('ruqqus', 'false', 1592984412, 'board description', '<p>ruqqus description</p>+', 1, '805ad5');
 
-
---
--- Name: badge_list_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.badge_list_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: badge_list_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.badge_list_id_seq OWNED BY public.badge_defs.id;
-
-
---
--- Name: titles; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.titles (
-    id integer NOT NULL,
-    is_before boolean DEFAULT true NOT NULL,
-    text character varying(64),
-    qualification_expr character varying(256),
-    requirement_string character varying(512),
-    color character varying(6) DEFAULT '000000'::character varying,
-    kind integer DEFAULT 1,
-    background_color_1 character varying(8) DEFAULT NULL::character varying,
-    background_color_2 character varying(8) DEFAULT NULL::character varying,
-    gradient_angle integer DEFAULT 0,
-    box_shadow_color character varying(32),
-    text_shadow_color character varying(32)
-);
-
-
---
--- Name: titles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.titles_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: titles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.titles_id_seq OWNED BY public.titles.id;
-
-
---
--- Name: badge_defs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.badge_defs ALTER COLUMN id SET DEFAULT nextval('public.badge_list_id_seq'::regclass);
-
-
---
--- Name: titles id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.titles ALTER COLUMN id SET DEFAULT nextval('public.titles_id_seq'::regclass);
-
-
---
--- Data for Name: badge_defs; Type: TABLE DATA; Schema: public; Owner: -
---
 
 COPY public.badge_defs (id, name, description, icon, kind, rank, qualification_expr) FROM stdin;
 3	Code Contributor	Contributed to Ruqqus source code	git.png	3	3	\N
@@ -139,10 +48,6 @@ COPY public.badge_defs (id, name, description, icon, kind, rank, qualification_e
 24	Diamond Patron	Contributes at least $50/month	patreon-4.png	2	4	v.patreon_pledge_cents>=5000
 \.
 
-
---
--- Data for Name: titles; Type: TABLE DATA; Schema: public; Owner: -
---
 
 COPY public.titles (id, is_before, text, qualification_expr, requirement_string, color, kind, background_color_1, background_color_2, gradient_angle, box_shadow_color, text_shadow_color) FROM stdin;
 9	f	, Guildmaker	v.boards_created.first()	Create your first Guild	aa8855	1	\N	\N	0	\N	\N
@@ -183,52 +88,64 @@ COPY public.titles (id, is_before, text, qualification_expr, requirement_string,
 \.
 
 
---
--- Name: badge_list_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.badge_list_id_seq', 24, true);
-
-
---
--- Name: titles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.titles_id_seq', 35, true);
-
-
---
--- Name: badge_defs badge_list_icon_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.badge_defs
-    ADD CONSTRAINT badge_list_icon_key UNIQUE (icon);
-
-
---
--- Name: badge_defs badge_list_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.badge_defs
-    ADD CONSTRAINT badge_list_pkey PRIMARY KEY (id);
-
-
---
--- Name: titles titles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.titles
-    ADD CONSTRAINT titles_pkey PRIMARY KEY (id);
+COPY public.submissions (id, author_id, created_utc, is_banned, over_18, distinguish_level, created_str, stickied, board_id, is_deleted, domain_ref, is_approved, approved_utc, original_board_id, edited_utc, creation_ip, mod_approved, is_image, has_thumb, accepted_utc, post_public, score_hot, score_top, score_activity, score_disputed, is_offensive, is_pinned, is_nsfl, repost_id, score_best) FROM stdin;
+1	1	1595380651	f	f	0	01:17 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+3	1	1595380697	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+4	1	1595380717	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+5	1	1595380731	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+6	1	1595380747	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+7	1	1595380777	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+8	1	1595380788	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+9	1	1595380824	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+10	1	1595380838	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+11	1	1595380850	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+12	1	1595380860	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+13	1	1595380870	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+14	1	1595380886	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+15	1	1595380923	f	f	0	01:22 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+16	1	1595380938	f	f	0	01:22 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	3	0
+2	1	1595380669	f	t	0	01:17 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+17	1	1595381019	f	t	0	01:23 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+18	1	1595381047	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+19	1	1595381058	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+20	1	1595381078	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+21	1	1595381090	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+22	1	1595381111	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+23	1	1595381123	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+24	1	1595381133	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+25	1	1595381144	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+26	1	1595381156	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+\.
 
 
---
--- Name: badgedef_qual_idx; Type: INDEX; Schema: public; Owner: -
---
+COPY public.submissions_aux (id, title, url, body, body_html, embed_url, ban_reason, key_id) FROM stdin;
+1	test 1		test 1	<p>test 1</p>\n			1
+2	test 2		test 2	<p>test 2</p>\n			2
+3	test 3	https://ruqqus.com	test 3	<p>test 3</p>\n			3
+4	test 4		test 4	<p>test 4</p>\n			4
+5	test 5		test 5	<p>test 5</p>\n			5
+6	test 6		test 6	<p>test 6</p>\n			6
+7	test 7		test 7	<p>test 7</p>\n			7
+8	test 8		test 8	<p>test 8</p>\n			8
+9	test 9		test 9	<p>test 9</p>\n			9
+10	test 10		test 10	<p>test 10</p>\n			10
+11	test 11		test 11	<p>test 11</p>\n			11
+12	test 12		test 12	<p>test 12</p>\n			12
+13	test 13		test 13	<p>test 13</p>\n			13
+14	test 14		test 14	<p>test 14</p>\n			14
+15	test 15		test 15	<p>test 15</p>\n			15
+16	test 16	https://ruqqus.com					16
+17	test 17		test 17	<p>test 17</p>\n			17
+18	test 18		test 18	<p>test 18</p>\n			18
+19	test 19		test 19	<p>test 19</p>\n			19
+20	test 20	https://ruqqus.com	test 20	<p>test 20</p>\n			20
+21	test 21		test 21	<p>test 21</p>\n			21
+22	test 22		test 22	<p>test 22</p>\n			22
+23	test 23		test 23	<p>test 23</p>\n			23
+24	test 24		test 24	<p>test 24</p>\n			24
+25	test 25		test 25	<p>test 25</p>\n			25
+26	test 26		test 26	<p>test 26</p>\n			26
+\.
 
-CREATE INDEX badgedef_qual_idx ON public.badge_defs USING btree (qualification_expr);
 
-
---
--- PostgreSQL database dump complete
---
 

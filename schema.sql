@@ -63,6 +63,55 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: boards; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.boards (
+    id integer NOT NULL,
+    name character varying(64),
+    is_banned boolean,
+    created_utc integer,
+    description character varying(1500),
+    description_html character varying(5000),
+    over_18 boolean,
+    creator_id integer,
+    has_banner boolean NOT NULL,
+    has_profile boolean NOT NULL,
+    ban_reason character varying(256),
+    color character varying(8),
+    downvotes_disabled boolean,
+    restricted_posting boolean,
+    hide_banner_data boolean,
+    profile_nonce integer NOT NULL,
+    banner_nonce integer NOT NULL,
+    is_private boolean,
+    color_nonce integer,
+    is_nsfl boolean,
+    rank_trending double precision,
+    stored_subscriber_count integer,
+    avg_score double precision,
+    all_opt_out boolean,
+    is_siegable boolean DEFAULT true,
+    last_yank_utc integer DEFAULT 0,
+    is_locked_category boolean DEFAULT false,
+    subcat_id integer,
+    secondary_color character(6) DEFAULT 'ffffff'::bpchar
+);
+
+
+--
+-- Name: age(public.boards); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.age(public.boards) RETURNS integer
+    LANGUAGE sql IMMUTABLE STRICT
+    AS $_$
+
+      SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
+      $_$;
+
+
+--
 -- Name: comments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -94,7 +143,10 @@ CREATE TABLE public.comments (
     upvotes integer,
     downvotes integer,
     is_bot boolean DEFAULT false,
-    is_pinned boolean DEFAULT false
+    gm_distinguish integer DEFAULT 0 NOT NULL,
+    is_pinned boolean DEFAULT false,
+    app_id integer,
+    creation_region character(2) DEFAULT NULL::bpchar
 );
 
 
@@ -146,7 +198,10 @@ CREATE TABLE public.submissions (
     score_best double precision,
     upvotes integer,
     downvotes integer,
-    is_politics boolean DEFAULT false
+    is_politics boolean DEFAULT false,
+    gm_distinguish integer DEFAULT 0 NOT NULL,
+    app_id integer,
+    creation_region character(2) DEFAULT NULL::bpchar
 );
 
 
@@ -183,7 +238,6 @@ CREATE TABLE public.users (
     referred_by integer,
     is_banned integer,
     ban_reason character varying(128),
-    ban_state integer,
     login_nonce integer,
     title_id integer,
     has_banner boolean NOT NULL,
@@ -214,7 +268,13 @@ CREATE TABLE public.users (
     premium_expires_utc integer DEFAULT 0,
     negative_balance_cents integer DEFAULT 0,
     is_hiding_politics boolean DEFAULT false,
-    custom_filter_list character varying(1000) DEFAULT ''::character varying
+    custom_filter_list character varying(1000) DEFAULT ''::character varying,
+    discord_id character varying(64),
+    last_yank_utc integer DEFAULT 0,
+    stored_karma integer DEFAULT 0,
+    stored_subscriber_count integer DEFAULT 0,
+    creation_region character(2) DEFAULT NULL::bpchar,
+    ban_evade integer DEFAULT 0
 );
 
 
@@ -227,40 +287,6 @@ CREATE FUNCTION public.age(public.users) RETURNS integer
     AS $_$
       SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
       $_$;
-
-
---
--- Name: boards; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.boards (
-    id integer NOT NULL,
-    name character varying(64),
-    is_banned boolean,
-    created_utc integer,
-    description character varying(1500),
-    description_html character varying(5000),
-    over_18 boolean,
-    creator_id integer,
-    has_banner boolean NOT NULL,
-    has_profile boolean NOT NULL,
-    ban_reason character varying(256),
-    color character varying(8),
-    downvotes_disabled boolean,
-    restricted_posting boolean,
-    hide_banner_data boolean,
-    profile_nonce integer NOT NULL,
-    banner_nonce integer NOT NULL,
-    is_private boolean,
-    color_nonce integer,
-    is_nsfl boolean,
-    rank_trending double precision,
-    stored_subscriber_count integer,
-    avg_score double precision,
-    all_opt_out boolean,
-    category integer DEFAULT 0,
-    is_siegable boolean DEFAULT true
-);
 
 
 --
@@ -396,6 +422,7 @@ select (
     	select user_id
     	from bans
     	where board_id=$1.original_board_id
+    	and is_active=true
     )
   ) as v1
    join (select * from users where users.is_banned=0 or users.unban_utc>0
@@ -412,6 +439,7 @@ select (
     	select user_id
     	from bans
     	where board_id=$1.original_board_id
+    	and is_active=true
     )
   ) as v1
    join (select * from users where is_banned=0 or users.unban_utc>0) as u1
@@ -427,6 +455,7 @@ select (
     	select user_id
     	from bans
     	where board_id=$1.original_board_id
+    	and is_active=true
     )
   ) as v2
     on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
@@ -457,6 +486,7 @@ select (
     	select user_id
     	from bans
     	where board_id=$1.board_id
+    	and is_active=true
     )
   ) as v1
    join (select * from users where users.is_banned=0 or users.unban_utc>0) as u0
@@ -472,6 +502,7 @@ select (
     	select user_id
     	from bans
     	where board_id=$1.board_id
+    	and is_active=true
     )
   ) as v1
    join (select * from users where is_banned=0 or users.unban_utc>0) as u1
@@ -487,6 +518,7 @@ select (
     	select user_id
     	from bans
     	where board_id=$1.board_id
+    	and is_active=true
     )
   ) as v2
     on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
@@ -554,12 +586,41 @@ CREATE FUNCTION public.flag_count(public.submissions) RETURNS bigint
 CREATE FUNCTION public.follower_count(public.users) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-         select count(*)
+	select (
+         (select count(*)
          from follows
          left join users
-         on follows.target_id=users.id
+         on follows.user_id=users.id
          where follows.target_id=$1.id
-         and users.is_banned=0
+         and (users.is_banned=0 or users.created_utc>0)
+         and users.is_deleted=false
+         )-(
+	         select count(distinct f1.id)
+	         	from
+	         	(
+	         		select *
+	         		from follows
+	         		where target_id=$1.id
+	         	) as f1
+   				join (select * from users where is_banned=0 or unban_utc>0) as u1
+    			 on u1.id=f1.user_id
+				join (select * from alts) as a
+			     on (a.user1=f1.user_id or a.user2=f1.user_id)
+			    join (
+			    	select *
+			    	from follows
+			    	where target_id=$1.id
+			    ) as f2
+			    on ((a.user1=f2.user_id or a.user2=f2.user_id) and f2.id != f1.id)
+			    join (select * from users where is_banned=0 or unban_utc>0) as u2
+			     on u2.id=f2.user_id
+			    where f1.id is not null
+			    and f2.id is not null        	
+	         )
+         
+         
+         
+         )
         $_$;
 
 
@@ -651,7 +712,7 @@ CREATE FUNCTION public.rank_activity(public.submissions) RETURNS double precisio
 CREATE FUNCTION public.rank_best(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT 10000000.0*CAST(($1.upvotes - $1.downvotes + 1) AS float)/((CAST(($1.age+3600) AS FLOAT)*cast((select boards.subscriber_count from boards where boards.id=$1.board_id)+6000 as float)/100.0)^(1.5))
+      SELECT 10000000.0*CAST(($1.upvotes - $1.downvotes + 1) AS float)/((CAST(($1.age+3600) AS FLOAT)*cast((select boards.subscriber_count from boards where boards.id=$1.board_id)+6000 as float)/100.0)^(1.4))
       $_$;
 
 
@@ -817,15 +878,44 @@ CREATE FUNCTION public.subscriber_count(public.boards) RETURNS bigint
 		case 
 		when $1.is_private=false
 		then
-	         (select count(*)
-	         from subscriptions
-	         left join users
-	         on subscriptions.user_id=users.id
-	         where subscriptions.board_id=$1.id
-	         and users.is_banned=0)
+	         (
+	         (
+		         select count(*)
+		         from subscriptions
+		         left join users
+		         on subscriptions.user_id=users.id
+		         where subscriptions.board_id=$1.id
+		         and users.is_deleted=false and (users.is_banned=0 or users.unban_utc>0)
+	         )-(
+	         	select count(distinct s1.id)
+	         	from
+	         	(
+	         		select *
+	         		from subscriptions
+	         		where board_id=$1.id
+	         		and is_active=true
+	         	) as s1
+   				join (select * from users where is_banned=0 or unban_utc>0) as u1
+    			 on u1.id=s1.user_id
+				join (select * from alts) as a
+			     on (a.user1=s1.user_id or a.user2=s1.user_id)
+			    join (
+			    	select *
+			    	from subscriptions
+			    	where board_id=$1.id
+			    	and is_active=true
+			    ) as s2
+			    on ((a.user1=s2.user_id or a.user2=s2.user_id) and s2.id != s1.id)
+			    join (select * from users where is_banned=0 or unban_utc>0) as u2
+			     on u2.id=s2.user_id
+			    where s1.id is not null
+			    and s2.id is not null        	
+	         )
+	         )
 	    when $1.is_private=true
 	    then
-	         (select count(*)
+	         (
+	         select count(*)
 	         from subscriptions
 	         left join users
 	         	on subscriptions.user_id=users.id
@@ -834,9 +924,16 @@ CREATE FUNCTION public.subscriber_count(public.boards) RETURNS bigint
 	         	where contributors.board_id=$1.id
 	         )as contribs
 	         	on contribs.user_id=users.id
+	         left join (
+	         	select * from mods
+	         	where mods.board_id=$1.id
+	         	and accepted=true
+	         )as m
+	         	on m.user_id=users.id
 	         where subscriptions.board_id=$1.id
-	         and users.is_banned=0
-	         and contribs.user_id is not null)
+	         and users.is_deleted=false and (users.is_banned=0 or users.unban_utc>0)
+	         and (contribs.user_id is not null or m.id is not null)
+	         )
 	    end
          
          
@@ -851,11 +948,12 @@ CREATE FUNCTION public.trending_rank(public.boards) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
 
-
 select
 	case 
-		when $1.subscriber_count<10 then 0
-		when $1.subscriber_count>=9 then cast($1.recent_subscriptions as float) / log(cast($1.subscriber_count as float))
+		when $1.subscriber_count<=10 then 0
+		when $1.age < 60*60*24*5 then 0
+		when $1.recent_subscriptions<=5 then 0
+		when $1.subscriber_count>=9 then ((cast($1.subscriber_count as float))^(1/3) + cast($1.recent_subscriptions as float)) / cast($1.subscriber_count + 10000 as float)
 	end
 $_$;
 
@@ -879,6 +977,7 @@ select (
     	select user_id
     	from bans
     	where board_id=$1.original_board_id
+    	and is_active=true
     )
   ) as v1
    join (select * from users where users.is_banned=0 or users.unban_utc>0) as u0
@@ -894,6 +993,7 @@ select (
     	select user_id
     	from bans
     	where board_id=$1.original_board_id
+    	and is_active=true
     )
   ) as v1
    join (select * from users where is_banned=0 or users.unban_utc>0) as u1
@@ -909,6 +1009,7 @@ select (
 	    	select user_id
 	    	from bans
 	    	where board_id=$1.original_board_id
+    		and is_active=true
 	    )
   ) as v2
     on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
@@ -939,6 +1040,7 @@ select (
     	select user_id
     	from bans
     	where board_id=$1.board_id
+    	and is_active=true
     )
   ) as v1
    join (select * from users where users.is_banned=0 or users.unban_utc>0) as u0
@@ -954,6 +1056,7 @@ select (
     	select user_id
     	from bans
     	where board_id=$1.board_id
+    	and is_active=true
     )
   ) as v1
    join (select * from users where is_banned=0 or users.unban_utc>0) as u1
@@ -969,6 +1072,7 @@ select (
     	select user_id
     	from bans
     	where board_id=$1.board_id
+    	and is_active=true
     )
   ) as v2
     on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
@@ -1336,6 +1440,41 @@ ALTER SEQUENCE public.boards_id_seq OWNED BY public.boards.id;
 
 
 --
+-- Name: categories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.categories (
+    id integer NOT NULL,
+    color character(6) DEFAULT '805ad5'::bpchar,
+    visible boolean DEFAULT true,
+    name character varying(64),
+    description character varying(512),
+    icon character varying(64) DEFAULT NULL::character varying,
+    is_nsfw boolean DEFAULT false
+);
+
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.categories_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.categories_id_seq OWNED BY public.categories.id;
+
+
+--
 -- Name: client_auths; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1472,7 +1611,8 @@ CREATE TABLE public.commentvotes (
     vote_type integer,
     user_id integer,
     created_utc integer,
-    creation_ip character(64)
+    creation_ip character(64),
+    app_id integer
 );
 
 
@@ -1640,7 +1780,8 @@ CREATE TABLE public.domains (
     reason integer,
     show_thumbnail boolean,
     embed_function character varying(64),
-    embed_template character varying(32) DEFAULT NULL::character varying
+    embed_template character varying(32) DEFAULT NULL::character varying,
+    sandbox_embed boolean DEFAULT false
 );
 
 
@@ -1880,6 +2021,43 @@ ALTER SEQUENCE public.messages_id_seq OWNED BY public.messages.id;
 
 
 --
+-- Name: modactions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.modactions (
+    id integer NOT NULL,
+    user_id integer,
+    board_id integer,
+    target_user_id integer,
+    target_submission_id integer,
+    target_comment_id integer,
+    created_utc integer DEFAULT 0,
+    kind character varying(32) DEFAULT NULL::character varying,
+    note character varying(256) DEFAULT NULL::character varying
+);
+
+
+--
+-- Name: modactions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.modactions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: modactions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.modactions_id_seq OWNED BY public.modactions.id;
+
+
+--
 -- Name: mods; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1889,7 +2067,12 @@ CREATE TABLE public.mods (
     board_id integer,
     created_utc integer,
     accepted boolean,
-    invite_rescinded boolean
+    invite_rescinded boolean,
+    perm_full boolean DEFAULT true,
+    perm_content boolean DEFAULT true,
+    perm_appearance boolean DEFAULT true,
+    perm_access boolean DEFAULT true,
+    perm_config boolean DEFAULT true
 );
 
 
@@ -1980,7 +2163,8 @@ CREATE TABLE public.paypal_txns (
     paypal_id character varying(64),
     usd_cents integer,
     status integer DEFAULT 0,
-    coin_count integer DEFAULT 1 NOT NULL
+    coin_count integer DEFAULT 1 NOT NULL,
+    promo_id integer
 );
 
 
@@ -2067,6 +2251,43 @@ ALTER SEQUENCE public.postrels_id_seq OWNED BY public.postrels.id;
 
 
 --
+-- Name: promocodes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.promocodes (
+    id integer NOT NULL,
+    code character varying(64) NOT NULL,
+    is_active boolean DEFAULT false,
+    percent_off integer,
+    flat_cents_off integer,
+    flat_cents_min integer,
+    promo_start_utc integer,
+    promo_end_utc integer,
+    promo_info character varying(64) DEFAULT NULL::character varying
+);
+
+
+--
+-- Name: promocodes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.promocodes_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: promocodes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.promocodes_id_seq OWNED BY public.promocodes.id;
+
+
+--
 -- Name: reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2115,6 +2336,39 @@ CREATE SEQUENCE public.save_relationship_id_seq
 --
 
 ALTER SEQUENCE public.save_relationship_id_seq OWNED BY public.save_relationship.id;
+
+
+--
+-- Name: subcategories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.subcategories (
+    id integer NOT NULL,
+    cat_id integer,
+    name character varying(64),
+    description character varying(512),
+    _visible boolean
+);
+
+
+--
+-- Name: subcategories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.subcategories_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: subcategories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.subcategories_id_seq OWNED BY public.subcategories.id;
 
 
 --
@@ -2374,7 +2628,8 @@ CREATE TABLE public.votes (
     submission_id integer,
     created_utc integer NOT NULL,
     vote_type integer,
-    creation_ip character(64)
+    creation_ip character(64),
+    app_id integer
 );
 
 
@@ -2466,6 +2721,13 @@ ALTER TABLE ONLY public.boardblocks ALTER COLUMN id SET DEFAULT nextval('public.
 --
 
 ALTER TABLE ONLY public.boards ALTER COLUMN id SET DEFAULT nextval('public.boards_id_seq'::regclass);
+
+
+--
+-- Name: categories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.categories_id_seq'::regclass);
 
 
 --
@@ -2588,6 +2850,13 @@ ALTER TABLE ONLY public.messages ALTER COLUMN id SET DEFAULT nextval('public.mes
 
 
 --
+-- Name: modactions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.modactions ALTER COLUMN id SET DEFAULT nextval('public.modactions_id_seq'::regclass);
+
+
+--
 -- Name: mods id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2630,6 +2899,13 @@ ALTER TABLE ONLY public.postrels ALTER COLUMN id SET DEFAULT nextval('public.pos
 
 
 --
+-- Name: promocodes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.promocodes ALTER COLUMN id SET DEFAULT nextval('public.promocodes_id_seq'::regclass);
+
+
+--
 -- Name: reports id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2641,6 +2917,13 @@ ALTER TABLE ONLY public.reports ALTER COLUMN id SET DEFAULT nextval('public.repo
 --
 
 ALTER TABLE ONLY public.save_relationship ALTER COLUMN id SET DEFAULT nextval('public.save_relationship_id_seq'::regclass);
+
+
+--
+-- Name: subcategories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subcategories ALTER COLUMN id SET DEFAULT nextval('public.subcategories_id_seq'::regclass);
 
 
 --
@@ -2827,6 +3110,14 @@ ALTER TABLE ONLY public.boards
 
 
 --
+-- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.categories
+    ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: client_auths client_auths_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2864,6 +3155,14 @@ ALTER TABLE ONLY public.comments
 
 ALTER TABLE ONLY public.commentvotes
     ADD CONSTRAINT commentvotes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contributors contribs_unique_constraint; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contributors
+    ADD CONSTRAINT contribs_unique_constraint UNIQUE (user_id, board_id);
 
 
 --
@@ -2947,6 +3246,14 @@ ALTER TABLE ONLY public.boards
 
 
 --
+-- Name: contributors id_const; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contributors
+    ADD CONSTRAINT id_const UNIQUE (id);
+
+
+--
 -- Name: ips ips_addr_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3003,6 +3310,14 @@ ALTER TABLE ONLY public.mods
 
 
 --
+-- Name: modactions modactions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.modactions
+    ADD CONSTRAINT modactions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: mods mods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3032,6 +3347,14 @@ ALTER TABLE ONLY public.oauth_apps
 
 ALTER TABLE ONLY public.boardblocks
     ADD CONSTRAINT one_board_block UNIQUE (user_id, board_id);
+
+
+--
+-- Name: users one_discord_account; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT one_discord_account UNIQUE (discord_id);
 
 
 --
@@ -3091,6 +3414,14 @@ ALTER TABLE ONLY public.postrels
 
 
 --
+-- Name: promocodes promocodes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.promocodes
+    ADD CONSTRAINT promocodes_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: reports reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3112,6 +3443,14 @@ ALTER TABLE ONLY public.save_relationship
 
 ALTER TABLE ONLY public.save_relationship
     ADD CONSTRAINT save_relationship_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: subcategories subcategories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subcategories
+    ADD CONSTRAINT subcategories_pkey PRIMARY KEY (id);
 
 
 --
@@ -3380,13 +3719,6 @@ CREATE INDEX block_user_idx ON public.userblocks USING btree (user_id);
 
 
 --
--- Name: board_category_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX board_category_idx ON public.boards USING btree (category);
-
-
---
 -- Name: board_name_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3618,6 +3950,13 @@ CREATE INDEX cvote_user_index ON public.commentvotes USING btree (user_id);
 
 
 --
+-- Name: discord_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX discord_id_idx ON public.users USING btree (discord_id);
+
+
+--
 -- Name: domain_ref_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3709,6 +4048,27 @@ CREATE INDEX mod_user_index ON public.mods USING btree (user_id);
 
 
 --
+-- Name: modaction_action_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX modaction_action_idx ON public.modactions USING btree (kind);
+
+
+--
+-- Name: modaction_board_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX modaction_board_idx ON public.modactions USING btree (board_id);
+
+
+--
+-- Name: modaction_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX modaction_id_idx ON public.modactions USING btree (id DESC);
+
+
+--
 -- Name: notification_read_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3758,6 +4118,13 @@ CREATE INDEX paypal_txn_user_id_idx ON public.paypal_txns USING btree (user_id);
 
 
 --
+-- Name: paypaltxn_status_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX paypaltxn_status_idx ON public.paypal_txns USING btree (status);
+
+
+--
 -- Name: politics_keyword_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3769,6 +4136,13 @@ CREATE INDEX politics_keyword_idx ON public.politicswords USING btree (keyword);
 --
 
 CREATE INDEX post_18_index ON public.submissions USING btree (over_18);
+
+
+--
+-- Name: post_app_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX post_app_id_idx ON public.submissions USING btree (app_id);
 
 
 --
@@ -3790,6 +4164,20 @@ CREATE INDEX post_offensive_index ON public.submissions USING btree (is_offensiv
 --
 
 CREATE INDEX post_public_idx ON public.submissions USING btree (post_public);
+
+
+--
+-- Name: promocode_active_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX promocode_active_idx ON public.promocodes USING btree (is_active);
+
+
+--
+-- Name: promocode_code_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX promocode_code_idx ON public.promocodes USING btree (code);
 
 
 --
@@ -3856,6 +4244,13 @@ CREATE INDEX submission_aux_url_idx ON public.submissions_aux USING btree (url);
 
 
 --
+-- Name: submission_aux_url_trgm_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submission_aux_url_trgm_idx ON public.submissions_aux USING gin (url public.gin_trgm_ops);
+
+
+--
 -- Name: submission_best_only_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3912,6 +4307,13 @@ CREATE INDEX submission_new_sort_idx ON public.submissions USING btree (is_banne
 
 
 --
+-- Name: submission_original_board_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submission_original_board_id_idx ON public.submissions USING btree (original_board_id);
+
+
+--
 -- Name: submission_pinned_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3944,13 +4346,6 @@ CREATE INDEX submissions_aux_id_idx ON public.submissions_aux USING btree (id);
 --
 
 CREATE INDEX submissions_aux_title_idx ON public.submissions_aux USING btree (title);
-
-
---
--- Name: submissions_aux_url_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX submissions_aux_url_idx ON public.submissions_aux USING btree (url);
 
 
 --
@@ -4000,13 +4395,6 @@ CREATE INDEX submissions_sticky_index ON public.submissions USING btree (stickie
 --
 
 CREATE INDEX submissions_title_trgm_idx ON public.submissions_aux USING gin (title public.gin_trgm_ops);
-
-
---
--- Name: submissions_url_trgm_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX submissions_url_trgm_idx ON public.submissions_aux USING gin (url public.gin_trgm_ops);
 
 
 --
@@ -4087,6 +4475,13 @@ CREATE INDEX users_created_utc_index ON public.users USING btree (created_utc);
 
 
 --
+-- Name: users_karma_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX users_karma_idx ON public.users USING btree (stored_karma);
+
+
+--
 -- Name: users_neg_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4105,6 +4500,13 @@ CREATE INDEX users_premium_expire_utc_idx ON public.users USING btree (premium_e
 --
 
 CREATE INDEX users_premium_idx ON public.users USING btree (premium_expires_utc);
+
+
+--
+-- Name: users_subs_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX users_subs_idx ON public.users USING btree (stored_subscriber_count);
 
 
 --
@@ -4234,6 +4636,14 @@ ALTER TABLE ONLY public.postrels
 
 ALTER TABLE ONLY public.reports
     ADD CONSTRAINT reports_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.submissions(id);
+
+
+--
+-- Name: subcategories subcategories_cat_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subcategories
+    ADD CONSTRAINT subcategories_cat_id_fkey FOREIGN KEY (cat_id) REFERENCES public.categories(id);
 
 
 --
