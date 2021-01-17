@@ -12,13 +12,18 @@
           <a class="card-title text-break stretched-link h5 mb-0" href="{{ u.permalink }}">@{{ u.username }}</a>
 
           {% if v %}
-          <div id="button-sub-{{ u.base36id }}" style="z-index: 2" class="{% if u.has_follower(v) %}d-none{% endif %}"><a class="btn btn-primary btn-sm" href="javascript:void(0)" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-{{ u.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ u.base36id }}').classList.toggle('d-none');})">Subscribe</a></div>
-          <div id="button-unsub-{{ u.base36id }}" style="z-index: 2" class="{% if not u.has_follower(v) %} d-none{% endif %}"><a class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-{{ u.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ u.base36id }}').classList.toggle('d-none');})">Unsubscribe</a></div>
+            {% if v.id!=u.id and not u.is_private and not u.is_nofollow %}
+            <div id="button-sub-{{ u.base36id }}" style="z-index: 2" class="{% if u.has_follower(v) %}d-none{% endif %}"><a class="btn btn-primary btn-sm" href="javascript:void(0)" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-{{ u.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ u.base36id }}').classList.toggle('d-none');})">Subscribe</a></div>
+            <div id="button-unsub-{{ u.base36id }}" style="z-index: 2" class="{% if not u.has_follower(v) %} d-none{% endif %}"><a class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-{{ u.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-{{ u.base36id }}').classList.toggle('d-none');})">Unsubscribe</a></div>
+            {% endif %}
           {% else %}
           <div id="button-sub-{{ u.base36id }}" style="z-index: 2" "><a class="btn btn-primary btn-sm" href="/signup?redirect={{ request.path }}">Subscribe</a></div>
           {% endif %}
         </div>
+
+        {% if not hide_bios %}
         <div class="card-text">{{ u.bio_html | safe }}</div>
+        {% endif %}
       </div>
     </div>
   </div>

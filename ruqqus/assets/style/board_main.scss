@@ -142,7 +142,7 @@ $yiq-contrasted-threshold:  160 !default;
     }
   }
 
-@import "ruqqus/assets/style/node_modules/bootstrap/scss/bootstrap";
+@import "/home/ubuntu/ruqqus/ruqqus/assets/style/node_modules/bootstrap/scss/bootstrap.scss";
 
 html {
     font-size: 14px;
@@ -176,6 +176,10 @@ pre {
     white-space: -pre-wrap;      /* Opera 4-6 */
     white-space: -o-pre-wrap;    /* Opera 7 */
     word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+body.using-mouse :focus {
+    outline: none;
 }
 
 #settings, #submit {
@@ -262,7 +266,7 @@ pre {
     top: 63px;
     height: auto;
     overflow-y: auto;
-    z-index: 4;
+    z-index: 2;
 }
 
 .sticky-105 {
@@ -969,8 +973,12 @@ th {
 
 */
 
-.voting div:focus {
+/* .voting div:focus {
     outline: 0;
+} */
+
+.active.arrow-up::before {
+    color: $upvote;
 }
 
 .arrow-up::before {
@@ -988,6 +996,10 @@ th {
     opacity: 0.5;
 }
 
+.active.arrow-down::before {
+    color: $downvote;
+}
+
 .arrow-down::before {
     cursor: pointer;
     font-size: $font-size-base;
@@ -1002,7 +1014,7 @@ th {
     opacity: 0.5;
 }
 
-.upvoted .arrow-up::before {
+/* .upvoted .arrow-up::before {
     color: $upvote;
 }
 
@@ -1016,7 +1028,7 @@ th {
 
 .downvoted .arrow-down:hover::before {
     opacity: 1;
-}
+} */
 
 .comment-actions .arrow-up {
     top: 0;
@@ -1032,6 +1044,14 @@ th {
 
 .downvoted .arrow-mobile-down {
     color: $downvote!important;
+}
+
+.comment-actions .score {
+    color: $muted;
+}
+
+.score {
+    color: $black;
 }
 
 .score-up {
@@ -1890,6 +1910,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .post-body {
     word-break: break-word;
+    overflow: hidden;
 }
 
 // Modals (post actions, delete confirmations, etc)
@@ -2362,6 +2383,11 @@ div:hover .thumb-img-link-overlay {
     margin-bottom: 1rem;
     word-break: break-word;
     color: $black;
+    overflow: hidden;
+}
+
+.comment .comment-body .comment-image {
+    border: 1px solid $primary
 }
 
 blockquote {
@@ -3202,7 +3228,7 @@ ul.comment-section {
 
 pre code {
     word-break: break-word;
-    white-space: break-word;
+    white-space: break-spaces;
     color: $black;
 }
 
@@ -3493,6 +3519,7 @@ body, #settings, #notifications, #submit {
     font-size: 14px;
     font-weight: $font-weight-normal;
     line-height: normal;
+    overflow: hidden;
 }
 
 .post-meta {
@@ -3520,8 +3547,28 @@ body, #settings, #notifications, #submit {
     font-size: $font-size-lg;
 }
 
-.arrow-up::before, .arrow-down::before {
+// Voting Mobile
+
+.comment-actions .score {
+    color: $muted;
+}
+
+.score {
+    color: $muted;
+}
+
+.arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
     font-size: $font-size-lg;
+    color: $gray-400;
+    opacity: 1;
+}
+
+.active.arrow-up::before, .active.arrow-up:hover::before {
+    color: $upvote;
+}
+
+.active.arrow-down::before, .active.arrow-down:hover::before {
+    color: $downvote;
 }
 
 .dropdown-actions a {
@@ -3752,4 +3799,36 @@ div.deleted.banned {
 }		
 .distinguish-mod .user-name::before {		
  content: "[M] "		
+}
+
+.in-comment-image {
+  max-height: 100px !important;
+  max-width: 100px !important;
+}
+
+.sidebar-left .btn:focus {
+  box-shadow: none;
+}
+
+.onboarding-card {
+    height: 180px;
+    .onboarding-card-overlay {
+        background-color: rgba(0,0,0,0.65);
+    }
+    &.selected {
+        .onboarding-card-overlay {
+            background-color: rgba($purple, .65);
+        }
+    }
+}
+
+.object-cover {
+    object-fit: cover;
+}
+
+.cat-item {
+    display: none;
+    &.selected {
+        display: block;
+    }
 }

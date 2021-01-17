@@ -5,16 +5,17 @@ from sqlalchemy.orm import relationship
 from ruqqus.__main__ import Base, cache
 import time
 
+
 class Subscription(Base):
     __tablename__ = "subscriptions"
     id = Column(BigInteger, primary_key=True)
     user_id = Column(BigInteger, ForeignKey("users.id"))
     board_id = Column(BigInteger, ForeignKey("boards.id"))
     created_utc = Column(BigInteger, default=0)
-    is_active=Column(Boolean, default=True)
+    is_active = Column(Boolean, default=True)
 
-    user=relationship("User", uselist=False)
-    board=relationship("Board", uselist=False)
+    user = relationship("User", uselist=False)
+    board = relationship("Board", uselist=False)
 
     def __init__(self, *args, **kwargs):
         if "created_utc" not in kwargs:
@@ -25,6 +26,7 @@ class Subscription(Base):
     def __repr__(self):
         return f"<Subscription(id={self.id})>"
 
+
 class Follow(Base):
     __tablename__ = "follows"
     id = Column(BigInteger, primary_key=True)
@@ -32,8 +34,14 @@ class Follow(Base):
     target_id = Column(BigInteger, ForeignKey("users.id"))
     created_utc = Column(BigInteger, default=0)
 
-    user=relationship("User", uselist=False, primaryjoin="User.id==Follow.user_id")
-    target=relationship("User", lazy="joined", primaryjoin="User.id==Follow.target_id")
+    user = relationship(
+        "User",
+        uselist=False,
+        primaryjoin="User.id==Follow.user_id")
+    target = relationship(
+        "User",
+        lazy="joined",
+        primaryjoin="User.id==Follow.target_id")
 
     def __init__(self, *args, **kwargs):
         if "created_utc" not in kwargs:

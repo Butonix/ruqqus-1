@@ -9,7 +9,7 @@
           <span aria-hidden="true"><i class="far fa-times"></i></span>
         </button>
       </div>
-      {% if v.email and mfa_secret %}
+      {% if mfa_secret %}
       <div>
         <form action="/settings/security" method="post">
           <input type="hidden" name="formkey" value="{{ v.formkey }}">
@@ -26,7 +26,7 @@
               <span class="font-weight-bold">Step 2:</span> Enter the six-digit code generated in the authenticator app and your Ruqqus account password.
             </p>
             <label for="2fa_input">6-digit code</label>
-            <input type="number" class="form-control mb-2" id="2fa_input" name="2fa_token" placeholder="# # # # # #" required>
+            <input type="text" class="form-control mb-2" id="2fa_input" name="2fa_token" placeholder="# # # # # #" required>
 
             <label for="2fa_input_password">Password</label>
             <input type="password" autocomplete="new-password" class="form-control mb-2" id="2fa_input_password" name="password" oninput="document.getElementById('enable2faButton').disabled=false" required>
@@ -36,18 +36,6 @@
             <input id="enable2faButton" class="btn btn-primary" type="submit" value="Enable 2-step login" disabled>
           </div>
         </form>
-      </div>
-      {% elif mfa_secret and not v.email %}
-      <div class="modal-body text-center">
-
-        <div class="py-4">
-        <i class="fad fa-mailbox text-warning" style="font-size: 3.5rem;"></i>
-        </div>
-
-        <p>A verified email is required to enable two-step login, please exit this box and add an email to your account in settings.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Okay, got it</button>
       </div>
       {% else %}
       <div>
@@ -65,7 +53,7 @@
             <input type="password" autocomplete="new-password" class="form-control mb-2" id="2fa_input_password" name="password" required>
 
             <label for="2fa_input">6-digit code</label>
-            <input type="number" class="form-control mb-2" id="2fa_input" name="2fa_remove" placeholder="# # # # # #" oninput="document.getElementById('disable2faButton').disabled=false" required>
+            <input type="text" class="form-control mb-2" id="2fa_input" name="2fa_remove" placeholder="# # # # # #" oninput="document.getElementById('disable2faButton').disabled=false" required>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>

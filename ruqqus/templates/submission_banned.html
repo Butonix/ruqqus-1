@@ -78,7 +78,7 @@
 
                         </div>
 			{% if p.is_banned and p.ban_reason %}
-			<div class="text-danger mt-4 mb-2">Reason: {{ p.ban_reason }}</div>
+			<div class="text-danger mt-4 mb-2">Reason: {{ p.ban_reason | safe }}</div>
 			{% endif %}
 			
 			{% if v and v.admin_level >=3 and p.body_html %}

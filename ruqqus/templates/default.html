@@ -10,10 +10,10 @@
 	<link rel="icon" type="image/png" href="/assets/favicon.ico">
 
 	{% block title %}
-	<title>Ruqqus - Awesome Online Communities, Without Censorship</title>
+	<title>Ruqqus: Awesome Online Communities, Without Censorship</title>
 
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Ruqqus - Awesome Online Communities, Without Censorship" />
+    <meta property="og:title" content="Ruqqus: Awesome Online Communities, Without Censorship" />
     <meta property="og:site_name" content="ruqqus.com" />
     <meta property="og:image" content="{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}" />
     <meta property="og:url" content="{{ request.path | full_link }}">
@@ -23,7 +23,7 @@
 
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:site" content="@ruqqus">
-    <meta name="twitter:title" content="Ruqqus - Awesome Online Communities, Without Censorship" />
+    <meta name="twitter:title" content="Ruqqus: Awesome Online Communities, Without Censorship" />
     <meta name="twitter:creator" content="@ruqqus">
     <meta name="twitter:description" content="Ruqqus is an open-source platform for online communities, free of censorship and moderator abuse by design." />
     <meta name="twitter:image" content="/assets/images/preview-images/ruqqus_og_image.png" />
@@ -36,14 +36,14 @@
 
 	<!-- iOS webapp -->
 	<meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-touch-fullscreen" content="yes" />
+  <meta name="apple-touch-fullscreen" content="yes">
 	<meta name="format-detection" content="telephone=no">
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png">
   <!---<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png">
-  <link rel="manifest" href="/assets/images/favicons/site.webmanifest">--->
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png">--->
+  <link rel="manifest" href="/assets/manifest.json">
   <link rel="mask-icon" href="/assets/images/favicons/safari-pinned-tab.svg" color="#805ad5">
   <link rel="shortcut icon" href="/assets/images/favicons/favicon.ico">
   <meta name="apple-mobile-web-app-title" content="Ruqqus">
@@ -188,15 +188,15 @@
 	{% block stylesheets %}
 
 	{% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
-	<link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css">
+	<link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.29.9.9">
 	{% else %}
-	<link id="css-link" rel="stylesheet" href="/assets/style/main.css">
+	<link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.29.9.9">
 	{% endif %}
 
 	{% endblock %}
 
 	<!-- Font Awesome -->
-	<link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+	<link href="https://fa.ruqqus.com/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 
   {% block fixedMobileBarJS %}
   {% endblock %}
@@ -208,23 +208,32 @@
      return '{{ v.formkey }}';
    }
  </script>
-
-
  {% endif %}
+
+ <script async defer data-domain="{{ 'SERVER_NAME' | app_config }}" src="https://plausible.ruqqus.com/js/plausible.js"></script>
 
 </head>
 
 <body id="{% block pagetype %}frontpage{% endblock %}" class="">
+
+{% if request.path=='/' and g.timestamp>session.get('tooltip_last_dismissed',0)+60*60*24 and (g.system.endswith('/chrome') or g.system.endswith('/other')) %}
+<div class="row fixed-top" style="z-index:2000" id="mobile-prompt-row">
+  <div id="mobile-prompt-container" class="ml-auto mr-5">
+    <div id="mobile-prompt" href="javascript:void(0)" data-toggle="tooltip" data-container="#mobile-prompt-row" data-placement="top" data-trigger="click" title="" data-original-title="Install the Ruqqus webapp by saving this page to your home screen!">
+    </div>
+  </div>
+</div>
+{% endif %}
 
 
   <!--Header -->
   <!-- Navigation -->
   <nav class="navbar navbar-expand-md navbar-light shadow shadow-md fixed-top" id="navbar">
     <div class="container-fluid">
-      <div class="flex-grow-1"><a href="/" class="navbar-brand">ruqqus<span class="text-small-extra text-uppercase text-gray-400"> Beta</span></a></div>
+      <div class="flex-grow-1"><a href="/" class="navbar-brand">{{ "SITE_NAME" | app_config }}<span class="text-small-extra text-uppercase text-gray-400"> Beta</span></a></div>
       <div class="flex-grow-1 d-fl d-none d-md-block">
-        <form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search" method="get">
-          <input class="form-control w-100" type="search" placeholder="Search posts and +guilds" aria-label="Search posts and +guilds" name="q">
+        <form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="{% if b %}/+{{ b.name }}{% endif %}/search" method="get">
+          <input class="form-control w-100" type="search" placeholder="Search posts{% if b %} in +{{ b.name }}{% else %}, +guilds, and @users{% endif %}" aria-label="Search posts{% if b %} in +{{ b.name }}{% else %}, +guilds, and @users{% endif %}" name="q">
           <span class="input-group-append">
             <span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;" onclick="document.getElementById('searchform').submit()">
               <i class="fa fa-search" aria-hidden="true"></i>
@@ -247,12 +256,6 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto d-none d-md-flex">
-
-        {% if v %}
-        <li class="nav-item d-flex align-items-center justify-content-center text-center mx-1" data-toggle="modal" data-target="#announcementsModalScrollable" >
-          <div class="nav-link" onclick="post('/settings/read_announcement')" role="button" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Announcements"><i class="fas fa-sparkles{% if v and v.read_announcement_utc < ('ANNOUNCE_UTC' | env) %} text-purple{% endif %}"></i></div>
-        </li>
-        {% endif %}
 
         {% if v and v.mods_anything %}
         <li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
@@ -294,9 +297,9 @@
             <div class="dropdown-menu border-0 shadow fade px-0 mt-2" aria-labelledby="dropdownMenuButton">
               <h6 class="dropdown-header">View random</h6>
               <div class="px-2">
-                <a class="dropdown-item" href="/random/guild"><i class="fas fa-chess-rook fa-width-rem text-center mr-3"></i>Guild</a>
-                <a class="dropdown-item" href="/random/post"><i class="fas fa-feather-alt fa-width-rem text-center mr-3"></i>Post</a>
-                <a class="dropdown-item" href="/random/comment"><i class="fas fa-comment fa-width-rem text-center mr-3"></i>Comment</a>
+                <a class="dropdown-item" href="/random/guild"><i class="fas fa-chess-rook fa-fw text-center mr-3"></i>Guild</a>
+                <a class="dropdown-item" href="/random/post"><i class="fas fa-feather-alt fa-fw text-center mr-3"></i>Post</a>
+                <a class="dropdown-item" href="/random/comment"><i class="fas fa-comment fa-fw text-center mr-3"></i>Comment</a>
               </div>
             </div>
           </div>
@@ -324,33 +327,34 @@
           </div>
           <hr class="my-2">
           <div class="px-2">
-            <a class="dropdown-item" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem text-left mr-3"></i>My
+            <a class="dropdown-item" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-fw text-left mr-3"></i>My
               profile</a>
-              {% if v.notifications_count %}
-              <a class="dropdown-item" href="/notifications"><i class="fas fa-inbox fa-width-rem text-left mr-3"></i>Inbox<span
+            {% if v.notifications_count %}
+              <a class="dropdown-item" href="/notifications"><i class="fas fa-inbox fa-fw text-left mr-3"></i>Inbox<span
                 class="badge badge-danger rounded-circle align-top ml-1">{{ v.notifications_count }}</span></a>
-                {% else %}
-                <a class="dropdown-item" href="/notifications?all=true"><i class="fas fa-inbox fa-width-rem text-left mr-3"></i>Inbox</a>
-                {% endif %}
-                <a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-width-rem text-left mr-3"></i>Settings</a>
+            {% else %}
+              <a class="dropdown-item" href="/notifications?all=true"><i class="fas fa-inbox fa-fw text-left mr-3"></i>Inbox</a>
+            {% endif %}
+            <a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-fw text-left mr-3"></i>Settings</a>
+            <a class="dropdown-item d-lg-none" href="/categories"><i class="fas fa-shapes fa-fw text-left mr-3" id="dark-switch"></i>Categories</a>
 
-                {% block darkswitch %}
-                {% if v and v.can_use_darkmode and session.get("dark_mode_enabled")%}
-                <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem text-left mr-3" id="dark-switch"></i>Dark mode</a>
-                {% elif v and v.can_use_darkmode %}
-                <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem text-left mr-3" id="dark-switch"></i>Dark mode</a>
-                {% else %}
-                <a class="dropdown-item" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem text-left mr-3"></i>Dark mode</a>
-                {% endif %}
-                {% endblock %}
+            {% block darkswitch %}
+              {% if v and v.can_use_darkmode and session.get("dark_mode_enabled")%}
+                <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-fw text-left mr-3" id="dark-switch"></i>Dark mode</a>
+              {% elif v and v.can_use_darkmode %}
+                <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-fw text-left mr-3" id="dark-switch"></i>Dark mode</a>
+              {% else %}
+                <a class="dropdown-item" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-fw text-left mr-3"></i>Dark mode</a>
+              {% endif %}
+            {% endblock %}
+          </div>
+              <hr class="my-2">
+              <div class="px-2">
+                <button class="dropdown-item copy-link" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}"><i class="fad fa-user-friends fa-fw text-left mr-3"></i>Invite friends</button>
               </div>
               <hr class="my-2">
               <div class="px-2">
-                <button class="dropdown-item copy-link" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}"><i class="fad fa-user-friends fa-width-rem text-left mr-3"></i>Invite friends</button>
-              </div>
-              <hr class="my-2">
-              <div class="px-2">
-                <a class="dropdown-item" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})">Log out</a>
+                <a class="dropdown-item" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})"><i class="fas fa-sign-out fa-fw text-left mr-3"></i>Log out</a>
               </div>
             </div>
           </div>
@@ -371,8 +375,8 @@
      <!-- Mobile Nav Menu -->
      <ul class="navbar-nav ml-auto d-flex d-md-none mt-3">
        <li class="nav-item pb-3">
-        <form class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search" method="get">
-          <input class="form-control form-control-sm w-100" type="search" placeholder="Search posts and +guilds" aria-label="Search posts and +guilds" name="q">
+        <form class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="{% if b %}/+{{ b.name }}{% endif %}/search" method="get">
+          <input class="form-control form-control-sm w-100" type="search" placeholder="Search posts{% if b %} in +{{ b.name }}{% else %}, +guilds, and @users{% endif %}" aria-label="Search posts{% if b %} in +{{ b.name }}{% else %}, +guilds, and @users{% endif %}" name="q">
           <span class="input-group-append">
             <span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;">
               <i class="fa fa-search" aria-hidden="true"></i>
@@ -381,37 +385,51 @@
         </form>
       </li>
       {% if v %}
-      <li class="nav-item">
-        <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-width-rem mr-3"></i>@{{ v.username }}</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {% if v.notifications_count %}position-relative{% endif %}" href="/notifications?all=true">
-          <i class="fas fa-envelope fa-width-rem mr-3"></i>Inbox
-          {% if v.notifications_count %}
-          <i class="fas fa-circle text-danger position-absolute" style="left: 19px; top: 5px; font-size: 10px;"></i>
-          {% endif %}
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/settings"><i class="fas fa-cog fa-width-rem mr-3"></i>My account</a>
-      </li>
-	{% block darkswitchMobile %}
-      {% if v and v.can_use_darkmode and session.get("dark_mode_enabled")%}
-      <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-width-rem mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
-      {% elif v and v.can_use_darkmode %}
-      <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-width-rem mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
-      {% else %}
-      <li class="nav-item"><a class="nav-link" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-width-rem mr-3"></i>Dark mode</a></li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-fw mr-3"></i>@{{ v.username }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if v.notifications_count %}position-relative{% endif %}" href="/notifications{% if not v.notifications_count %}?all=true{% endif %}">
+            <i class="fas fa-envelope fa-fw mr-3"></i>Inbox
+            {% if v.notifications_count %}
+            <i class="fas fa-circle text-danger position-absolute" style="left: 19px; top: 5px; font-size: 10px;"></i>
+            {% endif %}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>My account</a>
+        </li>
+        {% if v.can_make_guild %}
+          <li class="nav-item">
+            <a class="nav-link" href="/create_guild"><i class="fas fa-chess-rook fa-fw mr-3"></i>Create Guild</a>
+          </li>
+        {% endif %}
       {% endif %}
-          {% if v and v.can_make_guild %}
-    <li class="nav-item">
-      <a class="nav-link" href="/create_guild"><i class="fas fa-chess-rook fa-width-rem mr-3"></i>Create Guild</a>
-    </li>
-    {% endif %}
-	{% endblock %}
-      <li class="nav-item border-top mt-2 pt-2">
-        <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})">Log out</a>
+      <li class="nav-item">
+        <a class="nav-link" href="/categories"><i class="fas fa-shapes fa-fw mr-3"></i>Categories</a>
       </li>
+      {% if v %}
+      {% block darkswitchMobile %}
+        {% if session.get("dark_mode_enabled")%}
+          <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fas fa-toggle-on fa-fw mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fas fa-toggle-off fa-fw mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
+        {% endif %}
+      {% endblock %}
+      {% endif %}
+
+      {% if v %}
+      <li class="nav-item border-top mt-2 pt-2">
+        <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})"><i class="fas fa-sign-out fa-fw mr-3 text-danger"></i>Log out</a>
+      </li>
+      {% else %}
+      <li class="nav-item d-flex align-items-center justify-content-center pb-3">
+        <a class="btn btn-outline-purple btn-block" href="/login?redirect={{ request.path | urlencode}}">Sign in</a>
+      </li>
+      <li class="nav-item d-flex align-items-center justify-content-center">
+        <a class="btn btn-purple btn-block" href="/signup?redirect={{ request.path | urlencode}}">Sign up</a>
+      </li>
+      {% endif %}
       <li class="nav-item border-top mt-2 pt-2">
         <a class="nav-link text-small-extra" href="/help/about">About</a>
       </li>
@@ -427,29 +445,6 @@
       <li class="nav-item">
         <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">Github</a>
       </li>
-      {% else %}
-      <li class="nav-item d-flex align-items-center justify-content-center pb-3">
-        <a class="btn btn-outline-purple btn-block" href="/login?redirect={{ request.path | urlencode}}">Sign in</a>
-      </li>
-      <li class="nav-item d-flex align-items-center justify-content-center">
-        <a class="btn btn-purple btn-block" href="/signup?redirect={{ request.path | urlencode}}">Sign up</a>
-      </li>
-      <li class="nav-item mt-2">
-        <a class="nav-link text-small-extra" href="/help/about">About</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-small-extra" href="/help/terms">Terms</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-small-extra" href="/help/privacy">Privacy</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-small-extra" href="mailto:info@ruqqus.com">Contact</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">Github</a>
-      </li>
-      {% endif %}
     </ul>
 
   </div>
@@ -504,37 +499,71 @@
     {% block sidebar %}
     <div class="col sidebar text-left d-none d-lg-block pt-3 bg-white border-left">
       {% block sidebarblock %}
-      <div class="text-center my-4">
-        <i class="fad fa-comment-alt-smile text-gray-400 mb-3" style="
-        font-size: 3.5rem;
-        "></i>
-        <div class="h5 text-gray-500">Cool features coming here soon!</div>
+          <div class="sidebar-section">
+      <div class="title">
+        <i class="fas fa-heart mr-2"></i>Support Ruqqus
       </div>
+      <div class="body">
+        <p>Exclusive patron titles, merch, and more. Support Ruqqus today!</p>
+
+        {% if v %}
+
+        <a href="/settings#patreon" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
+          </span>Unlock Patron Titles
+        </a>
+
+        {% else %}
+
+        <a href="https://patreon.com/ruqqus" target="blank" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
+          </span>Become a Patron
+        </a>
+
+        {% endif %}
+
+        <a href="https://www.bonfire.com/store/ruqqus/" target="blank" class="btn btn-block btn-link text-info text-left text-decoration-none px-1 mt-0">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #BEE3F8!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-tshirt fa-stack-1x text-info text-base fa-inverse"></i>
+          </span>Awesome T-Shirts
+        </a>
+
+        <a href="https://gumroad.com/l/XpCXQ" target="blank" class="btn btn-block btn-link text-success text-left text-decoration-none px-1 mt-0">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #9AE6B4!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-laugh fa-stack-1x text-success text-base fa-inverse"></i>
+          </span>Custom Stickers
+        </a>
+
+        <a href="https://github.com/ruqqus/ruqqus" target="blank" class="btn btn-block btn-link text-black text-left text-decoration-none px-1 mt-0">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x text-gray-300" style="font-size: 2rem!important;"></i>
+            <i class="fab fa-github fa-stack-1x text-black text-base fa-inverse"></i>
+          </span>Contribute Code
+        </a>
+
+        <a href="https://github.com/ruqqus/ruqqus#sponsors" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #F7931A!important">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #FEEBC8!important; font-size: 2rem!important;"></i>
+            <i class="fab fa-bitcoin fa-stack-1x text-base fa-inverse" style="color: #F7931A!important;"></i>
+          </span>Donate Crypto
+        </a>
+
+        <a href="https://github.com/ruqqus/ruqqus/issues" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #DC143C!important">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x" style="color: #FC8181!important; font-size: 2rem!important;"></i>
+            <i class="fas fa-bug fa-stack-1x text-base fa-inverse" style="color: #DC143C!important;"></i>
+          </span>Report Bugs
+        </a>
+
+      </div>
+    </div>
       {% endblock %}
-
-      {% if v and v.can_use_darkmode==0 %}
-      <div class="sidebar-section sidebar-dark-promo text-white bg-black d-none">
-       <div class="body">
-        <div class="title" style="
-        color: #fff;
-        border-color: rgba(230, 230, 230, 0.1);
-        ">Announcement</div>
-        <div class="text-center my-3">
-         <i class="fad fa-moon-stars text-warning" style="font-size: 4rem"></i>
-       </div>
-
-       <div class="mb-2">
-         <span class="h5">Refer a friend. Get dark mode.</span>
-       </div>
-       <p class="text-small">When you invite a friend to make a Ruqqus, you'll unlock dark mode. Copy your referral code to get started.</p>
-       <label for="referral_code" class="text-white">Referral code</label>
-       <input type="text" readonly="" class="form-control copy-link" id="referral_code" value="https://ruqqus.com/signup?ref={{ v.username }}" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}">
-     </div>
-
-
-
-   </div>
-   {% endif %}
 
    {% if v and v.admin_level %}
    <div class="sidebar-section sidebar-adminpanel">
@@ -555,7 +584,9 @@
 </div>
 </div>
 
+{% block mobilenavbar %}
 {% include "mobile_navigation_bar.html" %}
+{% endblock %}
 
 {% block actionsModal %}
 {% endblock %}
@@ -586,12 +617,24 @@
 	</div>
 </div>
 
+<div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-success text-center text-white">
+    <i class="fas fa-comment-alt-smile mr-2"></i><span id="toast-post-success-text"></span>
+  </div>
+</div>
+<div class="toast" id="toast-post-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+  <div class="toast-body bg-danger text-center text-white">
+    <i class="fas fa-exclamation-circle mr-2"></i><span id="toast-post-error-text"></span>
+  </div>
+</div>
+
 {% if v %}
 {% include "flag_post_modal.html" %}
 {% include "flag_comment_modal.html" %}
 {% include "gif_modal.html" %}
 {% include "delete_comment_modal.html" %}
 {% include "delete_post_modal.html" %}
+{% include "tip_modal.html" %}
 {% endif %}
 
 {% if v and v.mods_anything %}
@@ -601,10 +644,9 @@
 
 {% include "expanded_image_modal.html" %}
 
-{% include "announcements_modal.html" %}
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/all_js.js"></script>
+<script src="/assets/js/all_js.js?v=2.29.9.9"></script>
 
 <!-- ClipboardJS -->
 
@@ -628,6 +670,16 @@
 		console.log(e);
 	});
 </script>
+
+<!-- Mobile "install the app" tooltip -->
+
+
+{% if request.path=='/' and g.timestamp>session.get('tooltip_last_dismissed',0)+60*60*24 and (not g.system.endswith('/chrome') and not g.system.endswith('/other')) and not g.system.endswith('/webview') %}
+
+<div id="mobile-prompt-container" class="fixed-bottom">
+  <div id="mobile-prompt" href="javascript:void(0)" data-toggle="tooltip" data-container="#mobile-prompt-container" data-placement="top" data-trigger="click" title="Install the Ruqqus webapp by saving this page to your home screen!"></div>
+</div>
+{% endif %}
 
 </body>
 
