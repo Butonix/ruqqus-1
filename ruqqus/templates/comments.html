@@ -84,7 +84,7 @@
 
 
 
-  {% if not c.author.is_deleted %}<span class="mr-2 d-block d-md-none"><a href="{{ c.author.permalink }}"><img src="{{ c.author.profile_url }}" class="profile-pic-25"></a></span>{% endif %}
+  <span class="mr-2 d-block d-md-none"><a href="{{ c.author.permalink }}"><img src="{{ c.author.profile_url }}" class="profile-pic-25"></a></span>
 
   <span class="comment-collapse d-md-block d-none" onclick="collapse_comment('{{ c.base36id }}')"></span>
 

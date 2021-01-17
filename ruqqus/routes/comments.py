@@ -6,6 +6,7 @@ from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 import secrets
 import threading
+from os import environ
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -22,7 +23,7 @@ from flask import *
 from ruqqus.__main__ import app, limiter
 
 
-BUCKET="i.ruqqus.com"
+BUCKET=environ.get("S3_BUCKET",'i.ruqqus.com')
 
 
 @app.route("/comment/<cid>", methods=["GET"])
