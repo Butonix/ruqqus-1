@@ -133,11 +133,15 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
     top_comment = c
 
     sort_type = request.args.get("sort", "hot")
-    mod=g.db.query(ModRelationship).filter_by(user_id=v.id, board_id=board.id, accepted=True).first()
     # children comments
+    if v:
+        mod=g.db.query(ModRelationship).filter_by(user_id=v.id, board_id=board.id, accepted=True).first()
+    else:
+        mod=None
     current_ids = [comment.id]
     for i in range(6 - context):
         if v:
+
             votes = g.db.query(CommentVote).filter(
                 CommentVote.user_id == v.id).subquery()
 
