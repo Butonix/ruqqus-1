@@ -8,8 +8,10 @@
     <meta name="description" content="Sign in to Ruqqus">
     <meta name="author" content="">
 
+    {% block title %}
     <title>Login - Ruqqus</title>
-
+    {% endblock %}
+    
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
     <!-- Bootstrap core CSS -->
@@ -17,7 +19,7 @@
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Font Awesome -->
-    <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+    <link href="https://fa.ruqqus.com/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 
     <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/latest/js/all.js"
     integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
@@ -68,11 +70,13 @@
                         <a href="/" class="text-decoration-none"><span class="h3 text-primary">ruqqus</span></a>
                     </div>
 
+                    {% block content %}
+
                     <div id="login-form" class="">
 
                         <h1 class="h2">Welcome back.</h1>
 
-                        <p class="text-muted mb-md-5">Glad to have you back. Make a ruckus!</p>
+                        <p class="text-muted mb-md-5">Glad to have you back. Make a ruqqus!</p>
 
                         {% if failed %}
                         <div class="alert alert-danger alert-dismissible fade show d-flex my-3" role="alert">
@@ -85,32 +89,36 @@
                           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                    </div>
-                    {% endif %}
-
-                    <form action="/login" method="post" class="mt-md-3" id="login">
-
-                        <label for="username" class="mt-3">Username or Email Address</label>
-
-                        <input class="form-control" id="username" aria-describedby="usernameHelp"
-                        type="text" name="username" required="">
-                        <input type="hidden" name="redirect" value="{{ redirect }}">
-
-                        <label for="password" class="mt-3">Password</label>
-
-                        <input class="form-control" id="password" aria-describedby="passwordHelp"
-                        type="password" name="password" required="">
-
-
-                        <small><a href="/forgot">Forgot password?</a></small>
-
-                        <button class="btn btn-primary login w-100 mt-3" id="login_button">Sign in</button>
-
-                        <div class="text-center text-muted text-small mt-5 mb-3">
-                            Don't have an account? <a href="/signup{{ '?redirect='+redirect if redirect else '' }}" class="font-weight-bold toggle-login">Sign up</a>
                         </div>
+                        {% endif %}
 
-                    </form>
+                        <form action="/login" method="post" class="mt-md-3" id="login">
+
+                            <label for="username" class="mt-3">Username or Email Address</label>
+
+                            <input class="form-control" id="username" aria-describedby="usernameHelp"
+                            type="text" name="username" required="">
+                            <input type="hidden" name="redirect" value="{{ redirect }}">
+
+                            <label for="password" class="mt-3">Password</label>
+
+                            <input class="form-control" id="password" aria-describedby="passwordHelp"
+                            type="password" name="password" required="">
+
+
+                            <small><a href="/forgot">Forgot password?</a></small>
+
+                            <button class="btn btn-primary login w-100 mt-3" id="login_button">Sign in</button>
+
+                            <div class="text-center text-muted text-small mt-5 mb-3">
+                                Don't have an account? <a href="/signup{{ '?redirect='+redirect if redirect else '' }}" class="font-weight-bold toggle-login">Sign up</a>
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                    {% endblock %}
 
                 </div>
 
@@ -118,24 +126,22 @@
 
         </div>
 
-    </div>
+        <div class="col-12 col-md-6 d-none d-md-block">
 
-    <div class="col-12 col-md-6 d-none d-md-block">
+            <div class="splash-wrapper">
 
-        <div class="splash-wrapper">
+                <div class="splash-overlay"></div>
 
-            <div class="splash-overlay"></div>
+                <h6 class="splash-text">
+                    {{ i.text }}
+                </h6>
 
-            <h6 class="splash-text">
-                {{ i.text }}
-            </h6>
+                <img class="splash-img" src="{{ i.path }}"></img>
+            </div>
 
-            <img class="splash-img" src="{{ i.path }}"></img>
         </div>
 
     </div>
-
-</div>
 </div>
 
 {% include "bootstrap.html" %}

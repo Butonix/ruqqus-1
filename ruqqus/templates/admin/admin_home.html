@@ -10,17 +10,32 @@
 
 {% block content %}
 {% filter markdown %}
-# Help
+# Admin Tools
 
 ## Content
 
 * [Flagged Posts](/admin/flagged/posts)
 * [Flagged Comments](/admin/flagged/comments)
 * [Image Feed](/admin/image_posts)
+* [Removed Feed](/admin/removed)
+* [Users Feed](/admin/users)
+
+## Apps
+
+* [App Queue](/admin/apps)
 
 ## Account Cosmetics
 
 * [Badges](/admin/badge_grant)
+
+## Data
+
+* [Content Stats](/admin/content_stats)
+
+## Abuse Prevention
+
+* [Single item vote insight](/admin/vote_info)
+* [Multivote Analysis](/admin/alt_votes)
 
 {% endfilter %}
 {% endblock %}

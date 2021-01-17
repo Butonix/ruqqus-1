@@ -8,7 +8,7 @@
 
 Ruqqus is an open-source platform for online communities, free of censorship and moderator abuse by design.
 
-![Build status](https://travis-ci.com/ruqqus/ruqqus.svg?branch=master) ![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/ruqqus/ruqqus) [![Website](https://img.shields.io/website/https/www.ruqqus.com?down_color=red&down_message=down&up_message=up)](https://www.ruqqus.com) ![GitHub language count](https://img.shields.io/github/languages/count/ruqqus/ruqqus) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ruqqus/ruqqus) [![](https://img.shields.io/discord/599258778520518676)](https://ruqqus.com/discord)
+[![Build status](https://travis-ci.com/ruqqus/ruqqus.svg?branch=master)](https://travis-ci.com/ruqqus) ![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/ruqqus/ruqqus) [![Website](https://img.shields.io/website/https/www.ruqqus.com?down_color=red&down_message=down&up_message=up)](https://www.ruqqus.com) ![GitHub language count](https://img.shields.io/github/languages/count/ruqqus/ruqqus) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ruqqus/ruqqus) [![Discord](https://img.shields.io/discord/599258778520518676)](https://ruqqus.com/discord)
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/ruqqus/ruqqus/master/ruqqus/assets/images/preview-images/ruqqus_demo.png" width="720"/>
@@ -56,11 +56,11 @@ Pull requests are welcome! For major changes, please open an issue to discuss wh
 
 As an open-source project, we are supported by the community. If you would like to support the development of Ruqqus, please consider [making a donation](https://ruqqus.com/help/donate) :)
 
-**BTC** - 16JFRF4sXQ9BvY3w73MD64yPUKehhUtste
+**BTC** - `16JFRF4sXQ9BvY3w73MD64yPUKehhUtste`
 
-**LTC** - LNDKsNhHjiNBJ6YBWtE8io8H1W3Fv5mtEd
+**LTC** - `LNDKsNhHjiNBJ6YBWtE8io8H1W3Fv5mtEd`
 
-**ETH** - 0x4301c31B81C2C66f5aaDFC1ec75861ad3d3cE0cC
+**ETH**/**ERC20** - `0x4301c31B81C2C66f5aaDFC1ec75861ad3d3cE0cC`
 
 ## Stay in touch
 
@@ -97,53 +97,43 @@ Install dependencies
 
 `$ brew install postgres`
 
+**XMR** - `8BkNezPQex6eTanNQHswMmhCAqWkXzVNEDnvnBN1YSxmic87E2VZncNVDiS1TCjuUs4K34FiGVBK82AfkT2NYsxFN6cYTpy`
 
-Start services
+**ZEC** - `t1VqHznyeQnS9hNaU32ksijfT9s9DTXgUSv`
 
-`$ redis-server /usr/local/etc/redis.conf`
+**BCH** - `qpcg2czl2fa8x43z807ta5kpuzd3g4suecuu9lmqug`
 
-`$ brew services start postgresql`
+**XRP** - `rBWWxvREbRPSqMGNqwpBVbSJMPkmLum5xR`
 
-`$ psql postgres -a -f schema.txt`
+**XLM** - `GBB4FE2UYMUPHCYYLZFT3WSAOSEKI7YIBSOLNEPU6GPWAU64OXOQOA3Q`
 
+**DASH** - `Xj5dmVJXVjCxuyKRhTmSJ6p1i3ehWLV9gT`
 
-Add test user to database (password = password)
+**DOGE** - `DT9j54NhxcH3VTU1QeuWcifyaLayTPuv1U`
 
-`$ psql postgres`
+**VTC** - `3Lq9vNtphMM3rtuzLhtNUjn5WhSk7ZMQYK`
 
-```
-INSERT INTO users (id, username, email, passhash, created_utc, creation_ip, tos_agreed_utc, login_nonce)
-         VALUES (NEXTVAL('users_id_seq'), 'ruqqie', 'ruqqie@ruqqus.com', 'pbkdf2:sha512:150000$vmPzuBFj$24cde8a6305b7c528b0428b1e87f256c65741bb035b4356549c13e745cc0581701431d5a2297d98501fcf20367791b4334dcd19cf063a6e60195abe8214f91e8',
-         1592672337, '127.0.0.1', 1592672337, 1);
-```
+**PIVX** - `DSgD6hxu1EgRiULn6RNbnv5tRvij5BGtUa`
 
 
-Add this line to `/etc/hosts`
-
-`127.0.0.1 ruqqus.localhost`
 
 
-Refresh DNS
 
-`$ sudo killall -HUP mDNSResponder`
+## Stay in touch
 
+- [Twitter](https://twitter.com/ruqqus)
+- [Discord](https://ruqqus.com/discord)
+- [Twitch.tv](https://twitch.tv/captainmeta4)
 
-Create environment variables
+## Local development
 
-`$ export domain=ruqqus.localhost:8000`
+### [Mac](https://github.com/ruqqus/ruqqus/wiki/Mac-Installation)
 
-`$ export REDIS_URL=redis://localhost:6379`
+### [Linux](https://github.com/ruqqus/ruqqus/wiki/Linux-Installation)
 
-`$ export DATABASE_URL=postgres://localhost:5432/postgres`
+Upon installation, trying to submit a post will cause a 404 error. You have to create a guild first (to achieve this perhaps temporarily remove the 250 rep restriction on making guilds). You also need to make sure the badwords table is populated.
 
-`$ export PYTHONPATH=$(/path/to/ruqqus/root)`
-
-`$ export MASTER_KEY=$(openssl rand -base64 32)`
-
-
-Run Ruqqus
-
-`$ gunicorn ruqqus.__main__:app -w 3 -k gevent --worker-connections 6 --preload --max-requests 500 --max-requests-jitter 50`
+Note: When trying to run Ruqqus locally, make sure to use a [tagged release version](https://github.com/ruqqus/ruqqus/releases). The reason this is necessary is that the file schema.txt is not always updated, which will cause Ruqqus to crash. If after first setting up Ruqqus you are getting a 500/Internal Server Error on pages because of database errors, this is most likely why.
 
 
 ## License

@@ -5,9 +5,9 @@
 {% block content %}
 
 
-<div class="row">
+<div id="posts" class="row">
 
-  <div class="col col-md-8">
+  <div class="col col-lg-8">
 
     <div class="settings">
 
@@ -156,41 +156,37 @@
 
           </div>
 
-          <h2 class="h5" name="linkouts">Linked Accounts</h2>
+          <h2 class="h5" name="referral">Linked Accounts</h2>
 
-          <p class="text-small text-muted">Link other services to your Ruqqus account</p>
+          <p class="text-small text-muted">Manage your connections to other services.</p>
 
           <div class="settings-section rounded">
 
             <div class="d-lg-flex">
 
               <div class="title w-lg-25">
-                <label for="patreon_link">Patreon</label>
+                <label>Discord</label>
               </div>
 
               <div class="body w-lg-100">
 
-                {% if not v.patreon_id %}
-
-                <a href="/patreon_authorize"><button class="btn btn-secondary">Link Patreon</button></a>
-
-                {% else %}
-
-                <p class="text-muted">Connected as {{ v.patreon_name }}</p>
-                <form action="/patreon_unauthorize" method="post">
+                {% if v.discord_id %}
+                <form action="/settings/remove_discord" method="post">
                   <input type="hidden" name="formkey" value="{{ v.formkey }}">
-                  <input type="submit" class="btn btn-secondary text-capitalize" value="Unlink patreon">
+                  <input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Disconnect Discord">
                 </form>
-                {% endif %}
 
-                <div class="text-small-extra text-muted mt-3">Link your Patreon account to get profile badges for supporting Ruqqus.</div>
+                <div class="text-small-extra text-muted mt-3">Disconnecting your Discord account will remove you from the Ruqqus Discord server.</div>
+                {% else %}
+                <a href="/discord" class="btn btn-primary">Link Discord</a>
+                <div class="text-small-extra text-muted mt-3">Link your Discord account to join the Ruqqus Discord server.</div>
+                {% endif %}
 
               </div>
 
             </div>
 
           </div>
-
 
           <h2 class="h5" name="referral">RSS Feed</h2>
 
@@ -220,75 +216,6 @@
 
           </div>
 
-          <h2 class="h5">Content Filters</h2>
-
-          <form id="profile-settings" action="/settings/profile" method="post">
-
-            <div class="settings-section rounded">
-
-              <input type="hidden" name="formkey" value="{{ v.formkey }}">
-
-              <div class="d-lg-flex border-bottom">
-
-                <div class="title w-lg-25">
-                  <label for="over18">View NSFW Content</label>
-                </div>
-
-                <div class="body w-lg-100">
-
-                  <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="over18" name="over18"{% if v.over_18 %} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
-                    <label class="custom-control-label" for="over18"></label>
-                  </div>
-
-                  <span class="text-small-extra text-muted">Enable if you are 18+ and are ok with viewing NSFW content.</span>
-
-                </div>
-
-              </div>
-
-              <div class="d-lg-flex border-bottom">
-
-                <div class="title w-lg-25">
-                  <label for="hidensfl">View NSFL Content</label>
-                </div>
-
-                <div class="body w-lg-100">
-
-                  <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="hidensfl" name="show_nsfl"{% if v.show_nsfl %} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
-                    <label class="custom-control-label" for="hidensfl"></label>
-                  </div>
-
-                  <span class="text-small-extra text-muted">Enable if you are 18+ and are ok with viewing NSFL content.</span>
-
-                </div>
-
-              </div>
-
-              <div class="d-lg-flex">
-
-                <div class="title w-lg-25">
-                  <label for="hideoffensive">Hide offensive speech</label>
-                </div>
-
-                <div class="body w-lg-100">
-
-                  <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="hideoffensive" name="hide_offensive"{% if v.hide_offensive %} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
-                    <label class="custom-control-label" for="hideoffensive"></label>
-                  </div>
-
-                  <span class="text-small-extra text-muted">Hide posts or collapse comments that include racial slurs. A full list of words can be found <a href="/slurs.txt" target="_blank">here</a>.</span>
-
-                </div>
-
-              </div>
-
-
-
-            </div>
-
             <h2 class="h5" id="bio" name="bio">Your Profile</h2>
 
             <p class="text-small text-muted">Edit how others see you on Ruqqus.</p>
@@ -302,14 +229,20 @@
                 <label for="bio" class="text-black w-lg-25">Bio</label>
 
                 <div class="w-lg-100">
-                  <div class="input-group mb-2">
-                    <textarea class="form-control rounded" id="bio" aria-label="With textarea"
-                    placeholder="Tell the Ruqqus community a bit about yourself."
-                    rows="3" name="bio" form="profile-settings" maxlength="300">{{ v.bio }}</textarea>
-                  </div>
 
-                  <small>Limit of 280 characters</small>
 
+                  <form id="profile-settings" action="/settings/profile" method="post">
+                    <input type="hidden" name="formkey" value="{{ v.formkey }}">
+                    <div class="input-group mb-2">
+                      <textarea class="form-control rounded" id="bio-text" aria-label="With textarea"
+                      placeholder="Tell the Ruqqus community a bit about yourself."
+                      rows="3" name="bio" form="profile-settings" maxlength="256">{{ v.bio }}</textarea>
+                    </div>
+                    <div class="d-flex">
+                      <small>Limit of 256 characters</small>
+                      <input class="btn btn-primary ml-auto" id="bioSave" type="submit" value="Save Changes">
+                    </div>
+                  </form>
                 </div>
 
               </div>
@@ -320,7 +253,7 @@
                 <div class="w-lg-100">
                   <p>Titles change the way your name is displayed across Ruqqus, allowing you to show off a site achievement.</p>
                   <div class="input-group mb2">
-                    <select class="form-control" form="profile-settings" name="title_id">
+                    <select id='title-selector' class="form-control" form="profile-settings" name="title_id" onchange="post_toast('/settings/profile?title_id='+document.getElementById('title-selector').value)">
                      <option value="0"{{ ' selected' if v.title_id==0 else '' }}>No title</option>
                      {% for entry in v.available_titles %}
                      <option value="{{ entry.id }}"{{ ' selected' if v.title_id==entry.id else '' }}>{{ entry.text }}</option>
@@ -333,7 +266,7 @@
 
              </div>
 
-             <div class="d-lg-flex">
+             <div class="d-lg-flex border-bottom">
 
               <div class="title w-lg-25">
                 <label for="privateswitch">Private Mode</label>
@@ -342,7 +275,7 @@
               <div class="body w-lg-100">
 
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="document.getElementById('profile-settings').submit()">
+                  <input type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="post_toast('/settings/profile?private='+document.getElementById('privateswitch').checked)">
                   <label class="custom-control-label" for="privateswitch"></label>
                 </div>
 
@@ -351,23 +284,27 @@
               </div>
 
             </div>
+             <div class="d-lg-flex">
 
-            <div class="footer">
+              <div class="title w-lg-25">
+                <label for="nofollowswitch">Disable Subscriptions</label>
+              </div>
 
-              <div class="d-flex">
+              <div class="body w-lg-100">
 
-                <input class="btn btn-primary ml-auto" id="bioSave"
-                type="submit" value="Save Changes">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="nofollowswitch" name="nofollow"{% if v.is_nofollow%} checked{% endif %} onchange="post_toast('/settings/profile?nofollow='+document.getElementById('nofollowswitch').checked)">
+                  <label class="custom-control-label" for="nofollowswitch"></label>
+                </div>
+
+                <span class="text-small-extra text-muted">Prevent other users from subscribing to you.</span>
 
               </div>
 
             </div>
-
           </div>
 
         </div>
-
-      </form>
 
     </div>
 

@@ -182,6 +182,10 @@ pre {
     word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
+body.using-mouse :focus {
+    outline: none;
+}
+
 #settings, #submit {
     padding-top: 98px;
     background-color: $gray-600;
@@ -265,7 +269,7 @@ pre {
     top: 63px;
     height: auto;
     overflow-y: auto;
-    z-index: 4;
+    z-index: 2;
 }
 
 .sticky-105 {
@@ -1002,8 +1006,12 @@ th {
 
 */
 
-.voting div:focus {
+/* .voting div:focus {
     outline: 0;
+} */
+
+.active.arrow-up::before {
+    color: $upvote;
 }
 
 .arrow-up::before {
@@ -1021,6 +1029,9 @@ th {
     opacity: 0.5;
 }
 
+.active.arrow-down::before {
+    color: $downvote;
+}
 
 .arrow-down::before {
     cursor: pointer;
@@ -1036,7 +1047,7 @@ th {
     opacity: 0.5;
 }
 
-.upvoted .arrow-up::before {
+/* .upvoted .arrow-up::before {
     color: $upvote;
 }
 
@@ -1050,7 +1061,7 @@ th {
 
 .downvoted .arrow-down:hover::before {
     opacity: 1;
-}
+} */
 
 .comment-actions .arrow-up {
     top: 0;
@@ -1066,6 +1077,14 @@ th {
 
 .downvoted .arrow-mobile-down {
     color: $downvote!important;
+}
+
+.comment-actions .score {
+    color: $muted;
+}
+
+.score {
+    color: $black;
 }
 
 .score-up {
@@ -1628,7 +1647,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     text-align: center;
     object-fit: cover;
     color: $white;
-    background-color: #FFFFFF;
+    background-color: #1f2023;
 }
 
 .profile-pic .letter {
@@ -1668,7 +1687,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #FFFFFF;
+    background-color: #1f2023;
 }
 
 .profile-pic-25 {
@@ -1677,7 +1696,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #FFFFFF;
+    background-color: #1f2023;
 }
 
 .profile-pic-30 {
@@ -1686,7 +1705,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #FFFFFF;
+    background-color: #1f2023;
 }
 
 .profile-pic-35 {
@@ -1695,7 +1714,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #FFFFFF;
+    background-color: #1f2023;
 }
 
 .profile-pic-40 {
@@ -1704,7 +1723,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #FFFFFF;
+    background-color: #1f2023;
 }
 
 .profile-pic-50 {
@@ -1713,7 +1732,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #FFFFFF;
+    background-color: #1f2023;
 }
 
 .profile-pic-65 {
@@ -1722,7 +1741,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #FFFFFF;
+    background-color: #1f2023;
 }
 
 .profile-pic-75 {
@@ -1731,7 +1750,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #FFFFFF;
+    background-color: #1f2023;
 }
 
 .profile-pic-100 {
@@ -1740,7 +1759,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #FFFFFF;
+    background-color: #1f2023;
 }
 
 .profile-pic-overlap {
@@ -1870,7 +1889,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-top-right-radius: $border-radius;
 }
 
-#frontpage .posts .card:last-of-type, #userpage .posts .card:last-of-type, #search .posts .card:last-of-type, #guild .posts .card:last-of-type, #settings-guild .posts .card:last-of-type  {
+#frontpage .posts .card:nth-last-of-type(2), #userpage .posts .card:nth-last-of-type(2), #search .posts .card:nth-last-of-type(2), #guild .posts .card:nth-last-of-type(2), #settings-guild .posts .card:last-of-type  {
     border-bottom-left-radius: $border-radius;
     border-bottom-right-radius: $border-radius;
     border-bottom: 1px solid $border-color;
@@ -1892,6 +1911,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     font-size: 16px;
     font-weight: $font-weight-bold;
     word-break: break-word;
+    overflow: hidden;
 }
 
 .post-title a {
@@ -1932,6 +1952,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .post-body {
     word-break: break-word;
+    overflow: hidden;
 }
 
 // Modals (post actions, delete confirmations, etc)
@@ -2420,6 +2441,11 @@ div:hover .thumb-img-link-overlay {
     margin-bottom: 1rem;
     word-break: break-word;
     color: $black;
+    overflow: hidden;
+}
+
+.comment .comment-body .comment-image {
+    border: 1px solid $primary
 }
 
 blockquote {
@@ -3265,7 +3291,7 @@ ul.comment-section {
 
 pre code {
     word-break: break-word;
-    white-space: break-word;
+    white-space: break-spaces;
     color: $white;
 }
 
@@ -3578,6 +3604,7 @@ body, #settings, #notifications, #submit {
     font-size: 14px;
     font-weight: $font-weight-normal;
     line-height: normal;
+    overflow: hidden;
 }
 
 .post-meta {
@@ -3601,8 +3628,28 @@ body, #settings, #notifications, #submit {
     font-size: $font-size-lg;
 }
 
-.arrow-up::before, .arrow-down::before {
+// Voting Mobile
+
+.comment-actions .score {
+    color: $gray-200;
+}
+
+.score {
+    color: $gray-200;
+}
+
+.arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
     font-size: $font-size-lg;
+    color: $gray-200;
+    opacity: 1;
+}
+
+.active.arrow-up::before, .active.arrow-up:hover::before {
+    color: $upvote;
+}
+
+.active.arrow-down::before, .active.arrow-down:hover::before {
+    color: $downvote;
 }
 
 .dropdown-actions a {
@@ -3833,4 +3880,36 @@ div.deleted.banned {
 
 .text-admin {
     color: $admin
+}
+
+.in-comment-image {
+  max-height: 100px !important;
+  max-width: 100px !important;
+}
+
+.sidebar-left .btn:focus {
+  box-shadow: none;
+}
+
+.onboarding-card {
+    height: 180px;
+    .onboarding-card-overlay {
+        background-color: rgba(0,0,0,0.65);
+    }
+    &.selected {
+        .onboarding-card-overlay {
+            background-color: rgba($purple, .65);
+        }
+    }
+}
+
+.object-cover {
+    object-fit: cover;
+}
+
+.cat-item {
+    display: none;
+    &.selected {
+        display: block;
+    }
 }

@@ -1,3 +1,15 @@
+// Using mouse
+
+document.body.addEventListener('mousedown', function() {
+  document.body.classList.add('using-mouse');
+});
+
+document.body.addEventListener('keydown', function(event) {
+  if (event.keyCode === 9) {
+    document.body.classList.remove('using-mouse');
+  }
+});
+
 // 2FA toggle modal
 
 $('#2faModal').on('hidden.bs.modal', function () {
@@ -87,16 +99,11 @@ $('#new_email').on('input', function () {
 
       cancelBtn.innerHTML = '<button class="btn btn-link pl-3 pr-0" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
 
-      console.log('searchTerm is: ', searchTerm)
-      console.log('comment or reply form is: ', commentFormID)
       $.ajax({
         url: "/giphy?searchTerm=" + searchTerm + "&limit=48",
         type: "GET",
         success: function(response) {
-          console.log(response)
         var max = response.data.length - 1 //length of response, minus 1 (cuz array starts at index 0)
-        console.log('response.data.length is ', max)
-        //var randomNumber = Math.round(Math.random() * max) //random number between 0 and max -1
         var randomNumber = Math.round(Math.random() * 6) //random number between 0 and max -1
         // GIF array
         var gifURL = [];
@@ -105,7 +112,12 @@ $('#new_email').on('input', function () {
         if (max < 48 && max > 0) {
           for (var i = 0; i <= max; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/200w_d.gif";
-            container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            if (response.data[i].username==''){
+              container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            }
+            else {
+              container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" title="by '+response.data[i].username+' on GIPHY" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            }
             noGIFs.innerHTML = null;
             loadGIFs.innerHTML = '<div class="text-center py-3"><div class="mb-3"><i class="fad fa-grin-beam-sweat text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Thou&#39;ve reached the end of the list!</p></div>';
           }
@@ -118,12 +130,16 @@ $('#new_email').on('input', function () {
         else {
           for (var i = 0; i <= 48; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/200w_d.gif";
-            container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            if (response.data[i].username==''){
+              container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            }
+            else {
+              container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" title="by '+response.data[i].username+' on GIPHY" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            }
             noGIFs.innerHTML = null;
             loadGIFs.innerHTML = '<div class="text-center py-3"><div class="mb-3"><i class="fad fa-grin-beam-sweat text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Thou&#39;ve reached the end of the list!</p></div>';
           }
         }
-        console.log(container);
       },
       error: function(e) {
         alert(e);
@@ -489,7 +505,7 @@ report_commentModal = function(id, author) {
 
   document.getElementById("comment-author").textContent = author;
 
-  offtopic.disabled=true;
+  //offtopic.disabled=true;
 
   document.getElementById("reportCommentButton").onclick = function() {
 
@@ -711,6 +727,34 @@ function toggleSub(){
   document.getElementById('button-sub-mobile').classList.toggle('d-none');
 }
 
+function post_toast(url, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  var form = new FormData()
+  form.append("formkey", formkey());
+  xhr.withCredentials=true;
+
+  xhr.onload = function() {
+    if (xhr.status==204) {}
+      else if (xhr.status >= 200 && xhr.status < 300) {
+        $('#toast-post-success').toast('dispose');
+        $('#toast-post-success').toast('show');
+        document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+        callback(xhr)
+
+      } else if (xhr.status >= 300 && xhr.status < 400) {
+        window.location.href = JSON.parse(xhr.response)["redirect"]
+      } else {
+        $('#toast-post-error').toast('dispose');
+        $('#toast-post-error').toast('show');
+        document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];
+      }
+    };
+
+    xhr.send(form);
+
+  }
+
 
 //Admin post modding
 function removePost(post_id) {
@@ -761,8 +805,6 @@ $('#password-register').on('input', function () {
   var charCount = document.getElementById("password-register").value;
   var id = document.getElementById("passwordHelpRegister");
   var successID = document.getElementById("passwordHelpSuccess");
-
-  console.log(charCount.length);
 
   if (charCount.length >= 8) {
     id.classList.add("d-none");
@@ -884,10 +926,136 @@ function toggle_sidebar_expand() {
 
 }
 
+// Voting
 
-//Voting
+var upvote = function(event) {
+  var type = event.target.dataset.contentType;
+  var id = event.target.dataset.idUp;
+
+  var downvoteButton = document.getElementsByClassName(type + '-' + id + '-down');
+  var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
+  var scoreText = document.getElementsByClassName(type + '-score-' + id);
+
+  for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
+
+    var thisUpvoteButton = upvoteButton[j];
+    var thisDownvoteButton = downvoteButton[j];
+    var thisScoreText = scoreText[j];
+    var thisScore = Number(thisScoreText.textContent);
+
+    if (thisUpvoteButton.classList.contains('active')) {
+      thisUpvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore - 1
+      voteDirection = "0"
+    } else if (thisDownvoteButton.classList.contains('active')) {
+      thisUpvoteButton.classList.add('active')
+      thisDownvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore + 2
+      voteDirection = "1"
+    } else {
+      thisUpvoteButton.classList.add('active')
+      thisScoreText.textContent = thisScore + 1
+      voteDirection = "1"
+    }
+
+    if (thisUpvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-up')
+      thisScoreText.classList.remove('score-down')
+      thisScoreText.classList.remove('score')
+    } else if (thisDownvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-down')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score')
+    } else {
+      thisScoreText.classList.add('score')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score-down')
+    }
+  }
+
+  post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection);
+  
+}
+
+var downvote = function(event) {
+  var type = event.target.dataset.contentType;
+  var id = event.target.dataset.idDown;
+
+  var downvoteButton = document.getElementsByClassName(type + '-' + id + '-down');
+  var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
+  var scoreText = document.getElementsByClassName(type + '-score-' + id);
+
+  for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
+
+    var thisUpvoteButton = upvoteButton[j];
+    var thisDownvoteButton = downvoteButton[j];
+    var thisScoreText = scoreText[j];
+    var thisScore = Number(thisScoreText.textContent);
+
+    if (thisDownvoteButton.classList.contains('active')) {
+      thisDownvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore + 1
+      voteDirection = "0"
+    } else if (thisUpvoteButton.classList.contains('active')) {
+      thisDownvoteButton.classList.add('active')
+      thisUpvoteButton.classList.remove('active')
+      thisScoreText.textContent = thisScore - 2
+      voteDirection = "-1"
+    } else {
+      thisDownvoteButton.classList.add('active')
+      thisScoreText.textContent = thisScore - 1
+      voteDirection = "-1"
+    }
+
+    if (thisUpvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-up')
+      thisScoreText.classList.remove('score-down')
+      thisScoreText.classList.remove('score')
+    } else if (thisDownvoteButton.classList.contains('active')) {
+      thisScoreText.classList.add('score-down')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score')
+    } else {
+      thisScoreText.classList.add('score')
+      thisScoreText.classList.remove('score-up')
+      thisScoreText.classList.remove('score-down')
+    }
+  }
+
+  post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection);
+  
+}
 
 
+var register_votes = function() {
+  var upvoteButtons = document.getElementsByClassName('upvote-button')
+
+  var downvoteButtons = document.getElementsByClassName('downvote-button')
+
+  var voteDirection = 0
+
+  for (var i = 0; i < upvoteButtons.length; i++) {
+    upvoteButtons[i].addEventListener('click', upvote, false);
+    upvoteButtons[i].addEventListener('keydown', function(event) {
+      if (event.keyCode === 13) {
+        upvote(event)
+      }
+    }, false)
+  };
+
+  for (var i = 0; i < downvoteButtons.length; i++) {
+    downvoteButtons[i].addEventListener('click', downvote, false);
+    downvoteButtons[i].addEventListener('keydown', function(event) {
+      if (event.keyCode === 13) {
+        downvote(event)
+      }
+    }, false)
+  };
+}
+
+register_votes()
+
+/*
 
 function vote(post_id, direction) {
   url="/api/vote/post/"+post_id+"/"+direction;
@@ -965,6 +1133,7 @@ function vote(post_id, direction) {
   post(url, callback, "Unable to vote at this time. Please try again later.");
 };
 
+*/
 
 function vote_comment(comment_id, direction) {
   url="/api/vote/comment/"+ comment_id +"/"+direction;
@@ -1132,9 +1301,9 @@ $('#expandImageModal').on('hidden.bs.modal', function (e) {
 
 	// remove image src and link
 
-	document.getElementById("desktop-expanded-image").src = null;
+	document.getElementById("desktop-expanded-image").src = '';
 
-	document.getElementById("desktop-expanded-image-link").href = null;
+	document.getElementById("desktop-expanded-image-link").href = '';
 
 });
 
@@ -1298,7 +1467,7 @@ document.addEventListener('paste', function (event) {
   if (nothingFocused) {
 
     if (document.getElementById('guild-name-reference')) {
-        var guild = document.getElementById('guild-name-reference').innerText;
+      var guild = document.getElementById('guild-name-reference').innerText;
     }
 
     var clipText = event.clipboardData.getData('Text');
@@ -1385,7 +1554,6 @@ function autoSuggestTitle()  {
     x.withCredentials=true;
     x.onreadystatechange = function() {
       if (x.readyState == 4 && x.status == 200) {
-        console.log(x.responseText);
 
         title=JSON.parse(x.responseText)["title"];
         titleField.value=title;
@@ -1433,9 +1601,9 @@ function exile_from_guild(boardid) {
         window.location.reload(true);
       }
       else {
-      $('#toast-exile-error').toast('dispose');
-      $('#toast-exile-error').toast('show');
-      exileError.textContent = JSON.parse(xhr.response)["error"];
+        $('#toast-exile-error').toast('dispose');
+        $('#toast-exile-error').toast('show');
+        exileError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
     xhr.send(f)
@@ -1536,13 +1704,13 @@ block_user=function() {
     f.append("username", username);
     f.append("formkey", formkey());
     xhr.onload=function(){
-      if (xhr.status==204) {
+      if (xhr.status<300) {
         window.location.reload(true);
       }
       else {
-      $('#toast-exile-error').toast('dispose');
-      $('#toast-exile-error').toast('show');
-      exileError.textContent = JSON.parse(xhr.response)["error"];
+        $('#toast-exile-error').toast('dispose');
+        $('#toast-exile-error').toast('show');
+        exileError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
     xhr.send(f)
@@ -1560,6 +1728,7 @@ post_comment=function(fullname){
   form.append('parent_fullname', fullname);
   form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
   form.append('body', document.getElementById('reply-form-body-'+fullname).value);
+  form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
 
 
   var xhr = new XMLHttpRequest();
@@ -1569,7 +1738,7 @@ post_comment=function(fullname){
     if (xhr.status==200) {
       commentForm=document.getElementById('comment-form-space-'+fullname);
       commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-        $('#toast-comment-success').toast('dispose');
+      $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-success').toast('show');
     }
@@ -1577,7 +1746,7 @@ post_comment=function(fullname){
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-error').toast('show');
-     commentError.textContent = JSON.parse(xhr.response)["error"];
+      commentError.textContent = JSON.parse(xhr.response)["error"];
     }
   }
   xhr.send(form)
@@ -1586,14 +1755,14 @@ post_comment=function(fullname){
 //part of submit page js
 
 hide_image=function(){
-    x=document.getElementById('image-upload-block');
-    url=document.getElementById('post-URL').value;
-    if (url.length>=1){
-        x.classList.add('d-none');
-    }
-    else {
-        x.classList.remove('d-none');
-    }
+  x=document.getElementById('image-upload-block');
+  url=document.getElementById('post-URL').value;
+  if (url.length>=1){
+    x.classList.add('d-none');
+  }
+  else {
+    x.classList.remove('d-none');
+  }
 }
 
 
@@ -1623,9 +1792,247 @@ comment_edit=function(id){
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-error').toast('show');
-     commentError.textContent = JSON.parse(xhr.response)["error"];
+      commentError.textContent = JSON.parse(xhr.response)["error"];
     }
   }
   xhr.send(form)
 
+}
+
+
+filter_guild=function() {
+
+  var exileForm = document.getElementById("exile-form");
+
+  var exileError = document.getElementById("toast-error-message");
+
+  var boardField = document.getElementById("exile-username");
+
+  var isValidUsername = boardField.checkValidity();
+
+  boardname = boardField.value;
+
+  if (isValidUsername) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("post", "/settings/block_guild");
+    xhr.withCredentials=true;
+    f=new FormData();
+    f.append("board", boardname);
+    f.append("formkey", formkey());
+    xhr.onload=function(){
+      if (xhr.status<300) {
+        window.location.reload(true);
+      }
+      else {
+        $('#toast-exile-error').toast('dispose');
+        $('#toast-exile-error').toast('show');
+        exileError.textContent = JSON.parse(xhr.response)["error"];
+      }
+    }
+    xhr.send(f)
+  }
+
+}
+
+coin_quote = function() {
+
+  var coins = document.getElementById('select-coins');
+  var btn = document.getElementById('buy-coin-btn')
+  var promo=document.getElementById('promo-code')
+  var promotext=document.getElementById('promo-text')
+
+  coin_count = coins.selectedOptions[0].value
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('get', '/shop/get_price?coins='+coin_count+'&promo='+promo.value)
+
+  xhr.onload=function(){
+    var s = 'Buy '+ coin_count + ' Coin';
+
+    if (coin_count > 1){s = s+'s'};
+
+    s=s+': $'+JSON.parse(xhr.response)["price"];
+
+    btn.value=s;
+
+    promotext.innerText=JSON.parse(xhr.response)["promo"];
+  }
+  xhr.send()
+}
+
+
+var tipModal2 = function(id, content, link, recipient, recipientPFP) {
+  console.log('opened modal, tipModal2 function triggered')
+
+  document.getElementById('tip-recipient-pfp').src = recipientPFP;
+
+  document.getElementById("tip-content-type").innerText = content
+  document.getElementById("tip-recipient-username").innerText = recipient
+
+  document.getElementById("sendTipButton").onclick = function() {
+    post_toast('/gift_'+ content +'/' + id + '?coins=1',
+      callback = function() {
+        location.href = link
+      }
+      )
+  }
+
+  console.log(recipientPFP, id, content, link, recipient)
+}
+
+var togglecat = function(sort, reload=false, delay=1000, page="/all") {
+  var cbs = document.getElementsByClassName('cat-check');
+  var l = []
+  for (var i=0; i< cbs.length; i++) {
+    l.push(cbs[i].checked)
+  }
+  setTimeout(function(){triggercat(sort, l, reload, page)}, delay)
+  return l;
+}
+
+var triggercat=function(sort, cats, reload, page) {
+
+  var cbs = document.getElementsByClassName('cat-check');
+  var l = []
+  for (var i=0; i< cbs.length; i++) {
+    l.push(cbs[i].checked)
+  }
+
+
+
+  for (var i=0; i<l.length; i++){
+    if (cats[i] != l[i]){
+      console.log("triggerfail");
+      return false;
+    }
+  }
+
+  console.log("triggercat")
+
+  var catlist=[]
+  for (var i=0; i< cbs.length; i++) {
+    if(cbs[i].checked){
+      catlist.push(cbs[i].dataset.cat);
+    }
+  }
+
+  var groups = document.getElementsByClassName('cat-group');
+  var grouplist=[];
+  for (i=0; i<groups.length; i++){
+    if(groups[i].checked){
+      grouplist.push(groups[i].dataset.group);
+    }
+  }
+
+  var url='/inpage/all?sort='+ sort +'&cats=' + catlist.join(',') + '&groups=' + grouplist.join(',');
+  
+
+  xhr = new XMLHttpRequest();
+  xhr.open('get', url);
+  xhr.withCredentials=true;
+
+  xhr.onload=function(){
+    if (reload){
+      document.location.href=page
+    }
+    else {
+      var l = document.getElementById('posts');
+      l.innerHTML=xhr.response;
+      register_votes();
+    }
+  }
+  xhr.send()
+}
+
+
+var permsEdit = function(username, permstring) {
+
+  document.getElementById('permedit-user').innerText = username
+  document.getElementById('edit-perm-username').value = username
+
+  cbs = document.getElementsByClassName('perm-box')
+
+  for (i=0; i< cbs.length; i++) {
+    cbs[i].checked = permstring.includes(cbs[i].dataset.perm) || permstring.includes('full')
+  }
+
+}
+
+var permfull=function() {
+
+  cbs = document.getElementsByClassName('perm-box')
+
+  full = cbs[0]
+
+  if (full.checked) {
+    for (i=1; i< cbs.length; i++) {
+      cbs[i].checked = true;
+    }
+  }
+}
+var permother=function() {
+
+  cbs = document.getElementsByClassName('perm-box')
+
+  full = cbs[0]
+
+  for (i=1; i< cbs.length; i++) {
+    if(cbs[i].checked == false) {
+      full.checked=false;
+    }
+  }
+}
+
+var cattoggle=function(id){
+
+  var check = document.getElementById('group-'+id);
+
+  check.click()
+
+  var x=document.getElementsByClassName('group-'+id);
+  for (i=0;i<x.length;i++) {
+    x[i].checked=check.checked
+  }
+
+  card=document.getElementById('cat-card-'+id)
+  card.classList.toggle('selected');
+}
+
+var all_cats=function(page) {
+  var x=document.getElementsByClassName('cat-check');
+  for(i=0;i<x.length;i++){
+    x[i].checked=true;
+  };
+  
+  var y=document.getElementsByClassName('cat-group');
+  for(i=0;i<y.length;i++){
+    y[i].checked=true;
+  };
+
+  togglecat('hot', reload=true, delay=0, page=page)  
+}
+
+
+//mobile prompt
+if (("standalone" in window.navigator) &&       // Check if "standalone" property exists
+    window.navigator.standalone){               // Test if using standalone navigator
+
+    // Web page is loaded via app mode (full-screen mode)
+    // (window.navigator.standalone is TRUE if user accesses website via App Mode)
+
+} else {
+  if (window.innerWidth <= 737){
+    $('#mobile-prompt').tooltip('show')
+    $('.tooltip')[0].addEventListener(
+      'click', 
+      function(event){
+        $('#mobile-prompt').tooltip('hide')
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials=true;
+        xhr.open("POST", '/dismiss_mobile_tip', true);
+        xhr.send();
+      }
+      )
+  }
 }

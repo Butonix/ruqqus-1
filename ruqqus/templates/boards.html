@@ -36,6 +36,17 @@
 {% endblock %}
 {% block content %}
 
+{% if request.args.get('onboarding') %}
+<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+<i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
+<span>
+Welcome to Ruqqus! These communities are currently Trending. Join some to start customizing your <a href="/">home page</a>.
+</span>
+<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+<span aria-hidden="true"><i class="far fa-times"></i></span>
+</button>
+</div>
+{% endif %}
 
 <div class="row row-cols-1 row-cols-md-3 mt-3 p-md-4">
 

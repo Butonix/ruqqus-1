@@ -115,10 +115,10 @@
               <div class="d-flex">
 
                  <form action="/mod/{{ b.base36id }}/color" id="color-form" method="post" class="color-picker" style="line-height: 0">
-                  <input type="hidden" name="formkey" value="{{ v.formkey }}">
+                    <input type="hidden" name="formkey" value="{{ v.formkey }}">
 
-                  <input type="radio" name="color" id="purple" value="805AD5" {% if b.color == '805AD5' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-                  <label class="color-radio" for="purple"><span class="purple" style="background-color: #805AD5">
+                    <input type="radio" name="color" id="purple" value="805AD5" {% if b.color == '805AD5' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+                    <label class="color-radio" for="purple"><span class="purple" style="background-color: #805AD5">
                     {% if b.color == '805AD5' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}</span></label>
 
                     <input type="radio" name="color" id="blue" value="2A96F3" {% if b.color == '2A96F3' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
@@ -156,6 +156,19 @@
 
                 </form>
 
+              </div>
+              
+              <p class="text-small mb-2">Or type a color code:</p>
+              
+              <div class="d-flex">
+              
+                <form action="/mod/{{ b.base36id }}/color" id="color-code-form" method="post">
+                   <input type="hidden" name="formkey" value="{{ v.formkey }}">
+
+                   <input class="form-control" type="text" name="color" id="color-code" value="{{ b.color }}">
+                   <label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
+                </form>
+                
               </div>
 
             </div>

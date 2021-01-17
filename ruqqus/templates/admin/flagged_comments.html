@@ -6,17 +6,18 @@
 
 
     <div class="posts p-3">
-      {% for c in listing %}
-        {{ c.rendered_comment(v=v, render_replies=False, standalone=True) | safe }}
-      {% else %}
-	<div class="row no-gutters">   
-	  <div class="col">      
-	    <div class="text-center py-7">
-	      <div class="h4 p-2">There are no comments here (yet).</div>
-	    </div>       
-	  </div>  
-	</div>
-      {% endfor%}
+      {% with comments=listing %}
+        {% include "comments.html" %}
+      {% endwith %}
+      {% if not listing %}
+    	<div class="row no-gutters">   
+    	  <div class="col">      
+    	    <div class="text-center py-7">
+    	      <div class="h4 p-2">There are no comments here (yet).</div>
+    	    </div>       
+    	  </div>  
+    	</div>
+        {% endif %}
     </div>
 
 {% endblock %}
