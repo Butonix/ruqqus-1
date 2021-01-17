@@ -317,7 +317,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
             CommentVote.user_id == v.id,
             CommentVote.comment_id == i).subquery()
 
-        mod=nSession.query(ModRelationship
+        mod=g.db.query(ModRelationship
             ).filter_by(
             user_id=v.id,
             accepted=True

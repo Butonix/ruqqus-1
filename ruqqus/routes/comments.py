@@ -142,7 +142,7 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
 
             blocking = v.blocking.subquery()
             blocked = v.blocked.subquery()
-            mod=nSession.query(ModRelationship
+            mod=g.db.query(ModRelationship
                 ).filter_by(
                 user_id=v.id,
                 accepted=True
