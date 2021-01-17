@@ -13,7 +13,11 @@ services:
       - DATABASE_CONNECTION_POOL_URL=postgres://postgres@postgres:5432/postgres
       - PYTHONPATH="/opt/ruqqus/service"
       - MASTER_KEY=${MASTER_KEY:-KTVciAUQFpFh2WdJ/oiHJlxl6FvzRZp8kYzAAv3l2OA=}
+      - HCAPTCHA_SECRET="asdffgfg1234"
+      - CLOUDFLARE_KEY="vcbxnsdfgh455445"
       - SESSION_COOKIE_SECURE=false
+      - AWS_ACCESS_KEY_ID="asdd23"
+      - AWS_SECRET_ACCESS_KEY="123123"
       - FLASK_DEBUG=1
       - FLASK_ENV=development
     links:
