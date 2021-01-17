@@ -216,7 +216,6 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
 
         current_ids = [x.id for x in output]
 
-
     post.tree_comments()
 
     post.replies=[top_comment]
@@ -314,7 +313,6 @@ def api_comment(v):
     # check for archive and ban state
     post = get_post(parent_id)
     if post.is_archived or not post.board.can_comment(v):
-
         return jsonify({"error": "You can't comment on this."}), 403
 
     # get bot status
@@ -419,7 +417,6 @@ def api_comment(v):
     g.db.add(c)
     g.db.flush()
 
-
     if v.has_premium:
         if request.files.get("file"):
             file=request.files["file"]
@@ -457,7 +454,6 @@ def api_comment(v):
         body_html=body_html,
         body=body
     )
-
     g.db.add(c_aux)
     g.db.flush()
 
@@ -486,7 +482,6 @@ def api_comment(v):
                          user_id=x)
         g.db.add(n)
 
-
     # create auto upvote
     vote = CommentVote(user_id=v.id,
                        comment_id=c.id,
@@ -500,9 +495,7 @@ def api_comment(v):
 
     g.db.commit()
 
-
     # print(f"Content Event: @{v.username} comment {c.base36id}")
-
 
     return {"html": lambda: jsonify({"html": render_template("comments.html",
                                                              v=v,
@@ -512,7 +505,6 @@ def api_comment(v):
                                                              )}),
             "api": lambda: c.json
             }
-
 
 
 @app.route("/edit_comment/<cid>", methods=["POST"])
@@ -570,7 +562,6 @@ def edit_comment(cid, v):
         if x.check(body):
             c.is_offensive = True
             break
-
         else:
             c.is_offensive = False
 
@@ -636,7 +627,6 @@ def edit_comment(cid, v):
 
     c.body = body
     c.body_html = body_html
-
     c.edited_utc = int(time.time())
 
     g.db.add(c)
@@ -666,7 +656,6 @@ def delete_comment(cid, v):
     c.is_deleted = True
 
     g.db.add(c)
-
 
     cache.delete_memoized(User.commentlisting, v)
 
