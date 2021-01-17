@@ -346,7 +346,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 
         x = items[0]
         x._voted = items[1] or 0
-        x._is_guildmaster=items[2] or None
+        x._is_guildmaster=items[2] or 0
 
         block = nSession.query(UserBlock).filter(
             or_(
