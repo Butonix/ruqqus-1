@@ -339,6 +339,11 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
             Comment.id == i
         ).join(
             vt, vt.c.comment_id == Comment.id, isouter=True
+        ).join(Comment.submission
+        ).join(
+            mod,
+            mod.c.board_id==Submission.board_id,
+            isouter=True
         ).first()
 
         if not items:
