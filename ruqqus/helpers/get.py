@@ -317,9 +317,18 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
             CommentVote.user_id == v.id,
             CommentVote.comment_id == i).subquery()
 
+        mod=nSession.query(ModRelationship
+            ).filter_by(
+            user_id=v.id,
+            accepted=True
+            ).subquery()
 
 
-        items = g.db.query(Comment, vt.c.vote_type).options(
+        items = g.db.query(
+            Comment, 
+            vt.c.vote_type,
+            aliased(ModRelationship, alias=mod)
+            ).options(
             joinedload(Comment.author).joinedload(User.title)
         )
 
@@ -337,6 +346,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 
         x = items[0]
         x._voted = items[1] or 0
+        x._is_guildmaster=items[2] or None
 
         block = nSession.query(UserBlock).filter(
             or_(
