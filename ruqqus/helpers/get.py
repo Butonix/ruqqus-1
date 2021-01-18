@@ -338,7 +338,9 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
         items=items.filter(
             Comment.id == i
         ).join(
-            vt, vt.c.comment_id == Comment.id, isouter=True
+            vt, 
+            vt.c.comment_id == Comment.id, 
+            isouter=True
         ).join(
             Comment.post,
             isouter=True
@@ -429,7 +431,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             Comment.post,
             isouter=True
             ).join(
-            Submission.board
+            Submission.board,
+            isouter=True
             ).join(
             mod,
             mod.c.board_id==Submission.board_id,
