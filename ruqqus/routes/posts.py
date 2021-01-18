@@ -472,7 +472,8 @@ def submit_post(v):
         v.ban(reason="Spamming.",
               days=1)
 
-        for alt in v.alts if not alt.is_suspended:
+        for alt in v.alts:
+            if not alt.is_suspended:
                 alt.ban(reason="Spamming.", days=1)
 
         for post in similar_posts + similar_urls:
