@@ -438,7 +438,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             mod.c.board_id==Submission.board_id,
             isouter=True
             ).options(
-            contains_eager(Comment.post).contains_eager(Submission.board)
+            contains_eager(Comment.post) #.contains_eager(Submission.board)
             )
 
         if load_parent:
