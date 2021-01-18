@@ -410,7 +410,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         query = nSession.query(
             Comment, 
             aliased(CommentVote, alias=vt),
-    #        aliased(ModRelationship, alias=mod)
+            aliased(ModRelationship, alias=mod)
             ).options(
             joinedload(Comment.author).joinedload(User.title)
             )
