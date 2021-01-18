@@ -418,7 +418,17 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         if v.admin_level >=4:
             query=query.options(joinedload(Comment.oauth_app))
 
-
+        if load_parent:
+            query = query.options(
+                joinedload(
+                    Comment.parent_comment
+                    ).joinedload(
+                    Comment.author
+                    ).joinedload(
+                    User.title
+                    )
+                )
+            
         query = query.filter(
             Comment.id.in_(cids)
             ).join(
@@ -437,16 +447,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             isouter=True
             )
 
-        if load_parent:
-            query = query.options(
-                joinedload(
-                    Comment.parent_comment
-                    ).joinedload(
-                    Comment.author
-                    ).joinedload(
-                    User.title
-                    )
-                )
+
 
         query=query.options(
             contains_eager(Comment.post).contains_eager(Submission.board)
