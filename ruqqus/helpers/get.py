@@ -431,10 +431,10 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             ).join(
             Submission.board,
             isouter=True
-   #         ).join(
-   #         mod,
-   #         mod.c.board_id==Submission.board_id,
-   #         isouter=True
+            ).join(
+            mod,
+            mod.c.board_id==Submission.board_id,
+            isouter=True
             ).options(
             contains_eager(Comment.post).contains_eager(Submission.board)
             )
