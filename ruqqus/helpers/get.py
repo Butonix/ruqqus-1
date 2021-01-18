@@ -430,9 +430,9 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             ).join(
             Comment.post,
             isouter=True
-            ).join(
-            Submission.board,
-            isouter=True
+        #    ).join(
+        #    Submission.board,
+        #    isouter=True
             ).join(
             mod,
             mod.c.board_id==Submission.board_id,
