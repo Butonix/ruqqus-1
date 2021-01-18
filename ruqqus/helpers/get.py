@@ -426,7 +426,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             ).filter(
             Comment.id.in_(cids)
             ).join(
-            Comment.post
+            Comment.post,
+            isouter=True
             ).join(
             Submission.board
             ).join(
