@@ -436,8 +436,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             vt.c.comment_id == Comment.id,
             isouter=True
             ).join(
-            Submission
-            Submission.id==Comment.parent_submission,
+            Comment.post,
             isouter=True
     #        ).join(
     #        Submission.board,
@@ -451,7 +450,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
 
         query=query.options(
-            contains_eager(Comment.post) #.contains_eager(Submission.board)
+    #        contains_eager(Comment.post).contains_eager(Submission.board)
             ).order_by(None).all()
 
         comments=[x for x in query]
