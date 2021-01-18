@@ -439,10 +439,10 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             ).join(
             Submission.board,
             isouter=True
-   #         ).join(
-   #         mod,
-   #         mod.c.board_id==Submission.board_id,
-   #         isouter=True
+            ).join(
+            mod,
+            mod.c.board_id==Submission.board_id,
+            isouter=True
             ).filter(
             Comment.id.in_(cids)
             )
@@ -458,7 +458,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         output = [x[0] for x in comments]
         for i in range(len(output)):
             output[i]._voted = comments[i][1].vote_type if comments[i][1] else 0
-   #         output[i]._is_guildmaster = comments[i][2]
+            output[i]._is_guildmaster = comments[i][2]
 
 
 
