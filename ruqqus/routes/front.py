@@ -32,6 +32,8 @@ def notifications(v):
 
     comments = get_comments(cids, v=v, sort_type="new", load_parent=True)
 
+    print(len(cids), len(comments))
+
     listing = []
     for c in comments:
         c._is_blocked = False
