@@ -419,12 +419,12 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             query=query.options(joinedload(Comment.oauth_app))
 
 
-        query = query.join(
+        query = query.filter(
+            Comment.id.in_(cids)
+            ).join(
             vt,
             vt.c.comment_id == Comment.id,
             isouter=True
-            ).filter(
-            Comment.id.in_(cids)
             ).join(
             Comment.post,
             isouter=True
