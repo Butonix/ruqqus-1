@@ -6,6 +6,7 @@ from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 import secrets
 import threading
+from os import environ
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -22,7 +23,7 @@ from flask import *
 from ruqqus.__main__ import app, limiter
 
 
-BUCKET="i.ruqqus.com"
+BUCKET=environ.get("S3_BUCKET",'i.ruqqus.com')
 
 
 @app.route("/comment/<cid>", methods=["GET"])
@@ -133,20 +134,23 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
 
     sort_type = request.args.get("sort", "hot")
     # children comments
+
     current_ids = [comment.id]
     for i in range(6 - context):
         if v:
+
             votes = g.db.query(CommentVote).filter(
                 CommentVote.user_id == v.id).subquery()
 
             blocking = v.blocking.subquery()
             blocked = v.blocked.subquery()
 
+
             comms = g.db.query(
                 Comment,
                 votes.c.vote_type,
                 blocking.c.id,
-                blocked.c.id
+                blocked.c.id,
             ).select_from(Comment).options(
                 joinedload(Comment.author).joinedload(User.title)
             ).filter(
@@ -185,6 +189,7 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
                 comment._voted = c[1] or 0
                 comment._is_blocking = c[2] or 0
                 comment._is_blocked = c[3] or 0
+                comment._is_guildmaster=top_comment._is_guildmaster
                 output.append(comment)
         else:
 
