@@ -409,7 +409,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
         query = nSession.query(
             Comment, 
-            vt.c.vote_type,
+            aliased(CommentVote, alias=vt),
             aliased(ModRelationship, alias=mod)
             ).options(
             joinedload(Comment.author).joinedload(User.title)
@@ -456,7 +456,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
         output = [x[0] for x in comments]
         for i in range(len(output)):
-            output[i]._voted = comments[i][1] or 0
+            output[i]._voted = comments[i][1].vote_type or 0
             output[i]._is_guildmaster = comments[i][2]
 
 
