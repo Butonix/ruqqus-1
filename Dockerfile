@@ -1,4 +1,4 @@
-FROM heroku/heroku:18
+FROM ubuntu:18.04
 
 COPY supervisord.conf /etc/supervisord.conf
 
