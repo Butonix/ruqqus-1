@@ -31,7 +31,8 @@ def notifications(v):
     cids = cids[0:25]
 
     comments = get_comments(cids, v=v, sort_type="new", load_parent=True)
-
+    print(cids)
+    print([x.id for x in comments])
 
     listing = []
     for c in comments:
