@@ -429,22 +429,22 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
                     )
                 )
 
-        query = query.filter(
-            Comment.id.in_(cids)
-            ).join(
+        query = query.join(
             vt,
             vt.c.comment_id == Comment.id,
             isouter=True
             ).join(
             Comment.post,
             isouter=True
-    #        ).join(
-    #        Submission.board,
-    #        isouter=True
-    #        ).join(
-    #        mod,
-    #        mod.c.board_id==Submission.board_id,
-    #        isouter=True
+            ).join(
+            Submission.board,
+            isouter=True
+            ).join(
+            mod,
+            mod.c.board_id==Submission.board_id,
+            isouter=True
+            ).filter(
+            Comment.id.in_(cids)
             )
 
 
