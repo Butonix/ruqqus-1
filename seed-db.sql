@@ -16,10 +16,10 @@ SET default_table_access_method = heap;
 
 -- Insert test user (username = "ruqqie", password = "password")
 INSERT INTO public.users (id, username, email, passhash, created_utc, creation_ip, tos_agreed_utc, login_nonce, admin_level, has_banner, has_profile, is_nsfw, profile_nonce, banner_nonce )
-VALUES (NEXTVAL('public.users_id_seq'), 'ruqqie', 'ruqqie@ruqqus.com', 'pbkdf2:sha512:150000$vmPzuBFj$24cde8a6305b7c528b0428b1e87f256c65741bb035b4356549c13e745cc0581701431d5a2297d98501fcf20367791b4334dcd19cf063a6e60195abe8214f91e8',1592672337, '127.0.0.1', 1592672337, 1, 4, 'false', 'true', 'false', 0, 0);
+VALUES (NEXTVAL('public.users_id_seq'), 'ruqqie', 'ruqqie@ruqqus.com', 'pbkdf2:sha512:150000$vmPzuBFj$24cde8a6305b7c528b0428b1e87f256c65741bb035b4356549c13e745cc0581701431d5a2297d98501fcf20367791b4334dcd19cf063a6e60195abe8214f91e8',1592672337, '127.0.0.1', 1592672337, 1, 4, 'false', 'false', 'false', 0, 0);
 
-INSERT INTO public.boards(name, is_banned, created_utc, description, description_html, creator_id, color, has_banner, banner_nonce, has_profile, profile_nonce, color_nonce, stored_subscriber_count) VALUES('general', 'false', 1592984412, 'board description', '<p>general description</p>+', 1, '805ad5', 'false', 0, 'true', 0, 0, 0);
-INSERT INTO public.boards(name, is_banned, created_utc, description, description_html, creator_id, color, has_banner, banner_nonce, has_profile, profile_nonce, color_nonce, stored_subscriber_count) VALUES('ruqqus', 'false', 1592984412, 'board description', '<p>ruqqus description</p>+', 1, '805ad5', 'false', 0, 'true', 0, 0, 0);
+INSERT INTO public.boards(name, is_banned, created_utc, description, description_html, creator_id, color, has_banner, banner_nonce, has_profile, profile_nonce, color_nonce, stored_subscriber_count, subcat_id) VALUES('general', 'false', 1592984412, 'board description', '<p>general description</p>+', 1, '805ad5', 'false', 0, 'false', 0, 0, 0, 1);
+INSERT INTO public.boards(name, is_banned, created_utc, description, description_html, creator_id, color, has_banner, banner_nonce, has_profile, profile_nonce, color_nonce, stored_subscriber_count, subcat_id) VALUES('ruqqus', 'false', 1592984412, 'board description', '<p>ruqqus description</p>+', 1, '805ad5', 'false', 0, 'false', 0, 0, 0, 1);
 INSERT INTO public.categories(name, id, description, color, is_nsfw, visible, icon) VALUES('Finance', 1, 'the /biz/', '805ad5', False, 'true',  'fa-btc');
 INSERT INTO public.subcategories(name, id, cat_id, description, _visible) VALUES('CryptoCurrency', 1, 1, 'ANCAPS ONLY', 'true');
 
@@ -86,62 +86,62 @@ COPY public.titles (id, is_before, text, qualification_expr, requirement_string,
 
 
 COPY public.submissions (id, upvotes, downvotes, author_id, created_utc, is_banned, over_18, distinguish_level, created_str, stickied, board_id, is_deleted, domain_ref, is_approved, approved_utc, original_board_id, edited_utc, creation_ip, mod_approved, is_image, has_thumb, accepted_utc, post_public, score_hot, score_top, score_activity, score_disputed, is_offensive, is_pinned, is_nsfl, repost_id, score_best) FROM stdin;
-1	10	0	1	1595380651	f	f	0	01:17 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-3	10	0	1	1595380697	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-4	10	0	1	1595380717	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-5	10	0	1	1595380731	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-6	10	0	1	1595380747	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-7	10	0	1	1595380777	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-8	10	0	1	1595380788	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-9	10	0	1	1595380824	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-10	10	0	1	1595380838	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-11	10	0	1	1595380850	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-12	10	0	1	1595380860	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-13	10	0	1	1595380870	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-14	10	0	1	1595380886	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-15	10	0	1	1595380923	f	f	0	01:22 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-16	10	0	1	1595380938	f	f	0	01:22 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	3	0
-2	10	0	1	1595380669	f	t	0	01:17 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-17	10	0	1	1595381019	f	t	0	01:23 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-18	10	0	1	1595381047	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-19	10	0	1	1595381058	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-20	10	0	1	1595381078	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-21	10	0	1	1595381090	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-22	10	0	1	1595381111	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-23	10	0	1	1595381123	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-24	10	0	1	1595381133	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-25	10	0	1	1595381144	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-26	10	0	1	1595381156	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+99999991	10	0	1	1611022409	f	f	0	01:17 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+99999993	10	0	1	1611022409	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+99999994	10	0	1	1611022409	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+99999995	10	0	1	1611022409	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+99999996	10	0	1	1611022409	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+99999997	10	0	1	1611022409	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+99999998	10	0	1	1611022409	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+99999999	10	0	1	1611022409	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999910	10	0	1	1611022409	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999911	10	0	1	1611022409	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999912	10	0	1	1611022409	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999913	10	0	1	1611022409	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999914	10	0	1	1611022409	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999915	10	0	1	1611022409	f	f	0	01:22 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999916	10	0	1	1611022409	f	f	0	01:22 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	3	0
+99999992	10	0	1	1611022409	f	t	0	01:17 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999917	10	0	1	1611022409	f	t	0	01:23 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999918	10	0	1	1611022409	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999919	10	0	1	1611022409	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999920	10	0	1	1611022409	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999921	10	0	1	1611022409	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999922	10	0	1	1611022409	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999923	10	0	1	1611022409	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999924	10	0	1	1611022409	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999925	10	0	1	1611022409	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
+999999926	10	0	1	1611022409	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
 \.
 
 
 COPY public.submissions_aux (id, title, url, body, body_html, embed_url, ban_reason, key_id) FROM stdin;
-1	test 1		test 1	<p>test 1</p>\n			1
-2	test 2		test 2	<p>test 2</p>\n			2
-3	test 3	https://ruqqus.com	test 3	<p>test 3</p>\n			3
-4	test 4		test 4	<p>test 4</p>\n			4
-5	test 5		test 5	<p>test 5</p>\n			5
-6	test 6		test 6	<p>test 6</p>\n			6
-7	test 7		test 7	<p>test 7</p>\n			7
-8	test 8		test 8	<p>test 8</p>\n			8
-9	test 9		test 9	<p>test 9</p>\n			9
-10	test 10		test 10	<p>test 10</p>\n			10
-11	test 11		test 11	<p>test 11</p>\n			11
-12	test 12		test 12	<p>test 12</p>\n			12
-13	test 13		test 13	<p>test 13</p>\n			13
-14	test 14		test 14	<p>test 14</p>\n			14
-15	test 15		test 15	<p>test 15</p>\n			15
-16	test 16	https://ruqqus.com					16
-17	test 17		test 17	<p>test 17</p>\n			17
-18	test 18		test 18	<p>test 18</p>\n			18
-19	test 19		test 19	<p>test 19</p>\n			19
-20	test 20	https://ruqqus.com	test 20	<p>test 20</p>\n			20
-21	test 21		test 21	<p>test 21</p>\n			21
-22	test 22		test 22	<p>test 22</p>\n			22
-23	test 23		test 23	<p>test 23</p>\n			23
-24	test 24		test 24	<p>test 24</p>\n			24
-25	test 25		test 25	<p>test 25</p>\n			25
-26	test 26		test 26	<p>test 26</p>\n			26
+99999991	test 1		test 1	<p>test 1</p>\n			99999991
+99999992	test 2		test 2	<p>test 2</p>\n			99999992
+99999993	test 3	https://ruqqus.com	test 3	<p>test 3</p>\n			99999993
+99999994	test 4		test 4	<p>test 4</p>\n			99999994
+99999995	test 5		test 5	<p>test 5</p>\n			99999995
+99999996	test 6		test 6	<p>test 6</p>\n			99999996
+99999997	test 7		test 7	<p>test 7</p>\n			99999997
+99999998	test 8		test 8	<p>test 8</p>\n			99999998
+99999999	test 9		test 9	<p>test 9</p>\n			99999999
+999999910	test 10		test 10	<p>test 10</p>\n			999999910
+999999911	test 11		test 11	<p>test 11</p>\n			999999911
+999999912	test 12		test 12	<p>test 12</p>\n			999999912
+999999913	test 13		test 13	<p>test 13</p>\n			999999913
+999999914	test 14		test 14	<p>test 14</p>\n			999999914
+999999915	test 15		test 15	<p>test 15</p>\n			999999915
+999999916	test 16	https://ruqqus.com					999999916
+999999917	test 17		test 17	<p>test 17</p>\n			999999917
+999999918	test 18		test 18	<p>test 18</p>\n			999999918
+999999919	test 19		test 19	<p>test 19</p>\n			999999919
+999999920	test 20	https://ruqqus.com	test 20	<p>test 20</p>\n			999999920
+999999921	test 21		test 21	<p>test 21</p>\n			999999921
+999999922	test 22		test 22	<p>test 22</p>\n			999999922
+999999923	test 23		test 23	<p>test 23</p>\n			999999923
+999999924	test 24		test 24	<p>test 24</p>\n			999999924
+999999925	test 25		test 25	<p>test 25</p>\n			999999925
+999999926	test 26		test 26	<p>test 26</p>\n			999999926
 \.
 
 
