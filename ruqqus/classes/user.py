@@ -198,7 +198,7 @@ class User(Base, Stndrd, Age_times):
     def idlist(self, sort="hot", page=1, t=None, filter_words="", **kwargs):
 
         posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
-                                                                           is_deleted=False,
+                                                                           deleted_utc=0,
                                                                            stickied=False
                                                                            )
 
