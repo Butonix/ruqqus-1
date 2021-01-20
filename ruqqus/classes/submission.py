@@ -539,7 +539,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         if not self.is_banned and self.deleted_utc == 0:
             return self.json_core
 
-        return {
+        data= {
             "title":self.title,
             "author": self.author.username,
             "url": self.url,
@@ -551,10 +551,15 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             'id': self.base36id,
             'fullname': self.fullname,
             'guild_name': self.board.name,
-            'original_guild_name': self.original_board.name if not self.board_id == self.original_board_id else None,
             'comment_count': self.comment_count,
             'permalink': self.permalink
         }
+
+        if self.original_board_id != self.board_id:
+
+            data['original_guild_name'] = self.original_board.name
+
+        return data
 
     @property
     def json_admin(self):
