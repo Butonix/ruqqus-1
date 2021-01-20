@@ -198,7 +198,7 @@ class User(Base, Stndrd, Age_times):
     def idlist(self, sort="hot", page=1, t=None, filter_words="", **kwargs):
 
         posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
-                                                                           is_deleted=False,
+                                                                           deleted_utc=0,
                                                                            stickied=False
                                                                            )
 
@@ -320,7 +320,7 @@ class User(Base, Stndrd, Age_times):
             submissions = submissions.filter_by(is_offensive=False)
 
         if not (v and (v.admin_level >= 3)):
-            submissions = submissions.filter_by(is_deleted=False)
+            submissions = submissions.filter_by(deleted_utc=0)
 
         if not (v and (v.admin_level >= 3 or v.id == self.id)):
             submissions = submissions.filter_by(is_banned=False)
@@ -366,7 +366,7 @@ class User(Base, Stndrd, Age_times):
             comments = comments.filter(Submission.is_nsfl == False)
 
         if (not v) or v.admin_level < 3:
-            comments = comments.filter(Comment.is_deleted == False)
+            comments = comments.filter(Comment.deleted_utc == 0)
 
         if not (v and (v.admin_level >= 3 or v.id == self.id)):
             comments = comments.filter(Comment.is_banned == False)
@@ -519,7 +519,7 @@ class User(Base, Stndrd, Age_times):
 
         notifications = self.notifications.join(Notification.comment).filter(
             Comment.is_banned == False,
-            Comment.is_deleted == False)
+            Comment.deleted_utc == 0)
 
         if not all_:
             notifications = notifications.filter(Notification.read == False)
@@ -544,7 +544,7 @@ class User(Base, Stndrd, Age_times):
     @lazy
     def notifications_count(self):
 
-        return self.notifications.join(Notification.comment).filter(Notification.read==False, Comment.is_banned==False, Comment.is_deleted==False).count()
+        return self.notifications.join(Notification.comment).filter(Notification.read==False, Comment.is_banned==False, Comment.deleted_utc==0).count()
 
     @property
     def post_count(self):
@@ -555,7 +555,7 @@ class User(Base, Stndrd, Age_times):
     def comment_count(self):
 
         return self.comments.filter(Comment.parent_submission!=None).filter_by(
-            is_banned=False, is_deleted=False).count()
+            is_banned=False, deleted_utc=0).count()
 
     @property
     @lazy
@@ -847,7 +847,7 @@ class User(Base, Stndrd, Age_times):
     def saved_idlist(self, page=1):
 
         posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
-                                                                           is_deleted=False
+                                                                           deleted_utc=0
                                                                            )
 
         if not self.over_18:

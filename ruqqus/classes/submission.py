@@ -51,7 +51,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     edited_utc = Column(BigInteger, default=0)
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
-    is_deleted = Column(Boolean, default=False)
+    deleted_utc = Column(Integer, default=0)
+    purged_utc = Column(Integer, default=0)
     distinguish_level = Column(Integer, default=0)
     gm_distinguish = Column(Integer, ForeignKey("boards.id"), default=0)
     distinguished_board = relationship("Board", lazy="joined", primaryjoin="Board.id==Submission.gm_distinguish")
@@ -154,6 +155,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return base36encode(self.board_id)
 
     @property
+    @lazy
+    def is_deleted(self):
+        return bool(self.deleted_utc)
+    
+
+    @property
     def is_repost(self):
         return bool(self.repost_id)
 
@@ -196,7 +203,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def rendered_page(self, comment=None, comment_info=None, v=None):
 
         # check for banned
-        if self.is_deleted:
+        if self.deleted_utc > 0:
             template = "submission_deleted.html"
         elif v and v.admin_level >= 3:
             template = "submission.html"
@@ -334,6 +341,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             self.is_offensive = False
 
     @property
+
     def json_raw(self):
         data = {'author_name': self.author.username if not self.author.is_deleted else None,
                 'permalink': self.permalink,
@@ -397,7 +405,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def json(self):
         data=self.json_core
         
-        if self.is_deleted or self.is_banned:
+        if self.deleted_utc > 0 or self.is_banned:
             return data
 
         data["author"]=self.author.json_core
@@ -528,7 +536,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def self_download_json(self):
 
         #This property should never be served to anyone but author and admin
-        if not self.is_banned and not self.is_deleted:
+        if not self.is_banned and self.deleted_utc == 0:
             return self.json_core
 
         return {
@@ -538,7 +546,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             "body": self.body,
             "body_html": self.body_html,
             "is_banned": bool(self.is_banned),
-            "is_deleted": self.is_deleted,
+            "deleted_utc": self.deleted_utc,
             'created_utc': self.created_utc,
             'id': self.base36id,
             'fullname': self.fullname,

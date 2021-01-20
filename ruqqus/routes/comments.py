@@ -299,7 +299,7 @@ def api_comment(v):
 
     # check existing
     existing = g.db.query(Comment).join(CommentAux).filter(Comment.author_id == v.id,
-                                                           Comment.is_deleted == False,
+                                                           Comment.deleted_utc == 0,
                                                            Comment.parent_comment_id == parent_comment_id,
                                                            Comment.parent_submission == parent_submission,
                                                            CommentAux.body == body
@@ -308,7 +308,7 @@ def api_comment(v):
         return jsonify({"error": f"You already made that comment: {existing.permalink}"}), 409
 
     # No commenting on deleted/removed things
-    if parent.is_banned or parent.is_deleted:
+    if parent.is_banned or parent.deleted_utc > 0:
         return jsonify(
             {"error": "You can't comment on things that have been deleted."}), 403
 
@@ -532,7 +532,7 @@ def edit_comment(cid, v):
     if not c.author_id == v.id:
         abort(403)
 
-    if c.is_banned or c.is_deleted:
+    if c.is_banned or c.deleted_utc > 0:
         abort(403)
 
     if c.board.has_ban(v):
@@ -669,7 +669,7 @@ def delete_comment(cid, v):
     if not c.author_id == v.id:
         abort(403)
 
-    c.is_deleted = True
+    c.deleted_utc = int(time.time())
 
     g.db.add(c)
 
@@ -691,7 +691,7 @@ def embed_comment_cid(cid, pid=None):
     if not comment.parent:
         abort(403)
 
-    if comment.is_banned or comment.is_deleted:
+    if comment.is_banned or comment.deleted_utc > 0:
         return {'html': lambda: render_template("embeds/comment_removed.html", c=comment),
                 'api': lambda: {'error': f'Comment {cid} has been removed'}
                 }

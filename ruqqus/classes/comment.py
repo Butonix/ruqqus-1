@@ -47,7 +47,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     distinguish_level = Column(Integer, default=0)
     gm_distinguish = Column(Integer, ForeignKey("boards.id"), default=0)
     distinguished_board = relationship("Board", lazy="joined", primaryjoin="Comment.gm_distinguish==Board.id")
-    is_deleted = Column(Boolean, default=False)
+    deleted_utc = Column(Integer, default=0)
+    purged_utc = Column(Integer, default=0)
     is_approved = Column(Integer, default=0)
     approved_utc = Column(Integer, default=0)
     creation_ip = Column(String(64), default='')
@@ -123,6 +124,11 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     @property
     @lazy
+    def is_deleted(self):
+        return bool(self.deleted_utc)
+
+    @property
+    @lazy
     def is_top_level(self):
         return self.parent_fullname and self.parent_fullname.startswith("t2_")
 
@@ -172,7 +178,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         if self.replies == []:
             return False
 
-        if any([not x.is_banned and not x.is_deleted for x in self.replies]):
+        if any([not x.is_banned and x.deleted_utc == 0 for x in self.replies]):
             return True
 
         else:
@@ -184,7 +190,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         kwargs["post_base36id"] = kwargs.get(
             "post_base36id", self.post.base36id if self.post else None)
 
-        if self.is_banned or self.is_deleted:
+        if self.is_banned or self.deleted_utc > 0:
             if v and v.admin_level > 1:
                 return render_template("single_comment.html",
                                        v=v,
@@ -285,16 +291,16 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                     'level': self.level,
                     'parent': self.parent_fullname
                     }
-        elif self.is_deleted:
-            data= {'is_deleted': True,
+        elif self.deleted_utc > 0:
+            data= {'deleted_utc': self.deleted_utc,
                     'id': self.base36id,
                     'post': self.post.base36id,
                     'level': self.level,
                     'parent': self.parent_fullname
                     }
         else:
-            data=self.json_raw
 
+            data=self.json_raw
 
             if self.level>=2:
                 data['parent_comment_id']= base36encode(self.parent_comment_id),
@@ -309,7 +315,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     
         data=self.json_core
 
-        if self.is_deleted or self.is_banned:
+        if self.deleted_utc > 0 or self.is_banned:
             return data
 
         data["author"]=self.author.json_core
@@ -416,7 +422,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             "body": self.body,
             "body_html": self.body_html,
             "is_banned": bool(self.is_banned),
-            "is_deleted": self.is_deleted,
+            "deleted_utc": self.deleted_utc,
             'created_utc': self.created_utc,
             'id': self.base36id,
             'fullname': self.fullname,
