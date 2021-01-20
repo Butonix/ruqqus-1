@@ -10,7 +10,7 @@ import time
 from .get import *
 from ruqqus.__main__ import app, db_session
 
-headers = {"User-Agent": app.config["UserAgent"]}
+
 
 
 def thumbnail_thread(pid, debug=False):
@@ -29,6 +29,7 @@ def thumbnail_thread(pid, debug=False):
 
     domain_obj = post.domain_obj
 
+    headers={"User-Agent": f"Ruqqus thumbnail acquisition for post {post.base36id}"}
     if debug:
         print(f"domain_obj {domain_obj}")
         if domain_obj:
