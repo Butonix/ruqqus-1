@@ -254,9 +254,7 @@ def u_username_comments(username, v=None):
     user=get_user(username, v=v)
 
     if user.is_blocking:
-        
-
-    return jsonify(user.json)
+        return jsonify(user.json)
 
 
 @app.route("/api/follow/<username>", methods=["POST"])
