@@ -6,7 +6,6 @@ import pyotp
 import qrcode
 import io
 import threading
-import daemon
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -502,11 +501,10 @@ def my_info_post(v):
     if method not in ['html','json']:
         abort(400)
 
-    try:
-        with daemon.DaemonContext():
-            info_packet(v.username, method=method)
-    except:
-        abort(500)
+    thread=threading.Thread(target=info_packet, args=(v.username,), kwargs={'method':method})
+    thread.setDaemon(True)
+    thread.start()
+
     #info_packet(g.db, v)
 
     return "started"
