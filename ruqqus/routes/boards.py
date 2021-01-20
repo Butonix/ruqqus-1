@@ -223,6 +223,7 @@ def board_name(name, v):
                                                        is_banned=False,
                                                        is_pinned=True,
                                                        deleted_utc=0).order_by(Submission.id.asc()
+
                                                                                 ).limit(4)
         stickies = [x[0] for x in stickies]
         ids = stickies + ids
