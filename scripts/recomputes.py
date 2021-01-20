@@ -106,7 +106,8 @@ def recompute():
             p.submission_aux.url = ""
             p.submission_aux.embed_url = ""
             p.creation_ip = ""
-            p.purged_utc=now
+            p.creation_region=""
+            p.purged_utc=int(time.time())
             p.is_pinned = False
             p.is_stickied = False
             db.add(p)
@@ -123,7 +124,8 @@ def recompute():
             c.comment_aux.body = ""
             c.comment_aux.body_html = ""
             c.creation_ip = ""
-            c.purged_utc=now
+            c.creation_region=""
+            c.purged_utc=int(time.time())
             c.is_pinned = False
             db.add(c)
 
