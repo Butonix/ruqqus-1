@@ -764,7 +764,7 @@ def delete_post_pid(pid, v):
     if not post.author_id == v.id:
         abort(403)
 
-    post.deleted_utc = int(time.time()) + (60 * 60 * 24 * 90)
+    post.deleted_utc = int(time.time())
     post.is_pinned = False
     post.stickied = False
 

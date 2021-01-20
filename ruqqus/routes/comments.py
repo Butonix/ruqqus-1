@@ -653,7 +653,7 @@ def delete_comment(cid, v):
     if not c.author_id == v.id:
         abort(403)
 
-    c.deleted_utc = int(time.time()) + (60 * 60 * 24 * 90)
+    c.deleted_utc = int(time.time())
 
     g.db.add(c)
 
