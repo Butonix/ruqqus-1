@@ -489,9 +489,9 @@ def info_packet(username, method="html"):
 
 
 
-#@app.route("/my_info", methods=["POST"])
-#@auth_required
-#@validate_formkey
+@app.route("/my_info", methods=["POST"])
+@auth_required
+@validate_formkey
 def my_info_post(v):
 
     if not v.is_activated:
@@ -501,15 +501,15 @@ def my_info_post(v):
     if method not in ['html','json']:
         abort(400)
 
-    thread=threading.Thread(target=info_packet, args=(v.username,), kwargs={'method':method}, daemon=True)
-    thread.start()
+    with daemon.DaemonContext():
+        info_packet(v.username, method=method)
 
     #info_packet(g.db, v)
 
     return "started"
 
 
-#@app.route("/my_info", methods=["GET"])
-#@auth_required
+@app.route("/my_info", methods=["GET"])
+@auth_required
 def my_info_get(v):
     return render_template("my_info.html", v=v)
