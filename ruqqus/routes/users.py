@@ -481,7 +481,7 @@ def info_packet(username, method="html"):
             "Your Ruqqus Data",
             "Your Ruqqus data is attached.",
             "Your Ruqqus data is attached.",
-            files={f"{user.username}_{entry}.{method}": io.StringIO(convert_file(packet[entry][method]())) for entry in packet}
+            files={f"{user.username}_{entry}.{method}": io.StringIO(convert_file(str(packet[entry][method]()))) for entry in packet}
         )
 
 
