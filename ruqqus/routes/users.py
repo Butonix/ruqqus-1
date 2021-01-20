@@ -254,7 +254,11 @@ def u_username_comments(username, v=None):
     user=get_user(username, v=v)
 
     if user.is_blocking:
-        return jsonify(user.json)
+        return jsonify({"error": "You're blocking this user."}), 401
+    elif user.is_blocked:
+        return jsonify({"error": "This user is blocking you."}), 403
+
+    return jsonify(user.json)
 
 
 @app.route("/api/follow/<username>", methods=["POST"])
