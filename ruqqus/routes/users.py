@@ -6,6 +6,7 @@ import pyotp
 import qrcode
 import io
 import threading
+import daemon
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
