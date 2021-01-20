@@ -555,7 +555,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             'permalink': self.permalink
         }
 
-        if self.original_board_id != self.board_id:
+        if self.original_board_id and (self.original_board_id!= self.board_id):
 
             data['original_guild_name'] = self.original_board.name
 
