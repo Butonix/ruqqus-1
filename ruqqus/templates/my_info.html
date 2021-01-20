@@ -4,7 +4,12 @@
 <h1>My Info</h1>
 <form action="/my_info" method="post">
 	<input type="hidden" name="formkey" value="{{ v.formkey }}">
-
+	<input type="hidden" name="method" value="html">
 	<input type="submit" class="btn btn-primary" value="Request HTML data">
+</form>
+<form action="/my_info" method="post">
+	<input type="hidden" name="formkey" value="{{ v.formkey }}">
+	<input type="hidden" name="method" value="json">
+	<input type="submit" class="btn btn-primary" value="Request JSON data">
 </form>
 {% endblock %}
