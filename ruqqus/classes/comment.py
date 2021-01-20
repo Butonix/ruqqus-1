@@ -124,6 +124,11 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     @property
     @lazy
+    def is_deleted(self):
+        return bool(self.deleted_utc)
+
+    @property
+    @lazy
     def is_top_level(self):
         return self.parent_fullname and self.parent_fullname.startswith("t2_")
 

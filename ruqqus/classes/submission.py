@@ -155,6 +155,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return base36encode(self.board_id)
 
     @property
+    @lazy
+    def is_deleted(self):
+        return bool(self.deleted_utc)
+    
+
+    @property
     def is_repost(self):
         return bool(self.repost_id)
 
