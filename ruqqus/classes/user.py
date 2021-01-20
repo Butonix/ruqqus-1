@@ -320,7 +320,7 @@ class User(Base, Stndrd, Age_times):
             submissions = submissions.filter_by(is_offensive=False)
 
         if not (v and (v.admin_level >= 3)):
-            submissions = submissions.filter_by(is_deleted=False)
+            submissions = submissions.filter_by(deleted_utc=0)
 
         if not (v and (v.admin_level >= 3 or v.id == self.id)):
             submissions = submissions.filter_by(is_banned=False)
@@ -366,7 +366,7 @@ class User(Base, Stndrd, Age_times):
             comments = comments.filter(Submission.is_nsfl == False)
 
         if (not v) or v.admin_level < 3:
-            comments = comments.filter(Comment.is_deleted == False)
+            comments = comments.filter(Comment.deleted_utc == 0)
 
         if not (v and (v.admin_level >= 3 or v.id == self.id)):
             comments = comments.filter(Comment.is_banned == False)
@@ -519,7 +519,7 @@ class User(Base, Stndrd, Age_times):
 
         notifications = self.notifications.join(Notification.comment).filter(
             Comment.is_banned == False,
-            Comment.is_deleted == False)
+            Comment.deleted_utc == 0)
 
         if not all_:
             notifications = notifications.filter(Notification.read == False)
