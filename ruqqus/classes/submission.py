@@ -541,7 +541,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
         return {
             "title":self.title,
-            "author": self.author.name,
+            "author": self.author.username,
             "url": self.url,
             "body": self.body,
             "body_html": self.body_html,
