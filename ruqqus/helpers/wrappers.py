@@ -455,7 +455,7 @@ def api(*scopes, no_ban=False):
 
                 result = f(*args, **kwargs)
 
-                if isinstance(result, RespObj) or isinstance(result, tuple) or isinstance(result, str):
+                if not isinstance(result, dict):
                     return result
 
                 if request.path.startswith('/inpage/'):
