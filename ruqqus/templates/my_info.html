@@ -1,6 +1,8 @@
 {% extends "default.html" %}
 
 {% block content %}
+
+{% if v.is_activated %}
 <h1>My Info</h1>
 <div>
 <form action="/my_info" method="post">
@@ -16,4 +18,7 @@
 	<input type="submit" class="btn btn-primary" value="Request JSON data">
 </form>
 </div>
+{% else %}
+<div>Verify your email first </div>
+{% endif %}
 {% endblock %}
