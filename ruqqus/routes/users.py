@@ -502,9 +502,11 @@ def my_info_post(v):
     if method not in ['html','json']:
         abort(400)
 
-    with daemon.DaemonContext():
-        info_packet(v.username, method=method)
-
+    try:
+        with daemon.DaemonContext():
+            info_packet(v.username, method=method)
+    except:
+        abort(500)
     #info_packet(g.db, v)
 
     return "started"
