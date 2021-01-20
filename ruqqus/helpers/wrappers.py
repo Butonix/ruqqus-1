@@ -458,12 +458,15 @@ def api(*scopes, no_ban=False):
                 if not isinstance(result, dict):
                     return result
 
-                if request.path.startswith('/inpage/'):
-                    return result['inpage']()
-                elif request.path.startswith('/test/'):
-                    return result['api']()
-                else:
-                    return result['html']()
+                try:
+                    if request.path.startswith('/inpage/'):
+                        return result['inpage']()
+                    elif request.path.startswith('/test/'):
+                        return result['api']()
+                    else:
+                        return result['html']()
+                except KeyError:
+                    return result
 
         wrapper.__name__ = f.__name__
         return wrapper
@@ -472,19 +475,19 @@ def api(*scopes, no_ban=False):
 
 
 SANCTIONS=[
-    "cu",   #Cuba
-    "ir",   #Iran
-    "kp",   #North Korea
-    "sy",   #Syria
-    "tr",   #Turkey
-    "ve",   #Venezuela
+    "CU",   #Cuba
+    "IR",   #Iran
+    "KP",   #North Korea
+    "SY",   #Syria
+    "TR",   #Turkey
+    "VE",   #Venezuela
 ]
 
 def no_sanctions(f):
 
     def wrapper(*args, **kwargs):
 
-        if request.headers.get("cf-ipcountry","").lower() in SANCTIONS:
+        if request.headers.get("cf-ipcountry","") in SANCTIONS:
             abort(451)
 
         return f(*args, **kwargs)
