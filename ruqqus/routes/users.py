@@ -246,6 +246,18 @@ def u_username_comments(username, v=None):
             "api": lambda: jsonify({"data": [c.json for c in listing]})
             }
 
+@app.route("/api/v1/user/<username>/info", methods=["GET"])
+@auth_desired
+@api("read")
+def u_username_comments(username, v=None):
+
+    user=get_user(username, v=v)
+
+    if user.is_blocking:
+        
+
+    return jsonify(user.json)
+
 
 @app.route("/api/follow/<username>", methods=["POST"])
 @auth_required

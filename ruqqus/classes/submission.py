@@ -52,6 +52,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
     deleted_utc = Column(Integer, default=0)
+    purged_utc = Column(Integer, default=0)
     distinguish_level = Column(Integer, default=0)
     gm_distinguish = Column(Integer, ForeignKey("boards.id"), default=0)
     distinguished_board = relationship("Board", lazy="joined", primaryjoin="Board.id==Submission.gm_distinguish")
@@ -85,7 +86,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     is_offensive = Column(Boolean, default=False)
     is_nsfl = Column(Boolean, default=False)
     is_politics = Column(Boolean, default=False)
-    is_purged = Column(Boolean, default=False)
     board = relationship(
         "Board",
         lazy="joined",
