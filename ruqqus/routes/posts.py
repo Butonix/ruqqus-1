@@ -60,6 +60,7 @@ def incoming_post_shortlink(base36id=None):
 @app.route("/api/v1/post/<base36id>", methods=["GET"])
 @app.route("/test/post/<base36id>", methods=["GET"])
 @auth_desired
+
 @api("read")
 def post_base36id(base36id, boardname=None, anything=None, v=None):
     
@@ -69,6 +70,7 @@ def post_base36id(base36id, boardname=None, anything=None, v=None):
 
     board = post.board
     #if the guild name is incorrect, fix the link and redirect
+
 
     if boardname and not boardname == board.name:
         return redirect(post.permalink)
@@ -86,6 +88,7 @@ def post_base36id(base36id, boardname=None, anything=None, v=None):
                                t=t,
                                lo_formkey=make_logged_out_formkey(t),
                                board=post.board
+
                                ),
                 "api":lambda:(jsonify({"error":"Must be 18+ to view"}), 451)
                 }
@@ -111,6 +114,7 @@ def post_base36id_noboard(base36id, anything=None, v=None):
     return redirect(post.permalink)
 
 
+
 @app.route("/submit", methods=["GET"])
 @is_not_banned
 @no_negative_balance("html")
@@ -119,7 +123,9 @@ def submit_get(v):
     board = request.args.get("guild", "general")
     b = get_guild(board, graceful=True)
     if not b:
+
         b = get_guild("general")
+
 
     return render_template("submit.html",
                            v=v,
@@ -161,6 +167,7 @@ def edit_post(pid, v):
             p.is_offensive = True
             break
 
+
     # politics
     p.is_politics = False
     for x in g.db.query(PoliticsWord).all():
@@ -169,7 +176,6 @@ def edit_post(pid, v):
             break
 
     g.db.add(p)
-
 
     return redirect(p.permalink)
 
@@ -192,8 +198,10 @@ def get_post_title(v):
     except BaseException:
         return jsonify({"error": "Could not reach page"}), 400
 
+
     if not x.status_code == 200:
         return jsonify({"error": f"Page returned {x.status_code}"}), x.status_code
+
 
     try:
         soup = BeautifulSoup(x.content, 'html.parser')
@@ -253,6 +261,7 @@ def submit_post(v):
     #                            b=board
     #                            )
 
+
     elif len(title) > 500:
         return {"html": lambda: (render_template("submit.html",
                                                  v=v,
@@ -284,6 +293,7 @@ def submit_post(v):
     title = bleach.clean(title)
 
     # Force https for submitted urls
+
     if request.form.get("url"):
         new_url = ParseResult(scheme="https",
                               netloc=parsed_url.netloc,
@@ -298,6 +308,7 @@ def submit_post(v):
     body = request.form.get("body", "")
     # check for duplicate
     dup = g.db.query(Submission).join(Submission.submission_aux).filter(
+
         Submission.author_id == v.id,
         Submission.deleted_utc == 0,
         Submission.board_id == board.id,
@@ -308,6 +319,7 @@ def submit_post(v):
 
     if dup:
         return redirect(dup.permalink)
+
 
     # check for domain specific rules
 
@@ -346,6 +358,7 @@ def submit_post(v):
         else:
             embed = ""
     else:
+
         embed = ""
 
     # board
@@ -359,6 +372,7 @@ def submit_post(v):
         board = get_guild('general')
 
     if board.is_banned:
+
         return {"html": lambda: (render_template("submit.html",
                                                  v=v,
                                                  error=f"+{board.name} has been banned.",
@@ -409,6 +423,7 @@ def submit_post(v):
         ).join(
             Submission.submission_aux
         ).filter(
+
             or_(
                 and_(
                     Submission.author_id == v.id,
@@ -458,7 +473,8 @@ def submit_post(v):
               days=1)
 
         for alt in v.alts:
-            alt.ban(reason="Spamming.", days=1)
+            if not alt.is_suspended:
+                alt.ban(reason="Spamming.", days=1)
 
         for post in similar_posts + similar_urls:
             post.is_banned = True
@@ -508,6 +524,7 @@ def submit_post(v):
     # render text
 
     body=preprocess(body)
+
     with CustomRenderer() as renderer:
         body_md = renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
@@ -833,7 +850,6 @@ def toggle_post_nsfw(pid, v):
             note = None if mod else "admin action"
             )
         g.db.add(ma)
-
 
     return "", 204
 

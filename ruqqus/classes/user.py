@@ -685,6 +685,28 @@ class User(Base, Stndrd, Age_times):
         return self.has_premium or self.true_score >= 500 or self.created_utc <= 1592974538
 
     @property
+    def json_raw(self):
+        data= {'username': self.username,
+                'permalink': self.permalink,
+                'is_banned': bool(self.is_banned),
+                'is_premium': self.has_premium_no_renew,
+                'created_utc': self.created_utc,
+                'id': self.base36id,
+                'is_private': self.is_private,
+                'profile_url': self.profile_url,
+                'banner_url': self.banner_url,
+                'title': self.title.json if self.title else None,
+                'bio': self.bio,
+                'bio_html': self.bio_html
+                }
+
+        if self.real_id:
+            data['real_id']=self.real_id
+
+        return data
+    
+
+    @property
     def json_core(self):
 
         now=int(time.time())
@@ -703,20 +725,9 @@ class User(Base, Stndrd, Age_times):
                     'is_deleted': True,
                     'id': self.base36id
                     }
+        return self.json_raw
         
-        return {'username': self.username,
-                'permalink': self.permalink,
-                'is_banned': False,
-                'is_premium': self.has_premium_no_renew,
-                'created_utc': self.created_utc,
-                'id': self.base36id,
-                'is_private': self.is_private,
-                'profile_url': self.profile_url,
-                'banner_url': self.banner_url,
-                'title': self.title.json if self.title else None,
-                'bio': self.bio,
-                'bio_html': self.bio_html
-                }
+
 
     @property
     def json(self):
@@ -969,3 +980,14 @@ class User(Base, Stndrd, Age_times):
         
         return self._transactions.filter(PayPalTxn.status!=1).order_by(PayPalTxn.created_utc.desc()).all()
     
+
+    @property
+    def json_admin(self):
+        data=self.json_raw
+
+        data['creation_ip']=self.creation_ip
+        data['creation_region']=self.creation_region
+        data['email']=self.email
+        data['email_verified']=self.is_activated
+
+        return data

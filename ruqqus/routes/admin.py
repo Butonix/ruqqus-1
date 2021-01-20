@@ -687,6 +687,34 @@ def admin_category_get(v):
         b=get_board(request.args.get("guild"), graceful=True)
         )
 
+@app.route("/admin/user_data", methods=["GET"])
+@admin_level_required(5)
+def admin_user_data_get(v):
+
+    user=request.values.get("username")
+    user=get_user(user, graceful=True)
+
+    if not user:
+        return render_template("admin/user_data.html", v=v)
+
+    post_ids = [x[0] for x in g.db.query(Submission.id).filter_by(author_id=user.id).order_by(Submission.created_utc.desc()).all()]
+    posts=get_posts(post_ids)
+
+    comment_ids=[x[0] for x in g.db.query(Comment.id).filter_by(author_id=user.id).order_by(Comment.created_utc.desc()).all()]
+    comments=get_comments(comment_ids)
+
+
+
+    return jsonify(
+        {
+        "submissions":[x.json_admin for x in posts],
+        "comments":[x.json_admin for x in comments],
+        "user":user.json_admin
+            }
+        )
+        
+
+
 
 # @app.route('/admin/deploy', methods=["GET"])
 # @admin_level_required(3)

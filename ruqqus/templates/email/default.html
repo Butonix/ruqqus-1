@@ -458,8 +458,12 @@
                         </div>
                         <h1>{% block title %}Title Goes Here{% endblock %}</h1>
 
-			{% block content %}
-			{% endblock %}
+{% block content %}
+  {% for entry in data %}
+  <h3>{{ entry[0] }}</h3>
+  <p>{{ entry[1] }}</p>
+  {% endfor %}
+{% endblock %}
 
                       </div>
                     </td>

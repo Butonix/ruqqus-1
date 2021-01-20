@@ -242,7 +242,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                                comment_info=comment_info,
                                is_allowed_to_comment=is_allowed_to_comment,
                                render_replies=True,
-                               is_guildmaster=self.board.has_mod(v),
                                b=self.board
                                )
 
@@ -342,29 +341,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             self.is_offensive = False
 
     @property
-    def json_core(self):
 
-        if self.is_banned:
-            return {'is_banned': True,
-                    'deleted_utc': self.deleted_utc,
-                    'ban_reason': self.ban_reason,
-                    'id': self.base36id,
-                    'title': self.title,
-                    'permalink': self.permalink,
-                    'guild_name': self.board.name
-                    }
-        elif self.deleted_utc > 0:
-            return {'is_banned': bool(self.is_banned),
-                    'deleted_utc': self.deleted_utc,
-                    'id': self.base36id,
-                    'title': self.title,
-                    'permalink': self.permalink,
-                    'guild_name': self.board.name
-                    }
+    def json_raw(self):
         data = {'author_name': self.author.username if not self.author.is_deleted else None,
                 'permalink': self.permalink,
-                'is_banned': False,
-                'deleted_utc': self.deleted_utc,
+                'is_banned': bool(self.is_banned),
+                'is_deleted': self.is_deleted,
                 'created_utc': self.created_utc,
                 'id': self.base36id,
                 'fullname': self.fullname,
@@ -380,18 +362,44 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'created_utc': self.created_utc,
                 'edited_utc': self.edited_utc or 0,
                 'guild_name': self.board.name,
-                'original_guild_name': self.original_board.name if self.board_id != self.original_board_id else None,
                 'guild_id': base36encode(self.board_id),
-                'original_guild_id': base36encode(self.original_board_id) if  self.board_id != self.original_board_id else None,
                 'comment_count': self.comment_count,
                 'score': self.score_fuzzed,
                 'upvotes': self.upvotes_fuzzed,
                 'downvotes': self.downvotes_fuzzed,
                 'award_count': self.award_count,
-                'is_offensive': self.is_offensive,
-                'is_politics': self.is_politics
+                'is_offensive': self.is_offensive
                 }
+        if self.ban_reason:
+            data["ban_reason"]=self.ban_reason
+
+        if self.board_id != self.original_board_id and self.original_board:
+            data['original_guild_name'] = self.original_board.name
+            data['original_guild_id'] = base36encode(self.original_board_id)
         return data
+
+    @property
+    def json_core(self):
+
+        if self.is_banned:
+            return {'is_banned': True,
+                    'is_deleted': self.is_deleted,
+                    'ban_reason': self.ban_reason,
+                    'id': self.base36id,
+                    'title': self.title,
+                    'permalink': self.permalink,
+                    'guild_name': self.board.name
+                    }
+        elif self.is_deleted:
+            return {'is_banned': bool(self.is_banned),
+                    'is_deleted': True,
+                    'id': self.base36id,
+                    'title': self.title,
+                    'permalink': self.permalink,
+                    'guild_name': self.board.name
+                    }
+
+        return self.json_raw
 
     @property
     def json(self):
@@ -478,13 +486,15 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     def is_guildmaster(self, perm=None):
         mod=self.__dict__.get('_is_guildmaster', False)
+
         if not mod:
             return False
-        if not perm:
+        elif not perm:
             return True
+        else:
+            return mod.perm_full or mod.__dict__[f"perm_{perm}"]
 
-        return mod.perm_full or mod.__dict__[f"perm_{perm}"]
-
+        return output
 
     @property
     def is_blocking_guild(self):
@@ -545,6 +555,17 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             'comment_count': self.comment_count,
             'permalink': self.permalink
         }
+
+    @property
+    def json_admin(self):
+
+        data=self.json_raw
+
+        data["creation_ip"]=self.creation_ip
+        data["creation_region"]=self.creation_region
+
+        return data
+
     
     
 class SaveRelationship(Base, Stndrd):

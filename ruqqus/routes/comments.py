@@ -6,6 +6,7 @@ from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 import secrets
 import threading
+from os import environ
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -22,7 +23,7 @@ from flask import *
 from ruqqus.__main__ import app, limiter
 
 
-BUCKET="i.ruqqus.com"
+BUCKET=environ.get("S3_BUCKET",'i.ruqqus.com')
 
 
 @app.route("/comment/<cid>", methods=["GET"])
@@ -133,20 +134,23 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
 
     sort_type = request.args.get("sort", "hot")
     # children comments
+
     current_ids = [comment.id]
     for i in range(6 - context):
         if v:
+
             votes = g.db.query(CommentVote).filter(
                 CommentVote.user_id == v.id).subquery()
 
             blocking = v.blocking.subquery()
             blocked = v.blocked.subquery()
 
+
             comms = g.db.query(
                 Comment,
                 votes.c.vote_type,
                 blocking.c.id,
-                blocked.c.id
+                blocked.c.id,
             ).select_from(Comment).options(
                 joinedload(Comment.author).joinedload(User.title)
             ).filter(
@@ -185,6 +189,7 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
                 comment._voted = c[1] or 0
                 comment._is_blocking = c[2] or 0
                 comment._is_blocked = c[3] or 0
+                comment._is_guildmaster=top_comment._is_guildmaster
                 output.append(comment)
         else:
 
@@ -215,6 +220,7 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
         post._preloaded_comments += output
 
         current_ids = [x.id for x in output]
+
 
     post.tree_comments()
 
@@ -313,6 +319,7 @@ def api_comment(v):
     # check for archive and ban state
     post = get_post(parent_id)
     if post.is_archived or not post.board.can_comment(v):
+
         return jsonify({"error": "You can't comment on this."}), 403
 
     # get bot status
@@ -348,7 +355,8 @@ def api_comment(v):
                   days=1)
 
             for alt in v.alts:
-                alt.ban(reason="Spamming.", days=1)
+                if not alt.is_suspended:
+                    alt.ban(reason="Spamming.", days=1)
 
             for comment in similar_comments:
                 comment.is_banned = True
@@ -417,6 +425,7 @@ def api_comment(v):
     g.db.add(c)
     g.db.flush()
 
+
     if v.has_premium:
         if request.files.get("file"):
             file=request.files["file"]
@@ -454,6 +463,7 @@ def api_comment(v):
         body_html=body_html,
         body=body
     )
+
     g.db.add(c_aux)
     g.db.flush()
 
@@ -482,6 +492,7 @@ def api_comment(v):
                          user_id=x)
         g.db.add(n)
 
+
     # create auto upvote
     vote = CommentVote(user_id=v.id,
                        comment_id=c.id,
@@ -495,7 +506,9 @@ def api_comment(v):
 
     g.db.commit()
 
+
     # print(f"Content Event: @{v.username} comment {c.base36id}")
+
 
     return {"html": lambda: jsonify({"html": render_template("comments.html",
                                                              v=v,
@@ -505,6 +518,7 @@ def api_comment(v):
                                                              )}),
             "api": lambda: c.json
             }
+
 
 
 @app.route("/edit_comment/<cid>", methods=["POST"])
@@ -562,6 +576,7 @@ def edit_comment(cid, v):
         if x.check(body):
             c.is_offensive = True
             break
+
         else:
             c.is_offensive = False
 
@@ -627,6 +642,7 @@ def edit_comment(cid, v):
 
     c.body = body
     c.body_html = body_html
+
     c.edited_utc = int(time.time())
 
     g.db.add(c)
@@ -656,6 +672,7 @@ def delete_comment(cid, v):
     c.deleted_utc = int(time.time())
 
     g.db.add(c)
+
 
     cache.delete_memoized(User.commentlisting, v)
 
