@@ -249,7 +249,7 @@ def u_username_comments(username, v=None):
 @app.route("/api/v1/user/<username>/info", methods=["GET"])
 @auth_desired
 @api("read")
-def u_username_comments(username, v=None):
+def u_username_info(username, v=None):
 
     user=get_user(username, v=v)
 
