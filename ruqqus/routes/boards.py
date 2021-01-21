@@ -1893,3 +1893,9 @@ def board_mod_perms_change(boardname, board, v):
     g.db.add(ma)
 
     return redirect(f"{board.permalink}/mod/mods")
+
+@app.route("/+<boardname>/mod/check", methods=["GET"])
+@auth_required
+@is_guildmaster("content")
+def board_mod_check(boardname, board, v):
+    return "", 200
