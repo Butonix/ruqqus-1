@@ -273,6 +273,11 @@ def gift_post_pid(pid, v):
 
     g.db.add(v)
     g.db.add(u)
+    g.db.flush()
+    if v.coin_balance<0:
+        g.db.rollback()
+        return jsonify({"error":"You don't have that many coins to give!"}), 403
+        
     g.db.commit()
 
     #create record - uniqueness constraints prevent duplicate award counting
@@ -345,6 +350,12 @@ def gift_comment_pid(cid, v):
 
     g.db.add(v)
     g.db.add(u)
+    g.db.flush()
+    if v.coin_balance<0:
+        g.db.rollback()
+        return jsonify({"error":"You don't have that many coins to give!"}), 403
+
+
     g.db.commit()
 
     #create record - uniqe prevents duplicates
