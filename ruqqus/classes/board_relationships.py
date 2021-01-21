@@ -83,7 +83,7 @@ class ModRelationship(Base):
         data=self.json_core
 
         data["user"]=self.user.json_core
-        data["guild"]=self.board.json_core
+        #data["guild"]=self.board.json_core
     
         return data
     
@@ -134,9 +134,9 @@ class BanRelationship(Base, Stndrd, Age_times):
     def json(self):
         data=self.json_core
 
-        data["user"]=self.user
-        data["mod"]=self.banning_mod
-        data["guild"]=self.board
+        data["user"]=self.user.json_core
+        data["mod"]=self.banning_mod.json_core
+        data["guild"]=self.board.json_core
 
         return data
 
