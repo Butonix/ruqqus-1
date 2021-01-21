@@ -1025,7 +1025,7 @@ def board_about_appearance(boardname, board, v):
 
 
 @app.route("/+<boardname>/mod/mods", methods=["GET"])
-@app.route("/api/vue/<boardname>/mod/mods",  methods=["GET"])
+@app.route("/api/vue/+<boardname>/mod/mods",  methods=["GET"])
 @app.route("/api/v1/<boardname>/mod/mods", methods=["GET"])
 @auth_desired
 @api("read")
