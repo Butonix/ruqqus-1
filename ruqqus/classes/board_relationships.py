@@ -123,10 +123,10 @@ class BanRelationship(Base, Stndrd, Age_times):
     @property
     def json_core(self):
         return {
-            user_id:self.user_id,
-            board_id:self.board_id,
-            created_utc:self.created_utc,
-            mod_id:self.banning_mod_id
+            'user_id':self.user_id,
+            'board_id':self.board_id,
+            'created_utc':self.created_utc,
+            'mod_id':self.banning_mod_id
         }
 
 
