@@ -249,6 +249,7 @@ def gift_post_pid(pid, v):
     if u.is_blocked:
         return jsonify({"error":"You can't give awards to someone that's blocking you."}), 403
 
+
     coins=int(request.args.get("coins",1))
 
     if not coins:
@@ -256,6 +257,9 @@ def gift_post_pid(pid, v):
 
     if coins <0:
         return jsonify({"error":"What are you doing, trying to *charge* someone coins?."}), 400
+
+    v=g.db.query(User).with_for_update().filter_by(id=v.id).first()
+    u=g.db.query(User).with_for_update().filter_by(id=u.id).first()
 
     if not v.coin_balance>=coins:
         return jsonify({"error":"You don't have that many coins to give!"}), 403
@@ -336,10 +340,11 @@ def gift_comment_pid(cid, v):
     if coins <0:
         return jsonify({"error":"What are you doing, trying to *charge* someone coins?."}), 400
 
+    v=g.db.query(User).with_for_update().filter_by(id=v.id).first()
+    u=g.db.query(User).with_for_update().filter_by(id=u.id).first()
+
     if not v.coin_balance>=coins:
         return jsonify({"error":"You don't have that many coins to give!"}), 403
-
-
         
     v.coin_balance -= coins
     u.coin_balance += coins
