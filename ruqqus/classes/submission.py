@@ -33,6 +33,8 @@ class SubmissionAux(Base):
     body_html = Column(String(20000), default="")
     ban_reason = Column(String(128), default="")
     embed_url = Column(String(256), default="")
+    meta_title=Column(String(512), default="")
+    meta_description=Column(String(1024), default="")
 
 
 class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
@@ -483,6 +485,25 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def embed_url(self, x):
         self.submission_aux.embed_url = x
         g.db.add(self.submission_aux)
+
+    @property
+    def meta_title(self):
+        return self.submission_aux.meta_title
+
+    @meta_title.setter
+    def meta_title(self, x):
+        self.submission_aux.meta_title=x
+        g.db.add(self.submission_aux)
+
+    @property
+    def meta_description(self):
+        return self.submission_aux.meta_description
+
+    @meta_description.setter
+    def meta_description(self, x):
+        self.submission_aux.meta_description=x
+        g.db.add(self.submission_aux)
+    
 
     def is_guildmaster(self, perm=None):
         mod=self.__dict__.get('_is_guildmaster', False)
