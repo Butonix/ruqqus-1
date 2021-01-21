@@ -10,7 +10,7 @@
 {% set voted=-2 %}
 {% endif %}
 
-<div id="post-{{ p.base36id }}" class="card{% if p.is_banned %} banned{% endif %}{% if p.is_deleted %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}{% if p.is_nsfl %} nsfl {% endif %}">
+<div id="post-{{ p.base36id }}" class="card{% if p.is_banned %} banned{% endif %}{% if p.deleted_utc > 0 %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}{% if p.is_nsfl %} nsfl {% endif %}">
 
   <div class="d-flex flex-row-reverse flex-md-row flex-nowrap justify-content-end">
 
@@ -146,7 +146,7 @@
           <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#reportPostModal" onclick="report_postModal('{{ p.base36id }}','{{ p.author.username }}','{{ p.board.name }}')"><i class="fas fa-flag"></i>Flag</a></li>
           {% endif %}
 
-          {% if v and v.id==p.author_id and not p.is_deleted %}
+          {% if v and v.id==p.author_id and p.deleted_utc == 0 %}
           <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#deletePostModal" onclick="delete_postModal('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
           {% endif %}
 
@@ -291,7 +291,7 @@
           {% if v and not v.id==p.author_id %}
           <button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{ p.base36id }}','{{ p.author.username }}','{{ p.board.name }}')" class="d-block"><i class="far fa-flag fa-fw text-center text-muted mr-3"></i>Flag</button>
           {% endif %}
-          {% if v and v.id==p.author_id and not p.is_deleted %}
+          {% if v and v.id==p.author_id and p.deleted_utc == 0 %}
           <button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{ p.base36id }}')"><i class="far fa-trash-alt fa-fw text-center text-muted mr-3"></i>Delete</button>
           {% endif %}
           {% if v and v.mods_anything and p.board_id==1 %}

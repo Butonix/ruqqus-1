@@ -92,7 +92,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
     if not(v and v.admin_level >= 3):
         posts = posts.filter(
-            Submission.is_deleted == False,
+            Submission.deleted_utc == 0,
             Submission.is_banned == False,
             User.is_private == False)
 

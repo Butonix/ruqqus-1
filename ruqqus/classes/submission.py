@@ -33,6 +33,8 @@ class SubmissionAux(Base):
     body_html = Column(String(20000), default="")
     ban_reason = Column(String(128), default="")
     embed_url = Column(String(256), default="")
+    meta_title=Column(String(512), default="")
+    meta_description=Column(String(1024), default="")
 
 
 class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
@@ -51,7 +53,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     edited_utc = Column(BigInteger, default=0)
     created_utc = Column(BigInteger, default=0)
     is_banned = Column(Boolean, default=False)
-    is_deleted = Column(Boolean, default=False)
+    deleted_utc = Column(Integer, default=0)
+    purged_utc = Column(Integer, default=0)
     distinguish_level = Column(Integer, default=0)
     gm_distinguish = Column(Integer, ForeignKey("boards.id"), default=0)
     distinguished_board = relationship("Board", lazy="joined", primaryjoin="Board.id==Submission.gm_distinguish")
@@ -154,6 +157,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return base36encode(self.board_id)
 
     @property
+    @lazy
+    def is_deleted(self):
+        return bool(self.deleted_utc)
+    
+
+    @property
     def is_repost(self):
         return bool(self.repost_id)
 
@@ -196,7 +205,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def rendered_page(self, comment=None, comment_info=None, v=None):
 
         # check for banned
-        if self.is_deleted:
+        if self.deleted_utc > 0:
             template = "submission_deleted.html"
         elif v and v.admin_level >= 3:
             template = "submission.html"
@@ -334,6 +343,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             self.is_offensive = False
 
     @property
+
     def json_raw(self):
         data = {'author_name': self.author.username if not self.author.is_deleted else None,
                 'permalink': self.permalink,
@@ -360,7 +370,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'upvotes': self.upvotes_fuzzed,
                 'downvotes': self.downvotes_fuzzed,
                 'award_count': self.award_count,
-                'is_offensive': self.is_offensive
+                'is_offensive': self.is_offensive,
+                'meta_title': self.meta_title,
+                'meta_description': self.meta_description
                 }
         if self.ban_reason:
             data["ban_reason"]=self.ban_reason
@@ -397,7 +409,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def json(self):
         data=self.json_core
         
-        if self.is_deleted or self.is_banned:
+        if self.deleted_utc > 0 or self.is_banned:
             return data
 
         data["author"]=self.author.json_core
@@ -476,6 +488,25 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         self.submission_aux.embed_url = x
         g.db.add(self.submission_aux)
 
+    @property
+    def meta_title(self):
+        return self.submission_aux.meta_title
+
+    @meta_title.setter
+    def meta_title(self, x):
+        self.submission_aux.meta_title=x
+        g.db.add(self.submission_aux)
+
+    @property
+    def meta_description(self):
+        return self.submission_aux.meta_description
+
+    @meta_description.setter
+    def meta_description(self, x):
+        self.submission_aux.meta_description=x
+        g.db.add(self.submission_aux)
+    
+
     def is_guildmaster(self, perm=None):
         mod=self.__dict__.get('_is_guildmaster', False)
 
@@ -528,25 +559,30 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def self_download_json(self):
 
         #This property should never be served to anyone but author and admin
-        if not self.is_banned and not self.is_deleted:
+        if not self.is_banned and self.deleted_utc == 0:
             return self.json_core
 
-        return {
+        data= {
             "title":self.title,
-            "author": self.author.name,
+            "author": self.author.username,
             "url": self.url,
             "body": self.body,
             "body_html": self.body_html,
             "is_banned": bool(self.is_banned),
-            "is_deleted": self.is_deleted,
+            "deleted_utc": self.deleted_utc,
             'created_utc': self.created_utc,
             'id': self.base36id,
             'fullname': self.fullname,
             'guild_name': self.board.name,
-            'original_guild_name': self.original_board.name if not self.board_id == self.original_board_id else None,
             'comment_count': self.comment_count,
             'permalink': self.permalink
         }
+
+        if self.original_board_id and (self.original_board_id!= self.board_id):
+
+            data['original_guild_name'] = self.original_board.name
+
+        return data
 
     @property
     def json_admin(self):

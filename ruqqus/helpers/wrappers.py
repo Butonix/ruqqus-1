@@ -114,7 +114,7 @@ def auth_required(f):
         if not v:
             abort(401)
         elif v and v.ban_evade and request.method=="POST":
-            if random.randint(0,200) < v.ban_evade:
+            if random.randint(0,100) < v.ban_evade:
                 v.ban(reason="Evading a site-wide ban")
                 send_notification(v, "Your Ruqqus account has been permanently suspended for the following reason:\n\n> ban evasion")
 
@@ -455,15 +455,18 @@ def api(*scopes, no_ban=False):
 
                 result = f(*args, **kwargs)
 
-                if isinstance(result, RespObj) or isinstance(result, tuple):
+                if not isinstance(result, dict):
                     return result
 
-                if request.path.startswith('/inpage/'):
-                    return result['inpage']()
-                elif request.path.startswith('/test/'):
-                    return result['api']()
-                else:
-                    return result['html']()
+                try:
+                    if request.path.startswith('/inpage/'):
+                        return result['inpage']()
+                    elif request.path.startswith(('/api/vue/','/test/')):
+                        return result['api']()
+                    else:
+                        return result['html']()
+                except KeyError:
+                    return result
 
         wrapper.__name__ = f.__name__
         return wrapper
@@ -472,19 +475,19 @@ def api(*scopes, no_ban=False):
 
 
 SANCTIONS=[
-    "cu",   #Cuba
-    "ir",   #Iran
-    "kp",   #North Korea
-    "sy",   #Syria
-    "tr",   #Turkey
-    "ve",   #Venezuela
+    "CU",   #Cuba
+    "IR",   #Iran
+    "KP",   #North Korea
+    "SY",   #Syria
+    "TR",   #Turkey
+    "VE",   #Venezuela
 ]
 
 def no_sanctions(f):
 
     def wrapper(*args, **kwargs):
 
-        if request.headers.get("cf-ipcountry","").lower() in SANCTIONS:
+        if request.headers.get("cf-ipcountry","") in SANCTIONS:
             abort(451)
 
         return f(*args, **kwargs)

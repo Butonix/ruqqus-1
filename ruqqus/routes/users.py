@@ -246,6 +246,20 @@ def u_username_comments(username, v=None):
             "api": lambda: jsonify({"data": [c.json for c in listing]})
             }
 
+@app.route("/api/v1/user/<username>/info", methods=["GET"])
+@auth_desired
+@api("read")
+def u_username_info(username, v=None):
+
+    user=get_user(username, v=v)
+
+    if user.is_blocking:
+        return jsonify({"error": "You're blocking this user."}), 401
+    elif user.is_blocked:
+        return jsonify({"error": "This user is blocking you."}), 403
+
+    return jsonify(user.json)
+
 
 @app.route("/api/follow/<username>", methods=["POST"])
 @auth_required
@@ -467,7 +481,7 @@ def info_packet(username, method="html"):
             "Your Ruqqus Data",
             "Your Ruqqus data is attached.",
             "Your Ruqqus data is attached.",
-            files={f"{user.username}_{entry}.{method}": io.StringIO(convert_file(packet[entry][method]())) for entry in packet}
+            files={f"{user.username}_{entry}.{method}": io.StringIO(convert_file(str(packet[entry][method]()))) for entry in packet}
         )
 
 
@@ -475,9 +489,9 @@ def info_packet(username, method="html"):
 
 
 
-#@app.route("/my_info", methods=["POST"])
-#@auth_required
-#@validate_formkey
+@app.route("/my_info", methods=["POST"])
+@auth_required
+@validate_formkey
 def my_info_post(v):
 
     if not v.is_activated:
@@ -487,7 +501,8 @@ def my_info_post(v):
     if method not in ['html','json']:
         abort(400)
 
-    thread=threading.Thread(target=info_packet, args=(v.username,), kwargs={'method':method}, daemon=True)
+    thread=threading.Thread(target=info_packet, args=(v.username,), kwargs={'method':method})
+    thread.setDaemon(True)
     thread.start()
 
     #info_packet(g.db, v)
@@ -495,7 +510,7 @@ def my_info_post(v):
     return "started"
 
 
-#@app.route("/my_info", methods=["GET"])
-#@auth_required
+@app.route("/my_info", methods=["GET"])
+@auth_required
 def my_info_get(v):
     return render_template("my_info.html", v=v)

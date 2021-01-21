@@ -65,16 +65,16 @@ class ModRelationship(Base):
     @property
     def json_core(self):
         return {
-            user_id:self.user_id,
-            board_id:self.board_id,
-            created_utc:self.created_utc,
-            accepted:self.accepted,
-            invite_rescinded:self.invite_rescinded,
-            perm_content:self.perm_content,
-            perm_config:self.perm_config,
-            perm_access:self.perm_access,
-            perm_appearance:self.perm_appearance,
-            perm_full:self.perm_full
+            'user_id':self.user_id,
+            'board_id':self.board_id,
+            'created_utc':self.created_utc,
+            'accepted':self.accepted,
+            'invite_rescinded':self.invite_rescinded,
+            'perm_content':self.perm_full or self.perm_content,
+            'perm_config':self.perm_full or self.perm_config,
+            'perm_access':self.perm_full or self.perm_access,
+            'perm_appearance':self.perm_full or self.perm_appearance,
+            'perm_full':self.perm_full
         }
 
 
@@ -82,8 +82,8 @@ class ModRelationship(Base):
     def json(self):
         data=self.json_core
 
-        data["user"]=self.user
-        data["guild"]=self.board
+        data["user"]=self.user.json_core
+        #data["guild"]=self.board.json_core
     
         return data
     
@@ -123,10 +123,10 @@ class BanRelationship(Base, Stndrd, Age_times):
     @property
     def json_core(self):
         return {
-            user_id:self.user_id,
-            board_id:self.board_id,
-            created_utc:self.created_utc,
-            mod_id:self.banning_mod_id
+            'user_id':self.user_id,
+            'board_id':self.board_id,
+            'created_utc':self.created_utc,
+            'mod_id':self.banning_mod_id
         }
 
 
@@ -134,9 +134,9 @@ class BanRelationship(Base, Stndrd, Age_times):
     def json(self):
         data=self.json_core
 
-        data["user"]=self.user
-        data["mod"]=self.banning_mod
-        data["guild"]=self.board
+        data["user"]=self.user.json_core
+        data["mod"]=self.banning_mod.json_core
+        data["guild"]=self.board.json_core
 
         return data
 
