@@ -70,10 +70,10 @@ class ModRelationship(Base):
             created_utc:self.created_utc,
             accepted:self.accepted,
             invite_rescinded:self.invite_rescinded,
-            perm_content:self.perm_content,
-            perm_config:self.perm_config,
-            perm_access:self.perm_access,
-            perm_appearance:self.perm_appearance,
+            perm_content:self.perm_full or self.perm_content,
+            perm_config:self.perm_full or self.perm_config,
+            perm_access:self.perm_full or self.perm_access,
+            perm_appearance:self.perm_full or self.perm_appearance,
             perm_full:self.perm_full
         }
 
@@ -82,8 +82,8 @@ class ModRelationship(Base):
     def json(self):
         data=self.json_core
 
-        data["user"]=self.user
-        data["guild"]=self.board
+        data["user"]=self.user.json_core
+        data["guild"]=self.board.json_core
     
         return data
     

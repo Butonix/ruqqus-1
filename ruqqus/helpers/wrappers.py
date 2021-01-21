@@ -461,7 +461,7 @@ def api(*scopes, no_ban=False):
                 try:
                     if request.path.startswith('/inpage/'):
                         return result['inpage']()
-                    elif request.path.startswith('/test/'):
+                    elif request.path.startswith(('/api/vue/','/test/')):
                         return result['api']()
                     else:
                         return result['html']()
