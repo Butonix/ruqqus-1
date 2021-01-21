@@ -258,8 +258,8 @@ def gift_post_pid(pid, v):
     if coins <0:
         return jsonify({"error":"What are you doing, trying to *charge* someone coins?."}), 400
 
-    v=g.db.query(User).with_for_update().filter_by(id=v.id).first()
-    u=g.db.query(User).with_for_update().filter_by(id=u.id).first()
+    v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
+    u=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=u.id).first()
 
     if not v.coin_balance>=coins:
         return jsonify({"error":"You don't have that many coins to give!"}), 403
@@ -340,8 +340,8 @@ def gift_comment_pid(cid, v):
     if coins <0:
         return jsonify({"error":"What are you doing, trying to *charge* someone coins?."}), 400
 
-    v=g.db.query(User).with_for_update().filter_by(id=v.id).first()
-    u=g.db.query(User).with_for_update().filter_by(id=u.id).first()
+    v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
+    u=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=u.id).first()
 
     if not v.coin_balance>=coins:
         return jsonify({"error":"You don't have that many coins to give!"}), 403
