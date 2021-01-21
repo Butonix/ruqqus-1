@@ -370,7 +370,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'upvotes': self.upvotes_fuzzed,
                 'downvotes': self.downvotes_fuzzed,
                 'award_count': self.award_count,
-                'is_offensive': self.is_offensive
+                'is_offensive': self.is_offensive,
+                'meta_title': self.meta_title,
+                'meta_description': self.meta_description
                 }
         if self.ban_reason:
             data["ban_reason"]=self.ban_reason
