@@ -11,8 +11,6 @@ from .get import *
 from ruqqus.__main__ import app, db_session
 
 
-
-
 def thumbnail_thread(pid, debug=False):
 
     db = db_session()
@@ -30,6 +28,8 @@ def thumbnail_thread(pid, debug=False):
     domain_obj = post.domain_obj
 
     headers={"User-Agent": f"Ruqqus thumbnail acquisition for post {post.base36id}"}
+
+
     if debug:
         print(f"domain_obj {domain_obj}")
         if domain_obj:
@@ -94,10 +94,23 @@ def thumbnail_thread(pid, debug=False):
 
     elif x.headers["Content-Type"].startswith("text/html"):
 
+
         if debug:
             print("parsing html doc")
 
         soup = BeautifulSoup(x.content, 'html.parser')
+
+        #get meta title and description
+        try:
+            meta_title=soup.find('title')
+            if meta_title:
+                post.meta_title=str(meta_title.string)
+
+            meta_desc = soup.find('meta', attrs={"name":"description"})
+            if meta_desc:
+                post.meta_description=meta_desc['content']
+        except:
+            pass
 
         metas = ["ruqqus:thumbnail",
                  "twitter:image",
