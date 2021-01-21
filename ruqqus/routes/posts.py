@@ -290,7 +290,7 @@ def submit_post(v):
                 "api": lambda: ({"error": "`url` or `body` parameter required."}, 400)
                 }
     # sanitize title
-    title = bleach.clean(title)
+    title = bleach.clean(title, tags=[])
 
     # Force https for submitted urls
 
