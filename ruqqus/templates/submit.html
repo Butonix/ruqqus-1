@@ -11,8 +11,8 @@
 	{% block title %}
 	<title>Create a post - Ruqqus</title>
 	{% endblock %}
-  
-  <link rel="icon" type="image/png" href="/assets/images/logo/favicon.png">
+
+	<link rel="icon" type="image/png" href="/assets/images/logo/favicon.png">
 
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
@@ -100,16 +100,16 @@
 						</div>
 
 						<div {% if not v.can_submit_image %} class="d-none"{% else %} ondrop="event.preventDefault();let input=document.getElementById('file-upload');input.files=event.dataTransfer.files;input.onchange();" ondragover="event.preventDefault();"{% endif %}>
-						<div id="image-upload-block"{% if not v.can_submit_image %} class="d-none"{% endif %}>
-							<div><label class="mt-3">Image Upload</label></div>
+							<div id="image-upload-block"{% if not v.can_submit_image %} class="d-none"{% endif %}>
+								<div><label class="mt-3">Image Upload</label></div>
 
-							<label class="btn btn-secondary m-0" for="file-upload">
-								<div id="filename-show">Select Image</div>
-								<input id="file-upload" type="file" name="file" accept="image/*" class="" onchange="document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerHTML=document.getElementById('file-upload').files[0].name;checkForRequired()" hidden>
-							</label>
+								<label class="btn btn-secondary m-0" for="file-upload">
+									<div id="filename-show">Select Image</div>
+									<input id="file-upload" type="file" name="file" accept="image/*" class="" onchange="document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerHTML=document.getElementById('file-upload').files[0].name;checkForRequired()" hidden>
+								</label>
 
-							<small class="form-text text-muted">Images uploaded will be public. Optional if you have text.</small>
-						</div>
+								<small class="form-text text-muted">Images uploaded will be public. Optional if you have text.</small>
+							</div>
 						</div>
 
 						<label for="body" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Uses markdown. Limited to 10000 characters."></i></label>
@@ -210,7 +210,7 @@
 							<li class="list-inline-item"><a href="/discord" class="text-gray-500">Discord</a></li>
 						</ul>
 
-						<div class="text-muted text-small-extra mt-1">v. 2.29.9.9, © 2020 Ruqqus, LLC</div>
+						<div class="text-muted text-small-extra mt-1">v. 2.29.6.3, © 2020 Ruqqus, LLC</div>
 
 					</div>
 
@@ -225,9 +225,23 @@
 				<div class="col">
 					<a href="/" class="btn btn-secondary">Cancel</a>
 				</div>
-				<div class="col text-right">
-					{% if error %}<span class="text-danger mr-2">{{ error }}</span>{% endif %}
-					<button class="btn btn-purple" id="create_button" type="submit" disabled>Post</button>
+				<div class="col">
+					<div class="d-flex align-items-center justify-content-end">
+						{% if error %}<span class="text-danger mr-2">{{ error }}</span>{% endif %}
+						<select class="custom-select w-auto mr-3 pr-3" aria-label="Post queue selection">
+							<option selected disabled>Schedule this Post</option>
+							<option value="1">Now</option>
+							<option value="2">+10 minutes</option>
+							<option value="3">+30 minutes</option>
+							<option value="4">+1 hour</option>
+							<option value="5">+3 hours</option>
+							<option value="6">+6 hours</option>
+							<option value="7">+12 hours</option>
+							<option value="8">+1 day</option>
+							<option value="9">+3 days</option>
+						</select>
+						<button class="btn btn-purple" id="create_button" type="submit" disabled>Post</button>
+					</div>
 				</div>
 			</div>
 		</div>
