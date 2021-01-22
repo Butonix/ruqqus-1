@@ -1921,7 +1921,7 @@ def board_mod_queued_posts(boardname, board, v):
     return render_template("guild/queued_posts.html",
                            v=v,
                            b=board,
-                           queue=posts,
+                           queue=queue,
                            next_exists=next_exists,
                            page=page
                            )
