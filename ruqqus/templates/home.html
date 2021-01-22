@@ -310,6 +310,13 @@
           </span>Report Bugs
         </a>
 
+        <a href="https://ruqqus.com/discord" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #7289DA!important;">
+          <span class="fa-stack fa-1x ml-n1 mr-2">
+            <i class="fas fa-square fa-stack-2x text-gray-300" style="font-size: 2rem!important;"></i>
+            <i class="fab fa-discord fa-stack-1x text-base fa-inverse" style="color: #7289DA!important;"></i>
+          </span>Discord Server
+        </a>
+
         <div data-toggle="tooltip" data-placement="bottom" title="Based on coins redeemed in the last 7 days">
           <div class="text-center text-small">{{ g.timestamp | coin_goal }}% of goal</div>
           <div class="progress" style="border-radius: 3px;">
@@ -339,10 +346,10 @@
             <div id="collapse-{{ loop.index }}" class="collapse" aria-labelledby="header-{{ loop.index }}" data-parent="#accordionCats">
               <div class="card-body">
                 {% for subcat in c.subcats %}
-                  <div class="custom-control custom-checkbox mb-2">
-                    <input type="checkbox" class="custom-control-input cat-check" id="cat-{{ subcat.base36id }}" data-cat="{{ subcat.id }}" onchange="togglecat('{{ sort_method }}')"{% if subcat.id in session.get('catids',[]) %} checked{% endif %}>
-                    <label class="custom-control-label" for="cat-{{ subcat.base36id }}">{{ subcat.name }}</label>
-                  </div>
+                <div class="custom-control custom-checkbox mb-2">
+                  <input type="checkbox" class="custom-control-input cat-check" id="cat-{{ subcat.base36id }}" data-cat="{{ subcat.id }}" onchange="togglecat('{{ sort_method }}')"{% if subcat.id in session.get('catids',[]) %} checked{% endif %}>
+                  <label class="custom-control-label" for="cat-{{ subcat.base36id }}">{{ subcat.name }}</label>
+                </div>
                 {% endfor %}
               </div>
             </div>
