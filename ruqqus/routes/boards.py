@@ -1159,7 +1159,7 @@ def unsubscribe_board(boardname, v):
     return jsonify({"message": f"Left +{board.name}"}), 200
 
 
-@app.route("/+<boardname>/mod/queue", methods=["GET"])
+@app.route("/+<boardname>/mod/reports", methods=["GET"])
 @auth_required
 @is_guildmaster("content")
 def board_mod_queue(boardname, board, v):
@@ -1192,7 +1192,7 @@ def board_mod_queue(boardname, board, v):
                            b=board)
 
 
-@app.route("/mod/queue", methods=["GET"])
+@app.route("/mod/reports", methods=["GET"])
 @auth_required
 def all_mod_queue(v):
 
@@ -1905,7 +1905,7 @@ def board_mod_check(boardname, board, v):
     return "", 200
 
 
-@app.route("/+<boardname>/mod/queued_posts", methods=["GET", "POST"])
+@app.route("/+<boardname>/mod/queue", methods=["GET", "POST"])
 @auth_required
 @is_guildmaster("content")
 @validate_formkey
