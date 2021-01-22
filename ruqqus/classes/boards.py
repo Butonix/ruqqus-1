@@ -141,10 +141,14 @@ class Board(Base, Stndrd, Age_times):
     def idlist(self, sort="hot", page=1, t=None,
                show_offensive=True, v=None, nsfw=False, **kwargs):
 
-        posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
-                                                                           is_pinned=False,
-                                                                           board_id=self.id
-                                                                           ).filter(Submission.deleted_utc == 0)
+        posts = g.db.query(Submission.id)\
+            .options(lazyload('*'))\
+            .filter_by(is_banned=False,
+                       is_pinned=False,
+                       board_id=self.id
+                       )\
+            .filter(Submission.deleted_utc == 0)\
+            .filter(Submission.created_utc <= int(time.time()))
 
         if not nsfw:
             posts = posts.filter_by(over_18=False)
