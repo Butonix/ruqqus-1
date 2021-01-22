@@ -12,218 +12,218 @@
 	{% block title %}
 	<title>Ruqqus: Awesome Online Communities, Without Censorship</title>
 
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content="Ruqqus: Awesome Online Communities, Without Censorship" />
-    <meta property="og:site_name" content="ruqqus.com" />
-    <meta property="og:image" content="{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}" />
-    <meta property="og:url" content="{{ request.path | full_link }}">
-    <meta property="og:description" name="description" content="Ruqqus is an open-source platform for online communities, free of censorship and moderator abuse by design.">
-    <meta property="og:author" name="author" content="@ruqqus" />
-    <meta property="og:site_name" content="ruqqus.com" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Ruqqus: Awesome Online Communities, Without Censorship" />
+  <meta property="og:site_name" content="ruqqus.com" />
+  <meta property="og:image" content="{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}" />
+  <meta property="og:url" content="{{ request.path | full_link }}">
+  <meta property="og:description" name="description" content="Ruqqus is an open-source platform for online communities, free of censorship and moderator abuse by design.">
+  <meta property="og:author" name="author" content="@ruqqus" />
+  <meta property="og:site_name" content="ruqqus.com" />
 
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:site" content="@ruqqus">
-    <meta name="twitter:title" content="Ruqqus: Awesome Online Communities, Without Censorship" />
-    <meta name="twitter:creator" content="@ruqqus">
-    <meta name="twitter:description" content="Ruqqus is an open-source platform for online communities, free of censorship and moderator abuse by design." />
-    <meta name="twitter:image" content="/assets/images/preview-images/ruqqus_og_image.png" />
-    <meta name="twitter:url" content="{{ request.path | full_link }}" />
-	{% endblock %}
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@ruqqus">
+  <meta name="twitter:title" content="Ruqqus: Awesome Online Communities, Without Censorship" />
+  <meta name="twitter:creator" content="@ruqqus">
+  <meta name="twitter:description" content="Ruqqus is an open-source platform for online communities, free of censorship and moderator abuse by design." />
+  <meta name="twitter:image" content="/assets/images/preview-images/ruqqus_og_image.png" />
+  <meta name="twitter:url" content="{{ request.path | full_link }}" />
+  {% endblock %}
 
-	<!-- Bootstrap core CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-	<!-- iOS webapp -->
-	<meta name="apple-mobile-web-app-capable" content="yes">
+  <!-- iOS webapp -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-touch-fullscreen" content="yes">
-	<meta name="format-detection" content="telephone=no">
-	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png">
   <!---<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png">--->
-  <link rel="manifest" href="/assets/manifest.json">
-  <link rel="mask-icon" href="/assets/images/favicons/safari-pinned-tab.svg" color="#805ad5">
-  <link rel="shortcut icon" href="/assets/images/favicons/favicon.ico">
-  <meta name="apple-mobile-web-app-title" content="Ruqqus">
-  <meta name="application-name" content="Ruqqus">
-  <meta name="msapplication-TileColor" content="#805ad5">
-  <meta name="msapplication-config" content="/assets/images/favicons/browserconfig.xml">
-  <meta name="theme-color" content="#805ad5">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicons/favicon-16x16.png">--->
+    <link rel="manifest" href="/assets/manifest.json">
+    <link rel="mask-icon" href="/assets/images/favicons/safari-pinned-tab.svg" color="#805ad5">
+    <link rel="shortcut icon" href="/assets/images/favicons/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Ruqqus">
+    <meta name="application-name" content="Ruqqus">
+    <meta name="msapplication-TileColor" content="#805ad5">
+    <meta name="msapplication-config" content="/assets/images/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#805ad5">
 
-  <link rel="icon" type="image/png" href="/assets/images/logo/favicon.png">
-
-
-    <link
-      rel="apple-touch-startup-image"
-      sizes="320x480"
-      href="/assets/images/splash/320x480.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="640x960"
-      href="/assets/images/splash/640x960.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="640x1136"
-      href="/assets/images/splash/640x1136.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="750x1334"
-      href="/assets/images/splash/750x1334.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="768x1004"
-      href="/assets/images/splash/768x1004.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="768x1024"
-      href="/assets/images/splash/768x1024.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="828x1792"
-      href="/assets/images/splash/828x1792.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="1024x748"
-      href="/assets/images/splash/1024x748.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="1024x768"
-      href="/assets/images/splash/1024x768.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="1125x2436"
-      href="/assets/images/splash/1125x2436.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="1242x2208"
-      href="/assets/images/splash/1242x2208.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="1242x2688"
-      href="/assets/images/splash/1242x2688.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="1334x750"
-      href="/assets/images/splash/1334x750.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="1536x2008"
-      href="/assets/images/splash/1536x2008.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="1536x2048"
-      href="/assets/images/splash/1536x2048.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="1668x2224"
-      href="/assets/images/splash/1668x2224.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="1792x828"
-      href="/assets/images/splash/1792x828.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="2048x1496"
-      href="/assets/images/splash/2048x1496.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="2048x1536"
-      href="/assets/images/splash/2048x1536.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="2048x2732"
-      href="/assets/images/splash/2048x2732.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="2208x1242"
-      href="/assets/images/splash/2208x1242.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="2224x1668"
-      href="/assets/images/splash/2224x1668.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="2436x1125"
-      href="/assets/images/splash/2436x1125.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="2668x1242"
-      href="/assets/images/splash/2668x1242.png"
-    />
-    <link
-      rel="apple-touch-startup-image"
-      sizes="2737x2048"
-      href="/assets/images/splash/2737x2048.png"
-    />
+    <link rel="icon" type="image/png" href="/assets/images/logo/favicon.png">
 
 
+    <link
+    rel="apple-touch-startup-image"
+    sizes="320x480"
+    href="/assets/images/splash/320x480.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="640x960"
+    href="/assets/images/splash/640x960.png"
+    />
+    <link
+    rel="apple-touch-icon"
+    sizes="640x1136"
+    href="/assets/images/splash/640x1136.png"
+    />
+    <link
+    rel="apple-touch-icon"
+    sizes="750x1334"
+    href="/assets/images/splash/750x1334.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="768x1004"
+    href="/assets/images/splash/768x1004.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="768x1024"
+    href="/assets/images/splash/768x1024.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="828x1792"
+    href="/assets/images/splash/828x1792.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="1024x748"
+    href="/assets/images/splash/1024x748.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="1024x768"
+    href="/assets/images/splash/1024x768.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="1125x2436"
+    href="/assets/images/splash/1125x2436.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="1242x2208"
+    href="/assets/images/splash/1242x2208.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="1242x2688"
+    href="/assets/images/splash/1242x2688.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="1334x750"
+    href="/assets/images/splash/1334x750.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="1536x2008"
+    href="/assets/images/splash/1536x2008.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="1536x2048"
+    href="/assets/images/splash/1536x2048.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="1668x2224"
+    href="/assets/images/splash/1668x2224.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="1792x828"
+    href="/assets/images/splash/1792x828.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="2048x1496"
+    href="/assets/images/splash/2048x1496.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="2048x1536"
+    href="/assets/images/splash/2048x1536.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="2048x2732"
+    href="/assets/images/splash/2048x2732.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="2208x1242"
+    href="/assets/images/splash/2208x1242.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="2224x1668"
+    href="/assets/images/splash/2224x1668.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="2436x1125"
+    href="/assets/images/splash/2436x1125.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="2668x1242"
+    href="/assets/images/splash/2668x1242.png"
+    />
+    <link
+    rel="apple-touch-startup-image"
+    sizes="2737x2048"
+    href="/assets/images/splash/2737x2048.png"
+    />
 
-	<!-- Ruqqus CSS -->
-	
-	{% block stylesheets %}
 
-	{% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
-	<link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.29.9.9">
-	{% else %}
-	<link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.29.9.9">
-	{% endif %}
 
-	{% endblock %}
+    <!-- Ruqqus CSS -->
+    
+    {% block stylesheets %}
 
-	<!-- Font Awesome -->
-	<link href="https://fa.ruqqus.com/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+    {% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
+    <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.29.9.9">
+    {% else %}
+    <link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.29.9.9">
+    {% endif %}
 
-  {% block fixedMobileBarJS %}
-  {% endblock %}
+    {% endblock %}
 
-  {% if v %}
+    <!-- Font Awesome -->
+    <link href="https://fa.ruqqus.com/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 
-  <script>
-    function formkey() {
-     return '{{ v.formkey }}';
-   }
- </script>
- {% endif %}
+    {% block fixedMobileBarJS %}
+    {% endblock %}
 
- <script async defer data-domain="{{ 'SERVER_NAME' | app_config }}" src="https://plausible.ruqqus.com/js/plausible.js"></script>
+    {% if v %}
 
-</head>
+    <script>
+      function formkey() {
+       return '{{ v.formkey }}';
+     }
+   </script>
+   {% endif %}
 
-<body id="{% block pagetype %}frontpage{% endblock %}" class="">
+   <script async defer data-domain="{{ 'SERVER_NAME' | app_config }}" src="https://plausible.ruqqus.com/js/plausible.js"></script>
 
-{% if request.path=='/' and g.timestamp>session.get('tooltip_last_dismissed',0)+60*60*24 and (g.system.endswith('/chrome') or g.system.endswith('/other')) %}
-<div class="row fixed-top" style="z-index:2000" id="mobile-prompt-row">
-  <div id="mobile-prompt-container" class="ml-auto mr-5">
-    <div id="mobile-prompt" href="javascript:void(0)" data-toggle="tooltip" data-container="#mobile-prompt-row" data-placement="top" data-trigger="click" title="" data-original-title="Install the Ruqqus webapp by saving this page to your home screen!">
+ </head>
+
+ <body id="{% block pagetype %}frontpage{% endblock %}" class="">
+
+  {% if request.path=='/' and g.timestamp>session.get('tooltip_last_dismissed',0)+60*60*24 and (g.system.endswith('/chrome') or g.system.endswith('/other')) %}
+  <div class="row fixed-top" style="z-index:2000" id="mobile-prompt-row">
+    <div id="mobile-prompt-container" class="ml-auto mr-5">
+      <div id="mobile-prompt" href="javascript:void(0)" data-toggle="tooltip" data-container="#mobile-prompt-row" data-placement="top" data-trigger="click" title="" data-original-title="Install the Ruqqus webapp by saving this page to your home screen!">
+      </div>
     </div>
   </div>
-</div>
-{% endif %}
+  {% endif %}
 
 
   <!--Header -->
@@ -267,15 +267,15 @@
 
         {% if v.notifications_count %}
 
-      <li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-        <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger"></i><span class="badge-count font-weight-bolder">{{ v.notifications_count }}</span></a>
-      </li>
+        <li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
+          <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger"></i><span class="badge-count font-weight-bolder">{{ v.notifications_count }}</span></a>
+        </li>
 
-      {% elif v.notifications_count > 9 %}
+        {% elif v.notifications_count > 9 %}
 
-      <li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-        <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger"></i><span class="badge-count font-weight-bolder" style="width: 24px;">9+</span></a>
-      </li>
+        <li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
+          <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger"></i><span class="badge-count font-weight-bolder" style="width: 24px;">9+</span></a>
+        </li>
 
         {% else %}
 
@@ -328,126 +328,126 @@
           <hr class="my-2">
           <div class="px-2">
             <a class="dropdown-item" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-fw text-left mr-3"></i>My
-              profile</a>
+            profile</a>
             {% if v.notifications_count %}
-              <a class="dropdown-item" href="/notifications"><i class="fas fa-inbox fa-fw text-left mr-3"></i>Inbox<span
-                class="badge badge-danger rounded-circle align-top ml-1">{{ v.notifications_count }}</span></a>
-            {% else %}
-              <a class="dropdown-item" href="/notifications?all=true"><i class="fas fa-inbox fa-fw text-left mr-3"></i>Inbox</a>
-            {% endif %}
-            <a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-fw text-left mr-3"></i>Settings</a>
-            <a class="dropdown-item d-lg-none" href="/categories"><i class="fas fa-shapes fa-fw text-left mr-3" id="dark-switch"></i>Categories</a>
-
-            {% block darkswitch %}
-              {% if v and v.can_use_darkmode and session.get("dark_mode_enabled")%}
-                <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-fw text-left mr-3" id="dark-switch"></i>Dark mode</a>
-              {% elif v and v.can_use_darkmode %}
-                <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-fw text-left mr-3" id="dark-switch"></i>Dark mode</a>
+            <a class="dropdown-item" href="/notifications"><i class="fas fa-inbox fa-fw text-left mr-3"></i>Inbox<span
+              class="badge badge-danger rounded-circle align-top ml-1">{{ v.notifications_count }}</span></a>
               {% else %}
-                <a class="dropdown-item" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-fw text-left mr-3"></i>Dark mode</a>
+              <a class="dropdown-item" href="/notifications?all=true"><i class="fas fa-inbox fa-fw text-left mr-3"></i>Inbox</a>
               {% endif %}
-            {% endblock %}
-          </div>
-              <hr class="my-2">
-              <div class="px-2">
-                <button class="dropdown-item copy-link" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}"><i class="fad fa-user-friends fa-fw text-left mr-3"></i>Invite friends</button>
-              </div>
-              <hr class="my-2">
-              <div class="px-2">
-                <a class="dropdown-item" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})"><i class="fas fa-sign-out fa-fw text-left mr-3"></i>Log out</a>
-              </div>
+              <a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-fw text-left mr-3"></i>Settings</a>
+              <a class="dropdown-item d-lg-none" href="/categories"><i class="fas fa-shapes fa-fw text-left mr-3" id="dark-switch"></i>Categories</a>
+
+              {% block darkswitch %}
+              {% if v and v.can_use_darkmode and session.get("dark_mode_enabled")%}
+              <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-on fa-fw text-left mr-3" id="dark-switch"></i>Dark mode</a>
+              {% elif v and v.can_use_darkmode %}
+              <a class="dropdown-item" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-fw text-left mr-3" id="dark-switch"></i>Dark mode</a>
+              {% else %}
+              <a class="dropdown-item" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-fw text-left mr-3"></i>Dark mode</a>
+              {% endif %}
+              {% endblock %}
+            </div>
+            <hr class="my-2">
+            <div class="px-2">
+              <button class="dropdown-item copy-link" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}"><i class="fad fa-user-friends fa-fw text-left mr-3"></i>Invite friends</button>
+            </div>
+            <hr class="my-2">
+            <div class="px-2">
+              <a class="dropdown-item" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})"><i class="fas fa-sign-out fa-fw text-left mr-3"></i>Log out</a>
             </div>
           </div>
-        </li>
-        {% else %}
-        <li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-          <a class="nav-link" href="/random/post" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="View random post"><i class="fas fa-random"></i></a>
-        </li>
-        <li class="nav-item d-flex align-items-center justify-content-center mx-1">
-         <a class="btn btn-outline-purple" href="/login?redirect={{ request.path | urlencode}}">Sign In</a>
-       </li>
-       <li class="nav-item d-flex align-items-center justify-content-center mx-1">
-         <a class="btn btn-purple" href="/signup?redirect={{ request.path | urlencode}}">Sign Up</a>
-       </li>
-       {% endif %}
-     </ul>
-
-     <!-- Mobile Nav Menu -->
-     <ul class="navbar-nav ml-auto d-flex d-md-none mt-3">
-       <li class="nav-item pb-3">
-        <form class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="{% if b %}/+{{ b.name }}{% endif %}/search" method="get">
-          <input class="form-control form-control-sm w-100" type="search" placeholder="Search posts{% if b %} in +{{ b.name }}{% else %}, +guilds, and @users{% endif %}" aria-label="Search posts{% if b %} in +{{ b.name }}{% else %}, +guilds, and @users{% endif %}" name="q">
-          <span class="input-group-append">
-            <span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;">
-              <i class="fa fa-search" aria-hidden="true"></i>
-            </span>
-          </span>
-        </form>
-      </li>
-      {% if v %}
-        <li class="nav-item">
-          <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-fw mr-3"></i>@{{ v.username }}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link {% if v.notifications_count %}position-relative{% endif %}" href="/notifications{% if not v.notifications_count %}?all=true{% endif %}">
-            <i class="fas fa-envelope fa-fw mr-3"></i>Inbox
-            {% if v.notifications_count %}
-            <i class="fas fa-circle text-danger position-absolute" style="left: 19px; top: 5px; font-size: 10px;"></i>
-            {% endif %}
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>My account</a>
-        </li>
-        {% if v.can_make_guild %}
-          <li class="nav-item">
-            <a class="nav-link" href="/create_guild"><i class="fas fa-chess-rook fa-fw mr-3"></i>Create Guild</a>
-          </li>
-        {% endif %}
-      {% endif %}
-      <li class="nav-item">
-        <a class="nav-link" href="/categories"><i class="fas fa-shapes fa-fw mr-3"></i>Categories</a>
-      </li>
-      {% if v %}
-      {% block darkswitchMobile %}
-        {% if session.get("dark_mode_enabled")%}
-          <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fas fa-toggle-on fa-fw mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
-        {% else %}
-          <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fas fa-toggle-off fa-fw mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
-        {% endif %}
-      {% endblock %}
-      {% endif %}
-
-      {% if v %}
-      <li class="nav-item border-top mt-2 pt-2">
-        <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})"><i class="fas fa-sign-out fa-fw mr-3 text-danger"></i>Log out</a>
+        </div>
       </li>
       {% else %}
-      <li class="nav-item d-flex align-items-center justify-content-center pb-3">
-        <a class="btn btn-outline-purple btn-block" href="/login?redirect={{ request.path | urlencode}}">Sign in</a>
+      <li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
+        <a class="nav-link" href="/random/post" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="View random post"><i class="fas fa-random"></i></a>
       </li>
-      <li class="nav-item d-flex align-items-center justify-content-center">
-        <a class="btn btn-purple btn-block" href="/signup?redirect={{ request.path | urlencode}}">Sign up</a>
-      </li>
-      {% endif %}
-      <li class="nav-item border-top mt-2 pt-2">
-        <a class="nav-link text-small-extra" href="/help/about">About</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-small-extra" href="/help/terms">Terms</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-small-extra" href="/help/privacy">Privacy</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-small-extra" href="/help/contact">Contact</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">Github</a>
-      </li>
-    </ul>
+      <li class="nav-item d-flex align-items-center justify-content-center mx-1">
+       <a class="btn btn-outline-purple" href="/login?redirect={{ request.path | urlencode}}">Sign In</a>
+     </li>
+     <li class="nav-item d-flex align-items-center justify-content-center mx-1">
+       <a class="btn btn-purple" href="/signup?redirect={{ request.path | urlencode}}">Sign Up</a>
+     </li>
+     {% endif %}
+   </ul>
 
-  </div>
+   <!-- Mobile Nav Menu -->
+   <ul class="navbar-nav ml-auto d-flex d-md-none mt-3">
+     <li class="nav-item pb-3">
+      <form class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="{% if b %}/+{{ b.name }}{% endif %}/search" method="get">
+        <input class="form-control form-control-sm w-100" type="search" placeholder="Search posts{% if b %} in +{{ b.name }}{% else %}, +guilds, and @users{% endif %}" aria-label="Search posts{% if b %} in +{{ b.name }}{% else %}, +guilds, and @users{% endif %}" name="q">
+        <span class="input-group-append">
+          <span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </span>
+        </span>
+      </form>
+    </li>
+    {% if v %}
+    <li class="nav-item">
+      <a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-fw mr-3"></i>@{{ v.username }}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if v.notifications_count %}position-relative{% endif %}" href="/notifications{% if not v.notifications_count %}?all=true{% endif %}">
+        <i class="fas fa-envelope fa-fw mr-3"></i>Inbox
+        {% if v.notifications_count %}
+        <i class="fas fa-circle text-danger position-absolute" style="left: 19px; top: 5px; font-size: 10px;"></i>
+        {% endif %}
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>My account</a>
+    </li>
+    {% if v.can_make_guild %}
+    <li class="nav-item">
+      <a class="nav-link" href="/create_guild"><i class="fas fa-chess-rook fa-fw mr-3"></i>Create Guild</a>
+    </li>
+    {% endif %}
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link" href="/categories"><i class="fas fa-shapes fa-fw mr-3"></i>Categories</a>
+    </li>
+    {% if v %}
+    {% block darkswitchMobile %}
+    {% if session.get("dark_mode_enabled")%}
+    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fas fa-toggle-on fa-fw mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
+    {% else %}
+    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fas fa-toggle-off fa-fw mr-3" id="dark-switch-mobile"></i>Dark mode</a></li>
+    {% endif %}
+    {% endblock %}
+    {% endif %}
+
+    {% if v %}
+    <li class="nav-item border-top mt-2 pt-2">
+      <a class="nav-link" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})"><i class="fas fa-sign-out fa-fw mr-3 text-danger"></i>Log out</a>
+    </li>
+    {% else %}
+    <li class="nav-item d-flex align-items-center justify-content-center pb-3">
+      <a class="btn btn-outline-purple btn-block" href="/login?redirect={{ request.path | urlencode}}">Sign in</a>
+    </li>
+    <li class="nav-item d-flex align-items-center justify-content-center">
+      <a class="btn btn-purple btn-block" href="/signup?redirect={{ request.path | urlencode}}">Sign up</a>
+    </li>
+    {% endif %}
+    <li class="nav-item border-top mt-2 pt-2">
+      <a class="nav-link text-small-extra" href="/help/about">About</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-small-extra" href="/help/terms">Terms</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-small-extra" href="/help/privacy">Privacy</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-small-extra" href="/help/contact">Contact</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">Github</a>
+    </li>
+  </ul>
+
+</div>
 </div>
 </nav>
 
@@ -499,89 +499,96 @@
     {% block sidebar %}
     <div class="col sidebar text-left d-none d-lg-block pt-3 bg-white border-left">
       {% block sidebarblock %}
-          <div class="sidebar-section">
-      <div class="title">
-        <i class="fas fa-heart mr-2"></i>Support Ruqqus
+      <div class="sidebar-section">
+        <div class="title">
+          <i class="fas fa-heart mr-2"></i>Support Ruqqus
+        </div>
+        <div class="body">
+          <p>Exclusive patron titles, merch, and more. Support Ruqqus today!</p>
+
+          {% if v %}
+
+          <a href="/settings#patreon" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
+            <span class="fa-stack fa-1x ml-n1 mr-2">
+              <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
+              <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
+            </span>Unlock Patron Titles
+          </a>
+
+          {% else %}
+
+          <a href="https://patreon.com/ruqqus" target="blank" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
+            <span class="fa-stack fa-1x ml-n1 mr-2">
+              <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
+              <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
+            </span>Become a Patron
+          </a>
+
+          {% endif %}
+
+          <a href="https://www.bonfire.com/store/ruqqus/" target="blank" class="btn btn-block btn-link text-info text-left text-decoration-none px-1 mt-0">
+            <span class="fa-stack fa-1x ml-n1 mr-2">
+              <i class="fas fa-square fa-stack-2x" style="color: #BEE3F8!important; font-size: 2rem!important;"></i>
+              <i class="fas fa-tshirt fa-stack-1x text-info text-base fa-inverse"></i>
+            </span>Awesome T-Shirts
+          </a>
+
+          <a href="https://gumroad.com/l/XpCXQ" target="blank" class="btn btn-block btn-link text-success text-left text-decoration-none px-1 mt-0">
+            <span class="fa-stack fa-1x ml-n1 mr-2">
+              <i class="fas fa-square fa-stack-2x" style="color: #9AE6B4!important; font-size: 2rem!important;"></i>
+              <i class="fas fa-laugh fa-stack-1x text-success text-base fa-inverse"></i>
+            </span>Custom Stickers
+          </a>
+
+          <a href="https://github.com/ruqqus/ruqqus" target="blank" class="btn btn-block btn-link text-black text-left text-decoration-none px-1 mt-0">
+            <span class="fa-stack fa-1x ml-n1 mr-2">
+              <i class="fas fa-square fa-stack-2x text-gray-300" style="font-size: 2rem!important;"></i>
+              <i class="fab fa-github fa-stack-1x text-black text-base fa-inverse"></i>
+            </span>Contribute Code
+          </a>
+
+          <a href="https://github.com/ruqqus/ruqqus#sponsors" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #F7931A!important">
+            <span class="fa-stack fa-1x ml-n1 mr-2">
+              <i class="fas fa-square fa-stack-2x" style="color: #FEEBC8!important; font-size: 2rem!important;"></i>
+              <i class="fab fa-bitcoin fa-stack-1x text-base fa-inverse" style="color: #F7931A!important;"></i>
+            </span>Donate Crypto
+          </a>
+
+          <a href="https://github.com/ruqqus/ruqqus/issues" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #DC143C!important">
+            <span class="fa-stack fa-1x ml-n1 mr-2">
+              <i class="fas fa-square fa-stack-2x" style="color: #FC8181!important; font-size: 2rem!important;"></i>
+              <i class="fas fa-bug fa-stack-1x text-base fa-inverse" style="color: #DC143C!important;"></i>
+            </span>Report Bugs
+          </a>
+
+          <a href="https://ruqqus.com/discord" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #7289DA!important;">
+            <span class="fa-stack fa-1x ml-n1 mr-2">
+              <i class="fas fa-square fa-stack-2x text-gray-300" style="font-size: 2rem!important;"></i>
+              <i class="fab fa-discord fa-stack-1x text-base fa-inverse" style="color: #7289DA!important;"></i>
+            </span>Discord Server
+          </a>
+
+        </div>
       </div>
-      <div class="body">
-        <p>Exclusive patron titles, merch, and more. Support Ruqqus today!</p>
-
-        {% if v %}
-
-        <a href="/settings#patreon" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
-            <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
-          </span>Unlock Patron Titles
-        </a>
-
-        {% else %}
-
-        <a href="https://patreon.com/ruqqus" target="blank" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
-            <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
-          </span>Become a Patron
-        </a>
-
-        {% endif %}
-
-        <a href="https://www.bonfire.com/store/ruqqus/" target="blank" class="btn btn-block btn-link text-info text-left text-decoration-none px-1 mt-0">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x" style="color: #BEE3F8!important; font-size: 2rem!important;"></i>
-            <i class="fas fa-tshirt fa-stack-1x text-info text-base fa-inverse"></i>
-          </span>Awesome T-Shirts
-        </a>
-
-        <a href="https://gumroad.com/l/XpCXQ" target="blank" class="btn btn-block btn-link text-success text-left text-decoration-none px-1 mt-0">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x" style="color: #9AE6B4!important; font-size: 2rem!important;"></i>
-            <i class="fas fa-laugh fa-stack-1x text-success text-base fa-inverse"></i>
-          </span>Custom Stickers
-        </a>
-
-        <a href="https://github.com/ruqqus/ruqqus" target="blank" class="btn btn-block btn-link text-black text-left text-decoration-none px-1 mt-0">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x text-gray-300" style="font-size: 2rem!important;"></i>
-            <i class="fab fa-github fa-stack-1x text-black text-base fa-inverse"></i>
-          </span>Contribute Code
-        </a>
-
-        <a href="https://github.com/ruqqus/ruqqus#sponsors" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #F7931A!important">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x" style="color: #FEEBC8!important; font-size: 2rem!important;"></i>
-            <i class="fab fa-bitcoin fa-stack-1x text-base fa-inverse" style="color: #F7931A!important;"></i>
-          </span>Donate Crypto
-        </a>
-
-        <a href="https://github.com/ruqqus/ruqqus/issues" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #DC143C!important">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x" style="color: #FC8181!important; font-size: 2rem!important;"></i>
-            <i class="fas fa-bug fa-stack-1x text-base fa-inverse" style="color: #DC143C!important;"></i>
-          </span>Report Bugs
-        </a>
-
-      </div>
-    </div>
       {% endblock %}
 
-   {% if v and v.admin_level %}
-   <div class="sidebar-section sidebar-adminpanel">
-    <div class="title"><i class="fas fa-user-shield mr-2"></i>Admin Panel</div>
-    <div class="body">
-      {% block adminpanel %}
-      <div class="text-center mb-2" style=""><i class="fad fa-ghost text-muted" style="font-size: 2.5rem"></i></div>
-      <p class="text-center text-small text-muted mb-0">No admin actions available</p>
-      {% endblock %}
+      {% if v and v.admin_level %}
+      <div class="sidebar-section sidebar-adminpanel">
+        <div class="title"><i class="fas fa-user-shield mr-2"></i>Admin Panel</div>
+        <div class="body">
+          {% block adminpanel %}
+          <div class="text-center mb-2" style=""><i class="fad fa-ghost text-muted" style="font-size: 2.5rem"></i></div>
+          <p class="text-center text-small text-muted mb-0">No admin actions available</p>
+          {% endblock %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% include "footer.html" %}
+
     </div>
+    {% endblock %}
   </div>
-  {% endif %}
-
-{% include "footer.html" %}
-
-</div>
-{% endblock %}
-</div>
 </div>
 
 {% block mobilenavbar %}
