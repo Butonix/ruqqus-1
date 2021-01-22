@@ -1903,3 +1903,25 @@ def board_mod_perms_change(boardname, board, v):
 @is_guildmaster("content")
 def board_mod_check(boardname, board, v):
     return "", 200
+
+
+@app.route("/+<boardname>/mod/queued_posts", methods=["GET", "POST"])
+@auth_required
+@is_guildmaster("content")
+@validate_formkey
+def board_mod_queued_posts(boardname, board, v):
+    page = int(request.args.get("page", 1))
+    board = get_guild(boardname)
+
+    queue = board.queued_posts(page)
+
+    next_exists = len(queue) == 26
+    queue = queue[0:25]
+
+    return render_template("guild/queued_posts.html",
+                           v=v,
+                           b=board,
+                           queue=posts,
+                           next_exists=next_exists,
+                           page=page
+                           )
