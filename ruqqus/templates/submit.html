@@ -228,7 +228,7 @@
 				<div class="col">
 					<div class="d-flex align-items-center justify-content-end">
 						{% if error %}<span class="text-danger mr-2">{{ error }}</span>{% endif %}
-						<select class="custom-select w-auto mr-3 pr-3" aria-label="Post queue selection" onchange="post_toast(mod_check_url)">
+						<select class="custom-select w-auto mr-3 pr-3" aria-label="Post queue selection" onchange="post_toast(mod_check_url())">
 							<option selected disabled>Schedule this Post</option>
 							<option value="1">Now</option>
 							<option value="2">+10 minutes</option>
@@ -262,7 +262,10 @@
 
 	<!-- Instantiate clipboard by passing a string selector -->
 	<script type="text/javascript">
-        var mod_check_url = '/+' + document.getElementById('board_name').value + '/mod/check'
+        function mod_check_url(){
+            return '/+' + document.getElementById('board_name').value + '/mod/check'
+        }
+
     </script>
     <script type="text/javascript">
 		var clipboard = new ClipboardJS('.copy-link');
