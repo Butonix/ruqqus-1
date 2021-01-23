@@ -1900,8 +1900,12 @@ def board_mod_perms_change(boardname, board, v):
 
 @app.route("/+<boardname>/mod/check", methods=["GET"])
 @auth_required
-@is_guildmaster("content")
-def board_mod_check(boardname, board, v):
+def board_mod_check(boardname, v):
+    guild = get_guild(boardname)
+
+    if v.id not in [x.id for x in guild.moderators]:
+        return jsonify({'error': 'You must be a Guildmaster to Queue a post in this Guild.'})
+
     return "", 200
 
 
