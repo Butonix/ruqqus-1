@@ -138,8 +138,7 @@ class Board(Base, Stndrd, Age_times):
         return self.submissions.filter(Submission.created_utc >= int(time.time())).count()
 
     def queued_posts(self, page):
-        return self.submissions\
-            .filter(Submission.created_utc >= int(time.time()))\
+        return self.submissions.filter(Submission.created_utc >= int(time.time()))\
             .order_by(Submission.created_utc.desc())\
             .offset(25 * (page - 1))\
             .limit(26).all()
