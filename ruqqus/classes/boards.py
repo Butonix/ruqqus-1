@@ -135,15 +135,12 @@ class Board(Base, Stndrd, Age_times):
 
     @property
     def active_queue(self):
-        return self.submissions.filter(Submission.created_utc >= int(time.time())).count()
+        return self.submissions.filter(Submission.created_utc > int(time.time())).count()
 
     def queued_posts(self, page):
-        return self.submissions\
-            .filter(Submission.created_utc >= int(time.time()))\
-            .order_by(
-            Submission.created_utc.desc())\
-            .offset(25 * (page - 1))\
-            .limit(26).all()
+        return self.submissions.filter(
+            Submission.created_utc > int(time.time())).order_by(
+            Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
 
     @cache.memoize(timeout=60)
     def idlist(self, sort="hot", page=1, t=None,
@@ -300,10 +297,6 @@ class Board(Base, Stndrd, Age_times):
                 return x
 
         return None
-
-    def queued_posts(self):
-     """       returnself.
-                board_id=self.id, user_id=user.id, is_active=True).first()"""
 
     def has_ban(self, user):
 

@@ -1898,21 +1898,25 @@ def board_mod_perms_change(boardname, board, v):
 
     return redirect(f"{board.permalink}/mod/mods")
 
-@app.route("/+<boardname>/mod/check", methods=["GET"])
+@app.route("/+<boardname>/mod/check", methods=["POST"])
 @auth_required
-@is_guildmaster("content")
-def board_mod_check(boardname, board, v):
+def board_mod_check(boardname, v):
+    guild = get_guild(boardname)
+    mod = get_mod(v.id, guild.id)
+    print(mod)
+    if not mod:
+        return jsonify({'error': 'You must be a Guildmaster to Queue a post in this Guild.'})
+
     return "", 200
 
 
 @app.route("/+<boardname>/mod/queue", methods=["GET", "POST"])
 @auth_required
 @is_guildmaster("content")
-@validate_formkey
 def board_mod_queued_posts(boardname, board, v):
     page = int(request.args.get("page", 1))
     board = get_guild(boardname)
-
+    print(f"active queue : {board.active_queue}")
     queue = board.queued_posts(page)
 
     next_exists = len(queue) == 26

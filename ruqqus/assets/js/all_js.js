@@ -1506,6 +1506,8 @@ var button = document.getElementById("create_button");
 
 var image = document.getElementById("file-upload");
 
+var time = document.getElementById("time_select");
+
 // Toggle reuqired attribute
 
 if (url.value.length > 0 || image.value.length > 0) {
@@ -1526,13 +1528,20 @@ var isValidURL = url.checkValidity();
 
 var isValidText = text.checkValidity();
 
+var time = time.checkValidity();
+
 // Disable submit button if invalid inputs
 
 if (isValidTitle && (isValidURL || image.value.length>0)) {
   button.disabled = false;
 } else if (isValidTitle && isValidText) {
   button.disabled = false;
-} else {
+}//else if (!time){
+ //   button.disabled = false;
+//} else if (time && gm){
+//    button.disabled = false
+//}
+  else {
   button.disabled = true;
 }
 
