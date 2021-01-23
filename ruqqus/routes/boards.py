@@ -1913,7 +1913,6 @@ def board_mod_check(boardname, v):
 @app.route("/+<boardname>/mod/queue", methods=["GET", "POST"])
 @auth_required
 @is_guildmaster("content")
-@validate_formkey
 def board_mod_queued_posts(boardname, board, v):
     page = int(request.args.get("page", 1))
     board = get_guild(boardname)
