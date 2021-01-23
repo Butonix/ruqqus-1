@@ -1902,8 +1902,8 @@ def board_mod_perms_change(boardname, board, v):
 @auth_required
 def board_mod_check(boardname, v):
     guild = get_guild(boardname)
-
-    if v.id not in [x.id for x in guild.moderators]:
+    mod = get_mod(v.id, guild.id)
+    if not mod:
         return jsonify({'error': 'You must be a Guildmaster to Queue a post in this Guild.'})
 
     return "", 200
