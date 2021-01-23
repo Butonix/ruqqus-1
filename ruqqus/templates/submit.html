@@ -228,7 +228,7 @@
 				<div class="col">
 					<div class="d-flex align-items-center justify-content-end">
 						{% if error %}<span class="text-danger mr-2">{{ error }}</span>{% endif %}
-						<select class="custom-select w-auto mr-3 pr-3" aria-label="Post queue selection">
+						<select class="custom-select w-auto mr-3 pr-3" aria-label="Post queue selection" onchange="post_toast('/ + 'document.getElementById('board').value + '/mod/check')">
 							<option selected disabled>Schedule this Post</option>
 							<option value="1">Now</option>
 							<option value="2">+10 minutes</option>
