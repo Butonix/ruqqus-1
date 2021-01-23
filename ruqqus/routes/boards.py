@@ -1903,6 +1903,7 @@ def board_mod_perms_change(boardname, board, v):
 def board_mod_check(boardname, v):
     guild = get_guild(boardname)
     mod = get_mod(v.id, guild.id)
+    print(mod)
     if not mod:
         return jsonify({'error': 'You must be a Guildmaster to Queue a post in this Guild.'})
 
