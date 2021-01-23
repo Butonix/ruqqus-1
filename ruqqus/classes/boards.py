@@ -140,8 +140,7 @@ class Board(Base, Stndrd, Age_times):
     def queued_posts(self, page):
         return self.submissions\
             .filter(Submission.created_utc >= int(time.time()))\
-            .order_by(
-            Submission.created_utc.desc())\
+            .order_by(Submission.created_utc.desc())\
             .offset(25 * (page - 1))\
             .limit(26).all()
 
@@ -300,10 +299,6 @@ class Board(Base, Stndrd, Age_times):
                 return x
 
         return None
-
-    def queued_posts(self):
-     """       returnself.
-                board_id=self.id, user_id=user.id, is_active=True).first()"""
 
     def has_ban(self, user):
 
