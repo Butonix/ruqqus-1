@@ -1916,7 +1916,7 @@ def board_mod_check(boardname, v):
 def board_mod_queued_posts(boardname, board, v):
     page = int(request.args.get("page", 1))
     board = get_guild(boardname)
-
+    print(f"active queue : {board.active_queue}")
     queue = board.queued_posts(page)
 
     next_exists = len(queue) == 26
