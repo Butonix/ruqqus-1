@@ -2,8 +2,18 @@
 
 {% block postNav %}{% endblock %}
 
+{% block stylesheets %}
+
+{% if v and v.referral_count and session.get("dark_mode_enabled") %}
+<link id="css-link" rel="stylesheet" href="/+{{ p.board.name }}/dark.css">
+{% else %}
+<link id="css-link" rel="stylesheet" href="/+{{ p.board.name }}/main.css">
+{% endif %}
+
+{% endblock %}
+
 {% block title %}
-<title>Reported Posts - Ruqqus</title>
+<title>Queued Posts - Ruqqus</title>
 <meta name="description" content="in {{ '+'+b.name if b else 'your guilds'}}">
 {% endblock %}
 
@@ -11,8 +21,8 @@
 {% if b %}
 <div class="sidebar-section sidebar-profile-basic">
   <div class="body">
-    <h1 class="h6 d-inline-block mb-0" style="color:black">{{ '+'+b.name+' ' if b else ''}}Reported Posts</h1>
-	<p>Posts in {{ '+'+b.name if b else 'your guilds'}} that users have reported as being off-topic.</p>
+    <h1 class="h6 d-inline-block mb-0" style="color:black">{{ '+'+b.name+' ' if b else ''}}Queued Posts</h1>
+	<p>Posts in {{ '+'+b.name if b else 'your guilds'}} that guildmasters have scheduled for automatic future posting.</p>
 
 </div>
 </div>
@@ -21,7 +31,7 @@
   <div class="body">
     <h1 class="h6 d-inline-block mb-0" style="color:black">Reported Posts</h1>
 
-	<p>Posts in your guilds that users have reported as being off-topic.</p>
+	<p>Posts in your guild that are scheduled for automatic future posting.</p>
 </div>
 </div>
 {% endif %}
@@ -31,13 +41,12 @@
 
 {% block content %}
 <!-- Post filters bar visible only on medium devices or larger-->
-
 <div class="row justify-content-around mx-lg-5 d-block d-lg-none no-gutters">
   <div class="col bg-light border-bottom rounded-md p-3">
     <div class="profile-details">
       <div class="media">
       <div class="media-body">
-        <h1 class="h6 d-inline-block">Flagged Posts</h1>
+        <h1 class="h6 d-inline-block">Queued Posts</h1>
 
       </div>
 
