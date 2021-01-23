@@ -152,6 +152,7 @@ def shop_buy_coins_completed(v):
         v.negative_balance_cents -= txn.usd_cents
 
     g.db.add(v)
+    g.db.commit()
 
     return render_template(
         "single_txn.html", 
