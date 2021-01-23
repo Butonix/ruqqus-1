@@ -1536,11 +1536,9 @@ if (isValidTitle && (isValidURL || image.value.length>0)) {
   button.disabled = false;
 } else if (isValidTitle && isValidText) {
   button.disabled = false;
-}
-  else if (!time){
-    button.disabled = false;
-}
-//  else if (time && gm){
+}//else if (!time){
+ //   button.disabled = false;
+//} else if (time && gm){
 //    button.disabled = false
 //}
   else {
