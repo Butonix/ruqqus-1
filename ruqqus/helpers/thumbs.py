@@ -40,8 +40,13 @@ def thumbnail_thread(pid, debug=False):
         if debug:
             print("trying direct url as image")
 
+        if post.embed_url and post.embed_url.startswith("https://"):
+            fetch_url=post.embed_url
+        else:
+            fetch_url=post.url
+
         try:
-            x = requests.get(post.url, headers=headers)
+            x = requests.get(fetch_url, headers=headers)
         except:
             if debug:
                 print("error connecting")
