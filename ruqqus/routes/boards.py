@@ -1898,7 +1898,7 @@ def board_mod_perms_change(boardname, board, v):
 
     return redirect(f"{board.permalink}/mod/mods")
 
-@app.route("/+<boardname>/mod/check", methods=["GET"])
+@app.route("/+<boardname>/mod/check", methods=["POST"])
 @auth_required
 def board_mod_check(boardname, v):
     guild = get_guild(boardname)
