@@ -3,9 +3,11 @@ from os import environ
 import requests
 from werkzeug.wrappers.response import Response as RespObj
 import time
+import random
 
 from ruqqus.classes import *
 from .get import *
+from .alerts import send_notification
 from ruqqus.__main__ import Base, app
 
 
@@ -62,7 +64,7 @@ def get_logged_in_user():
         if app.config["SERVER_NAME"]=="dev.ruqqus.com" and v.admin_level < 2 and not v.has_premium:
             x= (None, None)
 
-        if v and nonce < v.login_nonce:
+        if v and nonce and (nonce < v.login_nonce):
             x= (None, None)
         else:
             x=(v, None)
@@ -111,6 +113,54 @@ def auth_required(f):
 
         if not v:
             abort(401)
+        elif v and v.ban_evade and request.method=="POST":
+            if random.randint(0,100) < v.ban_evade:
+                v.ban(reason="Evading a site-wide ban")
+                send_notification(v, "Your Ruqqus account has been permanently suspended for the following reason:\n\n> ban evasion")
+
+                for post in g.db.query(Submission).filter_by(author_id=user.id).all():
+                    if post.is_banned:
+                        continue
+                        
+                    post.is_banned=True
+                    post.ban_reason="Ban evasion. This submission's owner was was banned from Ruqqus on another account."
+                    g.db.add(post)
+
+                    ma=ModAction(
+                        kind="ban_post",
+                        user_id=1,
+                        target_submission_id=post.id,
+                        board_id=post.board_id,
+                        note="ban evasion"
+                        )
+                    g.db.add(ma)
+
+                for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
+                    if comment.is_banned:
+                        continue
+
+                    comment.is_banned=True
+                    comment.ban_reason="Ban evasion. This comment's owner was was banned from Ruqqus on another account."
+                    g.db.add(comment)
+
+                    ma=ModAction(
+                        kind="ban_comment",
+                        user_id=1,
+                        target_comment_id=comment.id,
+                        board_id=comment.post.board_id,
+                        note="ban evasion"
+                        )
+                    g.db.add(ma)
+
+                g.db.commit()
+                abort(403)
+
+            else:
+                v.ban_evade +=1
+                g.db.add(v)
+                g.db.commit()
+
+
 
         if c:
             kwargs["c"] = c
@@ -405,15 +455,18 @@ def api(*scopes, no_ban=False):
 
                 result = f(*args, **kwargs)
 
-                if isinstance(result, RespObj) or isinstance(result, tuple):
+                if not isinstance(result, dict):
                     return result
 
-                if request.path.startswith('/inpage/'):
-                    return result['inpage']()
-                elif request.path.startswith('/test/'):
-                    return result['api']()
-                else:
-                    return result['html']()
+                try:
+                    if request.path.startswith('/inpage/'):
+                        return result['inpage']()
+                    elif request.path.startswith(('/api/vue/','/test/')):
+                        return result['api']()
+                    else:
+                        return result['html']()
+                except KeyError:
+                    return result
 
         wrapper.__name__ = f.__name__
         return wrapper
@@ -422,19 +475,19 @@ def api(*scopes, no_ban=False):
 
 
 SANCTIONS=[
-    "cu",   #Cuba
-    "ir",   #Iran
-    "kp",   #North Korea
-    "sy",   #Syria
-    "tr",   #Turkey
-    "ve",   #Venezuela
+    "CU",   #Cuba
+    "IR",   #Iran
+    "KP",   #North Korea
+    "SY",   #Syria
+    "TR",   #Turkey
+    "VE",   #Venezuela
 ]
 
 def no_sanctions(f):
 
     def wrapper(*args, **kwargs):
 
-        if request.headers.get("cf-ipcountry","").lower() in SANCTIONS:
+        if request.headers.get("cf-ipcountry","") in SANCTIONS:
             abort(451)
 
         return f(*args, **kwargs)

@@ -27,6 +27,7 @@ def flagged_posts(v):
 
     posts = g.db.query(Submission).filter_by(
         is_approved=0,
+        purged_utc=0,
         is_banned=False
     ).join(Submission.flags
            ).options(contains_eager(Submission.flags)
@@ -79,8 +80,8 @@ def flagged_comments(v):
     posts = g.db.query(Comment
                        ).filter_by(
         is_approved=0,
-        is_banned=False,
-        is_deleted=False
+        purged_utc=0,
+        is_banned=False
     ).join(Comment.flags).options(contains_eager(Comment.flags)
                                   ).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
@@ -230,13 +231,13 @@ def participation_stats(v):
             "locked_negative_users": g.db.query(User).filter(User.negative_balance_cents>0).count(),
             "total_posts": g.db.query(Submission).count(),
             "posting_users": g.db.query(Submission.author_id).distinct().count(),
-            "listed_posts": g.db.query(Submission).filter_by(is_banned=False, is_deleted=False).count(),
+            "listed_posts": g.db.query(Submission).filter_by(is_banned=False).filter(Submission.deleted_utc > 0).count(),
             "removed_posts": g.db.query(Submission).filter_by(is_banned=True).count(),
-            "deleted_posts": g.db.query(Submission).filter_by(is_deleted=True).count(),
+            "deleted_posts": g.db.query(Submission).filter(Submission.deleted_utc > 0).count(),
             "total_comments": g.db.query(Comment).count(),
             "commenting_users": g.db.query(Comment.author_id).distinct().count(),
             "removed_comments": g.db.query(Comment).filter_by(is_banned=True).count(),
-            "deleted_comments": g.db.query(Comment).filter_by(is_deleted=True).count(),
+            "deleted_comments": g.db.query(Comment).filter(Comment.deleted_utc>0).count(),
             "total_guilds": g.db.query(Board).count(),
             "listed_guilds": g.db.query(Board).filter_by(is_banned=False, is_private=False).count(),
             "private_guilds": g.db.query(Board).filter_by(is_banned=False, is_private=True).count(),
@@ -686,6 +687,34 @@ def admin_category_get(v):
         categories=CATEGORIES,
         b=get_board(request.args.get("guild"), graceful=True)
         )
+
+@app.route("/admin/user_data", methods=["GET"])
+@admin_level_required(5)
+def admin_user_data_get(v):
+
+    user=request.values.get("username")
+    user=get_user(user, graceful=True)
+
+    if not user:
+        return render_template("admin/user_data.html", v=v)
+
+    post_ids = [x[0] for x in g.db.query(Submission.id).filter_by(author_id=user.id).order_by(Submission.created_utc.desc()).all()]
+    posts=get_posts(post_ids)
+
+    comment_ids=[x[0] for x in g.db.query(Comment.id).filter_by(author_id=user.id).order_by(Comment.created_utc.desc()).all()]
+    comments=get_comments(comment_ids)
+
+
+
+    return jsonify(
+        {
+        "submissions":[x.json_admin for x in posts],
+        "comments":[x.json_admin for x in comments],
+        "user":user.json_admin
+            }
+        )
+        
+
 
 
 # @app.route('/admin/deploy', methods=["GET"])

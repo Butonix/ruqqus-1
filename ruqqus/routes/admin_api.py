@@ -92,7 +92,7 @@ def ban_post(post_id, v):
     post.is_approved = 0
     post.approved_utc = 0
     post.stickied = False
-    post.pinned = False
+    post.is_pinned = False
 
     ban_reason=request.form.get("reason", "")
     with CustomRenderer() as renderer:

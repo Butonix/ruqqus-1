@@ -44,7 +44,7 @@ def api_vote_post(post_id, x, v):
 
     if post.is_banned:
         return jsonify({"error":"That post has been removed."}), 403
-    elif post.is_deleted:
+    elif post.deleted_utc > 0:
         return jsonify({"error":"That post has been deleted."}), 403
     elif post.is_archived:
         return jsonify({"error":"That post is archived and can no longer be voted on."}), 403
@@ -115,7 +115,7 @@ def api_vote_comment(comment_id, x, v):
 
     if comment.is_banned:
         return jsonify({"error":"That comment has been removed."}), 403
-    elif comment.is_deleted:
+    elif comment.deleted_utc > 0:
         return jsonify({"error":"That comment has been deleted."}), 403
     elif comment.post.is_archived:
         return jsonify({"error":"This post and its comments are archived and can no longer be voted on."}), 403

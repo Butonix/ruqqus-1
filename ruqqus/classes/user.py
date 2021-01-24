@@ -104,6 +104,7 @@ class User(Base, Stndrd, Age_times):
     discord_id=Column(String(64), default=None)
     last_yank_utc=Column(Integer, default=0)
     creation_region=Column(String(2), default=None)
+    ban_evade=Column(Integer, default=0)
 
     moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
@@ -198,7 +199,7 @@ class User(Base, Stndrd, Age_times):
     def idlist(self, sort="hot", page=1, t=None, filter_words="", **kwargs):
 
         posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
-                                                                           is_deleted=False,
+                                                                           deleted_utc=0,
                                                                            stickied=False
                                                                            )
 
@@ -320,7 +321,7 @@ class User(Base, Stndrd, Age_times):
             submissions = submissions.filter_by(is_offensive=False)
 
         if not (v and (v.admin_level >= 3)):
-            submissions = submissions.filter_by(is_deleted=False)
+            submissions = submissions.filter_by(deleted_utc=0)
 
         if not (v and (v.admin_level >= 3 or v.id == self.id)):
             submissions = submissions.filter_by(is_banned=False)
@@ -366,7 +367,7 @@ class User(Base, Stndrd, Age_times):
             comments = comments.filter(Submission.is_nsfl == False)
 
         if (not v) or v.admin_level < 3:
-            comments = comments.filter(Comment.is_deleted == False)
+            comments = comments.filter(Comment.deleted_utc == 0)
 
         if not (v and (v.admin_level >= 3 or v.id == self.id)):
             comments = comments.filter(Comment.is_banned == False)
@@ -519,7 +520,7 @@ class User(Base, Stndrd, Age_times):
 
         notifications = self.notifications.join(Notification.comment).filter(
             Comment.is_banned == False,
-            Comment.is_deleted == False)
+            Comment.deleted_utc == 0)
 
         if not all_:
             notifications = notifications.filter(Notification.read == False)
@@ -544,7 +545,7 @@ class User(Base, Stndrd, Age_times):
     @lazy
     def notifications_count(self):
 
-        return self.notifications.join(Notification.comment).filter(Notification.read==False, Comment.is_banned==False, Comment.is_deleted==False).count()
+        return self.notifications.join(Notification.comment).filter(Notification.read==False, Comment.is_banned==False, Comment.deleted_utc==0).count()
 
     @property
     def post_count(self):
@@ -555,7 +556,7 @@ class User(Base, Stndrd, Age_times):
     def comment_count(self):
 
         return self.comments.filter(Comment.parent_submission!=None).filter_by(
-            is_banned=False, is_deleted=False).count()
+            is_banned=False, deleted_utc=0).count()
 
     @property
     @lazy
@@ -685,6 +686,28 @@ class User(Base, Stndrd, Age_times):
         return self.has_premium or self.true_score >= 500 or self.created_utc <= 1592974538
 
     @property
+    def json_raw(self):
+        data= {'username': self.username,
+                'permalink': self.permalink,
+                'is_banned': bool(self.is_banned),
+                'is_premium': self.has_premium_no_renew,
+                'created_utc': self.created_utc,
+                'id': self.base36id,
+                'is_private': self.is_private,
+                'profile_url': self.profile_url,
+                'banner_url': self.banner_url,
+                'title': self.title.json if self.title else None,
+                'bio': self.bio,
+                'bio_html': self.bio_html
+                }
+
+        if self.real_id:
+            data['real_id']=self.real_id
+
+        return data
+    
+
+    @property
     def json_core(self):
 
         now=int(time.time())
@@ -703,20 +726,9 @@ class User(Base, Stndrd, Age_times):
                     'is_deleted': True,
                     'id': self.base36id
                     }
+        return self.json_raw
         
-        return {'username': self.username,
-                'permalink': self.permalink,
-                'is_banned': False,
-                'is_premium': self.has_premium_no_renew,
-                'created_utc': self.created_utc,
-                'id': self.base36id,
-                'is_private': self.is_private,
-                'profile_url': self.profile_url,
-                'banner_url': self.banner_url,
-                'title': self.title.json if self.title else None,
-                'bio': self.bio,
-                'bio_html': self.bio_html
-                }
+
 
     @property
     def json(self):
@@ -836,7 +848,7 @@ class User(Base, Stndrd, Age_times):
     def saved_idlist(self, page=1):
 
         posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
-                                                                           is_deleted=False
+                                                                           deleted_utc=0
                                                                            )
 
         if not self.over_18:
@@ -969,3 +981,14 @@ class User(Base, Stndrd, Age_times):
         
         return self._transactions.filter(PayPalTxn.status!=1).order_by(PayPalTxn.created_utc.desc()).all()
     
+
+    @property
+    def json_admin(self):
+        data=self.json_raw
+
+        data['creation_ip']=self.creation_ip
+        data['creation_region']=self.creation_region
+        data['email']=self.email
+        data['email_verified']=self.is_activated
+
+        return data

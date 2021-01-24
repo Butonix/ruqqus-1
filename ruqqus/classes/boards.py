@@ -16,22 +16,6 @@ from .comment import Comment
 from .mix_ins import *
 from ruqqus.__main__ import Base, cache
 
-# class BoardCategory(Enum):
-
-#     Arts="Arts"
-#     Culture="Culture"
-#     Discussion="Discussion"
-#     Food="Food"
-#     Entertainment="Entertainment"
-#     Gaming="Gaming"
-#     Hobby="Hobby"
-#     Humor="Humor"
-#     News="News"
-#     Photography="Photography"
-#     Politics="Politics"
-#     Sports="Sports"
-#     Technology="Technology"
-
 
 class Board(Base, Stndrd, Age_times):
 
@@ -127,8 +111,7 @@ class Board(Base, Stndrd, Age_times):
     @property
     def mods_count(self):
 
-        return len(
-            [x for x in self.moderators if x.accepted and not x.invite_rescinded])
+        return len(self.mods_list)
 
     @property
     def permalink(self):
@@ -145,10 +128,9 @@ class Board(Base, Stndrd, Age_times):
                show_offensive=True, v=None, nsfw=False, **kwargs):
 
         posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
-                                                                           is_deleted=False,
                                                                            is_pinned=False,
                                                                            board_id=self.id
-                                                                           )
+                                                                           ).filter(Submission.deleted_utc == 0)
 
         if not nsfw:
             posts = posts.filter_by(over_18=False)
@@ -544,7 +526,7 @@ class Board(Base, Stndrd, Age_times):
             )
 
         if not v or not v.admin_level >= 3:
-            comments = comments.filter_by(is_deleted=False, is_banned=False)
+            comments = comments.filter_by(is_banned=False).filter(Comment.deleted_utc == 0)
 
         comments = comments.join(
             posts, Comment.parent_submission == posts.c.id)
