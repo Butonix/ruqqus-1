@@ -434,10 +434,16 @@ def mod_ban_bid_user(bid, board, v):
     if item:
         if isinstance(item, Submission):
             note=f'for <a href="{item.permalink}">post</a>'
+            target_submission_id=item.id
+            target_comment_id=None
         elif isinstance(item, Comment):
             note=f'for <a href="{item.permalink}">comment</a>'
+            target_submission_id=None
+            target_comment_id=item.id
         else:
             note=None
+            target_submission_id=None
+            target_comment_id=None
     else:
         note=None
 
@@ -446,7 +452,9 @@ def mod_ban_bid_user(bid, board, v):
         user_id=v.id,
         target_user_id=user.id,
         board_id=board.id,
-        note=note
+        note=note,
+        target_submission_id=target_submission_id,
+        target_comment_id=target_comment_id
         )
     g.db.add(ma)
 
@@ -1641,13 +1649,13 @@ def siege_guild(v):
                                    error="Your siege failed. One of the guildmasters has private activity in the last 60 days. You may try again in 30 days."
                                    ), 403
 
-        # check exiles
-        if g.db.query(BanRelationship).filter(BanRelationship.banning_mod_id.in_(
-                ids), BanRelationship.created_utc > cutoff).first():
+        # check mod actions
+        if g.db.query(ModAction).filter(ModAction.user_id.in_(
+                ids), ModAction.created_utc > cutoff).first():
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
-                                   error="Your siege failed. One of the guildmasters has private activity in the last 60 days. You may try again in 30 days."
+                                   error="Your siege failed. One of the guildmasters has performed a mod action in the last 60 days. You may try again in 30 days."
                                    ), 403
 
     #Siege is successful
