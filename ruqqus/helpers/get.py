@@ -186,7 +186,7 @@ def get_posts(pids, sort="hot", v=None):
         lazyload('*')
         ).filter(
         ModAction.kind=="exile_user",
-        target_submission_id.in_(pids)
+        ModAction.target_submission_id.in_(pids)
         ).subquery()
 
     if v:
