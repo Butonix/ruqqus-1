@@ -394,10 +394,10 @@ def submit_post(v):
     board_name = board_name.rstrip()
 
     board = get_guild(board_name, graceful=True)
-    if queue_time and board and not board.has_mod(v):
+    if queue_time and board and not v.can_queue():
         return {"html": lambda: (render_template("submit.html",
                                                  v=v,
-                                                 error=f"Only Guildmasters can queue posts in this guild.",
+                                                 error=f"You are not currently able to Queue any posts.",
                                                  title=title,
                                                  url=url, body=request.form.get(
                 "body", ""),
@@ -405,20 +405,7 @@ def submit_post(v):
                                                              graceful=True),
                                                  times=time_keys
                                                  ), 401),
-                "api": lambda: (jsonify({"error": f"Only Guildmasters can queue posts in this guild."}))
-                }
-    if queue_time and board and not v.can_queue():
-        return {"html": lambda: (render_template("submit.html",
-                                                 v=v,
-                                                 error=f"{v.username}'s post queue is currently full.",
-                                                 title=title,
-                                                 url=url, body=request.form.get(
-                                                     "body", ""),
-                                                 b=get_guild("general",
-                                                             graceful=True),
-                                                 times=time_keys
-                                                 ), 400),
-                "api": lambda: (jsonify({"error": f"{v.username}'s post queue is currently full."}))
+                "api": lambda: (jsonify({"error": f"You are not currently able to Queue any posts."}))
                 }
     if not board:
         board = get_guild('general')
