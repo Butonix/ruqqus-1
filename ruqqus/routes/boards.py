@@ -421,6 +421,11 @@ def mod_ban_bid_user(bid, board, v):
             note=None
             target_submission_id=None
             target_comment_id=None
+    else:
+        note=None
+        target_submission_id=None
+        target_comment_id=None
+
 
     # check for an existing deactivated ban
     existing_ban = g.db.query(BanRelationship).filter_by(
@@ -447,9 +452,6 @@ def mod_ban_bid_user(bid, board, v):
 
         send_notification(user, text)
 
-
-    else:
-        note=None
 
     ma=ModAction(
         kind="exile_user",
