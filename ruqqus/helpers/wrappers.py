@@ -64,7 +64,7 @@ def get_logged_in_user():
         if app.config["SERVER_NAME"]=="dev.ruqqus.com" and v.admin_level < 2 and not v.has_premium:
             x= (None, None)
 
-        if v and nonce < v.login_nonce:
+        if v and nonce and (nonce < v.login_nonce):
             x= (None, None)
         else:
             x=(v, None)
