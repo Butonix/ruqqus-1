@@ -394,7 +394,7 @@ def submit_post(v):
     board_name = board_name.rstrip()
 
     board = get_guild(board_name, graceful=True)
-    if queue_time and board and not v.can_queue():
+    if queue_time and board and not v.can_queue:
         return {"html": lambda: (render_template("submit.html",
                                                  v=v,
                                                  error=f"You are not currently able to Queue any posts.",
