@@ -131,7 +131,7 @@ def post_base36id_noboard(base36id, anything=None, v=None):
 @is_not_banned
 @no_negative_balance("html")
 def submit_get(v):
-    print(f"times : {times.keys()}")
+    print(f"times : {times.keys()[0]}")
     board = request.args.get("guild", "general")
     b = get_guild(board, graceful=True)
     if not b:
