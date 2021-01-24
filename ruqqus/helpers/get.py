@@ -263,8 +263,8 @@ def get_posts(pids, sort="hot", v=None):
 
         output=[]
         for post in posts:
-            p=posts[0]
-            p._is_exiled_for=posts[1] or 0
+            p=post[0]
+            p._is_exiled_for=post[1] or 0
             output.append(p)
 
     return sorted(output, key=lambda x: pids.index(x.id))
