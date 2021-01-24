@@ -408,6 +408,20 @@ def mod_ban_bid_user(bid, board, v):
     if not board.has_participant(user):
         return jsonify({"error": f"@{user.username} hasn't participated in +{board.name}."}), 403
 
+    if item:
+        if isinstance(item, Submission):
+            note=f'for <a href="{item.permalink}">post</a>'
+            target_submission_id=item.id
+            target_comment_id=None
+        elif isinstance(item, Comment):
+            note=f'for <a href="{item.permalink}">comment</a>'
+            target_submission_id=None
+            target_comment_id=item.id
+        else:
+            note=None
+            target_submission_id=None
+            target_comment_id=None
+
     # check for an existing deactivated ban
     existing_ban = g.db.query(BanRelationship).filter_by(
         user_id=user.id, board_id=board.id, is_active=False).first()
@@ -415,6 +429,8 @@ def mod_ban_bid_user(bid, board, v):
         existing_ban.is_active = True
         existing_ban.created_utc = int(time.time())
         existing_ban.banning_mod_id = v.id
+        existing_ban.target_submission_id=target_submission_id
+        existing_ban.target_comment_id=target_comment_id
         g.db.add(existing_ban)
     else:
         new_ban = BanRelationship(user_id=user.id,
@@ -431,19 +447,7 @@ def mod_ban_bid_user(bid, board, v):
 
         send_notification(user, text)
 
-    if item:
-        if isinstance(item, Submission):
-            note=f'for <a href="{item.permalink}">post</a>'
-            target_submission_id=item.id
-            target_comment_id=None
-        elif isinstance(item, Comment):
-            note=f'for <a href="{item.permalink}">comment</a>'
-            target_submission_id=None
-            target_comment_id=item.id
-        else:
-            note=None
-            target_submission_id=None
-            target_comment_id=None
+
     else:
         note=None
 
