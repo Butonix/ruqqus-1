@@ -194,6 +194,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return f"/+{self.board.name}/post/{self.base36id}/{output}"
 
     @property
+    def is_queued(self):
+        return int(time.time()) < self.created_utc
+
+    @property
     def is_archived(self):
 
         now = int(time.time())
