@@ -1570,7 +1570,15 @@ else {
 // Disable Input
 
 function disableInput(elem, val) {
-  document.getElementById(elem).disabled = val
+  document.getElementById(elem).disabled = val;
+  selectElement("time_select", "now");
+}
+
+// Set Selection
+
+function selectElement(id, valueToSelect) {
+    let element = document.getElementById(id);
+    element.value = valueToSelect;
 }
 
 // Auto-suggest title given URL

@@ -224,7 +224,7 @@ times = {
     "6h": 6*60*60,
     "12h": 12*60*60,
     "1d": 24*60*60,
-    "3d":3*24*60*60
+    "3d": 3*24*60*60
 }
 @app.route("/submit", methods=['POST'])
 @app.route("/api/v1/submit", methods=["POST"])
