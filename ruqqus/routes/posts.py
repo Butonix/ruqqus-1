@@ -265,7 +265,8 @@ def submit_post(v):
                                                  url=url,
                                                  body=request.form.get(
                                                      "body", ""),
-                                                 b=board
+                                                 b=board,
+                                                 times=times.keys()
                                                  ), 400),
                 "api": lambda: ({"error": "Please enter a better title"}, 400)
                 }

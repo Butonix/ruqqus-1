@@ -230,15 +230,15 @@
 						{% if error %}<span class="text-danger mr-2">{{ error }}</span>{% endif %}
 						<select class="custom-select w-auto mr-3 pr-5" aria-label="Post queue selection" id="time_select" onchange="post_toast(mod_check_url())">
 							<option selected disabled>Schedule post</option>
-							<option value="1">Now</option>
-							<option value="2">+10 minutes</option>
-							<option value="3">+30 minutes</option>
-							<option value="4">+1 hour</option>
-							<option value="5">+3 hours</option>
-							<option value="6">+6 hours</option>
-							<option value="7">+12 hours</option>
-							<option value="8">+1 day</option>
-							<option value="9">+3 days</option>
+							<option value="{{ times[0] }}">Now</option>
+							<option value="{{ times[1] }}">+10 minutes</option>
+							<option value="{{ times[2] }}">+30 minutes</option>
+							<option value="{{ times[3] }}">+1 hour</option>
+							<option value="{{ times[4] }}">+3 hours</option>
+							<option value="{{ times[5] }}">+6 hours</option>
+							<option value="{{ times[6] }}">+12 hours</option>
+							<option value="{{ times[7] }}">+1 day</option>
+							<option value="{{ times[8] }}">+3 days</option>
 						</select>
 						<button class="btn btn-purple" id="create_button" type="submit" disabled>Post</button>
 					</div>
