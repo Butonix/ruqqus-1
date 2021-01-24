@@ -458,7 +458,10 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     @property
     def is_exiled_for(self):
-        return self.__dict__.get('_is_exiled_for', None)
+        x= self.__dict__.get('_is_exiled_for', None)
+        print(self.id, self.base36id, x)
+
+        return x
     
 
 
