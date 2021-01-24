@@ -1901,15 +1901,19 @@ def board_mod_perms_change(boardname, board, v):
 @app.route("/+<boardname>/mod/check", methods=["POST"])
 @auth_required
 def board_mod_check(boardname, v):
-    guild = get_guild(boardname)
+    guild = get_guild(boardname, graceful=True)
+    if not guild:
+        return jsonify({gm:False, "name": guild}), 404
+
     mod = get_mod(v.id, guild.id)
-    print(mod)
     if not mod:
         return jsonify({"gm": False,
+                        "name": guild.name,
                         'error': 'You must be a Guildmaster to Queue a post in this Guild.'
-                        })
+                        }), 401
 
-    return jsonify({"gm": True}), 200
+    return jsonify({"gm": True,
+                    "name": guild.name}), 200
 
 
 @app.route("/+<boardname>/mod/queue", methods=["GET", "POST"])
