@@ -1903,7 +1903,8 @@ def board_mod_perms_change(boardname, board, v):
 def board_mod_check(boardname, v):
     guild = get_guild(boardname, graceful=True)
     if not guild:
-        return jsonify({gm:False, "name": guild}), 404
+        return jsonify({"gm": False,
+                        "name": guild}), 404
 
     mod = get_mod(v.id, guild.id)
     if not mod:
