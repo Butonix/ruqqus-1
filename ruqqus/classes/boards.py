@@ -135,12 +135,28 @@ class Board(Base, Stndrd, Age_times):
 
     @property
     def active_queue(self):
-        return self.submissions.filter(Submission.created_utc > int(time.time())).count()
+        return len(self.submissions.filter(Submission.created_utc > int(time.time())).all())
 
-    def queued_posts(self, page):
-        return self.submissions.filter(
-            Submission.created_utc > int(time.time())).order_by(
-            Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+    def queued_posts(self, page, v):
+        posts = g.db.query(Submission.id) \
+            .options(lazyload('*')) \
+            .filter_by(is_banned=False,
+                       is_pinned=False,
+                       board_id=self.id
+                       ) \
+            .filter(Submission.deleted_utc == 0) \
+            .filter(Submission.created_utc <= int(time.time()))
+
+        if v and v.filter_nsfw:
+            posts = posts.filter_by(over_18=False)
+
+        if v and v.hide_offensive:
+            posts = posts.filter_by(is_offensive=False)
+
+        if v and not v.show_nsfl:
+            posts = posts.filter_by(is_nsfl=False)
+
+        return posts
 
     @cache.memoize(timeout=60)
     def idlist(self, sort="hot", page=1, t=None,

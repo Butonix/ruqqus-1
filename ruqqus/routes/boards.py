@@ -1905,9 +1905,11 @@ def board_mod_check(boardname, v):
     mod = get_mod(v.id, guild.id)
     print(mod)
     if not mod:
-        return jsonify({'error': 'You must be a Guildmaster to Queue a post in this Guild.'})
+        return jsonify({"gm": False,
+                        'error': 'You must be a Guildmaster to Queue a post in this Guild.'
+                        })
 
-    return "", 200
+    return jsonify({"gm": True}), 200
 
 
 @app.route("/+<boardname>/mod/queue", methods=["GET", "POST"])
@@ -1917,7 +1919,7 @@ def board_mod_queued_posts(boardname, board, v):
     page = int(request.args.get("page", 1))
     board = get_guild(boardname)
     print(f"active queue : {board.active_queue}")
-    queue = board.queued_posts(page)
+    queue = board.queued_posts(page, v)
 
     next_exists = len(queue) == 26
     queue = queue[0:25]
