@@ -284,10 +284,16 @@
 	<!-- Check mod -->
 
 	<script type="text/javascript">
-        function mod_check_url(){
-            return '/+' + document.getElementById('board_name').value + '/mod/check'
-        }
-    </script>
+		function mod_check_url(){
+			const input = document.getElementById('board_name')
+
+			if (input.value != '') {
+				return '/+' + input.value + '/mod/check'
+			} else {
+				return '/+general/mod/check'
+			}
+		}
+	</script>
 
 </body>
 

@@ -737,7 +737,8 @@ function check_mod(url, callback) {
   xhr.onload = function() {
     if (xhr.status==204) {}
       else if (xhr.status >= 200 && xhr.status < 300) {
-        return xhr.response
+        return xhr.response.gm
+        console.log(response)
         callback(xhr)
       } else if (xhr.status >= 300 && xhr.status < 400) {
         window.location.href = JSON.parse(xhr.response)["redirect"]
