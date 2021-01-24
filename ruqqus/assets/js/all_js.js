@@ -1571,7 +1571,7 @@ else {
 
 function disableInput(elem, val) {
   document.getElementById(elem).disabled = val;
-  selectElement("time_select", "now");
+  //selectElement("time_select", "now");
 }
 
 // Set Selection
