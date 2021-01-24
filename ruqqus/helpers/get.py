@@ -177,7 +177,7 @@ def get_posts(pids, sort="hot", v=None):
 
     pids=tuple(pids)
 
-    exile=nSession.query(ModAction).filter_by(kind="exile_user").subquery()
+    exile=g.db.query(ModAction).filter_by(kind="exile_user").subquery()
 
     if v:
         vt = g.db.query(Vote).filter(
