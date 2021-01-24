@@ -135,7 +135,14 @@ class Board(Base, Stndrd, Age_times):
 
     @property
     def active_queue(self):
-        return len(self.submissions.filter(Submission.created_utc > int(time.time())).all())
+        return g.db.query(Submission.id) \
+            .options(lazyload('*')) \
+            .filter_by(is_banned=False,
+                       is_pinned=False,
+                       board_id=self.id
+                       ) \
+            .filter(Submission.deleted_utc == 0) \
+            .filter(Submission.created_utc > int(time.time())).count()
 
     def queued_posts(self, page, v):
         posts = g.db.query(Submission.id) \
@@ -145,7 +152,7 @@ class Board(Base, Stndrd, Age_times):
                        board_id=self.id
                        ) \
             .filter(Submission.deleted_utc == 0) \
-            .filter(Submission.created_utc <= int(time.time()))
+            .filter(Submission.created_utc > int(time.time()))
 
         if v and v.filter_nsfw:
             posts = posts.filter_by(over_18=False)
@@ -156,7 +163,7 @@ class Board(Base, Stndrd, Age_times):
         if v and not v.show_nsfl:
             posts = posts.filter_by(is_nsfl=False)
 
-        return posts
+        return posts.all()
 
     @cache.memoize(timeout=60)
     def idlist(self, sort="hot", page=1, t=None,
