@@ -422,6 +422,41 @@ class User(Base, Stndrd, Age_times):
         return z
 
     @property
+    def can_queue(self):
+        user_queue = g.db.query(Submission)\
+            .filter(Submission.created_utc > int(time.time()))\
+            .filter(Submission.author_id == self.id)\
+            .count()
+        if self.has_premium and user_queue < 50 or self.admin_level == 4:
+            return True
+        return False
+
+    def queued_posts(self, page):
+        posts = g.db.query(Submission) \
+            .options(lazyload('*')) \
+            .filter_by(is_banned=False,
+                       is_pinned=False,
+                       board_id=self.id
+                       ) \
+            .filter(Submission.deleted_utc == 0) \
+            .filter(Submission.created_utc > int(time.time()))\
+            .filter(Submission.author_id == self.id)
+
+        return posts.all()
+
+    @property
+    def active_queue(self):
+        return g.db.query(Submission.id) \
+            .options(lazyload('*')) \
+            .filter_by(is_banned=False,
+                       is_pinned=False,
+                       board_id=self.id
+                       ) \
+            .filter(Submission.deleted_utc == 0) \
+            .filter(Submission.created_utc > int(time.time()))\
+            .filter(Submission.author_id == self.id).count()
+
+    @property
     @cache.memoize(timeout=3600)  # 1hr cache time for user rep
     def karma(self):
         return 503 if self.id==1 else int(self.energy) - self.post_count

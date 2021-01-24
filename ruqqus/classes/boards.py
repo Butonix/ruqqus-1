@@ -123,15 +123,6 @@ class Board(Base, Stndrd, Age_times):
             return False
         return not self.postrels.filter_by(post_id=post.id).first()
 
-    @property
-    def can_queue(self, v=None):
-        if v and not self.has_mod(v) and v.admin_level <= 3:
-            user_queue = self.submissions.filter(Submission.created_utc <= int(time.time())).filter(Submission.author_id == v.id).count()
-            if v.has_premium and user_queue < 50:
-                return True
-            elif user_queue < 10:
-                return True
-        return False
 
     @property
     def active_queue(self):
@@ -145,7 +136,7 @@ class Board(Base, Stndrd, Age_times):
             .filter(Submission.created_utc > int(time.time())).count()
 
     def queued_posts(self, page, v):
-        posts = g.db.query(Submission.id) \
+        posts = g.db.query(Submission) \
             .options(lazyload('*')) \
             .filter_by(is_banned=False,
                        is_pinned=False,
