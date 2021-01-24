@@ -259,7 +259,7 @@ def get_posts(pids, sort="hot", v=None):
     else:
         query = g.db.query(
             Submission,
-            # aliased(ModAction, alias=exile)
+            aliased(ModAction, alias=exile)
         ).options(
             joinedload(Submission.author).joinedload(User.title)
         ).filter(Submission.id.in_(pids)
