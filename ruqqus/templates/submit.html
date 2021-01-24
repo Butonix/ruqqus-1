@@ -131,8 +131,7 @@
 						<div class="form-text text-small"><a href="/help/formatting" target="_blank">Formatting help</a></div>
 
 						<label for="board" class="mt-3">Post in guild<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Guilds are Ruqqus communities. Enter a guild you would like your post to belong to."></i></label>
-						<input class="form-control" name="board" placeholder="+general" id="board_name" value="{{ b.name if b else request.args.get('guild','') }}" oninput="post_toast(mod_check_url()); disableInput('time_select', check_mod());">
-
+						<input class="form-control" name="board" placeholder="+general" id="board_name" value="{{ b.name if b else request.args.get('guild','') }}">
 
 						{% if v.admin_level %}
 
@@ -228,7 +227,9 @@
 				<div class="col">
 					<div class="d-flex align-items-center justify-content-end">
 						{% if error %}<span class="text-danger mr-2">{{ error }}</span>{% endif %}
-						<select class="custom-select w-auto mr-3 pr-5" aria-label="Post queue selection" id="time_select" onchange="post_toast(mod_check_url())">
+
+						{% if v.can_queue %}
+						<select class="custom-select w-auto mr-3 pr-5" aria-label="Post queue selection" id="time_select" onchange="changeText('create_button', this.value)">
 							<option selected disabled>Schedule post</option>
 							<option value="{{ times[0] }}">Now</option>
 							<option value="{{ times[1] }}">+10 minutes</option>
@@ -240,6 +241,11 @@
 							<option value="{{ times[7] }}">+1 day</option>
 							<option value="{{ times[8] }}">+3 days</option>
 						</select>
+						{% elif not v.has_premium %}
+						<a href="/settings/premium" class="btn btn-outline-gray-300 font-weight-normal text-muted mr-3" data-toggle="tooltip" data-placement="top" title="Automagically publish your posts by scheduling them. Available only with Ruqqus Premium.">
+							Schedule post<i class="fas fa-caret-down pl-3"></i>
+						</a>
+						{% endif %}
 						<button class="btn btn-purple" id="create_button" type="submit" disabled>Post</button>
 					</div>
 				</div>
@@ -282,13 +288,12 @@
 	<!-- Check mod -->
 
 	<script type="text/javascript">
-		function mod_check_url(){
-			const input = document.getElementById('board_name')
-
-			if (input.value != '') {
-				return '/+' + input.value + '/mod/check'
+		function changeText(elem, val) {
+			const input = document.getElementById(elem)
+			if (val == 'now') {
+				input.textContent = 'Post'
 			} else {
-				return '/+general/mod/check'
+				input.textContent = 'Schedule post'
 			}
 		}
 	</script>
