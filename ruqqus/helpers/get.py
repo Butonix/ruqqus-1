@@ -91,7 +91,9 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 
     nSession = nSession or kwargs.get("session")or g.db
 
-    exile=nSession.query(ModAction).filter_by(kind="exile_user").subquery()
+    exile=nSession.query(ModAction).options(
+        lazyload('*')
+        ).filter_by(kind="exile_user").subquery()
 
     if v:
         vt = nSession.query(Vote).filter_by(
@@ -177,7 +179,9 @@ def get_posts(pids, sort="hot", v=None):
 
     pids=tuple(pids)
 
-    exile=g.db.query(ModAction).filter_by(kind="exile_user").subquery()
+    exile=g.db.query(ModAction).options(
+        lazyload('*')
+        ).filter_by(kind="exile_user").subquery()
 
     if v:
         vt = g.db.query(Vote).filter(
@@ -275,6 +279,8 @@ def get_post_with_comments(pid, sort_type="top", v=None):
     post = get_post(pid, v=v)
 
     exile=g.db.query(ModAction
+        ).options(
+        lazyload('*')
         ).filter_by(
         kind="exile_user"
         ).subquery()
@@ -395,6 +401,8 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
     nSession = nSession or kwargs.get('session') or g.db
 
     exile=g.db.query(ModAction
+        ).options(
+        lazyload('*')
         ).filter_by(
         kind="exile_user"
         ).subquery()
@@ -503,6 +511,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
     nSession = nSession or kwargs.get('session') or g.db
 
     exile=nSession.query(ModAction
+        ).options(
+        lazyload('*')
         ).filter_by(
         kind="exile_user"
         ).subquery()
