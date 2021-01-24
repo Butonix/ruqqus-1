@@ -132,7 +132,7 @@ def post_base36id_noboard(base36id, anything=None, v=None):
 @is_not_banned
 @no_negative_balance("html")
 def submit_get(v):
-    time_keys = [x for x in time_keys]
+    time_keys = [x for x in times.keys()]
     board = request.args.get("guild", "general")
     b = get_guild(board, graceful=True)
     if not b:
@@ -238,7 +238,7 @@ def get_post_title(v):
 @validate_formkey
 @api("create")
 def submit_post(v):
-    time_keys = [x for x in time_keys]
+    time_keys = [x for x in times.keys()]
     title = request.form.get("title", "").lstrip().rstrip()
 
     title = title.lstrip().rstrip()
