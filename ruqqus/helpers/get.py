@@ -491,7 +491,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             isouter=True
             ).join(
             exile,
-            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id)
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
             ).filter(
             Comment.id.in_(cids)
