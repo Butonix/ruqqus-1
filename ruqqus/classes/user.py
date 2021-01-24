@@ -431,8 +431,7 @@ class User(Base, Stndrd, Age_times):
         posts = g.db.query(Submission) \
             .options(lazyload('*')) \
             .filter_by(is_banned=False,
-                       is_pinned=False,
-                       board_id=self.id
+                       is_pinned=False
                        ) \
             .filter(Submission.deleted_utc == 0) \
             .filter(Submission.created_utc > int(time.time()))\
