@@ -1097,7 +1097,7 @@ def board_about_contributors(boardname, board, v):
 @app.route("/api/collapse_comment/<boardname>/<cid>", methods=["POST"])
 @auth_required
 @is_guildmaster("content")
-def subscribe_board(boardname, cid, v):
+def toggle_comment_collapse(boardname, cid, v):
     comment = get_comment(cid)
 
     if comment.is_collapsed:
