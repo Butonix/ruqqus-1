@@ -407,7 +407,7 @@ def submit_post(v):
                                                  ), 401),
                 "api": lambda: (jsonify({"error": f"Only Guildmasters can queue posts in this guild."}))
                 }
-    if queue_time and board and not board.can_queue(v):
+    if queue_time and board and not v.can_queue():
         return {"html": lambda: (render_template("submit.html",
                                                  v=v,
                                                  error=f"{v.username}'s post queue is currently full.",
