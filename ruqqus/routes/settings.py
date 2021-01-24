@@ -453,7 +453,7 @@ def settings_blockedpage(v):
 
 @app.route("/settings/queue", methods=["GET"])
 @auth_required
-def settings_blockedpage(v):
+def settings_queuedpage(v):
     return render_template("user_queue.html",
                            v=v)
 
