@@ -594,6 +594,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
         return data
 
+    @property
+    def is_exiled_for(self):
+        return self.__dict__.get('_is_exiled_for', None)
+
     
     
 class SaveRelationship(Base, Stndrd):
