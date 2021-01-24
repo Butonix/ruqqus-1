@@ -94,7 +94,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
         posts = posts.filter(
             Submission.deleted_utc == 0,
             Submission.is_banned == False,
-            User.is_private == False)
+            )
 
     if v and v.admin_level >= 4:
         pass
