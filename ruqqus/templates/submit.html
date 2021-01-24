@@ -78,140 +78,157 @@
 
 			<div class="row justify-content-center mb-4 pb-7">
 
-				<div class="col col-md-6 p-3 py-md-0">
+				<div class="col col-lg-6 p-3 py-md-0">
 
-					<h1 class="d-none d-md-block">Create a post</h1>
+					<div class="mb-3 pb-2 border-bottom d-flex align-items-center justify-content-between">
+						<h1 class="d-none d-md-block mb-0">Create a post</h1>
+						<h2 class="h3 d-md-none">Create a post</h2>
+						<div class="d-flex align-items-center mb-n2 mb-md-n3">
+							<div class="text-small font-weight-bold text-uppercase mb-0 text-muted">
+								{% if v.has_premium %}
+								In your queue -
+								<a href="/settings/queue" class="text-purple">
+									{{ v.active_queue }}
+								</a>
+								{% else %}
+								<a href="/settigns/premium" target="_blank" class="text-small font-weight-bold text-muted"
+								style="background: linear-gradient(45deg, #EC4899 0%, #805AD5 100%);
+								background-clip: text;
+								-webkit-background-clip: text;
+								-webkit-text-fill-color: transparent;">
+								Unlock Post Scheduling - Get Premium</a>
+							{% endif %}
+						</div>
+					</div>
 
-					<h2 class="h3 d-md-none">Create a post</h2>
+				</div>
 
+				<div class="body">
+
+					<input type="hidden" name="formkey" value="{{ v.formkey }}">
+
+					<label for="title">Post Title</label>
+
+
+					<input class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="Required" value="{{ title }}" minlength="1" maxlength="500" required oninput="checkForRequired()">
+
+					<div id="urlblock">
+						<label for="URL" class="mt-3">URL</label>
+						<input class="form-control" id="post-URL" aria-describedby="URLHelp" type="url" name="url" placeholder="Optional if you have text." value="{{ request.args.get('url','') }}" required oninput="checkForRequired();autoSuggestTitle();hide_image()">
+						<small class="form-text text-muted">To post an image, use a direct image link such as i.imgur.com</small>
+					</div>
+
+					<div {% if not v.can_submit_image %} class="d-none"{% else %} ondrop="event.preventDefault();let input=document.getElementById('file-upload');input.files=event.dataTransfer.files;input.onchange();" ondragover="event.preventDefault();"{% endif %}>
+						<div id="image-upload-block"{% if not v.can_submit_image %} class="d-none"{% endif %}>
+							<div><label class="mt-3">Image Upload</label></div>
+
+							<label class="btn btn-secondary m-0" for="file-upload">
+								<div id="filename-show">Select Image</div>
+								<input id="file-upload" type="file" name="file" accept="image/*" class="" onchange="document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerHTML=document.getElementById('file-upload').files[0].name;checkForRequired()" hidden>
+							</label>
+
+							<small class="form-text text-muted">Images uploaded will be public. Optional if you have text.</small>
+						</div>
+					</div>
+
+					<label for="body" class="mt-4">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Uses markdown. Limited to 10000 characters."></i></label>
+
+					<div class="input-group">
+
+						<textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="5" name="body" oninput="charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required>{{ text }}</textarea>
+
+						<span class="position-absolute text-small font-weight-bold" id="character-count-submit-text-form" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></span>
+
+						<div class="bg-light text-format d-none">
+							<small class="format"><i class="fas fa-bold"></i></small>
+							<small class="format"><i class="fas fa-italic"></i></small>
+							<small class="format"><i class="fas fa-quote-right"></i></small>
+							<small class="format"><i class="fas fa-link"></i></small>
+						</div>
+					</div>
+
+					<div class="form-text text-small"><a href="/help/formatting" target="_blank">Formatting help</a></div>
+
+					<label for="board" class="mt-3">Post in guild<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Guilds are Ruqqus communities. Enter a guild you would like your post to belong to."></i></label>
+					<input class="form-control" name="board" placeholder="+general" id="board_name" value="{{ b.name if b else request.args.get('guild','') }}">
+
+					{% if v.admin_level %}
+
+					<label for="username" class="mt-3 d-none">Post as</label>
+					<input type="text" class="form-control d-none" name="username">
+
+					{% endif %}
+
+
+
+					<label for="over_18" class="text-danger mt-4">NSFW?</label>
+
+					<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" id="nsfwCheck" name="over_18"{% if b and b.over_18 %} checked disabled {% endif %}>
+						<label class="custom-control-label" for="nsfwCheck">This post contains adult material.</label>
+					</div>
+
+
+				</div>
+
+			</div>
+
+			<!-- Right Sidebar (hidden on devices smaller than "large") -->
+
+			<div class="col sidebar text-left d-none d-lg-block pt-3">
+
+				<div class="sidebar-section sidebar-rules">
+					<div class="title bg-purple"><span><i class="fas fa-scroll-old mr-2"></i>Rules and guidelines</span></div>
 					<div class="body">
-
-						<input type="hidden" name="formkey" value="{{ v.formkey }}">
-
-						<label for="title">Post Title</label>
-
-
-						<input class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="Required" value="{{ title }}" minlength="1" maxlength="500" required oninput="checkForRequired()">
-
-						<div id="urlblock">
-							<label for="URL" class="mt-3">URL</label>
-							<input class="form-control" id="post-URL" aria-describedby="URLHelp" type="url" name="url" placeholder="Optional if you have text." value="{{ request.args.get('url','') }}" required oninput="checkForRequired();autoSuggestTitle();hide_image()">
-							<small class="form-text text-muted">To post an image, use a direct image link such as i.imgur.com</small>
-						</div>
-
-						<div {% if not v.can_submit_image %} class="d-none"{% else %} ondrop="event.preventDefault();let input=document.getElementById('file-upload');input.files=event.dataTransfer.files;input.onchange();" ondragover="event.preventDefault();"{% endif %}>
-							<div id="image-upload-block"{% if not v.can_submit_image %} class="d-none"{% endif %}>
-								<div><label class="mt-3">Image Upload</label></div>
-
-								<label class="btn btn-secondary m-0" for="file-upload">
-									<div id="filename-show">Select Image</div>
-									<input id="file-upload" type="file" name="file" accept="image/*" class="" onchange="document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerHTML=document.getElementById('file-upload').files[0].name;checkForRequired()" hidden>
-								</label>
-
-								<small class="form-text text-muted">Images uploaded will be public. Optional if you have text.</small>
+						<ol class="pl-0 mb-0">   
+							<li>
+								<a class="text-black font-weight-bold collapsed" data-toggle="collapse" href="#ruleCollapse1" role="button" aria-expanded="false" aria-controls="ruleCollapse1">Comply with US law<span class="float-right"><i class="fa"></i></span>
+								</a>
+							</li>
+							<div id="ruleCollapse1" class="collapse">
+								<p style="padding: 0 0 0 22px;">Do not post copyrighted material that you are not authorized to distribute. Do not post anything not legal to publish within, or export from, the United States of America.</p>
 							</div>
-						</div>
-
-						<label for="body" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Uses markdown. Limited to 10000 characters."></i></label>
-
-						<div class="input-group">
-
-							<textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="5" name="body" oninput="charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required>{{ text }}</textarea>
-
-							<span class="position-absolute text-small font-weight-bold" id="character-count-submit-text-form" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></span>
-
-							<div class="bg-light text-format d-none">
-								<small class="format"><i class="fas fa-bold"></i></small>
-								<small class="format"><i class="fas fa-italic"></i></small>
-								<small class="format"><i class="fas fa-quote-right"></i></small>
-								<small class="format"><i class="fas fa-link"></i></small>
+							<li>
+								<a class="text-black font-weight-bold collapsed" data-toggle="collapse" href="#ruleCollapse2" role="button" aria-expanded="false" aria-controls="ruleCollapse2">Do not harass other users<span class="float-right"><i class="fa"></i></span>
+								</a>
+							</li>
+							<div id="ruleCollapse2" class="collapse">
+								<p style="padding: 0 0 0 22px;">Do not harass or threaten others on Ruqqus. You are not allowed to share or publish personal information, either yours or another person.</p>
 							</div>
-						</div>
-
-						<div class="form-text text-small"><a href="/help/formatting" target="_blank">Formatting help</a></div>
-
-						<label for="board" class="mt-3">Post in guild<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Guilds are Ruqqus communities. Enter a guild you would like your post to belong to."></i></label>
-						<input class="form-control" name="board" placeholder="+general" id="board_name" value="{{ b.name if b else request.args.get('guild','') }}">
-
-						{% if v.admin_level %}
-
-						<label for="username" class="mt-3 d-none">Post as</label>
-						<input type="text" class="form-control d-none" name="username">
-
-						{% endif %}
-
-
-
-						<label for="over_18" class="text-danger mt-3">NSFW?</label>
-
-						<div class="custom-control custom-checkbox">
-							<input type="checkbox" class="custom-control-input" id="nsfwCheck" name="over_18"{% if b and b.over_18 %} checked disabled {% endif %}>
-							<label class="custom-control-label" for="nsfwCheck">This post contains adult material.</label>
-						</div>
-
-
+							<li>
+								<a class="text-black font-weight-bold collapsed" data-toggle="collapse" href="#ruleCollapse3" role="button" aria-expanded="false" aria-controls="ruleCollapse3">No inciting violence<span class="float-right"><i class="fa"></i></span>
+								</a>
+							</li>
+							<div id="ruleCollapse3" class="collapse">
+								<p style="padding: 0 0 0 22px;">No incitement, planning or execution of unlawful or violent activity. This does not include the exercise of human rights that may be considered unlawful in a user's home country but protected in the United States.</p>
+							</div>
+							<li>
+								<a class="text-black font-weight-bold collapsed" data-toggle="collapse" href="#ruleCollapse4" role="button" aria-expanded="false" aria-controls="ruleCollapse4">Check for duplicates
+									<span class="float-right"><i class="fa"></i></span>
+								</a>
+							</li>
+							<div id="ruleCollapse4" class="collapse">
+								<p style="padding: 0 0 0 22px;">Nobody likes reposts. Please make sure the content you're posting hasn't been posted on Ruqqus before.</p>
+							</div>
+						</ol>
 					</div>
-
 				</div>
 
-				<!-- Right Sidebar (hidden on devices smaller than "large") -->
+				<div class="d-none d-md-block">
+					<ul class="list-inline text-small mb-0">
+						<li class="list-inline-item"><a href="/help/about" class="text-gray-500">About</a></li>
+						<li class="list-inline-item d-none"><a href="/help/contact" class="text-gray-500">Contact</a></li>
+						<li class="list-inline-item"><a href="/help/terms" class="text-gray-500">Terms</a></li>
+						<li class="list-inline-item"><a href="/help/privacy" class="text-gray-500">Privacy Policy</a></li>
+						<li class="list-inline-item"><a href="/help/donate" class="text-gray-500">Donate</a></li>
+						<li class="list-inline-item"><a href="/help/press" class="text-gray-500">Press</a></li>
+						<li class="list-inline-item"><a href="/help" class="text-gray-500">Help</a></li>
+						<li class="list-inline-item"><a href="https://www.twitter.com/ruqqus" class="text-gray-500">Twitter</a></li>
+						<li class="list-inline-item"><a href="https://github.com/ruqqus/ruqqus" class="text-gray-500">Github</a></li>
+						<li class="list-inline-item"><a href="/discord" class="text-gray-500">Discord</a></li>
+					</ul>
 
-				<div class="col sidebar text-left d-none d-lg-block pt-3">
-
-					<div class="sidebar-section sidebar-rules">
-						<div class="title bg-purple"><span><i class="fas fa-scroll-old mr-2"></i>Rules and guidelines</span></div>
-						<div class="body">
-							<ol class="pl-0 mb-0">   
-								<li>
-									<a class="text-black font-weight-bold collapsed" data-toggle="collapse" href="#ruleCollapse1" role="button" aria-expanded="false" aria-controls="ruleCollapse1">Comply with US law<span class="float-right"><i class="fa"></i></span>
-									</a>
-								</li>
-								<div id="ruleCollapse1" class="collapse">
-									<p style="padding: 0 0 0 22px;">Do not post copyrighted material that you are not authorized to distribute. Do not post anything not legal to publish within, or export from, the United States of America.</p>
-								</div>
-								<li>
-									<a class="text-black font-weight-bold collapsed" data-toggle="collapse" href="#ruleCollapse2" role="button" aria-expanded="false" aria-controls="ruleCollapse2">Do not harass other users<span class="float-right"><i class="fa"></i></span>
-									</a>
-								</li>
-								<div id="ruleCollapse2" class="collapse">
-									<p style="padding: 0 0 0 22px;">Do not harass or threaten others on Ruqqus. You are not allowed to share or publish personal information, either yours or another person.</p>
-								</div>
-								<li>
-									<a class="text-black font-weight-bold collapsed" data-toggle="collapse" href="#ruleCollapse3" role="button" aria-expanded="false" aria-controls="ruleCollapse3">No inciting violence<span class="float-right"><i class="fa"></i></span>
-									</a>
-								</li>
-								<div id="ruleCollapse3" class="collapse">
-									<p style="padding: 0 0 0 22px;">No incitement, planning or execution of unlawful or violent activity. This does not include the exercise of human rights that may be considered unlawful in a user's home country but protected in the United States.</p>
-								</div>
-								<li>
-									<a class="text-black font-weight-bold collapsed" data-toggle="collapse" href="#ruleCollapse4" role="button" aria-expanded="false" aria-controls="ruleCollapse4">Check for duplicates
-										<span class="float-right"><i class="fa"></i></span>
-									</a>
-								</li>
-								<div id="ruleCollapse4" class="collapse">
-									<p style="padding: 0 0 0 22px;">Nobody likes reposts. Please make sure the content you're posting hasn't been posted on Ruqqus before.</p>
-								</div>
-							</ol>
-						</div>
-					</div>
-
-					<div class="d-none d-md-block">
-						<ul class="list-inline text-small mb-0">
-							<li class="list-inline-item"><a href="/help/about" class="text-gray-500">About</a></li>
-							<li class="list-inline-item d-none"><a href="/help/contact" class="text-gray-500">Contact</a></li>
-							<li class="list-inline-item"><a href="/help/terms" class="text-gray-500">Terms</a></li>
-							<li class="list-inline-item"><a href="/help/privacy" class="text-gray-500">Privacy Policy</a></li>
-							<li class="list-inline-item"><a href="/help/donate" class="text-gray-500">Donate</a></li>
-							<li class="list-inline-item"><a href="/help/press" class="text-gray-500">Press</a></li>
-							<li class="list-inline-item"><a href="/help" class="text-gray-500">Help</a></li>
-							<li class="list-inline-item"><a href="https://www.twitter.com/ruqqus" class="text-gray-500">Twitter</a></li>
-							<li class="list-inline-item"><a href="https://github.com/ruqqus/ruqqus" class="text-gray-500">Github</a></li>
-							<li class="list-inline-item"><a href="/discord" class="text-gray-500">Discord</a></li>
-						</ul>
-
-						<div class="text-muted text-small-extra mt-1">v. 2.29.6.3, © 2020 Ruqqus, LLC</div>
-
-					</div>
+					<div class="text-muted text-small-extra mt-1">v. 2.29.6.3, © 2020 Ruqqus, LLC</div>
 
 				</div>
 
@@ -219,84 +236,86 @@
 
 		</div>
 
-		<div class="container">
-			<div class="row fixed-bottom bg-white border-top p-3" id="" style="z-index: 100; bottom: 0px; transition: bottom 220ms cubic-bezier(0, 0, 0.2, 1) 0s;">
-				<div class="col">
-					<a href="/" class="btn btn-secondary">Cancel</a>
-				</div>
-				<div class="col">
-					<div class="d-flex align-items-center justify-content-end">
-						{% if error %}<span class="text-danger mr-2">{{ error }}</span>{% endif %}
+	</div>
 
-						{% if v.can_queue %}
-						<select class="custom-select w-auto mr-3 pr-5" aria-label="Post queue selection" name="queue" id="time_select" onchange="changeText('create_button', this.value)">
-							<option selected disabled>Schedule post</option>
-							<option value="{{ times[0] }}">Now</option>
-							<option value="{{ times[1] }}">+10 minutes</option>
-							<option value="{{ times[2] }}">+30 minutes</option>
-							<option value="{{ times[3] }}">+1 hour</option>
-							<option value="{{ times[4] }}">+3 hours</option>
-							<option value="{{ times[5] }}">+6 hours</option>
-							<option value="{{ times[6] }}">+12 hours</option>
-							<option value="{{ times[7] }}">+1 day</option>
-							<option value="{{ times[8] }}">+3 days</option>
-						</select>
-						{% elif not v.has_premium %}
-						<a href="/settings/premium" class="btn btn-outline-gray-300 font-weight-normal text-muted mr-3" data-toggle="tooltip" data-placement="top" title="Automagically publish your posts by scheduling them. Available only with Ruqqus Premium.">
-							Schedule post<i class="fas fa-caret-down pl-3"></i>
-						</a>
-						{% endif %}
-						<button class="btn btn-purple" id="create_button" type="submit" disabled>Post</button>
-					</div>
+	<div class="container">
+		<div class="row fixed-bottom bg-white border-top p-3" id="" style="z-index: 100; bottom: 0px; transition: bottom 220ms cubic-bezier(0, 0, 0.2, 1) 0s;">
+			<div class="col">
+				<a href="/" class="btn btn-secondary">Cancel</a>
+			</div>
+			<div class="col">
+				<div class="d-flex align-items-center justify-content-end">
+					{% if error %}<span class="text-danger mr-2">{{ error }}</span>{% endif %}
+
+					{% if v.can_queue %}
+					<select class="custom-select w-auto mr-3 pr-5" aria-label="Post queue selection" name="queue" id="time_select" onchange="changeText('create_button', this.value)">
+						<option selected disabled>Schedule post</option>
+						<option value="{{ times[0] }}">Now</option>
+						<option value="{{ times[1] }}">+10 minutes</option>
+						<option value="{{ times[2] }}">+30 minutes</option>
+						<option value="{{ times[3] }}">+1 hour</option>
+						<option value="{{ times[4] }}">+3 hours</option>
+						<option value="{{ times[5] }}">+6 hours</option>
+						<option value="{{ times[6] }}">+12 hours</option>
+						<option value="{{ times[7] }}">+1 day</option>
+						<option value="{{ times[8] }}">+3 days</option>
+					</select>
+					{% elif not v.has_premium %}
+					<a href="/settings/premium" class="btn btn-outline-gray-300 font-weight-normal text-muted mr-3" data-toggle="tooltip" data-placement="top" title="Automagically publish your posts in the future with post scheduling. Available only with Ruqqus Premium.">
+						Schedule post<i class="fas fa-caret-down pl-3"></i>
+					</a>
+					{% endif %}
+					<button class="btn btn-purple" id="create_button" type="submit" disabled>Post</button>
 				</div>
 			</div>
 		</div>
+	</div>
 
-	</form>
+</form>
 
-	{% endblock %}
+{% endblock %}
 
-	{% include "bootstrap.html" %}
+{% include "bootstrap.html" %}
 
-	<!-- Ruqqus JS -->
+<!-- Ruqqus JS -->
 
-	<script src="/assets/js/all_js.js"></script>
+<script src="/assets/js/all_js.js"></script>
 
-	<!-- ClipboardJS -->
+<!-- ClipboardJS -->
 
-	<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
 
-	<!-- Instantiate clipboard by passing a string selector -->
-    <script type="text/javascript">
-		var clipboard = new ClipboardJS('.copy-link');
-		clipboard.on('success', function(e) {
+<!-- Instantiate clipboard by passing a string selector -->
+<script type="text/javascript">
+	var clipboard = new ClipboardJS('.copy-link');
+	clipboard.on('success', function(e) {
 
-			jQuery(function($) {
-				$('#toast-success').toast('show');
-			})
-			console.log(e);
-		});
-		clipboard.on('error', function(e) {
+		jQuery(function($) {
+			$('#toast-success').toast('show');
+		})
+		console.log(e);
+	});
+	clipboard.on('error', function(e) {
 
-			jQuery(function($) {
-				$('#toast-error').toast('show');
-			})
-			console.log(e);
-		});
-	</script>
+		jQuery(function($) {
+			$('#toast-error').toast('show');
+		})
+		console.log(e);
+	});
+</script>
 
-	<!-- Check mod -->
+<!-- Check mod -->
 
-	<script type="text/javascript">
-		function changeText(elem, val) {
-			const input = document.getElementById(elem)
-			if (val == 'now') {
-				input.textContent = 'Post'
-			} else {
-				input.textContent = 'Schedule post'
-			}
+<script type="text/javascript">
+	function changeText(elem, val) {
+		const input = document.getElementById(elem)
+		if (val == 'now') {
+			input.textContent = 'Post'
+		} else {
+			input.textContent = 'Schedule post'
 		}
-	</script>
+	}
+</script>
 
 </body>
 
