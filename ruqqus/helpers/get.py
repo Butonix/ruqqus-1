@@ -444,7 +444,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
             isouter=True
         ).first()
 
-        if not items:
+        if not items and not graceful:
             abort(404)
 
         x = items[0]
@@ -479,11 +479,13 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
             isouter=True
         ).filter(Comment.id == i).first()
 
+        if not q and not graceful:
+            abort(404)
+
         x=q[0]
         x._is_exiled_for=q[1]
 
-    if not x and not graceful:
-        abort(404)
+
     return x
 
 
