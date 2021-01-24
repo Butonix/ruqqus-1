@@ -212,8 +212,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
 
     exile=g.db.query(ModAction
         ).filter_by(
-        kind="exile_user",
-        is_active=True
+        kind="exile_user"
         ).subquery()
 
     if v:
@@ -333,8 +332,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 
     exile=g.db.query(ModAction
         ).filter_by(
-        kind="exile_user",
-        is_active=True
+        kind="exile_user"
         ).subquery()
 
     if v:
@@ -440,8 +438,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
     exile=nSession.query(ModAction
         ).filter_by(
-        kind="exile_user",
-        is_active=True
+        kind="exile_user"
         ).subquery()
 
     if v:
