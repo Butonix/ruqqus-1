@@ -131,7 +131,7 @@
 						<div class="form-text text-small"><a href="/help/formatting" target="_blank">Formatting help</a></div>
 
 						<label for="board" class="mt-3">Post in guild<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Guilds are Ruqqus communities. Enter a guild you would like your post to belong to."></i></label>
-						<input class="form-control" name="board" placeholder="+general" id="board_name" value="{{ b.name if b else request.args.get('guild','') }}">
+						<input class="form-control" name="board" placeholder="+general" id="board_name" value="{{ b.name if b else request.args.get('guild','') }}" onchange="post_toast(mod_check_url()); disableInput('time_select', check_mod())">
 
 
 						{% if v.admin_level %}
@@ -228,8 +228,10 @@
 				<div class="col">
 					<div class="d-flex align-items-center justify-content-end">
 						{% if error %}<span class="text-danger mr-2">{{ error }}</span>{% endif %}
-						<select class="custom-select w-auto mr-3 pr-3" aria-label="Post queue selection" id="time_select" onchange="post_toast(mod_check_url())">
-							<option selected disabled>Schedule this Post</option>
+						<select class="custom-select w-auto mr-3 pr-5" aria-label="Post queue selection">
+							<option selected disabled>Schedule post</option>
+						<select class="custom-select w-auto mr-3 pr-5" aria-label="Post queue selection" id="time_select" onchange="post_toast(mod_check_url())">
+							<option selected disabled>Schedule post</option>
 							<option value="1">Now</option>
 							<option value="2">+10 minutes</option>
 							<option value="3">+30 minutes</option>
@@ -261,12 +263,6 @@
 	<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
 
 	<!-- Instantiate clipboard by passing a string selector -->
-	<script type="text/javascript">
-        function mod_check_url(){
-            return '/+' + document.getElementById('board_name').value + '/mod/check'
-        }
-
-    </script>
     <script type="text/javascript">
 		var clipboard = new ClipboardJS('.copy-link');
 		clipboard.on('success', function(e) {
@@ -284,6 +280,14 @@
 			console.log(e);
 		});
 	</script>
+
+	<!-- Check mod -->
+
+	<script type="text/javascript">
+        function mod_check_url(){
+            return '/+' + document.getElementById('board_name').value + '/mod/check'
+        }
+    </script>
 
 </body>
 

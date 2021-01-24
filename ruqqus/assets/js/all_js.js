@@ -727,7 +727,7 @@ function toggleSub(){
   document.getElementById('button-sub-mobile').classList.toggle('d-none');
 }
 
-function post_toast(url, callback) {
+function check_mod(url, callback) {
   var xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
   var form = new FormData()
@@ -737,23 +737,42 @@ function post_toast(url, callback) {
   xhr.onload = function() {
     if (xhr.status==204) {}
       else if (xhr.status >= 200 && xhr.status < 300) {
-        $('#toast-post-success').toast('dispose');
-        $('#toast-post-success').toast('show');
-        document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+        return xhr.response
         callback(xhr)
-
       } else if (xhr.status >= 300 && xhr.status < 400) {
         window.location.href = JSON.parse(xhr.response)["redirect"]
-      } else {
-        $('#toast-post-error').toast('dispose');
-        $('#toast-post-error').toast('show');
-        document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];
       }
     };
-
     xhr.send(form);
-
   }
+
+  function post_toast(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    var form = new FormData()
+    form.append("formkey", formkey());
+    xhr.withCredentials=true;
+
+    xhr.onload = function() {
+      if (xhr.status==204) {}
+        else if (xhr.status >= 200 && xhr.status < 300) {
+          $('#toast-post-success').toast('dispose');
+          $('#toast-post-success').toast('show');
+          document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+          callback(xhr)
+
+        } else if (xhr.status >= 300 && xhr.status < 400) {
+          window.location.href = JSON.parse(xhr.response)["redirect"]
+        } else {
+          $('#toast-post-error').toast('dispose');
+          $('#toast-post-error').toast('show');
+          document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];
+        }
+      };
+
+      xhr.send(form);
+
+    }
 
 
 //Admin post modding
@@ -1541,10 +1560,16 @@ if (isValidTitle && (isValidURL || image.value.length>0)) {
 //} else if (time && gm){
 //    button.disabled = false
 //}
-  else {
+else {
   button.disabled = true;
 }
 
+}
+
+// Disable Input
+
+function disableInput(elem, val) {
+  document.getElementById(elem).disabled = val
 }
 
 // Auto-suggest title given URL
@@ -2030,18 +2055,18 @@ if (("standalone" in window.navigator) &&       // Check if "standalone" propert
     // Web page is loaded via app mode (full-screen mode)
     // (window.navigator.standalone is TRUE if user accesses website via App Mode)
 
-} else {
-  if (window.innerWidth <= 737){
-    $('#mobile-prompt').tooltip('show')
-    $('.tooltip')[0].addEventListener(
-      'click', 
-      function(event){
-        $('#mobile-prompt').tooltip('hide')
-        var xhr = new XMLHttpRequest();
-        xhr.withCredentials=true;
-        xhr.open("POST", '/dismiss_mobile_tip', true);
-        xhr.send();
-      }
-      )
+  } else {
+    if (window.innerWidth <= 737){
+      $('#mobile-prompt').tooltip('show')
+      $('.tooltip')[0].addEventListener(
+        'click', 
+        function(event){
+          $('#mobile-prompt').tooltip('hide')
+          var xhr = new XMLHttpRequest();
+          xhr.withCredentials=true;
+          xhr.open("POST", '/dismiss_mobile_tip', true);
+          xhr.send();
+        }
+        )
+    }
   }
-}
