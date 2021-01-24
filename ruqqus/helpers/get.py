@@ -179,9 +179,9 @@ def get_posts(pids, sort="hot", v=None):
 
     pids=tuple(pids)
 
-    exile=g.db.query(ModAction).options(
-        lazyload('*')
-        ).filter_by(kind="exile_user").subquery()
+    # exile=g.db.query(ModAction).options(
+    #     lazyload('*')
+    #     ).filter_by(kind="exile_user").subquery()
 
     if v:
         vt = g.db.query(Vote).filter(
@@ -206,7 +206,7 @@ def get_posts(pids, sort="hot", v=None):
             blocking.c.id,
             blocked.c.id,
             subs.c.id,
-            aliased(ModAction, alias=exile)
+            # aliased(ModAction, alias=exile)
         ).options(
             joinedload(Submission.author).joinedload(User.title)
         ).filter(
@@ -233,10 +233,10 @@ def get_posts(pids, sort="hot", v=None):
             subs, 
             subs.c.board_id == Submission.board_id, 
             isouter=True
-        ).join(
-            exile,
-            and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
-            isouter=True
+        # ).join(
+        #     exile,
+        #     and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
+        #     isouter=True
         ).order_by(None).all()
 
         posts=[x for x in query]
@@ -249,18 +249,18 @@ def get_posts(pids, sort="hot", v=None):
             output[i]._is_blocking = posts[i][4] or 0
             output[i]._is_blocked = posts[i][5] or 0
             output[i]._is_subscribed = posts[i][6] or 0
-            output[i]._is_exiled_for=posts[i][7] or 0
+            # output[i]._is_exiled_for=posts[i][7] or 0
     else:
         query = g.db.query(
             Submission,
-            aliased(ModAction, alias=exile)
+            # aliased(ModAction, alias=exile)
         ).options(
             joinedload(Submission.author).joinedload(User.title)
         ).filter(Submission.id.in_(pids)
-        ).join(
-            exile,
-            and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
-            isouter=True
+        # ).join(
+        #     exile,
+        #     and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
+        #     isouter=True
         ).order_by(None).all()
 
         posts=[x for x in query]
@@ -268,7 +268,7 @@ def get_posts(pids, sort="hot", v=None):
         output=[]
         for post in posts:
             p=post[0]
-            p._is_exiled_for=post[1] or 0
+            # p._is_exiled_for=post[1] or 0
             output.append(p)
 
     return sorted(output, key=lambda x: pids.index(x.id))
