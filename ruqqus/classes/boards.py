@@ -133,7 +133,8 @@ class Board(Base, Stndrd, Age_times):
                        board_id=self.id
                        ) \
             .filter(Submission.deleted_utc == 0) \
-            .filter(Submission.created_utc > int(time.time())).count()
+            .filter(Submission.created_utc > int(time.time()))\
+            .count()
 
     def queued_posts(self, page, v):
         posts = g.db.query(Submission) \
