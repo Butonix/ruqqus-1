@@ -35,6 +35,18 @@ BAN_REASONS = ['',
 BUCKET = "i.ruqqus.com"
 
 
+times = {
+    "now": 0,
+    "10m": 10*60,
+    "30m": 30*60,
+    "1h": 60*60,
+    "3h": 3*60*60,
+    "6h": 6*60*60,
+    "12h": 12*60*60,
+    "1d": 24*60*60,
+    "3d": 3*24*60*60
+}
+
 @app.route("/post_short/", methods=["GET"])
 @app.route("/post_short/<base36id>", methods=["GET"])
 @app.route("/post_short/<base36id>/", methods=["GET"])
@@ -119,7 +131,7 @@ def post_base36id_noboard(base36id, anything=None, v=None):
 @is_not_banned
 @no_negative_balance("html")
 def submit_get(v):
-
+    print(f"times : {times.keys()}")
     board = request.args.get("guild", "general")
     b = get_guild(board, graceful=True)
     if not b:
@@ -215,17 +227,7 @@ def get_post_title(v):
     except BaseException:
         return jsonify({"error": f"Could not find a title"}), 400
 
-times = {
-    "now": 0,
-    "10m": 10*60,
-    "30m": 30*60,
-    "1h": 60*60,
-    "3h": 3*60*60,
-    "6h": 6*60*60,
-    "12h": 12*60*60,
-    "1d": 24*60*60,
-    "3d": 3*24*60*60
-}
+
 @app.route("/submit", methods=['POST'])
 @app.route("/api/v1/submit", methods=["POST"])
 #@limiter.limit("6/minute")
