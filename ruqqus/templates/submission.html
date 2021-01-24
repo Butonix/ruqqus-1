@@ -537,7 +537,7 @@
             </div>
           </div>
           {% endif %}
-          { % else %}
+          {% else %}
           <div id="voting" class="voting d-none d-md-block mb-auto" data-toggle="tooltip" data-placement="right" data-original-title="This post is scheduled for {{p.created_date}}. Voting is disabled until then.">
             <div id="post-{{ p.base36id }}-up" tabindex="0" class="arrow-up mx-auto" style="pointer-events: none;">
             </div>
