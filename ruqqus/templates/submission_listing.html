@@ -269,9 +269,11 @@
       {% endif %}
       {% else %}
       <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none" data-toggle="tooltip" data-placement="top" data-original-title="This post is scheduled for {{ p.created_date }}. Voting is disabled until then.">
-        <span tabindex="0" class="mr-2 arrow-mobile-up text-muted"></span>
+        <span tabindex="0" class="mr-2 text-muted"><i class="fas fa-arrow-alt-up"></i></span>
         <span class="score font-weight-bolder text-muted">·</span>
-        <span tabindex="0" class="ml-2 arrow-mobile-down text-muted"></span>
+        {% if not request.path.startswith('/@') %}
+        <span tabindex="0" class="ml-2 text-muted"><i class="fas fa-arrow-alt-down"></i></span>
+        {% endif %}
       </li>
       {% endif %}
     </ul>
