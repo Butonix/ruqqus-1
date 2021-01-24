@@ -130,8 +130,10 @@ def shop_buy_coins_completed(v):
     if not id:
         abort(400)
     id=base36decode(id)
-    txn=g.db.query(PayPalTxn).with_for_update().options(lazyload('*')).filter_by(user_id=v.id, id=id, status=1).first()
-    v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
+    txn=g.db.query(PayPalTxn
+        #).with_for_update(
+        ).options(lazyload('*')).filter_by(user_id=v.id, id=id, status=1).first()
+    #v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
 
     if not txn:
         abort(400)
