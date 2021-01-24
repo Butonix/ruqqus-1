@@ -95,7 +95,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         lazyload('*')
         ).filter_by(
         kind="exile_user",
-        target_submission_id=pid
+        target_submission_id=i
         ).subquery()
 
     if v:
