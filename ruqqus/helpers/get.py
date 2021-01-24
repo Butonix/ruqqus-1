@@ -184,8 +184,8 @@ def get_posts(pids, sort="hot", v=None):
 
     exile=g.db.query(ModAction).options(
         lazyload('*')
-        ).filter_by(
-        kind="exile_user",
+        ).filter(
+        ModAction.kind=="exile_user",
         target_submission_id.in_(pids)
         ).subquery()
 
@@ -519,8 +519,9 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
     exile=nSession.query(ModAction
         ).options(
         lazyload('*')
-        ).filter_by(
-        kind="exile_user"
+        ).filter(
+        ModAction.kind=="exile_user",
+        ModAction.target_comment_id.in_(cids)
         ).subquery()
 
     if v:
