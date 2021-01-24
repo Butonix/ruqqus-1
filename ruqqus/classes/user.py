@@ -423,11 +423,7 @@ class User(Base, Stndrd, Age_times):
 
     @property
     def can_queue(self):
-        user_queue = g.db.query(Submission)\
-            .filter(Submission.created_utc > int(time.time()))\
-            .filter(Submission.author_id == self.id)\
-            .count()
-        if self.has_premium and user_queue < 50 or self.admin_level == 4:
+        if self.has_premium and self.active_queue < 50 or self.admin_level == 4:
             return True
         return False
 
