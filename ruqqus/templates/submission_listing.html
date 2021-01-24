@@ -15,7 +15,7 @@
   <div class="d-flex flex-row-reverse flex-md-row flex-nowrap justify-content-end">
 
     <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
-
+    {% if not p.is_queued %}
     <div class="voting d-none d-md-block pr-2">
       {% if v and request.path.startswith('/@') %}
 
@@ -44,11 +44,15 @@
       <span id="post-{{ p.base36id }}-score-none" class="score"{% if not p.is_banned %} data-toggle="tooltip" data-placement="right" data-original-title="+{{ ups }} | -{{ downs }}"{% endif %}>{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
 
       <div id="post-{{ p.base36id }}-down" tabindex="0" class="text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
-
-
       {% endif %}
-
     </div>
+    {% else %}
+    <div id="voting" class="voting d-none d-md-block pr-2" data-toggle="tooltip" data-placement="right" data-original-title="This post is scheduled for {{p.created_date}}. Voting is disabled until then.">
+      <div id="post-{{ p.base36id }}-up" tabindex="0" class="arrow-up mx-auto" style="pointer-events: none;"></div>
+      <span id="post-{{ p.base36id }}-score-none" class="score text-muted font-weight-bolder">·</span>
+      <div id="post-{{ p.base36id }}-down" tabindex="0" class="arrow-down mx-auto" style="pointer-events: none;"></div>
+    </div>
+    {% endif %}
 
     <div class="card-header bg-transparent border-0 d-flex flex-row flex-nowrap pl-2 pl-md-0 p-0 mr-md-2">
 
@@ -104,11 +108,11 @@
 
           <div style="height: 21px" class="d-block d-md-none mb-1">
 
-            <div class="post-meta text-left x-scroll" style="overflow-x: scroll;">{% if not b %}<a href="{{ p.board.permalink }}">+{{ p.board.name }}</a> · {% endif %}{% if p.stickied %}<i class="fas fa-thumbtack text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> · {% endif %}{% if p.is_pinned %}<i class="fas fa-thumbtack text-info fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned to +{{ p.board.name }}"></i> · {% endif %}{% if p.over_18 %}<span class="text-danger"><i class="far fa-exclamation-triangle text-small mr-1"></i>nsfw</span> · {% endif %}{% if p.is_nsfl %} · <span class="badge text-black border-danger border-1 text-small-extra">nsfl</span>{% endif %}{% if p.is_repost %}<span class="text-warning"><i class="far fa-sync text-small mr-1"></i><a class="text-warning" href="{{ p.reposts.permalink }}">repost</a></span> · {% endif %} <span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by {% if p.author.is_deleted %}[deleted account]{% else %}<a href="/@{{ p.author.username }}" class="user-name">{{ p.author.username }}</a>{% if p.author.title %}{{ p.author.title.rendered | safe }}{% endif %}{% if p.distinguish_level %}</span> <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>{% endif %}{% if p.gm_distinguish %} <i class="fad fa-crown {% if p.gm_distinguish==p.board_id %}text-warning{% else %}text-muted{% endif %}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Guildmaster of +{{ p.distinguished_board.name }}"></i>{% endif %}{% endif %}{% if p.award_count %} · <span><img src="/assets/images/icons/ruqqus-coin.png" style="width: 15px; margin-bottom: 3px;"/><span class="pl-1 text-warning font-weight-bold">{{ p.award_count }}</span></span>{% endif %} · ({{ p.domain }}){% if not p.is_public %} · <i class="fas fa-eye-slash text-warning" data-toggle="tooltip" data-placement="bottom" title="Private post, visible to you because {{ p.visibility_reason(v) }}"></i>{% endif %}{% if v and v.admin_level >=3 and p.active_flags %} · <span class="text-danger">{{ p.active_flags }} Flags</span>{% endif %}{% if "/mod/queue" in request.path and p.active_reports %} · <span class="text-danger">{{ p.active_reports }} Reports</span>{% endif %}
+            <div class="post-meta text-left x-scroll" style="overflow-x: scroll;">{% if not b %}<a href="{{ p.board.permalink }}">+{{ p.board.name }}</a> · {% endif %}{% if p.stickied %}<i class="fas fa-thumbtack text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> · {% endif %}{% if p.is_pinned %}<i class="fas fa-thumbtack text-info fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned to +{{ p.board.name }}"></i> · {% endif %}{% if p.over_18 %}<span class="text-danger"><i class="far fa-exclamation-triangle text-small mr-1"></i>nsfw</span> · {% endif %}{% if p.is_nsfl %} · <span class="badge text-black border-danger border-1 text-small-extra">nsfl</span>{% endif %}{% if p.is_repost %}<span class="text-warning"><i class="far fa-sync text-small mr-1"></i><a class="text-warning" href="{{ p.reposts.permalink }}">repost</a></span> · {% endif %} <span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_date }}">{{ p.age_string }}</span> by {% if p.author.is_deleted %}[deleted account]{% else %}<a href="/@{{ p.author.username }}" class="user-name">{{ p.author.username }}</a>{% if p.author.title %}{{ p.author.title.rendered | safe }}{% endif %}{% if p.distinguish_level %}</span> <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>{% endif %}{% if p.gm_distinguish %} <i class="fad fa-crown {% if p.gm_distinguish==p.board_id %}text-warning{% else %}text-muted{% endif %}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Guildmaster of +{{ p.distinguished_board.name }}"></i>{% endif %}{% endif %}{% if p.award_count %} · <span><img src="/assets/images/icons/ruqqus-coin.png" style="width: 15px; margin-bottom: 3px;"/><span class="pl-1 text-warning font-weight-bold">{{ p.award_count }}</span></span>{% endif %} · ({{ p.domain }}){% if not p.is_public %} · <i class="fas fa-eye-slash text-warning" data-toggle="tooltip" data-placement="bottom" title="Private post, visible to you because {{ p.visibility_reason(v) }}"></i>{% endif %}{% if v and v.admin_level >=3 and p.active_flags %} · <span class="text-danger">{{ p.active_flags }} Flags</span>{% endif %}{% if "/mod/queue" in request.path and p.active_reports %} · <span class="text-danger">{{ p.active_reports }} Reports</span>{% if p.is_queued %} · <span class="text-info" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="This post is scheduled for {{ p.created_date }} and is currently only visible through direct link. Comments and voting are disabled until it is published publicly.">Scheduled post</span>{% endif %}{% endif %}
           </div>
         </div>
 
-        <div class="post-meta text-left d-none d-md-block mb-md-2">{% if p.board_id %}{% if not b %}<span class="font-weight-bold"><a href="{{ p.board.permalink }}" class="text-black"><img src="{{ p.board.profile_url }}" class="profile-pic-20 align-top mr-1">+{{ p.board.name }}</a></span> · {% endif %}{% endif %}{% if p.stickied %}<i class="fas fa-thumbtack text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> · {% endif %}{% if p.is_pinned %}<i class="fas fa-thumbtack text-info fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned to +{{ p.board.name }}"></i> · {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_datetime }}">{{ p.age_string }}</span> by {% if p.author.is_deleted %}[deleted account]{% else %}<a href="/@{{ p.author.username }}" class="user-name">{{ p.author.username }}</a>{% if p.author.title %}{{ p.author.title.rendered | safe }}{% endif %}{% if p.gm_distinguish %} <i class="fad fa-crown {% if p.gm_distinguish==p.board_id %}text-warning{% else %}text-muted{% endif %}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Guildmaster of +{{ p.distinguished_board.name }}"></i>{% endif %}{% endif %} {% if p.distinguish_level %}<i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>{% endif %}{% if p.award_count %} · <span><img src="/assets/images/icons/ruqqus-coin.png" style="width: 15px; margin-bottom: 3px;"/><span class="pl-1 text-warning font-weight-bold">{{ p.award_count }}</span></span>{% endif %} · ({{ p.domain }}){% if not p.is_public %} · <i class="fas fa-eye-slash text-warning" data-toggle="tooltip" data-placement="bottom" title="Private post, visible because {{ p.visibility_reason(v) }}"></i>{% endif %}{% if p.over_18 %} · <span class="badge text-danger border-danger border-1 text-small-extra">nsfw</span>{% endif %}{% if p.is_nsfl %} · <span class="badge text-black border-danger border-1 text-small-extra">nsfl</span>{% endif %}{% if p.is_repost %} · <span class="badge border-warning border-1 text-small-extra"><a class="text-warning" href="{{ p.reposts.permalink }}">repost</a></span>{% endif %}{% if v and v.admin_level >=3 and p.active_flags %}<span class="text-danger">{{ p.active_flags }} Flags</span>{% endif %}{% if "/mod/queue" in request.path and p.active_reports %} · <span class="text-danger">{{ p.active_reports }} Reports</span>{% endif %}
+        <div class="post-meta text-left d-none d-md-block mb-md-2">{% if p.board_id %}{% if not b %}<span class="font-weight-bold"><a href="{{ p.board.permalink }}" class="text-black"><img src="{{ p.board.profile_url }}" class="profile-pic-20 align-top mr-1">+{{ p.board.name }}</a></span> · {% endif %}{% endif %}{% if p.stickied %}<i class="fas fa-thumbtack text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Sticky post"></i> · {% endif %}{% if p.is_pinned %}<i class="fas fa-thumbtack text-info fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned to +{{ p.board.name }}"></i> · {% endif %}<span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ p.created_datetime }}">{{ p.age_string }}</span> by {% if p.author.is_deleted %}[deleted account]{% else %}<a href="/@{{ p.author.username }}" class="user-name">{{ p.author.username }}</a>{% if p.author.title %}{{ p.author.title.rendered | safe }}{% endif %}{% if p.gm_distinguish %} <i class="fad fa-crown {% if p.gm_distinguish==p.board_id %}text-warning{% else %}text-muted{% endif %}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Guildmaster of +{{ p.distinguished_board.name }}"></i>{% endif %}{% endif %} {% if p.distinguish_level %}<i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>{% endif %}{% if p.award_count %} · <span><img src="/assets/images/icons/ruqqus-coin.png" style="width: 15px; margin-bottom: 3px;"/><span class="pl-1 text-warning font-weight-bold">{{ p.award_count }}</span></span>{% endif %} · ({{ p.domain }}){% if not p.is_public %} · <i class="fas fa-eye-slash text-warning" data-toggle="tooltip" data-placement="bottom" title="Private post, visible because {{ p.visibility_reason(v) }}"></i>{% endif %}{% if p.over_18 %} · <span class="badge text-danger border-danger border-1 text-small-extra">nsfw</span>{% endif %}{% if p.is_nsfl %} · <span class="badge text-black border-danger border-1 text-small-extra">nsfl</span>{% endif %}{% if p.is_repost %} · <span class="badge border-warning border-1 text-small-extra"><a class="text-warning" href="{{ p.reposts.permalink }}">repost</a></span>{% endif %}{% if v and v.admin_level >=3 and p.active_flags %}<span class="text-danger">{{ p.active_flags }} Flags</span>{% endif %}{% if "/mod/queue" in request.path and p.active_reports %} · <span class="text-danger">{{ p.active_reports }} Reports</span>{% if p.is_queued %} · <span class="text-info" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="This post is scheduled for {{ p.created_date }} and is currently only visible through direct link. Comments and voting are disabled until it is published publicly.">Scheduled post</span>{% endif %}{% endif %}
 
       </div>
 
@@ -225,22 +229,18 @@
         </a>
       </li>
       {% endif %}
+      {% if not p.is_queued %}
       {% if v and request.path.startswith('/@') %}
       <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none">
-
         {% if voted==1 %}
         <span class="mr-2 arrow-up post-{{ p.base36id }}-up active">
         </span>
         {% endif %}
-
         <span id="post-score-{{ p.base36id }}-mobile" class="score post-score-{{ p.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-toggle="tooltip" data-placement="top" data-original-title="+{{ ups }} | -{{ downs }}"{% endif %}>{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
-
         {% if voted==-1 %}
         <span class="ml-2 my-0 arrow-down post-{{ p.base36id }}-down active">
         </span>
         {% endif %}
-
-
       </li>
       {% elif v %}
       <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none">
@@ -267,7 +267,13 @@
         </span>
       </li>
       {% endif %}
-
+      {% else %}
+      <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none" data-toggle="tooltip" data-placement="top" data-original-title="This post is scheduled for {{ p.created_date }}. Voting is disabled until then.">
+        <span tabindex="0" class="mr-2 arrow-mobile-up text-muted"></span>
+        <span class="score font-weight-bolder text-muted">·</span>
+        <span tabindex="0" class="ml-2 arrow-mobile-down text-muted"></span>
+      </li>
+      {% endif %}
     </ul>
   </div>
 </div>
