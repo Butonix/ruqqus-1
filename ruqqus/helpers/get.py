@@ -252,7 +252,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             isouter=True
         ).join(
             exile,
-            exile.c.target_comment_id==Comment.id,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
         )
 
@@ -292,7 +292,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             Comment.level <= 6
         ).join(
             exile,
-            exile.c.target_comment_id==Comment.id,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
         )
 
@@ -376,7 +376,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
             isouter=True
         ).join(
             exile,
-            exile.c.target_comment_id==Comment.id,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
         ).first()
 
@@ -411,7 +411,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
             joinedload(Comment.author).joinedload(User.title)
         ).join(
             exile,
-            exile.c.target_comment_id==Comment.id,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
         ).filter(Comment.id == i).first()
 
@@ -491,7 +491,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             isouter=True
             ).join(
             exile,
-            exile.c.target_comment_id==Comment.id,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id)
             isouter=True
             ).filter(
             Comment.id.in_(cids)
@@ -524,7 +524,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             Comment.id.in_(cids)
         ).join(
             exile,
-            exile.c.target_comment_id==Comment.id,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
         ).order_by(None).all()
 
