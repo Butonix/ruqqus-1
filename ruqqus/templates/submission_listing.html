@@ -50,7 +50,9 @@
     <div id="voting" class="voting d-none d-md-block pr-2" data-toggle="tooltip" data-placement="right" data-original-title="This post is scheduled for {{p.created_date}}. Voting is disabled until then.">
       <div id="post-{{ p.base36id }}-up" tabindex="0" class="arrow-up mx-auto" style="pointer-events: none;"></div>
       <span id="post-{{ p.base36id }}-score-none" class="score text-muted font-weight-bolder">·</span>
+      {% if not request.path.startswith('/@') %}
       <div id="post-{{ p.base36id }}-down" tabindex="0" class="arrow-down mx-auto" style="pointer-events: none;"></div>
+      {% endif %}
     </div>
     {% endif %}
 
@@ -269,10 +271,10 @@
       {% endif %}
       {% else %}
       <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none" data-toggle="tooltip" data-placement="top" data-original-title="This post is scheduled for {{ p.created_date }}. Voting is disabled until then.">
-        <span tabindex="0" class="mr-2 text-muted"><i class="fas fa-arrow-alt-up"></i></span>
+        <span tabindex="0" class="mr-2"><i class="fas fa-arrow-alt-up"></i></span>
         <span class="score font-weight-bolder text-muted">·</span>
         {% if not request.path.startswith('/@') %}
-        <span tabindex="0" class="ml-2 text-muted"><i class="fas fa-arrow-alt-down"></i></span>
+        <span tabindex="0" class="ml-2"><i class="fas fa-arrow-alt-down"></i></span>
         {% endif %}
       </li>
       {% endif %}
