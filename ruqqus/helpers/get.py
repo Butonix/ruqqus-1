@@ -595,7 +595,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         for i in range(len(output)):
             output[i]._voted = comments[i][1].vote_type if comments[i][1] else 0
             output[i]._is_guildmaster = comments[i][2]
-            output[i]._is_exiled_for = comments[i][3]
+            # output[i]._is_exiled_for = comments[i][3]
 
 
 
