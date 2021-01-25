@@ -394,6 +394,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
 
         output=[x for x in comments]
 
+
         post._preloaded_comments = output
 
     return post
