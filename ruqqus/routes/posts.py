@@ -149,6 +149,7 @@ def submit_get(v):
 @app.route("/submit/<pid>", methods=["POST"])
 @is_not_banned
 @no_negative_balance("html")
+@validate_formkey
 def publish_now(pid, v):
 
     p = get_post(pid)
