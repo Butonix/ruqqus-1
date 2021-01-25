@@ -360,7 +360,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
     else:
         comms = g.db.query(
             Comment,
-            aliased(ModAction, alias=exile)
+            # aliased(ModAction, alias=exile)
         ).options(
             joinedload(Comment.author).joinedload(User.title)
         ).filter(
