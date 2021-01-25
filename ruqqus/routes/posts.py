@@ -153,6 +153,8 @@ def submit_get(v):
 def publish_now(pid, v):
 
     p = get_post(pid)
+    if p.is_banned or p.board.has_ban(v) or p.is_deleted:
+        abort(403)
 
     if not p.is_queued:
         return jsonify({"error": "Post is already active."}), 400
