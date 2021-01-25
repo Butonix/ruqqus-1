@@ -160,10 +160,10 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             # aliased(ModAction, alias=exile)
         ).options(
             joinedload(Submission.author).joinedload(User.title)
-        ).join(
-            exile,
-            and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
-            isouter=True
+        # ).join(
+        #     exile,
+        #     and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
+        #     isouter=True
         ).filter(Submission.id == i).first()
 
         if not items and not graceful:
