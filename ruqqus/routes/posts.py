@@ -146,6 +146,22 @@ def submit_get(v):
                            times=time_keys
                            )
 
+@app.route("/submit/<pid>", methods=["POST"])
+@is_not_banned
+@no_negative_balance("html")
+def publish_now(pid, v):
+
+    p = get_post(pid)
+
+    if not p.is_queued:
+        return jsonify({"error": "Post is already active."}), 400
+
+    p.created_utc = int(time.time())
+    g.db.add(p)
+
+    return redirect(p.permalink)
+
+
 
 @app.route("/edit_post/<pid>", methods=["POST"])
 @is_not_banned
