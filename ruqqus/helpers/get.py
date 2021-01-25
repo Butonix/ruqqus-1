@@ -490,10 +490,10 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
             # aliased(ModAction, alias=exile)
         ).options(
             joinedload(Comment.author).joinedload(User.title)
-        ).join(
-            exile,
-            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-            isouter=True
+        # ).join(
+        #     exile,
+        #     and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+        #     isouter=True
         ).filter(Comment.id == i).first()
 
         if not q and not graceful:
