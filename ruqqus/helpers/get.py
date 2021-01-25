@@ -157,7 +157,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
     else:
         items = nSession.query(
             Submission,
-            aliased(ModAction, alias=exile)
+            # aliased(ModAction, alias=exile)
         ).options(
             joinedload(Submission.author).joinedload(User.title)
         ).join(
@@ -169,8 +169,8 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         if not items and not graceful:
             abort(404)
 
-        x=items[0]
-        x._is_exiled_for=items[1] or 0
+        x=items
+        # x._is_exiled_for=items[1] or 0
 
     return x
 
