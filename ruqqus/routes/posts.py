@@ -126,8 +126,6 @@ def post_base36id_noboard(base36id, anything=None, v=None):
     #board=post.board
     return redirect(post.permalink)
 
-
-
 @app.route("/submit", methods=["GET"])
 @is_not_banned
 @no_negative_balance("html")
@@ -138,7 +136,6 @@ def submit_get(v):
     if not b:
 
         b = get_guild("general")
-
 
     return render_template("submit.html",
                            v=v,
