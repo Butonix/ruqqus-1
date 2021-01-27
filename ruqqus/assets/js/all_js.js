@@ -446,6 +446,23 @@ function switch_css() {
   }
 }
 
+// Publish Post
+
+function publish_Modal(id) {
+
+  // Passed data for modal
+  document.getElementById("publishPostButton").addEventListener("click", publish_post;
+
+  function publish_post(){  
+    post('/submit/' + id,
+      callback = function() {
+        location.reload();
+      }
+    )
+  }
+
+};
+
 // Delete Post
 
 function delete_postModal(id) {

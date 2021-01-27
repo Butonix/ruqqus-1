@@ -155,6 +155,10 @@
           <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#deletePostModal" onclick="delete_postModal('{{ p.base36id }}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
           {% endif %}
 
+          {% if v and p.is_queued %}
+          <li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#publishPostModal" onclick="publish_Modal('{{ p.base36id }}')"><i class="fas fa-pencil"></i>Publish now</a></li>
+          {% endif %}
+
           {% if v %}
 
           {% if v.mods_anything and p.board.name == 'general' %}
