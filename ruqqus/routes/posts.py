@@ -265,12 +265,15 @@ def submit_post(v):
     url = request.form.get("url", "")
 
     queue_time = request.form.get("queue", "now")
+
     print(f"queue time : {queue_time}")
+
+    created_time = int(time.time())
+
     if queue_time in time_keys:
-        created_time = int(time.time()) + times[queue_time]
-    else:
-        queue_time = "now"
-        created_time = int(time.time())
+        created_time = created_time + times[queue_time]
+
+
     print(f"now : {int(time.time())} | created_utc : {created_time}")
 
     board = get_guild(request.form.get('board', 'general'), graceful=True)
@@ -708,7 +711,7 @@ def submit_post(v):
         is_politics=is_politics,
         app_id=v.client.application.id if v.client else None,
         creation_region=request.headers.get("cf-ipcountry"),
-        created_utc=created_time
+        created_utc=int(created_time)
         )
 
 

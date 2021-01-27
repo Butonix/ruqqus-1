@@ -26,6 +26,19 @@ from ruqqus.__main__ import app, limiter
 BUCKET=environ.get("S3_BUCKET",'i.ruqqus.com')
 
 
+@app.route("/comment/test/<cid>", methods=["GET"])
+def comment_test_cid(cid, pid=None):
+    try:
+        x = base36decode(cid)
+    except:
+        abort(400)
+
+    comment = get_comment(cid)
+    if not comment.parent_submission:
+        abort(403)
+
+    return jsonify({"comment": comment.json}), 200
+
 @app.route("/comment/<cid>", methods=["GET"])
 @app.route("/comment/<cid>", methods=["GET"])
 @app.route("/post_short/<pid>/<cid>", methods=["GET"])
