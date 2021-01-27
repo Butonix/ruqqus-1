@@ -451,7 +451,7 @@ function switch_css() {
 function publish_Modal(id) {
 
   // Passed data for modal
-  document.getElementById("publishPostButton").addEventListener("click", publish_post;
+  document.getElementById("publishPostButton").addEventListener("click", publish_post);
 
   function publish_post(){  
     post('/submit/' + id,
