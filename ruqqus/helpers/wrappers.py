@@ -138,6 +138,8 @@ def auth_required(f):
                         )
                     g.db.add(ma)
 
+                g.db.commit()
+
                 for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
                     if comment.is_banned:
                         continue
