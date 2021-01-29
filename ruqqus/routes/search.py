@@ -202,7 +202,7 @@ def search(v, search_type="posts"):
                                sort_method=sort,
                                next_exists=next_exists
                                ),
-                "api":lambda:jsonfy({"data":[x.json for x in boards]})
+                "api":lambda:jsonify({"data":[x.json for x in boards]})
                 }
 
     elif query.startswith("@"):
