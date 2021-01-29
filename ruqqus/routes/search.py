@@ -69,7 +69,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
         posts=posts.filter(Submission.board_id==b.id)
     elif 'guild' in criteria:
         posts=posts.filter(
-                Submission.board.id==get_guild(criteria['guild']).id
+                Submission.board_id==get_guild(criteria['guild']).id
             )
 
     if 'url' in criteria:
