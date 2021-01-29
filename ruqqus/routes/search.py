@@ -158,6 +158,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
 @app.route("/search", methods=["GET"])
 @app.route("/api/v1/search", methods=["GET"])
+@app.route("/api/vue/search")
 @auth_desired
 @api("read")
 def search(v, search_type="posts"):
