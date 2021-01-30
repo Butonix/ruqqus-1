@@ -102,13 +102,14 @@ def thumbnail_thread(pid, debug=False):
 
         #get meta title and description
         try:
-            meta_title=soup.find('title')
-            if meta_title:
-                post.meta_title=str(meta_title.string)
+            with app.app_context():
+                meta_title=soup.find('title')
+                if meta_title:
+                    post.meta_title=str(meta_title.string)
 
-            meta_desc = soup.find('meta', attrs={"name":"description"})
-            if meta_desc:
-                post.meta_description=meta_desc['content']
+                meta_desc = soup.find('meta', attrs={"name":"description"})
+                if meta_desc:
+                    post.meta_description=meta_desc['content']
         except Exception as e:
             print(f"Meta exception : {e}")
 
