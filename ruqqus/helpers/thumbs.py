@@ -19,7 +19,7 @@ def thumbnail_thread(pid, debug=False):
     if not post:
         # account for possible follower lag
         time.sleep(60)
-        post = get_post(pid, session=db)
+        post = get_post(pid, nSession=db)
 
     # step 1: see if post is image
 
@@ -106,10 +106,12 @@ def thumbnail_thread(pid, debug=False):
                 meta_title=soup.find('title')
                 if meta_title:
                     post.meta_title=str(meta_title.string)
+                    print(f"meta title : {post.meta_title}")
 
                 meta_desc = soup.find('meta', attrs={"name":"description"})
                 if meta_desc:
                     post.meta_description=meta_desc['content']
+                    print(f"meta title : {post.meta_description}")
         except Exception as e:
             print(f"Meta exception : {e}")
 
