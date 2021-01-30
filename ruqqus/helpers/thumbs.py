@@ -109,8 +109,8 @@ def thumbnail_thread(pid, debug=False):
             meta_desc = soup.find('meta', attrs={"name":"description"})
             if meta_desc:
                 post.meta_description=meta_desc['content']
-        except:
-            pass
+        except Exception as e:
+            print("Meta exception")
 
         metas = ["ruqqus:thumbnail",
                  "twitter:image",
