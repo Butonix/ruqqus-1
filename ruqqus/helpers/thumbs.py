@@ -110,7 +110,7 @@ def thumbnail_thread(pid, debug=False):
             if meta_desc:
                 post.meta_description=meta_desc['content']
         except Exception as e:
-            print("Meta exception")
+            print(f"Meta exception : {e}")
 
         metas = ["ruqqus:thumbnail",
                  "twitter:image",
