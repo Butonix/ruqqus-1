@@ -89,7 +89,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
     else:
         i = pid
 
-    nSession = nSession or kwargs.get("session") or g.db
+    nSession = nSession or kwargs.get("session")or g.db
 
     if v:
         vt = nSession.query(Vote).filter_by(
