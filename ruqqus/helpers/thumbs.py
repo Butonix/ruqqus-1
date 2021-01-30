@@ -15,7 +15,7 @@ def thumbnail_thread(pid, debug=False):
 
     db = db_session()
 
-    post = get_post(pid, graceful=True, session=db)
+    post = get_post(pid, graceful=True, nSession=db)
     if not post:
         # account for possible follower lag
         time.sleep(60)
