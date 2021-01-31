@@ -127,9 +127,6 @@
                     <input type="radio" name="color" id="green" value="62CA56" {% if b.color == '62CA56' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
                     <label class="color-radio" for="green"><span class="green" style="background-color: #62CA56">{% if b.color == '62CA56' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}</span></label>
 
-                    <input type="radio" name="color" id="yellow" value="f9C632" {% if b.color == 'ECD109' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-                    <label class="color-radio" for="yellow"><span class="yellow" style="background-color: #f9C632">{% if b.color == 'f9C632' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}</span></label>
-
                     <input type="radio" name="color" id="hot-pink" value="EB4963" {% if b.color == 'EB4963' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
                     <label class="color-radio" for="hot-pink"><span class="hot-pink" style="background-color: #EB4963">{% if b.color == 'EB4963' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}</span></label>
 
@@ -257,7 +254,7 @@
 
         </div>
 
-        <div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files supported. Max file size 16MB. (Recommend 1060x250 pixels)</div>
+        <div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files supported. Max file size 16MB. (Recommend ratio of 106:25)</div>
 
       </div>
 

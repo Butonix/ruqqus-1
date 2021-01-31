@@ -61,7 +61,7 @@ def comment_cid_api_redirect(c_id=None, p_id=None):
 
 @app.route("/api/v1/comment/<c_id>", methods=["GET"])
 @app.route("/+<boardname>/post/<p_id>/<anything>/<c_id>", methods=["GET"])
-@app.route("/test/coment/<c_id>")
+@app.route("/api/vue/comment/<c_id>")
 @auth_desired
 @api("read")
 def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None):
@@ -149,6 +149,12 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
     # children comments
 
     current_ids = [comment.id]
+
+    exile=g.db.query(ModAction
+        ).filter_by(
+        kind="exile_user"
+        ).subquery()
+
     for i in range(6 - context):
         if v:
 
@@ -164,6 +170,7 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
                 votes.c.vote_type,
                 blocking.c.id,
                 blocked.c.id,
+                aliased(ModAction, alias=exile)
             ).select_from(Comment).options(
                 joinedload(Comment.author).joinedload(User.title)
             ).filter(
@@ -179,6 +186,10 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
             ).join(
                 blocked,
                 blocked.c.user_id == Comment.author_id,
+                isouter=True
+            ).join(
+                exile,
+                exile.c.target_comment_id==Comment.id,
                 isouter=True
             )
 
@@ -203,15 +214,21 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
                 comment._is_blocking = c[2] or 0
                 comment._is_blocked = c[3] or 0
                 comment._is_guildmaster=top_comment._is_guildmaster
+                comment._is_exiled_for=c[4] or 0
                 output.append(comment)
         else:
 
             comms = g.db.query(
-                Comment
+                Comment,
+                aliased(ModAction, alias=exile)
             ).options(
                 joinedload(Comment.author).joinedload(User.title)
             ).filter(
                 Comment.parent_comment_id.in_(current_ids)
+            ).join(
+                exile,
+                exile.c.target_comment_id==Comment.id,
+                isouter=True
             )
 
             if sort_type == "hot":
@@ -228,7 +245,11 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
             else:
                 abort(422)
 
-            output = [c for c in comms]
+            output = []
+            for c in comms:
+                comment=c[0]
+                comment._is_exiled_for=c[1] or 0
+                output.append(comment)
 
         post._preloaded_comments += output
 

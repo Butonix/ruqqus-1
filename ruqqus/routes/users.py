@@ -489,28 +489,28 @@ def info_packet(username, method="html"):
 
 
 
-@app.route("/my_info", methods=["POST"])
-@auth_required
-@validate_formkey
-def my_info_post(v):
+# @app.route("/my_info", methods=["POST"])
+# @auth_required
+# @validate_formkey
+# def my_info_post(v):
 
-    if not v.is_activated:
-        return redirect("/settings/security")
+#     if not v.is_activated:
+#         return redirect("/settings/security")
 
-    method=request.values.get("method","html")
-    if method not in ['html','json']:
-        abort(400)
+#     method=request.values.get("method","html")
+#     if method not in ['html','json']:
+#         abort(400)
 
-    thread=threading.Thread(target=info_packet, args=(v.username,), kwargs={'method':method})
-    thread.setDaemon(True)
-    thread.start()
+#     thread=threading.Thread(target=info_packet, args=(v.username,), kwargs={'method':method})
+#     thread.setDaemon(True)
+#     thread.start()
 
-    #info_packet(g.db, v)
+#     #info_packet(g.db, v)
 
-    return "started"
+#     return "started"
 
 
-@app.route("/my_info", methods=["GET"])
-@auth_required
-def my_info_get(v):
-    return render_template("my_info.html", v=v)
+# @app.route("/my_info", methods=["GET"])
+# @auth_required
+# def my_info_get(v):
+#     return render_template("my_info.html", v=v)

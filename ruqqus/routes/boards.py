@@ -408,6 +408,25 @@ def mod_ban_bid_user(bid, board, v):
     if not board.has_participant(user):
         return jsonify({"error": f"@{user.username} hasn't participated in +{board.name}."}), 403
 
+    if item:
+        if isinstance(item, Submission):
+            note=f'for <a href="{item.permalink}">post</a>'
+            target_submission_id=item.id
+            target_comment_id=None
+        elif isinstance(item, Comment):
+            note=f'for <a href="{item.permalink}">comment</a>'
+            target_submission_id=None
+            target_comment_id=item.id
+        else:
+            note=None
+            target_submission_id=None
+            target_comment_id=None
+    else:
+        note=None
+        target_submission_id=None
+        target_comment_id=None
+
+
     # check for an existing deactivated ban
     existing_ban = g.db.query(BanRelationship).filter_by(
         user_id=user.id, board_id=board.id, is_active=False).first()
@@ -415,6 +434,8 @@ def mod_ban_bid_user(bid, board, v):
         existing_ban.is_active = True
         existing_ban.created_utc = int(time.time())
         existing_ban.banning_mod_id = v.id
+        existing_ban.target_submission_id=target_submission_id
+        existing_ban.target_comment_id=target_comment_id
         g.db.add(existing_ban)
     else:
         new_ban = BanRelationship(user_id=user.id,
@@ -431,22 +452,15 @@ def mod_ban_bid_user(bid, board, v):
 
         send_notification(user, text)
 
-    if item:
-        if isinstance(item, Submission):
-            note=f'for <a href="{item.permalink}">post</a>'
-        elif isinstance(item, Comment):
-            note=f'for <a href="{item.permalink}">comment</a>'
-        else:
-            note=None
-    else:
-        note=None
 
     ma=ModAction(
         kind="exile_user",
         user_id=v.id,
         target_user_id=user.id,
         board_id=board.id,
-        note=note
+        note=note,
+        target_submission_id=target_submission_id,
+        target_comment_id=target_comment_id
         )
     g.db.add(ma)
 
@@ -1641,13 +1655,13 @@ def siege_guild(v):
                                    error="Your siege failed. One of the guildmasters has private activity in the last 60 days. You may try again in 30 days."
                                    ), 403
 
-        # check exiles
-        if g.db.query(BanRelationship).filter(BanRelationship.banning_mod_id.in_(
-                ids), BanRelationship.created_utc > cutoff).first():
+        # check mod actions
+        if g.db.query(ModAction).filter(ModAction.user_id.in_(
+                ids), ModAction.created_utc > cutoff).first():
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
-                                   error="Your siege failed. One of the guildmasters has private activity in the last 60 days. You may try again in 30 days."
+                                   error="Your siege failed. One of the guildmasters has performed a mod action in the last 60 days. You may try again in 30 days."
                                    ), 403
 
     #Siege is successful

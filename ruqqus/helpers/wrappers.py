@@ -59,12 +59,15 @@ def get_logged_in_user():
             joinedload(User.moderates).joinedload(ModRelationship.board), #joinedload(Board.reports),
             joinedload(User.subscriptions).joinedload(Subscription.board)
         #    joinedload(User.notifications)
-            ).filter_by(id=uid).first()
+            ).filter_by(
+            id=uid,
+            is_deleted=False
+            ).first()
 
         if app.config["SERVER_NAME"]=="dev.ruqqus.com" and v.admin_level < 2 and not v.has_premium:
             x= (None, None)
 
-        if v and nonce < v.login_nonce:
+        if v and (nonce < v.login_nonce):
             x= (None, None)
         else:
             x=(v, None)
@@ -113,7 +116,7 @@ def auth_required(f):
 
         if not v:
             abort(401)
-        elif v and v.ban_evade and request.method=="POST":
+        elif v and v.ban_evade and not v.is_suspended:
             if random.randint(0,100) < v.ban_evade:
                 v.ban(reason="Evading a site-wide ban")
                 send_notification(v, "Your Ruqqus account has been permanently suspended for the following reason:\n\n> ban evasion")
@@ -134,6 +137,8 @@ def auth_required(f):
                         note="ban evasion"
                         )
                     g.db.add(ma)
+
+                g.db.commit()
 
                 for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
                     if comment.is_banned:

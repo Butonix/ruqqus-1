@@ -22,11 +22,15 @@ services:
       - GIPHY_KEY="sdgsdg345345345345"
       - FLASK_DEBUG=1
       - FLASK_ENV=development
+      - FORCE_HTTPS=0
     links:
       - "redis"
       - "postgres"
     ports:
       - "8000:8000"
+    depends_on:
+      - redis
+      - postgres
 
   redis:
     image: redis

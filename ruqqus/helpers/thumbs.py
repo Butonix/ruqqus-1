@@ -40,8 +40,13 @@ def thumbnail_thread(pid, debug=False):
         if debug:
             print("trying direct url as image")
 
+        if post.embed_url and post.embed_url.startswith("https://"):
+            fetch_url=post.embed_url
+        else:
+            fetch_url=post.url
+
         try:
-            x = requests.get(post.url, headers=headers)
+            x = requests.get(fetch_url, headers=headers)
         except:
             if debug:
                 print("error connecting")
@@ -102,18 +107,19 @@ def thumbnail_thread(pid, debug=False):
 
         #get meta title and description
         try:
-            with app.app_context():
-                meta_title=soup.find('title')
-                if meta_title:
-                    post.meta_title=str(meta_title.string)
-                    print(f"meta title : {post.meta_title}")
+            #with app.app_context():
+            meta_title=soup.find('title')
+            if meta_title:
+                post.submission_aux.meta_title=str(meta_title.string)
 
-                meta_desc = soup.find('meta', attrs={"name":"description"})
-                if meta_desc:
-                    post.meta_description=meta_desc['content']
-                    print(f"meta title : {post.meta_description}")
+            meta_desc = soup.find('meta', attrs={"name":"description"})
+            if meta_desc:
+                post.submission_aux.meta_description=meta_desc['content']
+
+            if meta_title or meta_desc:
+                db.add(post.submission_aux)
         except Exception as e:
-            print(f"Meta exception : {e}")
+            print(f"Meta Tags exception : {e}")
 
         metas = ["ruqqus:thumbnail",
                  "twitter:image",
