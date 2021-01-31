@@ -260,7 +260,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     def tree_comments(self, comment=None, v=None):
 
-        comments = self._preloaded_comments
+        comments = self.__dict__.get('_preloaded_comments',[])
+        if not comments:
+            return
 
         pinned_comment=[]
 
@@ -407,6 +409,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     @property
     def json(self):
+
         data=self.json_core
         
         if self.deleted_utc > 0 or self.is_banned:
