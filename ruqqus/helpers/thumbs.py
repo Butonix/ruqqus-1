@@ -109,11 +109,14 @@ def thumbnail_thread(pid, debug=False):
         try:
             meta_title=soup.find('title')
             if meta_title:
-                post.meta_title=str(meta_title.string)
+                post.submission_aux.meta_title=str(meta_title.string)
 
             meta_desc = soup.find('meta', attrs={"name":"description"})
             if meta_desc:
-                post.meta_description=meta_desc['content']
+                post.submission_aux.meta_description=meta_desc['content']
+
+            if meta_title or meta_desc:
+                db.add(post.submission_aux)
         except:
             pass
 
