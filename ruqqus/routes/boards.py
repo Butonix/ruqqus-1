@@ -712,6 +712,7 @@ def mod_accept_board(bid, v):
         return jsonify({"error": f"You already lead enough guilds."}), 409
 
     x.accepted = True
+    x.created_utc=int(time.time())
     g.db.add(x)
 
     ma=ModAction(
