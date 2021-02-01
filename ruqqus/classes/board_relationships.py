@@ -7,7 +7,7 @@ from .mix_ins import *
 import time
 
 
-class ModRelationship(Base):
+class ModRelationship(Base, Age_times):
     __tablename__ = "mods"
     id = Column(BigInteger, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
