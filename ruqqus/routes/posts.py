@@ -737,7 +737,7 @@ def submit_post(v):
 
 
     # expire the relevant caches: front page new, board new
-    cache.delete_memoized(frontlist, sort="new")
+    cache.delete_memoized(frontlist)
     g.db.commit()
     cache.delete_memoized(Board.idlist, board, sort="new")
 
