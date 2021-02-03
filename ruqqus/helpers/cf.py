@@ -37,8 +37,8 @@ def site_performance(time):
 
     #every 100 requests update status from shared cache
     if not config['COUNTER']%100:
-        UNDER_ATTACK=r.get("under_attack",False)
-        TIMEOUT_STAMP=r.get("timeout_stamp",0)
+        UNDER_ATTACK=r.get("under_attack") or 0
+        TIMEOUT_STAMP=r.get("timeout_stamp") or 0
 
     recent_reqs.append(time)
 
