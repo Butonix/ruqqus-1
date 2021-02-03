@@ -27,7 +27,7 @@ config={}
 config['UNDER_ATTACK']=r.get("under_attack") or 0
 config['TIMEOUT_STAMP']=r.get("timeout_stamp") or 0
 
-print(f"Under attack: {config["UNDER_ATTACK"]})
+print(f"Under attack: {config["UNDER_ATTACK"]}")
 
 config['COUNTER']=0
 
