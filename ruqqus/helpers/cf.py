@@ -6,7 +6,7 @@ from os import environ
 from ruqqus.__main__ import app
 
 CF_KEY = environ.get("CLOUDFLARE_KEY").lstrip().rstrip()
-CF_ZONE = environ.get("CLOUDFLARE_ZONE")
+CF_ZONE = environ.get("CLOUDFLARE_ZONE").lstrip().rstrip()
 recent_reqs=deque([],200)
 
 
