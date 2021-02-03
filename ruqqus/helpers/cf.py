@@ -45,7 +45,7 @@ def site_performance(time):
     if not config['UNDER_ATTACK'] and len(recent_reqs)>=100:
         avg=sum(recent_reqs)/len(recent_reqs)
 
-        if avg>3.0:
+        if avg>=1.0:
 
             try:
                 print("turning on UA mode")
