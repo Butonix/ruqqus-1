@@ -45,6 +45,11 @@ def site_performance(time):
 
         if avg>3.0:
 
+            try:
+                print("turning on UA mode")
+            except:
+                pass
+
             data={"value":"under_attack"}
             x=requests.patch(url, headers=headers, json=data)
 
@@ -57,6 +62,12 @@ def site_performance(time):
 
     elif config['UNDER_ATTACK']:
         if time.time()>config['TIMEOUT_STAMP']:
+
+            try:
+                print("turning off UA mode")
+            except:
+                pass
+
             data={"value":"high"}
             x=requests.patch(url, headers=headers, json=data)
 
