@@ -31,7 +31,7 @@ print(f"Under attack: {config['UNDER_ATTACK']}")
 
 config['COUNTER']=0
 
-def site_performance(time):
+def site_performance(t):
 
     config['COUNTER']+=1
 
@@ -40,7 +40,7 @@ def site_performance(time):
         UNDER_ATTACK=r.get("under_attack") or 0
         TIMEOUT_STAMP=r.get("timeout_stamp") or 0
 
-    recent_reqs.append(time)
+    recent_reqs.append(t)
 
     if not config['UNDER_ATTACK'] and len(recent_reqs)>=100:
         avg=sum(recent_reqs)/len(recent_reqs)
@@ -61,9 +61,6 @@ def site_performance(time):
                 ts=int(time.time())+3600
                 r.set("timeout_stamp", ts)
                 config['TIMEOUT_STAMP']=ts
-            else:
-                print(x.status_code)
-                print(x.json())
 
     elif config['UNDER_ATTACK']:
         if time.time()>config['TIMEOUT_STAMP']:
