@@ -101,8 +101,6 @@ app.config["CACHE_REDIS_URL"] = environ.get(
 app.config["CACHE_DEFAULT_TIMEOUT"] = 60
 app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
 
-app.config["UNDER_ATTACK"]=False
-
 #app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 30))
 
 # redispool=BlockingConnectionPool(max_connections=app.config["REDIS_POOL_SIZE"])
@@ -207,6 +205,7 @@ Base = declarative_base()
 import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
+from ruqqus.helpers.cf import site_performance
 
 
 @app.before_first_request
