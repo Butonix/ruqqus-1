@@ -2,6 +2,7 @@ from collections import deque
 import requests
 import time
 import redis
+from os import environ
 from ruqqus.__main__ import app
 
 CF_KEY = environ.get("CLOUDFLARE_KEY").lstrip().rstrip()
