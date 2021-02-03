@@ -22,8 +22,8 @@ url=f"https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_lev
 
 
 r=redis.Redis(host=app.config["CACHE_REDIS_URL"], decode_responses=True)
-UNDER_ATTACK=r.get("under_attack",0)
-TIMEOUT_STAMP=r.get("timeout_stamp",0)
+UNDER_ATTACK=r.get("under_attack") or 0
+TIMEOUT_STAMP=r.get("timeout_stamp") or 0
 
 def site_performance(time):
 
