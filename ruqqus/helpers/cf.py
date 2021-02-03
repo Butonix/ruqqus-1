@@ -28,6 +28,7 @@ config['UNDER_ATTACK']=r.get("under_attack") or 0
 config['TIMEOUT_STAMP']=r.get("timeout_stamp") or 0
 
 print(f"Under attack: {config['UNDER_ATTACK']}")
+print(f"TS: {config['TIMEOUT_STAMP']}")
 
 config['COUNTER']=0
 
@@ -76,6 +77,5 @@ def site_performance(t):
             if x.status_code<300:
                 r.set("under_attack",0)
                 config['UNDER_ATTACK']=0
-                config['TIMEOUT_STAMP']=ts
 
 
