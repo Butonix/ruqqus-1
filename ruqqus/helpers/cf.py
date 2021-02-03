@@ -55,6 +55,7 @@ def site_performance(t):
 
             data={"value":"under_attack"}
             x=requests.patch(url, headers=headers, json=data)
+            print(x.json())
 
             if x.status_code<300:
                 r.set("under_attack",1)
