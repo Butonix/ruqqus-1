@@ -46,7 +46,7 @@ def site_performance(t):
     if not config['UNDER_ATTACK'] and len(recent_reqs)>=100:
         avg=sum(recent_reqs)/len(recent_reqs)
 
-        if True: #avg>=1.0:
+        if avg>=1.0:
 
             try:
                 print("turning on UA mode")
@@ -55,7 +55,7 @@ def site_performance(t):
 
             data={"value":"under_attack"}
             x=requests.patch(url, headers=headers, json=data)
-            print(x.json())
+            #print(x.json())
 
             if x.status_code<300:
                 r.set("under_attack",1)
