@@ -21,7 +21,7 @@ url=f"https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_lev
 
 
 
-r=redis.Redis(host=app.config["CACHE_REDIS_URL"], decode_responses=True, ssl_cert_reqs=None)
+r=redis.Redis(host=app.config["CACHE_REDIS_URL"].split(':')[0], decode_responses=True, ssl_cert_reqs=None)
 UNDER_ATTACK=r.get("under_attack") or 0
 TIMEOUT_STAMP=r.get("timeout_stamp") or 0
 
