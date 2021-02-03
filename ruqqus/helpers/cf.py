@@ -63,7 +63,6 @@ def site_performance(time):
                 config['TIMEOUT_STAMP']=ts
             else:
                 print(x.status_code)
-                print(x.json)
                 print(x.response)
 
     elif config['UNDER_ATTACK']:
