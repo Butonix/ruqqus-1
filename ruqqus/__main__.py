@@ -12,6 +12,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_compress import Compress
 from time import sleep
+from collections import deque
 
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
@@ -99,6 +100,8 @@ app.config["CACHE_REDIS_URL"] = environ.get(
     "REDIS_URL").rstrip() if environ.get("REDIS_URL") else None
 app.config["CACHE_DEFAULT_TIMEOUT"] = 60
 app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
+
+app.config["UNDER_ATTACK"]=False
 
 #app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 30))
 
@@ -245,6 +248,8 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
+    g.req_start=time.time()
+
     g.db = db_session()
 
     session.permanent = True
@@ -338,6 +343,12 @@ def after_request(response):
         thread.start()
 
     g.db.close()
+
+    req_stop = time.time()
+
+    req_time=req_stop - g.req_start
+
+    site_performance(req_time)
 
     return response
 
