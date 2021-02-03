@@ -25,6 +25,8 @@ r=redis.Redis(host=app.config["CACHE_REDIS_URL"][8:], decode_responses=True, ssl
 UNDER_ATTACK=r.get("under_attack") or 0
 TIMEOUT_STAMP=r.get("timeout_stamp") or 0
 
+i=0
+
 def site_performance(time):
 
     #every 100 requests update status from shared cache
