@@ -78,5 +78,10 @@ def site_performance(t):
             if x.status_code<300:
                 r.set("under_attack",0)
                 config['UNDER_ATTACK']=0
+            else:
+                try:
+                    print(x.json())
+                except:
+                    pass
 
 
