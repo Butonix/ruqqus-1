@@ -25,7 +25,7 @@ r=redis.Redis(host=app.config["CACHE_REDIS_URL"][8:], decode_responses=True, ssl
 
 config={}
 config['UNDER_ATTACK']=r.get("under_attack") or 0
-config['TIMEOUT_STAMP']=r.get("timeout_stamp") or 0
+config['TIMEOUT_STAMP']=int(r.get("timeout_stamp") or 0)
 
 print(f"Under attack: {config['UNDER_ATTACK']}")
 print(f"TS: {config['TIMEOUT_STAMP']}")
