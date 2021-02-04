@@ -43,7 +43,7 @@ def site_performance(t):
 
     recent_reqs.append(t)
 
-    if not config['UNDER_ATTACK'] and len(recent_reqs)>=100:
+    if not config['UNDER_ATTACK'] and len(recent_reqs)>=20:
         avg=sum(recent_reqs)/len(recent_reqs)
 
         if avg>=1.0:
