@@ -69,7 +69,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
         posts=posts.filter(Submission.board_id==b.id)
     elif 'guild' in criteria:
         posts=posts.filter(
-                Submission.board.id==get_guild(criteria['guild']).id
+                Submission.board_id==get_guild(criteria['guild']).id
             )
 
     if 'url' in criteria:
@@ -92,9 +92,9 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
     if not(v and v.admin_level >= 3):
         posts = posts.filter(
-            Submission.is_deleted == False,
+            Submission.deleted_utc == 0,
             Submission.is_banned == False,
-            User.is_private == False)
+            )
 
     if v and v.admin_level >= 4:
         pass
@@ -158,6 +158,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
 @app.route("/search", methods=["GET"])
 @app.route("/api/v1/search", methods=["GET"])
+@app.route("/api/vue/search")
 @auth_desired
 @api("read")
 def search(v, search_type="posts"):
@@ -201,7 +202,7 @@ def search(v, search_type="posts"):
                                sort_method=sort,
                                next_exists=next_exists
                                ),
-                "api":lambda:jsonfy({"data":[x.json for x in boards]})
+                "api":lambda:jsonify({"data":[x.json for x in boards]})
                 }
 
     elif query.startswith("@"):

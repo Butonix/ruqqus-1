@@ -89,6 +89,7 @@
         <thead class="thead-dark">
           <tr>
             <th scope="col">User</th>
+            <th scope="col">Guildmaster Since</th>
             <th scope="col">Permissions</th>
             <th scope="col"></th>
           </tr>
@@ -101,6 +102,7 @@
               <a href="{{ mod.user.permalink }}">
                 <img src="{{ mod.user.profile_url }}" class="profile-pic-20 align-top mr-2">@{{ mod.user.username }}</a>
               </td>
+              <td>{{ mod.created_date }}</td>
               <td>{{ mod.permlist }}</td>
 
               <td>
@@ -138,6 +140,7 @@
           <thead class="thead-dark">
             <tr>
               <th scope="col">User</th>
+              <th scope="col">Invited On</th>
               <th scope="col">Permissions</th>
               <th scope="col"></th>
             </tr>
@@ -150,6 +153,7 @@
                 <a href="{{ m.user.permalink }}">
                   <img src="{{ m.user.profile_url }}" class="profile-pic-20 align-top mr-2">@{{ m.user.username }}</a>
                 </td>
+                <td>{{ m.created_date }}</td>
                 <td>{{ m.permlist }}</td>
                 <td>
                     {% if me.perm_full %}

@@ -13,6 +13,7 @@ from flask_limiter.util import get_remote_address
 from flask_compress import Compress
 from flask_sockets import Sockets
 from time import sleep
+from collections import deque
 
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
@@ -29,7 +30,7 @@ from redis import BlockingConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.29.7"
+_version = "2.29.9.9"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -207,6 +208,7 @@ Base = declarative_base()
 import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
+from ruqqus.helpers.cf import site_performance
 
 #import and bind chat function
 from ruqqus.chat import *
@@ -251,6 +253,8 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
+    g.req_start=time.time()
+
     g.db = db_session()
 
     session.permanent = True
@@ -272,6 +276,21 @@ def before_request():
         session["session_id"] = secrets.token_hex(16)
 
     g.timestamp = int(time.time())
+
+    ua=request.headers.get("User-Agent","")
+    if "CriOS/" in ua:
+        g.system="ios/chrome"
+    elif "Version/" in ua:
+        g.system="android/webview"
+    elif "Mobile Safari/" in ua:
+        g.system="android/chrome"
+    elif "Safari/" in ua:
+        g.system="ios/safari"
+    elif "Mobile/" in ua:
+        g.system="ios/webview"
+    else:
+        g.system="other/other"
+
 
     # g.db.begin_nested()
 
@@ -329,6 +348,12 @@ def after_request(response):
         thread.start()
 
     g.db.close()
+
+    req_stop = time.time()
+
+    req_time=req_stop - g.req_start
+
+    site_performance(req_time)
 
     return response
 
