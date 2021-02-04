@@ -64,7 +64,7 @@ def site_performance(t):
                 r.set("timeout_stamp", ts)
                 config['TIMEOUT_STAMP']=ts
 
-    elif config['UNDER_ATTACK']:
+    elif config['UNDER_ATTACK']==1:
         if time.time()>config['TIMEOUT_STAMP']:
 
             try:
