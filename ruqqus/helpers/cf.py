@@ -48,7 +48,7 @@ def site_performance(t):
 
         print(f"{len(recent_reqs)} - {avg}")
 
-        if avg>=0.75:
+        if avg>=0.45:
 
             try:
                 print("turning on UA mode")
