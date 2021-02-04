@@ -46,8 +46,6 @@ def site_performance(t):
     if not config['UNDER_ATTACK'] and len(recent_reqs)>=20:
         avg=sum(recent_reqs)/len(recent_reqs)
 
-        print(f"{len(recent_reqs)} - {avg}")
-
         if avg>=0.45:
 
             try:
