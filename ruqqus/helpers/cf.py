@@ -35,11 +35,7 @@ def site_performance(t):
     if not config['COUNTER']%100:
         config['UNDER_ATTACK']=int(r.get("under_attack")) or 0
         config['TIMEOUT_STAMP']=int(r.get("timeout_stamp")) or 0
-        try:
-            print(f"Under attack: {config['UNDER_ATTACK']}")
-            print(f"TS: {config['TIMEOUT_STAMP']}")
-        except:
-            pass
+
 
     recent_reqs.append(t)
 
