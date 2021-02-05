@@ -27,6 +27,8 @@ class Vote(Base):
         if "created_utc" not in kwargs:
             kwargs["created_utc"] = int(time())
 
+        kwargs["creation_ip"]=request.remote_addr
+
         super().__init__(*args, **kwargs)
 
     def __repr__(self):
@@ -85,6 +87,8 @@ class CommentVote(Base):
     def __init__(self, *args, **kwargs):
         if "created_utc" not in kwargs:
             kwargs["created_utc"] = int(time())
+
+        kwargs["creation_ip"]=request.remote_addr
 
         super().__init__(*args, **kwargs)
 
