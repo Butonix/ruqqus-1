@@ -572,11 +572,11 @@ class User(Base, Stndrd, Age_times):
             User,
             aliased(Alt, alias=subq)
             ).join(
-            subq, 
+            subq,
             or_(
-                subq.c.user1 == User.id,
-                subq.c.user2 == User.id
-                ),
+                subq.c.user1==User.id,
+                subq.c.user2==User.id
+                )
             ).filter(
             User.id != self.id
             ).order_by(User.username.asc()).all()
