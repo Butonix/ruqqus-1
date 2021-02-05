@@ -277,7 +277,7 @@
 <p>Alts:</p>
 <ul>
   {% for account in u.alts %}
-  <li><a href="{{ account.permalink }}">@{{ account.username }}</a></li>
+  <li><a href="{{ account.permalink }}">@{{ account.username }}</a>{% if account._is_manual %} [m]{% endif %}</li>
   {% endfor %}
 </ul>
 {% endif %}

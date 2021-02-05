@@ -568,7 +568,10 @@ class User(Base, Stndrd, Age_times):
                 )
             ).subquery()
 
-        alts = g.db.query(User).join(
+        data = g.db.query(
+            User,
+            aliased(Alt, alias=subq)
+            ).join(
             subq, 
             or_(
                 subq.c.user1 == User.id,
@@ -578,7 +581,12 @@ class User(Base, Stndrd, Age_times):
             User.id != self.id
             ).order_by(User.username.asc()).all()
 
-        return [x for x in alts]
+        data=[x for x in data]
+        output=[]
+        for x in data:
+            user=x[0]
+            user._is_manual=x[1]._is_manual
+            output.append(x)
 
         return output
 

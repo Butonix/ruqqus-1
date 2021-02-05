@@ -457,7 +457,11 @@ def admin_link_accounts(v):
     u1 = int(request.form.get("u1"))
     u2 = int(request.form.get("u2"))
 
-    new_alt = Alt(user1=u1, user2=u2)
+    new_alt = Alt(
+        user1=u1, 
+        user2=u2,
+        is_manual=True
+        )
 
     g.db.add(new_alt)
 
