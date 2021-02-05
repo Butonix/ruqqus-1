@@ -464,6 +464,7 @@ def admin_link_accounts(v):
         )
 
     g.db.add(new_alt)
+    g.db.commit()
 
     return redirect(f"/admin/alt_votes?u1={g.db.query(User).get(u1).username}&u2={g.db.query(User).get(u2).username}")
 
