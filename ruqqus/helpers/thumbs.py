@@ -181,12 +181,12 @@ def thumbnail_thread(pid, debug=False):
                 if src.startswith("https://"):
                     pass
                 elif src.startswith("http://"):
-                    src = f"https://{src.split('http://')}"
+                    src = f"https://{src.split('http://')[1]}"
                 elif src.startswith('//'):
                     src = f"https:{src}"
                 elif src.startswith('/'):
                     parsed_url = urlparse(post.url)
-                    src = f"https://{parsed_url.netloc}/{src.lstrip('/')}"
+                    src = f"https://{parsed_url.netloc}{src}"
                 else:
                     src = f"{post.url}{'/' if not post.url.endswith('/') else ''}{src}"
 
