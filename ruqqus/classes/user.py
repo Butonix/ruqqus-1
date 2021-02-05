@@ -586,7 +586,7 @@ class User(Base, Stndrd, Age_times):
         for x in data:
             user=x[0]
             user._is_manual=x[1].is_manual
-            output.append(x)
+            output.append(user)
 
         return output
 
