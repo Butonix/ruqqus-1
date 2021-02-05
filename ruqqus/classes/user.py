@@ -582,7 +582,6 @@ class User(Base, Stndrd, Age_times):
             ).order_by(User.username.asc()).all()
 
         data=[x for x in data]
-        print(data)
         output=[]
         for x in data:
             user=x[0]
