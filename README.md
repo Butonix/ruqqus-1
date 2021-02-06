@@ -135,6 +135,10 @@ Upon installation, trying to submit a post will cause a 404 error. You have to c
 
 Note: When trying to run Ruqqus locally, make sure to use a [tagged release version](https://github.com/ruqqus/ruqqus/releases). The reason this is necessary is that the file schema.txt is not always updated, which will cause Ruqqus to crash. If after first setting up Ruqqus you are getting a 500/Internal Server Error on pages because of database errors, this is most likely why.
 
+## API
+
+Community-made docs for the Ruqqus API can be found here:
+https://ruqqus-api.stoplight.io
 
 ## License
 [MPL-2.0](https://github.com/ruqqus/ruqqus/blob/master/LICENSE)
