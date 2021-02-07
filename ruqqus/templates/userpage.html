@@ -260,8 +260,8 @@
   <input type="submit" class="btn btn-danger" value="Nuke User's Content">
 </form>
 {% else %}
-<form action="/api/ban_user/{{ u.id }}", method="post">
-  <input type="hidden" name="formkey", value="{{ v.formkey }}">
+<form action="/api/ban_user/{{ u.id }}" method="post">
+  <input type="hidden" name="formkey" value="{{ v.formkey }}">
   <input id="user-ban-message" type="text" class="form-control" name="message" placeholder="Ban Message Reason" onchange="document.getElementById('user-ban-submit').disabled=false">
   <input id="user-ban-reason" type="text" class="form-control" name="reason" placeholder="Ban Reason (public)" onchange="document.getElementById('user-ban-submit').disabled=false">
   <input id="user-ban-days" type="number" class="form-control" name="days" placeholder="Days (blank = permanent)">
@@ -281,6 +281,13 @@
   {% endfor %}
 </ul>
 {% endif %}
+
+<a href="javascript:void(0)" class="btn btn-warning" onclick="document.getElementById('demod-user').classList.toggle('d-none')">De-Mod User</a>
+<form action="/admin/demod_user" method="post">
+  <input type="hidden" name="formkey" value="{{ v.formkey }}">
+  <input type="hidden" name="user" value="{{ v.username }}">
+  <input type="submit" class="d-none btn btn-danger" id="demod-user" value="Confirm De-Mod User">
+</form>
 {% endblock %}
 
 {% block content %}
