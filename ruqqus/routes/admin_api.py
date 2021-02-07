@@ -49,7 +49,8 @@ def ban_user(user_id, v):
 
 
     for x in user.alts:
-        x.ban(admin=v, reason=reason)
+        if not x.is_deleted:
+            x.ban(admin=v, reason=reason)
 
 
 
