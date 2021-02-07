@@ -16,6 +16,7 @@ class Category(Base, Stndrd):
     icon = Column(String(256), default="")
     color = Column(String(128), default="805ad5")
     visible = Column(Boolean, default=True)
+    is_nsfw = Column(Boolean, default=False)
     _subcats = relationship("SubCategory", lazy="joined", primaryjoin="SubCategory.cat_id==Category.id")
 
     @property

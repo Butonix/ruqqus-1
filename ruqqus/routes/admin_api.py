@@ -92,7 +92,7 @@ def ban_post(post_id, v):
     post.is_approved = 0
     post.approved_utc = 0
     post.stickied = False
-    post.pinned = False
+    post.is_pinned = False
 
     ban_reason=request.form.get("reason", "")
     with CustomRenderer() as renderer:
@@ -110,6 +110,7 @@ def ban_post(post_id, v):
         user_id=v.id,
         target_submission_id=post.id,
         board_id=post.board_id,
+        note="admin action"
         )
     g.db.add(ma)
     return (redirect(post.permalink), post)
@@ -131,6 +132,7 @@ def unban_post(post_id, v):
             user_id=v.id,
             target_submission_id=post.id,
             board_id=post.board_id,
+            note="admin action"
         )
         g.db.add(ma)
 
@@ -209,6 +211,7 @@ def api_ban_comment(c_id, v):
         user_id=v.id,
         target_comment_id=comment.id,
         board_id=comment.post.board_id,
+        note="admin action"
         )
     g.db.add(ma)
     return "", 204
@@ -229,6 +232,7 @@ def api_unban_comment(c_id, v):
             user_id=v.id,
             target_comment_id=comment.id,
             board_id=comment.post.board_id,
+            note="admin action"
             )
         g.db.add(ma)
 
@@ -544,6 +548,13 @@ def admin_csam_nuke(pid, v):
     post.is_banned = True
     post.ban_reason = "CSAM [1]"
     g.db.add(post)
+    ma=ModAction(
+        user_id=1,
+        target_submission_id=post.id,
+        board_id=post.board_id,
+        kind="ban_post",
+        note="CSAM detected"
+        )
 
     user = post.author
     user.is_banned = v.id
@@ -607,3 +618,44 @@ def admin_ban_domain(v):
     g.db.commit()
     return redirect(d.permalink)
 
+
+@app.route("/admin/nuke_user", methods=["POST"])
+@admin_level_required(4)
+@validate_formkey
+def admin_nuke_user(v):
+
+    user=get_user(request.form.get("user"))
+
+    for post in g.db.query(Submission).filter_by(author_id=user.id).all():
+        if post.is_banned:
+            continue
+            
+        post.is_banned=True
+        g.db.add(post)
+
+        ma=ModAction(
+            kind="ban_post",
+            user_id=v.id,
+            target_submission_id=post.id,
+            board_id=post.board_id,
+            note="admin action"
+            )
+        g.db.add(ma)
+
+    for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
+        if comment.is_banned:
+            continue
+
+        comment.is_banned=True
+        g.db.add(comment)
+
+        ma=ModAction(
+            kind="ban_comment",
+            user_id=v.id,
+            target_comment_id=comment.id,
+            board_id=comment.post.board_id,
+            note="admin action"
+            )
+        g.db.add(ma)
+
+    return redirect(user.permalink)

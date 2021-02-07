@@ -8,7 +8,7 @@ from PIL import Image
 
 BUCKET = "i.ruqqus.com"
 CF_KEY = environ.get("CLOUDFLARE_KEY").lstrip().rstrip()
-CF_ZONE = environ.get("CLOUDFLARE_ZONE")
+CF_ZONE = environ.get("CLOUDFLARE_ZONE").lstrip().rstrip()
 
 # setup AWS connection
 S3 = boto3.client("s3",
@@ -199,3 +199,5 @@ def check_csam_url(url, v, delete_content_function):
         g.db.add(alt)
 
     delete_content_function()
+
+    g.db.commit()

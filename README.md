@@ -62,6 +62,41 @@ As an open-source project, we are supported by the community. If you would like 
 
 **ETH**/**ERC20** - `0x4301c31B81C2C66f5aaDFC1ec75861ad3d3cE0cC`
 
+## Stay in touch
+
+- [Twitter](https://twitter.com/ruqqus)
+- [Discord](https://ruqqus.com/discord)
+- [Twitch.tv](https://twitch.tv/captainmeta4)
+
+## Local development
+
+### Docker Deployment
+
+In order to build your docs, you need to add the following to your hosts file:
+
+```
+127.0.0.1    ruqqus.localhost
+```
+
+
+To deploy the stack with docker, simply use:
+
+```
+docker-compose up
+```
+
+The database will automatically be seeded with an administrator account; user `ruqqie` and password `password`.
+
+### Mac
+
+Install dependencies
+
+`$ pip3 install -r requirements.txt`
+
+`$ brew install redis`
+
+`$ brew install postgres`
+
 **XMR** - `8BkNezPQex6eTanNQHswMmhCAqWkXzVNEDnvnBN1YSxmic87E2VZncNVDiS1TCjuUs4K34FiGVBK82AfkT2NYsxFN6cYTpy`
 
 **ZEC** - `t1VqHznyeQnS9hNaU32ksijfT9s9DTXgUSv`
@@ -100,6 +135,10 @@ Upon installation, trying to submit a post will cause a 404 error. You have to c
 
 Note: When trying to run Ruqqus locally, make sure to use a [tagged release version](https://github.com/ruqqus/ruqqus/releases). The reason this is necessary is that the file schema.txt is not always updated, which will cause Ruqqus to crash. If after first setting up Ruqqus you are getting a 500/Internal Server Error on pages because of database errors, this is most likely why.
 
+## API
+
+Community-made docs for the Ruqqus API can be found here:
+https://ruqqus-api.stoplight.io
 
 ## License
 [MPL-2.0](https://github.com/ruqqus/ruqqus/blob/master/LICENSE)
