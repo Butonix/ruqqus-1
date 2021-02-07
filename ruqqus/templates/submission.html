@@ -527,7 +527,7 @@
             <span id="post-score-{{ p.base36id }}" class="{% if p.created_utc >= hide_score_time %}d-none{% endif %} score post-score-{{ p.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-toggle="tooltip" data-placement="right" data-original-title="+{{ ups }} | -{{ downs }}">{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
 
             {% if p.created_utc >= hide_score_time %}
-            <span data-toggle="tooltip" data-placement="right" data-original-title="Score hidden for new posts.">
+            <span data-toggle="tooltip" data-placement="right" data-original-title="Score hidden for new posts." data-delay='{"show":"700", "hide":"300"}'>
               &#8226;
             </span>
             {% endif %}
@@ -543,7 +543,7 @@
             <span id="post-{{ p.base36id }}-score-none" class="{% if p.created_utc >= hide_score_time %}d-none{% endif %} score text-muted"{% if not p.is_banned %} data-toggle="tooltip" data-placement="right" data-original-title="+{{ ups }} | -{{ downs }}"{% endif %}>{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
 
             {% if p.created_utc >= hide_score_time %}
-            <span data-toggle="tooltip" data-placement="right" data-original-title="Score hidden for new posts.">
+            <span data-toggle="tooltip" data-placement="right" data-original-title="Score hidden for new posts." data-delay='{"show":"700", "hide":"300"}'>
               &#8226;
             </span>
             {% endif %}
@@ -603,7 +603,7 @@
           <span id="post-score-{{ p.base36id }}" class="{% if p.created_utc >= hide_score_time %}d-none{% endif %} score post-score-{{ p.base36id }} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-toggle="tooltip" data-placement="top" data-original-title="+{{ ups }} | -{{ downs }}">{% if p.is_banned %}✖{% else %}{{ score }}{% endif %}</span>
 
           {% if p.created_utc >= hide_score_time %}
-          <span data-toggle="tooltip" data-placement="right" data-original-title="Score hidden for new posts.">
+          <span data-toggle="tooltip" data-placement="right" data-original-title="Score hidden for new posts." data-delay='{"show":"700", "hide":"300"}'>
             &#8226;
           </span>
           {% endif %}
