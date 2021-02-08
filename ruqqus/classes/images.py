@@ -5,7 +5,7 @@ from flask import g
 import random
 
 from ruqqus.helpers.base36 import *
-from ruqqus.__main__ import Base
+from ruqqus.__main__ import Base, db_session
 
 
 class Image(Base):
@@ -20,7 +20,7 @@ class Image(Base):
         return f"/assets/images/states/{self.state.lower()}-{self.number}.jpg"
 
 
-n=g.db.query(Image).count()
+n=db_session().query(Image).count()
 
 def random_image():
     return g.db.query(Image).order_by(Image.id.asc()).offset(random.randint(0,n)).first()
