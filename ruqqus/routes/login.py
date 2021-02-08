@@ -558,7 +558,7 @@ def post_reset(v):
 
 @app.route("/lost_2fa")
 @auth_desired
-def lost_2fav):
+def lost_2fa(v):
 
     return render_template(
         "lost_2fa.html",
