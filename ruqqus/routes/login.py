@@ -568,6 +568,7 @@ def lost_2fa(v):
         )
 
 @app.route("/request_2fa_disable", methods=["POST"])
+@limiter.limit("6/minute")
 @auth_desired
 def request_2fa_disable(v):
 
