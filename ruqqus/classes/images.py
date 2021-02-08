@@ -23,4 +23,4 @@ class Image(Base):
 
 def random_image():
     n=g.db.query(Image).count()
-    return g.db.query(Image).order_by(Image.id.asc()).offset(random.randint(0,n)).first()
+    return g.db.query(Image).order_by(Image.id.asc()).offset(random.randint(0,n-1)).first()
