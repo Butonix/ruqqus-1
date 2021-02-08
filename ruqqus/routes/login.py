@@ -609,7 +609,7 @@ def request_2fa_disable(v):
     send_mail(to_address=user.email,
               subject="Ruqqus - 2FA Removal Request",
               html=render_template("email/2fa_remove.html",
-                                   action_url=url,
+                                   action_url=action_url,
                                    v=user)
               )
 
