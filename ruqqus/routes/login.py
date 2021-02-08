@@ -557,11 +557,13 @@ def post_reset(v):
                            message="Login normally to access your account.")
 
 @app.route("/lost_2fa")
-def lost_2fa():
+@auth_desired
+def lost_2fav):
 
     return render_template(
         "lost_2fa.html",
-        i=random_image()
+        i=random_image(),
+        v=v
         )
 
 @app.route("/request_2fa_disable", methods=["POST"])
