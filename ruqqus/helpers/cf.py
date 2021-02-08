@@ -69,7 +69,7 @@ def site_performance(t):
 
         if request.remote_addr in ip_list:
             ip_list[request.remote_addr]+=1
-            if ip_list[request.remote_addr]>=100:
+            if ip_list[request.remote_addr]>=10:
                 print(request.remote_addr)
                 ip_list.pop(request.remote_addr)
         else:
