@@ -561,7 +561,10 @@ def lost_2fa(v):
     if v:
         return redirect('/')
 
-    return render_template("lost_2fa.html")
+    return render_template(
+        "lost_2fa.html",
+        i=random_image()
+        )
 
 @app.route("/request_2fa_disable", methods=["POST"])
 @auth_desired
