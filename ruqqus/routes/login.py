@@ -492,8 +492,9 @@ def get_reset():
     now = int(time.time())
 
     if now - timestamp > 600:
-        return render_template("message.html", title="Password reset link expired",
-                               text="That password reset link has expired.")
+        return render_template("message.html", 
+            title="Password reset link expired",
+            error="That password reset link has expired.")
 
     if not validate_hash(f"{user_id}+{timestamp}+forgot", token):
         abort(400)
@@ -531,7 +532,7 @@ def post_reset(v):
     if now - timestamp > 600:
         return render_template("message.html",
                                title="Password reset expired",
-                               text="That password reset form has expired.")
+                               error="That password reset form has expired.")
 
     if not validate_hash(f"{user_id}+{timestamp}+reset", token):
         abort(400)
@@ -553,7 +554,7 @@ def post_reset(v):
 
     return render_template("message_success.html",
                            title="Password reset successful!",
-                           text="Login normally to access your account.")
+                           message="Login normally to access your account.")
 
 @app.route("/lost_2fa")
 @auth_desired
@@ -578,7 +579,7 @@ def request_2fa_disable(v):
     if not user or not user.email or not user.mfa_secret:
         return render_template("message.html",
                            title="Removal request received",
-                           text="If username, password, and email match, we will send you an email.")
+                           message="If username, password, and email match, we will send you an email.")
 
 
     email=request.form.get("email")
@@ -591,14 +592,14 @@ def request_2fa_disable(v):
     if email != user.email:
         return render_template("message.html",
                            title="Removal request received",
-                           text="If username, password, and email match, we will send you an email.")
+                           message="If username, password, and email match, we will send you an email.")
 
 
     password =request.form.get("password")
     if not user.verifyPass(password):
         return render_template("message.html",
                            title="Removal request received",
-                           text="If username, password, and email match, we will send you an email.")
+                           message="If username, password, and email match, we will send you an email.")
 
     #compute token
     valid=int(time.time())+60*60*24
@@ -615,7 +616,7 @@ def request_2fa_disable(v):
 
     return render_template("message.html",
                            title="Removal request received",
-                           text="If username, password, and email match, we will send you an email.")
+                           message="If username, password, and email match, we will send you an email.")
 
 @app.route("/reset_2fa", methods=["GET"])
 @auth_desired
@@ -631,11 +632,11 @@ def reset_2fa(v):
     if now<t:
         return render_template("message.html",
                            title="Inactive Link",
-                           text="That link isn't active yet. Try again later.")
+                           error="That link isn't active yet. Try again later.")
     elif now > t+3600*24:
         return render_template("message.html",
                            title="Expired Link",
-                           text="That link has expired.")
+                           error="That link has expired.")
 
     token=request.args.get("token")
     uid=request.args.get("id")
@@ -653,5 +654,5 @@ def reset_2fa(v):
 
     return render_template("message_success.html",
                            title="Two-factor authentication removed.",
-                           text="Login normally to access your account.")
+                           message="Login normally to access your account.")
 
