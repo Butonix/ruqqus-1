@@ -29,6 +29,8 @@ config['TIMEOUT_STAMP']=int(r.get("timeout_stamp")) or 0
 
 config['COUNTER']=0
 
+ip_list={}
+
 def site_performance(t):
 
     config['COUNTER']+=1
@@ -63,6 +65,17 @@ def site_performance(t):
                 config['TIMEOUT_STAMP']=ts
 
     elif config['UNDER_ATTACK']==1:
+
+        if request.remote_addr in ip_list:
+            ip_list[request.remote_addr]+=1
+            if ip_list[request.remote_addr]>=100:
+                print(request.remote_addr)
+                ip_list.pop(request.remote_addr)
+        else:
+            ip_list[request.remote_addr]=1
+
+
+
         if time.time()>config['TIMEOUT_STAMP']:
 
             try:
