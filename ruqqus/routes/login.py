@@ -467,7 +467,7 @@ def post_forgot():
     if user:
         # generate url
         now = int(time.time())
-        token = generate_hash(f"{user.id}+{now}+forgot")
+        token = generate_hash(f"{user.id}+{now}+forgot+{user.login_nonce}")
         url = f"https://{app.config['SERVER_NAME']}/reset?id={user.id}&time={now}&token={token}"
 
         send_mail(to_address=user.email,
@@ -496,15 +496,15 @@ def get_reset():
             title="Password reset link expired",
             error="That password reset link has expired.")
 
-    if not validate_hash(f"{user_id}+{timestamp}+forgot", token):
-        abort(400)
-
     user = g.db.query(User).filter_by(id=user_id).first()
+
+    if not validate_hash(f"{user_id}+{timestamp}+forgot+{user.login_nonce}", token):
+        abort(400)
 
     if not user:
         abort(404)
 
-    reset_token = generate_hash(f"{user.id}+{timestamp}+reset")
+    reset_token = generate_hash(f"{user.id}+{timestamp}+reset+{user.login_nonce}")
 
     return render_template("reset_password.html",
                            v=user,
@@ -534,10 +534,10 @@ def post_reset(v):
                                title="Password reset expired",
                                error="That password reset form has expired.")
 
-    if not validate_hash(f"{user_id}+{timestamp}+reset", token):
-        abort(400)
-
     user = g.db.query(User).filter_by(id=user_id).first()
+
+    if not validate_hash(f"{user_id}+{timestamp}+reset+{user.login_nonce}", token):
+        abort(400)
     if not user:
         abort(404)
 
