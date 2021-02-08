@@ -601,7 +601,7 @@ def request_2fa_disable(v):
     valid=int(time.time())+60*60*24
     token=generate_hash(f"{user.id}+{user.username}+disable2fa+{valid}+{user.mfa_secret}")
 
-    action_url=f"https://{app.config["SERVER_NAME"]}/reset_2fa?id={user.base36id}&t={valid}&token={token}"
+    action_url=f"https://{app.config['SERVER_NAME']}/reset_2fa?id={user.base36id}&t={valid}&token={token}"
     
     send_mail(to_address=user.email,
               subject="Ruqqus - 2FA Removal Request",
