@@ -603,7 +603,7 @@ def request_2fa_disable(v):
 
     #compute token
     valid=int(time.time())+60*60*24
-    token=generate_hash(f"{user.id}+{user.username}+disable2fa+{valid}+{user.mfa_secret}")
+    token=generate_hash(f"{user.id}+{user.username}+disable2fa+{valid}+{user.mfa_secret}+{user.login_nonce}")
 
     action_url=f"https://{app.config['SERVER_NAME']}/reset_2fa?id={user.base36id}&t={valid}&token={token}"
     
@@ -643,7 +643,7 @@ def reset_2fa(v):
 
     user=get_account(uid)
 
-    if not validate_hash(f"{user.id}+{user.username}+disable2fa+{t}+{user.mfa_secret}", token):
+    if not validate_hash(f"{user.id}+{user.username}+disable2fa+{t}+{user.mfa_secret}+{user.login_nonce}", token):
         abort(403)
 
     #validation successful, remove 2fa
