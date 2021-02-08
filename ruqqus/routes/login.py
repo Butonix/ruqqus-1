@@ -557,10 +557,7 @@ def post_reset(v):
                            message="Login normally to access your account.")
 
 @app.route("/lost_2fa")
-@auth_desired
-def lost_2fa(v):
-    if v:
-        return redirect('/')
+def lost_2fa():
 
     return render_template(
         "lost_2fa.html",
@@ -569,11 +566,7 @@ def lost_2fa(v):
 
 @app.route("/request_2fa_disable", methods=["POST"])
 @limiter.limit("6/minute")
-@auth_desired
-def request_2fa_disable(v):
-
-    if v:
-        return redirect('/')
+def request_2fa_disable():
 
     username=request.form.get("username")
     user=get_user(username, graceful=True)
@@ -603,7 +596,7 @@ def request_2fa_disable(v):
                            message="If username, password, and email match, we will send you an email.")
 
     #compute token
-    valid=int(time.time())+60*60*24
+    valid=int(time.time())+60*60*24*3
     token=generate_hash(f"{user.id}+{user.username}+disable2fa+{valid}+{user.mfa_secret}+{user.login_nonce}")
 
     action_url=f"https://{app.config['SERVER_NAME']}/reset_2fa?id={user.base36id}&t={valid}&token={token}"
@@ -620,12 +613,7 @@ def request_2fa_disable(v):
                            message="If username, password, and email match, we will send you an email.")
 
 @app.route("/reset_2fa", methods=["GET"])
-@auth_desired
-def reset_2fa(v):
-
-    if v:
-        return redirect('/')
-
+def reset_2fa():
 
     now=int(time.time())
     t=int(request.args.get("t"))
