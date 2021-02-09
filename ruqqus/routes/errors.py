@@ -103,7 +103,7 @@ def error_429(e, v):
     count_429s+=1
 
     try:
-        print(ip, count_429s)
+        print(request.headers.get("CF-IPCountry"), ip, count_429s)
     except:
         pass
 
