@@ -196,7 +196,7 @@ def search(v, search_type="posts"):
 
             boards=boards.order_by(
                 Board.name.ilike(term).desc(),
-                Subscription.id.op(">")(0).desc(),
+                joined.c.id.op(">")(0).desc(),
                 Board.stored_subscriber_count.desc(),
                 )
 
