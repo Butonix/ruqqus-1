@@ -233,12 +233,12 @@ def is_ip_banned(remote_addr):
         return bool(g.db.query(ruqqus.classes.IP).filter(
             or_(
                 ruqqus.classes.IP.addr==first3,
-                ruqqus.classes.ip.addr==remote_addr)
+                ruqqus.classes.IP.addr==remote_addr)
             ).count()
         )
     else:
         return bool(g.db.query(ruqqus.classes.IP).filter(
-            ruqqus.classes.ip.addr==remote_addr
+            ruqqus.classes.IP.addr==remote_addr
             )
             .count()
         )
