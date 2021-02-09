@@ -232,21 +232,14 @@ def is_ip_banned(remote_addr):
     Given a remote address, returns whether or not user is banned
     """
 
-    if '.' in remote_addr:
-        first3 = '.'.join(remote_addr.split('.')[0:2])
-
-
-        return bool(g.db.query(ruqqus.classes.IP).filter(
-            or_(
-                ruqqus.classes.IP.addr==first3,
-                ruqqus.classes.IP.addr==remote_addr)
+    return bool(
+        g.db.query(ruqqus.classes.IP).filter(
+             ruqqus.classes.IP.addr==remote_addr,
+             or_(
+                ruqqus.classes.IP.until_utc>int(time.time()),
+                ruqqus.classes.IP.until_utc==None
+                )
             ).count()
-        )
-    else:
-        return bool(g.db.query(ruqqus.classes.IP).filter(
-            ruqqus.classes.IP.addr==remote_addr
-            )
-            .count()
         )
 
 
@@ -277,7 +270,7 @@ def before_request():
     session.permanent = True
 
     if is_ip_banned(request.remote_addr):
-        return "", 429
+        return "", 403
 
     ua_banned, response_tuple = get_useragent_ban_response(
         request.headers.get("User-Agent", "NoAgent"))
@@ -376,7 +369,7 @@ def after_request(response):
         site_performance(req_time)
     except AttributeError:
         pass
-        
+
     return response
 
 

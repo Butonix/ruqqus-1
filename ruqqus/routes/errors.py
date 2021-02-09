@@ -4,7 +4,7 @@ from ruqqus.classes.custom_errors import *
 from flask import *
 from urllib.parse import quote, urlencode
 import time
-from ruqqus.__main__ import app, r
+from ruqqus.__main__ import app, r, cache, is_ip_banned
 
 # Errors
 
@@ -109,6 +109,18 @@ def error_429(e, v):
 
     r.set(f"429_count_{ip}", count_429s)
     r.expire(f"429_count_{ip}", 60)
+
+    #if you exceed 30x 429 without a 60s break, you get IP banned for 1 hr:
+    if count_429s>=30:
+        new_ipban=IP(
+            addr=ip,
+            until_utc=int(time.time())+3600
+            )
+        g.db.add(new_ipban)
+        g.db.commit()
+        cache.delete_memoized(is_ip_banned, request.remote_addr)
+        return "", 403
+
 
 
     return{"html": lambda: (render_template('errors/429.html', v=v), 429),
