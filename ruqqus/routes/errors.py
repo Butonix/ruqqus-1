@@ -100,7 +100,7 @@ def error_429(e, v):
     else:
         count_429s=int(count_429s)
 
-    count_429s+=1:
+    count_429s+=1
 
     try:
         print(ip, count_429s)
