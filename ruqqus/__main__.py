@@ -125,6 +125,7 @@ app.config["RATELIMIT_KEY_PREFIX"] = "flask_limiting_"
 app.config["RATELIMIT_ENABLED"] = True
 app.config["RATELIMIT_DEFAULTS_DEDUCT_WHEN"]=lambda:True
 app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
+app.config["RATELIMIT_HEADERS_ENABLED"]=True
 
 
 def limiter_key_func():
@@ -224,8 +225,23 @@ def is_ip_banned(remote_addr):
     """
     Given a remote address, returns whether or not user is banned
     """
-    return bool(g.db.query(ruqqus.classes.IP).filter_by(
-        addr=remote_addr).count())
+
+    if '.' in remote_addr:
+        first3 = '.'.join(remote_addr.split('.')[0:2])
+
+
+        return bool(g.db.query(ruqqus.classes.IP).filter(
+            or_(
+                ruqqus.classes.IP.addr==first3,
+                ruqqus.classes.ip.addr==remote_addr)
+            ).count()
+        )
+    else:
+        return bool(g.db.query(ruqqus.classes.IP).filter(
+            ruqqus.classes.ip.addr==remote_addr
+            )
+            .count()
+        )
 
 
 @cache.memoize(UA_BAN_CACHE_TTL)
