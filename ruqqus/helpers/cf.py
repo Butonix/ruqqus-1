@@ -63,16 +63,16 @@ def site_performance(t):
 
     elif config['UNDER_ATTACK']==1:
 
-        if request.remote_addr in ip_list:
-            ip_list[request.remote_addr]+=1
-            if ip_list[request.remote_addr]>=10:
-                try:
-                    print(request.remote_addr)
-                except:
-                    pass
-                ip_list.pop(request.remote_addr)
-        else:
-            ip_list[request.remote_addr]=1
+        # if request.remote_addr in ip_list:
+        #     ip_list[request.remote_addr]+=1
+        #     if ip_list[request.remote_addr]>=10:
+        #         try:
+        #             print(request.remote_addr)
+        #         except:
+        #             pass
+        #         ip_list.pop(request.remote_addr)
+        # else:
+            # ip_list[request.remote_addr]=1
 
 
 
