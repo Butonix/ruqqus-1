@@ -136,7 +136,7 @@ def limiter_key_func():
 limiter = Limiter(
     app,
     key_func=limiter_key_func,
-    default_limits=["10/6seconds"],
+    default_limits=["100/minute"],
     headers_enabled=True,
     strategy="fixed-window"
 )
@@ -271,7 +271,7 @@ def before_request():
     session.permanent = True
 
     if is_ip_banned(request.remote_addr):
-        return "", 403
+        return "", 418
 
     ua_banned, response_tuple = get_useragent_ban_response(
         request.headers.get("User-Agent", "NoAgent"))

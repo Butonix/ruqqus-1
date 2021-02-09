@@ -112,6 +112,10 @@ def error_429(e, v):
 
     #if you exceed 30x 429 without a 60s break, you get IP banned for 1 hr:
     if count_429s>=30:
+        try:
+            print("1hr ipban")
+        except:
+            pass
         new_ipban=IP(
             addr=ip,
             until_utc=int(time.time())+3600
@@ -119,7 +123,7 @@ def error_429(e, v):
         g.db.add(new_ipban)
         g.db.commit()
         cache.delete_memoized(is_ip_banned, request.remote_addr)
-        return "", 403
+        return "", 418
 
 
 
