@@ -264,7 +264,7 @@ def sign_up_post(v):
     #        i=random_image()
     #    )
 
-    form_timestamp = request.form.get("now", 0)
+    form_timestamp = request.form.get("now", '0')
     form_formkey = request.form.get("formkey", "none")
 
     submitted_token = session.get("signup_token", "")
