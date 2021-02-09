@@ -185,7 +185,29 @@ def search(v, search_type="posts"):
         if not (v and v.admin_level >= 3):
             boards = boards.filter_by(is_banned=False)
 
-        boards = boards.order_by(Board.name.ilike(term).desc(), Board.stored_subscriber_count.desc())
+        if v:
+            joined = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
+
+            boards=boards.join(
+                joined,
+                joined.c.board_id==Board.id,
+                isouter=True
+                )
+
+            boards=Boards.order_by(
+                Board.name.ilike(term).desc(),
+                Subscription.id.op(">")(0).desc(),
+                Board.stored_subscriber_count.desc(),
+                )
+
+
+
+        else:
+
+            boards = boards.order_by(
+                Board.name.ilike(term).desc(), 
+                Board.stored_subscriber_count.desc()
+                )
 
         total = boards.count()
 
