@@ -4,7 +4,7 @@ from ruqqus.classes.custom_errors import *
 from flask import *
 from urllib.parse import quote, urlencode
 import time
-from ruqqus.__main__ import app
+from ruqqus.__main__ import app, r
 
 # Errors
 
@@ -90,6 +90,26 @@ def error_422(e, v):
 @auth_desired
 @api()
 def error_429(e, v):
+
+    ip=request.remote_addr
+
+    #get recent violations
+    count_429s = r.get(f"429_count_{ip}")
+    if not count_429s:
+        count_429s=0
+    else:
+        count_429s=int(count_429s)
+
+    count_429s+=1:
+
+    try:
+        print(ip, count_429s)
+    except:
+        pass
+
+    r.set(f"429_count_{ip}", count_429s)
+
+
     return{"html": lambda: (render_template('errors/429.html', v=v), 429),
            "api": lambda: (jsonify({"error": "429 Too Many Requests"}), 429)
            }

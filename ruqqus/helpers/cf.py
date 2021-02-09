@@ -4,7 +4,7 @@ import time
 import redis
 from os import environ
 from flask import request
-from ruqqus.__main__ import app
+from ruqqus.__main__ import app, r
 
 CF_KEY = environ.get("CLOUDFLARE_KEY").lstrip().rstrip()
 CF_ZONE = environ.get("CLOUDFLARE_ZONE").lstrip().rstrip()
@@ -21,25 +21,22 @@ url=f"https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_lev
 
 
 
-
-r=redis.Redis(host=app.config["CACHE_REDIS_URL"][8:], decode_responses=True, ssl_cert_reqs=None)
-
 config={}
 config['UNDER_ATTACK']=int(r.get("under_attack")) or 0
 config['TIMEOUT_STAMP']=int(r.get("timeout_stamp")) or 0
 
 config['COUNTER']=0
 
-ip_list={}
+#ip_list={}
 
 def site_performance(t):
 
     config['COUNTER']+=1
 
     #every 100 requests update status from shared cache
-    if not config['COUNTER']%100:
-        config['UNDER_ATTACK']=int(r.get("under_attack")) or 0
-        config['TIMEOUT_STAMP']=int(r.get("timeout_stamp")) or 0
+    # if not config['COUNTER']%100:
+    #     config['UNDER_ATTACK']=int(r.get("under_attack")) or 0
+    #     config['TIMEOUT_STAMP']=int(r.get("timeout_stamp")) or 0
 
 
     recent_reqs.append(t)
