@@ -128,7 +128,11 @@ def error_451(e, v):
 @auth_desired
 @api()
 def error_500(e, v):
-    g.db.rollback()
+    try:
+        g.db.rollback()
+    except AttributeError:
+        pass
+
     return{"html": lambda: (render_template('errors/500.html', v=v), 500),
            "api": lambda: (jsonify({"error": "500 Internal Server Error"}), 500)
            }
