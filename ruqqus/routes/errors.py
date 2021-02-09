@@ -108,6 +108,9 @@ def error_429(e, v):
         pass
 
     r.set(f"429_count_{ip}", count_429s)
+    r.expire(f"429_count_{ip}", 60)
+
+    if 
 
 
     return{"html": lambda: (render_template('errors/429.html', v=v), 429),
