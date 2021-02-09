@@ -1,7 +1,6 @@
 from collections import deque
 import requests
 import time
-import redis
 from os import environ
 from flask import request
 from ruqqus.__main__ import app, r

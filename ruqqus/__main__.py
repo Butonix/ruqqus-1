@@ -23,6 +23,7 @@ from sqlalchemy.pool import QueuePool
 import threading
 import requests
 import random
+import redis
 
 from redis import BlockingConnectionPool
 
@@ -202,6 +203,11 @@ db_session = scoped_session(sessionmaker(class_=RoutingSession, query_cls=Retryi
 # db_session=scoped_session(sessionmaker(bind=engines["leader"]))
 
 Base = declarative_base()
+
+
+#set the shared redis cache for misc stuff
+
+r=redis.Redis(host=app.config["CACHE_REDIS_URL"][8:], decode_responses=True, ssl_cert_reqs=None)
 
 # import and bind all routing functions
 import ruqqus.classes
@@ -383,7 +389,3 @@ def www_redirect(path):
 #     g.db.close()
 
 
-
-#set the shared redis cache for misc stuff
-
-r=redis.Redis(host=app.config["CACHE_REDIS_URL"][8:], decode_responses=True, ssl_cert_reqs=None)
