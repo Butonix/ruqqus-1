@@ -209,11 +209,6 @@ Base = declarative_base()
 
 r=redis.Redis(host=app.config["CACHE_REDIS_URL"][8:], decode_responses=True, ssl_cert_reqs=None)
 
-# import and bind all routing functions
-import ruqqus.classes
-from ruqqus.routes import *
-import ruqqus.helpers.jinja2
-from ruqqus.helpers.cf import site_performance
 
 
 @app.before_first_request
@@ -241,6 +236,12 @@ def is_ip_banned(remote_addr):
                 )
             ).count()
         )
+
+# import and bind all routing functions
+import ruqqus.classes
+from ruqqus.routes import *
+import ruqqus.helpers.jinja2
+from ruqqus.helpers.cf import site_performance
 
 
 @cache.memoize(UA_BAN_CACHE_TTL)
