@@ -371,10 +371,12 @@ def after_request(response):
 
     req_stop = time.time()
 
-    req_time=req_stop - g.req_start
-
-    site_performance(req_time)
-
+    try:
+        req_time=req_stop - g.req_start
+        site_performance(req_time)
+    except AttributeError:
+        pass
+        
     return response
 
 
