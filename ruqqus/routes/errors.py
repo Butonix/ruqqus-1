@@ -110,8 +110,6 @@ def error_429(e, v):
     r.set(f"429_count_{ip}", count_429s)
     r.expire(f"429_count_{ip}", 60)
 
-    if 
-
 
     return{"html": lambda: (render_template('errors/429.html', v=v), 429),
            "api": lambda: (jsonify({"error": "429 Too Many Requests"}), 429)
