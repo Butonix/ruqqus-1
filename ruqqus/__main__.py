@@ -136,7 +136,7 @@ def limiter_key_func():
 limiter = Limiter(
     app,
     key_func=limiter_key_func,
-    default_limits=["10/6seconds"],
+    default_limits=["50/minute"],
     headers_enabled=True,
     strategy="fixed-window"
 )
