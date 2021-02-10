@@ -759,6 +759,12 @@ def admin_ip_addr(ipaddr, v):
         standalone=True
         )
 
+@app.route("/admin/test", methods=["GET"])
+@admin_level_required(5)
+def admin_test_ip(v):
+
+  return f"IP: {request.remote_addr}; fwd: {request.headers.get('X-Forwarded-For')}"
+
 
 # @app.route('/admin/deploy', methods=["GET"])
 # @admin_level_required(3)
