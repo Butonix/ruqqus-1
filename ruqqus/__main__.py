@@ -275,7 +275,7 @@ def before_request():
 
     if is_ip_banned(request.remote_addr):
         try:
-            print("closing", request.remote_addr, request.headers.get("Host"))
+            print("closing", request.remote_addr, session.get("user_id"))
         except:
             pass
         request.close()
