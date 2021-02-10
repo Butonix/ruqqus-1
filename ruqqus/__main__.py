@@ -24,6 +24,7 @@ import threading
 import requests
 import random
 import redis
+import gevent.sleep
 
 from redis import BlockingConnectionPool
 
@@ -274,6 +275,10 @@ def before_request():
             print("ipbanned", request.remote_addr, session.get("history"))
         except:
             pass
+
+        #offensively hold request open for 60s while ignoring user and doing other,
+        #more useful things
+        gevent.sleep(60)
         return "", 429
 
     g.db = db_session()
