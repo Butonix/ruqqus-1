@@ -274,8 +274,7 @@ def before_request():
             print("closing", request.remote_addr, session.get("user_id"))
         except:
             pass
-        request.close()
-        return
+        return "Slow down.", 429
 
     g.db = db_session()
 
