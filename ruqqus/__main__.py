@@ -278,8 +278,9 @@ def before_request():
 
         #offensively hold request open for 60s while ignoring user and doing other,
         #more useful things
-        gevent.sleep(60)
-        return "", 429
+        #gevent.sleep(60)
+        #return "", 429
+        gevent.getcurrent().kill()
 
     g.db = db_session()
 
