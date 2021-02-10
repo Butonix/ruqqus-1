@@ -220,6 +220,8 @@ def app_setup():
 IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
 UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
 
+local_ban_cache={}
+
 
 #@cache.memoize(IP_BAN_CACHE_TTL)
 def is_ip_banned(remote_addr):
@@ -227,11 +229,16 @@ def is_ip_banned(remote_addr):
     Given a remote address, returns whether or not user is banned
     """
 
+    now=int(time.time())
+    if remote_addr in local_ban_cache and local_ban_cache[remote_addr]>now:
+        return True
+
     val = r.get(f"ban_ip_{remote_addr}")
     if not val:
         return False
     else:
-        return int(val) > int(time.time())
+        local_ban_cache[remote_addr]=int(val)
+        return int(val) > now
 
 # import and bind all routing functions
 import ruqqus.classes
