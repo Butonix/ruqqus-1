@@ -267,6 +267,10 @@ def before_request():
     session.permanent = True
 
     if is_ip_banned(request.remote_addr):
+        try:
+            print(418, request.remote_addr)
+        except:
+            pass
         return "", 418
 
     ua_banned, response_tuple = get_useragent_ban_response(
