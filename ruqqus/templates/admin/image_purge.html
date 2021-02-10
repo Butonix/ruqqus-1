@@ -9,11 +9,11 @@
 {% endblock %}
 
 {% block content %}
-<h1>Guildmaster Check</h1>
+<h1>S3 Image Purge</h1>
+<p>Paste an i.ruqqus.com link here to delete the image and purge it from cache</p>
 
 <form action="/admin/image_purge" method="post" class="mb-6">
 	<label for="link-input">S3 Link</label>
-	<p class="text-small">Paste an i.ruqqus.com link here to delete the image and purge it from cache</p>
 	<input id="link-input" type="text" class="form-control mb-2" name="url">
 	<input type="submit" value="Delete Image" class="btn btn-primary">
 </form>
