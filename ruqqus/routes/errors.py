@@ -112,8 +112,7 @@ def error_429(e):
             pass
         
         r.set(f"ban_ip_{ip}", int(time.time())+3600)
-        request.close()
-        return
+        return "", 429
 
 
 
