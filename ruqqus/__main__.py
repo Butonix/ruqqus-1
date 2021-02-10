@@ -269,10 +269,6 @@ def before_request():
 
     g.timestamp = int(time.time())
 
-    g.db = db_session()
-
-    session.permanent = True
-
     if is_ip_banned(request.remote_addr):
         try:
             print("closing", request.remote_addr, session.get("user_id"))
@@ -280,6 +276,10 @@ def before_request():
             pass
         request.close()
         return
+
+    g.db = db_session()
+
+    session.permanent = True
 
     ua_banned, response_tuple = get_useragent_ban_response(
         request.headers.get("User-Agent", "NoAgent"))
