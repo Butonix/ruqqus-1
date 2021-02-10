@@ -113,7 +113,7 @@ def error_429(e, v):
         except:
             pass
         
-        r.set(f"ban_ip_{ip}", True)
+        r.set(f"ban_ip_{ip}", 1)
         r.expire(f"ban_ip_{ip}", 3600)
         gevent.getcurrent().kill()
 
