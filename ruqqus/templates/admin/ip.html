@@ -1,0 +1,32 @@
+{% extends "docs_default.html" %}
+
+{% block sidebarblock %}{% endblock %}
+{% block sidebarLeftblock %}{% endblock %}
+
+{% block title %}
+<title>Ruqqus - Help</title>
+<meta name="description" content="Ruqqus Help">
+{% endblock %}
+
+{% block content %}
+<h1>IP Address Info</h1>
+
+{% if thing %}
+
+<h1>Users</h1>
+{% include "user_listing.html" %}
+
+<h2>Posts</h2>
+{% include "submission_listing.html" %}
+
+
+<h2>Comments</h2>
+{% include "comments.html" %}
+
+
+
+
+{% endif %}
+
+
+{% endblock %}

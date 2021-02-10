@@ -742,7 +742,22 @@ def admin_image_purge(v):
     return "", 204
 
 
+@app.route("/admin/ip/<ipaddr>", methods=["GET"])
+@admin_level_required(5)
+def admin_ip_addr(ipaddr, v):
 
+    pids=[x for x in g.db.query(Submission.id).filter_by(creation_ip=ipaddr).order_by(Submission.created_utc.desc()).all()
+
+    cids=[x for x in g.db.query(Comment).filter_by(creation_ip=ipaddr).order_by(Comment.created_utc.desc()).all()]
+
+    return render_template(
+        "admin/ip.html",
+        v=v,
+        users=g.db.query(User).filter_by(creation_ip=ipaddr).order_by(User.created_utc.desc()).all(),
+        listing=get_posts(pids),
+        comments=get_comments(cids),
+        standalone=True
+        )
 
 
 # @app.route('/admin/deploy', methods=["GET"])
