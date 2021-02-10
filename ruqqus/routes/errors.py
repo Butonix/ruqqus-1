@@ -4,7 +4,7 @@ from ruqqus.classes.custom_errors import *
 from flask import *
 from urllib.parse import quote, urlencode
 import time
-from ruqqus.__main__ import app, r, cache, is_ip_banned
+from ruqqus.__main__ import app, r, cache, is_ip_banned, db_session
 
 # Errors
 
@@ -116,12 +116,14 @@ def error_429(e, v):
             print("1hr ipban")
         except:
             pass
+        db=db_session()
         new_ipban=IP(
             addr=ip,
             until_utc=int(time.time())+3600
             )
-        g.db.add(new_ipban)
-        g.db.commit()
+        db.add(new_ipban)
+        db.commit()
+        db.close()
         cache.delete_memoized(is_ip_banned, request.remote_addr)
         return "", 418
 
