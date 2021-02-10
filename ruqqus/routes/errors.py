@@ -87,8 +87,9 @@ def error_422(e, v):
 
 
 @app.errorhandler(429)
+@auth_desired
 @api()
-def error_429(e):
+def error_429(e, v):
 
     ip=request.remote_addr
 
@@ -107,7 +108,7 @@ def error_429(e):
     #if you exceed 5x 429 without a 60s break, you get IP banned for 1 hr:
     if count_429s>=5:
         try:
-            print("1hr ipban", request.headers.get("CF-IPCountry"), ip, count_429s, request.headers.get("User-Agent"))
+            print("1hr ipban", v, request.headers.get("CF-IPCountry"), ip, count_429s, request.headers.get("User-Agent"))
         except:
             pass
         
