@@ -230,16 +230,7 @@ def is_ip_banned(remote_addr):
     Given a remote address, returns whether or not user is banned
     """
 
-    now=int(time.time())
-    if remote_addr in local_ban_cache and local_ban_cache[remote_addr]>now:
-        return True
-
-    val = r.get(f"ban_ip_{remote_addr}")
-    if not val:
-        return False
-    else:
-        local_ban_cache[remote_addr]=int(val)
-        return int(val) > now
+    return bool(r.get(f"ban_ip_{remote_addr}"))
 
 # import and bind all routing functions
 import ruqqus.classes

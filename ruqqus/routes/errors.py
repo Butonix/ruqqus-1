@@ -5,6 +5,7 @@ from flask import *
 from urllib.parse import quote, urlencode
 import time
 from ruqqus.__main__ import app, r, cache, is_ip_banned, db_session
+import gevent
 
 # Errors
 
@@ -112,8 +113,9 @@ def error_429(e, v):
         except:
             pass
         
-        r.set(f"ban_ip_{ip}", int(time.time())+3600)
-        return "", 429
+        r.set(f"ban_ip_{ip}", True)
+        r.expire(f"ban_ip_{ip}", 3600)
+        gevent.getcurrent().kill()
 
 
 
