@@ -260,7 +260,7 @@ def get_useragent_ban_response(user_agent_str):
 @app.before_request
 def before_request():
 
-    g.req_start=time.time()
+    g.timestamp = int(time.time())
 
     g.db = db_session()
 
@@ -286,8 +286,6 @@ def before_request():
 
     if not session.get("session_id"):
         session["session_id"] = secrets.token_hex(16)
-
-    g.timestamp = int(time.time())
 
     ua=request.headers.get("User-Agent","")
     if "CriOS/" in ua:
@@ -367,7 +365,7 @@ def after_request(response):
     req_stop = time.time()
 
     try:
-        req_time=req_stop - g.req_start
+        req_time=req_stop - g.timestamp
         site_performance(req_time)
     except AttributeError:
         pass
