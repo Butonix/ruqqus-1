@@ -362,13 +362,13 @@ def after_request(response):
     except AttributeError:
         pass
 
-    req_stop = time.time()
+    # req_stop = time.time()
 
-    try:
-        req_time=req_stop - g.timestamp
-        site_performance(req_time)
-    except AttributeError:
-        pass
+    # try:
+    #     req_time=req_stop - g.timestamp
+    #     site_performance(req_time)
+    # except AttributeError:
+    #     pass
 
     return response
 
