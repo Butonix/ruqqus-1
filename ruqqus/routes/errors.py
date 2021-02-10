@@ -111,7 +111,6 @@ def error_429(e, v):
             print("1hr ipban", request.headers.get("CF-IPCountry"), ip, count_429s, request.headers.get("User-Agent"))
         except:
             pass
-        db=db_session()
         
         r.set(f"ban_ip_{ip}", int(time.time())+3600)
         request.close()
