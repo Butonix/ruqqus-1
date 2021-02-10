@@ -227,15 +227,11 @@ def is_ip_banned(remote_addr):
     Given a remote address, returns whether or not user is banned
     """
 
-    return bool(
-        g.db.query(ruqqus.classes.IP).filter(
-             ruqqus.classes.IP.addr==remote_addr,
-             or_(
-                ruqqus.classes.IP.until_utc>int(time.time()),
-                ruqqus.classes.IP.until_utc==None
-                )
-            ).count()
-        )
+    val = r.get(f"ban_ip_{remote_addr}")
+    if not val:
+        return False
+    else:
+        return int(val) > int(time.time())
 
 # import and bind all routing functions
 import ruqqus.classes
