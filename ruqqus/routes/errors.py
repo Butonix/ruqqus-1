@@ -114,7 +114,8 @@ def error_429(e, v):
         db=db_session()
         
         r.set(f"ban_ip_{ip}", int(time.time())+3600)
-        return "", 418
+        request.close()
+        return
 
 
 
