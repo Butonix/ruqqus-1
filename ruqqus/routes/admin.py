@@ -16,6 +16,8 @@ from ruqqus.classes.domains import reasons as REASONS
 from ruqqus.routes.admin_api import create_plot, user_stat_data
 from ruqqus.classes.categories import CATEGORIES
 from flask import *
+
+import ruqqus.helpers.aws as aws
 from ruqqus.__main__ import app
 
 
@@ -719,6 +721,21 @@ def admin_user_data_get(v):
             }
         )
         
+@app.route("/admin/image_purge", methods=["POST"])
+@admin_level_required(5)
+def admin_image_purge(v):
+    
+    url=request.form.get("url")
+
+    parsed_url=urlparse(url)
+
+    name=parsed_url.path
+
+    aws.delete_file(name)
+
+    return "", 204
+
+
 
 
 
