@@ -102,18 +102,13 @@ def error_429(e, v):
 
     count_429s+=1
 
-    try:
-        print(request.headers.get("CF-IPCountry"), ip, count_429s, request.headers.get("User-Agent"))
-    except:
-        pass
-
     r.set(f"429_count_{ip}", count_429s)
     r.expire(f"429_count_{ip}", 60)
 
     #if you exceed 10x 429 without a 60s break, you get IP banned for 1 hr:
     if count_429s>=5:
         try:
-            print("1hr ipban")
+            print("1hr ipban", request.headers.get("CF-IPCountry"), ip, count_429s, request.headers.get("User-Agent"))
         except:
             pass
         db=db_session()
