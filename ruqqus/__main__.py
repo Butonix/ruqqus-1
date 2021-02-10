@@ -221,7 +221,7 @@ IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
 UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
 
 
-@cache.memoize(IP_BAN_CACHE_TTL)
+#@cache.memoize(IP_BAN_CACHE_TTL)
 def is_ip_banned(remote_addr):
     """
     Given a remote address, returns whether or not user is banned
