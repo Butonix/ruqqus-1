@@ -271,10 +271,10 @@ def before_request():
 
     if is_ip_banned(request.remote_addr):
         try:
-            print("closing", request.remote_addr, session.get("user_id"))
+            print("ipbanned", request.remote_addr, session.get("user_id"))
         except:
             pass
-        return "Slow down.", 429
+        return "", 429
 
     g.db = db_session()
 
