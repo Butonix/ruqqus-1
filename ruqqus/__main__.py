@@ -24,7 +24,7 @@ import threading
 import requests
 import random
 import redis
-import gevent.sleep
+import gevent
 
 from redis import BlockingConnectionPool
 
