@@ -117,12 +117,16 @@ def error_429(e, v):
         except:
             pass
         db=db_session()
-        new_ipban=IP(
-            addr=ip,
-            until_utc=int(time.time())+3600,
-            banned_by=1
+        ipban=db.query(IP).filter_by(addr=ip).first()
+        if ipban:
+            ipban.until_utc=int(time.time())+3600
+        else:
+            ipban=IP(
+                addr=ip,
+                until_utc=int(time.time())+3600,
+                banned_by=1
             )
-        db.add(new_ipban)
+        db.add(ipban)
         db.commit()
         db.close()
         cache.delete_memoized(is_ip_banned, request.remote_addr)
