@@ -748,7 +748,7 @@ def admin_ip_addr(ipaddr, v):
 
     pids=[x for x in g.db.query(Submission.id).filter_by(creation_ip=ipaddr).order_by(Submission.created_utc.desc()).all()]
 
-    cids=[x for x in g.db.query(Comment).filter_by(creation_ip=ipaddr).order_by(Comment.created_utc.desc()).all()]
+    cids=[x for x in g.db.query(Comment.id).filter_by(creation_ip=ipaddr).order_by(Comment.created_utc.desc()).all()]
 
     return render_template(
         "admin/ip.html",
