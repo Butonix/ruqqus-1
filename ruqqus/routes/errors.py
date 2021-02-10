@@ -119,7 +119,8 @@ def error_429(e, v):
         db=db_session()
         new_ipban=IP(
             addr=ip,
-            until_utc=int(time.time())+3600
+            until_utc=int(time.time())+3600,
+            banned_by=1
             )
         db.add(new_ipban)
         db.commit()
