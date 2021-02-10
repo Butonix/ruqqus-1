@@ -268,7 +268,7 @@ def before_request():
 
     if is_ip_banned(request.remote_addr):
         try:
-            print(418, request.remote_addr)
+            print("closing", request.remote_addr)
         except:
             pass
         request.close()
