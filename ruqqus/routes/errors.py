@@ -109,7 +109,7 @@ def error_429(e, v):
     #if you exceed 5x 429 without a 60s break, you get IP banned for 1 hr:
     if count_429s>=5:
         try:
-            print("1hr ipban", v, request.headers.get("CF-IPCountry"), ip, count_429s, request.headers.get("User-Agent"))
+            print("triggering IP ban", request.remote_addr, session.get("user_id"), session.get("history"))
         except:
             pass
         

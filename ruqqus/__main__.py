@@ -263,7 +263,7 @@ def before_request():
 
     if is_ip_banned(request.remote_addr):
         try:
-            print("ipbanned", request.remote_addr, session.get("history"))
+            print("banned ip", request.remote_addr, session.get("user_id"), session.get("history"))
         except:
             pass
 
