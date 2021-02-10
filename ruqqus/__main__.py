@@ -271,7 +271,8 @@ def before_request():
             print(418, request.remote_addr)
         except:
             pass
-        return "", 418
+        request.close()
+        return
 
     ua_banned, response_tuple = get_useragent_ban_response(
         request.headers.get("User-Agent", "NoAgent"))
