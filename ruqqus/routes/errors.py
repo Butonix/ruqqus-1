@@ -111,7 +111,7 @@ def error_429(e, v):
     r.expire(f"429_count_{ip}", 60)
 
     #if you exceed 10x 429 without a 60s break, you get IP banned for 1 hr:
-    if count_429s>=10:
+    if count_429s>=5:
         try:
             print("1hr ipban")
         except:
