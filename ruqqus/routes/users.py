@@ -438,7 +438,7 @@ def info_packet(username, method="html"):
         for post in upvote_posts:
             post.__dict__['voted']=1
         packet['upvoted_posts']={
-            'html':lambda:render_template("home.html", v=None, listing=posts, page=1, next_exists=False),
+            'html':lambda:render_template("userpage.html", v=None, listing=posts, page=1, next_exists=False),
             'json':lambda:[x.json_core for x in upvote_posts]
         }
 
@@ -446,7 +446,7 @@ def info_packet(username, method="html"):
         downvote_query=db.query(Vote.submission_id).filter_by(user_id=user.id, vote_type=-1).order_by(Vote.id.desc()).all()
         downvote_posts=get_posts([i[0] for i in downvote_query], v=user)
         packet['downvoted_posts']={
-            'html':lambda:render_template("home.html", v=None, listing=posts, page=1, next_exists=False),
+            'html':lambda:render_template("userpage.html", v=None, listing=posts, page=1, next_exists=False),
             'json':lambda:[x.json_core for x in downvote_posts]
         }
 
@@ -454,7 +454,7 @@ def info_packet(username, method="html"):
         upvote_query=db.query(CommentVote.comment_id).filter_by(user_id=user.id, vote_type=1).order_by(CommentVote.id.desc()).all()
         upvote_comments=get_comments([i[0] for i in upvote_query], v=user)
         packet["upvoted_comments"]={
-            'html':lambda:render_template("notifications.html", v=None, comments=upvote_comments, page=1, next_exists=False),
+            'html':lambda:render_template("userpage_comments.html", v=None, listing=upvote_comments, page=1, next_exists=False),
             'json':lambda:[x.json_core for x in upvote_comments]
         }
 
@@ -462,7 +462,7 @@ def info_packet(username, method="html"):
         downvote_query=db.query(CommentVote.comment_id).filter_by(user_id=user.id, vote_type=-1).order_by(CommentVote.id.desc()).all()
         downvote_comments=get_comments([i[0] for i in downvote_query], v=user)
         packet["downvoted_comments"]={
-            'html':lambda:render_template("notifications.html", v=None, comments=downvote_comments, page=1, next_exists=False),
+            'html':lambda:render_template("userpage_comments.html", v=None, listing=downvote_comments, page=1, next_exists=False),
             'json':lambda:[x.json_core for x in downvote_comments]
         }
 
