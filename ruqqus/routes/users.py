@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import pyotp
 import qrcode
 import io
-import threading
+import gevent
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -466,12 +466,13 @@ def info_packet(username, method="html"):
             'json':lambda:[x.json_core for x in downvote_comments]
         }
 
-    # blocked_users=db.query(UserBlock.target_id).filter_by(user_id=user.id).order_by(UserBlock.id.desc()).all()
-    # users=[get_account(base36encode(x[0])) for x in blocked_users]
-    # packet["blocked_users"]={
-    #     "html":lambda:render_template
-    #     "json":lambda:[x.json_core for x in users]
-    # }
+        print('blocked users')
+        blocked_users=db.query(UserBlock.target_id).filter_by(user_id=user.id).order_by(UserBlock.id.desc()).all()
+        users=[get_account(base36encode(x[0])) for x in blocked_users]
+        packet["blocked_users"]={
+            "html":lambda:render_template
+            "json":lambda:[x.json_core for x in users]
+        }
 
 
 
@@ -489,28 +490,25 @@ def info_packet(username, method="html"):
 
 
 
-# @app.route("/my_info", methods=["POST"])
-# @auth_required
-# @validate_formkey
-# def my_info_post(v):
+@app.route("/my_info", methods=["POST"])
+#@limiter.limit("2/day")
+@auth_required
+@validate_formkey
+def my_info_post(v):
 
-#     if not v.is_activated:
-#         return redirect("/settings/security")
+    if not v.is_activated:
+        return redirect("/settings/security")
 
-#     method=request.values.get("method","html")
-#     if method not in ['html','json']:
-#         abort(400)
+    method=request.values.get("method","html")
+    if method not in ['html','json']:
+        abort(400)
 
-#     thread=threading.Thread(target=info_packet, args=(v.username,), kwargs={'method':method})
-#     thread.setDaemon(True)
-#     thread.start()
+    gevent.spawn(info_packet, v.username, method=method)
 
-#     #info_packet(g.db, v)
-
-#     return "started"
+    return "started"
 
 
-# @app.route("/my_info", methods=["GET"])
-# @auth_required
-# def my_info_get(v):
-#     return render_template("my_info.html", v=v)
+@app.route("/my_info", methods=["GET"])
+@auth_required
+def my_info_get(v):
+    return render_template("my_info.html", v=v)
