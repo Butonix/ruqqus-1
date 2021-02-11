@@ -414,7 +414,7 @@ def info_packet(username, method="html"):
         post_ids=[i[0] for i in post_ids]
         print(f'have {len(post_ids)} ids')
         posts=get_posts(post_ids, v=user)
-        print('have posts')
+        print(f'have {len(posts)} posts')
         packet["posts"]={
             'html':lambda:render_template("userpage.html", v=None, u=user, listing=posts, page=1, next_exists=False),
             'json':lambda:[x.self_download_json for x in posts]
@@ -425,7 +425,7 @@ def info_packet(username, method="html"):
         comment_ids=[x[0] for x in comment_ids]
         print(f"have {len(comment_ids)} ids")
         comments=get_comments(comment_ids, v=user)
-        print('have comments')
+        print(f'have {len(comments)} comments')
         packet["comments"]={
             'html':lambda:render_template("userpage_comments.html", v=None, u=user, comments=comments, page=1, next_exists=False),
             'json':lambda:[x.self_download_json for x in comments]
@@ -470,7 +470,7 @@ def info_packet(username, method="html"):
         blocked_users=db.query(UserBlock.target_id).filter_by(user_id=user.id).order_by(UserBlock.id.desc()).all()
         users=[get_account(base36encode(x[0])) for x in blocked_users]
         packet["blocked_users"]={
-            "html":lambda:render_template,
+            "html":lambda:render_template("admin/new_users.html", users=users, v=None),
             "json":lambda:[x.json_core for x in users]
         }
 
