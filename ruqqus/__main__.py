@@ -236,7 +236,6 @@ def is_ip_banned(remote_addr):
 import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
-from ruqqus.helpers.cf import site_performance
 
 
 @cache.memoize(UA_BAN_CACHE_TTL)
