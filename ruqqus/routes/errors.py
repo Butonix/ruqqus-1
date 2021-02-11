@@ -115,7 +115,7 @@ def error_429(e, v):
         
         r.set(f"ban_ip_{ip}", int(time.time()))
         r.expire(f"ban_ip_{ip}", 3600)
-        gevent.getcurrent().kill()
+        return "", 429
 
 
 

@@ -269,8 +269,8 @@ def before_request():
         #offensively hold request open for 60s while ignoring user and doing other,
         #more useful things
         #gevent.sleep(60)
-        #return "", 429
-        gevent.getcurrent().kill()
+        return "", 429
+        #gevent.getcurrent().kill()
 
     g.db = db_session()
 
@@ -351,13 +351,12 @@ def after_request(response):
                              "deny")
 
     # signups - hit discord webhook
-    if request.method == "POST" and response.status_code in [
-            301, 302] and request.path == "/signup":
-        link = f'https://{app.config["SERVER_NAME"]}/@{request.form.get("username")}'
-        thread = threading.Thread(
-            target=lambda: log_event(
-                name="Account Signup", link=link))
-        thread.start()
+    # if request.method == "POST" and response.status_code in [
+    #     link = f'https://{app.config["SERVER_NAME"]}/@{request.form.get("username")}'
+    #     thread = threading.Thread(
+    #         target=lambda: log_event(
+    #             name="Account Signup", link=link))
+    #     thread.start()
 
     try:
         g.db.close()
