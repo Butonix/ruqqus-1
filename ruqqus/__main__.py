@@ -352,6 +352,7 @@ def after_request(response):
 
     # signups - hit discord webhook
     # if request.method == "POST" and response.status_code in [
+    #         301, 302] and request.path == "/signup":
     #     link = f'https://{app.config["SERVER_NAME"]}/@{request.form.get("username")}'
     #     thread = threading.Thread(
     #         target=lambda: log_event(
