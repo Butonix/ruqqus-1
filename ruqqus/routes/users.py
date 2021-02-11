@@ -503,7 +503,7 @@ def my_info_post(v):
     if method not in ['html','json']:
         abort(400)
 
-    gevent.spawn(info_packet, v.username, method=method)
+    gevent.spawn_later(5, info_packet, v.username, method=method)
 
     return "started"
 
