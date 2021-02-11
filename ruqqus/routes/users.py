@@ -408,30 +408,25 @@ def info_packet(username, method="html"):
 
         user=get_user(username)
 
-        print('submissions')
         #submissions
         post_ids=db.query(Submission.id).filter_by(author_id=user.id).order_by(Submission.created_utc.desc()).all()
         post_ids=[i[0] for i in post_ids]
-        print(f'have {len(post_ids)} ids')
         posts=get_posts(post_ids, v=user)
-        print(f'have {len(posts)} posts')
         packet["posts"]={
             'html':lambda:render_template("userpage.html", v=None, u=user, listing=posts, page=1, next_exists=False),
             'json':lambda:[x.self_download_json for x in posts]
         }
 
-        print('comments')
+        #comments
         comment_ids=db.query(Comment.id).filter_by(author_id=user.id).order_by(Comment.created_utc.desc()).all()
         comment_ids=[x[0] for x in comment_ids]
-        print(f"have {len(comment_ids)} ids")
         comments=get_comments(comment_ids, v=user)
-        print(f'have {len(comments)} comments')
         packet["comments"]={
             'html':lambda:render_template("userpage_comments.html", v=None, u=user, listing=comments, page=1, next_exists=False),
             'json':lambda:[x.self_download_json for x in comments]
         }
 
-        print('post_upvotes')
+        #upvoted posts
         upvote_query=db.query(Vote.submission_id).filter_by(user_id=user.id, vote_type=1).order_by(Vote.id.desc()).all()
         upvote_posts=get_posts([i[0] for i in upvote_query], v=user)
         upvote_posts=[i for i in upvote_posts]
