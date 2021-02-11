@@ -427,7 +427,7 @@ def info_packet(username, method="html"):
         comments=get_comments(comment_ids, v=user)
         print(f'have {len(comments)} comments')
         packet["comments"]={
-            'html':lambda:render_template("userpage_comments.html", v=None, u=user, comments=comments, page=1, next_exists=False),
+            'html':lambda:render_template("userpage_comments.html", v=None, u=user, listing=comments, page=1, next_exists=False),
             'json':lambda:[x.self_download_json for x in comments]
         }
 
