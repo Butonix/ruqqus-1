@@ -470,7 +470,7 @@ def info_packet(username, method="html"):
         blocked_users=db.query(UserBlock.target_id).filter_by(user_id=user.id).order_by(UserBlock.id.desc()).all()
         users=[get_account(base36encode(x[0])) for x in blocked_users]
         packet["blocked_users"]={
-            "html":lambda:render_template
+            "html":lambda:render_template,
             "json":lambda:[x.json_core for x in users]
         }
 
