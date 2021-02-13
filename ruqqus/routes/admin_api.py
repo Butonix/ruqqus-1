@@ -49,7 +49,8 @@ def ban_user(user_id, v):
 
 
     for x in user.alts:
-        x.ban(admin=v, reason=reason)
+        if not x.is_deleted:
+            x.ban(admin=v, reason=reason)
 
 
 
@@ -658,4 +659,27 @@ def admin_nuke_user(v):
             )
         g.db.add(ma)
 
+    return redirect(user.permalink)
+
+@app.route("/admin/demod_user", methods=["POST"])
+@admin_level_required(4)
+@validate_formkey
+def admin_demod_user(v):
+
+    user=get_user(request.form.get("user"))
+
+    for mod in g.db.query(ModRelationship).filter_by(user_id=user.id, accepted=True):
+
+        ma=ModAction(
+            user_id=v.id,
+            target_user_id=user.id,
+            board_id=mod.board_id,
+            kind="remove_mod",
+            note="admin_action"
+            )
+        g.db.add(ma)
+
+        g.db.delete(mod)
+
+    g.db.commit()
     return redirect(user.permalink)

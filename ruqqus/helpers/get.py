@@ -11,6 +11,7 @@ def get_user(username, v=None, nSession=None, graceful=False):
 
     username = username.replace('\\', '')
     username = username.replace('_', '\_')
+    username = username.replace('%', '')
 
     if not nSession:
         nSession = g.db
@@ -647,6 +648,7 @@ def get_guild(name, graceful=False):
 
     name = name.replace('\\', '')
     name = name.replace('_', '\_')
+    name = name.replace('%', '')
 
     x = g.db.query(Board).options(
         joinedload(Board.moderators).joinedload(ModRelationship.user),

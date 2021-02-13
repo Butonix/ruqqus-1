@@ -883,6 +883,10 @@ def mod_bid_settings_private(bid, board, v):
     board.is_private = bool(request.form.get("guildprivacy", False) == 'true')
 
     g.db.add(board)
+    g.db.flush()
+    board.stored_subscriber_count=board.subscriber_count
+    g.db.add(board)
+    g.db.commit()
 
     ma=ModAction(
         kind="update_settings",
@@ -891,6 +895,8 @@ def mod_bid_settings_private(bid, board, v):
         note=f"private={board.is_private}"
         )
     g.db.add(ma)
+
+
     return "", 204
 
 

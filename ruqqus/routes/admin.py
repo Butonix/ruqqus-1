@@ -16,6 +16,8 @@ from ruqqus.classes.domains import reasons as REASONS
 from ruqqus.routes.admin_api import create_plot, user_stat_data
 from ruqqus.classes.categories import CATEGORIES
 from flask import *
+
+import ruqqus.helpers.aws as aws
 from ruqqus.__main__ import app
 
 
@@ -719,7 +721,49 @@ def admin_user_data_get(v):
             }
         )
         
+@app.route("/admin/image_purge", methods=["POST"])
+@admin_level_required(5)
+def admin_image_purge(v):
+    
+    url=request.form.get("url")
 
+    parsed_url=urlparse(url)
+
+    name=parsed_url.path.lstrip('/')
+
+    try:
+        print(name)
+    except:
+        pass
+
+
+    aws.delete_file(name)
+
+    return "", 204
+
+
+@app.route("/admin/ip/<ipaddr>", methods=["GET"])
+@admin_level_required(5)
+def admin_ip_addr(ipaddr, v):
+
+    pids=[x for x in g.db.query(Submission.id).filter_by(creation_ip=ipaddr).order_by(Submission.created_utc.desc()).all()]
+
+    cids=[x for x in g.db.query(Comment.id).filter_by(creation_ip=ipaddr).order_by(Comment.created_utc.desc()).all()]
+
+    return render_template(
+        "admin/ip.html",
+        v=v,
+        users=g.db.query(User).filter_by(creation_ip=ipaddr).order_by(User.created_utc.desc()).all(),
+        listing=get_posts(pids) if pids else [],
+        comments=get_comments(cids) if cids else [],
+        standalone=True
+        )
+
+@app.route("/admin/test", methods=["GET"])
+@admin_level_required(5)
+def admin_test_ip(v):
+
+  return f"IP: {request.remote_addr}; fwd: {request.headers.get('X-Forwarded-For')}"
 
 
 # @app.route('/admin/deploy', methods=["GET"])

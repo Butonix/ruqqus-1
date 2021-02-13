@@ -4,7 +4,8 @@ from ruqqus.classes.custom_errors import *
 from flask import *
 from urllib.parse import quote, urlencode
 import time
-from ruqqus.__main__ import app
+from ruqqus.__main__ import app, r, cache, is_ip_banned, db_session
+import gevent
 
 # Errors
 
@@ -90,6 +91,34 @@ def error_422(e, v):
 @auth_desired
 @api()
 def error_429(e, v):
+
+    ip=request.remote_addr
+
+    #get recent violations
+    count_429s = r.get(f"429_count_{ip}")
+    if not count_429s:
+        count_429s=0
+    else:
+        count_429s=int(count_429s)
+
+    count_429s+=1
+
+    r.set(f"429_count_{ip}", count_429s)
+    r.expire(f"429_count_{ip}", 60)
+
+    #if you exceed 15x 429 without a 60s break, you get IP banned for 1 hr:
+    if count_429s>=15:
+        try:
+            print("triggering IP ban", request.remote_addr, session.get("user_id"), session.get("history"))
+        except:
+            pass
+        
+        r.set(f"ban_ip_{ip}", int(time.time()))
+        r.expire(f"ban_ip_{ip}", 3600)
+        return "", 429
+
+
+
     return{"html": lambda: (render_template('errors/429.html', v=v), 429),
            "api": lambda: (jsonify({"error": "429 Too Many Requests"}), 429)
            }
@@ -108,7 +137,11 @@ def error_451(e, v):
 @auth_desired
 @api()
 def error_500(e, v):
-    g.db.rollback()
+    try:
+        g.db.rollback()
+    except AttributeError:
+        pass
+
     return{"html": lambda: (render_template('errors/500.html', v=v), 500),
            "api": lambda: (jsonify({"error": "500 Internal Server Error"}), 500)
            }

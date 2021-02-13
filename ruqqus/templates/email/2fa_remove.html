@@ -2,12 +2,13 @@
 
 {% block image %}verify.png{% endblock %}
 
-{% block title %}Verify Your Email{% endblock %}</h1>
+{% block title %}Remove Two-Factor Authentication{% endblock %}</h1>
 
-{% block preheader %}Verify your new Ruqqus email.{% endblock %}
+{% block preheader %}Remove Two-Factor Authentication.{% endblock %}
 
 {% block content %}
-                        <p>You told us you wanted to change your Ruqqus account email. To finish this process, please verify your new email address:</p>
+                        <p>We received a request to remove two-factor authentication from your account. In 72 hours, click the link below.</p>
+                        <p>If you didn't make this request, change your password and use the Log Out Everywhere feature in your <a href="https://ruqqus.com/settings/security">Security Settings</a> to permanently invalidate the link.</p>
                         <!-- Action -->
                         <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>
@@ -17,30 +18,7 @@
                               <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
                                 <tr>
                                   <td align="center">
-                                    <a href="{{action_url}}" class="f-fallback button" target="_blank">Verify email</a>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
-                        <p>For reference, here's your current information:</p>
-                        <table class="attributes" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                          <tr>
-                            <td class="attributes_content">
-                              <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                                <tr>
-                                  <td class="attributes_item">
-                                    <span class="f-fallback">
-              <strong>Email:</strong> {{ v.email }}
-            </span>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="attributes_item">
-                                    <span class="f-fallback">
-              <strong>Username:</strong> {{ v.username }}
-            </span>
+                                    <a href="{{action_url}}" class="f-fallback button" target="_blank">Remove 2FA</a>
                                   </td>
                                 </tr>
                               </table>
@@ -48,7 +26,7 @@
                           </tr>
                         </table>
                         <p>Plese note that Ruqqus will never ask you for your email, password, or two-factor token via email, text, or phone.</p>
-                        <p>If you have any questions, feel free to <a href="mailto:info@ruqqus.com">email the Ruqqus team</a>. (We're lightning fast at replying.)</p>
+                        <p>If you have any questions, feel free to <a href="mailto:hello@ruqqus.com">email the Ruqqus team.</a>.</p>
                         <p>Thanks,
                           <br>The Ruqqus Team</p>
                         <p><strong>P.S.</strong> Feel free to tweet at us on Twitter <a href="https://www.twitter.com/ruqqus">@ruqqus</a>.</p>
