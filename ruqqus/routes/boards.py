@@ -1598,7 +1598,7 @@ def siege_guild(v):
     # Assemble list of mod ids to check
     # skip any user with a perm site-wide ban
     # skip any deleted mod
-    mods = [x for x in guild.mods if not x.is_deleted]
+    mods = [x for x in guild.mods if not x.is_deleted and not (x.is_banned and not x.unban_utc)]
 
     # if no mods, skip straight to success
     if mods:
