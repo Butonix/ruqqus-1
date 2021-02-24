@@ -12,7 +12,9 @@
 <h2>IP Address Info</h2>
 
 <h1>Users</h1>
+<div class="col h-100 {% block customPadding %}custom-gutters{% endblock %}" id="main-content-col">
 {% include "user_listing.html" %}
+</div>
 
 <h2>Posts</h2>
 {% include "submission_listing.html" %}
