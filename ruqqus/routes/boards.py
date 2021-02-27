@@ -1575,13 +1575,6 @@ def siege_guild(v):
         alt.last_siege_utc = now
         g.db.add(v)
 
-    # check guild count
-    if not v.can_join_gms and guild not in v.boards_modded:
-        return render_template("message.html",
-                               v=v,
-                               title=f"Siege against +{guild.name} Failed",
-                               error="You already lead the maximum number of guilds."
-                               ), 403
 
     # Cannot siege +general, +ruqqus, +ruqquspress, +ruqqusdmca
     if not guild.is_siegable:
