@@ -1561,7 +1561,13 @@ def siege_guild(v):
                                title=f"Siege against +{guild.name} Failed",
                                error="You need to wait 30 days between siege attempts."
                                ), 403
-
+    # check guild count
+    if not v.can_join_gms and guild not in v.boards_modded:
+        return render_template("message.html",
+                               v=v,
+                               title=f"Siege against +{guild.name} Failed",
+                               error="You already lead the maximum number of guilds."
+                               ), 403
     # update siege date
     v.last_siege_utc = now
     g.db.add(v)
