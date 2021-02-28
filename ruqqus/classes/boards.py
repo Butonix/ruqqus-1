@@ -87,9 +87,11 @@ class Board(Base, Stndrd, Age_times):
     @property
     def mods(self):
 
-        z = [x.user for x in self.moderators if x.accepted]
+        z = [x for x in self.moderators if x.accepted]
 
         z = sorted(z, key=lambda x: x.id)
+
+        z = [x.user for x in z]
 
         return z
 

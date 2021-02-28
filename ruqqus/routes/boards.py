@@ -1568,6 +1568,7 @@ def siege_guild(v):
                                title=f"Siege against +{guild.name} Failed",
                                error="You already lead the maximum number of guilds."
                                ), 403
+
     # update siege date
     v.last_siege_utc = now
     g.db.add(v)
@@ -1597,8 +1598,14 @@ def siege_guild(v):
     # Assemble list of mod ids to check
     # skip any user with a perm site-wide ban
     # skip any deleted mod
-    mods = [x for x in guild.mods if not x.is_deleted and not (x.is_banned and not x.unban_utc)]
+    mod_ids = [x for x in guild.mods if not x.is_deleted and not (x.is_banned and not x.unban_utc)]
 
+    #check mods above user
+    mods=[]
+    for x in mod_ids:
+        if x.id==v.id:
+            break
+        mods.append(x)
     # if no mods, skip straight to success
     if mods:
 
@@ -1672,8 +1679,14 @@ def siege_guild(v):
 
     #Siege is successful
 
-    # delete and notify mods
+    #look up current mod record if one exists
+    m=guild.has_mod(v)
+
+    #remove current mods. If they are at or below existing mod, leave in place
     for x in guild.moderators:
+
+        if m and x.id>m.id and x.accepted:
+            continue
 
         if x.accepted:
             send_notification(x.user,
@@ -1700,8 +1713,7 @@ def siege_guild(v):
 
         g.db.delete(x)
 
-    # add new mod if user is not already
-    m=guild.has_mod(v)
+
     if not m:
         new_mod = ModRelationship(user_id=v.id,
                                   board_id=guild.id,
@@ -1725,9 +1737,11 @@ def siege_guild(v):
         g.db.add(ma)
 
     elif not m.perm_full:
-        for p in m.__dict__:
-            if p.startswith("perm_"):
-                m.__dict__[p]=True
+        m.perm_full=True
+        m.perm_access=True
+        m.perm_appearance=True
+        m.perm_config=True
+        m.perm_content=True
         g.db.add(p)
         ma=ModAction(
             kind="change_perms",
