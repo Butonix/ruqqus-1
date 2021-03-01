@@ -904,19 +904,32 @@ class User(Base, Stndrd, Age_times):
 
 
 
-    def guild_rep(self, guild):
+    def guild_rep(self, guild, recent=0):
+
+        
 
         posts=db.query(Submission.score_top).filter_by(
             is_banned=False,
-            board_id=guild.id).all()
+            originalboard_id=guild.id)
+
+        if recent:
+            cutoff=int(time.time())-60*60*24*recent
+            posts=posts.filter(Submission.created_utc>cutoff)
+
+        posts=posts.all()
 
         post_rep= sum([x[0] for x in posts])
 
 
-        comments=db.query(Comment.score_top).join(
-            Comment.post).filter(
-            Comment.is_banned==False,
-            Submission.board_id==guild.id).all()
+        comments=db.query(Comment.score_top).filter_by(
+            is_banned==False,
+            original_board_id==guild.id)
+
+        if recent:
+            cutoff=int(time.time())-60*60*24*recent
+            comments=comments.filter(Comment.created_utc>cutoff)
+
+        comments=comments.all()
 
         comment_rep=sum([x[0] for x in comments])
 

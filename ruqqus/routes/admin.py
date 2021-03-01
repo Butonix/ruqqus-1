@@ -763,7 +763,34 @@ def admin_ip_addr(ipaddr, v):
 @admin_level_required(5)
 def admin_test_ip(v):
 
-  return f"IP: {request.remote_addr}; fwd: {request.headers.get('X-Forwarded-For')}"
+    return f"IP: {request.remote_addr}; fwd: {request.headers.get('X-Forwarded-For')}"
+
+
+@app.route("/admin/siege_count")
+@admin_level_required(3)
+def admin_siege_count(v):
+
+    board=get_guild(request.args.get("board"))
+    recent=int(request.args.get("days",0))
+
+    now=int(time.time())
+
+    cutoff=board.stored_subscriber_count//10 + min(recent, (now-board.created_utc)//(60*60*24))
+
+    uids=g.db.query(Subscription.user_id).filter_by(is_active=True, board_id=board.id).subquery()
+
+    can_siege=0
+    for user in g.db.query(User).options(lazyload('*'), joinedload(user.submissions), joinedload(user.comments)).filter(id.in_(uids)).all():
+        if user.guild_rep(board) >= cutoff:
+            can_siege+=1
+
+    return jsonify(
+        {
+        "guild":f"+{board.name}",
+        "requirement":cutoff,
+        "eligible_users":can_siege
+        }
+        )
 
 
 # @app.route('/admin/deploy', methods=["GET"])
