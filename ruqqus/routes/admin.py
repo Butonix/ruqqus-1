@@ -777,7 +777,7 @@ def admin_siege_count(v):
 
     cutoff=board.stored_subscriber_count//10 + min(recent, (now-board.created_utc)//(60*60*24))
 
-    uids=g.db.query(Subscription.user_id).filter_by(is_active=True, board_id=board.id).subquery()
+    uids=g.db.query(Subscription.user_id).filter_by(is_active=True, board_id=board.id).all()
     uids=[x[0] for x in uids]
 
     can_siege=0
