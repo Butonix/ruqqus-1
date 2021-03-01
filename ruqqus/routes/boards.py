@@ -1634,7 +1634,7 @@ def siege_guild(v):
                                         Submission.created_utc > cutoff,
                                         Submission.original_board_id==guild.id,
                                         Submission.is_deleted==False,
-                                        Submission.is_banned=False).first()
+                                        Submission.is_banned==False).first()
         if post:
             return render_template("message.html",
                                    v=v,
