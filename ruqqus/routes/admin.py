@@ -778,11 +778,20 @@ def admin_siege_count(v):
     cutoff=board.stored_subscriber_count//10 + min(recent, (now-board.created_utc)//(60*60*24))
 
     uids=g.db.query(Subscription.user_id).filter_by(is_active=True, board_id=board.id).subquery()
+    uids=[x[0] for x in uids]
 
     can_siege=0
-    for user in g.db.query(User).options(lazyload('*'), joinedload(User.submissions), joinedload(User.comments)).filter(User.id.in_(uids)).all():
-        if user.guild_rep(board) >= cutoff:
+    total=0
+    for uid in uids:
+        posts=sum([x[0] for x in g.db.query(Submission.score_top).options(lazyload('*')).filter(author_id=uid).all()])
+        comments=sum([x[0] for x in g.db.query(Comment.score_top).options(lazyload('*')).filter(author_id=uid).all()])
+        rep=posts+comments
+        if rep>=cutoff:
             can_siege+=1
+        total+=1
+        print(f"{can_siege}/{total}")
+
+
 
     return jsonify(
         {
