@@ -553,3 +553,9 @@ class Board(Base, Stndrd, Age_times):
         return mod.__dict__[f"perm_{perm}"]
 
 
+    @property
+    def siege_rep_requirement(self):
+
+        now=int(time.time())
+
+        return self.stored_subscriber_count//10 + min(180, (now-self.created_utc)//(60*60*24))
