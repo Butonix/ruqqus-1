@@ -1598,14 +1598,15 @@ def siege_guild(v):
 
 
     # check user activity
-    karma  = sum([x.score_top for x in g.db.query(Submission).options(lazyload('*')).filter_by(user_id=v.id, original_board_id=guild.id).all()])
-    karma += sum([x.score_top for x in g.db.query(Comment   ).options(lazyload('*')).filter_by(user_id=v.id, original_board_id=guild.id).all()])
+    cutoff=int(time.time())-60*60*24*180
+    karma  = sum([x.score_top for x in g.db.query(Submission).options(lazyload('*')).filter_by(user_id=v.id, original_board_id=guild.id).filter(Submission.created_utc>cutoff).all()])
+    karma += sum([x.score_top for x in g.db.query(   Comment).options(lazyload('*')).filter_by(user_id=v.id, original_board_id=guild.id).filter(   Comment.created_utc>cutoff).all()])
     if guild not in v.boards_modded and karma < guild.siege_rep_requirement:
         return render_template(
             "message.html",
             v=v,
             title=f"Siege against +{guild.name} Failed",
-            error=f"You do not have enough Reputation in +{guild.name} to siege it. +{guild.name} currently requires {guild.siege_rep_requirement} Rep, and you have {karma} Rep. You may try again in 7 days."
+            error=f"You do not have enough recent Reputation in +{guild.name} to siege it. +{guild.name} currently requires {guild.siege_rep_requirement} Rep within the last 180 days, and you have {karma} Rep in +{guild.name} in the last 180 days. You may try again in 7 days."
             ), 403
 
     # Assemble list of mod ids to check
@@ -1629,38 +1630,47 @@ def siege_guild(v):
 
         # check submissions
 
-        if g.db.query(Submission).filter(Submission.author_id.in_(ids), 
+        post= g.db.query(Submission).filter(Submission.author_id.in_(ids), 
                                         Submission.created_utc > cutoff,
                                         Submission.original_board_id==guild.id,
                                         Submission.is_deleted==False,
-                                        Submission.is_banned=False).first():
+                                        Submission.is_banned=False).first()
+        if post:
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
-                                   error=f"Your siege failed. One of the guildmasters has post or comment activity in +{guild.name} within the last 60 days. You may try again in 7 days."
+                                   error=f"Your siege failed. One of the guildmasters created a post in +{guild.name} within the last 60 days. You may try again in 7 days.",
+                                   link=post.permalink,
+                                   link_text="View post"
                                    ), 403
 
         # check comments
-        if g.db.query(Comment).filter(Comment.author_id.in_(ids),
+        comment= g.db.query(Comment).filter(Comment.author_id.in_(ids),
                                       Comment.created_utc > cutoff,
                                       Comment.original_board_id==guild.id,
                                       Comment.is_deleted==False,
-                                      Comment.is_banned==False).first():
+                                      Comment.is_banned==False).first()
+        if comment:
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
-                                   error=f"Your siege failed. One of the guildmasters has post or comment activity in +{guild.name} within the last 60 days. You may try again in 7 days."
+                                   error=f"Your siege failed. One of the guildmasters created a comment in +{guild.name} within the last 60 days. You may try again in 7 days.",
+                                   link=comment.permalink,
+                                   link_text="View comment"
                                    ), 403
 
         # check mod actions
-        if g.db.query(ModAction).filter(
+        ma = g.db.query(ModAction).filter(
                 ModAction.user_id.in_(ids), 
                 ModAction.created_utc > cutoff
-                ModAction.board_id==guild.id).first():
+                ModAction.board_id==guild.id).first()
+        if ma:
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
-                                   error=f"Your siege failed. One of the guildmasters has performed a mod action in +{guild.name} within the last 60 days. You may try again in 7 days."
+                                   error=f"Your siege failed. One of the guildmasters has performed a mod action in +{guild.name} within the last 60 days. You may try again in 7 days.",
+                                   link=ma.permalink,
+                                   link_text="View mod log record"
                                    ), 403
 
     #Siege is successful
