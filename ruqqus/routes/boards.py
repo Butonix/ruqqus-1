@@ -1598,10 +1598,7 @@ def siege_guild(v):
 
 
     # check user activity
-    cutoff=int(time.time())-60*60*24*180
-    karma  = sum([x.score_top for x in g.db.query(Submission).options(lazyload('*')).filter_by(user_id=v.id, original_board_id=guild.id).filter(Submission.created_utc>cutoff).all()])
-    karma += sum([x.score_top for x in g.db.query(   Comment).options(lazyload('*')).filter_by(user_id=v.id, original_board_id=guild.id).filter(   Comment.created_utc>cutoff).all()])
-    if guild not in v.boards_modded and karma < guild.siege_rep_requirement:
+    if guild not in v.boards_modded and v.guild_rep(guild, recent=180) < guild.siege_rep_requirement:
         return render_template(
             "message.html",
             v=v,
