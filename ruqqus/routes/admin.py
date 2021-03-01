@@ -783,8 +783,8 @@ def admin_siege_count(v):
     can_siege=0
     total=0
     for uid in uids:
-        posts=sum([x[0] for x in g.db.query(Submission.score_top).options(lazyload('*')).filter_by(author_id=uid).all()])
-        comments=sum([x[0] for x in g.db.query(Comment.score_top).options(lazyload('*')).filter_by(author_id=uid).all()])
+        posts=sum([x[0] for x in g.db.query(Submission.score_top).options(lazyload('*')).filter_by(author_id=uid).filter(Submission.created_utc>now-60*60*24*recent).all()])
+        comments=sum([x[0] for x in g.db.query(Comment.score_top).options(lazyload('*')).filter_by(author_id=uid).filter(   Comment.created_utc>now-60*60*24*recent).all()])
         rep=posts+comments
         if rep>=cutoff:
             can_siege+=1
