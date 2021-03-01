@@ -1662,7 +1662,7 @@ def siege_guild(v):
         # check mod actions
         ma = g.db.query(ModAction).filter(
                 ModAction.user_id.in_(ids), 
-                ModAction.created_utc > cutoff
+                ModAction.created_utc > cutoff,
                 ModAction.board_id==guild.id).first()
         if ma:
             return render_template("message.html",
