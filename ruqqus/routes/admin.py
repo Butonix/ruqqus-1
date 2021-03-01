@@ -780,7 +780,7 @@ def admin_siege_count(v):
     uids=g.db.query(Subscription.user_id).filter_by(is_active=True, board_id=board.id).subquery()
 
     can_siege=0
-    for user in g.db.query(User).options(lazyload('*'), joinedload(User.submissions), joinedload(User.comments)).filter(id.in_(uids)).all():
+    for user in g.db.query(User).options(lazyload('*'), joinedload(User.submissions), joinedload(User.comments)).filter(User.id.in_(uids)).all():
         if user.guild_rep(board) >= cutoff:
             can_siege+=1
 
