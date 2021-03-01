@@ -677,7 +677,7 @@ class User(Base, Stndrd, Age_times):
         now = int(time.time())
 
         return now - max(self.last_siege_utc,
-                         self.created_utc) > 60 * 60 * 24 * 30
+                         self.created_utc) > 60 * 60 * 24 * 7
 
     @property
     def can_submit_image(self):
