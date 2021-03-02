@@ -1603,7 +1603,7 @@ def siege_guild(v):
             "message.html",
             v=v,
             title=f"Siege against +{guild.name} Failed",
-            error=f"You do not have enough recent Reputation in +{guild.name} to siege it. +{guild.name} currently requires {guild.siege_rep_requirement} Rep within the last 180 days, and you have {karma} Rep in +{guild.name} in the last 180 days. You may try again in 7 days."
+            error=f"You do not have enough recent Reputation in +{guild.name} to siege it. +{guild.name} currently requires {guild.siege_rep_requirement} Rep within the last 180 days, and you have {v.guild_rep(guild, recent=180)} Rep in +{guild.name} in the last 180 days. You may try again in 7 days."
             ), 403
 
     # Assemble list of mod ids to check
