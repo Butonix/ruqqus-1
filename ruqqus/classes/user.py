@@ -908,7 +908,7 @@ class User(Base, Stndrd, Age_times):
 
         
 
-        posts=db.query(Submission.score_top).filter_by(
+        posts=g.db.query(Submission.score_top).filter_by(
             is_banned=False,
             originalboard_id=guild.id)
 
