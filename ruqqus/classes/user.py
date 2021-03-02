@@ -922,8 +922,8 @@ class User(Base, Stndrd, Age_times):
 
 
         comments=g.db.query(Comment.score_top).filter_by(
-            is_banned==False,
-            original_board_id==guild.id)
+            is_banned=False,
+            original_board_id=guild.id)
 
         if recent:
             cutoff=int(time.time())-60*60*24*recent
