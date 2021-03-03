@@ -72,7 +72,7 @@ class ModAction(Base, Stndrd, Age_times):
     def note(self):
 
         if self.target_post:
-            return f'for <a href="{self.target_post.permalink}">post</a>"'
+            return f'for <a href="{self.target_post.permalink}">post</a>'
             return f'for <a href="{self.target_comment.permalink}">comment</a>'
         else:
             return self._note
