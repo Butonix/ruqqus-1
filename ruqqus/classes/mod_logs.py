@@ -51,18 +51,12 @@ class ModAction(Base, Stndrd, Age_times):
     @property
     def note(self):
 
-        print("called note")
-
-        if self.action_type=="exile_user":
-            print("exile")
+        if self.kind=="exile_user":
             if self.target_post:
-                print("post")
                 return f'for <a href="{self.target_post.permalink}">post</a>'
             elif self.target_comment:
-                print("comment")
                 return f'for <a href="{self.target_comment.permalink}">comment</a>'
         else:
-            print('not exile')
             return self._note or ""
 
     @property
