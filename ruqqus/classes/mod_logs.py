@@ -59,6 +59,10 @@ class ModAction(Base, Stndrd, Age_times):
         else:
             return self._note or ""
 
+    @note.setter
+    def note(self, x):
+        self._note=x
+
     @property
     def string(self):
 
