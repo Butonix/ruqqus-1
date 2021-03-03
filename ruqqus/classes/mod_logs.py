@@ -47,11 +47,13 @@ class ModAction(Base, Stndrd, Age_times):
 
     @property
     def str(self):
-        output =  self.actiontype["str"].format(self=self)
+        i =  self.actiontype["str"].format(self=self)
+
         if self.note:
-            output +=f" <i>({self.note})</i>"
-        else:
-            return output
+            output = i + f" <i>({self.note})</i>"
+
+        print(i, output)
+        return output
 
     @property
     def target_link(self):
