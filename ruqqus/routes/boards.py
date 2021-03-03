@@ -388,8 +388,6 @@ def mod_ban_bid_user(bid, board, v):
     item = request.values.get("thing")
     if item:
         item=get_from_fullname(item)
-    else:
-        return jsonify({"error":"You need to specify an item in your guild."}), 400 
 
     if item.original_board_id != board.id:
         return jsonify({"error":f"That was originally created in +{item.original_board.name}, not +{board.name}"}), 400
