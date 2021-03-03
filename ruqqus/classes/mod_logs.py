@@ -36,6 +36,9 @@ class ModAction(Base, Stndrd, Age_times):
         if "created_utc" not in kwargs:
             kwargs["created_utc"] = int(time.time())
 
+        if "note" in kwargs:
+            kwargs["_note"]=kwargs["note"]
+
         super().__init__(*args, **kwargs)
 
     def __repr__(self):
@@ -44,7 +47,7 @@ class ModAction(Base, Stndrd, Age_times):
     @property
     def actiontype(self):
         return ACTIONTYPES[self.kind]
-        
+
     @property
     def note(self):
 
@@ -56,19 +59,11 @@ class ModAction(Base, Stndrd, Age_times):
         else:
             return self._note or ""
 
-    @note.setter
-    def note(self, x):
-        self._note=x
-        g.db.add(self)
-
     @property
     def string(self):
 
         print('called')
         i =  self.actiontype["str"].format(self=self)
-
-        print(i)
-        print(self.note)
 
         if self.note:
             output = i + f" <i>({self.note})</i>"
