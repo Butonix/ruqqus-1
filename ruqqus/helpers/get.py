@@ -500,7 +500,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
         if not q and not graceful:
             abort(404)
 
-        x=q
+        x=q[0]
         x._is_exiled_for=q[1]
 
 
