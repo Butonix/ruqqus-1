@@ -51,10 +51,12 @@ class ModAction(Base, Stndrd, Age_times):
         print('called')
         i =  self.actiontype["str"].format(self=self)
 
+        print(i)
+
         if self.note:
             output = i + f" <i>({self.note})</i>"
 
-        print(i, output)
+        print(output)
         return output
 
     @property
