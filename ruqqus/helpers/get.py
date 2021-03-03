@@ -520,13 +520,13 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
     nSession = nSession or kwargs.get('session') or g.db
 
-    # exile=nSession.query(ModAction
-    #     ).options(
-    #     lazyload('*')
-    #     ).filter(
-    #     ModAction.kind=="exile_user",
-    #     ModAction.target_comment_id.in_(cids)
-    #     ).subquery()
+    exile=nSession.query(ModAction
+        ).options(
+        lazyload('*')
+        ).filter(
+        ModAction.kind=="exile_user",
+        ModAction.target_comment_id.in_(cids)
+        ).subquery()
 
     if v:
         vt = nSession.query(CommentVote).filter(
@@ -576,10 +576,10 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             mod,
             mod.c.board_id==Submission.board_id,
             isouter=True
-            # ).join(
-            # exile,
-            # and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-            # isouter=True
+            ).join(
+            exile,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+            isouter=True
             ).filter(
             Comment.id.in_(cids)
             )
@@ -609,17 +609,17 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             joinedload(Comment.post).joinedload(Submission.board)
         ).filter(
             Comment.id.in_(cids)
-        # ).join(
-        #     exile,
-        #     and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-        #     isouter=True
+        ).join(
+            exile,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+            isouter=True
         ).order_by(None).all()
 
         output=[x for x in query]
 
-        # output=[x[0] for x in comments]
-        # for i in range(len(output)):
-        #     output[i]._is_exiled_for=comments[i][1]
+        output=[x[0] for x in comments]
+        for i in range(len(output)):
+            output[i]._is_exiled_for=comments[i][1]
 
 
     output = sorted(output, key=lambda x: cids.index(x.id))
