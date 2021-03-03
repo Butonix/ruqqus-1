@@ -51,6 +51,8 @@ class ModAction(Base, Stndrd, Age_times):
     @property
     def note(self):
 
+        print("called note")
+
         if self.action_type=="exile_user":
             if self.target_post:
                 return f'for <a href="{self.target_post.permalink}">post</a>'
@@ -62,7 +64,6 @@ class ModAction(Base, Stndrd, Age_times):
     @property
     def string(self):
 
-        print('called')
         i =  self.actiontype["str"].format(self=self)
 
         if self.note:
