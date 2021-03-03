@@ -74,7 +74,7 @@ class ModAction(Base, Stndrd, Age_times):
         if self.action_type=="exile_user":
             if self.target_post:
                 return f'for <a href="{self.target_post.permalink}">post</a>'
-            elif self.target_comment
+            elif self.target_comment:
                 return f'for <a href="{self.target_comment.permalink}">comment</a>'
         else:
             return self._note
