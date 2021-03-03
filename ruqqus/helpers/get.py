@@ -285,12 +285,12 @@ def get_post_with_comments(pid, sort_type="top", v=None):
 
     post = get_post(pid, v=v)
 
-    # exile=g.db.query(ModAction
-    #     ).options(
-    #     lazyload('*')
-    #     ).filter_by(
-    #     kind="exile_user"
-    #     ).subquery()
+    exile=g.db.query(ModAction
+        ).options(
+        lazyload('*')
+        ).filter_by(
+        kind="exile_user"
+        ).subquery()
 
     if v:
         votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -304,7 +304,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             votes.c.vote_type,
             blocking.c.id,
             blocked.c.id,
-            # aliased(ModAction, alias=exile)
+            aliased(ModAction, alias=exile)
         ).options(
             joinedload(Comment.author).joinedload(User.title)
         )
@@ -327,10 +327,10 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             blocked,
             blocked.c.user_id == Comment.author_id,
             isouter=True
-        # ).join(
-        #     exile,
-        #     and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-        #     isouter=True
+        ).join(
+            exile,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+            isouter=True
         )
 
         if sort_type == "hot":
@@ -354,23 +354,23 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             comment._is_blocking = c[2] or 0
             comment._is_blocked = c[3] or 0
             comment._is_guildmaster=post._is_guildmaster
-            # comment._is_exiled_for=c[4]
+            comment._is_exiled_for=c[4]
             output.append(comment)
         post._preloaded_comments = output
 
     else:
         comms = g.db.query(
             Comment,
-            # aliased(ModAction, alias=exile)
+            aliased(ModAction, alias=exile)
         ).options(
             joinedload(Comment.author).joinedload(User.title)
         ).filter(
             Comment.parent_submission == post.id,
             Comment.level <= 6
-        # ).join(
-        #     exile,
-        #     and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-        #     isouter=True
+        ).join(
+            exile,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+            isouter=True
         )
 
         if sort_type == "hot":
@@ -387,13 +387,13 @@ def get_post_with_comments(pid, sort_type="top", v=None):
         else:
             abort(422)
 
-        # output = []
-        # for c in comments:
-        #     comment=c[0]
-        #     comment._is_exiled_for=c[0]
-        #     output.append(comment)
+        output = []
+        for c in comments:
+            comment=c[0]
+            comment._is_exiled_for=c[0]
+            output.append(comment)
 
-        output=[x for x in comments]
+        # output=[x for x in comments]
 
 
         post._preloaded_comments = output
