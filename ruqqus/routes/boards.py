@@ -389,10 +389,10 @@ def mod_ban_bid_user(bid, board, v):
     if item:
         item=get_from_fullname(item)
     else:
-        return jsonify("You need to specify an item in your guild."), 400 
+        return jsonify({"error":"You need to specify an item in your guild."}), 400 
 
     if item.original_board_id != board.id:
-        return jsonify(f"That was originally created in +{item.original_board.name}, not +{board.name}")
+        return jsonify({"error":f"That was originally created in +{item.original_board.name}, not +{board.name}"})
 
     if not user:
         return jsonify({"error": "That user doesn't exist."}), 404
