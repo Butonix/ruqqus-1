@@ -19,7 +19,7 @@ class ModAction(Base, Stndrd, Age_times):
     target_comment_id = Column(Integer, ForeignKey("comments.id"), default=0)
     #targetLodge = Column(Integer, ForeignKey("lodges.id"), default=0)
     #targetRule = Column(Boolean, ForeignKey("rules.id"), default=False)
-    note=Column(String(256), default=None)
+    _note=Column(String(256), default=None)
     created_utc = Column(Integer, default=0)
 
 
@@ -75,7 +75,11 @@ class ModAction(Base, Stndrd, Age_times):
             return f'for <a href="{self.target_post.permalink}">post</a>"'
             return f'for <a href="{self.target_comment.permalink}">comment</a>'
         else:
-            return self.__dict__['note']
+            return self._note
+
+    @note.setter
+    def note(self, x):
+        self._note=x
 
     @property
     def icon(self):
