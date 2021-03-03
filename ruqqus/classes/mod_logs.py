@@ -66,10 +66,10 @@ class ModAction(Base, Stndrd, Age_times):
     @property
     def string(self):
 
-        i =  self.actiontype["str"].format(self=self)
+        output =  self.actiontype["str"].format(self=self)
 
         if self.note:
-            output = i + f" <i>({self.note})</i>"
+            output += f" <i>({self.note})</i>"
 
         print(output)
         return output
