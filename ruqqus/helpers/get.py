@@ -603,7 +603,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
     else:
         query = nSession.query(
             Comment,
-            # aliased(ModAction, alias=exile)
+            aliased(ModAction, alias=exile)
         ).options(
             joinedload(Comment.author).joinedload(User.title),
             joinedload(Comment.post).joinedload(Submission.board)
