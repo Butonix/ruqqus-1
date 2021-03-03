@@ -612,7 +612,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             isouter=True
         ).order_by(None).all()
 
-        output=[x for x in query]
+        comments=[x for x in query]
 
         output=[x[0] for x in comments]
         for i in range(len(output)):
