@@ -410,32 +410,32 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 
     nSession = nSession or kwargs.get('session') or g.db
 
-    exile = nSession.query(ModAction
-         ).options(
-         lazyload('*')
-         ).filter_by(
-         kind="exile_user"
-         ).subquery()
+    # exile=g.db.query(ModAction
+    #     ).options(
+    #     lazyload('*')
+    #     ).filter_by(
+    #     kind="exile_user"
+    #     ).subquery()
 
     if v:
         blocking = v.blocking.subquery()
         blocked = v.blocked.subquery()
-        vt = nSession.query(CommentVote).filter(
+        vt = g.db.query(CommentVote).filter(
             CommentVote.user_id == v.id,
             CommentVote.comment_id == i).subquery()
 
-        mod=nSession.query(ModRelationship
+        mod=g.db.query(ModRelationship
             ).filter_by(
             user_id=v.id,
             accepted=True
             ).subquery()
 
 
-        items = nSession.query(
+        items = g.db.query(
             Comment, 
             vt.c.vote_type,
             aliased(ModRelationship, alias=mod),
-            aliased(ModAction, alias=exile)
+            # aliased(ModAction, alias=exile)
         ).options(
             joinedload(Comment.author).joinedload(User.title)
         )
@@ -456,10 +456,10 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
             mod,
             mod.c.board_id==Submission.board_id,
             isouter=True
-        ).join(
-            exile,
-            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-            isouter=True
+        # ).join(
+        #     exile,
+        #     and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+        #     isouter=True
         ).first()
 
         if not items and not graceful:
@@ -468,7 +468,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
         x = items[0]
         x._voted = items[1] or 0
         x._is_guildmaster=items[2] or 0
-        x._is_exiled_for=items[3] or 0
+        # x._is_exiled_for=items[3] or 0
 
         block = nSession.query(UserBlock).filter(
             or_(
@@ -486,22 +486,22 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
         x._is_blocked = block and block.target_id == v.id
 
     else:
-        q = nSession.query(
+        q = g.db.query(
             Comment,
-            aliased(ModAction, alias=exile)
+            # aliased(ModAction, alias=exile)
         ).options(
             joinedload(Comment.author).joinedload(User.title)
-        ).join(
-            exile,
-            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-            isouter=True
+        # ).join(
+        #     exile,
+        #     and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+        #     isouter=True
         ).filter(Comment.id == i).first()
 
         if not q and not graceful:
             abort(404)
 
         x=q
-        x._is_exiled_for=q[1]
+        # x._is_exiled_for=q[1]
 
 
     return x
