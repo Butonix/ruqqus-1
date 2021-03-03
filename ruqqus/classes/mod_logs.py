@@ -44,6 +44,22 @@ class ModAction(Base, Stndrd, Age_times):
     @property
     def actiontype(self):
         return ACTIONTYPES[self.kind]
+        
+    @property
+    def note(self):
+
+        if self.action_type=="exile_user":
+            if self.target_post:
+                return f'for <a href="{self.target_post.permalink}">post</a>'
+            elif self.target_comment:
+                return f'for <a href="{self.target_comment.permalink}">comment</a>'
+        else:
+            return self._note or ""
+
+    @note.setter
+    def note(self, x):
+        self._note=x
+        g.db.add(self)
 
     @property
     def string(self):
@@ -75,21 +91,7 @@ class ModAction(Base, Stndrd, Age_times):
         else:
             return ''
 
-    @property
-    def note(self):
 
-        if self.action_type=="exile_user":
-            if self.target_post:
-                return f'for <a href="{self.target_post.permalink}">post</a>'
-            elif self.target_comment:
-                return f'for <a href="{self.target_comment.permalink}">comment</a>'
-        else:
-            return self._note or ""
-
-    @note.setter
-    def note(self, x):
-        self._note=x
-        g.db.add(self)
 
     @property
     def icon(self):
