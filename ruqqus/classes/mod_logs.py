@@ -71,7 +71,6 @@ class ModAction(Base, Stndrd, Age_times):
         if self.note:
             output += f" <i>({self.note})</i>"
 
-        print(output)
         return output
 
     @property
