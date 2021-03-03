@@ -67,7 +67,16 @@ class ModAction(Base, Stndrd, Age_times):
 
         else:
             return ''
-    
+
+    @property
+    def note(self):
+
+        if self.target_post:
+            return f"for <a href="{self.target_post.permalink}">post</a>"
+        elif self.target_comment:
+            return f"for <a href="{self.target_comment.permalink}">comment</a>"
+        else:
+            return self.__dict__['note']
 
     @property
     def icon(self):

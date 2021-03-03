@@ -388,6 +388,11 @@ def mod_ban_bid_user(bid, board, v):
     item = request.values.get("thing")
     if item:
         item=get_from_fullname(item)
+    else:
+
+
+    if item.original_board_id != board.id:
+        return jsonify(f"That was originally created in +{item.original_board.name}, not +{board.name}")
 
     if not user:
         return jsonify({"error": "That user doesn't exist."}), 404
@@ -410,21 +415,11 @@ def mod_ban_bid_user(bid, board, v):
 
     if item:
         if isinstance(item, Submission):
-            note=f'for <a href="{item.permalink}">post</a>'
             target_submission_id=item.id
             target_comment_id=None
         elif isinstance(item, Comment):
-            note=f'for <a href="{item.permalink}">comment</a>'
             target_submission_id=None
             target_comment_id=item.id
-        else:
-            note=None
-            target_submission_id=None
-            target_comment_id=None
-    else:
-        note=None
-        target_submission_id=None
-        target_comment_id=None
 
 
     # check for an existing deactivated ban
