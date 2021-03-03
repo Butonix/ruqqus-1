@@ -510,9 +510,6 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 def get_comments(cids, v=None, nSession=None, sort_type="new",
                  load_parent=False, **kwargs):
 
-    #output= [get_comment(cid, v=v, graceful=True, nSession=nSession) for cid in cids]
-    # return [i for i in output if i]
-
     if not cids:
         return []
 
