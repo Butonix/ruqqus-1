@@ -46,7 +46,7 @@ class ModAction(Base, Stndrd, Age_times):
         return ACTIONTYPES[self.kind]
 
     @property
-    def str(self):
+    def string(self):
 
         print('called')
         i =  self.actiontype["str"].format(self=self)
@@ -86,6 +86,7 @@ class ModAction(Base, Stndrd, Age_times):
     @note.setter
     def note(self, x):
         self._note=x
+        g.db.add(self)
 
     @property
     def icon(self):
