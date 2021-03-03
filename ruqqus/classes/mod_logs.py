@@ -50,8 +50,8 @@ class ModAction(Base, Stndrd, Age_times):
         output =  self.actiontype["str"].format(self=self)
         if self.note:
             output +=f" <i>({self.note})</i>"
-
-        return output
+        else:
+            return output
 
     @property
     def target_link(self):
@@ -77,7 +77,7 @@ class ModAction(Base, Stndrd, Age_times):
             elif self.target_comment:
                 return f'for <a href="{self.target_comment.permalink}">comment</a>'
         else:
-            return self._note
+            return self._note or ""
 
     @note.setter
     def note(self, x):
