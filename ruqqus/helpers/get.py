@@ -390,7 +390,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
         output = []
         for c in comments:
             comment=c[0]
-            comment._is_exiled_for=c[0]
+            comment._is_exiled_for=c[1]
             output.append(comment)
 
         # output=[x for x in comments]
