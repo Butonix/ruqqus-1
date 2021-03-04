@@ -418,6 +418,9 @@ def mod_ban_bid_user(bid, board, v):
         elif isinstance(item, Comment):
             target_submission_id=None
             target_comment_id=item.id
+    else:
+        target_submission_id=None
+        target_comment_id=None
 
 
     # check for an existing deactivated ban
