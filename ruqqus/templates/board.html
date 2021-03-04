@@ -191,11 +191,11 @@
         </div>
         <div>
           <a href="{{ b.permalink }}">
-          <span class="h6 text-black mb-0">+{{ b.name }}
-            {% if v and v.has_blocked_guild(b) %}
-            <i class="fas fa-eye-slash text-danger align-middle ml-2" data-toggle="tooltip" data-placement="bottom" data-html="true" title="You have hidden this guild from /all. Visit your settings or click the <i class='far fa-ellipsis-h text-small'></i> icon to adjust its visibility."></i>
-            {% endif %}
-          </span>
+            <span class="h6 text-black mb-0">+{{ b.name }}
+              {% if v and v.has_blocked_guild(b) %}
+              <i class="fas fa-eye-slash text-danger align-middle ml-2" data-toggle="tooltip" data-placement="bottom" data-html="true" title="You have hidden this guild from /all. Visit your settings or click the <i class='far fa-ellipsis-h text-small'></i> icon to adjust its visibility."></i>
+              {% endif %}
+            </span>
             {% if b.over_18 %}
             <span class="badge badge-danger text-small ml-2" data-toggle="tooltip" data-placement="bottom" title="This guild contains adult content">nsfw</span>
             {% endif %}
@@ -275,7 +275,14 @@
 
       {% if v %}
       <div id="button-sub" {% if b.has_subscriber(v) %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=toggleSub)">Join guild</a></div>
-      <div id="button-unsub" {% if not b.has_subscriber(v) %}class="d-none"{% endif %}><a class="btn btn-secondary" href="javascript:void(0)" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">Leave</a></div>
+      <div class="btn-group {% if not b.has_subscriber(v) %}d-none{% endif %}" role="group" aria-label="Basic example">
+        <div id="button-unsub">
+          <a class="btn btn-secondary" href="javascript:void(0)" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">Leave</a>
+        </div>
+        <div class="btn btn-secondary" id="bell-notif">
+          <i id="bell-notif-icon" class="fas fa-bell"></i>
+        </div>
+      </div>
       {% elif not v %}
       <a class="btn btn-primary" href="/signup">Join guild</a>
       {% endif %}
@@ -305,7 +312,7 @@
             {% if b.over_18 %}
             <span class="badge badge-danger text-small align-top">nsfw</span>
             {% endif %}
-          {% if b.is_nsfl %}
+            {% if b.is_nsfl %}
             <span class="badge badge-black text-small align-top">nsfl</span>
             {% endif %}
             {% if b.is_private %}
