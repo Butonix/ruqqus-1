@@ -454,7 +454,6 @@ def mod_ban_bid_user(bid, board, v):
         user_id=v.id,
         target_user_id=user.id,
         board_id=board.id,
-        note=note,
         target_submission_id=target_submission_id,
         target_comment_id=target_comment_id
         )
