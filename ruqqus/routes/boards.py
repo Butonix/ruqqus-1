@@ -389,8 +389,8 @@ def mod_ban_bid_user(bid, board, v):
     if item:
         item=get_from_fullname(item)
 
-    if item.original_board_id != board.id:
-        return jsonify({"error":f"That was originally created in +{item.original_board.name}, not +{board.name}"}), 400
+        if item.original_board_id != board.id:
+            return jsonify({"error":f"That was originally created in +{item.original_board.name}, not +{board.name}"}), 400
 
     if not user:
         return jsonify({"error": "That user doesn't exist."}), 404
@@ -456,6 +456,8 @@ def mod_ban_bid_user(bid, board, v):
         target_comment_id=target_comment_id
         )
     g.db.add(ma)
+
+    g.db.commit()
 
 
     if request.args.get("toast"):
