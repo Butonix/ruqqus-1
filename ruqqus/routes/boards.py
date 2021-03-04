@@ -1595,7 +1595,7 @@ def siege_guild(v):
 
 
     # check user activity
-    if guild not in v.boards_modded and v.guild_rep(guild, recent=180) < guild.siege_rep_requirement:
+    if guild not in v.boards_modded and v.guild_rep(guild, recent=180) < guild.siege_rep_requirement and not guild.has_contributor(v):
         return render_template(
             "message.html",
             v=v,
