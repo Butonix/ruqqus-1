@@ -99,7 +99,7 @@
     dswitch = document.getElementById("dark-switch");
 
     if (css.href.endsWith("{{ b.css_url }}?v=2.31.0")) {
-      
+
       post("/settings/dark_mode/1",
         callback=function(){
           css.href="{{ b.css_dark_url }}?v=2.31.0";
@@ -275,13 +275,11 @@
 
       {% if v %}
       <div id="button-sub" {% if b.has_subscriber(v) %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=toggleSub)">Join guild</a></div>
-      <div class="btn-group {% if not b.has_subscriber(v) %}d-none{% endif %}" role="group" aria-label="Basic example">
-        <div id="button-unsub">
-          <a class="btn btn-secondary" href="javascript:void(0)" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">Leave</a>
-        </div>
-        <div class="btn btn-secondary" id="bell-notif">
-          <i id="bell-notif-icon" class="fas fa-bell"></i>
-        </div>
+      <div id="button-unsub" class="btn-group {% if not b.has_subscriber(v) %}d-none{% endif %}" role="group" aria-label="Leave guild desktop">
+        <button class="btn btn-secondary" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">Leave</button>
+        <button class="btn btn-secondary bell-button">
+          <i class="fas fa-bell bell-icon"></i>
+        </button>
       </div>
       {% elif not v %}
       <a class="btn btn-primary" href="/signup">Join guild</a>
@@ -328,7 +326,14 @@
         {% endif %}
         {% if v %}
         <div id="button-sub-mobile" {% if is_subscribed %}class="d-none"{% endif %}><a class="btn btn-primary btn-block" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=toggleSub)">Join guild</a></div>
-        <div id="button-unsub-mobile" {% if not is_subscribed %}class="d-none"{% endif %}><a class="btn btn-secondary btn-block" href="javascript:void(0)" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">Leave</a></div>
+        <div id="button-unsub-mobile" class="btn btn-group {% if not is_subscribed %}d-none{% endif %}" role="group" aria-label="Leave guild mobile">
+          <button class="btn btn-secondary btn-block" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">
+            Leave
+          </button>
+          <button class="btn btn-secondary bell-button">
+            <i class="fas fa-bell bell-icon"></i>
+          </button>
+        </div>
         {% elif not v %}
         <a class="btn btn-primary btn-block" href="/signup">Join guild</a>
         {% endif %}
