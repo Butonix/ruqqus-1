@@ -192,7 +192,8 @@ def get_post_title(v):
     if not url:
         return abort(400)
 
-    headers = {"User-Agent": app.config["UserAgent"]}
+    #mimic chrome browser agent
+    headers = {"User-Agent": f"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
     try:
         x = requests.get(url, headers=headers)
     except BaseException:
