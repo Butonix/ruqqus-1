@@ -19,7 +19,7 @@ class ModAction(Base, Stndrd, Age_times):
     target_comment_id = Column(Integer, ForeignKey("comments.id"), default=0)
     #targetLodge = Column(Integer, ForeignKey("lodges.id"), default=0)
     #targetRule = Column(Boolean, ForeignKey("rules.id"), default=False)
-    note=Column(String(256), default=None)
+    _note=Column(String(256), default=None)
     created_utc = Column(Integer, default=0)
 
 
@@ -36,6 +36,9 @@ class ModAction(Base, Stndrd, Age_times):
         if "created_utc" not in kwargs:
             kwargs["created_utc"] = int(time.time())
 
+        if "note" in kwargs:
+            kwargs["_note"]=kwargs["note"]
+
         super().__init__(*args, **kwargs)
 
     def __repr__(self):
@@ -46,10 +49,27 @@ class ModAction(Base, Stndrd, Age_times):
         return ACTIONTYPES[self.kind]
 
     @property
-    def str(self):
+    def note(self):
+
+        if self.kind=="exile_user":
+            if self.target_post:
+                return f'for <a href="{self.target_post.permalink}">post</a>'
+            elif self.target_comment:
+                return f'for <a href="{self.target_comment.permalink}">comment</a>'
+        else:
+            return self._note or ""
+
+    @note.setter
+    def note(self, x):
+        self._note=x
+
+    @property
+    def string(self):
+
         output =  self.actiontype["str"].format(self=self)
+
         if self.note:
-            output +=f" <i>({self.note})</i>"
+            output += f" <i>({self.note})</i>"
 
         return output
 
@@ -67,7 +87,8 @@ class ModAction(Base, Stndrd, Age_times):
 
         else:
             return ''
-    
+
+
 
     @property
     def icon(self):

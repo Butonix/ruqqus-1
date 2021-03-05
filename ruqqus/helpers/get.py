@@ -285,12 +285,12 @@ def get_post_with_comments(pid, sort_type="top", v=None):
 
     post = get_post(pid, v=v)
 
-    # exile=g.db.query(ModAction
-    #     ).options(
-    #     lazyload('*')
-    #     ).filter_by(
-    #     kind="exile_user"
-    #     ).subquery()
+    exile=g.db.query(ModAction
+        ).options(
+        lazyload('*')
+        ).filter_by(
+        kind="exile_user"
+        ).subquery()
 
     if v:
         votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -304,7 +304,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             votes.c.vote_type,
             blocking.c.id,
             blocked.c.id,
-            # aliased(ModAction, alias=exile)
+            aliased(ModAction, alias=exile)
         ).options(
             joinedload(Comment.author).joinedload(User.title)
         )
@@ -327,10 +327,10 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             blocked,
             blocked.c.user_id == Comment.author_id,
             isouter=True
-        # ).join(
-        #     exile,
-        #     and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-        #     isouter=True
+        ).join(
+            exile,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+            isouter=True
         )
 
         if sort_type == "hot":
@@ -354,23 +354,23 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             comment._is_blocking = c[2] or 0
             comment._is_blocked = c[3] or 0
             comment._is_guildmaster=post._is_guildmaster
-            # comment._is_exiled_for=c[4]
+            comment._is_exiled_for=c[4]
             output.append(comment)
         post._preloaded_comments = output
 
     else:
         comms = g.db.query(
             Comment,
-            # aliased(ModAction, alias=exile)
+            aliased(ModAction, alias=exile)
         ).options(
             joinedload(Comment.author).joinedload(User.title)
         ).filter(
             Comment.parent_submission == post.id,
             Comment.level <= 6
-        # ).join(
-        #     exile,
-        #     and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-        #     isouter=True
+        ).join(
+            exile,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+            isouter=True
         )
 
         if sort_type == "hot":
@@ -387,13 +387,13 @@ def get_post_with_comments(pid, sort_type="top", v=None):
         else:
             abort(422)
 
-        # output = []
-        # for c in comments:
-        #     comment=c[0]
-        #     comment._is_exiled_for=c[0]
-        #     output.append(comment)
+        output = []
+        for c in comments:
+            comment=c[0]
+            comment._is_exiled_for=c[1]
+            output.append(comment)
 
-        output=[x for x in comments]
+        # output=[x for x in comments]
 
 
         post._preloaded_comments = output
@@ -410,32 +410,32 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 
     nSession = nSession or kwargs.get('session') or g.db
 
-    # exile=g.db.query(ModAction
-    #     ).options(
-    #     lazyload('*')
-    #     ).filter_by(
-    #     kind="exile_user"
-    #     ).subquery()
+    exile = nSession.query(ModAction
+         ).options(
+         lazyload('*')
+         ).filter_by(
+         kind="exile_user"
+         ).subquery()
 
     if v:
         blocking = v.blocking.subquery()
         blocked = v.blocked.subquery()
-        vt = g.db.query(CommentVote).filter(
+        vt = nSession.query(CommentVote).filter(
             CommentVote.user_id == v.id,
             CommentVote.comment_id == i).subquery()
 
-        mod=g.db.query(ModRelationship
+        mod=nSession.query(ModRelationship
             ).filter_by(
             user_id=v.id,
             accepted=True
             ).subquery()
 
 
-        items = g.db.query(
+        items = nSession.query(
             Comment, 
             vt.c.vote_type,
             aliased(ModRelationship, alias=mod),
-            # aliased(ModAction, alias=exile)
+            aliased(ModAction, alias=exile)
         ).options(
             joinedload(Comment.author).joinedload(User.title)
         )
@@ -456,10 +456,10 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
             mod,
             mod.c.board_id==Submission.board_id,
             isouter=True
-        # ).join(
-        #     exile,
-        #     and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-        #     isouter=True
+        ).join(
+            exile,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+            isouter=True
         ).first()
 
         if not items and not graceful:
@@ -468,7 +468,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
         x = items[0]
         x._voted = items[1] or 0
         x._is_guildmaster=items[2] or 0
-        # x._is_exiled_for=items[3] or 0
+        x._is_exiled_for=items[3] or 0
 
         block = nSession.query(UserBlock).filter(
             or_(
@@ -486,22 +486,22 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
         x._is_blocked = block and block.target_id == v.id
 
     else:
-        q = g.db.query(
+        q = nSession.query(
             Comment,
-            # aliased(ModAction, alias=exile)
+            aliased(ModAction, alias=exile)
         ).options(
             joinedload(Comment.author).joinedload(User.title)
-        # ).join(
-        #     exile,
-        #     and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-        #     isouter=True
+        ).join(
+            exile,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+            isouter=True
         ).filter(Comment.id == i).first()
 
         if not q and not graceful:
             abort(404)
 
-        x=q
-        # x._is_exiled_for=q[1]
+        x=q[0]
+        x._is_exiled_for=q[1]
 
 
     return x
@@ -510,9 +510,6 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 def get_comments(cids, v=None, nSession=None, sort_type="new",
                  load_parent=False, **kwargs):
 
-    #output= [get_comment(cid, v=v, graceful=True, nSession=nSession) for cid in cids]
-    # return [i for i in output if i]
-
     if not cids:
         return []
 
@@ -520,13 +517,13 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
     nSession = nSession or kwargs.get('session') or g.db
 
-    # exile=nSession.query(ModAction
-    #     ).options(
-    #     lazyload('*')
-    #     ).filter(
-    #     ModAction.kind=="exile_user",
-    #     ModAction.target_comment_id.in_(cids)
-    #     ).subquery()
+    exile=nSession.query(ModAction
+        ).options(
+        lazyload('*')
+        ).filter(
+        ModAction.kind=="exile_user",
+        ModAction.target_comment_id.in_(cids)
+        ).subquery()
 
     if v:
         vt = nSession.query(CommentVote).filter(
@@ -546,7 +543,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             Comment, 
             aliased(CommentVote, alias=vt),
             aliased(ModRelationship, alias=mod),
-            # aliased(ModAction, alias=exile)
+            aliased(ModAction, alias=exile)
             ).options(
             joinedload(Comment.author).joinedload(User.title)
             )
@@ -576,10 +573,10 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             mod,
             mod.c.board_id==Submission.board_id,
             isouter=True
-            # ).join(
-            # exile,
-            # and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-            # isouter=True
+            ).join(
+            exile,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+            isouter=True
             ).filter(
             Comment.id.in_(cids)
             )
@@ -596,30 +593,30 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         for i in range(len(output)):
             output[i]._voted = comments[i][1].vote_type if comments[i][1] else 0
             output[i]._is_guildmaster = comments[i][2]
-            # output[i]._is_exiled_for = comments[i][3]
+            output[i]._is_exiled_for = comments[i][3]
 
 
 
     else:
         query = nSession.query(
             Comment,
-            # aliased(ModAction, alias=exile)
+            aliased(ModAction, alias=exile)
         ).options(
             joinedload(Comment.author).joinedload(User.title),
             joinedload(Comment.post).joinedload(Submission.board)
         ).filter(
             Comment.id.in_(cids)
-        # ).join(
-        #     exile,
-        #     and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-        #     isouter=True
+        ).join(
+            exile,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+            isouter=True
         ).order_by(None).all()
 
-        output=[x for x in query]
+        comments=[x for x in query]
 
-        # output=[x[0] for x in comments]
-        # for i in range(len(output)):
-        #     output[i]._is_exiled_for=comments[i][1]
+        output=[x[0] for x in comments]
+        for i in range(len(output)):
+            output[i]._is_exiled_for=comments[i][1]
 
 
     output = sorted(output, key=lambda x: cids.index(x.id))

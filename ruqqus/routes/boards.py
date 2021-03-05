@@ -389,6 +389,9 @@ def mod_ban_bid_user(bid, board, v):
     if item:
         item=get_from_fullname(item)
 
+        if item.original_board_id != board.id:
+            return jsonify({"error":f"That was originally created in +{item.original_board.name}, not +{board.name}"}), 400
+
     if not user:
         return jsonify({"error": "That user doesn't exist."}), 404
 
@@ -410,19 +413,12 @@ def mod_ban_bid_user(bid, board, v):
 
     if item:
         if isinstance(item, Submission):
-            note=f'for <a href="{item.permalink}">post</a>'
             target_submission_id=item.id
             target_comment_id=None
         elif isinstance(item, Comment):
-            note=f'for <a href="{item.permalink}">comment</a>'
             target_submission_id=None
             target_comment_id=item.id
-        else:
-            note=None
-            target_submission_id=None
-            target_comment_id=None
     else:
-        note=None
         target_submission_id=None
         target_comment_id=None
 
@@ -458,11 +454,12 @@ def mod_ban_bid_user(bid, board, v):
         user_id=v.id,
         target_user_id=user.id,
         board_id=board.id,
-        note=note,
         target_submission_id=target_submission_id,
         target_comment_id=target_comment_id
         )
     g.db.add(ma)
+
+    g.db.commit()
 
 
     if request.args.get("toast"):
@@ -1598,7 +1595,7 @@ def siege_guild(v):
 
 
     # check user activity
-    if guild not in v.boards_modded and v.guild_rep(guild, recent=180) < guild.siege_rep_requirement:
+    if guild not in v.boards_modded and v.guild_rep(guild, recent=180) < guild.siege_rep_requirement and not guild.has_contributor(v):
         return render_template(
             "message.html",
             v=v,

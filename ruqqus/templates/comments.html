@@ -115,7 +115,7 @@
         {% if c.is_blocked %}
         <i class="fas fa-user-minus text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="This user is blocking you, but you can see this comment because {{ 'it\'s in your guild' if c.is_guildmaster('content') else 'it\'s an admin comment' if c.distinguish_level else 'you\'re an admin' }}."></i>
         {% endif %}
-        {% if c.is_exiled_for %}
+        {% if c.is_exiled_for.board_id == c.post.board_id%}
         <a href="{{ c.is_exiled_for.permalink }}" target="_blank"><i class="fad fa-gavel text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="User was exiled for this comment."></i></a>
         {% endif %}
         <span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ c.created_datetime }}" class="time-stamp"> · {{ c.age_string }}</span>
@@ -291,7 +291,7 @@
               {% endif %}
             {% endif %}
             {% if v and c.post and c.is_guildmaster('access') %}
-              {% if v.id!=c.author_id and not c.author.is_deleted %}
+              {% if v.id!=c.author_id and not c.author.is_deleted and c.original_board_id==c.post.board_id %}
                 <a class="dropdown-item text-danger" id="exile-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post_toast('/mod/exile/{{ c.post.board.base36id }}?username={{ c.author.username }}&toast=1&thing={{ c.fullname }}')"><i class="fas fa-user-minus fa-fw text-danger"></i>Exile @{{ c.author.username }}</a>
               {% endif %}
             {% endif %}
@@ -464,7 +464,7 @@
             {% endif %}
           {% endif %}
           {% if v and c.post and c.is_guildmaster('access') %}
-            {% if c.author_id != v.id and not c.author.is_deleted %}
+            {% if c.author_id != v.id and not c.author.is_deleted and c.original_board_id==c.post.board_id %}
               <li class="list-group-item"><a class="d-block text-danger" id="exile-comment2-{{ c.base36id }}" href="javascript:void(0)" onclick="post_toast('/mod/exile/{{ c.post.board.base36id }}?username={{ c.author.username }}&toast=1&thing={{ c.fullname }}')"><i class="fas fa-user-minus fa-fw text-danger"></i>Exile @{{ c.author.username }}</a></li>
             {% endif %}
           {% endif %}  
