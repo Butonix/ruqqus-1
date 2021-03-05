@@ -27,7 +27,7 @@ def thumbnail_thread(pid, debug=False):
 
     domain_obj = post.domain_obj
 
-    headers={"User-Agent": app.config["User-Agent"]}
+    headers={"User-Agent": app.config["UserAgent"]}
 
 
     if debug:
