@@ -190,7 +190,7 @@ class GuildNotificationSubscriptions(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     board_id = Column(Integer, ForeignKey("boards.id"))
 
-    post = relationship("Submission", lazy="subquery")
+    user = relationship("User", lazy="subquery")
     board = relationship("Board", lazy="subquery")
 
     def __repr__(self):
