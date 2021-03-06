@@ -187,7 +187,7 @@ class GuildNotificationSubscriptions(Base):
 
     __tablename__ = "guild_notification_subscriptions"
     id = Column(BigInteger, primary_key=True)
-    user_id = Column(Integer, ForeignKey("user.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
     board_id = Column(Integer, ForeignKey("boards.id"))
 
     post = relationship("Submission", lazy="subquery")
