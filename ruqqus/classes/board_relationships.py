@@ -183,6 +183,19 @@ class PostRelationship(Base):
     def __repr__(self):
         return f"<PostRel(id={self.id}, pid={self.post_id}, board_id={self.board_id})>"
 
+class GuildNotificationSubscriptions(Base):
+
+    __tablename__ = "guild_notification_subscriptions"
+    id = Column(BigInteger, primary_key=True)
+    user_id = Column(Integer, ForeignKey("user.id"))
+    board_id = Column(Integer, ForeignKey("boards.id"))
+
+    post = relationship("Submission", lazy="subquery")
+    board = relationship("Board", lazy="subquery")
+
+    def __repr__(self):
+        return f"<GuildNotificationSubscription(id={self.id}, uid={self.user_id}, board_id={self.board_id})>"
+
 
 class BoardBlock(Base, Stndrd, Age_times):
 
