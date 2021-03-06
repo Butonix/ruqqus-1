@@ -113,7 +113,7 @@
             <button class="btn btn-secondary" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Unsubscribe
             </button>
             <button class="btn btn-secondary bell-button">
-              <i class="fas fa-bell bell-icon"></i>
+              <i class="fas fa-fw fa-bell bell-icon"></i>
             </button>
           </div>
           <div id="button-sub" {% if is_following %}class="d-none"{% endif %}>

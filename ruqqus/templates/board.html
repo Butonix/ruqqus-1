@@ -278,7 +278,7 @@
       <div id="button-unsub" class="btn-group {% if not b.has_subscriber(v) %}d-none{% endif %}" role="group" aria-label="Leave guild desktop">
         <button class="btn btn-secondary" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">Leave</button>
         <button class="btn btn-secondary bell-button">
-          <i class="fas fa-bell bell-icon"></i>
+          <i class="fas fa-fw fa-bell bell-icon"></i>
         </button>
       </div>
       {% elif not v %}
