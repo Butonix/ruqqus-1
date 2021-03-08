@@ -184,8 +184,20 @@
         <a href="/settings/profile" class="btn btn-secondary btn-sm">Edit profile</a>
         {% endif %}
         {% if v and v.id != u.id and not u.is_nofollow %}
-        <div id="button-unsub-mobile" {% if not is_following %}class="d-none"{% endif %}><a class="btn btn-secondary" href="javascript:void(0)" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">Unsubscribe</a></div>
-        <div id="button-sub-mobile" {% if is_following %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">Subscribe</a></div>
+        <div id="button-unsub-mobile" {% if not is_following %}class="d-none"{% endif %}>
+          <button class="btn btn-secondary" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">Unsubscribe
+          </button>
+        </div>
+        <div id="button-sub-mobile" {% if is_following %}class="d-none"{% endif %}>
+          <div class="btn-group d-flex" role="group" aria-label="Unsubscribe user mobile">
+            <button class="btn btn-primary" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">
+              Subscribe
+            </button>
+            <button class="btn btn-secondary bell-button">
+              <i class="fas fa-bell bell-icon"></i>
+            </button>
+          </div>
+        </div>
         {% endif %}
       </div>
     </div>

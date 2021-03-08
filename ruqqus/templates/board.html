@@ -325,14 +325,20 @@
         <a class="btn btn-outline-secondary btn-block text-muted mb-2" href="{{ b.permalink }}/mod/settings">Guild settings</a>
         {% endif %}
         {% if v %}
-        <div id="button-sub-mobile" {% if is_subscribed %}class="d-none"{% endif %}><a class="btn btn-primary btn-block" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=toggleSub)">Join guild</a></div>
-        <div id="button-unsub-mobile" class="btn btn-group {% if not is_subscribed %}d-none{% endif %}" role="group" aria-label="Leave guild mobile">
-          <button class="btn btn-secondary btn-block" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">
-            Leave
+        <div id="button-sub-mobile" {% if is_subscribed %}class="d-none"{% endif %}>
+          <button class="btn btn-primary btn-block" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=toggleSub)">
+            Join guild
           </button>
-          <button class="btn btn-secondary bell-button">
-            <i class="fas fa-bell bell-icon"></i>
-          </button>
+        </div>
+        <div id="button-unsub-mobile" {% if not is_subscribed %}class="d-none"{% endif %}>
+          <div class="btn-group d-flex" role="group" aria-label="Leave guild mobile">
+            <button class="btn btn-secondary btn-block" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">
+              Leave
+            </button>
+            <button class="btn btn-secondary bell-button">
+              <i class="fas fa-bell bell-icon"></i>
+            </button>
+          </div>
         </div>
         {% elif not v %}
         <a class="btn btn-primary btn-block" href="/signup">Join guild</a>
