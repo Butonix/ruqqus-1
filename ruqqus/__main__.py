@@ -31,7 +31,7 @@ from redis import BlockingConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.31.0"
+_version = "2.31.3"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -71,7 +71,7 @@ app.config["DISABLE_SIGNUPS"]=int(environ.get("DISABLE_SIGNUPS",0))
 
 app.jinja_env.cache = {}
 
-app.config["UserAgent"] = f"Ruqqus title finder tool for Ruqqus v{_version} developed by Ruqqus LLC for ruqqus.com."
+app.config["UserAgent"] = f"Content Aquisition for Porpl message board v{_version}."
 
 if "localhost" in app.config["SERVER_NAME"]:
     app.config["CACHE_TYPE"] = "null"

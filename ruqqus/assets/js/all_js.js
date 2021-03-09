@@ -1586,7 +1586,7 @@ function autoSuggestTitle()  {
         checkForRequired()
       }
     }
-    x.open('get','/api/submit/title?url=' + urlField.value);
+    x.open('get','/submit/title?url=' + urlField.value);
     x.send(null);
 
   };
