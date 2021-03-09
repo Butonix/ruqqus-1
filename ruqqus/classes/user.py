@@ -93,6 +93,9 @@ class User(Base, Stndrd, Age_times):
     filter_nsfw = Column(Boolean, default=False)
     stored_karma = Column(Integer, default=0)
     stored_subscriber_count=Column(Integer, default=0)
+    guild_last_checked_utc = Column(Integer, default=0)
+    replies_last_checked_utc = Column(Integer, default=0)
+
 
     coin_balance=Column(Integer, default=0)
     premium_expires_utc=Column(Integer, default=0)
@@ -517,6 +520,7 @@ class User(Base, Stndrd, Age_times):
         return f"<User(username={self.username})>"
 
     def notification_commentlisting(self, page=1, all_=False):
+        #TODO: this function will become used only @mentions
 
         notifications = self.notifications.join(Notification.comment).filter(
             Comment.is_banned == False,
@@ -543,9 +547,55 @@ class User(Base, Stndrd, Age_times):
 
     @property
     @lazy
-    def notifications_count(self):
+    def mentions_count(self):
+        return self.notifications\
+            .join(Notification.comment)\
+            .filter(Notification.read == False,
+                    Comment.is_banned == False,
+                    Comment.deleted_utc == 0)\
+            .count()
+    @property
+    @lazy
+    def guild_notifications_count(self):
+        return g.db.query(Submission)\
+            .filter(Submission.created_utc < self.guilds_last_check_utc)\
+            .filter(Submission.deleted_utc == 0)\
+            .filter(Submission.is_banned == False)\
+            .filter(Submission.board_id.in_(g.db.query(GuildNotificationSubscriptions.id)
+                                            .filter_by(user_id=self.id))
+                    )\
+            .count()
 
-        return self.notifications.join(Notification.comment).filter(Notification.read==False, Comment.is_banned==False, Comment.deleted_utc==0).count()
+
+    @property
+    @lazy
+    def reply_notifications_count(self):
+        #TODO: query for count of new replies
+        # use self.replies_last_checked_utc
+        pass
+
+    @property
+    @lazy
+    def replies(self):
+        #TODO: query for all new reply items for notifications
+        # use self.replies_last_checked_utc
+
+    @property
+    @lazy
+    def guild_notifications(self):
+        return g.db.query(Submission) \
+            .filter(Submission.created_utc < self.guild_last_check_utc) \
+            .filter(Submission.deleted_utc == 0) \
+            .filter(Submission.is_banned == False)\
+            .filter(Submission.board_id.in_(g.db.query(GuildNotificationSubscriptions.id)
+                                            .filter_by(user_id=self.id))
+                    )\
+            .all()
+
+    @property
+    def notifications_count(self):
+        return self.replies_notification_count + self.guild_notifications_count + self.mentions_count
+
 
     @property
     def post_count(self):
@@ -660,6 +710,9 @@ class User(Base, Stndrd, Age_times):
                 text("id asc")).all() if eval(
                 i.qualification_expr, {}, locs)]
         return titles
+
+    @property
+    def
 
     @property
     def can_make_guild(self):
