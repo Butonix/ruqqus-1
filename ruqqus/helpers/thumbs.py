@@ -27,7 +27,8 @@ def thumbnail_thread(pid, debug=False):
 
     domain_obj = post.domain_obj
 
-    headers={"User-Agent": app.config["UserAgent"]}
+    #mimic chrome browser agent
+    headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
 
     if debug:
