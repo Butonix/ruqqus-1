@@ -933,7 +933,7 @@ class User(Base, Stndrd, Age_times):
 
         comment_rep=sum([x[0] for x in comments])
 
-        return post_rep + comment_rep
+        return int(post_rep + comment_rep)
 
     @property
     def has_premium(self):
