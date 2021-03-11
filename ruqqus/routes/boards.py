@@ -1660,6 +1660,7 @@ def siege_guild(v):
                 and_(
                     ModAction.user_id.in_(ids),
                     ModAction.created_utc > cutoff,
+
                     ModAction.board_id==guild.id
                     ),
                 #option 2: ruqqus adds user as mod due to siege
@@ -1688,7 +1689,7 @@ def siege_guild(v):
     #remove current mods. If they are at or below existing mod, leave in place
     for x in guild.moderators:
 
-        if m and x.id>m.id and x.accepted:
+        if m and x.id>=m.id and x.accepted:
             continue
 
         if x.accepted:
