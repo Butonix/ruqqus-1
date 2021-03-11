@@ -1666,7 +1666,8 @@ def siege_guild(v):
                 and_(
                     ModAction.user_id==1,
                     ModAction.target_user_id==v.id,
-                    ModAction.kind=="add_mod"
+                    ModAction.kind=="add_mod",
+                    ModAction.board_id==guild.id
                     )
                 )
             ).first()
