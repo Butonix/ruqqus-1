@@ -576,6 +576,8 @@ def random_post(v):
             user_id=v.id).subquery()
         x = x.filter(Submission.board_id.notin_(bans))
 
+    x=x.join(Submission.board).filter(Board.is_banned==False)
+
     total = x.count()
     n = random.randint(0, total - 1)
 

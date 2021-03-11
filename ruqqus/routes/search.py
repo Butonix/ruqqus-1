@@ -81,13 +81,6 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
             )
 
 
-    posts=posts.options(
-            contains_eager(Submission.submission_aux),
-            contains_eager(Submission.author),
-            contains_eager(Submission.board)
-            )
-
-
     if not (v and v.over_18):
         posts = posts.filter(Submission.over_18 == False)
 
@@ -126,10 +119,14 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
         posts = posts.filter(
             Submission.author_id.notin_(blocking),
-            Submission.author_id.notin_(blocked)
+            Submission.author_id.notin_(blocked),
+            Board.is_banned==False,
         )
     else:
-        posts = posts.filter(Submission.post_public == True)
+        posts = posts.filter(
+            Submission.post_public == True,
+            Board.is_banned==False,
+            )
 
     if t:
         now = int(time.time())
@@ -144,6 +141,12 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
         else:
             cutoff = 0
         posts = posts.filter(Submission.created_utc >= cutoff)
+
+    posts=posts.options(
+        contains_eager(Submission.submission_aux),
+        contains_eager(Submission.author),
+        contains_eager(Submission.board)
+        )
 
     if sort == "hot":
         posts = posts.order_by(Submission.score_hot.desc())
