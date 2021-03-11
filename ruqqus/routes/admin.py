@@ -823,7 +823,7 @@ def admin_siege_count(v):
 #     return "1"
 
 
-@app.route("/admin/purge_guild_images/<boardname>")
+@app.route("/admin/purge_guild_images/<boardname>", methods=["POST"])
 @admin_level_required(5)
 @validate_formkey
 def admin_purge_guild_images(boardname, v):

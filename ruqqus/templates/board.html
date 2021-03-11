@@ -15,6 +15,9 @@
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input type="submit" class="btn btn-success" value="Unban guild">
 </form>
+
+<p class="my-3">Reason: {{ b.ban_reason }}</p>
+
 {% if v.admin_level >=5 %}
 <form action="/admin/purge_guild_images/{{ b.name }}" method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
@@ -36,9 +39,6 @@
 {% endif %}
 {% endif %}
 
-{% if b.is_banned %}
-<p>Reason: {{ b.ban_reason }}</p>
-{% endif %}
 {% endblock %}
 
 {% block sidebarblock %}
