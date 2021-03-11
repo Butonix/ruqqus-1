@@ -16,7 +16,7 @@
   <input type="submit" class="btn btn-success" value="Unban guild">
 </form>
 {% if v.admin_level >=5 %}
-<form action="/admin/purge_guild_images/{{ b.name }" method="post">
+<form action="/admin/purge_guild_images/{{ b.name }}" method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input type="submit" class="btn btn-danger" value="Purge All Hosted Images">
 </form>
