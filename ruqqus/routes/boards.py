@@ -695,7 +695,7 @@ def mod_rescind_bid_username(bid, username, board, v):
 
 
 @app.route("/mod/accept/<bid>", methods=["POST"])
-@app.route("/api/v1/accept_invite/<bid>")
+@app.route("/api/v1/accept_invite/<bid>", methods=["POST"])
 @auth_required
 @validate_formkey
 @api("guildmaster")
