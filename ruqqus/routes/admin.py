@@ -821,3 +821,39 @@ def admin_siege_count(v):
 
 
 #     return "1"
+
+
+@app.route("/admin/purge_guild_images/<boardname>")
+@admin_level_required(5)
+@validate_formkey
+def admin_purge_guild_images(boardname, v)
+
+    #Iterates through all posts in guild with thumbnail, and nukes thumbnails and i.ruqqus uploads
+
+    board=get_guild(boardname)
+
+    if not board.is_banned:
+        return jsonify({"error":"This guild isn't banned"}), 409
+
+    posts = g.db.query(Submission).options(lazyload('*')).filter_by(board_id=board.id, has_thumb=True)
+
+
+    i=0
+
+    for post in posts:
+        i+=1
+        aws.delete_file(urlparse(post.thumb_url).path.lstrip('/'))
+        post.has_thumb=False
+
+        if post.url and post.domain=="i.ruqqus.com":
+            aws.delete_file(urlparse(post.url).path.lstrip('/'))
+
+        g.db.add(post)
+
+        if not i%100:
+            g.db.commit()
+
+
+    g.db.commit()
+
+    return redirect(board.permalink)
