@@ -47,6 +47,8 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
                 Submission.submission_aux,
             ).join(
                 Submission.author
+            ).join(
+                Submission.board
             )
 
     if 'q' in criteria:
@@ -69,14 +71,8 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
         posts=posts.filter(Submission.board_id==b.id)
     elif 'guild' in criteria:
         board=get_guild(criteria["guild"])
-        posts=posts.join(
-                Submission.board
-            ).filter(
+        posts=posts.filter(
                 Submission.board_id==board.id,
-                Board.is_banned==False,
-                Board.is_private==False,
-            ).options(
-                contains_eager(Submission.board)
             )
 
     if 'url' in criteria:
@@ -87,7 +83,8 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
     posts=posts.options(
             contains_eager(Submission.submission_aux),
-            contains_eager(Submission.author)
+            contains_eager(Submission.author),
+            contains_eager(Submission.board)
             )
 
 
