@@ -68,8 +68,15 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
     if b:
         posts=posts.filter(Submission.board_id==b.id)
     elif 'guild' in criteria:
-        posts=posts.filter(
-                Submission.board_id==get_guild(criteria['guild']).id
+        board=get_guild(criteria["guild"])
+        posts=posts.join(
+                Submission.board
+            ).filter(
+                Submission.board_id==board.id,
+                Board.is_banned==False,
+                Board.is_private==False,
+            ).options(
+                contains_eager(Submission.board)
             )
 
     if 'url' in criteria:
@@ -312,6 +319,9 @@ def search_guild(name, v, search_type="posts"):
     b = get_guild(name, graceful=True)
     if not b:
         abort(404)
+
+    if b.is_banned:
+        return render_template("board_banned.html", v=v, b=b)
 
     page=max(1, int(request.args.get("page", 1)))
 
