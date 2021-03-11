@@ -835,6 +835,12 @@ def admin_purge_guild_images(boardname, v):
     if not board.is_banned:
         return jsonify({"error":"This guild isn't banned"}), 409
 
+    if board.has_profile:
+        board.del_profile()
+
+    if board.has_banner:
+        board.del_banner()
+
     posts = g.db.query(Submission).options(lazyload('*')).filter_by(board_id=board.id, has_thumb=True)
 
 

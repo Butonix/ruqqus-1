@@ -1053,6 +1053,12 @@ def board_about_mods(boardname, v):
 
     board = get_guild(boardname)
 
+    if board.is_banned:
+        return {
+        "html":lambda:(render_template("board_banned.html", v=v, b=board), 403),
+        "api":lambda:(jsonify({"error":f"+{board.name} is banned"}), 403)
+        }
+
     me = board.has_mod(v)
 
     return {
@@ -1866,6 +1872,12 @@ def board_mod_log(boardname, v):
 
     page=int(request.args.get("page",1))
     board=get_guild(boardname)
+
+    if board.is_banned:
+        return {
+        "html":lambda:(render_template("board_banned.html", v=v, b=board), 403),
+        "api":lambda:(jsonify({"error":f"+{board.name} is banned"}), 403)
+        }
 
     actions=g.db.query(ModAction).filter_by(board_id=board.id).order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
     actions=[i for i in actions]
