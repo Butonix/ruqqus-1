@@ -1655,9 +1655,21 @@ def siege_guild(v):
 
         # check mod actions
         ma = g.db.query(ModAction).filter(
-                ModAction.user_id.in_(ids), 
-                ModAction.created_utc > cutoff,
-                ModAction.board_id==guild.id).first()
+            or_(
+                #option 1: mod action by user
+                and_(
+                    ModAction.user_id.in_(ids),
+                    ModAction.created_utc > cutoff,
+                    ModAction.board_id==guild.id
+                    ),
+                #option 2: ruqqus adds user as mod due to siege
+                and_(
+                    ModAction.user_id==1,
+                    ModAction.target_user_id==v.id,
+                    ModAction.kind=="add_mod"
+                    )
+                )
+            ).first()
         if ma:
             return render_template("message.html",
                                    v=v,
