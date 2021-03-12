@@ -704,25 +704,25 @@ def submit_post(v):
         g.db.add(new_post)
 
         #csam detection
-        def del_function():
+        def del_function(db):
             delete_file(name)
             new_post.is_banned=True
-            g.db.add(new_post)
-            g.db.commit()
+            db.add(new_post)
+            db.commit()
             ma=ModAction(
                 kind="ban_post",
                 user_id=1,
                 note="csam detected",
                 target_submission_id=new_post.id
                 )
-            g.db.add(ma)
-            g.db.commit()
+            db.add(ma)
+            db.commit()
 
             
         csam_thread=threading.Thread(target=check_csam_url, 
                                      args=(f"https://{BUCKET}/{name}", 
                                            v, 
-                                           del_function
+                                           lambda:del_function(db=g.db)
                                           )
                                     )
         csam_thread.start()
