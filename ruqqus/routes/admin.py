@@ -6,7 +6,7 @@ from sqlalchemy.orm import lazyload
 import threading
 import subprocess
 import imagehash
-from PIL import Image
+from PIL import Image as IMAGE
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.alerts import *
@@ -881,7 +881,7 @@ def admin_image_ban(v):
 
     i.save(tempname)
 
-    h=imagehash.phash(Image.open(tempname))
+    h=imagehash.phash(IMAGE.open(tempname))
     print(h)
     h=hex2bin(str(h))
     print(h)
