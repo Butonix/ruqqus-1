@@ -176,10 +176,12 @@ def check_csam(post):
     if x.status_code == 451:
 
         # ban user and alts
-        post.author.ban(reason="Sexualizing Minors")
+        post.author.ban_reason="Sexualizing Minors"
+        post.author.is_banned=1
         db.add(v)
         for alt in post.author.alts:
-            alt.ban(reason="Sexualizing Minors")
+            alt.ban_reason="Sexualizing Minors")
+            alt.is_banned=1
             db.add(alt)
 
         # remove content
@@ -190,6 +192,8 @@ def check_csam(post):
 
         # nuke aws
         delete_file(parsed_url.path.lstrip('/'))
+        db.close()
+        return
 
     #check phash
     tempname = f"test_post_{post.base36id}"
@@ -201,11 +205,17 @@ def check_csam(post):
     h=check_phash(db, tempname)
     if h:
 
+        now=int(time.time())
+        unban=now+60*60*24*h.ban_time if h.ban_time else 0
         # ban user and alts
-        post.author.ban(reason=h.ban_reason, days=h.ban_time)
+        post.author.ban_reason=h.ban_reason
+        post.author.is_banned=1
+        post.author.unban_utc = unban
         db.add(v)
         for alt in post.author.alts:
-            alt.ban(reason=h.ban_reason, days=h.ban_time)
+            alt.ban_reason=h.ban_reason
+            alt.is_banned=1
+            alt.unban_utc = unban
             db.add(alt)
 
         # remove content
@@ -242,15 +252,20 @@ def check_csam_url(url, v, delete_content_function):
     db=db_session()
 
     if x.status_code == 451:
-        v.ban(reason="Sexualizing Minors", days=0)
+        v.ban_reason="Sexualizing Minors"
+        v.is_banned=1
         db.add(v)
         for alt in v.alts:
-            alt.ban(reason="Sexualizing Minors", days=0)
+            alt.ban_reason="Sexualizing Minors"
+            alt.is_banned=1
             db.add(alt)
 
         delete_content_function()
 
         db.commit()
+        db.close()
+        delete_file(parsed_url.path.lstrip('/'))
+        return
 
     tempname=f"test_from_url_{parsed_url.path}"
     tempname=tempname.replace('/','_')
@@ -262,16 +277,20 @@ def check_csam_url(url, v, delete_content_function):
     h=check_phash(db, tempname)
     if h:
 
+        now=int(time.time())
+        unban=now+60*60*24*h.ban_time if h.ban_time else 0
         # ban user and alts
-        post.author.ban(reason=h.ban_reason, days=h.ban_time)
+        post.author.ban_reason=h.ban_reason
+        post.author.is_banned=1
+        post.author.unban_utc = unban
         db.add(v)
         for alt in post.author.alts:
-            alt.ban(reason=h.ban_reason, days=h.ban_time)
+            alt.ban_reason=h.ban_reason
+            alt.is_banned=1
+            alt.unban_utc = unban
             db.add(alt)
 
-        # remove content
-        post.is_banned = True
-        db.add(post)
+        delete_content_function()
 
         db.commit()
 
