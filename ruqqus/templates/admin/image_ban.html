@@ -10,8 +10,8 @@
 
 {% block content %}
 
-{% if h %}
-<p class="text-danger">Image already banned for: {{ h.ban_reason }}</p>
+{% if existing %}
+<p class="text-danger">Image already banned for: {{ existing.ban_reason }}</p>
 {% elif success %}
 <p class="text-success">Image banned.</p>
 {% endif %}
