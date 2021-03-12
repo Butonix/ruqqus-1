@@ -180,7 +180,7 @@ def check_csam(post):
         post.author.is_banned=1
         db.add(v)
         for alt in post.author.alts:
-            alt.ban_reason="Sexualizing Minors")
+            alt.ban_reason="Sexualizing Minors"
             alt.is_banned=1
             db.add(alt)
 
