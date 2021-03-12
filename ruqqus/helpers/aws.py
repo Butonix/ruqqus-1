@@ -196,15 +196,14 @@ def check_csam(post):
         for chunk in x.iter_content(1024):
             file.write(chunk)
 
-    if check_phash(tempname):
+    h=check_phash(tempname)
+    if h:
 
         # ban user and alts
-        post.author.is_banned = 1
-        post.author.ban_reason="Sexualizing Minors"
+        post.author.ban(reason=h.ban_reason, days=h.ban_time)
         g.db.add(v)
         for alt in post.author.alts:
-            alt.is_banned = 1
-            alt.ban_reason="Sexualizing Minors"
+            alt.ban(reason=h.ban_reason, days=h.ban_time)
             g.db.add(alt)
 
         # remove content
@@ -256,15 +255,14 @@ def check_csam_url(url, v, delete_content_function):
         for chunk in x.iter_content(1024):
             file.write(chunk)
 
-    if check_phash(tempname):
+    h=check_phash(tempname)
+    if h:
 
         # ban user and alts
-        post.author.is_banned = 1
-        post.author.ban_reason="Sexualizing Minors"
+        post.author.ban(reason=h.ban_reason, days=h.ban_time)
         g.db.add(v)
         for alt in post.author.alts:
-            alt.is_banned = 1
-            alt.ban_reason="Sexualizing Minors"
+            alt.ban(reason=h.ban_reason, days=h.ban_time)
             g.db.add(alt)
 
         # remove content
