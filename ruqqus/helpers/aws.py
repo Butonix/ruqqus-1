@@ -7,6 +7,7 @@ from urllib.parse import urlparse
 from PIL import Image
 import imagehash
 from sqlalchemy import func
+from os import remove
 
 from ruqqus.classes.images import BadPic
 from ruqqus.__main__ import db_session
