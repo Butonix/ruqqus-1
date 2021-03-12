@@ -51,7 +51,7 @@ def base_encode(number, base):
 
 #got this one from stackoverflow
 def hex2bin(hexstr): 
-    value = int(hexval, 16) 
+    value = int(hexstr, 16) 
     bindigits = [] 
      
     # Seed digit: 2**0 
