@@ -694,26 +694,34 @@ def admin_image_ban(v):
 
     i=request.files['file']
 
+    print('have file')
+
     #make phash
     tempname = f"admin_image_ban_{v.username}_{int(time.time())}"
+    print(tempname)
 
     with open(tempname, "wb") as file:
         for chunk in x.iter_content(1024):
             file.write(chunk)
 
     h=imagehash.phash(Image.open(tempname))
+    print(h)
     h=hex2bin(str(h))
+    print(h)
 
     #check db for existing
     badpic = g.db.query(BadPic).filter_by(
         phash=h
         ).first()
+    print(badpic)
 
     remove(tempname)
 
     if badpic:
+        print('existing')
         return render_template("admin/image_ban.html", v=v, existing=badpic)
 
+    print('new')
     new_bp=BadPic(
         phash=h,
         ban_reason=request.form.get("ban_reason"),
