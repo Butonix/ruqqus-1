@@ -241,7 +241,7 @@ def check_csam_url(url, v, delete_content_function):
 
     db=db_session()
 
-    if x.status_code != 451:
+    if x.status_code == 451:
         v.ban(reason="Sexualizing Minors", days=0)
         db.add(v)
         for alt in v.alts:
