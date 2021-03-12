@@ -590,8 +590,6 @@ class User(Base, Stndrd, Age_times):
 
         return output
 
-    @property
-    @lazy
     def alts_threaded(self, db):
 
         subq = db.query(Alt).filter(
