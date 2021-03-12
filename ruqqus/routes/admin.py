@@ -903,7 +903,7 @@ def admin_image_ban(v):
     new_bp=BadPic(
         phash=h,
         ban_reason=request.form.get("ban_reason"),
-        ban_time=int(request.form.get("ban_time",0))
+        ban_time=int(request.form.get("ban_length",0))
         )
 
     g.db.add(new_bp)
