@@ -5,6 +5,11 @@ import piexif
 import time
 from urllib.parse import urlparse
 from PIL import Image
+import imagehash
+from flask import g
+from sqlalchemy import func
+
+from ruqqus.classes.images import BadPic
 
 BUCKET = "i.ruqqus.com"
 CF_KEY = environ.get("CLOUDFLARE_KEY").lstrip().rstrip()
@@ -18,6 +23,15 @@ S3 = boto3.client("s3",
                       "AWS_SECRET_ACCESS_KEY").lstrip().rstrip()
                   )
 
+def check_phash(name):
+
+    return g.db.query(BadPic).filter(
+        func.levenshtein(
+            BadPic.phash,
+            str(imagehash.phash(Image.open(name)))
+            ) < 10
+        ).first()
+
 
 def upload_from_url(name, url):
 
@@ -30,8 +44,8 @@ def upload_from_url(name, url):
     tempname = name.replace("/", "_")
 
     with open(tempname, "wb") as file:
-        for chunk in r.iter_content(1024):
-            f.write(chunk)
+        for chunk in x.iter_content(1024):
+            file.write(chunk)
 
     if tempname.split('.')[-1] in ['jpg', 'jpeg']:
         piexif.remove(tempname)
@@ -155,22 +169,54 @@ def check_csam(post):
         else:
             time.sleep(20)
 
-    if x.status_code != 451:
-        return
+    if x.status_code == 451:
 
-    # ban user and alts
-    post.author.is_banned = 1
-    g.db.add(v)
-    for alt in post.author.alts:
-        alt.is_banned = 1
-        g.db.add(alt)
+        # ban user and alts
+        post.author.is_banned = 1
+        post.author.ban_reason="Sexualizing Minors"
+        g.db.add(v)
+        for alt in post.author.alts:
+            alt.is_banned = 1
+            alt.ban_reason="Sexualizing Minors"
+            g.db.add(alt)
 
-    # remove content
-    post.is_banned = True
-    g.db.add(post)
+        # remove content
+        post.is_banned = True
+        g.db.add(post)
 
-    # nuke aws
-    delete_file(parsed_url.path.lstrip('/'))
+        g.db.commit()
+
+        # nuke aws
+        delete_file(parsed_url.path.lstrip('/'))
+
+    #check phash
+    tempname = f"test_post_{post.base36id}"
+
+    with open(tempname, "wb") as file:
+        for chunk in x.iter_content(1024):
+            file.write(chunk)
+
+    if check_phash(tempname):
+
+        # ban user and alts
+        post.author.is_banned = 1
+        post.author.ban_reason="Sexualizing Minors"
+        g.db.add(v)
+        for alt in post.author.alts:
+            alt.is_banned = 1
+            alt.ban_reason="Sexualizing Minors"
+            g.db.add(alt)
+
+        # remove content
+        post.is_banned = True
+        g.db.add(post)
+
+        g.db.commit()
+
+        # nuke aws
+        delete_file(parsed_url.path.lstrip('/'))
+
+
 
 
 def check_csam_url(url, v, delete_content_function):
@@ -190,14 +236,42 @@ def check_csam_url(url, v, delete_content_function):
             time.sleep(20)
 
     if x.status_code != 451:
-        return
 
-    v.is_banned = 1
-    g.db.add(v)
-    for alt in v.alts:
-        alt.is_banned = 1
-        g.db.add(alt)
+        v.is_banned = 1
+        v.ban_reason= "Sexualizing Minors"
+        g.db.add(v)
+        for alt in v.alts:
+            alt.is_banned = 1
+            alt.ban_reason="Sexualizing Minors"
+            g.db.add(alt)
 
-    delete_content_function()
+        delete_content_function()
 
-    g.db.commit()
+        g.db.commit()
+
+    tempname=f"test_from_url_{parsed_url.path}"
+    tempname=tempname.replace('/','_')
+
+    with open(tempname, "wb") as file:
+        for chunk in x.iter_content(1024):
+            file.write(chunk)
+
+    if check_phash(tempname):
+
+        # ban user and alts
+        post.author.is_banned = 1
+        post.author.ban_reason="Sexualizing Minors"
+        g.db.add(v)
+        for alt in post.author.alts:
+            alt.is_banned = 1
+            alt.ban_reason="Sexualizing Minors"
+            g.db.add(alt)
+
+        # remove content
+        post.is_banned = True
+        g.db.add(post)
+
+        g.db.commit()
+
+        # nuke aws
+        delete_file(parsed_url.path.lstrip('/'))

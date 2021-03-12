@@ -24,3 +24,16 @@ class Image(Base):
 def random_image():
     n=g.db.query(Image).count()
     return g.db.query(Image).order_by(Image.id.asc()).offset(random.randint(0,n-1)).first()
+
+
+
+class BadPic(Base):
+
+    #Class for tracking fuzzy hashes of banned csam images
+
+    __tablename__="badpics"
+    id = Column(BigInteger, primary_key=True)
+    description=Column(String(255), default=None)
+    phash=Column(String(64))
+
+    
