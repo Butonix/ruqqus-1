@@ -35,5 +35,7 @@ class BadPic(Base):
     id = Column(BigInteger, primary_key=True)
     description=Column(String(255), default=None)
     phash=Column(String(64))
+    ban_reason=Column(String(64))
+    ban_time=Column(Integer)
 
     
