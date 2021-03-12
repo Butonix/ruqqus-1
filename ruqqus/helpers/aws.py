@@ -179,7 +179,7 @@ def check_csam(post):
         post.author.ban_reason="Sexualizing Minors"
         post.author.is_banned=1
         db.add(v)
-        for alt in post.author.alts:
+        for alt in post.author.alts_threaded(db):
             alt.ban_reason="Sexualizing Minors"
             alt.is_banned=1
             db.add(alt)
@@ -212,7 +212,7 @@ def check_csam(post):
         post.author.is_banned=1
         post.author.unban_utc = unban
         db.add(v)
-        for alt in post.author.alts:
+        for alt in post.author.alts_threaded(db):
             alt.ban_reason=h.ban_reason
             alt.is_banned=1
             alt.unban_utc = unban
@@ -255,7 +255,7 @@ def check_csam_url(url, v, delete_content_function):
         v.ban_reason="Sexualizing Minors"
         v.is_banned=1
         db.add(v)
-        for alt in v.alts:
+        for alt in v.alts_threaded(db):
             alt.ban_reason="Sexualizing Minors"
             alt.is_banned=1
             db.add(alt)
@@ -284,7 +284,7 @@ def check_csam_url(url, v, delete_content_function):
         v.is_banned=1
         v.unban_utc = unban
         db.add(v)
-        for alt in v.alts:
+        for alt in v.alts_threaded(db):
             alt.ban_reason=h.ban_reason
             alt.is_banned=1
             alt.unban_utc = unban
