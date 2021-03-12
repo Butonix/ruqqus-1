@@ -5,6 +5,8 @@ from sqlalchemy import func
 from sqlalchemy.orm import lazyload
 import threading
 import subprocess
+import imagehash
+from PIL import Image
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.alerts import *
