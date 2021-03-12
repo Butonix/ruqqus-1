@@ -688,7 +688,7 @@ def submit_post(v):
                                                              "body", ""),
                                                          b=board
                                                          ), 400),
-                        "api": lambda: ({"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}, 400)
+                        "api": lambda: ({"error": f"Image files only"}, 400)
                         }
 
         name = f'post/{new_post.base36id}/{secrets.token_urlsafe(8)}'

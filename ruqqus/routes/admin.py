@@ -877,9 +877,7 @@ def admin_image_ban(v):
     tempname = f"admin_image_ban_{v.username}_{int(time.time())}"
     print(tempname)
 
-    with open(tempname, "wb") as file:
-        for chunk in x.iter_content(1024):
-            file.write(chunk)
+    i.save(tempname)
 
     h=imagehash.phash(Image.open(tempname))
     print(h)
