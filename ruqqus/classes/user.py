@@ -622,13 +622,19 @@ class User(Base, Stndrd, Age_times):
 
         aws.delete_file(name=f"users/{self.username}/profile-{self.profile_nonce}.png")
         self.has_profile = False
-        g.db.add(self)
+        try:
+            g.db.add(self)
+        except:
+            pass
 
     def del_banner(self):
 
         aws.delete_file(name=f"users/{self.username}/banner-{self.banner_nonce}.png")
         self.has_banner = False
-        g.db.add(self)
+        try:
+            g.db.add(self)
+        except:
+            pass
 
     @property
     def banner_url(self):
@@ -797,7 +803,10 @@ class User(Base, Stndrd, Age_times):
         if reason:
             self.ban_reason = reason
 
-        g.db.add(self)
+        try:
+            g.db.add(self)
+        except:
+            pass
 
 
     def unban(self):
@@ -844,7 +853,10 @@ class User(Base, Stndrd, Age_times):
                 if bad_badge:
                     g.db.delete(bad_badge)
 
-        g.db.add(self)
+        try:
+            g.db.add(self)
+        except:
+            pass
 
     @property
     def applications(self):
