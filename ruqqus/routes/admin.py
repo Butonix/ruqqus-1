@@ -6,6 +6,7 @@ from sqlalchemy.orm import lazyload
 import threading
 import subprocess
 import imagehash
+from os import remove
 from PIL import Image as IMAGE
 
 from ruqqus.helpers.wrappers import *
