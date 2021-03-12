@@ -24,7 +24,7 @@ from ruqqus.helpers.alerts import send_notification
 from ruqqus.classes import *
 from .front import frontlist
 from flask import *
-from ruqqus.__main__ import app, limiter, cache
+from ruqqus.__main__ import app, limiter, cache, db_session
 
 BAN_REASONS = ['',
                "URL shorteners are not permitted.",
@@ -712,7 +712,7 @@ def submit_post(v):
             ma=ModAction(
                 kind="ban_post",
                 user_id=1,
-                note="csam detected",
+                note="banned image",
                 target_submission_id=new_post.id
                 )
             db.add(ma)
@@ -722,7 +722,7 @@ def submit_post(v):
         csam_thread=threading.Thread(target=check_csam_url, 
                                      args=(f"https://{BUCKET}/{name}", 
                                            v, 
-                                           lambda:del_function(db=g.db)
+                                           lambda:del_function(db=db_session())
                                           )
                                     )
         csam_thread.start()
