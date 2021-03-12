@@ -9,6 +9,14 @@
 {% endblock %}
 
 {% block content %}
+
+{% if h %}
+<p class="text-danger">Image already banned for: {{ h.ban_reason }}</p>
+{% elif success %}
+<p class="text-success">Image banned.</p>
+{% endif %}
+
+
 <h1>Perceptive Hash Image Ban</h1>
 <p>Upload an image to add its hash to the ban list.</p>
 

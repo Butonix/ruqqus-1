@@ -1,6 +1,11 @@
 import time
 import calendar
 from flask import *
+import imagehash
+from PIL import Image
+from os import remove
+from sqlalchemy import func
+
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.aws import delete_file
@@ -11,10 +16,8 @@ from ruqqus.helpers.markdown import *
 from urllib.parse import urlparse
 from secrets import token_hex
 import matplotlib.pyplot as plt
-import imagehash
 
 from ruqqus.__main__ import app, cache
-from os import remove
 
 
 @app.route("/api/ban_user/<user_id>", methods=["POST"])
@@ -683,3 +686,41 @@ def admin_demod_user(v):
 
     g.db.commit()
     return redirect(user.permalink)
+
+@app.route("/admin/image_ban", methods=["POST"])
+@admin_level_required(4)
+@validate_formkey
+def admin_image_ban(v):
+
+    i=request.files['file']
+
+    #make phash
+    tempname = f"admin_image_ban_{v.username}_{int(time.time())}"
+
+    with open(tempname, "wb") as file:
+        for chunk in x.iter_content(1024):
+            file.write(chunk)
+
+    h=imagehash.phash(Image.open(tempname))
+    h=hex2bin(str(h))
+
+    #check db for existing
+    badpic = g.db.query(BadPic).filter_by(
+        phash=h
+        ).first()
+
+    remove(tempname)
+
+    if badpic:
+        return render_template("admin/image_ban.html", v=v, existing=badpic)
+
+    new_bp=BadPic(
+        phash=h,
+        ban_reason=request.form.get("ban_reason"),
+        ban_time=int(request.form.get("ban_time",0))
+        )
+
+    g.db.add(new_bp)
+    g.db.commit()
+
+    return render_template("admin/image_ban.html", v=v, success=True)
