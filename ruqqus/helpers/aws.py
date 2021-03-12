@@ -280,11 +280,11 @@ def check_csam_url(url, v, delete_content_function):
         now=int(time.time())
         unban=now+60*60*24*h.ban_time if h.ban_time else 0
         # ban user and alts
-        post.author.ban_reason=h.ban_reason
-        post.author.is_banned=1
-        post.author.unban_utc = unban
+        v.ban_reason=h.ban_reason
+        v.is_banned=1
+        v.unban_utc = unban
         db.add(v)
-        for alt in post.author.alts:
+        for alt in v.alts:
             alt.ban_reason=h.ban_reason
             alt.is_banned=1
             alt.unban_utc = unban
