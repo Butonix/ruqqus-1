@@ -140,7 +140,7 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
     exile=g.db.query(ModAction
         ).filter_by(
         kind="exile_user"
-        ).subquery()
+        ).distinct(ModAction.target_comment_id).subquery()
 
     for i in range(6 - context):
         if v:
