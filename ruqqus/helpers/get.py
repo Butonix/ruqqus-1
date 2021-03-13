@@ -290,7 +290,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
         lazyload('*')
         ).filter_by(
         kind="exile_user"
-        ).subquery()
+        ).distinct(ModAction.target_comment_id).subquery()
 
     if v:
         votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -523,7 +523,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         ).filter(
         ModAction.kind=="exile_user",
         ModAction.target_comment_id.in_(cids)
-        ).subquery()
+        ).distinct(ModAction.target_comment_id).subquery()
 
     if v:
         vt = nSession.query(CommentVote).filter(
