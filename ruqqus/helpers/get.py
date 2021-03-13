@@ -334,13 +334,13 @@ def get_post_with_comments(pid, sort_type="top", v=None):
         )
 
         if sort_type == "hot":
-            comments = comms.order_by(Comment.score_hot.desc()).distinct()
+            comments = comms.order_by(Comment.score_hot.desc()).all()
         elif sort_type == "top":
-            comments = comms.order_by(Comment.score_top.desc()).distinct()
+            comments = comms.order_by(Comment.score_top.desc()).all()
         elif sort_type == "new":
-            comments = comms.order_by(Comment.created_utc.desc()).distinct()
+            comments = comms.order_by(Comment.created_utc.desc()).all()
         elif sort_type == "disputed":
-            comments = comms.order_by(Comment.score_disputed.desc()).distinct()
+            comments = comms.order_by(Comment.score_disputed.desc()).all()
         elif sort_type == "random":
             c = comms.all()
             comments = random.sample(c, k=len(c))
@@ -374,13 +374,13 @@ def get_post_with_comments(pid, sort_type="top", v=None):
         )
 
         if sort_type == "hot":
-            comments = comms.order_by(Comment.score_hot.desc()).distinct()
+            comments = comms.order_by(Comment.score_hot.desc()).all()
         elif sort_type == "top":
-            comments = comms.order_by(Comment.score_top.desc()).distinct()
+            comments = comms.order_by(Comment.score_top.desc()).all()
         elif sort_type == "new":
-            comments = comms.order_by(Comment.created_utc.desc()).distinct()
+            comments = comms.order_by(Comment.created_utc.desc()).all()
         elif sort_type == "disputed":
-            comments = comms.order_by(Comment.score_disputed.desc()).distinct()
+            comments = comms.order_by(Comment.score_disputed.desc()).all()
         elif sort_type == "random":
             c = comms.all()
             comments = random.sample(c, k=len(c))
@@ -585,7 +585,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
         query=query.options(
     #        contains_eager(Comment.post).contains_eager(Submission.board)
-            ).order_by(None).distinct()
+            ).order_by(None).all()
 
         comments=[x for x in query]
 
@@ -610,7 +610,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
-        ).order_by(None).distinct()
+        ).order_by(None).all()
 
         comments=[x for x in query]
 
