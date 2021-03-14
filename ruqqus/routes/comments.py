@@ -296,6 +296,9 @@ def api_comment(v):
     #process and sanitize
     body = request.form.get("body", "")[0:10000]
     body = body.lstrip().rstrip()
+
+    if not body:
+        return jsonify({"error":"You need to actually write something!"}), 400
     
     body=preprocess(body)
     with CustomRenderer(post_id=parent_id) as renderer:
