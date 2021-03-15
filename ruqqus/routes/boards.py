@@ -1560,7 +1560,7 @@ def siege_guild(v):
     guild = get_guild(guild)
 
     # check time
-    if v.last_siege_utc > now - (60 * 60 * 24 * 30):
+    if v.last_siege_utc > now - (60 * 60 * 24 * 7):
         return render_template("message.html",
                                v=v,
                                title=f"Siege against +{guild.name} Failed",
