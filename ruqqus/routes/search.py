@@ -53,7 +53,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
     
     if 'q' in criteria:
         words=criteria['q'].split()
-        words=[SubmissionAux.title.contains(x) for x in words]
+        words=[SubmissionAux.title.ilike('%'+x+'%') for x in words]
         words=tuple(words)
         posts=posts.filter(*words)
         
