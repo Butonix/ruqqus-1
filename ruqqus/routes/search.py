@@ -50,16 +50,15 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
             ).join(
                 Submission.board
             )
-
+    
     if 'q' in criteria:
-        posts=posts.filter(
-        SubmissionAux.title.ilike(
-            '%' +
-            criteria['q'] +
-            '%'
-            )
-        )
-
+        words=criteria['q'].split()
+        words=[SubmissionAux.title.contains(x) for x in words]
+        words=tuple(words)
+        posts=posts.filter(words)
+       )
+   )
+        
     if 'author' in criteria:
         posts=posts.filter(
                 Submission.author_id==get_user(criteria['author']).id,
