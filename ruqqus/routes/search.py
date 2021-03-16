@@ -55,9 +55,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
         words=criteria['q'].split()
         words=[SubmissionAux.title.contains(x) for x in words]
         words=tuple(words)
-        posts=posts.filter(words)
-       )
-   )
+        posts=posts.filter(*words)
         
     if 'author' in criteria:
         posts=posts.filter(
