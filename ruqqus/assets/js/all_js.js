@@ -1790,7 +1790,7 @@ pin_comment=function(bid,cid){
 
 
   var xhr = new XMLHttpRequest();
-  xhr.open("post", "/mod/distinguish_comment/"+bid+'/'+cid);
+  xhr.open("post", "/mod/comment_pin/"+bid+'/'+cid);
 
   var form = new FormData();
 
