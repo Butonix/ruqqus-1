@@ -450,7 +450,7 @@
             
           {% if v and c.post and c.is_guildmaster('content') %}
             {% if c.is_top_level %}
-              <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="herald_comment('{{ c.board.base36id }}','{{ c.base36id }}')"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>{{ 'Unpin' if c.is_pinned else 'Pin' }}</a>
+              <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="pin_comment('{{ c.board.base36id }}','{{ c.base36id }}')"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>{{ 'Unpin' if c.is_pinned else 'Pin' }}</a>
               </li>
             {% endif %}
           {% endif %}
