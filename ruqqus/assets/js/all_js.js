@@ -1757,6 +1757,8 @@ post_comment=function(fullname){
   }
   xhr.send(form)
 
+  document.getElementById('save-reply-to-'+fullname).classList.add('disabled');
+
 }
 
 herald_comment=function(bid,cid){
