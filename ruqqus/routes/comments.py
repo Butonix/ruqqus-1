@@ -530,6 +530,8 @@ def api_comment(v):
 
     g.db.commit()
 
+    c=get_comment(c.id, v=v)
+
 
     # print(f"Content Event: @{v.username} comment {c.base36id}")
 
