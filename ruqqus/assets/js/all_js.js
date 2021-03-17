@@ -745,9 +745,15 @@ function post_toast(url, callback) {
       } else if (xhr.status >= 300 && xhr.status < 400) {
         window.location.href = JSON.parse(xhr.response)["redirect"]
       } else {
-        $('#toast-post-error').toast('dispose');
-        $('#toast-post-error').toast('show');
-        document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];
+        data=JSON.parse(xhr.response);
+        try {
+          window.location.href=data["redirect"]
+        }
+        catch {
+          $('#toast-post-error').toast('dispose');
+          $('#toast-post-error').toast('show');
+          document.getElementById('toast-post-error-text').innerText = data["error"];
+        }
       }
     };
 
@@ -1752,6 +1758,30 @@ post_comment=function(fullname){
   xhr.send(form)
 
 }
+
+herald_comment=function(bid,cid){
+
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("post", "/mod/distinguish_comment/"+bid+'/'+cid);
+  xhr.withCredentials=true;
+  xhr.onload=function(){
+    if (xhr.status==200) {
+      commentForm=document.getElementById('comment-'+cid+'only');
+      commentForm.innerHTML=JSON.parse(xhr.response)["html"];
+    }
+    else {
+      $('#toast-comment-success').toast('dispose');
+      $('#toast-comment-error').toast('dispose');
+      $('#toast-comment-error').toast('show');
+      commentError.textContent = JSON.parse(xhr.response)["error"];
+    }
+  }
+  xhr.send(form)
+
+}
+
+
 //part of submit page js
 
 hide_image=function(){
