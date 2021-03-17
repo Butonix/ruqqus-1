@@ -294,58 +294,33 @@ function approveComment(post_id) {
   post(url, callback, "Unable to approve post at this time. Please try again later.")
 }
 
-function distinguishModComment(post_id) {
-  url="/api/distinguish_comment/"+post_id
+admin_comment=function(cid){
 
-  callback=function(){
-    document.getElementById("comment-"+post_id+"-only").classList.add("distinguish-mod");
 
-    button=document.getElementById("distinguish-"+post_id);
-    button.onclick=function(){undistinguishModComment(post_id)};
-    button.innerHTML="undistinguish"
+  var xhr = new XMLHttpRequest();
+  xhr.open("post", "/api/distinguish_comment/"+post_id);
+
+  var form = new FormData();
+
+  form.append('formkey', formkey());
+
+  xhr.withCredentials=true;
+  xhr.onload=function(){
+    if (xhr.status==200) {
+      comment=document.getElementById('comment-'+cid+'-only');
+      comment.innerHTML=JSON.parse(xhr.response)["html"];
+    }
+    else {
+      var commentError = document.getElementById("comment-error-text");
+      $('#toast-comment-success').toast('dispose');
+      $('#toast-comment-error').toast('dispose');
+      $('#toast-comment-error').toast('show');
+      commentError.textContent = JSON.parse(xhr.response)["error"];
+    }
   }
+  xhr.send(form)
 
-  post(url, callback, "Unable to distinguish comment at this time. Please try again later.")
-};
 
-function undistinguishModComment(post_id) {
-  url="/api/undistinguish_comment/"+post_id
-
-  callback=function(){
-    document.getElementById("comment-"+post_id+"-only").classList.remove("distinguish-mod");
-
-    button=document.getElementById("distinguish-"+post_id);
-    button.onclick=function(){distinguishModComment(post_id)};
-    button.innerHTML="distinguish"
-  }
-  post(url, callback, "Unable to undistinguish comment at this time. Please try again later.")
-};
-
-function distinguishAdminComment(post_id) {
-  url="/api/distinguish_comment/"+post_id
-
-  callback=function(){
-    document.getElementById("comment-"+post_id+"-only").classList.add("distinguish-admin");
-
-    button=document.getElementById("distinguish-"+post_id);
-    button.onclick=function(){undistinguishAdminComment(post_id)};
-    button.innerHTML="undistinguish"
-  }
-  post(url, callback, "Unable to distinguish comment at this time. Please try again later.")
-};
-
-function undistinguishAdminComment(post_id) {
-  url="/api/undistinguish_comment/"+post_id
-
-  callback=function(){
-    document.getElementById("comment-"+post_id+"-only").classList.remove("distinguish-admin");
-
-    button=document.getElementById("distinguish-"+post_id);
-    button.onclick=function(){distinguishAdminComment(post_id)};
-    button.innerHTML="distinguish"
-  }
-  post(url, callback, "Unable to undistinguish post at this time. Please try again later.")
-}
 
 //comment replies
 

@@ -250,32 +250,30 @@ def api_unban_comment(c_id, v):
 
 @app.route("/api/distinguish_comment/<c_id>", methods=["post"])
 @admin_level_required(1)
-def api_distinguish_comment(c_id, v):
+def admin_distinguish_comment(c_id, v):
 
-    comment = g.db.query(Comment).filter_by(id=base36decode(c_id)).first()
-    if not comment:
-        abort(404)
+    comment = get_comment(c_id, v=v)
 
-    comment.distinguish_level = v.admin_level
+    if comment.author_id != v.id:
+        abort(403)
 
-    g.db.add(comment)
-
-    return "", 204
-
-
-@app.route("/api/undistinguish_comment/<c_id>", methods=["post"])
-@admin_level_required(1)
-def api_undistinguish_comment(c_id, v):
-
-    comment = g.db.query(Comment).filter_by(id=base36decode(c_id)).first()
-    if not comment:
-        abort(404)
-
-    comment.distinguish_level = 0
+    comment.distinguish_level = 0 if comment.distinguish_level else v.admin_level
 
     g.db.add(comment)
+    g.db.commit()
 
-    return "", 204
+    html=render_template(
+                "comments.html",
+                v=v,
+                comments=[comment],
+                render_replies=False,
+                is_allowed_to_comment=True
+                )
+
+    html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.base36id}-only"))
+
+    return jsonify({"html":html})
+
 
 
 @app.route("/api/ban_guild/<bid>", methods=["POST"])
