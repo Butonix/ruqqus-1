@@ -283,11 +283,7 @@
             {% if v and c.post and c.is_guildmaster('content') %}
             <div class="dropdown-divider"></div>
               {% if c.is_top_level %}
-                {% if c.is_pinned %}
-                <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>Unpin</a>
-                {% else %}
-                <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>Pin</a>
-                {% endif %}
+                <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="pin_comment('{{ c.board.base36id }}','{{ c.base36id }}')"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>{{ "Unpin" if c.is_pinned else "Pin" }}</a>
               {% endif %}
             {% endif %}
             {% if v and c.post and c.is_guildmaster('access') %}
@@ -454,13 +450,8 @@
             
           {% if v and c.post and c.is_guildmaster('content') %}
             {% if c.is_top_level %}
-              {% if c.is_pinned %}
-              <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Unpin</a>
+              <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="herald_comment('{{ c.board.base36id }}','{{ c.base36id }}')"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>{{ 'Unpin' if c.is_pinned else 'Pin' }}</a>
               </li>
-              {% else %}
-              <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Pin</a>
-              </li>
-              {% endif %}
             {% endif %}
           {% endif %}
           {% if v and c.post and c.is_guildmaster('access') %}

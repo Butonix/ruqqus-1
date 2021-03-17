@@ -727,7 +727,7 @@ def embed_comment_cid(cid, pid=None):
 
     return render_template("embeds/comment.html", c=comment)
 
-@app.route("/mod/comment_pin/<bid>/<cid>/<x>", methods=["POST"])
+@app.route("/mod/comment_pin/<bid>/<cid>", methods=["POST"])
 @auth_required
 @is_guildmaster("content")
 @validate_formkey
@@ -765,4 +765,15 @@ def mod_toggle_comment_pin(bid, cid, x, board, v):
         target_comment_id=comment.id
     )
     g.db.add(ma)
-    return "", 204
+
+    html=render_template(
+                "comments.html",
+                v=v,
+                comments=[comment],
+                render_replies=False,
+                is_allowed_to_comment=True
+                )
+
+    html=str(BeautifulSoup(html).find(id=f"comment-{comment.base36id}-only"))
+
+    return jsonify({"html":html})

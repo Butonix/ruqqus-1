@@ -323,8 +323,6 @@ def mod_distinguish_comment(bid, cid, board, v):
 
     html=str(BeautifulSoup(html).find(id=f"comment-{comment.base36id}-only"))
 
-
-
     return jsonify({"html":html})
 
 @app.route("/mod/kick/<bid>/<pid>", methods=["POST"])

@@ -1786,6 +1786,34 @@ herald_comment=function(bid,cid){
 
 }
 
+pin_comment=function(bid,cid){
+
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("post", "/mod/distinguish_comment/"+bid+'/'+cid);
+
+  var form = new FormData();
+
+  form.append('formkey', formkey());
+
+  xhr.withCredentials=true;
+  xhr.onload=function(){
+    if (xhr.status==200) {
+      comment=document.getElementById('comment-'+cid+'-only');
+      comment.innerHTML=JSON.parse(xhr.response)["html"];
+    }
+    else {
+      $('#toast-comment-success').toast('dispose');
+      $('#toast-comment-error').toast('dispose');
+      $('#toast-comment-error').toast('show');
+      commentError.textContent = JSON.parse(xhr.response)["error"];
+    }
+  }
+  xhr.send(form)
+
+}
+
+
 
 //part of submit page js
 
