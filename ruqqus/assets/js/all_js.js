@@ -1726,7 +1726,6 @@ block_user=function() {
 
 post_comment=function(fullname){
 
-  var commentError = document.getElementById("comment-error-text");
 
   var form = new FormData();
 
@@ -1749,6 +1748,7 @@ post_comment=function(fullname){
       $('#toast-comment-success').toast('show');
     }
     else {
+      var commentError = document.getElementById("comment-error-text");
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-error').toast('show');
@@ -1776,6 +1776,7 @@ herald_comment=function(bid,cid){
       comment.innerHTML=JSON.parse(xhr.response)["html"];
     }
     else {
+      var commentError = document.getElementById("comment-error-text");
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-error').toast('show');
@@ -1803,6 +1804,7 @@ pin_comment=function(bid,cid){
       comment.innerHTML=JSON.parse(xhr.response)["html"];
     }
     else {
+      var commentError = document.getElementById("comment-error-text");
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-error').toast('show');
