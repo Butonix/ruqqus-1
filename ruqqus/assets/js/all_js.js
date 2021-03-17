@@ -319,6 +319,7 @@ admin_comment=function(cid){
     }
   }
   xhr.send(form)
+}
 
 
 
