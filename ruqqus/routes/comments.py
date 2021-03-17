@@ -774,6 +774,6 @@ def mod_toggle_comment_pin(bid, cid, x, board, v):
                 is_allowed_to_comment=True
                 )
 
-    html=str(BeautifulSoup(html).find(id=f"comment-{comment.base36id}-only"))
+    html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.base36id}-only"))
 
     return jsonify({"html":html})
