@@ -722,14 +722,11 @@ function post_toast(url, callback) {
         window.location.href = JSON.parse(xhr.response)["redirect"]
       } else {
         data=JSON.parse(xhr.response);
-        try {
-          window.location.href=data["redirect"]
-        }
-        catch {
+        
           $('#toast-post-error').toast('dispose');
           $('#toast-post-error').toast('show');
           document.getElementById('toast-post-error-text').innerText = data["error"];
-        }
+        
       }
     };
 
