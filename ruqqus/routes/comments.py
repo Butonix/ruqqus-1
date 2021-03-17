@@ -733,7 +733,7 @@ def embed_comment_cid(cid, pid=None):
 @validate_formkey
 def mod_toggle_comment_pin(bid, cid, board, v):
 
-    comment = get_comment(cid)
+    comment = get_comment(cid, v=v)
 
     if comment.post.board_id != board.id:
         abort(400)
