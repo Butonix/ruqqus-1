@@ -1772,7 +1772,7 @@ herald_comment=function(bid,cid){
   xhr.withCredentials=true;
   xhr.onload=function(){
     if (xhr.status==200) {
-      comment=document.getElementById('comment-'+cid+'only');
+      comment=document.getElementById('comment-'+cid+'-only');
       comment.innerHTML=JSON.parse(xhr.response)["html"];
     }
     else {
