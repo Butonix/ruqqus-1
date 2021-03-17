@@ -415,7 +415,7 @@
           {% if v %}
               {% if v.admin_level>=1 and v.id==c.author_id %}
 
-                      <li class="list-group-item"><a class="d-block" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="admin_comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>{{ 'Undistinguish' if c.distinguish_level else 'Distinguish'</a></li>
+                      <li class="list-group-item"><a class="d-block" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="admin_comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>{{ 'Undistinguish' if c.distinguish_level else 'Distinguish' }}</a></li>
               {% endif %}
               {% if v.admin_level>=3 %}
                   {% if not c.is_banned %}
