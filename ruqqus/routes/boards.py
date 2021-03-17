@@ -312,7 +312,17 @@ def mod_distinguish_comment(bid, cid, board, v):
         )
     g.db.add(ma)
 
-    return "", 204
+    return jsonify(
+        {
+            "html":render_template(
+                "comments.html",
+                v=v,
+                comments=[comment],
+                render_replies=False,
+                is_allowed_to_comment=True
+                )
+            }
+        )
 
 @app.route("/mod/kick/<bid>/<pid>", methods=["POST"])
 @app.route("/api/v1/kick/<bid>/<pid>", methods=["POST"])

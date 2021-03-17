@@ -1767,8 +1767,8 @@ herald_comment=function(bid,cid){
   xhr.withCredentials=true;
   xhr.onload=function(){
     if (xhr.status==200) {
-      commentForm=document.getElementById('comment-'+cid+'only');
-      commentForm.innerHTML=JSON.parse(xhr.response)["html"];
+      comment=document.getElementById('comment-'+cid+'only');
+      comment.innerHTML=JSON.parse(xhr.response)["html"];
     }
     else {
       $('#toast-comment-success').toast('dispose');
