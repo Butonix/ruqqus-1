@@ -298,7 +298,7 @@ admin_comment=function(cid){
 
 
   var xhr = new XMLHttpRequest();
-  xhr.open("post", "/api/distinguish_comment/"+post_id);
+  xhr.open("post", "/api/distinguish_comment/"+cid);
 
   var form = new FormData();
 
