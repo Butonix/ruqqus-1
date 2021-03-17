@@ -5,6 +5,7 @@ import sass
 import threading
 import time
 import os.path
+from bs4 import BeautifulSoup
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -312,17 +313,19 @@ def mod_distinguish_comment(bid, cid, board, v):
         )
     g.db.add(ma)
 
-    return jsonify(
-        {
-            "html":render_template(
+    html=render_template(
                 "comments.html",
                 v=v,
                 comments=[comment],
                 render_replies=False,
                 is_allowed_to_comment=True
                 )
-            }
-        )
+
+    html=str(BeautifulSoup(html).find(id=f"comment-{comment.base36id}-only"))
+
+
+
+    return jsonify({"html":html})
 
 @app.route("/mod/kick/<bid>/<pid>", methods=["POST"])
 @app.route("/api/v1/kick/<bid>/<pid>", methods=["POST"])
