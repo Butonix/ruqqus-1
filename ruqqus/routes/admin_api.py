@@ -705,7 +705,7 @@ def sig_validate(v):
     valid=validate_hash(str(file.read()), sig)
 
     return render_template(
-        "help/signature",
+        "help/signature.html",
         v=v,
         success = valid,
         error = not valid

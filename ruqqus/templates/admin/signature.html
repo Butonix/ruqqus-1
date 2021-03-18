@@ -4,18 +4,11 @@
 {% block sidebarLeftblock %}{% endblock %}
 
 {% block title %}
-<title>Image Ban</title>
-<meta name="description" content="Image Ban">
+<title>Signature Generation</title>
+<meta name="description" content="Ruqqus Signature">
 {% endblock %}
 
 {% block content %}
-
-{% if existing %}
-<p class="text-danger">Image already banned for: {{ existing.ban_reason }}</p>
-{% elif success %}
-<p class="text-success">Image banned.</p>
-{% endif %}
-
 
 <h1>Perceptive Hash Image Ban</h1>
 <p>Upload an image to add its hash to the ban list.</p>
