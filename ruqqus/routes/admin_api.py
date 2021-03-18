@@ -13,6 +13,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.alerts import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.markdown import *
+from ruqqus helpers.security import *
 from urllib.parse import urlparse
 from secrets import token_hex
 import matplotlib.pyplot as plt
@@ -685,3 +686,9 @@ def admin_demod_user(v):
     g.db.commit()
     return redirect(user.permalink)
 
+@app.route("/admin/signature", methods=["POST"])
+@admin_level_required(5)
+def admin_sig_generate(v):
+
+    file=request.files["file"]
+    return generate_hash(file.read())
