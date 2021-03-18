@@ -696,7 +696,7 @@ def admin_sig_generate(v):
 
 @app.route("/help/signature", methods=["POST"])
 @auth_desired
-def admin_sig_generate(v):
+def sig_validate(v):
 
     file=request.files["file"]
 
