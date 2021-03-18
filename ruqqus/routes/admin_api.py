@@ -13,7 +13,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.alerts import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.markdown import *
-from ruqqus helpers.security import *
+from ruqqus.helpers.security import *
 from urllib.parse import urlparse
 from secrets import token_hex
 import matplotlib.pyplot as plt
