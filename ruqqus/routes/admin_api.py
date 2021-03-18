@@ -688,7 +688,25 @@ def admin_demod_user(v):
 
 @app.route("/admin/signature", methods=["POST"])
 @admin_level_required(5)
+@validate_formkey
 def admin_sig_generate(v):
 
     file=request.files["file"]
     return generate_hash(str(file.read()))
+
+@app.route("/help/signature", methods=["POST"])
+@auth_desired
+def admin_sig_generate(v):
+
+    file=request.files["file"]
+
+    sig=request.form.get("sig").lstrip().rstrip()
+
+    valid=validate_hash(str(file.read()), sig)
+
+    return render_template(
+        "help/signature",
+        v=v,
+        success = valid,
+        error = not valid
+        )
