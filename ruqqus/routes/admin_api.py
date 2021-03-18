@@ -691,4 +691,4 @@ def admin_demod_user(v):
 def admin_sig_generate(v):
 
     file=request.files["file"]
-    return generate_hash(file.read())
+    return generate_hash(str(file.read()))
