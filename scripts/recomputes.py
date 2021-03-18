@@ -98,7 +98,12 @@ def recompute():
 
         #purge deleted comments older than 90 days
 
-        purge_posts = db.query(Submission).filter(Submission.deleted_utc < cutoff_purge, Submission.purged_utc==0).all()
+        purge_posts = db.query(
+            Submission
+            ).filter(
+            Submission.deleted_utc < cutoff_purge, 
+            Submission.purged_utc==0
+            ).all()
         for p in purge_posts:
             x += 1
             p.submission_aux.body = ""
@@ -120,7 +125,13 @@ def recompute():
         db.commit()
 
         x = 0
-        purge_comments = db.query(Comment).filter(Comment.deleted_utc < cutoff_purge, Comment.purged_utc==0).all()
+        purge_comments = db.query(
+            Comment
+            ).filter(
+            Comment.deleted_utc < cutoff_purge, 
+            Comment.purged_utc==0,
+            Comment.author_id != 1
+            ).all()
         for c in purge_comments:
             c += 1
             c.comment_aux.body = ""
