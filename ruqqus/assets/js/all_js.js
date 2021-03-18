@@ -1237,21 +1237,19 @@ var attribution = document.getElementById("modal-image-attribution");
 // Link text
 
 var linkText = document.getElementById("desktop-expanded-image-link");
+var imgLink = document.getElementById("desktop-expanded-image-wrap-link");
 
 var inlineImage = document.getElementById("desktop-expanded-image");
 
 inlineImage.src = image;
 
+linkText.href = link;
+imgLink.href=link;
+
 if (image.includes("i.ruqqus.com")) {
-	linkText.href = link;
 	linkText.textContent = 'Go to website';
 }
-else if (image.includes("imgur.com") || image.includes("cdn.discordapp.com")){
-	linkText.href = image;
-	linkText.textContent = 'View original';
-}
 else {
-	linkText.href = image;
 	linkText.textContent = 'View original';
 }
 
