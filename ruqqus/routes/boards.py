@@ -572,7 +572,7 @@ def mod_take_pid(pid, board, v):
         recent_yank = g.db.query(ModAction).filter(
             #yank records for the guild or user within the last hour..
             ModAction.kind=="yank_post",
-            ModAction.created_utc>now-3600
+            ModAction.created_utc>now-3600,
             or_(
                 ModAction.user_id==v.id,
                 ModAction.board_id==board.id
