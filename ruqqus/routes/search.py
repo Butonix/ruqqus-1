@@ -74,17 +74,25 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
             )
 
     if 'url' in criteria:
+        url=criteria['url']
+        url=url.replace('%','\%')
+        url=url.replace('_','\_')
         posts=posts.filter(
             SubmissionAux.url.ilike("%"+criteria['url']+"%")
             )
 
     if 'domain' in criteria:
+        domain=criteria['domain']
         posts=posts.filter(
             or_(
-                SubmissionAux.url.ilike("https://"+criteria['domain']+'/%'),
-                SubmissionAux.url.ilike("http://"+criteria['domain']+'/%'),
-                SubmissionAux.url.ilike("https://"+criteria['domain']),
-                SubmissionAux.url.ilike("http://"+criteria['domain'])
+                SubmissionAux.url.ilike("https://"+domain+'/%'),
+                SubmissionAux.url.ilike("http://"+domain+'/%'),
+                SubmissionAux.url.ilike("https://"+domain),
+                SubmissionAux.url.ilike("http://"+domain),
+                SubmissionAux.url.ilike("https://www."+domain+'/%'),
+                SubmissionAux.url.ilike("http://www."+domain+'/%'),
+                SubmissionAux.url.ilike("https://www."+domain),
+                SubmissionAux.url.ilike("http://www."+domain)
                 )
             )
 
