@@ -578,7 +578,7 @@ def mod_take_pid(pid, board, v):
                 ModAction.board_id==board.id
                 )
             ).join(
-            ModAction.target_submission
+            ModAction.target_post
             #...which were not originally from the user or guild
             ).filter(
                 Submission.original_board_id!=board.id,
@@ -587,7 +587,7 @@ def mod_take_pid(pid, board, v):
                 ModAction.user_id==v.id,
                 ModAction.created_utc.desc()
             ).options(
-                contains_eager(ModAction.target_submission)
+                contains_eager(ModAction.target_post)
             ).first()
 
 
