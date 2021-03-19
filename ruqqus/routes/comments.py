@@ -297,7 +297,7 @@ def api_comment(v):
     body = request.form.get("body", "")[0:10000]
     body = body.lstrip().rstrip()
 
-    if not body:
+    if not body and not (v.has_premium and request.files.get('file')):
         return jsonify({"error":"You need to actually write something!"}), 400
     
     body=preprocess(body)
