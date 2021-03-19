@@ -583,6 +583,9 @@ def mod_take_pid(pid, board, v):
             ).filter(
                 Submission.original_board_id!=board.id,
                 Submission.author_id!=v.id
+            ).order_by(
+                ModAction.user_id==v.id,
+                ModAction.created_utc.desc()
             ).options(
                 contains_eager(ModAction.target_submission)
             ).first()
