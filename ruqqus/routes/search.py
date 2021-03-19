@@ -83,7 +83,7 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
                 SubmissionAux.url.ilike("https://"+criteria['domain']+'/%'),
                 SubmissionAux.url.ilike("http://"+criteria['domain']+'/%'),
                 SubmissionAux.url.ilike("https://"+criteria['domain']),
-                SubmissionAux.url.ilike("http://"+criteria['domain']),
+                SubmissionAux.url.ilike("http://"+criteria['domain'])
                 )
             )
 
