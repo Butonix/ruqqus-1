@@ -13,6 +13,7 @@ from ruqqus.__main__ import app, cache
 query_regex=re.compile("(\w+):(\S+)")
 valid_params=[
     'author',
+    'domain',
     'guild',
     'url'
 ]
