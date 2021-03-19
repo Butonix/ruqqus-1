@@ -156,6 +156,54 @@ def edit_post(pid, v):
         body_md = renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
 
+
+    # Run safety filter
+    bans = filter_comment_html(body_html)
+    if bans:
+        ban = bans[0]
+        reason = f"Remove the {ban.domain} link from your post and try again."
+        if ban.reason:
+            reason += f" {ban.reason_text}"
+            
+        #auto ban for digitally malicious content
+        if any([x.reason==4 for x in bans]):
+            v.ban(days=30, reason="Digitally malicious content is not allowed.")
+            abort(403)
+            
+        return {"error": reason}, 403
+
+    # check spam
+    soup = BeautifulSoup(body_html, features="html.parser")
+    links = [x['href'] for x in soup.find_all('a') if x.get('href')]
+
+    if url:
+        links = [url] + links
+
+    for link in links:
+        parse_link = urlparse(link)
+        check_url = ParseResult(scheme="https",
+                                netloc=parse_link.netloc,
+                                path=parse_link.path,
+                                params=parse_link.params,
+                                query=parse_link.query,
+                                fragment='')
+        check_url = urlunparse(check_url)
+
+        badlink = g.db.query(BadLink).filter(
+            literal(check_url).contains(
+                BadLink.link)).first()
+        if badlink:
+            if badlink.autoban:
+                text = "Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+                send_notification(v, text)
+                v.ban(days=1, reason="spam")
+
+                return redirect('/notifications')
+            else:
+
+                return {"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}
+
+
     p.body = body
     p.body_html = body_html
     p.edited_utc = int(time.time())
