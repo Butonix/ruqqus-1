@@ -10,8 +10,8 @@
 
 {% block content %}
 
-<h1>Perceptive Hash Image Ban</h1>
-<p>Upload an image to add its hash to the ban list.</p>
+<h1>Signature Generation</h1>
+<p>Upload a file to generate a HMAC signature for it.</p>
 
 <form action="/admin/signature" method="post" class="mb-6" enctype="multipart/form-data">
 	<input type="hidden" name="formkey" value="{{ v.formkey }}">

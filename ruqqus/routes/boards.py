@@ -567,10 +567,32 @@ def mod_take_pid(pid, board, v):
     #check cooldowns
     now=int(time.time())
     if post.original_board_id != board.id and post.author_id != v.id:
-        if now <  v.last_yank_utc + 3600:
-            return jsonify({'error':f"You've yanked a post recently. You need to wait 1 hour between yanks."}), 401
-        elif now <  board.last_yank_utc + 3600:
-            return jsonify({'error':f"+{board.name} has yanked a post recently. The Guild needs to wait 1 hour between yanks."}), 401
+        #look for modlog action with either board or user
+
+        recent_yank = g.db.query(ModAction).filter(
+            #yank records for the guild or user within the last hour..
+            ModAction.kind=="yank_post",
+            ModAction.created_utc>now-3600
+            or_(
+                ModAction.user_id==v.id,
+                ModAction.board_id==board.id
+                )
+            ).join(
+            ModAction.target_submission
+            #...which were not originally from the user or guild
+            ).filter(
+                Submission.original_board_id!=board.id,
+                Submission.author_id!=v.id
+            ).options(
+                contains_eager(ModAction.target_submission)
+            ).first()
+
+
+        if recent_yank:
+            if recent_yank.user_id==v.id:
+                return jsonify({'error':f"You've yanked a post recently. You need to wait 1 hour between yanks."}), 401
+            else:
+                return jsonify({'error':f"+{board.name} has yanked a post recently. The Guild needs to wait 1 hour between yanks."}), 401
 
 
     if board.is_banned:
@@ -599,11 +621,6 @@ def mod_take_pid(pid, board, v):
     g.db.add(post)
 
     if post.original_board_id != board.id and post.author_id != v.id:
-        board.last_yank_utc=now
-        v.last_yank_utc=now
-
-        g.db.add(board)
-        g.db.add(v)
 
         notif_text=f"Your post [{post.title}]({post.permalink}) has been Yanked from +general to +{board.name}.\n\nIf you don't want it there, just click `Remove from +{board.name}` on the post."
         send_notification(post.author, notif_text)

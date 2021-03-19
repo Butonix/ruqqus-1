@@ -45,7 +45,6 @@ class Board(Base, Stndrd, Age_times):
     stored_subscriber_count=Column(Integer, default=1)
     all_opt_out=Column(Boolean, default=False)
     is_siegable=Column(Boolean, default=True)
-    last_yank_utc=Column(Integer, default=0)
     is_locked_category = Column(Boolean, default=False)
     subcat_id=Column(Integer, ForeignKey("subcategories.id"), default=0)
     secondary_color=Column(String(6), default="ffffff")

@@ -14,8 +14,10 @@
 <p>This page may be used to authenticate any file which is purported to be from Ruqqus LLC.</p>
 <p>Any file provided by Ruqqus LLC in response to a legal process, such as a search warrant, will be accompanied by a cryptographic signature. A file may be submitted here, with its signature. If this page does not validate the signature, then the file may not be authentic, and you should suspect tampering or mishandling.</p>
 
+As an example, you can test this page using the Ruqqus logo [here](/assets/images/logo/ruqqus_logo.png). Its signature is `37e4987a9a8a2e033a129f3f629dc5c1`.
+
 {% if error %}
-	<p class="text-danger">The signature is not valid. The file or signature may have been altered, or the file is inauthentic.</p>
+	<p class="text-danger">The signature is not valid. The file or signature may have been altered or mishandled, or the file is inauthentic.</p>
 {% elif success %}
 	<p class="text-info">The signature is valid. The file you uploaded is authentic.</p>
 {% endif %}

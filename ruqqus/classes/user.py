@@ -101,7 +101,6 @@ class User(Base, Stndrd, Age_times):
     is_nofollow = Column(Boolean, default=False)
     custom_filter_list=Column(String(1000), default="")
     discord_id=Column(String(64), default=None)
-    last_yank_utc=Column(Integer, default=0)
     creation_region=Column(String(2), default=None)
     ban_evade=Column(Integer, default=0)
 
