@@ -77,6 +77,16 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
             SubmissionAux.url.ilike("%"+criteria['url']+"%")
             )
 
+    if 'domain' in criteria:
+        posts=posts.filter(
+            or_(
+                SubmissionAux.url.ilike("https://"+criteria['domain']+'/%'),
+                SubmissionAux.url.ilike("http://"+criteria['domain']+'/%'),
+                SubmissionAux.url.ilike("https://"+criteria['domain']),
+                SubmissionAux.url.ilike("http://"+criteria['domain']),
+                )
+            )
+
 
     if not (v and v.over_18):
         posts = posts.filter(Submission.over_18 == False)
