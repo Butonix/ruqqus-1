@@ -176,9 +176,6 @@ def edit_post(pid, v):
     soup = BeautifulSoup(body_html, features="html.parser")
     links = [x['href'] for x in soup.find_all('a') if x.get('href')]
 
-    if url:
-        links = [url] + links
-
     for link in links:
         parse_link = urlparse(link)
         check_url = ParseResult(scheme="https",
