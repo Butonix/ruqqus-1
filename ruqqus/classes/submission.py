@@ -101,6 +101,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     is_pinned = Column(Boolean, default=False)
     score_best = Column(Float, default=0)
     reports = relationship("Report", backref="submission")
+    is_bot = Column(Boolean, default=False)
 
     upvotes = Column(Integer, default=1)
     downvotes = Column(Integer, default=0)
