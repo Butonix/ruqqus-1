@@ -104,6 +104,12 @@ class User(Base, Stndrd, Age_times):
     creation_region=Column(String(2), default=None)
     ban_evade=Column(Integer, default=0)
 
+    profile_upload_ip=deferred(Column(String(255), default=None))
+    banner_upload_ip=deferred(Column(String(255), default=None))
+    profile_upload_region=deferred(Column(String(2)))
+    banner_upload_region=deferred(Column(String(2)))
+
+
     moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
                                primaryjoin="BanRelationship.user_id==User.id")
@@ -635,6 +641,8 @@ class User(Base, Stndrd, Age_times):
                         resize=(100, 100)
                         )
         self.has_profile = True
+        self.profile_upload_ip=request.remote_addr
+        self.profile_upload_region=request.headers.get("cf-ipcountry")
         g.db.add(self)
 
     def set_banner(self, file):
@@ -646,6 +654,8 @@ class User(Base, Stndrd, Age_times):
                         file=file)
 
         self.has_banner = True
+        self.banner_upload_ip=request.remote_addr
+        self.banner_upload_region=request.headers.get("cf-ipcountry")
         g.db.add(self)
 
     def del_profile(self):
@@ -717,16 +727,19 @@ class User(Base, Stndrd, Age_times):
 
     @property
     def can_submit_image(self):
-        return self.has_premium or self.true_score >= 1000 or (
-            self.created_utc <= 1592974538 and self.true_score >= 500)
+        # Has premium
+        # Has 1000 Rep, or 500 for older accounts
+        # if connecting through Tor, must have verified email
+        return (self.has_premium or self.true_score >= 1000 or (
+            self.created_utc <= 1592974538 and self.true_score >= 500)) and (self.is_activated or request.headers.get("cf-ipcountry")!="T1") 
 
     @property
     def can_upload_avatar(self):
-        return self.has_premium or self.true_score >= 300 or self.created_utc <= 1592974538
+        return (self.has_premium or self.true_score >= 300 or self.created_utc <= 1592974538) and (self.is_activated or request.headers.get("cf-ipcountry")!="T1")
 
     @property
     def can_upload_banner(self):
-        return self.has_premium or self.true_score >= 500 or self.created_utc <= 1592974538
+        return (self.has_premium or self.true_score >= 500 or self.created_utc <= 1592974538) and (self.is_activated or request.headers.get("cf-ipcountry")!="T1")
 
     @property
     def json_raw(self):
