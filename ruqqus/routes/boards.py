@@ -1378,13 +1378,13 @@ def mod_board_images_delete_banner(bid, board, v):
     return redirect(f"/+{board.name}/mod/appearance?msg=Success#images")
 
 
-@app.route("/assets/<boardname>/main/<x>.css", methods=["GET"])
+@app.route("/assets/<board_fullname>/main/<x>.css", methods=["GET"])
 #@cache.memoize(60*6*24)
-def board_css(boardname, x):
+def board_css(board_fullname, x):
 
-    # temp
+    b36id=board_fullname.split('_')[1]
 
-    board = get_guild(boardname)
+    board = get_board(b36id)
 
     if int(x) != board.color_nonce:
         return redirect(board.css_url)
@@ -1409,14 +1409,13 @@ def board_css(boardname, x):
     return resp
 
 
-@app.route("/assets/<boardname>/dark/<x>.css", methods=["GET"])
+@app.route("/assets/<board_fullname>/dark/<x>.css", methods=["GET"])
 #@cache.memoize(60*60*24)
-def board_dark_css(boardname, x):
+def board_dark_css(board_fullnamename, x):
 
-    # temp
-    # return redirect("/assets/style/main_dark.css")
+    b36id=board_fullname.split('_')[1]
 
-    board = get_guild(boardname)
+    board = get_board(b36id)
 
     if int(x) != board.color_nonce:
         return redirect(board.css_dark_url)
