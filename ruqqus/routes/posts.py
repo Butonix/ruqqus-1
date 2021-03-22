@@ -776,7 +776,7 @@ def submit_post(v):
     g.db.commit()
 
     # spin off thumbnail generation and csam detection as  new threads
-    if new_post.url or request.files.get('file'):
+    if new_post.url or request.files.get('file') and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"):
         new_thread = threading.Thread(target=thumbnail_thread,
                                       args=(new_post.base36id,)
                                       )
