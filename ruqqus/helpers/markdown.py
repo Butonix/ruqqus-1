@@ -69,7 +69,7 @@ class CustomRenderer(HTMLRenderer):
         if (not user or (user.is_banned and not user.unban_utc) or user.is_deleted):
             return f"{space}@{target}"
 
-        return f'{space}<a href="{user.permalink}" class="d-inline-block"><img src="/@{user.username}/pic/profile" class="profile-pic-20 mr-1">@{user.username}</a>'
+        return f'{space}<a href="{user.uid_permalink}" class="d-inline-block"><img src="/uid/<uid>/pic/profile" class="profile-pic-20 mr-1">@{user.username}</a>'
 
     def render_board_mention(self, token):
         space = token.target[0]

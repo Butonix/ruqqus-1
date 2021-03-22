@@ -521,6 +521,11 @@ class User(Base, Stndrd, Age_times):
     def permalink(self):
         return self.url
 
+    @property
+    def uid_permalink(self):
+        return f"/uid/{self.base36id}"
+    
+
     def __repr__(self):
         return f"<User(username={self.username})>"
 

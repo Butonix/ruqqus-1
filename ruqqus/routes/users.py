@@ -56,6 +56,7 @@ def api_is_available(name, v):
 def user_uid(uid):
 
     user = get_account(uid)
+
     if user:
         return redirect(user.permalink)
     else:
@@ -323,6 +324,12 @@ def api_agree_tos(v):
 @limiter.exempt
 def user_profile(username):
     x = get_user(username)
+    return redirect(x.profile_url)
+
+@app.route("/uid/<uid>/pic/profile")
+@limiter.exempt
+def user_profile_uid(uid):
+    x=get_account(uid)
     return redirect(x.profile_url)
 
 
