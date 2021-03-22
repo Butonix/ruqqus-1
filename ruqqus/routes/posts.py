@@ -690,7 +690,8 @@ def submit_post(v):
         is_offensive=is_offensive,
         is_politics=is_politics,
         app_id=v.client.application.id if v.client else None,
-        creation_region=request.headers.get("cf-ipcountry")
+        creation_region=request.headers.get("cf-ipcountry"),
+        is_bot = request.headers.get("X-User-Type")=="Bot"
         )
 
     g.db.add(new_post)
