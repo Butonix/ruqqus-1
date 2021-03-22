@@ -350,7 +350,7 @@
           </label> 
           <label class="format btn btn-secondary m-0 ml-1{% if not v.can_upload_comment_image %} d-none{% endif %}" for="file-upload-reply-{{ c.fullname }}">
                 <div id="filename-show-reply-{{ c.base36id }}"><i class="far fa-image"></i></div>
-                <input id="file-upload-reply-{{ c.fullname }}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{ c.base36id }}').innerHTML=document.getElementById('file-upload-reply-{{ c.fullname }}').files[0].name;" hidden{% if not >
+                <input id="file-upload-reply-{{ c.fullname }}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{ c.base36id }}').innerHTML=document.getElementById('file-upload-reply-{{ c.fullname }}').files[0].name;" hidden>
           </label>
 
           <a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{ c.base36id }}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
