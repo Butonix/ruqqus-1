@@ -1070,5 +1070,5 @@ class User(Base, Stndrd, Age_times):
 
     @property
     def can_upload_comment_image(self):
-        return v.has_premium and (request.headers.get("cf-ipcountry")!="T1" or v.is_activated)
+        return self.has_premium and (request.headers.get("cf-ipcountry")!="T1" or self.is_activated)
     
