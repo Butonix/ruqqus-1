@@ -1067,3 +1067,8 @@ class User(Base, Stndrd, Age_times):
         data['email_verified']=self.is_activated
 
         return data
+
+    @property
+    def can_upload_comment_image(self):
+        return v.has_premium and (request.headers.get("cf-ipcountry")!="T1" or v.is_activated)
+    
