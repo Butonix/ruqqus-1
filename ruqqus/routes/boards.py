@@ -1290,6 +1290,9 @@ def all_mod_queue(v):
 @validate_formkey
 def mod_board_images_profile(bid, board, v):
 
+    if request.headers.get("cf-ipcountry")=="T1" and not v.is_activated:
+        return jsonfiy({"error":"You must have a verified email address to upload images via Tor."})
+
     board.set_profile(request.files["profile"])
 
     # anti csam
@@ -1317,6 +1320,9 @@ def mod_board_images_profile(bid, board, v):
 @is_guildmaster("appearance")
 @validate_formkey
 def mod_board_images_banner(bid, board, v):
+
+    if request.headers.get("cf-ipcountry")=="T1" and not v.is_activated:
+        return jsonfiy({"error":"You must have a verified email address to upload images via Tor."})
 
     board.set_banner(request.files["banner"])
 
