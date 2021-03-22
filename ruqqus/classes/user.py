@@ -109,6 +109,10 @@ class User(Base, Stndrd, Age_times):
     profile_upload_region=deferred(Column(String(2)))
     banner_upload_region=deferred(Column(String(2)))
 
+    #stuff to support name changes
+    profile_set_utc=Column(Integer, default=0)
+    banner_set_utc=Column(Integer, default=0)
+
 
     moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
@@ -636,7 +640,7 @@ class User(Base, Stndrd, Age_times):
         self.del_profile()
         self.profile_nonce += 1
 
-        aws.upload_file(name=f"users/{self.username}/profile-{self.profile_nonce}.png",
+        aws.upload_file(name=f"uid/{self.base36id}/profile-{self.profile_nonce}.png",
                         file=file,
                         resize=(100, 100)
                         )
@@ -650,7 +654,7 @@ class User(Base, Stndrd, Age_times):
         self.del_banner()
         self.banner_nonce += 1
 
-        aws.upload_file(name=f"users/{self.username}/banner-{self.banner_nonce}.png",
+        aws.upload_file(name=f"uid/{self.base36id}/banner-{self.banner_nonce}.png",
                         file=file)
 
         self.has_banner = True
@@ -660,7 +664,10 @@ class User(Base, Stndrd, Age_times):
 
     def del_profile(self):
 
-        aws.delete_file(name=f"users/{self.username}/profile-{self.profile_nonce}.png")
+        if self.profile_set_utc>1616443200:
+            aws.delete_file(name=f"uid/{self.base36id}/profile-{self.profile_nonce}.png")
+        else:
+            aws.delete_file(name=f"users/{self.username}/profile-{self.profile_nonce}.png")
         self.has_profile = False
         try:
             g.db.add(self)
@@ -669,7 +676,10 @@ class User(Base, Stndrd, Age_times):
 
     def del_banner(self):
 
-        aws.delete_file(name=f"users/{self.username}/banner-{self.banner_nonce}.png")
+        if self.banner_set_utc>1616443200:
+            aws.delete_file(name=f"uid/{self.base36id}/banner-{self.banner_nonce}.png")
+        else:
+            aws.delete_file(name=f"users/{self.username}/banner-{self.banner_nonce}.png")
         self.has_banner = False
         try:
             g.db.add(self)
@@ -680,7 +690,10 @@ class User(Base, Stndrd, Age_times):
     def banner_url(self):
 
         if self.has_banner:
-            return f"https://i.ruqqus.com/users/{self.username}/banner-{self.banner_nonce}.png"
+            if self.banner_set_utc>1616443200:
+                return f"https://i.ruqqus.com/uid/{self.base36id}/banner-{self.profile_nonce}.png"
+            else:
+                return f"https://i.ruqqus.com/users/{self.username}/banner-{self.banner_nonce}.png"
         else:
             return "/assets/images/profiles/default_bg.png"
 
@@ -688,7 +701,10 @@ class User(Base, Stndrd, Age_times):
     def profile_url(self):
 
         if self.has_profile and not self.is_deleted:
-            return f"https://i.ruqqus.com/users/{self.username}/profile-{self.profile_nonce}.png"
+            if self.profile_set_utc>1616443200:
+                return f"https://i.ruqqus.com/uid/{self.base36id}/profile-{self.profile_nonce}.png"
+            else:
+                return f"https://i.ruqqus.com/users/{self.username}/profile-{self.profile_nonce}.png"
         else:
             return "/assets/images/profiles/default-profile-pic.png"
 
