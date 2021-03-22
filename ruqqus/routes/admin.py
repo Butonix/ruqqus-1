@@ -702,10 +702,11 @@ def admin_category_get(v):
 @admin_level_required(5)
 def admin_user_data_get(v):
 
-    user=request.values.get("username")
+    name=request.values.get("username",'')
+
     user=get_user(user, graceful=True)
 
-    if not user:
+    if not name or not user:
         return render_template("admin/user_data.html", v=v)
 
     post_ids = [x[0] for x in g.db.query(Submission.id).filter_by(author_id=user.id).order_by(Submission.created_utc.desc()).all()]
