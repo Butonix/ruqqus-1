@@ -1411,7 +1411,7 @@ def board_css(board_fullname, x):
 
 @app.route("/assets/<board_fullname>/dark/<x>.css", methods=["GET"])
 #@cache.memoize(60*60*24)
-def board_dark_css(board_fullnamename, x):
+def board_dark_css(board_fullname, x):
 
     b36id=board_fullname.split('_')[1]
 
