@@ -55,7 +55,7 @@ def api_is_available(name, v):
 @app.route("/uid/<uid>", methods=["GET"])
 def user_uid(uid):
 
-    user = g.db.query(User).filter_by(id=base36decode(uid)).first()
+    user = get_account(uid)
     if user:
         return redirect(user.permalink)
     else:
