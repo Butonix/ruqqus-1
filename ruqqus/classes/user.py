@@ -526,6 +526,10 @@ class User(Base, Stndrd, Age_times):
     @property
     def uid_permalink(self):
         return f"/uid/{self.base36id}"
+
+    @property
+    def original_link(self):
+        return f"/@{self.original_username}"
     
 
     def __repr__(self):

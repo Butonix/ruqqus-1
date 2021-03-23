@@ -2083,6 +2083,6 @@ $('.mention-user').click(function (event) {
 
   event.preventDefault();
 
-  window.location.href=$(this).data('uid-link');
+  window.location.href=$(this).data('original-link');
 
 });
