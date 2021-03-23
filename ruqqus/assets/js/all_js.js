@@ -2074,3 +2074,11 @@ if (("standalone" in window.navigator) &&       // Check if "standalone" propert
       )
   }
 }
+
+$('.mention-user').focus(function (event) {
+
+  event.preventDefault();
+
+  window.location.href=$(this).data('uid-link');
+
+});
