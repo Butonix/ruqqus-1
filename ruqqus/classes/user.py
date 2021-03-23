@@ -110,8 +110,10 @@ class User(Base, Stndrd, Age_times):
     banner_upload_region=deferred(Column(String(2)))
 
     #stuff to support name changes
-    profile_set_utc=Column(Integer, default=0)
-    banner_set_utc=Column(Integer, default=0)
+    profile_set_utc=deferred(Column(Integer, default=0))
+    banner_set_utc=deferred(Column(Integer, default=0))
+    original_username=deferred(Column(String(255)))
+    name_changed_utc=deferred(Column(Integer, default=0))
 
 
     moderates = relationship("ModRelationship")

@@ -46,7 +46,19 @@ def mfa_qr(secret, v):
 @auth_desired
 @api("read")
 def api_is_available(name, v):
-    if get_user(name, graceful=True):
+
+    name=name.replace('_','\_')
+
+    x= g.db.query(User).options(
+        lazyload('*')
+        ).filter(
+        or_(
+            User.username==name,
+            User.original_username==name
+            )
+        ).first()
+
+    if x:
         return jsonify({name: False})
     else:
         return jsonify({name: True})

@@ -17,6 +17,7 @@ from .front import frontlist
 from ruqqus.__main__ import app, cache
 
 
+valid_username_regex = re.compile("^[a-zA-Z0-9_]{5,25}$")
 valid_password_regex = re.compile("^.{8,100}$")
 
 
@@ -593,3 +594,54 @@ def settings_content_get(v):
 def settings_purchase_history(v):
 
     return render_template("settings_txnlist.html", v=v)
+
+#@app.route("settings/name_change", methods=["POST"])
+#@auth_required
+#@validate_formkey
+def settings_name_change(v):
+
+    new_name=request.form.get("name").lstrip().rstrip()
+
+    #can't change name on verified ID accounts
+    if v.real_id:
+        return jsonify({"error": f"Your ID is verified so you can't change your account username."}), 422
+
+    #60 day cooldown
+    if v.name_changed_utc > int(time.time()) - 60*60*24*60:
+        return jsonify({"error": f"You changed your name less than 60 days ago."}), 422
+
+    #costs 3 coins
+    if v.coin_balance < 3:
+        return jsonify({"error": f"Changing your username costs 3 Coins."}), 422
+
+    #verify acceptability
+    if not re.match(valid_username_regex, new_name):
+        return jsonify({"error": f"Invalid username"}), 422
+
+    #verify availability
+    name=new_name.replace('_','\_')
+
+    x= g.db.query(User).options(
+        lazyload('*')
+        ).filter(
+        or_(
+            User.username.ilike(name),
+            User.original_username.ilike(name)
+            )
+        ).first()
+
+    if x:
+        return jsonify({"error": f"Username `{new_name}` is already in use"}), 409
+
+    v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
+
+    v.username=new_name
+    v.coin_balance-=3
+
+    g.db.add(v)
+    g.db.commit()
+
+
+    return jsonify({"message": f"Username changed to `{new_name}`. 3 Coins have been deducted from your balance."}), 409
+
+
