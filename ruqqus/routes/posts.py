@@ -152,9 +152,9 @@ def edit_post(pid, v):
 
     body = request.form.get("body", "")
     body=preprocess(body)
+    body_html = sanitize(body, linkgen=True)
     with CustomRenderer() as renderer:
-        body_md = renderer.render(mistletoe.Document(body))
-    body_html = sanitize(body_md, linkgen=True)
+        body_html = renderer.render(mistletoe.Document(body_html))
 
 
     # Run safety filter
@@ -571,9 +571,9 @@ def submit_post(v):
 
     body=preprocess(body)
 
+    body_html = sanitize(body, linkgen=True)
     with CustomRenderer() as renderer:
-        body_md = renderer.render(mistletoe.Document(body))
-    body_html = sanitize(body_md, linkgen=True)
+        body_html = renderer.render(mistletoe.Document(body_html))
 
     # Run safety filter
     bans = filter_comment_html(body_html)

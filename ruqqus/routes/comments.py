@@ -301,9 +301,9 @@ def api_comment(v):
         return jsonify({"error":"You need to actually write something!"}), 400
     
     body=preprocess(body)
+    body_html = sanitize(body, linkgen=True)
     with CustomRenderer(post_id=parent_id) as renderer:
-        body_md = renderer.render(mistletoe.Document(body))
-    body_html = sanitize(body_md, linkgen=True)
+        body_html = renderer.render(mistletoe.Document(body_html))
 
     # Run safety filter
     bans = filter_comment_html(body_html)
@@ -461,9 +461,9 @@ def api_comment(v):
 
             body = request.form.get("body") + f"\n\n![](https://{BUCKET}/{name})"
             body=preprocess(body)
+            body_html = sanitize(body, linkgen=True)
             with CustomRenderer(post_id=parent_id) as renderer:
-                body_md = renderer.render(mistletoe.Document(body))
-            body_html = sanitize(body_md, linkgen=True)
+                body_html = renderer.render(mistletoe.Document(body_html))
             
             #csam detection
             def del_function():
@@ -566,9 +566,9 @@ def edit_comment(cid, v):
 
     body = request.form.get("body", "")[0:10000]
     body=preprocess(body)
+    body_html = sanitize(body, linkgen=True)
     with CustomRenderer(post_id=c.post.base36id) as renderer:
-        body_md = renderer.render(mistletoe.Document(body))
-    body_html = sanitize(body_md, linkgen=True)
+        body_html = renderer.render(mistletoe.Document(body_html))
 
     # Run safety filter
     bans = filter_comment_html(body_html)
