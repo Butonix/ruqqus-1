@@ -1388,7 +1388,11 @@ def mod_board_images_delete_banner(bid, board, v):
 #@cache.memoize(60*6*24)
 def board_css(board_fullname, x):
 
-    b36id=board_fullname.split('_')[1]
+    try:
+        b36id=board_fullname.split('_')[1]
+    except IndexError:
+        print(request.headers.get("Referer",request.headers.get("Referrer")))
+        abort(500)
 
     board = get_board(b36id)
 
