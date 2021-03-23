@@ -61,7 +61,7 @@ class CustomRenderer(HTMLRenderer):
 
 
         try:
-            if g.v.admin_level == 0 and g.dv.any_block_exists(user):
+            if g.v.admin_level == 0 and g.v.any_block_exists(user):
                 return f"{space}@{target}"
         except BaseException:
             pass
