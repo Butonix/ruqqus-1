@@ -2077,6 +2077,10 @@ if (("standalone" in window.navigator) &&       // Check if "standalone" propert
 
 $('.mention-user').focus(function (event) {
 
+  if (event.which != 1) {
+    return
+  }
+
   event.preventDefault();
 
   window.location.href=$(this).data('uid-link');
