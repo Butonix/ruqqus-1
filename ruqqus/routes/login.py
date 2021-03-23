@@ -388,16 +388,18 @@ def sign_up_post(v):
 
     # make new user
     try:
-        new_user = User(username=username,
-                        password=request.form.get("password"),
-                        email=email,
-                        created_utc=int(time.time()),
-                        creation_ip=request.remote_addr,
-                        referred_by=ref_id or None,
-                        tos_agreed_utc=int(time.time()),
-                        creation_region=request.headers.get("cf-ipcountry"),
-                        ban_evade =  int(any([x.is_banned for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x]))
-                        )
+        new_user = User(
+            username=username,
+            original_username = username,
+            password=request.form.get("password"),
+            email=email,
+            created_utc=int(time.time()),
+            creation_ip=request.remote_addr,
+            referred_by=ref_id or None,
+            tos_agreed_utc=int(time.time()),
+            creation_region=request.headers.get("cf-ipcountry"),
+            ban_evade =  int(any([x.is_banned for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x]))
+            )
 
     except Exception as e:
         #print(e)
