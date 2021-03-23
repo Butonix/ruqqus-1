@@ -1423,7 +1423,12 @@ def board_css(board_fullname, x):
 #@cache.memoize(60*60*24)
 def board_dark_css(board_fullname, x):
 
-    b36id=board_fullname.split('_')[1]
+
+    try:
+        b36id=board_fullname.split('_')[1]
+    except IndexError:
+        print(request.headers.get("Referer",request.headers.get("Referrer")))
+        abort(500)
 
     board = get_board(b36id)
 
