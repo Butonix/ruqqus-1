@@ -16,10 +16,14 @@ def get_user(username, v=None, nSession=None, graceful=False):
     if not nSession:
         nSession = g.db
 
-    user = nSession.query(User
-                          ).filter(
-        User.username.ilike(username)
-    ).first()
+    user = nSession.query(
+        User
+        ).filter(
+        or_(
+            User.username.ilike(username),
+            User.original_username.ilike(username)
+            )
+        ).first()
 
     if not user:
         if not graceful:
