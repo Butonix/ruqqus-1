@@ -2075,7 +2075,7 @@ if (("standalone" in window.navigator) &&       // Check if "standalone" propert
   }
 }
 
-$('.mention-user').focus(function (event) {
+$('.mention-user').click(function (event) {
 
   if (event.which != 1) {
     return
