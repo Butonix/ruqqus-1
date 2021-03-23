@@ -47,6 +47,7 @@ def mfa_qr(secret, v):
 @api("read")
 def api_is_available(name, v):
 
+    name=name.lstrip().rstrip()
     name=name.replace('_','\_')
 
     x= g.db.query(User).options(
