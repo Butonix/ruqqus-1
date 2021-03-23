@@ -118,9 +118,9 @@ def create_board_post(v):
                                ), 400
 
 
-    description_html = sanitize(description, linkgen=True)
     with CustomRenderer() as renderer:
-        description_html = renderer.render(mistletoe.Document(description_html))
+        description_md = renderer.render(mistletoe.Document(description))
+    description_html = sanitize(description_md, linkgen=True)
 
     # make the board
 
@@ -962,9 +962,9 @@ def mod_bid_settings_name(bid, board, v):
 def mod_bid_settings_description(bid, board, v):
     # board description
     description = request.form.get("description")
-    description_html = sanitize(description, linkgen=True)
     with CustomRenderer() as renderer:
-        description_html = renderer.render(mistletoe.Document(description_html))
+        description_md = renderer.render(mistletoe.Document(description))
+    description_html = sanitize(description_md, linkgen=True)
 
     board.description = description
     board.description_html = description_html
