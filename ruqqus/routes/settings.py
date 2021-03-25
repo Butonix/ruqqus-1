@@ -11,7 +11,7 @@ from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.filters import filter_comment_html
 from ruqqus.helpers.markdown import *
 from ruqqus.helpers.discord import remove_user, set_nick
-from ruqqus.helpers.aws import check_csam_url
+from ruqqus.helpers.aws import *
 from ruqqus.mail import *
 from .front import frontlist
 from ruqqus.__main__ import app, cache
@@ -655,7 +655,23 @@ def settings_name_change(v):
                            v=v,
                            error=f"Username `{new_name}` is already in use.")
 
-    #success
+    #all reqs passed
+
+    #check user avatar/banner for rename if needed
+    if v.has_profile and v.profile_url.startswith("/users/"):
+        upload_from_url(f"https://i.ruqqus.com{v.profile_url}", f"uid/{v.base36id}/profile-{v.profile_nonce}.png")
+        v.profile_set_utc=int(time.time())
+        g.db.add(v)
+        g.db.commit()
+
+    if v.has_banner and v.banner_url.startswith("/users/"):
+        upload_from_url(f"https://i.ruqqus.com{v.banner_url}", f"uid/{v.base36id}/banner-{v.banner_nonce}.png")
+        v.banner_set_utc=int(time.time())
+        g.db.add(v)
+        g.db.commit()
+
+
+    #do name change and deduct coins
 
     v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
 
