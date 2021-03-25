@@ -658,11 +658,9 @@ def settings_name_change(v):
 
     g.db.add(v)
     g.db.commit()
-
-
-    if not re.match(valid_username_regex, new_name):
-        return render_template("settings_profile.html",
-                           v=v,
-                           msg=f"Username changed successfully. 20 Coins have been deducted from your balance.")
+    
+    return render_template("settings_profile.html",
+                       v=v,
+                       msg=f"Username changed successfully. 20 Coins have been deducted from your balance.")
 
 
