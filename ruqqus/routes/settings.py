@@ -595,9 +595,9 @@ def settings_purchase_history(v):
 
     return render_template("settings_txnlist.html", v=v)
 
-#@app.route("settings/name_change", methods=["POST"])
-#@auth_required
-#@validate_formkey
+@app.route("settings/name_change", methods=["POST"])
+@auth_required
+@validate_formkey
 def settings_name_change(v):
 
     new_name=request.form.get("name").lstrip().rstrip()
@@ -611,8 +611,8 @@ def settings_name_change(v):
         return jsonify({"error": f"You changed your name less than 60 days ago."}), 422
 
     #costs 3 coins
-    if v.coin_balance < 3:
-        return jsonify({"error": f"Changing your username costs 3 Coins."}), 422
+    if v.coin_balance < 20:
+        return jsonify({"error": f"Changing your username costs 20 Coins. You only have {v.coin_balance} Coins."}), 422
 
     #verify acceptability
     if not re.match(valid_username_regex, new_name):
@@ -636,12 +636,12 @@ def settings_name_change(v):
     v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
 
     v.username=new_name
-    v.coin_balance-=3
+    v.coin_balance-=20
 
     g.db.add(v)
     g.db.commit()
 
 
-    return jsonify({"message": f"Username changed to `{new_name}`. 3 Coins have been deducted from your balance."}), 409
+    return jsonify({"message": f"Username changed to `{new_name}`. 20 Coins have been deducted from your balance."}), 409
 
 
