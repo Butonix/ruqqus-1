@@ -52,9 +52,9 @@ accounts_to_release.sort(key=lambda x: x.username)
 accounts_to_hold.sort(key=lambda x: x.username)
 
 print(f"{len(accounts_to_release)} names to release")
-print(accounts_to_release)
+#print(accounts_to_release)
 print("")
 
 print(f"{len(accounts_to_hold)} names to hold")
-print(accounts_to_hold)
+#print(accounts_to_hold)
 # for name in names_to_release:
