@@ -235,7 +235,13 @@
                     <input type="text" name="name" class="form-control" value="{{ v.username }}">
                     <div class="d-flex mt-2">
                       <small>5-25 characters, including letters, numbers, and _</small>
+                      {% if v.can_change_name %}
                       <input class="btn btn-primary ml-auto" id="nameSave" type="submit" value="Change Display Name">
+                      {% elif g.timestamp-v.name_changed_utc < 60*60*24 %}
+                      <input class="btn btn-primary ml-auto" id="nameSave" value="{{ 90-((g.timestamp-v.name_changed_utc)//(60*60*24)) }} days remaining" disabled>
+                      {% else %}
+                      <input class="btn btn-primary ml-auto" id="nameSave" value="20 Coins Required" disabled>
+                      {% endif %}
                     </div>
                   </form>
                 </div>
