@@ -602,21 +602,35 @@ def settings_name_change(v):
 
     new_name=request.form.get("name").lstrip().rstrip()
 
+    #make sure name is different
+    if new_name==v.username:
+        return render_template("settings_profile.html",
+                           v=v,
+                           error="You didn't change anything")
+
     #can't change name on verified ID accounts
     if v.real_id:
-        return jsonify({"error": f"Your ID is verified so you can't change your account username."}), 422
+        return render_template("settings_profile.html",
+                           v=v,
+                           error="Your ID is verified so you can't change your username.")
 
     #60 day cooldown
     if v.name_changed_utc > int(time.time()) - 60*60*24*60:
-        return jsonify({"error": f"You changed your name less than 60 days ago."}), 422
+        return render_template("settings_profile.html",
+                           v=v,
+                           error=f"You changed your name {(int(time.time()) - v.name_changed_utc)//(60*60*24)} days ago. You need to wait 90 days between name changes.")
 
     #costs 3 coins
     if v.coin_balance < 20:
-        return jsonify({"error": f"Changing your username costs 20 Coins. You only have {v.coin_balance} Coins."}), 422
+        return render_template("settings_profile.html",
+                           v=v,
+                           error=f"Username changes cost 20 Coins. You only have a balance of {v.coin_balance} Coins")
 
     #verify acceptability
     if not re.match(valid_username_regex, new_name):
-        return jsonify({"error": f"Invalid username"}), 422
+        return render_template("settings_profile.html",
+                           v=v,
+                           error=f"That isn't a valid username.")
 
     #verify availability
     name=new_name.replace('_','\_')
@@ -631,7 +645,10 @@ def settings_name_change(v):
         ).first()
 
     if x:
-        return jsonify({"error": f"Username `{new_name}` is already in use"}), 409
+    if not re.match(valid_username_regex, new_name):
+        return render_template("settings_profile.html",
+                           v=v,
+                           error=f"Username `{new_name}` is already in use.")
 
     v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
 
@@ -642,6 +659,9 @@ def settings_name_change(v):
     g.db.commit()
 
 
-    return jsonify({"message": f"Username changed to `{new_name}`. 20 Coins have been deducted from your balance."}), 409
+    if not re.match(valid_username_regex, new_name):
+        return render_template("settings_profile.html",
+                           v=v,
+                           msg=f"Username changed successfully. 20 Coins have been deducted from your balance.")
 
 

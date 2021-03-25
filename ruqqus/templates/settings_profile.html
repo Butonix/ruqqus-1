@@ -222,8 +222,24 @@
 
             <div class="settings-section rounded mb-0">
 
-              <input type="hidden" name="formkey" value="{{ v.formkey }}">
+              <div class="body d-lg-flex border-bottom">
 
+                <label for="bio" class="text-black w-lg-25">Display Name</label>
+
+                <div class="w-lg-100">
+
+
+                  <form id="profile-settings" action="/settings/change_name" method="post">
+                    <input type="hidden" name="formkey" value="{{ v.formkey }}">
+                    <input type="text" name="name" class="form-control" value="{{ v.username }}">
+                    <div class="d-flex">
+                      <small>5-25 characters, including letters, numbers, and _</small>
+                      <input class="btn btn-primary ml-auto" id="nameSave" type="submit" value="Save Changes">
+                    </div>
+                  </form>
+                </div>
+
+              </div>
               <div class="body d-lg-flex border-bottom">
 
                 <label for="bio" class="text-black w-lg-25">Bio</label>
