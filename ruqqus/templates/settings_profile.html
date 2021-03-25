@@ -238,9 +238,9 @@
                       {% if v.can_change_name %}
                       <input class="btn btn-primary ml-auto" id="nameSave" type="submit" value="Change Display Name">
                       {% elif g.timestamp-v.name_changed_utc < 60*60*24 %}
-                      <input class="btn btn-primary ml-auto" id="nameSave" value="{{ 90-((g.timestamp-v.name_changed_utc)//(60*60*24)) }} days remaining" disabled>
+                      <input class="btn btn-primary ml-auto" id="nameSave" type="submit" value="{{ 90-((g.timestamp-v.name_changed_utc)//(60*60*24)) }} days remaining" disabled>
                       {% else %}
-                      <input class="btn btn-primary ml-auto" id="nameSave" value="20 Coins Required" disabled>
+                      <a class="btn btn-primary ml-auto" id="nameSave" href="/settings/premium">20 Coins required</a>
                       {% endif %}
                     </div>
                   </form>

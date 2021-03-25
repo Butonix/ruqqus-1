@@ -10,7 +10,7 @@ from ruqqus.helpers.security import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.filters import filter_comment_html
 from ruqqus.helpers.markdown import *
-from ruqqus.helpers.discord import remove_user
+from ruqqus.helpers.discord import remove_user, set_nick
 from ruqqus.helpers.aws import check_csam_url
 from ruqqus.mail import *
 from .front import frontlist
@@ -656,6 +656,8 @@ def settings_name_change(v):
     v.username=new_name
     v.coin_balance-=20
     v.name_changed_utc=int(time.time())
+
+    set_nick(v, new_name)
 
     g.db.add(v)
     g.db.commit()
