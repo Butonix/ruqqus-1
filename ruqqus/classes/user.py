@@ -1104,5 +1104,5 @@ class User(Base, Stndrd, Age_times):
     
     @property
     def can_change_name(self):
-        return self.name_changed_utc < int(time.time())-60*60*24*90 and self.coin_balance>=20
+        return self.name_changed_utc < int(time.time())-60*60*24*90 and self.coin_balance>=12
     

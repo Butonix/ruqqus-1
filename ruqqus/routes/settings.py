@@ -621,10 +621,10 @@ def settings_name_change(v):
                            error=f"You changed your name {(int(time.time()) - v.name_changed_utc)//(60*60*24)} days ago. You need to wait 90 days between name changes.")
 
     #costs 3 coins
-    if v.coin_balance < 20:
+    if v.coin_balance < 12:
         return render_template("settings_profile.html",
                            v=v,
-                           error=f"Username changes cost 20 Coins. You only have a balance of {v.coin_balance} Coins")
+                           error=f"Username changes cost 12 Coins. You only have a balance of {v.coin_balance} Coins")
 
     #verify acceptability
     if not re.match(valid_username_regex, new_name):
@@ -654,7 +654,7 @@ def settings_name_change(v):
     v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
 
     v.username=new_name
-    v.coin_balance-=20
+    v.coin_balance-=12
     v.name_changed_utc=int(time.time())
 
     set_nick(v, new_name)
@@ -664,6 +664,6 @@ def settings_name_change(v):
 
     return render_template("settings_profile.html",
                        v=v,
-                       msg=f"Username changed successfully. 20 Coins have been deducted from your balance.")
+                       msg=f"Username changed successfully. 12 Coins have been deducted from your balance.")
 
 
