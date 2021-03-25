@@ -655,6 +655,7 @@ def settings_name_change(v):
 
     v.username=new_name
     v.coin_balance-=20
+    v.name_changed_utc=int(time.time())
 
     g.db.add(v)
     g.db.commit()
