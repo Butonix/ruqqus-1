@@ -30,11 +30,13 @@ displayed_comment_owners = db.query(
         is_deleted=False,
     is_banned=False).distinct().subquery()
 
-banned_accounts = db.query(User).filter_by(
-    unban_utc=0).filter(
+banned_accounts = db.query(User).filter(
         User.is_banned > 0,
+        User.unban_utc==0,
         User.id.notin_(displayed_post_owners),
-    User.id.notin_(displayed_comment_owners))
+        User.id.notin_(displayed_comment_owners)
+        )
+
 
 accounts = [x for x in deleted_accounts] + [y for y in banned_accounts]
 
@@ -56,4 +58,19 @@ print(f"{len(accounts_to_release)} names to release")
 
 print(f"{len(accounts_to_hold)} names to hold")
 #print(accounts_to_hold)
-# for name in names_to_release:
+
+i=0
+
+for account in accounts_to_release:
+    i+=1
+    account.username=f"_Account_{self.base36id}"
+    account.original_username=f"_Account_{self.base36id}"
+    db.add(account)
+    if not i%100:
+        db.flush()
+
+db.flush()
+if input(f"{i} names changed. Commit? "):
+    db.commit()
+else:
+    db.rollback()
