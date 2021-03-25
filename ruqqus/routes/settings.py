@@ -644,7 +644,7 @@ def settings_name_change(v):
             )
         ).first()
 
-    if x:
+    if x and x.id != v.id:
         return render_template("settings_profile.html",
                            v=v,
                            error=f"Username `{new_name}` is already in use.")
@@ -658,7 +658,7 @@ def settings_name_change(v):
 
     g.db.add(v)
     g.db.commit()
-    
+
     return render_template("settings_profile.html",
                        v=v,
                        msg=f"Username changed successfully. 20 Coins have been deducted from your balance.")
