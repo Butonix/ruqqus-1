@@ -645,10 +645,11 @@ def settings_name_change(v):
         ).first()
 
     if x:
-    if not re.match(valid_username_regex, new_name):
         return render_template("settings_profile.html",
                            v=v,
                            error=f"Username `{new_name}` is already in use.")
+
+    #success
 
     v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
 
