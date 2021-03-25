@@ -600,6 +600,12 @@ def settings_purchase_history(v):
 @validate_formkey
 def settings_name_change(v):
 
+    if v.admin_level:
+        return render_template("settings_profile.html",
+                           v=v,
+                           error="Admins can't change their name.")
+
+
     new_name=request.form.get("name").lstrip().rstrip()
 
     #make sure name is different
