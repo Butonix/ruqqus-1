@@ -54,8 +54,8 @@ def api_is_available(name, v):
         lazyload('*')
         ).filter(
         or_(
-            User.username==name,
-            User.original_username==name
+            User.username.ilike(name),
+            User.original_username.ilike(name)
             )
         ).first()
 
