@@ -26,15 +26,20 @@ displayed_post_owners = db.query(
         is_deleted=False,
     is_banned=False).distinct().subquery()
 displayed_comment_owners = db.query(
-    Comment.author_id).filter_by(
-        is_deleted=False,
+    Comment.author_id
+    ).filter_by(
+    is_deleted=False,
     is_banned=False).distinct().subquery()
+
+modaction_owners = db.query(
+	ModAction.user_id).distinct().subquery()
 
 banned_accounts = db.query(User).filter(
         User.is_banned > 0,
         User.unban_utc==0,
         User.id.notin_(displayed_post_owners),
-        User.id.notin_(displayed_comment_owners)
+        User.id.notin_(displayed_comment_owners),
+        User.id.notin_(modaction_owners)
         )
 
 
@@ -63,8 +68,8 @@ i=0
 
 for account in accounts_to_release:
     i+=1
-    account.username=f"_Account_{account.base36id}"
-    account.original_username=f"_Account_{account.base36id}"
+    account.username=f"$Account_{account.base36id}"
+    account.original_username=f"$Account_{account.base36id}"
     db.add(account)
     if not i%100:
         db.flush()
