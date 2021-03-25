@@ -255,12 +255,12 @@
                 <div class="w-lg-100">
 
 
-                  <form id="profile-settings" action="/settings/profile" method="post">
+                  <form id="profile-bio" action="/settings/profile" method="post">
                     <input type="hidden" name="formkey" value="{{ v.formkey }}">
                     <div class="input-group mb-2">
                       <textarea class="form-control rounded" id="bio-text" aria-label="With textarea"
                       placeholder="Tell the Ruqqus community a bit about yourself."
-                      rows="3" name="bio" form="profile-settings" maxlength="256">{{ v.bio }}</textarea>
+                      rows="3" name="bio" form="profile-bio" maxlength="256">{{ v.bio }}</textarea>
                     </div>
                     <div class="d-flex">
                       <small>Limit of 256 characters</small>
