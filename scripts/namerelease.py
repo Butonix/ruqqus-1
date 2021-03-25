@@ -63,8 +63,8 @@ i=0
 
 for account in accounts_to_release:
     i+=1
-    account.username=f"_Account_{self.base36id}"
-    account.original_username=f"_Account_{self.base36id}"
+    account.username=f"_Account_{account.base36id}"
+    account.original_username=f"_Account_{account.base36id}"
     db.add(account)
     if not i%100:
         db.flush()
