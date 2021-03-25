@@ -658,13 +658,13 @@ def settings_name_change(v):
     #all reqs passed
 
     #check user avatar/banner for rename if needed
-    if v.has_profile and v.profile_url.startswith("/users/"):
+    if v.has_profile and v.profile_url.startswith("https://i.ruqqus.com/users/"):
         upload_from_url(f"https://i.ruqqus.com{v.profile_url}", f"uid/{v.base36id}/profile-{v.profile_nonce}.png")
         v.profile_set_utc=int(time.time())
         g.db.add(v)
         g.db.commit()
 
-    if v.has_banner and v.banner_url.startswith("/users/"):
+    if v.has_banner and v.banner_url.startswith("https://i.ruqqus.com/users/"):
         upload_from_url(f"https://i.ruqqus.com{v.banner_url}", f"uid/{v.base36id}/banner-{v.banner_nonce}.png")
         v.banner_set_utc=int(time.time())
         g.db.add(v)
