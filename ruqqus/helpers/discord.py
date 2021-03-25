@@ -58,8 +58,13 @@ def remove_user(user):
 @discord_wrap
 def set_nick(user, nick):
     url=f"{DISCORD_ENDPOINT}/guilds/{SERVER_ID}/members/{user.discord_id}"
+    print(url)
     headers = {"Authorization": f"Bot {BOT_TOKEN}"}
     data={"nick": nick}
-    requests.patch(url, headers=headers, json=data)
+    print(data)
+    x=requests.patch(url, headers=headers, json=data)
+    print(x)
+    print(x.json())
+
 
 
