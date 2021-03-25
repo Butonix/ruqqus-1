@@ -12007,7 +12007,8 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   margin-bottom: 0;
   padding: 0;
   display: flex;
-  align-items: center; }
+  align-items: center;
+  z-index: -2; }
 
 .jumbotron-guild .guild-banner-contents {
   display: none; }
@@ -12019,7 +12020,8 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   width: 100%;
   height: 100%;
   bottom: 0;
-  left: 0; }
+  left: 0;
+  z-index: -1; }
 
 .jumbotron-guild .guild-icon-square-lg {
   height: 125px;

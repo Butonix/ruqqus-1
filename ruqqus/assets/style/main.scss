@@ -2190,6 +2190,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     padding: 0;
     display: flex;
     align-items: center;
+    z-index: -2;
 }
 
 .jumbotron-guild .guild-banner-contents {
@@ -2204,6 +2205,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     height: 100%;
     bottom: 0;
     left: 0;
+    z-index: -1;
 }
 
 .jumbotron-guild .guild-icon-square-lg {
