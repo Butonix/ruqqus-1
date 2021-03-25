@@ -48,6 +48,10 @@ def mfa_qr(secret, v):
 def api_is_available(name, v):
 
     name=name.lstrip().rstrip()
+
+    if len(name)<5 or len(name)>25:
+        return jsonify({name:False})
+        
     name=name.replace('_','\_')
 
     x= g.db.query(User).options(
