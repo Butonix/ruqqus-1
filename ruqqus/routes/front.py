@@ -249,7 +249,6 @@ def home(v):
                      # cache memoization differentiation
                        allow_nsfw=v.over_18,
                      hide_offensive=v.hide_offensive,
-                     hide_politics=v and v.is_hiding_politics,
 
                      #greater/less than
                      gt=int(request.args.get("utc_greater_than",0)),
