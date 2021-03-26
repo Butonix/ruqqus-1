@@ -599,6 +599,8 @@ def admin_ban_domain(v):
         abort(400)
 
     reason=int(request.form.get("reason",0))
+    if not reason:
+        abort(400)
 
     d_query=domain.replace("_","\_")
     d=g.db.query(Domain).filter_by(domain=d_query).first()
