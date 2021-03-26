@@ -212,14 +212,6 @@ def edit_post(pid, v):
             p.is_offensive = True
             break
 
-
-    # politics
-    p.is_politics = False
-    for x in g.db.query(PoliticsWord).all():
-        if (p.body and x.check(p.body)) or x.check(p.title):
-            p.is_politics = True
-            break
-
     g.db.add(p)
 
     return redirect(p.permalink)
@@ -666,13 +658,6 @@ def submit_post(v):
             is_offensive = True
             break
 
-    #politics
-    is_politics=False
-    for x in g.db.query(PoliticsWord).all():
-        if (body and x.check(body)) or x.check(title):
-            is_politics = True
-            break
-
     new_post = Submission(
         author_id=v.id,
         domain_ref=domain_obj.id if domain_obj else None,
@@ -688,7 +673,6 @@ def submit_post(v):
         post_public=not board.is_private,
         repost_id=repost.id if repost else None,
         is_offensive=is_offensive,
-        is_politics=is_politics,
         app_id=v.client.application.id if v.client else None,
         creation_region=request.headers.get("cf-ipcountry"),
         is_bot = request.headers.get("X-User-Type")=="Bot"
