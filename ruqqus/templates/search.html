@@ -237,7 +237,7 @@
   {% endblock %}
 
 
-{% block adminpanel}
+{% block adminpanel %}
 
 {% if domain %}
   <p>{{ "Banned" if domain_obj and not domain_obj.can_submit else "Not banned" }}</p>
