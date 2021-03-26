@@ -235,3 +235,26 @@
   </nav>
   {% endif %}
   {% endblock %}
+
+
+{% block adminpanel}
+
+{% if domain %}
+  <p>{{ "Banned" if domain_obj and not domain_obj.can_submit else "Not banned" }}</p>
+
+  <form action="/admin/ban_domain" method="post">
+    <input type="hidden" name="formkey" value="{{ v.formkey }}">
+    <input type="hidden" name="domain" value="{{ domain_obj.domain }}">
+    <label for="reason_select">Ban reason</label>
+    <select id="reason_select" class="form-control" name="reason">
+        <option value="0">---Select Ban Reason---</option>
+        {% for i in reasons %}
+            <option value="{{ i }}"{% if i==domain.reason %} selected{% endif %}>{{ reasons[i] }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" class="btn btn-primary" value="Ban {{ domain_name }}">
+</form>
+
+{% domain %}
+
+{% endblock %}

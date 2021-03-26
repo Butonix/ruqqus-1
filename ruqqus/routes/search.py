@@ -6,6 +6,7 @@ import re
 from sqlalchemy import *
 
 from flask import *
+from ruqqus.classes.domains import reasons as REASONS
 from ruqqus.__main__ import app, cache
 
 
@@ -38,9 +39,7 @@ def searchparse(text):
 
 
 @cache.memoize(300)
-def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
-
-    criteria = searchparse(q)
+def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 
     posts = g.db.query(Submission).options(
                 lazyload('*')
@@ -301,12 +300,20 @@ def search(v, search_type="posts"):
 
         # posts search
 
-        total, ids = searchlisting(query, v=v, page=page, t=t, sort=sort)
+        criteria=searchparse(query)
+        total, ids = searchlisting(criteria, v=v, page=page, t=t, sort=sort)
 
         next_exists = (len(ids) == 26)
         ids = ids[0:25]
 
         posts = get_posts(ids, v=v)
+
+        if v and v.admin_level>3 and "domain" in criteria:
+            domain=criteria['domain']
+            domain_obj=get_domain(domain)
+        else:
+            domain=None
+            domain_obj=None
 
         return {"html":lambda:render_template("search.html",
                                v=v,
@@ -316,7 +323,10 @@ def search(v, search_type="posts"):
                                listing=posts,
                                sort_method=sort,
                                time_filter=t,
-                               next_exists=next_exists
+                               next_exists=next_exists,
+                               domain=domain,
+                               domain_obj=domain_obj,
+                               reasons=REASONS
                                ),
                 "api":lambda:jsonify({"data":[x.json for x in posts]})
                 }
