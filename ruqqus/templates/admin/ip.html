@@ -13,7 +13,9 @@
 
 <h1>Users</h1>
 <div class="col {% block customPadding %}custom-gutters{% endblock %}" id="main-content-col">
-{% include "user_listing.html" %}
+	<div id="posts" class="posts">
+		{% include "user_listing.html" %}
+	</div>
 </div>
 
 <h2>Posts</h2>
