@@ -348,6 +348,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'title': self.title,
                 'is_nsfw': self.over_18,
                 'is_nsfl': self.is_nsfl,
+                'is_bot': self.is_bot,
                 'thumb_url': self.thumb_url,
                 'domain': self.domain,
                 'is_archived': self.is_archived,
