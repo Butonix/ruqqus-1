@@ -272,6 +272,9 @@ def before_request():
         return "", 429
         #gevent.getcurrent().kill()
 
+    if "archive" in request.headers.get("Origin"):
+    	abort(418)
+
     g.db = db_session()
 
     session.permanent = True
