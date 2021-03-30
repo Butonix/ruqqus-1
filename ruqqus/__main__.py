@@ -386,7 +386,7 @@ def www_redirect(path):
 #     g.db.close()
 
 
-@app.route("/test/archive"):
+@app.route("/test/archive")
 def test_archive():
 	print(request.headers)
 	abort(418)
