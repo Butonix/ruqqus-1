@@ -388,4 +388,5 @@ def www_redirect(path):
 
 @app.route("/test/archive"):
 def test_archive():
+	print(request.headers)
 	abort(418)
