@@ -198,7 +198,7 @@ CREATE TABLE public.submissions (
     score_best double precision,
     upvotes integer,
     downvotes integer,
-    is_politics boolean DEFAULT false,
+    is_bot boolean DEFAULT false,
     gm_distinguish integer DEFAULT 0 NOT NULL,
     app_id integer,
     creation_region character(2) DEFAULT NULL::bpchar
@@ -230,6 +230,7 @@ CREATE TABLE public.users (
     over_18 boolean,
     creation_ip character varying(255),
     hide_offensive boolean,
+    hide_bot boolean,
     is_activated boolean,
     reddit_username character varying(64),
     bio character varying(300),
@@ -267,7 +268,6 @@ CREATE TABLE public.users (
     coin_balance integer DEFAULT 0,
     premium_expires_utc integer DEFAULT 0,
     negative_balance_cents integer DEFAULT 0,
-    is_hiding_politics boolean DEFAULT false,
     custom_filter_list character varying(1000) DEFAULT ''::character varying,
     discord_id character varying(64),
     last_yank_utc integer DEFAULT 0,
@@ -2189,37 +2189,6 @@ ALTER SEQUENCE public.paypal_txns_id_seq OWNED BY public.paypal_txns.id;
 
 
 --
--- Name: politicswords; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.politicswords (
-    id integer NOT NULL,
-    keyword character varying(64),
-    regex character varying(256)
-);
-
-
---
--- Name: politicswords_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.politicswords_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: politicswords_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.politicswords_id_seq OWNED BY public.politicswords.id;
-
-
---
 -- Name: postrels; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2885,13 +2854,6 @@ ALTER TABLE ONLY public.paypal_txns ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
--- Name: politicswords id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.politicswords ALTER COLUMN id SET DEFAULT nextval('public.politicswords_id_seq'::regclass);
-
-
---
 -- Name: postrels id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3387,14 +3349,6 @@ ALTER TABLE ONLY public.votes
 
 ALTER TABLE ONLY public.paypal_txns
     ADD CONSTRAINT paypal_txns_pkey PRIMARY KEY (id);
-
-
---
--- Name: politicswords politicswords_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.politicswords
-    ADD CONSTRAINT politicswords_pkey PRIMARY KEY (id);
 
 
 --
@@ -4125,13 +4079,6 @@ CREATE INDEX paypaltxn_status_idx ON public.paypal_txns USING btree (status);
 
 
 --
--- Name: politics_keyword_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX politics_keyword_idx ON public.politicswords USING btree (keyword);
-
-
---
 -- Name: post_18_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4157,6 +4104,13 @@ CREATE INDEX post_author_index ON public.submissions USING btree (author_id);
 --
 
 CREATE INDEX post_offensive_index ON public.submissions USING btree (is_offensive);
+
+
+--
+-- Name: post_bot_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX post_bot_index ON public.submissions USING btree (is_bot);
 
 
 --
@@ -4367,6 +4321,13 @@ CREATE INDEX submissions_created_utc_desc_idx ON public.submissions USING btree 
 --
 
 CREATE INDEX submissions_offensive_index ON public.submissions USING btree (is_offensive);
+
+
+--
+-- Name: submissions_bot_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submissions_bot_index ON public.submissions USING btree (is_bot);
 
 
 --

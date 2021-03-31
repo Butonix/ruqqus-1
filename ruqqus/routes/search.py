@@ -101,6 +101,9 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 
     if v and v.hide_offensive:
         posts = posts.filter(Submission.is_offensive == False)
+		
+    if v and v.hide_bot:
+        posts = posts.filter(Submission.is_bot == False)
 
     if not(v and v.admin_level >= 3):
         posts = posts.filter(

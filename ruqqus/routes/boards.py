@@ -1862,7 +1862,8 @@ def board_comments(boardname, v):
                               page=page,
                               nsfw=v and v.over_18,
                               nsfl=v and v.show_nsfl,
-                              hide_offensive=v and v.hide_offensive)
+                              hide_offensive=(v and v.hide_offensive) or not v,
+                              hide_bot=v and v.hide_bot)
 
     next_exists = len(idlist) == 26
 

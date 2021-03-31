@@ -38,6 +38,12 @@ def settings_profile_post(v):
         updated = True
         v.hide_offensive = request.values.get("hide_offensive", None) == 'true'
         cache.delete_memoized(User.idlist, v)
+		
+    if request.values.get("hide_bot",
+                          v.hide_bot) != v.hide_bot:
+        updated = True
+        v.hide_bot = request.values.get("hide_bot", None) == 'true'
+        cache.delete_memoized(User.idlist, v)
 
     if request.values.get("show_nsfl", v.show_nsfl) != v.show_nsfl:
         updated = True

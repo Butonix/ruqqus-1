@@ -99,10 +99,13 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
         posts = posts.filter_by(over_18=False)
     
     if not nsfl:
-	    posts = posts.filter_by(is_nsfl=False)
+        posts = posts.filter_by(is_nsfl=False)
 
     if (v and v.hide_offensive) or not v:
         posts = posts.filter_by(is_offensive=False)
+        
+    if v and v.hide_bot:
+        posts = posts.filter_by(is_bot=False)
 
     if v and v.admin_level >= 4:
         board_blocks = g.db.query(
@@ -249,6 +252,7 @@ def home(v):
                      # cache memoization differentiation
                        allow_nsfw=v.over_18,
                      hide_offensive=v.hide_offensive,
+                     hide_bot=v.hide_bot,
 
                      #greater/less than
                      gt=int(request.args.get("utc_greater_than",0)),
@@ -359,6 +363,7 @@ def front_all(v):
                     t=t,
                     v=v,
                     hide_offensive=(v and v.hide_offensive) or not v,
+                    hide_bot=(v and v.hide_bot),
                     gt=int(request.args.get("utc_greater_than", 0)),
                     lt=int(request.args.get("utc_less_than", 0)),
                     filter_words=v.filter_words if v else [],
@@ -568,6 +573,9 @@ def random_post(v):
 
     if v and v.hide_offensive:
         x = x.filter_by(is_offensive=False)
+        
+    if v and v.hide_bot:
+        x = x.filter_by(is_bot=False)
 
     if v:
         bans = g.db.query(
@@ -613,7 +621,8 @@ def random_comment(v):
     x = g.db.query(Comment).filter_by(is_banned=False,
                                       over_18=False,
                                       is_nsfl=False,
-                                      is_offensive=False).filter(Comment.parent_submission.isnot(None))
+                                      is_offensive=False,
+                                      is_bot=False).filter(Comment.parent_submission.isnot(None))
     if v:
         bans = g.db.query(BanRelationship.id).filter_by(user_id=v.id).all()
         x = x.filter(Comment.board_id.notin_([i[0] for i in bans]))
@@ -681,6 +690,9 @@ def comment_idlist(page=1, v=None, nsfw=False, **kwargs):
 
     if v and v.hide_offensive:
         comments = comments.filter_by(is_offensive=False)
+        
+    if v and v.hide_bot:
+        comments = comments.filter_by(is_bot=False)
 
     if v and v.admin_level <= 3:
         # blocks
@@ -719,7 +731,8 @@ def all_comments(v):
                             page=page,
                             nsfw=v and v.over_18,
                             nsfl=v and v.show_nsfl,
-                            hide_offensive=v and v.hide_offensive)
+                            hide_offensive=v and v.hide_offensive,
+                            hide_bot=v and v.hide_bot)
 
     comments = get_comments(idlist, v=v)
 

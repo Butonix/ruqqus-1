@@ -126,7 +126,7 @@ class Board(Base, Stndrd, Age_times):
 
     @cache.memoize(timeout=60)
     def idlist(self, sort="hot", page=1, t=None,
-               show_offensive=True, v=None, nsfw=False, **kwargs):
+               hide_offensive=True, hide_bot=False, v=None, nsfw=False, **kwargs):
 
         posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
                                                                            is_pinned=False,
@@ -138,6 +138,9 @@ class Board(Base, Stndrd, Age_times):
 
         if v and v.hide_offensive:
             posts = posts.filter_by(is_offensive=False)
+			
+        if v and v.hide_bot:
+            posts = posts.filter_by(is_bot=False)
 
         if v and not v.show_nsfl:
             posts = posts.filter_by(is_nsfl=False)
@@ -511,6 +514,9 @@ class Board(Base, Stndrd, Age_times):
 
         if v and v.hide_offensive:
             comments = comments.filter_by(is_offensive=False)
+			
+        if v and v.hide_bot:
+            comments = comments.filter_by(is_bot=False)
 
         if v and not self.has_mod(v) and v.admin_level <= 3:
             # blocks

@@ -81,6 +81,25 @@
                 </div>
 
               </div>
+			  
+              <div class="d-lg-flex border-bottom">
+
+                <div class="title w-lg-25">
+                  <label for="hidebot">Hide bot content</label>
+                </div>
+
+                <div class="body w-lg-100">
+
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="hidebot" name="hide_bot"{% if v.hide_bot %} checked{% endif %} onchange="post_toast('/settings/profile?hide_bot='+document.getElementById('hidebot').checked)">
+                    <label class="custom-control-label" for="hidebot"></label>
+                  </div>
+
+                  <span class="text-small-extra text-muted">Hide posts or collapse comments that are made by bots.</span>
+
+                </div>
+
+              </div>
 
               <div class="d-lg-flex">
 

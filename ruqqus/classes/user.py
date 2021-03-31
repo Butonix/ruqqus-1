@@ -83,6 +83,7 @@ class User(Base, Stndrd, Age_times):
     last_siege_utc = Column(Integer, default=0)
     mfa_secret = deferred(Column(String(16), default=None))
     hide_offensive = Column(Boolean, default=False)
+    hide_bot = Column(Boolean, default=False)
     show_nsfl = Column(Boolean, default=False)
     is_private = Column(Boolean, default=False)
     read_announcement_utc = Column(Integer, default=0)
@@ -217,6 +218,9 @@ class User(Base, Stndrd, Age_times):
 
         if self.hide_offensive:
             posts = posts.filter_by(is_offensive=False)
+			
+        if self.hide_bot:
+            posts = posts.filter_by(is_bot=False)
 
         if not self.show_nsfl:
             posts = posts.filter_by(is_nsfl=False)
@@ -325,6 +329,9 @@ class User(Base, Stndrd, Age_times):
 
         if v and v.hide_offensive:
             submissions = submissions.filter_by(is_offensive=False)
+			
+        if v and v.hide_bot:
+            submissions = submissions.filter_by(is_bot=False)
 
         if not (v and (v.admin_level >= 3)):
             submissions = submissions.filter_by(deleted_utc=0)
@@ -368,6 +375,9 @@ class User(Base, Stndrd, Age_times):
 
         if v and v.hide_offensive:
             comments = comments.filter(Comment.is_offensive == False)
+			
+        if v and v.hide_bot:
+            comments = comments.filter(Comment.is_bot == False)
 
         if v and not v.show_nsfl:
             comments = comments.filter(Submission.is_nsfl == False)
@@ -1101,4 +1111,4 @@ class User(Base, Stndrd, Age_times):
     @property
     def can_change_name(self):
         return self.name_changed_utc < int(time.time())-60*60*24*90 and self.coin_balance>=20
-    
+   

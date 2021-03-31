@@ -405,6 +405,9 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
         if self.is_offensive and v.hide_offensive:
             return True
+			
+        if self.is_bot and v.hide_bot:
+            return True
 
         if any([x in self.body for x in v.filter_words]):
             return True
