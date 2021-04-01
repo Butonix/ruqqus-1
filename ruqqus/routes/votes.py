@@ -1,5 +1,6 @@
 from urllib.parse import urlparse
 import time
+import random
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -24,6 +25,10 @@ def api_vote_post(post_id, x, v):
     # disallow bots
     if request.headers.get("X-User-Type","") == "Bot":
         abort(403)
+
+    #april fools
+    if not random.randint(0,4):
+        return jsonify({"error": "Please wait for the vote button to be sanitized in between uses"}), 400
 
     x = int(x)
 
@@ -109,6 +114,10 @@ def api_vote_comment(comment_id, x, v):
     if request.headers.get("X-User-Type","") == "Bot":
         abort(403)
 
+    #april fools
+    if not random.randint(0,4):
+        return jsonify({"error": "Please wait for the vote button to be sanitized in between uses"}), 400
+        
     x = int(x)
 
     comment = get_comment(comment_id)
