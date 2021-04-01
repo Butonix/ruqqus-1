@@ -71,3 +71,7 @@ def coin_goal(x):
 @app.template_filter("app_config")
 def app_config(x):
     return app.config.get(x)
+
+@app.template_filter("endswith")
+def endswith(x, y)
+    return x.endswith(y)
