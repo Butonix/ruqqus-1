@@ -1,6 +1,9 @@
 {% macro single_comment(c, level=1) %}
 <!---beginning of comment {{ c.id }}--->
 
+<div id="aprilfools" class="py-5">
+</div>
+
 {% set ups=c.upvotes_fuzzed %}
 {% set downs=c.downvotes_fuzzed %}
 {% set score=ups-downs %}
@@ -463,9 +466,6 @@
 </div>
 
 {% endif %}
-
-<div id="aprilfools" class="py-5">
-</div>
 
 {% endmacro %}
 
