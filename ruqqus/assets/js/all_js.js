@@ -401,7 +401,7 @@ function switch_css() {
   if (css.href.includes("/assets/style/main.css")) {
     post("/settings/dark_mode/1",
       callback=function(){
-        css.href="/assets/style/main_dark.css?v=2.34.0";
+        css.href="/assets/style/main_dark.css?v=2.34.1";
         dswitch.classList.remove("fa-toggle-off");
         dswitch.classList.add("fa-toggle-on");
         dswitchmobile.classList.remove("fa-toggle-off");
@@ -412,7 +412,7 @@ function switch_css() {
   else {
     post("/settings/dark_mode/0",
       callback=function(){
-        css.href="/assets/style/main.css?v=2.34.0";
+        css.href="/assets/style/main.css?v=2.34.1";
         dswitch.classList.remove("fa-toggle-on");
         dswitch.classList.add("fa-toggle-off");
         dswitchmobile.classList.remove("fa-toggle-on");
@@ -717,15 +717,17 @@ function post_toast(url, callback) {
         $('#toast-post-success').toast('show');
         document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
         callback(xhr)
+        return true
 
       } else if (xhr.status >= 300 && xhr.status < 400) {
         window.location.href = JSON.parse(xhr.response)["redirect"]
       } else {
         data=JSON.parse(xhr.response);
         
-          $('#toast-post-error').toast('dispose');
-          $('#toast-post-error').toast('show');
-          document.getElementById('toast-post-error-text').innerText = data["error"];
+        $('#toast-post-error').toast('dispose');
+        $('#toast-post-error').toast('show');
+        document.getElementById('toast-post-error-text').innerText = data["error"];
+        return false
         
       }
     };
@@ -915,45 +917,46 @@ var upvote = function(event) {
   var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
   var scoreText = document.getElementsByClassName(type + '-score-' + id);
 
-  for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
+  if (post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection)) {
 
-    var thisUpvoteButton = upvoteButton[j];
-    var thisDownvoteButton = downvoteButton[j];
-    var thisScoreText = scoreText[j];
-    var thisScore = Number(thisScoreText.textContent);
+    for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
 
-    if (thisUpvoteButton.classList.contains('active')) {
-      thisUpvoteButton.classList.remove('active')
-      thisScoreText.textContent = thisScore - 1
-      voteDirection = "0"
-    } else if (thisDownvoteButton.classList.contains('active')) {
-      thisUpvoteButton.classList.add('active')
-      thisDownvoteButton.classList.remove('active')
-      thisScoreText.textContent = thisScore + 2
-      voteDirection = "1"
-    } else {
-      thisUpvoteButton.classList.add('active')
-      thisScoreText.textContent = thisScore + 1
-      voteDirection = "1"
+      var thisUpvoteButton = upvoteButton[j];
+      var thisDownvoteButton = downvoteButton[j];
+      var thisScoreText = scoreText[j];
+      var thisScore = Number(thisScoreText.textContent);
+
+      if (thisUpvoteButton.classList.contains('active')) {
+        thisUpvoteButton.classList.remove('active')
+        thisScoreText.textContent = thisScore - 1
+        voteDirection = "0"
+      } else if (thisDownvoteButton.classList.contains('active')) {
+        thisUpvoteButton.classList.add('active')
+        thisDownvoteButton.classList.remove('active')
+        thisScoreText.textContent = thisScore + 2
+        voteDirection = "1"
+      } else {
+        thisUpvoteButton.classList.add('active')
+        thisScoreText.textContent = thisScore + 1
+        voteDirection = "1"
+      }
+
+      if (thisUpvoteButton.classList.contains('active')) {
+        thisScoreText.classList.add('score-up')
+        thisScoreText.classList.remove('score-down')
+        thisScoreText.classList.remove('score')
+      } else if (thisDownvoteButton.classList.contains('active')) {
+        thisScoreText.classList.add('score-down')
+        thisScoreText.classList.remove('score-up')
+        thisScoreText.classList.remove('score')
+      } else {
+        thisScoreText.classList.add('score')
+        thisScoreText.classList.remove('score-up')
+        thisScoreText.classList.remove('score-down')
+      }
     }
-
-    if (thisUpvoteButton.classList.contains('active')) {
-      thisScoreText.classList.add('score-up')
-      thisScoreText.classList.remove('score-down')
-      thisScoreText.classList.remove('score')
-    } else if (thisDownvoteButton.classList.contains('active')) {
-      thisScoreText.classList.add('score-down')
-      thisScoreText.classList.remove('score-up')
-      thisScoreText.classList.remove('score')
-    } else {
-      thisScoreText.classList.add('score')
-      thisScoreText.classList.remove('score-up')
-      thisScoreText.classList.remove('score-down')
-    }
+    
   }
-
-  post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection);
-  
 }
 
 var downvote = function(event) {
@@ -964,45 +967,46 @@ var downvote = function(event) {
   var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
   var scoreText = document.getElementsByClassName(type + '-score-' + id);
 
-  for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
+  if (post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection)){
 
-    var thisUpvoteButton = upvoteButton[j];
-    var thisDownvoteButton = downvoteButton[j];
-    var thisScoreText = scoreText[j];
-    var thisScore = Number(thisScoreText.textContent);
+    for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
 
-    if (thisDownvoteButton.classList.contains('active')) {
-      thisDownvoteButton.classList.remove('active')
-      thisScoreText.textContent = thisScore + 1
-      voteDirection = "0"
-    } else if (thisUpvoteButton.classList.contains('active')) {
-      thisDownvoteButton.classList.add('active')
-      thisUpvoteButton.classList.remove('active')
-      thisScoreText.textContent = thisScore - 2
-      voteDirection = "-1"
-    } else {
-      thisDownvoteButton.classList.add('active')
-      thisScoreText.textContent = thisScore - 1
-      voteDirection = "-1"
+      var thisUpvoteButton = upvoteButton[j];
+      var thisDownvoteButton = downvoteButton[j];
+      var thisScoreText = scoreText[j];
+      var thisScore = Number(thisScoreText.textContent);
+
+      if (thisDownvoteButton.classList.contains('active')) {
+        thisDownvoteButton.classList.remove('active')
+        thisScoreText.textContent = thisScore + 1
+        voteDirection = "0"
+      } else if (thisUpvoteButton.classList.contains('active')) {
+        thisDownvoteButton.classList.add('active')
+        thisUpvoteButton.classList.remove('active')
+        thisScoreText.textContent = thisScore - 2
+        voteDirection = "-1"
+      } else {
+        thisDownvoteButton.classList.add('active')
+        thisScoreText.textContent = thisScore - 1
+        voteDirection = "-1"
+      }
+
+      if (thisUpvoteButton.classList.contains('active')) {
+        thisScoreText.classList.add('score-up')
+        thisScoreText.classList.remove('score-down')
+        thisScoreText.classList.remove('score')
+      } else if (thisDownvoteButton.classList.contains('active')) {
+        thisScoreText.classList.add('score-down')
+        thisScoreText.classList.remove('score-up')
+        thisScoreText.classList.remove('score')
+      } else {
+        thisScoreText.classList.add('score')
+        thisScoreText.classList.remove('score-up')
+        thisScoreText.classList.remove('score-down')
+      }
     }
 
-    if (thisUpvoteButton.classList.contains('active')) {
-      thisScoreText.classList.add('score-up')
-      thisScoreText.classList.remove('score-down')
-      thisScoreText.classList.remove('score')
-    } else if (thisDownvoteButton.classList.contains('active')) {
-      thisScoreText.classList.add('score-down')
-      thisScoreText.classList.remove('score-up')
-      thisScoreText.classList.remove('score')
-    } else {
-      thisScoreText.classList.add('score')
-      thisScoreText.classList.remove('score-up')
-      thisScoreText.classList.remove('score-down')
-    }
   }
-
-  post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection);
-  
 }
 
 
