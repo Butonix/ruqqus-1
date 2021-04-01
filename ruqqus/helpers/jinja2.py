@@ -73,5 +73,5 @@ def app_config(x):
     return app.config.get(x)
 
 @app.template_filter("endswith")
-def endswith(x, y)
+def endswith(x, y):
     return x.endswith(y)
