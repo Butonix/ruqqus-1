@@ -463,10 +463,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def is_exiled_for(self):
         return self.__dict__.get('_is_exiled_for', None)
-
-    @property
-    def showvirus(self):
-        return self.base36id.endswith('0')
     
     
 

@@ -10,10 +10,6 @@
 {% set voted=-2 %}
 {% endif %}
 
-{% if loop.index0 %}
-<div id="aprilfools" class="my-5 py-5">
-</div>
-{% endif %}
 
 <div id="post-{{ p.base36id }}" class="card{% if p.is_banned %} banned{% endif %}{% if p.deleted_utc > 0 %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}{% if p.is_nsfl %} nsfl {% endif %}">
 
