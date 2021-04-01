@@ -401,7 +401,7 @@ function switch_css() {
   if (css.href.includes("/assets/style/main.css")) {
     post("/settings/dark_mode/1",
       callback=function(){
-        css.href="/assets/style/main_dark.css?v=2.34.2";
+        css.href="/assets/style/main_dark.css?v=2.34.3";
         dswitch.classList.remove("fa-toggle-off");
         dswitch.classList.add("fa-toggle-on");
         dswitchmobile.classList.remove("fa-toggle-off");
@@ -412,7 +412,7 @@ function switch_css() {
   else {
     post("/settings/dark_mode/0",
       callback=function(){
-        css.href="/assets/style/main.css?v=2.34.2";
+        css.href="/assets/style/main.css?v=2.34.3";
         dswitch.classList.remove("fa-toggle-on");
         dswitch.classList.add("fa-toggle-off");
         dswitchmobile.classList.remove("fa-toggle-on");
@@ -914,7 +914,8 @@ var upvote = function(event) {
   if(Math.floor(Math.random()*5)==0){
     $('#toast-post-error').toast('dispose');
     $('#toast-post-error').toast('show');
-    document.getElementById('toast-post-error-text').innerText = "Please wait for the vote button to be sanitized before using it."
+    document.getElementById('toast-post-error-text').innerText = "Please wait for the vote button to be sanitized between uses."
+    return
   }
 
   var type = event.target.dataset.contentType;
@@ -970,7 +971,8 @@ var downvote = function(event) {
   if(Math.floor(Math.random()*5)==0){
     $('#toast-post-error').toast('dispose');
     $('#toast-post-error').toast('show');
-    document.getElementById('toast-post-error-text').innerText = "Please wait for the vote button to be sanitized before using it."
+    document.getElementById('toast-post-error-text').innerText = "Please wait for the vote button to be sanitized between uses."
+    return
   }
 
   var type = event.target.dataset.contentType;
