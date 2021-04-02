@@ -34,6 +34,7 @@ $banned: #960000;
 $deleted: #969600;
 $deletedandbanned: #964000;
 $mod: #07c20c;
+$code: #e83e8c;
 
 $gold: #ECC94B;
 $reddit: #ED4630;
@@ -3281,7 +3282,7 @@ ul.comment-section {
 pre code {
     word-break: break-word;
     white-space: break-spaces;
-    color: $white;
+    color: $code;
 }
 
 // Code Prettify
