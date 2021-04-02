@@ -691,3 +691,12 @@ def settings_name_change(v):
                        msg=f"Username changed successfully. 20 Coins have been deducted from your balance.")
 
 
+
+@app.route("/settings/badges", methods=["POST"])
+@auth_required
+@validate_formkey
+def settings_badge_recheck(v):
+
+    v.refresh_selfset_badges()
+
+    return jsonify({"message":"Badges Refreshed"})
