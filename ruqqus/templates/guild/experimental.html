@@ -1,3 +1,343 @@
 {% extends "guild/guild_settings.html" %}
 
 {% block pagetitle %}+{{ b.name }} Experimental Features - Ruqqus Guildmaster Tools{% endblock %}
+
+<div class="row">
+
+	<div class="col">
+
+		<div class="settings">
+
+			<h2 id="color" class="h5">Guild Secondary Color</h2>
+
+			<div class="settings-section rounded">
+
+				<div class="d-lg-flex">
+
+					<div class="body w-lg-100 my-auto">
+
+						<p class="text-small mb-2">Pick an accent color to represent your guild. Affects buttons, links, etc.</p>
+
+						<div class="d-flex">
+
+							<form action="/mod/{{ b.base36id }}/color" id="color-form" method="post" class="color-picker" style="line-height: 0">
+								<input type="hidden" name="formkey" value="{{ v.formkey }}">
+
+								<input type="radio" name="color" id="purple" value="805AD5" {% if b.color == '805AD5' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+								<label class="color-radio" for="purple">
+									<span class="purple" style="background-color: #805AD5">
+										{% if b.color == '805AD5' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+									</span>
+								</label>
+
+								<input type="radio" name="color" id="blue" value="2A96F3" {% if b.color == '2A96F3' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+								<label class="color-radio" for="blue">
+									<span class="blue" style="background-color: #2A96F3">{% if b.color == '2A96F3' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+									</span>
+								</label>
+
+								<input type="radio" name="color" id="green" value="62CA56" {% if b.color == '62CA56' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+								<label class="color-radio" for="green">
+									<span class="green" style="background-color: #62CA56">{% if b.color == '62CA56' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+									</span>
+								</label>
+
+								<input type="radio" name="color" id="hot-pink" value="EB4963" {% if b.color == 'EB4963' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+								<label class="color-radio" for="hot-pink">
+									<span class="hot-pink" style="background-color: #EB4963">{% if b.color == 'EB4963' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+									</span>
+								</label>
+
+								<input type="radio" name="color" id="orange" value="F39731" {% if b.color == 'F39731' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+								<label class="color-radio" for="orange">
+									<span class="orange" style="background-color: #F39731">{% if b.color == 'F39731' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+									</span>
+								</label>
+
+								<input type="radio" name="color" id="deep-blue" value="30409F" {% if b.color == '30409F' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+								<label class="color-radio" for="deep-blue">
+									<span class="deep-blue" style="background-color: #30409F">{% if b.color == '30409F' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+									</span>
+								</label>
+
+								<input type="radio" name="color" id="teal" value="3E98A7" {% if b.color == '3E98A7' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+								<label class="color-radio" for="teal">
+									<span class="teal" style="background-color: #3E98A7">{% if b.color == '3E98A7' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+									</span>
+								</label>
+
+								<input type="radio" name="color" id="red" value="E4432D" {% if b.color == 'E4432D' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+								<label class="color-radio" for="red">
+									<span class="red" style="background-color: #E4432D">{% if b.color == 'E4432D' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+									</span>
+								</label>
+
+								<input type="radio" name="color" id="blurple" value="7B9AE4" {% if b.color == '7B9AE4' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+								<label class="color-radio" for="blurple">
+									<span class="blurple" style="background-color: #7B9AE4">{% if b.color == '7B9AE4' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+									</span>
+								</label>
+
+								<input type="radio" name="color" id="pink" value="EC72DE" {% if b.color == 'EC72DE' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+								<label class="color-radio" for="pink">
+									<span class="pink" style="background-color: #EC72DE">{% if b.color == 'EC72DE' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+									</span>
+								</label>
+
+								<input type="radio" name="color" id="gray" value="7F8FA6" {% if b.color == '7F8FA6' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+								<label class="color-radio" for="gray">
+									<span class="gray" style="background-color: #7F8FA6">{% if b.color == '7F8FA6' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+									</span>
+								</label>
+
+							</form>
+
+						</div>
+
+						<p class="text-small mb-2">Or type a color code:</p>
+
+						<div class="d-flex">
+
+							<form action="/mod/{{ b.base36id }}/color" id="color-code-form" method="post">
+								<input type="hidden" name="formkey" value="{{ v.formkey }}">
+
+								<input class="form-control" type="text" name="color" id="color-code" value="{{ b.color }}">
+								<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
+							</form>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<div id="description">
+
+				<h2 class="h5" id="guild_description" name="guild_description">Guild Description</h2>
+
+				<p class="text-small text-muted">Edit the guild's public description. All visitors to the guild will see this.</p>
+
+				<div class="settings-section rounded">
+
+					<div class="body d-lg-flex">
+
+						<label for="bio" class="text-black w-lg-25">Short Description</label>
+
+						<div class="w-lg-100">
+							<div class="input-group mb-2">
+								<textarea class="form-control rounded" id="bio" aria-label="With textarea" placeholder="Briefly describe your guild and what it's about." rows="3" name="description" form="guild-settings" maxlength="1000">{{ b.description }}</textarea>
+							</div>
+
+							<small>Limit of 140 characters. Markdown not supported.</small>
+
+						</div>
+
+					</div>
+
+					<div class="footer">
+
+						<div class="d-flex justify-content-end">
+
+							{% if error %}
+							<p class="mb-0">
+								<span class="text-danger text-small" style="vertical-align: sub;">{{ error }}</span>
+							</p>
+							{% endif %}
+
+							<button class="btn btn-primary ml-auto" id="save-bio" onclick="mod_post('/mod/{{ b.base36id }}/settings/description_short', 'bio', 'save-bio');">Save</button>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+			<div id="user-titles">
+				<div class="d-md-flex justify-content-between mb-3">
+					<div>
+						<h2 class="h5" name="guild_name">User Titles</h2>
+					</div>
+					<div class="mt-auto">
+						<button class="btn btn-primary" data-toggle="modal" data-target="#titleCreateModal">
+							<i class="fas fa-plus mr-2"></i>Create new title
+						</button>
+					</div>
+				</div>
+				<div class="card mb-5">
+					<table class="table table-hover rounded mb-0">
+						<thead class="thead-dark">
+							<tr>
+								<th scope="col">User Title</th>
+								<th scope="col">Settings</th>
+								<th scope="col"></th>
+							</tr>
+						</thead>
+						<tbody class="text-muted">
+
+							{% for title in b.titles_list %}
+							<tr>
+								<td>
+									<span id="{{ title.id }}" class="badge badge-primary text-small" style="background-color: {{ title.bgColor }}">
+										{{ title.name }}
+									</span>
+								</td>
+								<td>{{ title.settings }}</td>
+
+								<td>
+									{% if perm_full or perm_appearance %}
+									<div class="dropdown float-right dropdown-actions">
+										<a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="line-height: 0;">
+											<i class="fas fa-ellipsis-h text-muted"></i>
+										</a>
+										<div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
+											<button class="dropdown-item" data-toggle="collapse" data-target="#accordion-{{ title.id }}" onclick="titleEdit('{{ mod.user.username }}','{{ mod.permlist }}')">
+												<i class="fas fa-user-cog fa-fw"></i>Edit title
+											</button>
+											<button class="dropdown-item" onclick="post('/mod/{{ b.base36id }}/remove/{{ mod.user.username }}', callback=function(){window.location.reload(true)})">
+												<i class="fas fa-trash-alt"></i>Delete title
+											</button>
+										</div>
+									</div>
+									{% endif %}
+
+
+								</td>
+							</tr>
+							<tr class="settings-section bg-white border-0">
+								<td colspan="4" class="p-0">
+									<div id="accordion-{{ title.id }}" class="collapse">
+
+										<form action="/+{{ b.name }}/mod/edit_titles" method="post">
+
+											<input type="hidden" name="formkey" value="{{ v.formkey }}">
+
+											<div class="d-lg-flex mb-4">
+												<div class="title w-lg-25">
+													<label for="title_text">Text</label>
+												</div>
+												<div class="body w-lg-100">
+													<input class="form-control w-auto" type="text" name="title_text" id="title_text" value="{{ title.text }}">
+												</div>
+											</div>
+
+											<div class="d-lg-flex mb-4">
+												<div class="title w-lg-25">
+													<label for="title_color">Background Color</label>
+												</div>
+												<div class="body w-lg-100">
+													<input type="radio" name="title_color" id="purple" value="805AD5" {% if b.color == '805AD5' %}checked{% endif %}/>
+													<label class="color-radio" for="purple">
+														<span class="purple" style="background-color: #805AD5">
+															{% if b.color == '805AD5' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+														</span>
+													</label>
+													<input type="radio" name="title_color" id="blue" value="2A96F3" {% if b.color == '2A96F3' %}checked{% endif %}/>
+													<label class="color-radio" for="blue">
+														<span class="blue" style="background-color: #2A96F3">{% if b.color == '2A96F3' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+														</span>
+													</label>
+													<input type="radio" name="title_color" id="green" value="62CA56" {% if b.color == '62CA56' %}checked{% endif %}/>
+													<label class="color-radio" for="green">
+														<span class="green" style="background-color: #62CA56">{% if b.color == '62CA56' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+														</span>
+													</label>
+													<input type="radio" name="title_color" id="hot-pink" value="EB4963" {% if b.color == 'EB4963' %}checked{% endif %}/>
+													<label class="color-radio" for="hot-pink">
+														<span class="hot-pink" style="background-color: #EB4963">{% if b.color == 'EB4963' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+														</span>
+													</label>
+													<input type="radio" name="title_color" id="orange" value="F39731" {% if b.color == 'F39731' %}checked{% endif %}/>
+													<label class="color-radio" for="orange">
+														<span class="orange" style="background-color: #F39731">{% if b.color == 'F39731' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+														</span>
+													</label>
+													<input type="radio" name="title_color" id="deep-blue" value="30409F" {% if b.color == '30409F' %}checked{% endif %}/>
+													<label class="color-radio" for="deep-blue">
+														<span class="deep-blue" style="background-color: #30409F">{% if b.color == '30409F' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+														</span>
+													</label>
+													<input type="radio" name="title_color" id="teal" value="3E98A7" {% if b.color == '3E98A7' %}checked{% endif %}/>
+													<label class="color-radio" for="teal">
+														<span class="teal" style="background-color: #3E98A7">{% if b.color == '3E98A7' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+														</span>
+													</label>
+													<input type="radio" name="title_color" id="red" value="E4432D" {% if b.color == 'E4432D' %}checked{% endif %}/>
+													<label class="color-radio" for="red">
+														<span class="red" style="background-color: #E4432D">{% if b.color == 'E4432D' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+														</span>
+													</label>
+													<input type="radio" name="title_color" id="blurple" value="7B9AE4" {% if b.color == '7B9AE4' %}checked{% endif %}/>
+													<label class="color-radio" for="blurple">
+														<span class="blurple" style="background-color: #7B9AE4">{% if b.color == '7B9AE4' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+														</span>
+													</label>
+													<input type="radio" name="title_color" id="pink" value="EC72DE" {% if b.color == 'EC72DE' %}checked{% endif %}/>
+													<label class="color-radio" for="pink">
+														<span class="pink" style="background-color: #EC72DE">{% if b.color == 'EC72DE' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+														</span>
+													</label>
+													<input type="radio" name="title_color" id="gray" value="7F8FA6" {% if b.color == '7F8FA6' %}checked{% endif %}/>
+													<label class="color-radio" for="gray">
+														<span class="gray" style="background-color: #7F8FA6">{% if b.color == '7F8FA6' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}
+														</span>
+													</label>
+												</div>
+											</div>
+
+											<div class="d-lg-flex mb-4">
+												<div class="title w-lg-25">
+													<label for="title_edits">Allow member edits</label>
+												</div>
+												<div class="body w-lg-100">
+													<div class="custom-control custom-switch">
+														<input type="checkbox" class="custom-control-input" id="title_edits" name="title_edits"{% if title.allow_edits %} checked{% endif %}>
+														<label class="custom-control-label" for="title_edits"></label>
+													</div>
+													<span class="text-small-extra text-muted">
+														Members will be able to change the text of the title.
+													</span>
+												</div>
+											</div>
+
+											<div class="d-lg-flex mb-4">
+												<div class="title w-lg-25">
+													<label for="title_rep">Rep Requirement</label>
+												</div>
+												<div class="body w-lg-100">
+													<input class="form-control w-auto" type="number" name="title_rep" id="title_rep" value="{{ title.rep }}">
+													<span class="text-small-extra text-muted">
+														Members must meet the rep requirement to use the title.
+													</span>
+												</div>
+											</div>
+
+											<div class="footer">
+												<div class="d-flex justify-content-end">
+													<button type="button" class="btn btn-link text-muted" data-toggle="collapse" data-target="#accordion-{{ title.id }}">
+														Cancel
+													</button>
+													<input type="submit" class="btn btn-primary" value="Save Changes">
+												</div>
+											</div>
+
+										</form>
+									</div>
+								</td>
+							</tr>
+							{% else %}
+							<td>There are no guildmasters.{% if b.is_siegable and b.id>1%} You may be able to <a href="/help/siege">siege</a> this community and become guildmaster.{% endif %}</td>
+							{% endfor %}
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>

@@ -2055,7 +2055,6 @@ var all_cats=function(page) {
   togglecat('hot', reload=true, delay=0, page=page)  
 }
 
-
 //mobile prompt
 if (("standalone" in window.navigator) &&       // Check if "standalone" property exists
     window.navigator.standalone){               // Test if using standalone navigator
