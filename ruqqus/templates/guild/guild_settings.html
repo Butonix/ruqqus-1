@@ -113,6 +113,12 @@
                   </li>
                   {% endif %}
 
+                  {% if mod and mod.perm_appearance %}
+                  <li class="nav-item">
+                    <a class="nav-link{% if request.path.endswith('/mod/experimental') %} active{% endif %}" href="/+{{ b.name }}/mod/experimental"><i class="fas fa-flask"></i>Experimental</a> 
+                  </li>
+                  {% endif %}
+
                 </ul>
               </div>
             </div>
@@ -156,6 +162,11 @@
             {% if mod and mod.perm_content %}
             <li class="nav-item">
               <a class="nav-link{% if request.path.endswith('/mod/queue') %} active{% endif %}" href="/+{{ b.name }}/mod/queue"><i class="fas fa-flag text-lg mr-0"></i></a>
+            </li>
+            {% endif %}
+            {% if mod and mod.perm_appearance %}
+            <li class="nav-item">
+              <a class="nav-link{% if request.path.endswith('/mod/experimental') %} active{% endif %}" href="/+{{ b.name }}/mod/experimental"><i class="fas fa-flask text-lg mr-0"></i></a>
             </li>
             {% endif %}
           </ul>
