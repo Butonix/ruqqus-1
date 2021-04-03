@@ -43,8 +43,8 @@
       var test = new ReconnectingWebSocket(ws_scheme + location.host + "/chat/test_socket");
 
 
-      var inbox = new ReconnectingWebSocket(ws_scheme + location.host + "/chat/{{ b.name }}");
-      var outbox = new ReconnectingWebSocket(ws_scheme + location.host + "/chat/{{ b.name }}");
+      var inbox = new ReconnectingWebSocket(ws_scheme + location.host + "/chat/{{ b.name }}/outbox");
+      var outbox = new ReconnectingWebSocket(ws_scheme + location.host + "/chat/{{ b.name }}/inbox");
 
       inbox.onmessage = function(message) {
         var data = JSON.parse(message.data);
