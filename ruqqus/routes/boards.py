@@ -955,6 +955,7 @@ def mod_bid_settings_name(bid, board, v):
         return "", 422
 
 
+
 @app.route("/mod/<bid>/settings/description", methods=["POST"])
 @auth_required
 @is_guildmaster("config")
@@ -988,12 +989,8 @@ def mod_bid_settings_description(bid, board, v):
 def create_board_short_descr(bid, v):
     board = get_board(bid)
 
-    description = request.form.get("description")
-    with CustomRenderer() as renderer:
-        description_md = renderer.render(mistletoe.Document(description))
-    description_html = sanitize(description_md, linkgen=True)
-    board.short_description = description_md
-    board.short_description_html = description_html
+    board.short_description = request.form.get("description", "")
+
     g.db.add(board)
 
     ma = ModAction(
@@ -1004,6 +1001,13 @@ def create_board_short_descr(bid, v):
     )
     g.db.add(ma)
     return "", 204
+
+@app.route("/+<boardname>/settings/experimental", methods=["GET"])
+@auth_required
+@is_guildmaster()
+def board_experimental(boardname, board, v):
+
+    return render_template("guild/experimental.html", v=v, b=board)
 
 @app.route("/mod/<bid>/settings/banner", methods=["POST"])
 @auth_required
