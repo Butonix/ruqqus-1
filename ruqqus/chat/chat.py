@@ -32,7 +32,7 @@ def socket_home():
 
     return """
 <script>
-ws=new WebSocket("ws://dev.ruqqus.com/socket_test")
+ws=new WebSocket("wss://dev.ruqqus.com/socket_test")
 ws.onmessage = function (event) {
   console.log(event.data);
 }
