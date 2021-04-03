@@ -63,13 +63,13 @@ CHATS = {}
 
 @sockets.route('/+<guildname>/chat_submit')
 #@is_not_banned
-def inbox(ws):
+def inbox(ws, guildname):
 
     print('submit websocket')
     """Receives incoming chat messages, inserts them into Redis."""
 
     #guild=get_guild(guildname, graceful=True)
-    guild=get_guild('general', graceful=True)
+    guild=get_guild(guildname, graceful=True)
     #if not guild or guild.is_banned:
     #    ws.close()
     #    return
@@ -89,12 +89,12 @@ def inbox(ws):
 
 @sockets.route('/+<guildname>/chat_receive')
 #@is_not_banned
-def outbox(ws):
+def outbox(ws, guildname):
     #print(args)
 
     #guild=get_guild(guildname, graceful=True)
     
-    guild=get_guild('general', graceful=True)
+    guild=get_guild(guildname, graceful=True)
     #if not guild or guild.is_banned:
     #    ws.close()
     #    return
