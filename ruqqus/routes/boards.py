@@ -65,25 +65,6 @@ def api_board_available(name, v):
     else:
         return jsonify({"board": name, "available": True})
 
-
-@app.route("/mod/<bid>/short_description", methods=["POST"])
-@app.route("/api/v1/mod/<bid>/short_description", methods=["POST"])
-@is_not_banned
-@auth_required
-@is_guildmaster("full")
-@api("guildmaster")
-@validate_formkey
-def create_board_short_descr(bid, v):
-    board = get_board(bid)
-
-    description = request.form.get("description")
-    with CustomRenderer() as renderer:
-        description_md = renderer.render(mistletoe.Document(description))
-    description_html = sanitize(description_md, linkgen=True)
-    board.short_description = description_md
-    board.short_description_html = description_html
-    return "", 204
-
 @app.route("/create_guild", methods=["POST"])
 @is_not_banned
 @no_negative_balance("html")
@@ -999,6 +980,30 @@ def mod_bid_settings_description(bid, board, v):
     g.db.add(ma)
     return "", 204
 
+@app.route("/mod/<bid>/settings/short_description", methods=["POST"])
+@is_not_banned
+@auth_required
+@is_guildmaster("config")
+@validate_formkey
+def create_board_short_descr(bid, v):
+    board = get_board(bid)
+
+    description = request.form.get("description")
+    with CustomRenderer() as renderer:
+        description_md = renderer.render(mistletoe.Document(description))
+    description_html = sanitize(description_md, linkgen=True)
+    board.short_description = description_md
+    board.short_description_html = description_html
+    g.db.add(board)
+
+    ma = ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"update short description"
+    )
+    g.db.add(ma)
+    return "", 204
 
 @app.route("/mod/<bid>/settings/banner", methods=["POST"])
 @auth_required
@@ -1472,6 +1477,54 @@ def board_dark_css(board_fullname, x):
     resp.headers.add("Cache-Control", "public")
     return resp
 
+@app.route("/mod/<bid>/color", methods=["POST"])
+@auth_required
+@is_guildmaster("appearance")
+@validate_formkey
+def mod_board_color(bid, board, v):
+
+    color = str(request.form.get("color", "")).strip()
+
+    # Remove the '#' from the beginning in case it was entered.
+    if color.startswith('#'):
+        color = color[1:]
+
+    if len(color) != 6:
+        return render_template("guild/appearance.html",
+                               v=v, b=board, error="Invalid color code."), 400
+
+    red = color[0:1]
+    green = color[2:3]
+    blue = color[4:5]
+
+    try:
+        if any([int(x, 16) > 255 for x in [red, green, blue]]):
+            return render_template(
+                "guild/appearance.html", v=v, b=board, error="Invalid color code."), 400
+    except ValueError:
+        return render_template("guild/appearance.html",
+                               v=v, b=board, error="Invalid color code."), 400
+
+    board.color = color
+    board.color_nonce += 1
+
+    g.db.add(board)
+
+    try:
+        cache.delete_memoized(board_css, board.name)
+        cache.delete_memoized(board_dark_css, board.name)
+    except BaseException:
+        pass
+
+    ma=ModAction(
+        kind="update_appearance",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"color=#{board.color}"
+        )
+    g.db.add(ma)
+
+    return redirect(f"/+{board.name}/mod/appearance?msg=Success")
 
 @app.route("/mod/<bid>/color", methods=["POST"])
 @auth_required
