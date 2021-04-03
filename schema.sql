@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 12.3
+-- Dumped from database version 12.5
 -- Dumped by pg_dump version 12.3
 
 SET statement_timeout = 0;
@@ -124,7 +124,7 @@ CREATE TABLE public.comments (
     parent_fullname character varying(255),
     distinguish_level integer,
     edited_utc integer,
-    is_deleted boolean NOT NULL,
+    deleted_utc integer NOT NULL,
     is_approved integer NOT NULL,
     author_name character varying(64),
     approved_utc integer,
@@ -146,7 +146,8 @@ CREATE TABLE public.comments (
     gm_distinguish integer DEFAULT 0 NOT NULL,
     is_pinned boolean DEFAULT false,
     app_id integer,
-    creation_region character(2) DEFAULT NULL::bpchar
+    creation_region character(2) DEFAULT NULL::bpchar,
+    purged_utc integer DEFAULT 0
 );
 
 
@@ -175,7 +176,7 @@ CREATE TABLE public.submissions (
     created_str character varying(255),
     stickied boolean,
     board_id integer,
-    is_deleted boolean NOT NULL,
+    deleted_utc integer NOT NULL,
     domain_ref integer,
     is_approved integer NOT NULL,
     approved_utc integer,
@@ -198,10 +199,11 @@ CREATE TABLE public.submissions (
     score_best double precision,
     upvotes integer,
     downvotes integer,
-    is_politics boolean DEFAULT false,
     gm_distinguish integer DEFAULT 0 NOT NULL,
     app_id integer,
-    creation_region character(2) DEFAULT NULL::bpchar
+    creation_region character(2) DEFAULT NULL::bpchar,
+    purged_utc integer DEFAULT 0,
+    is_bot boolean DEFAULT false
 );
 
 
@@ -231,7 +233,6 @@ CREATE TABLE public.users (
     creation_ip character varying(255),
     hide_offensive boolean,
     is_activated boolean,
-    reddit_username character varying(64),
     bio character varying(300),
     bio_html character varying(1000),
     real_id character varying,
@@ -259,22 +260,29 @@ CREATE TABLE public.users (
     unban_utc integer,
     is_deleted boolean,
     delete_reason character varying(1000),
-    patreon_pledge_cents integer,
     is_enrolled boolean,
-    roulette_wins integer,
     filter_nsfw boolean,
     is_nofollow boolean DEFAULT false,
     coin_balance integer DEFAULT 0,
     premium_expires_utc integer DEFAULT 0,
     negative_balance_cents integer DEFAULT 0,
-    is_hiding_politics boolean DEFAULT false,
     custom_filter_list character varying(1000) DEFAULT ''::character varying,
     discord_id character varying(64),
     last_yank_utc integer DEFAULT 0,
     stored_karma integer DEFAULT 0,
     stored_subscriber_count integer DEFAULT 0,
     creation_region character(2) DEFAULT NULL::bpchar,
-    ban_evade integer DEFAULT 0
+    ban_evade integer DEFAULT 0,
+    profile_upload_ip character varying(255),
+    banner_upload_ip character varying(255),
+    profile_upload_region character(2),
+    banner_upload_region character(2),
+    name_last_changed_utc integer,
+    banner_set_utc integer DEFAULT 0,
+    profile_set_utc integer DEFAULT 0,
+    original_username character varying(255),
+    name_changed_utc integer DEFAULT 0,
+    hide_bot boolean DEFAULT false
 );
 
 
@@ -354,7 +362,7 @@ CREATE FUNCTION public.comment_count(public.submissions) RETURNS bigint
       SELECT COUNT(*)
       FROM comments
       WHERE is_banned=false
-        AND is_deleted=false
+        AND deleted_utc=0
         AND parent_submission = $1.id
       $_$;
 
@@ -701,7 +709,7 @@ CREATE FUNCTION public.mod_count(public.users) RETURNS bigint
 CREATE FUNCTION public.rank_activity(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT 1000000.0*CAST($1.comment_count AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.5))
+      SELECT 1000000.0*CAST($1.comment_count AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.35))
     $_$;
 
 
@@ -712,7 +720,7 @@ CREATE FUNCTION public.rank_activity(public.submissions) RETURNS double precisio
 CREATE FUNCTION public.rank_best(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT 10000000.0*CAST(($1.upvotes - $1.downvotes + 1) AS float)/((CAST(($1.age+3600) AS FLOAT)*cast((select boards.subscriber_count from boards where boards.id=$1.board_id)+6000 as float)/100.0)^(1.4))
+      SELECT 10000000.0*CAST(($1.upvotes - $1.downvotes + 1) AS float)/((CAST(($1.age+3600) AS FLOAT)*cast((select boards.subscriber_count from boards where boards.id=$1.board_id)+10000 as float)/1000.0)^(1.35))
       $_$;
 
 
@@ -734,7 +742,7 @@ CREATE FUNCTION public.rank_fiery(public.comments) RETURNS double precision
 CREATE FUNCTION public.rank_fiery(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
-      SELECT 1000000.0*SQRT(CAST(($1.upvotes * $1.downvotes) AS float))/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.5))
+      SELECT 1000000.0*SQRT(CAST(($1.upvotes * $1.downvotes) AS float))/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.35))
       $_$;
 
 
@@ -885,6 +893,7 @@ CREATE FUNCTION public.subscriber_count(public.boards) RETURNS bigint
 		         left join users
 		         on subscriptions.user_id=users.id
 		         where subscriptions.board_id=$1.id
+		         and subscriptions.is_active=true
 		         and users.is_deleted=false and (users.is_banned=0 or users.unban_utc>0)
 	         )-(
 	         	select count(distinct s1.id)
@@ -915,6 +924,7 @@ CREATE FUNCTION public.subscriber_count(public.boards) RETURNS bigint
 	    when $1.is_private=true
 	    then
 	         (
+	         (
 	         select count(*)
 	         from subscriptions
 	         left join users
@@ -931,8 +941,10 @@ CREATE FUNCTION public.subscriber_count(public.boards) RETURNS bigint
 	         )as m
 	         	on m.user_id=users.id
 	         where subscriptions.board_id=$1.id
+	         and subscriptions.is_active=true
 	         and users.is_deleted=false and (users.is_banned=0 or users.unban_utc>0)
 	         and (contribs.user_id is not null or m.id is not null)
+	         )
 	         )
 	    end
          
@@ -1133,7 +1145,8 @@ select (
 CREATE TABLE public.alts (
     id integer NOT NULL,
     user1 integer NOT NULL,
-    user2 integer NOT NULL
+    user2 integer NOT NULL,
+    is_manual boolean DEFAULT false
 );
 
 
@@ -1297,7 +1310,9 @@ ALTER SEQUENCE public.badlinks_id_seq OWNED BY public.badlinks.id;
 CREATE TABLE public.badpics (
     id integer NOT NULL,
     description character varying(255),
-    phash character varying(255)
+    phash character varying(64),
+    ban_reason character varying(64),
+    ban_time integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1897,7 +1912,8 @@ CREATE TABLE public.ips (
     id integer NOT NULL,
     addr character varying(64),
     reason character varying(256),
-    banned_by integer
+    banned_by integer,
+    until_utc integer
 );
 
 
@@ -2033,7 +2049,7 @@ CREATE TABLE public.modactions (
     target_comment_id integer,
     created_utc integer DEFAULT 0,
     kind character varying(32) DEFAULT NULL::character varying,
-    note character varying(256) DEFAULT NULL::character varying
+    _note character varying(256) DEFAULT NULL::character varying
 );
 
 
@@ -2186,37 +2202,6 @@ CREATE SEQUENCE public.paypal_txns_id_seq
 --
 
 ALTER SEQUENCE public.paypal_txns_id_seq OWNED BY public.paypal_txns.id;
-
-
---
--- Name: politicswords; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.politicswords (
-    id integer NOT NULL,
-    keyword character varying(64),
-    regex character varying(256)
-);
-
-
---
--- Name: politicswords_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.politicswords_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: politicswords_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.politicswords_id_seq OWNED BY public.politicswords.id;
 
 
 --
@@ -2383,7 +2368,9 @@ CREATE TABLE public.submissions_aux (
     body_html character varying(20000),
     embed_url character varying(10000),
     ban_reason character varying(128),
-    key_id integer NOT NULL
+    key_id integer NOT NULL,
+    meta_title character varying(512),
+    meta_description character varying(1024)
 );
 
 
@@ -2885,13 +2872,6 @@ ALTER TABLE ONLY public.paypal_txns ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
--- Name: politicswords id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.politicswords ALTER COLUMN id SET DEFAULT nextval('public.politicswords_id_seq'::regclass);
-
-
---
 -- Name: postrels id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3254,6 +3234,14 @@ ALTER TABLE ONLY public.contributors
 
 
 --
+-- Name: images images_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.images
+    ADD CONSTRAINT images_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: ips ips_addr_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3390,14 +3378,6 @@ ALTER TABLE ONLY public.paypal_txns
 
 
 --
--- Name: politicswords politicswords_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.politicswords
-    ADD CONSTRAINT politicswords_pkey PRIMARY KEY (id);
-
-
---
 -- Name: postrels postrel_unique; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3510,6 +3490,14 @@ ALTER TABLE ONLY public.oauth_apps
 
 
 --
+-- Name: paypal_txns unique_paypalid; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.paypal_txns
+    ADD CONSTRAINT unique_paypalid UNIQUE (paypal_id);
+
+
+--
 -- Name: client_auths unique_refresh; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3582,19 +3570,19 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: users users_original_username_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_original_username_key UNIQUE (original_username);
+
+
+--
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (username);
-
-
---
--- Name: users users_reddit_username_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_reddit_username_key UNIQUE (reddit_username);
 
 
 --
@@ -3681,6 +3669,20 @@ CREATE INDEX badges_user_index ON public.badges USING btree (user_id);
 --
 
 CREATE INDEX badlink_link_idx ON public.badlinks USING btree (link);
+
+
+--
+-- Name: badpic_phash_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX badpic_phash_idx ON public.badpics USING btree (phash);
+
+
+--
+-- Name: badpic_phash_trgm_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX badpic_phash_trgm_idx ON public.badpics USING gin (phash public.gin_trgm_ops);
 
 
 --
@@ -3810,6 +3812,13 @@ CREATE INDEX comment_body_trgm_idx ON public.comments_aux USING gin (body public
 
 
 --
+-- Name: comment_ip_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX comment_ip_idx ON public.comments USING btree (creation_ip);
+
+
+--
 -- Name: comment_parent_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3821,6 +3830,13 @@ CREATE INDEX comment_parent_index ON public.comments USING btree (parent_comment
 --
 
 CREATE INDEX comment_post_id_index ON public.comments USING btree (parent_submission);
+
+
+--
+-- Name: comment_purge_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX comment_purge_idx ON public.comments USING btree (purged_utc);
 
 
 --
@@ -3999,6 +4015,13 @@ CREATE INDEX follow_user_id_index ON public.follows USING btree (user_id);
 
 
 --
+-- Name: ips_until_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ips_until_idx ON public.ips USING btree (until_utc DESC);
+
+
+--
 -- Name: lodge_board_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4062,10 +4085,24 @@ CREATE INDEX modaction_board_idx ON public.modactions USING btree (board_id);
 
 
 --
+-- Name: modaction_cid_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX modaction_cid_idx ON public.modactions USING btree (target_comment_id);
+
+
+--
 -- Name: modaction_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX modaction_id_idx ON public.modactions USING btree (id DESC);
+
+
+--
+-- Name: modaction_pid_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX modaction_pid_idx ON public.modactions USING btree (target_submission_id);
 
 
 --
@@ -4122,13 +4159,6 @@ CREATE INDEX paypal_txn_user_id_idx ON public.paypal_txns USING btree (user_id);
 --
 
 CREATE INDEX paypaltxn_status_idx ON public.paypal_txns USING btree (status);
-
-
---
--- Name: politics_keyword_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX politics_keyword_idx ON public.politicswords USING btree (keyword);
 
 
 --
@@ -4205,7 +4235,7 @@ CREATE INDEX sub_user_index ON public.subscriptions USING btree (user_id);
 -- Name: subimssion_binary_group_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX subimssion_binary_group_idx ON public.submissions USING btree (is_banned, is_deleted, over_18);
+CREATE INDEX subimssion_binary_group_idx ON public.submissions USING btree (is_banned, deleted_utc, over_18);
 
 
 --
@@ -4268,7 +4298,7 @@ CREATE INDEX submission_best_sort_idx ON public.submissions USING btree (score_b
 -- Name: submission_disputed_sort_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX submission_disputed_sort_idx ON public.submissions USING btree (is_banned, is_deleted, score_disputed DESC, over_18);
+CREATE INDEX submission_disputed_sort_idx ON public.submissions USING btree (is_banned, deleted_utc, score_disputed DESC, over_18);
 
 
 --
@@ -4282,7 +4312,14 @@ CREATE INDEX submission_domainref_index ON public.submissions USING btree (domai
 -- Name: submission_hot_sort_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX submission_hot_sort_idx ON public.submissions USING btree (is_banned, is_deleted, score_hot DESC, over_18);
+CREATE INDEX submission_hot_sort_idx ON public.submissions USING btree (is_banned, deleted_utc, score_hot DESC, over_18);
+
+
+--
+-- Name: submission_ip_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submission_ip_idx ON public.submissions USING btree (creation_ip);
 
 
 --
@@ -4296,14 +4333,14 @@ CREATE INDEX submission_isbanned_idx ON public.submissions USING btree (is_banne
 -- Name: submission_isdeleted_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX submission_isdeleted_idx ON public.submissions USING btree (is_deleted);
+CREATE INDEX submission_isdeleted_idx ON public.submissions USING btree (deleted_utc);
 
 
 --
 -- Name: submission_new_sort_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX submission_new_sort_idx ON public.submissions USING btree (is_banned, is_deleted, created_utc DESC, over_18);
+CREATE INDEX submission_new_sort_idx ON public.submissions USING btree (is_banned, deleted_utc, created_utc DESC, over_18);
 
 
 --
@@ -4318,6 +4355,13 @@ CREATE INDEX submission_original_board_id_idx ON public.submissions USING btree 
 --
 
 CREATE INDEX submission_pinned_idx ON public.submissions USING btree (is_pinned);
+
+
+--
+-- Name: submission_purge_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submission_purge_idx ON public.submissions USING btree (purged_utc);
 
 
 --
@@ -4415,7 +4459,7 @@ CREATE INDEX subscription_user_index ON public.subscriptions USING btree (user_i
 -- Name: trending_all_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX trending_all_idx ON public.submissions USING btree (is_banned, is_deleted, stickied, post_public, score_hot DESC);
+CREATE INDEX trending_all_idx ON public.submissions USING btree (is_banned, deleted_utc, stickied, post_public, score_hot DESC);
 
 
 --
@@ -4437,6 +4481,13 @@ CREATE INDEX user_creation_ip_idx ON public.users USING btree (creation_ip);
 --
 
 CREATE INDEX user_del_idx ON public.users USING btree (is_deleted);
+
+
+--
+-- Name: user_ip_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX user_ip_idx ON public.users USING btree (creation_ip);
 
 
 --
@@ -4486,6 +4537,13 @@ CREATE INDEX users_karma_idx ON public.users USING btree (stored_karma);
 --
 
 CREATE INDEX users_neg_idx ON public.users USING btree (negative_balance_cents);
+
+
+--
+-- Name: users_original_username_trgm_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX users_original_username_trgm_idx ON public.users USING gin (original_username public.gin_trgm_ops);
 
 
 --

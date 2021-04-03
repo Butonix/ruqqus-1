@@ -26,15 +26,22 @@ displayed_post_owners = db.query(
         is_deleted=False,
     is_banned=False).distinct().subquery()
 displayed_comment_owners = db.query(
-    Comment.author_id).filter_by(
-        is_deleted=False,
+    Comment.author_id
+    ).filter_by(
+    is_deleted=False,
     is_banned=False).distinct().subquery()
 
-banned_accounts = db.query(User).filter_by(
-    unban_utc=0).filter(
+modaction_owners = db.query(
+	ModAction.user_id).distinct().subquery()
+
+banned_accounts = db.query(User).filter(
         User.is_banned > 0,
+        User.unban_utc==0,
         User.id.notin_(displayed_post_owners),
-    User.id.notin_(displayed_comment_owners))
+        User.id.notin_(displayed_comment_owners),
+        User.id.notin_(modaction_owners)
+        )
+
 
 accounts = [x for x in deleted_accounts] + [y for y in banned_accounts]
 
@@ -52,9 +59,23 @@ accounts_to_release.sort(key=lambda x: x.username)
 accounts_to_hold.sort(key=lambda x: x.username)
 
 print(f"{len(accounts_to_release)} names to release")
-print(accounts_to_release)
-print("")
+#print(accounts_to_release)
 
 print(f"{len(accounts_to_hold)} names to hold")
-print(accounts_to_hold)
-# for name in names_to_release:
+#print(accounts_to_hold)
+
+i=0
+
+for account in accounts_to_release:
+    i+=1
+    account.username=f"$Account_{account.base36id}"
+    account.original_username=f"$Account_{account.base36id}"
+    db.add(account)
+    if not i%100:
+        db.flush()
+
+db.flush()
+if input(f"{i} names changed. Commit? "):
+    db.commit()
+else:
+    db.rollback()

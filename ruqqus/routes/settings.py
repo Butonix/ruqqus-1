@@ -10,13 +10,14 @@ from ruqqus.helpers.security import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.filters import filter_comment_html
 from ruqqus.helpers.markdown import *
-from ruqqus.helpers.discord import remove_user
-from ruqqus.helpers.aws import check_csam_url
+from ruqqus.helpers.discord import remove_user, set_nick
+from ruqqus.helpers.aws import *
 from ruqqus.mail import *
 from .front import frontlist
 from ruqqus.__main__ import app, cache
 
 
+valid_username_regex = re.compile("^[a-zA-Z0-9_]{5,25}$")
 valid_password_regex = re.compile("^.{8,100}$")
 
 
@@ -37,6 +38,12 @@ def settings_profile_post(v):
         updated = True
         v.hide_offensive = request.values.get("hide_offensive", None) == 'true'
         cache.delete_memoized(User.idlist, v)
+		
+    if request.values.get("hide_bot",
+                          v.hide_bot) != v.hide_bot:
+        updated = True
+        v.hide_bot = request.values.get("hide_bot", None) == 'true'
+        cache.delete_memoized(User.idlist, v)
 
     if request.values.get("show_nsfl", v.show_nsfl) != v.show_nsfl:
         updated = True
@@ -51,10 +58,6 @@ def settings_profile_post(v):
     if request.values.get("private", v.is_private) != v.is_private:
         updated = True
         v.is_private = request.values.get("private", None) == 'true'
-
-    if request.values.get("politics", v.is_hiding_politics) != v.is_hiding_politics:
-        updated = True
-        v.is_hiding_politics = request.values.get("politics", None) == 'true'
 
     if request.values.get("nofollow", v.is_nofollow) != v.is_nofollow:
         updated = True
@@ -593,3 +596,107 @@ def settings_content_get(v):
 def settings_purchase_history(v):
 
     return render_template("settings_txnlist.html", v=v)
+
+@app.route("/settings/name_change", methods=["POST"])
+@auth_required
+@validate_formkey
+def settings_name_change(v):
+
+    if v.admin_level:
+        return render_template("settings_profile.html",
+                           v=v,
+                           error="Admins can't change their name.")
+
+
+    new_name=request.form.get("name").lstrip().rstrip()
+
+    #make sure name is different
+    if new_name==v.username:
+        return render_template("settings_profile.html",
+                           v=v,
+                           error="You didn't change anything")
+
+    #can't change name on verified ID accounts
+    if v.real_id:
+        return render_template("settings_profile.html",
+                           v=v,
+                           error="Your ID is verified so you can't change your username.")
+
+    #60 day cooldown
+    if v.name_changed_utc > int(time.time()) - 60*60*24*60:
+        return render_template("settings_profile.html",
+                           v=v,
+                           error=f"You changed your name {(int(time.time()) - v.name_changed_utc)//(60*60*24)} days ago. You need to wait 90 days between name changes.")
+
+    #costs 3 coins
+    if v.coin_balance < 20:
+        return render_template("settings_profile.html",
+                           v=v,
+                           error=f"Username changes cost 20 Coins. You only have a balance of {v.coin_balance} Coins")
+
+    #verify acceptability
+    if not re.match(valid_username_regex, new_name):
+        return render_template("settings_profile.html",
+                           v=v,
+                           error=f"That isn't a valid username.")
+
+    #verify availability
+    name=new_name.replace('_','\_')
+
+    x= g.db.query(User).options(
+        lazyload('*')
+        ).filter(
+        or_(
+            User.username.ilike(name),
+            User.original_username.ilike(name)
+            )
+        ).first()
+
+    if x and x.id != v.id:
+        return render_template("settings_profile.html",
+                           v=v,
+                           error=f"Username `{new_name}` is already in use.")
+
+    #all reqs passed
+
+    #check user avatar/banner for rename if needed
+    if v.has_profile and v.profile_url.startswith("https://i.ruqqus.com/users/"):
+        upload_from_url(f"uid/{v.base36id}/profile-{v.profile_nonce}.png", f"{v.profile_url}")
+        v.profile_set_utc=int(time.time())
+        g.db.add(v)
+        g.db.commit()
+
+    if v.has_banner and v.banner_url.startswith("https://i.ruqqus.com/users/"):
+        upload_from_url(f"uid/{v.base36id}/banner-{v.banner_nonce}.png", f"{v.banner_url}")
+        v.banner_set_utc=int(time.time())
+        g.db.add(v)
+        g.db.commit()
+
+
+    #do name change and deduct coins
+
+    v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
+
+    v.username=new_name
+    v.coin_balance-=20
+    v.name_changed_utc=int(time.time())
+
+    set_nick(v, new_name)
+
+    g.db.add(v)
+    g.db.commit()
+
+    return render_template("settings_profile.html",
+                       v=v,
+                       msg=f"Username changed successfully. 20 Coins have been deducted from your balance.")
+
+
+
+@app.route("/settings/badges", methods=["POST"])
+@auth_required
+@validate_formkey
+def settings_badge_recheck(v):
+
+    v.refresh_selfset_badges()
+
+    return jsonify({"message":"Badges Refreshed"})

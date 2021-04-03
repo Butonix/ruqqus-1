@@ -10,7 +10,8 @@ class IP(Base):
     id = Column(Integer, primary_key=True)
     addr = Column(String(64))
     reason = Column(String(256), default="")
-    banned_by = Column(Boolean, ForeignKey("users.id"), default=True)
+    banned_by = Column(Integer, ForeignKey("users.id"), default=True)
+    until_utc=Column(Integer, default=None)
 
 
 class Agent(Base):

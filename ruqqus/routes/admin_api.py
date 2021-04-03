@@ -1,6 +1,11 @@
 import time
 import calendar
 from flask import *
+import imagehash
+from PIL import Image
+from os import remove
+from sqlalchemy import func
+
 from ruqqus.classes import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.aws import delete_file
@@ -8,13 +13,12 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.alerts import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.markdown import *
+from ruqqus.helpers.security import *
 from urllib.parse import urlparse
 from secrets import token_hex
 import matplotlib.pyplot as plt
-import imagehash
 
 from ruqqus.__main__ import app, cache
-from os import remove
 
 
 @app.route("/api/ban_user/<user_id>", methods=["POST"])
@@ -49,7 +53,8 @@ def ban_user(user_id, v):
 
 
     for x in user.alts:
-        x.ban(admin=v, reason=reason)
+        if not x.is_deleted:
+            x.ban(admin=v, reason=reason)
 
 
 
@@ -246,32 +251,30 @@ def api_unban_comment(c_id, v):
 
 @app.route("/api/distinguish_comment/<c_id>", methods=["post"])
 @admin_level_required(1)
-def api_distinguish_comment(c_id, v):
+def admin_distinguish_comment(c_id, v):
 
-    comment = g.db.query(Comment).filter_by(id=base36decode(c_id)).first()
-    if not comment:
-        abort(404)
+    comment = get_comment(c_id, v=v)
 
-    comment.distinguish_level = v.admin_level
+    if comment.author_id != v.id:
+        abort(403)
 
-    g.db.add(comment)
-
-    return "", 204
-
-
-@app.route("/api/undistinguish_comment/<c_id>", methods=["post"])
-@admin_level_required(1)
-def api_undistinguish_comment(c_id, v):
-
-    comment = g.db.query(Comment).filter_by(id=base36decode(c_id)).first()
-    if not comment:
-        abort(404)
-
-    comment.distinguish_level = 0
+    comment.distinguish_level = 0 if comment.distinguish_level else v.admin_level
 
     g.db.add(comment)
+    g.db.commit()
 
-    return "", 204
+    html=render_template(
+                "comments.html",
+                v=v,
+                comments=[comment],
+                render_replies=False,
+                is_allowed_to_comment=True
+                )
+
+    html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.base36id}-only"))
+
+    return jsonify({"html":html})
+
 
 
 @app.route("/api/ban_guild/<bid>", methods=["POST"])
@@ -596,6 +599,8 @@ def admin_ban_domain(v):
         abort(400)
 
     reason=int(request.form.get("reason",0))
+    if not reason:
+        abort(400)
 
     d_query=domain.replace("_","\_")
     d=g.db.query(Domain).filter_by(domain=d_query).first()
@@ -659,3 +664,51 @@ def admin_nuke_user(v):
         g.db.add(ma)
 
     return redirect(user.permalink)
+
+@app.route("/admin/demod_user", methods=["POST"])
+@admin_level_required(4)
+@validate_formkey
+def admin_demod_user(v):
+
+    user=get_user(request.form.get("user"))
+
+    for mod in g.db.query(ModRelationship).filter_by(user_id=user.id, accepted=True):
+
+        ma=ModAction(
+            user_id=v.id,
+            target_user_id=user.id,
+            board_id=mod.board_id,
+            kind="remove_mod",
+            note="admin_action"
+            )
+        g.db.add(ma)
+
+        g.db.delete(mod)
+
+    g.db.commit()
+    return redirect(user.permalink)
+
+@app.route("/admin/signature", methods=["POST"])
+@admin_level_required(5)
+@validate_formkey
+def admin_sig_generate(v):
+
+    file=request.files["file"]
+    return generate_hash(str(file.read()))
+
+@app.route("/help/signature", methods=["POST"])
+@auth_desired
+def sig_validate(v):
+
+    file=request.files["file"]
+
+    sig=request.form.get("sig").lstrip().rstrip()
+
+    valid=validate_hash(str(file.read()), sig)
+
+    return render_template(
+        "help/signature.html",
+        v=v,
+        success = valid,
+        error = not valid
+        )

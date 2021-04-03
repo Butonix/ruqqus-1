@@ -1,4 +1,4 @@
-aiohttp==3.6.3
+aiohttp==3.7.4
 async-timeout==3.0.1
 attrs==20.3.0
 beautifulsoup4==4.8.1
@@ -41,7 +41,7 @@ multidict==4.7.6
 newrelic==5.8.0.136
 numpy==1.19.4
 piexif==1.1.3
-Pillow==8.1.0
+Pillow==8.1.2
 psycogreen==1.0.2
 psycopg2-binary==2.8.4
 py3socket==0.2.1.3

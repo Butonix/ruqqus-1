@@ -38,7 +38,7 @@
 
                 {% else %}
 
-                <div class="text-muted">You can add a custom avatar after earning 300 Rep.</div>
+                <div class="text-muted">You can add a custom avatar after earning 300 Rep.{% if request.headers.get("cf-ipcountry")=="T1" and not v.is_activated %} Additionally, you must have a verified email address to upload images via Tor.{% endif %}</div>
 
                 {% endif %}
 
@@ -93,7 +93,7 @@
 
                 {% else %}
 
-                <div class="text-muted">You can add a custom banner after earning 500 Rep.</div>
+                <div class="text-muted">You can add a custom banner after earning 500 Rep.{% if request.headers.get("cf-ipcountry")=="T1" and not v.is_activated %} Additionally, you must have a verified email address to upload images via Tor.{% endif %}</div>
 
                 {% endif %}
 
@@ -222,8 +222,32 @@
 
             <div class="settings-section rounded mb-0">
 
-              <input type="hidden" name="formkey" value="{{ v.formkey }}">
+              <div class="body d-lg-flex border-bottom">
 
+                <label for="bio" class="text-black w-lg-25">Display Name</label>
+
+                <div class="w-lg-100">
+                  <p>Your display name is how you are known across Ruqqus. Changing your display name costs 20 Coins and may be done once every 90 days.</p>
+
+
+                  <form id="profile-settings" action="/settings/name_change" method="post">
+                    <input type="hidden" name="formkey" value="{{ v.formkey }}">
+                    <input type="text" name="name" class="form-control" value="{{ v.username }}">
+                    <small>Your original username will always stay reserved for you: <code>{{ v.original_username }}</code></small>
+                    <div class="d-flex mt-2">
+                      <small>5-25 characters, including letters, numbers, and _</small>
+                      {% if v.can_change_name %}
+                      <input class="btn btn-primary ml-auto" id="nameSave" type="submit" value="Change Display Name">
+                      {% elif g.timestamp-v.name_changed_utc < 60*60*24*90 %}
+                      <input class="btn btn-primary ml-auto" id="nameSave" type="submit" value="{{ 90-((g.timestamp-v.name_changed_utc)//(60*60*24)) }} days remaining" disabled>
+                      {% else %}
+                      <a class="btn btn-primary ml-auto" id="nameSave" href="/settings/premium">20 Coins required</a>
+                      {% endif %}
+                    </div>
+                  </form>
+                </div>
+
+              </div>
               <div class="body d-lg-flex border-bottom">
 
                 <label for="bio" class="text-black w-lg-25">Bio</label>
@@ -231,12 +255,12 @@
                 <div class="w-lg-100">
 
 
-                  <form id="profile-settings" action="/settings/profile" method="post">
+                  <form id="profile-bio" action="/settings/profile" method="post">
                     <input type="hidden" name="formkey" value="{{ v.formkey }}">
                     <div class="input-group mb-2">
                       <textarea class="form-control rounded" id="bio-text" aria-label="With textarea"
                       placeholder="Tell the Ruqqus community a bit about yourself."
-                      rows="3" name="bio" form="profile-settings" maxlength="256">{{ v.bio }}</textarea>
+                      rows="3" name="bio" form="profile-bio" maxlength="256">{{ v.bio }}</textarea>
                     </div>
                     <div class="d-flex">
                       <small>Limit of 256 characters</small>
@@ -261,6 +285,19 @@
                    </select>
                  </div>
                  <div class="text-small-extra text-muted mt-3"><a href="/help/titles" target="_blank">Click here</a> to see all titles and the requirements to unlock them.</div>
+
+               </div>
+
+             </div>
+
+              <div class="body d-lg-flex border-bottom">
+                <label class="text-black w-lg-25">Badges</label>
+
+                <div class="w-lg-100">
+                  <p>Profile badges show off all of your site achievements. If your badges look not quite up to date, use this tool to refresh them.</p>
+                  <div class="d-flex">
+                    <a class="btn btn-primary ml-auto" id="badgeUpdate" href="javascript:void(0)" onclick="post_toast('/settings/badges')">Refresh badges</a>
+                  </div>
 
                </div>
 

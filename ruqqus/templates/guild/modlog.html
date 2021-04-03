@@ -45,7 +45,7 @@
                   [deleted user]
                 {% endif %}
 
-               <span>{{ ma.str | safe }}</span>
+               <span>{{ ma.string | safe }}</span>
              </div>
 
              <div class="text-gray-500">{{ ma.age_string }} <a href="{{ ma.permalink }}"><i class="far fa-link ml-1 text-muted"></i></a> <a href="javascript:void(0)" class="copy-link" role="button"data-clipboard-text="{{ ma.permalink | full_link }}"><i class="far fa-copy ml-1 text-muted"></i></a></div>
@@ -66,7 +66,7 @@
       <ul class="pagination pagination-sm mb-0">
         {% if page>1 %}
         <li class="page-item">
-          <small><a class="page-link" href="page={{ page-1 }}" tabindex="-1">Prev</a></small>
+          <small><a class="page-link" href="?page={{ page-1 }}" tabindex="-1">Prev</a></small>
         </li>
         {% else %}
         <li class="page-item disabled"><span class="page-link">Prev</span></li>

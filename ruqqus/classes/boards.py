@@ -45,7 +45,6 @@ class Board(Base, Stndrd, Age_times):
     stored_subscriber_count=Column(Integer, default=1)
     all_opt_out=Column(Boolean, default=False)
     is_siegable=Column(Boolean, default=True)
-    last_yank_utc=Column(Integer, default=0)
     is_locked_category = Column(Boolean, default=False)
     subcat_id=Column(Integer, ForeignKey("subcategories.id"), default=0)
     secondary_color=Column(String(6), default="ffffff")
@@ -87,9 +86,11 @@ class Board(Base, Stndrd, Age_times):
     @property
     def mods(self):
 
-        z = [x.user for x in self.moderators if x.accepted]
+        z = [x for x in self.moderators if x.accepted]
 
         z = sorted(z, key=lambda x: x.id)
+
+        z = [x.user for x in z]
 
         return z
 
@@ -125,7 +126,7 @@ class Board(Base, Stndrd, Age_times):
 
     @cache.memoize(timeout=60)
     def idlist(self, sort="hot", page=1, t=None,
-               show_offensive=True, v=None, nsfw=False, **kwargs):
+               hide_offensive=True, hide_bot=False, v=None, nsfw=False, **kwargs):
 
         posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
                                                                            is_pinned=False,
@@ -137,6 +138,9 @@ class Board(Base, Stndrd, Age_times):
 
         if v and v.hide_offensive:
             posts = posts.filter_by(is_offensive=False)
+			
+        if v and v.hide_bot:
+            posts = posts.filter_by(is_bot=False)
 
         if v and not v.show_nsfl:
             posts = posts.filter_by(is_nsfl=False)
@@ -411,11 +415,11 @@ class Board(Base, Stndrd, Age_times):
 
     @property
     def css_url(self):
-        return f"/assets/{self.name}/main/{self.color_nonce}.css"
+        return f"/assets/{self.fullname}/main/{self.color_nonce}.css"
 
     @property
     def css_dark_url(self):
-        return f"/assets/{self.name}/dark/{self.color_nonce}.css"
+        return f"/assets/{self.fullname}/dark/{self.color_nonce}.css"
 
     def has_participant(self, user):
         return (g.db.query(Submission).filter_by(original_board_id=self.id, author_id=user.id).first() or
@@ -510,6 +514,9 @@ class Board(Base, Stndrd, Age_times):
 
         if v and v.hide_offensive:
             comments = comments.filter_by(is_offensive=False)
+			
+        if v and v.hide_bot:
+            comments = comments.filter_by(is_bot=False)
 
         if v and not self.has_mod(v) and v.admin_level <= 3:
             # blocks
@@ -551,3 +558,9 @@ class Board(Base, Stndrd, Age_times):
         return mod.__dict__[f"perm_{perm}"]
 
 
+    @property
+    def siege_rep_requirement(self):
+
+        now=int(time.time())
+
+        return self.stored_subscriber_count//10 + min(180, (now-self.created_utc)//(60*60*24))

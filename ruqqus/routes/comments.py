@@ -140,7 +140,7 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
     exile=g.db.query(ModAction
         ).filter_by(
         kind="exile_user"
-        ).subquery()
+        ).distinct(ModAction.target_comment_id).subquery()
 
     for i in range(6 - context):
         if v:
@@ -296,6 +296,9 @@ def api_comment(v):
     #process and sanitize
     body = request.form.get("body", "")[0:10000]
     body = body.lstrip().rstrip()
+
+    if not body and not (v.has_premium and request.files.get('file')):
+        return jsonify({"error":"You need to actually write something!"}), 400
     
     body=preprocess(body)
     with CustomRenderer(post_id=parent_id) as renderer:
@@ -527,6 +530,8 @@ def api_comment(v):
 
     g.db.commit()
 
+    c=get_comment(c.id, v=v)
+
 
     # print(f"Content Event: @{v.username} comment {c.base36id}")
 
@@ -722,24 +727,19 @@ def embed_comment_cid(cid, pid=None):
 
     return render_template("embeds/comment.html", c=comment)
 
-@app.route("/mod/comment_pin/<bid>/<cid>/<x>", methods=["POST"])
+@app.route("/mod/comment_pin/<bid>/<cid>", methods=["POST"])
 @auth_required
 @is_guildmaster("content")
 @validate_formkey
-def mod_toggle_comment_pin(bid, cid, x, board, v):
+def mod_toggle_comment_pin(bid, cid, board, v):
 
-    comment = get_comment(cid)
+    comment = get_comment(cid, v=v)
 
     if comment.post.board_id != board.id:
         abort(400)
-
-    try:
-        x = bool(int(x))
-    except BaseException:
-        abort(400)
         
     #remove previous pin (if exists)
-    if x:
+    if not comment.is_pinned:
         previous_sticky = g.db.query(Comment).filter(
             and_(
                 Comment.parent_submission == comment.post.id, 
@@ -750,7 +750,7 @@ def mod_toggle_comment_pin(bid, cid, x, board, v):
             previous_sticky.is_pinned = False
             g.db.add(previous_sticky)
 
-    comment.is_pinned = x
+    comment.is_pinned = not comment.is_pinned
 
     g.db.add(comment)
     ma=ModAction(
@@ -760,4 +760,15 @@ def mod_toggle_comment_pin(bid, cid, x, board, v):
         target_comment_id=comment.id
     )
     g.db.add(ma)
-    return "", 204
+
+    html=render_template(
+                "comments.html",
+                v=v,
+                comments=[comment],
+                render_replies=False,
+                is_allowed_to_comment=True
+                )
+
+    html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.base36id}-only"))
+
+    return jsonify({"html":html})

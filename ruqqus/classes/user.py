@@ -2,7 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import *
 import time
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, deferred, joinedload, lazyload, contains_eager
+from sqlalchemy.orm import relationship, deferred, joinedload, lazyload, contains_eager, aliased
 from os import environ
 from secrets import token_hex
 import random
@@ -83,7 +83,7 @@ class User(Base, Stndrd, Age_times):
     last_siege_utc = Column(Integer, default=0)
     mfa_secret = deferred(Column(String(16), default=None))
     hide_offensive = Column(Boolean, default=False)
-    is_hiding_politics=Column(Boolean, default=False)
+    hide_bot = Column(Boolean, default=False)
     show_nsfl = Column(Boolean, default=False)
     is_private = Column(Boolean, default=False)
     read_announcement_utc = Column(Integer, default=0)
@@ -101,9 +101,20 @@ class User(Base, Stndrd, Age_times):
     is_nofollow = Column(Boolean, default=False)
     custom_filter_list=Column(String(1000), default="")
     discord_id=Column(String(64), default=None)
-    last_yank_utc=Column(Integer, default=0)
     creation_region=Column(String(2), default=None)
     ban_evade=Column(Integer, default=0)
+
+    profile_upload_ip=deferred(Column(String(255), default=None))
+    banner_upload_ip=deferred(Column(String(255), default=None))
+    profile_upload_region=deferred(Column(String(2)))
+    banner_upload_region=deferred(Column(String(2)))
+
+    #stuff to support name changes
+    profile_set_utc=deferred(Column(Integer, default=0))
+    banner_set_utc=deferred(Column(Integer, default=0))
+    original_username=deferred(Column(String(255)))
+    name_changed_utc=deferred(Column(Integer, default=0))
+
 
     moderates = relationship("ModRelationship")
     banned_from = relationship("BanRelationship",
@@ -207,12 +218,12 @@ class User(Base, Stndrd, Age_times):
 
         if self.hide_offensive:
             posts = posts.filter_by(is_offensive=False)
+			
+        if self.hide_bot:
+            posts = posts.filter_by(is_bot=False)
 
         if not self.show_nsfl:
             posts = posts.filter_by(is_nsfl=False)
-
-        if self.is_hiding_politics:
-            posts=posts.filter_by(is_politics=False)
 
         board_ids = g.db.query(
             Subscription.board_id).filter_by(
@@ -318,6 +329,9 @@ class User(Base, Stndrd, Age_times):
 
         if v and v.hide_offensive:
             submissions = submissions.filter_by(is_offensive=False)
+			
+        if v and v.hide_bot:
+            submissions = submissions.filter_by(is_bot=False)
 
         if not (v and (v.admin_level >= 3)):
             submissions = submissions.filter_by(deleted_utc=0)
@@ -361,6 +375,9 @@ class User(Base, Stndrd, Age_times):
 
         if v and v.hide_offensive:
             comments = comments.filter(Comment.is_offensive == False)
+			
+        if v and v.hide_bot:
+            comments = comments.filter(Comment.is_bot == False)
 
         if v and not v.show_nsfl:
             comments = comments.filter(Submission.is_nsfl == False)
@@ -512,6 +529,15 @@ class User(Base, Stndrd, Age_times):
     def permalink(self):
         return self.url
 
+    @property
+    def uid_permalink(self):
+        return f"/uid/{self.base36id}"
+
+    @property
+    def original_link(self):
+        return f"/@{self.original_username}"
+    
+
     def __repr__(self):
         return f"<User(username={self.username})>"
 
@@ -568,17 +594,56 @@ class User(Base, Stndrd, Age_times):
                 )
             ).subquery()
 
-        alts = g.db.query(User).join(
-            subq, 
+        data = g.db.query(
+            User,
+            aliased(Alt, alias=subq)
+            ).join(
+            subq,
             or_(
-                subq.c.user1 == User.id,
-                subq.c.user2 == User.id
-                ),
+                subq.c.user1==User.id,
+                subq.c.user2==User.id
+                )
             ).filter(
             User.id != self.id
             ).order_by(User.username.asc()).all()
 
-        return [x for x in alts]
+        data=[x for x in data]
+        output=[]
+        for x in data:
+            user=x[0]
+            user._is_manual=x[1].is_manual
+            output.append(user)
+
+        return output
+
+    def alts_threaded(self, db):
+
+        subq = db.query(Alt).filter(
+            or_(
+                Alt.user1==self.id,
+                Alt.user2==self.id
+                )
+            ).subquery()
+
+        data = db.query(
+            User,
+            aliased(Alt, alias=subq)
+            ).join(
+            subq,
+            or_(
+                subq.c.user1==User.id,
+                subq.c.user2==User.id
+                )
+            ).filter(
+            User.id != self.id
+            ).order_by(User.username.asc()).all()
+
+        data=[x for x in data]
+        output=[]
+        for x in data:
+            user=x[0]
+            user._is_manual=x[1].is_manual
+            output.append(user)
 
         return output
 
@@ -592,11 +657,14 @@ class User(Base, Stndrd, Age_times):
         self.del_profile()
         self.profile_nonce += 1
 
-        aws.upload_file(name=f"users/{self.username}/profile-{self.profile_nonce}.png",
+        aws.upload_file(name=f"uid/{self.base36id}/profile-{self.profile_nonce}.png",
                         file=file,
                         resize=(100, 100)
                         )
         self.has_profile = True
+        self.profile_upload_ip=request.remote_addr
+        self.profile_set_utc=int(time.time())
+        self.profile_upload_region=request.headers.get("cf-ipcountry")
         g.db.add(self)
 
     def set_banner(self, file):
@@ -604,29 +672,48 @@ class User(Base, Stndrd, Age_times):
         self.del_banner()
         self.banner_nonce += 1
 
-        aws.upload_file(name=f"users/{self.username}/banner-{self.banner_nonce}.png",
+        aws.upload_file(name=f"uid/{self.base36id}/banner-{self.banner_nonce}.png",
                         file=file)
 
         self.has_banner = True
+        self.banner_upload_ip=request.remote_addr
+        self.banner_set_utc=int(time.time())
+        self.banner_upload_region=request.headers.get("cf-ipcountry")
+
         g.db.add(self)
 
     def del_profile(self):
 
-        aws.delete_file(name=f"users/{self.username}/profile-{self.profile_nonce}.png")
+        if self.profile_set_utc>1616443200:
+            aws.delete_file(name=f"uid/{self.base36id}/profile-{self.profile_nonce}.png")
+        else:
+            aws.delete_file(name=f"users/{self.username}/profile-{self.profile_nonce}.png")
         self.has_profile = False
-        g.db.add(self)
+        try:
+            g.db.add(self)
+        except:
+            pass
 
     def del_banner(self):
 
-        aws.delete_file(name=f"users/{self.username}/banner-{self.banner_nonce}.png")
+        if self.banner_set_utc>1616443200:
+            aws.delete_file(name=f"uid/{self.base36id}/banner-{self.banner_nonce}.png")
+        else:
+            aws.delete_file(name=f"users/{self.username}/banner-{self.banner_nonce}.png")
         self.has_banner = False
-        g.db.add(self)
+        try:
+            g.db.add(self)
+        except:
+            pass
 
     @property
     def banner_url(self):
 
         if self.has_banner:
-            return f"https://i.ruqqus.com/users/{self.username}/banner-{self.banner_nonce}.png"
+            if self.banner_set_utc>1616443200:
+                return f"https://i.ruqqus.com/uid/{self.base36id}/banner-{self.banner_nonce}.png"
+            else:
+                return f"https://i.ruqqus.com/users/{self.username}/banner-{self.banner_nonce}.png"
         else:
             return "/assets/images/profiles/default_bg.png"
 
@@ -634,7 +721,10 @@ class User(Base, Stndrd, Age_times):
     def profile_url(self):
 
         if self.has_profile and not self.is_deleted:
-            return f"https://i.ruqqus.com/users/{self.username}/profile-{self.profile_nonce}.png"
+            if self.profile_set_utc>1616443200:
+                return f"https://i.ruqqus.com/uid/{self.base36id}/profile-{self.profile_nonce}.png"
+            else:
+                return f"https://i.ruqqus.com/users/{self.username}/profile-{self.profile_nonce}.png"
         else:
             return "/assets/images/profiles/default-profile-pic.png"
 
@@ -669,20 +759,23 @@ class User(Base, Stndrd, Age_times):
         now = int(time.time())
 
         return now - max(self.last_siege_utc,
-                         self.created_utc) > 60 * 60 * 24 * 30
+                         self.created_utc) > 60 * 60 * 24 * 7
 
     @property
     def can_submit_image(self):
-        return self.has_premium or self.true_score >= 1000 or (
-            self.created_utc <= 1592974538 and self.true_score >= 500)
+        # Has premium
+        # Has 1000 Rep, or 500 for older accounts
+        # if connecting through Tor, must have verified email
+        return (self.has_premium or self.true_score >= 1000 or (
+            self.created_utc <= 1592974538 and self.true_score >= 500)) and (self.is_activated or request.headers.get("cf-ipcountry")!="T1") 
 
     @property
     def can_upload_avatar(self):
-        return self.has_premium or self.true_score >= 300 or self.created_utc <= 1592974538
+        return (self.has_premium or self.true_score >= 300 or self.created_utc <= 1592974538) and (self.is_activated or request.headers.get("cf-ipcountry")!="T1")
 
     @property
     def can_upload_banner(self):
-        return self.has_premium or self.true_score >= 500 or self.created_utc <= 1592974538
+        return (self.has_premium or self.true_score >= 500 or self.created_utc <= 1592974538) and (self.is_activated or request.headers.get("cf-ipcountry")!="T1")
 
     @property
     def json_raw(self):
@@ -789,7 +882,10 @@ class User(Base, Stndrd, Age_times):
         if reason:
             self.ban_reason = reason
 
-        g.db.add(self)
+        try:
+            g.db.add(self)
+        except:
+            pass
 
 
     def unban(self):
@@ -836,7 +932,10 @@ class User(Base, Stndrd, Age_times):
                 if bad_badge:
                     g.db.delete(bad_badge)
 
-        g.db.add(self)
+        try:
+            g.db.add(self)
+        except:
+            pass
 
     @property
     def applications(self):
@@ -896,23 +995,36 @@ class User(Base, Stndrd, Age_times):
 
 
 
-    def guild_rep(self, guild):
+    def guild_rep(self, guild, recent=0):
 
-        posts=db.query(Submission.score_top).filter_by(
+        
+
+        posts=g.db.query(Submission.score_top).filter_by(
             is_banned=False,
-            board_id=guild.id).all()
+            original_board_id=guild.id)
+
+        if recent:
+            cutoff=int(time.time())-60*60*24*recent
+            posts=posts.filter(Submission.created_utc>cutoff)
+
+        posts=posts.all()
 
         post_rep= sum([x[0] for x in posts])
 
 
-        comments=db.query(Comment.score_top).join(
-            Comment.post).filter(
-            Comment.is_banned==False,
-            Submission.board_id==guild.id).all()
+        comments=g.db.query(Comment.score_top).filter_by(
+            is_banned=False,
+            original_board_id=guild.id)
+
+        if recent:
+            cutoff=int(time.time())-60*60*24*recent
+            comments=comments.filter(Comment.created_utc>cutoff)
+
+        comments=comments.all()
 
         comment_rep=sum([x[0] for x in comments])
 
-        return post_rep + comment_rep
+        return int(post_rep + comment_rep)
 
     @property
     def has_premium(self):
@@ -991,3 +1103,12 @@ class User(Base, Stndrd, Age_times):
         data['email_verified']=self.is_activated
 
         return data
+
+    @property
+    def can_upload_comment_image(self):
+        return self.has_premium and (request.headers.get("cf-ipcountry")!="T1" or self.is_activated)
+    
+    @property
+    def can_change_name(self):
+        return self.name_changed_utc < int(time.time())-60*60*24*90 and self.coin_balance>=20
+   

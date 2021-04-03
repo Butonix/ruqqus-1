@@ -62,6 +62,24 @@ As an open-source project, we are supported by the community. If you would like 
 
 **ETH**/**ERC20** - `0x4301c31B81C2C66f5aaDFC1ec75861ad3d3cE0cC`
 
+**XMR** - `8BkNezPQex6eTanNQHswMmhCAqWkXzVNEDnvnBN1YSxmic87E2VZncNVDiS1TCjuUs4K34FiGVBK82AfkT2NYsxFN6cYTpy`
+
+**ZEC** - `t1VqHznyeQnS9hNaU32ksijfT9s9DTXgUSv`
+
+**BCH** - `qpcg2czl2fa8x43z807ta5kpuzd3g4suecuu9lmqug`
+
+**XRP** - `rBWWxvREbRPSqMGNqwpBVbSJMPkmLum5xR`
+
+**XLM** - `GBB4FE2UYMUPHCYYLZFT3WSAOSEKI7YIBSOLNEPU6GPWAU64OXOQOA3Q`
+
+**DASH** - `Xj5dmVJXVjCxuyKRhTmSJ6p1i3ehWLV9gT`
+
+**DOGE** - `DT9j54NhxcH3VTU1QeuWcifyaLayTPuv1U`
+
+**VTC** - `3Lq9vNtphMM3rtuzLhtNUjn5WhSk7ZMQYK`
+
+**PIVX** - `DSgD6hxu1EgRiULn6RNbnv5tRvij5BGtUa`
+
 ## Stay in touch
 
 - [Twitter](https://twitter.com/ruqqus)
@@ -97,24 +115,6 @@ Install dependencies
 
 `$ brew install postgres`
 
-**XMR** - `8BkNezPQex6eTanNQHswMmhCAqWkXzVNEDnvnBN1YSxmic87E2VZncNVDiS1TCjuUs4K34FiGVBK82AfkT2NYsxFN6cYTpy`
-
-**ZEC** - `t1VqHznyeQnS9hNaU32ksijfT9s9DTXgUSv`
-
-**BCH** - `qpcg2czl2fa8x43z807ta5kpuzd3g4suecuu9lmqug`
-
-**XRP** - `rBWWxvREbRPSqMGNqwpBVbSJMPkmLum5xR`
-
-**XLM** - `GBB4FE2UYMUPHCYYLZFT3WSAOSEKI7YIBSOLNEPU6GPWAU64OXOQOA3Q`
-
-**DASH** - `Xj5dmVJXVjCxuyKRhTmSJ6p1i3ehWLV9gT`
-
-**DOGE** - `DT9j54NhxcH3VTU1QeuWcifyaLayTPuv1U`
-
-**VTC** - `3Lq9vNtphMM3rtuzLhtNUjn5WhSk7ZMQYK`
-
-**PIVX** - `DSgD6hxu1EgRiULn6RNbnv5tRvij5BGtUa`
-
 
 
 
@@ -135,6 +135,10 @@ Upon installation, trying to submit a post will cause a 404 error. You have to c
 
 Note: When trying to run Ruqqus locally, make sure to use a [tagged release version](https://github.com/ruqqus/ruqqus/releases). The reason this is necessary is that the file schema.txt is not always updated, which will cause Ruqqus to crash. If after first setting up Ruqqus you are getting a 500/Internal Server Error on pages because of database errors, this is most likely why.
 
+## API
+
+Community-made docs for the Ruqqus API can be found here:
+https://ruqqus-api.stoplight.io
 
 ## License
 [MPL-2.0](https://github.com/ruqqus/ruqqus/blob/master/LICENSE)

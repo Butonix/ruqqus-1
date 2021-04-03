@@ -42,7 +42,7 @@
   <div class="col px-0">
     <div class="jumbotron jumbotron-fluid jumbotron-guild d-none d-md-block" style="background-image: url({{ u.banner_url }})">
       <div class="jumbotron-overlay"></div>
-      <div class="position-absolute w-100" style="bottom: 1rem;">
+      <div class="w-100 my-3">
         <div class="container-fluid">
           <div class="d-md-flex text-center text-md-left">
             <div>
@@ -51,6 +51,11 @@
             <div class="ml-3 w-100">
               <div class="d-flex align-items-center mt-1 mb-2">
                 <h1 class="h3 mb-0">{{ u.username }}</h1>
+                {% if u.username != u.original_username %}
+                <span>
+                  <i class="fad fa-user-tag text-info align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Original Username: @{{ u.original_username }}"></i>
+                </span>
+                {% endif %}
                 {% if u.admin_level > 1 %}
                 <span>
                   <i class="fad fa-shield text-admin align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Admin"></i>
@@ -150,6 +155,11 @@
       <div class="mt-n3 py-3">
         <a href="{{ u.permalink }}" class="text-black">
           <h1 class="h5 d-inline-block">{{ u.username }}
+            {% if u.username != u.original_username %}
+              <span>
+                <i class="fad fa-user-tag text-info align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Original Username: @{{ u.original_username }}"></i>
+              </span>
+            {% endif %}
             <!--{% if u.over_18 %}
             <span class="badge badge-danger text-small align-middle mx-1">nsfw</span>
             {% endif %}-->
@@ -260,8 +270,8 @@
   <input type="submit" class="btn btn-danger" value="Nuke User's Content">
 </form>
 {% else %}
-<form action="/api/ban_user/{{ u.id }}", method="post">
-  <input type="hidden" name="formkey", value="{{ v.formkey }}">
+<form action="/api/ban_user/{{ u.id }}" method="post">
+  <input type="hidden" name="formkey" value="{{ v.formkey }}">
   <input id="user-ban-message" type="text" class="form-control" name="message" placeholder="Ban Message Reason" onchange="document.getElementById('user-ban-submit').disabled=false">
   <input id="user-ban-reason" type="text" class="form-control" name="reason" placeholder="Ban Reason (public)" onchange="document.getElementById('user-ban-submit').disabled=false">
   <input id="user-ban-days" type="number" class="form-control" name="days" placeholder="Days (blank = permanent)">
@@ -277,10 +287,17 @@
 <p>Alts:</p>
 <ul>
   {% for account in u.alts %}
-  <li><a href="{{ account.permalink }}">@{{ account.username }}</a></li>
+  <li><a href="{{ account.permalink }}">@{{ account.username }}</a>{% if account._is_manual %} [m]{% endif %}</li>
   {% endfor %}
 </ul>
 {% endif %}
+
+<a href="javascript:void(0)" class="btn btn-warning w-100" onclick="document.getElementById('demod-user').classList.toggle('d-none')">De-Mod User</a>
+<form action="/admin/demod_user" method="post">
+  <input type="hidden" name="formkey" value="{{ v.formkey }}">
+  <input type="hidden" name="user" value="{{ v.username }}">
+  <input type="submit" class="d-none btn btn-danger" id="demod-user" value="Confirm De-Mod User">
+</form>
 {% endblock %}
 
 {% block content %}

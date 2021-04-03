@@ -11016,7 +11016,7 @@ ol > li::before {
   color: #805AD5; }
 
 .navbar-brand, .navbar-light .navbar-brand {
-  color: #CFCFCF;
+  color: #805AD5;
   font-weight: 600; }
 
 .navbar-dark .navbar-brand {
@@ -12356,7 +12356,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .jumbotron-guild {
   position: relative;
-  height: 225px;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -12365,7 +12364,8 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   margin-bottom: 0;
   padding: 0;
   display: flex;
-  align-items: center; }
+  align-items: center;
+  z-index: 1; }
 
 .jumbotron-guild .guild-banner-contents {
   display: none; }
@@ -12377,7 +12377,9 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   width: 100%;
   height: 100%;
   bottom: 0;
-  left: 0; }
+  left: 0;
+  z-index: -1;
+  pointer-events: none; }
 
 .jumbotron-guild .guild-icon-square-lg {
   height: 125px;
@@ -13521,7 +13523,7 @@ ul.comment-section {
 pre code {
   word-break: break-word;
   white-space: break-spaces;
-  color: #FFFFFF; }
+  color: #e83e8c; }
 
 pre.prettyprint {
   padding: 0; }

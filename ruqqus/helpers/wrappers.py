@@ -8,10 +8,15 @@ import random
 from ruqqus.classes import *
 from .get import *
 from .alerts import send_notification
-from ruqqus.__main__ import Base, app
+from ruqqus.__main__ import Base, app, db_session
 
 
 def get_logged_in_user():
+
+    try:
+        db=g.db
+    except AttributeError:
+        db=db_session()
 
     if request.path.startswith("/api/v1"):
 
@@ -38,7 +43,7 @@ def get_logged_in_user():
         if not token:
             return None, None
 
-        client = g.db.query(ClientAuth).filter(
+        client = db.query(ClientAuth).filter(
             ClientAuth.access_token == token,
             ClientAuth.access_token_expire_utc > int(time.time())
         ).first()
@@ -55,7 +60,7 @@ def get_logged_in_user():
         nonce = session.get("login_nonce", 0)
         if not uid:
             x= (None, None)
-        v = g.db.query(User).options(
+        v = db.query(User).options(
             joinedload(User.moderates).joinedload(ModRelationship.board), #joinedload(Board.reports),
             joinedload(User.subscriptions).joinedload(Subscription.board)
         #    joinedload(User.notifications)
@@ -121,7 +126,7 @@ def auth_required(f):
                 v.ban(reason="Evading a site-wide ban")
                 send_notification(v, "Your Ruqqus account has been permanently suspended for the following reason:\n\n> ban evasion")
 
-                for post in g.db.query(Submission).filter_by(author_id=user.id).all():
+                for post in g.db.query(Submission).filter_by(author_id=v.id).all():
                     if post.is_banned:
                         continue
                         
@@ -140,7 +145,7 @@ def auth_required(f):
 
                 g.db.commit()
 
-                for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
+                for comment in g.db.query(Comment).filter_by(author_id=v.id).all():
                     if comment.is_banned:
                         continue
 

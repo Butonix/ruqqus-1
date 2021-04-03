@@ -2,9 +2,9 @@
 
 {% block stylesheets %}
 {% if v and session.get("dark_mode_enabled") %}
-<link id="css-link" rel="stylesheet" href="{{ b.css_dark_url }}?v=2.29.9.9">
+<link id="css-link" rel="stylesheet" href="{{ b.css_dark_url }}?v=2.34.5">
 {% else %}
-<link id="css-link" rel="stylesheet" href="{{ b.css_url }}?v=2.29.9.9">
+<link id="css-link" rel="stylesheet" href="{{ b.css_url }}?v=2.34.5">
 {% endif %}
 {% endblock %}
 
@@ -15,23 +15,30 @@
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input type="submit" class="btn btn-success" value="Unban guild">
 </form>
+
+<p class="my-3">Reason: {{ b.ban_reason }}</p>
+
+{% if v.admin_level >=5 %}
+<form action="/admin/purge_guild_images/{{ b.name }}" method="post">
+  <input type="hidden" name="formkey", value="{{ v.formkey }}">
+  <input type="submit" class="btn btn-danger" value="Purge All Hosted Images">
+</form>
+{% endif %}
 {% else %}
 <form action="/api/ban_guild/{{ b.base36id }}", method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input id="guild-ban-reason" type="text" class="form-control bg-white" name="reason" placeholder="Ban Reason" onchange="document.getElementById('guild-ban-submit').disabled=false;">
   <input id="guild-ban-submit" type="submit" class="btn btn-warning mt-3" value="Ban guild" disabled>
 </form>
-{% endif %}
-{% endif %}
 {% if not b.has_mod(v) %}
 <form action="/api/mod_self/{{ b.base36id }}" method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input type="submit" class="btn btn-success mt-3" value="Mod Self">
 </form>
 {% endif %}
-{% if b.is_banned %}
-<p>Reason: {{ b.ban_reason }}</p>
 {% endif %}
+{% endif %}
+
 {% endblock %}
 
 {% block sidebarblock %}
@@ -98,11 +105,11 @@
     css = document.getElementById("css-link");
     dswitch = document.getElementById("dark-switch");
 
-    if (css.href.endsWith("{{ b.css_url }}?v=2.29.9.9")) {
+    if (css.href.endsWith("{{ b.css_url }}?v=2.34.5")) {
       
       post("/settings/dark_mode/1",
         callback=function(){
-          css.href="{{ b.css_dark_url }}?v=2.29.9.9";
+          css.href="{{ b.css_dark_url }}?v=2.34.5";
           dswitch.classList.remove("fa-toggle-off");
           dswitch.classList.add("fa-toggle-on");
         }
@@ -111,7 +118,7 @@
     else {
       post("/settings/dark_mode/0",
         callback=function(){
-          css.href="{{ b.css_url }}?v=2.29.9.9";
+          css.href="{{ b.css_url }}?v=2.34.5";
           dswitch.classList.remove("fa-toggle-on");
           dswitch.classList.add("fa-toggle-off");
         }

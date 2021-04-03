@@ -1,0 +1,32 @@
+{% extends "docs_default.html" %}
+
+{% block sidebarblock %}{% endblock %}
+{% block sidebarLeftblock %}{% endblock %}
+
+{% block title %}
+<title>IP: {{ ip }}</title>
+<meta name="description" content="Ruqqus Help">
+{% endblock %}
+
+{% block content %}
+<h2>IP Address Info</h2>
+
+<h1>Users</h1>
+<div class="col {% block customPadding %}custom-gutters{% endblock %}" id="main-content-col">
+{% include "user_listing.html" %}
+</div>
+
+<h2>Posts</h2>
+<div class="row no-gutters mt-md-3">
+<div class="col-12">
+<div class="posts" id="posts">
+{% include "submission_listing.html" %}
+</div>
+</div>
+</div>
+
+<h2>Comments</h2>
+{% include "comments.html" %}
+
+
+{% endblock %}

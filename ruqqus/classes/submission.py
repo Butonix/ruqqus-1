@@ -87,7 +87,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     score_activity = Column(Float, default=0)
     is_offensive = Column(Boolean, default=False)
     is_nsfl = Column(Boolean, default=False)
-    is_politics = Column(Boolean, default=False)
     board = relationship(
         "Board",
         lazy="joined",
@@ -101,6 +100,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     is_pinned = Column(Boolean, default=False)
     score_best = Column(Float, default=0)
     reports = relationship("Report", backref="submission")
+    is_bot = Column(Boolean, default=False)
 
     upvotes = Column(Integer, default=1)
     downvotes = Column(Integer, default=0)
@@ -335,15 +335,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         else:
             self.is_offensive = False
 
-    def determine_politics(self):
-
-        for x in g.db.query(PoliticsWord).all():
-            if (self.body and x.check(self.body)) or x.check(self.title):
-                self.is_politics = True
-                break
-        else:
-            self.is_offensive = False
-
     @property
 
     def json_raw(self):
@@ -357,6 +348,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'title': self.title,
                 'is_nsfw': self.over_18,
                 'is_nsfl': self.is_nsfl,
+                'is_bot': self.is_bot,
                 'thumb_url': self.thumb_url,
                 'domain': self.domain,
                 'is_archived': self.is_archived,

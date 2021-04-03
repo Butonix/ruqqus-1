@@ -115,7 +115,7 @@
         {% if c.is_blocked %}
         <i class="fas fa-user-minus text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="This user is blocking you, but you can see this comment because {{ 'it\'s in your guild' if c.is_guildmaster('content') else 'it\'s an admin comment' if c.distinguish_level else 'you\'re an admin' }}."></i>
         {% endif %}
-        {% if c.is_exiled_for %}
+        {% if c.parent_submission and c.is_exiled_for.board_id == c.post.board_id%}
         <a href="{{ c.is_exiled_for.permalink }}" target="_blank"><i class="fad fa-gavel text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="User was exiled for this comment."></i></a>
         {% endif %}
         <span data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="{{ c.created_datetime }}" class="time-stamp"> · {{ c.age_string }}</span>
@@ -216,7 +216,7 @@
           
 
           {% if v and v.id==c.author_id and c.post and c.is_guildmaster('content') %}
-          <li class="list-inline-item d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post('/mod/distinguish_comment/{{ c.board.base36id }}/{{ c.base36id }}', callback=function(){window.location.href = '{{c.permalink}}';})" class="text-warning"><i class="fas fa-crown text-warning"></i><span class="d-none d-md-inline-block">Herald</span></a></li>
+          <li class="list-inline-item d-none d-md-inline-block"><a href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="herald_comment('{{ c.board.base36id }}','{{ c.base36id }}')" class="text-warning"><i class="fas fa-crown text-warning"></i><span class="d-none d-md-inline-block">Herald</span></a></li>
           {% endif %}
 
           {% if v and v.admin_level>=3 and request.path.startswith ('/admin') %}
@@ -249,17 +249,14 @@
               {% endif %}
 
               {% if v %}
-              {% if v.admin_level>=1 and v.id==c.author_id %}
-                {% if c.distinguish_level %}
+              {% if v.admin_level and v.id==c.author_id %}
 
                   <div class="dropdown-divider"></div>
-                  <h6 class="dropdown-header">Admin actions</h6>
+                  <h6 class="dropdown-header" class="text-muted">Admin actions</h6>
 
-                  <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge fa-fw"></i>Undistinguish</a>
-                  {% else %}
-                  <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="distinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge fa-fw"></i>Distinguish</a>
+                  <a class="dropdown-item" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="admin_comment('{{ c.base36id }}')"><i class="fas fa-id-badge fa-fw"></i>{{ 'Undistinguish' if c.distinguish_level else 'Distinguish' }}</a>
 
-                {% endif %}
+
               {% endif %}
               {% if v.admin_level>=3 %}
                 {% if not c.is_banned %}
@@ -283,15 +280,11 @@
             {% if v and c.post and c.is_guildmaster('content') %}
             <div class="dropdown-divider"></div>
               {% if c.is_top_level %}
-                {% if c.is_pinned %}
-                <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>Unpin</a>
-                {% else %}
-                <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>Pin</a>
-                {% endif %}
+                <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="pin_comment('{{ c.board.base36id }}','{{ c.base36id }}')"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>{{ "Unpin" if c.is_pinned else "Pin" }}</a>
               {% endif %}
             {% endif %}
             {% if v and c.post and c.is_guildmaster('access') %}
-              {% if v.id!=c.author_id and not c.author.is_deleted %}
+              {% if v.id!=c.author_id and not c.author.is_deleted and c.original_board_id==c.post.board_id %}
                 <a class="dropdown-item text-danger" id="exile-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post_toast('/mod/exile/{{ c.post.board.base36id }}?username={{ c.author.username }}&toast=1&thing={{ c.fullname }}')"><i class="fas fa-user-minus fa-fw text-danger"></i>Exile @{{ c.author.username }}</a>
               {% endif %}
             {% endif %}
@@ -355,13 +348,13 @@
           <label class="btn btn-secondary format d-inline-block m-0" for="gif-reply-btn-{{ c.fullname }}">
             <span id="gif-reply-btn-{{ c.fullname }}" class="font-weight-bolder text-uppercase" onclick="getGif();commentForm('reply-form-body-{{ c.fullname }}')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF">GIF</span>
           </label> 
-          <label class="format btn btn-secondary m-0 ml-1 {% if v.has_premium %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-reply-{{ c.fullname }}">
+          <label class="format btn btn-secondary m-0 ml-1{% if not v.can_upload_comment_image %} d-none{% endif %}" for="file-upload-reply-{{ c.fullname }}">
                 <div id="filename-show-reply-{{ c.base36id }}"><i class="far fa-image"></i></div>
                 <input id="file-upload-reply-{{ c.fullname }}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{ c.base36id }}').innerHTML=document.getElementById('file-upload-reply-{{ c.fullname }}').files[0].name;" hidden>
           </label>
 
           <a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{ c.base36id }}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-          <a class="btn btn-primary text-white ml-2" onclick="post_comment('{{ c.fullname }}');" href="javascript:void(0)">Comment</a> 
+          <a id="save-reply-to-{{ c.fullname }}" class="btn btn-primary text-white ml-2" onclick="post_comment('{{ c.fullname }}');" href="javascript:void(0)">Comment</a> 
         </div> 
       </form> 
     </div>
@@ -421,13 +414,7 @@
 
           {% if v %}
               {% if v.admin_level>=1 and v.id==c.author_id %}
-                  {% if c.distinguish_level %}
-
-                      <li class="list-group-item"><a class="d-block" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Undistinguish</a></li>
-                  {% else %}
-                      <li class="list-group-item"><a class="d-block" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="distinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>Distinguish</a></li>
-
-                  {% endif %}
+                      <li class="list-group-item"><a class="d-block" id="distinguish-{{ c.base36id }}" href="javascript:void(0)" onclick="admin_comment('{{ c.base36id }}')"><i class="fas fa-id-badge"></i>{{ 'Undistinguish' if c.distinguish_level else 'Distinguish' }}</a></li>
               {% endif %}
               {% if v.admin_level>=3 %}
                   {% if not c.is_banned %}
@@ -449,22 +436,17 @@
           {% endif %}
 
           {% if v and v.id==c.author_id and c.post and c.is_guildmaster('content') %}
-          <li class="list-group-item"><a href="javascript:void(0)" onclick="post('/mod/distinguish_comment/{{ c.board.base36id }}/{{ c.base36id }}', callback=function(){window.location.href = '{{c.permalink}}';})" class="text-warning"><i class="fas fa-crown text-warning"></i><span>Herald</span></a></li>
+          <li class="list-group-item"><a href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="herald_comment('{{ c.board.base36id }}','{{ c.base36id }}')" class="text-warning"><i class="fas fa-crown text-warning"></i><span>Herald</span></a></li>
           {% endif %}
             
           {% if v and c.post and c.is_guildmaster('content') %}
             {% if c.is_top_level %}
-              {% if c.is_pinned %}
-              <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Unpin</a>
+              <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="pin_comment('{{ c.board.base36id }}','{{ c.base36id }}')"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>{{ 'Unpin' if c.is_pinned else 'Pin' }}</a>
               </li>
-              {% else %}
-              <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" onclick="post('/mod/comment_pin/{{ c.board.base36id }}/{{ c.base36id }}/1', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Pin</a>
-              </li>
-              {% endif %}
             {% endif %}
           {% endif %}
           {% if v and c.post and c.is_guildmaster('access') %}
-            {% if c.author_id != v.id and not c.author.is_deleted %}
+            {% if c.author_id != v.id and not c.author.is_deleted and c.original_board_id==c.post.board_id %}
               <li class="list-group-item"><a class="d-block text-danger" id="exile-comment2-{{ c.base36id }}" href="javascript:void(0)" onclick="post_toast('/mod/exile/{{ c.post.board.base36id }}?username={{ c.author.username }}&toast=1&thing={{ c.fullname }}')"><i class="fas fa-user-minus fa-fw text-danger"></i>Exile @{{ c.author.username }}</a></li>
             {% endif %}
           {% endif %}  

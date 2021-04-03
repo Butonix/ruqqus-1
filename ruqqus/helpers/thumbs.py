@@ -27,7 +27,8 @@ def thumbnail_thread(pid, debug=False):
 
     domain_obj = post.domain_obj
 
-    headers={"User-Agent": f"Ruqqus thumbnail acquisition for post {post.base36id}"}
+    #mimic chrome browser agent
+    headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
 
     if debug:
@@ -181,12 +182,12 @@ def thumbnail_thread(pid, debug=False):
                 if src.startswith("https://"):
                     pass
                 elif src.startswith("http://"):
-                    src = f"https://{src.split('http://')}"
+                    src = f"https://{src.split('http://')[1]}"
                 elif src.startswith('//'):
                     src = f"https:{src}"
                 elif src.startswith('/'):
                     parsed_url = urlparse(post.url)
-                    src = f"https://{parsed_url.netloc}/{src.lstrip('/')}"
+                    src = f"https://{parsed_url.netloc}{src}"
                 else:
                     src = f"{post.url}{'/' if not post.url.endswith('/') else ''}{src}"
 
