@@ -384,15 +384,5 @@ def after_request(response):
 @app.route("/<path:path>", subdomain="www")
 def www_redirect(path):
 
-    return redirect(f"https://ruqqus.com/{path}")
+    return redirect(f"https://{app.config['SERVER_NAME']}/{path}")
 
-# @app.teardown_appcontext
-# def teardown(resp):
-
-#     g.db.close()
-
-
-@app.route("/test/archive/<x>")
-def test_archive(x):
-	print(request.headers)
-	abort(418)
