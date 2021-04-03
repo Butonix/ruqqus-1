@@ -393,3 +393,8 @@ def socket_test(ws):
 
 	print('socket')
 	ws.send('x')
+
+
+from gevent import pywsgi
+from geventwebsocket.handler import WebSocketHandler
+server = pywsgi.WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
