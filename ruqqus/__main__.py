@@ -386,3 +386,10 @@ def www_redirect(path):
 
     return redirect(f"https://{app.config['SERVER_NAME']}/{path}")
 
+
+
+@sockets.route("/test_socket")
+def socket_test(ws):
+
+	print('socket')
+	ws.send('x')

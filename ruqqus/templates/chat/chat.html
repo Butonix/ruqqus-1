@@ -40,6 +40,8 @@
         var ws_scheme = "ws://"
       };
 
+      var test = new ReconnectingWebSocket(ws_scheme + location.host + "/test_socket");
+
 
       var inbox = new ReconnectingWebSocket(ws_scheme + location.host + "/+{{ b.name }}/chat_receive");
       var outbox = new ReconnectingWebSocket(ws_scheme + location.host + "/+{{ b.name }}/chat_submit");
