@@ -61,7 +61,7 @@ class ChatBackend(object):
 CHATS = {}
 
 
-@sockets.route('/+<guildname>/chat_submit')
+@sockets.route('/chat/<guildname>/inbox')
 #@is_not_banned
 def inbox(ws, guildname):
 
@@ -87,7 +87,7 @@ def inbox(ws, guildname):
             #app.logger.info(f'Inserting message: {message}')
             redis.publish(guild.name, message)
 
-@sockets.route('/chat/<guildname>')
+@sockets.route('/chat/<guildname>/outbox')
 #@is_not_banned
 def outbox(ws, guildname):
     #print(args)
@@ -111,7 +111,7 @@ def outbox(ws, guildname):
         gevent.sleep(0.1)
 
 
-@app.route("/chat/+<guildname>", methods=["GET"])
+@app.route("/+<guildname>/chat", methods=["GET"])
 @is_not_banned
 def guild_chat_get(guildname, v):
 
