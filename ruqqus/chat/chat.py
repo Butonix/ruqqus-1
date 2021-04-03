@@ -87,7 +87,7 @@ def inbox(ws, guildname):
             #app.logger.info(f'Inserting message: {message}')
             redis.publish(guild.name, message)
 
-@sockets.route('/+<guildname>/chat_receive')
+@sockets.route('/chat/<guildname>')
 #@is_not_banned
 def outbox(ws, guildname):
     #print(args)
@@ -111,7 +111,7 @@ def outbox(ws, guildname):
         gevent.sleep(0.1)
 
 
-@app.route("/+<guildname>/chat", methods=["GET"])
+@app.route("/chat/+<guildname>", methods=["GET"])
 @is_not_banned
 def guild_chat_get(guildname, v):
 

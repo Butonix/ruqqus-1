@@ -388,7 +388,7 @@ def www_redirect(path):
 
 
 
-@sockets.route("/test_socket")
+@sockets.route("/chat/test_socket")
 def socket_test(ws):
 
 	print('socket')
