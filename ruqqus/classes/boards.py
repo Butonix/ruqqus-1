@@ -25,8 +25,9 @@ class Board(Base, Stndrd, Age_times):
     name = Column(String)
     created_utc = Column(Integer)
     description = Column(String)
-
     description_html=Column(String)
+    short_description = Column(String(140))
+    short_description_html = Column(String)
     over_18=Column(Boolean, default=False)
     is_nsfl=Column(Boolean, default=False)
     is_banned=Column(Boolean, default=False)
