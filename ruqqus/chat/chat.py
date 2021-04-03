@@ -18,17 +18,17 @@ redis = redis.from_url(REDIS_URL)
 
 
 @sockets.route("/socket_test")
-def test(ws):
+def socket_test(ws):
 
     i=0
     while True:
 
         ws.send(str(i))
         i+=1
-        time.sleep(3)
+        time.sleep(1)
 
 @app.route("/socket_home")
-def home():
+def socket_home():
 
     return """
 <script>
