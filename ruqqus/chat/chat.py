@@ -20,6 +20,8 @@ redis = redis.from_url(REDIS_URL)
 @sockets.route("/socket_test")
 def socket_test(ws):
 
+    print("socket test")
+
     i=0
     while True:
 
