@@ -25,7 +25,7 @@ def socket_test(ws):
     i=0
     while True:
 
-        ws.send(str(i))
+        ws.sendall(str(i).encode('utf-8'))
         i+=1
         time.sleep(1)
 
