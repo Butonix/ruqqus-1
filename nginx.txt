@@ -40,8 +40,8 @@ server {
 
     location /socket_test {
         proxy_pass http://127.0.0.1:5000;
-        proxy_set_header Upgrade websocket;
-        proxy_set_header Connection Upgrade;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
     }
 
     location / {
