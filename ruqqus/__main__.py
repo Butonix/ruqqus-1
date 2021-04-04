@@ -385,11 +385,3 @@ def after_request(response):
 def www_redirect(path):
 
     return redirect(f"https://{app.config['SERVER_NAME']}/{path}")
-
-
-
-@sockets.route("/chat/test_socket")
-def socket_test(ws):
-
-	print('socket')
-	ws.send('x')
