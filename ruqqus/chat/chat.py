@@ -23,7 +23,7 @@ def socket_test(ws):
     i=0
     while True:
 
-        ws.send(bytes(str(i)), "utf-8")
+        ws.send(str(i))
         i+=1
         time.sleep(1)
 
