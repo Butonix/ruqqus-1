@@ -50,8 +50,7 @@ def get_room(f):
 @socket_auth_required
 def socket_connect_auth_user(v):
 
-    if not v:
-        disconnect()
+    pass
 
 @socketio.on('join room')
 @socket_auth_required
