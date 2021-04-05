@@ -82,8 +82,6 @@ def join_guild_room(data, v, guild):
         send(f"You can't join the +{guild.name} chat right now.")
         return
 
-    if 
-
     join_room(guild.fullname)
     send(f"→ @{v.username} has entered the chat", room=guild.fullname)
 
