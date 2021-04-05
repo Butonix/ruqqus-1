@@ -5,7 +5,6 @@ import gevent
 from flask import *
 from flask_socketio import *
 
-from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
 from ruqqus.__main__ import app, socketio
 
@@ -14,7 +13,6 @@ REDIS_URL = app.config["CACHE_REDIS_URL"]
 #app = Flask(__name__)
 #app.debug = 'DEBUG' in os.environ
 
-redis = redis.from_url(REDIS_URL)
 
 
 def socket_auth_required(f):
@@ -32,6 +30,20 @@ def socket_auth_required(f):
     wrapper.__name__=f.__name__
     return wrapper
 
+def get_room(f):
+
+    def wrapper(*args, **kwargs):
+
+        data=args[0]
+        guild=get_guild(data["guild"])
+
+        if guild.is_banned:
+            return
+
+        f(*args, guild, **kwargs)
+
+    wrapper.__name__=f.__name__
+    return wrapper
 
 @socketio.on('connect')
 @socket_auth_required
@@ -42,19 +54,34 @@ def socket_connect_auth_user(v):
 
 @socketio.on('join room')
 @socket_auth_required
-def join_room(data):
+@get_room
+def join_guild_room(data, guild, v):
 
-    guild=get_guild(data["guild"])
     if guild.has_ban(v):
         emit("error", {"error":f"You are banned from +{guild.name}"})
         return
 
     join_room(guild.fullname)
+    send(f"→ @{v.username} has entered the chat", room=guild.fullname)
 
 @socketio.on('leave room')
 @socket_auth_required
-def leave_room(data, v):
-    leave_room(get_guild(data["guild"]).fullname)
+@get_room
+def leave_guild_room(data, guild, v):
+    leave_room(guild.fullname)
+    send(f"← @{v.username} has left the chat", room=guild.fullname)
+
+
+@socketio.on('speak')
+@socket_auth_required
+@get_room
+def speak_guild(data, guild, v):
+
+    data={
+        "username":v.username,
+        "text":data["text"]
+    }
+    emit("speak", data, to=guild.fullname)
 
 
 @app.route("/socket_home")
