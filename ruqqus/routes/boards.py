@@ -1322,7 +1322,7 @@ def mod_board_images_profile(bid, board, v):
 def mod_board_images_banner(bid, board, v):
 
     if request.headers.get("cf-ipcountry")=="T1" and not v.is_activated:
-        return jsonfiy({"error":"You must have a verified email address to upload images via Tor."}), 401
+        return jsonify({"error":"You must have a verified email address to upload images via Tor."}), 401
 
     board.set_banner(request.files["banner"])
 
