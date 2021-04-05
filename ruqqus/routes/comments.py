@@ -438,7 +438,6 @@ def api_comment(v):
                 level=level,
                 over_18=post.over_18,
                 is_nsfl=post.is_nsfl,
-                is_op=(v.id == post.author_id),
                 is_offensive=is_offensive,
                 original_board_id=parent_post.board_id,
                 is_bot=is_bot,
