@@ -2,8 +2,8 @@ import os
 import logging
 import redis
 import gevent
-from flask import Flask, render_template
-from flask_socketio import emit
+from flask import *
+from flask_socketio import *
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
@@ -15,6 +15,16 @@ REDIS_URL = app.config["CACHE_REDIS_URL"]
 #app.debug = 'DEBUG' in os.environ
 
 redis = redis.from_url(REDIS_URL)
+
+@socketio.on('connect')
+def socket_connect_auth_user(event):
+
+    v, client=get_logged_in_user()
+
+    if client or not v:
+        send("Not logged in")
+        disconnect()
+
 
 
 
