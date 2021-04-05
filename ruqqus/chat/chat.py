@@ -64,6 +64,7 @@ def socket_connect_auth_user():
 def socket_disconnect_user(v):
 
     for room in rooms():
+        print(room)
         leave_room(room)
         send(f"← @{v.username} has left the chat", room=room)
 
