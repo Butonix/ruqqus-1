@@ -8,7 +8,7 @@ from flask_socketio import *
 from ruqqus.helpers.wrappers import get_logged_in_user, auth_required
 from ruqqus.helpers.get import *
 from ruqqus.helpers.sanitize import *
-from ruqqus.helpers.mistletoe import CustomRenderer
+from ruqqus.helpers.markdown import CustomRenderer
 from ruqqus.__main__ import app, socketio, db_session
 
 REDIS_URL = app.config["CACHE_REDIS_URL"]
