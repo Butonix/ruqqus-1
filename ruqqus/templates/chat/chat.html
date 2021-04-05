@@ -1,18 +1,8 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Python Websockets Chat Demo</title>
-    <link href="{{ b.css_url }}" rel="stylesheet" media="screen">
-    <!----<link href="static/css/application.css" rel="stylesheet" media="screen">--->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "board.html" %}
 
+{% block PseudoSubmitForm %}{% endblock %}
 
-    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js" integrity="sha384-DkkWv9oJFWLIydBXXjkBWnG1/fuVhw8YPBq37uvvD6WSYRFRqr21eY5Dg9ZhmWdy" crossorigin="anonymous"></script>
-
-
-
-  </head>
-  <body>
+{% block content %}
     <div class="container">
       <div class="jumbotron">
         <h1>Python Websockets Chat Demo</h1>
@@ -125,5 +115,4 @@
     {% include "bootstrap.html" %}
 
     <script src="/assets/js/all_js.js?v=2.34.5"></script>
-  </body>
-</html>
+{% endblock %}
