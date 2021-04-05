@@ -60,7 +60,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     original_board_id = Column(Integer, ForeignKey("boards.id"))
 
     over_18 = Column(Boolean, default=False)
-    is_op = Column(Boolean, default=False)
     is_offensive = Column(Boolean, default=False)
     is_nsfl = Column(Boolean, default=False)
     is_bot = Column(Boolean, default=False)
@@ -463,6 +462,10 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @property
     def is_exiled_for(self):
         return self.__dict__.get('_is_exiled_for', None)
+
+    @property
+    def is_op(self):
+        return self.author_id==self.post.author_id and not self.author.is_deleted and not self.is_deleted and not self.post.is_deleted
     
     
 
