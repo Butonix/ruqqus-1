@@ -1,8 +1,11 @@
 import gevent.monkey
 gevent.monkey.patch_all()
 
-#import psycogreen.gevent
-# psycogreen.gevent.patch_psycopg()
+import eventlet
+eventlet.monkey_patch()
+
+import psycogreen.gevent
+psycogreen.gevent.patch_psycopg()
 
 from os import environ
 import secrets
