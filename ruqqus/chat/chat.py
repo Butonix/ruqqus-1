@@ -5,6 +5,7 @@ import gevent
 from flask import *
 from flask_socketio import *
 
+from ruqqus.helpers.wrappers import auth_required
 from ruqqus.helpers.get import *
 from ruqqus.__main__ import app, socketio
 
