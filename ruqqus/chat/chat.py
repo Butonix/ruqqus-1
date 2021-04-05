@@ -123,9 +123,7 @@ def speak_guild(data, v, guild):
     emit("speak", data, to=guild.fullname)
 
     if raw_text.startswith('/') and guild.has_mod(v):
-        print("command processing")
         args=raw_text.split()
-        print(args)
 
         if args[0]=="/kick":
             user=get_user(args[1], graceful=True)
@@ -133,7 +131,9 @@ def speak_guild(data, v, guild):
             if not user:
                 send(f"No user named {args[1]}")
             x=False
+            print(SIDS[user.id])
             for sid in SIDS[user.id]:
+                print(rooms(sid=sid))
                 for room in rooms(sid=sid):
                     if room==guild.fullname:
                         if not x:
