@@ -54,7 +54,7 @@ def join_room(data):
 @socketio.on('leave room')
 @socket_auth_required
 def leave_room(data, v):
-    leave_room(data["guild"]):
+    leave_room(get_guild(data["guild"]).fullname)
 
 
 @app.route("/socket_home")
