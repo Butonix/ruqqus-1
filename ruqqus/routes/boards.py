@@ -1913,7 +1913,9 @@ def change_guild_category(v, board, bid, category):
 
 
 @app.route("/+<boardname>/mod/log", methods=["GET"])
+@app.route("/api/v1/mod_log/<boardname>", method=["GET"])
 @auth_desired
+@api("read")
 def board_mod_log(boardname, v):
 
     page=int(request.args.get("page",1))
@@ -1921,9 +1923,9 @@ def board_mod_log(boardname, v):
 
     if board.is_banned:
         return {
-        "html":lambda:(render_template("board_banned.html", v=v, b=board), 403),
-        "api":lambda:(jsonify({"error":f"+{board.name} is banned"}), 403)
-        }
+            "html":lambda:(render_template("board_banned.html", v=v, b=board), 403),
+            "api":lambda:(jsonify({"error":f"+{board.name} is banned"}), 403)
+            }
 
     actions=g.db.query(ModAction).filter_by(board_id=board.id).order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
     actions=[i for i in actions]
@@ -1931,13 +1933,17 @@ def board_mod_log(boardname, v):
     next_exists=len(actions)==26
     actions=actions[0:25]
 
-    return render_template("guild/modlog.html",
-        v=v,
-        b=board,
-        actions=actions,
-        next_exists=next_exists,
-        page=page
-        )
+    return {
+        "html":lambda:render_template(
+            "guild/modlog.html",
+            v=v,
+            b=board,
+            actions=actions,
+            next_exists=next_exists,
+            page=page
+        ),
+        "api":lambda:jsonify({"data":[x.json for x in actions]})
+        }
 
 @app.route("/+<boardname>/mod/log/<aid>", methods=["GET"])
 @auth_desired
