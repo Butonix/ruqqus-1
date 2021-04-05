@@ -124,7 +124,7 @@ def speak_guild(data, v, guild):
 
     if raw_text.startswith('/') and guild.has_mod(v):
         print("command processing")
-        args=text.split()
+        args=raw_text.split()
         print(args)
 
         if args[0]=="/kick":
