@@ -97,6 +97,7 @@ def leave_guild_room(data, v, guild):
 def speak_guild(data, v, guild):
 
     data={
+        "avatar": v.profile_url
         "username":v.username,
         "text":data["text"]
     }

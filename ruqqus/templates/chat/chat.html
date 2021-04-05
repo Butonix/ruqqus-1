@@ -30,6 +30,22 @@
       </div>
     </div>
 
+    <div id="chat-line-template" class="d-none">
+      <div>
+        <div class="d-flex align-items-center">
+          <span class="rounded">
+            <img alt="avatar" style="width: 42px;height: 42px;" class="rounded-circle">
+          </span>
+          <div class="text-muted pl-3">
+            <div>
+              <a href="" class="font-weight-bold text-black" target="_blank"></a>
+              <span class="chat-message"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
 
     <script>
@@ -56,7 +72,13 @@
       console.log(json);
       username=json['username'];
       text=json['text'];
-      $('#chat-text').append('<p><b>@'+username+'</b> '+text+'</p>')
+      ava=json['avatar']
+
+      $('#chat-line-template img').attr('src', ava)
+      $('#chat-line-template a').attr('href','/@'+username)
+      $('#chat-line-template a').text('/@'+username)
+      $('#chat-line-template .chat-message').text(text)
+      $('#chat-text').append($('#chat-line-template div').clone())
       }
     );
 
