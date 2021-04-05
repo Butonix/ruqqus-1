@@ -42,9 +42,12 @@
       }
       event.preventDefault();
 
+      console.log('clicked')
+
       text = $('#input-text').val()
 
       socket.emit('speak', {data: text});
+      $('#input-text').val('')
 
     });
 
@@ -60,6 +63,7 @@
 
     socket.on('connect',
         function(event) {
+          console.log('connected, joining room')
           name=$('#guildname').val();
           socket.emit('join room', {'guild': name });
         }
