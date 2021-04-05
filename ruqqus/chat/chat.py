@@ -18,6 +18,8 @@ REDIS_URL = app.config["CACHE_REDIS_URL"]
 #app.debug = 'DEBUG' in os.environ
 
 
+SIDS={}
+
 
 def socket_auth_required(f):
 
@@ -61,6 +63,11 @@ def socket_connect_auth_user():
     if client or not v:
         emit("error", {"error":"Authentication required"})
         disconnect()
+
+    if v.username.lower() in SIDS:
+        SIDS[v.id].append(request.sid)
+    else:
+        SIDS[v.id]=[request.sid]
 
 @socketio.on('disconnect')
 @socket_auth_required
@@ -114,6 +121,29 @@ def speak_guild(data, v, guild):
         "room": guild.fullname
     }
     emit("speak", data, to=guild.fullname)
+
+    if text.startswith('/') and guild.has_moderator(v):
+        args=text.split()
+        
+        if args[0]=="/kick":
+            user=get_user(args[1], graceful=True)
+            reason= " ".join(args[2:]) if len(args)>3 else "none"
+            if not user:
+                send(f"No user named {args[1]}")
+            x=False
+            for sid in SIDS[user.id]:
+                for room in rooms(sid=sid):
+                    if room==guild.fullname:
+                        if not x:
+                            send(f"← @{user.username} kicked by @{v.username}. Reason: {reason} ", to=guild.fullname)
+                        leave_room(guild.fullname, sid=sid)
+                        x=True
+            if not x:
+                send(f"User {args[1]} not present in chat")
+
+
+
+
 
 
 @app.route("/socket_home")
