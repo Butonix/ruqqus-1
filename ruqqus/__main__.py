@@ -1,6 +1,3 @@
-import eventlet
-eventlet.monkey_patch()
-
 import gevent.monkey
 gevent.monkey.patch_all()
 
