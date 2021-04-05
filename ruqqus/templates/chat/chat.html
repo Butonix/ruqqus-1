@@ -52,8 +52,9 @@
       console.log(json);
       username=json['username'];
       text=json['text'];
-      $('#chat-text').append('<p><b>@'+username+'</b> '+text+'</p>');
-    }
+      $('#chat-text').append('<p><b>@'+username+'</b> '+text+'</p>')
+      }
+    );
 
     socket.on('message', function(msg){$('#chat-text').append('<p>'+msg+'</p>')});
 
