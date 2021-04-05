@@ -62,7 +62,7 @@ def socket_connect_auth_user():
 @socketio.on('join room')
 @socket_auth_required
 @get_room
-def join_guild_room(data, guild, v):
+def join_guild_room(data, v, guild):
 
     if guild.has_ban(v):
         emit("error", {"error":f"You are banned from +{guild.name}"})
@@ -74,7 +74,7 @@ def join_guild_room(data, guild, v):
 @socketio.on('leave room')
 @socket_auth_required
 @get_room
-def leave_guild_room(data, guild, v):
+def leave_guild_room(data, v, guild):
     leave_room(guild.fullname)
     send(f"← @{v.username} has left the chat", room=guild.fullname)
 
