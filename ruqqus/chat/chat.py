@@ -37,7 +37,7 @@ def socket_test(json, v=None):
 
 
 @app.route("/socket_home")
-@auth_required
+#@auth_required
 def socket_home(v):
 
     return render_template("chat/chat_test.html", v=v)
