@@ -20,6 +20,8 @@ def socket_auth_required(f):
 
     def wrapper(*args, **kwargs):
 
+        g.db=db_session()
+
         v, client=get_logged_in_user()
 
         if client or not v:
