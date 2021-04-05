@@ -24,13 +24,13 @@
       </div>
       <div id="chat-text">
       </div>
-    </div>
 
-    <div class="form-group">
-      <input id="guildname" type="hidden" value="{{ b.name }}">
-      <input id="input-text" type="text" class="form-control" placeholder="Enter chat text here!" autofocus />
+      <div class="form-group">
+        <input id="guildname" type="hidden" value="{{ b.name }}">
+        <input id="input-text" type="text" class="form-control" placeholder="Enter chat text here!" autofocus />
+        <button id="chatsend" class="btn btn-primary" type="submit">Send</button>
+      </div>
     </div>
-    <button id="chatsend" class="btn btn-primary" type="submit">Send</button>
 
     <div id="chat-line-template" class="d-none">
       <div class="chat-line my-1">
@@ -106,6 +106,16 @@
         }
       )
 
+    document.getElementById('input-text').addEventListener("keyup", function(event) {
+      // Number 13 is the "Enter" key on the keyboard
+      if (event.keyCode === 13) {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        document.getElementById("chatsend").click();
+        }
+      }
+    )
     
     </script>
   </body>
