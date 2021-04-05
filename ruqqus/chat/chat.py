@@ -7,7 +7,7 @@ from flask_socketio import *
 
 from ruqqus.helpers.wrappers import get_logged_in_user, auth_required
 from ruqqus.helpers.get import *
-from ruqqus.__main__ import app, socketio
+from ruqqus.__main__ import app, socketio, db_session
 
 REDIS_URL = app.config["CACHE_REDIS_URL"]
 
@@ -47,10 +47,14 @@ def get_room(f):
     return wrapper
 
 @socketio.on('connect')
-@socket_auth_required
 def socket_connect_auth_user(v):
 
-    if not v:
+    g.db=db_session()
+
+    v, client=get_logged_in_user()
+
+    if client or not v:
+        emit("error", {"error":"Authentication required"})
         disconnect()
 
 @socketio.on('join room')
