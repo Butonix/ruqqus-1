@@ -21,6 +21,8 @@ redis = redis.from_url(REDIS_URL)
 def socket_test(json):
 
     print(f"received json {str(json)}")
+    emit('my response',{'test':'foobar'})
+
 
 @app.route("/socket_home")
 @auth_required
