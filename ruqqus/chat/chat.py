@@ -78,9 +78,11 @@ def socket_disconnect_user(v):
 @get_room
 def join_guild_room(data, v, guild):
 
-    if guild.has_ban(v):
-        send(f"You are banned from +{guild.name}.")
+    if guild.can_submit(v):
+        send(f"You can't join the +{guild.name} chat right now.")
         return
+
+    if 
 
     join_room(guild.fullname)
     send(f"→ @{v.username} has entered the chat", room=guild.fullname)
@@ -110,7 +112,8 @@ def speak_guild(data, v, guild):
     data={
         "avatar": v.profile_url,
         "username":v.username,
-        "text":text
+        "text":text,
+        "room": guild.fullname
     }
     emit("speak", data, to=guild.fullname)
 
