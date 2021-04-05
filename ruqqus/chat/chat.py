@@ -104,7 +104,7 @@ def speak_guild(data, v, guild):
 
     text=preprocess(text)
     with CustomRenderer() as renderer:
-        body_md = renderer.render(mistletoe.Document(text))
+        text = renderer.render(mistletoe.Document(text))
     text = sanitize(text, linkgen=True)
 
     data={
