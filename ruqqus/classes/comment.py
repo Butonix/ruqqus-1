@@ -464,6 +464,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         return self.__dict__.get('_is_exiled_for', None)
 
     @property
+    @lazy
     def is_op(self):
         return self.author_id==self.post.author_id and not self.author.is_deleted and not self.post.author.is_deleted and not self.post.is_deleted
     
