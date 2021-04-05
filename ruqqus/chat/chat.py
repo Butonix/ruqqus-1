@@ -47,7 +47,7 @@ def get_room(f):
     return wrapper
 
 @socketio.on('connect')
-def socket_connect_auth_user(v):
+def socket_connect_auth_user():
 
     g.db=db_session()
 
