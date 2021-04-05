@@ -8,19 +8,17 @@
 
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js" integrity="sha384-DkkWv9oJFWLIydBXXjkBWnG1/fuVhw8YPBq37uvvD6WSYRFRqr21eY5Dg9ZhmWdy" crossorigin="anonymous"></script>
 
-    <script type="text/javascript" charset="utf-8">
-    var socket = io();
-</script>
-
 
   </head>
   <body>
 
 
-  <p>test</p>
+  <p id="socketread">test</p>
   <a id="sockettest" class="btn btn-primary">send json</a>
   <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
   <script>
+    var socket=io();
+
     $('#sockettest').click(function (event) {
 
       if (event.which != 1) {
@@ -31,6 +29,13 @@
       socket.emit('my event', {data: 'I\'m connected!'});
 
     });
+
+    socket.on('my response', function(json){
+      console.log(json);
+      $('#socketread').text(json['test'])
+    }
+
+    )
   </script>
   </body>
 </html>
