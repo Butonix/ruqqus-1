@@ -78,6 +78,8 @@ def socket_connect_auth_user():
     else:
         SIDS[v.id]=[request.sid]
 
+    print(f"{v.username} connected")
+
 @socketio.on('disconnect')
 @socket_auth_required
 def socket_disconnect_user(v):
