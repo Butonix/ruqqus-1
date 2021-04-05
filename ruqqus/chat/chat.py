@@ -20,6 +20,15 @@ REDIS_URL = app.config["CACHE_REDIS_URL"]
 
 SIDS={}
 
+def v_rooms(v):
+
+    output=[]
+    for sid in SIDS[v.id]:
+        for room in rooms(sid=sid):
+            if room not in output:
+                output.append(room)
+    return output
+
 
 def socket_auth_required(f):
 
@@ -105,6 +114,9 @@ def leave_guild_room(data, v, guild):
 @get_room
 def speak_guild(data, v, guild):
 
+    if guild.fullname not in v_rooms(v):
+        send("You aren't connected to that chat room.")
+
     raw_text=data['text'][0:1000].lstrip().rstrip()
     if not raw_text:
         return
@@ -131,7 +143,6 @@ def speak_guild(data, v, guild):
             if not user:
                 send(f"No user named {args[1]}")
             x=False
-            print(SIDS[user.id])
             for sid in SIDS[user.id]:
                 print(rooms(sid=sid))
                 for room in rooms(sid=sid):
