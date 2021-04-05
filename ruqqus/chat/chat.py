@@ -7,6 +7,8 @@ from flask_socketio import *
 
 from ruqqus.helpers.wrappers import get_logged_in_user, auth_required
 from ruqqus.helpers.get import *
+from ruqqus.helpers.sanitize import *
+from ruqqus.helpers.mistletoe import CustomRenderer
 from ruqqus.__main__ import app, socketio, db_session
 
 REDIS_URL = app.config["CACHE_REDIS_URL"]
@@ -95,10 +97,19 @@ def leave_guild_room(data, v, guild):
 @get_room
 def speak_guild(data, v, guild):
 
+    text=data['text']
+    if not text:
+        return
+
+    text=preprocess(text)
+    with CustomRenderer() as renderer:
+        body_md = renderer.render(mistletoe.Document(text))
+    text = sanitize(text, linkgen=True)
+
     data={
         "avatar": v.profile_url,
         "username":v.username,
-        "text":data["text"]
+        "text":text
     }
     emit("speak", data, to=guild.fullname)
 
