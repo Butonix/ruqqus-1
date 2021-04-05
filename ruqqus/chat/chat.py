@@ -59,6 +59,17 @@ def socket_connect_auth_user():
         emit("error", {"error":"Authentication required"})
         disconnect()
 
+@socketio.on('disconnect')
+@socket_auth_required
+def socket_disconnect_user(v):
+
+    for room in rooms():
+        leave_room(room)
+        send(f"← @{v.username} has left the chat", room=room)
+
+
+
+
 @socketio.on('join room')
 @socket_auth_required
 @get_room
