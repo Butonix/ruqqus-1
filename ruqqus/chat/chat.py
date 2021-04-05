@@ -96,6 +96,6 @@ def socket_home(v=None):
 @auth_required
 def guild_chat(guildname, v):
 
-    guild=get_guild(guildname, v=v)
+    guild=get_guild(guildname)
 
     return render_template("chat/chat.html", b=guild, v=v)
