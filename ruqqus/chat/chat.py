@@ -64,7 +64,6 @@ def socket_connect_auth_user():
 def socket_disconnect_user(v):
 
     for room in rooms():
-        print(room)
         leave_room(room)
         send(f"← @{v.username} has left the chat", room=room)
 
@@ -97,7 +96,7 @@ def leave_guild_room(data, v, guild):
 def speak_guild(data, v, guild):
 
     data={
-        "avatar": v.profile_url
+        "avatar": v.profile_url,
         "username":v.username,
         "text":data["text"]
     }
