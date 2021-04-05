@@ -79,7 +79,7 @@ def socket_disconnect_user(v):
 def join_guild_room(data, v, guild):
 
     if guild.has_ban(v):
-        emit("error", {"error":f"You are banned from +{guild.name}"})
+        send(f"You are banned from +{guild.name}.")
         return
 
     join_room(guild.fullname)
