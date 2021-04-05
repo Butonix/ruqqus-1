@@ -98,7 +98,7 @@ def leave_guild_room(data, v, guild):
 @get_room
 def speak_guild(data, v, guild):
 
-    text=data['text']
+    text=data['text'][0:1000]
     if not text:
         return
 
