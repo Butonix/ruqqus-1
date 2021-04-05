@@ -10,9 +10,6 @@
 
     <script type="text/javascript" charset="utf-8">
     var socket = io();
-    socket.on('connect', function() {
-        socket.emit('my event', {data: 'I\'m connected!'});
-    });
 </script>
 
 
@@ -21,5 +18,18 @@
 
 
   <p>test</p>
+  <a id="sockettest" class="btn btn-primary">send json</a>
+  <script>
+    $('#sockettest').click(function (event) {
+
+      if (event.which != 1) {
+        return
+      }
+      event.preventDefault();
+
+      socket.emit('my event', {data: 'I\'m connected!'});
+
+    });
+  </script>
   </body>
 </html>
