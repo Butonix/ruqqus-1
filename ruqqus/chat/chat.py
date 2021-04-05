@@ -90,3 +90,11 @@ def socket_home(v=None):
 
     return render_template("chat/chat_test.html", v=v)
 
+
+@app.route("/+<guildname>/chat", methods=["GET"])
+@auth_required
+def guild_chat(guildname, v):
+
+    guild=get_guild(guildname, v=v)
+
+    return render_template("chat/chat.html", b=guild, v=v)
