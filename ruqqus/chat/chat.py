@@ -3,6 +3,7 @@ import logging
 import redis
 import gevent
 from flask import Flask, render_template
+from flask_socketio import emit
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
