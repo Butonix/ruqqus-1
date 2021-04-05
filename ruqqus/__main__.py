@@ -121,7 +121,7 @@ Markdown(app)
 cache = Cache(app)
 Compress(app)
 
-socketio=SocketIO(app)
+socketio=SocketIO(app, cors_allowed_origins=f"https://{app.config["SERVER_NAME"]}")
 
 
 # app.config["CACHE_REDIS_URL"]
