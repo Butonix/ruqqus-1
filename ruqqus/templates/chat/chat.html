@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Python Websockets Chat Demo</title>
-    <link href="/assets/{{ b.name }}/main/{{ b.color_nonce }}.css" rel="stylesheet" media="screen">
+    <link href="{{ b.css_url }}" rel="stylesheet" media="screen">
     <!----<link href="static/css/application.css" rel="stylesheet" media="screen">--->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -22,7 +22,7 @@
           <input id="guildname" type="hidden" value="{{ b.name }}">
           <input id="input-text" type="text" class="form-control" placeholder="Enter chat text here!" autofocus />
         </div>
-        <button class="btn btn-primary" type="submit">Send</button>
+        <button id="chatsend" class="btn btn-primary" type="submit">Send</button>
       <div class="page-header">
         <h1>Chat Log</h1>
       </div>
@@ -35,7 +35,7 @@
     <script>
       var socket=io();
 
-    $('#sockettest').click(function (event) {
+    $('#chatsend').click(function (event) {
 
       if (event.which != 1) {
         return
