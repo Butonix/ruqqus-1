@@ -139,7 +139,6 @@ def speak_guild(data, v, guild):
                         if not x:
                             send(f"← @{user.username} kicked by @{v.username}. Reason: {reason} ", to=guild.fullname)
                         leave_room(guild.fullname, sid=sid)
-                        send(f"← @{user.username} kicked by @{v.username}. Reason: {reason} ", to=sid)
                         x=True
             if not x:
                 send(f"User {args[1]} not present in chat")
