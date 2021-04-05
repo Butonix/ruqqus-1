@@ -19,7 +19,7 @@ redis = redis.from_url(REDIS_URL)
 
 def socket_auth_required(f):
 
-    def wrapper(*args, **kwargs)
+    def wrapper(*args, **kwargs):
 
         v, client=get_logged_in_user()
 
