@@ -18,7 +18,8 @@ redis = redis.from_url(REDIS_URL)
 
 
 @socketio.on('my event')
-def socket_test(json):
+@auth_desired
+def socket_test(json, v=None):
 
     print(f"received json {str(json)}")
     emit('my response',{'test':'foobar'})
