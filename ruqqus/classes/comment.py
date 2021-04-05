@@ -465,7 +465,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
     @property
     def is_op(self):
-        return self.author_id==self.post.author_id and not self.author.is_deleted and not self.is_deleted and not self.post.is_deleted
+        return self.author_id==self.post.author_id and not self.author.is_deleted and not self.post.author.is_deleted and not self.post.is_deleted
     
     
 
