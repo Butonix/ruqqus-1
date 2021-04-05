@@ -1,4 +1,5 @@
 import gevent.monkey
+gevent.monkey.patch_ssl()
 gevent.monkey.patch_all()
 
 #import psycogreen.gevent
