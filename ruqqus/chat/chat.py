@@ -44,6 +44,8 @@ def socket_auth_required(f):
 
         f(*args, v, **kwargs)
 
+        g.db.close()
+
     wrapper.__name__=f.__name__
     return wrapper
 
@@ -79,6 +81,7 @@ def socket_connect_auth_user():
         SIDS[v.id]=[request.sid]
 
     print(f"{v.username} connected")
+    g.db.close()
 
 @socketio.on('disconnect')
 @socket_auth_required
