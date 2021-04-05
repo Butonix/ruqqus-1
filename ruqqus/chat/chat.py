@@ -105,11 +105,11 @@ def leave_guild_room(data, v, guild):
 @get_room
 def speak_guild(data, v, guild):
 
-    text=data['text'][0:1000].lstrip().rstrip()
-    if not text:
+    raw_text=data['text'][0:1000].lstrip().rstrip()
+    if not raw_text:
         return
 
-    text=preprocess(text)
+    text=preprocess(raw_text)
     with CustomRenderer() as renderer:
         text = renderer.render(mistletoe.Document(text))
     text = sanitize(text, linkgen=True)
@@ -122,7 +122,7 @@ def speak_guild(data, v, guild):
     }
     emit("speak", data, to=guild.fullname)
 
-    if text.startswith('/') and guild.has_mod(v):
+    if raw_text.startswith('/') and guild.has_mod(v):
         print("command processing")
         args=text.split()
         print(args)
