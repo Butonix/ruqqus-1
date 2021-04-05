@@ -11,7 +11,7 @@ from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_compress import Compress
-from flask_sockets import Sockets
+from flask_socketio import SocketIO
 from time import sleep
 from collections import deque
 
@@ -121,7 +121,7 @@ Markdown(app)
 cache = Cache(app)
 Compress(app)
 
-sockets=Sockets(app)
+socketio=SocketIO(app)
 
 
 # app.config["CACHE_REDIS_URL"]

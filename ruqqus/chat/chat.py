@@ -6,7 +6,7 @@ from flask import Flask, render_template
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
-from ruqqus.__main__ import app, sockets
+from ruqqus.__main__ import app, socketio
 
 REDIS_URL = app.config["CACHE_REDIS_URL"]
 
@@ -17,29 +17,16 @@ redis = redis.from_url(REDIS_URL)
 
 
 
-@sockets.route("/socket_test")
-def socket_test(ws):
+@socketio.on('my event')
+def socket_test(json):
 
-    print("socket test")
-
-    i=0
-    while True:
-
-        ws.send(b"test")
-        i+=1
-        time.sleep(1)
+    print(f"received json {str(json)}")
 
 @app.route("/socket_home")
-def socket_home():
+@auth_required
+def socket_home(v):
 
-    return """
-<script>
-ws=new WebSocket("wss://dev.ruqqus.com/socket_test")
-ws.onmessage = function (event) {
-  console.log(event.data);
-}
-</script>
-"""
+    return render_template("chat/chat_test.html", v=v)
 
 
 # class ChatBackend(object):
