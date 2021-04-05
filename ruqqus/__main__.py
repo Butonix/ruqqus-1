@@ -1,8 +1,8 @@
-import gevent.monkey
-gevent.monkey.patch_all()
-
 import eventlet
 eventlet.monkey_patch()
+
+import gevent.monkey
+gevent.monkey.patch_all()
 
 import psycogreen.gevent
 psycogreen.gevent.patch_psycopg()
