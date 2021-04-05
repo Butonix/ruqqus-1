@@ -124,7 +124,7 @@ Compress(app)
 socketio=SocketIO(
 	app,
 	cors_allowed_origins=f'https://{app.config["SERVER_NAME"]}',
-	message_queue=environ.get("REDIS_URL")
+	message_queue=environ.get("REDIS_CHAT_URL")
 	)
 
 
