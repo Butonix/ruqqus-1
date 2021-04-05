@@ -47,7 +47,7 @@
       text = $('#input-text').val()
       guild=$('#guildname').val()
 
-      socket.emit('speak', {data: text, guild: guild});
+      socket.emit('speak', {text: text, guild: guild});
       $('#input-text').val('')
 
     });
