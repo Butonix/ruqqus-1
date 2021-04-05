@@ -123,7 +123,9 @@ def speak_guild(data, v, guild):
     emit("speak", data, to=guild.fullname)
 
     if text.startswith('/') and guild.has_mod(v):
+        print("command processing")
         args=text.split()
+        print(args)
 
         if args[0]=="/kick":
             user=get_user(args[1], graceful=True)
