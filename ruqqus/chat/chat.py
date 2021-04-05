@@ -22,6 +22,8 @@ def socket_auth_required(f):
 
         v, client=get_logged_in_user()
 
+        print(v, client)
+
         if client or not v:
             send("Not logged in")
             return
