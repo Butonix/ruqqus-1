@@ -122,9 +122,9 @@ def speak_guild(data, v, guild):
     }
     emit("speak", data, to=guild.fullname)
 
-    if text.startswith('/') and guild.has_moderator(v):
+    if text.startswith('/') and guild.has_mod(v):
         args=text.split()
-        
+
         if args[0]=="/kick":
             user=get_user(args[1], graceful=True)
             reason= " ".join(args[2:]) if len(args)>3 else "none"
