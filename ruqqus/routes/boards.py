@@ -1659,28 +1659,27 @@ def siege_guild(v):
     # Assemble list of mod ids to check
     # skip any user with a perm site-wide ban
     # skip any deleted mod
-    mod_ids = [x for x in guild.mods if not x.is_deleted and not (x.is_banned and not x.unban_utc)]
 
     #check mods above user
     mods=[]
-    for x in mod_ids:
-        if x.id==v.id:
+    for x in guild.mods_list:
+        if x.user_id==v.id:
             break
         mods.append(x)
     # if no mods, skip straight to success
     if mods:
 
-        ids = [x.id for x in mods]
+        ids = [x.user_id for x in mods]
 
         # cutoff
         cutoff = now - 60 * 60 * 24 * 60
 
         # check submissions
 
-        post= g.db.query(Submission).filter(Submission.author_id.in_(ids), 
+        post= g.db.query(Submission).filter(Submission.author_id.in_(tuple(ids)), 
                                         Submission.created_utc > cutoff,
                                         Submission.original_board_id==guild.id,
-                                        Submission.is_deleted==False,
+                                        Submission.deleted_utc==0,
                                         Submission.is_banned==False).first()
         if post:
             return render_template("message.html",
@@ -1692,11 +1691,13 @@ def siege_guild(v):
                                    ), 403
 
         # check comments
-        comment= g.db.query(Comment).filter(Comment.author_id.in_(ids),
-                                      Comment.created_utc > cutoff,
-                                      Comment.original_board_id==guild.id,
-                                      Comment.is_deleted==False,
-                                      Comment.is_banned==False).first()
+        comment= g.db.query(Comment).filter(
+            Comment.author_id.in_(tuple(ids)),
+            Comment.created_utc > cutoff,
+            Comment.original_board_id==guild.id,
+            Comment.deleted_utc==0,
+            Comment.is_banned==False).first()
+
         if comment:
             return render_template("message.html",
                                    v=v,
@@ -1711,7 +1712,7 @@ def siege_guild(v):
             or_(
                 #option 1: mod action by user
                 and_(
-                    ModAction.user_id.in_(ids),
+                    ModAction.user_id.in_(tuple(ids)),
                     ModAction.created_utc > cutoff,
 
                     ModAction.board_id==guild.id
@@ -1719,7 +1720,7 @@ def siege_guild(v):
                 #option 2: ruqqus adds user as mod due to siege
                 and_(
                     ModAction.user_id==1,
-                    ModAction.target_user_id==v.id,
+                    ModAction.target_user_id.in_(tuple(ids)),
                     ModAction.kind=="add_mod",
                     ModAction.board_id==guild.id
                     )
