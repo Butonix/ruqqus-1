@@ -31,7 +31,7 @@
     </div>
 
     <div id="chat-line-template" class="d-none">
-      <div>
+      <div class="chat-line">
         <div class="d-flex align-items-center">
           <span class="rounded">
             <img alt="avatar" style="width: 42px;height: 42px;" class="rounded-circle">
@@ -76,9 +76,9 @@
 
       $('#chat-line-template img').attr('src', ava)
       $('#chat-line-template a').attr('href','/@'+username)
-      $('#chat-line-template a').text('/@'+username)
+      $('#chat-line-template a').text('@'+username)
       $('#chat-line-template .chat-message').text(text)
-      $('#chat-text').append($('#chat-line-template div').clone())
+      $('#chat-text').append($('#chat-line-template .chat-line').clone())
       }
     );
 
