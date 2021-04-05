@@ -88,6 +88,32 @@ class ModAction(Base, Stndrd, Age_times):
         else:
             return ''
 
+    @property
+    def json(self):
+        data={
+            "id":self.base36id,
+            "guild": self.board.name,
+            "kind": self.kind,
+            "created_utc": self.created_utc,
+            "mod": self.user.username,
+        }
+
+        if self.target_user_id:
+            data["target_user_id"]=self.target_user.base36id
+            data["target_user"]=self.target_user.username
+
+        if self.target_comment_id:
+            data["target_comment_id"]=self.target_comment.base36id
+
+        if self.target_submission_id:
+            data["target_submission_id"]=self.target_submission.base36id
+
+        if self._note:
+            data["note"]=self._note
+
+        return data
+    
+
 
 
     @property
@@ -185,7 +211,7 @@ ACTIONTYPES={
         "title": 'pinned a comment'
     },
     "unpin_comment":{
-        "str":'un-pinned a {self.target_link}>',
+        "str":'un-pinned a {self.target_link}',
         "icon":"fa-thumbtack fa-rotate--45",
         "color": "bg-muted",
         "title": 'un-pinned a comment'

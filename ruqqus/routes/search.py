@@ -361,7 +361,7 @@ def search_guild(name, v, search_type="posts"):
 
     #posts search
 
-    total, ids = searchlisting(query, v=v, page=page, t=t, sort=sort, b=b)
+    total, ids = searchlisting(searchparse(query), v=v, page=page, t=t, sort=sort, b=b)
 
     next_exists=(len(ids)==26)
     ids=ids[0:25]
