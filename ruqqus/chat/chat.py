@@ -134,17 +134,20 @@ def speak_guild(data, v, guild):
     }
     emit("speak", data, to=guild.fullname)
 
-    if raw_text.startswith('/') and guild.has_mod(v):
+    if raw_text.startswith('/'):
+        if not guild.has_mod(v):
+            send("You don't have permission to use commands in this chat")
+            return
+
         args=raw_text.split()
 
         if args[0]=="/kick":
             user=get_user(args[1], graceful=True)
-            reason= " ".join(args[2:]) if len(args)>3 else "none"
+            reason= " ".join(args[2:]) if len(args)>=3 else "none"
             if not user:
                 send(f"No user named {args[1]}")
             x=False
             for sid in SIDS[user.id]:
-                print(rooms(sid=sid))
                 for room in rooms(sid=sid):
                     if room==guild.fullname:
                         if not x:
