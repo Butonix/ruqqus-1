@@ -82,7 +82,7 @@ def leave_guild_room(data, v, guild):
 @socketio.on('speak')
 @socket_auth_required
 @get_room
-def speak_guild(data, guild, v):
+def speak_guild(data, v, guild):
 
     data={
         "username":v.username,
