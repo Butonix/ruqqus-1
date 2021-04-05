@@ -17,7 +17,7 @@ REDIS_URL = app.config["CACHE_REDIS_URL"]
 redis = redis.from_url(REDIS_URL)
 
 @socketio.on('connect')
-def socket_connect_auth_user(event):
+def socket_connect_auth_user():
 
     v, client=get_logged_in_user()
 
