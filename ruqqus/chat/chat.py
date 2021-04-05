@@ -5,7 +5,7 @@ import gevent
 from flask import *
 from flask_socketio import *
 
-from ruqqus.helpers.wrappers import auth_required
+from ruqqus.helpers.wrappers import get_logged_in_user, auth_required
 from ruqqus.helpers.get import *
 from ruqqus.__main__ import app, socketio
 
@@ -21,8 +21,6 @@ def socket_auth_required(f):
     def wrapper(*args, **kwargs):
 
         v, client=get_logged_in_user()
-
-        print(v, client)
 
         if client or not v:
             send("Not logged in")
@@ -52,7 +50,8 @@ def get_room(f):
 @socket_auth_required
 def socket_connect_auth_user(v):
 
-    pass
+    if not v:
+        disconnect()
 
 @socketio.on('join room')
 @socket_auth_required
