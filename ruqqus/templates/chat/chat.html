@@ -39,10 +39,16 @@
           <div class="text-muted pl-3">
             <div>
               <a href="" class="font-weight-bold text-black" target="_blank"></a>
-              <span class="chat-message"></span>
+              <span class="chat-message text-black"></span>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div id="system-template" class="d-none">
+      <div class="system-line">
+        <p class="message text-muted"></p>
       </div>
     </div>
 
@@ -82,7 +88,11 @@
       }
     );
 
-    socket.on('message', function(msg){$('#chat-text').append('<p>'+msg+'</p>')});
+    socket.on('message', function(msg){
+      $('#system-template .message').text(msg)
+      $('#chat-text').append($('#system-template .system-line').clone())
+    }
+    );
 
     socket.on('connect',
         function(event) {
