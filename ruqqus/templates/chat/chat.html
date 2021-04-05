@@ -45,8 +45,9 @@
       console.log('clicked')
 
       text = $('#input-text').val()
+      guild=$('#guildname').val()
 
-      socket.emit('speak', {data: text});
+      socket.emit('speak', {data: text, guild: guild});
       $('#input-text').val('')
 
     });
