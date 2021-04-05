@@ -83,7 +83,7 @@
       $('#chat-line-template img').attr('src', ava)
       $('#chat-line-template a').attr('href','/@'+username)
       $('#chat-line-template a').text('@'+username)
-      $('#chat-line-template .chat-message').text(text)
+      $('#chat-line-template .chat-message').html(text)
       $('#chat-text').append($('#chat-line-template .chat-line').clone())
       }
     );
