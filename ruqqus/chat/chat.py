@@ -98,7 +98,7 @@ def leave_guild_room(data, v, guild):
 @get_room
 def speak_guild(data, v, guild):
 
-    text=data['text'][0:1000]
+    text=data['text'][0:1000].lstrip().rstrip()
     if not text:
         return
 
