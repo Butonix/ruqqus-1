@@ -14,7 +14,7 @@ from .subscriptions import *
 from .board_relationships import *
 from .comment import Comment
 from .mix_ins import *
-from ruqqus.__main__ import Base, cache
+from ruqqus.__main__ import Base, cache, r
 
 
 class Board(Base, Stndrd, Age_times):
