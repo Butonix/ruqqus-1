@@ -42,6 +42,9 @@ def socket_auth_required(f):
             send("Not logged in")
             return
 
+        if v.is_suspended:
+            send("You're banned and can't access chat right now.")
+
         f(*args, v, **kwargs)
 
         g.db.close()
@@ -74,6 +77,9 @@ def socket_connect_auth_user():
     if client or not v:
         emit("error", {"error":"Authentication required"})
         disconnect()
+        
+    if v.is_suspended:
+        send("You're banned and can't access chat right now.")
 
     if v.username.lower() in SIDS:
         SIDS[v.id].append(request.sid)
@@ -242,7 +248,7 @@ def socket_home(v=None):
 
 
 @app.route("/+<guildname>/chat", methods=["GET"])
-@auth_required
+@is_not_banned
 def guild_chat(guildname, v):
 
     guild=get_guild(guildname)
