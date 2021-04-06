@@ -177,6 +177,14 @@ def speak_guild(data, v, guild):
             send(f"Users present: {names}")
             return
 
+        elif args[0]=="/help":
+            send("The following commands are supported:")
+            send("/here - Display a list of users currently in this channel")
+            send("/help - Display this help information")
+            send("/kick <username> [reason] - Eject a user from this channel. They will be able to rejoin immediately after.")
+            send("/ban <username> [reason] - Eject a user from this channel. They will not be able to rejoin until unbanned by a Guildmaster.")
+            return
+
 
         if not guild.has_mod(v, perm="chat"):
             send("You don't have permission to use commands in this chat")
@@ -200,6 +208,7 @@ def speak_guild(data, v, guild):
 
         if not any([x==guild.fullname for x in v_rooms(user)]):
             send(f"User {user.username} not present in chat")
+
 
         if args[0]=="/kick":
             reason= " ".join(args[2:]) if len(args)>=3 else "none"
