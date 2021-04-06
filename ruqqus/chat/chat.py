@@ -204,18 +204,18 @@ def speak_guild(data, v, guild):
                     send(f"No user named {args[1]}")
                     return
 
-            if user.id==v.id:
-                send("You can't kick/ban yourself!")
-                return
-            elif guild.has_mod(user):
-                send(f"You can't kick/ban other guildmasters")
-                return
-            elif guild.has_contributor(user):
-                send(f"@{user.username} is an approved contributor and can't currently be kicked or banned.")
-                return
+                if user.id==v.id:
+                    send("You can't kick/ban yourself!")
+                    return
+                elif guild.has_mod(user):
+                    send(f"You can't kick/ban other guildmasters")
+                    return
+                elif guild.has_contributor(user):
+                    send(f"@{user.username} is an approved contributor and can't currently be kicked or banned.")
+                    return
 
-            if not any([x==guild.fullname for x in v_rooms(user)]):
-                send(f"User {user.username} not present in chat")
+                if not any([x==guild.fullname for x in v_rooms(user)]):
+                    send(f"User {user.username} not present in chat")
 
 
             if args[0]=="/kick":
