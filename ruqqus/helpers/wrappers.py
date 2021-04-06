@@ -283,7 +283,7 @@ def no_negative_balance(s):
 
     return wrapper_maker
 
-def is_guildmaster(perm=None):
+def is_guildmaster(*perms):
     # decorator that enforces guildmaster status and verifies permissions
     # use under auth_required
     def wrapper_maker(f):
@@ -308,9 +308,10 @@ def is_guildmaster(perm=None):
             if not m:
                 return jsonify({"error":f"You aren't a guildmaster of +{board.name}"}), 403
 
-            if perm:
-                if not m.__dict__.get(f"perm_{perm}"):
-                    return jsonify({"error":f"Permission `{perm}` required"}), 403
+            if perms:
+                for perm in perms:
+                    if not m.__dict__.get(f"perm_{perm}"):
+                        return jsonify({"error":f"Permission `{perm}` required"}), 403
 
 
             if v.is_banned and not v.unban_utc:
