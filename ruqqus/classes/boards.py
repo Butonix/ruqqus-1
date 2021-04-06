@@ -49,6 +49,7 @@ class Board(Base, Stndrd, Age_times):
     subcat_id=Column(Integer, ForeignKey("subcategories.id"), default=0)
     secondary_color=Column(String(6), default="ffffff")
     public_chat=Column(Boolean, default=False)
+    motd = Column(String(1000), default='')
 
     subcat=relationship("SubCategory")
     moderators=relationship("ModRelationship")
