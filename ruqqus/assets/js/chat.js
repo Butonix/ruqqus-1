@@ -47,6 +47,14 @@
   }
   );
 
+  socket.on('me', function(data){
+    $('#me-template .message').text(data['msg'])
+    $('#chat-text').append($('#me-template .system-line').clone())
+    window.scrollTo(0,document.body.scrollHeight)
+  }
+  );
+
+
   socket.on('warning', function(data){
     $('#system-warning .message').text(data['msg'])
     $('#chat-text').append($('#system-warning .system-line').clone())

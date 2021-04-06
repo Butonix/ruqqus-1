@@ -255,7 +255,7 @@ def speak_guild(data, v, guild):
             if not text:
                 return
             text=sanitize(text, linkgen=False)
-            send(f"@{v.username} {text}", to=guild.fullname)
+            emit('me', {'msg':f"@{v.username} {text}"}, to=guild.fullname)
             return
 
 
