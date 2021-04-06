@@ -120,7 +120,7 @@ def leave_guild_room(data, v, guild):
 def speak_guild(data, v, guild):
 
     if guild.fullname not in v_rooms(v):
-        send("You aren't connected to that chat room.")
+        send("You aren't connected to that chat room. Trying to join...")
         trigger('join room')
         return
 
