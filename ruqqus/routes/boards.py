@@ -1144,7 +1144,7 @@ def board_about_chatbanned(boardname, board, v):
 
     return {
         "html":lambda:render_template(
-            "guild/bans.html", 
+            "guild/chatbans.html", 
             v=v, 
             b=board, 
             bans=bans,
