@@ -878,6 +878,25 @@ def mod_bid_settings_optout(bid, board, v):
     g.db.add(ma)
     return "", 204
 
+@app.route("/mod/<bid>/settings/public_chat", methods=["POST"])
+@auth_required
+@is_guildmaster("config", "chat")
+@validate_formkey
+def mod_bid_settings_optout(bid, board, v):
+
+    # nsfw
+    board.public_chat = bool(request.form.get("public_chat", False) == 'true')
+
+    g.db.add(board)
+
+    ma=ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"public_chat={board.public_chat}"
+        )
+    g.db.add(ma)
+    return "", 204
 
 @app.route("/mod/<bid>/settings/restricted", methods=["POST"])
 @auth_required
