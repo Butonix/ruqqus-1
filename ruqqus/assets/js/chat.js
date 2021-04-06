@@ -84,6 +84,21 @@
   }
   );
 
+  socket.on('admin', function(json){
+    console.log(json);
+    username=json['username'];
+    text=json['text'];
+    ava=json['avatar']
+
+    $('#admin-template img').attr('src', ava)
+    $('#admin-template a').attr('href','/@'+username)
+    $('#admin-template a').text('@'+username)
+    $('#admin-template .chat-message').html(text)
+    $('#chat-text').append($('#admin-template .chat-line').clone())
+    window.scrollTo(0,document.body.scrollHeight)
+  }
+  );
+
   socket.on('count', function(data){
     $('#chat-count').text(data['count'])
   }

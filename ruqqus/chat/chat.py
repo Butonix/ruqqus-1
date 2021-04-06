@@ -207,9 +207,6 @@ def speak_guild(data, v, guild):
                 send("/ban <username> [reason] - Eject a user from this channel. They will not be able to rejoin until unbanned by a Guildmaster.")
                 send("/gm <text> - Send a message as guildmaster.")
                 send("/kick <username> [reason] - Eject a user from this channel. They will be able to rejoin immediately after.")
-            if v.admin_level >=3:
-                send("Administrator Commands:")
-                send("/wallop <text> - Send a global broadcast.")
             return
 
         elif args[0] in ['/shrug','/table',"/lenny","/untable","/porter","/notsure","/flushed","/gib","/sus"]:
@@ -354,12 +351,27 @@ def speak_guild(data, v, guild):
                 g.db.commit()
                 emit('info', {'msg':f"@{user.username} un-chatbanned by @{v.username}."}, to=guild.fullname)
 
-        elif args[0] in ['/wallop']:
+        elif args[0] in ['/wallop', '/admin']:
 
             if v.admin_level <4:
                 send(f"You do not have permission to use the {args[0]} command.")
 
-            if args[0]=="/wallop":
+            if args[0]=="/admin":
+
+                text=" ".join(args[1:])
+                text=preprocess(text)
+                with CustomRenderer() as renderer:
+                    text = renderer.render(mistletoe.Document(text))
+                text = sanitize(text, linkgen=True)
+
+                data={
+                    "avatar": v.profile_url,
+                    "username":v.username,
+                    "text":text
+                    }
+                emit('admin', data, to=guild.fullname)
+
+            elif args[0]=="/wallop":
 
                 text=" ".join(args[1:])
                 text=preprocess(text)
