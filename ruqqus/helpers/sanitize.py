@@ -89,6 +89,10 @@ def a_modify(attrs, new=False):
     return attrs
 
 
+
+
+
+
 _clean_wo_links = bleach.Cleaner(tags=_allowed_tags,
                                  attributes=_allowed_attributes,
                                  protocols=_allowed_protocols,
@@ -99,7 +103,7 @@ _clean_w_links = bleach.Cleaner(tags=_allowed_tags_with_links,
                                 filters=[partial(LinkifyFilter,
                                                  skip_tags=["pre"],
                                                  parse_email=False,
-                                                 callbacks=[a_modify]
+                                                 callbacks=[a_modify, img_modify]
                                                  )
                                          ]
                                 )
@@ -140,7 +144,7 @@ def sanitize(text, bio=False, linkgen=False):
             domain = get_domain(netloc)
             if not(netloc) or (domain and domain.show_thumbnail):
 
-                if "profile-pic-20" not in tag.get("class", ""):
+                if tag.get("class", "") != 'profile-pic-20 align-middle mr-1':
                     # set classes and wrap in link
 
                     tag["rel"] = "nofollow"
@@ -182,6 +186,12 @@ def sanitize(text, bio=False, linkgen=False):
         #clean up tags in code
         for tag in soup.find_all("code"):
             tag.contents=[x.string for x in tag.contents if x.string]
+
+        #whatever else happens with images, there are only two sets of classes allowed
+        for tag in soup.find_all("img"):
+            if img.attrs.get("class") not in ["in-comment-image rounded-sm my-2","profile-pic-20 align-middle mr-1"]:
+                img.attrs['class']=""
+
 
         sanitized = str(soup)
 
