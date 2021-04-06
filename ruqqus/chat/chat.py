@@ -211,7 +211,7 @@ def speak_guild(data, v, guild):
                 send("/wallop <text> - Send a global broadcast.")
             return
 
-        elif args[0] in ['/shrug','/table',"/lenny","/untable"]:
+        elif args[0] in ['/shrug','/table',"/lenny","/untable","/porter","/notsure","/flushed","/gib"]:
 
             if args[0]=="/shrug":
                 args.append(r"¯\\\_(ツ)_/¯")
@@ -221,6 +221,14 @@ def speak_guild(data, v, guild):
                 args.append("( ͡° ͜ʖ ͡°)")
             elif args[0]=="/untable":
                 args.append('┬─┬ノ( º _ ºノ)')
+            elif args[0]=="/porter":
+                args.append('【=◈︿◈=】')
+            elif args[0]=="/notsure":
+                args.append('(≖_≖ )')
+            elif args[0]=="/flushed":
+                args.append('◉_◉')
+            elif args[0]=="/gib":
+                args.append('༼ つ ◕_◕ ༽つ')
 
             text=" ".join(args[1:])
 
