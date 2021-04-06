@@ -373,6 +373,7 @@ class Board(Base, Stndrd, Age_times):
 
         return self.public_chat
 
+
     def can_view(self, user):
 
         if user is None:
