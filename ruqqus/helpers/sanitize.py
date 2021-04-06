@@ -174,7 +174,14 @@ def sanitize(text, bio=False, linkgen=False):
 
             tag.contents=[x if x.name=='img' else x.string if x.string else '' for x in tag.contents]
 
-            display=''.join([x.string for x in tag.contents if x.string else x])
+            l=[]
+            for x in tag.contents:
+                try:
+                    l.append(x.string)
+                except AttributeError:
+                    l.append(x)
+
+            display=''.join(l)
             display=re.sub("\s",'', display)
 
             if re.match("https?://\S+", display):
