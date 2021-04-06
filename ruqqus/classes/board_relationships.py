@@ -142,6 +142,54 @@ class BanRelationship(Base, Stndrd, Age_times):
 
         return data
 
+class ChatBan(Base, Stndrd, Age_times):
+
+    __tablename__ = "chatbans"
+    id = Column(BigInteger, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    board_id = Column(Integer, ForeignKey("boards.id"))
+    created_utc = Column(BigInteger, default=0)
+    banning_mod_id = Column(Integer, ForeignKey("users.id"))
+    mod_note = Column(String(128), default="")
+
+    user = relationship(
+        "User",
+        lazy="joined",
+        primaryjoin="User.id==BanRelationship.user_id")
+    banning_mod = relationship(
+        "User",
+        lazy="joined",
+        primaryjoin="User.id==BanRelationship.banning_mod_id")
+    board = relationship("Board")
+
+    def __init__(self, *args, **kwargs):
+        if "created_utc" not in kwargs:
+            kwargs["created_utc"] = int(time.time())
+
+        super().__init__(*args, **kwargs)
+
+    def __repr__(self):
+        return f"<Ban(id={self.id}, uid={self.uid}, board_id={self.board_id})>"
+
+    @property
+    def json_core(self):
+        return {
+            'user_id':self.user_id,
+            'board_id':self.board_id,
+            'created_utc':self.created_utc,
+            'mod_id':self.banning_mod_id
+        }
+
+
+    @property
+    def json(self):
+        data=self.json_core
+
+        data["user"]=self.user.json_core
+        data["mod"]=self.banning_mod.json_core
+        data["guild"]=self.board.json_core
+
+        return data
 class ContributorRelationship(Base, Stndrd, Age_times):
 
     __tablename__ = "contributors"
