@@ -246,6 +246,14 @@ def speak_guild(data, v, guild):
             emit("speak", data, to=guild.fullname)
             return
 
+        elif args[0]=="/me":
+            text=" ".join(args[1:])
+            text=sanitize(text, linkgen=False)
+            send(f"@{v.username} {text}", to=guild.fullname)
+            return
+
+
+
 
 
         elif args[0] in ['/kick','/ban', "/unban", "/gm"]:
