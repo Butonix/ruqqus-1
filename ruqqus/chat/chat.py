@@ -6,7 +6,7 @@ import mistletoe
 from flask import *
 from flask_socketio import *
 
-from ruqqus.helpers.wrappers import get_logged_in_user, auth_required
+from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.markdown import CustomRenderer, preprocess
@@ -77,7 +77,7 @@ def socket_connect_auth_user():
     if client or not v:
         emit("error", {"error":"Authentication required"})
         disconnect()
-        
+
     if v.is_suspended:
         send("You're banned and can't access chat right now.")
 
