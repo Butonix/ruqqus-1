@@ -188,6 +188,13 @@ def sanitize(text, bio=False, linkgen=False):
             if 'profile-pic-20' not in tag.attrs.get("class",""):
                 tag.attrs['class']="in-comment-image rounded-sm my-2"
 
+        #table format
+        for tag in soup.find_all("table"):
+            tag.attrs['class']="table table-striped"
+
+        for tag in soup.find_all("thead"):
+            tag.attrs['class']="bg-primary text-white"
+
 
         sanitized = str(soup)
 
