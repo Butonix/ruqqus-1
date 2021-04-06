@@ -131,13 +131,7 @@ def speak_guild(data, v, guild):
         text = renderer.render(mistletoe.Document(text))
     text = sanitize(text, linkgen=True)
 
-    data={
-        "avatar": v.profile_url,
-        "username":v.username,
-        "text":text,
-        "room": guild.fullname
-    }
-    emit("speak", data, to=guild.fullname)
+
 
     if raw_text.startswith('/'):
         if not guild.has_mod(v):
@@ -145,12 +139,16 @@ def speak_guild(data, v, guild):
             return
 
         args=raw_text.split()
+        user=get_user(args[1], graceful=True)
+        if not user:
+            send(f"No user named {args[1]}")
+        if guild.has_mod(user):
+            send(f"You can't kick/ban other guildmasters")
+        elif guild.has_contributor(user):
+            send(f"@{user.username} is an approved contributor and can't currently be kicked or banned.")
 
         if args[0]=="/kick":
-            user=get_user(args[1], graceful=True)
             reason= " ".join(args[2:]) if len(args)>=3 else "none"
-            if not user:
-                send(f"No user named {args[1]}")
             x=False
             for sid in SIDS[user.id]:
                 for room in rooms(sid=sid):
@@ -161,6 +159,41 @@ def speak_guild(data, v, guild):
                         x=True
             if not x:
                 send(f"User {args[1]} not present in chat")
+
+        elif args[0]="/ban"
+            reason= " ".join(args[2:]) if len(args)>=3 else "none"
+            x=False
+            for sid in SIDS[user.id]:
+                for room in rooms(sid=sid):
+                    if room==guild.fullname:
+                        if not x:
+                            send(f"← @{user.username} kicked and banned by @{v.username}. Reason: {reason} ", to=guild.fullname)
+                        leave_room(guild.fullname, sid=sid)
+                        x=True
+            if x:
+                new_ban = BanRelationship(user_id=user.id,
+                                          board_id=board.id,
+                                          banning_mod_id=v.id,
+                                          is_active=True)
+                g.db.add(new_ban)
+
+                ma=ModAction(
+                    kind="chatban_user",
+                    user_id=v.id,
+                    target_user_id=user.id,
+                    board_id=board.id
+                    )
+                g.db.add(ma)
+            else:
+                send(f"User {args[1]} not present in chat")
+    else:
+        data={
+            "avatar": v.profile_url,
+            "username":v.username,
+            "text":text,
+            "room": guild.fullname
+        }
+        emit("speak", data, to=guild.fullname)
 
 
 
