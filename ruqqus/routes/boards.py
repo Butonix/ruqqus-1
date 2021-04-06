@@ -1126,6 +1126,35 @@ def board_about_exiled(boardname, board, v):
         "api":lambda:jsonify({"data":[x.json for x in bans]})
         }
 
+@app.route("/+<boardname>/mod/chatbans", methods=["GET"])
+@app.route("/api/v1/<boardname>/mod/chatbans", methods=["GET"])
+@auth_required
+@is_guildmaster("chat")
+@api("read", "guildmaster")
+def board_about_chatbanned(boardname, board, v):
+
+    page = int(request.args.get("page", 1))
+
+    bans = board.chatbans.order_by(
+        ChatBan.created_utc.desc()).offset(25 * (page - 1)).limit(26)
+
+    bans = [ban for ban in bans]
+    next_exists = (len(bans) == 26)
+    bans = bans[0:25]
+
+    return {
+        "html":lambda:render_template(
+            "guild/bans.html", 
+            v=v, 
+            b=board, 
+            bans=bans,
+            page=page,
+            next_exists=next_exists
+            ),
+        "api":lambda:jsonify({"data":[x.json for x in bans]})
+        }
+
+
 
 @app.route("/+<boardname>/mod/contributors", methods=["GET"])
 @auth_required
