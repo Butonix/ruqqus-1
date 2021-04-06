@@ -40,6 +40,35 @@
   }
   );
 
+  socket.on('info', function(data){
+    $('#system-info .message').text(data['msg'])
+    $('#chat-text').append($('#system-info .system-line').clone())
+    window.scrollTo(0,document.body.scrollHeight)
+  }
+  );
+
+  socket.on('warning', function(data){
+    $('#system-warning .message').text(data['msg'])
+    $('#chat-text').append($('#system-warning .system-line').clone())
+    window.scrollTo(0,document.body.scrollHeight)
+  }
+  );
+
+  socket.on('wallop', function(json){
+    console.log(json);
+    username=json['username'];
+    text=json['text'];
+    ava=json['avatar']
+
+    $('#wallop-template img').attr('src', ava)
+    $('#wallop-template a').attr('href','/@'+username)
+    $('#wallop-template a').text('@'+username)
+    $('#wallop-template .chat-message').html(text)
+    $('#chat-text').append($('#wallop-template .chat-line').clone())
+    window.scrollTo(0,document.body.scrollHeight)
+  }
+  );
+
   socket.on('connect',
     function(event) {
       console.log('connected, joining room')

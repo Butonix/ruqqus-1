@@ -107,7 +107,7 @@ def socket_disconnect_user(v):
 
     for room in rooms():
         leave_room(room)
-        send(f"← @{v.username} has left the chat", room=room)
+        emit('info', {'msg':f"← @{v.username} has left the chat"}, to=room)
 
 
 
@@ -123,7 +123,7 @@ def join_guild_room(data, v, guild):
 
     join_room(guild.fullname)
 
-    send(f"→ @{v.username} has entered the chat", room=guild.fullname)
+    emit('info',{'msg': f"→ @{v.username} has entered the chat"}, to=guild.fullname)
     return True
 
 @socketio.on('leave room')
@@ -131,7 +131,7 @@ def join_guild_room(data, v, guild):
 @get_room
 def leave_guild_room(data, v, guild):
     leave_room(guild.fullname)
-    send(f"← @{v.username} has left the chat", room=guild.fullname)
+        emit('info', {'msg':f"← @{v.username} has left the chat"}, to=guild.fullname)
 
 
 @socketio.on('speak')
@@ -151,10 +151,7 @@ def speak_guild(data, v, guild):
     if not raw_text:
         return
 
-    text=preprocess(raw_text)
-    with CustomRenderer() as renderer:
-        text = renderer.render(mistletoe.Document(text))
-    text = sanitize(text, linkgen=True)
+
 
 
 
@@ -268,7 +265,30 @@ def speak_guild(data, v, guild):
             g.db.add(ma)
             g.db.commit()
             send(f"@{user.username} un-chatbanned by @{v.username}.", to=guild.fullname)
+
+        elif v.admin_level >=4:
+
+            if args[0]=="/wallop":
+
+                text=" ".join(args[2:])
+                text=preprocess(text)
+                with CustomRenderer() as renderer:
+                    text = renderer.render(mistletoe.Document(text))
+                text = sanitize(text, linkgen=True)
+
+                data={
+                    "avatar": v.profile_url,
+                    "username":v.username,
+                    "text":text
+                    }
+                emit('wallop', data)
+
     else:
+        text=preprocess(raw_text)
+        with CustomRenderer() as renderer:
+            text = renderer.render(mistletoe.Document(text))
+        text = sanitize(text, linkgen=True)
+
         data={
             "avatar": v.profile_url,
             "username":v.username,

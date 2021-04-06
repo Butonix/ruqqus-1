@@ -55,12 +55,45 @@
   </div>
 </div>
 
+<div id="system-info" class="d-none">
+  <div class="system-line">
+    <p class="message text-primary"></p>
+  </div>
+</div>
+
+<div id="system-warning" class="d-none">
+  <div class="system-line">
+    <p class="message text-danger"></p>
+  </div>
+</div>
+
+<div id="wallop-template" class="d-none">
+  <div class="chat-line my-2">
+    <div class="d-flex align-items-center">
+      <div class="border-3 border-danger">
+        <span class="rounded mb-auto d-none d-md-block" style="width: 42px; height: 42px;">
+          <img class="desktop-avatar rounded-circle w-100">
+        </span>
+        <div class="pl-md-3 text-muted">
+          <div>
+            <img class="mobile-avatar profile-pic-30 mr-2 d-inline-block d-md-none" >
+            <a href="" class="font-weight-bold text-black" target="_blank"></a><i class="fad fa-shield"></i>
+            <div style="overflow:hidden" class="pl-4 pl-md-0 ml-4 ml-md-0">
+              <span class="chat-message text-boldtext-black"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
 <script src="https://cdn.socket.io/4.0.0/socket.io.min.js" integrity="sha384-DkkWv9oJFWLIydBXXjkBWnG1/fuVhw8YPBq37uvvD6WSYRFRqr21eY5Dg9ZhmWdy" crossorigin="anonymous"></script>
 
-<script src="/assets/js/chat.js"></script>
+<script src="/assets/js/chat.js?v=2.35.1"></script>
 {% include "expanded_image_modal.html" %}
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/all_js.js?v=2.34.5"></script>
+<script src="/assets/js/all_js.js?v=2.35.1"></script>
 {% endblock %}
