@@ -262,7 +262,7 @@ def speak_guild(data, v, guild):
 
 
 
-        elif args[0] in ['/kick','/ban', "/unban", "/gm", "motd"]:
+        elif args[0] in ['/kick','/ban', "/unban", "/gm", "/motd"]:
 
             if not guild.has_mod(v, perm="chat"):
                 send(f"You do not have permission to use the {args[0]} command in this chat.")
