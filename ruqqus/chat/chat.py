@@ -156,8 +156,7 @@ def speak_guild(data, v, guild):
             return
 
         if not any([x==guild.fullname for x in v_rooms(user)]):
-            send(f"User {args[1]} not present in chat")
-            return
+            send(f"User {user.username} not present in chat")
 
         if args[0]=="/kick":
             reason= " ".join(args[2:]) if len(args)>=3 else "none"
@@ -195,7 +194,25 @@ def speak_guild(data, v, guild):
                 g.db.add(ma)
                 g.db.commit()
             else:
-                send(f"User {args[1]} not present in chat")
+                send(f"User {user.username} not present in chat")
+
+        elif args[0]=="/unban":
+
+            ban=g.db.query(ChatBan).filter_by(board_id=guild.id, target_user_id=user.id).first()
+            if not ban:
+                send(f"User {user.username} is not banned from chat.")
+                return
+
+            g.db.delete(ban)
+
+            ma=ModAction(
+                kind="unchatban_user",
+                user_id=v.id,
+                target_user_id=user.id,
+                board_id=guild.id
+                )
+            g.db.add(ma)
+            g.db.commit()
     else:
         data={
             "avatar": v.profile_url,

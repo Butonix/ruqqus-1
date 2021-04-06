@@ -2091,7 +2091,7 @@ def mod_unchatban_bid_user(bid, board, v):
 
     user = get_user(request.values.get("username"))
 
-    x =  g.db.query(ChatBan).filter_by(board_id=board.id, user_id=user.id, is_active=True).first()
+    x =  g.db.query(ChatBan).filter_by(board_id=board.id, user_id=user.id).first()
 
     if not x:
         abort(409)
