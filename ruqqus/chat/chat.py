@@ -176,7 +176,7 @@ def speak_guild(data, v, guild):
                 for room in rooms(sid=sid):
                     if room==guild.fullname:
                         if not x:
-                            send(f"← @{user.username} kicked and banned by @{v.username}. Reason: {reason} ", to=guild.fullname)
+                            send(f"← @{user.username} kicked and banned by @{v.username}. Reason: {reason}", to=guild.fullname)
                         leave_room(guild.fullname, sid=sid)
                         x=True
             if x:
@@ -213,6 +213,7 @@ def speak_guild(data, v, guild):
                 )
             g.db.add(ma)
             g.db.commit()
+            send(f"@{user.username} un-chatbanned by @{v.username}.", to=guild.fullname)
     else:
         data={
             "avatar": v.profile_url,
