@@ -241,8 +241,11 @@
       </div>
     </div>
   </div>
+
   <div class="ml-auto">
     <div class="d-flex align-items-center">
+
+      {% block viewfilters %}
       <div class="text-small font-weight-bold mr-2">Filter by</div>
       <div class="dropdown dropdown-actions">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -279,6 +282,7 @@
           {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity"><i class="fas fa-comments mr-2"></i>Activity</a>{% endif %}
         </div>
       </div>
+      {% endblock %}
 
       {% if v %}
       <div id="button-sub" {% if b.has_subscriber(v) %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=toggleSub)">Join guild</a></div>
