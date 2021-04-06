@@ -161,7 +161,7 @@ def speak_guild(data, v, guild):
             for uid in SIDS:
                 for sid in SIDS[uid]:
                     if guild.fullname in rooms(sid=sid):
-                        ids.append(uid)
+                        ids.add(uid)
                         break
 
             users=g.db.query(User.username).filter(User.username.in_(tuple(ids))).all()
@@ -175,7 +175,7 @@ def speak_guild(data, v, guild):
         if not guild.has_mod(v, perm="chat"):
             send("You don't have permission to use commands in this chat")
             return
-            
+
         user=get_user(args[1], graceful=True)
 
         if not user:
