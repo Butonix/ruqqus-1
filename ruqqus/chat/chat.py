@@ -375,7 +375,7 @@ def speak_guild(data, v, guild):
                     message=preprocess(message)
                     with CustomRenderer() as renderer:
                         message = renderer.render(mistletoe.Document(message))
-                    message = sanitize(text, linkgen=True)
+                    message = sanitize(message, linkgen=True)
 
                     guild.motd=message
                     g.db.add(guild)
