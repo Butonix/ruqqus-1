@@ -150,7 +150,6 @@ class ChatBan(Base, Stndrd, Age_times):
     board_id = Column(Integer, ForeignKey("boards.id"))
     created_utc = Column(BigInteger, default=0)
     banning_mod_id = Column(Integer, ForeignKey("users.id"))
-    mod_note = Column(String(128), default="")
 
     user = relationship(
         "User",
