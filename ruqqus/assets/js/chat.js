@@ -92,7 +92,7 @@
 
     $('#motd-template img').attr('src', ava)
     $('#motd-template a').attr('href','/@'+username)
-    $('#motd-template a').text('@'+username)
+    $('#motd-template a').text('+'+username)
     $('#motd-template .chat-message').html(text)
     $('#chat-text').append($('#motd-template .chat-line').clone())
     window.scrollTo(0,document.body.scrollHeight)
