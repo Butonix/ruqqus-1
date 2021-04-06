@@ -271,7 +271,7 @@ def speak_guild(data, v, guild):
 
             if args[0]=="/wallop":
 
-                text=" ".join(args[2:])
+                text=" ".join(args[1:])
                 text=preprocess(text)
                 with CustomRenderer() as renderer:
                     text = renderer.render(mistletoe.Document(text))
