@@ -93,6 +93,11 @@ def socket_connect_auth_user():
 @socket_auth_required
 def socket_disconnect_user(v):
 
+    try:
+        SIDS[v.id].remove(request.sid)
+    except ValueError:
+        pass
+
     for room in rooms():
         leave_room(room)
         send(f"← @{v.username} has left the chat", room=room)
@@ -147,12 +152,31 @@ def speak_guild(data, v, guild):
 
 
     if raw_text.startswith('/'):
+
+        args=raw_text.split()
+        user=get_user(args[1], graceful=True)
+
+        if args[0]=="/here":
+
+            ids=set()
+            for uid in SIDS:
+                for sid in SIDS[uid]:
+                    if guild.fullname in rooms(sid=sid):
+                        ids.append(uid)
+                        break
+
+            users=g.db.query(User.username).filter(User.username.in_(tuple(ids))).all()
+            names=[x[0] for x in users]
+            names=sorted(names)
+            names = ", ".join(names)
+            send(f"Users present: {names}")
+            return
+
+
         if not guild.has_mod(v, perm="chat"):
             send("You don't have permission to use commands in this chat")
             return
 
-        args=raw_text.split()
-        user=get_user(args[1], graceful=True)
         if not user:
             send(f"No user named {args[1]}")
             return
