@@ -211,6 +211,26 @@ def speak_guild(data, v, guild):
                 send("/wallop <text> - Send a global broadcast.")
             return
 
+        elif args[0]=="/shrug":
+
+            args.append[r"¯\_(ツ)_/¯"]
+
+            text=" ".join(args[1:])
+
+            text=preprocess(text)
+            with CustomRenderer() as renderer:
+                text = renderer.render(mistletoe.Document(text))
+            text = sanitize(text, linkgen=True)
+
+            data={
+                "avatar": v.profile_url,
+                "username":v.username,
+                "text":text,
+                "room": guild.fullname
+            }
+            emit("speak", data, to=guild.fullname)
+            return
+
 
 
         elif args[0] in ['/kick','/ban', "/unban", "/gm"]:
