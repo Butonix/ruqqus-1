@@ -155,11 +155,11 @@ class ChatBan(Base, Stndrd, Age_times):
     user = relationship(
         "User",
         lazy="joined",
-        primaryjoin="User.id==BanRelationship.user_id")
+        primaryjoin="User.id==ChatBan.user_id")
     banning_mod = relationship(
         "User",
         lazy="joined",
-        primaryjoin="User.id==BanRelationship.banning_mod_id")
+        primaryjoin="User.id==ChatBan.banning_mod_id")
     board = relationship("Board")
 
     def __init__(self, *args, **kwargs):
