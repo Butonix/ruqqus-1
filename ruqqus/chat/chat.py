@@ -285,10 +285,11 @@ def speak_guild(data, v, guild):
 
                 sent=[]
                 for uid in SIDS:
-                    for roomid in rooms(SIDS[uid]):
-                        if roomid.startswith('t4_') and roomid not in sent:
-                            emit('wallop', data, to=roomid)
-                            sent.append(roomid)
+                    for sid in SIDS[uid]:
+                        for roomid in rooms(sid=sid)
+                            if roomid.startswith('t4_') and roomid not in sent:
+                                emit('wallop', data, to=roomid)
+                                sent.append(roomid)
 
     else:
         text=preprocess(raw_text)
