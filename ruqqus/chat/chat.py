@@ -32,8 +32,6 @@ def v_rooms(v):
 
 def update_chat_count(board):
 
-    print(f"updating chat count for +{board.fullname}")
-
     count=[]
     for uid in SIDS:
         for sid in SIDS[uid]:
@@ -43,13 +41,10 @@ def update_chat_count(board):
                     break
 
     count=len(count)
-    print(count)
 
     r.set(f"{board.fullname}_chat_count", count)
-    print('set redis')
 
     emit("count", {"count":str(count)}, to=board.fullname)
-    print('emitted')
 
 def socket_auth_required(f):
 
