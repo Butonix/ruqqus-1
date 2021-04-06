@@ -191,10 +191,10 @@ def speak_guild(data, v, guild):
 
 
 
-        if args[0] in ['/kick','/ban', "/unban", "/gm"]:
+        elif args[0] in ['/kick','/ban', "/unban", "/gm"]:
 
             if not guild.has_mod(v, perm="chat"):
-                send("You don't have permission to use Guildmaster commands in this chat")
+                send(f"You do not have permission to use the {args[0]} command in this chat.")
                 return
 
 
@@ -292,7 +292,10 @@ def speak_guild(data, v, guild):
                 g.db.commit()
                 emit('info', {'msg':f"@{user.username} un-chatbanned by @{v.username}."}, to=guild.fullname)
 
-        elif v.admin_level >=4:
+        elif args[0] in ['/wallop']:
+
+            if v.admin_level <4:
+                send(f"You do not have permission to use the {args[0]} command.")
 
             if args[0]=="/wallop":
 
@@ -315,6 +318,9 @@ def speak_guild(data, v, guild):
                             if roomid.startswith('t4_') and roomid not in sent:
                                 emit('wallop', data, to=roomid)
                                 sent.append(roomid)
+
+        else:
+            send(f"Command {args[0]} not recognized")
 
     else:
         text=preprocess(raw_text)
