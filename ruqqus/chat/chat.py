@@ -5,6 +5,7 @@ import gevent
 import mistletoe
 from flask import *
 from flask_socketio import *
+import random
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
@@ -230,7 +231,7 @@ def speak_guild(data, v, guild):
             elif args[0]=="/gib":
                 args.append('༼ つ ◕_◕ ༽つ')
             elif args[0]=="/sus":
-                args.append('ඞඞ | ඣ | යඞ')
+                args.append(random.choice(['ඞඞ','ඣ','යඞ'])
 
             text=" ".join(args[1:])
 
