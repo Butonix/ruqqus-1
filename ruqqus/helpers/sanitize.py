@@ -189,8 +189,8 @@ def sanitize(text, bio=False, linkgen=False):
 
         #whatever else happens with images, there are only two sets of classes allowed
         for tag in soup.find_all("img"):
-            if img.attrs.get("class") not in ["in-comment-image rounded-sm my-2","profile-pic-20 align-middle mr-1"]:
-                img.attrs['class']=""
+            if tag.attrs.get("class") not in ["in-comment-image rounded-sm my-2","profile-pic-20 align-middle mr-1"]:
+                tag.attrs['class']=""
 
 
         sanitized = str(soup)
