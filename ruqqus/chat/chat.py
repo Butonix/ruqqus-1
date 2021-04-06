@@ -193,6 +193,7 @@ def speak_guild(data, v, guild):
                     board_id=board.id
                     )
                 g.db.add(ma)
+                g.db.commit()
             else:
                 send(f"User {args[1]} not present in chat")
     else:
