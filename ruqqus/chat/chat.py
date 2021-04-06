@@ -367,7 +367,7 @@ def speak_guild(data, v, guild):
                 g.db.commit()
                 send(f"@{user.username} un-chatbanned by @{v.username}.", to=guild.fullname)
 
-            elif args[0]=="/motd"
+            elif args[0]=="/motd":
 
                 if len(args)>=2:
 
