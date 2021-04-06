@@ -144,8 +144,10 @@ def speak_guild(data, v, guild):
             send(f"No user named {args[1]}")
         if guild.has_mod(user):
             send(f"You can't kick/ban other guildmasters")
+            return
         elif guild.has_contributor(user):
             send(f"@{user.username} is an approved contributor and can't currently be kicked or banned.")
+            return
 
         if args[0]=="/kick":
             reason= " ".join(args[2:]) if len(args)>=3 else "none"
