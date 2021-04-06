@@ -145,6 +145,7 @@ def sanitize(text, bio=False, linkgen=False):
             if not(netloc) or (domain and domain.show_thumbnail):
 
                 if "profile-pic-20" not in tag.get("class", ""):
+                    print(tag.get('class'))
                     # set classes and wrap in link
 
                     tag["rel"] = "nofollow"
