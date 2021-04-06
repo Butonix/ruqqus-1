@@ -231,7 +231,7 @@ def speak_guild(data, v, guild):
             elif args[0]=="/gib":
                 args.append('༼ つ ◕_◕ ༽つ')
             elif args[0]=="/sus":
-                args.append(random.choice(['ඞඞ','ඣ','යඞ'])
+                args.append(random.choice(['ඞඞ','ඣ','යඞ']))
 
             text=" ".join(args[1:])
 
