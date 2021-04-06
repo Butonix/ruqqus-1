@@ -171,8 +171,9 @@ def speak_guild(data, v, guild):
             users=g.db.query(User.username).filter(User.id.in_(tuple(ids))).all()
             names=[x[0] for x in users]
             names=sorted(names)
-            names = ", ".join(names)
-            send(f"Users present: {names}")
+            count=len(names)
+            namestr = ", ".join(names)
+            send(f"{count} user{'s' if count>1 else ''} present: {namestr}")
             return
 
         elif args[0]=="/help":
