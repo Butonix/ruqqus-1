@@ -144,7 +144,7 @@ def sanitize(text, bio=False, linkgen=False):
             domain = get_domain(netloc)
             if not(netloc) or (domain and domain.show_thumbnail):
 
-                if tag.get("class", "") != 'profile-pic-20 align-middle mr-1':
+                if 'profile-pic-20' not in tag.attrs['class']:
                     # set classes and wrap in link
 
                     tag["rel"] = "nofollow"
@@ -185,7 +185,7 @@ def sanitize(text, bio=False, linkgen=False):
         #whatever else happens with images, there are only two sets of classes allowed
         for tag in soup.find_all("img"):
             if tag.attrs.get("class") not in ["in-comment-image rounded-sm my-2","profile-pic-20 align-middle mr-1"]:
-                tag.attrs['class']=""
+                tag.attrs['class']="in-comment-image rounded-sm my-2"
 
 
         sanitized = str(soup)
