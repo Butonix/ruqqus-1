@@ -181,16 +181,15 @@ def speak_guild(data, v, guild):
                         x=True
             if x:
                 new_ban = ChatBan(user_id=user.id,
-                                          board_id=board.id,
-                                          banning_mod_id=v.id,
-                                          is_active=True)
+                                          board_id=guild.id,
+                                          banning_mod_id=v.id)
                 g.db.add(new_ban)
 
                 ma=ModAction(
                     kind="chatban_user",
                     user_id=v.id,
                     target_user_id=user.id,
-                    board_id=board.id
+                    board_id=guild.id
                     )
                 g.db.add(ma)
                 g.db.commit()
