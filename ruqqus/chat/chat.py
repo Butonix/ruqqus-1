@@ -144,6 +144,16 @@ def join_guild_room(data, v, guild):
     update_chat_count(guild)
 
     send(f"→ @{v.username} has entered the chat", to=guild.fullname)
+
+    if guild.motd:
+
+        data={
+            "avatar": guild.profile_url,
+            "username":guild.name,
+            "text":text,
+            "guild":guild.name
+            }
+        emit('motd', data, to=request.sid)
     return True
 
 @socketio.on('leave room')
@@ -166,15 +176,9 @@ def speak_guild(data, v, guild):
         if not x:
             return
 
-
-
     raw_text=data['text'][0:1000].lstrip().rstrip()
     if not raw_text:
         return
-
-
-
-
 
     if raw_text.startswith('/'):
 
@@ -258,7 +262,7 @@ def speak_guild(data, v, guild):
 
 
 
-        elif args[0] in ['/kick','/ban', "/unban", "/gm"]:
+        elif args[0] in ['/kick','/ban', "/unban", "/gm", "motd"]:
 
             if not guild.has_mod(v, perm="chat"):
                 send(f"You do not have permission to use the {args[0]} command in this chat.")
@@ -362,6 +366,36 @@ def speak_guild(data, v, guild):
                 g.db.add(ma)
                 g.db.commit()
                 send(f"@{user.username} un-chatbanned by @{v.username}.", to=guild.fullname)
+
+            elif args[0]=="/motd"
+
+                if len(args)>=2:
+
+                    message = " ".join(args[1:])
+                    message=preprocess(message)
+                    with CustomRenderer() as renderer:
+                        message = renderer.render(mistletoe.Document(message))
+                    message = sanitize(text, linkgen=True)
+
+                    guild.motd=message
+                    g.db.add(guild)
+                    g.db.commit()
+
+                    send("Message updated")
+                    data={
+                        "avatar": guild.profile_url,
+                        "username":guild.name,
+                        "text":text,
+                        "guild":guild.name
+                        }
+                    emit('motd', data, to=request.sid)
+
+
+                else:
+                    guild.motd=''
+                    g.db.add(guild)
+                    g.db.commit()
+                    send("Message removed")
 
         elif args[0] in ['/wallop', '/admin']:
 

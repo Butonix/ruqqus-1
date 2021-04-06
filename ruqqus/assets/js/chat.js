@@ -84,6 +84,21 @@
   }
   );
 
+  socket.on('motd', function(json){
+    console.log(json);
+    username=json['username'];
+    text=json['text'];
+    ava=json['avatar']
+
+    $('#motd-template img').attr('src', ava)
+    $('#motd-template a').attr('href','/@'+username)
+    $('#motd-template a').text('@'+username)
+    $('#motd-template .chat-message').html(text)
+    $('#chat-text').append($('#motd-template .chat-line').clone())
+    window.scrollTo(0,document.body.scrollHeight)
+  }
+  );
+
   socket.on('admin', function(json){
     console.log(json);
     username=json['username'];
