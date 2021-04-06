@@ -168,6 +168,18 @@ ACTIONTYPES={
         "color": "bg-muted",
         "title": 'un-exiled user {self.target_user.username}'
     },
+    "chatban_user":{
+        "str":'chatbanned user {self.target_link}',
+        "icon":"fa-comments-alt",
+        "color": "bg-danger",
+        "title": 'chatbanned user {self.target_user.username}'
+    },
+    "unchatban_user":{
+        "str":'un-chatbanned user {self.target_link}',
+        "icon": "fa-comments-alt",
+        "color": "bg-muted",
+        "title": 'un-chatbanned user {self.target_user.username}'
+    },
     "contrib_user":{
         "str":'added contributor {self.target_link}',
         "icon": "fa-user-check",

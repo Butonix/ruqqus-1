@@ -1126,6 +1126,35 @@ def board_about_exiled(boardname, board, v):
         "api":lambda:jsonify({"data":[x.json for x in bans]})
         }
 
+@app.route("/+<boardname>/mod/chatbans", methods=["GET"])
+@app.route("/api/v1/<boardname>/mod/chatbans", methods=["GET"])
+@auth_required
+@is_guildmaster("chat")
+@api("read", "guildmaster")
+def board_about_chatbanned(boardname, board, v):
+
+    page = int(request.args.get("page", 1))
+
+    bans = board.chatbans.order_by(
+        ChatBan.created_utc.desc()).offset(25 * (page - 1)).limit(26)
+
+    bans = [ban for ban in bans]
+    next_exists = (len(bans) == 26)
+    bans = bans[0:25]
+
+    return {
+        "html":lambda:render_template(
+            "guild/chatbans.html", 
+            v=v, 
+            b=board, 
+            bans=bans,
+            page=page,
+            next_exists=next_exists
+            ),
+        "api":lambda:jsonify({"data":[x.json for x in bans]})
+        }
+
+
 
 @app.route("/+<boardname>/mod/contributors", methods=["GET"])
 @auth_required
@@ -2002,3 +2031,81 @@ def board_mod_perms_change(boardname, board, v):
     g.db.add(ma)
 
     return redirect(f"{board.permalink}/mod/mods")
+
+
+# @app.route("/mod/chatban/<bid>", methods=["POST"])
+# @app.route("/api/v1/chatban/<bid>", methods=["POST"])
+# @auth_required
+# @is_guildmaster('chat')
+# @api("guildmaster")
+# @validate_formkey
+# def mod_chatban_bid_user(bid, board, v):
+
+#     user = get_user(request.values.get("username"), graceful=True)
+
+#     if not user:
+#         return jsonify({"error": "That user doesn't exist."}), 404
+
+#     if user.id == v.id:
+#         return jsonify({"error": "You can't chatban yourself."}), 409
+
+#     if g.db.query(ChatBan).filter_by(user_id=user.id, board_id=board.id, is_active=True).first():
+#         return jsonify({"error": f"@{user.username} is already chatbanned from +{board.name}."}), 409
+
+#     if board.has_contributor(user):
+#         return jsonify({"error": f"@{user.username} is an approved contributor to +{board.name} and can't currently be chatbanned."}), 409
+
+#     if board.has_mod(user):
+#         return jsonify({"error": "You can't chatban other guildmasters."}), 409
+
+#     new_ban = BanRelationship(user_id=user.id,
+#                               board_id=board.id,
+#                               banning_mod_id=v.id,
+#                               is_active=True)
+#     g.db.add(new_ban)
+
+#     ma=ModAction(
+#         kind="chatban_user",
+#         user_id=v.id,
+#         target_user_id=user.id,
+#         board_id=board.id
+#         )
+#     g.db.add(ma)
+
+#     g.db.commit()
+
+
+#     if request.args.get("toast"):
+#         return jsonify({"message": f"@{user.username} was exiled from +{board.name}"})
+#     else:
+#         return "", 204
+
+
+@app.route("/mod/unchatban/<bid>", methods=["POST"])
+@app.route("/api/v1/unchatban/<bid>", methods=["POST"])
+@auth_required
+@is_guildmaster('chat')
+@api("guildmaster")
+@validate_formkey
+def mod_unchatban_bid_user(bid, board, v):
+
+    user = get_user(request.values.get("username"))
+
+    x =  g.db.query(ChatBan).filter_by(board_id=board.id, user_id=user.id).first()
+
+    if not x:
+        abort(409)
+
+    g.db.delete(x)
+
+    ma=ModAction(
+        kind="unchatban_user",
+        user_id=v.id,
+        target_user_id=user.id,
+        board_id=board.id
+        )
+    g.db.add(ma)
+
+    g.db.commit()
+
+    return "", 204

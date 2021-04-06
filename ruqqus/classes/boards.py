@@ -55,6 +55,7 @@ class Board(Base, Stndrd, Age_times):
     submissions=relationship("Submission", primaryjoin="Board.id==Submission.board_id")
     contributors=relationship("ContributorRelationship", lazy="dynamic")
     bans=relationship("BanRelationship", lazy="dynamic")
+    chatbans=relationship("ChatBan", lazy="dynamic")
     postrels=relationship("PostRelationship", lazy="dynamic")
     trending_rank=deferred(Column(Float, server_default=FetchedValue()))
 
@@ -290,6 +291,17 @@ class Board(Base, Stndrd, Age_times):
         return g.db.query(BanRelationship).filter_by(
             board_id=self.id, user_id=user.id, is_active=True).first()
 
+    def has_chat_ban(self, user):
+
+        if user is None:
+            return None
+        
+        if user.admin_level >=4:
+            return None
+
+        return g.db.query(ChatBan).filter_by(
+            board_id=self.id, user_id=user.id).first()
+
     def has_subscriber(self, user):
 
         if not user:
@@ -334,6 +346,25 @@ class Board(Base, Stndrd, Age_times):
             return True
 
         if self.has_ban(user):
+            return False
+
+        if self.has_contributor(user) or self.has_mod(user):
+            return True
+
+        if self.is_private:
+            return False
+
+        return True
+
+    def can_chat(self, user):
+
+        if user is None:
+            return False
+
+        if user.admin_level>=4:
+            return True
+
+        if self.has_ban(user) or self.has_chat_ban(user):
             return False
 
         if self.has_contributor(user) or self.has_mod(user):

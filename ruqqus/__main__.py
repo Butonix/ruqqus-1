@@ -1,8 +1,11 @@
 import gevent.monkey
 gevent.monkey.patch_all()
 
+#import eventlet
+#eventlet.monkey_patch()
+
 #import psycogreen.gevent
-# psycogreen.gevent.patch_psycopg()
+#psycogreen.gevent.patch_psycopg()
 
 from os import environ
 import secrets
@@ -11,6 +14,7 @@ from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_compress import Compress
+from flask_socketio import SocketIO
 from time import sleep
 from collections import deque
 
@@ -31,7 +35,7 @@ from redis import BlockingConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.34.5"
+_version = "2.35.0"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -119,6 +123,12 @@ for x in ["DATABASE_URL", "SECRET_KEY"]:
 Markdown(app)
 cache = Cache(app)
 Compress(app)
+
+socketio=SocketIO(
+	app,
+	cors_allowed_origins=f'https://{app.config["SERVER_NAME"]}'
+	#message_queue=environ.get("REDIS_CHAT_URL")
+	)
 
 
 # app.config["CACHE_REDIS_URL"]
@@ -210,6 +220,9 @@ Base = declarative_base()
 
 r=redis.Redis(host=app.config["CACHE_REDIS_URL"][8:], decode_responses=True, ssl_cert_reqs=None)
 
+
+#import and bind chat function
+from ruqqus.chat import *
 
 
 @app.before_first_request
@@ -378,15 +391,4 @@ def after_request(response):
 @app.route("/<path:path>", subdomain="www")
 def www_redirect(path):
 
-    return redirect(f"https://ruqqus.com/{path}")
-
-# @app.teardown_appcontext
-# def teardown(resp):
-
-#     g.db.close()
-
-
-@app.route("/test/archive/<x>")
-def test_archive(x):
-	print(request.headers)
-	abort(418)
+    return redirect(f"https://{app.config['SERVER_NAME']}/{path}")
