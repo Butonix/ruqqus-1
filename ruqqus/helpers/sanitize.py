@@ -179,7 +179,8 @@ def sanitize(text, bio=False, linkgen=False):
                 try:
                     l.append(x.string)
                 except AttributeError:
-                    l.append(x)
+                    if x:
+                        l.append(x)
 
             display=''.join(l)
             display=re.sub("\s",'', display)
