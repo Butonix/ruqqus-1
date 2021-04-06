@@ -882,7 +882,7 @@ def mod_bid_settings_optout(bid, board, v):
 @auth_required
 @is_guildmaster("config", "chat")
 @validate_formkey
-def mod_bid_settings_optout(bid, board, v):
+def mod_bid_settings_public_chat(bid, board, v):
 
     # nsfw
     board.public_chat = bool(request.form.get("public_chat", False) == 'true')
