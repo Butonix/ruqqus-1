@@ -23,7 +23,7 @@ SIDS={}
 def v_rooms(v):
 
     output=[]
-    for sid in SIDS[v.id]:
+    for sid in SIDS.get(v.id,[]):
         for room in rooms(sid=sid):
             if room not in output:
                 output.append(room)
@@ -142,11 +142,19 @@ def speak_guild(data, v, guild):
         user=get_user(args[1], graceful=True)
         if not user:
             send(f"No user named {args[1]}")
-        if guild.has_mod(user):
+
+        if user.id==v.id:
+            send("You can't kick/ban yourself!")
+            return
+        elif guild.has_mod(user):
             send(f"You can't kick/ban other guildmasters")
             return
         elif guild.has_contributor(user):
             send(f"@{user.username} is an approved contributor and can't currently be kicked or banned.")
+            return
+
+        if not any([x==guild.fullname for x in v_rooms(user)]):
+            send(f"User {args[1]} not present in chat")
             return
 
         if args[0]=="/kick":
@@ -159,8 +167,6 @@ def speak_guild(data, v, guild):
                             send(f"← @{user.username} kicked by @{v.username}. Reason: {reason} ", to=guild.fullname)
                         leave_room(guild.fullname, sid=sid)
                         x=True
-            if not x:
-                send(f"User {args[1]} not present in chat")
 
         elif args[0]=="/ban":
             reason= " ".join(args[2:]) if len(args)>=3 else "none"
