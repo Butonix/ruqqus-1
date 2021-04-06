@@ -150,7 +150,7 @@ def join_guild_room(data, v, guild):
         data={
             "avatar": guild.profile_url,
             "username":guild.name,
-            "text":text,
+            "text":guild.motd,
             "guild":guild.name
             }
         emit('motd', data, to=request.sid)
@@ -385,7 +385,7 @@ def speak_guild(data, v, guild):
                     data={
                         "avatar": guild.profile_url,
                         "username":guild.name,
-                        "text":text,
+                        "text":guild.motd,
                         "guild":guild.name
                         }
                     emit('motd', data, to=request.sid)
