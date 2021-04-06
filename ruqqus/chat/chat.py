@@ -282,7 +282,13 @@ def speak_guild(data, v, guild):
                     "username":v.username,
                     "text":text
                     }
-                emit('wallop', data)
+
+                sent=[]
+                for uid in SIDS:
+                    for roomid in SIDS[uid]:
+                        if roomid.startswith('t4_') and roomid not in sent:
+                            emit('wallop', data, to=roomid)
+                            sent.appned(roomid)
 
     else:
         text=preprocess(raw_text)
