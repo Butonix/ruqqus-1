@@ -160,7 +160,7 @@ def speak_guild(data, v, guild):
             if not x:
                 send(f"User {args[1]} not present in chat")
 
-        elif args[0]="/ban":
+        elif args[0]=="/ban":
             reason= " ".join(args[2:]) if len(args)>=3 else "none"
             x=False
             for sid in SIDS[user.id]:
