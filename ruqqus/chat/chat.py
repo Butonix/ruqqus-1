@@ -121,7 +121,7 @@ def speak_guild(data, v, guild):
 
     if guild.fullname not in v_rooms(v):
         send("You aren't connected to that chat room. Trying to join...")
-        trigger_event('join room')
+        join_guild_room(data)
         return
 
     raw_text=data['text'][0:1000].lstrip().rstrip()
