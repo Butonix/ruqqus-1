@@ -256,7 +256,7 @@ def speak_guild(data, v, guild):
                 else:
                     send(f"User {user.username} not present in chat")
 
-            elif args[0]=="gm":
+            elif args[0]=="/gm":
 
                 text=" ".join(args[1:])
                 text=preprocess(text)
