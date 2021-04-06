@@ -594,3 +594,8 @@ class Board(Base, Stndrd, Age_times):
         now=int(time.time())
 
         return self.stored_subscriber_count//10 + min(180, (now-self.created_utc)//(60*60*24))
+
+    @property
+    def chat_url(self):
+        return f"{self.permalink}/chat"
+    
