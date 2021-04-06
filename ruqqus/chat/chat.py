@@ -213,7 +213,7 @@ def speak_guild(data, v, guild):
 
         elif args[0]=="/shrug":
 
-            args.append(r"¯\\_(ツ)_/¯")
+            args.append(r"¯\\\_(ツ)_/¯")
 
             text=" ".join(args[1:])
 
