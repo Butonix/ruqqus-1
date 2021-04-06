@@ -44,8 +44,8 @@ def update_chat_count(board):
 
     r.set(f"{board.fullname}_chat_count", count)
 
-    emit("count", {"count":count}, to=board.fullname)
-    
+    emit("count", {"count":str(count)}, to=board.fullname)
+
 def socket_auth_required(f):
 
     def wrapper(*args, **kwargs):
