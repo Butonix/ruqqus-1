@@ -177,7 +177,8 @@ def sanitize(text, bio=False, linkgen=False):
             l=[]
             for x in tag.contents:
                 try:
-                    l.append(x.string)
+                    if x.string:
+                        l.append(x.string)
                 except AttributeError:
                     if x:
                         l.append(x)
