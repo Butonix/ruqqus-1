@@ -293,6 +293,11 @@ def socket_home(v=None):
 @is_not_banned
 def guild_chat(guildname, v):
 
+
+
+    board=get_guild(guildname)
+
+
     if board.over_18 and not (v and v.over_18) and not session_over18(board):
         t = int(time.time())
         return render_template("errors/nsfw.html",
@@ -302,6 +307,4 @@ def guild_chat(guildname, v):
                                                 board=board
                                                 )
 
-    guild=get_guild(guildname)
-
-    return render_template("chat/chat.html", b=guild, v=v)
+    return render_template("chat/chat.html", b=board, v=v)
