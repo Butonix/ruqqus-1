@@ -172,21 +172,7 @@ def sanitize(text, bio=False, linkgen=False):
         #disguised link preventer
         for tag in soup.find_all("a"):
 
-            tag.contents=[x if x.name=='img' else x.string if x.string else '' for x in tag.contents]
-
-            l=[]
-            for x in tag.contents:
-                try:
-                    if x.string:
-                        l.append(x.string)
-                except AttributeError:
-                    if x:
-                        l.append(x)
-
-            display=''.join(l)
-            display=re.sub("\s",'', display)
-
-            if re.match("https?://\S+", display):
+            if re.match("https?://\S+", tag.string):
                 try:
                     tag.string = tag["href"]
                 except:
