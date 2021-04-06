@@ -309,9 +309,11 @@ def speak_guild(data, v, guild):
                             update_chat_count(guild)
                             x=True
                 if x:
-                    new_ban = ChatBan(user_id=user.id,
-                                              board_id=guild.id,
-                                              banning_mod_id=v.id)
+                    new_ban = ChatBan(
+                        user_id=user.id,
+                        board_id=guild.id,
+                        banning_mod_id=v.id,
+                        )
                     g.db.add(new_ban)
 
                     ma=ModAction(
@@ -344,7 +346,7 @@ def speak_guild(data, v, guild):
 
             elif args[0]=="/unban":
 
-                ban=g.db.query(ChatBan).filter_by(board_id=guild.id, target_user_id=user.id).first()
+                ban=g.db.query(ChatBan).filter_by(board_id=guild.id, user_id=user.id).first()
                 if not ban:
                     send(f"User {user.username} is not banned from chat.")
                     return
