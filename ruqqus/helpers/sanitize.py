@@ -85,7 +85,6 @@ def a_modify(attrs, new=False):
                                   fragment=parsed_url.fragment)
 
             attrs[(None, "href")] = urlunparse(new_url)
-            attrs[(None)]
 
     return attrs
 
