@@ -127,7 +127,7 @@ def socket_disconnect_user(v):
 
     for room in rooms():
         leave_room(room)
-        emit('info', {'msg':f"← @{v.username} has left the chat"}, to=room)
+        send('msg':f"← @{v.username} has left the chat", to=room)
         board=get_from_fullname(room)
         update_chat_count(board)
 
@@ -146,7 +146,7 @@ def join_guild_room(data, v, guild):
     join_room(guild.fullname)
     update_chat_count(guild)
 
-    emit('info',{'msg': f"→ @{v.username} has entered the chat"}, to=guild.fullname)
+    send(f"→ @{v.username} has entered the chat", to=guild.fullname)
     return True
 
 @socketio.on('leave room')
@@ -155,7 +155,7 @@ def join_guild_room(data, v, guild):
 def leave_guild_room(data, v, guild):
     leave_room(guild.fullname)
     update_chat_count(guild)
-    emit('info', {'msg':f"← @{v.username} has left the chat"}, to=guild.fullname)
+    send(f"← @{v.username} has left the chat", to=guild.fullname)
 
 
 @socketio.on('speak')
@@ -395,19 +395,4 @@ def guild_chat(guildname, v):
                                                 )
 
     return render_template("chat/chat.html", b=board, v=v)
-
-def update_chat_count(board):
-
-    room=board.fullname
-
-    count=[]
-    for uid in SIDS:
-        for sid in SIDS[uid]:
-            for room in rooms(sid=sid):
-                if uid not in count:
-                    count.append(uid)
-
-    count=len(count)
-
-    r.set(f"{board.fullname}_chat_count", count)
 
