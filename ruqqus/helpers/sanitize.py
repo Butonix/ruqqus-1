@@ -103,7 +103,7 @@ _clean_w_links = bleach.Cleaner(tags=_allowed_tags_with_links,
                                 filters=[partial(LinkifyFilter,
                                                  skip_tags=["pre"],
                                                  parse_email=False,
-                                                 callbacks=[a_modify, img_modify]
+                                                 callbacks=[a_modify]
                                                  )
                                          ]
                                 )
