@@ -134,7 +134,7 @@ def speak_guild(data, v, guild):
 
 
     if raw_text.startswith('/'):
-        if not guild.has_mod(v):
+        if not guild.has_mod(v, perm="chat"):
             send("You don't have permission to use commands in this chat")
             return
 
