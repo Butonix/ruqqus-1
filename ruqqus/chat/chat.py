@@ -361,7 +361,7 @@ def speak_guild(data, v, guild):
                     )
                 g.db.add(ma)
                 g.db.commit()
-                emit('info', {'msg':f"@{user.username} un-chatbanned by @{v.username}."}, to=guild.fullname)
+                send(f"@{user.username} un-chatbanned by @{v.username}.", to=guild.fullname)
 
         elif args[0] in ['/wallop', '/admin']:
 
