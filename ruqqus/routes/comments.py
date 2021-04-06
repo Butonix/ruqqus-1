@@ -336,7 +336,7 @@ def api_comment(v):
         return jsonify(
             {"error": "You can't comment on things that have been deleted."}), 403
 
-    if parent.author.any_block_exists(v) and not v.admin_level>=3:
+    if parent.author.any_block_exists(v) and not v.admin_level>=3 and not parent.post.board.has_mod(v, "content"):
         return jsonify(
             {"error": "You can't reply to users who have blocked you, or users you have blocked."}), 403
 
