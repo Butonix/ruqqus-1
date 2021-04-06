@@ -197,12 +197,12 @@ def speak_guild(data, v, guild):
                 send(f"You do not have permission to use the {args[0]} command in this chat.")
                 return
 
+            if args[0] in ['/kick', '/ban', '/unban']:
+                user=get_user(args[1], graceful=True)
 
-            user=get_user(args[1], graceful=True)
-
-            if not user:
-                send(f"No user named {args[1]}")
-                return
+                if not user:
+                    send(f"No user named {args[1]}")
+                    return
 
             if user.id==v.id:
                 send("You can't kick/ban yourself!")
