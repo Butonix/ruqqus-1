@@ -154,7 +154,6 @@ def speak_guild(data, v, guild):
     if raw_text.startswith('/'):
 
         args=raw_text.split()
-        user=get_user(args[1], graceful=True)
 
         if args[0]=="/here":
 
@@ -176,6 +175,8 @@ def speak_guild(data, v, guild):
         if not guild.has_mod(v, perm="chat"):
             send("You don't have permission to use commands in this chat")
             return
+            
+        user=get_user(args[1], graceful=True)
 
         if not user:
             send(f"No user named {args[1]}")
