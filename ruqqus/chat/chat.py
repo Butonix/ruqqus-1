@@ -99,7 +99,7 @@ def socket_disconnect_user(v):
 @get_room
 def join_guild_room(data, v, guild):
 
-    if not guild.can_submit(v):
+    if not guild.can_chat(v):
         send(f"You can't join the +{guild.name} chat right now.")
         return
 
