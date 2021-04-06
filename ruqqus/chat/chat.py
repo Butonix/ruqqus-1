@@ -164,7 +164,7 @@ def speak_guild(data, v, guild):
                         ids.add(uid)
                         break
 
-            users=g.db.query(User.username).filter(User.username.in_(tuple(ids))).all()
+            users=g.db.query(User.username).filter(User.id.in_(tuple(ids))).all()
             names=[x[0] for x in users]
             names=sorted(names)
             names = ", ".join(names)
