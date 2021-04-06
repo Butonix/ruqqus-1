@@ -101,11 +101,12 @@ def join_guild_room(data, v, guild):
 
     if not guild.can_chat(v):
         send(f"You can't join the +{guild.name} chat right now.")
-        return
+        return False
 
     join_room(guild.fullname)
 
     send(f"→ @{v.username} has entered the chat", room=guild.fullname)
+    return True
 
 @socketio.on('leave room')
 @socket_auth_required
@@ -120,8 +121,13 @@ def leave_guild_room(data, v, guild):
 @get_room
 def speak_guild(data, v, guild):
 
-    if not guild.can_chat(v):
-        send("You aren't allowed to chat here right now.")
+    if guild.fullname not in rooms():
+        send("You aren't connected to that chat room. Trying to join...")
+        x=join_guild_room(data)
+        if not x:
+            return
+
+
 
     raw_text=data['text'][0:1000].lstrip().rstrip()
     if not raw_text:
