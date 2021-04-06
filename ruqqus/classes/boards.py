@@ -601,4 +601,4 @@ class Board(Base, Stndrd, Age_times):
     
     @property
     def chat_count(self):
-        return int(r.get(f"{board.fullname}_chat_count"))
+        return int(r.get(f"{self.fullname}_chat_count"))
