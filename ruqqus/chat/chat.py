@@ -171,7 +171,7 @@ def speak_guild(data, v, guild):
                         leave_room(guild.fullname, sid=sid)
                         x=True
             if x:
-                new_ban = BanRelationship(user_id=user.id,
+                new_ban = ChatBan(user_id=user.id,
                                           board_id=board.id,
                                           banning_mod_id=v.id,
                                           is_active=True)
