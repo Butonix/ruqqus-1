@@ -181,7 +181,7 @@ def speak_guild(data, v, guild):
             send("Universal Commands:")
             send("/here - Display a list of users currently in this channel")
             send("/help - Display this help information")
-            send("Guilmaster Commands:")
+            send("Guildmaster Commands:")
             send("/kick <username> [reason] - Eject a user from this channel. They will be able to rejoin immediately after.")
             send("/ban <username> [reason] - Eject a user from this channel. They will not be able to rejoin until unbanned by a Guildmaster.")
             return
