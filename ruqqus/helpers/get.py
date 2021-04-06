@@ -767,7 +767,7 @@ def get_from_fullname(fullname, v=None, graceful=False):
     elif kind == 't3':
         return get_comment(b36, v=v, graceful=graceful)
     elif kind == 't4':
-        return get_board(b36, v=v, graceful=graceful)
+        return get_board(b36, graceful=graceful)
 
 def get_txn(paypal_id):
 

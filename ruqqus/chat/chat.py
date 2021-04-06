@@ -154,7 +154,7 @@ def join_guild_room(data, v, guild):
 @get_room
 def leave_guild_room(data, v, guild):
     leave_room(guild.fullname)
-    udpate_chat_count(guild)
+    update_chat_count(guild)
     emit('info', {'msg':f"← @{v.username} has left the chat"}, to=guild.fullname)
 
 
@@ -198,6 +198,7 @@ def speak_guild(data, v, guild):
             count=len(names)
             namestr = ", ".join(names)
             send(f"{count} user{'s' if count>1 else ''} present: {namestr}")
+
             return
 
         elif args[0]=="/help":
