@@ -9,6 +9,7 @@ from flask_socketio import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
 from ruqqus.helpers.sanitize import *
+from ruqqus.helpers.session import *
 from ruqqus.helpers.markdown import CustomRenderer, preprocess
 from ruqqus.__main__ import app, socketio, db_session
 
@@ -291,6 +292,15 @@ def socket_home(v=None):
 @app.route("/+<guildname>/chat", methods=["GET"])
 @is_not_banned
 def guild_chat(guildname, v):
+
+    if board.over_18 and not (v and v.over_18) and not session_over18(board):
+        t = int(time.time())
+        return render_template("errors/nsfw.html",
+                                                v=v,
+                                                t=t,
+                                                lo_formkey=make_logged_out_formkey(t),
+                                                board=board
+                                                )
 
     guild=get_guild(guildname)
 
