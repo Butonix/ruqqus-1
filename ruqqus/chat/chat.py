@@ -189,11 +189,6 @@ def speak_guild(data, v, guild):
             send("You don't have permission to use commands in this chat")
             return
 
-        user=get_user(args[1], graceful=True)
-
-        if not user:
-            send(f"No user named {args[1]}")
-            return
 
         if user.id==v.id:
             send("You can't kick/ban yourself!")
@@ -210,6 +205,11 @@ def speak_guild(data, v, guild):
 
 
         if args[0]=="/kick":
+            user=get_user(args[1], graceful=True)
+
+            if not user:
+                send(f"No user named {args[1]}")
+                return
             reason= " ".join(args[2:]) if len(args)>=3 else "none"
             x=False
             for sid in SIDS[user.id]:
@@ -221,6 +221,11 @@ def speak_guild(data, v, guild):
                         x=True
 
         elif args[0]=="/ban":
+            user=get_user(args[1], graceful=True)
+
+            if not user:
+                send(f"No user named {args[1]}")
+                return
             reason= " ".join(args[2:]) if len(args)>=3 else "none"
             x=False
             for sid in SIDS[user.id]:
@@ -248,6 +253,11 @@ def speak_guild(data, v, guild):
                 send(f"User {user.username} not present in chat")
 
         elif args[0]=="/unban":
+            user=get_user(args[1], graceful=True)
+
+            if not user:
+                send(f"No user named {args[1]}")
+                return
 
             ban=g.db.query(ChatBan).filter_by(board_id=guild.id, target_user_id=user.id).first()
             if not ban:
