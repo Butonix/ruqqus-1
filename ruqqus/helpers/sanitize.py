@@ -54,7 +54,7 @@ _allowed_tags_in_bio = [
     'sup'
 ]
 
-_allowed_attributes = {'a': ['href', 'title', "rel", "class", "data-original-name"],
+_allowed_attributes = {'a': ['href', 'title', "rel", "data-original-name"],
                        'i': [],
                        'img': ['src', 'class']
                        }
@@ -85,6 +85,7 @@ def a_modify(attrs, new=False):
                                   fragment=parsed_url.fragment)
 
             attrs[(None, "href")] = urlunparse(new_url)
+            attrs[(None)]
 
     return attrs
 
