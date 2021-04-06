@@ -142,6 +142,7 @@ def speak_guild(data, v, guild):
         user=get_user(args[1], graceful=True)
         if not user:
             send(f"No user named {args[1]}")
+            return
 
         if user.id==v.id:
             send("You can't kick/ban yourself!")
