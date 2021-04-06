@@ -71,9 +71,9 @@ def a_modify(attrs, new=False):
         parsed_url = urlparse(raw_url)
 
         domain = parsed_url.netloc
+        attrs[(None, "target")] = "_blank"
         if domain and not domain.endswith(("ruqqus.com", "ruqq.us")):
             attrs[(None, "rel")] = "nofollow noopener"
-            attrs[(None, "target")] = "_blank"
 
             # Force https for all external links in comments
             # (Ruqqus already forces its own https)
