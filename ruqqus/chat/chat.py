@@ -127,7 +127,7 @@ def socket_disconnect_user(v):
 
     for room in rooms():
         leave_room(room)
-        send('msg':f"← @{v.username} has left the chat", to=room)
+        send(f"← @{v.username} has left the chat", to=room)
         board=get_from_fullname(room)
         update_chat_count(board)
 
