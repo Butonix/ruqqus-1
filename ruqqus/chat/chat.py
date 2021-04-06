@@ -179,17 +179,25 @@ def speak_guild(data, v, guild):
             send("Universal Commands:")
             send("/here - Display a list of users currently in this channel")
             send("/help - Display this help information")
-            send("Guildmaster Commands:")
-            send("/kick <username> [reason] - Eject a user from this channel. They will be able to rejoin immediately after.")
-            send("/ban <username> [reason] - Eject a user from this channel. They will not be able to rejoin until unbanned by a Guildmaster.")
+            if guild.has_mod(v, "chat"):
+                send("Guildmaster Commands:")
+                send("/kick <username> [reason] - Eject a user from this channel. They will be able to rejoin immediately after.")
+                send("/ban <username> [reason] - Eject a user from this channel. They will not be able to rejoin until unbanned by a Guildmaster.")
+                send("/gm <text> - Send a message as guildmaster.")
+            if v.admin_level >=3:
+                send("Administrator Commands:")
+                send("/wallop <text> - Send a global broadcast.")
             return
 
 
-        if not guild.has_mod(v, perm="chat"):
-            send("You don't have permission to use commands in this chat")
-            return
 
-        if args[0] in ['/kick','/ban']:
+        if args[0] in ['/kick','/ban', "/unban", "/gm"]:
+
+            if not guild.has_mod(v, perm="chat"):
+                send("You don't have permission to use Guildmaster commands in this chat")
+                return
+
+
             user=get_user(args[1], graceful=True)
 
             if not user:
@@ -210,62 +218,79 @@ def speak_guild(data, v, guild):
                 send(f"User {user.username} not present in chat")
 
 
-        if args[0]=="/kick":
-            reason= " ".join(args[2:]) if len(args)>=3 else "none"
-            x=False
-            for sid in SIDS[user.id]:
-                for room in rooms(sid=sid):
-                    if room==guild.fullname:
-                        if not x:
-                            send(f"← @{user.username} kicked by @{v.username}. Reason: {reason} ", to=guild.fullname)
-                        leave_room(guild.fullname, sid=sid)
-                        x=True
+            if args[0]=="/kick":
+                reason= " ".join(args[2:]) if len(args)>=3 else "none"
+                x=False
+                for sid in SIDS[user.id]:
+                    for room in rooms(sid=sid):
+                        if room==guild.fullname:
+                            if not x:
+                                send(f"← @{user.username} kicked by @{v.username}. Reason: {reason} ", to=guild.fullname)
+                            leave_room(guild.fullname, sid=sid)
+                            x=True
 
-        elif args[0]=="/ban":
-            reason= " ".join(args[2:]) if len(args)>=3 else "none"
-            x=False
-            for sid in SIDS[user.id]:
-                for room in rooms(sid=sid):
-                    if room==guild.fullname:
-                        if not x:
-                            send(f"← @{user.username} kicked and banned by @{v.username}. Reason: {reason}", to=guild.fullname)
-                        leave_room(guild.fullname, sid=sid)
-                        x=True
-            if x:
-                new_ban = ChatBan(user_id=user.id,
-                                          board_id=guild.id,
-                                          banning_mod_id=v.id)
-                g.db.add(new_ban)
+            elif args[0]=="/ban":
+                reason= " ".join(args[2:]) if len(args)>=3 else "none"
+                x=False
+                for sid in SIDS[user.id]:
+                    for room in rooms(sid=sid):
+                        if room==guild.fullname:
+                            if not x:
+                                send(f"← @{user.username} kicked and banned by @{v.username}. Reason: {reason}", to=guild.fullname)
+                            leave_room(guild.fullname, sid=sid)
+                            x=True
+                if x:
+                    new_ban = ChatBan(user_id=user.id,
+                                              board_id=guild.id,
+                                              banning_mod_id=v.id)
+                    g.db.add(new_ban)
+
+                    ma=ModAction(
+                        kind="chatban_user",
+                        user_id=v.id,
+                        target_user_id=user.id,
+                        board_id=guild.id
+                        )
+                    g.db.add(ma)
+                    g.db.commit()
+                else:
+                    send(f"User {user.username} not present in chat")
+
+            elif args[0]=="gm":
+
+                text=" ".join(args[1:])
+                text=preprocess(text)
+                with CustomRenderer() as renderer:
+                    text = renderer.render(mistletoe.Document(text))
+                text = sanitize(text, linkgen=True)
+
+                data={
+                    "avatar": v.profile_url,
+                    "username":v.username,
+                    "text":text
+                    }
+                emit('gm', data, to=guild.fullname)
+
+
+
+            elif args[0]=="/unban":
+
+                ban=g.db.query(ChatBan).filter_by(board_id=guild.id, target_user_id=user.id).first()
+                if not ban:
+                    send(f"User {user.username} is not banned from chat.")
+                    return
+
+                g.db.delete(ban)
 
                 ma=ModAction(
-                    kind="chatban_user",
+                    kind="unchatban_user",
                     user_id=v.id,
                     target_user_id=user.id,
                     board_id=guild.id
                     )
                 g.db.add(ma)
                 g.db.commit()
-            else:
-                send(f"User {user.username} not present in chat")
-
-        elif args[0]=="/unban":
-
-            ban=g.db.query(ChatBan).filter_by(board_id=guild.id, target_user_id=user.id).first()
-            if not ban:
-                send(f"User {user.username} is not banned from chat.")
-                return
-
-            g.db.delete(ban)
-
-            ma=ModAction(
-                kind="unchatban_user",
-                user_id=v.id,
-                target_user_id=user.id,
-                board_id=guild.id
-                )
-            g.db.add(ma)
-            g.db.commit()
-            send(f"@{user.username} un-chatbanned by @{v.username}.", to=guild.fullname)
+                emit('info', {'msg':f"@{user.username} un-chatbanned by @{v.username}."}, to=guild.fullname)
 
         elif v.admin_level >=4:
 

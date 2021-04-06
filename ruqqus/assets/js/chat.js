@@ -69,6 +69,21 @@
   }
   );
 
+  socket.on('gm', function(json){
+    console.log(json);
+    username=json['username'];
+    text=json['text'];
+    ava=json['avatar']
+
+    $('#gm-template img').attr('src', ava)
+    $('#gm-template a').attr('href','/@'+username)
+    $('#gm-template a').text('@'+username)
+    $('#gm-template .chat-message').html(text)
+    $('#chat-text').append($('#gm-template .chat-line').clone())
+    window.scrollTo(0,document.body.scrollHeight)
+  }
+  );
+
   socket.on('connect',
     function(event) {
       console.log('connected, joining room')
