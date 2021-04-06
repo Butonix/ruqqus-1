@@ -45,6 +45,12 @@ def socket_auth_required(f):
         if v.is_suspended:
             send("You're banned and can't access chat right now.")
 
+        if request.sid not in SIDS.get(v.id, []):
+            if v.id in SIDS:
+                SIDS[v.id].append(request.sid)
+            else:
+                SIDS[v.id]=[request.sid]
+
         f(*args, v, **kwargs)
 
         g.db.close()
@@ -81,7 +87,7 @@ def socket_connect_auth_user():
     if v.is_suspended:
         send("You're banned and can't access chat right now.")
 
-    if v.username.lower() in SIDS:
+    if v.id in SIDS:
         SIDS[v.id].append(request.sid)
     else:
         SIDS[v.id]=[request.sid]
