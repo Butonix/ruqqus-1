@@ -355,6 +355,7 @@ def speak_guild(data, v, guild):
 
             if not v.admin_level >= 4:
                 send(f"You do not have permission to use the {args[0]} command.")
+                return
 
             if args[0]=="/admin":
 
