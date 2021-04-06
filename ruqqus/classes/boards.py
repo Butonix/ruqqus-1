@@ -7,6 +7,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import *
 from ruqqus.helpers.session import *
+from ruqqus.chat.chat import chat_count
 import ruqqus.helpers.aws as aws
 from .userblock import *
 from .submission import *
@@ -599,3 +600,6 @@ class Board(Base, Stndrd, Age_times):
     def chat_url(self):
         return f"{self.permalink}/chat"
     
+    @property
+    def chat_count(self):
+        return int(r.get(f"{board.fullname}_chat_count"))

@@ -11,7 +11,7 @@ from ruqqus.helpers.get import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.session import *
 from ruqqus.helpers.markdown import CustomRenderer, preprocess
-from ruqqus.__main__ import app, socketio, db_session
+from ruqqus.__main__ import app, r, socketio, db_session
 
 REDIS_URL = app.config["CACHE_REDIS_URL"]
 
@@ -30,7 +30,20 @@ def v_rooms(v):
                 output.append(room)
     return output
 
+def update_chat_count(board):
 
+    room=board.fullname
+
+    count=[]
+    for uid in SIDS:
+        for sid in SIDS[uid]:
+            for room in rooms(sid=sid):
+                if uid not in count:
+                    count.append(uid)
+
+    count=len(count)
+
+    r.set(f"{board.fullname}_chat_count", count)
 def socket_auth_required(f):
 
     def wrapper(*args, **kwargs):
@@ -122,6 +135,7 @@ def join_guild_room(data, v, guild):
         return False
 
     join_room(guild.fullname)
+    update_chat_count(guild)
 
     emit('info',{'msg': f"→ @{v.username} has entered the chat"}, to=guild.fullname)
     return True
@@ -131,6 +145,7 @@ def join_guild_room(data, v, guild):
 @get_room
 def leave_guild_room(data, v, guild):
     leave_room(guild.fullname)
+    udpate_chat_count(guild)
     emit('info', {'msg':f"← @{v.username} has left the chat"}, to=guild.fullname)
 
 
@@ -228,6 +243,7 @@ def speak_guild(data, v, guild):
                             if not x:
                                 send(f"← @{user.username} kicked by @{v.username}. Reason: {reason} ", to=guild.fullname)
                             leave_room(guild.fullname, sid=sid)
+                            update_chat_count(guild)
                             x=True
 
             elif args[0]=="/ban":
@@ -239,6 +255,7 @@ def speak_guild(data, v, guild):
                             if not x:
                                 send(f"← @{user.username} kicked and banned by @{v.username}. Reason: {reason}", to=guild.fullname)
                             leave_room(guild.fullname, sid=sid)
+                            update_chat_count(guild)
                             x=True
                 if x:
                     new_ban = ChatBan(user_id=user.id,
@@ -368,3 +385,19 @@ def guild_chat(guildname, v):
                                                 )
 
     return render_template("chat/chat.html", b=board, v=v)
+
+def update_chat_count(board):
+
+    room=board.fullname
+
+    count=[]
+    for uid in SIDS:
+        for sid in SIDS[uid]:
+            for room in rooms(sid=sid):
+                if uid not in count:
+                    count.append(uid)
+
+    count=len(count)
+
+    r.set(f"{board.fullname}_chat_count", count)
+
