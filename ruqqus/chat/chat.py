@@ -248,6 +248,8 @@ def speak_guild(data, v, guild):
 
         elif args[0]=="/me":
             text=" ".join(args[1:])
+            if not text:
+                return
             text=sanitize(text, linkgen=False)
             send(f"@{v.username} {text}", to=guild.fullname)
             return
