@@ -32,18 +32,20 @@ def v_rooms(v):
 
 def update_chat_count(board):
 
-    room=board.fullname
-
     count=[]
     for uid in SIDS:
         for sid in SIDS[uid]:
             for room in rooms(sid=sid):
-                if uid not in count:
+                if room==board.fullname and uid not in count:
                     count.append(uid)
+                    break
 
     count=len(count)
 
     r.set(f"{board.fullname}_chat_count", count)
+
+    emit("count", {"count":count}, to=board.fullname)
+    
 def socket_auth_required(f):
 
     def wrapper(*args, **kwargs):

@@ -84,6 +84,11 @@
   }
   );
 
+  socket.on('count', function(data){
+    $('#chat-count').text(data['count'])
+  }
+  );
+
   socket.on('connect',
     function(event) {
       console.log('connected, joining room')
