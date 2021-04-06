@@ -601,4 +601,9 @@ class Board(Base, Stndrd, Age_times):
     
     @property
     def chat_count(self):
-        return int(r.get(f"{self.fullname}_chat_count"))
+        count= r.get(f"{self.fullname}_chat_count")
+
+        if count==None:
+            count=0
+
+        return count
