@@ -177,13 +177,13 @@ def speak_guild(data, v, guild):
 
         elif args[0]=="/help":
             send("Universal Commands:")
-            send("/here - Display a list of users currently in this channel")
             send("/help - Display this help information")
+            send("/here - Display a list of users currently in this channel")
             if guild.has_mod(v, "chat"):
                 send("Guildmaster Commands:")
-                send("/kick <username> [reason] - Eject a user from this channel. They will be able to rejoin immediately after.")
                 send("/ban <username> [reason] - Eject a user from this channel. They will not be able to rejoin until unbanned by a Guildmaster.")
                 send("/gm <text> - Send a message as guildmaster.")
+                send("/kick <username> [reason] - Eject a user from this channel. They will be able to rejoin immediately after.")
             if v.admin_level >=3:
                 send("Administrator Commands:")
                 send("/wallop <text> - Send a global broadcast.")
