@@ -754,8 +754,11 @@ def get_from_fullname(fullname, v=None, graceful=False):
 
     parts = fullname.split('_')
 
-    if len(parts) < 2:
-        abort(400)
+    if len(parts) != 2:
+        if graceful:
+            return None
+        else:
+            abort(400)
 
     kind = parts[0]
     b36 = parts[1]
