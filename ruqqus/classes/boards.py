@@ -7,7 +7,6 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import *
 from ruqqus.helpers.session import *
-from ruqqus.chat.chat import chat_count
 import ruqqus.helpers.aws as aws
 from .userblock import *
 from .submission import *
