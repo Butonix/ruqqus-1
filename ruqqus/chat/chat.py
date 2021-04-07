@@ -284,9 +284,11 @@ def help_command(args, guild, v):
         if target in COMMANDS:
             send(f"/{target}{' '+HELP[target] if HELP[target] else ''} - {COMMANDS[target].__doc__}")
         else:
-            send(f"Unknown command `target`")
+            send(f"Unknown command `{target}`")
     except IndexError:
-        send(f"Type `/help <command>` for information on a specific command. Available commands: {', '.join([x for x in COMMANDS.keys()].sort())}")
+        commands=[x for x in COMMANDS.keys()]
+        commands=sorted(commands)
+        send(f"Type `/help <command>` for information on a specific command. Available commands: {', '.join(commands)}")
 
 @command('random')
 def random_post(args, guild, v):
