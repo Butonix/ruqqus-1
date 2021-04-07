@@ -366,6 +366,9 @@ class Board(Base, Stndrd, Age_times):
         if user.admin_level>=4:
             return True
 
+        if user.is_suspended:
+            return False
+
         if self.has_ban(user) or self.has_chat_ban(user):
             return False
 
