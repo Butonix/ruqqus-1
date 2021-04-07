@@ -569,3 +569,6 @@ def guild_chat(guildname, v):
 
     return render_template("chat/chat.html", b=board, v=v)
 
+
+
+print(COMMANDS)
