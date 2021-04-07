@@ -310,7 +310,7 @@ def is_guildmaster(*perms):
 
             if perms:
                 for perm in perms:
-                    if not m.__dict__.get(f"perm_{perm}"):
+                    if not m.__dict__.get(f"perm_{perm}") and not m.perm_full:
                         return jsonify({"error":f"Permission `{perm}` required"}), 403
 
 
