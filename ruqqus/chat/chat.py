@@ -26,6 +26,8 @@ SIDS={}
 COMMANDS={}
 HELP={}
 
+TYPING={}
+
 
 def command(c, syntax=""):
 
@@ -283,6 +285,68 @@ def speak_guild(data, v, guild):
 
     else:
         speak(raw_text, v, guild)
+
+@socketio.on('typing')
+@socket_auth_required
+@get_room
+def typing_indicator(data, v, guild):
+
+    #guild in typing
+    if guild.fullname not in TYPING:
+        TYPING[guild.fullname]=[]
+
+    if data['typing'] and v.username not in TYPING[guild.fullname]:
+        TYPING[guild.fullname].append(v.username)
+    elif not data['typing'] and v.username in TYPING[guild.fullname]:
+        TYPING[guild.fullname].remove(v.username)
+
+    emit('typing', {'users':TYPING[guild.fullname]}, to=guild.fullname)
+
+
+
+
+
+##############
+#            #
+#   ROUTES   #
+#            #
+##############
+
+
+
+@app.route("/socket_home")
+#@auth_required
+def socket_home(v=None):
+
+    return render_template("chat/chat_test.html", v=v)
+
+
+@app.route("/+<guildname>/chat", methods=["GET"])
+@is_not_banned
+def guild_chat(guildname, v):
+
+
+
+    board=get_guild(guildname)
+
+
+    if board.over_18 and not (v and v.over_18) and not session_over18(board):
+        t = int(time.time())
+        return render_template("errors/nsfw.html",
+                                                v=v,
+                                                t=t,
+                                                lo_formkey=make_logged_out_formkey(t),
+                                                board=board
+                                                )
+
+    return render_template("chat/chat.html", b=board, v=v)
+
+
+##############
+#            #
+#  COMMANDS  #
+#            #
+##############
 
 @command('help', syntax='[command]')
 def help_command(args, guild, v):
@@ -624,33 +688,3 @@ def say_guild(args, guild, v):
         "text":text
         }
     emit('motd', data, to=guild.fullname)
-
-
-
-
-@app.route("/socket_home")
-#@auth_required
-def socket_home(v=None):
-
-    return render_template("chat/chat_test.html", v=v)
-
-
-@app.route("/+<guildname>/chat", methods=["GET"])
-@is_not_banned
-def guild_chat(guildname, v):
-
-
-
-    board=get_guild(guildname)
-
-
-    if board.over_18 and not (v and v.over_18) and not session_over18(board):
-        t = int(time.time())
-        return render_template("errors/nsfw.html",
-                                                v=v,
-                                                t=t,
-                                                lo_formkey=make_logged_out_formkey(t),
-                                                board=board
-                                                )
-
-    return render_template("chat/chat.html", b=board, v=v)
