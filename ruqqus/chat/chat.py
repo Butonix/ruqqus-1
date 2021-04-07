@@ -476,6 +476,8 @@ def chatban_user(args, guild, v):
 def speak_as_gm(args, guild, v):
     """Distinguish your message with a Guildmaster's crown. (Must be Guildmaster.)"""
     text=" ".join(args[1:])
+    if not text:
+        return
     text=preprocess(text)
     with CustomRenderer() as renderer:
         text = renderer.render(mistletoe.Document(text))
@@ -555,6 +557,8 @@ def speak_admin(args, guild, v):
 
 
     text=" ".join(args[1:])
+    if not text:
+        return
     text=preprocess(text)
     with CustomRenderer() as renderer:
         text = renderer.render(mistletoe.Document(text))
@@ -573,6 +577,8 @@ def speak_admin(args, guild, v):
 def wallop(args, guild, v):
     """Send a global broadcast. (Must be site administrator.)"""
     text=" ".join(args[1:])
+    if not text:
+        return
     text=preprocess(text)
     with CustomRenderer() as renderer:
         text = renderer.render(mistletoe.Document(text))
