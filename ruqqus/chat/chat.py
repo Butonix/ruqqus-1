@@ -6,6 +6,7 @@ import mistletoe
 from flask import *
 from flask_socketio import *
 import random
+from sqlalchem.orm import lazyload
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
@@ -275,7 +276,7 @@ def speak_guild(data, v, guild):
 def random_post(args, guild, v):
 
     total=g.db.query(Submission).options(lazyload('*')).filter_by(board_id=guild.id, is_deleted=False, is_banned=False).count()
-    offset=random.randint(0, total-1)
+    offset=random.randint(0, total)
     post=g.db.query(Submission).options(lazyload('*')).filter_by(board_id=guild.id, is_deleted=False, is_banned=False).order_by(Submission.id.asc()).offset(offset).first()
     speak(post.permalink, v, guild)
 
