@@ -270,6 +270,17 @@ def speak_guild(data, v, guild):
     else:
         speak(raw_text, v, guild)
 
+
+@command('random')
+def random_post(args, guild, v):
+
+    total=g.db.query(Submission).options(lazyload('*')).filter_by(board_id=guild.id, is_deleted=False, is_banned=0).count()
+    offset=random.randint(0, total-1)
+    post=g.db.query(Submission).options(lazyload('*')).filter_by(board_id=guild.id, is_deleted=False, is_banned=0).order_by(Submission.id.asc()).offset(offset).first()
+    speak(post.permalink, v, guild)
+
+
+
 @command('shrug')
 def shrug(args, guild, v):
     args.append(r"¯\\\_(ツ)_/¯")
@@ -567,7 +578,3 @@ def guild_chat(guildname, v):
                                                 )
 
     return render_template("chat/chat.html", b=board, v=v)
-
-
-
-print(COMMANDS)
