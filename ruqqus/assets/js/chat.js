@@ -40,20 +40,20 @@ $('#input-text').on('input', function() {
 socket.on('typing', function (json){
   users=json['users']
   if (users.length==0){
-    $('#typing-indicator').text('')
+    $('#typing-indicator').html('')
   }
   else if (users.length==1){
-    $('#typing-indicator').text(users[0]+" is typing...")
+    $('#typing-indicator').html('<b>'+users[0]+"</b> is typing...")
   }
   else if (users.length==2){
-    $('#typing-indicator').text(users[0]+" and "+users[1]+" are typing...")
+    $('#typing-indicator').html('<b>'+users[0]+"</b> and '<b>'+"+users[1]+" are typing...")
   }
   else if (users.length==3){
-    $('#typing-indicator').text(users[0]+", "+users[1]+", and "+users[2]+" are typing...")
+    $('#typing-indicator').html('<b>'+users[0]+"</b>, '<b>'+"+users[1]+"</b>, and '<b>'+"+users[2]+"</b> are typing...")
   }
   else if (users.length>=4){
     more=users.length-3
-    $('#typing-indicator').text(users[0]+", "+users[1]+", "+users[2]+" and "+more.toString()+" more are typing...")
+    $('#typing-indicator').html('<b>'+users[0]+"</b>, '<b>'+"+users[1]+"</b>, '<b>'+"+users[2]+"</b> and "+more.toString()+" more are typing...")
   }
 }
 )
