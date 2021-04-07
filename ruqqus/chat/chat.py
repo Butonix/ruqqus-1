@@ -59,7 +59,7 @@ def gm_command(f):
         v=kwargs['v']
 
         if not guild.has_mod(v, "chat"):
-            send(f"You do not have permission to use the {args[0]} command in this channel.")
+            send(f"You do not have permission to use the {args[0][0]} command in this channel.")
             return
 
         f(*args, **kwargs)
@@ -76,7 +76,7 @@ def admin_command(f):
         v=kwargs['v']
 
         if v.admin_level <4:
-            send(f"You do not have permission to use the {args[0]} command.")
+            send(f"You do not have permission to use the {args[0][0]} command.")
             return
 
         f(*args, **kwargs)
