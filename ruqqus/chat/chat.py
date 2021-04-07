@@ -352,7 +352,7 @@ def gib(args, guild, v):
 
 @command('sus', syntax='[text]')
 def sus(args, guild, v):
-    """Appends (╯° □°） ╯︵ ┻━┻ to your chat message."""
+    """Appends one of the following to your chat message:  ඞඞ  ඣ  යඞ"""
     args.append(random.choice(['ඞඞ','ඣ','යඞ']))
     speak(args[1:], v, guild)
 
