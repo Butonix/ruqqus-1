@@ -6,9 +6,9 @@
 
 {% block stylesheets %}
 {% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
-<link id="css-link" rel="stylesheet" href="{{ p.board.css_dark_url }}?v=2.35.20">
+<link id="css-link" rel="stylesheet" href="{{ p.board.css_dark_url }}?v=2.35.21">
 {% else %}
-<link id="css-link" rel="stylesheet" href="{{ p.board.css_url }}?v=2.35.20">
+<link id="css-link" rel="stylesheet" href="{{ p.board.css_url }}?v=2.35.21">
 {% endif %}
 {% endblock %}
 
