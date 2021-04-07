@@ -84,7 +84,7 @@ def admin_command(f):
     wrapper.__doc__=f.__doc__
     return wrapper
 
-def speak(text, user, guild):
+def speak(text, user, guild, as_guild=False):
 
     if isinstance(text, list):
         text=" ".join(text)
@@ -94,17 +94,26 @@ def speak(text, user, guild):
         text = renderer.render(mistletoe.Document(text))
     text = sanitize(text, linkgen=True)
 
-    data={
-        "avatar": user.profile_url,
-        "username":user.username,
-        "text":text,
-        "room": guild.fullname
-    }
-    if request.headers.get("X-User-Type")=="Bot":
-        emit("bot", data, to=guild.fullname)
+    if as_guild:
+        data={
+            "avatar": guild.profile_url,
+            "username":guild.name,
+            "text":text,
+            "room": guild.fullname
+        }
+        emit("motd", data, to=guild.fullname)
     else:
-        emit("speak", data, to=guild.fullname)
-    return
+        data={
+            "avatar": user.profile_url,
+            "username":user.username,
+            "text":text,
+            "room": guild.fullname
+        }
+        if request.headers.get("X-User-Type")=="Bot":
+            emit("bot", data, to=guild.fullname)
+        else:
+            emit("speak", data, to=guild.fullname)
+        return
 
 def v_rooms(v):
 
@@ -279,13 +288,13 @@ def speak_guild(data, v, guild):
 def help_command(args, guild, v):
 
     """Displays help information for a command, or displays a list of commands if no command is provided."""
-    try:
+    if len(args)>1:
         target=args[1]
         if target in COMMANDS:
             send(f"/{target}{' '+HELP[target] if HELP[target] else ''} - {COMMANDS[target].__doc__}")
         else:
             send(f"Unknown command `{target}`")
-    except IndexError:
+    else:
         commands=[x for x in COMMANDS.keys()]
         commands=sorted(commands)
         send(f"Type `/help <command>` for information on a specific command. Commands: {', '.join(commands)}")
