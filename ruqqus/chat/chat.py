@@ -265,7 +265,7 @@ def speak_guild(data, v, guild):
         if command in COMMANDS:
             COMMANDS[command](args, guild=guild, v=v)
         else:
-            send(f"Command `{args[0]}` not recognized")
+            send(f"Command `{command}` not recognized")
 
     else:
         speak(raw_text, v, guild)
