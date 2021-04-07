@@ -288,10 +288,6 @@ def speak_guild(data, v, guild):
                     send(f"@{user.username} is an approved contributor and can't currently be kicked or banned.")
                     return
 
-                if not any([x==guild.fullname for x in v_rooms(user)]):
-                    send(f"User {user.username} not present in chat")
-
-
             if args[0]=="/kick":
                 reason= " ".join(args[2:]) if len(args)>=3 else "none"
                 x=False
@@ -310,6 +306,8 @@ def speak_guild(data, v, guild):
 
                 if existing:
                     send(f"@{existing.username} is already banned from chat.")
+                    return
+
                 reason= " ".join(args[2:]) if len(args)>=3 else "none"
                 x=False
                 for sid in SIDS[user.id]:
