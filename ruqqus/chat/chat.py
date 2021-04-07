@@ -276,48 +276,43 @@ def shrug(args, guild, v):
     args.append(r"¯\\\_(ツ)_/¯")
     speak(args[1:], v, guild)
 
-@command('shrug')
-def shrug(args, guild, v):
-    args.append(r"¯\\\_(ツ)_/¯")
-    speak(args[1:], v, guild)
-
 @command('lenny')
-def shrug(args, guild, v):
+def lenny(args, guild, v):
     args.append("( ͡° ͜ʖ ͡°)")
     speak(args[1:], v, guild)
 
 @command('table')
-def shrug(args, guild, v):
+def table(args, guild, v):
     args.append("(╯° □°） ╯︵ ┻━┻")
     speak(args[1:], v, guild)
 
 @command('untable')
-def shrug(args, guild, v):
+def untable(args, guild, v):
     args.append('┬─┬ノ( º _ ºノ)')
     speak(args[1:], v, guild)
 
 @command('porter')
-def shrug(args, guild, v):
+def porter(args, guild, v):
     args.append('【=◈︿◈=】')
     speak(args[1:], v, guild)
 
 @command('notsure')
-def shrug(args, guild, v):
+def notsure(args, guild, v):
     args.append('(≖_≖ )')
     speak(args[1:], v, guild)
 
 @command('flushed')
-def shrug(args, guild, v):
+def flushed(args, guild, v):
     args.append('◉_◉')
     speak(args[1:], v, guild)
 
 @command('gib')
-def shrug(args, guild, v):
+def gib(args, guild, v):
     args.append('༼ つ ◕_◕ ༽つ')
     speak(args[1:], v, guild)
 
 @command('sus')
-def shrug(args, guild, v):
+def sus(args, guild, v):
     args.append(random.choice(['ඞඞ','ඣ','යඞ']))
     speak(args[1:], v, guild)
 
