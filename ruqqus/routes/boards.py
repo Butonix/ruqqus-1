@@ -880,7 +880,7 @@ def mod_bid_settings_optout(bid, board, v):
 
 @app.route("/mod/<bid>/settings/public_chat", methods=["POST"])
 @auth_required
-@is_guildmaster("chat")
+@is_guildmaster("config", "chat")
 @validate_formkey
 def mod_bid_settings_public_chat(bid, board, v):
 
