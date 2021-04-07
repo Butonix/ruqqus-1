@@ -69,7 +69,7 @@ socket.on('speak', function(json){
   text=json['text'];
   ava=json['avatar']
 
-  var my_name=$('username').val()
+  var my_name=$('#username').val()
   var template="#chat-line-template"
   if (text.includes('@'+my_name)){
     template="#mention-template"
