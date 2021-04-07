@@ -24,9 +24,10 @@ REDIS_URL = app.config["CACHE_REDIS_URL"]
 SIDS={}
 
 COMMANDS={}
+HELP={}
 
 
-def command(c):
+def command(c, syntax=""):
 
     def wrapper_maker(f):
 
@@ -37,12 +38,13 @@ def command(c):
             raise ValueError(f"Duplicate command function {f.__name__}")
 
         COMMANDS[c]=f
+        HELP[c]=syntax
 
         def wrapper(*args, **kwargs):
-
             f(*args, **kwargs)
 
         wrapper.__name__=f.__name__
+        wrapper.__doc__=f.__doc__
         return wrapper
 
     return wrapper_maker
@@ -62,6 +64,7 @@ def gm_command(f):
         
 
     wrapper.__name__=f.__name__
+    wrapper.__doc__=f.__doc__
     return wrapper
 
 def admin_command(f):
@@ -78,6 +81,7 @@ def admin_command(f):
         
 
     wrapper.__name__=f.__name__
+    wrapper.__doc__=f.__doc__
     return wrapper
 
 def speak(text, user, guild):
@@ -271,9 +275,22 @@ def speak_guild(data, v, guild):
     else:
         speak(raw_text, v, guild)
 
+@command('help', syntax='<command>')
+def help_command(args, guild, v):
+
+    """Displays help information for a command."""
+
+    target=args[1]
+    if target in COMMANDS:
+        send(f"/{target}{' '+HELP[target] if HELP[target] else ''} - {COMMANDS[target].__doc__}")
+    else:
+        send(f"Unknown command `target`")
+
 
 @command('random')
 def random_post(args, guild, v):
+
+    """Fetches a random post from this channel's Guild."""
 
     total=g.db.query(Submission).options(lazyload('*')).filter_by(board_id=guild.id, deleted_utc=0, is_banned=False).count()
     offset=random.randint(0, total-1)
@@ -282,53 +299,63 @@ def random_post(args, guild, v):
 
 
 
-@command('shrug')
+@command('shrug', syntax='[text]')
 def shrug(args, guild, v):
+    """Appends ¯\\_(ツ)_/¯ to your chat message."""
     args.append(r"¯\\\_(ツ)_/¯")
     speak(args[1:], v, guild)
 
-@command('lenny')
+@command('lenny', syntax='[text]')
 def lenny(args, guild, v):
+    """Appends ( ͡° ͜ʖ ͡°) to your chat message."""
     args.append("( ͡° ͜ʖ ͡°)")
     speak(args[1:], v, guild)
 
-@command('table')
+@command('table', syntax='[text]')
 def table(args, guild, v):
+    """Appends (╯° □°） ╯︵ ┻━┻ to your chat message."""
     args.append("(╯° □°） ╯︵ ┻━┻")
     speak(args[1:], v, guild)
 
-@command('untable')
+@command('untable', syntax='[text]')
 def untable(args, guild, v):
+    """Appends ┬─┬ノ( º _ ºノ)to your chat message."""
     args.append('┬─┬ノ( º _ ºノ)')
     speak(args[1:], v, guild)
 
-@command('porter')
+@command('porter', syntax='[text]')
 def porter(args, guild, v):
+    """Appends 【=◈︿◈=】 to your chat message."""
     args.append('【=◈︿◈=】')
     speak(args[1:], v, guild)
 
-@command('notsure')
+@command('notsure', syntax='[text]')
 def notsure(args, guild, v):
+    """Appends (≖_≖ ) to your chat message."""
     args.append('(≖_≖ )')
     speak(args[1:], v, guild)
 
-@command('flushed')
+@command('flushed', syntax='[text]')
 def flushed(args, guild, v):
+    """Appends ◉_◉ to your chat message."""
     args.append('◉_◉')
     speak(args[1:], v, guild)
 
-@command('gib')
+@command('gib', syntax='[text]')
 def gib(args, guild, v):
+    """Appends ༼ つ ◕_◕ ༽つ to your chat message."""
     args.append('༼ つ ◕_◕ ༽つ')
     speak(args[1:], v, guild)
 
-@command('sus')
+@command('sus', syntax='[text]')
 def sus(args, guild, v):
+    """Appends (╯° □°） ╯︵ ┻━┻ to your chat message."""
     args.append(random.choice(['ඞඞ','ඣ','යඞ']))
     speak(args[1:], v, guild)
 
 @command('here')
 def here_command(args, guild, v):
+    """Displays a list of users currently present in the chat."""
     ids=set()
     for uid in SIDS:
         for sid in SIDS[uid]:
@@ -343,8 +370,9 @@ def here_command(args, guild, v):
     namestr = ", ".join(names)
     send(f"{count} user{'s' if count>1 else ''} present: {namestr}")
 
-@command('me')
+@command('me', syntax="<text>")
 def me_action(args, guild, v):
+    """Sends your message as an action."""
     text=" ".join(args[1:])
     if not text:
         return
@@ -352,9 +380,10 @@ def me_action(args, guild, v):
     emit('me', {'msg':f"@{v.username} {text}"}, to=guild.fullname)
     return
 
-@command('kick')
+@command('kick', syntax="<username> [reason]")
 @gm_command
 def kick_user(args, guild, v):
+    """Ejects a user from the chat. They can rejoin immediately."""
     user=get_user(args[1], graceful=True)
 
     if not user:
@@ -383,9 +412,10 @@ def kick_user(args, guild, v):
                 update_chat_count(guild)
                 x=True
 
-@command('ban')
+@command('ban', syntax="<username> [reason]")
 @gm_command
 def chatban_user(args, guild, v):
+    """Ejects a user from the chat. They may not rejoin until unbanned."""
     user=get_user(args[1], graceful=True)
 
     if not user:
@@ -438,9 +468,10 @@ def chatban_user(args, guild, v):
     g.db.add(ma)
     g.db.commit()
 
-@command('gm')
+@command('gm', syntax="<text>")
 @gm_command
 def speak_as_gm(args, guild, v):
+    """Distinguish your message with a Guildmaster's crown."""
     text=" ".join(args[1:])
     text=preprocess(text)
     with CustomRenderer() as renderer:
@@ -454,9 +485,10 @@ def speak_as_gm(args, guild, v):
         }
     emit('gm', data, to=guild.fullname)
 
-@command('unban')
+@command('unban', syntax="<username>")
 @gm_command
 def un_chatban_user(args, guild, v):
+    """Unban a banned user from this chat."""
     user=get_user(args[1], graceful=True)
 
     if not user:
@@ -480,9 +512,11 @@ def un_chatban_user(args, guild, v):
     g.db.commit()
     send(f"@{user.username} un-chatbanned by @{v.username}.", to=guild.fullname)
 
-@command('motd')
+@command('motd', syntax="[text]")
 @gm_command
 def message_of_the_day(args, guild, v):
+    """Set or clear a Message of the Day, to be shown to users upon joining this channel. (Messages are shown as being spoken by the guild.)"""
+
     if len(args)>=2:
 
         message = " ".join(args[1:])
@@ -511,9 +545,12 @@ def message_of_the_day(args, guild, v):
         send("Message removed")
 
 
-@command('admin')
+@command('admin', syntax="<text>")
 @admin_command
 def speak_admin(args, guild, v):
+    """Distinguish your message with an Administrator's shield."""
+
+
     text=" ".join(args[1:])
     text=preprocess(text)
     with CustomRenderer() as renderer:
@@ -528,9 +565,10 @@ def speak_admin(args, guild, v):
     emit('admin', data, to=guild.fullname)
 
 
-@command('wallop')
+@command('wallop', syntax="<text>")
 @admin_command
 def wallop(args, guild, v):
+    """Send a global broadcast."""
     text=" ".join(args[1:])
     text=preprocess(text)
     with CustomRenderer() as renderer:
