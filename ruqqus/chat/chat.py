@@ -305,7 +305,7 @@ def speak_guild(data, v, guild):
                 existing = g.db.query(ChatBan).filter_by(board_id=guild.id, user_id=user.id).first()
 
                 if existing:
-                    send(f"@{existing.username} is already banned from chat.")
+                    send(f"@{user.username} is already banned from chat.")
                     return
 
                 reason= " ".join(args[2:]) if len(args)>=3 else "none"
