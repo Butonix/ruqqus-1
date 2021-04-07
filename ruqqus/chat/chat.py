@@ -6,7 +6,7 @@ import mistletoe
 from flask import *
 from flask_socketio import *
 import random
-from sqlalchem.orm import lazyload
+from sqlalchemy.orm import lazyload
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
