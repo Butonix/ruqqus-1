@@ -22,6 +22,32 @@ REDIS_URL = app.config["CACHE_REDIS_URL"]
 
 SIDS={}
 
+COMMANDS={}
+
+
+def command(c):
+
+    def wrapper_maker(f):
+
+        def wrapper(*args, **kwargs):
+
+            pass
+
+        wrapper.__name__=f.__name__
+        return wrapper
+
+    return wrapper_maker
+
+def gm_command(f):
+
+    def wrapper(*args, **kwargs):
+
+        pass
+        
+    wrapper.__name__=f.__name__
+    return wrapper
+
+
 def v_rooms(v):
 
     output=[]
