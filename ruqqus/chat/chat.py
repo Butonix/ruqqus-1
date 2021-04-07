@@ -279,13 +279,14 @@ def speak_guild(data, v, guild):
 def help_command(args, guild, v):
 
     """Displays help information for a command."""
-
-    target=args[1]
-    if target in COMMANDS:
-        send(f"/{target}{' '+HELP[target] if HELP[target] else ''} - {COMMANDS[target].__doc__}")
-    else:
-        send(f"Unknown command `target`")
-
+    try:
+        target=args[1]
+        if target in COMMANDS:
+            send(f"/{target}{' '+HELP[target] if HELP[target] else ''} - {COMMANDS[target].__doc__}")
+        else:
+            send(f"Unknown command `target`")
+    except IndexError:
+        send(f"Type `/help <command>` for information on a specific command. Available commands: {', '.join([x for x in COMMANDS.keys()].sort())}")
 
 @command('random')
 def random_post(args, guild, v):
