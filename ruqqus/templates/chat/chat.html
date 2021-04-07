@@ -33,7 +33,7 @@
   <div class="position-relative form-group d-flex pb-3">
     <div class="position-absolute text-muted text-small" style="bottom: -.5rem; line-height: 1;">
       <span id="typing-indicator"></span>
-      <span id="loading-indicator"></span>
+      <span id="loading-indicator" class="d-none"></span>
     </div>
     <input id="guildname" type="hidden" value="{{ b.name }}">
     <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name }} chat, or type /help for information about chat commands" autocomplete="off" autofocus />
@@ -182,15 +182,15 @@
 <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
 <script src="https://cdn.socket.io/4.0.0/socket.io.min.js" integrity="sha384-DkkWv9oJFWLIydBXXjkBWnG1/fuVhw8YPBq37uvvD6WSYRFRqr21eY5Dg9ZhmWdy" crossorigin="anonymous"></script>
 
-<script src="/assets/js/chat.js?v=2.35.17"></script>
+<script src="/assets/js/chat.js?v=2.35.16"></script>
 {% include "expanded_image_modal.html" %}
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/all_js.js?v=2.35.17"></script>
+<script src="/assets/js/all_js.js?v=2.35.16"></script>
 
 
 <style>
-#loading:after {
+#loading-indicator:after {
   overflow: hidden;
   display: inline-block;
   vertical-align: bottom;
