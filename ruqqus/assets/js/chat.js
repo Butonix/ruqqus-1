@@ -21,6 +21,7 @@ $('#chatsend').click(function (event) {
 
 $('#input-text').on('input', function() {
   text=$('#input-text').val();
+  guild=$('#guildname').val();
   if (text==''){
     if (is_typing==true) {
       is_typing=false;
