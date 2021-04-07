@@ -69,11 +69,18 @@ socket.on('speak', function(json){
   text=json['text'];
   ava=json['avatar']
 
-  $('#chat-line-template img').attr('src', ava)
-  $('#chat-line-template a').attr('href','/@'+username)
-  $('#chat-line-template a').text('@'+username)
-  $('#chat-line-template .chat-message').html(text)
-  $('#chat-text').append($('#chat-line-template .chat-line').clone())
+  var my_name=$('username').val()
+  var template="#chat-line-template"
+  if (text.includes('@'+my_name)){
+    template="#mention-template"
+  }
+
+
+  $(template+' img').attr('src', ava)
+  $(template+' a').attr('href','/@'+username)
+  $(template+' a').text('@'+username)
+  $(template+' .chat-message').html(text)
+  $('#chat-text').append($(template+' .chat-line').clone())
   window.scrollTo(0,document.body.scrollHeight)
 }
 );
