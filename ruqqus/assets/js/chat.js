@@ -48,16 +48,16 @@ socket.on('typing', function (json){
     $('#loading-indicator').removeClass('d-none');
   }
   else if (users.length==2){
-    $('#typing-indicator').html('<b>'+users[0]+"</b> and <b>"+users[1]+" are typing...");
+    $('#typing-indicator').html('<b>'+users[0]+"</b> and <b>"+users[1]+"</b> are typing...");
     $('#loading-indicator').removeClass('d-none');
   }
   else if (users.length==3){
-    $('#typing-indicator').html('<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, and <b>"+users[2]+"</b> are typing...");
+    $('#typing-indicator').html('<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, and <b>"+users[2]+"</b> are typing");
     $('#loading-indicator').removeClass('d-none');
   }
   else if (users.length>=4){
     more=users.length-3
-    $('#typing-indicator').html('<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, <b>"+users[2]+"</b> and "+more.toString()+" more are typing...");
+    $('#typing-indicator').html('<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, <b>"+users[2]+"</b> and "+more.toString()+" more are typing");
     $('#loading-indicator').removeClass('d-none');
   }
 }
