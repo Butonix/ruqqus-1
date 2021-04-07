@@ -272,57 +272,57 @@ def speak_guild(data, v, guild):
         speak(raw_text, v, guild)
 
 @command('shrug')
-def shrug(args, guild=guild, v=v):
+def shrug(args, guild, v):
     args.append(r"¯\\\_(ツ)_/¯")
     speak(args[1:], v, guild)
 
 @command('shrug')
-def shrug(args, guild=guild, v=v):
+def shrug(args, guild, v):
     args.append(r"¯\\\_(ツ)_/¯")
     speak(args[1:], v, guild)
 
 @command('lenny')
-def shrug(args, guild=guild, v=v):
+def shrug(args, guild, v):
     args.append("( ͡° ͜ʖ ͡°)")
     speak(args[1:], v, guild)
 
 @command('table')
-def shrug(args, guild=guild, v=v):
+def shrug(args, guild, v):
     args.append("(╯° □°） ╯︵ ┻━┻")
     speak(args[1:], v, guild)
 
 @command('untable')
-def shrug(args, guild=guild, v=v):
+def shrug(args, guild, v):
     args.append('┬─┬ノ( º _ ºノ)')
     speak(args[1:], v, guild)
 
 @command('porter')
-def shrug(args, guild=guild, v=v):
+def shrug(args, guild, v):
     args.append('【=◈︿◈=】')
     speak(args[1:], v, guild)
 
 @command('notsure')
-def shrug(args, guild=guild, v=v):
+def shrug(args, guild, v):
     args.append('(≖_≖ )')
     speak(args[1:], v, guild)
 
 @command('flushed')
-def shrug(args, guild=guild, v=v):
+def shrug(args, guild, v):
     args.append('◉_◉')
     speak(args[1:], v, guild)
 
 @command('gib')
-def shrug(args, guild=guild, v=v):
+def shrug(args, guild, v):
     args.append('༼ つ ◕_◕ ༽つ')
     speak(args[1:], v, guild)
 
 @command('sus')
-def shrug(args, guild=guild, v=v):
+def shrug(args, guild, v):
     args.append(random.choice(['ඞඞ','ඣ','යඞ']))
     speak(args[1:], v, guild)
 
 @command('here')
-def here_command(args, guild=guild, v=v):
+def here_command(args, guild, v):
     ids=set()
     for uid in SIDS:
         for sid in SIDS[uid]:
@@ -338,7 +338,7 @@ def here_command(args, guild=guild, v=v):
     send(f"{count} user{'s' if count>1 else ''} present: {namestr}")
 
 @command('me')
-def me_action(args, guild=guild, v=v):
+def me_action(args, guild, v):
     text=" ".join(args[1:])
     if not text:
         return
@@ -348,7 +348,7 @@ def me_action(args, guild=guild, v=v):
 
 @command('kick')
 @gm_command
-def kick_user(args, guild=guild, v=v):
+def kick_user(args, guild, v):
     user=get_user(args[1], graceful=True)
 
     if not user:
@@ -379,7 +379,7 @@ def kick_user(args, guild=guild, v=v):
 
 @command('ban')
 @gm_command
-def chatban_user(args, guild=guild, v=v):
+def chatban_user(args, guild, v):
     user=get_user(args[1], graceful=True)
 
     if not user:
@@ -434,7 +434,7 @@ def chatban_user(args, guild=guild, v=v):
 
 @command('gm')
 @gm_command
-def speak_as_gm(args, guild=guild, v=v):
+def speak_as_gm(args, guild, v):
     text=" ".join(args[1:])
     text=preprocess(text)
     with CustomRenderer() as renderer:
@@ -450,7 +450,7 @@ def speak_as_gm(args, guild=guild, v=v):
 
 @command('unban')
 @gm_command
-def un_chatban_user(args, guild=guild, v=v):
+def un_chatban_user(args, guild, v):
     user=get_user(args[1], graceful=True)
 
     if not user:
@@ -476,7 +476,7 @@ def un_chatban_user(args, guild=guild, v=v):
 
 @command('motd')
 @gm_command
-def message_of_the_day(args, guild=guild, v=v):
+def message_of_the_day(args, guild, v):
     if len(args)>=2:
 
         message = " ".join(args[1:])
@@ -507,7 +507,7 @@ def message_of_the_day(args, guild=guild, v=v):
 
 @command('admin')
 @admin_command
-def speak_admin(args, guild=guild, v=v):
+def speak_admin(args, guild, v):
     text=" ".join(args[1:])
     text=preprocess(text)
     with CustomRenderer() as renderer:
@@ -524,7 +524,7 @@ def speak_admin(args, guild=guild, v=v):
 
 @command('wallop')
 @admin_command
-def wallop(args, guild=guild, v=v):
+def wallop(args, guild, v):
     text=" ".join(args[1:])
     text=preprocess(text)
     with CustomRenderer() as renderer:
