@@ -271,7 +271,7 @@ def speak_guild(data, v, guild):
         if not x:
             return
 
-    if v.username in TYPING[guild.fullname]:
+    if v.username in TYPING.get(guild.fullname, []):
         TYPING[guild.fullname].remove(v.username)
         emit('typing', {'users':TYPING[guild.fullname]}, to=guild.fullname)
 
