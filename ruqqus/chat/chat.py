@@ -271,6 +271,11 @@ def speak_guild(data, v, guild):
         if not x:
             return
 
+    if v.username in TYPING[guild.fullname]:
+        TYPING[guild.fullname].remove(v.username)
+        emit('typing', {'users':TYPING[guild.fullname]}, to=guild.fullname)
+
+
     raw_text=data['text'][0:1000].lstrip().rstrip()
     if not raw_text:
         return
