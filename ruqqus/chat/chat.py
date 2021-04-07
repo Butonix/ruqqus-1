@@ -275,10 +275,10 @@ def speak_guild(data, v, guild):
     else:
         speak(raw_text, v, guild)
 
-@command('help', syntax='<command>')
+@command('help', syntax='[command]')
 def help_command(args, guild, v):
 
-    """Displays help information for a command."""
+    """Displays help information for a command, or displays a list of commands if no command is provided."""
     try:
         target=args[1]
         if target in COMMANDS:
