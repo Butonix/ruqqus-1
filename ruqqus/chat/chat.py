@@ -288,8 +288,9 @@ def speak_guild(data, v, guild):
 
 @socketio.on('typing')
 @socket_auth_required
-@get_room
-def typing_indicator(data, v, guild):
+def typing_indicator(data, v):
+
+    guild=get_guild(data['guild'])
 
     #guild in typing
     if guild.fullname not in TYPING:
