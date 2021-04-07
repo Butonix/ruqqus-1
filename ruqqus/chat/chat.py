@@ -288,7 +288,7 @@ def help_command(args, guild, v):
     except IndexError:
         commands=[x for x in COMMANDS.keys()]
         commands=sorted(commands)
-        send(f"Type `/help <command>` for information on a specific command. Available commands: {', '.join(commands)}")
+        send(f"Type `/help <command>` for information on a specific command. Commands: {', '.join(commands)}")
 
 @command('random')
 def random_post(args, guild, v):
@@ -386,7 +386,7 @@ def me_action(args, guild, v):
 @command('kick', syntax="<username> [reason]")
 @gm_command
 def kick_user(args, guild, v):
-    """Ejects a user from the chat. They can rejoin immediately."""
+    """Ejects a user from the chat. They can rejoin immediately. (Must be Guildmaster.)"""
     user=get_user(args[1], graceful=True)
 
     if not user:
@@ -418,7 +418,7 @@ def kick_user(args, guild, v):
 @command('ban', syntax="<username> [reason]")
 @gm_command
 def chatban_user(args, guild, v):
-    """Ejects a user from the chat. They may not rejoin until unbanned."""
+    """Ejects a user from the chat. They may not rejoin until unbanned. (Must be Guildmaster.)"""
     user=get_user(args[1], graceful=True)
 
     if not user:
@@ -474,7 +474,7 @@ def chatban_user(args, guild, v):
 @command('gm', syntax="<text>")
 @gm_command
 def speak_as_gm(args, guild, v):
-    """Distinguish your message with a Guildmaster's crown."""
+    """Distinguish your message with a Guildmaster's crown. (Must be Guildmaster.)"""
     text=" ".join(args[1:])
     text=preprocess(text)
     with CustomRenderer() as renderer:
@@ -491,7 +491,7 @@ def speak_as_gm(args, guild, v):
 @command('unban', syntax="<username>")
 @gm_command
 def un_chatban_user(args, guild, v):
-    """Unban a banned user from this chat."""
+    """Unban a banned user from this chat. (Must be Guildmaster.)"""
     user=get_user(args[1], graceful=True)
 
     if not user:
@@ -518,7 +518,7 @@ def un_chatban_user(args, guild, v):
 @command('motd', syntax="[text]")
 @gm_command
 def message_of_the_day(args, guild, v):
-    """Set or clear a Message of the Day, to be shown to users upon joining this channel. (Messages are shown as being spoken by the guild.)"""
+    """Set or clear a Message of the Day, to be shown to users upon joining this channel. Messages are shown as being spoken by the guild. (Must be Guildmaster.)"""
 
     if len(args)>=2:
 
@@ -551,7 +551,7 @@ def message_of_the_day(args, guild, v):
 @command('admin', syntax="<text>")
 @admin_command
 def speak_admin(args, guild, v):
-    """Distinguish your message with an Administrator's shield."""
+    """Distinguish your message with an Administrator's shield. (Must be site administrator.)"""
 
 
     text=" ".join(args[1:])
@@ -571,7 +571,7 @@ def speak_admin(args, guild, v):
 @command('wallop', syntax="<text>")
 @admin_command
 def wallop(args, guild, v):
-    """Send a global broadcast."""
+    """Send a global broadcast. (Must be site administrator.)"""
     text=" ".join(args[1:])
     text=preprocess(text)
     with CustomRenderer() as renderer:
@@ -591,6 +591,25 @@ def wallop(args, guild, v):
                 if roomid.startswith('t4_') and roomid not in sent:
                     emit('wallop', data, to=roomid)
                     sent.append(roomid)
+
+@command('say', syntax="<text>")
+@gm_command
+def say_guild(args, guild, v):
+    """Say something as the Guild. (Must be Guildmaster.)"""
+
+    text=" ".join(args[1:])
+    text=preprocess(text)
+    with CustomRenderer() as renderer:
+        text = renderer.render(mistletoe.Document(text))
+    text = sanitize(text, linkgen=True)
+
+    data={
+        "avatar": guild.profile_url,
+        "username":guild.name,
+        "text":text
+        }
+    emit('motd', data, to=guild.fullname)
+
 
 
 
