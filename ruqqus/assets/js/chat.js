@@ -46,14 +46,14 @@ socket.on('typing', function (json){
     $('#typing-indicator').html('<b>'+users[0]+"</b> is typing...")
   }
   else if (users.length==2){
-    $('#typing-indicator').html('<b>'+users[0]+"</b> and '<b>'+"+users[1]+" are typing...")
+    $('#typing-indicator').html('<b>'+users[0]+"</b> and <b>"+users[1]+" are typing...")
   }
   else if (users.length==3){
-    $('#typing-indicator').html('<b>'+users[0]+"</b>, '<b>'+"+users[1]+"</b>, and '<b>'+"+users[2]+"</b> are typing...")
+    $('#typing-indicator').html('<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, and <b>"+users[2]+"</b> are typing...")
   }
   else if (users.length>=4){
     more=users.length-3
-    $('#typing-indicator').html('<b>'+users[0]+"</b>, '<b>'+"+users[1]+"</b>, '<b>'+"+users[2]+"</b> and "+more.toString()+" more are typing...")
+    $('#typing-indicator').html('<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, <b>"+users[2]+"</b> and "+more.toString()+" more are typing...")
   }
 }
 )
