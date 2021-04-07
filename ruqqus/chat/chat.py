@@ -317,7 +317,7 @@ def speak_guild(data, v, guild):
                             x=True
 
                 if not x:
-                    send(f"← @{user.username} banned by @{v.username}. Reason: {reason}", to=guild.fullname)
+                    send(f"@{user.username} banned by @{v.username}. Reason: {reason}", to=guild.fullname)
 
                 new_ban = ChatBan(
                     user_id=user.id,
