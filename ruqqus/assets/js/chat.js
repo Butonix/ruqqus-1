@@ -67,8 +67,6 @@ var notifs=0;
 var titletoggle=true;
 var focused=true;
 
-#{{ b.name }} - Ruqqus
-
 var flash = function(){
 
   guild=$('#guildname').val();
