@@ -63,6 +63,42 @@ socket.on('typing', function (json){
 }
 )
 
+var notifs=0;
+var titletoggle=true;
+var focused=true;
+
+#{{ b.name }} - Ruqqus
+
+var flash = function(){
+
+  guild=$('#guildname').val();
+
+  if (notifs>1 && focused==false){
+    if (titletoggle) {
+      $('title').text('['+notifs.toString()+'] #'+guild+'- Ruqqus');
+      titletoggle=false;
+    }
+    else {
+      $('title').text('#'+guild+'- Ruqqus');
+      titletoggle=true;
+    }
+    setTimeout(flash, 1000)
+  }
+  else {
+    notifs=0
+    $('title').text('#'+guild+'- Ruqqus');
+    titletoggle=true;
+  }
+}
+
+window.onblur = function(){
+  focused=false
+}
+window.onfocus = function(){
+  focused=true
+  flash()
+}
+
 socket.on('speak', function(json){
   console.log(json);
   username=json['username'];
@@ -73,6 +109,8 @@ socket.on('speak', function(json){
   var template="#chat-line-template"
   if (text.includes('@'+my_name)){
     template="#mention-template"
+    notifs=notifs+1
+    setTimeout(flash, 1000)
   }
 
 
