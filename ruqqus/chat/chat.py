@@ -322,7 +322,7 @@ def shrug(args, guild=guild, v=v):
     speak(args[1:], v, guild)
 
 @command('here')
-def here_command(args, guild=guild, v=v)
+def here_command(args, guild=guild, v=v):
     ids=set()
     for uid in SIDS:
         for sid in SIDS[uid]:
