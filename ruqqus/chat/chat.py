@@ -223,6 +223,11 @@ def socket_disconnect_user(v):
         if board:
             update_chat_count(board)
 
+            if v.username in TYPING.get(board.fullname, []):
+                TYPING[board.fullname].remove(v.username)
+                emit('typing', {'users':TYPING[board.fullname]}, to=board.fullname)
+
+
 
 
 
@@ -258,6 +263,9 @@ def leave_guild_room(data, v, guild):
     leave_room(guild.fullname)
     update_chat_count(guild)
     send(f"← @{v.username} has left the chat", to=guild.fullname)
+    if v.username in TYPING.get(guild.fullname, []):
+        TYPING[guild.fullname].remove(v.username)
+        emit('typing', {'users':TYPING[guild.fullname]}, to=guild.fullname)
 
 
 @socketio.on('speak')
@@ -491,6 +499,10 @@ def kick_user(args, guild, v):
                     send(f"← @{user.username} kicked by @{v.username}. Reason: {reason} ", to=guild.fullname)
                 leave_room(guild.fullname, sid=sid)
                 update_chat_count(guild)
+                if user.username in TYPING.get(guild.fullname, []):
+                    TYPING[guild.fullname].remove(user.username)
+                    emit('typing', {'users':TYPING[guild.fullname]}, to=guild.fullname)
+
                 x=True
 
 @command('ban', syntax="<username> [reason]")
@@ -529,6 +541,9 @@ def chatban_user(args, guild, v):
                     x=True
                 leave_room(guild.fullname, sid=sid)
                 update_chat_count(guild)
+                if user.username in TYPING.get(guild.fullname, []):
+                    TYPING[guild.fullname].remove(user.username)
+                    emit('typing', {'users':TYPING[guild.fullname]}, to=guild.fullname)
 
     if not x:
         send(f"@{user.username} banned by @{v.username}.{' Reason: '+reason if reason else ''}", to=guild.fullname)
