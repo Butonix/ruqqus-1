@@ -206,11 +206,14 @@ def speak_guild(data, v, guild):
             send("Universal Commands:")
             send("/help - Display this help information")
             send("/here - Display a list of users currently in this channel")
+            send("/me <text> - Perform an action (callback to old IRC feature)")
             if guild.has_mod(v, "chat"):
                 send("Guildmaster Commands:")
                 send("/ban <username> [reason] - Eject a user from this channel. They will not be able to rejoin until unbanned by a Guildmaster.")
                 send("/gm <text> - Send a message as guildmaster.")
                 send("/kick <username> [reason] - Eject a user from this channel. They will be able to rejoin immediately after.")
+                send("/motd - Clear the guild Message of the Day.")
+                send("/motd <text> - Set a Message of the Day that will be shown to users connecting to the channel.")
             return
 
         elif args[0] in ['/shrug','/table',"/lenny","/untable","/porter","/notsure","/flushed","/gib","/sus"]:
@@ -312,24 +315,25 @@ def speak_guild(data, v, guild):
                             leave_room(guild.fullname, sid=sid)
                             update_chat_count(guild)
                             x=True
-                if x:
-                    new_ban = ChatBan(
-                        user_id=user.id,
-                        board_id=guild.id,
-                        banning_mod_id=v.id,
-                        )
-                    g.db.add(new_ban)
 
-                    ma=ModAction(
-                        kind="chatban_user",
-                        user_id=v.id,
-                        target_user_id=user.id,
-                        board_id=guild.id
-                        )
-                    g.db.add(ma)
-                    g.db.commit()
-                else:
-                    send(f"User {user.username} not present in chat")
+                if not x:
+                    send(f"← @{user.username} banned by @{v.username}. Reason: {reason}", to=guild.fullname)
+
+                new_ban = ChatBan(
+                    user_id=user.id,
+                    board_id=guild.id,
+                    banning_mod_id=v.id,
+                    )
+                g.db.add(new_ban)
+
+                ma=ModAction(
+                    kind="chatban_user",
+                    user_id=v.id,
+                    target_user_id=user.id,
+                    board_id=guild.id
+                    )
+                g.db.add(ma)
+                g.db.commit()
 
             elif args[0]=="/gm":
 
