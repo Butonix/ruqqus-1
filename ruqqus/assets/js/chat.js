@@ -40,20 +40,25 @@ $('#input-text').on('input', function() {
 socket.on('typing', function (json){
   users=json['users']
   if (users.length==0){
-    $('#typing-indicator').html('')
+    $('#typing-indicator').html('');
+    $('#loading-indicator').addClass('d-none');
   }
   else if (users.length==1){
-    $('#typing-indicator').html('<b>'+users[0]+"</b> is typing...")
+    $('#typing-indicator').html('<b>'+users[0]+"</b> is typing");
+    $('#loading-indicator').removeClass('d-none');
   }
   else if (users.length==2){
-    $('#typing-indicator').html('<b>'+users[0]+"</b> and <b>"+users[1]+" are typing...")
+    $('#typing-indicator').html('<b>'+users[0]+"</b> and <b>"+users[1]+" are typing...");
+    $('#loading-indicator').removeClass('d-none');
   }
   else if (users.length==3){
-    $('#typing-indicator').html('<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, and <b>"+users[2]+"</b> are typing...")
+    $('#typing-indicator').html('<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, and <b>"+users[2]+"</b> are typing...");
+    $('#loading-indicator').removeClass('d-none');
   }
   else if (users.length>=4){
     more=users.length-3
-    $('#typing-indicator').html('<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, <b>"+users[2]+"</b> and "+more.toString()+" more are typing...")
+    $('#typing-indicator').html('<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, <b>"+users[2]+"</b> and "+more.toString()+" more are typing...");
+    $('#loading-indicator').removeClass('d-none');
   }
 }
 )
