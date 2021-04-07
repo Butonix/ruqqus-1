@@ -30,12 +30,12 @@
   </div>
   <div id="chat-text">
   </div>
-  <div class="form-group d-flex">
+  <div class="position-relative form-group d-flex pb-3">
+    <div id="typing-indicator" class="position-absolute text-muted text-small" style="bottom: -.5rem; line-height: 1;"></div>
     <input id="guildname" type="hidden" value="{{ b.name }}">
     <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name }} chat, or type /help for information about chat commands" autocomplete="off" autofocus />
     <button id="chatsend" class="btn btn-primary ml-3" type="submit">Send</button>
   </div>
-  <div id="typing-indicator" class="text-muted text-small position-relative form-group d-flex pb-3" style="bottom: -.5rem;line-height: 1;"></div>
 </div>
 
 <div id="chat-line-template" class="d-none">
