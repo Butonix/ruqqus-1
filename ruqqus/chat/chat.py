@@ -278,7 +278,7 @@ def random_post(args, guild, v):
     total=g.db.query(Submission).options(lazyload('*')).filter_by(board_id=guild.id, deleted_utc=0, is_banned=False).count()
     offset=random.randint(0, total-1)
     post=g.db.query(Submission).options(lazyload('*')).filter_by(board_id=guild.id, deleted_utc=0, is_banned=False).order_by(Submission.id.asc()).offset(offset).first()
-    speak(post.permalink, v, guild)
+    speak(f"https://{app.config["SERVER_NAME"]}{post.permalink}", v, guild)
 
 
 
