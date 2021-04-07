@@ -16,6 +16,7 @@ $('#chatsend').click(function (event) {
 
   socket.emit('speak', {text: text, guild: guild});
   $('#input-text').val('')
+  is_typing=false
 
 });
 

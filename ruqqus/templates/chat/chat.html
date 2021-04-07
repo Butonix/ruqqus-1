@@ -30,12 +30,12 @@
   </div>
   <div id="chat-text">
   </div>
-  <div id="typing-indicator" class="text-muted text-small"></div>
   <div class="form-group d-flex">
     <input id="guildname" type="hidden" value="{{ b.name }}">
     <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name }} chat, or type /help for information about chat commands" autocomplete="off" autofocus />
     <button id="chatsend" class="btn btn-primary ml-3" type="submit">Send</button>
   </div>
+  <div id="typing-indicator" class="text-muted text-small" style="height:1rem;position:absolute"></div>
 </div>
 
 <div id="chat-line-template" class="d-none">
@@ -179,9 +179,9 @@
 <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
 <script src="https://cdn.socket.io/4.0.0/socket.io.min.js" integrity="sha384-DkkWv9oJFWLIydBXXjkBWnG1/fuVhw8YPBq37uvvD6WSYRFRqr21eY5Dg9ZhmWdy" crossorigin="anonymous"></script>
 
-<script src="/assets/js/chat.js?v=2.35.13"></script>
+<script src="/assets/js/chat.js?v=2.35.14"></script>
 {% include "expanded_image_modal.html" %}
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/all_js.js?v=2.35.13"></script>
+<script src="/assets/js/all_js.js?v=2.35.14"></script>
 {% endblock %}
