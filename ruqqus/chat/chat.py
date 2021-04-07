@@ -29,9 +29,17 @@ def command(c):
 
     def wrapper_maker(f):
 
+        if c in COMMANDS:
+            raise ValueError(f"Duplicate command `{c}`")
+
+        if f.__name__ in [x.__name__ for x in COMMANDS.values()]:
+            raise ValueError(f"Duplicate command function {f.__name__}")
+
+        COMMANDS[c]=f
+
         def wrapper(*args, **kwargs):
 
-            pass
+            f(*args, **kwargs)
 
         wrapper.__name__=f.__name__
         return wrapper
@@ -42,11 +50,56 @@ def gm_command(f):
 
     def wrapper(*args, **kwargs):
 
-        pass
+        guild=kwargs['guild']
+        v=kwargs['v']
+
+        if not guild.has_mod(v, "chat"):
+            send(f"You do not have permission to use the {args[0]} command in this channel.")
+            return
+
+        f(*args, **kwargs)
         
+
     wrapper.__name__=f.__name__
     return wrapper
 
+def admin_command(f):
+
+    def wrapper(*args, **kwargs):
+
+        v=kwargs['v']
+
+        if v.admin_level <4:
+            send(f"You do not have permission to use the {args[0]} command.")
+            return
+
+        f(*args, **kwargs)
+        
+
+    wrapper.__name__=f.__name__
+    return wrapper
+
+def speak(text, user, guild):
+
+    if isinstance(text, list):
+        text=" ".join(text)
+
+    text=preprocess(text)
+    with CustomRenderer() as renderer:
+        text = renderer.render(mistletoe.Document(text))
+    text = sanitize(text, linkgen=True)
+
+    data={
+        "avatar": user.profile_url,
+        "username":user.username,
+        "text":text,
+        "room": guild.fullname
+    }
+    if request.headers.get("X-User-Type")=="Bot":
+        emit("bot", data, to=guild.fullname)
+    else:
+        emit("speak", data, to=guild.fullname)
+    return
 
 def v_rooms(v):
 
@@ -207,294 +260,290 @@ def speak_guild(data, v, guild):
         return
 
     if raw_text.startswith('/'):
-
         args=raw_text.split()
-
-        if args[0]=="/here":
-
-            ids=set()
-            for uid in SIDS:
-                for sid in SIDS[uid]:
-                    if guild.fullname in rooms(sid=sid):
-                        ids.add(uid)
-                        break
-
-            users=g.db.query(User.username).filter(User.id.in_(tuple(ids))).all()
-            names=[x[0] for x in users]
-            names=sorted(names)
-            count=len(names)
-            namestr = ", ".join(names)
-            send(f"{count} user{'s' if count>1 else ''} present: {namestr}")
-
-            return
-
-        elif args[0]=="/help":
-            send("Universal Commands:")
-            send("/help - Display this help information")
-            send("/here - Display a list of users currently in this channel")
-            send("/me <text> - Perform an action (callback to old IRC feature)")
-            if guild.has_mod(v, "chat"):
-                send("Guildmaster Commands:")
-                send("/ban <username> [reason] - Eject a user from this channel. They will not be able to rejoin until unbanned by a Guildmaster.")
-                send("/gm <text> - Send a message as guildmaster.")
-                send("/kick <username> [reason] - Eject a user from this channel. They will be able to rejoin immediately after.")
-                send("/motd - Clear the guild Message of the Day.")
-                send("/motd <text> - Set a Message of the Day that will be shown to users connecting to the channel.")
-            return
-
-        elif args[0] in ['/shrug','/table',"/lenny","/untable","/porter","/notsure","/flushed","/gib","/sus"]:
-
-            if args[0]=="/shrug":
-                args.append(r"¯\\\_(ツ)_/¯")
-            elif args[0]=='/table':
-                args.append("(╯° □°） ╯︵ ┻━┻")
-            elif args[0]=="/lenny":
-                args.append("( ͡° ͜ʖ ͡°)")
-            elif args[0]=="/untable":
-                args.append('┬─┬ノ( º _ ºノ)')
-            elif args[0]=="/porter":
-                args.append('【=◈︿◈=】')
-            elif args[0]=="/notsure":
-                args.append('(≖_≖ )')
-            elif args[0]=="/flushed":
-                args.append('◉_◉')
-            elif args[0]=="/gib":
-                args.append('༼ つ ◕_◕ ༽つ')
-            elif args[0]=="/sus":
-                args.append(random.choice(['ඞඞ','ඣ','යඞ']))
-
-            text=" ".join(args[1:])
-
-            text=preprocess(text)
-            with CustomRenderer() as renderer:
-                text = renderer.render(mistletoe.Document(text))
-            text = sanitize(text, linkgen=True)
-
-            data={
-                "avatar": v.profile_url,
-                "username":v.username,
-                "text":text,
-                "room": guild.fullname
-            }
-            emit("speak", data, to=guild.fullname)
-            return
-
-        elif args[0]=="/me":
-            text=" ".join(args[1:])
-            if not text:
-                return
-            text=sanitize(text, linkgen=False)
-            emit('me', {'msg':f"@{v.username} {text}"}, to=guild.fullname)
-            return
-
-
-
-
-
-        elif args[0] in ['/kick','/ban', "/unban", "/gm", "/motd"]:
-
-            if not guild.has_mod(v, perm="chat"):
-                send(f"You do not have permission to use the {args[0]} command in this chat.")
-                return
-
-            if args[0] in ['/kick', '/ban', '/unban']:
-                user=get_user(args[1], graceful=True)
-
-                if not user:
-                    send(f"No user named {args[1]}")
-                    return
-
-                if user.id==v.id:
-                    send("You can't kick/ban yourself!")
-                    return
-                elif guild.has_mod(user):
-                    send(f"You can't kick/ban other guildmasters")
-                    return
-                elif guild.has_contributor(user):
-                    send(f"@{user.username} is an approved contributor and can't currently be kicked or banned.")
-                    return
-
-            if args[0]=="/kick":
-                reason= " ".join(args[2:]) if len(args)>=3 else "none"
-                x=False
-                for sid in SIDS[user.id]:
-                    for room in rooms(sid=sid):
-                        if room==guild.fullname:
-                            if not x:
-                                send(f"← @{user.username} kicked by @{v.username}. Reason: {reason} ", to=guild.fullname)
-                            leave_room(guild.fullname, sid=sid)
-                            update_chat_count(guild)
-                            x=True
-
-            elif args[0]=="/ban":
-
-                existing = g.db.query(ChatBan).filter_by(board_id=guild.id, user_id=user.id).first()
-
-                if existing:
-                    send(f"@{user.username} is already banned from chat.")
-                    return
-
-                reason= " ".join(args[2:]) if len(args)>=3 else "none"
-                x=False
-                for sid in SIDS[user.id]:
-                    for room in rooms(sid=sid):
-                        if room==guild.fullname:
-                            if not x:
-                                send(f"← @{user.username} kicked and banned by @{v.username}. Reason: {reason}", to=guild.fullname)
-                            leave_room(guild.fullname, sid=sid)
-                            update_chat_count(guild)
-                            x=True
-
-                if not x:
-                    send(f"@{user.username} banned by @{v.username}. Reason: {reason}", to=guild.fullname)
-
-                new_ban = ChatBan(
-                    user_id=user.id,
-                    board_id=guild.id,
-                    banning_mod_id=v.id,
-                    )
-                g.db.add(new_ban)
-
-                ma=ModAction(
-                    kind="chatban_user",
-                    user_id=v.id,
-                    target_user_id=user.id,
-                    board_id=guild.id
-                    )
-                g.db.add(ma)
-                g.db.commit()
-
-            elif args[0]=="/gm":
-
-                text=" ".join(args[1:])
-                text=preprocess(text)
-                with CustomRenderer() as renderer:
-                    text = renderer.render(mistletoe.Document(text))
-                text = sanitize(text, linkgen=True)
-
-                data={
-                    "avatar": v.profile_url,
-                    "username":v.username,
-                    "text":text
-                    }
-                emit('gm', data, to=guild.fullname)
-
-
-
-            elif args[0]=="/unban":
-
-                ban=g.db.query(ChatBan).filter_by(board_id=guild.id, user_id=user.id).first()
-                if not ban:
-                    send(f"User {user.username} is not banned from chat.")
-                    return
-
-                g.db.delete(ban)
-
-                ma=ModAction(
-                    kind="unchatban_user",
-                    user_id=v.id,
-                    target_user_id=user.id,
-                    board_id=guild.id
-                    )
-                g.db.add(ma)
-                g.db.commit()
-                send(f"@{user.username} un-chatbanned by @{v.username}.", to=guild.fullname)
-
-            elif args[0]=="/motd":
-
-                if len(args)>=2:
-
-                    message = " ".join(args[1:])
-                    message=preprocess(message)
-                    with CustomRenderer() as renderer:
-                        message = renderer.render(mistletoe.Document(message))
-                    message = sanitize(message, linkgen=True)
-
-                    guild.motd=message
-                    g.db.add(guild)
-                    g.db.commit()
-
-                    send("Message updated")
-                    data={
-                        "avatar": guild.profile_url,
-                        "username":guild.name,
-                        "text":guild.motd,
-                        "guild":guild.name
-                        }
-                    emit('motd', data, to=request.sid)
-
-
-                else:
-                    guild.motd=''
-                    g.db.add(guild)
-                    g.db.commit()
-                    send("Message removed")
-
-        elif args[0] in ['/wallop', '/admin']:
-
-            if not v.admin_level >= 4:
-                send(f"You do not have permission to use the {args[0]} command.")
-                return
-
-            if args[0]=="/admin":
-
-                text=" ".join(args[1:])
-                text=preprocess(text)
-                with CustomRenderer() as renderer:
-                    text = renderer.render(mistletoe.Document(text))
-                text = sanitize(text, linkgen=True)
-
-                data={
-                    "avatar": v.profile_url,
-                    "username":v.username,
-                    "text":text
-                    }
-                emit('admin', data, to=guild.fullname)
-
-            elif args[0]=="/wallop":
-
-                text=" ".join(args[1:])
-                text=preprocess(text)
-                with CustomRenderer() as renderer:
-                    text = renderer.render(mistletoe.Document(text))
-                text = sanitize(text, linkgen=True)
-
-                data={
-                    "avatar": v.profile_url,
-                    "username":v.username,
-                    "text":text
-                    }
-
-                sent=[]
-                for uid in SIDS:
-                    for sid in SIDS[uid]:
-                        for roomid in rooms(sid=sid):
-                            if roomid.startswith('t4_') and roomid not in sent:
-                                emit('wallop', data, to=roomid)
-                                sent.append(roomid)
-
+        args[0].lstrip('/')
+        command=args[0]
+        if command in COMMANDS:
+            COMMANDS[command](args, guild=guild, v=v)
         else:
-            send(f"Command {args[0]} not recognized")
+            send(f"Command `{args[0]}` not recognized")
 
     else:
-        text=preprocess(raw_text)
-        with CustomRenderer() as renderer:
-            text = renderer.render(mistletoe.Document(text))
-        text = sanitize(text, linkgen=True)
+        speak(raw_text, v, guild)
 
-        data={
-            "avatar": v.profile_url,
-            "username":v.username,
-            "text":text,
-            "room": guild.fullname
+@command('shrug')
+def shrug(args, guild=guild, v=v):
+    args.append(r"¯\\\_(ツ)_/¯")
+    speak(args[1:], v, guild)
+
+@command('shrug')
+def shrug(args, guild=guild, v=v):
+    args.append(r"¯\\\_(ツ)_/¯")
+    speak(args[1:], v, guild)
+
+@command('lenny')
+def shrug(args, guild=guild, v=v):
+    args.append("( ͡° ͜ʖ ͡°)")
+    speak(args[1:], v, guild)
+
+@command('table')
+def shrug(args, guild=guild, v=v):
+    args.append("(╯° □°） ╯︵ ┻━┻")
+    speak(args[1:], v, guild)
+
+@command('untable')
+def shrug(args, guild=guild, v=v):
+    args.append('┬─┬ノ( º _ ºノ)')
+    speak(args[1:], v, guild)
+
+@command('porter')
+def shrug(args, guild=guild, v=v):
+    args.append('【=◈︿◈=】')
+    speak(args[1:], v, guild)
+
+@command('notsure')
+def shrug(args, guild=guild, v=v):
+    args.append('(≖_≖ )')
+    speak(args[1:], v, guild)
+
+@command('flushed')
+def shrug(args, guild=guild, v=v):
+    args.append('◉_◉')
+    speak(args[1:], v, guild)
+
+@command('gib')
+def shrug(args, guild=guild, v=v):
+    args.append('༼ つ ◕_◕ ༽つ')
+    speak(args[1:], v, guild)
+
+@command('sus')
+def shrug(args, guild=guild, v=v):
+    args.append(random.choice(['ඞඞ','ඣ','යඞ']))
+    speak(args[1:], v, guild)
+
+@command('here')
+def here_command(args, guild=guild, v=v)
+    ids=set()
+    for uid in SIDS:
+        for sid in SIDS[uid]:
+            if guild.fullname in rooms(sid=sid):
+                ids.add(uid)
+                break
+
+    users=g.db.query(User.username).filter(User.id.in_(tuple(ids))).all()
+    names=[x[0] for x in users]
+    names=sorted(names)
+    count=len(names)
+    namestr = ", ".join(names)
+    send(f"{count} user{'s' if count>1 else ''} present: {namestr}")
+
+@command('me')
+def me_action(args, guild=guild, v=v):
+    text=" ".join(args[1:])
+    if not text:
+        return
+    text=sanitize(text, linkgen=False)
+    emit('me', {'msg':f"@{v.username} {text}"}, to=guild.fullname)
+    return
+
+@command('kick')
+@gm_command
+def kick_user(args, guild=guild, v=v):
+    user=get_user(args[1], graceful=True)
+
+    if not user:
+        send(f"No user named {args[1]}")
+        return
+
+    if user.id==v.id:
+        send("You can't kick yourself!")
+        return
+    elif guild.has_mod(user):
+        send(f"You can't kick other guildmasters")
+        return
+    elif guild.has_contributor(user):
+        send(f"@{user.username} is an approved contributor and can't currently be kicked.")
+        return
+
+    reason= " ".join(args[2:]) if len(args)>=3 else ""
+
+    x=False
+    for sid in SIDS[user.id]:
+        for room in rooms(sid=sid):
+            if room==guild.fullname:
+                if not x:
+                    send(f"← @{user.username} kicked by @{v.username}. Reason: {reason} ", to=guild.fullname)
+                leave_room(guild.fullname, sid=sid)
+                update_chat_count(guild)
+                x=True
+
+@command('ban')
+@gm_command
+def chatban_user(args, guild=guild, v=v):
+    user=get_user(args[1], graceful=True)
+
+    if not user:
+        send(f"No user named {args[1]}")
+        return
+    if user.id==v.id:
+        send("You can't ban yourself!")
+        return
+    elif guild.has_mod(user):
+        send(f"You can't ban other guildmasters")
+        return
+    elif guild.has_contributor(user):
+        send(f"@{user.username} is an approved contributor and can't currently be banned.")
+        return
+
+    existing = g.db.query(ChatBan).filter_by(board_id=guild.id, user_id=user.id).first()
+
+    if existing:
+        send(f"@{user.username} is already banned from chat.")
+        return
+
+    reason= " ".join(args[2:]) if len(args)>=3 else ""
+
+    x=False
+    for sid in SIDS[user.id]:
+        for room in rooms(sid=sid):
+            if room==guild.fullname:
+                if not x:
+                    send(f"← @{user.username} kicked and banned by @{v.username}.{' Reason: '+reason if reason else ''}", to=guild.fullname)
+                    x=True
+                leave_room(guild.fullname, sid=sid)
+                update_chat_count(guild)
+
+    if not x:
+        send(f"@{user.username} banned by @{v.username}.{' Reason: '+reason if reason else ''}", to=guild.fullname)
+
+    new_ban = ChatBan(
+        user_id=user.id,
+        board_id=guild.id,
+        banning_mod_id=v.id,
+        )
+    g.db.add(new_ban)
+
+    ma=ModAction(
+        kind="chatban_user",
+        user_id=v.id,
+        target_user_id=user.id,
+        board_id=guild.id
+        )
+    g.db.add(ma)
+    g.db.commit()
+
+@command('gm')
+@gm_command
+def speak_as_gm(args, guild=guild, v=v):
+    text=" ".join(args[1:])
+    text=preprocess(text)
+    with CustomRenderer() as renderer:
+        text = renderer.render(mistletoe.Document(text))
+    text = sanitize(text, linkgen=True)
+
+    data={
+        "avatar": v.profile_url,
+        "username":v.username,
+        "text":text
         }
-        if request.headers.get("X-User-Type")=="Bot":
-            emit("bot", data, to=guild.fullname)
-        else:
-            emit("speak", data, to=guild.fullname)
+    emit('gm', data, to=guild.fullname)
+
+@command('unban')
+@gm_command
+def un_chatban_user(args, guild=guild, v=v):
+    user=get_user(args[1], graceful=True)
+
+    if not user:
+        send(f"No user named {args[1]}")
+        return
+
+    ban=g.db.query(ChatBan).filter_by(board_id=guild.id, user_id=user.id).first()
+    if not ban:
+        send(f"User {user.username} is not banned from chat.")
+        return
+
+    g.db.delete(ban)
+
+    ma=ModAction(
+        kind="unchatban_user",
+        user_id=v.id,
+        target_user_id=user.id,
+        board_id=guild.id
+        )
+    g.db.add(ma)
+    g.db.commit()
+    send(f"@{user.username} un-chatbanned by @{v.username}.", to=guild.fullname)
+
+@command('motd')
+@gm_command
+def message_of_the_day(args, guild=guild, v=v):
+    if len(args)>=2:
+
+        message = " ".join(args[1:])
+        message=preprocess(message)
+        with CustomRenderer() as renderer:
+            message = renderer.render(mistletoe.Document(message))
+        message = sanitize(message, linkgen=True)
+
+        guild.motd=message
+        g.db.add(guild)
+        g.db.commit()
+
+        send("Message updated")
+        data={
+            "avatar": guild.profile_url,
+            "username":guild.name,
+            "text":guild.motd,
+            "guild":guild.name
+            }
+        emit('motd', data, to=request.sid)
+
+    else:
+        guild.motd=''
+        g.db.add(guild)
+        g.db.commit()
+        send("Message removed")
 
 
+@command('admin')
+@admin_command
+def speak_admin(args, guild=guild, v=v):
+    text=" ".join(args[1:])
+    text=preprocess(text)
+    with CustomRenderer() as renderer:
+        text = renderer.render(mistletoe.Document(text))
+    text = sanitize(text, linkgen=True)
 
+    data={
+        "avatar": v.profile_url,
+        "username":v.username,
+        "text":text
+        }
+    emit('admin', data, to=guild.fullname)
+
+
+@command('wallop')
+@admin_command
+def wallop(args, guild=guild, v=v):
+    text=" ".join(args[1:])
+    text=preprocess(text)
+    with CustomRenderer() as renderer:
+        text = renderer.render(mistletoe.Document(text))
+    text = sanitize(text, linkgen=True)
+
+    data={
+        "avatar": v.profile_url,
+        "username":v.username,
+        "text":text
+        }
+
+    sent=[]
+    for uid in SIDS:
+        for sid in SIDS[uid]:
+            for roomid in rooms(sid=sid):
+                if roomid.startswith('t4_') and roomid not in sent:
+                    emit('wallop', data, to=roomid)
+                    sent.append(roomid)
 
 
 
