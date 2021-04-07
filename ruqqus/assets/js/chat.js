@@ -33,6 +33,21 @@
   }
   );
 
+    socket.on('bot', function(json){
+    console.log(json);
+    username=json['username'];
+    text=json['text'];
+    ava=json['avatar']
+
+    $('#bot-template img').attr('src', ava)
+    $('#bot-template a').attr('href','/@'+username)
+    $('#bot-template a').text('@'+username)
+    $('#bot-template .chat-message').html(text)
+    $('#chat-text').append($('#bot-template .chat-line').clone())
+    window.scrollTo(0,document.body.scrollHeight)
+  }
+  );
+
   socket.on('message', function(msg){
     $('#system-template .message').text(msg)
     $('#chat-text').append($('#system-template .system-line').clone())

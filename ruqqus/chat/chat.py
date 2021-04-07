@@ -462,7 +462,10 @@ def speak_guild(data, v, guild):
             "text":text,
             "room": guild.fullname
         }
-        emit("speak", data, to=guild.fullname)
+        if request.headers.get("X-User-Type")=="Bot":
+            emit("bot", data, to=guild.fullname)
+        else:
+            emit("speak", data, to=guild.fullname)
 
 
 
