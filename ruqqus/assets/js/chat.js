@@ -20,7 +20,7 @@ $('#chatsend').click(function (event) {
 });
 
 $('#input-text').on('input', function() {
-  text=$('#input-text').text();
+  text=$('#input-text').val();
   if (text==''){
     if (is_typing==true) {
       is_typing=false;
@@ -28,7 +28,7 @@ $('#input-text').on('input', function() {
     }
   }
   else {
-    if (is_typing==False) {
+    if (is_typing==false) {
       is_typing=true;
       socket.emit('typing', {guild: guild, typing: true});
     }
