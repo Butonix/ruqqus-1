@@ -48,7 +48,7 @@ socket.on('typing', function (json){
     $('#loading-indicator').removeClass('d-none');
   }
   else if (users.length==2){
-    $('#typing-indicator').html('<b>'+users[0]+"</b> and <b>"+users[1]+"</b> are typing...");
+    $('#typing-indicator').html('<b>'+users[0]+"</b> and <b>"+users[1]+"</b> are typing");
     $('#loading-indicator').removeClass('d-none');
   }
   else if (users.length==3){
