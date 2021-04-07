@@ -261,8 +261,7 @@ def speak_guild(data, v, guild):
 
     if raw_text.startswith('/'):
         args=raw_text.split()
-        args[0].lstrip('/')
-        command=args[0]
+        command=args[0].lstrip()
         if command in COMMANDS:
             COMMANDS[command](args, guild=guild, v=v)
         else:
