@@ -410,7 +410,7 @@ def chatban_user(args, guild, v):
     reason= " ".join(args[2:]) if len(args)>=3 else ""
 
     x=False
-    for sid in SIDS[user.id]:
+    for sid in SIDS.get(user.id,[]):
         for room in rooms(sid=sid):
             if room==guild.fullname:
                 if not x:
