@@ -74,7 +74,7 @@ def user_uid(uid):
 
     user = get_account(uid)
 
-    redirect(f'/api/v1/user/{user.username}/info')
+    return redirect(f'/api/v1/user/{user.username}/info')
 
 # Allow Id of user to be queryied, and then redirect the bot to the
 # actual user api endpoint.
