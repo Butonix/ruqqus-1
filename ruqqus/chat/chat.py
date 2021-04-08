@@ -222,7 +222,9 @@ def socket_disconnect_user(v):
 
     for room in rooms():
         leave_room(room)
-        send(f"← @{v.username} has left the chat", to=room)
+        if room not in v_rooms(v):
+            send(f"← @{v.username} has left the chat", to=room)
+
         board=get_from_fullname(room, graceful=True)
         if board:
             update_chat_count(board)
@@ -244,10 +246,11 @@ def join_guild_room(data, v, guild):
         send(f"You can't join the +{guild.name} chat right now.")
         return False
 
+    if guild.fullname not in v_rooms(v):
+        send(f"→ @{v.username} has entered the chat", to=guild.fullname)
+
     join_room(guild.fullname)
     update_chat_count(guild)
-
-    send(f"→ @{v.username} has entered the chat", to=guild.fullname)
 
     if guild.motd:
 
@@ -266,7 +269,10 @@ def join_guild_room(data, v, guild):
 def leave_guild_room(data, v, guild):
     leave_room(guild.fullname)
     update_chat_count(guild)
-    send(f"← @{v.username} has left the chat", to=guild.fullname)
+    
+    if guild.fullname not in v_rooms(v):
+        send(f"← @{v.username} has left the chat", to=guild.fullname)
+
     if v.username in TYPING.get(guild.fullname, []):
         TYPING[guild.fullname].remove(v.username)
         emit('typing', {'users':TYPING[guild.fullname]}, to=guild.fullname)
