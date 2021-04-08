@@ -269,7 +269,7 @@ def join_guild_room(data, v, guild):
 def leave_guild_room(data, v, guild):
     leave_room(guild.fullname)
     update_chat_count(guild)
-    
+
     if guild.fullname not in v_rooms(v):
         send(f"← @{v.username} has left the chat", to=guild.fullname)
 
@@ -597,7 +597,8 @@ def speak_as_gm(args, guild, v):
     data={
         "avatar": v.profile_url,
         "username":v.username,
-        "text":text
+        "text":text,
+        "guild":guild.name
         }
     emit('gm', data, to=guild.fullname)
 
@@ -678,7 +679,8 @@ def speak_admin(args, guild, v):
     data={
         "avatar": v.profile_url,
         "username":v.username,
-        "text":text
+        "text":text,
+        'guild':guild.name
         }
     emit('admin', data, to=guild.fullname)
 
