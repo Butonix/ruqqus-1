@@ -2,6 +2,7 @@
 
   <div id="chat-text" style="max-height:calc(100vh - 300px); overflow-y:scroll;">
   </div>
+  {% if request.path.endswith('/chat') %}
   <div class="position-relative form-group d-flex pb-3">
     <div class="position-absolute text-muted text-small" style="bottom: -.5rem; line-height: 1;">
       <span id="typing-indicator"></span>
@@ -18,6 +19,25 @@
     {% endif %}
     <button id="chatsend" class="btn btn-primary ml-3" type="submit">Send</button>
   </div>
+  {% else %}
+  <div class="position-relative form-group  pb-3">
+    <div class="position-absolute text-muted text-small" style="bottom: -.5rem; line-height: 1;">
+      <span id="typing-indicator"></span>
+      <span id="loading-indicator" class="d-none"></span>
+    </div>
+    <input id="guildname" type="hidden" value="{{ b.name }}">
+    <input id="username" type="hidden" value="{{ v.username }}">
+    <div class="d-flex mt-3">
+    <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name }} chat, or type /help for information about chat commands" autocomplete="off" autofocus />
+    {% if v.has_premium %}
+        <label class="btn btn-secondary w-50 mr-3 mb-0" for="chat-image-upload">
+          <div id="filename-show"><i class="fad fa-image"></i></div>
+          <input id="chat-image-upload" type="file" name="image" accept="image/*" onchange="upload_chat_image()" hidden>
+        </label>
+    {% endif %}
+    <button id="chatsend" class="btn btn-primary w-50" type="submit">Send</button>
+  </div>
+  {% endif %}
 </div>
 
 <div id="chat-line-template" class="d-none">
