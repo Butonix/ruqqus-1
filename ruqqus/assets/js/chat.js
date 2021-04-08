@@ -306,7 +306,7 @@ var upload_chat_image=function(){
   fd.append("image", file);
 
   xhr= new XMLHttpRequest();
-  xhr.open("/chat_upload", "post");
+  xhr.open("post", "/chat_upload");
   xhr.withCredentials=true;
   xhr.onload=function(){
     guild=$('#guildname').val()
