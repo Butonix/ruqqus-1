@@ -1,4 +1,4 @@
-if (window.innerWidth>=992 or window.location.href.endsWith('/chat')) {
+if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
 
   var socket=io();
   var is_typing=false;
