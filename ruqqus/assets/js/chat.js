@@ -103,11 +103,11 @@ window.addEventListener('focus', on_focus)
 
 var scrolled_down=true
 
-should_scroll = function() {
+var should_scroll = function() {
   scrolled_down= (window.scrollY+window.innerHeight >= document.body.scrollHeight)
 }
 
-scroll=function() {
+var scroll=function() {
   if (scrolled_down) {
     window.scrollTo(0,document.body.scrollHeight)
   }
