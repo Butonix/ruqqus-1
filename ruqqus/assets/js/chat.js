@@ -1,279 +1,324 @@
+if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
 
-var socket=io();
-var is_typing=false;
+  var socket=io();
+  var is_typing=false;
 
-$('#chatsend').click(function (event) {
+  $('#chatsend').click(function (event) {
 
-  if (event.which != 1) {
-    return
-  }
-  event.preventDefault();
-
-  console.log('clicked')
-
-  text = $('#input-text').val()
-  guild=$('#guildname').val()
-
-  socket.emit('speak', {text: text, guild: guild});
-  $('#input-text').val('')
-  is_typing=false
-
-});
-
-$('#input-text').on('input', function() {
-  text=$('#input-text').val();
-  guild=$('#guildname').val();
-  if (text==''){
-    if (is_typing==true) {
-      is_typing=false;
-      socket.emit('typing', {guild: guild, typing: false});
+    if (event.which != 1) {
+      return
     }
-  }
-  else {
-    if (is_typing==false) {
-      is_typing=true;
-      socket.emit('typing', {guild: guild, typing: true});
-    }
-  }
-});
+    event.preventDefault();
 
-socket.on('typing', function (json){
-  users=json['users']
-  if (users.length==0){
-    $('#typing-indicator').html('');
-    $('#loading-indicator').addClass('d-none');
-  }
-  else if (users.length==1){
-    $('#typing-indicator').html('<b>'+users[0]+"</b> is typing");
-    $('#loading-indicator').removeClass('d-none');
-  }
-  else if (users.length==2){
-    $('#typing-indicator').html('<b>'+users[0]+"</b> and <b>"+users[1]+"</b> are typing");
-    $('#loading-indicator').removeClass('d-none');
-  }
-  else if (users.length==3){
-    $('#typing-indicator').html('<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, and <b>"+users[2]+"</b> are typing");
-    $('#loading-indicator').removeClass('d-none');
-  }
-  else if (users.length>=4){
-    more=users.length-3
-    $('#typing-indicator').html('<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, <b>"+users[2]+"</b> and "+more.toString()+" more are typing");
-    $('#loading-indicator').removeClass('d-none');
-  }
-}
-)
+    console.log('clicked')
 
-var notifs=0;
-var titletoggle=true;
-var focused=true;
+    text = $('#input-text').val()
+    guild=$('#guildname').val()
 
-var flash = function(){
+    socket.emit('speak', {text: text, guild: guild});
+    $('#input-text').val('')
+    is_typing=false
 
-  guild=$('#guildname').val();
+  });
 
-  if (notifs>=1 && focused==false){
-    $('link[rel="shortcut icon"]').attr('href','/assets/images/logo/favicon_alert.png')
-    if (titletoggle) {
-      $('title').text('['+notifs.toString()+'] #'+guild+'- Ruqqus');
-      titletoggle=false;
+  $('#input-text').on('input', function() {
+    text=$('#input-text').val();
+    guild=$('#guildname').val();
+    if (text==''){
+      if (is_typing==true) {
+        is_typing=false;
+        socket.emit('typing', {guild: guild, typing: false});
+      }
     }
     else {
+      if (is_typing==false) {
+        is_typing=true;
+        socket.emit('typing', {guild: guild, typing: true});
+      }
+    }
+  });
+
+  socket.on('typing', function (json){
+    users=json['users']
+    if (users.length==0){
+      $('#typing-indicator').html('');
+      $('#loading-indicator').addClass('d-none');
+    }
+    else if (users.length==1){
+      $('#typing-indicator').html('<b>'+users[0]+"</b> is typing");
+      $('#loading-indicator').removeClass('d-none');
+    }
+    else if (users.length==2){
+      $('#typing-indicator').html('<b>'+users[0]+"</b> and <b>"+users[1]+"</b> are typing");
+      $('#loading-indicator').removeClass('d-none');
+    }
+    else if (users.length==3){
+      $('#typing-indicator').html('<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, and <b>"+users[2]+"</b> are typing");
+      $('#loading-indicator').removeClass('d-none');
+    }
+    else if (users.length>=4){
+      more=users.length-3
+      $('#typing-indicator').html('<b>'+users[0]+"</b>, <b>"+users[1]+"</b>, <b>"+users[2]+"</b> and "+more.toString()+" more are typing");
+      $('#loading-indicator').removeClass('d-none');
+    }
+  }
+  )
+
+  var notifs=0;
+  var titletoggle=true;
+  var focused=true;
+
+  var flash = function(){
+
+    guild=$('#guildname').val();
+
+    if (notifs>=1 && focused==false){
+      $('link[rel="shortcut icon"]').attr('href','/assets/images/logo/favicon_alert.png')
+      if (titletoggle) {
+        $('title').text('['+notifs.toString()+'] #'+guild+'- Ruqqus');
+        titletoggle=false;
+      }
+      else {
+        $('link[rel="shortcut icon"]').attr('href','/assets/images/logo/favicon.png')
+        titletoggle=true;
+      }
+      setTimeout(flash, 500)
+    }
+    else {
+      $('link[rel="shortcut icon"]').attr('href','/assets/images/logo/favicon.png')
+      notifs=0
       $('title').text('#'+guild+'- Ruqqus');
       titletoggle=true;
     }
-    setTimeout(flash, 500)
-  }
-  else {
-    $('link[rel="shortcut icon"]').attr('href','/assets/images/logo/favicon.png')
-    notifs=0
-    $('title').text('#'+guild+'- Ruqqus');
-    titletoggle=true;
-  }
-}
-
-on_blur = function(){
-  focused=false
-}
-on_focus = function(){
-  focused=true
-  flash()
-}
-window.addEventListener('blur', on_blur)
-window.addEventListener('focus', on_focus)
-
-socket.on('speak', function(json){
-  console.log(json);
-  username=json['username'];
-  text=json['text'];
-  ava=json['avatar']
-
-  var my_name=$('#username').val()
-
-  if (text.includes('href="/@'+my_name+'"')){
-    $('#chat-line-template .chat-line').addClass('chat-mention');
-    notifs=notifs+1;
-    setTimeout(flash, 500);
-  }
-  else {
-    $('#chat-line-template .chat-line').removeClass('chat-mention');
   }
 
+  on_blur = function(){
+    focused=false
+  };
+  on_focus = function(){
+    focused=true
+    flash()
+  };
+  window.addEventListener('blur', on_blur);
+  window.addEventListener('focus', on_focus);
 
-  $('#chat-line-template img').attr('src', ava)
-  $('#chat-line-template a').attr('href','/@'+username)
-  $('#chat-line-template a').text('@'+username)
-  $('#chat-line-template .chat-message').html(text)
-  $('#chat-text').append($('#chat-line-template .chat-line').clone())
-  window.scrollTo(0,document.body.scrollHeight)
-}
-);
+  var scrolled_down=true;
 
-  socket.on('bot', function(json){
-  console.log(json);
-  username=json['username'];
-  text=json['text'];
-  ava=json['avatar']
+  var box = document.getElementById('chat-text');
 
-  $('#bot-template img').attr('src', ava)
-  $('#bot-template a').attr('href','/@'+username)
-  $('#bot-template a').text('@'+username)
-  $('#bot-template .chat-message').html(text)
-  $('#chat-text').append($('#bot-template .chat-line').clone())
-  window.scrollTo(0,document.body.scrollHeight)
-}
-);
-
-socket.on('message', function(msg){
-  $('#system-template .message').text(msg)
-  $('#chat-text').append($('#system-template .system-line').clone())
-  window.scrollTo(0,document.body.scrollHeight)
-}
-);
-
-socket.on('info', function(data){
-  $('#system-info .message').text(data['msg'])
-  $('#chat-text').append($('#system-info .system-line').clone())
-  window.scrollTo(0,document.body.scrollHeight)
-}
-);
-
-socket.on('me', function(data){
-  $('#me-template .message').text(data['msg'])
-  $('#chat-text').append($('#me-template .system-line').clone())
-  window.scrollTo(0,document.body.scrollHeight)
-}
-);
-
-
-socket.on('warning', function(data){
-  $('#system-warning .message').text(data['msg'])
-  $('#chat-text').append($('#system-warning .system-line').clone())
-  window.scrollTo(0,document.body.scrollHeight)
-}
-);
-
-socket.on('wallop', function(json){
-  console.log(json);
-  username=json['username'];
-  text=json['text'];
-  ava=json['avatar']
-
-  $('#wallop-template img').attr('src', ava)
-  $('#wallop-template a').attr('href','/@'+username)
-  $('#wallop-template a').text('@'+username)
-  $('#wallop-template .chat-message').html(text)
-  $('#chat-text').append($('#wallop-template .chat-line').clone())
-  window.scrollTo(0,document.body.scrollHeight)
-}
-);
-
-socket.on('gm', function(json){
-  console.log(json);
-  username=json['username'];
-  text=json['text'];
-  ava=json['avatar']
-
-  var my_name=$('#username').val()
-
-  if (text.includes('href="/@'+my_name+'"')){
-    $('#gm-template .chat-line').addClass('chat-mention');
-    notifs=notifs+1;
-    setTimeout(flash, 500);
-  }
-  else {
-    $('#gm-template .chat-line').removeClass('chat-mention');
+  var should_scroll = function() {
+    scrolled_down= (box.scrollHeight - box.scrollTop <= window.innerHeight-109)
   }
 
-  $('#gm-template img').attr('src', ava)
-  $('#gm-template a').attr('href','/@'+username)
-  $('#gm-template a').text('@'+username)
-  $('#gm-template .chat-message').html(text)
-  $('#chat-text').append($('#gm-template .chat-line').clone())
-  window.scrollTo(0,document.body.scrollHeight)
-}
-);
-
-socket.on('motd', function(json){
-  console.log(json);
-  username=json['username'];
-  text=json['text'];
-  ava=json['avatar']
-
-  $('#motd-template img').attr('src', ava)
-  $('#motd-template a').attr('href','/+'+username)
-  $('#motd-template a').text('+'+username)
-  $('#motd-template .chat-message').html(text)
-  $('#chat-text').append($('#motd-template .chat-line').clone())
-  window.scrollTo(0,document.body.scrollHeight)
-}
-);
-
-socket.on('admin', function(json){
-  console.log(json);
-  username=json['username'];
-  text=json['text'];
-  ava=json['avatar']
-
-  var my_name=$('#username').val()
-
-  if (text.includes('href="/@'+my_name+'"')){
-    $('#admin-template .chat-line').addClass('chat-mention');
-    notifs=notifs+1;
-    setTimeout(flash, 500);
-  }
-  else {
-    $('#admin-template .chat-line').removeClass('chat-mention');
-  }
-
-  $('#admin-template img').attr('src', ava)
-  $('#admin-template a').attr('href','/@'+username)
-  $('#admin-template a').text('@'+username)
-  $('#admin-template .chat-message').html(text)
-  $('#chat-text').append($('#admin-template .chat-line').clone())
-  window.scrollTo(0,document.body.scrollHeight)
-}
-);
-
-socket.on('count', function(data){
-  $('#chat-count').text(data['count'])
-}
-);
-
-socket.on('connect',
-  function(event) {
-    console.log('connected, joining room')
-    name=$('#guildname').val();
-    socket.emit('join room', {'guild': name });
-  }
-  )
-
-document.getElementById('input-text').addEventListener("keyup", function(event) {
-    // Number 13 is the "Enter" key on the keyboard
-    if (event.keyCode === 13) {
-      // Cancel the default action, if needed
-      event.preventDefault();
-      // Trigger the button element with a click
-      document.getElementById("chatsend").click();
+  var scroll=function() {
+    if (scrolled_down) {
+      box.scrollTo(0,box.scrollHeight)
     }
   }
-  )
+
+  socket.on('speak', function(json){
+    console.log(json);
+    username=json['username'];
+    text=json['text'];
+    ava=json['avatar']
+
+    var my_name=$('#username').val()
+
+    if (text.includes('href="/@'+my_name+'"')){
+      $('#chat-line-template .chat-line').addClass('chat-mention');
+      notifs=notifs+1;
+      setTimeout(flash, 500);
+    }
+    else {
+      $('#chat-line-template .chat-line').removeClass('chat-mention');
+    };
+
+    should_scroll()
+    $('#chat-line-template img').attr('src', ava)
+    $('#chat-line-template a').attr('href','/@'+username)
+    $('#chat-line-template a').text('@'+username)
+    $('#chat-line-template .chat-message').html(text)
+    $('#chat-text').append($('#chat-line-template .chat-line').clone())
+    scroll()
+  }
+  );
+
+    socket.on('bot', function(json){
+    console.log(json);
+    username=json['username'];
+    text=json['text'];
+    ava=json['avatar']
+
+    should_scroll()
+    $('#bot-template img').attr('src', ava)
+    $('#bot-template a').attr('href','/@'+username)
+    $('#bot-template a').text('@'+username)
+    $('#bot-template .chat-message').html(text)
+    $('#chat-text').append($('#bot-template .chat-line').clone())
+    scroll()
+  }
+  );
+
+  socket.on('message', function(msg){
+    should_scroll()
+    $('#system-template .message').text(msg)
+    $('#chat-text').append($('#system-template .system-line').clone())
+    scroll()
+  }
+  );
+
+  socket.on('info', function(data){
+    should_scroll()
+    $('#system-info .message').text(data['msg'])
+    $('#chat-text').append($('#system-info .system-line').clone())
+    scroll()
+  }
+  );
+
+  socket.on('me', function(data){
+    should_scroll()
+    $('#me-template .message').text(data['msg'])
+    $('#chat-text').append($('#me-template .system-line').clone())
+    scroll()
+  }
+  );
+
+
+  socket.on('warning', function(data){
+    should_scroll()
+    $('#system-warning .message').text(data['msg'])
+    $('#chat-text').append($('#system-warning .system-line').clone())
+    scroll()
+  }
+  );
+
+  socket.on('wallop', function(json){
+    console.log(json);
+    username=json['username'];
+    text=json['text'];
+    ava=json['avatar']
+
+    should_scroll()
+    $('#wallop-template img').attr('src', ava)
+    $('#wallop-template a').attr('href','/@'+username)
+    $('#wallop-template a').text('@'+username)
+    $('#wallop-template .chat-message').html(text)
+    $('#chat-text').append($('#wallop-template .chat-line').clone())
+    scroll()
+  }
+  );
+
+  socket.on('gm', function(json){
+    console.log(json);
+    username=json['username'];
+    text=json['text'];
+    ava=json['avatar']
+
+    var my_name=$('#username').val()
+
+    if (text.includes('href="/@'+my_name+'"')){
+      $('#gm-template .chat-line').addClass('chat-mention');
+      notifs=notifs+1;
+      setTimeout(flash, 500);
+    }
+    else {
+      $('#gm-template .chat-line').removeClass('chat-mention');
+    }
+
+    should_scroll()
+    $('#gm-template img').attr('src', ava)
+    $('#gm-template a').attr('href','/@'+username)
+    $('#gm-template a').text('@'+username)
+    $('#gm-template .chat-message').html(text)
+    $('#chat-text').append($('#gm-template .chat-line').clone())
+    scroll()
+  }
+  );
+
+  socket.on('motd', function(json){
+    console.log(json);
+    username=json['username'];
+    text=json['text'];
+    ava=json['avatar']
+
+    should_scroll()
+    $('#motd-template img').attr('src', ava)
+    $('#motd-template a').attr('href','/+'+username)
+    $('#motd-template a').text('+'+username)
+    $('#motd-template .chat-message').html(text)
+    $('#chat-text').append($('#motd-template .chat-line').clone())
+    scroll()
+  }
+  );
+
+  socket.on('admin', function(json){
+    console.log(json);
+    username=json['username'];
+    text=json['text'];
+    ava=json['avatar']
+
+    var my_name=$('#username').val()
+
+    if (text.includes('href="/@'+my_name+'"')){
+      $('#admin-template .chat-line').addClass('chat-mention');
+      notifs=notifs+1;
+      setTimeout(flash, 500);
+    }
+    else {
+      $('#admin-template .chat-line').removeClass('chat-mention');
+    }
+
+    should_scroll()
+    $('#admin-template img').attr('src', ava)
+    $('#admin-template a').attr('href','/@'+username)
+    $('#admin-template a').text('@'+username)
+    $('#admin-template .chat-message').html(text)
+    $('#chat-text').append($('#admin-template .chat-line').clone())
+    scroll()
+  }
+  );
+
+  socket.on('count', function(data){
+    $('#chat-count').text(data['count'])
+  }
+  );
+
+  socket.on('connect',
+    function(event) {
+      console.log('connected, joining room')
+      name=$('#guildname').val();
+      socket.emit('join room', {'guild': name });
+    }
+    )
+
+  document.getElementById('input-text').addEventListener("keyup", function(event) {
+      // Number 13 is the "Enter" key on the keyboard
+      if (event.keyCode === 13) {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        document.getElementById("chatsend").click();
+      }
+    }
+    )
+
+  var upload_chat_image=function(){
+
+    file=document.getElementById('chat-image-upload').files[0];
+    fd=new FormData();
+    fd.append("image", file);
+
+    xhr= new XMLHttpRequest();
+    xhr.open("post", "/chat_upload");
+    xhr.withCredentials=true;
+    xhr.onload=function(){
+      guild=$('#guildname').val()
+      url=JSON.parse(xhr.response)['url']
+      text='![]('+url+')'
+      socket.emit('speak', {text: text, guild: guild});
+      document.getElementById('chat-image-upload').value=null;
+      box.scrollTo(0,box.scrollHeight)
+    }
+    xhr.send(fd);
+  }
+}

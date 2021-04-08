@@ -2,9 +2,9 @@
 
 {% block stylesheets %}
 {% if v and session.get("dark_mode_enabled") %}
-<link id="css-link" rel="stylesheet" href="{{ b.css_dark_url }}?v=2.35.27">
+<link id="css-link" rel="stylesheet" href="{{ b.css_dark_url }}?v=2.35.44">
 {% else %}
-<link id="css-link" rel="stylesheet" href="{{ b.css_url }}?v=2.35.27">
+<link id="css-link" rel="stylesheet" href="{{ b.css_url }}?v=2.35.44">
 {% endif %}
 {% endblock %}
 
@@ -80,9 +80,9 @@
 </div>
 {% if b.can_chat(v) %}
 <div class="sidebar-section sidebar-chat">
-  <div class="title"><i class="fas fa-comments-alt mr-2"></i>Guild Chat</div>
+  <div class="title"><i class="fas fa-comments-alt mr-2"></i>Guild Chat (<i class="far fa-user fa-sm mr-1"></i><span id="chat-count">6</span>)</div>
   <div class="body">
-    <a href="{{ b.chat_url }}" target="_blank" class="btn btn-primary w-100">Join Chat (<i class="far fa-user"></i>{{ b.chat_count}})</a>
+    {% include "chat/chat_client.html" %}
   </div>
 </div>
 {% endif %}
@@ -113,11 +113,11 @@
     css = document.getElementById("css-link");
     dswitch = document.getElementById("dark-switch");
 
-    if (css.href.endsWith("{{ b.css_url }}?v=2.35.27")) {
+    if (css.href.endsWith("{{ b.css_url }}?v=2.35.44")) {
       
       post("/settings/dark_mode/1",
         callback=function(){
-          css.href="{{ b.css_dark_url }}?v=2.35.27";
+          css.href="{{ b.css_dark_url }}?v=2.35.44";
           dswitch.classList.remove("fa-toggle-off");
           dswitch.classList.add("fa-toggle-on");
         }
@@ -126,7 +126,7 @@
     else {
       post("/settings/dark_mode/0",
         callback=function(){
-          css.href="{{ b.css_url }}?v=2.35.27";
+          css.href="{{ b.css_url }}?v=2.35.44";
           dswitch.classList.remove("fa-toggle-on");
           dswitch.classList.add("fa-toggle-off");
         }
@@ -194,7 +194,9 @@
 <!-- Desktop -->
 <div class="row d-none d-md-block">
   <div class="col px-0">
+    {% block desktopbanner %}
     <img src="{{ b.banner_url }}" style="width: 100%; height: 250px; object-fit: cover;">
+    {% endblock %}
   </div>
 </div>
 <div class="row border-bottom bg-white sticky d-none d-md-block guild-border-top" style="overflow: visible;">

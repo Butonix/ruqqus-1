@@ -1,18 +1,20 @@
 import os
-import logging
 import redis
-import gevent
 import mistletoe
 from flask import *
 from flask_socketio import *
 import random
 from sqlalchemy.orm import lazyload
+import time
+import secrets
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.session import *
+from ruqqus.helpers.base36 import *
 from ruqqus.helpers.markdown import CustomRenderer, preprocess
+from ruqqus.helpers.aws import *
 from ruqqus.__main__ import app, r, socketio, db_session
 
 REDIS_URL = app.config["CACHE_REDIS_URL"]
@@ -218,7 +220,9 @@ def socket_disconnect_user(v):
 
     for room in rooms():
         leave_room(room)
-        send(f"← @{v.username} has left the chat", to=room)
+        if room not in v_rooms(v):
+            send(f"← @{v.username} has left the chat", to=room)
+
         board=get_from_fullname(room, graceful=True)
         if board:
             update_chat_count(board)
@@ -240,10 +244,11 @@ def join_guild_room(data, v, guild):
         send(f"You can't join the +{guild.name} chat right now.")
         return False
 
+    if guild.fullname not in v_rooms(v):
+        send(f"→ @{v.username} has entered the chat", to=guild.fullname)
+
     join_room(guild.fullname)
     update_chat_count(guild)
-
-    send(f"→ @{v.username} has entered the chat", to=guild.fullname)
 
     if guild.motd:
 
@@ -251,7 +256,7 @@ def join_guild_room(data, v, guild):
             "avatar": guild.profile_url,
             "username":guild.name,
             "text":guild.motd,
-            "guild":guild.name
+            "room":guild.name
             }
         emit('motd', data, to=request.sid)
     return True
@@ -262,7 +267,10 @@ def join_guild_room(data, v, guild):
 def leave_guild_room(data, v, guild):
     leave_room(guild.fullname)
     update_chat_count(guild)
-    send(f"← @{v.username} has left the chat", to=guild.fullname)
+
+    if guild.fullname not in v_rooms(v):
+        send(f"← @{v.username} has left the chat", to=guild.fullname)
+
     if v.username in TYPING.get(guild.fullname, []):
         TYPING[guild.fullname].remove(v.username)
         emit('typing', {'users':TYPING[guild.fullname]}, to=guild.fullname)
@@ -462,7 +470,7 @@ def here_command(args, guild, v):
             TYPING[guild.fullname].remove(name)
             emit('typing',{'users':TYPING[guild.fullname]}, to=guild.fullname)
 
-    
+
     count=len(names)
     namestr = ", ".join(names)
     send(f"{count} user{'s' if count>1 else ''} present: {namestr}")
@@ -587,7 +595,8 @@ def speak_as_gm(args, guild, v):
     data={
         "avatar": v.profile_url,
         "username":v.username,
-        "text":text
+        "text":text,
+        "room":guild.name
         }
     emit('gm', data, to=guild.fullname)
 
@@ -640,7 +649,7 @@ def message_of_the_day(args, guild, v):
             "avatar": guild.profile_url,
             "username":guild.name,
             "text":guild.motd,
-            "guild":guild.name
+            "room":guild.name
             }
         emit('motd', data, to=request.sid)
 
@@ -668,7 +677,8 @@ def speak_admin(args, guild, v):
     data={
         "avatar": v.profile_url,
         "username":v.username,
-        "text":text
+        "text":text,
+        'guild':guild.name
         }
     emit('admin', data, to=guild.fullname)
 
@@ -716,3 +726,25 @@ def say_guild(args, guild, v):
         "text":text
         }
     emit('motd', data, to=guild.fullname)
+
+
+@app.route("/chat_upload", methods=["POST"])
+@is_not_banned
+def chat_upload_image(v):
+
+    if not v.has_premium:
+        abort(403)
+
+
+    file = request.files['image']
+    if not file.content_type.startswith('image/'):
+        abort(400)
+
+    now=int(time.time())
+    now=base36encode(now)
+    name = f'chat/{now}/{secrets.token_urlsafe(8)}'
+    upload_file(name, file)
+
+    check_csam_url(f"https://i.ruqqus.com/{name}", v, lambda:delete_file(name))
+
+    return jsonify({'url':f"https://i.ruqqus.com/{name}"})
