@@ -400,17 +400,17 @@ def help_command(args, guild, v):
 def print_ruqqie(args, guild, v):
     """Prints an ascii Ruqqie"""
 
-        data={
-            "avatar": user.profile_url,
-            "username":user.username,
-            "text":'<pre class="text-black">  👑<br>  ╭───────╮<br> ╭┤  ╹ ╹  ├╮<br>  ╰─┬───┬─╯</pre>',
-            "room": guild.fullname,
-            "guild": guild.name
-        }
-        if request.headers.get("X-User-Type")=="Bot":
-            emit("bot", data, to=guild.fullname)
-        else:
-            emit("speak", data, to=guild.fullname)
+    data={
+        "avatar": user.profile_url,
+        "username":user.username,
+        "text":'<pre class="text-black">  👑<br>  ╭───────╮<br> ╭┤  ╹ ╹  ├╮<br>  ╰─┬───┬─╯</pre>',
+        "room": guild.fullname,
+        "guild": guild.name
+    }
+    if request.headers.get("X-User-Type")=="Bot":
+        emit("bot", data, to=guild.fullname)
+    else:
+        emit("speak", data, to=guild.fullname)
 
 
 @command('random')
