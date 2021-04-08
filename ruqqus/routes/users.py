@@ -71,8 +71,9 @@ def api_is_available(name, v):
 
 @app.route("/uid/<uid>", methods=["GET"])
 @app.route("/api/v1/uid/<uid>", methods=["GET"])
+@auth_desired
 @api("read")
-def user_uid(uid):
+def user_uid(uid, v):
 
     user = get_account(uid)
 
