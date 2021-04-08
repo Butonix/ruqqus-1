@@ -67,6 +67,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
   var notifs=0;
   var titletoggle=true;
   var focused=true;
+  var original_title=$('title').text()
 
   var flash = function(){
 
@@ -75,7 +76,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
     if (notifs>=1 && focused==false){
       $('link[rel="shortcut icon"]').attr('href','/assets/images/logo/favicon_alert.png')
       if (titletoggle) {
-        $('title').text('['+notifs.toString()+'] #'+guild+'- Ruqqus');
+        $('title').text('['+notifs.toString()+'] #'+ original_title);
         titletoggle=false;
       }
       else {
@@ -87,7 +88,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
     else {
       $('link[rel="shortcut icon"]').attr('href','/assets/images/logo/favicon.png')
       notifs=0
-      $('title').text('#'+guild+'- Ruqqus');
+        $('title').text(original_title);
       titletoggle=true;
     }
   }
