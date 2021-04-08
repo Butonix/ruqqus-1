@@ -109,7 +109,6 @@ socket.on('speak', function(json){
 
   var my_name=$('#username').val()
 
-
   if (text.includes('href="/@'+my_name+'"')){
     $('#chat-line-template .chat-line').addClass('chat-mention');
     notifs=notifs+1;
@@ -194,6 +193,8 @@ socket.on('gm', function(json){
   text=json['text'];
   ava=json['avatar']
 
+  var my_name=$('#username').val()
+
   if (text.includes('href="/@'+my_name+'"')){
     $('#gm-template .chat-line').addClass('chat-mention');
     notifs=notifs+1;
@@ -232,6 +233,8 @@ socket.on('admin', function(json){
   username=json['username'];
   text=json['text'];
   ava=json['avatar']
+
+  var my_name=$('#username').val()
 
   if (text.includes('href="/@'+my_name+'"')){
     $('#admin-template .chat-line').addClass('chat-mention');
