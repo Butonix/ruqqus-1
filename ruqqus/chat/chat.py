@@ -245,11 +245,12 @@ def join_guild_room(data, v, guild):
         send(f"You can't join the +{guild.name} chat right now.")
         return False
 
-    if guild.fullname not in v_rooms(v):
-        send(f"→ @{v.username} has entered the chat", to=guild.fullname)
+    broadcast= guild.fullname not in v_rooms(v)
 
     join_room(guild.fullname)
     update_chat_count(guild)
+    if broadcast:
+        send(f"→ @{v.username} has entered the chat", to=guild.fullname)
 
     if guild.motd:
 
