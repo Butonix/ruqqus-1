@@ -1,6 +1,6 @@
 <div class="container p-md-0">
 
-  <div id="chat-text" style="max-height:calc(100vh - 300px); overflow-y:scroll;">
+  <div id="chat-text" {% if request.path.endswith('/chat') %}class="fullchat"{% else %}class="sidebarchat"{% endif %} style="max-height:calc(100vh - 300px); overflow-y:scroll;">
   </div>
   {% if request.path.endswith('/chat') %}
   <div class="position-relative form-group d-flex pb-3">
@@ -43,7 +43,7 @@
 <div id="chat-line-template" class="d-none">
   <div class="chat-line my-2">
     <div class="d-flex align-items-center">
-      <span class="rounded mb-auto d-none d-md-block" style="width: 42px; height: 42px;">
+      <span class="rounded mb-auto d-none d-md-block chat-profile">
         <img class="desktop-avatar rounded-circle w-100">
       </span>
       <div class="pl-md-3 text-muted">
@@ -62,7 +62,7 @@
 <div id="mention-template" class="d-none">
   <div class="chat-line my-2" style="background-color:#f4a460">
     <div class="d-flex align-items-center">
-      <span class="rounded mb-auto d-none d-md-block" style="width: 42px; height: 42px;">
+      <span class="rounded mb-auto d-none d-md-block chat-profile">
         <img class="desktop-avatar rounded-circle w-100">
       </span>
       <div class="pl-md-3 text-muted">
@@ -81,7 +81,7 @@
 <div id="bot-template" class="d-none">
   <div class="chat-line my-2">
     <div class="d-flex align-items-center">
-      <span class="rounded mb-auto d-none d-md-block" style="width: 42px; height: 42px;">
+      <span class="rounded mb-auto d-none d-md-block chat-profile">
         <img class="desktop-avatar rounded-circle w-100">
       </span>
       <div class="pl-md-3 text-muted">
@@ -124,7 +124,7 @@
 <div id="gm-template" class="d-none">
   <div class="chat-line my-2">
     <div class="d-flex align-items-center">
-      <span class="rounded mb-auto d-none d-md-block" style="width: 42px; height: 42px;">
+      <span class="rounded mb-auto d-none d-md-block chat-profile">
         <img class="desktop-avatar rounded-circle w-100">
       </span>
       <div class="pl-md-3 text-muted">
@@ -143,7 +143,7 @@
 <div id="motd-template" class="d-none">
   <div class="chat-line my-2">
     <div class="d-flex align-items-center">
-      <span class="rounded mb-auto d-none d-md-block" style="width: 42px; height: 42px;">
+      <span class="rounded mb-auto d-none d-md-block chat-profile">
         <img class="desktop-avatar rounded-circle w-100">
       </span>
       <div class="pl-md-3 text-muted">
@@ -162,7 +162,7 @@
 <div id="admin-template" class="d-none">
   <div class="chat-line my-2">
     <div class="d-flex align-items-center">
-      <span class="rounded mb-auto d-none d-md-block" style="width: 42px; height: 42px;">
+      <span class="rounded mb-auto d-none d-md-block chat-profile">
         <img class="desktop-avatar rounded-circle w-100">
       </span>
       <div class="pl-md-3 text-muted">
@@ -181,7 +181,7 @@
 <div id="wallop-template" class="d-none">
   <div class="chat-line my-2">
     <div class="d-flex align-items-center">
-      <span class="rounded mb-auto d-none d-md-block" style="width: 42px; height: 42px;">
+      <span class="rounded mb-auto d-none d-md-block chat-profile">
         <img class="desktop-avatar rounded-circle w-100">
       </span>
       <div class="pl-md-3 text-muted">
@@ -239,5 +239,17 @@
 #chat-text {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+}
+
+.fullchat .chat-profile {
+  min-width: 42px;
+  width: 42px;
+  height: 42px;
+}
+
+.sidebarchat .chat-profile {
+  min-width: 30px;
+  width: 30px;
+  height: 30px;
 }
 </style>
