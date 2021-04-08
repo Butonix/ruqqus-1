@@ -7,8 +7,8 @@
 
 	<meta name="thumbnail" content="https://ruqqus.com/assets/images/preview-images/ruqqus_og_image.png">
 
-	<link rel="icon" type="image/png" href="/assets/favicon.ico">
-
+  <link rel="icon" type="image/png" href="/assets/images/logo/favicon.png">
+  
 	{% block title %}
 	<title>Ruqqus: Awesome Online Communities, Without Censorship</title>
 
@@ -52,7 +52,6 @@
     <meta name="msapplication-config" content="/assets/images/favicons/browserconfig.xml">
     <meta name="theme-color" content="#805ad5">
 
-    <link rel="icon" type="image/png" href="/assets/images/logo/favicon.png">
 
 
     <link
@@ -188,9 +187,9 @@
     {% block stylesheets %}
 
     {% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
-    <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.35.23">
+    <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.35.24">
     {% else %}
-    <link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.35.23">
+    <link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.35.24">
     {% endif %}
 
     {% endblock %}
@@ -656,7 +655,7 @@
 
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/all_js.js?v=2.35.23"></script>
+<script src="/assets/js/all_js.js?v=2.35.24"></script>
 
 <!-- ClipboardJS -->
 

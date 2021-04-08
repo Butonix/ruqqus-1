@@ -72,6 +72,7 @@ var flash = function(){
   guild=$('#guildname').val();
 
   if (notifs>=1 && focused==false){
+    $('rel[link="icon"]').attr('href','/assets/images/logo/favicon_alert.png')
     if (titletoggle) {
       $('title').text('['+notifs.toString()+'] #'+guild+'- Ruqqus');
       titletoggle=false;
@@ -83,6 +84,7 @@ var flash = function(){
     setTimeout(flash, 500)
   }
   else {
+    $('rel[link="icon"]').attr('href','/assets/images/logo/favicon.png')
     notifs=0
     $('title').text('#'+guild+'- Ruqqus');
     titletoggle=true;
