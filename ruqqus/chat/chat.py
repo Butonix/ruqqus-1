@@ -386,10 +386,13 @@ def guild_chat(guildname, v):
 @command('leave')
 def leave_room_command(args, guild, v):
 
+    """Leave the chat channel"""
+
     send(f"← @{v.username} has left the chat", to=guild.fullname)
 
     for sid in SIDS[v.id]:
         leave_room(guild.fullname, sid=sid)
+        emit('typing',{'users':[]}, to=sid)
 
 @command('help', syntax='[command]')
 def help_command(args, guild, v):
