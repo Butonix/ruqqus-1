@@ -401,8 +401,8 @@ def print_ruqqie(args, guild, v):
     """Prints an ascii Ruqqie"""
 
     data={
-        "avatar": user.profile_url,
-        "username":user.username,
+        "avatar": v.profile_url,
+        "username":v.username,
         "text":'<pre class="text-black">  👑<br>  ╭───────╮<br> ╭┤  ╹ ╹  ├╮<br>  ╰─┬───┬─╯</pre>',
         "room": guild.fullname,
         "guild": guild.name
