@@ -7,11 +7,13 @@ from flask import *
 from flask_socketio import *
 import random
 from sqlalchemy.orm import lazyload
+import time
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.session import *
+from ruqqus.helpers.base36 import *
 from ruqqus.helpers.markdown import CustomRenderer, preprocess
 from ruqqus.__main__ import app, r, socketio, db_session
 
@@ -462,7 +464,7 @@ def here_command(args, guild, v):
             TYPING[guild.fullname].remove(name)
             emit('typing',{'users':TYPING[guild.fullname]}, to=guild.fullname)
 
-    
+
     count=len(names)
     namestr = ", ".join(names)
     send(f"{count} user{'s' if count>1 else ''} present: {namestr}")
@@ -716,3 +718,25 @@ def say_guild(args, guild, v):
         "text":text
         }
     emit('motd', data, to=guild.fullname)
+
+
+@app.route("/chat_upload", methods=["POST"])
+@is_not_banned
+def chat_upload_image(v):
+
+    if not v.has_premium:
+        abort(403)
+
+
+    file = request.files['image']
+    if not file.content_type.startswith('image/'):
+        abort(400)
+
+    now=int(time.time())
+    now=base36encode(now)
+    name = f'chat/{now}/{secrets.token_urlsafe(8)}'
+    upload_file(name, file)
+
+    check_csam_url(f"https://i.ruqqus.com/{name}", v, lambda:delete_file(name))
+
+    return jsonify({'url':f"https://i.ruqqus.com/{name}"})

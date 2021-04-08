@@ -298,3 +298,21 @@ document.getElementById('input-text').addEventListener("keyup", function(event) 
     }
   }
   )
+
+var upload_chat_image=function(){
+
+  file=document.getElementById('chat-image-upload').files[0];
+  fd=new FormData();
+  formData.append("image", file);
+
+  xhr= new XMLHttpRequest();
+  xhr.open("/chat_upload", "post");
+  xhr.withCredentials=true;
+  xhr.onload=function(){
+    guild=$('#guildname').val()
+    url=JSON.parse(xhr.response)['url']
+    text='![]('+url+')'
+    socket.emit('speak', {text: text, guild: guild});
+  }
+  xhr.send(fd);
+}
