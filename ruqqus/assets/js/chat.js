@@ -317,7 +317,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
       text='![]('+url+')'
       socket.emit('speak', {text: text, guild: guild});
       document.getElementById('chat-image-upload').value=null;
-      window.scrollTo(0,document.body.scrollHeight)
+      box.scrollTo(0,box.scrollHeight)
     }
     xhr.send(fd);
   }
