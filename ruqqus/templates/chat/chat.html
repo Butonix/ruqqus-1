@@ -8,111 +8,39 @@
 
 {% block content %}
 
-    <div class="container">
-        
-      <div class="page-header">
-        <span class="h1">+{{ b.name }} Chat</span> <span class="text-small text-muted">alpha</span>
-      </div>
-      <div id="chat-text">
-      </div>
+{% include "chat_client.html" %}
 
-      <div class="form-group d-flex">
-        <input id="guildname" type="hidden" value="{{ b.name }}">
-        <input id="input-text" type="text" class="form-control" placeholder="Enter chat text here!" autofocus />
-        <button id="chatsend" class="btn btn-primary ml-3" type="submit">Send</button>
-      </div>
-    </div>
+{% include "expanded_image_modal.html" %}
+{% include "bootstrap.html" %}
 
-    <div id="chat-line-template" class="d-none">
-      <div class="chat-line my-1">
-        <div class="d-flex align-items-center">
-          <span class="rounded mb-auto">
-            <img alt="avatar" style="width: 42px;height: 42px;" class="rounded-circle">
-          </span>
-          <div class="text-muted pl-3">
-            <div>
-              <a href="" class="font-weight-bold text-black" target="_blank"></a>
-              <div style="overflow:hidden">
-                <span class="chat-message text-black"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<script src="/assets/js/all_js.js?v=2.35.39"></script>
 
-    <div id="system-template" class="d-none">
-      <div class="system-line">
-        <p class="message text-muted"></p>
-      </div>
-    </div>
 
-    <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
-    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js" integrity="sha384-DkkWv9oJFWLIydBXXjkBWnG1/fuVhw8YPBq37uvvD6WSYRFRqr21eY5Dg9ZhmWdy" crossorigin="anonymous"></script>
-    <script>
-      var socket=io();
+<style>
+#loading-indicator:after {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+  -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
+  animation: ellipsis steps(4,end) 900ms infinite;
+  content: "\2026"; /* ascii code for the ellipsis character */
+  width: 0px;
+}
 
-    $('#chatsend').click(function (event) {
+@keyframes ellipsis {
+  to {
+    width: 20px;    
+  }
+}
 
-      if (event.which != 1) {
-        return
-      }
-      event.preventDefault();
+@-webkit-keyframes ellipsis {
+  to {
+    width: 20px;    
+  }
+}
 
-      console.log('clicked')
-
-      text = $('#input-text').val()
-      guild=$('#guildname').val()
-
-      socket.emit('speak', {text: text, guild: guild});
-      $('#input-text').val('')
-
-    });
-
-    socket.on('speak', function(json){
-      console.log(json);
-      username=json['username'];
-      text=json['text'];
-      ava=json['avatar']
-
-      $('#chat-line-template img').attr('src', ava)
-      $('#chat-line-template a').attr('href','/@'+username)
-      $('#chat-line-template a').text('@'+username)
-      $('#chat-line-template .chat-message').html(text)
-      $('#chat-text').append($('#chat-line-template .chat-line').clone())
-      window.scrollTo(0,document.body.scrollHeight)
-      }
-    );
-
-    socket.on('message', function(msg){
-      $('#system-template .message').text(msg)
-      $('#chat-text').append($('#system-template .system-line').clone())
-      window.scrollTo(0,document.body.scrollHeight)
-      }
-    );
-
-    socket.on('connect',
-        function(event) {
-          console.log('connected, joining room')
-          name=$('#guildname').val();
-          socket.emit('join room', {'guild': name });
-        }
-      )
-
-    document.getElementById('input-text').addEventListener("keyup", function(event) {
-      // Number 13 is the "Enter" key on the keyboard
-      if (event.keyCode === 13) {
-        // Cancel the default action, if needed
-        event.preventDefault();
-        // Trigger the button element with a click
-        document.getElementById("chatsend").click();
-        }
-      }
-    )
-    
-    </script>
-    {% include "expanded_image_modal.html" %}
-    {% include "bootstrap.html" %}
-
-    <script src="/assets/js/all_js.js?v=2.35.0"></script>
+.chat-mention {
+  background-color: rgba(128, 90, 213, 0.3);
+}
+</style>
 {% endblock %}
