@@ -218,7 +218,7 @@ def edit_post(pid, v):
 
 
 @app.route("/submit/title", methods=['GET'])
-#@limiter.limit("3/minute")
+@limiter.limit("6/minute")
 @is_not_banned
 @no_negative_balance("html")
 #@tos_agreed
