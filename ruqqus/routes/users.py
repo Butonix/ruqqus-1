@@ -74,7 +74,7 @@ def user_uid(uid):
 
     user = get_account(uid)
 
-    return redirect(f'/api/v1/user/{user.username}/info')
+    return redirect(user.permalink)
 
 # Allow Id of user to be queryied, and then redirect the bot to the
 # actual user api endpoint.
@@ -86,7 +86,7 @@ def user_uid(uid):
 def user_by_uid(uid, v=None):
     user=get_account(uid)
     
-    return redirect(f"/api/v1/user/{user.username}")
+    return redirect(f'/api/v1/user/{user.username}/info')
         
 @app.route("/u/<username>", methods=["GET"])
 def redditor_moment_redirect(username):
