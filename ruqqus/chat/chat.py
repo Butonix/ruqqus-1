@@ -16,6 +16,7 @@ from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.session import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.markdown import CustomRenderer, preprocess
+from ruqqus.helpers.aws import *
 from ruqqus.__main__ import app, r, socketio, db_session
 
 REDIS_URL = app.config["CACHE_REDIS_URL"]
