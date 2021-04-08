@@ -104,13 +104,15 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
 
   var scrolled_down=true;
 
+  var box = document.getElementById('chat-text');
+
   var should_scroll = function() {
-    scrolled_down= (window.scrollY+window.innerHeight >= document.body.scrollHeight-100)
+    scrolled_down= (box.scrollHeight - box.scrollTop >= window.innerHeight-399)
   }
 
   var scroll=function() {
     if (scrolled_down) {
-      window.scrollTo(0,document.body.scrollHeight)
+      box.scrollTo(0,box.scrollHeight)
     }
   }
 
