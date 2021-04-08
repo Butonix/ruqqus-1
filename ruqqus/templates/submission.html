@@ -70,6 +70,14 @@
     <div class="text-small mb-2">Shortlink: <input readonly="readonly" value="https://ruqq.us/{{ p.base36id }}" data-clipboard-text="https://ruqq.us/{{ p.base36id }}" role="button" class="copy-link form-control form-control-sm rounded"></div>
   </div>
 </div>
+{% if b.can_chat(v) %}
+<div class="sidebar-section sidebar-chat">
+  <div class="title"><i class="fas fa-comments-alt mr-2"></i>Guild Chat</div>
+  <div class="body">
+    {% include "chat/chat_client.html" %}
+  </div>
+</div>
+{% endif %}
 {% endblock %}
 
 {% if v %}
