@@ -30,12 +30,12 @@
     <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name }} chat, or type /help for information about chat commands" autocomplete="off" autofocus />
     <div class="d-flex mt-3">
     {% if v.has_premium %}
-        <label class="btn btn-secondary w-50 mr-3 mb-0" for="chat-image-upload">
+        <label class="btn btn-secondary w-20 mr-3 mb-0 ml-auto" for="chat-image-upload">
           <div id="filename-show"><i class="fad fa-image"></i></div>
           <input id="chat-image-upload" type="file" name="image" accept="image/*" onchange="upload_chat_image()" hidden>
         </label>
     {% endif %}
-    <button id="chatsend" class="btn btn-primary w-50" type="submit">Send</button>
+    <button id="chatsend" class="btn btn-primary w-50 ml-auto" type="submit">Send</button>
   </div>
   {% endif %}
 </div>
