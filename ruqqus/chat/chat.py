@@ -316,6 +316,9 @@ def typing_indicator(data, v, guild):
     if guild.fullname not in TYPING:
         TYPING[guild.fullname]=[]
 
+    if guild.fullname not in v_rooms(v):
+        return
+
     if data['typing'] and v.username not in TYPING[guild.fullname]:
         TYPING[guild.fullname].append(v.username)
     elif not data['typing'] and v.username in TYPING[guild.fullname]:
