@@ -39,7 +39,7 @@
     <input id="username" type="hidden" value="{{ v.username }}">
     <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name }} chat, or type /help for information about chat commands" autocomplete="off" autofocus />
     {% if v.has_premium %}
-        <label class="btn btn-secondary ml-3" for="chat-image-upload">
+        <label class="btn btn-secondary ml-3 mb-0" for="chat-image-upload">
           <div id="filename-show"><i class="fad fa-image"></i></div>
           <input id="chat-image-upload" type="file" name="image" accept="image/*" onchange="upload_chat_image()" hidden>
         </label>
@@ -208,11 +208,11 @@
 <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
 <script src="https://cdn.socket.io/4.0.0/socket.io.min.js" integrity="sha384-DkkWv9oJFWLIydBXXjkBWnG1/fuVhw8YPBq37uvvD6WSYRFRqr21eY5Dg9ZhmWdy" crossorigin="anonymous"></script>
 
-<script src="/assets/js/chat.js?v=2.35.37"></script>
+<script src="/assets/js/chat.js?v=2.35.38"></script>
 {% include "expanded_image_modal.html" %}
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/all_js.js?v=2.35.37"></script>
+<script src="/assets/js/all_js.js?v=2.35.38"></script>
 
 
 <style>

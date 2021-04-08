@@ -313,6 +313,7 @@ var upload_chat_image=function(){
     url=JSON.parse(xhr.response)['url']
     text='![]('+url+')'
     socket.emit('speak', {text: text, guild: guild});
+    document.getElementById('chat-image-upload').value=null;
   }
   xhr.send(fd);
 }
