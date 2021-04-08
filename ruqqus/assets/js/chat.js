@@ -303,7 +303,7 @@ var upload_chat_image=function(){
 
   file=document.getElementById('chat-image-upload').files[0];
   fd=new FormData();
-  formData.append("image", file);
+  fd.append("image", file);
 
   xhr= new XMLHttpRequest();
   xhr.open("/chat_upload", "post");
