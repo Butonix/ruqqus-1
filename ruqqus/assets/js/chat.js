@@ -314,6 +314,7 @@ var upload_chat_image=function(){
     text='![]('+url+')'
     socket.emit('speak', {text: text, guild: guild});
     document.getElementById('chat-image-upload').value=null;
+    window.scrollTo(0,document.body.scrollHeight)
   }
   xhr.send(fd);
 }
