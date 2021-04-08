@@ -70,12 +70,18 @@ def api_is_available(name, v):
 
 
 @app.route("/uid/<uid>", methods=["GET"])
+@app.route("/api/v1/uid/<uid>", methods=["GET"])
+@api("read")
 def user_uid(uid):
 
     user = get_account(uid)
 
     if user:
-        return redirect(user.permalink)
+        return {
+            "http":lambda:redirect(user.permalink),
+            "api":lambda:redirect("/api/v1/user/<username>/info")
+            }
+
     else:
         abort(404)
 
