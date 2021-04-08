@@ -754,8 +754,11 @@ def get_from_fullname(fullname, v=None, graceful=False):
 
     parts = fullname.split('_')
 
-    if len(parts) < 2:
-        abort(400)
+    if len(parts) != 2:
+        if graceful:
+            return None
+        else:
+            abort(400)
 
     kind = parts[0]
     b36 = parts[1]
@@ -767,7 +770,7 @@ def get_from_fullname(fullname, v=None, graceful=False):
     elif kind == 't3':
         return get_comment(b36, v=v, graceful=graceful)
     elif kind == 't4':
-        return get_board(b36, v=v, graceful=graceful)
+        return get_board(b36, graceful=graceful)
 
 def get_txn(paypal_id):
 

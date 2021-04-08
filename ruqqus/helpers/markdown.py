@@ -93,7 +93,7 @@ class CustomRenderer(HTMLRenderer):
         if not board or board.is_banned:
             return f"{space}+{target}"
         else:
-            return f'{space}<a href="{board.permalink}" class="d-inline-block"><img src="/+{board.name}/pic/profile" class="profile-pic-20 align-middle mr-1">+{board.name}</a>'
+            return f'{space}<a href="{board.permalink}" class="d-inline-block"><img src="/+{board.name}/pic/profile" class="profile-pic-20 mr-1">+{board.name}</a>'
 
     def render_chat_mention(self, token):
         space = token.target[0]
@@ -104,7 +104,7 @@ class CustomRenderer(HTMLRenderer):
         if not board or board.is_banned:
             return f"{space}#{target}"
         else:
-            return f'{space}<a href="{board.permalink}/chat" class="d-inline-block"><img src="/+{board.name}/pic/profile" class="profile-pic-20 align-middle mr-1">#{board.name}</a>'
+            return f'{space}<a href="{board.permalink}/chat" class="d-inline-block"><img src="/+{board.name}/pic/profile" class="profile-pic-20 mr-1">#{board.name}</a>'
 
     # def render_op_mention(self, token):
 

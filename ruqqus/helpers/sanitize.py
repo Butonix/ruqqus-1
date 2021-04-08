@@ -54,7 +54,7 @@ _allowed_tags_in_bio = [
     'sup'
 ]
 
-_allowed_attributes = {'a': ['href', 'title', "rel", "class", "data-original-name"],
+_allowed_attributes = {'a': ['href', 'title', "rel", "data-original-name"],
                        'i': [],
                        'img': ['src', 'class']
                        }
@@ -87,6 +87,10 @@ def a_modify(attrs, new=False):
             attrs[(None, "href")] = urlunparse(new_url)
 
     return attrs
+
+
+
+
 
 
 _clean_wo_links = bleach.Cleaner(tags=_allowed_tags,
@@ -141,6 +145,7 @@ def sanitize(text, bio=False, linkgen=False):
             if not(netloc) or (domain and domain.show_thumbnail):
 
                 if "profile-pic-20" not in tag.get("class", ""):
+                    print(tag.get('class'))
                     # set classes and wrap in link
 
                     tag["rel"] = "nofollow"
@@ -168,12 +173,7 @@ def sanitize(text, bio=False, linkgen=False):
         #disguised link preventer
         for tag in soup.find_all("a"):
 
-            tag.contents=[x if x.name=='img' else x.string if x.string else '' for x in tag.contents]
-
-            display=''.join([x.string for x in tag.contents if x.string])
-            display=re.sub("\s",'', display)
-
-            if re.match("https?://\S+", display):
+            if re.match("https?://\S+", str(tag.string)):
                 try:
                     tag.string = tag["href"]
                 except:
@@ -182,6 +182,19 @@ def sanitize(text, bio=False, linkgen=False):
         #clean up tags in code
         for tag in soup.find_all("code"):
             tag.contents=[x.string for x in tag.contents if x.string]
+
+        #whatever else happens with images, there are only two sets of classes allowed
+        for tag in soup.find_all("img"):
+            if 'profile-pic-20' not in tag.attrs.get("class",""):
+                tag.attrs['class']="in-comment-image rounded-sm my-2"
+
+        #table format
+        for tag in soup.find_all("table"):
+            tag.attrs['class']="table table-striped"
+
+        for tag in soup.find_all("thead"):
+            tag.attrs['class']="bg-primary text-white"
+
 
         sanitized = str(soup)
 

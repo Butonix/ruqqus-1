@@ -14,7 +14,7 @@ from .subscriptions import *
 from .board_relationships import *
 from .comment import Comment
 from .mix_ins import *
-from ruqqus.__main__ import Base, cache
+from ruqqus.__main__ import Base, cache, r
 
 
 class Board(Base, Stndrd, Age_times):
@@ -49,6 +49,7 @@ class Board(Base, Stndrd, Age_times):
     subcat_id=Column(Integer, ForeignKey("subcategories.id"), default=0)
     secondary_color=Column(String(6), default="ffffff")
     public_chat=Column(Boolean, default=False)
+    motd = Column(String(1000), default='')
 
     subcat=relationship("SubCategory")
     moderators=relationship("ModRelationship")
@@ -365,6 +366,9 @@ class Board(Base, Stndrd, Age_times):
         if user.admin_level>=4:
             return True
 
+        if user.is_suspended:
+            return False
+
         if self.has_ban(user) or self.has_chat_ban(user):
             return False
 
@@ -594,3 +598,16 @@ class Board(Base, Stndrd, Age_times):
         now=int(time.time())
 
         return self.stored_subscriber_count//10 + min(180, (now-self.created_utc)//(60*60*24))
+
+    @property
+    def chat_url(self):
+        return f"{self.permalink}/chat"
+    
+    @property
+    def chat_count(self):
+        count= r.get(f"{self.fullname}_chat_count")
+
+        if count==None:
+            count=0
+
+        return count
