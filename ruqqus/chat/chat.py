@@ -298,6 +298,8 @@ def speak_guild(data, v, guild):
     raw_text=data['text'][0:1000].lstrip().rstrip()
     if not raw_text:
         return
+    
+    print(f"@{v.username} - #{guild.name} - {raw_text}")
 
     if raw_text.startswith('/'):
         args=raw_text.split()
