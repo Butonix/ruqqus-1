@@ -38,8 +38,8 @@ def command(c, syntax=""):
         if c in COMMANDS:
             raise ValueError(f"Duplicate command `{c}`")
 
-        if f.__name__ in [x.__name__ for x in COMMANDS.values()]:
-            raise ValueError(f"Duplicate command function {f.__name__}")
+        #if f.__name__ in [x.__name__ for x in COMMANDS.values()]:
+        #    raise ValueError(f"Duplicate command function {f.__name__}")
 
         COMMANDS[c]=f
         HELP[c]=syntax
