@@ -41,7 +41,7 @@
     {% if v.has_premium %}
         <label class="btn btn-secondary m-0" for="chat-image-upload">
           <div id="filename-show"><i class="fad fa-image"></i></div>
-          <input id="chat-image-upload" type="file" name="image" accept="image/*" onchange="chat_upload_image()" hidden>
+          <input id="chat-image-upload" type="file" name="image" accept="image/*" onchange="upload_chat_image()" hidden>
         </label>
     {% endif %}
     <button id="chatsend" class="btn btn-primary ml-3" type="submit">Send</button>
