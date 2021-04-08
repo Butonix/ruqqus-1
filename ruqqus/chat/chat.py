@@ -396,6 +396,13 @@ def help_command(args, guild, v):
         commands=sorted(commands)
         send(f"Type `/help <command>` for information on a specific command. Commands: {', '.join(commands)}")
 
+@command('ruqqie')
+def print_ruqqie(args, guild, v):
+    """Prints an ascii Ruqqie"""
+
+    speak("<pre>  👑<br>  ╭───────╮<br> ╭┤  ╹ ╹  ├╮<br>  ╰─┬───┬─╯</pre>", v, guild)
+
+
 @command('random')
 def random_post(args, guild, v):
 
