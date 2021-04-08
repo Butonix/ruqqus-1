@@ -455,6 +455,14 @@ def here_command(args, guild, v):
     users=g.db.query(User.username).filter(User.id.in_(tuple(ids))).all()
     names=[x[0] for x in users]
     names=sorted(names)
+
+    #typing clearer
+    for name in TYPING[guild.fullname]:
+        if name not in names:
+            TYPING[guild.fullname].remove(name)
+            emit('typing',{'users':TYPING[guild.fullname]}, to=guild.fullname)
+
+    
     count=len(names)
     namestr = ", ".join(names)
     send(f"{count} user{'s' if count>1 else ''} present: {namestr}")
