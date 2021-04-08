@@ -256,7 +256,8 @@ def join_guild_room(data, v, guild):
             "avatar": guild.profile_url,
             "username":guild.name,
             "text":guild.motd,
-            "room":guild.name
+            "room":guild.fullname,
+            "guild":guild.name
             }
         emit('motd', data, to=request.sid)
     return True
@@ -599,7 +600,8 @@ def speak_as_gm(args, guild, v):
         "avatar": v.profile_url,
         "username":v.username,
         "text":text,
-        "room":guild.name
+        "room":guild.fullname,
+        "guild":guild.name
         }
     emit('gm', data, to=guild.fullname)
 
@@ -652,7 +654,8 @@ def message_of_the_day(args, guild, v):
             "avatar": guild.profile_url,
             "username":guild.name,
             "text":guild.motd,
-            "room":guild.name
+            "room":guild.fullname,
+            "guild":guild.name
             }
         emit('motd', data, to=request.sid)
 
