@@ -38,6 +38,11 @@
     <input id="guildname" type="hidden" value="{{ b.name }}">
     <input id="username" type="hidden" value="{{ v.username }}">
     <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name }} chat, or type /help for information about chat commands" autocomplete="off" autofocus />
+    {% if v.has_premium %}
+      <form action="/chat_upload" method="post" enctype="multipart/form-data">
+        <button id="chatsend" class="btn btn-primary ml-3" type="submit">Send</button>
+      </form>
+    {% endif %}
     <button id="chatsend" class="btn btn-primary ml-3" type="submit">Send</button>
   </div>
 </div>
@@ -233,7 +238,7 @@
 }
 
 .chat-mention {
-  background-color: #ee7811;
+  background-color: rgba(128, 90, 213, 0.3);
 }
 </style>
 {% endblock %}
