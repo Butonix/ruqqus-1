@@ -128,7 +128,7 @@ socket.on('speak', function(json){
   }
   else {
     $('#chat-line-template .chat-line').removeClass('chat-mention');
-  }
+  };
 
   should_scroll()
   $('#chat-line-template img').attr('src', ava)
@@ -237,8 +237,6 @@ socket.on('motd', function(json){
   username=json['username'];
   text=json['text'];
   ava=json['avatar']
-
-  should_scroll=(window.scrollY+window.innerHeight >= document.body.scrollheight)
 
   should_scroll()
   $('#motd-template img').attr('src', ava)
