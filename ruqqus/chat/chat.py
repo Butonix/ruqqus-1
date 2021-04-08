@@ -8,6 +8,7 @@ from flask_socketio import *
 import random
 from sqlalchemy.orm import lazyload
 import time
+import secrets
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
