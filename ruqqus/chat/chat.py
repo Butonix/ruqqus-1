@@ -298,7 +298,9 @@ def speak_guild(data, v, guild):
     if not raw_text:
         return
     
-    print(f"@{v.username} - #{guild.name} - {raw_text}")
+    user_pad=" "*(25-len(v.username))
+    guild_pad=" "*(25-len(guild.name))
+    print(f"@{v.username}{user_pad} - #{guild.name}{guild_pad} - {raw_text}")
 
     if raw_text.startswith('/'):
         args=raw_text.split()
