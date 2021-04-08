@@ -108,19 +108,23 @@ socket.on('speak', function(json){
   ava=json['avatar']
 
   var my_name=$('#username').val()
-  var template="#chat-line-template"
+
+
   if (text.includes('href="/@'+my_name+'"')){
-    template="#mention-template"
-    notifs=notifs+1
-    setTimeout(flash, 1000)
+    $('#chat-line-template .chat-line').addClass('chat-mention');
+    notifs=notifs+1;
+    setTimeout(flash, 1000);
+  }
+  else {
+    $('#chat-line-template .chat-line').removeClass('chat-mention');
   }
 
 
-  $(template+' img').attr('src', ava)
-  $(template+' a').attr('href','/@'+username)
-  $(template+' a').text('@'+username)
-  $(template+' .chat-message').html(text)
-  $('#chat-text').append($(template+' .chat-line').clone())
+  $('#chat-line-template img').attr('src', ava)
+  $('#chat-line-template a').attr('href','/@'+username)
+  $('#chat-line-template a').text('@'+username)
+  $('#chat-line-template .chat-message').html(text)
+  $('#chat-text').append($('#chat-line-template .chat-line').clone())
   window.scrollTo(0,document.body.scrollHeight)
 }
 );
@@ -190,6 +194,15 @@ socket.on('gm', function(json){
   text=json['text'];
   ava=json['avatar']
 
+  if (text.includes('href="/@'+my_name+'"')){
+    $('#gm-template .chat-line').addClass('chat-mention');
+    notifs=notifs+1;
+    setTimeout(flash, 1000);
+  }
+  else {
+    $('#gm-template .chat-line').removeClass('chat-mention');
+  }
+
   $('#gm-template img').attr('src', ava)
   $('#gm-template a').attr('href','/@'+username)
   $('#gm-template a').text('@'+username)
@@ -219,6 +232,15 @@ socket.on('admin', function(json){
   username=json['username'];
   text=json['text'];
   ava=json['avatar']
+
+  if (text.includes('href="/@'+my_name+'"')){
+    $('#admin-template .chat-line').addClass('chat-mention');
+    notifs=notifs+1;
+    setTimeout(flash, 1000);
+  }
+  else {
+    $('#admin-template .chat-line').removeClass('chat-mention');
+  }
 
   $('#admin-template img').attr('src', ava)
   $('#admin-template a').attr('href','/@'+username)
