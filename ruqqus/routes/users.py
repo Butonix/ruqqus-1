@@ -70,33 +70,21 @@ def api_is_available(name, v):
 
 
 @app.route("/uid/<uid>", methods=["GET"])
-@app.route("/api/v1/uid/<uid>", methods=["GET"])
-@auth_desired
-@api("read")
-def user_uid(uid, v):
+def user_uid(uid):
 
     user = get_account(uid)
 
-    if user:
-        return {
-            "http":lambda:redirect(user.permalink),
-            "api":lambda:redirect("/api/v1/user/<username>/info")
-            }
-
-    else:
-        abort(404)
+    redirect(f'/api/v1/user/{user.username}/info')
 
 # Allow Id of user to be queryied, and then redirect the bot to the
 # actual user api endpoint.
 # So they get the data and then there will be no need to reinvent
 # the wheel.
-@app.route("/api/v1/user/by_id/<uid>", methods=["GET"])
+@app.route("/api/v1/uid/<uid>", methods=["GET"])
 @auth_desired
 @api("read")
 def user_by_uid(uid, v=None):
-    user=g.db.query(User).filter_by(id=base36decode(uid)).first()
-    if user == None:
-      abort(404)
+    user=get_account(uid)
     
     return redirect(f"/api/v1/user/{user.username}")
         
