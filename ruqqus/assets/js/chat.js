@@ -280,7 +280,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
   );
 
   socket.on('count', function(data){
-    $('#chat-count').text(data['count'])
+    $('.board-chat-count').text(data['count'])
   }
   );
 

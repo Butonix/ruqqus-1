@@ -2,9 +2,9 @@
 
 {% block stylesheets %}
 {% if v and session.get("dark_mode_enabled") %}
-<link id="css-link" rel="stylesheet" href="{{ b.css_dark_url }}?v=2.35.44">
+<link id="css-link" rel="stylesheet" href="{{ b.css_dark_url }}?v=2.35.45">
 {% else %}
-<link id="css-link" rel="stylesheet" href="{{ b.css_url }}?v=2.35.44">
+<link id="css-link" rel="stylesheet" href="{{ b.css_url }}?v=2.35.45">
 {% endif %}
 {% endblock %}
 
@@ -80,7 +80,7 @@
 </div>
 {% if b.can_chat(v) %}
 <div class="sidebar-section sidebar-chat">
-  <div class="title"><i class="fas fa-comments-alt mr-2"></i>Guild Chat (<i class="far fa-user fa-sm mr-1"></i><span id="chat-count">6</span>)</div>
+  <div class="title"><i class="fas fa-comments-alt mr-2"></i>Guild Chat (<i class="far fa-user fa-sm mr-1"></i><span class="board-chat-count">{{ b.chat_count }}</span>)</div>
   <div class="body">
     {% include "chat/chat_client.html" %}
   </div>
@@ -113,11 +113,11 @@
     css = document.getElementById("css-link");
     dswitch = document.getElementById("dark-switch");
 
-    if (css.href.endsWith("{{ b.css_url }}?v=2.35.44")) {
+    if (css.href.endsWith("{{ b.css_url }}?v=2.35.45")) {
       
       post("/settings/dark_mode/1",
         callback=function(){
-          css.href="{{ b.css_dark_url }}?v=2.35.44";
+          css.href="{{ b.css_dark_url }}?v=2.35.45";
           dswitch.classList.remove("fa-toggle-off");
           dswitch.classList.add("fa-toggle-on");
         }
@@ -126,7 +126,7 @@
     else {
       post("/settings/dark_mode/0",
         callback=function(){
-          css.href="{{ b.css_url }}?v=2.35.44";
+          css.href="{{ b.css_url }}?v=2.35.45";
           dswitch.classList.remove("fa-toggle-on");
           dswitch.classList.add("fa-toggle-off");
         }
@@ -337,14 +337,17 @@
             {% endif %}
           </h1>
         </a>
+
+        {% block mobile_description %}
         <div class="text-muted text-break">{{ b.description_html | safe }}</div>
+        {% endblock %}
         <p class="font-weight-bold">{{ [b.stored_subscriber_count, 0] | max }} member{{ 's' if b.stored_subscriber_count != 1 else '' }}
         </p>
         {% if b.has_mod(v) %}
         <a class="btn btn-outline-secondary btn-block text-muted mb-2" href="{{ b.permalink }}/mod/settings">Guild settings</a>
         {% endif %}
         {% if b.can_chat(v) %}
-        <a class="btn btn-primary btn-block text-white mb-2" href="{{ b.chat_url }}">Chat (<i class="far fa-user"></i>{{ b.chat_count }})</a>
+        <a class="btn btn-primary btn-block text-white mb-2" href="{{ b.chat_url }}">Chat (<i class="far fa-user"></i><span class="board-chat-count">{{ b.chat_count }}</span>)</a>
         {% endif %}
         {% if v %}
         <div id="button-sub-mobile" {% if is_subscribed %}class="d-none"{% endif %}><a class="btn btn-primary btn-block" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=toggleSub)">Join guild</a></div>

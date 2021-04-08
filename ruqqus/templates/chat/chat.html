@@ -6,6 +6,7 @@
 {% block sortnav %}{% endblock %}
 {% block viewfilters %}{% endblock %}
 {% block mobilenavbar %}{% endblock %}
+{% block mobile_description %}{% endblock %}
 
 {% block title %}
 <title>#{{ b.name }} - Ruqqus</title>
@@ -18,8 +19,8 @@
 
 {% block infobar %}
 <div class="border-right py-3 px-3">
-  <span data-toggle="tooltip" data-placement="bottom" title="people online right now">
-    <i class="far fa-user fa-sm text-muted mr-1"></i><span id="chat-count" class="text-muted">{{ b.chat_count }}</span>
+  <span data-toggle="tooltip" data-placement="bottom" title="people online right now" class="text-muted">
+    <i class="far fa-user fa-sm mr-1"></i><span class="board-chat-count">{{ b.chat_count }}</span>
   </span>
 </div>
 {% endblock %}
@@ -31,5 +32,5 @@
 {% include "expanded_image_modal.html" %}
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/all_js.js?v=2.35.44"></script>
+<script src="/assets/js/all_js.js?v=2.35.45"></script>
 {% endblock %}
