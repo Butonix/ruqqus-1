@@ -104,7 +104,7 @@ window.addEventListener('focus', on_focus);
 var scrolled_down=true;
 
 var should_scroll = function() {
-  scrolled_down= (window.scrollY+window.innerHeight >= document.body.scrollHeight)
+  scrolled_down= (window.scrollY+window.innerHeight >= document.body.scrollHeight-100)
 }
 
 var scroll=function() {
