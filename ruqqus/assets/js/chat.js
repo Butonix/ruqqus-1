@@ -102,11 +102,12 @@ window.addEventListener('blur', on_blur)
 window.addEventListener('focus', on_focus)
 
 var scrolled_down=true
-var should_scroll = function (){
+
+should_scroll = function (){
   scrolled_down= (window.scrollY+window.innerHeight >= document.body.scrollHeight)
 }
 
-var scroll=function(){
+scroll=function(){
   if (scrolled_down) {
     window.scrollTo(0,document.body.scrollHeight)
   }
