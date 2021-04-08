@@ -71,7 +71,7 @@ var flash = function(){
 
   guild=$('#guildname').val();
 
-  if (notifs>1 && focused==false){
+  if (notifs>=1 && focused==false){
     if (titletoggle) {
       $('title').text('['+notifs.toString()+'] #'+guild+'- Ruqqus');
       titletoggle=false;
@@ -80,7 +80,7 @@ var flash = function(){
       $('title').text('#'+guild+'- Ruqqus');
       titletoggle=true;
     }
-    setTimeout(flash, 1000)
+    setTimeout(flash, 500)
   }
   else {
     notifs=0
@@ -89,13 +89,15 @@ var flash = function(){
   }
 }
 
-window.onblur = function(){
+on_blur = function(){
   focused=false
 }
-window.onfocus = function(){
+on_focus = function(){
   focused=true
   flash()
 }
+window.addEventListener('blur', on_blur)
+window.addEventListener('focus', on_focus)
 
 socket.on('speak', function(json){
   console.log(json);
@@ -105,7 +107,7 @@ socket.on('speak', function(json){
 
   var my_name=$('#username').val()
   var template="#chat-line-template"
-  if (text.includes('@'+my_name)){
+  if (text.includes('href="/@'+my_name+'"')){
     template="#mention-template"
     notifs=notifs+1
     setTimeout(flash, 1000)
