@@ -28,33 +28,4 @@
 {% include "bootstrap.html" %}
 
 <script src="/assets/js/all_js.js?v=2.35.39"></script>
-
-
-<style>
-#loading-indicator:after {
-  overflow: hidden;
-  display: inline-block;
-  vertical-align: bottom;
-  -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
-  animation: ellipsis steps(4,end) 900ms infinite;
-  content: "\2026"; /* ascii code for the ellipsis character */
-  width: 0px;
-}
-
-@keyframes ellipsis {
-  to {
-    width: 20px;    
-  }
-}
-
-@-webkit-keyframes ellipsis {
-  to {
-    width: 20px;    
-  }
-}
-
-.chat-mention {
-  background-color: rgba(128, 90, 213, 0.3);
-}
-</style>
 {% endblock %}
