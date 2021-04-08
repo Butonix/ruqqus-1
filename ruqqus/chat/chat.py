@@ -103,7 +103,8 @@ def speak(text, user, guild, as_guild=False):
             "avatar": guild.profile_url,
             "username":guild.name,
             "text":text,
-            "room": guild.fullname
+            "room": guild.fullname,
+            "guild": guild.name
         }
         emit("motd", data, to=guild.fullname)
     else:
@@ -111,7 +112,8 @@ def speak(text, user, guild, as_guild=False):
             "avatar": user.profile_url,
             "username":user.username,
             "text":text,
-            "room": guild.fullname
+            "room": guild.fullname,
+            "guild": guild.name
         }
         if request.headers.get("X-User-Type")=="Bot":
             emit("bot", data, to=guild.fullname)
@@ -690,7 +692,8 @@ def speak_admin(args, guild, v):
         "avatar": v.profile_url,
         "username":v.username,
         "text":text,
-        'guild':guild.name
+        'guild':guild.name,
+        'room':guild.fullname
         }
     emit('admin', data, to=guild.fullname)
 
