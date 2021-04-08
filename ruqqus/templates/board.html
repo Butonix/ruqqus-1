@@ -194,7 +194,9 @@
 <!-- Desktop -->
 <div class="row d-none d-md-block">
   <div class="col px-0">
+    {% block desktopbanner %}
     <img src="{{ b.banner_url }}" style="width: 100%; height: 250px; object-fit: cover;">
+    {% endblock %}
   </div>
 </div>
 <div class="row border-bottom bg-white sticky d-none d-md-block guild-border-top" style="overflow: visible;">
