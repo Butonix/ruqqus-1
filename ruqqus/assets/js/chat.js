@@ -113,7 +113,7 @@ socket.on('speak', function(json){
   if (text.includes('href="/@'+my_name+'"')){
     $('#chat-line-template .chat-line').addClass('chat-mention');
     notifs=notifs+1;
-    setTimeout(flash, 1000);
+    setTimeout(flash, 500);
   }
   else {
     $('#chat-line-template .chat-line').removeClass('chat-mention');
@@ -197,7 +197,7 @@ socket.on('gm', function(json){
   if (text.includes('href="/@'+my_name+'"')){
     $('#gm-template .chat-line').addClass('chat-mention');
     notifs=notifs+1;
-    setTimeout(flash, 1000);
+    setTimeout(flash, 500);
   }
   else {
     $('#gm-template .chat-line').removeClass('chat-mention');
@@ -236,7 +236,7 @@ socket.on('admin', function(json){
   if (text.includes('href="/@'+my_name+'"')){
     $('#admin-template .chat-line').addClass('chat-mention');
     notifs=notifs+1;
-    setTimeout(flash, 1000);
+    setTimeout(flash, 500);
   }
   else {
     $('#admin-template .chat-line').removeClass('chat-mention');
