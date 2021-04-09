@@ -259,8 +259,8 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
 
     should_scroll()
     $('#msg-in-template img').attr('src', ava)
-    $('#msg-in-template a').attr('href','/+'+username)
-    $('#msg-in-template a').text('+'+username)
+    $('#msg-in-template a').attr('href','/@'+username)
+    $('#msg-in-template a').text('@'+username)
     $('#msg-in-template .chat-message').html(text)
     $('#chat-text').append($('#msg-in-template .chat-line').clone())
     scroll();
@@ -276,8 +276,8 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
 
     should_scroll()
     $('#msg-out-template img').attr('src', ava)
-    $('#msg-out-template a').attr('href','/+'+username)
-    $('#msg-out-template a').text('+'+username)
+    $('#msg-out-template a').attr('href','/@'+username)
+    $('#msg-out-template a').text('@'+username)
     $('#msg-out-template .chat-message').html(text)
     $('#chat-text').append($('#msg-out-template .chat-line').clone())
     scroll()
