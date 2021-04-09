@@ -117,7 +117,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
     }
   }
 
-  socket.on('speak', function(json){
+  var process_chat = function(json, template){
     console.log(json);
     username=json['username'];
     text=json['text'];
@@ -125,40 +125,34 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
 
     var my_name=$('#username').val()
 
-    if (text.includes('href="/@'+my_name+'"')){
-      $('#chat-line-template .chat-line').addClass('chat-mention');
+    if (template=="#msg-in" || text.includes('href="/@'+my_name+'"')){
+      $(template+'-template .chat-line').addClass('chat-mention');
       notifs=notifs+1;
       setTimeout(flash, 500);
     }
     else {
-      $('#chat-line-template .chat-line').removeClass('chat-mention');
+      $(template+' .chat-line').removeClass('chat-mention');
     };
 
     should_scroll()
-    $('#chat-line-template img').attr('src', ava)
-    $('#chat-line-template a').attr('href','/@'+username)
-    $('#chat-line-template a').text('@'+username)
-    $('#chat-line-template .chat-message').html(text)
-    $('#chat-text').append($('#chat-line-template .chat-line').clone())
+    $(template+'-template img').attr('src', ava)
+    $(template+'-template img').attr('data-original-title', json['time'])
+    $(template+'-template a').attr('href','/@'+username)
+    $(template+'-template a').text('@'+username)
+    $(template+'-template .chat-message').html(text)
+    $('#chat-text').append($(template+'-template .chat-line').clone())
     scroll()
   }
-  );
 
-    socket.on('bot', function(json){
-    console.log(json);
-    username=json['username'];
-    text=json['text'];
-    ava=json['avatar']
+  socket.on('speak', function(json){process_chat(json, "#chat-line")});
+  socket.on('bot',  function(json){process_chat(json, "#bot")});
+  socket.on('wallop',  function(json){process_chat(json, "#wallop")});
+  socket.on('gm',  function(json){process_chat(json, "#gm")});
+  socket.on('admin',  function(json){process_chat(json, "#admin")});
+  socket.on('motd',  function(json){process_chat(json, "#motd")});
+  socket.on('msg-out',  function(json){process_chat(json, "#msg-out")});
+  socket.on('msg-in',  function(json){process_chat(json, "#msg-in")});
 
-    should_scroll()
-    $('#bot-template img').attr('src', ava)
-    $('#bot-template a').attr('href','/@'+username)
-    $('#bot-template a').text('@'+username)
-    $('#bot-template .chat-message').html(text)
-    $('#chat-text').append($('#bot-template .chat-line').clone())
-    scroll()
-  }
-  );
 
   socket.on('message', function(msg){
     should_scroll()
@@ -189,123 +183,6 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
     should_scroll()
     $('#system-warning .message').text(data['msg'])
     $('#chat-text').append($('#system-warning .system-line').clone())
-    scroll()
-  }
-  );
-
-  socket.on('wallop', function(json){
-    console.log(json);
-    username=json['username'];
-    text=json['text'];
-    ava=json['avatar']
-
-    should_scroll()
-    $('#wallop-template img').attr('src', ava)
-    $('#wallop-template a').attr('href','/@'+username)
-    $('#wallop-template a').text('@'+username)
-    $('#wallop-template .chat-message').html(text)
-    $('#chat-text').append($('#wallop-template .chat-line').clone())
-    scroll()
-  }
-  );
-
-  socket.on('gm', function(json){
-    console.log(json);
-    username=json['username'];
-    text=json['text'];
-    ava=json['avatar']
-
-    var my_name=$('#username').val()
-
-    if (text.includes('href="/@'+my_name+'"')){
-      $('#gm-template .chat-line').addClass('chat-mention');
-      notifs=notifs+1;
-      setTimeout(flash, 500);
-    }
-    else {
-      $('#gm-template .chat-line').removeClass('chat-mention');
-    }
-
-    should_scroll()
-    $('#gm-template img').attr('src', ava)
-    $('#gm-template a').attr('href','/@'+username)
-    $('#gm-template a').text('@'+username)
-    $('#gm-template .chat-message').html(text)
-    $('#chat-text').append($('#gm-template .chat-line').clone())
-    scroll()
-  }
-  );
-
-  socket.on('motd', function(json){
-    console.log(json);
-    username=json['username'];
-    text=json['text'];
-    ava=json['avatar']
-
-    should_scroll()
-    $('#motd-template img').attr('src', ava)
-    $('#motd-template a').attr('href','/+'+username)
-    $('#motd-template a').text('+'+username)
-    $('#motd-template .chat-message').html(text)
-    $('#chat-text').append($('#motd-template .chat-line').clone())
-    scroll()
-  }
-  );
-  socket.on('msg-in', function(json){
-    console.log(json);
-    username=json['username'];
-    text=json['text'];
-    ava=json['avatar']
-
-    should_scroll()
-    $('#msg-in-template img').attr('src', ava)
-    $('#msg-in-template a').attr('href','/@'+username)
-    $('#msg-in-template a').text('@'+username)
-    $('#msg-in-template .chat-message').html(text)
-    $('#chat-text').append($('#msg-in-template .chat-line').clone())
-    scroll();
-    notifs=notifs+1;
-    setTimeout(flash, 500);
-  }
-  );
-  socket.on('msg-out', function(json){
-    console.log(json);
-    username=json['username'];
-    text=json['text'];
-    ava=json['avatar']
-
-    should_scroll()
-    $('#msg-out-template img').attr('src', ava)
-    $('#msg-out-template a').attr('href','/@'+username)
-    $('#msg-out-template a').text('@'+username)
-    $('#msg-out-template .chat-message').html(text)
-    $('#chat-text').append($('#msg-out-template .chat-line').clone())
-    scroll()
-  }
-  );
-  socket.on('admin', function(json){
-    console.log(json);
-    username=json['username'];
-    text=json['text'];
-    ava=json['avatar']
-
-    var my_name=$('#username').val()
-
-    if (text.includes('href="/@'+my_name+'"')){
-      $('#admin-template .chat-line').addClass('chat-mention');
-      notifs=notifs+1;
-      setTimeout(flash, 500);
-    }
-    else {
-      $('#admin-template .chat-line').removeClass('chat-mention');
-    }
-
-    should_scroll()
-    $('#admin-template img').attr('src', ava)
-    $('#admin-template a').attr('href','/@'+username)
-    $('#admin-template a').text('@'+username)
-    $('#admin-template .chat-message').html(text)
-    $('#chat-text').append($('#admin-template .chat-line').clone())
     scroll()
   }
   );
