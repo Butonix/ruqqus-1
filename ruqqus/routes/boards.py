@@ -651,7 +651,11 @@ def mod_invite_username(bid, board, v):
 
     username = request.form.get("username", '').lstrip('@')
     user = get_user(username)
+    if not user:
+        return jsonify({"error": "That user doesn't exist."}), 404
 
+    if board.has_ban(user):
+        return jsonify({"error": f"@{user.username} is exiled from +{board.name} and can't currently become a guildmaster."}), 409
     if not user.can_join_gms:
         return jsonify({"error": f"@{user.username} already leads enough guilds."}), 409
 
@@ -740,7 +744,8 @@ def mod_accept_board(bid, v):
 
     if not v.can_join_gms:
         return jsonify({"error": f"You already lead enough guilds."}), 409
-
+    if board.has_ban(v):
+        return jsonify({"error": f"You are exiled from +{board.name} and can't currently become a guildmaster."}), 409
     x.accepted = True
     x.created_utc=int(time.time())
     g.db.add(x)
@@ -2051,7 +2056,6 @@ def board_mod_perms_change(boardname, board, v):
     g.db.add(ma)
 
     return redirect(f"{board.permalink}/mod/mods")
-
 
 # @app.route("/mod/chatban/<bid>", methods=["POST"])
 # @app.route("/api/v1/chatban/<bid>", methods=["POST"])
