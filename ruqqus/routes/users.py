@@ -115,7 +115,7 @@ def u_username(username, v=None):
         return {'html': lambda: render_template("userpage_reserved.html",
                                                 u=u,
                                                 v=v),
-                'api': lambda: {"error": "That user is banned"}
+                'api': lambda: {"error": f"That username is reserved for: {u.reserved}"}
                 }
 
     if u.is_suspended and (not v or v.admin_level < 3):
@@ -198,7 +198,7 @@ def u_username_comments(username, v=None):
         return {'html': lambda: render_template("userpage_reserved.html",
                                                 u=u,
                                                 v=v),
-                'api': lambda: {"error": "That user is banned"}
+                'api': lambda: {"error": f"That username is reserved for: {u.reserved}"}
                 }
 
     if u.is_suspended and (not v or v.admin_level < 3):
@@ -504,7 +504,7 @@ def info_packet(username, method="html"):
 
 
 
-@app.route("/my_info", methods=["POST"])
+#@app.route("/my_info", methods=["POST"])
 #@limiter.limit("2/day")
 @auth_required
 @validate_formkey
@@ -520,9 +520,3 @@ def my_info_post(v):
     gevent.spawn_later(5, info_packet, v.username, method=method)
 
     return "started"
-
-
-@app.route("/my_info", methods=["GET"])
-@auth_required
-def my_info_get(v):
-    return render_template("my_info.html", v=v)
