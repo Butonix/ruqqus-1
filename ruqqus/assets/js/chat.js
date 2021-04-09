@@ -2,6 +2,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
 
   var socket=io();
   var is_typing=false;
+  var recent_sender=$('username').text()
 
   $('#chatsend').click(function (event) {
 
@@ -14,6 +15,13 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
 
     text = $('#input-text').val()
     guild=$('#guildname').val()
+
+    if (text.startsWith("~")) {
+      text=text.replace("~", "/msg "+recent_sender+" ")
+    }
+    else if (text.startsWith("/reply")) {
+      text=text.replace("/reply", "/msg "+recent_sender+" ")
+    }
 
     socket.emit('speak', {text: text, guild: guild});
     $('#input-text').val('')
@@ -151,7 +159,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
   socket.on('admin',  function(json){process_chat(json, "#admin")});
   socket.on('motd',  function(json){process_chat(json, "#motd")});
   socket.on('msg-out',  function(json){process_chat(json, "#msg-out")});
-  socket.on('msg-in',  function(json){process_chat(json, "#msg-in")});
+  socket.on('msg-in',  function(json){process_chat(json, "#msg-in");recent_sender=json["username"]});
 
 
   socket.on('message', function(msg){

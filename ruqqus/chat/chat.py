@@ -834,6 +834,10 @@ def direct_message(args, guild, v):
     for sid in SIDS.get(v.id,[]):
         emit('msg-out', data, to=sid)
 
+@command("reply", synax="<text>")
+def reply_function(*args, **kwargs):
+    """Send a reply to the most recent direct message. Shortcut: `~`"""
+    pass
 
 ##############
 #            #
