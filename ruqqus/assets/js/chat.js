@@ -139,7 +139,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
       setTimeout(flash, 500);
     }
     else {
-      $(template+' .chat-line').removeClass('chat-mention');
+      $(template+'-template .chat-line').removeClass('chat-mention');
     };
 
     should_scroll()
@@ -158,7 +158,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
   socket.on('gm',  function(json){process_chat(json, "#gm")});
   socket.on('admin',  function(json){process_chat(json, "#admin")});
   socket.on('motd',  function(json){process_chat(json, "#motd")});
-  socket.on('msg-out',  function(json){process_chat(json, "#msg-out")});
+  socket.on('msg-out',  function(json){process_chat(json, "#msg-out");recent_sender=json["username"]});
   socket.on('msg-in',  function(json){process_chat(json, "#msg-in");recent_sender=json["username"]});
 
 
