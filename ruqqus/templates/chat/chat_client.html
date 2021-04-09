@@ -58,8 +58,8 @@
     </div>
   </div>
 
-  <div id="mention-template" class="d-none">
-    <div class="chat-line my-2" style="background-color:#f4a460">
+  <div id="msg-in-template" class="d-none">
+    <div class="chat-line my-2 chat-mention">
       <div class="d-flex align-items-center">
         <span class="rounded mb-auto d-none d-md-block chat-profile">
           <img class="desktop-avatar rounded-circle w-100">
@@ -67,7 +67,26 @@
         <div class="pl-md-3 text-muted">
           <div>
             <img class="mobile-avatar profile-pic-30 mr-2 d-inline-block d-md-none" >
-            <a href="" class="font-weight-bold text-black" target="_blank"></a>
+            from <a href="" class="font-weight-bold text-black" target="_blank"></a> to <b>me</b>.<i class="fad fa-eye-slash ml-1"></i>
+            <div style="overflow:hidden" class="pl-4 pl-md-0 ml-4 ml-md-0">
+              <span class="chat-message text-black"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="msg-out-template" class="d-none">
+    <div class="chat-line my-2">
+      <div class="d-flex align-items-center">
+        <span class="rounded mb-auto d-none d-md-block chat-profile">
+          <img class="desktop-avatar rounded-circle w-100">
+        </span>
+        <div class="pl-md-3 text-muted">
+          <div>
+            <img class="mobile-avatar profile-pic-30 mr-2 d-inline-block d-md-none" >
+            from <b>me</b> to <a href="" class="font-weight-bold text-black" target="_blank">.<i class="fad fa-eye-slash ml-1"></i>
             <div style="overflow:hidden" class="pl-4 pl-md-0 ml-4 ml-md-0">
               <span class="chat-message text-black"></span>
             </div>
@@ -200,7 +219,7 @@
 <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
 <script src="https://cdn.socket.io/4.0.0/socket.io.min.js" integrity="sha384-DkkWv9oJFWLIydBXXjkBWnG1/fuVhw8YPBq37uvvD6WSYRFRqr21eY5Dg9ZhmWdy" crossorigin="anonymous"></script>
 
-<script src="/assets/js/chat.js?v=2.35.47"></script>
+<script src="/assets/js/chat.js?v=2.35.48"></script>
 
 <style>
 #loading-indicator:after {

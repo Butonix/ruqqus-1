@@ -251,7 +251,38 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
     scroll()
   }
   );
+  socket.on('msg-in', function(json){
+    console.log(json);
+    username=json['username'];
+    text=json['text'];
+    ava=json['avatar']
 
+    should_scroll()
+    $('#msg-in-template img').attr('src', ava)
+    $('#msg-in-template a').attr('href','/+'+username)
+    $('#msg-in-template a').text('+'+username)
+    $('#msg-in-template .chat-message').html(text)
+    $('#chat-text').append($('#msg-in-template .chat-line').clone())
+    scroll();
+    notifs=notifs+1;
+    setTimeout(flash, 500);
+  }
+  );
+  socket.on('msg-out', function(json){
+    console.log(json);
+    username=json['username'];
+    text=json['text'];
+    ava=json['avatar']
+
+    should_scroll()
+    $('#msg-out-template img').attr('src', ava)
+    $('#msg-out-template a').attr('href','/+'+username)
+    $('#msg-out-template a').text('+'+username)
+    $('#msg-out-template .chat-message').html(text)
+    $('#chat-text').append($('#msg-out-template .chat-line').clone())
+    scroll()
+  }
+  );
   socket.on('admin', function(json){
     console.log(json);
     username=json['username'];

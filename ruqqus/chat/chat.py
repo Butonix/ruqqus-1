@@ -775,6 +775,51 @@ def say_guild(args, guild, v):
         }
     emit('motd', data, to=guild.fullname)
 
+@command('msg', syntax="<username> <text>")
+def direct_message(args, guild, v):
+    """Send someone a private message."""
+
+    if len(args)<3:
+        send("Not enough arguments. Type `/help msg` for more information.")
+        return
+
+    user=get_user(args[1])
+
+    targets=SIDS.get(user.id, [])
+    if not targets:
+        send(f"@{user.username} is not online right now.")
+
+    text=" ".join(args[2:])
+
+    text=preprocess(text)
+    with CustomRenderer() as renderer:
+        text = renderer.render(mistletoe.Document(text))
+    text = sanitize(text, linkgen=True)
+
+    data={
+        "avatar": v.profile_url,
+        "username":v.username,
+        "text":text
+        }
+
+    for sid in targets:
+        emit('msg-in', data, to=sid)
+
+    data={
+        "avatar": user.profile_url,
+        "username":user.username,
+        "text":text
+        }
+    for sid in SIDS.get(v.id,[]):
+        emit('msg-out', data, to=sid)
+
+
+##############
+#            #
+#  PICTURES  #
+#            #
+##############
+
 
 @app.route("/chat_upload", methods=["POST"])
 @is_not_banned
