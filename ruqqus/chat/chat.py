@@ -788,6 +788,7 @@ def direct_message(args, guild, v):
     targets=SIDS.get(user.id, [])
     if not targets:
         send(f"@{user.username} is not online right now.")
+        return
 
     text=" ".join(args[2:])
 
