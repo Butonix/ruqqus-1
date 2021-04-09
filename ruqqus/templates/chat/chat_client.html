@@ -17,6 +17,7 @@
     {% endif %}
     <button id="chatsend" class="btn btn-primary ml-3" type="submit">Send</button>
   </div>
+  <input id="autojoin" type="hidden" value="True">
   {% else %}
   <div class="position-relative form-group pb-3">
     <div class="position-absolute text-muted text-small" style="bottom: -.5rem; line-height: 1;">
@@ -34,10 +35,10 @@
       <button id="chatsend" class="btn btn-primary w-100 ml-auto" type="submit">Send</button>
     </div>
   </div>
+  <input id="autojoin" type="hidden" value="{{ v.auto_join_chat }}">
     {% endif %}
   <input id="guildname" type="hidden" value="{{ b.name if b else 'general' }}">
   <input id="username" type="hidden" value="{{ v.username }}">
-  <input id="autojoin" type="hidden" value="{{ v.auto_join_chat }}">
 
   <div id="chat-line-template" class="d-none">
     <div class="chat-line my-2">
