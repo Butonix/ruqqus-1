@@ -222,7 +222,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
       }
     }
     )
-  document.getElementById('intput-text').addEventListener("keydown", function(event){
+  document.getElementById('input-text').addEventListener("keydown", function(event){
     if (event.keyCode===9) {
       event.preventDefault();
       $('#input-text').val("/msg "+recent_sender+" ")
