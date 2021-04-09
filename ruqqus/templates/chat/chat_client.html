@@ -8,8 +8,6 @@
       <span id="typing-indicator"></span>
       <span id="loading-indicator" class="d-none"></span>
     </div>
-    <input id="guildname" type="hidden" value="{{ b.name }}">
-    <input id="username" type="hidden" value="{{ v.username }}">
     <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name }} chat, or type /help for information about chat commands" autocomplete="off" autofocus />
     {% if v.has_premium %}
         <label class="btn btn-secondary ml-3 mb-0" for="chat-image-upload">
@@ -25,8 +23,6 @@
       <span id="typing-indicator"></span>
       <span id="loading-indicator" class="d-none"></span>
     </div>
-    <input id="guildname" type="hidden" value="{{ b.name }}">
-    <input id="username" type="hidden" value="{{ v.username }}">
     <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name }} chat, or type /help for information about chat commands" autocomplete="off" />
     <div class="d-flex mt-3">
       {% if v.has_premium %}
@@ -37,8 +33,11 @@
       {% endif %}
       <button id="chatsend" class="btn btn-primary w-100 ml-auto" type="submit">Send</button>
     </div>
-    {% endif %}
   </div>
+    {% endif %}
+  <input id="guildname" type="hidden" value="{{ b.name }}">
+  <input id="username" type="hidden" value="{{ v.username }}">
+  <input id="autojoin" type="hidden" value="{{ v.auto_join_chat }}">
 
   <div id="chat-line-template" class="d-none">
     <div class="chat-line my-2">
@@ -201,7 +200,7 @@
 <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
 <script src="https://cdn.socket.io/4.0.0/socket.io.min.js" integrity="sha384-DkkWv9oJFWLIydBXXjkBWnG1/fuVhw8YPBq37uvvD6WSYRFRqr21eY5Dg9ZhmWdy" crossorigin="anonymous"></script>
 
-<script src="/assets/js/chat.js?v=2.35.46"></script>
+<script src="/assets/js/chat.js?v=2.35.47"></script>
 
 <style>
 #loading-indicator:after {

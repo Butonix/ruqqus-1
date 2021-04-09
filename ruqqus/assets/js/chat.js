@@ -288,7 +288,11 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
     function(event) {
       console.log('connected, joining room')
       name=$('#guildname').val();
-      socket.emit('join room', {'guild': name });
+
+      join=($('#autojoin').val()=="True")
+      if (join){
+        socket.emit('join room', {'guild': name });
+      }
     }
     )
 
