@@ -76,7 +76,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
     if (notifs>=1 && focused==false){
       $('link[rel="shortcut icon"]').attr('href','/assets/images/logo/favicon_alert.png')
       if (titletoggle) {
-        $('title').text('['+notifs.toString()+'] #'+ original_title);
+        $('title').text('['+notifs.toString()+'] '+ original_title);
         titletoggle=false;
       }
       else {
