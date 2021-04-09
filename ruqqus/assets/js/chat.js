@@ -16,13 +16,6 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
     text = $('#input-text').val()
     guild=$('#guildname').val()
 
-    if (text.startsWith("~")) {
-      text=text.replace("~", "/msg "+recent_sender+" ")
-    }
-    else if (text.startsWith("/reply")) {
-      text=text.replace("/reply", "/msg "+recent_sender+" ")
-    }
-
     socket.emit('speak', {text: text, guild: guild});
     $('#input-text').val('')
     is_typing=false
@@ -225,7 +218,9 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
   document.getElementById('input-text').addEventListener("keydown", function(event){
     if (event.keyCode===9) {
       event.preventDefault();
-      $('#input-text').val("/msg "+recent_sender+" ")
+      if (! $('#input-text').val().startsWith('/msg')) {
+        $('#input-text').val("/msg "+recent_sender+" "+$('#input-text').val())
+      }
     }
   })
 

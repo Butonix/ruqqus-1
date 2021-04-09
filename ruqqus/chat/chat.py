@@ -790,7 +790,7 @@ def say_guild(args, guild, v):
 
 @command('msg', syntax="<username> <text>")
 def direct_message(args, guild, v):
-    """Send someone a private message."""
+    """Send someone a private message. Use Tab to reply to the most recent private message"""
 
     if len(args)<3:
         send("Not enough arguments. Type `/help msg` for more information.")
@@ -833,11 +833,6 @@ def direct_message(args, guild, v):
         }
     for sid in SIDS.get(v.id,[]):
         emit('msg-out', data, to=sid)
-
-@command("reply", syntax="<text>")
-def reply_function(args, guild, v):
-    """Send a reply to the most recent direct message. Shortcut: `~`"""
-    pass
 
 ##############
 #            #
