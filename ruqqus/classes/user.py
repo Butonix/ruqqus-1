@@ -93,7 +93,7 @@ class User(Base, Stndrd, Age_times):
     filter_nsfw = Column(Boolean, default=False)
     stored_karma = Column(Integer, default=0)
     stored_subscriber_count=Column(Integer, default=0)
-    auto_join_chat=Column(Boolean, default=True)
+    auto_join_chat=Column(Boolean, default=False)
 
     coin_balance=Column(Integer, default=0)
     premium_expires_utc=Column(Integer, default=0)
