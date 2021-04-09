@@ -242,7 +242,7 @@ def socket_disconnect_user(v):
 def join_guild_room(data, v, guild):
 
     if not guild.can_chat(v):
-        send(f"You can't join the +{guild.name} chat right now.")
+        send(f"You can't join #{guild.name} right now.")
         return False
 
     broadcast= guild.fullname not in v_rooms(v)
@@ -285,7 +285,7 @@ def leave_guild_room(data, v, guild):
 def speak_guild(data, v, guild):
 
     if guild.fullname not in rooms():
-        send("You aren't connected to that chat room. Trying to join...")
+        send(f"You aren't connected to #{guild.name}. Trying to join...")
         x=join_guild_room(data)
         if not x:
             return
