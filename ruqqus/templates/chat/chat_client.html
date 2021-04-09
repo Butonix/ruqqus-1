@@ -8,7 +8,7 @@
       <span id="typing-indicator"></span>
       <span id="loading-indicator" class="d-none"></span>
     </div>
-    <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name }} chat, or type /help for information about chat commands" autocomplete="off" autofocus />
+    <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name if b else 'general' }} chat, or type /help for information about chat commands" autocomplete="off" autofocus />
     {% if v.has_premium %}
         <label class="btn btn-secondary ml-3 mb-0" for="chat-image-upload">
           <div id="filename-show"><i class="fad fa-image"></i></div>
@@ -23,7 +23,7 @@
       <span id="typing-indicator"></span>
       <span id="loading-indicator" class="d-none"></span>
     </div>
-    <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name }} chat, or type /help for information about chat commands" autocomplete="off" />
+    <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name if b else 'general' }} chat, or type /help for information about chat commands" autocomplete="off" />
     <div class="d-flex mt-3">
       {% if v.has_premium %}
           <label class="btn btn-secondary w-20 mr-3 mb-0 ml-auto" for="chat-image-upload">
@@ -35,7 +35,7 @@
     </div>
   </div>
     {% endif %}
-  <input id="guildname" type="hidden" value="{{ b.name }}">
+  <input id="guildname" type="hidden" value="{{ b.name if b else 'general' }}">
   <input id="username" type="hidden" value="{{ v.username }}">
   <input id="autojoin" type="hidden" value="{{ v.auto_join_chat }}">
 
