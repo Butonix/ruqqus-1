@@ -783,7 +783,10 @@ def direct_message(args, guild, v):
         send("Not enough arguments. Type `/help msg` for more information.")
         return
 
-    user=get_user(args[1])
+    user=get_user(args[1], graceful=True)
+    if not user:
+        send(f"No user named @{args[1]}.")
+        return
 
     targets=SIDS.get(user.id, [])
     if not targets:
