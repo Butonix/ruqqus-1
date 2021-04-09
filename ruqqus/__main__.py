@@ -137,7 +137,7 @@ class CorsMatch(str):
         elif isinstance(other, list):
             if f'https{app.config["SERVER_NAME"]}' in other:
                 return True
-            elif any([x.endswith(".ruqqus.com") for x in other])
+            elif any([x.endswith(".ruqqus.com") for x in other]):
                 return True
 
         return False
