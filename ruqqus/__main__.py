@@ -127,7 +127,6 @@ Compress(app)
 class CorsMatch(str):
 
     def __eq__(self, other):
-        print(f"other: {other}")
         if isinstance(other, str):
             if other==f'https://{app.config["SERVER_NAME"]}':
                 return True
