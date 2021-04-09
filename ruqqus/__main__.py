@@ -124,9 +124,20 @@ Markdown(app)
 cache = Cache(app)
 Compress(app)
 
+class CorsMatch(str):
+
+    def __eq__(self, other)
+        if other==f'https{app.config["SERVER_NAME"]}':
+            return True
+
+        elif other.endswith(".ruqqus.com"):
+            return True
+
+        return False
+
 socketio=SocketIO(
 	app,
-	cors_allowed_origins=f'https://{app.config["SERVER_NAME"]}'
+	cors_allowed_origins=CorsMatch()
 	#message_queue=environ.get("REDIS_CHAT_URL")
 	)
 
