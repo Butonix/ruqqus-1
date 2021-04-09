@@ -2,7 +2,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
 
   var socket=io();
   var is_typing=false;
-  var recent_sender=$('username').text()
+  var recent_sender=$('username').val()
 
   $('#chatsend').click(function (event) {
 
