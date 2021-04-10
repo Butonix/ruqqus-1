@@ -155,4 +155,28 @@ if input().startswith('y'):
     print("HCaptcha Secret")
     envs["HCAPTCHA_SECRET"]=input() or environ.get("HCAPTCHA_SECRET")
 
+keys=[x for x in envs.keys()].sorted()
+
+with open(f"{path}/env.sh", "w+") as f:
+    f.write("\n".join([f"export {x}={envs[x]}" for x in keys]))
+
+start_script="""
+killall gunicorn
+cd ~/ruqqus
+git pull
+source startup.sh
+"""
+with open(f"{path}/go.sh", "w+") as f:
+    f.write(start_script)
+
+
 print("")
+print("")
+print('   /\\')
+print(' _/__\\_')
+print(' ╭───────╮')
+print('╭┤  ╹ ╹  ├╮')
+print(' ╰─┬───┬─╯')
+print("")
+print("")
+print("Ruqqus is set up! To start Ruqqus navigate to the folder above the repository and run `source go.sh`")
