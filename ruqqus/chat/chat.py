@@ -222,7 +222,7 @@ def socket_connect_auth_user():
     g.db.close()
     g.v=v
 
-    send("Connected")
+    emit("status", {'status':"connected"})
 
 @socketio.on('disconnect')
 @socket_auth_required
@@ -277,6 +277,7 @@ def join_guild_room(data, v, guild):
             "time": now()
             }
         emit('motd', data, to=request.sid)
+
     return True
 
 @socketio.on('leave room')
@@ -293,6 +294,7 @@ def leave_guild_room(data, v, guild):
         TYPING[guild.fullname].remove(v.username)
         emit('typing', {'users':TYPING[guild.fullname]}, to=guild.fullname)
 
+    emit("status", {'status':f"Left #{guild.name}"})
 
 @socketio.on('speak')
 @socket_auth_required
