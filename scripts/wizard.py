@@ -34,7 +34,7 @@ if "env.sh" in files:
 
 first="env.sh" not in files
 
-os.system(f"export PYTHONPATH=$PYTHONPATH:{path}/ruqqus")
+os.system(f"export PYTHONPATH=$PYTHONPATH:{path}")
 from ruqqus.__main__ import *
 from ruqqus.classes import *
 
