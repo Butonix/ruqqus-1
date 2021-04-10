@@ -99,7 +99,6 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
   };
   on_focus = function(){
     focused=true
-    flash()
   };
   window.addEventListener('blur', on_blur);
   window.addEventListener('focus', on_focus);
@@ -129,7 +128,9 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
     if (template=="#msg-in" || text.includes('href="/@'+my_name+'"')){
       $(template+'-template .chat-line').addClass('chat-mention');
       notifs=notifs+1;
-      setTimeout(flash, 500);
+      if (notifs==1){
+        setTimeout(flash, 500);
+      }
     }
     else {
       $(template+'-template .chat-line').removeClass('chat-mention');

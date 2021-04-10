@@ -802,7 +802,7 @@ def direct_message(args, guild, v):
         return
 
     targets=SIDS.get(user.id, [])
-    if not targets:
+    if (not targets) or v.any_block_exists(user):
         send(f"@{user.username} is not online right now.")
         return
 
