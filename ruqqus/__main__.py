@@ -85,9 +85,9 @@ else:
 app.config["CACHE_DIR"] = environ.get("CACHE_DIR", "ruqquscache")
 
 # captcha configs
-app.config["HCAPTCHA_SITEKEY"] = environ.get("HCAPTCHA_SITEKEY")
+app.config["HCAPTCHA_SITEKEY"] = environ.get("HCAPTCHA_SITEKEY","")
 app.config["HCAPTCHA_SECRET"] = environ.get(
-    "HCAPTCHA_SECRET").lstrip().rstrip()
+    "HCAPTCHA_SECRET","").lstrip().rstrip()
 app.config["SIGNUP_HOURLY_LIMIT"]=int(environ.get("SIGNUP_HOURLY_LIMIT",0))
 
 # antispam configs
@@ -111,13 +111,6 @@ app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
 
 # redispool=BlockingConnectionPool(max_connections=app.config["REDIS_POOL_SIZE"])
 # app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
-
-
-# setup env vars - convenience statement
-
-for x in ["DATABASE_URL", "SECRET_KEY"]:
-    if not app.config.get(x):
-        raise RuntimeError(f"The following environment variable must be defined: {x}")
 
 
 Markdown(app)
