@@ -30,6 +30,8 @@ files=os.listdir(path)
 if "env.sh" in files:
     os.system(f"source {path}/env.sh")
 
+first="env.sh" not in files
+
 if "venv" not in files:
 
 
@@ -77,7 +79,11 @@ os.system("pip install -r {path}/ruqqus/requirements.txt")
 
 
 print("Next, I need some information to cast my setup spells.")
-print("This information is required. Optional things will be later.")
+if "env.sh" in files:
+    print("This information is required,")
+    print("but you can press enter to skip items and leave them at their current setting")
+else:
+    print("This information is required.")
 
 envs={}
 
@@ -85,10 +91,10 @@ print("What is the name of your site?")
 envs["SITE_NAME"]=input().lower() or environ.get("SITE_NAME")
 
 print("What is the domain that your site will run under?")
-envs["SERVER_NAME"]=input() or environ.get("SERVER_NAME") or "localhost:5000"
+envs["SERVER_NAME"]=input().lower() or environ.get("SERVER_NAME") or "localhost:5000"
 
 print("Postgres database url (postgres://username:password@host:port)")
-envs["DATABASE_URL"]=input() or environ.get("DATABASE_URL")
+envs["DATABASE_URL"]=input().lower() or environ.get("DATABASE_URL")
 
 print("")
 print("")
@@ -109,7 +115,7 @@ print("Master Secret (If you don't have one already, I'll generate one for you.)
 envs["MASTER_KEY"]=input() or environ.get("MASTER_KEY", secrets.token_urlsafe(1024))
 
 print("Redis url (redis://host)")
-envs["REDIS_URL"]=input() or environ.get("REDIS_URL", "")
+envs["REDIS_URL"]=input().lower() or environ.get("REDIS_URL", "")
 envs["CACHE_TYPE"]="redis" if envs["REDIS_URL"] else "filesystem"
 
 print("")
@@ -122,17 +128,17 @@ print(' ╰─┬───┬─╯')
 print("")
 print("")
 print("Next, I'll ask you about some third-party services that I can integrate with.")
-print("To skip any item, or to leave it at its current setting,just press enter.")
-
 print("")
-print("Are you using CloudFlare? (y/n)")
+
+if first:
+    print("Are you using Giphy for gif insertion? (y/n)")
+else:
+    print("Change Giphy settings? (y/n)")
 if input().startswith('y'):
-
-    print("Cloudflare API Key:")
-    envs["CLOUDFLARE_KEY"]=input() or environ.get("CLOUDFLARE_KEY","")
-
-    print("Cloudflare Zone:")
-    envs["CLOUDFLARE_ZONE"]=input() or environ.get("CLOUDFLARE_ZONE","")
+    print("Giphy Key:")
+    envs["GIPHY_KEY"]=input() or environ.get("GIPHY_KEY")
+else:
+    envs["GIPHY_KEY"]=environ.get("GIPHY_KEY","")
 
 print("Are you using AWS S3 to host images? (y/n)")
 if input().startswith('y'):
@@ -147,13 +153,59 @@ if input().startswith('y'):
     print("AWS Secret Access Key:")
     envs["AWS_SECRET_ACCESS_KEY"]=input() or environ.get("AWS_SECRET_ACCESS_KEY","")
 
+else:
+    envs["S3_BUCKET_NAME"]=environ.get("S3_BUCKET_NAME","")
+    envs["AWS_ACCESS_KEY_ID"]=environ.get("AWS_ACCESS_KEY_ID","")
+    envs["AWS_SECRET_ACCESS_KEY"]=environ.get("AWS_SECRET_ACCESS_KEY","")
+
+print("Are you using CloudFlare? (y/n)")
+if input().startswith('y'):
+
+    print("Cloudflare API Key:")
+    envs["CLOUDFLARE_KEY"]=input() or environ.get("CLOUDFLARE_KEY","")
+
+    print("Cloudflare Zone:")
+    envs["CLOUDFLARE_ZONE"]=input() or environ.get("CLOUDFLARE_ZONE","")
+
+else:
+    envs["CLOUDFLARE_KEY"]=environ.get("CLOUDFLARE_KEY","")
+    envs["CLOUDFLARE_ZONE"]=environ.get("CLOUDFLARE_ZONE","")
+
 print("Are you using HCaptcha to block bot signups?")
 if input().startswith('y'):
     print("HCaptcha Site Key")
-    envs["HCAPTCHA_SITEKEY"]=input() or environ.get("HCAPTCHA_SITEKEY")
+    envs["HCAPTCHA_SITEKEY"]=input() or environ.get("HCAPTCHA_SITEKEY","")
 
     print("HCaptcha Secret")
-    envs["HCAPTCHA_SECRET"]=input() or environ.get("HCAPTCHA_SECRET")
+    envs["HCAPTCHA_SECRET"]=input() or environ.get("HCAPTCHA_SECRET","")
+else:
+    envs["HCAPTCHA_SITEKEY"]=environ.get("HCAPTCHA_SITEKEY","")
+    envs["HCAPTCHA_SECRET"]=environ.get("HCAPTCHA_SECRET","")
+
+print("Are you using MailGun as an email provider?")
+if input().startswith('y'):
+    print("Your email:")
+    envs["admin_email"]=input() or environ.get("admin_email","")
+
+    print("Mailgun Key:")
+    envs["MAILGUN_KEY"]=input() or environ.get("MAILGUN_KEY","")
+
+print("Are you using PayPal for premium payments?")
+if input().startswith('y'):
+    print("Paypal Client ID:")
+    envs["PAYPAL_CLIENT_ID"]=input() or environ.get("PAYPAL_CLIENT_ID","")
+
+    print("PayPal Client Secret:")
+    envs["PAYPAL_CLIENT_SECRET"]=input() or environ.get("PAYPAL_CLIENT_SECRET","")
+
+    print("PayPal Webhook ID:")
+    envs["PAYPAL_WEBHOOK_ID"]=input() or environ.get("PAYPAL_WEBHOOK_ID","")
+else:
+    envs["PAYPAL_CLIENT_ID"]=environ.get("PAYPAL_CLIENT_ID","")
+    envs["PAYPAL_CLIENT_SECRET"]=environ.get("PAYPAL_CLIENT_SECRET","")
+    envs["PAYPAL_WEBHOOK_ID"]=environ.get("PAYPAL_WEBHOOK_ID","")
+
+
 
 keys=[x for x in envs.keys()].sorted()
 
