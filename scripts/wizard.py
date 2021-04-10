@@ -240,6 +240,18 @@ else:
     envs["PAYPAL_CLIENT_SECRET"]=environ.get("PAYPAL_CLIENT_SECRET","")
     envs["PAYPAL_WEBHOOK_ID"]=environ.get("PAYPAL_WEBHOOK_ID","")
 
+
+envs["PYTHONPATH"]=f"$PYTHONPATH:{path}/ruqqus"
+
+
+keys=[x for x in envs.keys()].sorted()
+
+with open(f"{path}/env.sh", "w+") as f:
+    f.write("\n".join([f"export {x}={envs[x]}" for x in keys]))
+
+
+
+
 ###db setup sql
 if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
     print("")
@@ -269,7 +281,11 @@ if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
         escaped_sql = sqlalchemy.text(file.read())
         engine.execute(escaped_sql)
 
+    os.system(f"source {path}/env.sh")
+    from ruqqus.__main__ import *
+    from ruqqus.classes import *
 
+    db=db_session()
     sys_account = User(
         id=1,
         username=envs["SITE_NAME"],
@@ -280,7 +296,6 @@ if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
         tos_agreed_utc=int(time.time()),
         )
 
-    db=sessionmaker(engine_)()
     db.add(sys_account)
     db.commit()
 
@@ -297,13 +312,6 @@ if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
     db.add(general_guild)
     db.commit()
 
-envs["PYTHONPATH"]=f"$PYTHONPATH:{path}/ruqqus"
-
-
-keys=[x for x in envs.keys()].sorted()
-
-with open(f"{path}/env.sh", "w+") as f:
-    f.write("\n".join([f"export {x}={envs[x]}" for x in keys]))
 
 start_script="""
 killall gunicorn
