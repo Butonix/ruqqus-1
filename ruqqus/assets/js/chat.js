@@ -65,6 +65,11 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
   }
   )
 
+  var ding=function(){
+      var audio = new Audio('/assets/audio/chat-ding.mp3');
+      audio.play();
+  }
+
   var notifs=0;
   var alerttoggle=true;
   var focused=true;
@@ -130,6 +135,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
       notifs=notifs+1;
       if (notifs==1){
         setTimeout(flash, 500);
+        ding()
       }
     }
     else {
