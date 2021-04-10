@@ -4,6 +4,7 @@ import os
 from os import environ
 import venv
 import secrets
+os.system(f"source {path}/env.sh")
 
 
 print("")
@@ -17,6 +18,8 @@ print("")
 print("")
 print("Welcome. I am the Ruqqus Installation and Setup Wizard.")
 print("I will guide you through the process of setting up your own Ruqqus server.")
+print("")
+print("Loading Ruqqus application...")
 
 #navigate to folder above ruqqus repo
 path=os.path.realpath('.')
@@ -32,7 +35,11 @@ if "env.sh" in files:
 
 first="env.sh" not in files
 
-if "venv" not in files:
+os.system(f"export PYTHONPATH=$PYTHONPATH:{path}/ruqqus")
+from ruqqus.__main__ import *
+from ruqqus.classes import *
+
+if not first:
 
 
     print("")
@@ -77,7 +84,7 @@ print("")
 input("Press enter to continue.")
 os.system("pip install -r {path}/ruqqus/requirements.txt")
 
-import 
+from werkzeug.security import generate_password_hash
 
 print("Next, I need some information to cast my setup spells.")
 if "env.sh" in files:
@@ -88,8 +95,15 @@ else:
 
 envs={}
 
-print("What is the name of your site?")
+if first:
+    print("What is the name of your site? (This will also be the username of the system admin account)")
+else:
+    print("What is the name of your site?")
 envs["SITE_NAME"]=input().lower() or environ.get("SITE_NAME")
+
+if first:
+    print(f"Enter a password for the {envs['SITE_NAME']} system account:")
+    password_hash=generate_password_hash(input())
 
 print("What is the domain that your site will run under?")
 envs["SERVER_NAME"]=input().lower() or environ.get("SERVER_NAME") or "localhost:5000"
@@ -251,6 +265,36 @@ if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
     with open(f"{path}/ruqqus/seed-db.sql", "r+") as file:
         escaped_sql = sqlalchemy.text(file.read())
         engine.execute(escaped_sql)
+
+
+    sys_account = User(
+        id=1,
+        username=envs["SITE_NAME"],
+        original_username = envs["SITE_NAME"],
+        passhash=password_hash,
+        email=envs["admin_email"],
+        created_utc=int(time.time()),
+        tos_agreed_utc=int(time.time()),
+        )
+
+    db=sessionmaker(engine_)()
+    db.add(sys_account)
+    db.commit()
+
+    general_guild=Board(
+        id=1,
+        name=board_name,
+        description="All topics. Content posted here may be yanked to other guilds.",
+        description_html="<p>All topics. Content posted here may be yanked to other guilds.</p>",
+        over_18=False,
+        created_utc=int(time.time())
+        creator_id=1
+        )
+
+    db.add(general_guild)
+    db.commit()
+
+envs["PYTHONPATH"]=f"$PYTHONPATH:{path}/ruqqus"
 
 
 keys=[x for x in envs.keys()].sorted()
