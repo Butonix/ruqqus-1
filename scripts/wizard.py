@@ -81,6 +81,7 @@ print("Now, I'm going to update the environment with everything Ruqqus needs.")
 print("This may take a moment, especially if it's the first time.")
 print("")
 input("Press enter to continue.")
+os.system("pip install --upgrade pip")
 os.system(f"pip install -r {path}/ruqqus/requirements.txt")
 
 from ruqqus.__main__ import *
