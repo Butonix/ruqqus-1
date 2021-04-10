@@ -4,7 +4,6 @@ import os
 from os import environ
 import venv
 import secrets
-os.system(f"source {path}/env.sh")
 
 
 print("")
