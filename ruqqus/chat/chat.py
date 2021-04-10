@@ -158,7 +158,13 @@ def socket_auth_required(f):
 
         g.db=db_session()
 
-        v=g.v
+        v, client=get_logged_in_user()
+
+        g.v=v
+
+        if client or not v:
+            send("Not logged in")
+            return
 
         if v.is_suspended:
             send("You're banned and can't access chat right now.")
