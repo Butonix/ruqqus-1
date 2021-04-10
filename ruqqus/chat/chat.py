@@ -158,11 +158,7 @@ def socket_auth_required(f):
 
         g.db=db_session()
 
-        v, client=get_logged_in_user()
-
-        if client or not v:
-            send("Not logged in")
-            return
+        v=g.v
 
         if v.is_suspended:
             send("You're banned and can't access chat right now.")
@@ -203,11 +199,14 @@ def socket_connect_auth_user():
     v, client=get_logged_in_user()
 
     if client or not v:
-        emit("error", {"error":"Authentication required"})
+        send("Authentication required")
         disconnect()
+        return
 
     if v.is_suspended:
         send("You're banned and can't access chat right now.")
+        disconnect()
+        return
 
     if v.id in SIDS:
         SIDS[v.id].append(request.sid)
@@ -215,6 +214,7 @@ def socket_connect_auth_user():
         SIDS[v.id]=[request.sid]
 
     g.db.close()
+    g.v=v
 
 @socketio.on('disconnect')
 @socket_auth_required
