@@ -222,6 +222,8 @@ def socket_connect_auth_user():
     g.db.close()
     g.v=v
 
+    send("Connected")
+
 @socketio.on('disconnect')
 @socket_auth_required
 def socket_disconnect_user(v):
