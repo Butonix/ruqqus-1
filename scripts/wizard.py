@@ -82,7 +82,7 @@ print("This information is required. Optional things will be later.")
 envs={}
 
 print("What is the name of your site?")
-envs["SITE_NAME"]=input().lower() or environ.get("DATABASE_URL")
+envs["SITE_NAME"]=input().lower() or environ.get("SITE_NAME")
 
 print("What is the domain that your site will run under?")
 envs["SERVER_NAME"]=input() or environ.get("SERVER_NAME") or "localhost:5000"
