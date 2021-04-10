@@ -287,7 +287,7 @@ if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
         description="All topics. Content posted here may be yanked to other guilds.",
         description_html="<p>All topics. Content posted here may be yanked to other guilds.</p>",
         over_18=False,
-        created_utc=int(time.time())
+        created_utc=int(time.time()),
         creator_id=1
         )
 
