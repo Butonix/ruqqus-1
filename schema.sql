@@ -95,7 +95,9 @@ CREATE TABLE public.boards (
     last_yank_utc integer DEFAULT 0,
     is_locked_category boolean DEFAULT false,
     subcat_id integer,
-    secondary_color character(6) DEFAULT 'ffffff'::bpchar
+    secondary_color character(6) DEFAULT 'ffffff'::bpchar,
+    public_chat boolean DEFAULT false,
+    motd character varying(1000) DEFAULT ''::character varying
 );
 
 
@@ -282,7 +284,8 @@ CREATE TABLE public.users (
     profile_set_utc integer DEFAULT 0,
     original_username character varying(255),
     name_changed_utc integer DEFAULT 0,
-    hide_bot boolean DEFAULT false
+    hide_bot boolean DEFAULT false,
+    auto_join_chat boolean DEFAULT true
 );
 
 
@@ -1490,6 +1493,39 @@ ALTER SEQUENCE public.categories_id_seq OWNED BY public.categories.id;
 
 
 --
+-- Name: chatbans; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.chatbans (
+    id integer NOT NULL,
+    user_id integer,
+    board_id integer,
+    created_utc integer,
+    banning_mod_id integer
+);
+
+
+--
+-- Name: chatbans_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.chatbans_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: chatbans_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.chatbans_id_seq OWNED BY public.chatbans.id;
+
+
+--
 -- Name: client_auths; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2088,7 +2124,8 @@ CREATE TABLE public.mods (
     perm_content boolean DEFAULT true,
     perm_appearance boolean DEFAULT true,
     perm_access boolean DEFAULT true,
-    perm_config boolean DEFAULT true
+    perm_config boolean DEFAULT true,
+    perm_chat boolean DEFAULT false
 );
 
 
@@ -2718,6 +2755,13 @@ ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.c
 
 
 --
+-- Name: chatbans id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chatbans ALTER COLUMN id SET DEFAULT nextval('public.chatbans_id_seq'::regclass);
+
+
+--
 -- Name: client_auths id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3095,6 +3139,14 @@ ALTER TABLE ONLY public.boards
 
 ALTER TABLE ONLY public.categories
     ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: chatbans chatbans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chatbans
+    ADD CONSTRAINT chatbans_pkey PRIMARY KEY (id);
 
 
 --

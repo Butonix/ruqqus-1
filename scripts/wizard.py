@@ -77,6 +77,7 @@ print("")
 input("Press enter to continue.")
 os.system("pip install -r {path}/ruqqus/requirements.txt")
 
+import 
 
 print("Next, I need some information to cast my setup spells.")
 if "env.sh" in files:
@@ -140,7 +141,11 @@ if input().startswith('y'):
 else:
     envs["GIPHY_KEY"]=environ.get("GIPHY_KEY","")
 
-print("Are you using AWS S3 to host images? (y/n)")
+if first:
+    print("Are you using AWS S3 to host images? (y/n)")
+else:
+    print("Change AWS S3 settings? (y/n)")
+
 if input().startswith('y'):
 
     print("S3 Bucket Name")
@@ -158,7 +163,10 @@ else:
     envs["AWS_ACCESS_KEY_ID"]=environ.get("AWS_ACCESS_KEY_ID","")
     envs["AWS_SECRET_ACCESS_KEY"]=environ.get("AWS_SECRET_ACCESS_KEY","")
 
-print("Are you using CloudFlare? (y/n)")
+if first:
+    print("Are you using CloudFlare? (y/n)")
+else:
+    print("Change CloudFlare settings? (y/n)")
 if input().startswith('y'):
 
     print("Cloudflare API Key:")
@@ -171,7 +179,11 @@ else:
     envs["CLOUDFLARE_KEY"]=environ.get("CLOUDFLARE_KEY","")
     envs["CLOUDFLARE_ZONE"]=environ.get("CLOUDFLARE_ZONE","")
 
-print("Are you using HCaptcha to block bot signups?")
+if first:
+    print("Are you using HCaptcha to block bot signups? (y/n)")
+else:
+    print("Change HCaptcha settings? (y/n)")
+
 if input().startswith('y'):
     print("HCaptcha Site Key")
     envs["HCAPTCHA_SITEKEY"]=input() or environ.get("HCAPTCHA_SITEKEY","")
@@ -182,7 +194,10 @@ else:
     envs["HCAPTCHA_SITEKEY"]=environ.get("HCAPTCHA_SITEKEY","")
     envs["HCAPTCHA_SECRET"]=environ.get("HCAPTCHA_SECRET","")
 
-print("Are you using MailGun as an email provider?")
+if first:
+    print("Are you using MailGun as an email provider? (y/n)")
+else:
+    print("Change MailGun settings? (y/n)")
 if input().startswith('y'):
     print("Your email:")
     envs["admin_email"]=input() or environ.get("admin_email","")
@@ -190,7 +205,10 @@ if input().startswith('y'):
     print("Mailgun Key:")
     envs["MAILGUN_KEY"]=input() or environ.get("MAILGUN_KEY","")
 
-print("Are you using PayPal for premium payments?")
+if first:
+    print("Are you using PayPal for premium payments? (y/n)")
+else:
+    print("Change PayPal settings? (y/n)")
 if input().startswith('y'):
     print("Paypal Client ID:")
     envs["PAYPAL_CLIENT_ID"]=input() or environ.get("PAYPAL_CLIENT_ID","")
@@ -205,6 +223,34 @@ else:
     envs["PAYPAL_CLIENT_SECRET"]=environ.get("PAYPAL_CLIENT_SECRET","")
     envs["PAYPAL_WEBHOOK_ID"]=environ.get("PAYPAL_WEBHOOK_ID","")
 
+###db setup sql
+if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
+    print("")
+    print("")
+    print('   /\\')
+    print(' _/__\\_')
+    print(' ╭───────╮')
+    print('╭┤  ╹ ╹  ├╮')
+    print(' ╰─┬───┬─╯')
+    print("")
+    print("")
+    if first:
+        print("Since this is the first time setting up and the database is brand new,")
+    else:
+        print("Since you changed the postgres database settings,")
+    print("I need to connect to it and set that up too.")
+    print("This may take some time.")
+    print("")
+    input("Press enter to set up database.")
+
+    engine = sqlalchemy.create_engine(envs["DATABASE_URL"])
+    with open(f"{path}/ruqqus/schema.sql", "r+") as file:
+        escaped_sql = sqlalchemy.text(file.read())
+        engine.execute(escaped_sql)
+
+    with open(f"{path}/ruqqus/seed-db.sql", "r+") as file:
+        escaped_sql = sqlalchemy.text(file.read())
+        engine.execute(escaped_sql)
 
 
 keys=[x for x in envs.keys()].sorted()
