@@ -14,7 +14,7 @@ docutils==0.16
 eventlet==0.30.2
 Flask==1.1.2
 Flask-Caching==1.9.0
-Flask-Compress==1.4.0
+Flask-Compress==1.9.0
 Flask-Limiter==1.1.0
 Flask-Markdown==0.3
 flask-socketio==5.0.1
