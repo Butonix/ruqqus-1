@@ -2,6 +2,7 @@
 import pip
 import os
 from os import environ
+import sys
 import venv
 import secrets
 
@@ -29,14 +30,13 @@ if path.endswith("ruqqus"):
 
 files=os.listdir(path)
 
-if "env.sh" in files:
-    os.system(f"source {path}/env.sh")
-
 first="env.sh" not in files
 
-os.system(f"export PYTHONPATH=$PYTHONPATH:{path}/ruqqus/ruqqus")
-from ruqqus.__main__ import *
-from ruqqus.classes import *
+if first:
+    os.system(f"source {path}/env.sh")
+
+sys.path.append(f"{path}/ruqqus")
+
 
 if not first:
 
@@ -81,7 +81,10 @@ print("Now, I'm going to update the environment with everything Ruqqus needs.")
 print("This may take a moment, especially if it's the first time.")
 print("")
 input("Press enter to continue.")
-os.system("pip install -r {path}/ruqqus/requirements.txt")
+os.system(f"pip install -r {path}/ruqqus/requirements.txt")
+
+from ruqqus.__main__ import *
+from ruqqus.classes import *
 
 from werkzeug.security import generate_password_hash
 
