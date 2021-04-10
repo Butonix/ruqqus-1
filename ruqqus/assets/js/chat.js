@@ -66,7 +66,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
   )
 
   var notifs=0;
-  var titletoggle=true;
+  var alerttoggle=true;
   var focused=true;
   var original_title=$('title').text()
 
@@ -75,14 +75,14 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
     guild=$('#guildname').val();
 
     if (notifs>=1 && focused==false){
-      $('link[rel="shortcut icon"]').attr('href','/assets/images/logo/favicon_alert.png')
-      if (titletoggle) {
-        $('title').text('['+notifs.toString()+'] '+ original_title);
-        titletoggle=false;
+      $('title').text('['+notifs.toString()+'] '+ original_title);
+      if (alerttoggle) {
+        $('link[rel="shortcut icon"]').attr('href','/assets/images/logo/favicon_alert.png')
+        alerttoggle=false;
       }
       else {
         $('link[rel="shortcut icon"]').attr('href','/assets/images/logo/favicon.png')
-        titletoggle=true;
+        alerttoggle=true;
       }
       setTimeout(flash, 500)
     }
