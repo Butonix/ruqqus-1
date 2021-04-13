@@ -163,3 +163,5 @@ def recompute():
 
 #with daemon.DaemonContext():
 #    recompute()
+
+recompute()
