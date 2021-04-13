@@ -93,8 +93,6 @@ def recompute():
             page += 1
             print_(f"re-scored {post_count} posts")
 
-            print_(f"{i}/{total} - {post.base36id}")
-
         db.commit()
 
         for action in db.query(ModAction).filter(ModAction.created_utc<int(time.time())-60*60*24*90).all():
