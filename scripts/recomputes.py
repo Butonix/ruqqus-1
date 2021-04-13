@@ -6,6 +6,13 @@ import daemon
 
 db = db_session()
 
+def print_(x):
+
+    try:
+        print(x)
+    except OSError:
+        pass
+
 
 def recompute():
 
@@ -13,7 +20,7 @@ def recompute():
 
     while True:
 
-        #print("beginning guild trend recompute")
+        print_("beginning guild trend recompute")
         x += 1
         boards = db.query(Board).options(
             lazyload('*')).filter_by(is_banned=False).order_by(Board.rank_trending.desc())
@@ -36,6 +43,7 @@ def recompute():
         cutoff_purge = now - (60 * 60 * 24 * 90)
 
         #print("Beginning post recompute")
+        print_("Beginning post recompute")
         i = 0
         page = 1
         posts = True
@@ -84,9 +92,9 @@ def recompute():
             db.commit()
 
             page += 1
-            #print(f"re-scored {post_count} posts")
+            print_(f"re-scored {post_count} posts")
 
-            # #print(f"{i}/{total} - {post.base36id}")
+            print_(f"{i}/{total} - {post.base36id}")
 
         db.commit()
 
@@ -97,6 +105,8 @@ def recompute():
         x = 0
 
         #purge deleted comments older than 90 days
+
+        print_("beginning post purge")
 
         purge_posts = db.query(
             Submission
@@ -123,6 +133,7 @@ def recompute():
                 db.commit()
 
         db.commit()
+        print_(f"purged {x} posts")
 
         x = 0
         purge_comments = db.query(
@@ -146,8 +157,10 @@ def recompute():
                 db.commit()
 
         db.commit()
+        print_(f"purged {x} comments")
 
 
 
-with daemon.DaemonContext():
-    recompute()
+
+#with daemon.DaemonContext():
+#    recompute()
