@@ -42,7 +42,6 @@ def recompute():
         cutoff = now - (60 * 60 * 24 * 180)
         cutoff_purge = now - (60 * 60 * 24 * 90)
 
-        #print("Beginning post recompute")
         print_("Beginning post recompute")
         i = 0
         page = 1
