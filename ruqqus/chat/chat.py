@@ -160,6 +160,8 @@ def socket_auth_required(f):
 
         v, client=get_logged_in_user()
 
+        g.v=v
+
         if client or not v:
             send("Not logged in")
             return
@@ -203,11 +205,14 @@ def socket_connect_auth_user():
     v, client=get_logged_in_user()
 
     if client or not v:
-        emit("error", {"error":"Authentication required"})
+        send("Authentication required")
         disconnect()
+        return
 
     if v.is_suspended:
         send("You're banned and can't access chat right now.")
+        disconnect()
+        return
 
     if v.id in SIDS:
         SIDS[v.id].append(request.sid)
@@ -215,6 +220,9 @@ def socket_connect_auth_user():
         SIDS[v.id]=[request.sid]
 
     g.db.close()
+    g.v=v
+
+    emit("status", {'status':"connected"})
 
 @socketio.on('disconnect')
 @socket_auth_required
@@ -269,6 +277,7 @@ def join_guild_room(data, v, guild):
             "time": now()
             }
         emit('motd', data, to=request.sid)
+
     return True
 
 @socketio.on('leave room')
@@ -285,6 +294,7 @@ def leave_guild_room(data, v, guild):
         TYPING[guild.fullname].remove(v.username)
         emit('typing', {'users':TYPING[guild.fullname]}, to=guild.fullname)
 
+    emit("status", {'status':f"Left #{guild.name}"})
 
 @socketio.on('speak')
 @socket_auth_required

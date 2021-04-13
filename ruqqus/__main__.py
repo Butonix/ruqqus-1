@@ -85,7 +85,7 @@ else:
 app.config["CACHE_DIR"] = environ.get("CACHE_DIR", "ruqquscache")
 
 # captcha configs
-app.config["HCAPTCHA_SITEKEY"] = environ.get("HCAPTCHA_SITEKEY","")
+app.config["HCAPTCHA_SITEKEY"] = environ.get("HCAPTCHA_SITEKEY","").lstrip().rstrip()
 app.config["HCAPTCHA_SECRET"] = environ.get(
     "HCAPTCHA_SECRET","").lstrip().rstrip()
 app.config["SIGNUP_HOURLY_LIMIT"]=int(environ.get("SIGNUP_HOURLY_LIMIT",0))
