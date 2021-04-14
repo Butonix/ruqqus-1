@@ -335,9 +335,10 @@ if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
     db.commit()
 
 
-start_script="""
+start_script=f"""
 killall gunicorn
-cd ~/ruqqus
+killall python
+cd {path}/ruqqus
 git pull
 source startup.sh
 """
