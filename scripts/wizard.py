@@ -241,9 +241,11 @@ envs["PYTHONPATH"]=f"$PYTHONPATH:{path}/ruqqus"
 
 keys=[x for x in envs.keys()].sorted()
 
+#make the envs.sh
 with open(f"{path}/env.sh", "w+") as f:
     f.write("\n".join([f"export {x}={envs[x]}" for x in keys]))
 
+#load envs for import
 for x in envs:
     os.environ[key]=envs[key]
 
