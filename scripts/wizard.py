@@ -56,7 +56,7 @@ if first:
     print("")
     input("Press enter to continue.")
 
-    os.system(f"python -m venv {path}/venv")
+    os.system(f"python3 -m venv {path}/venv")
     os.system(f"source {path}/venv/bin/activate")
 
     print("We have created and entered the virtual environment.")
