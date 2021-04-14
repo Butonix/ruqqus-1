@@ -99,7 +99,7 @@ if "env.sh" in files:
     with open(f"{path}/env.sh", "r+") as f:
         for line in f.read():
             args=line.split("=")
-            val=args[1]
+            val=args[1] if len(args)>1 else ""
             key=args[0].split("export ")[1]
             os.environ[key]=val
 
