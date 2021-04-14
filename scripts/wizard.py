@@ -247,7 +247,7 @@ with open(f"{path}/env.sh", "w+") as f:
 
 #load envs for import
 for x in envs:
-    os.environ[key]=envs[key]
+    os.environ[x]=envs[x]
 
 from ruqqus.__main__ import *
 from ruqqus.classes import *
