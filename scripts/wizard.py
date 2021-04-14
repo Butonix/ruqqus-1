@@ -337,7 +337,7 @@ if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
 
 start_script=f"""
 killall gunicorn
-killall python
+killall Python
 cd {path}/ruqqus
 git pull
 cd {path}
