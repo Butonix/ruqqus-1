@@ -239,7 +239,7 @@ else:
 envs["PYTHONPATH"]=f"$PYTHONPATH:{path}/ruqqus"
 
 
-keys=[x for x in envs.keys()].sorted()
+keys=sorted([x for x in envs.keys()])
 
 #make the envs.sh
 with open(f"{path}/env.sh", "w+") as f:
