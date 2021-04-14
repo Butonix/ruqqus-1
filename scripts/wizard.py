@@ -83,10 +83,10 @@ input("Press enter to continue.")
 os.system("pip install --upgrade pip")
 os.system(f"pip install -r {path}/ruqqus/requirements.txt")
 
-os.system(f"export PATH=$PATH:{path}/ruqqus")
+os.chdir(path)
 
-from ruqqus.__main__ import *
-from ruqqus.classes import *
+from .ruqqus.ruqqus.__main__ import *
+from .ruqqus.ruqqus.classes import *
 
 from werkzeug.security import generate_password_hash
 
