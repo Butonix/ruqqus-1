@@ -760,7 +760,8 @@ def admin_ip_addr(ipaddr, v):
         users=g.db.query(User).filter_by(creation_ip=ipaddr).order_by(User.created_utc.desc()).all(),
         listing=get_posts(pids) if pids else [],
         comments=get_comments(cids) if cids else [],
-        standalone=True
+        standalone=True,
+        ip=ipaddr
         )
 
 @app.route("/admin/test", methods=["GET"])
