@@ -82,10 +82,7 @@ os.system(f"pip install -r {path}/ruqqus/requirements.txt")
 
 sys.path.append(f"{path}/ruqqus")
 
-from ruqqus.__main__ import *
-from ruqqus.classes import *
 
-from werkzeug.security import generate_password_hash
 
 print("Next, I need some information to cast my setup spells.")
 if "env.sh" in files:
@@ -247,7 +244,13 @@ keys=[x for x in envs.keys()].sorted()
 with open(f"{path}/env.sh", "w+") as f:
     f.write("\n".join([f"export {x}={envs[x]}" for x in keys]))
 
+for x in envs:
+    os.environ[key]=envs[key]
 
+from ruqqus.__main__ import *
+from ruqqus.classes import *
+
+from werkzeug.security import generate_password_hash
 
 
 ###db setup sql
