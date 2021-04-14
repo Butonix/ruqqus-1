@@ -5,7 +5,7 @@ from os import environ
 import sys
 import venv
 import secrets
-
+from werkzeug.security import generate_password_hash
 
 print("")
 print("")
@@ -252,7 +252,6 @@ for x in envs:
 from ruqqus.__main__ import *
 from ruqqus.classes import *
 
-from werkzeug.security import generate_password_hash
 
 
 ###db setup sql
