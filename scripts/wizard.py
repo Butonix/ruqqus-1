@@ -127,7 +127,7 @@ print("What is the domain that your site will run under?")
 envs["SERVER_NAME"]=input().lower() or environ.get("SERVER_NAME") or "localhost:5000"
 
 print("Postgres database url (postgres://username:password@host:port)")
-envs["DATABASE_URL"]=input().lower() or environ.get("DATABASE_URL")
+envs["DATABASE_URL"]=input() or environ.get("DATABASE_URL")
 
 print("")
 print("")
@@ -148,7 +148,7 @@ print("Master Secret (If you don't have one already, I'll generate one for you.)
 envs["MASTER_KEY"]=input() or environ.get("MASTER_KEY", secrets.token_urlsafe(1024))
 
 print("Redis url (redis://host)")
-envs["REDIS_URL"]=input().lower() or environ.get("REDIS_URL", "") or ""
+envs["REDIS_URL"]=input() or environ.get("REDIS_URL", "") or ""
 envs["CACHE_TYPE"]="redis" if envs["REDIS_URL"] else "filesystem"
 
 print("")
