@@ -34,9 +34,6 @@ first="env.sh" not in files
 if not first:
     os.system(f"source {path}/env.sh")
 
-sys.path.append(f"{path}/ruqqus")
-
-
 if "venv" not in files:
 
 
@@ -83,10 +80,10 @@ input("Press enter to continue.")
 os.system("pip install --upgrade pip")
 os.system(f"pip install -r {path}/ruqqus/requirements.txt")
 
-os.chdir(path)
+sys.path.append(f"{path}/ruqqus")
 
-from ruqqus.ruqqus.__main__ import *
-from ruqqus.ruqqus.classes import *
+from ruqqus.__main__ import *
+from ruqqus.classes import *
 
 from werkzeug.security import generate_password_hash
 
