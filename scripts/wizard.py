@@ -97,7 +97,7 @@ print("")
 print("Next, I need some information to cast my setup spells.")
 if "env.sh" in files:
     with open(f"{path}/env.sh", "r+") as f:
-        for line in f.read():
+        for line in f:
             args=line.split("=")
             val=args[1] if len(args)>1 else ""
             key=args[0].split("export ")[1]
