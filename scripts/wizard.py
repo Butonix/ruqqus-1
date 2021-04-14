@@ -19,7 +19,6 @@ print("")
 print("Welcome. I am the Ruqqus Installation and Setup Wizard.")
 print("I will guide you through the process of setting up your own Ruqqus server.")
 print("")
-print("Loading Ruqqus application...")
 
 #navigate to folder above ruqqus repo
 path=os.path.realpath('.')
@@ -32,13 +31,13 @@ files=os.listdir(path)
 
 first="env.sh" not in files
 
-if first:
+if not first:
     os.system(f"source {path}/env.sh")
 
 sys.path.append(f"{path}/ruqqus")
 
 
-if not first:
+if first:
 
 
     print("")
