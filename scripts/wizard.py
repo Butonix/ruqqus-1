@@ -37,7 +37,7 @@ if not first:
 sys.path.append(f"{path}/ruqqus")
 
 
-if first:
+if "venv" not in files:
 
 
     print("")
@@ -57,14 +57,12 @@ if first:
     input("Press enter to continue.")
 
     os.system(f"python3 -m venv {path}/venv")
-    os.system(f"source {path}/venv/bin/activate")
 
-    print("We have created and entered the virtual environment.")
+    print("Now, run the following command, and then rerun the wizard.")
+    print(f"source {path}/venv/bin/activate")
+    return
 
-else:
 
-    os.system(f"source {path}/venv/bin/activate")
-    print("We are now in the python virtual environment.")
 
 
 print("")
