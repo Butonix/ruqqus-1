@@ -32,7 +32,7 @@ BAN_REASONS = ['',
                "Copyright infringement is not permitted."
                ]
 
-BUCKET = "i.ruqqus.com"
+BUCKET = app.config["S3_BUCKET"]
 
 
 @app.route("/post_short/", methods=["GET"])

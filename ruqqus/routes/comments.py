@@ -23,7 +23,7 @@ from flask import *
 from ruqqus.__main__ import app, limiter
 
 
-BUCKET=environ.get("S3_BUCKET",'i.ruqqus.com')
+BUCKET=app.config["S3_BUCKET"]
 
 
 @app.route("/comment/<cid>", methods=["GET"])
