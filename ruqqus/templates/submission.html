@@ -312,7 +312,7 @@
             <button class="btn btn-link btn-block btn-lg text-danger text-left" onclick="post('/user/kick/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="far fa-chess-rook text-center text-muted mr-3"></i>Remove from +{{ p.board.name }}</button>
             {% endif %}
 
-            {% if p.has_thumb==False and (v.id==p.author_id or v.admin_level>=3) %}
+            {% if p.url and p.has_thumb==False and (v.id==p.author_id or v.admin_level>=3) %}
             <button class="btn btn-link btn-block btn-lg text-danger text-left" onclick="post_toast('/retry_thumb/{{ p.base36id }}')"><i class="far fa-image text-center text-muted mr-3"></i>Retry Thumbnail</button>
             {% endif %}
 
@@ -489,7 +489,7 @@
                     {% if v.id==p.author_id and p.board_id not in [1, p.original_board_id] %}
                     <li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/user/kick/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="fas fa-chess-rook"></i>Remove from +{{ p.board.name }}</a></li>
                     {% endif %}
-                    {% if p.has_thumb==False and (v.id==p.author_id or v.admin_level>=3) %}
+                    {% if p.url and p.has_thumb==False and (v.id==p.author_id or v.admin_level>=3) %}
                     <li class="list-inline-item"><a href="javascript:void(0)" onclick="post_toast('/retry_thumb/{{ p.base36id }}')"><i class="fas fa-image"></i>Retry Thumb</a></li>
 
                     {% endif %}
