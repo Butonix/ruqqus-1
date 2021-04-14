@@ -96,7 +96,13 @@ print("")
 
 print("Next, I need some information to cast my setup spells.")
 if "env.sh" in files:
-    os.system(f"source {path}/env.sh")
+    with open(f"{path}/env.sh", "r+") as f:
+        for line in f.read():
+            args=line.split("=")
+            val=args[1]
+            key=args[0].split("export ")[1]
+            os.environ[key]=val
+
     print("This information is required,")
     print("but you can press enter to skip items and leave them at their current setting")
 else:
