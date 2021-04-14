@@ -83,6 +83,16 @@ os.system(f"pip install -r {path}/ruqqus/requirements.txt")
 sys.path.append(f"{path}/ruqqus")
 
 
+print("")
+print("")
+print('   /\\')
+print(' _/__\\_')
+print(' ╭───────╮')
+print('╭┤  ╹ ╹  ├╮')
+print(' ╰─┬───┬─╯')
+print("")
+print("")
+
 
 print("Next, I need some information to cast my setup spells.")
 if "env.sh" in files:
@@ -128,7 +138,7 @@ print("Master Secret (If you don't have one already, I'll generate one for you.)
 envs["MASTER_KEY"]=input() or environ.get("MASTER_KEY", secrets.token_urlsafe(1024))
 
 print("Redis url (redis://host)")
-envs["REDIS_URL"]=input().lower() or environ.get("REDIS_URL", "")
+envs["REDIS_URL"]=input().lower() or environ.get("REDIS_URL", "") or ""
 envs["CACHE_TYPE"]="redis" if envs["REDIS_URL"] else "filesystem"
 
 print("")
