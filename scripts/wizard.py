@@ -59,7 +59,9 @@ if "venv" not in files:
     os.system(f"python3 -m venv {path}/venv")
 
     print("Now, run the following command, and then rerun the wizard.")
+    print("")
     print(f"source {path}/venv/bin/activate")
+    print("")
     quit(0)
 
 
@@ -80,6 +82,8 @@ print("")
 input("Press enter to continue.")
 os.system("pip install --upgrade pip")
 os.system(f"pip install -r {path}/ruqqus/requirements.txt")
+
+os.system(f"export PYTHONPATH=$PYTHONPATH:{path}/ruqqus")
 
 from ruqqus.__main__ import *
 from ruqqus.classes import *
