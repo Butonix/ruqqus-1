@@ -85,8 +85,8 @@ os.system(f"pip install -r {path}/ruqqus/requirements.txt")
 
 os.chdir(path)
 
-from .ruqqus.ruqqus.__main__ import *
-from .ruqqus.ruqqus.classes import *
+from ruqqus.ruqqus.__main__ import *
+from ruqqus.ruqqus.classes import *
 
 from werkzeug.security import generate_password_hash
 
