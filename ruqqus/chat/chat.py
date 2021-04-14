@@ -18,6 +18,7 @@ from ruqqus.helpers.aws import *
 from ruqqus.__main__ import app, r, socketio, db_session
 
 REDIS_URL = app.config["CACHE_REDIS_URL"]
+BUCKET=app.config["S3_BUCKET"]
 
 #app = Flask(__name__)
 #app.debug = 'DEBUG' in os.environ
@@ -868,6 +869,6 @@ def chat_upload_image(v):
     name = f'chat/{now}/{secrets.token_urlsafe(8)}'
     upload_file(name, file)
 
-    check_csam_url(f"https://i.ruqqus.com/{name}", v, lambda:delete_file(name))
+    check_csam_url(f"https://{BUCKET}/{name}", v, lambda:delete_file(name))
 
-    return jsonify({'url':f"https://i.ruqqus.com/{name}"})
+    return jsonify({'url':f"https://{BUCKET}/{name}"})
