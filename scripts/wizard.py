@@ -60,7 +60,7 @@ if "venv" not in files:
 
     print("Now, run the following command, and then rerun the wizard.")
     print(f"source {path}/venv/bin/activate")
-    return
+    quit(0)
 
 
 
