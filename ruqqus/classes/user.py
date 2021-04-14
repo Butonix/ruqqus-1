@@ -782,7 +782,7 @@ class User(Base, Stndrd, Age_times):
     def json_raw(self):
         data= {'username': self.username,
                 'permalink': self.permalink,
-                'is_banned': bool(self.is_banned),
+                'is_banned': self.is_suspended,
                 'is_premium': self.has_premium_no_renew,
                 'created_utc': self.created_utc,
                 'id': self.base36id,
@@ -804,7 +804,7 @@ class User(Base, Stndrd, Age_times):
     def json_core(self):
 
         now=int(time.time())
-        if self.is_banned and (self.unban_utc==0 or now < self.unban_utc):
+        if self.is_suspended:
             return {'username': self.username,
                     'permalink': self.permalink,
                     'is_banned': True,
@@ -827,7 +827,7 @@ class User(Base, Stndrd, Age_times):
     def json(self):
         data= self.json_core
 
-        if self.is_deleted or self.is_banned:
+        if self.is_suspended or self.is_banned:
             return data
 
         data["badges"]=[x.json_core for x in self.badges]
