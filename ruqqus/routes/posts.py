@@ -971,3 +971,23 @@ def unsave_post(pid, v):
     g.db.delete(save)
 
     return "", 204
+
+@app.route("/retry_thumb/<pid>", methods=["POST"])
+@auth_required
+@validate_formkey
+def retry_thumb(pid, v):
+
+    post=get_post(pid)
+
+    if v.id != post.author_id and v.admin_level<3:
+        return(403)
+
+    if post.has_thumb:
+        abort(409)
+
+    try:
+        thumbnail_thread(post.base36id)
+    except:
+        pass
+
+    return "", 204
