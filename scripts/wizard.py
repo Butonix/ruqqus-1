@@ -349,12 +349,12 @@ cd {path}/ruqqus
 pip3 install -r requirements.txt
 export PYTHONPATH=$PYTHONPATH:~/ruqqus
 cd {path}
-echo "starting regular workers"
-newrelic-admin run-program gunicorn ruqqus.__main__:app -k gevent -w 2 --worker-connections 5 --max-requests 10000 --max-requests-jitter 500 --preload --bind 127.0.0.1:5000 -D
-echo "starting chat worker"
-gunicorn ruqqus.__main__:app -k eventlet  -w 1 --worker-connections 1000 --max-requests 100000 --preload --bind 127.0.0.1:5001 -D
 echo "starting background worker"
 python {path}/ruqqus/scripts/recomputes.py
+echo "starting chat worker"
+gunicorn ruqqus.__main__:app -k eventlet  -w 1 --worker-connections 1000 --max-requests 100000 --preload --bind 127.0.0.1:5001 -D
+echo "starting regular workers"
+newrelic-admin run-program gunicorn ruqqus.__main__:app -k gevent -w 2 --worker-connections 5 --max-requests 10000 --max-requests-jitter 500 --preload --bind 127.0.0.1:5000
 """
 
 with open(f"{path}/go.sh", "w+") as f:
