@@ -83,7 +83,7 @@ input("Press enter to continue.")
 os.system("pip install --upgrade pip")
 os.system(f"pip install -r {path}/ruqqus/requirements.txt")
 
-os.system(f"export PYTHONPATH=$PYTHONPATH:{path}/ruqqus")
+os.system(f"export PATH=$PATH:{path}/ruqqus")
 
 from ruqqus.__main__ import *
 from ruqqus.classes import *
