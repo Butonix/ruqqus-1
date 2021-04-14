@@ -13,7 +13,7 @@ from ruqqus.classes.images import BadPic
 from ruqqus.__main__ import db_session
 from .base36 import hex2bin
 
-BUCKET = environ.get("S3_BUCKET_NAME",'i.ruqqus.com')
+BUCKET = environ.get("S3_BUCKET_NAME",'i.ruqqus.com').lstrip().rstrip()
 CF_KEY = environ.get("CLOUDFLARE_KEY").lstrip().rstrip()
 CF_ZONE = environ.get("CLOUDFLARE_ZONE").lstrip().rstrip()
 
