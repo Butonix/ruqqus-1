@@ -489,8 +489,8 @@
                     {% if v.id==p.author_id and p.board_id not in [1, p.original_board_id] %}
                     <li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/user/kick/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="fas fa-chess-rook"></i>Remove from +{{ p.board.name }}</a></li>
                     {% endif %}
-                    <li class="list-inline-item"><a href="javascript:void(0)" onclick="post_toast('/retry_thumb/{{ p.base36id }}')"><i class="fas fa-image"></i>Retry Thumb</a></li>
                     {% if p.has_thumb==False and (v.id==p.author_id or v.admin_level>=3) %}
+                    <li class="list-inline-item"><a href="javascript:void(0)" onclick="post_toast('/retry_thumb/{{ p.base36id }}')"><i class="fas fa-image"></i>Retry Thumb</a></li>
 
                     {% endif %}
 
