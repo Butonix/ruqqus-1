@@ -931,11 +931,13 @@ def retry_thumbnail(pid, v):
     if post.author_id != v.id and v.admin_level < 3:
         abort(403)
 
-    new_thread = threading.Thread(target=thumbnail_thread,
-                                  args=(post.base36id,)
-                                  )
-    new_thread.start()
-    return jsonify({"message": "Thumbnail Retry Queued"})
+    try:
+        thumbnail_thread(post.base36id)
+    except:
+        return jsonify({"error":"Unable to obtain thumbnail"}), 500
+
+
+    return jsonify({"message": "Success"})
 
 
 @app.route("/save_post/<pid>", methods=["POST"])
