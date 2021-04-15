@@ -51,10 +51,10 @@ def thumbnail_thread(pid, debug=False):
         except:
             if debug:
                 print("error connecting")
-            return
+            return False, "Unable to connect to source"
 
         if x.status_code>=400:
-            return
+            return False, f"Got status {x.status_code} from source"
 
         if x.headers.get("Content-Type", "/").split("/")[0] == "image":
             # image post, using submitted url
@@ -73,7 +73,7 @@ def thumbnail_thread(pid, debug=False):
             db.add(post)
 
             db.commit()
-            return
+            return True, x.status_code
 
     if debug:
         print("not direct image")
@@ -83,13 +83,13 @@ def thumbnail_thread(pid, debug=False):
     except:
         if debug:
             print("error connecting")
-        return
+        return False, "Unable to connect to source"
 
     if x.status_code != 200 or not x.headers["Content-Type"].startswith(
             ("text/html", "image/")):
         if debug:
             print(f'not html post, status {x.status_code}')
-        return
+        return False, "Unable to parse source"
 
     if x.headers["Content-Type"].startswith("image/"):
 
@@ -168,7 +168,7 @@ def thumbnail_thread(pid, debug=False):
                 pass
             else:
                 #print('no image in doc')
-                return
+                return False, "No images in source"
 
             # Loop through all images in document until we find one that works
             # (and isn't svg)
@@ -243,9 +243,11 @@ def thumbnail_thread(pid, debug=False):
 
     db.commit()
 
-    # db.close()
+    db.close()
 
     try:
         remove(tempname)
     except FileNotFoundError:
         pass
+
+    return True, "Success"
