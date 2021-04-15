@@ -937,7 +937,7 @@ def retry_thumbnail(pid, v):
         return jsonify({"error":"Unable to obtain thumbnail"}), 500
 
 
-    return jsonify({"redirect": post.permalink}), 301
+    return jsonify({"message": "Success"})
 
 
 @app.route("/save_post/<pid>", methods=["POST"])
