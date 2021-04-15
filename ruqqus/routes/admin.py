@@ -698,13 +698,11 @@ def admin_category_get(v):
         b=get_board(request.args.get("guild"), graceful=True)
         )
 
-@app.route("/admin/user_data", methods=["GET"])
+@app.route("/admin/user_data/<username>", methods=["GET"])
 @admin_level_required(5)
-def admin_user_data_get(v):
+def admin_user_data_get(username, v):
 
-    name=request.values.get("username",'')
-
-    user=get_user(user, graceful=True)
+    user=get_user(username, graceful=True)
 
     if not name or not user:
         return render_template("admin/user_data.html", v=v)
@@ -724,7 +722,22 @@ def admin_user_data_get(v):
         "user":user.json_admin
             }
         )
-        
+
+@app.route("/admin/account_data/<username>", methods=["GET"])
+@admin_level_required(5)
+def admin_user_data_get(username, v):
+
+    user=get_user(username, graceful=True)
+
+    if not name or not user:
+        return render_template("admin/user_data.html", v=v)
+
+    return jsonify(
+        {
+        "user":user.json_admin
+            }
+        )
+
 @app.route("/admin/image_purge", methods=["POST"])
 @admin_level_required(5)
 def admin_image_purge(v):
