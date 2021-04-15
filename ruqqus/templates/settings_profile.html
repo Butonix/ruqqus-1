@@ -227,7 +227,7 @@
                 <label for="bio" class="text-black w-lg-25">Display Name</label>
 
                 <div class="w-lg-100">
-                  <p>Your display name is how you are known across Ruqqus. Changing your display name costs 20 Coins and may be done once every 90 days.</p>
+                  <p>Your display name is how you are known across Ruqqus. Changing your display name costs 20 Coins and may be done once every 7 days.</p>
 
 
                   <form id="profile-settings" action="/settings/name_change" method="post">
@@ -238,8 +238,8 @@
                       <small>5-25 characters, including letters, numbers, and _</small>
                       {% if v.can_change_name %}
                       <input class="btn btn-primary ml-auto" id="nameSave" type="submit" value="Change Display Name">
-                      {% elif g.timestamp-v.name_changed_utc < 60*60*24*90 %}
-                      <input class="btn btn-primary ml-auto" id="nameSave" type="submit" value="{{ 90-((g.timestamp-v.name_changed_utc)//(60*60*24)) }} days remaining" disabled>
+                      {% elif g.timestamp-v.name_changed_utc < 60*60*24*7 %}
+                      <input class="btn btn-primary ml-auto" id="nameSave" type="submit" value="{{ 7-((g.timestamp-v.name_changed_utc)//(60*60*24)) }} days remaining" disabled>
                       {% else %}
                       <a class="btn btn-primary ml-auto" id="nameSave" href="/settings/premium">20 Coins required</a>
                       {% endif %}

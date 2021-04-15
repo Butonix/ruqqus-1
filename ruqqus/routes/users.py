@@ -153,6 +153,7 @@ def u_username(username, v=None):
                 'api': lambda: {"error": "This person is blocking you."}
                 }
 
+    sort = request.args.get("sort", "new")
     page = int(request.args.get("page", "1"))
     page = max(page, 1)
 
@@ -162,7 +163,7 @@ def u_username(username, v=None):
     next_exists = (len(ids) == 26)
     ids = ids[0:25]
 
-    listing = get_posts(ids, v=v, sort="new")
+    listing = get_posts(ids, v=v, sort=sort)
 
     return {'html': lambda: render_template("userpage.html",
                                             u=u,
