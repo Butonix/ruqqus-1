@@ -725,7 +725,7 @@ def admin_user_data_get(username, v):
 
 @app.route("/admin/account_data/<username>", methods=["GET"])
 @admin_level_required(5)
-def admin_user_data_get(username, v):
+def admin_account_data_get(username, v):
 
     user=get_user(username, graceful=True)
 
