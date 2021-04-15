@@ -149,7 +149,7 @@ Verbal rules:
 
 {% endfilter %}
 
-{% if v and v.is_activated and not v.is_banned %}
+{% if v and v.is_activated and not v.is_suspended %}
 
 <p>Use this form to submit a press inquiry. You must have a press email address set on your account. If you have a generic, non-press email address, please <a target="_blank" href="/settings/security">update it</a> before submitting this form.</p>
 
@@ -176,7 +176,7 @@ Verbal rules:
 
 </form>
 
-{% elif v and v.is_banned %}
+{% elif v and v.is_suspended %}
 
 <p>Your Ruqqus account has been suspended. You are not permitted to submit press inquiries at this time.</p>
 

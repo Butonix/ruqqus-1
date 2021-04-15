@@ -933,8 +933,8 @@ def retry_thumbnail(pid, v):
 
     try:
         thumbnail_thread(post.base36id)
-    except:
-        return jsonify({"error":"Unable to obtain thumbnail"}), 500
+    except Exception as e:
+        return jsonify({"error":e}), 500
 
 
     return jsonify({"message": "Success"})
