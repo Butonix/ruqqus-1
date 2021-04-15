@@ -118,35 +118,35 @@ def u_username(username, v=None):
                 'api': lambda: {"error": f"That username is reserved for: {u.reserved}"}
                 }
 
-    if u.is_suspended and (not v or v.admin_level < 3):
+    if u.is_suspended and not (v and (v.admin_level >=3 or v.id==u.id)):
         return {'html': lambda: render_template("userpage_banned.html",
                                                 u=u,
                                                 v=v),
                 'api': lambda: {"error": "That user is banned"}
                 }
 
-    if u.is_deleted and (not v or v.admin_level < 3):
+    if u.is_deleted and not (v and v.admin_level >= 3):
         return {'html': lambda: render_template("userpage_deleted.html",
                                                 u=u,
                                                 v=v),
                 'api': lambda: {"error": "That user deactivated their account."}
                 }
 
-    if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
+    if u.is_private and not (v and (v.admin_level >=3 or v.id==u.id)):
         return {'html': lambda: render_template("userpage_private.html",
                                                 u=u,
                                                 v=v),
                 'api': lambda: {"error": "That userpage is private"}
                 }
 
-    if u.is_blocking and (not v or v.admin_level < 3):
+    if u.is_blocking and not (v and v.admin_level >= 3):
         return {'html': lambda: render_template("userpage_blocking.html",
                                                 u=u,
                                                 v=v),
                 'api': lambda: {"error": f"You are blocking @{u.username}."}
                 }
 
-    if u.is_blocked and (not v or v.admin_level < 3):
+    if u.is_blocked and not (v and v.admin_level >= 3):
         return {'html': lambda: render_template("userpage_blocked.html",
                                                 u=u,
                                                 v=v),
@@ -202,35 +202,35 @@ def u_username_comments(username, v=None):
                 'api': lambda: {"error": f"That username is reserved for: {u.reserved}"}
                 }
 
-    if u.is_suspended and (not v or v.admin_level < 3):
+    if u.is_suspended and not (v and (v.admin_level >=3 or v.id==u.id)):
         return {'html': lambda: render_template("userpage_banned.html",
                                                 u=u,
                                                 v=v),
                 'api': lambda: {"error": "That user is banned"}
                 }
 
-    if u.is_deleted and (not v or v.admin_level < 3):
+    if u.is_deleted and not (v and v.admin_level >= 3):
         return {'html': lambda: render_template("userpage_deleted.html",
                                                 u=u,
                                                 v=v),
                 'api': lambda: {"error": "That user deactivated their account."}
                 }
 
-    if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
+    if u.is_private and not (v and (v.admin_level >=3 or v.id==u.id)):
         return {'html': lambda: render_template("userpage_private.html",
                                                 u=u,
                                                 v=v),
                 'api': lambda: {"error": "That userpage is private"}
                 }
 
-    if u.is_blocking and (not v or v.admin_level < 3):
+    if u.is_blocking and not (v and v.admin_level >= 3):
         return {'html': lambda: render_template("userpage_blocking.html",
                                                 u=u,
                                                 v=v),
                 'api': lambda: {"error": f"You are blocking @{u.username}."}
                 }
 
-    if u.is_blocked and (not v or v.admin_level < 3):
+    if u.is_blocked and not (v and v.admin_level >= 3):
         return {'html': lambda: render_template("userpage_blocked.html",
                                                 u=u,
                                                 v=v),
