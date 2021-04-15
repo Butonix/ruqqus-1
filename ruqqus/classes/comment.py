@@ -272,7 +272,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             'upvotes': self.upvotes_fuzzed,
             'downvotes': self.downvotes_fuzzed,
             'award_count': self.award_count,
-            'is_bot': self.is_bot
+            'is_bot': self.is_bot,
+            'guild_id': base36encode(self.post.board_id)
             }
 
         if self.ban_reason:
@@ -299,7 +300,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
                     'parent': self.parent_fullname
                     }
         else:
-
             data=self.json_raw
 
             if self.level>=2:

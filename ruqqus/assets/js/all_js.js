@@ -1257,7 +1257,7 @@ else {
 	linkText.textContent = 'View original';
 }
 
-if (image.includes("media.giphy.com")) {
+if (image.startsWith("https://media.giphy.com")) {
 	attribution.innerHTML = '<img src="/assets/images/icons/PoweredBy_200px-Black_HorizLogo.png" style="width: 100px;">';
 
   var GIPHYsrc = image.replace(/\b100w\b~?/g, 'giphy');

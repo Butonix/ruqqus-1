@@ -626,11 +626,11 @@ def settings_name_change(v):
                            v=v,
                            error="Your ID is verified so you can't change your username.")
 
-    #60 day cooldown
-    if v.name_changed_utc > int(time.time()) - 60*60*24*60:
+    #7 day cooldown
+    if v.name_changed_utc > int(time.time()) - 60*60*24*7:
         return render_template("settings_profile.html",
                            v=v,
-                           error=f"You changed your name {(int(time.time()) - v.name_changed_utc)//(60*60*24)} days ago. You need to wait 90 days between name changes.")
+                           error=f"You changed your name {(int(time.time()) - v.name_changed_utc)//(60*60*24)} days ago. You need to wait 7 days between name changes.")
 
     #costs 3 coins
     if v.coin_balance < 20:
