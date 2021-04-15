@@ -131,7 +131,7 @@ def auth_required(f):
                         continue
                         
                     post.is_banned=True
-                    post.ban_reason="Ban evasion. This submission's owner was was banned from Ruqqus on another account."
+                    post.ban_reason="Ban evasion. This submission's owner was banned from Ruqqus on another account."
                     g.db.add(post)
 
                     ma=ModAction(
@@ -150,7 +150,7 @@ def auth_required(f):
                         continue
 
                     comment.is_banned=True
-                    comment.ban_reason="Ban evasion. This comment's owner was was banned from Ruqqus on another account."
+                    comment.ban_reason="Ban evasion. This comment's owner was banned from Ruqqus on another account."
                     g.db.add(comment)
 
                     ma=ModAction(
