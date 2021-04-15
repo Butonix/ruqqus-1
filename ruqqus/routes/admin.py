@@ -704,7 +704,7 @@ def admin_user_data_get(username, v):
 
     user=get_user(username, graceful=True)
 
-    if not name or not user:
+    if not user:
         return render_template("admin/user_data.html", v=v)
 
     post_ids = [x[0] for x in g.db.query(Submission.id).filter_by(author_id=user.id).order_by(Submission.created_utc.desc()).all()]
@@ -729,7 +729,7 @@ def admin_account_data_get(username, v):
 
     user=get_user(username, graceful=True)
 
-    if not name or not user:
+    if not user:
         return render_template("admin/user_data.html", v=v)
 
     return jsonify(
