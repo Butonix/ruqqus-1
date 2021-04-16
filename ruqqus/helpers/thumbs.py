@@ -166,7 +166,6 @@ def thumbnail_thread(pid, debug=False):
                 print_("image too small, next")
                 continue
 
-            if image
             image = PILimage.open(BytesIO(image_req.content))
             break
 
@@ -181,6 +180,7 @@ def thumbnail_thread(pid, debug=False):
     elif x.headers.get("Content-Type","").startswith("image/"):
         #image is originally loaded fetch_url
         print_("post url is direct image")
+        image_req=x
         image = PILimage.open(BytesIO(x.content))
 
     else:
@@ -195,7 +195,7 @@ def thumbnail_thread(pid, debug=False):
     tempname = name.replace("/", "_")
 
     with open(tempname, "wb") as file:
-        for chunk in x.iter_content(1024):
+        for chunk in image_req.iter_content(1024):
             file.write(chunk)
 
     aws.upload_from_file(name, tempname, resize=(375, 227))
