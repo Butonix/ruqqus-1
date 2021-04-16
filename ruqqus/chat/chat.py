@@ -23,6 +23,7 @@ BUCKET=app.config["S3_BUCKET"]
 #app = Flask(__name__)
 #app.debug = 'DEBUG' in os.environ
 
+db=db_session()
 
 SIDS={}
 
@@ -157,8 +158,6 @@ def socket_auth_required(f):
 
     def wrapper(*args, **kwargs):
 
-        g.db=db_session()
-
         v, client=get_logged_in_user()
 
         g.v=v
@@ -177,8 +176,6 @@ def socket_auth_required(f):
                 SIDS[v.id]=[request.sid]
 
         f(*args, v, **kwargs)
-
-        g.db.close()
 
     wrapper.__name__=f.__name__
     return wrapper
@@ -201,7 +198,6 @@ def get_room(f):
 @socketio.on('connect')
 def socket_connect_auth_user():
 
-    g.db=db_session()
 
     v, client=get_logged_in_user()
 
@@ -220,7 +216,6 @@ def socket_connect_auth_user():
     else:
         SIDS[v.id]=[request.sid]
 
-    g.db.close()
     g.v=v
 
     emit("status", {'status':"connected"})
@@ -453,9 +448,9 @@ def random_post(args, guild, v):
 
     """Fetches a random post from this channel's Guild."""
 
-    total=g.db.query(Submission).options(lazyload('*')).filter_by(board_id=guild.id, deleted_utc=0, is_banned=False).count()
+    total=db.query(Submission).options(lazyload('*')).filter_by(board_id=guild.id, deleted_utc=0, is_banned=False).count()
     offset=random.randint(0, total-1)
-    post=g.db.query(Submission).options(lazyload('*')).filter_by(board_id=guild.id, deleted_utc=0, is_banned=False).order_by(Submission.id.asc()).offset(offset).first()
+    post=db.query(Submission).options(lazyload('*')).filter_by(board_id=guild.id, deleted_utc=0, is_banned=False).order_by(Submission.id.asc()).offset(offset).first()
     speak(f"Random Post: <a href=\"https://{app.config['SERVER_NAME']}{post.permalink}\">{post.title}</a>", v, guild)
 
 
@@ -524,7 +519,7 @@ def here_command(args, guild, v):
                 ids.add(uid)
                 break
 
-    users=g.db.query(User.username).filter(User.id.in_(tuple(ids))).all()
+    users=db.query(User.username).filter(User.id.in_(tuple(ids))).all()
     names=[x[0] for x in users]
     names=sorted(names)
 
@@ -604,7 +599,7 @@ def chatban_user(args, guild, v):
         send(f"@{user.username} is an approved contributor and can't currently be banned.")
         return
 
-    existing = g.db.query(ChatBan).filter_by(board_id=guild.id, user_id=user.id).first()
+    existing = db.query(ChatBan).filter_by(board_id=guild.id, user_id=user.id).first()
 
     if existing:
         send(f"@{user.username} is already banned from chat.")
@@ -633,7 +628,7 @@ def chatban_user(args, guild, v):
         board_id=guild.id,
         banning_mod_id=v.id,
         )
-    g.db.add(new_ban)
+    db.add(new_ban)
 
     ma=ModAction(
         kind="chatban_user",
@@ -641,8 +636,8 @@ def chatban_user(args, guild, v):
         target_user_id=user.id,
         board_id=guild.id
         )
-    g.db.add(ma)
-    g.db.commit()
+    db.add(ma)
+    db.commit()
 
 @command('gm', syntax="<text>")
 @gm_command
@@ -676,12 +671,12 @@ def un_chatban_user(args, guild, v):
         send(f"No user named {args[1]}")
         return
 
-    ban=g.db.query(ChatBan).filter_by(board_id=guild.id, user_id=user.id).first()
+    ban=db.query(ChatBan).filter_by(board_id=guild.id, user_id=user.id).first()
     if not ban:
         send(f"User {user.username} is not banned from chat.")
         return
 
-    g.db.delete(ban)
+    db.delete(ban)
 
     ma=ModAction(
         kind="unchatban_user",
@@ -689,8 +684,8 @@ def un_chatban_user(args, guild, v):
         target_user_id=user.id,
         board_id=guild.id
         )
-    g.db.add(ma)
-    g.db.commit()
+    db.add(ma)
+    db.commit()
     send(f"@{user.username} un-chatbanned by @{v.username}.", to=guild.fullname)
 
 @command('motd', syntax="[text]")
@@ -707,8 +702,8 @@ def message_of_the_day(args, guild, v):
         message = sanitize(message, linkgen=True)
 
         guild.motd=message
-        g.db.add(guild)
-        g.db.commit()
+        db.add(guild)
+        db.commit()
 
         send("Message updated")
         data={
@@ -723,8 +718,8 @@ def message_of_the_day(args, guild, v):
 
     else:
         guild.motd=''
-        g.db.add(guild)
-        g.db.commit()
+        db.add(guild)
+        db.commit()
         send("Message removed")
 
 
