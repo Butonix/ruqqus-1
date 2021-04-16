@@ -160,7 +160,7 @@ def thumbnail_thread(pid, debug=False):
                 print_("svg, try next")
                 continue
 
-            image = PILimage.open(BytesIO(x.content))
+            image = PILimage.open(BytesIO(image_req.content))
             if image.width < 30 or image.height < 30:
                 print_("image too small, next")
                 continue
