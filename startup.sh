@@ -13,4 +13,5 @@ gunicorn ruqqus.__main__:app -k eventlet  -w 1 --worker-connections 1000 --max-r
 echo "starting background worker"
 python ruqqus/scripts/recomputes.py
 echo "starting regular workers"
-newrelic-admin run-program gunicorn ruqqus.__main__:app -k gevent -w $WEB_CONCURRENCY --worker-connections $WORKER_CONNECTIONS --max-requests 10000 --max-requests-jitter 500 --preload --bind 127.0.0.1:5000
+#newrelic-admin run-program 
+gunicorn ruqqus.__main__:app -k gevent -w $WEB_CONCURRENCY --worker-connections $WORKER_CONNECTIONS --max-requests 10000 --max-requests-jitter 500 --preload --bind 127.0.0.1:5000
