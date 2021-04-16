@@ -597,7 +597,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     @property
     def is_image(self):
-        return self.domain_obj and self.domain_obj.show_thumbnail
+        return self.has_thumb and self.domain_obj and self.domain_obj.show_thumbnail
 
     @is_image.setter
     def is_image(self, other):
