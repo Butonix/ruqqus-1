@@ -165,12 +165,13 @@ def thumbnail_thread(pid, debug=False):
                 print_("image too small, next")
                 continue
 
+            print_("Image is good, uplaod it")
             break
 
-
-        #getting here means we are out of candidate urls (or there never were any)
-        print_("Unable to find image")
-        return False, "No usable images"
+        else:
+            #getting here means we are out of candidate urls (or there never were any)
+            print_("Unable to find image")
+            return False, "No usable images"
 
 
 
