@@ -165,7 +165,7 @@ def thumbnail_thread(pid, debug=False):
                 print_("image too small, next")
                 continue
 
-            print_("Image is good, uplaod it")
+            print_("Image is good, upload it")
             break
 
         else:
