@@ -2100,5 +2100,5 @@ $('.expandable-image').click( function(event) {
 
   var url= $(this).data('url');
 
-  expandDesktopImage('{{ p.url }}','{{ p.url }}');
+  expandDesktopImage(url,url);
 })
