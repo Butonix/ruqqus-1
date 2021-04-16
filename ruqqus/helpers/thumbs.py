@@ -185,8 +185,8 @@ def thumbnail_thread(pid, debug=False):
 
     else:
 
-        print_(f"Unknown content type {x.headers.get("Content-Type")}")
-        return False, f"Unknown content type {x.headers.get("Content-Type")} for submitted content"
+        print_(f'Unknown content type {x.headers.get("Content-Type")}')
+        return False, f'Unknown content type {x.headers.get("Content-Type")} for submitted content'
 
 
     print_(f"Have image, uploading")
