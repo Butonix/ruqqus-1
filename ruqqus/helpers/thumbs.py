@@ -112,7 +112,7 @@ def thumbnail_thread(pid, debug=False):
 
         for tag_name in meta_tags:
             
-            print_(f"Looking for meta tag: {meta}")
+            print_(f"Looking for meta tag: {tag_name}")
 
 
             tag = soup.find(
@@ -126,7 +126,7 @@ def thumbnail_thread(pid, debug=False):
                 tag = soup.find(
                     'meta',
                     attrs={
-                        'property': meta,
+                        'property': tag_name,
                         'content': True
                         }
                     )
