@@ -110,7 +110,7 @@ _clean_wo_links = bleach.Cleaner(tags=_allowed_tags,
 _clean_w_links = bleach.Cleaner(tags=_allowed_tags_with_links,
                                 attributes=_allowed_attributes,
                                 protocols=_allowed_protocols,
-                                styles=_allowed_styles
+                                styles=_allowed_styles,
                                 filters=[partial(LinkifyFilter,
                                                  skip_tags=["pre"],
                                                  parse_email=False,
