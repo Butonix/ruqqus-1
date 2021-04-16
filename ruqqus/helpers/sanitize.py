@@ -36,7 +36,8 @@ _allowed_tags = tags = ['b',
                         ]
 
 _allowed_tags_with_links = _allowed_tags + ["a",
-                                            "img"
+                                            "img",
+                                            'span'
                                             ]
 
 _allowed_tags_in_bio = [
@@ -57,7 +58,8 @@ _allowed_tags_in_bio = [
 _allowed_attributes = {
     'a': ['href', 'title', "rel", "data-original-name"],
     'i': [],
-    'img': ['src', 'class']
+    'img': ['src', 'class'],
+    'span': ['style']
     }
 
 _allowed_protocols = [
