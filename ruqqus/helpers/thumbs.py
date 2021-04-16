@@ -19,7 +19,7 @@ def expand_url(post_url, fragment_url):
         return f"https://{fragment_url.split('http://')[1]}"
     elif fragment_url.startswith('//'):
         return f"https:{fragment_url}"
-    elif src.startswith('/'):
+    elif fragment_url.startswith('/'):
         parsed_url = urlparse(post_url)
         return f"https://{parsed_url.netloc}{fragment_url}"
     else:
