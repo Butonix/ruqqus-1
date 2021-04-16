@@ -78,7 +78,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     creation_ip = Column(String(64), default="")
     mod_approved = Column(Integer, default=None)
     accepted_utc = Column(Integer, default=0)
-    is_image = Column(Boolean, default=False)
+    #is_image = Column(Boolean, default=False)
     has_thumb = Column(Boolean, default=False)
     post_public = Column(Boolean, default=True)
     score_hot = Column(Float, default=0)
@@ -595,6 +595,13 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def is_exiled_for(self):
         return self.__dict__.get('_is_exiled_for', None)
 
+    @property
+    def is_image(self):
+        return self.domain_obj and self.domain_obj.show_thumbnail
+
+    @is_image.setter
+    def is_image(self, other):
+        pass
     
     
 class SaveRelationship(Base, Stndrd):
