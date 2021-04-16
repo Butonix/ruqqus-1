@@ -144,7 +144,6 @@ def thumbnail_thread(pid, debug=False):
 
             try:
                 image_req=requests.get(url, headers=headers)
-                break
             except:
                 print_(f"Unable to connect to candidate url {url}")
                 continue
@@ -166,7 +165,6 @@ def thumbnail_thread(pid, debug=False):
                 print_("image too small, next")
                 continue
 
-            image = PILimage.open(BytesIO(image_req.content))
             break
 
 
