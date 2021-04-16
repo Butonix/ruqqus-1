@@ -67,7 +67,7 @@ def thumbnail_thread(pid, debug=False):
     headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
     try:
-        print(f"loading {fetch_url}")
+        print_(f"loading {fetch_url}")
         x=requests.get(fetch_url, headers=headers)
     except:
         print_(f"unable to connect to {fetch_url}")
