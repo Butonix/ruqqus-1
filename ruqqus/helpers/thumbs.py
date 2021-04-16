@@ -47,15 +47,17 @@ def thumbnail_thread(pid, debug=False):
     #First, determine the url to go off of
     #This is the embed url, if the post is allowed to be embedded, and the embedded url starts with http
 
-    if post.domain_obj and post.domain_obj.show_thumbnail:
-        print_("Post is likely hosted image")
-        fetch_url=post.url
-    elif post.embed_url and post.embed_url.startswith("https://"):
-        print_("Post is likely embedded content")
-        fetch_url=post.embed_url
-    else:
-        print_("Post is article content")
-        fetch_url=post.url
+    # if post.domain_obj and post.domain_obj.show_thumbnail:
+    #     print_("Post is likely hosted image")
+    #     fetch_url=post.url
+    # elif post.embed_url and post.embed_url.startswith("https://"):
+    #     print_("Post is likely embedded content")
+    #     fetch_url=post.embed_url
+    # else:
+    #     print_("Post is article content")
+    #     fetch_url=post.url
+
+    fetch_url=post.url
 
 
 
