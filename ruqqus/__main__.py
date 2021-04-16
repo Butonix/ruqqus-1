@@ -385,10 +385,7 @@ def after_request(response):
     #             name="Account Signup", link=link))
     #     thread.start()
 
-    try:
-        g.db.close()
-    except AttributeError:
-        pass
+    g.db.close()
 
     # req_stop = time.time()
 
