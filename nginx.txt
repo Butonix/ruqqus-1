@@ -46,6 +46,7 @@ server {
 
     location / {
         proxy_pass http://127.0.0.1:5000;
+        add_header Permissions-Policy interest-cohort=();
     }
 
     error_page 502 =500 /error_page/503.html;
