@@ -76,7 +76,7 @@ def thumbnail_thread(pid, debug=False):
 
     #if content is image, stick with that. Otherwise, parse html.
 
-    if x.headers.get("Content-Type","")=="text/html":
+    if x.headers.get("Content-Type","").startswith("text/html"):
         #parse html, find image, load image
         soup=BeautifulSoup(x.content, 'html.parser')
         #parse html
