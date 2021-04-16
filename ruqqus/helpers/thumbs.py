@@ -154,7 +154,7 @@ def thumbnail_thread(pid, debug=False):
                 continue
 
             if not image_req.headers.get("Content-Type","").startswith("image/"):
-                print_(f"bad type {image_req.headers.get("Content-Type","")}, try next")
+                print_(f'bad type {image_req.headers.get("Content-Type","")}, try next')
                 continue
 
             if image_req.headers.get("Content-Type","").startswith("image/svg"):
