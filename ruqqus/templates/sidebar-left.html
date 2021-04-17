@@ -6,7 +6,7 @@
       <div class="mb-4">
         <div class="sidebar-collapsed-hidden collapsed-toggle-parent">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="text-small font-weight-bold text-muted text-uppercase" style="letter-spacing: 0.025rem;">Ruqqus Feeds</div>
+            <div class="text-small font-weight-bold text-muted text-uppercase" style="letter-spacing: 0.025rem;">{{ "SITE_NAME" | env }} Feeds</div>
             <button class="btn" data-toggle="tooltip" data-placement="right" title="Collapse" onclick="toggle_sidebar_collapse();post('/settings/toggle_collapse');"><span class="collapsed-toggle"></span></button>
           </div>
         </div>
@@ -167,8 +167,8 @@
             <div class="my-3" style="">
               <i class="fad fa-telescope text-purple" style="font-size:3rem"></i>
             </div>
-            <h5>Discover amazing communities across <span class="text-purple">Ruqqus</span>.</h5>
-            <p class="text-small">Create a Ruqqus account and join your favorite communities, no email address required.</p>
+            <h5>Discover amazing communities across <span class="text-purple">{{ "SITE_NAME" | env | upper }}</span>.</h5>
+            <p class="text-small">Create a {{ "SITE_NAME" | env | upper }} account and join your favorite communities, no email address required.</p>
             <a href="/signup" class="btn btn-purple btn-block">Sign up</a>
           </div>
         </div>
