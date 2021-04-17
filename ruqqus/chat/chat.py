@@ -28,8 +28,6 @@ HELP={}
 
 TYPING={}
 
-AUTHS={}
-
 def print_(x):
     try:
         print(x)
@@ -162,8 +160,8 @@ def socket_auth_required(f):
 
     def wrapper(*args, **kwargs):
 
-        v = AUTHS.get(request.sid,None)
         g.db=db_session()
+        v, client=get_logged_in_user(db=g.db)
 
         if not v:
             send("You are not logged in")
