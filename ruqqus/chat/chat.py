@@ -38,7 +38,7 @@ def socket_connect_auth_user():
 
     g.db=db_session()
 
-    v, client=get_logged_in_user(db=db)
+    v, client=get_logged_in_user()
 
     if client or not v:
         send("Authentication required")
@@ -94,7 +94,7 @@ def get_room(f):
     def wrapper(*args, **kwargs):
 
         data=args[0]
-        guild=get_guild(data["guild"], db=db)
+        guild=get_guild(data["guild"])
 
         if guild.is_banned:
             return
@@ -380,7 +380,7 @@ def guild_chat(guildname, v):
 
 
 
-    board=get_guild(guildname, db=db)
+    board=get_guild(guildname)
 
 
     if board.over_18 and not (v and v.over_18) and not session_over18(board):
