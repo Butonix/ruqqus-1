@@ -556,17 +556,6 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         if v.admin_level >=4:
             query=query.options(joinedload(Comment.oauth_app))
 
-        if load_parent:
-            query = query.options(
-                joinedload(
-                    Comment.parent_comment
-                ).joinedload(
-                    Comment.author
-                ).joinedload(
-                    User.title
-                    )
-                )
-
         query = query.join(
             vt,
             vt.c.comment_id == Comment.id,
@@ -622,6 +611,19 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
 
     output = sorted(output, key=lambda x: cids.index(x.id))
+
+    if load_parent:
+        parents=get_comments(
+            [x.parent_comment_id for x in output if x], 
+            v=v, 
+            nSession=nSession, 
+            load_parent=False
+            )
+
+        parents={x.id: x for x in parents}
+
+        for c in output:
+            c.parent_comment=parents.get(c.parent_comment_id)
 
     return output
 
