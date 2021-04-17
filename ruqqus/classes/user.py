@@ -320,7 +320,7 @@ class User(Base, Stndrd, Age_times):
         return [x[0] for x in posts.offset(25 * (page - 1)).limit(26).all()]
 
     @cache.memoize(300)
-    def userpagelisting(self, v=None, page=1):
+    def userpagelisting(self, v=None, page=1, sort="new"):
 
         submissions = g.db.query(Submission.id).options(
             lazyload('*')).filter_by(author_id=self.id)
@@ -360,9 +360,18 @@ class User(Base, Stndrd, Age_times):
             )
         else:
             submissions = submissions.filter(Submission.post_public == True)
+        if sort == "hot":
+            submissions = submissions.order_by(Submission.score_best.desc())
+        elif sort == "new":
+            submissions = submissions.order_by(Submission.created_utc.desc())
+        elif sort == "disputed":
+            submissions = submissions.order_by(Submission.score_disputed.desc())
+        elif sort == "top":
+            submissions = submissions.order_by(Submission.score_top.desc())
+        elif sort == "activity":
+            submissions = submissions.order_by(Submission.score_activity.desc())
 
-        listing = [x[0] for x in submissions.order_by(
-            Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26)]
+        listing = [x[0] for x in submissions.offset(25 * (page - 1)).limit(26)]
 
         return listing
 
