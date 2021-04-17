@@ -20,7 +20,6 @@ from ruqqus.__main__ import app, r, socketio, db_session
 REDIS_URL = app.config["CACHE_REDIS_URL"]
 BUCKET=app.config["S3_BUCKET"]
 
-db=db_session()
 
 SIDS={}
 
@@ -30,6 +29,12 @@ HELP={}
 TYPING={}
 
 AUTHS={}
+
+def print_(x):
+    try:
+        print(x)
+    except:
+        pass
 
 def now():
 
@@ -169,7 +174,9 @@ def socket_auth_required(f):
             else:
                 SIDS[v.id]=[request.sid]
 
-        f(*args, v, **kwargs)
+        with db_session() as db:
+            f(*args, v, **kwargs)
+            db.close()
 
     wrapper.__name__=f.__name__
     return wrapper
