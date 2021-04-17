@@ -80,9 +80,11 @@ def socket_auth_required(f):
             else:
                 SIDS[v.id]=[request.sid]
 
-        g.db.add(v)
+        g.db.enable_relationship_loading(v)
 
         f(*args, v, **kwargs)
+
+        g.db.expunge(v)
 
         g.db.close()
 
