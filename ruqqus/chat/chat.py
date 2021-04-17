@@ -157,7 +157,7 @@ def socket_auth_required(f):
 
     def wrapper(*args, **kwargs):
 
-        v = AUTHS.get('v',None)
+        v = AUTHS.get(request.sid,None)
 
         if not v:
             send("You are not logged in")
