@@ -7,6 +7,7 @@ from flask import g
 from ruqqus.classes.user import User
 from .get import *
 import requests
+
 from ruqqus.__main__ import app, cache
 
 
@@ -72,6 +73,6 @@ def coin_goal(x):
 def app_config(x):
     return app.config.get(x)
 
-@app.template_flter("general_chat_count")
+@app.template_filter("general_chat_count")
 def general_chat_count(x):
     return get_guild("general").chat_count
