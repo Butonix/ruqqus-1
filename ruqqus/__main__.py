@@ -291,6 +291,9 @@ def get_useragent_ban_response(user_agent_str):
     Given a user agent string, returns a tuple in the form of:
     (is_user_agent_banned, (insult, status_code))
     """
+    if request.path.startswith("/socket.io/"):
+        return False, (None, None)
+
     result = g.db.query(
         ruqqus.classes.Agent).filter(
         ruqqus.classes.Agent.kwd.in_(
