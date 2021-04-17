@@ -199,7 +199,7 @@ def get_room(f):
 @socketio.on('connect')
 def socket_connect_auth_user():
 
-    db=db_session()
+
     v, client=get_logged_in_user(db=db)
 
     if client or not v:
@@ -220,8 +220,6 @@ def socket_connect_auth_user():
     AUTHS[request.sid]=v
 
     emit("status", {'status':"connected"})
-
-    db.close()
 
 @socketio.on('disconnect')
 @socket_auth_required
