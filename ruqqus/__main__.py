@@ -236,7 +236,7 @@ Base = declarative_base()
 #set the shared redis cache for misc stuff
 
 redispool2=BlockingConnectionPool(
-    max_connections=app.config["REDIS_POOL_SIZE"],
+    max_connections=100,
     host=app.config["CACHE_REDIS_URL"][8:],
     decode_responses=True
 )
