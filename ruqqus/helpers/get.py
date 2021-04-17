@@ -544,12 +544,13 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
 
         query = nSession.query(
-            Comment, 
-            aliased(CommentVote, alias=vt),
-            aliased(ModRelationship, alias=mod),
-            aliased(ModAction, alias=exile)
+                Comment, 
+                aliased(CommentVote, alias=vt),
+                aliased(ModRelationship, alias=mod),
+                aliased(ModAction, alias=exile)
             ).options(
-            joinedload(Comment.author).joinedload(User.title)
+                joinedload(Comment.author).joinedload(User.title),
+                joinedload(Comment.post).joinedload(Submission.board)
             )
 
         if v.admin_level >=4:
@@ -559,9 +560,9 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             query = query.options(
                 joinedload(
                     Comment.parent_comment
-                    ).joinedload(
+                ).joinedload(
                     Comment.author
-                    ).joinedload(
+                ).joinedload(
                     User.title
                     )
                 )
@@ -571,11 +572,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             vt.c.comment_id == Comment.id,
             isouter=True
             ).join(
-            Comment.post,
-            isouter=True
-            ).join(
             mod,
-            mod.c.board_id==Submission.board_id,
+            mod.c.board_id==Comment.original_board_id,
             isouter=True
             ).join(
             exile,
@@ -587,9 +585,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
 
 
-        query=query.options(
-            contains_eager(Comment.post).contains_eager(Submission.board)
-            ).order_by(None).all()
+        query=query.order_by(None).all()
 
         comments=[x for x in query]
 
@@ -616,9 +612,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             isouter=True
         )
 
-        query=query.options(
-            contains_eager(Comment.post).contains_eager(Submission.board)
-            ).order_by(None).all()
+        query=query.order_by(None).all()
 
         comments=[x for x in query]
 
