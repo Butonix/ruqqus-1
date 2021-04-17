@@ -643,7 +643,10 @@ def get_board(bid, graceful=False):
     return x
 
 
-def get_guild(name, graceful=False):
+def get_guild(name, graceful=False, db=None):
+
+    if not db:
+        db=g.db
 
     name = name.lstrip('+')
 
@@ -651,7 +654,7 @@ def get_guild(name, graceful=False):
     name = name.replace('_', '\_')
     name = name.replace('%', '')
 
-    x = g.db.query(Board).options(
+    x = db.query(Board).options(
         joinedload(Board.moderators).joinedload(ModRelationship.user),
         joinedload(Board.subcat).joinedload(SubCategory.category)
             ).filter(

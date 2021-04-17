@@ -179,7 +179,7 @@ def get_room(f):
     def wrapper(*args, **kwargs):
 
         data=args[0]
-        guild=get_guild(data["guild"])
+        guild=get_guild(data["guild"], db=db)
 
         if guild.is_banned:
             return
@@ -367,7 +367,7 @@ def guild_chat(guildname, v):
 
 
 
-    board=get_guild(guildname)
+    board=get_guild(guildname, db=db)
 
 
     if board.over_18 and not (v and v.over_18) and not session_over18(board):

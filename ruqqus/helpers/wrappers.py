@@ -11,12 +11,10 @@ from .alerts import send_notification
 from ruqqus.__main__ import Base, app, db_session
 
 
-def get_logged_in_user():
+def get_logged_in_user(db=None):
 
-    try:
+    if not db:
         db=g.db
-    except AttributeError:
-        db=db_session()
 
     if request.path.startswith("/api/v1"):
 
