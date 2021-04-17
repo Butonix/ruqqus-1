@@ -243,7 +243,7 @@ r=redis.Redis(
 
 
 #import and bind chat function
-from ruqqus.chat import *
+#from ruqqus.chat import *
 
 
 @app.before_first_request
