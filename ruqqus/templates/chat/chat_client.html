@@ -1,6 +1,6 @@
-<div class="container p-md-0">
+<div class="container p-md-0 chat-container">
 
-  <div id="chat-text" {% if request.path.endswith('/chat') %}class="fullchat"{% else %}class="sidebarchat"{% endif %} style="max-height:calc(100vh - 300px); overflow-y:scroll;">
+  <div id="chat-text" {% if request.path.endswith('/chat') %}class="fullchat"{% else %}class="sidebarchat"{% endif %}>
   </div>
   {% if request.path.endswith('/chat') %}
   <div class="position-relative form-group d-flex pb-3">
@@ -223,6 +223,17 @@
 <script src="/assets/js/chat.js?v=2.35.64"></script>
 
 <style>
+
+.sidebar-chat:focus-within #chat-text {
+  max-height:calc(100vh - 300px);
+}
+
+#chat-text {
+  max-height: 200px;
+  overflow-y:scroll;
+}
+
+
 #loading-indicator:after {
   overflow: hidden;
   display: inline-block;
