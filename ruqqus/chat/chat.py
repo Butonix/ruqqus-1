@@ -155,7 +155,7 @@ def socket_auth_required(f):
 
     def wrapper(*args, **kwargs):
 
-        v = request.v
+        v = request.__dict__.get('v',None)
 
         if request.sid not in SIDS.get(v.id, []):
             if v.id in SIDS:
@@ -204,7 +204,7 @@ def socket_connect_auth_user():
     else:
         SIDS[v.id]=[request.sid]
 
-    request.v=v
+    request.__dict__['v']=v
 
     emit("status", {'status':"connected"})
 
