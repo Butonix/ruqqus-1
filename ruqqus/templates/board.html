@@ -370,7 +370,7 @@
 {% block pagetype %}guild{% endblock %}
 
 {% block title %}
-<title>+{{ b.name }} - {{ 'SITE_NAME' | env }}</title>
+<title>+{{ b.name }} - {{ 'SITE_NAME' | app_config }}</title>
 <meta name="description" content="{{ b.description }}">
 {% endblock %}
 

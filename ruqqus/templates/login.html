@@ -5,11 +5,11 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Sign in to {{ 'SITE_NAME' | env }}">
+    <meta name="description" content="Sign in to {{ 'SITE_NAME' | app_config }}">
     <meta name="author" content="">
 
     {% block title %}
-    <title>Login - {{ 'SITE_NAME' | env }}</title>
+    <title>Login - {{ 'SITE_NAME' | app_config }}</title>
     {% endblock %}
     
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
@@ -67,7 +67,7 @@
                 <div class="col-10 col-md-7">
 
                     <div class="mb-5">
-                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">{{ 'SITE_NAME' | env | lower }}</span></a>
+                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">{{ 'SITE_NAME' | app_config | lower }}</span></a>
                     </div>
 
                     {% block content %}
@@ -76,7 +76,7 @@
 
                         <h1 class="h2">Welcome back.</h1>
 
-                        <p class="text-muted mb-md-5">Glad to have you back. Make a {{ 'SITE_NAME' | env | lower }}!</p>
+                        <p class="text-muted mb-md-5">Glad to have you back. Make a {{ 'SITE_NAME' | app_config | lower }}!</p>
 
                         {% if failed %}
                         <div class="alert alert-danger alert-dismissible fade show d-flex my-3" role="alert">

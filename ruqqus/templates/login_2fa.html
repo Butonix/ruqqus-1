@@ -5,10 +5,10 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Sign in to {{ 'SITE_NAME' | env }}">
+    <meta name="description" content="Sign in to {{ 'SITE_NAME' | app_config }}">
     <meta name="author" content="">
 
-    <title>2-Step Login - {{ 'SITE_NAME' | env }}</title>
+    <title>2-Step Login - {{ 'SITE_NAME' | app_config }}</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -64,7 +64,7 @@
                 <div class="col-10 col-md-7">
 
                     <div class="mb-5">
-                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">{{ 'SITE_NAME' | env | lower }}</span></a>
+                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">{{ 'SITE_NAME' | app_config | lower }}</span></a>
                     </div>
 
                     <div id="login-form" class="">
