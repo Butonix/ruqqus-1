@@ -360,8 +360,7 @@ class User(Base, Stndrd, Age_times):
             )
         else:
             submissions = submissions.filter(Submission.post_public == True)
-	
-	if sort == "hot":
+        if sort == "hot":
             submissions = submissions.order_by(Submission.score_best.desc())
         elif sort == "new":
             submissions = submissions.order_by(Submission.created_utc.desc())
