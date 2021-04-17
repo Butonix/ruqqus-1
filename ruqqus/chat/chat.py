@@ -204,7 +204,7 @@ def socket_connect_auth_user():
 
     g.db=db_session()
 
-    v, client=get_logged_in_user(db=db)
+    v, client=get_logged_in_user(db=g.db)
 
     if client or not v:
         send("Authentication required")
