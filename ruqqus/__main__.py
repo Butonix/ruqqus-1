@@ -110,7 +110,7 @@ app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
 
 app.config["S3_BUCKET"]=environ.get("S3_BUCKET_NAME","i.ruqqus.com").lstrip().rstrip()
 
-app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 200))
+app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 300))
 
 redispool=BlockingConnectionPool(
     max_connections=app.config["REDIS_POOL_SIZE"],
@@ -235,17 +235,11 @@ Base = declarative_base()
 
 #set the shared redis cache for misc stuff
 
-redispool2=BlockingConnectionPool(
-    max_connections=100,
-    host=app.config["CACHE_REDIS_URL"][8:],
-    decode_responses=True
-)
-
 r=redis.Redis(
     host=app.config["CACHE_REDIS_URL"][8:], 
     decode_responses=True, 
     ssl_cert_reqs=None,
-    connection_pool=redispool2
+    connection_pool=redispool
     )
 
 
