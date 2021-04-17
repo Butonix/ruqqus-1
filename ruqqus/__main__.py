@@ -29,6 +29,7 @@ import requests
 import random
 import redis
 import gevent
+import sys
 
 from redis import BlockingConnectionPool
 
@@ -243,7 +244,8 @@ r=redis.Redis(
 
 
 #import and bind chat function
-#from ruqqus.chat import *
+if "load_chat" in sys.argv:
+    from ruqqus.chat import *
 
 
 @app.before_first_request
