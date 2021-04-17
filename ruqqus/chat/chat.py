@@ -56,7 +56,8 @@ def socket_connect_auth_user():
 
     emit("status", {'status':"connected"})
 
-    g.db.expunge(v)
+    g.db.make_transient(v)
+    g.db.make_transient_to_detached(v)
 
     AUTHS[request.sid]=v
     g.db.close()
@@ -80,11 +81,9 @@ def socket_auth_required(f):
             else:
                 SIDS[v.id]=[request.sid]
 
-        g.db.add(v)
+        g.db.enable_relationship_loading(v)
 
         f(*args, v, **kwargs)
-
-        g.db.expunge(v)
 
         g.db.close()
 
