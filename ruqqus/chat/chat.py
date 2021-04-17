@@ -160,8 +160,10 @@ def socket_auth_required(f):
 
     def wrapper(*args, **kwargs):
 
-        g.db=db_session()
-        v, client=get_logged_in_user(db=g.db)
+        #g.db=db_session()
+        #v, client=get_logged_in_user(db=g.db)
+
+        v=g.v
 
         if not v:
             send("You are not logged in")
@@ -175,7 +177,7 @@ def socket_auth_required(f):
 
         f(*args, v, **kwargs)
 
-        g.db.close()
+        #g.db.close()
 
     wrapper.__name__=f.__name__
     return wrapper
@@ -216,8 +218,6 @@ def socket_connect_auth_user():
         SIDS[v.id].append(request.sid)
     else:
         SIDS[v.id]=[request.sid]
-
-    g.db.close()
     g.v=v
 
     emit("status", {'status':"connected"})
@@ -243,6 +243,8 @@ def socket_disconnect_user(v):
             if v.username in TYPING.get(board.fullname, []):
                 TYPING[board.fullname].remove(v.username)
                 emit('typing', {'users':TYPING[board.fullname]}, to=board.fullname)
+
+    g.db.close()
 
 
 
