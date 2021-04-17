@@ -1,6 +1,6 @@
 {% extends "settings.html" %}
 
-{% block pagetitle %}Profile Settings - Ruqqus{% endblock %}
+{% block pagetitle %}Profile Settings - {{ 'SITE_NAME' | env }}{% endblock %}
 
 {% block content %}
 
@@ -125,7 +125,7 @@
 
       <h2 class="h5" id="referral" name="referral">Referrals</h2>
 
-      <p class="text-small text-muted">Invite a friend to make a Ruqqus.</p>
+      <p class="text-small text-muted">Invite a friend to make a {{ 'SITE_NAME' | env }}.</p>
 
       <div class="settings-section rounded">
 
@@ -139,7 +139,7 @@
 
             <div class="input-group">
 
-              <input type="text" readonly="" class="form-control copy-link" id="referral_code" value="https://ruqqus.com/signup?ref={{ v.username }}" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}">
+              <input type="text" readonly="" class="form-control copy-link" id="referral_code" value="{{ ('/signup?ref=' + v.username) | full_link }}" data-clipboard-text="{{ ('/signup?ref=' + v.username) | full_link }}">
 
               <span class="input-group-append" data-toggle="tooltip" data-placement="top" title="You have referred {{ v.referral_count }} user{{ 's' if v.referral_count != 1 else '' }} so far. {% if v.referral_count==0 %}¯\_(ツ)_/¯{% elif v.referral_count>10%}Wow!{% endif %}">
                 <span class="input-group-text text-muted border-0">
@@ -176,10 +176,10 @@
                   <input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Disconnect Discord">
                 </form>
 
-                <div class="text-small-extra text-muted mt-3">Disconnecting your Discord account will remove you from the Ruqqus Discord server.</div>
+                <div class="text-small-extra text-muted mt-3">Disconnecting your Discord account will remove you from the {{ 'SITE_NAME' | env }} Discord server.</div>
                 {% else %}
                 <a href="/discord" class="btn btn-primary">Link Discord</a>
-                <div class="text-small-extra text-muted mt-3">Link your Discord account to join the Ruqqus Discord server.</div>
+                <div class="text-small-extra text-muted mt-3">Link your Discord account to join the {{ 'SITE_NAME' | env }} Discord server.</div>
                 {% endif %}
 
               </div>
@@ -190,7 +190,7 @@
 
           <h2 class="h5" name="referral">RSS Feed</h2>
 
-          <p class="text-small text-muted">Subscribe to your own personal ruqqus rss feed.</p>
+          <p class="text-small text-muted">Subscribe to your own personal {{ 'SITE_NAME' | env | lower}} rss feed.</p>
 
           <div class="settings-section rounded">
 
@@ -218,7 +218,7 @@
 
             <h2 class="h5" id="bio" name="bio">Your Profile</h2>
 
-            <p class="text-small text-muted">Edit how others see you on Ruqqus.</p>
+            <p class="text-small text-muted">Edit how others see you on {{ 'SITE_NAME' | env }}.</p>
 
             <div class="settings-section rounded mb-0">
 
@@ -227,7 +227,7 @@
                 <label for="bio" class="text-black w-lg-25">Display Name</label>
 
                 <div class="w-lg-100">
-                  <p>Your display name is how you are known across Ruqqus. Changing your display name costs 20 Coins and may be done once every 7 days.</p>
+                  <p>Your display name is how you are known across {{ 'SITE_NAME' | env }}. Changing your display name costs 20 Coins and may be done once every 7 days.</p>
 
 
                   <form id="profile-settings" action="/settings/name_change" method="post">
@@ -275,7 +275,7 @@
                 <label for="bio" class="text-black w-lg-25">Title</label>
 
                 <div class="w-lg-100">
-                  <p>Titles change the way your name is displayed across Ruqqus, allowing you to show off a site achievement.</p>
+                  <p>Titles change the way your name is displayed across {{ 'SITE_NAME' | env }}, allowing you to show off a site achievement.</p>
                   <div class="input-group mb2">
                     <select id='title-selector' class="form-control" form="profile-settings" name="title_id" onchange="post_toast('/settings/profile?title_id='+document.getElementById('title-selector').value)">
                      <option value="0"{{ ' selected' if v.title_id==0 else '' }}>No title</option>
