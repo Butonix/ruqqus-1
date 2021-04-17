@@ -588,7 +588,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
 
         query=query.options(
-    #        contains_eager(Comment.post).contains_eager(Submission.board)
+            contains_eager(Comment.post).contains_eager(Submission.board)
             ).order_by(None).all()
 
         comments=[x for x in query]
@@ -614,7 +614,11 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
-        ).order_by(None).all()
+        )
+
+        query=query.options(
+            contains_eager(Comment.post).contains_eager(Submission.board)
+            ).order_by(None).all()
 
         comments=[x for x in query]
 
