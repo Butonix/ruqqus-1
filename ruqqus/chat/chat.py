@@ -53,13 +53,13 @@ def socket_connect_auth_user():
     else:
         SIDS[v.id]=[request.sid]
 
-    g.db.close()
 
     emit("status", {'status':"connected"})
 
-    make_transient(v)
+    g.db.expunge(v)
 
     AUTHS[request.sid]=v
+    g.db.close()
 
 
 
