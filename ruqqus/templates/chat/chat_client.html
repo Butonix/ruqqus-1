@@ -26,13 +26,13 @@
     </div>
     <input id="input-text" type="text" class="form-control" placeholder="Temporarily Disabled" autocomplete="off" disabled>
     <div class="d-flex mt-3">
-      {% if v.has_premium %}
+      {% if False %}
           <label class="btn btn-disabled w-20 mr-3 mb-0 ml-auto" for="chat-image-upload">
             <div id="filename-show"><i class="fad fa-image"></i></div>
             <input id="chat-image-upload" type="file" name="image" accept="image/*" onchange="upload_chat_image()" hidden>
           </label>
       {% endif %}
-      <button id="chatsend" class="btn btn-primary btn-disabled w-100 ml-auto" type="submit">Send</button>
+      <button id="chatsend" class="btn btn-primary w-100 ml-auto" type="submit" disabled>Send</button>
     </div>
   </div>
   <input id="autojoin" type="hidden" value="{{ v.auto_join_chat }}">
