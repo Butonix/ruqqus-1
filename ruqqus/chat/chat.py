@@ -43,11 +43,13 @@ def socket_connect_auth_user():
     if client or not v:
         send("Authentication required")
         disconnect()
+        g.db.close()
         return
 
     if v.is_suspended:
         send("You're banned and can't access chat right now.")
         disconnect()
+        g.db.close()
         return
 
     if v.id in SIDS:
@@ -72,6 +74,7 @@ def socket_auth_required(f):
 
         if not v:
             send("You are not logged in")
+            g.db.close()
             return
 
         if request.sid not in SIDS.get(v.id, []):
