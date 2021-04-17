@@ -157,13 +157,13 @@ def u_username(username, v=None):
     page = int(request.args.get("page", "1"))
     page = max(page, 1)
 
-    ids = u.userpagelisting(v=v, page=page)
+    ids = u.userpagelisting(v=v, page=page, sort=sort)
 
     # we got 26 items just to see if a next page exists
     next_exists = (len(ids) == 26)
     ids = ids[0:25]
 
-    listing = get_posts(ids, v=v, sort=sort)
+    listing = get_posts(ids, v=v)
 
     return {'html': lambda: render_template("userpage.html",
                                             u=u,
