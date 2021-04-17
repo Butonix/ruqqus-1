@@ -121,7 +121,8 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             # aliased(ModAction, alias=exile)
         ).options(
             joinedload(Submission.author).joinedload(User.title),
-            joinedload(Submission.submission_aux)
+            joinedload(Submission.submission_aux),
+            joinedload(Submission.board)
         )
 
         if v.admin_level>=4:
@@ -166,7 +167,8 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             # aliased(ModAction, alias=exile)
         ).options(
             joinedload(Submission.author).joinedload(User.title),
-            joinedload(Submission.submission_aux)
+            joinedload(Submission.submission_aux),
+            joinedload(Submission.board)
         # ).join(
         #     exile,
         #     and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
@@ -222,7 +224,8 @@ def get_posts(pids, sort="hot", v=None):
             # aliased(ModAction, alias=exile)
         ).options(
             joinedload(Submission.author).joinedload(User.title),
-            joinedload(Submission.submission_aux)
+            joinedload(Submission.submission_aux),
+            joinedload(Submission.board)
         ).filter(
             Submission.id.in_(pids)
         ).join(
@@ -315,7 +318,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             aliased(ModAction, alias=exile)
         ).options(
             joinedload(Comment.author).joinedload(User.title),
-            joinedload(Comment.comment_aux)
+            joinedload(Comment.comment_aux),
         )
         if v.admin_level >=4:
 
