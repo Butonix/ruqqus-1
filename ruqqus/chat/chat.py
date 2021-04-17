@@ -175,9 +175,7 @@ def socket_auth_required(f):
             else:
                 SIDS[v.id]=[request.sid]
 
-        with db_session() as db:
-            f(*args, v, **kwargs)
-            db.close()
+        f(*args, v, **kwargs)
 
         g.db.close()
 
