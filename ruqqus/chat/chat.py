@@ -187,7 +187,7 @@ def get_room(f):
     def wrapper(*args, **kwargs):
 
         data=args[0]
-        guild=get_guild(data["guild"], db=db)
+        guild=get_guild(data["guild"], db=g.db)
 
         if guild.is_banned:
             return
@@ -378,7 +378,7 @@ def guild_chat(guildname, v):
 
 
 
-    board=get_guild(guildname, db=db)
+    board=get_guild(guildname, db=g.db)
 
 
     if board.over_18 and not (v and v.over_18) and not session_over18(board):
@@ -555,7 +555,7 @@ def me_action(args, guild, v):
 @gm_command
 def kick_user(args, guild, v):
     """Ejects a user from the chat. They can rejoin immediately. (Must be Guildmaster.)"""
-    user=get_user(args[1], graceful=True)
+    user=get_user(args[1], graceful=True, nSession=g.db)
 
     if not user:
         send(f"No user named {args[1]}")
@@ -591,7 +591,7 @@ def kick_user(args, guild, v):
 @gm_command
 def chatban_user(args, guild, v):
     """Ejects a user from the chat. They may not rejoin until unbanned. (Must be Guildmaster.)"""
-    user=get_user(args[1], graceful=True)
+    user=get_user(args[1], graceful=True, nSession=g.db)
 
     if not user:
         send(f"No user named {args[1]}")
@@ -672,7 +672,7 @@ def speak_as_gm(args, guild, v):
 @gm_command
 def un_chatban_user(args, guild, v):
     """Unban a banned user from this chat. (Must be Guildmaster.)"""
-    user=get_user(args[1], graceful=True)
+    user=get_user(args[1], graceful=True, nSession=g.db)
 
     if not user:
         send(f"No user named {args[1]}")
@@ -809,7 +809,7 @@ def direct_message(args, guild, v):
         send("Not enough arguments. Type `/help msg` for more information.")
         return
 
-    user=get_user(args[1], graceful=True)
+    user=get_user(args[1], graceful=True, nSession=g.db)
     if not user:
         send(f"No user named @{args[1]}.")
         return
