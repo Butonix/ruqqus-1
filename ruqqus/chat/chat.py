@@ -4,7 +4,7 @@ import mistletoe
 from flask import *
 from flask_socketio import *
 import random
-from sqlalchemy.orm import lazyload, make_transient
+from sqlalchemy.orm import lazyload, make_transient, make_transient_to_detached
 import time
 import secrets
 
@@ -56,8 +56,8 @@ def socket_connect_auth_user():
 
     emit("status", {'status':"connected"})
 
-    g.db.make_transient(v)
-    g.db.make_transient_to_detached(v)
+    make_transient(v)
+    make_transient_to_detached(v)
 
     AUTHS[request.sid]=v
     g.db.close()
