@@ -115,7 +115,7 @@ redispool=BlockingConnectionPool(
     max_connections=app.config["REDIS_POOL_SIZE"],
     host=app.config["CACHE_REDIS_URL"][8:]
     )
-#app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
+app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
 
 
 Markdown(app)
@@ -243,7 +243,7 @@ r=redis.Redis(
 
 
 #import and bind chat function
-#from ruqqus.chat import *
+from ruqqus.chat import *
 
 
 @app.before_first_request
