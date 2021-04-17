@@ -225,21 +225,23 @@
 <style>
 
 .sidebar-chat:focus-within #chat-text {
+  overflow-y:scroll;
   animation: chatexpand ease-out 500ms;
+  max-height:calc(100vh - 300px);
 }
 
-#chat-text {
-  max-height: 200px;
+.sidebar-chat:not(:focus-within) #chat-text {
   overflow-y:scroll;
+  max-height: 200px;
 }
 
 @keyframes chatexpand {
-  0%    {max-height: 200px;}
-  100%  {max-height:calc(100vh - 300px);}
+  from  {max-height: 200px;}
+  to    {max-height:calc(100vh - 300px);}
 }
 @-webkit-keyframes chatexpand {
-  to {
-    max-height:calc(100vh - 300px);
+  from  {max-height: 200px;}
+  to    {max-height:calc(100vh - 300px);}
   }
 }
 
