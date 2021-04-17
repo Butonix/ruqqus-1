@@ -519,7 +519,7 @@ def me_action(args, guild, v):
 @gm_command
 def kick_user(args, guild, v):
     """Ejects a user from the chat. They can rejoin immediately. (Must be Guildmaster.)"""
-    user=get_user(args[1], graceful=True, nSession=db)
+    user=get_user(args[1], graceful=True)
 
     if not user:
         send(f"No user named {args[1]}")
@@ -555,7 +555,7 @@ def kick_user(args, guild, v):
 @gm_command
 def chatban_user(args, guild, v):
     """Ejects a user from the chat. They may not rejoin until unbanned. (Must be Guildmaster.)"""
-    user=get_user(args[1], graceful=True, nSession=db)
+    user=get_user(args[1], graceful=True)
 
     if not user:
         send(f"No user named {args[1]}")
@@ -636,7 +636,7 @@ def speak_as_gm(args, guild, v):
 @gm_command
 def un_chatban_user(args, guild, v):
     """Unban a banned user from this chat. (Must be Guildmaster.)"""
-    user=get_user(args[1], graceful=True, nSession=db)
+    user=get_user(args[1], graceful=True)
 
     if not user:
         send(f"No user named {args[1]}")
@@ -773,7 +773,7 @@ def direct_message(args, guild, v):
         send("Not enough arguments. Type `/help msg` for more information.")
         return
 
-    user=get_user(args[1], graceful=True, nSession=db)
+    user=get_user(args[1], graceful=True)
     if not user:
         send(f"No user named @{args[1]}.")
         return
