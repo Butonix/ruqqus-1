@@ -193,7 +193,7 @@ def get_room(f):
 def socket_connect_auth_user():
 
 
-    v, client=get_logged_in_user()
+    v, client=get_logged_in_user(db=db)
 
     if client or not v:
         send("Authentication required")
