@@ -30,6 +30,12 @@ TYPING={}
 
 #db=db_session()
 
+def print_(x):
+    try:
+        print(x)
+    except:
+        pass
+
 
 @socketio.on('connect')
 def socket_connect_auth_user():
@@ -323,7 +329,7 @@ def speak_guild(data, v, guild):
     
     user_pad=" "*(25-len(v.username))
     guild_pad=" "*(25-len(guild.name))
-    print(f"@{v.username}{user_pad} - #{guild.name}{guild_pad} - {raw_text}")
+    print_(f"@{v.username}{user_pad} - #{guild.name}{guild_pad} - {raw_text}")
 
     if raw_text.startswith('/'):
         args=raw_text.split()
