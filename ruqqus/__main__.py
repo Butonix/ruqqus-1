@@ -231,7 +231,12 @@ Base = declarative_base()
 
 #set the shared redis cache for misc stuff
 
-r=redis.Redis(host=app.config["CACHE_REDIS_URL"][8:], decode_responses=True, ssl_cert_reqs=None)
+r=redis.Redis(
+    host=app.config["CACHE_REDIS_URL"][8:], 
+    decode_responses=True, 
+    ssl_cert_reqs=None,
+    connection_pool=redispool
+    )
 
 
 #import and bind chat function
