@@ -217,7 +217,6 @@ def socket_connect_auth_user():
     else:
         SIDS[v.id]=[request.sid]
 
-    AUTHS[request.sid]=v
     g.db.close()
     g.v=v
 
@@ -244,9 +243,6 @@ def socket_disconnect_user(v):
             if v.username in TYPING.get(board.fullname, []):
                 TYPING[board.fullname].remove(v.username)
                 emit('typing', {'users':TYPING[board.fullname]}, to=board.fullname)
-
-    AUTHS.pop(request.sid, None)
-
 
 
 
