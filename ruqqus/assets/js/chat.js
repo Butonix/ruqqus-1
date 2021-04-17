@@ -164,7 +164,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
   socket.on('help', function(json){
     should_scroll();
     $('#help-template .chat-message').text(json['text']);
-    $('#chat-text').append($('#help-template .chat-line').clone());
+    $('#chat-text').append($('#help-template .system-line').clone());
     scroll()
   });
 
