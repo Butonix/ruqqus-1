@@ -56,7 +56,7 @@ def socket_connect_auth_user():
 
     emit("status", {'status':"connected"})
 
-    g.db.expunge(v)
+    v=g.db.expunge(v)
 
     AUTHS[request.sid]=v
     g.db.close()
