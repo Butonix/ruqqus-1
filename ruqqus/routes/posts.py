@@ -934,7 +934,7 @@ def retry_thumbnail(pid, v):
     try:
         success, msg = thumbnail_thread(post.base36id, debug=True)
     except Exception as e:
-        return jsonify({"error":e}), 500
+        return jsonify({"error":str(e)}), 500
 
     if not success:
         return jsonify({"error":msg}), 500
