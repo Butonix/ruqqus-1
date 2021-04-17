@@ -28,11 +28,107 @@ HELP={}
 
 TYPING={}
 
-def print_(x):
+AUTHS={}
+
+
+@socketio.on('connect')
+def socket_connect_auth_user():
+
+    g.db=db_session()
+
+    v, client=get_logged_in_user(db=g.db)
+
+    if client or not v:
+        send("Authentication required")
+        disconnect()
+        return
+
+    if v.is_suspended:
+        send("You're banned and can't access chat right now.")
+        disconnect()
+        return
+
+    if v.id in SIDS:
+        SIDS[v.id].append(request.sid)
+    else:
+        SIDS[v.id]=[request.sid]
+
+    g.db.close()
+
+    emit("status", {'status':"connected"})
+
+    AUTHS[request.sid]=v
+
+
+
+def socket_auth_required(f):
+
+    def wrapper(*args, **kwargs):
+
+        g.db=db_session()
+        v = AUTHS.get(request.sid, None)
+
+        if not v:
+            send("You are not logged in")
+            return
+
+        if request.sid not in SIDS.get(v.id, []):
+            if v.id in SIDS:
+                SIDS[v.id].append(request.sid)
+            else:
+                SIDS[v.id]=[request.sid]
+
+        v=g.db.merge(v)
+
+        f(*args, v, **kwargs)
+
+        g.db.close()
+
+
+
+    wrapper.__name__=f.__name__
+    return wrapper
+
+def get_room(f):
+
+    def wrapper(*args, **kwargs):
+
+        data=args[0]
+        guild=get_guild(data["guild"], db=g.db)
+
+        if guild.is_banned:
+            return
+
+        f(*args, guild, **kwargs)
+
+    wrapper.__name__=f.__name__
+    return wrapper
+
+
+
+@socketio.on('disconnect')
+@socket_auth_required
+def socket_disconnect_user(v):
+
     try:
-        print(x)
-    except:
+        SIDS[v.id].remove(request.sid)
+    except ValueError:
         pass
+
+    for room in rooms():
+        leave_room(room)
+        if room not in v_rooms(v):
+            send(f"← @{v.username} has left the chat", to=room)
+
+        board=get_from_fullname(room, graceful=True)
+        if board:
+            update_chat_count(board)
+
+            if v.username in TYPING.get(board.fullname, []):
+                TYPING[board.fullname].remove(v.username)
+                emit('typing', {'users':TYPING[board.fullname]}, to=board.fullname)
+
+
 
 def now():
 
@@ -155,94 +251,6 @@ def update_chat_count(board):
     r.set(f"{board.fullname}_chat_count", count)
 
     emit("count", {"count":str(count)}, to=board.fullname)
-
-def socket_auth_required(f):
-
-    def wrapper(*args, **kwargs):
-
-        g.db=db_session()
-        v, client=get_logged_in_user(db=g.db)
-
-        if not v:
-            send("You are not logged in")
-            return
-
-        if request.sid not in SIDS.get(v.id, []):
-            if v.id in SIDS:
-                SIDS[v.id].append(request.sid)
-            else:
-                SIDS[v.id]=[request.sid]
-
-        f(*args, v, **kwargs)
-
-        g.db.close()
-
-    wrapper.__name__=f.__name__
-    return wrapper
-
-def get_room(f):
-
-    def wrapper(*args, **kwargs):
-
-        data=args[0]
-        guild=get_guild(data["guild"], db=g.db)
-
-        if guild.is_banned:
-            return
-
-        f(*args, guild, **kwargs)
-
-    wrapper.__name__=f.__name__
-    return wrapper
-
-@socketio.on('connect')
-def socket_connect_auth_user():
-
-    g.db=db_session()
-
-    v, client=get_logged_in_user(db=g.db)
-
-    if client or not v:
-        send("Authentication required")
-        disconnect()
-        return
-
-    if v.is_suspended:
-        send("You're banned and can't access chat right now.")
-        disconnect()
-        return
-
-    if v.id in SIDS:
-        SIDS[v.id].append(request.sid)
-    else:
-        SIDS[v.id]=[request.sid]
-
-    g.db.close()
-    g.v=v
-
-    emit("status", {'status':"connected"})
-
-@socketio.on('disconnect')
-@socket_auth_required
-def socket_disconnect_user(v):
-
-    try:
-        SIDS[v.id].remove(request.sid)
-    except ValueError:
-        pass
-
-    for room in rooms():
-        leave_room(room)
-        if room not in v_rooms(v):
-            send(f"← @{v.username} has left the chat", to=room)
-
-        board=get_from_fullname(room, graceful=True)
-        if board:
-            update_chat_count(board)
-
-            if v.username in TYPING.get(board.fullname, []):
-                TYPING[board.fullname].remove(v.username)
-                emit('typing', {'users':TYPING[board.fullname]}, to=board.fullname)
 
 
 
