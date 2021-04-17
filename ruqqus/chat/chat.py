@@ -157,6 +157,10 @@ def socket_auth_required(f):
 
         v = request.__dict__.get('v',None)
 
+        if not v:
+            send("You are not logged in")
+            return
+
         if request.sid not in SIDS.get(v.id, []):
             if v.id in SIDS:
                 SIDS[v.id].append(request.sid)
