@@ -29,6 +29,8 @@ HELP={}
 
 TYPING={}
 
+AUTHS={}
+
 def now():
 
     return time.strftime("%d %b %Y at %H:%M:%S", time.gmtime(int(time.time())))
@@ -155,7 +157,7 @@ def socket_auth_required(f):
 
     def wrapper(*args, **kwargs):
 
-        v = request.__dict__.get('v',None)
+        v = AUTHS.get('v',None)
 
         if not v:
             send("You are not logged in")
@@ -208,7 +210,7 @@ def socket_connect_auth_user():
     else:
         SIDS[v.id]=[request.sid]
 
-    request.__dict__['v']=v
+    AUTHS[request.sid]=v
 
     emit("status", {'status':"connected"})
 
@@ -233,6 +235,8 @@ def socket_disconnect_user(v):
             if v.username in TYPING.get(board.fullname, []):
                 TYPING[board.fullname].remove(v.username)
                 emit('typing', {'users':TYPING[board.fullname]}, to=board.fullname)
+
+    AUTHS.pop(request.sid, None)
 
 
 
