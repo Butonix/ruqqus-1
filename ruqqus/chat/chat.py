@@ -38,6 +38,8 @@ def socket_connect_auth_user():
 
     v, client=get_logged_in_user(db=g.db)
 
+    v.profile_set_utc=v.profile_set_utc
+
     if client or not v:
         send("Authentication required")
         disconnect()
@@ -55,8 +57,6 @@ def socket_connect_auth_user():
 
 
     emit("status", {'status':"connected"})
-
-    v.profile_set_utc
 
     AUTHS[request.sid]=v
     g.db.close()
