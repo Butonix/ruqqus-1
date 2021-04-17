@@ -36,7 +36,7 @@ AUTHS={}
 @socketio.on('connect')
 def socket_connect_auth_user():
 
-    db=db_session()
+    g.db=db_session()
 
     v, client=get_logged_in_user(db=db)
 
