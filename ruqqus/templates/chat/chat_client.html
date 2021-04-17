@@ -24,7 +24,7 @@
       <span id="typing-indicator"></span>
       <span id="loading-indicator" class="d-none"></span>
     </div>
-    <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name }} or type /help" autocomplete="off">
+    <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name if b else 'general' }} or type /help" autocomplete="off">
     <div class="d-flex mt-3">
       {% if v.has_premium %}
           <label class="btn btn-secondary w-20 mr-3 mb-0 ml-auto" for="chat-image-upload">
