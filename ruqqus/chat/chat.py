@@ -28,8 +28,6 @@ HELP={}
 
 TYPING={}
 
-AUTHS={}
-
 #db=db_session()
 
 
@@ -60,7 +58,6 @@ def socket_connect_auth_user():
 
     emit("status", {'status':"connected"})
 
-    AUTHS[request.sid]=v
     g.db.close()
 
 
@@ -70,7 +67,7 @@ def socket_auth_required(f):
     def wrapper(*args, **kwargs):
 
         g.db=db_session()
-        v = AUTHS.get(request.sid, None)
+        v, client=get_logged_in_user()
 
         if not v:
             send("You are not logged in")
