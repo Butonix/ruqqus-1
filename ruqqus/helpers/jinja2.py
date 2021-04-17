@@ -71,3 +71,7 @@ def coin_goal(x):
 @app.template_filter("app_config")
 def app_config(x):
     return app.config.get(x)
+
+@app.template_flter("general_chat_count")
+def general_chat_count(x):
+    return get_guild("general").chat_count
