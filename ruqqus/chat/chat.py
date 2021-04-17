@@ -69,6 +69,7 @@ def socket_auth_required(f):
 
         #g.db=db_session()
         v = AUTHS.get(request.sid, None)
+        g.db=db
 
         if not v:
             send("You are not logged in")
