@@ -109,7 +109,7 @@ app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
 
 app.config["S3_BUCKET"]=environ.get("S3_BUCKET_NAME","i.ruqqus.com").lstrip().rstrip()
 
-app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 30))
+app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 80))
 
 redispool=BlockingConnectionPool(max_connections=app.config["REDIS_POOL_SIZE"])
 app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
