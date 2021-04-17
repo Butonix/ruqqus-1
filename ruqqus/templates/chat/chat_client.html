@@ -225,7 +225,7 @@
 <style>
 
 .sidebar-chat:focus-within #chat-text {
-  max-height:calc(100vh - 300px);
+  animation: chatexpand ease-out 500ms;
 }
 
 #chat-text {
@@ -233,6 +233,15 @@
   overflow-y:scroll;
 }
 
+@keyframes chatexpand {
+  0%    {max-height: 200px;}
+  100%  {max-height:calc(100vh - 300px);}
+}
+@-webkit-keyframes chatexpand {
+  to {
+    max-height:calc(100vh - 300px);
+  }
+}
 
 #loading-indicator:after {
   overflow: hidden;
