@@ -120,7 +120,8 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             blocking.c.id,
             # aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Submission.author).joinedload(User.title)
+            joinedload(Submission.author).joinedload(User.title),
+            joinedload(Submission.submission_aux)
         )
 
         if v.admin_level>=4:
@@ -164,7 +165,8 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             Submission,
             # aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Submission.author).joinedload(User.title)
+            joinedload(Submission.author).joinedload(User.title),
+            joinedload(Submission.submission_aux)
         # ).join(
         #     exile,
         #     and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
@@ -219,7 +221,8 @@ def get_posts(pids, sort="hot", v=None):
             subs.c.id,
             # aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Submission.author).joinedload(User.title)
+            joinedload(Submission.author).joinedload(User.title),
+            joinedload(Submission.submission_aux)
         ).filter(
             Submission.id.in_(pids)
         ).join(
@@ -266,7 +269,8 @@ def get_posts(pids, sort="hot", v=None):
             Submission,
             # aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Submission.author).joinedload(User.title)
+            joinedload(Submission.author).joinedload(User.title),
+            joinedload(Submission.submission_aux)
         ).filter(Submission.id.in_(pids)
         # ).join(
         #     exile,
@@ -310,7 +314,8 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             blocked.c.id,
             aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Comment.author).joinedload(User.title)
+            joinedload(Comment.author).joinedload(User.title),
+            joinedload(Comment.comment_aux)
         )
         if v.admin_level >=4:
 
@@ -367,7 +372,8 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Comment.author).joinedload(User.title)
+            joinedload(Comment.author).joinedload(User.title),
+            joinedload(Comment.comment_aux)
         ).filter(
             Comment.parent_submission == post.id,
             Comment.level <= 6
@@ -441,7 +447,8 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
             aliased(ModRelationship, alias=mod),
             aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Comment.author).joinedload(User.title)
+            joinedload(Comment.author).joinedload(User.title),
+            joinedload(Comment.comment_aux)
         )
 
         if v.admin_level >=4:
@@ -494,7 +501,8 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Comment.author).joinedload(User.title)
+            joinedload(Comment.author).joinedload(User.title),
+            joinedload(Comment.comment_aux)
         ).join(
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
@@ -550,7 +558,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
                 aliased(ModAction, alias=exile)
             ).options(
                 joinedload(Comment.author).joinedload(User.title),
-                joinedload(Comment.post).joinedload(Submission.board)
+                joinedload(Comment.post).joinedload(Submission.board),
+                joinedload(Comment.comment_aux)
             )
 
         if v.admin_level >=4:
@@ -592,7 +601,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             aliased(ModAction, alias=exile)
         ).options(
             joinedload(Comment.author).joinedload(User.title),
-            joinedload(Comment.post).joinedload(Submission.board)
+            joinedload(Comment.post).joinedload(Submission.board),
+            joinedload(Comment.comment_aux)
         ).filter(
             Comment.id.in_(cids)
         ).join(
