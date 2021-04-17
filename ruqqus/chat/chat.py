@@ -58,8 +58,6 @@ def socket_connect_auth_user():
 
     g.db.expunge(v)
 
-    print(v.__dict__)
-
     AUTHS[request.sid]=v
     g.db.close()
 
