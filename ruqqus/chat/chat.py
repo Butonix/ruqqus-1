@@ -15,7 +15,7 @@ from ruqqus.helpers.session import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.markdown import CustomRenderer, preprocess
 from ruqqus.helpers.aws import *
-from ruqqus.__main__ import app, r, socketio, db_session
+from ruqqus.__main__ import app, r, socketio
 
 REDIS_URL = app.config["CACHE_REDIS_URL"]
 BUCKET=app.config["S3_BUCKET"]
@@ -27,8 +27,6 @@ COMMANDS={}
 HELP={}
 
 TYPING={}
-
-#db=db_session()
 
 def print_(x):
     try:
@@ -422,7 +420,7 @@ def random_post(args, guild, v):
     total=g.db.query(Submission).options(lazyload('*')).filter_by(board_id=guild.id, deleted_utc=0, is_banned=False).count()
     offset=random.randint(0, total-1)
     post=g.db.query(Submission).options(lazyload('*')).filter_by(board_id=guild.id, deleted_utc=0, is_banned=False).order_by(Submission.id.asc()).offset(offset).first()
-    speak(f"Random Post: <a href=\"https://{app.config['SERVER_NAME']}{post.permalink}\">{post.title}</a>", v, guild)
+    speak(f"Random post requested by @{v.username}: <a href=\"https://{app.config['SERVER_NAME']}{post.permalink}\">{post.title}</a>", v, guild, as_guild=True)
 
 
 

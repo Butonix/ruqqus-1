@@ -165,7 +165,6 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
   socket.on('message', function(msg){
     should_scroll()
     $('#system-template .message').text(msg)
-    $('#chat-text').append($('#system-template .system-line').clone())
     scroll()
   }
   );

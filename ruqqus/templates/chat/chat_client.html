@@ -2,6 +2,11 @@
 
   <div id="chat-text" {% if request.path.endswith('/chat') %}class="fullchat"{% else %}class="sidebarchat"{% endif %}>
   </div>
+  <div id="system-template" class="d-none">
+    <div class="system-line">
+      <p class="message text-muted"></p>
+    </div>
+  </div>
   {% if request.path.endswith('/chat') %}
   <div class="position-relative form-group d-flex pb-3">
     <div class="position-absolute text-muted text-small" style="bottom: -1.5rem; line-height: 1;">
@@ -116,11 +121,7 @@
     </div>
   </div>
 
-  <div id="system-template" class="d-none">
-    <div class="system-line">
-      <p class="message text-muted"></p>
-    </div>
-  </div>
+
 
   <div id="me-template" class="d-none">
     <div class="system-line">
@@ -220,7 +221,7 @@
 <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
 <script src="https://cdn.socket.io/4.0.0/socket.io.min.js" integrity="sha384-DkkWv9oJFWLIydBXXjkBWnG1/fuVhw8YPBq37uvvD6WSYRFRqr21eY5Dg9ZhmWdy" crossorigin="anonymous"></script>
 
-<script src="/assets/js/chat.js?v=2.35.64"></script>
+<script src="/assets/js/chat.js?v=2.35.65"></script>
 
 <style>
 
