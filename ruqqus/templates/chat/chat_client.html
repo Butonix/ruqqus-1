@@ -1,10 +1,12 @@
 <div class="container p-md-0 chat-container">
 
-  <div id="chat-text" {% if request.path.endswith('/chat') %}class="fullchat"{% else %}class="sidebarchat"{% endif %}>
-  </div>
-  <div id="system-template" class="d-none">
-    <div class="system-line">
-      <p class="message text-muted"></p>
+  <div id="chat-window">
+    <div id="chat-text" {% if request.path.endswith('/chat') %}class="fullchat"{% else %}class="sidebarchat"{% endif %}>
+    </div>
+    <div id="system-template">
+      <div class="system-line">
+        <p class="message text-muted"></p>
+      </div>
     </div>
   </div>
   {% if request.path.endswith('/chat') %}
@@ -248,7 +250,7 @@
 }
 */
 
-#chat-text {
+#chat-window {
   max-height:calc(100vh - 300px);
   overflow-y: scroll;
 }
