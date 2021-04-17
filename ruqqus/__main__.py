@@ -274,6 +274,8 @@ def is_ip_banned(remote_addr):
     """
     Given a remote address, returns whether or not user is banned
     """
+    if request.path.startswith("/socket.io/"):
+        return False
 
     return bool(r.get(f"ban_ip_{remote_addr}"))
 
