@@ -231,6 +231,16 @@ def speak(text, user, guild, as_guild=False):
             emit("speak", data, to=guild.fullname)
         return
 
+def speak_help(text, to=None):
+
+    to=to or request.sid
+
+    data={
+        "text":text,
+        'time': now()
+    }
+    emit('help', data, to=to)
+
 def v_rooms(v):
 
     output=[]
@@ -386,13 +396,13 @@ def help_command(args, guild, v):
     if len(args)>1:
         target=args[1]
         if target in COMMANDS:
-            send(f"/{target}{' '+HELP[target] if HELP[target] else ''} - {COMMANDS[target].__doc__}")
+            speak_help(f"/{target}{' '+HELP[target] if HELP[target] else ''} - {COMMANDS[target].__doc__}")
         else:
-            send(f"Unknown command `{target}`")
+            speak_help(f"Unknown command `{target}`")
     else:
         commands=[x for x in COMMANDS.keys()]
         commands=sorted(commands)
-        send(f"Type `/help <command>` for information on a specific command. Commands: {', '.join(commands)}")
+        speak_help(f"Type `/help <command>` for information on a specific command. Commands: {', '.join(commands)}")
 
 @command('ruqqie')
 def print_ruqqie(args, guild, v):
@@ -501,7 +511,7 @@ def here_command(args, guild, v):
 
     count=len(names)
     namestr = ", ".join(names)
-    send(f"{count} user{'s' if count>1 else ''} present: {namestr}")
+    speak_help(f"{count} user{'s' if count>1 else ''} present: {namestr}")
 
 @command('me', syntax="<text>")
 def me_action(args, guild, v):
@@ -520,17 +530,17 @@ def kick_user(args, guild, v):
     user=get_user(args[1], graceful=True)
 
     if not user:
-        send(f"No user named {args[1]}")
+        speak_helpnd(f"No user named {args[1]}")
         return
 
     if user.id==v.id:
-        send("You can't kick yourself!")
+        speak_help("You can't kick yourself!")
         return
     elif guild.has_mod(user):
-        send(f"You can't kick other guildmasters")
+        speak_help(f"You can't kick other guildmasters")
         return
     elif guild.has_contributor(user):
-        send(f"@{user.username} is an approved contributor and can't currently be kicked.")
+        speak_help(f"@{user.username} is an approved contributor and can't currently be kicked.")
         return
 
     reason= " ".join(args[2:]) if len(args)>=3 else ""
@@ -540,7 +550,7 @@ def kick_user(args, guild, v):
         for room in rooms(sid=sid):
             if room==guild.fullname:
                 if not x:
-                    send(f"← @{user.username} kicked by @{v.username}. Reason: {reason} ", to=guild.fullname)
+                    speak_help(f"← @{user.username} kicked by @{v.username}. Reason: {reason} ", to=guild.fullname)
                 leave_room(guild.fullname, sid=sid)
                 update_chat_count(guild)
                 if user.username in TYPING.get(guild.fullname, []):
@@ -556,22 +566,22 @@ def chatban_user(args, guild, v):
     user=get_user(args[1], graceful=True)
 
     if not user:
-        send(f"No user named {args[1]}")
+        speak_help(f"No user named {args[1]}")
         return
     if user.id==v.id:
-        send("You can't ban yourself!")
+        speak_help("You can't ban yourself!")
         return
     elif guild.has_mod(user):
-        send(f"You can't ban other guildmasters")
+        speak_help(f"You can't ban other guildmasters")
         return
     elif guild.has_contributor(user):
-        send(f"@{user.username} is an approved contributor and can't currently be banned.")
+        speak_help(f"@{user.username} is an approved contributor and can't currently be banned.")
         return
 
     existing = g.db.query(ChatBan).filter_by(board_id=guild.id, user_id=user.id).first()
 
     if existing:
-        send(f"@{user.username} is already banned from chat.")
+        speak_help(f"@{user.username} is already banned from chat.")
         return
 
     reason= " ".join(args[2:]) if len(args)>=3 else ""
@@ -581,7 +591,7 @@ def chatban_user(args, guild, v):
         for room in rooms(sid=sid):
             if room==guild.fullname:
                 if not x:
-                    send(f"← @{user.username} kicked and banned by @{v.username}.{' Reason: '+reason if reason else ''}", to=guild.fullname)
+                    speak_help(f"← @{user.username} kicked and banned by @{v.username}.{' Reason: '+reason if reason else ''}", to=guild.fullname)
                     x=True
                 leave_room(guild.fullname, sid=sid)
                 update_chat_count(guild)
@@ -590,7 +600,7 @@ def chatban_user(args, guild, v):
                     emit('typing', {'users':TYPING[guild.fullname]}, to=guild.fullname)
 
     if not x:
-        send(f"@{user.username} banned by @{v.username}.{' Reason: '+reason if reason else ''}", to=guild.fullname)
+        speak_help(f"@{user.username} banned by @{v.username}.{' Reason: '+reason if reason else ''}", to=guild.fullname)
 
     new_ban = ChatBan(
         user_id=user.id,
