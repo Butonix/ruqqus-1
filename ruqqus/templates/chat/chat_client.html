@@ -24,15 +24,15 @@
       <span id="typing-indicator"></span>
       <span id="loading-indicator" class="d-none"></span>
     </div>
-    <input id="input-text" type="text" class="form-control" placeholder="Temporarily Disabled" autocomplete="off" disabled>
+    <input id="input-text" type="text" class="form-control" placeholder="Message +{{ b.name }} or type /help" autocomplete="off">
     <div class="d-flex mt-3">
-      {% if False %}
-          <label class="btn btn-disabled w-20 mr-3 mb-0 ml-auto" for="chat-image-upload">
+      {% if v.has_premium %}
+          <label class="btn btn-secondary w-20 mr-3 mb-0 ml-auto" for="chat-image-upload">
             <div id="filename-show"><i class="fad fa-image"></i></div>
             <input id="chat-image-upload" type="file" name="image" accept="image/*" onchange="upload_chat_image()" hidden>
           </label>
       {% endif %}
-      <button id="chatsend" class="btn btn-primary w-100 ml-auto" type="submit" disabled>Send</button>
+      <button id="chatsend" class="btn btn-primary w-100 ml-auto" type="submit">Send</button>
     </div>
   </div>
   <input id="autojoin" type="hidden" value="{{ v.auto_join_chat }}">
@@ -220,7 +220,7 @@
 <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
 <script src="https://cdn.socket.io/4.0.0/socket.io.min.js" integrity="sha384-DkkWv9oJFWLIydBXXjkBWnG1/fuVhw8YPBq37uvvD6WSYRFRqr21eY5Dg9ZhmWdy" crossorigin="anonymous"></script>
 
-<!---<script src="/assets/js/chat.js?v=2.35.64"></script>--->
+<script src="/assets/js/chat.js?v=2.35.64"></script>
 
 <style>
 #loading-indicator:after {
