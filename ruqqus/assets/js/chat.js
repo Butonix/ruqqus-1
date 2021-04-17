@@ -160,7 +160,13 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
   socket.on('motd',  function(json){process_chat(json, "#motd")});
   socket.on('msg-out',  function(json){process_chat(json, "#msg-out");recent_sender=json["username"]});
   socket.on('msg-in',  function(json){process_chat(json, "#msg-in");recent_sender=json["username"]});
-  socket.on('help', function(json){process_chat(json, '#help')})
+
+  socket.on('help', function(json){
+    should_scroll();
+    $('#help-template .chat-message').text(json['text']);
+    $('#chat-text').append($('#help-template .chat-line').clone());
+    scroll()
+  });
 
 
   socket.on('message', function(msg){
