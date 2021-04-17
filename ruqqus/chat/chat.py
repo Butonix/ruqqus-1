@@ -20,9 +20,6 @@ from ruqqus.__main__ import app, r, socketio, db_session
 REDIS_URL = app.config["CACHE_REDIS_URL"]
 BUCKET=app.config["S3_BUCKET"]
 
-#app = Flask(__name__)
-#app.debug = 'DEBUG' in os.environ
-
 db=db_session()
 
 SIDS={}
@@ -158,16 +155,7 @@ def socket_auth_required(f):
 
     def wrapper(*args, **kwargs):
 
-        v, client=get_logged_in_user()
-
-        g.v=v
-
-        if client or not v:
-            send("Not logged in")
-            return
-
-        if v.is_suspended:
-            send("You're banned and can't access chat right now.")
+        v = request.v
 
         if request.sid not in SIDS.get(v.id, []):
             if v.id in SIDS:
@@ -216,7 +204,7 @@ def socket_connect_auth_user():
     else:
         SIDS[v.id]=[request.sid]
 
-    g.v=v
+    request.v=v
 
     emit("status", {'status':"connected"})
 
