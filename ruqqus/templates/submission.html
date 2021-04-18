@@ -70,6 +70,8 @@
     <div class="text-small mb-2">Shortlink: <input readonly="readonly" value="https://ruqq.us/{{ p.base36id }}" data-clipboard-text="https://ruqq.us/{{ p.base36id }}" role="button" class="copy-link form-control form-control-sm rounded"></div>
   </div>
 </div>
+
+<!--
 {% if b.can_chat(v) %}
 <div class="sidebar-section sidebar-chat">
   <a href="{{ b.chat_url }}" target="_blank"><div class="title"><i class="fas fa-comments-alt mr-2"></i>Guild Chat (<i class="far fa-user fa-sm mr-1"></i><span class="board-chat-count">{{ b.chat_count }}</span>)</div></a>
@@ -79,6 +81,7 @@
 </div>
 {% endif %}
 {% endblock %}
+-->
 
 {% if v %}
 {% set voted=p.voted if p.voted else 0 %}
