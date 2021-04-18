@@ -3,7 +3,7 @@
 {% block pagetype %}search{% endblock %}
 
 {% block title %}
-<title>Search {% if b %}+{{ b.name }} {% endif %}for "{{ query }}" - {{ 'SITE_NAME' | env }}"</title> <!-- include dynamic jinja-generated text in title -->
+<title>Search {% if b %}+{{ b.name }} {% endif %}for "{{ query }}" - {{ 'SITE_NAME' | app_config }}"</title> <!-- include dynamic jinja-generated text in title -->
 <meta name="description" content="{{ total }} result{{ 's' if total != 1 else '' }}">
 {% endblock %}
 
@@ -82,7 +82,7 @@
 
           <div class="text-muted text-small mb-1">Showing {% block listinglength %}{{ listing | length }}{% endblock %} of {{ total }} result{{ 's' if total != 1 else '' }} for</div>
           <h1 class="h4 mb-0">{{ query }}</h1>
-          {% if b %}<div class="text-muted text-small mb-1">Showing results in +{{ b.name }}. <a href="/search?q={{ query | urlencode }}">Did you want to search all of {{ 'SITE_NAME' | env }} instead?</a></div>{% endif %}
+          {% if b %}<div class="text-muted text-small mb-1">Showing results in +{{ b.name }}. <a href="/search?q={{ query | urlencode }}">Did you want to search all of {{ 'SITE_NAME' | app_config }} instead?</a></div>{% endif %}
 
         </div>
       </div>
