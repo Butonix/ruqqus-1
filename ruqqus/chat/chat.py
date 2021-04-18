@@ -15,7 +15,7 @@ from ruqqus.helpers.session import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.markdown import CustomRenderer, preprocess
 from ruqqus.helpers.aws import *
-from ruqqus.__main__ import app, socketio, db_session
+from ruqqus.__main__ import app, socketio, db_session, redispool
 
 REDIS_URL = app.config["CACHE_REDIS_URL"]
 BUCKET=app.config["S3_BUCKET"]
@@ -31,8 +31,9 @@ TYPING={}
 r=redis.Redis(
     host=app.config["CACHE_REDIS_URL"][8:], 
     decode_responses=True, 
-    ssl_cert_reqs=None
-    )#hopefully just 1 redis conn
+    ssl_cert_reqs=None,
+    pool=redispool
+    )
 
 def print_(x):
     try:
