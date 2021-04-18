@@ -22,7 +22,9 @@ valid_password_regex = re.compile("^.{8,100}$")
 
 
 @app.route("/settings/profile", methods=["POST"])
+@app.route("/api/vue/settings/profile", methods=["POST"])
 @auth_required
+@api()
 @validate_formkey
 def settings_profile_post(v):
 
@@ -73,9 +75,11 @@ def settings_profile_post(v):
         bio=preprocess(bio)
 
         if bio == v.bio:
-            return render_template("settings_profile.html",
+            return {"html":lambda:render_template("settings_profile.html",
                                    v=v,
-                                   error="You didn't change anything")
+                                   error="You didn't change anything"),
+		    "api":lambda:jsonify({"error":"You didn't change anything"})
+		   }
 
 
         with CustomRenderer() as renderer:
@@ -99,24 +103,28 @@ def settings_profile_post(v):
         v.bio = bio
         v.bio_html=bio_html
         g.db.add(v)
-        return render_template("settings_profile.html",
+        return {"html":lambda:render_template("settings_profile.html",
                                v=v,
-                               msg="Your bio has been updated.")
+                               msg="Your bio has been updated."),
+		"api":lambda:jsonify({"message":"Your bio has been updated."})
 
     if request.values.get("filters") is not None:
 
         filters=request.values.get("filters")[0:1000].lstrip().rstrip()
 
         if filters==v.custom_filter_list:
-            return render_template("settings_profile.html",
+            return {"html":lambda:render_template("settings_profile.html",
                                    v=v,
-                                   error="You didn't change anything")
+                                   error="You didn't change anything"),
+		    "api":lambda:jsonify({"error":"You didn't change anything"})
+		   }
 
         v.custom_filter_list=filters
         g.db.add(v)
-        return render_template("settings_profile.html",
+        return {"html":lambda:render_template("settings_profile.html",
                                v=v,
-                               msg="Your custom filters have been updated.")
+                               msg="Your custom filters have been updated."),
+		"api":lambda:jsonify({"message":"Your custom filters have been updated"})}
 
 
 
