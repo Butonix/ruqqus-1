@@ -31,7 +31,7 @@ import redis
 import gevent
 import sys
 
-from redis import BlockingConnectionPool
+from redis import BlockingConnectionPool, ConnectionPool
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -112,7 +112,7 @@ app.config["S3_BUCKET"]=environ.get("S3_BUCKET_NAME","i.ruqqus.com").lstrip().rs
 
 app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 300))
 
-redispool=BlockingConnectionPool(
+redispool=ConnectionPool(
     max_connections=app.config["REDIS_POOL_SIZE"],
     host=app.config["CACHE_REDIS_URL"][8:]
     )
