@@ -238,7 +238,7 @@ Base = declarative_base()
 r=redis.Redis(
     host=app.config["CACHE_REDIS_URL"][8:], 
     decode_responses=True, 
-    ssl_cert_reqs=None
+    ssl_cert_reqs=None,
     connection_pool=redispool
     )
 
