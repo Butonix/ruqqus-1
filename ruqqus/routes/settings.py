@@ -106,7 +106,7 @@ def settings_profile_post(v):
         return {"html":lambda:render_template("settings_profile.html",
                                v=v,
                                msg="Your bio has been updated."),
-		"api":lambda:jsonify({"message":"Your bio has been updated."})
+		"api":lambda:jsonify({"message":"Your bio has been updated."})}
 
     if request.values.get("filters") is not None:
 
