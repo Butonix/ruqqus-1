@@ -8,16 +8,16 @@
     <meta name="description" content="Sign up in under 27 seconds.">
     <meta name="author" content="">
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="{{ 'SITE_NAME' | env }}: Awesome Online Communities, Without Censorship" />
+    <meta property="og:title" content="{{ 'SITE_NAME' | app_config }}: Awesome Online Communities, Without Censorship" />
     <meta property="og:image" content="{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}" />
-    <meta property="og:description" name="description" content="Sign up now! {{ 'SITE_NAME' | env }} is an open-source platform for online communities, free of censorship and moderator abuse by design.">
+    <meta property="og:description" name="description" content="Sign up now! {{ 'SITE_NAME' | app_config }} is an open-source platform for online communities, free of censorship and moderator abuse by design.">
 
     <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:title" content="{{ 'SITE_NAME' | env }}: Awesome Online Communities, Without Censorship" />
-    <meta name="twitter:description" content="Sign up now! {{ 'SITE_NAME' | env }} is an open-source platform for online communities, free of censorship and moderator abuse by design." />
+    <meta name="twitter:title" content="{{ 'SITE_NAME' | app_config }}: Awesome Online Communities, Without Censorship" />
+    <meta name="twitter:description" content="Sign up now! {{ 'SITE_NAME' | app_config }} is an open-source platform for online communities, free of censorship and moderator abuse by design." />
     <meta name="twitter:image" content="{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}" />
 
-    <title>{% if ref_user %}{{ ref_user.username }} invites you to {{ 'SITE_NAME' | env }}{% else %}{{ 'SITE_NAME' | env }}: the open, free-speech social platform{% endif %}</title>
+    <title>{% if ref_user %}{{ ref_user.username }} invites you to {{ 'SITE_NAME' | app_config }}{% else %}{{ 'SITE_NAME' | env }}: the open, free-speech social platform{% endif %}</title>
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
@@ -74,7 +74,7 @@
                 <div class="col-10 col-md-7">
 
                     <div class="text-center mb-5">
-                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">{{ 'SITE_NAME' | env | lower }}</span></a>
+                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">{{ 'SITE_NAME' | app_config | lower }}</span></a>
                     </div>
 
                     <div id="register-form" class="">
