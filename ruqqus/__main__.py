@@ -112,11 +112,11 @@ app.config["S3_BUCKET"]=environ.get("S3_BUCKET_NAME","i.ruqqus.com").lstrip().rs
 
 app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 300))
 
-redispool=ConnectionPool(
-    max_connections=app.config["REDIS_POOL_SIZE"],
-    host=app.config["CACHE_REDIS_URL"][8:]
-    )
-app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
+#redispool=ConnectionPool(
+#    max_connections=app.config["REDIS_POOL_SIZE"],
+#    host=app.config["CACHE_REDIS_URL"][8:]
+#    )
+#app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
 
 
 Markdown(app)
@@ -238,8 +238,8 @@ Base = declarative_base()
 r=redis.Redis(
     host=app.config["CACHE_REDIS_URL"][8:], 
     decode_responses=True, 
-    ssl_cert_reqs=None,
-    connection_pool=redispool
+    ssl_cert_reqs=None
+#    connection_pool=redispool
     )
 
 
