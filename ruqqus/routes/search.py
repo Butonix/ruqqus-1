@@ -82,17 +82,31 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 
     if 'domain' in criteria:
         domain=criteria['domain']
+
+        #sanitize domain by removing anything that isn't [a-z0-9.]
+        domain=domain.lower()
+        domain=re.sub("[^a-z0-9.]","", domain)
+        #escape periods
+        domain=domain.replace(".","\.")
+
         posts=posts.filter(
-            or_(
-                SubmissionAux.url.ilike("https://"+domain+'/%'),
-                SubmissionAux.url.ilike("http://"+domain+'/%'),
-                SubmissionAux.url.ilike("https://"+domain),
-                SubmissionAux.url.ilike("http://"+domain),
-                SubmissionAux.url.ilike("https://www."+domain+'/%'),
-                SubmissionAux.url.ilike("http://www."+domain+'/%'),
-                SubmissionAux.url.ilike("https://www."+domain),
-                SubmissionAux.url.ilike("http://www."+domain)
+
+            SubmissionAux.url.rexexp_match(
+                "https?://([^/]*\.)?"+domain+"(/|$)"
                 )
+
+            # or_(
+            #     SubmissionAux.url.ilike("https://"+domain+'/%'),
+            #     SubmissionAux.url.ilike("http://"+domain+'/%'),
+            #     SubmissionAux.url.ilike("https://"+domain),
+            #     SubmissionAux.url.ilike("http://"+domain),
+            #     SubmissionAux.url.ilike("https://%."+domain+'/%'),
+            #     SubmissionAux.url.ilike("http://%."+domain+'/%'),
+            #     SubmissionAux.url.ilike("https://%."+domain),
+            #     SubmissionAux.url.ilike("http://%."+domain)
+            #     ),
+            # not_(SubmissionAux.url.ilike("https://%/%"+domain)),
+            # not_(SubmissionAux.url.ilike("http://%/%"+domain))
             )
 
 
