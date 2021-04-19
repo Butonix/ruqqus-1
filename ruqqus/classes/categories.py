@@ -58,7 +58,9 @@ class SubCategory(Base, Stndrd):
             "name": self.name
         }
 
-CATEGORIES = [i for i in db_session().query(Category).order_by(Category.name.asc()).all()]
+db=db_session()
+CATEGORIES = [i for i in db.query(Category).order_by(Category.name.asc()).all()]
+db.close()
 
 # class GuildCategory(Base, Stndrd, Age_times):
 #     __tablename__ = "guildcategories"
