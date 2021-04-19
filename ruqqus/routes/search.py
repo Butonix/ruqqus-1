@@ -91,7 +91,7 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 
         posts=posts.filter(
 
-            SubmissionAux.url.rexexp_match(
+            SubmissionAux.url.regexp_match(
                 "https?://([^/]*\.)?"+domain+"(/|$)"
                 )
 
