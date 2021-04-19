@@ -90,10 +90,10 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
         domain=domain.replace(".","\.")
 
         posts=posts.filter(
-
-            SubmissionAux.url.regexp_match(
+            SubmissionAux.url.op('~')(
                 "https?://([^/]*\.)?"+domain+"(/|$)"
                 )
+            )
 
             # or_(
             #     SubmissionAux.url.ilike("https://"+domain+'/%'),
@@ -107,7 +107,6 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
             #     ),
             # not_(SubmissionAux.url.ilike("https://%/%"+domain)),
             # not_(SubmissionAux.url.ilike("http://%/%"+domain))
-            )
 
 
     if not (v and v.over_18):
