@@ -378,7 +378,9 @@ def after_request(response):
     try:
         g.db.commit()
     except BaseException:
-        pass  # g.db.close()
+        g.db.rollback()
+        g.db.close()
+        abort(500)
 
     response.headers.add('Access-Control-Allow-Headers',
                          "Origin, X-Requested-With, Content-Type, Accept, x-auth"
