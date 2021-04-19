@@ -17,7 +17,7 @@
     <meta name="twitter:description" content="Sign up now! {{ 'SITE_NAME' | app_config }} is an open-source platform for online communities, free of censorship and moderator abuse by design." />
     <meta name="twitter:image" content="{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}" />
 
-    <title>{% if ref_user %}{{ ref_user.username }} invites you to {{ 'SITE_NAME' | app_config }}{% else %}{{ 'SITE_NAME' | env }}: the open, free-speech social platform{% endif %}</title>
+    <title>{% if ref_user %}{{ ref_user.username }} invites you to {{ 'SITE_NAME' | app_config }}{% else %}{{ 'SITE_NAME' | app_config }}: the open, free-speech social platform{% endif %}</title>
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
@@ -55,7 +55,7 @@
                     <a class="nav-link" href="/help/terms">Terms</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="mailto:info@ruqqus.com">Contact</a>
+                    <a class="nav-link" href="/help/contact">Contact</a>
                 </li>
             </ul>
         </div>
