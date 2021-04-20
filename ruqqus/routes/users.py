@@ -241,7 +241,7 @@ def u_username_comments(username, v=None):
 
     ids = user.commentlisting(
         v=v, 
-        page=page
+        page=page,
         sort=request.args.get("sort","new")
         )
 
