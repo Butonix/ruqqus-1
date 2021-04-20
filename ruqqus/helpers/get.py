@@ -111,6 +111,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         boardblocks = nSession.query(
             BoardBlock).filter_by(user_id=v.id).subquery()
         blocking = v.blocking.subquery()
+        blocked = v.blocked.subquery()
 
         items = nSession.query(
             Submission,
@@ -118,6 +119,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             aliased(ModRelationship, alias=mod),
             boardblocks.c.id,
             blocking.c.id,
+            blocked.c.id
             # aliased(ModAction, alias=exile)
         ).options(
             joinedload(Submission.author).joinedload(User.title),
@@ -145,6 +147,10 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             blocking, 
             blocking.c.target_id == Submission.author_id, 
             isouter=True
+        ).join(
+            blocked, 
+            blocked.c.user_id == Submission.author_id, 
+            isouter=True
         # ).join(
         #     exile,
         #     and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
@@ -159,6 +165,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         x._is_guildmaster = items[2] or 0
         x._is_blocking_guild = items[3] or 0
         x._is_blocking = items[4] or 0
+        x._is_blocked = items[5] or 0
         # x._is_exiled_for=items[5] or 0
 
     else:

@@ -40,7 +40,13 @@ def api_vote_post(post_id, x, v):
         if count >=15:
             return jsonify({"error": "You're doing that too much. Try again later."}), 403
 
-    post = get_post(post_id)
+    post = get_post(post_id, v=v)
+
+    if post.is_blocking:
+        return jsonify({"error":"You can't vote on posts made by users who you are blocking."}), 403
+    if post.is_blocked:
+        return jsonify({"error":"You can't vote on posts made by users who are blocking you."}), 403
+
 
     if post.is_banned:
         return jsonify({"error":"That post has been removed."}), 403
@@ -111,7 +117,12 @@ def api_vote_comment(comment_id, x, v):
 
     x = int(x)
 
-    comment = get_comment(comment_id)
+    comment = get_comment(comment_id, v=v)
+
+    if comment.is_blocking:
+        return jsonify({"error":"You can't vote on comments made by users who you are blocking."}), 403
+    if comment.is_blocked:
+        return jsonify({"error":"You can't vote on comments made by users who are blocking you."}), 403
 
     if comment.is_banned:
         return jsonify({"error":"That comment has been removed."}), 403
