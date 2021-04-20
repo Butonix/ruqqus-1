@@ -376,7 +376,7 @@ class User(Base, Stndrd, Age_times):
         return listing
 
     @cache.memoize(300)
-    def commentlisting(self, v=None, page=1):
+    def commentlisting(self, v=None, page=1, sort="new"):
         comments = self.comments.options(
             lazyload('*')).filter(Comment.parent_submission is not None).join(Comment.post)
 
@@ -422,7 +422,16 @@ class User(Base, Stndrd, Age_times):
 
         comments = comments.options(contains_eager(Comment.post))
 
-        comments = comments.order_by(Comment.created_utc.desc())
+
+        if sort == "hot":
+            comments = comments.order_by(Comment.score_hot.desc())
+        elif sort == "new":
+            comments = comments.order_by(Comment.created_utc.desc())
+        elif sort == "disputed":
+            comments = comments.order_by(Comment.score_disputed.desc())
+        elif sort == "top":
+            comments = comments.order_by(Comment.score_top.desc())
+
         comments = comments.offset(25 * (page - 1)).limit(26)
 
         listing = [c.id for c in comments]

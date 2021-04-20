@@ -239,7 +239,11 @@ def u_username_comments(username, v=None):
 
     page = int(request.args.get("page", "1"))
 
-    ids = user.commentlisting(v=v, page=page)
+    ids = user.commentlisting(
+        v=v, 
+        page=page
+        sort=request.args.get("sort","new")
+        )
 
     # we got 26 items just to see if a next page exists
     next_exists = (len(ids) == 26)
