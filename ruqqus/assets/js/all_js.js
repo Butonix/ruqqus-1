@@ -824,8 +824,8 @@ $('#username-register').on('input', function () {
     // Change alert text
     id.innerHTML = '<span class="form-text font-weight-bold text-success mt-1">Username is a-okay!';
 
-    if (charCount.length < 5) {
-      id.innerHTML = '<span class="form-text font-weight-bold text-muted mt-1">Username must be at least 5 characters long.';
+    if (charCount.length < 3) {
+      id.innerHTML = '<span class="form-text font-weight-bold text-muted mt-1">Username must be at least 3 characters long.';
     }
     else if (charCount.length > 25) {
       id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">Username must be 25 characters or less.';
