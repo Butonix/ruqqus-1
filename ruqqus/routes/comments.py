@@ -336,9 +336,15 @@ def api_comment(v):
         return jsonify(
             {"error": "You can't comment on things that have been deleted."}), 403
 
-    if parent.author.any_block_exists(v) and not v.admin_level>=3 and not parent.post.board.has_mod(v, "content"):
+    if parent.is_blocking and not v.admin_level>=3 and not parent.post.board.has_mod(v, "content"):
         return jsonify(
-            {"error": "You can't reply to users who have blocked you, or users you have blocked."}), 403
+            {"error": "You can't reply to users that you're blocking."}
+            )
+
+    if parent.is_blocked and not v.admin_level>=3 and not parent.post.board.has_mod(v, "content"):
+        return jsonify(
+            {"error": "You can't reply to users that are blocking you."}
+            )
 
     # check for archive and ban state
     post = get_post(parent_id)
