@@ -17,7 +17,7 @@ from .front import frontlist
 from ruqqus.__main__ import app, cache
 
 
-valid_username_regex = re.compile("^[a-zA-Z0-9_]{5,25}$")
+valid_username_regex = re.compile("^[a-zA-Z0-9_]{3,25}$")
 valid_password_regex = re.compile("^.{8,100}$")
 
 
