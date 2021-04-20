@@ -132,12 +132,12 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
         blocking = g.db.query(
             UserBlock.target_id).filter_by(
             user_id=v.id).subquery()
-        blocked = g.db.query(
-            UserBlock.user_id).filter_by(
-            target_id=v.id).subquery()
+        # blocked = g.db.query(
+        #     UserBlock.user_id).filter_by(
+        #     target_id=v.id).subquery()
         posts = posts.filter(
-            Submission.author_id.notin_(blocking),
-            Submission.author_id.notin_(blocked)
+            Submission.author_id.notin_(blocking) #,
+        #    Submission.author_id.notin_(blocked)
         )
 
         board_blocks = g.db.query(
