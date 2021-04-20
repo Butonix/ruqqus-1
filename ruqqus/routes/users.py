@@ -49,19 +49,10 @@ def api_is_available(name, v):
 
     name=name.lstrip().rstrip()
 
-    if len(name)<5 or len(name)>25:
+    if len(name)<3 or len(name)>25:
         return jsonify({name:False})
         
-    name=name.replace('_','\_')
-
-    x= g.db.query(User).options(
-        lazyload('*')
-        ).filter(
-        or_(
-            User.username.ilike(name),
-            User.original_username.ilike(name)
-            )
-        ).first()
+    x=get_user(name)
 
     if x:
         return jsonify({name: False})
