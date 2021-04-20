@@ -808,7 +808,7 @@ $('#username-register').on('input', function () {
 
   var ruqqusAPI = '/api/is_available/' + charCount;
 
-  if (charCount.length >= 5) {
+  if (charCount.length >= 3) {
 
     $.getJSON(ruqqusAPI, function(result) {
       $.each(result, function(i, field) {
