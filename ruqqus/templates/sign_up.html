@@ -12,7 +12,7 @@
     <meta property="og:site_name" content="{{ 'SERVER_NAME' | app_config }}" />
     <meta property="og:image" content="{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}" />
     <meta property="og:url" content="https://{{ 'SERVER_NAME' | app_config }}">
-    <meta property="og:description" name="description" content="Sign up now! {{ 'SITE_NAME' | env }} is an open-source platform for online communities, free of censorship and moderator abuse by design.">
+    <meta property="og:description" name="description" content="Sign up now! {{ 'SITE_NAME' | app_config }} is an open-source platform for online communities, free of censorship and moderator abuse by design.">
     <meta property="og:author" name="author" content="@{{ 'SITE_NAME' | app_config | lower }}" />
     <meta property="og:site_name" content="{{ 'SERVER_NAME' | app_config }}" />
 
@@ -81,7 +81,7 @@
                 <div class="col-10 col-md-7">
 
                     <div class="mb-3">
-                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">{{ 'SITE_NAME' | env }}</span></a>
+                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">{{ 'SITE_NAME' | app_config }}</span></a>
                     </div>
 
                     <div id="register-form" class="">
