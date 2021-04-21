@@ -110,13 +110,13 @@ app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
 
 app.config["S3_BUCKET"]=environ.get("S3_BUCKET_NAME","i.ruqqus.com").lstrip().rstrip()
 
-app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 300))
+app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 30))
 
 redispool=ConnectionPool(
     max_connections=app.config["REDIS_POOL_SIZE"],
     host=app.config["CACHE_REDIS_URL"][8:]
     )
-app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
+app.config["CACHE_OPTIONS"]={'connection_pool':redispool} if app.config["CACHE_TYPE"]=="redis" else {}
 
 
 Markdown(app)
