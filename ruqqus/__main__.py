@@ -353,8 +353,6 @@ def before_request():
 
 def log_event(name, link):
 
-    sleep(5)
-
     x = requests.get(link)
 
     if x.status_code != 200:
@@ -423,6 +421,6 @@ def www_redirect(path):
 
     return redirect(f"https://{app.config['SERVER_NAME']}/{path}")
 
-#engines["leader"].dispose()
-#for engine in engines["followers"]:
-#    engine.dispose()
+engines["leader"].dispose()
+for engine in engines["followers"]:
+    engine.dispose()
