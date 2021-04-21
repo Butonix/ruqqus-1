@@ -71,9 +71,11 @@ def thumbnail_thread(pid, debug=False):
         x=requests.get(fetch_url, headers=headers)
     except:
         print_(f"unable to connect to {fetch_url}")
+        db.close()
         return False, "Unable to connect to source"
 
     if x.status_code != 200:
+        db.close()
         return False, f"Source returned status {x.status_code}."
 
     #if content is image, stick with that. Otherwise, parse html.
@@ -173,6 +175,7 @@ def thumbnail_thread(pid, debug=False):
         else:
             #getting here means we are out of candidate urls (or there never were any)
             print_("Unable to find image")
+            db.close()
             return False, "No usable images"
 
 
@@ -187,6 +190,7 @@ def thumbnail_thread(pid, debug=False):
     else:
 
         print_(f'Unknown content type {x.headers.get("Content-Type")}')
+        db.close()
         return False, f'Unknown content type {x.headers.get("Content-Type")} for submitted content'
 
 
