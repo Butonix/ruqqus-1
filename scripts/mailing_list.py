@@ -51,6 +51,8 @@ for user in x.order_by(classes.user.User.id.asc()).all():
         print(f"{i}/{total} unable - [{user.id}] @{user.username}")
         unable+=1
 
+db.close()
+        
 print("all done")
 print(f"attempt - {total}")
 print(f"success - {success}")
