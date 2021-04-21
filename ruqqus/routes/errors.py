@@ -20,6 +20,8 @@ def error_401(e):
     argval = quote(f"{path}?{qs}", safe='')
     output = f"/login?redirect={argval}"
 
+    g.db.close()
+
     if request.path.startswith("/api/v1/"):
         return jsonify({"error": "401 Not Authorized"}), 401
     else:
@@ -29,6 +31,7 @@ def error_401(e):
 @auth_desired
 @api()
 def error_402(e, v):
+    g.db.close()
     return{"html": lambda: (render_template('errors/402.html', v=v), 402),
            "api": lambda: (jsonify({"error": "402 Payment Required"}), 402)
            }
@@ -37,6 +40,7 @@ def error_402(e, v):
 @auth_desired
 @api()
 def error_403(e, v):
+    g.db.close()
     return{"html": lambda: (render_template('errors/403.html', v=v), 403),
            "api": lambda: (jsonify({"error": "403 Forbidden"}), 403)
            }
@@ -46,6 +50,7 @@ def error_403(e, v):
 @auth_desired
 @api()
 def error_404(e, v):
+    g.db.close()
     return{"html": lambda: (render_template('errors/404.html', v=v), 404),
            "api": lambda: (jsonify({"error": "404 Not Found"}), 404)
            }
@@ -55,6 +60,7 @@ def error_404(e, v):
 @auth_desired
 @api()
 def error_405(e, v):
+    g.db.close()
     return{"html": lambda: (render_template('errors/405.html', v=v), 405),
            "api": lambda: (jsonify({"error": "405 Method Not Allowed"}), 405)
            }
@@ -64,6 +70,7 @@ def error_405(e, v):
 @auth_desired
 @api()
 def error_409(e, v):
+    g.db.close()
     return{"html": lambda: (render_template('errors/409.html', v=v), 409),
            "api": lambda: (jsonify({"error": "409 Conflict"}), 409)
            }
@@ -73,6 +80,7 @@ def error_409(e, v):
 @auth_desired
 @api()
 def error_413(e, v):
+    g.db.close()
     return{"html": lambda: (render_template('errors/413.html', v=v), 413),
            "api": lambda: (jsonify({"error": "413 Request Payload Too Large"}), 413)
            }
@@ -82,6 +90,7 @@ def error_413(e, v):
 @auth_desired
 @api()
 def error_422(e, v):
+    g.db.close()
     return{"html": lambda: (render_template('errors/422.html', v=v), 422),
            "api": lambda: (jsonify({"error": "422 Unprocessable Entity"}), 422)
            }
@@ -105,6 +114,7 @@ def error_429(e, v):
 
     r.set(f"429_count_{ip}", count_429s)
     r.expire(f"429_count_{ip}", 60)
+    g.db.close()
 
     #if you exceed 15x 429 without a 60s break, you get IP banned for 1 hr:
     if count_429s>=15:
@@ -128,6 +138,7 @@ def error_429(e, v):
 @auth_desired
 @api()
 def error_451(e, v):
+    g.db.close()
     return{"html": lambda: (render_template('errors/451.html', v=v), 451),
            "api": lambda: (jsonify({"error": "451 Unavailable For Legal Reasons"}), 451)
            }
@@ -139,6 +150,7 @@ def error_451(e, v):
 def error_500(e, v):
     try:
         g.db.rollback()
+        g.db.close()
     except AttributeError:
         pass
 
