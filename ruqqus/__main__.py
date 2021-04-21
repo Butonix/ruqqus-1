@@ -423,6 +423,6 @@ def www_redirect(path):
 
     return redirect(f"https://{app.config['SERVER_NAME']}/{path}")
 
-engines["leader"].dispose()
-for engine in engines["followers"]:
-    engine.dispose()
+#engines["leader"].dispose()
+#for engine in engines["followers"]:
+#    engine.dispose()
