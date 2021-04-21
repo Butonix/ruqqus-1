@@ -110,7 +110,7 @@ app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
 
 app.config["S3_BUCKET"]=environ.get("S3_BUCKET_NAME","i.ruqqus.com").lstrip().rstrip()
 
-app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 30))
+app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 100))
 
 redispool=ConnectionPool(
     max_connections=app.config["REDIS_POOL_SIZE"],
@@ -347,6 +347,10 @@ def before_request():
     else:
         g.system="other/other"
 
+    try:
+        print(session.get('user_id'), request.remote_addr, request.path)
+    except:
+        pass
 
     # g.db.begin_nested()
 
