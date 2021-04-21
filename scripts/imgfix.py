@@ -13,3 +13,5 @@ for post in db.query(Submission).options(lazyload('*'), joinedload(Submission.su
         print(f"{post.base36id} - {post.title}")
     except BaseException:
         print(f"ERROR: {post.base36id} - {post.title}")
+
+db.close()
