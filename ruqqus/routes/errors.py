@@ -4,7 +4,7 @@ from ruqqus.classes.custom_errors import *
 from flask import *
 from urllib.parse import quote, urlencode
 import time
-from ruqqus.__main__ import app, r, cache, is_ip_banned, db_session
+from ruqqus.__main__ import app, r, cache
 import gevent
 
 # Errors
