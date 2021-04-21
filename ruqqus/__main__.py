@@ -225,9 +225,26 @@ class RetryingQuery(_Query):
         return super().first()
 
 
+class CustomSessionmaker(scoped_session):
+
+    def __call__(self):
+        try:
+            print('+', request.method, request.path)
+        except:
+            pass
+
+        return self.super().__call__()
+
+    def close(self):
+        try:
+            print('-', request.method, request.path)
+        except:
+            pass
+
+        self.super().close()
 
 
-db_session = scoped_session(sessionmaker(class_=RoutingSession, query_cls=RetryingQuery))
+db_session = CustomSessionmaker(sessionmaker(class_=RoutingSession, query_cls=RetryingQuery))
 #db_session=scoped_session(sessionmaker(bind=engines["leader"]))
 
 Base = declarative_base()
@@ -347,10 +364,10 @@ def before_request():
     else:
         g.system="other/other"
 
-    try:
-        print(session.get('user_id'), request.remote_addr, request.method, request.path)
-    except:
-        pass
+    #try:
+    #    print(session.get('user_id'), request.remote_addr, request.method, request.path)
+    #except:
+    #    pass
 
     # g.db.begin_nested()
 
