@@ -227,8 +227,8 @@ class RetryingQuery(_Query):
 
 
 
-db_session = scoped_session(sessionmaker(class_=RoutingSession, query_cls=RetryingQuery))
-# db_session=scoped_session(sessionmaker(bind=engines["leader"]))
+#db_session = scoped_session(sessionmaker(class_=RoutingSession, query_cls=RetryingQuery))
+db_session=scoped_session(sessionmaker(bind=engines["leader"]))
 
 Base = declarative_base()
 
