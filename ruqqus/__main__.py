@@ -348,7 +348,7 @@ def before_request():
         g.system="other/other"
 
     try:
-        print(session.get('user_id'), request.remote_addr, request.path)
+        print(session.get('user_id'), request.remote_addr, request.method, request.path)
     except:
         pass
 
