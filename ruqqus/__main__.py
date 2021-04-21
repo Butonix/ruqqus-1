@@ -244,7 +244,7 @@ class CustomSessionmaker(scoped_session):
         self.super().close()
 
 
-db_session = CustomSessionmaker(sessionmaker(class_=RoutingSession, query_cls=RetryingQuery))
+db_session = scoped_session(sessionmaker(class_=RoutingSession, query_cls=RetryingQuery))
 #db_session=scoped_session(sessionmaker(bind=engines["leader"]))
 
 Base = declarative_base()
