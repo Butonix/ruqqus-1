@@ -467,6 +467,12 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @lazy
     def is_op(self):
         return self.author_id==self.post.author_id and not self.author.is_deleted and not self.post.author.is_deleted and not self.post.is_deleted
+
+    @property
+    @lazy
+    def board(self):
+        return self.post.board
+    
     
     
 
