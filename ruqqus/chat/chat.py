@@ -120,9 +120,12 @@ def get_room(f):
 @socketio.on('disconnect')
 def socket_disconnect_user():
 
+    g.db=db_session()
+
     v, client=get_logged_in_user()
 
     if not v:
+        g.db.close()
         return
 
     try:
@@ -142,6 +145,8 @@ def socket_disconnect_user():
             if v.username in TYPING.get(board.fullname, []):
                 TYPING[board.fullname].remove(v.username)
                 emit('typing', {'users':TYPING[board.fullname]}, to=board.fullname)
+
+    g.db.close()
 
 
 
