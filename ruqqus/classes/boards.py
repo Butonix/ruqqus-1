@@ -610,6 +610,6 @@ class Board(Base, Stndrd, Age_times):
         if count==None:
             count=0
         else:
-            count=int(decode(count))
+            count=int(count.decode('utf-8'))
 
         return count
