@@ -141,11 +141,7 @@ class CorsMatch(str):
 
         return False
 
-socketio=SocketIO(
-	app,
-	cors_allowed_origins=CorsMatch()
-	#message_queue=app.config["CACHE_REDIS_URL"]
-	)
+
 
 
 # app.config["CACHE_REDIS_URL"]
@@ -245,6 +241,11 @@ r=redis.Redis(
 #and if it's not used then every worker connection will spawn a new db session
 from ruqqus.chat.chat_routes import *
 if "load_chat" in sys.argv:
+    socketio=SocketIO(
+        app,
+        cors_allowed_origins=CorsMatch()
+        #message_queue=app.config["CACHE_REDIS_URL"]
+        )
     from ruqqus.chat.chat import *
 
 
