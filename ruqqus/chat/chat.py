@@ -691,7 +691,7 @@ def message_of_the_day(args, guild, v):
         g.db.add(guild)
         g.db.commit()
 
-        send("Message updated")
+        speak_help(f"Welcome message updated to:")
         data={
             "avatar": guild.profile_url,
             "username":guild.name,
