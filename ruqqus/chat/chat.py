@@ -339,9 +339,10 @@ def update_chat_count(board):
 @get_room
 def join_guild_room(data, v, guild):
 
-    if not guild.can_chat(v):
+    if not guild.can_chat(v) or not all([guild.can_chat(alt) for alt in v.alts]):
         send(f"You can't join #{guild.name} right now.")
         return False
+
 
     broadcast= guild.fullname not in v_rooms(v)
 
