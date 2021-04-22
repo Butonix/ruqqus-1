@@ -127,7 +127,7 @@ class CorsMatch(str):
 
     def __eq__(self, other):
         if isinstance(other, str):
-            if other==f'https://{app.config["SERVER_NAME"]}':
+            if other in ['https://ruqqus.com', f'https://{app.config["SERVER_NAME"]}']:
                 return True
 
             elif other.endswith(".ruqqus.com"):
@@ -223,26 +223,6 @@ class RetryingQuery(_Query):
     @retry
     def first(self):
         return super().first()
-
-
-class CustomSessionmaker(scoped_session):
-
-    def __call__(self):
-        try:
-            print('+', request.method, request.path)
-        except:
-            pass
-
-        return self.super().__call__()
-
-    def close(self):
-        try:
-            print('-', request.method, request.path)
-        except:
-            pass
-
-        self.super().close()
-
 
 db_session = scoped_session(sessionmaker(class_=RoutingSession, query_cls=RetryingQuery))
 #db_session=scoped_session(sessionmaker(bind=engines["leader"]))
