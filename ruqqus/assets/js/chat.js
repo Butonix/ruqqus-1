@@ -1,6 +1,6 @@
 if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
 
-  var socket=io();
+  var socket=io("https://chat.ruqqus.com");
   var is_typing=false;
   var recent_sender=$('#username').val()
 
@@ -130,7 +130,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
 
     var my_name=$('#username').val()
 
-    if (template=="#msg-in" || text.includes('href="/@'+my_name+'"')){
+    if (template=="#msg-in" || template=="#wallop" || text.includes('href="/@'+my_name+'"')){
       $(template+'-template .chat-line').addClass('chat-mention');
       notifs=notifs+1;
       if (notifs==1){
