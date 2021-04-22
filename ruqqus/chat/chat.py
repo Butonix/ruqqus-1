@@ -83,11 +83,13 @@ def socket_auth_desired(f):
         g.db=db_session()
         v, client=get_logged_in_user()
 
-        if request.sid not in SIDS.get(v.id, []):
-            if v.id in SIDS:
-                SIDS[v.id].append(request.sid)
-            else:
-                SIDS[v.id]=[request.sid]
+        if v:
+
+            if request.sid not in SIDS.get(v.id, []):
+                if v.id in SIDS:
+                    SIDS[v.id].append(request.sid)
+                else:
+                    SIDS[v.id]=[request.sid]
 
         f(*args, v, **kwargs)
         g.db.close()
