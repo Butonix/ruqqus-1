@@ -45,6 +45,8 @@ def print_(x):
 @socketio.on('connect')
 def socket_connect_auth_user():
 
+    print("connected")
+
     g.db=db_session()
 
     v, client=get_logged_in_user()
