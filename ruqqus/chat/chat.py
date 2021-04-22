@@ -28,12 +28,6 @@ HELP={}
 
 TYPING={}
 
-r=redis.Redis(
-    host=app.config["CACHE_REDIS_URL"][8:], 
-    decode_responses=True, 
-    ssl_cert_reqs=None
-    )
-
 
 def print_(x):
     try:
