@@ -39,7 +39,7 @@ def print_(x):
 
 def screen(html):
 
-    soup=BeautifulSoup.html
+    soup=BeautifulSoup(html, "html.parser")
 
     for tag in soup.find_all('a'):
 
@@ -756,7 +756,7 @@ def wallop(args, guild, v):
     if ban:
         speak_help(f"Unable to send message - banned domain {ban}")
         return
-        
+
     data={
         "avatar": v.profile_url,
         "username":v.username,
