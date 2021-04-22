@@ -7,6 +7,8 @@ import random
 from sqlalchemy.orm import lazyload, make_transient, make_transient_to_detached
 import time
 import secrets
+from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
@@ -34,6 +36,31 @@ def print_(x):
         print(x)
     except:
         pass
+
+def screen(html):
+
+    soup=BeautifulSoup.html
+
+    for tag in soup.find_all('a'):
+
+        if not tag.get('href'):
+            continue
+
+        parsed_url=urlparse(tag['href'])
+        if not parsed_url.netloc:
+            continue
+
+        domain=get_domain(parsed_url.netloc)
+        if not domain:
+            continue
+
+        if (not domain.can_comment) or (not domain.can_submit):
+            return domain.domain
+
+    return False
+
+
+
 
 
 @socketio.on('connect')
@@ -211,7 +238,7 @@ def admin_command(f):
     wrapper.__doc__=f.__doc__
     return wrapper
 
-def speak(text, user, guild, as_guild=False):
+def speak(text, user, guild, as_guild=False, event="speak", to=None):
 
     if isinstance(text, list):
         text=" ".join(text)
@@ -221,7 +248,14 @@ def speak(text, user, guild, as_guild=False):
         text = renderer.render(mistletoe.Document(text))
     text = sanitize(text, linkgen=True)
 
-    if as_guild:
+    to = to or guild.fullname
+
+    ban=screen(text)
+    if ban:
+        speak_help(f"Unable to send message - banned domain {ban}")
+        return
+
+    if as_guild or event=="motd":
         data={
             "avatar": guild.profile_url,
             "username":guild.name,
@@ -231,7 +265,7 @@ def speak(text, user, guild, as_guild=False):
             "time": now(),
             'userlink':guild.permalink
         }
-        emit("motd", data, to=guild.fullname)
+        emit("motd", data, to=to)
     else:
         data={
             "avatar": user.profile_url,
@@ -243,9 +277,9 @@ def speak(text, user, guild, as_guild=False):
             "userlink":user.permalink
         }
         if request.headers.get("X-User-Type")=="Bot":
-            emit("bot", data, to=guild.fullname)
+            emit("bot", data, to=to)
         else:
-            emit("speak", data, to=guild.fullname)
+            emit(event, data, to=to)
         return
 
 def speak_help(text, to=None):
@@ -303,17 +337,7 @@ def join_guild_room(data, v, guild):
         send(f"→ @{v.username} has entered the chat", to=guild.fullname)
 
     if guild.motd:
-
-        data={
-            "avatar": guild.profile_url,
-            "username":guild.name,
-            "text":guild.motd,
-            "room":guild.fullname,
-            "guild":guild.name,
-            "time": now(),
-            "userlink":guild.permalink
-            }
-        emit('motd', data, to=request.sid)
+        speak(guild.motd, v, guild, event="motd", to=request.sid)
 
     return True
 
@@ -644,21 +668,7 @@ def speak_as_gm(args, guild, v):
     text=" ".join(args[1:])
     if not text:
         return
-    text=preprocess(text)
-    with CustomRenderer() as renderer:
-        text = renderer.render(mistletoe.Document(text))
-    text = sanitize(text, linkgen=True)
-
-    data={
-        "avatar": v.profile_url,
-        "username":v.username,
-        "text":text,
-        "room":guild.fullname,
-        "guild":guild.name,
-        "time": now(),
-        "userlink":v.permalink
-        }
-    emit('gm', data, to=guild.fullname)
+    speak(text, v, guild, event="gm")
 
 @command('unban', syntax="<username>")
 @gm_command
@@ -700,21 +710,17 @@ def message_of_the_day(args, guild, v):
             message = renderer.render(mistletoe.Document(message))
         message = sanitize(message, linkgen=True)
 
+        ban=screen(message)
+        if ban:
+            speak_help(f"Unable to send message - banned domain {ban}")
+            return
+
         guild.motd=message
         g.db.add(guild)
         g.db.commit()
 
         speak_help(f"Welcome message updated to:")
-        data={
-            "avatar": guild.profile_url,
-            "username":guild.name,
-            "text":guild.motd,
-            "room":guild.fullname,
-            "guild":guild.name,
-            "time": now(),
-            "userlink":guild.permalink
-            }
-        emit('motd', data, to=request.sid)
+        speak(guild.motd, v, guild, event='motd', to=request.sid)
 
     else:
         guild.motd=''
@@ -732,21 +738,7 @@ def speak_admin(args, guild, v):
     text=" ".join(args[1:])
     if not text:
         return
-    text=preprocess(text)
-    with CustomRenderer() as renderer:
-        text = renderer.render(mistletoe.Document(text))
-    text = sanitize(text, linkgen=True)
-
-    data={
-        "avatar": v.profile_url,
-        "username":v.username,
-        "text":text,
-        'guild':guild.name,
-        'room':guild.fullname,
-        "time": now(),
-        "userlink":v.permalink
-        }
-    emit('admin', data, to=guild.fullname)
+    speak(text, v, guild, event="admin")
 
 
 @command('wallop', syntax="<text>")
@@ -760,7 +752,11 @@ def wallop(args, guild, v):
     with CustomRenderer() as renderer:
         text = renderer.render(mistletoe.Document(text))
     text = sanitize(text, linkgen=True)
-
+    ban=screen(text)
+    if ban:
+        speak_help(f"Unable to send message - banned domain {ban}")
+        return
+        
     data={
         "avatar": v.profile_url,
         "username":v.username,
@@ -783,19 +779,8 @@ def say_guild(args, guild, v):
     """Say something as the Guild. (Must be Guildmaster.)"""
 
     text=" ".join(args[1:])
-    text=preprocess(text)
-    with CustomRenderer() as renderer:
-        text = renderer.render(mistletoe.Document(text))
-    text = sanitize(text, linkgen=True)
 
-    data={
-        "avatar": guild.profile_url,
-        "username":guild.name,
-        "text":text,
-        "time": now(),
-        "userlink":guild.permalink
-        }
-    emit('motd', data, to=guild.fullname)
+    speak(text, v, guild, event='motd')
 
 @command('msg', syntax="<username> <text>")
 def direct_message(args, guild, v):
@@ -821,6 +806,11 @@ def direct_message(args, guild, v):
     with CustomRenderer() as renderer:
         text = renderer.render(mistletoe.Document(text))
     text = sanitize(text, linkgen=True)
+
+    ban=screen(text)
+    if ban:
+        speak_help(f"Unable to send message - banned domain {ban}")
+        return
 
     t=now()
 
