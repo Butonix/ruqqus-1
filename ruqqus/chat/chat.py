@@ -97,8 +97,6 @@ def socket_auth_required(f):
         g.db.close()
 
 
-
-
     wrapper.__name__=f.__name__
     return wrapper
 
@@ -120,8 +118,9 @@ def get_room(f):
 
 
 @socketio.on('disconnect')
-@socket_auth_required
-def socket_disconnect_user(v):
+def socket_disconnect_user():
+
+    v, client=get_logged_in_user()
 
     if not v:
         return
