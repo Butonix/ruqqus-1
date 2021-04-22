@@ -1,3 +1,5 @@
+import secrets
+
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.get import *
 from ruqqus.helpers.session import *
