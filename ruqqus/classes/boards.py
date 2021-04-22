@@ -14,8 +14,7 @@ from .subscriptions import *
 from .board_relationships import *
 from .comment import Comment
 from .mix_ins import *
-from ruqqus.__main__ import Base, cache, r
-
+from ruqqus.__main__ import Base, cache
 
 class Board(Base, Stndrd, Age_times):
 
@@ -603,13 +602,13 @@ class Board(Base, Stndrd, Age_times):
     def chat_url(self):
         return f"{self.permalink}/chat"
     
-    @property
-    def chat_count(self):
-        count= r.get(f"{self.fullname}_chat_count")
+    # @property
+    # def chat_count(self):
+    #     count= r.get(f"{self.fullname}_chat_count")
 
-        if count==None:
-            count=0
-        else:
-            count=int(count.decode('utf-8'))
+    #     if count==None:
+    #         count=0
+    #     else:
+    #         count=int(count.decode('utf-8'))
 
-        return count
+    #     return count
