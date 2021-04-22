@@ -263,9 +263,9 @@ r=redis.Redis(
 #import and bind chat function
 #the if statement is needed because chat includes its own db session
 #and if it's not used then every worker connection will spawn a new db session
-from ruqqus.chat.chat import *
+from ruqqus.chat.chat_routes import *
 if "load_chat" in sys.argv:
-    from ruqqus.chat.chat_routes import *
+    from ruqqus.chat.chat import *
 
 
 @app.before_first_request
