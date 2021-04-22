@@ -709,7 +709,7 @@ def un_chatban_user(args, guild, v):
         )
     g.db.add(ma)
     g.db.commit()
-    send(f"@{user.username} un-chatbanned by @{v.username}.", to=guild.fullname)
+    speak_help(f"@{user.username} un-chatbanned by @{v.username}.", to=guild.fullname)
 
 @command('motd', syntax="[text]")
 @gm_command
