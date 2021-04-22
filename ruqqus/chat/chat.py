@@ -735,7 +735,7 @@ def speak_admin(args, guild, v):
         "text":text,
         'guild':guild.name,
         'room':guild.fullname,
-        "time": now()
+        "time": now(),
         "userlink":v.permalink
         }
     emit('admin', data, to=guild.fullname)
