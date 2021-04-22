@@ -285,7 +285,7 @@ def update_chat_count(board):
 
     count=len(count)
 
-    r.set(f"{board.fullname}_chat_count", count)
+    #r.set(f"{board.fullname}_chat_count", count)
 
     emit("count", {"count":str(count)}, to=board.fullname)
 
