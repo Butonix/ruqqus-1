@@ -177,7 +177,10 @@ def socket_disconnect_user():
 
 @socketio.on_error()
 def error_handler(e):
-
+    try:
+        print(e)
+    except:
+        pass
     try:
         g.db.rollback()
         g.db.close()
