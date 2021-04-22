@@ -65,7 +65,7 @@ def socket_connect_auth_user():
         g.db.close()
         return
 
-    print_(v)
+    #print_(v)
     if v.id in SIDS:
         SIDS[v.id].append(request.sid)
     else:
