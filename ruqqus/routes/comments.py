@@ -289,7 +289,7 @@ def api_comment(v):
         level = parent.level + 1
         parent_id = parent.parent_submission
         parent_submission = parent_id
-        parent_post = get_post(base36encode(parent_id))
+        parent_post = get_post(parent_id, v=v)
     else:
         abort(400)
 
@@ -339,12 +339,12 @@ def api_comment(v):
     if parent.is_blocking and not v.admin_level>=3 and not parent.board.has_mod(v, "content"):
         return jsonify(
             {"error": "You can't reply to users that you're blocking."}
-            )
+            ), 403
 
     if parent.is_blocked and not v.admin_level>=3 and not parent.board.has_mod(v, "content"):
         return jsonify(
             {"error": "You can't reply to users that are blocking you."}
-            )
+            ), 403
 
     # check for archive and ban state
     post = get_post(parent_id)
