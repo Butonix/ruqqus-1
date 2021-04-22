@@ -818,7 +818,7 @@ def direct_message(args, guild, v):
 
     targets=SIDS.get(user.id, [])
     if (not targets) or v.any_block_exists(user):
-        send(f"@{user.username} is not online right now.")
+        speak_help(f"@{user.username} is not online right now.")
         return
 
     text=" ".join(args[2:])
