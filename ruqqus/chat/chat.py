@@ -52,13 +52,13 @@ def socket_connect_auth_user():
 
 
     if client or not v:
-        print_("no auth")
+        #print_("no auth")
         send("Authentication required")
         g.db.close()
         return False
 
     if v.is_suspended:
-        print_("suspended")
+        #print_("suspended")
         send("You're banned and can't access chat right now.")
         g.db.close()
         return False
@@ -84,6 +84,11 @@ def socket_auth_required(f):
 
         if not v:
             send("You are not logged in")
+            g.db.close()
+            return
+
+        if v.is_suspended:
+            send("You're banned and can't access chat right now.")
             g.db.close()
             return
 
