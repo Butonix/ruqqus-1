@@ -180,7 +180,7 @@ def gm_command(f):
         guild=kwargs['guild']
         v=kwargs['v']
 
-        if not guild.has_mod(v, "chat"):
+        if not guild.has_mod(v, "chat") and not (guild.id==1 and v.admin_level>3):
             send(f"You do not have permission to use the {args[0][0]} command in this channel.")
             return
 
