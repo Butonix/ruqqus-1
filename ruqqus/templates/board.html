@@ -82,7 +82,7 @@
 
 {% if b.can_chat(v) %}
 <div class="sidebar-section sidebar-chat">
-  <a href="{{ b.chat_url }}" target="_blank"><div class="title"><i class="fas fa-comments-alt mr-2"></i>Guild Chat (<i class="far fa-user fa-sm mr-1"></i><span class="board-chat-count">{{ b.chat_count }}</span>)</div></a>
+  <a href="{{ b.chat_url }}" target="_blank"><div class="title"><i class="fas fa-comments-alt mr-2"></i>Guild Chat (<i class="far fa-user fa-sm mr-1"></i><span class="board-chat-count"></span>)</div></a>
   <div class="body">
     {% include "chat/chat_client.html" %}
   </div>
@@ -350,7 +350,7 @@
         <a class="btn btn-outline-secondary btn-block text-muted mb-2" href="{{ b.permalink }}/mod/settings">Guild settings</a>
         {% endif %}
         {% if b.can_chat(v) %}
-        <a class="btn btn-primary btn-block text-white mb-2" href="{{ b.chat_url }}">Chat (<i class="far fa-user"></i><span class="board-chat-count">{{ b.chat_count }}</span>)</a>
+        <a class="btn btn-primary btn-block text-white mb-2" href="{{ b.chat_url }}">Chat</a>
         {% endif %}
         {% if v %}
         <div id="button-sub-mobile" {% if is_subscribed %}class="d-none"{% endif %}><a class="btn btn-primary btn-block" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=toggleSub)">Join guild</a></div>
