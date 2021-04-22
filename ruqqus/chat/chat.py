@@ -134,6 +134,7 @@ def get_room(f):
         guild=get_guild(data["guild"])
 
         if guild.is_banned:
+            g.db.close()
             return
 
         f(*args, guild, **kwargs)
@@ -173,6 +174,16 @@ def socket_disconnect_user():
                 emit('typing', {'users':TYPING[board.fullname]}, to=board.fullname)
 
     g.db.close()
+
+@socketio.on_error()
+def error-handler(e):
+
+    try:
+        g.db.rollback()
+        g.db.close()
+    except:
+        pass
+
 
 
 
