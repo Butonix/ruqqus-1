@@ -220,7 +220,8 @@ def speak(text, user, guild, as_guild=False):
             "text":text,
             "room": guild.fullname,
             "guild": guild.name,
-            "time": now()
+            "time": now(),
+            'userlink':guild.permalink
         }
         emit("motd", data, to=guild.fullname)
     else:
@@ -230,7 +231,8 @@ def speak(text, user, guild, as_guild=False):
             "text":text,
             "room": guild.fullname,
             "guild": guild.name,
-            "time": now()
+            "time": now(),
+            "userlink":user.permalink
         }
         if request.headers.get("X-User-Type")=="Bot":
             emit("bot", data, to=guild.fullname)
@@ -300,7 +302,8 @@ def join_guild_room(data, v, guild):
             "text":guild.motd,
             "room":guild.fullname,
             "guild":guild.name,
-            "time": now()
+            "time": now(),
+            "userlink":guild.permalink
             }
         emit('motd', data, to=request.sid)
 
@@ -421,7 +424,8 @@ def print_ruqqie(args, guild, v):
         "text":'<pre class="text-black">  👑<br>  ╭───────╮<br> ╭┤  ╹ ╹  ├╮<br>  ╰─┬───┬─╯</pre>',
         "room": guild.fullname,
         "guild": guild.name,
-        "time": now()
+        "time": now(),
+        "userlink":v.permalink
     }
     if request.headers.get("X-User-Type")=="Bot":
         emit("bot", data, to=guild.fullname)
@@ -643,7 +647,8 @@ def speak_as_gm(args, guild, v):
         "text":text,
         "room":guild.fullname,
         "guild":guild.name,
-        "time": now()
+        "time": now(),
+        "userlink":v.permalink
         }
     emit('gm', data, to=guild.fullname)
 
@@ -698,7 +703,8 @@ def message_of_the_day(args, guild, v):
             "text":guild.motd,
             "room":guild.fullname,
             "guild":guild.name,
-            "time": now()
+            "time": now(),
+            "userlink":guild.permalink
             }
         emit('motd', data, to=request.sid)
 
@@ -730,6 +736,7 @@ def speak_admin(args, guild, v):
         'guild':guild.name,
         'room':guild.fullname,
         "time": now()
+        "userlink":v.permalink
         }
     emit('admin', data, to=guild.fullname)
 
@@ -750,7 +757,8 @@ def wallop(args, guild, v):
         "avatar": v.profile_url,
         "username":v.username,
         "text":text,
-        "time": now()
+        "time": now(),
+        "userlink":v.permalink
         }
 
     sent=[]
@@ -776,7 +784,8 @@ def say_guild(args, guild, v):
         "avatar": guild.profile_url,
         "username":guild.name,
         "text":text,
-        "time": now()
+        "time": now(),
+        "userlink":guild.permalink
         }
     emit('motd', data, to=guild.fullname)
 
@@ -811,7 +820,8 @@ def direct_message(args, guild, v):
         "avatar": v.profile_url,
         "username":v.username,
         "text":text,
-        "time": t
+        "time": t,
+        "userlink": v.permalink
         }
 
     for sid in targets:
@@ -821,7 +831,8 @@ def direct_message(args, guild, v):
         "avatar": v.profile_url,
         "username":user.username,
         "text":text,
-        "time": t
+        "time": t,
+        "userlink":user.permalink
         }
     for sid in SIDS.get(v.id,[]):
         emit('msg-out', data, to=sid)
