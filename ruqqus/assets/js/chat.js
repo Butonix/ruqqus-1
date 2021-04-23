@@ -145,7 +145,7 @@ if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
     should_scroll()
     $(template+'-template img').attr('src', ava)
     $(template+'-template img').attr('data-original-title', json['time'])
-    $(template+'-template .userlink').attr(json['userlink'])
+    $(template+'-template .userlink').attr('href', json['userlink'])
     $(template+'-template .username').text(username)
     $(template+'-template .chat-message').html(text)
     $('#chat-text').append($(template+'-template .chat-line').clone())
