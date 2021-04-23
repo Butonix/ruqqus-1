@@ -237,7 +237,7 @@ def participation_stats(v):
             "locked_negative_users": g.db.query(User).filter(User.negative_balance_cents>0).count(),
             "total_posts": g.db.query(Submission).count(),
             "active_posts": g.db.query(Submission).filter_by(is_banned=False).filter(Submission.deleted_utc > 0, Submission.created_utc>cutoff).count(),
-            "archived_posts":g.db.query(Submission).filter_by(is_banned=False).filter(Submission.deleted_utc > 0, Submission.created_utc<cutoff).count()
+            "archived_posts":g.db.query(Submission).filter_by(is_banned=False).filter(Submission.deleted_utc > 0, Submission.created_utc<cutoff).count(),
             "posting_users": g.db.query(Submission.author_id).distinct().count(),
             "listed_posts": g.db.query(Submission).filter_by(is_banned=False).filter(Submission.deleted_utc > 0).count(),
             "removed_posts": g.db.query(Submission).filter_by(is_banned=True).count(),
