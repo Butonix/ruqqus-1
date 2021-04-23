@@ -228,6 +228,7 @@ def admin_data(v):
 def participation_stats(v):
 
     now = int(time.time())
+    cutoff=now-60*60*24*180
 
     data = {"valid_users": g.db.query(User).filter_by(is_deleted=False).filter(or_(User.is_banned == 0, and_(User.is_banned > 0, User.unban_utc > 0))).count(),
             "private_users": g.db.query(User).filter_by(is_deleted=False, is_private=False).filter(User.is_banned > 0, or_(User.unban_utc > now, User.unban_utc == 0)).count(),
@@ -235,6 +236,8 @@ def participation_stats(v):
             "deleted_users": g.db.query(User).filter_by(is_deleted=True).count(),
             "locked_negative_users": g.db.query(User).filter(User.negative_balance_cents>0).count(),
             "total_posts": g.db.query(Submission).count(),
+            "active_posts": g.db.query(Submission).filter_by(is_banned=False).filter(Submission.deleted_utc > 0, Submission.created_utc>cutoff).count(),
+            "archived_posts":g.db.query(Submission).filter_by(is_banned=False).filter(Submission.deleted_utc > 0, Submission.created_utc<cutoff).count()
             "posting_users": g.db.query(Submission.author_id).distinct().count(),
             "listed_posts": g.db.query(Submission).filter_by(is_banned=False).filter(Submission.deleted_utc > 0).count(),
             "removed_posts": g.db.query(Submission).filter_by(is_banned=True).count(),
