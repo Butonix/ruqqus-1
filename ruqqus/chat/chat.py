@@ -663,7 +663,7 @@ def chatban_user(args, guild, v):
     new_ban = ChatBan(
         user_id=user.id,
         board_id=guild.id,
-        banning_mod_id=v.id,
+        banning_mod_id=v.id
         )
     g.db.add(new_ban)
 
@@ -671,7 +671,8 @@ def chatban_user(args, guild, v):
         kind="chatban_user",
         user_id=v.id,
         target_user_id=user.id,
-        board_id=guild.id
+        board_id=guild.id,
+        _note=reason if reason else None
         )
     g.db.add(ma)
     g.db.commit()
