@@ -73,7 +73,7 @@ def recompute():
             ).all()
 
         for c in purge_comments:
-            c += 1
+            x+=1
             c.comment_aux.body = ""
             c.comment_aux.body_html = ""
             c.creation_ip = ""
