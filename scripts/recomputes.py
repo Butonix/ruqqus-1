@@ -22,6 +22,7 @@ def recompute():
 
         cycle +=1
         print(f"cycle {cycle}")
+
         #purge deleted comments older than 90 days
 
         print_("beginning post purge")
@@ -47,6 +48,7 @@ def recompute():
             p.purged_utc=int(time.time())
             p.is_pinned = False
             p.is_stickied = False
+            p.domain_ref=None
             db.add(p)
 
             if not x % 100:
@@ -63,6 +65,7 @@ def recompute():
             Comment.purged_utc==0,
             Comment.author_id != 1
             ).all()
+
         for c in purge_comments:
             c += 1
             c.comment_aux.body = ""
@@ -98,17 +101,18 @@ def recompute():
             if not i % 100:
                 db.commit()
 
+        print(f"Re-ranked {i} boards")
+
         now = int(time.time())
 
         cutoff = now - (60 * 60 * 24 * 180)
         cutoff_purge = now - (60 * 60 * 24 * 90)
 
         print_("Beginning post recompute")
-        i = 0
         page = 1
-        posts = True
         post_count = 0
-        while posts:
+        posts_exist=True
+        while i:
             posts = db.query(Submission
                 ).options(
                     lazyload('*')
@@ -123,8 +127,10 @@ def recompute():
                     100 * (page - 1)
                 ).limit(100).all()
 
+
+            posts_exist=False
             for post in posts:
-                i += 1
+                posts_exist=True
                 post_count += 1
 
                 post.upvotes = post.ups
@@ -157,20 +163,23 @@ def recompute():
 
                     db.add(comment)
 
-
-
             db.commit()
 
             page += 1
             print_(f"re-scored {post_count} posts")
 
+        print("Done with posts. Rescored {")
+
         db.commit()
 
-        for action in db.query(ModAction).filter(ModAction.created_utc<int(time.time())-60*60*24*90).all():
-            db.delete(action)
+        print("Deleting old mod actions")
+
+        actions=db.query(ModAction).filter(ModAction.created_utc<int(time.time())-60*60*24*180)
+        count=actions.count()
+        actions.delete()
         db.commit()
 
-        x = 0
+        print(f"deleted {count} old mod actions")
 
 
 
