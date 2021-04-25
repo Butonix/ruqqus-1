@@ -931,6 +931,9 @@ def retry_thumbnail(pid, v):
     if post.author_id != v.id and v.admin_level < 3:
         abort(403)
 
+    if post.is_archived:
+        return jsonify({"error": "Post is archived"}), 409
+
     try:
         success, msg = thumbnail_thread(post.base36id, debug=True)
     except Exception as e:
