@@ -43,8 +43,8 @@ def recompute():
             p.submission_aux.body_html = ""
             p.submission_aux.url = ""
             p.submission_aux.embed_url = ""
-            p.meta_text=""
-            p.meta_description=""
+            p.submission_aux.meta_text=""
+            p.submisson_aux.meta_description=""
             p.creation_ip = ""
             p.creation_region=""
             p.purged_utc=int(time.time())
