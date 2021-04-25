@@ -16,9 +16,12 @@ def print_(x):
 
 def recompute():
 
-    x = 0
+    cycle=0
 
     while True:
+
+        cycle +=1
+        print(f"cycle {cycle}")
         #purge deleted comments older than 90 days
 
         print_("beginning post purge")
@@ -29,6 +32,8 @@ def recompute():
             Submission.deleted_utc < cutoff_purge, 
             Submission.purged_utc==0
             ).all()
+
+        x=0
         for p in purge_posts:
             x += 1
             p.submission_aux.body = ""
@@ -73,13 +78,15 @@ def recompute():
 
         db.commit()
         print_(f"purged {x} comments")
-        
+
         print_("beginning guild trend recompute")
-        x += 1
         boards = db.query(Board).options(
             lazyload('*')).filter_by(is_banned=False).order_by(Board.rank_trending.desc())
-        if x % 10:
+        if cycle % 10:
+            print("top 1000 boards only")
             boards = boards.limit(1000)
+        else:
+            print("all boards")
 
         i = 0
         for board in boards.all():
@@ -103,10 +110,18 @@ def recompute():
         post_count = 0
         while posts:
             posts = db.query(Submission
-                             ).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0
-                                                                ).filter(Submission.created_utc > cutoff
-                                                                         ).order_by(Submission.id.asc()
-                                                                                    ).offset(100 * (page - 1)).limit(100).all()
+                ).options(
+                    lazyload('*')
+                ).filter_by(
+                    is_banned=False,
+                    deleted_utc=0
+                ).filter(
+                    Submission.created_utc > cutoff
+                ).order_by(
+                    Submission.id.asc()
+                ).offset(
+                    100 * (page - 1)
+                ).limit(100).all()
 
             for post in posts:
                 i += 1
@@ -142,6 +157,8 @@ def recompute():
 
                     db.add(comment)
 
+
+
             db.commit()
 
             page += 1
@@ -158,7 +175,7 @@ def recompute():
 
 
 
-with daemon.DaemonContext():
-    recompute()
+#with daemon.DaemonContext():
+#    recompute()
 
-#recompute()
+recompute()
