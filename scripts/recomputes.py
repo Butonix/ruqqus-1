@@ -25,6 +25,7 @@ def recompute():
 
         #purge deleted content older than 90 days
         
+        now = int(time.time())
         cutoff_purge = now - (60 * 60 * 24 * 90)
         print_("beginning post purge")
 
@@ -104,7 +105,6 @@ def recompute():
 
         print(f"Re-ranked {i} boards")
 
-        now = int(time.time())
 
         cutoff = now - (60 * 60 * 24 * 180)
 
