@@ -32,7 +32,7 @@ def recompute():
         purge_posts = db.query(
             Submission
             ).filter(
-            Submission.deleted_utc>0
+            Submission.deleted_utc>0,
             Submission.deleted_utc < cutoff_purge, 
             Submission.purged_utc==0
             ).all()
@@ -66,7 +66,7 @@ def recompute():
         purge_comments = db.query(
             Comment
             ).filter(
-            Comment.deleted_utc>0
+            Comment.deleted_utc>0,
             Comment.deleted_utc < cutoff_purge, 
             Comment.purged_utc==0,
             Comment.author_id != 1
