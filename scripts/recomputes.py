@@ -63,6 +63,7 @@ def recompute():
         print_(f"Done with post purge. Purged {x} posts")
 
         x = 0
+        print_("beginning comment purge")
         purge_comments = db.query(
             Comment
             ).filter(
