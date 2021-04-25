@@ -32,6 +32,7 @@ def recompute():
         purge_posts = db.query(
             Submission
             ).filter(
+            Submission.deleted_utc>0
             Submission.deleted_utc < cutoff_purge, 
             Submission.purged_utc==0
             ).all()
@@ -52,6 +53,7 @@ def recompute():
             p.is_stickied = False
             p.domain_ref=None
             db.add(p)
+            db.add(p.submission_aux)
 
             if not x % 100:
                 print(f"purged {x} posts")
@@ -64,6 +66,7 @@ def recompute():
         purge_comments = db.query(
             Comment
             ).filter(
+            Comment.deleted_utc>0
             Comment.deleted_utc < cutoff_purge, 
             Comment.purged_utc==0,
             Comment.author_id != 1
@@ -78,6 +81,7 @@ def recompute():
             c.purged_utc=int(time.time())
             c.is_pinned = False
             db.add(c)
+            db.add(c.comment_aux)
 
             if not x % 100:
                 print(f"purged {x} comments")
