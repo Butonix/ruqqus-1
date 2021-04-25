@@ -24,7 +24,7 @@ def recompute():
         print(f"cycle {cycle}")
 
         #purge deleted content older than 90 days
-        
+
         now = int(time.time())
         cutoff_purge = now - (60 * 60 * 24 * 90)
         print_("beginning post purge")
@@ -32,7 +32,7 @@ def recompute():
         purge_posts = db.query(
             Submission
             ).filter(
-            Submission.deleted_utc < cutoff, 
+            Submission.deleted_utc < cutoff_purge, 
             Submission.purged_utc==0
             ).all()
 
@@ -63,7 +63,7 @@ def recompute():
         purge_comments = db.query(
             Comment
             ).filter(
-            Comment.deleted_utc < cutoff, 
+            Comment.deleted_utc < cutoff_purge, 
             Comment.purged_utc==0,
             Comment.author_id != 1
             ).all()
