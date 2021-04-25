@@ -358,6 +358,8 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             comments = comms.order_by(Comment.score_top.desc()).all()
         elif sort_type == "new":
             comments = comms.order_by(Comment.created_utc.desc()).all()
+        elif sort_type == "old":
+            comments = comms.order_by(Comment.created_utc.sc.all()
         elif sort_type == "disputed":
             comments = comms.order_by(Comment.score_disputed.desc()).all()
         elif sort_type == "random":
@@ -399,6 +401,8 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             comments = comms.order_by(Comment.score_top.desc()).all()
         elif sort_type == "new":
             comments = comms.order_by(Comment.created_utc.desc()).all()
+        elif sort_type == "old":
+            comments = comms.order_by(Comment.created_utc.asc()).all()
         elif sort_type == "disputed":
             comments = comms.order_by(Comment.score_disputed.desc()).all()
         elif sort_type == "random":

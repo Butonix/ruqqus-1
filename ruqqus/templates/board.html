@@ -286,6 +286,7 @@
           {% if sort_method=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
           {% if sort_method=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
           {% if sort_method=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+          {% if sort_method=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
           {% if sort_method=="disputed" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
           {% if sort_method=="activity" %}<i class="fas fa-comments mr-1"></i>{% endif %}
           {{ sort_method }}
@@ -294,6 +295,7 @@
           {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
           {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
           {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+          {% if not sort_method=="old" %}<a class="dropdown-item" href="?sort=old"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
           {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed"><i class="fas fa-bullhorn mr-2"></i>Disputed</a>{% endif %}
           {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity"><i class="fas fa-comments mr-2"></i>Activity</a>{% endif %}
         </div>

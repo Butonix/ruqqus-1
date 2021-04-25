@@ -450,8 +450,17 @@ def delete_account(v):
     for block in blocks:
         g.db.delete(block)
 
+    for b in v.boards_modded:
+        if b.mods_count == 0:
+            b.is_private = False
+            b.restricted_posting = False
+            b.all_opt_out = False
+            g.db.add(b)
+
     session.pop("user_id", None)
     session.pop("session_id", None)
+
+    g.db.commit()
 
     return redirect('/')
 

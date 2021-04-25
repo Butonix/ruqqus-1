@@ -141,7 +141,7 @@ class Board(Base, Stndrd, Age_times):
         if v and v.hide_offensive:
             posts = posts.filter_by(is_offensive=False)
 			
-        if v and v.hide_bot:
+        if v and v.hide_bot and not self.has_mod(v, "content"):
             posts = posts.filter_by(is_bot=False)
 
         if v and not v.show_nsfl:
@@ -199,6 +199,8 @@ class Board(Base, Stndrd, Age_times):
             posts = posts.order_by(Submission.score_best.desc())
         elif sort == "new":
             posts = posts.order_by(Submission.created_utc.desc())
+        elif sort == "old":
+            posts = posts.order_by(Submission.created_utc.asc())
         elif sort == "disputed":
             posts = posts.order_by(Submission.score_disputed.desc())
         elif sort == "top":
@@ -548,7 +550,7 @@ class Board(Base, Stndrd, Age_times):
         if v and v.hide_offensive:
             comments = comments.filter_by(is_offensive=False)
 			
-        if v and v.hide_bot:
+        if v and v.hide_bot and not self.has_mod(v, "content"):
             comments = comments.filter_by(is_bot=False)
 
         if v and not self.has_mod(v) and v.admin_level <= 3:

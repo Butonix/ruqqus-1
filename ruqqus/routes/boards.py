@@ -41,7 +41,7 @@ def create_board_get(v):
     recent = g.db.query(Board).filter(
         Board.creator_id == v.id,
         Board.created_utc >= cutoff).all()
-    if len([x for x in recent]) >= 2:
+    if v.admin_level<3 and len([x for x in recent]) >= 2:
         return render_template("message.html",
                                v=v,
                                title="You need to wait a bit.",
@@ -103,7 +103,7 @@ def create_board_post(v):
     recent = g.db.query(Board).filter(
         Board.creator_id.in_(user_ids),
         Board.created_utc >= cutoff).all()
-    if len([x for x in recent]) >= 2:
+    if v.admin_level<3 and len([x for x in recent]) >= 2:
         return render_template("message.html",
                                title="You need to wait a bit.",
                                message="You can only create up to 2 guilds per day. Try again later."
@@ -781,6 +781,15 @@ def mod_step_down(bid, board, v):
         board_id=board.id
         )
     g.db.add(ma) 
+
+    g.db.flush()
+
+    if board.mods_count == 0:
+        board.is_private = False
+        board.restricted_posting = False
+        board.all_opt_out = False
+        g.db.add(board)
+
     return "", 204
 
 

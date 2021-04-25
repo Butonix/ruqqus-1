@@ -308,6 +308,8 @@ class User(Base, Stndrd, Age_times):
             posts = posts.order_by(Submission.score_best.desc())
         elif sort == "new":
             posts = posts.order_by(Submission.created_utc.desc())
+        elif sort == "old":
+            posts = posts.order_by(Submission.created_utc.asc())
         elif sort == "disputed":
             posts = posts.order_by(Submission.score_disputed.desc())
         elif sort == "top":
@@ -364,6 +366,8 @@ class User(Base, Stndrd, Age_times):
             submissions = submissions.order_by(Submission.score_best.desc())
         elif sort == "new":
             submissions = submissions.order_by(Submission.created_utc.desc())
+        elif sort == "old":
+            submissions = submissions.order_by(Submission.created_utc.asc())
         elif sort == "disputed":
             submissions = submissions.order_by(Submission.score_disputed.desc())
         elif sort == "top":
@@ -427,6 +431,8 @@ class User(Base, Stndrd, Age_times):
             comments = comments.order_by(Comment.score_hot.desc())
         elif sort == "new":
             comments = comments.order_by(Comment.created_utc.desc())
+        elif sort == "old":
+            comments = comments.order_by(Comment.created_utc.asc())
         elif sort == "disputed":
             comments = comments.order_by(Comment.score_disputed.desc())
         elif sort == "top":
@@ -763,7 +769,7 @@ class User(Base, Stndrd, Age_times):
 
     @property
     def can_make_guild(self):
-        return (self.has_premium or self.true_score >= 250 or (self.created_utc <= 1592974538 and self.true_score >= 50)) and len([x for x in self.boards_modded if x.is_siegable]) < 10
+        return (self.has_premium or self.admin_level>=3 or self.true_score >= 250 or (self.created_utc <= 1592974538 and self.true_score >= 50)) and self.can_join_gms
 
     @property
     def can_join_gms(self):
@@ -882,6 +888,13 @@ class User(Base, Stndrd, Age_times):
 
     def ban(self, admin=None, reason=None,  days=0):
 
+        self.is_banned = admin.id if admin else 1
+        if reason:
+            self.ban_reason = reason
+
+        g.db.add(self)
+        g.db.flush()
+
         if days > 0:
             ban_time = int(time.time()) + (days * 86400)
             self.unban_utc = ban_time
@@ -897,15 +910,18 @@ class User(Base, Stndrd, Age_times):
             add_role(self, "banned")
             delete_role(self, "member")
 
-        self.is_banned = admin.id if admin else 1
-        if reason:
-            self.ban_reason = reason
+            #unprivate guilds if no mods remaining
+            for b in self.boards_modded:
+                if b.mods_count == 0:
+                    b.is_private = False
+                    b.restricted_posting = False
+                    #b.all_opt_out = False
+                    g.db.add(b)
 
         try:
             g.db.add(self)
         except:
             pass
-
 
     def unban(self):
 
