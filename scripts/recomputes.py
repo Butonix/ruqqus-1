@@ -19,7 +19,61 @@ def recompute():
     x = 0
 
     while True:
+        #purge deleted comments older than 90 days
 
+        print_("beginning post purge")
+
+        purge_posts = db.query(
+            Submission
+            ).filter(
+            Submission.deleted_utc < cutoff_purge, 
+            Submission.purged_utc==0
+            ).all()
+        for p in purge_posts:
+            x += 1
+            p.submission_aux.body = ""
+            p.submission_aux.body_html = ""
+            p.submission_aux.url = ""
+            p.submission_aux.embed_url = ""
+            p.meta_text=""
+            p.meta_description=""
+            p.creation_ip = ""
+            p.creation_region=""
+            p.purged_utc=int(time.time())
+            p.is_pinned = False
+            p.is_stickied = False
+            db.add(p)
+
+            if not x % 100:
+                db.commit()
+
+        db.commit()
+        print_(f"purged {x} posts")
+
+        x = 0
+        purge_comments = db.query(
+            Comment
+            ).filter(
+            Comment.deleted_utc < cutoff_purge, 
+            Comment.purged_utc==0,
+            Comment.author_id != 1
+            ).all()
+        for c in purge_comments:
+            c += 1
+            c.comment_aux.body = ""
+            c.comment_aux.body_html = ""
+            c.creation_ip = ""
+            c.creation_region=""
+            c.purged_utc=int(time.time())
+            c.is_pinned = False
+            db.add(c)
+
+            if not x % 100:
+                db.commit()
+
+        db.commit()
+        print_(f"purged {x} comments")
+        
         print_("beginning guild trend recompute")
         x += 1
         boards = db.query(Board).options(
@@ -100,61 +154,6 @@ def recompute():
         db.commit()
 
         x = 0
-
-        #purge deleted comments older than 90 days
-
-        print_("beginning post purge")
-
-        purge_posts = db.query(
-            Submission
-            ).filter(
-            Submission.deleted_utc < cutoff_purge, 
-            Submission.purged_utc==0
-            ).all()
-        for p in purge_posts:
-            x += 1
-            p.submission_aux.body = ""
-            p.submission_aux.body_html = ""
-            p.submission_aux.url = ""
-            p.submission_aux.embed_url = ""
-            p.meta_text=""
-            p.meta_description=""
-            p.creation_ip = ""
-            p.creation_region=""
-            p.purged_utc=int(time.time())
-            p.is_pinned = False
-            p.is_stickied = False
-            db.add(p)
-
-            if not x % 100:
-                db.commit()
-
-        db.commit()
-        print_(f"purged {x} posts")
-
-        x = 0
-        purge_comments = db.query(
-            Comment
-            ).filter(
-            Comment.deleted_utc < cutoff_purge, 
-            Comment.purged_utc==0,
-            Comment.author_id != 1
-            ).all()
-        for c in purge_comments:
-            c += 1
-            c.comment_aux.body = ""
-            c.comment_aux.body_html = ""
-            c.creation_ip = ""
-            c.creation_region=""
-            c.purged_utc=int(time.time())
-            c.is_pinned = False
-            db.add(c)
-
-            if not x % 100:
-                db.commit()
-
-        db.commit()
-        print_(f"purged {x} comments")
 
 
 
