@@ -54,10 +54,11 @@ def recompute():
             db.add(p)
 
             if not x % 100:
+                print(f"purged {x} posts")
                 db.commit()
 
         db.commit()
-        print_(f"purged {x} posts")
+        print_(f"Done with post purge. Purged {x} posts")
 
         x = 0
         purge_comments = db.query(
@@ -79,10 +80,11 @@ def recompute():
             db.add(c)
 
             if not x % 100:
+                print(f"purged {x} comments")
                 db.commit()
 
         db.commit()
-        print_(f"purged {x} comments")
+        print_(f"Done with comment purge. Purged {x} comments")
 
         print_("beginning guild trend recompute")
         boards = db.query(Board).options(
