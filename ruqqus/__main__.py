@@ -261,6 +261,13 @@ UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
 local_ban_cache={}
 
 
+
+
+# import and bind all routing functions
+import ruqqus.classes
+from ruqqus.routes import *
+import ruqqus.helpers.jinja2
+
 #@cache.memoize(IP_BAN_CACHE_TTL)
 def is_ip_banned(remote_addr):
     """
@@ -269,13 +276,7 @@ def is_ip_banned(remote_addr):
     if request.path.startswith("/socket.io/"):
         return False
 
-    return bool(r.get(f"ban_ip_{remote_addr}"))
-
-# import and bind all routing functions
-import ruqqus.classes
-from ruqqus.routes import *
-import ruqqus.helpers.jinja2
-
+    return bool(r.get(f"ban_ip_{remote_addr}")) or bool(g.db.query(IP).filter_by(addr=remote_addr).first())
 
 @cache.memoize(UA_BAN_CACHE_TTL)
 def get_useragent_ban_response(user_agent_str):
@@ -283,8 +284,8 @@ def get_useragent_ban_response(user_agent_str):
     Given a user agent string, returns a tuple in the form of:
     (is_user_agent_banned, (insult, status_code))
     """
-    if request.path.startswith("/socket.io/"):
-        return False, (None, None)
+    #if request.path.startswith("/socket.io/"):
+    #    return False, (None, None)
 
     result = g.db.query(
         ruqqus.classes.Agent).filter(
@@ -294,6 +295,14 @@ def get_useragent_ban_response(user_agent_str):
         return True, (result.mock or "Follow the robots.txt, dumbass",
                       result.status_code or 418)
     return False, (None, None)
+
+def drop_connection():
+
+    try:
+        g.db.close()
+    except:
+        pass
+    gevent.getcurrent().kill()
 
 
 # enforce https
@@ -308,11 +317,7 @@ def before_request():
         except:
             pass
 
-        #offensively hold request open for 60s while ignoring user and doing other,
-        #more useful things
-        #gevent.sleep(60)
-        return "", 429
-        #gevent.getcurrent().kill()
+        drop_connection()
 
     g.db = db_session()
 
