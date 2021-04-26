@@ -781,7 +781,7 @@ def admin_ip_addr(ipaddr, v):
         listing=get_posts(pids) if pids else [],
         comments=get_comments(cids) if cids else [],
         standalone=True,
-        ip=ipaddr
+        ip=ipaddr,
         ip_record=ip_record
         )
 
