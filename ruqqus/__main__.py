@@ -256,6 +256,8 @@ def app_setup():
 
 local_ban_cache={}
 
+IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
+UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
 
 
 
@@ -311,7 +313,7 @@ def before_request():
         return jsonify({"error":"Too many requests. You are in time out for 1 hour. Rate limit is 100/min; less for authentication and content creation endpoints."}), 429
 
     g.db = db_session()
-    
+
     if g.db.query(IP).filter_by(addr=remote_addr).first():
         return jsonify({"error":"Your connection has been identified as an abusive proxy."}), 403
 
