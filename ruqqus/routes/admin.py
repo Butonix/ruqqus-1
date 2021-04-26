@@ -951,7 +951,7 @@ def admin_ipban(v):
 @app.route("/admin/user_ipban", methods=["POST"])
 @admin_level_required(7)
 @validate_formkey
-def admin_ipban(v):
+def admin_user_ipban(v):
 
     #bans all non-Tor IPs associated with a given account
     #only use for obvious proxys
