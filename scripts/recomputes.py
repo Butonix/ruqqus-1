@@ -191,7 +191,7 @@ def recompute():
 
 
 
-#with daemon.DaemonContext():
-#    recompute()
+with daemon.DaemonContext():
+    recompute()
 
-recompute()
+#recompute()
