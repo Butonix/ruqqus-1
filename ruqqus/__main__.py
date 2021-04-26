@@ -311,6 +311,8 @@ def before_request():
 
     g.timestamp = int(time.time())
 
+    g.db = db_session()
+    
     if is_ip_banned(request.remote_addr):
         try:
             print("banned ip", request.remote_addr, session.get("user_id"), session.get("history"))
@@ -319,7 +321,6 @@ def before_request():
 
         drop_connection()
 
-    g.db = db_session()
 
     session.permanent = True
 
