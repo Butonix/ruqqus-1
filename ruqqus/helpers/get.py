@@ -3,6 +3,7 @@ from .sqla_values import *
 from ruqqus.classes import *
 from flask import g
 from sqlalchemy.orm import joinedload, aliased
+from urllib.parse import urlparse
 
 import re
 
@@ -750,6 +751,8 @@ def get_application(client_id, graceful=False):
 
 
 def get_from_permalink(link, v=None):
+
+    link=urlparse(link).path
 
     if "@" in link:
 
