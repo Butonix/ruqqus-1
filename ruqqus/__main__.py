@@ -254,10 +254,6 @@ def app_setup():
     # app.config["databases"]=scoped_session(sessionmaker(class_=RoutingSession))
     pass
 
-
-IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
-UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
-
 local_ban_cache={}
 
 
@@ -273,8 +269,8 @@ def is_ip_banned(remote_addr):
     """
     Given a remote address, returns whether or not user is banned
     """
-    if request.path.startswith("/socket.io/"):
-        return False
+    #if request.path.startswith("/socket.io/"):
+    #    return False
 
     return bool(r.get(f"ban_ip_{remote_addr}")) or bool(g.db.query(IP).filter_by(addr=remote_addr).first())
 
@@ -309,18 +305,17 @@ def drop_connection():
 @app.before_request
 def before_request():
 
-    g.timestamp = int(time.time())
+
+
+    if bool(r.get(f"ban_ip_{remote_addr}")):
+        return jsonify({"error":"Too many requests. You are in time out for 1 hour. Rate limit is 100/min; less for authentication and content creation endpoints."}), 429
 
     g.db = db_session()
     
-    if is_ip_banned(request.remote_addr):
-        try:
-            print("banned ip", request.remote_addr, session.get("user_id"), session.get("history"))
-        except:
-            pass
+    if g.db.query(IP).filter_by(addr=remote_addr).first():
+        return jsonify({"error":"Your connection has been identified as an abusive proxy."}), 403
 
-        drop_connection()
-
+    g.timestamp = int(time.time())
 
     session.permanent = True
 
