@@ -772,6 +772,8 @@ def admin_ip_addr(ipaddr, v):
 
     cids=[x.id for x in g.db.query(Comment).filter(Comment.creation_ip==ipaddr, Comment.parent_submission!=None).order_by(Comment.created_utc.desc()).all()]
 
+    ip_record=g.db.query(IP).filter_by(addr=ipaddr).first()
+
     return render_template(
         "admin/ip.html",
         v=v,
@@ -780,6 +782,7 @@ def admin_ip_addr(ipaddr, v):
         comments=get_comments(cids) if cids else [],
         standalone=True,
         ip=ipaddr
+        ip_record=ip_record
         )
 
 @app.route("/admin/test", methods=["GET"])
@@ -923,3 +926,60 @@ def admin_image_ban(v):
     g.db.commit()
 
     return render_template("admin/image_ban.html", v=v, success=True)
+
+@app.route("/admin/ipban", methods=["POST"])
+@admin_level_required(7)
+@validate_formkey
+def admin_ipban(v):
+
+    #bans all non-Tor IPs associated with a given account
+    #only use for obvious proxys
+
+    target_ip=request.values.get("ip")
+
+    new_ipban=IP(
+        banned_by=v.id,
+        addr=target_ip
+        )
+    g.db.add(new_ipban)
+
+    g.db.commit()
+
+    return redirect(f"/admin/ip/{target_ip}")
+
+
+@app.route("/admin/user_ipban", methods=["POST"])
+@admin_level_required(7)
+@validate_formkey
+def admin_ipban(v):
+
+    #bans all non-Tor IPs associated with a given account
+    #only use for obvious proxys
+
+    target_user=get_user(request.values.get("username"))
+
+    targets=[target_user]+[alt for alt in target_user.alts]
+
+    ips=set()
+    for user in targets:
+        if user.creation_region != "T1":
+            ips.add(user.creation_ip)
+
+        for post in g.db.query(Submission).options(lazyload('*')).filter_by(author_id=user.id).all():
+            if post.creation_region != "T1"
+                ips.add(post.creation_ip)
+
+        for comment in g.db.query(Comment).options(lazyload('*')).filter_by(author_id=user.id).all():
+            if comment.creation_region != "T1":
+                ips.add()
+
+    
+    for ip in ips:
+
+        new_ipban=IP(
+            banned_by=v.id,
+            addr=ip
+            )
+        g.db.add(new_ipban)
+
+    g.db.commit()
