@@ -986,7 +986,6 @@ def admin_user_ipban(v):
 
 @app.route("/admin/get_ip", methods=["GET"])
 @admin_level_required(4)
-@validate_formkey
 def admin_get_ip_info(v):
 
     link=request.args.get("link","")
