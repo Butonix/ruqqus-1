@@ -966,7 +966,7 @@ def admin_ipban(v):
             ips.add(user.creation_ip)
 
         for post in g.db.query(Submission).options(lazyload('*')).filter_by(author_id=user.id).all():
-            if post.creation_region != "T1"
+            if post.creation_region != "T1":
                 ips.add(post.creation_ip)
 
         for comment in g.db.query(Comment).options(lazyload('*')).filter_by(author_id=user.id).all():
