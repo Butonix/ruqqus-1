@@ -256,7 +256,7 @@ def app_setup():
 
 local_ban_cache={}
 
-IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
+#IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
 UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
 
 
@@ -266,15 +266,6 @@ import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
 
-#@cache.memoize(IP_BAN_CACHE_TTL)
-def is_ip_banned(remote_addr):
-    """
-    Given a remote address, returns whether or not user is banned
-    """
-    #if request.path.startswith("/socket.io/"):
-    #    return False
-
-    return bool(r.get(f"ban_ip_{remote_addr}")) or bool(g.db.query(IP).filter_by(addr=remote_addr).first())
 
 @cache.memoize(UA_BAN_CACHE_TTL)
 def get_useragent_ban_response(user_agent_str):
@@ -309,12 +300,12 @@ def before_request():
 
 
 
-    if bool(r.get(f"ban_ip_{remote_addr}")):
+    if bool(r.get(f"ban_ip_{request.remote_addr}")):
         return jsonify({"error":"Too many requests. You are in time out for 1 hour. Rate limit is 100/min; less for authentication and content creation endpoints."}), 429
 
     g.db = db_session()
 
-    if g.db.query(IP).filter_by(addr=remote_addr).first():
+    if g.db.query(IP).filter_by(addr=request.remote_addr).first():
         return jsonify({"error":"Your connection has been identified as an abusive proxy."}), 403
 
     g.timestamp = int(time.time())
