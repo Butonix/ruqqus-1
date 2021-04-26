@@ -758,15 +758,15 @@ def get_from_permalink(link, v=None):
 
         name = re.search("/@(\w+)", link)
         if name:
-            name=name.match(1)
-            return get_user(name)
+            name=name.group(1)
+            return get_user(name, v=v)
 
     if "+" in link:
 
         x = re.search("/\+(\w+)$", link)
         if x:
-            name=x.match(1)
-            return get_guild(name)
+            name=x.group(1)
+            return get_guild(name, v=v)
 
     ids = re.search("://[^/]+/\+\w+/post/(\w+)/[^/]+(/(\w+))?", link)
 
