@@ -989,7 +989,7 @@ def admin_user_ipban(v):
 @validate_formkey
 def admin_get_ip_info(v):
 
-    link=request.args.get("link")
+    link=request.args.get("link","")
 
     if not link:
         return render_template(
