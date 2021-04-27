@@ -287,10 +287,7 @@ def get_useragent_ban_response(user_agent_str):
 
 def drop_connection():
 
-    try:
-        g.db.close()
-    except:
-        pass
+    g.db.close()
     gevent.getcurrent().kill()
 
 
@@ -306,7 +303,7 @@ def before_request():
     g.db = db_session()
 
     if g.db.query(IP).filter_by(addr=request.remote_addr).first():
-        return jsonify({"error":"Your connection has been identified as an abusive proxy."}), 403
+        drop_connection()
 
     g.timestamp = int(time.time())
 
