@@ -109,7 +109,7 @@
 
                             <label class="btn btn-secondary m-0" for="file-upload">
                                 <div id="filename-show">Select Image</div>
-                                <input id="file-upload" type="file" name="file" accept="image/*" onchange="document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerText=document.getElementById('file-upload').files[0].name;checkForRequired()" hidden>
+                                <input id="file-upload" type="file" name="file" accept="image/*" hidden>
                             </label>
 
                             <small class="form-text text-muted">Images uploaded will be public. Optional if you have text.</small>
@@ -275,17 +275,34 @@
     document.onpaste = function(event) {
         f=document.getElementById('file-upload');
         f.files = event.clipboardData.files;
-        label=document.getElementById('filename-show');
-        label.innerText=f.files[0].name;
-        document.getElementById('urlblock').classList.add('d-none');
+        $('#filename-show').text(f.files[0].name);
+        $('#urlblock').addClass('d-none');
 
         var fileReader = new FileReader();
         fileReader.readAsDataURL(f.files[0]);
         fileReader.addEventListener("load", function () {
-            document.getElementById('image-preview').src=this.result
+            $('#image-preview').attr('src', this.result);
     });  
 
+        checkForRequired();
+
     }
+
+    $('#file-upload').on('change', function(e){
+        f=document.getElementById('file-upload');
+        $('#urlblock').addClass('d-none');
+        $('#filename-show').text($('#file-upload').files[0].name);
+
+        var fileReader = new FileReader();
+        fileReader.readAsDataURL(f.files[0]);
+        fileReader.addEventListener("load", function () {
+            $('#image-preview').attr('src', this.result);
+    });  
+
+        checkForRequired();
+    })
+
+    document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerText=document.getElementById('file-upload').files[0].name;checkForRequired()
     </script>
 
 </body>
