@@ -75,13 +75,13 @@ def socket_connect_auth_user():
         #print_("no auth")
         send("Authentication required")
         g.db.close()
-        return False
+        return #False
 
     if v.is_suspended:
         #print_("suspended")
         send("You're banned and can't access chat right now.")
         g.db.close()
-        return False
+        return #False
 
     #print_(v)
     if v.id in SIDS:
