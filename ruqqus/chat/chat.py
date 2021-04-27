@@ -186,7 +186,7 @@ def error_handler(e):
     except:
         pass
 
-@socketio.on_error_default()
+@socketio.on_error_default
 def error_handler_default(e):
     try:
         print(e)
