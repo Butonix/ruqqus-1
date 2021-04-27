@@ -279,6 +279,12 @@
         label.innerText=f.files[0].name;
         document.getElementById('urlblock').classList.add('d-none');
 
+        var fileReader = new FileReader();
+        fileReader.readAsDataURL(f.files);
+        fileReader.addEventListener("load", function () {
+            document.getElementById('image-preview').src=this.result
+    });  
+
     }
     </script>
 
