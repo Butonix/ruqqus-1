@@ -105,9 +105,11 @@
                         <div id="image-upload-block">
                             <div><label class="mt-3">Image Upload</label></div>
 
+                            <img id="image-preview">
+
                             <label class="btn btn-secondary m-0" for="file-upload">
                                 <div id="filename-show">Select Image</div>
-                                <input id="file-upload" type="file" name="file" accept="image/*" onchange="document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerHTML=document.getElementById('file-upload').files[0].name;checkForRequired()" hidden>
+                                <input id="file-upload" type="file" name="file" accept="image/*" onchange="document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerText=document.getElementById('file-upload').files[0].name;checkForRequired()" hidden>
                             </label>
 
                             <small class="form-text text-muted">Images uploaded will be public. Optional if you have text.</small>
@@ -267,6 +269,17 @@
             })
             console.log(e);
         });
+    </script>
+
+    <script>
+    document.onpaste = function(event) {
+        f=document.getElementById('file-upload');
+        f.files = event.clipboardData.files;
+        label=document.getElementById('filename-show');
+        label.innerText=f.files[0].name;
+        document.getElementById('urlblock').classList.add('d-none');
+
+    }
     </script>
 
 </body>
