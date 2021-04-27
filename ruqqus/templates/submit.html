@@ -280,7 +280,7 @@
         document.getElementById('urlblock').classList.add('d-none');
 
         var fileReader = new FileReader();
-        fileReader.readAsDataURL(f.files);
+        fileReader.readAsDataURL(f.files[0]);
         fileReader.addEventListener("load", function () {
             document.getElementById('image-preview').src=this.result
     });  
