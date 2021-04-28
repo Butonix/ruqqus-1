@@ -631,16 +631,17 @@ def admin_nuke_user(v):
 
     user=get_user(request.form.get("user"))
 
+    note='admin_action'
+    if user.ban_reason:
+        note+=f" | {user.ban_reason}"
+
+
     for post in g.db.query(Submission).filter_by(author_id=user.id).all():
         if post.is_banned:
             continue
             
         post.is_banned=True
         g.db.add(post)
-
-        note = 'admin action'
-        if user.ban_reason:
-            note+=f" | {user.ban_reason}"
 
         ma=ModAction(
             kind="ban_post",
@@ -663,7 +664,7 @@ def admin_nuke_user(v):
             user_id=v.id,
             target_comment_id=comment.id,
             board_id=comment.post.board_id,
-            note="admin action"
+            note=note
             )
         g.db.add(ma)
 
