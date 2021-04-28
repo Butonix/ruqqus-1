@@ -258,6 +258,9 @@
 {% endif %}
 <p>Premium: {{ u.has_premium_no_renew }}</p>
 <p>user id: {{ u.base36id }}</p>
+{% if u.ban_evade %}
+<p>Ban Evasion Counter: {{ u.ban_evade }}</p>
+{% endif %}
 {% if v.admin_level >=3 and v.admin_level > u.admin_level %}
 {% if u.is_suspended %}
 <p>IP: <a href="/admin/ip/{{ u.creation_ip }}" target="_blank">{{ u.creation_ip }}</a></p>
