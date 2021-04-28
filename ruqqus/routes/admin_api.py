@@ -638,12 +638,16 @@ def admin_nuke_user(v):
         post.is_banned=True
         g.db.add(post)
 
+        note = 'admin action'
+        if user.ban_reason:
+            note+=f" | {user.ban_reason}"
+
         ma=ModAction(
             kind="ban_post",
             user_id=v.id,
             target_submission_id=post.id,
             board_id=post.board_id,
-            note="admin action"
+            note=note
             )
         g.db.add(ma)
 
