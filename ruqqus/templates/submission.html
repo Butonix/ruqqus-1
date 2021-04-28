@@ -106,7 +106,7 @@
 <meta property="og:title" content="{{ '@'+comment_info.author.username if not comment_info.author.is_deleted else '[deleted account]'}} comments on {{ p.title }} - {{ 'SITE_NAME' | app_config }}" />
 <meta property="og:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}{% endif %}" />
 <meta property="og:url" content="{{ comment_info.permalink | full_link }}" />
-<meta property="og:site_name" content="ruqqus.com/+{{ p.board.name }}" />
+<meta property="og:site_name" content="{{ p.board.permalink | full_link }}" />
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@ruqqus">
@@ -133,7 +133,7 @@
 <meta property="og:title" content="{{ p.title }} - {{ 'SITE_NAME' | app_config }}" />
 <meta property="og:image" content="{% if p.is_image %}{{ p.url }}{% elif p.has_thumb%}{{ p.thumb_url }}{% else %}{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}{% endif %}" />
 <meta property="og:url" content="{{ p.permalink | full_link}}" />
-<meta property="og:site_name" content="{{ ('+'+p.board.name) | full_link }}" />
+<meta property="og:site_name" content="{{ p.board.name.permalink | full_link }}" />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:site" content="@{{ 'SITE_NAME' | app_config }} | lower">
