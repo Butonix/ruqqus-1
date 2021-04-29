@@ -510,7 +510,7 @@ class User(Base, Stndrd, Age_times):
         return g.db.query(User).filter_by(id=self.is_banned).first()
 
     def has_badge(self, badgedef_id):
-        return self.badges.filter_by(badge_id=badgedef_id).first()
+        return self._badges.filter_by(badge_id=badgedef_id).first()
 
     def vote_status_on_post(self, post):
 
