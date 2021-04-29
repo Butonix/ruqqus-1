@@ -55,7 +55,7 @@ class User(Base, Stndrd, Age_times):
     commentvotes = relationship("CommentVote", lazy="dynamic", backref="users")
     bio = Column(String, default="")
     bio_html = Column(String, default="")
-    badges = relationship("Badge", lazy="dynamic", backref="user")
+    _badges = relationship("Badge", lazy="dynamic", backref="user")
     real_id = Column(String, default=None)
     notifications = relationship(
         "Notification",
@@ -1147,3 +1147,10 @@ class User(Base, Stndrd, Age_times):
     def can_change_name(self):
         return self.name_changed_utc < int(time.time())-60*60*24*7 and self.coin_balance>=20
    
+	@property
+    @cache.memoize(60*60*24)
+    def badges(self):
+        self.refresh_selfset_badges()
+        g.db.commit()
+        return self._badges
+        
