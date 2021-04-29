@@ -83,6 +83,62 @@ def get_logged_in_user(db=None):
 
     return x
 
+def check_ban_evade(v):
+
+    if not v or not v.ban_evade:
+        return
+    
+    if random.randint(0,30) < v.ban_evade:
+        v.ban(reason="Evading a site-wide ban")
+        send_notification(v, "Your Ruqqus account has been permanently suspended for the following reason:\n\n> ban evasion")
+
+        for post in g.db.query(Submission).filter_by(author_id=v.id).all():
+            if post.is_banned:
+                continue
+
+            post.is_banned=True
+            post.ban_reason="Ban evasion. This submission's owner was banned from Ruqqus on another account."
+            g.db.add(post)
+
+            ma=ModAction(
+                kind="ban_post",
+                user_id=1,
+                target_submission_id=post.id,
+                board_id=post.board_id,
+                note="ban evasion"
+                )
+            g.db.add(ma)
+
+        g.db.commit()
+
+        for comment in g.db.query(Comment).filter_by(author_id=v.id).all():
+            if comment.is_banned:
+                continue
+
+            comment.is_banned=True
+            comment.ban_reason="Ban evasion. This comment's owner was banned from Ruqqus on another account."
+            g.db.add(comment)
+
+            ma=ModAction(
+                kind="ban_comment",
+                user_id=1,
+                target_comment_id=comment.id,
+                board_id=comment.post.board_id,
+                note="ban evasion"
+                )
+            g.db.add(ma)
+
+        g.db.commit()
+        abort(403)
+
+    else:
+        v.ban_evade +=1
+        g.db.add(v)
+        g.db.commit()
+
+
+
+
 # Wrappers
 def auth_desired(f):
     # decorator for any view that changes if user is logged in (most pages)
@@ -93,6 +149,8 @@ def auth_desired(f):
 
         if c:
             kwargs["c"] = c
+            
+        check_ban_evade(v)
 
         resp = make_response(f(*args, v=v, **kwargs))
         if v:
@@ -119,56 +177,8 @@ def auth_required(f):
 
         if not v:
             abort(401)
-        elif v and v.ban_evade and not v.is_suspended:
-            if random.randint(0,30) < v.ban_evade:
-                v.ban(reason="Evading a site-wide ban")
-                send_notification(v, "Your Ruqqus account has been permanently suspended for the following reason:\n\n> ban evasion")
-
-                for post in g.db.query(Submission).filter_by(author_id=v.id).all():
-                    if post.is_banned:
-                        continue
-                        
-                    post.is_banned=True
-                    post.ban_reason="Ban evasion. This submission's owner was banned from Ruqqus on another account."
-                    g.db.add(post)
-
-                    ma=ModAction(
-                        kind="ban_post",
-                        user_id=1,
-                        target_submission_id=post.id,
-                        board_id=post.board_id,
-                        note="ban evasion"
-                        )
-                    g.db.add(ma)
-
-                g.db.commit()
-
-                for comment in g.db.query(Comment).filter_by(author_id=v.id).all():
-                    if comment.is_banned:
-                        continue
-
-                    comment.is_banned=True
-                    comment.ban_reason="Ban evasion. This comment's owner was banned from Ruqqus on another account."
-                    g.db.add(comment)
-
-                    ma=ModAction(
-                        kind="ban_comment",
-                        user_id=1,
-                        target_comment_id=comment.id,
-                        board_id=comment.post.board_id,
-                        note="ban evasion"
-                        )
-                    g.db.add(ma)
-
-                g.db.commit()
-                abort(403)
-
-            else:
-                v.ban_evade +=1
-                g.db.add(v)
-                g.db.commit()
-
-
+            
+        check_ban_evade(v)
 
         if c:
             kwargs["c"] = c
@@ -199,6 +209,8 @@ def is_not_banned(f):
 
         if not v:
             abort(401)
+            
+        check_ban_evade(v)
 
         if v.is_suspended:
             abort(403)
