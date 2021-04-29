@@ -368,6 +368,9 @@ def after_request(response):
 
     try:
         g.db.commit()
+        g.db.close()
+    except AttributeError:
+        pass
     except BaseException:
         g.db.rollback()
         g.db.close()
@@ -395,8 +398,6 @@ def after_request(response):
     #         target=lambda: log_event(
     #             name="Account Signup", link=link))
     #     thread.start()
-
-    g.db.close()
 
     # req_stop = time.time()
 
