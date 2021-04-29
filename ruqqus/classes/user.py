@@ -1152,5 +1152,5 @@ class User(Base, Stndrd, Age_times):
     def badges(self):
         self.refresh_selfset_badges()
         g.db.commit()
-        return self._badges
+        return self._badges.all()
         
