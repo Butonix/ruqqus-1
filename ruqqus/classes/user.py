@@ -1146,8 +1146,8 @@ class User(Base, Stndrd, Age_times):
     @property
     def can_change_name(self):
         return self.name_changed_utc < int(time.time())-60*60*24*7 and self.coin_balance>=20
-   
-	@property
+
+    @property
     @cache.memoize(60*60*24)
     def badges(self):
         self.refresh_selfset_badges()
