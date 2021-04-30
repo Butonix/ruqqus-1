@@ -19,7 +19,6 @@ from ruqqus.helpers.markdown import CustomRenderer, preprocess
 from ruqqus.helpers.aws import *
 from ruqqus.__main__ import app, socketio, db_session
 
-REDIS_URL = app.config["CACHE_REDIS_URL"]
 BUCKET=app.config["S3_BUCKET"]
 
 
@@ -76,13 +75,13 @@ def socket_connect_auth_user():
         #print_("no auth")
         send("Authentication required")
         g.db.close()
-        return False
+        return #False
 
     if v.is_suspended:
         #print_("suspended")
         send("You're banned and can't access chat right now.")
         g.db.close()
-        return False
+        return #False
 
     #print_(v)
     if v.id in SIDS:
@@ -187,6 +186,17 @@ def error_handler(e):
     except:
         pass
 
+@socketio.on_error_default
+def error_handler_default(e):
+    try:
+        print(e)
+    except:
+        pass
+    try:
+        g.db.rollback()
+        g.db.close()
+    except:
+        pass
 
 
 

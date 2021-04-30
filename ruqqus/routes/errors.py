@@ -168,6 +168,18 @@ def error_500(e, v):
            "api": lambda: (jsonify({"error": "500 Internal Server Error"}), 500)
            }
 
+@app.errorhandler(503)
+@error_wrapper
+@api()
+def error_503(e):
+    try:
+        g.db.rollback()
+    except AttributeError:
+        pass
+
+    return{"html": lambda: (render_template('errors/503.html', v=v), 503),
+           "api": lambda: (jsonify({"error": "503 Service Unavailable"}), 503)
+           }
 
 @app.route("/allow_nsfw_logged_in/<bid>", methods=["POST"])
 @auth_required

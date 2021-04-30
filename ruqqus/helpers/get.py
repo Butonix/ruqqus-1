@@ -3,6 +3,7 @@ from .sqla_values import *
 from ruqqus.classes import *
 from flask import g
 from sqlalchemy.orm import joinedload, aliased
+from urllib.parse import urlparse
 
 import re
 
@@ -751,21 +752,23 @@ def get_application(client_id, graceful=False):
 
 def get_from_permalink(link, v=None):
 
+    link=urlparse(link).path
+
     if "@" in link:
 
         name = re.search("/@(\w+)", link)
         if name:
-            name=name.match(1)
-            return get_user(name)
+            name=name.group(1)
+            return get_user(name, v=v)
 
     if "+" in link:
 
         x = re.search("/\+(\w+)$", link)
         if x:
-            name=x.match(1)
-            return get_guild(name)
+            name=x.group(1)
+            return get_guild(name, v=v)
 
-    ids = re.search("://[^/]+/\+\w+/post/(\w+)/[^/]+(/(\w+))?", link)
+    ids = re.search("/\+\w+/post/(\w+)/[^/]+(/(\w+))?", link)
 
     post_id = ids.group(1)
     comment_id = ids.group(3)

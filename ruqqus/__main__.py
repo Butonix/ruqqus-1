@@ -36,7 +36,7 @@ from redis import BlockingConnectionPool, ConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.35.78"
+_version = "2.35.79"
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -110,7 +110,7 @@ app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
 
 app.config["S3_BUCKET"]=environ.get("S3_BUCKET_NAME","i.ruqqus.com").lstrip().rstrip()
 
-app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 100))
+app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 10))
 
 redispool=ConnectionPool(
     max_connections=app.config["REDIS_POOL_SIZE"],
@@ -254,22 +254,12 @@ def app_setup():
     # app.config["databases"]=scoped_session(sessionmaker(class_=RoutingSession))
     pass
 
-
-IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
-UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
-
 local_ban_cache={}
 
+#IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
+UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
 
-#@cache.memoize(IP_BAN_CACHE_TTL)
-def is_ip_banned(remote_addr):
-    """
-    Given a remote address, returns whether or not user is banned
-    """
-    if request.path.startswith("/socket.io/"):
-        return False
 
-    return bool(r.get(f"ban_ip_{remote_addr}"))
 
 # import and bind all routing functions
 import ruqqus.classes
@@ -283,8 +273,8 @@ def get_useragent_ban_response(user_agent_str):
     Given a user agent string, returns a tuple in the form of:
     (is_user_agent_banned, (insult, status_code))
     """
-    if request.path.startswith("/socket.io/"):
-        return False, (None, None)
+    #if request.path.startswith("/socket.io/"):
+    #    return False, (None, None)
 
     result = g.db.query(
         ruqqus.classes.Agent).filter(
@@ -295,26 +285,27 @@ def get_useragent_ban_response(user_agent_str):
                       result.status_code or 418)
     return False, (None, None)
 
+def drop_connection():
+
+    g.db.close()
+    gevent.getcurrent().kill()
+
 
 # enforce https
 @app.before_request
 def before_request():
 
-    g.timestamp = int(time.time())
 
-    if is_ip_banned(request.remote_addr):
-        try:
-            print("banned ip", request.remote_addr, session.get("user_id"), session.get("history"))
-        except:
-            pass
 
-        #offensively hold request open for 60s while ignoring user and doing other,
-        #more useful things
-        #gevent.sleep(60)
-        return "", 429
-        #gevent.getcurrent().kill()
+    if bool(r.get(f"ban_ip_{request.remote_addr}")):
+        return jsonify({"error":"Too many requests. You are in time out for 1 hour. Rate limit is 100/min; less for authentication and content creation endpoints."}), 429
 
     g.db = db_session()
+
+    if g.db.query(IP).filter_by(addr=request.remote_addr).first():
+        abort(503)
+
+    g.timestamp = int(time.time())
 
     session.permanent = True
 
@@ -377,6 +368,9 @@ def after_request(response):
 
     try:
         g.db.commit()
+        g.db.close()
+    except AttributeError:
+        pass
     except BaseException:
         g.db.rollback()
         g.db.close()
@@ -404,8 +398,6 @@ def after_request(response):
     #         target=lambda: log_event(
     #             name="Account Signup", link=link))
     #     thread.start()
-
-    g.db.close()
 
     # req_stop = time.time()
 

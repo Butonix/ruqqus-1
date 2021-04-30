@@ -460,6 +460,32 @@ def delete_account(v):
     session.pop("user_id", None)
     session.pop("session_id", None)
 
+    #deal with throwaway spam - auto nuke content if account age below threshold
+    if int(time.time()) - v.created_utc < 60*60*12:
+        for post in v.submissions:
+            post.is_banned=True
+
+            new_ma=ModAction(
+                user_id=1,
+                kind="ban_post",
+                target_submission_id=post.id,
+                note="spam"
+                )
+
+            g.db.add(post)
+            g.db.add(new_ma)
+
+        for comment in v.comments:
+            comment.is_banned=True
+            new_ma=ModAction(
+                user_id=1,
+                kind="ban_comment",
+                target_comment_id=comment.id,
+                note="spam"
+                )
+            g.db.add(comment)
+            g.db.add(new_ma)
+
     g.db.commit()
 
     return redirect('/')

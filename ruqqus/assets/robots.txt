@@ -4,6 +4,7 @@ Disallow: /mod/*
 Disallow: /submit
 Disallow: /settings
 Disallow: /me
+Disallow: /discord
 
 User-Agent: DotBot
 User-Agent: TurnitinBot
@@ -15,5 +16,6 @@ User-Agent: MJ12bot
 User-Agent: SEMrushBot
 User-Agent: AhrefsBot
 User-Agent: CCBot
-User-agent: SBSearch
+User-Agent: SBSearch
+User-Agent: ZoominfoBot
 Disallow: /

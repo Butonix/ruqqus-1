@@ -323,7 +323,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         data["guild"]=self.post.board.json_core
 
         if self.level >= 2:
-            data["parent"]=self.parent.json_core
+            data["parent"]=self.parent.json_core if self.parent else []
 
 
         return data
