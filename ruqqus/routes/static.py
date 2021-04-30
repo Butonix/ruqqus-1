@@ -214,7 +214,7 @@ def dismiss_mobile_tip():
 
 @app.route("/assets/style/<file>.css", methods=["GET"])
 #@cache.memoize(60*6*24)
-def board_css(file):
+def main_css(file):
 
 	color = app.config["SITE_COLOR"]
 
