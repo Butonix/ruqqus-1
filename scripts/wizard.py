@@ -5,6 +5,7 @@ from os import environ
 import sys
 import venv
 import secrets
+import sqlalchemy
 
 print("")
 print("")
@@ -132,7 +133,7 @@ if first:
 print("What is the domain that your site will run under?")
 envs["SERVER_NAME"]=input().lower() or environ.get("SERVER_NAME") or "localhost:5000"
 
-print("Postgres database url (postgres://username:password@host:port)")
+print("Postgres database url (postgres://username:password@host:port/dbname)")
 envs["DATABASE_URL"]=input() or environ.get("DATABASE_URL")
 
 print("")
