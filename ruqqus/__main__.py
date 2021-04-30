@@ -233,7 +233,7 @@ r=redis.Redis(
     decode_responses=True, 
     ssl_cert_reqs=None,
     connection_pool=redispool
-    )
+    ) if app.config["CACHE_REDIS_URL"] else None
 
 
 #import and bind chat function
