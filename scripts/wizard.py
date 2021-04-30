@@ -298,17 +298,16 @@ if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
     input("Press enter to set up database.")
 
     engine = sqlalchemy.create_engine(envs["DATABASE_URL"])
-    with open(f"{path}/ruqqus/schema.sql", "r+") as file:
-        escaped_sql = sqlalchemy.text(file.read())
-        engine.execute(escaped_sql)
+    with engine.begin() as conn:
+        with open(f"{path}/ruqqus/schema.sql", "r+") as file:
+            escaped_sql = sqlalchemy.text(file.read())
+            conn.execute(escaped_sql)
 
-    engine.execute("commit;")
+    with engine.begin() as conn:
+        with open(f"{path}/ruqqus/seed-db.sql", "r+") as file:
+            escaped_sql = sqlalchemy.text(file.read())
+            conn.execute(escaped_sql)
 
-    with open(f"{path}/ruqqus/seed-db.sql", "r+") as file:
-        escaped_sql = sqlalchemy.text(file.read())
-        engine.execute(escaped_sql)
-
-    engine.execute("commit;")
 
     os.system(f"source {path}/env.sh")
     from ruqqus.__main__ import *
