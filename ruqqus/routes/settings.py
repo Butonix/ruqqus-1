@@ -476,7 +476,7 @@ def delete_account(v):
             g.db.add(new_ma)
 
         for comment in v.comments:
-            comemnt.is_banned=True
+            comment.is_banned=True
             new_ma=ModAction(
                 user_id=1,
                 kind="ban_comment",
