@@ -47,6 +47,8 @@ app.url_map.strict_slashes = False
 
 app.config["SITE_NAME"]=environ.get("SITE_NAME", "Ruqqus").lstrip().rstrip()
 
+app.config["SITE_COLOR"]=environ.get("SITE_COLOR", "805ad5").lstrip().rstrip()
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get(
     "DATABASE_CONNECTION_POOL_URL",
