@@ -20,6 +20,11 @@ print("Welcome. I am the Ruqqus Installation and Setup Wizard.")
 print("I will guide you through the process of setting up your own Ruqqus server.")
 print("")
 
+if float(sys.version[0:3])<3.6:
+    print("First, install Python 3.5 or higher.")
+    print("If it's already installed, rerun the wizard using the command `python3` instead of `python`.")
+    quit(0)
+
 #navigate to folder above ruqqus repo
 path=os.path.realpath('.')
 if path.endswith("scripts"):
