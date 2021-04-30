@@ -275,10 +275,6 @@ with open(f"{path}/env.sh", "w+") as f:
 for x in envs:
     os.environ[x]=envs.get(x) or ""
 
-from ruqqus.__main__ import *
-from ruqqus.classes import *
-
-
 
 ###db setup sql
 if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
