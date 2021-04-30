@@ -297,7 +297,7 @@ def before_request():
 
 
 
-    if bool(r.get(f"ban_ip_{request.remote_addr}")):
+    if r and bool(r.get(f"ban_ip_{request.remote_addr}")):
         return jsonify({"error":"Too many requests. You are in time out for 1 hour. Rate limit is 100/min; less for authentication and content creation endpoints."}), 429
 
     g.db = db_session()
