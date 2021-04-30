@@ -355,8 +355,8 @@ killall Python
 cd {path}/ruqqus
 git pull
 cd {path}
-sudo cp {path}/ruqqus/nginx.txt /etc/nginx/sites-available/ruqqus.com.conf
-sudo nginx -s reload
+#sudo cp {path}/ruqqus/nginx.txt /etc/nginx/sites-available/ruqqus.com.conf
+#sudo nginx -s reload
 . {path}/venv/bin/activate
 . {path}/env.sh
 cd {path}/ruqqus
@@ -365,10 +365,10 @@ export PYTHONPATH=$PYTHONPATH:~/ruqqus
 cd {path}
 echo "starting background worker"
 python {path}/ruqqus/scripts/recomputes.py
-echo "starting chat worker"
-gunicorn ruqqus.__main__:app -k eventlet  -w 1 --worker-connections 1000 --max-requests 100000 --preload --bind 127.0.0.1:5001 -D
+#echo "starting chat worker"
+#gunicorn ruqqus.__main__:app -k eventlet  -w 1 --worker-connections 1000 --max-requests 100000 --preload --bind 0.0.0.0:5001 -D
 echo "starting regular workers"
-newrelic-admin run-program gunicorn ruqqus.__main__:app -k gevent -w 2 --worker-connections 5 --max-requests 10000 --max-requests-jitter 500 --preload --bind 127.0.0.1:5000
+newrelic-admin run-program gunicorn ruqqus.__main__:app -k gevent -w 2 --worker-connections 5 --max-requests 10000 --max-requests-jitter 500 --preload --bind 0.0.0.0:5000
 """
 
 with open(f"{path}/go.sh", "w+") as f:
