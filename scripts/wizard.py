@@ -306,6 +306,8 @@ if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
         escaped_sql = sqlalchemy.text(file.read())
         engine.execute(escaped_sql)
 
+    engine.execute("commit;")
+
     os.system(f"source {path}/env.sh")
     from ruqqus.__main__ import *
     from ruqqus.classes import *
