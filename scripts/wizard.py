@@ -5,7 +5,6 @@ from os import environ
 import sys
 import venv
 import secrets
-import sqlalchemy
 
 print("")
 print("")
@@ -88,6 +87,7 @@ os.system(f"pip install -r {path}/ruqqus/requirements.txt")
 
 sys.path.append(f"{path}/ruqqus")
 from werkzeug.security import generate_password_hash
+import sqlalchemy
 
 
 print("")
