@@ -115,7 +115,7 @@ app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 10))
 redispool=ConnectionPool(
     max_connections=app.config["REDIS_POOL_SIZE"],
     host=app.config["CACHE_REDIS_URL"][8:]
-    )
+    ) if app.config["CACHE_TYPE"]=="redis" else None
 app.config["CACHE_OPTIONS"]={'connection_pool':redispool} if app.config["CACHE_TYPE"]=="redis" else {}
 
 
