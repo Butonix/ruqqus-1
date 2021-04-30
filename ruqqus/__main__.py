@@ -71,7 +71,7 @@ app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 365
 app.config["SESSION_REFRESH_EACH_REQUEST"] = True
 
-app.config["FORCE_HTTPS"] = int(environ.get("FORCE_HTTPS", 1))
+app.config["FORCE_HTTPS"] = int(environ.get("FORCE_HTTPS", 1)) if ("localhost" not in app.config["SERVER_NAME"] and "127.0.0.1" not in app.config["SERVER_NAME"]) else 0
 app.config["DISABLE_SIGNUPS"]=int(environ.get("DISABLE_SIGNUPS",0))
 
 app.jinja_env.cache = {}
