@@ -5,7 +5,6 @@ from os import environ
 import sys
 import venv
 import secrets
-from werkzeug.security import generate_password_hash
 
 print("")
 print("")
@@ -82,10 +81,12 @@ print("Now, I'm going to update the environment with everything Ruqqus needs.")
 print("This may take a moment, especially if it's the first time.")
 print("")
 input("Press enter to continue.")
+
 os.system("pip install --upgrade pip")
 os.system(f"pip install -r {path}/ruqqus/requirements.txt")
 
 sys.path.append(f"{path}/ruqqus")
+from werkzeug.security import generate_password_hash
 
 
 print("")
