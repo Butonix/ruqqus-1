@@ -304,7 +304,7 @@ if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
                 escaped_sql = sqlalchemy.text(file.read())
                 conn.execute(escaped_sql)
     except Exception as e:
-        print(e)
+        print("Tables already exist, skipping seed data")
     else:
         with engine.begin() as conn:
             with open(f"{path}/ruqqus/seed-db.sql", "r+") as file:
@@ -327,12 +327,15 @@ if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
         tos_agreed_utc=int(time.time()),
         )
 
-    db.add(sys_account)
-    db.commit()
+    try:
+        db.add(sys_account)
+        db.commit()
+    except:
+        print(f"@{envs['SITE_NAME']} already exists")
 
     general_guild=Board(
         id=1,
-        name=board_name,
+        name="general",
         description="All topics. Content posted here may be yanked to other guilds.",
         description_html="<p>All topics. Content posted here may be yanked to other guilds.</p>",
         over_18=False,
@@ -340,9 +343,11 @@ if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
         creator_id=1
         )
 
-    db.add(general_guild)
-    db.commit()
-
+    try:
+        db.add(general_guild)
+        db.commit()
+    except:
+        "+general already exists"
 
 start_script=f"""
 killall gunicorn
