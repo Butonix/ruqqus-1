@@ -298,15 +298,18 @@ if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
     input("Press enter to set up database.")
 
     engine = sqlalchemy.create_engine(envs["DATABASE_URL"])
-    with engine.begin() as conn:
-        with open(f"{path}/ruqqus/schema.sql", "r+") as file:
-            escaped_sql = sqlalchemy.text(file.read())
-            conn.execute(escaped_sql)
-
-    with engine.begin() as conn:
-        with open(f"{path}/ruqqus/seed-db.sql", "r+") as file:
-            escaped_sql = sqlalchemy.text(file.read())
-            conn.execute(escaped_sql)
+    try:
+        with engine.begin() as conn:
+            with open(f"{path}/ruqqus/schema.sql", "r+") as file:
+                escaped_sql = sqlalchemy.text(file.read())
+                conn.execute(escaped_sql)
+    except Exception as e:
+        print(e)
+    else:
+        with engine.begin() as conn:
+            with open(f"{path}/ruqqus/seed-db.sql", "r+") as file:
+                escaped_sql = sqlalchemy.text(file.read())
+                conn.execute(escaped_sql)
 
 
     os.system(f"source {path}/env.sh")
@@ -319,7 +322,7 @@ if first or envs["DATABASE_URL"]!=environ.get("DATABASE_URL"):
         username=envs["SITE_NAME"],
         original_username = envs["SITE_NAME"],
         passhash=password_hash,
-        email=envs["admin_email"],
+        email=envs.get("admin_email",""),
         created_utc=int(time.time()),
         tos_agreed_utc=int(time.time()),
         )
