@@ -167,7 +167,7 @@ def login_post():
 
 
 @app.route("/me", methods=["GET"])
-@auth_desired
+@auth_required
 def me(v):
     return redirect(v.url)
 
