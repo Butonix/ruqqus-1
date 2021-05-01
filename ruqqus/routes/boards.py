@@ -540,6 +540,15 @@ def user_kick_pid(pid, v):
 
     g.db.add(post)
 
+    #un-pin any comments
+    pinned_comments = g.db.query(Comment).filter_by(
+        is_pinned=True,
+        parent_submission=post.id
+        ).all()
+    for comment in pinned_comments:
+        pinned_comment.is_pinned=False
+        g.db.add(comment)
+
     g.db.commit()
 
     # clear board's listing caches
