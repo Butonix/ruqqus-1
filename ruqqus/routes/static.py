@@ -19,6 +19,8 @@ def main_css(file):
 
 	color = app.config["SITE_COLOR"]
 
+	print(file, color)
+
 	if file not in ["main", "main_dark"]:
 		abort(404)
 
