@@ -29,6 +29,7 @@ def main_css(file):
 		print(name)
 		with open(os.path.join(os.path.expanduser('~'), name), "r") as file:
 			raw = file.read()
+
 	except FileNotFoundError:
 		print("unable to find file")
 		return make_response(send_file(f'~/ruqqus/ruqqus/assets/style/{file}.css'))
@@ -40,7 +41,8 @@ def main_css(file):
 
 	try:
 		resp = Response(sass.compile(string=scss), mimetype='text/css')
-	except sass.CompileError:
+	except sass.CompileError as e:
+		print(e)
 		return make_response(send_file('./assets/style/main.css'))
 
 	resp.headers.add("Cache-Control", "public")
