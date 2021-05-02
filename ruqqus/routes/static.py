@@ -19,19 +19,19 @@ def main_css(file):
 
 	color = app.config["SITE_COLOR"]
 
-	print(file, color)
+	#print(file, color)
 
 	if file not in ["main", "main_dark"]:
 		abort(404)
 
 	try:
 		name=f"ruqqus/ruqqus/assets/style/{file}.scss"
-		print(name)
+		#print(name)
 		with open(os.path.join(os.path.expanduser('~'), name), "r") as file:
 			raw = file.read()
 
 	except FileNotFoundError:
-		print("unable to find file")
+		#rint("unable to find file")
 		return make_response(send_file(f'~/ruqqus/ruqqus/assets/style/{file}.css'))
 
 	# This doesn't use python's string formatting because
@@ -42,8 +42,8 @@ def main_css(file):
 	try:
 		resp = Response(sass.compile(string=scss), mimetype='text/css')
 	except sass.CompileError as e:
-		print(e)
-		return make_response(send_file('./assets/style/main.css'))
+		#print(e)
+		return make_response(send_file(f'./assets/style/{file}.css'))
 
 	resp.headers.add("Cache-Control", "public")
 
