@@ -13,6 +13,38 @@ from ruqqus.__main__ import app, limiter
 
 # take care of misc pages that never really change (much)
 
+@app.route("/assets/style/<file>.css", methods=["GET"])
+#@cache.memoize(60*6*24)
+def main_css(file):
+
+	try:
+		print("main css")
+	except:
+		pass
+
+	color = app.config["SITE_COLOR"]
+
+	if file not in ["main.css", "main_dark.css"]:
+		abort(404)
+
+	try:
+		with open(os.path.join(os.path.expanduser('~'), f"ruqqus/ruqqus/assets/style/{file}.scss"), "r") as file:
+			raw = file.read()
+	except FileNotFoundError:
+		return make_response(send_file(f'./assets/style/{file}.css'))
+
+	# This doesn't use python's string formatting because
+	# of some odd behavior with css files
+	scss = raw.replace("{boardcolor}", color)
+
+	try:
+		resp = Response(sass.compile(string=scss), mimetype='text/css')
+	except sass.CompileError:
+		return make_response(send_file('./assets/style/main.css'))
+
+	resp.headers.add("Cache-Control", "public")
+
+	return resp
 
 @app.route('/assets/<path:path>')
 @limiter.exempt
@@ -211,31 +243,3 @@ def dismiss_mobile_tip():
 
 	return "", 204
 
-
-@app.route("/assets/style/<file>.css", methods=["GET"])
-#@cache.memoize(60*6*24)
-def main_css(file):
-
-	color = app.config["SITE_COLOR"]
-
-	if file not in ["main", "main_dark"]:
-		abort(404)
-
-	try:
-		with open(os.path.join(os.path.expanduser('~'), f"ruqqus/ruqqus/assets/style/{file}.scss"), "r") as file:
-			raw = file.read()
-	except FileNotFoundError:
-		return make_response(send_file('./assets/style/main.css'))
-
-	# This doesn't use python's string formatting because
-	# of some odd behavior with css files
-	scss = raw.replace("{boardcolor}", color)
-
-	try:
-		resp = Response(sass.compile(string=scss), mimetype='text/css')
-	except sass.CompileError:
-		return make_response(send_file('./assets/style/main.css'))
-
-	resp.headers.add("Cache-Control", "public")
-
-	return resp
