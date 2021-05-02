@@ -25,7 +25,9 @@ def main_css(file):
 		abort(404)
 
 	try:
-		with open(f"~/ruqqus/ruqqus/assets/style/{file}.scss", "r") as file:
+		name=f"ruqqus/ruqqus/assets/style/{file}.scss"
+		print(name)
+		with open(os.path.join(os.path.expanduser('~'), name), "r") as file:
 			raw = file.read()
 	except FileNotFoundError:
 		print("unable to find file")
