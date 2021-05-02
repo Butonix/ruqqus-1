@@ -20,9 +20,11 @@ def main_css(file):
 	color = app.config["SITE_COLOR"]
 
 	if file not in ["main", "main_dark"]:
+		print("bad file")
 		abort(404)
 
 	try:
+		print('trying to open file')
 		with open(os.path.join(os.path.expanduser('~'), f"ruqqus/ruqqus/assets/style/{file}.scss"), "r") as file:
 			raw = file.read()
 	except FileNotFoundError:
