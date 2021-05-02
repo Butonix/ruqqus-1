@@ -17,11 +17,6 @@ from ruqqus.__main__ import app, limiter
 #@cache.memoize(60*6*24)
 def main_css(file):
 
-	try:
-		print("main css")
-	except:
-		pass
-
 	color = app.config["SITE_COLOR"]
 
 	if file not in ["main.css", "main_dark.css"]:
@@ -31,7 +26,8 @@ def main_css(file):
 		with open(os.path.join(os.path.expanduser('~'), f"ruqqus/ruqqus/assets/style/{file}.scss"), "r") as file:
 			raw = file.read()
 	except FileNotFoundError:
-		return make_response(send_file(f'./assets/style/{file}.css'))
+		print("unable to find file")
+		return make_response(send_file(f'~/ruqqus/ruqqus/assets/style/{file}.css'))
 
 	# This doesn't use python's string formatting because
 	# of some odd behavior with css files
