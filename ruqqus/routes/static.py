@@ -19,7 +19,7 @@ def main_css(file):
 
 	color = app.config["SITE_COLOR"]
 
-	if file not in ["main.css", "main_dark.css"]:
+	if file not in ["main", "main_dark"]:
 		abort(404)
 
 	try:
@@ -32,6 +32,7 @@ def main_css(file):
 	# This doesn't use python's string formatting because
 	# of some odd behavior with css files
 	scss = raw.replace("{boardcolor}", color)
+
 
 	try:
 		resp = Response(sass.compile(string=scss), mimetype='text/css')
