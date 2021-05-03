@@ -37,6 +37,7 @@ def main_css(file):
 	# This doesn't use python's string formatting because
 	# of some odd behavior with css files
 	scss = raw.replace("{boardcolor}", color)
+	scss = scss.replace("{maincolor}", app.config["SITE_COLOR"])
 
 
 	try:

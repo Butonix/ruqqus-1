@@ -1515,6 +1515,7 @@ def board_dark_css(board_fullname, x):
     # This doesn't use python's string formatting because
     # of some odd behavior with css files
     scss = raw.replace("{boardcolor}", board.color)
+    scss = scss.replace("{maincolor}", app.config["SITE_COLOR"])
 
     try:
         resp = Response(sass.compile(string=scss), mimetype='text/css')
