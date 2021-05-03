@@ -913,6 +913,10 @@ th {
     font-size: $small-font-size;
 }
 
+.sidebar-left .fa-stack-1x, .sidebar-left .fas, .sidebar-left .far, .sidebar-left .fab, .sidebar-left .fal, .sidebar-left .fad {
+    font-size: 15px;
+}
+
 .sidebar .title .fa, .sidebar .title .fas, .sidebar .title .far, .sidebar .title .fab, .sidebar .title .fal, .sidebar .title .fad {
     font-size: $small-font-size;
 }
@@ -1622,6 +1626,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     font-size: $font-size-lg;
     font-weight: $font-weight-bold;
     text-transform: uppercase;
+}
+
+.profile-pic-28 .letter {
+    height:28px;
+    width: 28px
 }
 
 .profile-pic-30 .letter {
