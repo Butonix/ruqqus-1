@@ -1628,11 +1628,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     text-transform: uppercase;
 }
 
-.profile-pic-28{
-    height:28px;
-    width: 28px
-}
-
 .profile-pic-30 .letter {
     line-height: 1.75;
 }
@@ -1669,6 +1664,15 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-25 {
     width: 25px;
     height: 25px;
+    border-radius: 50%;
+    text-align: center;
+    object-fit: cover;
+    background-color: $white;
+}
+
+.profile-pic-28 {
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
