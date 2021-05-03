@@ -14,7 +14,9 @@
           <button class="btn mb-3" onclick="toggle_sidebar_expand();post('/settings/toggle_collapse');"><span class="collapsed-toggle"></span></button>
         </div>
         <div class="sidebar-collapsed-visible">
-          <i class="fas fa-newspaper text-muted mb-3" style="font-size: 1rem;"></i>
+          <span class="fa-stack">
+            <i class="fas fa-newspaper text-muted mb-3" style="font-size: 1rem;"></i>
+          </span>
         </div>
         <ul class="no-bullets guild-recommendations-list pl-0 sidebar-collapsed-hidden">
           <li class="guild-recommendations-item">
@@ -89,7 +91,9 @@
                 </div>
               </div>
               <div class="sidebar-collapsed-visible">
-                <i class="fas fa-chess-rook text-muted mb-3" style="font-size: 1rem;"></i>
+                <span class="fa-stack">
+                  <i class="fas fa-chess-rook text-muted mb-3" style="font-size: 1rem;"></i>
+                </span>
               </div>
               <ul class="no-bullets guild-recommendations-list pl-0 sidebar-collapsed-hidden">
                 {% for board in v.boards_subscribed[0:10] %}
@@ -138,7 +142,10 @@
               </div>
             </div>
             <div class="sidebar-collapsed-visible">
-              <i class="fas fa-crown text-warning mb-3" style="font-size: 1rem;"></i>
+              
+              <span class="fa-stack">
+                <i class="fas fa-crown text-warning mb-3" style="font-size: 1rem;"></i>
+              </span>
             </div>
             <ul class="no-bullets guild-recommendations-list pl-0 sidebar-collapsed-hidden">
               {% for board in v.boards_modded[0:10] %}
