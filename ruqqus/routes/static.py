@@ -17,8 +17,6 @@ from ruqqus.__main__ import app, limiter
 #@cache.memoize(60*6*24)
 def main_css(file):
 
-	color = app.config["SITE_COLOR"]
-
 	#print(file, color)
 
 	if file not in ["main", "main_dark"]:
@@ -36,7 +34,7 @@ def main_css(file):
 
 	# This doesn't use python's string formatting because
 	# of some odd behavior with css files
-	scss = raw.replace("{boardcolor}", color)
+	scss = raw.replace("{boardcolor}", app.config["SITE_COLOR"])
 	scss = scss.replace("{maincolor}", app.config["SITE_COLOR"])
 
 
