@@ -1455,9 +1455,12 @@ def mod_board_images_delete_banner(bid, board, v):
     return redirect(f"/+{board.name}/mod/appearance?msg=Success#images")
 
 
-@app.route("/assets/<board_fullname>/main/<x>.css", methods=["GET"])
+@app.route("/assets/<board_fullname>/<theme>/<x>.css", methods=["GET"])
 #@cache.memoize(60*6*24)
-def board_css(board_fullname, x):
+def board_css(board_fullname, theme, x):
+
+    if theme not in ["main", "dark"]:
+        abort(404)
 
     try:
         b36id=board_fullname.split('_')[1]
@@ -1479,6 +1482,7 @@ def board_css(board_fullname, x):
     # This doesn't use python's string formatting because
     # of some odd behavior with css files
     scss = raw.replace("{boardcolor}", board.color)
+    scss = scss.replace("{maincolor}", app.config["SITE_COLOR"])
 
     try:
         resp = Response(sass.compile(string=scss), mimetype='text/css')
@@ -1487,42 +1491,6 @@ def board_css(board_fullname, x):
 
     resp.headers.add("Cache-Control", "public")
 
-    return resp
-
-
-@app.route("/assets/<board_fullname>/dark/<x>.css", methods=["GET"])
-#@cache.memoize(60*60*24)
-def board_dark_css(board_fullname, x):
-
-
-    try:
-        b36id=board_fullname.split('_')[1]
-    except IndexError:
-        print(request.headers.get("Referer",request.headers.get("Referrer")))
-        abort(500)
-
-    board = get_board(b36id)
-
-    if int(x) != board.color_nonce:
-        return redirect(board.css_dark_url)
-
-    try:
-        with open(os.path.join(os.path.expanduser('~'), "ruqqus/ruqqus/assets/style/board_dark.scss"), "r") as file:
-            raw = file.read()
-    except FileNotFoundError:
-        return redirect("/assets/style/main_dark.css")
-
-    # This doesn't use python's string formatting because
-    # of some odd behavior with css files
-    scss = raw.replace("{boardcolor}", board.color)
-    scss = scss.replace("{maincolor}", app.config["SITE_COLOR"])
-
-    try:
-        resp = Response(sass.compile(string=scss), mimetype='text/css')
-    except sass.CompileError:
-        return redirect("/assets/style/main_dark.css")
-
-    resp.headers.add("Cache-Control", "public")
     return resp
 
 
