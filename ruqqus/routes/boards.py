@@ -1473,8 +1473,13 @@ def board_css(board_fullname, theme, x):
     if int(x) != board.color_nonce:
         return redirect(board.css_url)
 
+    if theme=="main":
+        path="ruqqus/ruqqus/assets/style/main.scss"
+    else:
+        path="ruqqus/ruqqus/assets/style/main_dark.scss"
+
     try:
-        with open(os.path.join(os.path.expanduser('~'), "ruqqus/ruqqus/assets/style/board_main.scss"), "r") as file:
+        with open(os.path.join(os.path.expanduser('~'), path), "r") as file:
             raw = file.read()
     except FileNotFoundError:
         return redirect("/assets/style/main.css")
