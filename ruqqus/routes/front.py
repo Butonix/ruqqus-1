@@ -18,7 +18,9 @@ def slash_post():
 
 
 @app.route("/notifications", methods=["GET"])
+@app.route("/api/v1/notifications", methods=["GET"])
 @auth_required
+@api("read")
 def notifications(v):
 
     page = int(request.args.get('page', 1))
@@ -57,21 +59,27 @@ def notifications(v):
             c._is_username_mention = True
             listing.append(c)
 
-    return render_template("notifications.html",
-                           v=v,
-                           notifications=listing,
-                           next_exists=next_exists,
-                           page=page,
-                           standalone=True,
-                           render_replies=True,
-                           is_notification_page=True)
+    return {'html': lambda: render_template("notifications.html",
+                            v=v,
+                            notifications=listing,
+                            next_exists=next_exists,
+                            page=page,
+                            standalone=True,
+                            render_replies=True,
+                            is_notification_page=True),
+            'api': lambda: jsonify({"data": [x.json for x in listing]})}
+
 
 @cache.memoize(timeout=900)
 
-def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
+def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
               t=None, ids_only=True, categories=[], filter_words='', **kwargs):
 
     # cutoff=int(time.time())-(60*60*24*30)
+
+    if sort == None:
+        if v: sort = v.defaultsorting
+        else: sort = "hot"
 
     if sort == "hot":
         sort_func = Submission.score_hot.desc
@@ -184,6 +192,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
             #print(word)
             posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
 
+    if t == None and v: t = v.defaulttime
     if t:
         now = int(time.time())
         if t == 'day':
@@ -238,11 +247,17 @@ def home(v):
     if v and [i for i in v.subscriptions if i.is_active]:
 
         only=request.args.get("only",None)
-        sort=request.args.get("sort","hot")
-        
-        page=max(int(request.args.get("page",1)),0)
-        t=request.args.get('t', 'all')
 
+        if v:
+            defaultsorting = v.defaultsorting
+            defaulttime = v.defaulttime
+        else:
+            defaultsorting = "hot"
+            defaulttime = "all"
+
+        sort=request.args.get("sort",defaultsorting)
+        t=request.args.get('t', defaulttime)
+        page=max(int(request.args.get("page",1)),0)
         ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
         
@@ -268,7 +283,7 @@ def home(v):
         ids=ids[0:25]
 
         # If page 1, check for sticky
-        if page == 1 and sort != "new" and not ignore_pinned:
+        if page == 1 and not ignore_pinned:
             sticky = g.db.query(Submission.id).filter_by(stickied=True).first()
 
 
@@ -328,8 +343,15 @@ def front_all(v):
     # prevent invalid paging
     page = max(page, 1)
 
-    sort_method = request.args.get("sort", "hot")
-    t = request.args.get('t', 'all')
+    if v:
+        defaultsorting = v.defaultsorting
+        defaulttime = v.defaulttime
+    else:
+        defaultsorting = "hot"
+        defaulttime = "all"
+
+    sort=request.args.get("sort",defaultsorting)
+    t=request.args.get('t', defaulttime)
     ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
 
@@ -405,6 +427,80 @@ def front_all(v):
                                     }
                                    )
             }
+
+@app.route("/subcat/<name>", methods=["GET"])
+@auth_desired
+@api("read")
+def subcat(name, v):
+
+    if v:
+        defaultsorting = v.defaultsorting
+        defaulttime = v.defaulttime
+    else:
+        defaultsorting = "hot"
+        defaulttime = "all"
+
+    sort=request.args.get("sort",defaultsorting)
+    t=request.args.get('t', defaulttime)
+
+    page = int(request.args.get("page") or 1)
+
+    # prevent invalid paging
+    page = max(page, 1)
+    
+    if "+" in name:
+        ids = []
+        for name in name.split("+"):
+            ids += frontlist(sort=sort_method,
+                            page=page,
+                            nsfw=(v and v.over_18 and not v.filter_nsfw),
+                            nsfl=(v and v.show_nsfl),
+                            t=t,
+                            v=v,
+                            hide_offensive=(v and v.hide_offensive) or not v,
+                            hide_bot=(v and v.hide_bot),
+                            gt=int(request.args.get("utc_greater_than", 0)),
+                            lt=int(request.args.get("utc_less_than", 0)),
+                            filter_words=v.filter_words if v else [],
+                            categories=[name]
+                            )
+    else:
+        ids = frontlist(sort=sort_method,
+                        page=page,
+                        nsfw=(v and v.over_18 and not v.filter_nsfw),
+                        nsfl=(v and v.show_nsfl),
+                        t=t,
+                        v=v,
+                        hide_offensive=(v and v.hide_offensive) or not v,
+                        hide_bot=(v and v.hide_bot),
+                        gt=int(request.args.get("utc_greater_than", 0)),
+                        lt=int(request.args.get("utc_less_than", 0)),
+                        filter_words=v.filter_words if v else [],
+                        categories=[name]
+                        )
+
+    # check existence of next page
+    next_exists = (len(ids) == 26)
+    ids = ids[0:25]
+
+    # check if ids exist
+    posts = get_posts(ids, sort=sort_method, v=v)
+
+    return {'html': lambda: render_template("home.html",
+                                            v=v,
+                                            listing=posts,
+                                            next_exists=next_exists,
+                                            sort_method=sort_method,
+                                            time_filter=t,
+                                            page=page,
+                                            CATEGORIES=CATEGORIES
+                                            ),
+            'inpage': lambda: render_template("submission_listing.html",
+                                              v=v,
+                                              listing=posts
+                                              ),
+            'api': lambda: jsonify({"data": [x.json for x in posts],
+                                    "next_exists": next_exists})}
 
 
 @cache.memoize(600)
@@ -497,7 +593,9 @@ def browse_guilds(v):
 
 
 @app.route('/mine', methods=["GET"])
+@app.route("/api/v1/mine", methods=["GET"])
 @auth_required
+@api("read")
 def my_subs(v):
 
     kind = request.args.get("kind", "guilds")
@@ -523,12 +621,13 @@ def my_subs(v):
         next_exists = (len(content) == 26)
         content = content[0:25]
 
-        return render_template("mine/boards.html",
+        return {"html": lambda: render_template("mine/boards.html",
                                v=v,
                                boards=content,
                                next_exists=next_exists,
                                page=page,
-                               kind="guilds")
+                               kind="guilds"),
+                "api": lambda: jsonify({"data": [x.json for x in content]})}
 
     elif kind == "users":
 
@@ -545,12 +644,13 @@ def my_subs(v):
         next_exists = (len(content) == 26)
         content = content[0:25]
 
-        return render_template("mine/users.html",
+        return {"html": lambda: render_template("mine/users.html",
                                v=v,
                                users=content,
                                next_exists=next_exists,
                                page=page,
-                               kind="users")
+                               kind="users"),
+                "api": lambda: jsonify({"data": [x.json for x in content]})}
 
     else:
         abort(400)

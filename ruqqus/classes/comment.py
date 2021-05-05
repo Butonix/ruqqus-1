@@ -273,7 +273,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             'downvotes': self.downvotes_fuzzed,
             'award_count': self.award_count,
             'is_bot': self.is_bot,
-            'guild_id': base36encode(self.post.board_id)
+            'guild_id': base36encode(self.post.board_id),
+            'voted': self.voted
             }
 
         if self.ban_reason:
@@ -321,6 +322,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         data["author"]=self.author.json_core
         data["post"]=self.post.json_core
         data["guild"]=self.post.board.json_core
+        data["voted"]=self.voted
 
         if self.level >= 2:
             data["parent"]=self.parent.json_core if self.parent else []

@@ -31,7 +31,7 @@
             {% if not time_filter=="week" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
             {% if not time_filter=="month" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
             {% if not time_filter=="year" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
-            {% if not time_filter=="all" %}<a class="dropdown-item" href="?sort={{ sort_method }}"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
+            {% if not time_filter=="all" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=all"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
           </div>
         </div>
 
@@ -47,12 +47,12 @@
             {{ sort_method | capitalize }}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-            {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
-            {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
-            {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-            {% if not sort_method=="old" %}<a class="dropdown-item" href="?sort=old"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
-            {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed"><i class="fas fa-bullhorn mr-2"></i>Disputed</a>{% endif %}
-            {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity"><i class="fas fa-comments mr-2"></i>Activity</a>{% endif %}
+            {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot&t={time_filter}"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
+            {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top&t={time_filter}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
+            {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new&t={time_filter}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+            {% if not sort_method=="old" %}<a class="dropdown-item" href="?sort=old&t={time_filter}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
+            {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed&t={time_filter}"><i class="fas fa-bullhorn mr-2"></i>Disputed</a>{% endif %}
+            {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity&t={time_filter}"><i class="fas fa-comments mr-2"></i>Activity</a>{% endif %}
           </div>
         </div>
       </div>
@@ -164,12 +164,12 @@
                   {{ sort_method | capitalize }}
                 </button>
                 <div class="dropdown-menu" id="mobileSortDropdown" aria-labelledby="dropdownMenuButtonMobile" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-                  {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot"><i class="fas fa-fire text-primary mr-3"></i>Hot</a>{% endif %}
-                  {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top"><i class="fas fa-arrow-alt-circle-up text-primary mr-3"></i>Top</a>{% endif %}
-                  {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles text-primary mr-3"></i>New</a>{% endif %}
-                  {% if not sort_method=="old" %}<a class="dropdown-item" href="?sort=old"><i class="fas fa-book text-primary mr-3"></i>Old</a>{% endif %}
-                  {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed"><i class="fas fa-bullhorn text-primary mr-3"></i>Disputed</a>{% endif %}
-                  {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity"><i class="fas fa-comments text-primary mr-3"></i>Activity</a>{% endif %}
+                  {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot&t={time_filter}"><i class="fas fa-fire text-primary mr-3"></i>Hot</a>{% endif %}
+                  {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top&t={time_filter}"><i class="fas fa-arrow-alt-circle-up text-primary mr-3"></i>Top</a>{% endif %}
+                  {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new&t={time_filter}"><i class="fas fa-sparkles text-primary mr-3"></i>New</a>{% endif %}
+                  {% if not sort_method=="old" %}<a class="dropdown-item" href="?sort=old&t={time_filter}"><i class="fas fa-book text-primary mr-3"></i>Old</a>{% endif %}
+                  {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed&t={time_filter}"><i class="fas fa-bullhorn text-primary mr-3"></i>Disputed</a>{% endif %}
+                  {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity&t={time_filter}"><i class="fas fa-comments text-primary mr-3"></i>Activity</a>{% endif %}
                 </div>
               </div>
 
@@ -187,7 +187,7 @@
                   {% if not time_filter=="week" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=week"><i class="fas fa-calendar-week text-primary mr-3"></i>Week</a>{% endif %}
                   {% if not time_filter=="month" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=month"><i class="fas fa-calendar-alt text-primary mr-3"></i>Month</a>{% endif %}
                   {% if not time_filter=="year" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=year"><i class="fas fa-calendar text-primary mr-3"></i>Year</a>{% endif %}
-                  {% if not time_filter=="all" %}<a class="dropdown-item" href="?sort={{ sort_method }}"><i class="fas fa-infinity text-primary mr-3"></i>All</a>{% endif %}
+                  {% if not time_filter=="all" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=all"><i class="fas fa-infinity text-primary mr-3"></i>All</a>{% endif %}
                 </div>
               </div>
 

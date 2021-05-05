@@ -179,8 +179,8 @@ def board_name(name, v):
 
     board = get_guild(name)
 
-    if not board.name == name and not request.path.startswith('/api/v1'):
-        return redirect(request.path.replace(name, board.name))
+    #if not board.name == name and not request.path.startswith('/api/v1'):
+        #return redirect(request.path.replace(name, board.name))
 
     if board.is_banned and not (v and v.admin_level >= 3):
         return {'html': lambda: (render_template("board_banned.html",
@@ -202,9 +202,16 @@ def board_name(name, v):
                 'api': lambda: jsonify({'error': f'+{board.name} is NSFW.'})
                 }
 
-    sort = request.args.get("sort", "hot")
+    if v:
+        defaultsorting = v.defaultsorting
+        defaulttime = v.defaulttime
+    else:
+        defaultsorting = "hot"
+        defaulttime = "all"
+
+    sort = request.args.get("sort", defaultsorting)
+    t = request.args.get("t", defaulttime)
     page = int(request.args.get("page", 1))
-    t = request.args.get("t", "all")
     ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
     ids = board.idlist(sort=sort,
@@ -219,7 +226,7 @@ def board_name(name, v):
     next_exists = (len(ids) == 26)
     ids = ids[0:25]
 
-    if page == 1 and sort != "new" and not ignore_pinned:
+    if page == 1 and sort != "new" and sort != "old" and not ignore_pinned:
         stickies = g.db.query(Submission.id).filter_by(board_id=board.id,
                                                        is_banned=False,
                                                        is_pinned=True,
@@ -249,6 +256,59 @@ def board_name(name, v):
                                     }
                                    )
             }
+
+@app.route("/m/<name>", methods=["GET"])
+@app.route("/api/v1/multi/<name>/listing", methods=["GET"])
+@auth_desired
+@api("read")
+def multiboard(name, v):
+    
+    if v:
+        defaultsorting = v.defaultsorting
+        defaulttime = v.defaulttime
+    else:
+        defaultsorting = "hot"
+        defaulttime = "all"
+
+    sort = request.args.get("sort", defaultsorting)
+    t = request.args.get("t", defaulttime)
+    page = int(request.args.get("page", 1))
+    ids = []
+    
+    for name in name.split("+"):
+        board = get_guild(name)
+        if board.is_banned and not (v and v.admin_level >= 3): continue
+        if board.over_18 and not (v and v.over_18) and not session_over18(board): continue
+        ids += board.idlist(sort=sort,
+                           t=t,
+                           page=page,
+                           nsfw=(v and v.over_18) or session_over18(board),
+                           v=v,
+                           gt=int(request.args.get("utc_greater_than", 0)),
+                           lt=int(request.args.get("utc_less_than", 0))
+                           )
+
+    next_exists = (len(ids) == 26)
+    ids = ids[0:25]
+
+    posts = get_posts(ids,
+                      sort=sort,
+                      v=v)
+
+    return {'html': lambda: render_template("board.html",
+                                            b=board,
+                                            v=v,
+                                            time_filter=t,
+                                            listing=posts,
+                                            next_exists=next_exists,
+                                            sort_method=sort,
+                                            page=page,
+                                            is_subscribed=(v and board.has_subscriber(v)
+                                                           )
+                                            ),
+            'api': lambda: jsonify({"data": [x.json for x in posts],
+                                    "next_exists": next_exists})}
+
 
 @app.route("/mod/distinguish_post/<bid>/<pid>", methods=["POST"])
 @app.route("/api/v1/distinguish_post/<bid>/<pid>", methods=["POST"])
@@ -900,6 +960,18 @@ def mod_bid_settings_optout(bid, board, v):
         )
     g.db.add(ma)
     return "", 204
+
+@app.route("/mod/<bid>/settings/disallowbots", methods=["POST"])
+@auth_required
+@is_guildmaster("config")
+@validate_formkey
+def mod_bid_settings_disallowbots(bid, board, v):
+
+    # toggle disallowing bots setting
+    board.disallowbots = bool(
+        request.form.get(
+            "disallowbots",
+            False) == 'true')
 
 @app.route("/mod/<bid>/settings/public_chat", methods=["POST"])
 @auth_required

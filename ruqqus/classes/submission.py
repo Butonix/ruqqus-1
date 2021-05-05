@@ -368,7 +368,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'award_count': self.award_count,
                 'is_offensive': self.is_offensive,
                 'meta_title': self.meta_title,
-                'meta_description': self.meta_description
+                'meta_description': self.meta_description,
+                'is_pinned': self.is_pinned
                 }
         if self.ban_reason:
             data["ban_reason"]=self.ban_reason
@@ -388,7 +389,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                     'id': self.base36id,
                     'title': self.title,
                     'permalink': self.permalink,
-                    'guild_name': self.board.name
+                    'guild_name': self.board.name,
+                    'is_pinned': self.is_pinned
                     }
         elif self.is_deleted:
             return {'is_banned': bool(self.is_banned),

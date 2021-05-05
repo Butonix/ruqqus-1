@@ -69,6 +69,8 @@ class User(Base, Stndrd, Age_times):
     is_banned = Column(Integer, default=0)
     unban_utc = Column(Integer, default=0)
     ban_reason = Column(String, default="")
+    defaultsorting = Column(String, default="hot")
+    defaulttime = Column(String, default="all")
     feed_nonce = Column(Integer, default=0)
     login_nonce = Column(Integer, default=0)
     title_id = Column(Integer, ForeignKey("titles.id"), default=None)
@@ -207,7 +209,7 @@ class User(Base, Stndrd, Age_times):
         return int(time.time()) - self.created_utc
 
     @cache.memoize(timeout=300)
-    def idlist(self, sort="hot", page=1, t=None, filter_words="", **kwargs):
+    def idlist(self, sort=None, page=1, t=None, filter_words="", **kwargs):
 
         posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
                                                                            deleted_utc=0,
@@ -304,6 +306,9 @@ class User(Base, Stndrd, Age_times):
         if lt:
             posts = posts.filter(Submission.created_utc < lt)
 
+        if sort == None:
+            sort= self.defaultsorting or "hot"
+
         if sort == "hot":
             posts = posts.order_by(Submission.score_best.desc())
         elif sort == "new":
@@ -322,7 +327,7 @@ class User(Base, Stndrd, Age_times):
         return [x[0] for x in posts.offset(25 * (page - 1)).limit(26).all()]
 
     @cache.memoize(300)
-    def userpagelisting(self, v=None, page=1, sort="new"):
+    def userpagelisting(self, v=None, page=1, sort="new", t="all"):
 
         submissions = g.db.query(Submission.id).options(
             lazyload('*')).filter_by(author_id=self.id)
@@ -375,12 +380,24 @@ class User(Base, Stndrd, Age_times):
         elif sort == "activity":
             submissions = submissions.order_by(Submission.score_activity.desc())
 
-        listing = [x[0] for x in submissions.offset(25 * (page - 1)).limit(26)]
+        now = int(time.time())
+        if t == 'day':
+            cutoff = now - 86400
+        elif t == 'week':
+            cutoff = now - 604800
+        elif t == 'month':
+            cutoff = now - 2592000
+        elif t == 'year':
+            cutoff = now - 31536000
+        else:
+            cutoff = 0
+        submissions = submissions.filter(Submission.created_utc >= cutoff)
 
+        listing = [x[0] for x in submissions.offset(25 * (page - 1)).limit(26)]
         return listing
 
     @cache.memoize(300)
-    def commentlisting(self, v=None, page=1, sort="new"):
+    def commentlisting(self, v=None, page=1, sort="new", t="all"):
         comments = self.comments.options(
             lazyload('*')).filter(Comment.parent_submission is not None).join(Comment.post)
 
@@ -438,6 +455,19 @@ class User(Base, Stndrd, Age_times):
         elif sort == "top":
             comments = comments.order_by(Comment.score_top.desc())
 
+        now = int(time.time())
+        if t == 'day':
+            cutoff = now - 86400
+        elif t == 'week':
+            cutoff = now - 604800
+        elif t == 'month':
+            cutoff = now - 2592000
+        elif t == 'year':
+            cutoff = now - 31536000
+        else:
+            cutoff = 0
+        comments = comments.filter(Comment.created_utc >= cutoff)
+            
         comments = comments.offset(25 * (page - 1)).limit(26)
 
         listing = [c.id for c in comments]

@@ -290,6 +290,40 @@
 
              </div>
 
+             <div class="body d-lg-flex border-bottom">
+                <label for="bio" class="text-black w-lg-25">Default Sorting</label>
+
+                <div class="w-lg-100">
+                  <p>Change the default sorting for posts.</p>
+                  <div class="input-group mb2">
+                    <select id='defaultsorting' class="form-control" form="profile-settings" name="defaultsorting" onchange="post_toast('/settings/profile?defaultsorting='+document.getElementById('defaultsorting').value)">
+                     {% for entry in ["hot", "new", "old", "top", "disputed", "activity"] %}
+                     <option value="{{ entry }}"{{ ' selected' if v.defaultsorting==entry else '' }}>{{ entry }}</option>
+                     {% endfor %}
+                   </select>
+                  </div>
+
+                </div>
+
+             </div>
+
+             <div class="body d-lg-flex border-bottom">
+                <label for="bio" class="text-black w-lg-25">Default Time Filter</label>
+
+                <div class="w-lg-100">
+                  <p>Change the default time filter for posts.</p>
+                  <div class="input-group mb2">
+                    <select id='defaulttime' class="form-control" form="profile-settings" name="defaulttime" onchange="post_toast('/settings/profile?defaulttime='+document.getElementById('defaulttime').value)">
+                     {% for entry in ["day", "week", "month", "year", "all"] %}
+                     <option value="{{ entry }}"{{ ' selected' if v.defaulttime==entry else '' }}>{{ entry }}</option>
+                     {% endfor %}
+                   </select>
+                  </div>
+
+                </div>
+
+             </div>
+
              <div class="d-lg-flex border-bottom">
 
               <div class="title w-lg-25">

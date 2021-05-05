@@ -452,6 +452,9 @@ def submit_post(v):
                 "api": lambda: (jsonify({"error": f"403 Not Authorized - You are not an approved contributor for +{board.name}"}), 403)
                 }
 
+    if board.disallowbots and request.headers.get("X-User-Type")=="Bot":
+        return {"api": lambda: (jsonify({"error": f"403 Not Authorized - +{board.name} disallows bots from posting and commenting!"}), 403)}
+
     # similarity check
     now = int(time.time())
     cutoff = now - 60 * 60 * 24

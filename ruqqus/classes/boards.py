@@ -35,6 +35,7 @@ class Board(Base, Stndrd, Age_times):
     ban_reason=Column(String(256), default=None)
     color=Column(String(8), default="805ad5")
     restricted_posting=Column(Boolean, default=False)
+    disallowbots=Column(Boolean, default=False)
     hide_banner_data=Column(Boolean, default=False)
     profile_nonce=Column(Integer, default=0)
     banner_nonce=Column(Integer, default=0)
@@ -127,11 +128,11 @@ class Board(Base, Stndrd, Age_times):
         return not self.postrels.filter_by(post_id=post.id).first()
 
     @cache.memoize(timeout=60)
-    def idlist(self, sort="hot", page=1, t=None,
+    def idlist(self, sort=None, page=1, t=None,
                hide_offensive=True, hide_bot=False, v=None, nsfw=False, **kwargs):
 
         posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
-                                                                           is_pinned=False,
+                                                                           #is_pinned=False,
                                                                            board_id=self.id
                                                                            ).filter(Submission.deleted_utc == 0)
 
@@ -172,6 +173,7 @@ class Board(Base, Stndrd, Age_times):
             #    Submission.author_id.notin_(blocked)
             )
 
+        if t == None and v: t = v.defaulttime
         if t:
             now = int(time.time())
             if t == 'day':
@@ -194,6 +196,12 @@ class Board(Base, Stndrd, Age_times):
 
         if lt:
             posts = posts.filter(Submission.created_utc < lt)
+
+        if sort == None:
+            if v: sort = v.defaultsorting
+            else: sort = "hot"
+
+        if sort != "new" and sort != "old": posts.filter_by(is_pinned=False)
 
         if sort == "hot":
             posts = posts.order_by(Submission.score_best.desc())
@@ -494,6 +502,7 @@ class Board(Base, Stndrd, Age_times):
                 'is_banned': False,
                 'is_private': self.is_private,
                 'is_restricted': self.restricted_posting,
+                'disallowbots': self.disallowbots,
                 'id': self.base36id,
                 'fullname': self.fullname,
                 'banner_url': self.banner_url,
@@ -512,6 +521,7 @@ class Board(Base, Stndrd, Age_times):
 
         data['guildmasters']=[x.json_core for x in self.mods]
         data['subscriber_count']= self.subscriber_count
+        data['disallowbots']= self.disallowbots
 
         return data
     

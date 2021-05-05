@@ -99,8 +99,8 @@ def u_username(username, v=None):
 
     # check for wrong cases
 
-    if username != u.username:
-        return redirect(request.path.replace(username, u.username))
+    #if username != u.username:
+        #return redirect(request.path.replace(username, u.username))
 
     if u.reserved:
         return {'html': lambda: render_template("userpage_reserved.html",
@@ -145,10 +145,11 @@ def u_username(username, v=None):
                 }
 
     sort = request.args.get("sort", "new")
+    t = request.args.get("t", "all")
     page = int(request.args.get("page", "1"))
     page = max(page, 1)
 
-    ids = u.userpagelisting(v=v, page=page, sort=sort)
+    ids = u.userpagelisting(v=v, page=page, sort=sort, t=t)
 
     # we got 26 items just to see if a next page exists
     next_exists = (len(ids) == 26)
@@ -233,7 +234,8 @@ def u_username_comments(username, v=None):
     ids = user.commentlisting(
         v=v, 
         page=page,
-        sort=request.args.get("sort","new")
+        sort=request.args.get("sort","new"),
+        t=request.args.get("t","all")
         )
 
     # we got 26 items just to see if a next page exists
