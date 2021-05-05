@@ -320,9 +320,8 @@ class Board(Base, Stndrd, Age_times):
 
         return self.id in [
             x.board_id for x in user.subscriptions if x.is_active]
-
-	
-	@property
+    
+    @property
     def is_subscribed(self):
 		return self.__dict__.get("_is_subscribed", False)
 
