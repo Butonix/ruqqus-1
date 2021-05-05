@@ -1,5 +1,4 @@
-http {
-  server {
+server {
     
     server_name dev.ruqqus.com chat.ruqqus.com ruqqus.com ruqq.us c.ruqq.us ruqqus.org ruqqus.win *.amazonaws.com cc5j4aqdgznut4ns.onion;
 
@@ -57,9 +56,9 @@ http {
     }
 
 
-  }
+}
 
-  server {
+server {
 
     listen 80;
     listen [::]:80;
@@ -69,5 +68,4 @@ http {
     location / {
         alias ~/fa;
     }
-  }
 }
