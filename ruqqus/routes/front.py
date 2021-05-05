@@ -428,9 +428,9 @@ def front_all(v):
                                    )
             }
 
-@app.route("/subcat/<name>", methods=["GET"])
-@auth_desired
-@api("read")
+#@app.route("/subcat/<name>", methods=["GET"])
+#@auth_desired
+#@api("read")
 def subcat(name, v):
 
     if v:
