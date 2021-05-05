@@ -45,6 +45,8 @@ class Flask_Timeout(Flask):
         value= gevent.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
         if value==kwargs['timeout_value']:
             print("internal timeout", request.method, request.path, request.session.get('user_id'))
+            
+        return value
 
 app = Flask_Timeout(__name__,
             template_folder='./templates',
