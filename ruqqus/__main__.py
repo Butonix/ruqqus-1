@@ -41,14 +41,14 @@ _version = "2.35.94"
 class Flask_Timeout(Flask):
             
     def full_dispatch_request(self, *args, **kwargs):
-        timeval = "timed_out"
-        returnval= eventlet.timeout.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
-        if timeval==returnval:
-            print('internal timeout', request.method, request.path, session.get('user_id'))
-            abort(500)
-        return returnval
+        #timeval = "timed_out"
+        try:
+            return eventlet.timeout.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
+        except eventlet.timeout.Timeout as e:
+            print("timeout", request.method, request.path)
+            
 
-app = Flask_Timeout(__name__,
+app = Flask(__name__,
             template_folder='./templates',
             static_folder='./static'
             )
