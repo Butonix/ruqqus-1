@@ -323,7 +323,7 @@ class Board(Base, Stndrd, Age_times):
     
     @property
     def is_subscribed(self):
-		return self.__dict__.get("_is_subscribed", False)
+        return self.__dict__.get("_is_subscribed", False)
     
     def has_contributor(self, user):
 
