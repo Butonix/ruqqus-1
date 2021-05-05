@@ -413,7 +413,7 @@ def front_all(v):
                                             v=v,
                                             listing=posts,
                                             next_exists=next_exists,
-                                            sort_method=sort_method,
+                                            sort_method=sort,
                                             time_filter=t,
                                             page=page,
                                             CATEGORIES=CATEGORIES
