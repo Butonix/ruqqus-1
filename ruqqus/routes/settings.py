@@ -144,7 +144,7 @@ def settings_profile_post(v):
         else:
             abort(400)
 
-    defaultsorting = request.values.get("defaultsorting", "hot")
+    defaultsorting = request.values.get("defaultsorting")
     if defaultsorting:
         if defaultsorting in ["hot", "new", "old", "activity", "disputed", "top"]:
             v.defaultsorting = defaultsorting
@@ -152,7 +152,7 @@ def settings_profile_post(v):
         else:
             abort(400)
 
-    defaulttime = request.values.get("defaulttime", "all")
+    defaulttime = request.values.get("defaulttime")
     if defaulttime:
         if defaulttime in ["day", "week", "month", "year", "all"]:
             v.defaulttime = defaulttime
