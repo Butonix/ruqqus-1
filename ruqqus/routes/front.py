@@ -382,7 +382,7 @@ def front_all(v):
 
     #print(cats)
 
-    ids = frontlist(sort=sort_method,
+    ids = frontlist(sort=sort,
                     page=page,
                     nsfw=(v and v.over_18 and not v.filter_nsfw),
                     nsfl=(v and v.show_nsfl),
