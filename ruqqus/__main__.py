@@ -47,6 +47,10 @@ class Flask_Timeout(Flask):
         except eventlet.timeout.Timeout as e:
         #except gevent.Timeout as e:
             print("timeout", request.remote_addr, request.method, request.path)
+            try:
+                g.db.close()
+            except:
+                pass
             return make_response("Your request took too long to process.", 500)
         
             
