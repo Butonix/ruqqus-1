@@ -40,7 +40,7 @@ _version = "2.35.94"
 
 class Flask_Timeout(Flask):
             
-    timeout_response=make_response("unable to complete request")
+    timeout_response=lambda:make_response("unable to complete request")
             
     def full_dispatch_request(self, *args, **kwargs):
         kwargs['timeout_value']=self.timeout_response
