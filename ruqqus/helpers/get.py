@@ -726,8 +726,11 @@ def get_guild(name, v=None, graceful=False, db=None):
             isouter=True
         )
         items=query.first()
-        board=items[0]
-        board._is_subscribed=items[1]
+        if items:
+            board=items[0]
+            board._is_subscribed=items[1]
+        else:
+            board=None
     else:
             
         query = g.db.query(Board).options(
