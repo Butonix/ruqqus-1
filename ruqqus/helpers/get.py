@@ -653,19 +653,46 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
     return output
 
 
-def get_board(bid, graceful=False):
+def get_board(bid,v=v, graceful=False):
 
-    x = g.db.query(Board).options(
-        joinedload(Board.moderators).joinedload(ModRelationship.user),
-        joinedload(Board.subcat).joinedload(SubCategory.category)
-        ).filter_by(
-                id=base36decode(bid)).first()
-    if not x:
+    if isinstance(bid, str):
+        bid=base36decode(bid)
+        
+    if v:
+        sub = g.db.query(SubscriberRelationship).filter_by(user_id=v.id, board_id=bid, is_active=True).subquery()
+        query = g.db.query(
+            Board,
+            aliased(sub, SubscriberRelationship)
+            ).options(
+            joinedload(Board.moderators).joinedload(ModRelationship.user),
+            joinedload(Board.subcat).joinedload(SubCategory.category)
+            ).filter(
+                    Board.id==base36decode(bid)
+            ).join(
+            sub,
+            sub.c.board_id==Board.id,
+            isouter=True
+        )
+        items=query.first()
+        board=items[0]
+        board._is_subscribed=items[1]
+    else:
+            
+        query = g.db.query(Board).options(
+            joinedload(Board.moderators).joinedload(ModRelationship.user),
+            joinedload(Board.subcat).joinedload(SubCategory.category)
+            ).filter(
+                    Board.id==bid)
+        board=query.first()
+    
+    
+    
+    if not board:
         if graceful:
             return None
         else:
             abort(404)
-    return x
+    return board
 
 
 def get_guild(name, graceful=False, db=None):
