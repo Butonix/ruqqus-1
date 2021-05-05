@@ -16,4 +16,4 @@ echo "starting chat worker"
 gunicorn ruqqus.__main__:app load_chat -k eventlet  -w 1 --worker-connections 1000 --max-requests 1000000 --preload --bind 127.0.0.1:5001 -D
 
 echo "starting regular workers"
-NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn ruqqus.__main__:app -k gevent -w $WEB_CONCURRENCY --worker-connections $WORKER_CONNECTIONS --max-requests 10000 --max-requests-jitter 500 --preload --bind 127.0.0.1:5000 #--log-level debug
+NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn ruqqus.__main__:app -k gevent -w $WEB_CONCURRENCY --worker-connections $WORKER_CONNECTIONS --max-requests 10000 --max-requests-jitter 500 --preload --bind 127.0.0.1:5000 --worker-tmp-dir /dev/shm #--log-level debug
