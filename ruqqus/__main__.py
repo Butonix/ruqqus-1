@@ -38,6 +38,12 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 _version = "2.35.94"
 
+class Flask_Timeout(Flask):
+            
+    def full_dispatch_request(self, *args, **kwargs):
+        
+        return gevent.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
+
 app = Flask(__name__,
             template_folder='./templates',
             static_folder='./static'
