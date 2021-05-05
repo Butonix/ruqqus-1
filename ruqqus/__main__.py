@@ -44,7 +44,7 @@ class Flask_Timeout(Flask):
         
         return gevent.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
 
-app = Flask(__name__,
+app = Flask_Timeout(__name__,
             template_folder='./templates',
             static_folder='./static'
             )
