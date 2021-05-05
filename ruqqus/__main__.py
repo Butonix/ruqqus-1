@@ -44,6 +44,7 @@ class Flask_Timeout(Flask):
         try:
             return gevent.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
         except gevent.Timeout:
+            print('internal timeout', request.method, request.path, session.get('user_id'))
             abort(500)
 
 app = Flask_Timeout(__name__,
