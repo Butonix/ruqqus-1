@@ -279,6 +279,8 @@ def multiboard(name, v):
         board = get_guild(name)
         if board.is_banned and not (v and v.admin_level >= 3): continue
         if board.over_18 and not (v and v.over_18) and not session_over18(board): continue
+        if not board.can_view(v): continue
+            
         ids += board.idlist(sort=sort,
                            t=t,
                            page=page,
