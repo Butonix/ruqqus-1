@@ -990,6 +990,15 @@ def mod_bid_settings_disallowbots(bid, board, v):
         request.form.get(
             "disallowbots",
             False) == 'true')
+    g.db.add(board)
+    ma=ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"disallow_bots={board.disallowbots}"
+    )
+    g.db.add(ma)
+    return "", 204
 
 @app.route("/mod/<bid>/settings/public_chat", methods=["POST"])
 @auth_required
