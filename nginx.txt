@@ -1,3 +1,5 @@
+worker_processes auto;
+
 server {
     
     server_name dev.ruqqus.com chat.ruqqus.com ruqqus.com ruqq.us c.ruqq.us ruqqus.org ruqqus.win *.amazonaws.com cc5j4aqdgznut4ns.onion;
