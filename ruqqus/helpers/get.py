@@ -653,7 +653,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
     return output
 
 
-def get_board(bid,v=v, graceful=False):
+def get_board(bid,v=None, graceful=False):
 
     if isinstance(bid, str):
         bid=base36decode(bid)
