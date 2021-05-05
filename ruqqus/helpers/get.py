@@ -659,10 +659,10 @@ def get_board(bid,v=None, graceful=False):
         bid=base36decode(bid)
         
     if v:
-        sub = g.db.query(SubscriberRelationship).filter_by(user_id=v.id, board_id=bid, is_active=True).subquery()
+        sub = g.db.query(Subscription).filter_by(user_id=v.id, board_id=bid, is_active=True).subquery()
         query = g.db.query(
             Board,
-            aliased(sub, SubscriberRelationship)
+            aliased(sub, Subscription)
             ).options(
             joinedload(Board.moderators).joinedload(ModRelationship.user),
             joinedload(Board.subcat).joinedload(SubCategory.category)
@@ -707,10 +707,10 @@ def get_guild(name, v=None, graceful=False, db=None):
     name = name.replace('%', '')
 
     if v:
-        sub = g.db.query(SubscriberRelationship).filter_by(user_id=v.id, board_id=bid, is_active=True).subquery()
+        sub = g.db.query(Subscription).filter_by(user_id=v.id, board_id=bid, is_active=True).subquery()
         query = g.db.query(
             Board,
-            aliased(sub, SubscriberRelationship)
+            aliased(sub, Subscription)
             ).options(
             joinedload(Board.moderators).joinedload(ModRelationship.user),
             joinedload(Board.subcat).joinedload(SubCategory.category)
