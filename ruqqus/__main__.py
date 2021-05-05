@@ -1,8 +1,8 @@
-import gevent.monkey
-gevent.monkey.patch_all()
+#import gevent.monkey
+#gevent.monkey.patch_all()
 
-#import eventlet
-#eventlet.monkey_patch()
+import eventlet
+eventlet.monkey_patch()
 
 #import psycogreen.gevent
 #psycogreen.gevent.patch_psycopg()
@@ -43,9 +43,9 @@ class Flask_Timeout(Flask):
     def full_dispatch_request(self, *args, **kwargs):
         #timeval = "timed_out"
         try:
-            return gevent.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
-        #except eventlet.timeout.Timeout as e:
-        except gevent.Timeout as e:
+            return gevent.timeout.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
+        except eventlet.timeout.Timeout as e:
+        #except gevent.Timeout as e:
             print("timeout", request.remote_addr, request.method, request.path)
             return make_response("Your request took too long to process.", 500)
         
