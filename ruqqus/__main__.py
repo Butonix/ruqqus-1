@@ -43,7 +43,7 @@ class Flask_Timeout(Flask):
     def full_dispatch_request(self, *args, **kwargs):
         #timeval = "timed_out"
         try:
-            return gevent.timeout.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
+            return eventlet.timeout.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
         except eventlet.timeout.Timeout as e:
         #except gevent.Timeout as e:
             try:
