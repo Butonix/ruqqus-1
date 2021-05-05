@@ -257,10 +257,10 @@ def board_name(name, v):
                                    )
             }
 
-@app.route("/m/<name>", methods=["GET"])
-@app.route("/api/v1/multi/<name>/listing", methods=["GET"])
-@auth_desired
-@api("read")
+#@app.route("/m/<name>", methods=["GET"])
+#@app.route("/api/v1/multi/<name>/listing", methods=["GET"])
+#@auth_desired
+#@api("read")
 def multiboard(name, v):
     
     if v:
@@ -273,14 +273,30 @@ def multiboard(name, v):
     sort = request.args.get("sort", defaultsorting)
     t = request.args.get("t", defaulttime)
     page = int(request.args.get("page", 1))
-    ids = []
+    
+    board_ids=[]
     
     for name in name.split("+"):
         board = get_guild(name)
         if board.is_banned and not (v and v.admin_level >= 3): continue
         if board.over_18 and not (v and v.over_18) and not session_over18(board): continue
         if not board.can_view(v): continue
-            
+
+        board_ids.append(board.id)
+        
+    
+    ids = g.db.query(Submission).filter(
+        Submission.board_id.in_(tuple(board_ids))
+    )
+    
+    if sort=="hot":
+        ids=ids.order_by(Submission.rank_hot)
+    
+    ids=ids.offset((page-1)*25).limit(26)
+        
+        
+        
+        
         ids += board.idlist(sort=sort,
                            t=t,
                            page=page,
