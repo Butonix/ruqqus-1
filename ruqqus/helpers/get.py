@@ -695,7 +695,7 @@ def get_board(bid,v=None, graceful=False):
     return board
 
 
-def get_guild(name, graceful=False, db=None):
+def get_guild(name, v=None, graceful=False, db=None):
 
     if not db:
         db=g.db
@@ -706,18 +706,40 @@ def get_guild(name, graceful=False, db=None):
     name = name.replace('_', '\_')
     name = name.replace('%', '')
 
-    x = db.query(Board).options(
-        joinedload(Board.moderators).joinedload(ModRelationship.user),
-        joinedload(Board.subcat).joinedload(SubCategory.category)
+    if v:
+        sub = g.db.query(SubscriberRelationship).filter_by(user_id=v.id, board_id=bid, is_active=True).subquery()
+        query = g.db.query(
+            Board,
+            aliased(sub, SubscriberRelationship)
+            ).options(
+            joinedload(Board.moderators).joinedload(ModRelationship.user),
+            joinedload(Board.subcat).joinedload(SubCategory.category)
             ).filter(
-                Board.name.ilike(name)
-                ).first()
-    if not x:
+                    Board.name.ilike(name)
+            ).join(
+            sub,
+            sub.c.board_id==Board.id,
+            isouter=True
+        )
+        items=query.first()
+        board=items[0]
+        board._is_subscribed=items[1]
+    else:
+            
+        query = g.db.query(Board).options(
+            joinedload(Board.moderators).joinedload(ModRelationship.user),
+            joinedload(Board.subcat).joinedload(SubCategory.category)
+            ).filter(
+                    Board.name.ilike(name)
+        )
+        board=query.first()
+    
+    if not board:
         if not graceful:
             abort(404)
         else:
             return None
-    return x
+    return board
 
 
 def get_domain(s):
