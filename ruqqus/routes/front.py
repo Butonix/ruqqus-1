@@ -407,7 +407,7 @@ def front_all(v):
         if sticky:
             ids = [sticky.id] + ids
     # check if ids exist
-    posts = get_posts(ids, sort=sort_method, v=v)
+    posts = get_posts(ids, sort=sort, v=v)
 
     return {'html': lambda: render_template("home.html",
                                             v=v,
