@@ -304,7 +304,7 @@ def api_comment(v):
     if not body and not (v.has_premium and request.files.get('file')):
         return jsonify({"error":"You need to actually write something!"}), 400
     
-    if board.disallowbots and request.headers.get("X-User-Type")=="Bot":
+    if parent_post.board.disallowbots and request.headers.get("X-User-Type")=="Bot":
         return jsonify({"error":f"403 Not Authorized - +{board.name} disallows bots from posting and commenting!"}), 403
 
     body=preprocess(body)
