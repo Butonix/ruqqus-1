@@ -297,7 +297,7 @@ def multiboard(name, v):
         
         
         
-        ids += board.idlist(sort=sort,
+    ids += board.idlist(sort=sort,
                            t=t,
                            page=page,
                            nsfw=(v and v.over_18) or session_over18(board),
