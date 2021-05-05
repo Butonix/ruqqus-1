@@ -333,25 +333,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         
     @property
     def voted(self):
-
-        x = self.__dict__.get("_voted")
-        if x is not None:
-            return x
-
-        if g.v:
-            x = g.db.query(CommentVote).filter_by(
-                comment_id=self.id,
-                user_id=g.v.id
-            ).first()
-
-            if x:
-                x = x.vote_type
-            else:
-                x = 0
-        else:
-            x = 0
-        return x
-
+        return self.__dict__.get("_voted")
+        
     @property
     def title(self):
         return self.__dict__.get("_title", self.author.title)
