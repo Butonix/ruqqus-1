@@ -1,7 +1,7 @@
 if (window.innerWidth>=992 || window.location.href.endsWith('/chat')) {
 
-  //var socket=io("https://chat.ruqqus.com", {withCredentials: true});
-  var socket=io()
+  var socket=io("https://chat.ruqqus.com", {withCredentials: true});
+  //var socket=io()
 
   var is_typing=false;
   var recent_sender=$('#username').val()
