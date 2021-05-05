@@ -451,7 +451,7 @@ def subcat(name, v):
     if "+" in name:
         ids = []
         for name in name.split("+"):
-            ids += frontlist(sort=sort_method,
+            ids += frontlist(sort=sort,
                             page=page,
                             nsfw=(v and v.over_18 and not v.filter_nsfw),
                             nsfl=(v and v.show_nsfl),
@@ -465,7 +465,7 @@ def subcat(name, v):
                             categories=[name]
                             )
     else:
-        ids = frontlist(sort=sort_method,
+        ids = frontlist(sort=sort,
                         page=page,
                         nsfw=(v and v.over_18 and not v.filter_nsfw),
                         nsfl=(v and v.show_nsfl),
