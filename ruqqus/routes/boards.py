@@ -177,7 +177,7 @@ def reddit_moment_redirect(name):
 @api("read")
 def board_name(name, v):
 
-    board = get_guild(name)
+    board = get_guild(name, v=v)
 
     #if not board.name == name and not request.path.startswith('/api/v1'):
         #return redirect(request.path.replace(name, board.name))
@@ -248,8 +248,7 @@ def board_name(name, v):
                                             next_exists=next_exists,
                                             sort_method=sort,
                                             page=page,
-                                            is_subscribed=(v and board.has_subscriber(v)
-                                                           )
+                                            is_subscribed=board.is_subscribed
                                             ),
             'api': lambda: jsonify({"data": [x.json for x in posts],
                                     "next_exists": next_exists
