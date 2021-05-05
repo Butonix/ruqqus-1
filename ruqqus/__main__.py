@@ -1,8 +1,8 @@
-import gevent.monkey
-gevent.monkey.patch_all()
+#import gevent.monkey
+#gevent.monkey.patch_all()
 
-#import eventlet
-#eventlet.monkey_patch()
+import eventlet
+eventlet.monkey_patch()
 
 #import psycogreen.gevent
 #psycogreen.gevent.patch_psycopg()
@@ -42,7 +42,7 @@ class Flask_Timeout(Flask):
             
     def full_dispatch_request(self, *args, **kwargs):
         timeval = "timed_out"
-        returnval= gevent.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
+        returnval= eventlet.timetout.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
         if timeval==returnval:
             print('internal timeout', request.method, request.path, session.get('user_id'))
             abort(500)
