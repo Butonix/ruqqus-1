@@ -46,9 +46,10 @@ class Flask_Timeout(Flask):
             return eventlet.timeout.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
         except eventlet.timeout.Timeout as e:
             print("timeout", request.method, request.path)
+            return make_response("Your request took too long to process.")
             
 
-app = Flask(__name__,
+app = Flask_Timeout(__name__,
             template_folder='./templates',
             static_folder='./static'
             )
