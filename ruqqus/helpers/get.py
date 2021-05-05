@@ -707,7 +707,7 @@ def get_guild(name, v=None, graceful=False, db=None):
     name = name.replace('%', '')
 
     if v:
-        sub = g.db.query(Subscription).filter_by(user_id=v.id, board_id=bid, is_active=True).subquery()
+        sub = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).join(Subscription.board).filter(Board.name.ilike(name)).subquery()
         query = g.db.query(
             Board,
             aliased(sub, Subscription)
