@@ -46,7 +46,11 @@ class Flask_Timeout(Flask):
             return gevent.timeout.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
         except eventlet.timeout.Timeout as e:
         #except gevent.Timeout as e:
-            print("timeout", request.remote_addr, request.method, request.path)
+            try:
+                print("timeout", request.remote_addr, request.method, request.path)
+            except:
+                pass
+            
             try:
                 g.db.close()
             except:
