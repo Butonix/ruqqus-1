@@ -122,8 +122,15 @@ def login_post():
                              formhash
                              ):
             return redirect("/login")
-
-        if not account.validate_2fa(request.form.get("2fa_token", "").strip()):
+        
+        is_2fa=account.validate_2fa(request.form.get("2fa_token", "").strip())
+        is_recovery=validate_hash(
+                f"{account.mfa_secret}+{account.id}+P{account.original_username}",
+                request.form.get("2fa_token","").lower().replace(" ","")
+            )
+        
+        if not is_2fa and not is_recovery:
+            
             hash = generate_hash(f"{account.id}+{time}+2fachallenge")
             return render_template("login_2fa.html",
                                    v=account,
@@ -132,20 +139,16 @@ def login_post():
                                    failed=True,
                                    i=random_image()
                                    )
+        elif is recovery:
+            account.mfa_secret=None
+            g.db.add(account)
+            g.db.commit()
 
     else:
         abort(400)
 
     if account.is_banned and account.unban_utc > 0 and time.time() > account.unban_utc:
         account.unban()
-
-    #dev server - primo only
-    if app.config.get("PREMIUM_ONLY", False) and account.admin_level < 2 and not account.has_premium:
-        return render_template(
-            "login_premium.html", 
-            i=random_image()
-            )
-
 
     # set session and user id
     session["user_id"] = account.id
@@ -632,11 +635,18 @@ def reset_2fa():
                            error="That link has expired.")
 
     token=request.args.get("token")
+    token=token.lower()
+    token=token.replace(" ","")
     uid=request.args.get("id")
 
     user=get_account(uid)
 
-    if not validate_hash(f"{user.id}+{user.username}+disable2fa+{t}+{user.mfa_secret}+{user.login_nonce}", token):
+    if not validate_hash(
+        f"{user.id}+{user.username}+disable2fa+{t}+{user.mfa_secret}+{user.login_nonce}", 
+        token
+    ) and not validate_hash(
+        f"{user.mfa_secret}+{user.id}+{user.original_username}"
+    ):
         abort(403)
 
     #validation successful, remove 2fa
