@@ -43,8 +43,8 @@ class Flask_Timeout(Flask):
     def full_dispatch_request(self, *args, **kwargs):
         #timeval = "timed_out"
         try:
-            return eventlet.timeout.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
-        except eventlet.timeout.Timeout as e:
+            return gevent.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
+        except gevent.Timeout as e:
         #except gevent.Timeout as e:
             try:
                 print("timeout", request.remote_addr, request.method, request.path)
@@ -59,7 +59,7 @@ class Flask_Timeout(Flask):
         
             
 
-app = Flask(__name__,
+app = Flask_Timeout(__name__,
             template_folder='./templates',
             static_folder='./static'
             )
