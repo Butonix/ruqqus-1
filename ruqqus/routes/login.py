@@ -139,7 +139,7 @@ def login_post():
                                    failed=True,
                                    i=random_image()
                                    )
-        elif is recovery:
+        elif is_recovery:
             account.mfa_secret=None
             g.db.add(account)
             g.db.commit()
