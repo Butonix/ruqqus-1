@@ -113,6 +113,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             BoardBlock).filter_by(user_id=v.id).subquery()
         blocking = v.blocking.subquery()
         blocked = v.blocked.subquery()
+        sub = nSession.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery
 
         items = nSession.query(
             Submission,
@@ -120,7 +121,8 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             aliased(ModRelationship, alias=mod),
             boardblocks.c.id,
             blocking.c.id,
-            blocked.c.id
+            blocked.c.id,
+            aliased(Subscription, alias=sub)
             # aliased(ModAction, alias=exile)
         ).options(
             joinedload(Submission.author).joinedload(User.title),
@@ -152,6 +154,10 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             blocked, 
             blocked.c.user_id == Submission.author_id, 
             isouter=True
+        ).join(
+            sub,
+            sub.c.board_id == Submission.board_id,
+            isouter=True
         # ).join(
         #     exile,
         #     and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
@@ -167,6 +173,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
         x._is_blocking_guild = items[3] or 0
         x._is_blocking = items[4] or 0
         x._is_blocked = items[5] or 0
+        x.board._is_subscribed=items[6] or 0
         # x._is_exiled_for=items[5] or 0
 
     else:
@@ -274,6 +281,7 @@ def get_posts(pids, sort="hot", v=None):
             output[i]._is_blocking = posts[i][4] or 0
             output[i]._is_blocked = posts[i][5] or 0
             output[i]._is_subscribed = posts[i][6] or 0
+            output[i].board._is_subscribed=posts[i][6] or 0
             # output[i]._is_exiled_for=posts[i][7] or 0
     else:
         query = g.db.query(
