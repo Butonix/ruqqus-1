@@ -247,7 +247,7 @@ class RetryingQuery(_Query):
     def first(self):
         return super().first()
 
-db_session = scoped_session(sessionmaker(class_=RoutingSession, query_cls=RetryingQuery))
+db_session = scoped_session(sessionmaker(class_=RoutingSession))#, query_cls=RetryingQuery))
 #db_session=scoped_session(sessionmaker(bind=engines["leader"]))
 
 Base = declarative_base()
@@ -397,7 +397,8 @@ def log_event(name, link):
 def after_request(response):
 
     try:
-        g.db.commit()
+        if g.db.dirty:
+            g.db.commit()
         g.db.close()
     except AttributeError:
         pass
