@@ -662,7 +662,7 @@ def get_board(bid,v=None, graceful=False):
         sub = g.db.query(Subscription).filter_by(user_id=v.id, board_id=bid, is_active=True).subquery()
         query = g.db.query(
             Board,
-            aliased(sub, Subscription)
+            aliased(Subscription, alias=sub)
             ).options(
             joinedload(Board.moderators).joinedload(ModRelationship.user),
             joinedload(Board.subcat).joinedload(SubCategory.category)
@@ -714,7 +714,7 @@ def get_guild(name, v=None, graceful=False, db=None):
         sub = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).join(Subscription.board).filter(Board.name.ilike(name)).subquery()
         query = g.db.query(
             Board,
-            aliased(sub, Subscription)
+            aliased(Subscription, alias=sub)
             ).options(
             joinedload(Board.moderators).joinedload(ModRelationship.user),
             joinedload(Board.subcat).joinedload(SubCategory.category)
@@ -727,7 +727,6 @@ def get_guild(name, v=None, graceful=False, db=None):
             )
 
         items=query.first()
-        print(items)
         if items:
             board=items[0]
             board._is_subscribed=items[1]
