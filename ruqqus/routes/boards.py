@@ -822,7 +822,7 @@ def mod_rescind_bid_username(bid, username, board, v):
 @api("guildmaster")
 def mod_accept_board(bid, v):
 
-    board = get_board(bid)
+    board = get_board(bid, v=v)
 
     x = board.has_invite(v)
     if not x:
@@ -1222,7 +1222,7 @@ def board_about_appearance(boardname, board, v):
 @api("read")
 def board_about_mods(boardname, v):
 
-    board = get_guild(boardname)
+    board = get_guild(boardname, v=v)
 
     if board.is_banned:
         return {
@@ -1324,7 +1324,7 @@ def board_about_contributors(boardname, board, v):
 @auth_required
 def subscribe_board(boardname, v):
 
-    board = get_guild(boardname)
+    board = get_guild(boardname, v=v)
 
     # check for existing subscription, canceled or otherwise
     sub = g.db.query(Subscription).filter_by(
@@ -1361,7 +1361,7 @@ def subscribe_board(boardname, v):
 @auth_required
 def unsubscribe_board(boardname, v):
 
-    board = get_guild(boardname)
+    board = get_guild(boardname, v=v)
 
     # check for existing subscription
     sub = g.db.query(Subscription).filter_by(
@@ -1745,7 +1745,7 @@ def siege_guild(v):
     if not guild:
         abort(400)
 
-    guild = get_guild(guild)
+    guild = get_guild(guild, v=v)
 
     # check time
     if v.last_siege_utc > now - (60 * 60 * 24 * 7):
@@ -1998,7 +1998,7 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
 @api("read")
 def board_comments(boardname, v):
 
-    b = get_guild(boardname)
+    b = get_guild(boardname, v=v)
 
     page = int(request.args.get("page", 1))
 
@@ -2063,7 +2063,7 @@ def change_guild_category(v, board, bid, category):
 def board_mod_log(boardname, v):
 
     page=int(request.args.get("page",1))
-    board=get_guild(boardname)
+    board=get_guild(boardname, v=v)
 
     if board.is_banned:
         return {
