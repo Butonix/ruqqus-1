@@ -149,6 +149,7 @@ def settings_security(v):
         while len(recovery)<25:
             recovery="0"+recovery
         recovery=" ".join([recovery[i:i+5] for i in range(0,len(recovery),5)])
+	recovery=recovery.upper()
     else:
         recovery=None
     return render_template(
