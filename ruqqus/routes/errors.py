@@ -15,6 +15,7 @@ def error_wrapper(f):
     def wrapper(*args, **kwargs):
 
         resp=make_response(f(*args, **kwargs))
+        g.db.rollback()
         g.db.close()
         return resp
 
