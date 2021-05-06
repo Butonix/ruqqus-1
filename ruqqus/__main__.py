@@ -49,7 +49,7 @@ class Flask_Timeout(Flask):
             try:
                 print("timeout", request.remote_addr, request.method, request.path)
             except:
-                pass
+                print("timeout")
             
             try:
                 g.db.close()
