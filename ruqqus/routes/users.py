@@ -31,7 +31,7 @@ def mfa_qr(secret, v):
     qr = qrcode.QRCode(
         error_correction=qrcode.constants.ERROR_CORRECT_L
     )
-    qr.add_data(x.provisioning_uri(v.username, issuer_name="Ruqqus"))
+    qr.add_data(x.provisioning_uri(v.username, issuer_name=app.config["SITE_NAME"]))
     img = qr.make_image(fill_color="#"+app.config["SITE_COLOR"], back_color="white")
 
     mem = io.BytesIO()
