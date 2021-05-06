@@ -141,12 +141,22 @@ def help_admins(v):
 @app.route("/settings/security", methods=["GET"])
 @auth_required
 def settings_security(v):
-	return render_template("settings_security.html",
-						   v=v,
-						   mfa_secret=pyotp.random_base32() if not v.mfa_secret else None,
-						   error=request.args.get("error") or None,
-						   msg=request.args.get("msg") or None
-						   )
+    mfa_secret=pyotp.random_base32() if not v.mfa_secret else None
+    if mfa_secret:
+        recovery=f"{mfa_secret}+{v.id}+{v.original_username}"
+        recovery=generate_hash(recovery)
+        recovery=base36encode(int(recovery,16))
+        while len(recovery)<25:
+            recovery="0"+recovery
+        recovery=" ".join([recovery[i:i+5] for i in range(0,len(recovery),5)])
+        return render_template(
+            "settings_security.html",
+            v=v,
+            mfa_secret=mfa_secret,
+            recovery=recovery,
+            error=request.args.get("error") or None,
+            msg=request.args.get("msg") or None
+        )
 
 @app.route("/settings/premium", methods=["GET"])
 @auth_required
