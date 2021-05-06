@@ -149,7 +149,9 @@ def settings_security(v):
         while len(recovery)<25:
             recovery="0"+recovery
         recovery=" ".join([recovery[i:i+5] for i in range(0,len(recovery),5)])
-        return render_template(
+    else:
+        recovery=None
+    return render_template(
             "settings_security.html",
             v=v,
             mfa_secret=mfa_secret,
