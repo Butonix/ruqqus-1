@@ -143,6 +143,8 @@ redispool=ConnectionPool(
     ) if app.config["CACHE_TYPE"]=="redis" else None
 app.config["CACHE_OPTIONS"]={'connection_pool':redispool} if app.config["CACHE_TYPE"]=="redis" else {}
 
+app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", False)))
+
 
 Markdown(app)
 cache = Cache(app)
@@ -319,6 +321,9 @@ def drop_connection():
 # enforce https
 @app.before_request
 def before_request():
+
+    if request.method.lower() != "get" and app.config["READ_ONLY"]:
+        return jsonify({"error":f"{app.config['SITE_NAME']} is currently in read-only mode."}), 500
 
 
 
