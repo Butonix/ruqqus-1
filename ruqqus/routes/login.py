@@ -124,10 +124,7 @@ def login_post():
             return redirect("/login")
         
         is_2fa=account.validate_2fa(request.form.get("2fa_token", "").strip())
-        is_recovery=validate_hash(
-                f"{account.mfa_secret}+{account.id}+P{account.original_username}",
-                request.form.get("2fa_token","").lower().replace(" ","")
-            )
+        is_recovery=safe_compare(request.form.get("2fa_token","").lower().replace(' ',''), v.mfa_removal_code)
         
         if not is_2fa and not is_recovery:
             
