@@ -52,6 +52,7 @@ class Flask_Timeout(Flask):
                 print("timeout")
             
             try:
+                g.db.rollback()
                 g.db.close()
             except:
                 pass
