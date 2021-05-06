@@ -265,7 +265,7 @@ def settings_security_post(v):
 
         token = request.form.get("2fa_remove")
 
-        if not v.validate_2fa(token) and not validate_hash(f"{v.mfa_secret}+{v.id}+{v.original_username}", token.lower().replace(' ','')):
+        if not v.validate_2fa(token) and not safe_compare(v.mfa_removal_code, token.lower().replace(' ','')):
             return redirect("/settings/security?error=" +
                             escape("Invalid password or token."))
 
