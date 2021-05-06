@@ -314,12 +314,8 @@ class Board(Base, Stndrd, Age_times):
             board_id=self.id, user_id=user.id).first()
 
     def has_subscriber(self, user):
-
-        if not user:
-            return False
-
-        return self.id in [
-            x.board_id for x in user.subscriptions if x.is_active]
+        
+        return self.is_subscribed
     
     @property
     def is_subscribed(self):
