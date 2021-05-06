@@ -282,7 +282,7 @@ def admin_distinguish_comment(c_id, v):
 @validate_formkey
 def api_ban_guild(v, bid):
 
-    board = get_board(bid)
+    board = get_board(bid, v=v)
 
     board.is_banned = True
     board.ban_reason = request.form.get("reason", "")
@@ -297,7 +297,7 @@ def api_ban_guild(v, bid):
 @validate_formkey
 def api_unban_guild(v, bid):
 
-    board = get_board(bid)
+    board = get_board(bid, v=v)
 
     board.is_banned = False
     board.ban_reason = ""
