@@ -196,6 +196,13 @@ class User(Base, Stndrd, Age_times):
 
         x = pyotp.TOTP(self.mfa_secret)
         return x.verify(token, valid_window=1)
+    
+    @property
+    def mfa_removal_code(self):
+        
+        hashstr = f"{self.mfa_secret}+{self.id}+{self.original_username}"
+        
+        return generate_hash(hashstr)
 
     @property
     def boards_subscribed(self):
