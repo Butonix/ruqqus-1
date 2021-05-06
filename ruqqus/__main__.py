@@ -59,7 +59,7 @@ class Flask_Timeout(Flask):
         
             
 
-app = Flask_Timeout(__name__,
+app = Flask(__name__,
             template_folder='./templates',
             static_folder='./static'
             )
