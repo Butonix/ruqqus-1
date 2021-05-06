@@ -113,7 +113,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             BoardBlock).filter_by(user_id=v.id).subquery()
         blocking = v.blocking.subquery()
         blocked = v.blocked.subquery()
-        sub = nSession.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery
+        sub = nSession.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
 
         items = nSession.query(
             Submission,
