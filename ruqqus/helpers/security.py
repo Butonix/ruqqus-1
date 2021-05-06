@@ -3,7 +3,7 @@ from werkzeug.security import *
 from os import environ
 import time
 import random
-import gevent.sleep
+import gevent
 
 def generate_hash(string):
 
