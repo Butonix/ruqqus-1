@@ -202,7 +202,15 @@ class User(Base, Stndrd, Age_times):
         
         hashstr = f"{self.mfa_secret}+{self.id}+{self.original_username}"
         
-        return generate_hash(hashstr)
+        hashstr= generate_hash(hashstr)
+        
+        removal_code = base36id(int(hashstr,16))
+        
+        #should be 25char long, left pad if needed
+        while len(removal_code)<25:
+            removal_code="0"+removal_code
+            
+        return removal_code
 
     @property
     def boards_subscribed(self):
