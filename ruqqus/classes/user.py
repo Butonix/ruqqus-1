@@ -204,7 +204,7 @@ class User(Base, Stndrd, Age_times):
         
         hashstr= generate_hash(hashstr)
         
-        removal_code = base36id(int(hashstr,16))
+        removal_code = base36encode(int(hashstr,16))
         
         #should be 25char long, left pad if needed
         while len(removal_code)<25:
