@@ -67,7 +67,7 @@ class Flask_Timeout(Flask):
             return make_response("Your request took too long to process.", 500)
             
 
-app = Flask_Timeout(__name__,
+app = Flask(__name__,
             template_folder='./templates',
             static_folder='./static'
             )
