@@ -45,7 +45,7 @@ class Flask_Timeout(Flask):
         timeout=gevent.Timeout(15, gevent.Timeout)
         timeout.start()
         try:
-            req_thread=gevent.spawn(super().full_dispatch_request, *args, **kwargs))
+            req_thread=gevent.spawn(super().full_dispatch_request, *args, **kwargs)
             req_thread.join()
             return_val = req_thread.value
         except gevent.timeout.Timeout as t:
