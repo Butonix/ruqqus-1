@@ -211,7 +211,7 @@ limiter = Limiter(
 _engine=create_engine(
     app.config['DATABASE_URL'],
     pool_class=QueuePool,
-    pool_size=int(environ.get("PG_POOL_SIZE",10))
+    pool_size=int(environ.get("PG_POOL_SIZE",10)),
     pool_use_lifo=True
 )
 
