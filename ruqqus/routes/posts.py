@@ -9,6 +9,7 @@ import requests
 import re
 import bleach
 import time
+import gevent
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -767,11 +768,10 @@ def submit_post(v):
 
     # spin off thumbnail generation and csam detection as  new threads
     if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"):
-        new_thread = threading.Thread(target=thumbnail_thread,
-                                      args=(new_post.base36id,)
-                                      )
-        new_thread.start()
-
+        new_thread = gevent.spawn(
+            thumbnail_thread,
+            new_post.base36id
+        )
 
     # expire the relevant caches: front page new, board new
     cache.delete_memoized(frontlist)
