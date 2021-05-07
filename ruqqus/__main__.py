@@ -42,13 +42,13 @@ class Flask_Timeout(Flask):
             
     def full_dispatch_request(self, *args, **kwargs):
             
-        def target(self, *args, **kwargs):
+        def target(*args, **kwargs):
             
-            return self.super().full_dispatch_request(*args, **kwargs)
+            return super().full_dispatch_request(*args, **kwargs)
         
         timeout=gevent.Timeout(15, gevent.Timeout)
         timeout.start()
-        req_thread=gevent.spawn(target, self, *args, **kwargs)
+        req_thread=gevent.spawn(target, *args, **kwargs)
         try:
             req_thread.join()
             return req_thread.value
