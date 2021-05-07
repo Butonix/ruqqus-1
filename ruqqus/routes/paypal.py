@@ -301,6 +301,8 @@ def gift_post_pid(pid, v):
         g.db.flush()
     except:
         pass
+    
+    g.db.commit()
 
     return jsonify({"message":"Tip Successful!"})
 
@@ -382,6 +384,8 @@ def gift_comment_pid(cid, v):
         g.db.flush()
     except:
         pass
+    
+    g.db.commit()
 
     return jsonify({"message":"Tip Successful!"})
 
