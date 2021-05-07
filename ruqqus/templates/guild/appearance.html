@@ -121,7 +121,7 @@
                     <input type="radio" name="color" id="color-{{ color }}" value="{{ color }}" {% if b.color == color %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
                     <label class="color-radio" for="color-{{ color }}">
                       <span style="background-color: #{{ color }}">
-                      {% if b.color == color %}
+                      {% if b.color.lower() == color %}
                         <i class="fas fa-check text-white"></i>
                       {% else %}
                         &nbsp;
