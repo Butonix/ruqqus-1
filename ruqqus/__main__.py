@@ -44,13 +44,14 @@ class Flask_Timeout(Flask):
         
         timeout=gevent.Timeout(15, gevent.Timeout)
         timeout.start()
+        req_thread=gevent.spawn(super().full_dispatch_request, *args, **kwargs)
         try:
-            req_thread=gevent.spawn(super().full_dispatch_request, *args, **kwargs)
             req_thread.join()
             return req_thread.value
         except gevent.timeout.Timeout as t:
             if t is not timeout:
                 raise
+            req_thread.kill()
             print("timeout", request.remote_addr, request.method, request.path)
             try:
                 g.db.rollback()
@@ -60,7 +61,7 @@ class Flask_Timeout(Flask):
             return make_response("Your request took too long to process.", 500)
             
 
-app = Flask(__name__,
+app = Flask_Timeout(__name__,
             template_folder='./templates',
             static_folder='./static'
             )
