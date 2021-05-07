@@ -581,6 +581,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
                 aliased(ModAction, alias=exile)
             ).options(
                 joinedload(Comment.author).joinedload(User.title),
+                joinedload(Comment.post).lazyload('*'),
                 joinedload(Comment.post).joinedload(Submission.board),
                 joinedload(Comment.comment_aux)
             )
@@ -732,7 +733,7 @@ def get_guild(name, v=None, graceful=False, db=None):
             sub,
             sub.c.board_id==Board.id,
             isouter=True
-        )
+            )
         items=query.first()
         if items:
             board=items[0]
