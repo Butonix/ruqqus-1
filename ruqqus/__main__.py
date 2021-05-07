@@ -44,7 +44,7 @@ class Flask_Timeout(Flask):
             
         def target(*args, **kwargs):
             
-            return super().full_dispatch_request(*args, **kwargs)
+            return self.__super__().full_dispatch_request(*args, **kwargs)
         
         timeout=gevent.Timeout(15, gevent.Timeout)
         timeout.start()
