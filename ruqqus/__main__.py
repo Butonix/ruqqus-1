@@ -203,11 +203,17 @@ limiter = Limiter(
 )
 
 # setup db
-pool_size = int(environ.get("PG_POOL_SIZE", 10))
-engines = {
-    "leader": create_engine(app.config['DATABASE_URL'], pool_size=pool_size, pool_use_lifo=True),
-    "followers": [create_engine(x, pool_size=pool_size, pool_use_lifo=True) for x in app.config['SQLALCHEMY_READ_URIS'] if x] if any(i for i in app.config['SQLALCHEMY_READ_URIS']) else [create_engine(app.config['DATABASE_URL'], pool_size=pool_size, pool_use_lifo=True)]
-}
+                         
+#engines = {
+#    "leader": create_engine(app.config['DATABASE_URL'], pool_size=pool_size, pool_use_lifo=True),
+#    "followers": [create_engine(x, pool_size=pool_size, pool_use_lifo=True) for x in app.config['SQLALCHEMY_READ_URIS'] if x] if any(i for i in app.config['SQLALCHEMY_READ_URIS']) else [create_engine(app.config['DATABASE_URL'], pool_size=pool_size, pool_use_lifo=True)]
+#}
+_engine=create_engine(
+    app.config['DATABASE_URL'],
+    pool_class=QueuePool,
+    pool_size=int(environ.get("PG_POOL_SIZE",10))
+    pool_user_lifo=True
+)
 
 
 #These two classes monkey patch sqlalchemy
@@ -257,8 +263,8 @@ class RetryingQuery(_Query):
     def first(self):
         return super().first()
 
-db_session = scoped_session(sessionmaker(class_=RoutingSession))#, query_cls=RetryingQuery))
-#db_session=scoped_session(sessionmaker(bind=engines["leader"]))
+#db_session = scoped_session(sessionmaker(class_=RoutingSession))#, query_cls=RetryingQuery))
+db_session=scoped_session(sessionmaker(bind=_engine))
 
 Base = declarative_base()
 
