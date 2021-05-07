@@ -597,6 +597,7 @@ def settings_block_guild(v):
                            created_utc=int(time.time())
                            )
     g.db.add(new_block)
+    g.db.commit()
 
     cache.delete_memoized(v.idlist)
     #cache.delete_memoized(Board.idlist, v=v)
@@ -617,6 +618,7 @@ def settings_unblock_guild(v):
         abort(409)
 
     g.db.delete(x)
+    g.db.commit()
 
     cache.delete_memoized(v.idlist)
     #cache.delete_memoized(Board.idlist, v=v)
