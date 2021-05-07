@@ -46,7 +46,7 @@ class Flask_Timeout(Flask):
         
         @copy_current_request_context
         def thread_target(self, *args, **kwargs):   
-            return self.super().full_dispatch_request(*args, **kwargs)
+            return super(Flask, self).full_dispatch_request(*args, **kwargs)
         
             
         
