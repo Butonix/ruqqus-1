@@ -264,7 +264,7 @@ class RetryingQuery(_Query):
         return super().first()
 
 #db_session = scoped_session(sessionmaker(class_=RoutingSession))#, query_cls=RetryingQuery))
-db_session=scoped_session(sessionmaker(bind=_engine))
+db_session=scoped_session(sessionmaker(bind=_engine, query_cls=RetryingQuery))
 
 Base = declarative_base()
 
