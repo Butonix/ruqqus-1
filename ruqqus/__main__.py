@@ -50,7 +50,7 @@ class Flask_Timeout(Flask):
         
             
         
-        timeout=gevent.Timeout(15, gevent.Timeout)
+        timeout=gevent.Timeout(10, gevent.Timeout)
         timeout.start()
         req_thread=gevent.spawn(thread_target, self, *args, **kwargs)
         try:
