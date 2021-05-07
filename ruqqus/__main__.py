@@ -57,8 +57,6 @@ class Flask_Timeout(Flask):
             req_thread.join()
             return req_thread.value
         except gevent.timeout.Timeout as t:
-            if t is not timeout:
-                raise
             req_thread.kill()
             print("timeout", request.remote_addr, request.method, request.path)
             try:
