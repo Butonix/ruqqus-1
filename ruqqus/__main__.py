@@ -41,16 +41,17 @@ _version = "2.35.94"
 class Flask_Timeout(Flask):
             
     def full_dispatch_request(self, *args, **kwargs):
-        #timeval = "timed_out"
+        
+        timeout=gevent.Timeout(15, gevent.Timeout)
+        timeout.start()
         try:
-            return gevent.with_timeout(10, super().full_dispatch_request, *args, **kwargs)
-        except gevent.Timeout as e:
-        #except gevent.Timeout as e:
-            try:
-                print("timeout", request.remote_addr, request.method, request.path)
-            except:
-                print("timeout")
-            
+            req_thread=gevent.spawn(super().full_dispatch_request, *args, **kwargs))
+            req_thread.join()
+            return_val = req_thread.value
+        except gevent.timeout.Timeout as t:
+            if t is not timeout:
+                raise
+            print("timeout", request.remote_addr, request.method, request.path)
             try:
                 g.db.rollback()
                 g.db.close()
