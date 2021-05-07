@@ -33,6 +33,6 @@ def safe_compare(x, y):
     
     after=time.time()
     
-    gevent.sleep(random.uniform(0.0, 0.5)-(after-before))
+    gevent.sleep(random.uniform(0.0, 0.1)-(after-before))
     
     return returnval
