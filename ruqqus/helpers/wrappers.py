@@ -46,10 +46,7 @@ def get_logged_in_user(db=None):
             ClientAuth.access_token_expire_utc > int(time.time())
         ).first()
 
-        if app.config.get("PREMIUM_ONLY") and client.user.admin_level < 2 and not client.user.has_premium:
-            x=(None, None)
-        else:
-            x = (client.user, client) if client else (None, None)
+        x = (client.user, client) if client else (None, None)
 
 
     elif "user_id" in session:
