@@ -38,7 +38,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 _version = "2.35.94"
 
-class Flask(Flask):
+class Flask_Timeout(Flask):
             
     def full_dispatch_request(self, *args, **kwargs):
         
@@ -60,7 +60,7 @@ class Flask(Flask):
             return make_response("Your request took too long to process.", 500)
             
 
-app = Flask_Timeout(__name__,
+app = Flask(__name__,
             template_folder='./templates',
             static_folder='./static'
             )
