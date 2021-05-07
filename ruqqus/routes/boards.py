@@ -1564,7 +1564,7 @@ def board_css(board_fullname, theme, x):
         b36id=board_fullname.split('_')[1]
     except IndexError:
         #print(request.headers.get("Referer",request.headers.get("Referrer")))
-        abort(500)
+        abort(400)
 
     board = get_board(b36id)
 
