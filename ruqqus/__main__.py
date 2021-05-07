@@ -47,7 +47,7 @@ class Flask_Timeout(Flask):
         try:
             req_thread=gevent.spawn(super().full_dispatch_request, *args, **kwargs)
             req_thread.join()
-            return_val = req_thread.value
+            return req_thread.value
         except gevent.timeout.Timeout as t:
             if t is not timeout:
                 raise
@@ -58,7 +58,6 @@ class Flask_Timeout(Flask):
             except:
                 pass
             return make_response("Your request took too long to process.", 500)
-        
             
 
 app = Flask_Timeout(__name__,
