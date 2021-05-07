@@ -398,8 +398,7 @@ def log_event(name, link):
 def after_request(response):
 
     try:
-        if g.db.dirty:
-            g.db.commit()
+        g.db.commit()
         g.db.close()
     except AttributeError:
         pass
