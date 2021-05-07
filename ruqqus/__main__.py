@@ -38,7 +38,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 _version = "2.35.94"
 
-class Flask_Timeout(Flask):
+class Flask(Flask):
             
     def full_dispatch_request(self, *args, **kwargs):
         
