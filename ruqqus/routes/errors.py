@@ -265,3 +265,13 @@ def error_all_preview(eid, v):
      eid=int(eid)
      return render_template(f"errors/{eid}.html", v=v)
 
+
+
+@app.errorhandler(DatabaseOverload)
+@error_wrapper
+@auth_desired
+@api()
+def error_402(e, v):
+    return{"html": lambda: (render_template('errors/overload.html', v=v), 500),
+           "api": lambda: (jsonify({"error": "500 Internal Server Error (database overload)"}), 500)
+           }
