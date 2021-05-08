@@ -2,7 +2,7 @@ from .base36 import *
 from .sqla_values import *
 from ruqqus.classes import *
 from flask import g
-from sqlalchemy.orm import joinedload, aliased, lazyload, aliased
+from sqlalchemy.orm import joinedload, aliased, lazyload, aliased, Load
 from urllib.parse import urlparse
 
 import re
