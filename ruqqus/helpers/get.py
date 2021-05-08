@@ -627,7 +627,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             #comment._is_blocked = c[3] or 0
             comment._is_guildmaster=post._is_guildmaster
             
-            comment._is_exiled_for=c[3]
+            comment._is_exiled_for=c[2]
             #comment._is_exiled_for=c[4]
             output.append(comment)
 
