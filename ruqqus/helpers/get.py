@@ -564,9 +564,9 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
     if v:
         votes = nSession.query(CommentVote).filter_by(user_id=v.id).subquery()
 
-        #blocking = v.blocking.subquery()
+        blocking = v.blocking.subquery()
 
-        #blocked = v.blocked.subquery()
+        blocked = v.blocked.subquery()
 
         comms = nSession.query(
             Comment,
@@ -598,14 +598,14 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             votes,
             votes.c.comment_id == Comment.id,
             isouter=True
-        # ).join(
-        #     blocking,
-        #     blocking.c.target_id == Comment.author_id,
-        #     isouter=True
-        # ).join(
-        #     blocked,
-        #     blocked.c.user_id == Comment.author_id,
-        #     isouter=True
+        ).join(
+            blocking,
+            blocking.c.target_id == Comment.author_id,
+            isouter=True
+        ).join(
+            blocked,
+            blocked.c.user_id == Comment.author_id,
+            isouter=True
         ).join(
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
@@ -632,11 +632,11 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         for c in comments:
             comment = c[0]
             comment._voted = c[1] or 0
-            # comment._is_blocking = c[2] or 0
-            # comment._is_blocked = c[3] or 0
+            comment._is_blocking = c[2] or 0
+            comment._is_blocked = c[3] or 0
             # comment._is_guildmaster=post._is_guildmaster
             
-            comment._is_exiled_for=c[2]
+            comment._is_exiled_for=c[4]
             output.append(comment)
 
     else:
