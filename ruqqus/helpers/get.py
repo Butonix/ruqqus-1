@@ -2,7 +2,7 @@ from .base36 import *
 from .sqla_values import *
 from ruqqus.classes import *
 from flask import g
-from sqlalchemy.orm import Load, lazyload, joinedload, aliased
+from sqlalchemy.orm import joinedload, aliased
 from urllib.parse import urlparse
 
 import re
@@ -575,17 +575,16 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
 
         query = nSession.query(
-            Comment, 
-            aliased(CommentVote, alias=vt),
-            aliased(ModRelationship, alias=mod),
-            aliased(ModAction, alias=exile)
-        ).options(
-            joinedload(Comment.author).joinedload(User.title),
-            Load(User).lazyload('*'),
-            Load(Submission).lazyload("*"),
-            joinedload(Comment.post).joinedload(Submission.board),
-            joinedload(Comment.comment_aux)
-        )
+                Comment, 
+                aliased(CommentVote, alias=vt),
+                aliased(ModRelationship, alias=mod),
+                aliased(ModAction, alias=exile)
+            ).options(
+                joinedload(Comment.author).joinedload(User.title),
+                joinedload(Comment.post).lazyload('*'),
+                joinedload(Comment.post).joinedload(Submission.board),
+                joinedload(Comment.comment_aux)
+            )
 
         if v.admin_level >=4:
             query=query.options(joinedload(Comment.oauth_app))
@@ -624,9 +623,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
-            Load(User).lazyload('*'),
-            Load(Submission).lazyload("*"),
             joinedload(Comment.author).joinedload(User.title),
+            joinedload(Comment.post).lazyload('*'),
             joinedload(Comment.post).joinedload(Submission.board),
             joinedload(Comment.comment_aux)
         ).filter(
