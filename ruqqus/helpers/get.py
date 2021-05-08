@@ -574,7 +574,14 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             aliased(ModAction, alias=exile)
         ).options(
             Load(User).joinedload(User.title)
+        ).select_from(
+            cte
+        ).join(
+            Comment,
+            Comment.id==cte.c.id,
+            isouter=False
         )
+
 
         if v.admin_level >=4:
 
@@ -583,10 +590,6 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         comms=comms.join(
             votes,
             votes.c.comment_id == Comment.id,
-            isouter=True
-        ).join(
-            cte,
-            cte.c.id==Comment.id,
             isouter=True
         ).join(
             blocking,
