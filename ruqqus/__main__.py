@@ -39,42 +39,42 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 _version = "2.35.94"
 
-def time_limit(s):
-    def wrapper_maker(f):
-        def wrapper(*args, **kwargs):
+# def time_limit(s):
+#     def wrapper_maker(f):
+#         def wrapper(*args, **kwargs):
 
-            timeout=gevent.Timeout(s, gevent.Timeout)
-            timeout.start()
-            target_thread=gevent.spawn(f, *args, **kwargs)
-            try:
-                target_thread.join()
-                return target_thread.value
-            except gevent.timeout.Timeout as t:
-                target_thread.kill()
-                try:
-                    g.db.rollback()
-                    g.db.invalidate()
-                except:
-                    pass
-                abort(500)
+#             timeout=gevent.Timeout(s, gevent.Timeout)
+#             timeout.start()
+#             target_thread=gevent.spawn(f, *args, **kwargs)
+#             try:
+#                 target_thread.join()
+#                 return target_thread.value
+#             except gevent.timeout.Timeout as t:
+#                 target_thread.kill()
+#                 try:
+#                     g.db.rollback()
+#                     g.db.invalidate()
+#                 except:
+#                     pass
+#                 abort(500)
 
-        wrapper.__name__=f.__name__
-        return wrapper
-    return wrapper_maker
+#         wrapper.__name__=f.__name__
+#         return wrapper
+#     return wrapper_maker
 
-class Flask_Timeout(Flask):
+# class Flask_Timeout(Flask):
     
             
-    def full_dispatch_request(self, *args, **kwargs):
+#     def full_dispatch_request(self, *args, **kwargs):
         
         
-        @copy_current_request_context
-        @time_limit(10)
-        @copy_current_request_context
-        def thread_target(self, *args, **kwargs):   
-            return super(Flask_Timeout, self).full_dispatch_request(*args, **kwargs)
+#         @copy_current_request_context
+#         @time_limit(10)
+#         @copy_current_request_context
+#         def thread_target(self, *args, **kwargs):   
+#             return super(Flask_Timeout, self).full_dispatch_request(*args, **kwargs)
         
-        return thread_target(self, *args, **kwargs)
+#         return thread_target(self, *args, **kwargs)
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -242,14 +242,13 @@ class RoutingSession(Session):
 
 def retry(f):
 
-    #@time_limit(1)
     def wrapper(self, *args, **kwargs):
 
         try:
             return f(self, *args, **kwargs)
         except psycopg2.errors.QueryCanceled as e:
             self.session.rollback()
-            abort(500)
+            raise(DatabaseOverload)
         except:
             self.session.rollback()
             return f(self, *args, **kwargs)
