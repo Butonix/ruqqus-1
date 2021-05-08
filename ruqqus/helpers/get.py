@@ -621,7 +621,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
         output = []
         for c in comments:
-            comment = c[0]
+            comment = c
             # comment._voted = c[1] or 0
             # comment._is_blocking = c[2] or 0
             # comment._is_blocked = c[3] or 0
