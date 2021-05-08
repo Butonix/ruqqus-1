@@ -38,6 +38,29 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 _version = "2.35.94"
 
+def time_limit(s):
+    def wrapper_maker(f):
+        def wrapper(*args, **kwargs):
+
+            timeout=gevent.Timeout(s, gevent.Timeout)
+            timeout.start()
+            target_thread=gevent.spawn(f, *args, **kwargs)
+            try:
+                target_thread.join()
+                return target_thread.value
+            except gevent.timeout.Timeout as t:
+                target_thread.kill()
+                try:
+                    g.db.rollback()
+                    g.db.invalidate()
+                except:
+                    pass
+                abort(500)
+
+        wrapper.__name__=f.__name__
+        return wrapper
+    return wrapper_maker
+
 class Flask_Timeout(Flask):
     
             
@@ -45,27 +68,11 @@ class Flask_Timeout(Flask):
         
         
         @copy_current_request_context
+        @time_limit(10)
         def thread_target(self, *args, **kwargs):   
             return super(Flask_Timeout, self).full_dispatch_request(*args, **kwargs)
         
-            
-        
-        timeout=gevent.Timeout(10, gevent.Timeout)
-        timeout.start()
-        req_thread=gevent.spawn(thread_target, self, *args, **kwargs)
-        try:
-            req_thread.join()
-            return req_thread.value
-        except gevent.timeout.Timeout as t:
-            req_thread.kill()
-            print("timeout", request.remote_addr, request.method, request.path)
-            try:
-                g.db.rollback()
-                g.db.close()
-            except:
-                pass
-            return make_response("Your request took too long to process.", 500)
-            
+        return thread_target(self, *args, **kwargs)
 
 app = Flask(__name__,
             template_folder='./templates',
@@ -231,6 +238,8 @@ class RoutingSession(Session):
 
 
 def retry(f):
+
+    @timer(1)
     def wrapper(self, *args, **kwargs):
 
         try:
