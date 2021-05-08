@@ -569,7 +569,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         #blocked = v.blocked.subquery()
 
         comms = nSession.query(
-            Comment,
+            Comment
             # votes.c.vote_type,
             # blocking.c.id,
             # blocked.c.id,
@@ -632,16 +632,16 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
     else:
         comms = nSession.query(
-            Comment,
-            aliased(ModAction, alias=exile)
+            Comment
+            # aliased(ModAction, alias=exile)
         ).options(
             Load(User).joinedload(User.title)
         ).filter(
             Comment.id.in_(cids)
-        ).join(
-            exile,
-            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-            isouter=True
+        # ).join(
+        #     exile,
+        #     and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+        #     isouter=True
         )
 
         if sort_type == "hot":
@@ -662,9 +662,9 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
         output = []
         for c in comments:
-            comment=c[0]
-            comment._is_exiled_for=c[1]
-            output.append(comment)
+            # comment=c[0]
+            # comment._is_exiled_for=c[1]
+            output.append(c)
 
 
     output = sorted(output, key=lambda x: cids.index(x.id))
