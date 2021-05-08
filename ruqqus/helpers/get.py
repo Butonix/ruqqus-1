@@ -606,8 +606,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             )
 
         query=query.options(
-            contains_eager(Comment.author),
-            contains_eager(Comment.post)
+            contains_eager(Comment.author)
             )
 
 
@@ -642,8 +641,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         )
 
         query=query.options(
-            contains_eager(Comment.author),
-            contains_eager(Comment.post)
+            contains_eager(Comment.author)
             )
 
         query=query.order_by(None).all()
