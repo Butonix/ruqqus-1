@@ -2071,7 +2071,17 @@ def board_mod_log(boardname, v):
             "api":lambda:(jsonify({"error":f"+{board.name} is banned"}), 403)
             }
 
-    actions=g.db.query(ModAction).filter_by(board_id=board.id).order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
+    actions=g.db.query(ModAction).options(
+        joinedload(Modaction.target_submission).lazyload('*'),
+        Load(Submission).joinedload(Submission.submission_aux)
+        joinedload(ModAction.target_comment).lazyload('*'),
+        joinedload(ModAction.target_user).lazyload('*'),
+        joinedload(Modaction.user).lazyload('*')
+        ).filter_by(
+        board_id=board.id
+        ).order_by(
+        ModAction.id.desc()
+        ).offset(25*(page-1)).limit(26).all()
     actions=[i for i in actions]
 
     next_exists=len(actions)==26
