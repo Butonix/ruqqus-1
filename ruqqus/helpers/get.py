@@ -642,17 +642,17 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
     else:
         comms = nSession.query(
             Comment
-            # aliased(ModAction, alias=exile)
+            aliased(ModAction, alias=exile)
         ).options(
             lazyload('*'),
             joinedload(Comment.comment_aux),
             joinedload(Comment.author).joinedload(User.title)
         ).filter(
             Comment.id.in_(cids)
-        # ).join(
-        #     exile,
-        #     and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-        #     isouter=True
+        ).join(
+            exile,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+            isouter=True
         )
 
         if sort_type == "hot":
