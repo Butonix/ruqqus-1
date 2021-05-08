@@ -584,7 +584,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             Load(Submission).lazyload('*'),
             Load(Submission).joinedload(Submission.submission_aux),
             Load(Submission).joinedload(Submission.board),
-            lazyload('CommentVote.*')
+            Load(CommentVote).lazyload('*')
         ).filter(
             Comment.id.in_(cids)
         )
