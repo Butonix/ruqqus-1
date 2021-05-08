@@ -569,7 +569,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         #blocked = v.blocked.subquery()
 
         comms = nSession.query(
-            Comment
+            Comment,
             votes.c.vote_type,
             # blocking.c.id,
             # blocked.c.id,
