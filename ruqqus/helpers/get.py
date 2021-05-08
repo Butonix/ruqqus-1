@@ -2,6 +2,7 @@ from .base36 import *
 from .sqla_values import *
 from ruqqus.classes import *
 from flask import g
+from sqlalchemy import *
 from sqlalchemy.orm import joinedload, aliased, lazyload, aliased, Load
 from urllib.parse import urlparse
 
@@ -538,7 +539,12 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
     if not cids:
         return []
 
-    cids=tuple(cids)
+    #construct  temp 1column table because in_() is slow af
+    cte = values(
+        column('id', Integer),
+    ).data(
+        [(x,) for x in cids]
+    )
 
     nSession = nSession or kwargs.get('session') or g.db
 
@@ -566,16 +572,18 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         ).options(
             Load(User).joinedload(User.title)
         )
+        
         if v.admin_level >=4:
 
             comms=comms.options(joinedload(Comment.oauth_app))
 
-        comms=comms.filter(
-            Comment.id.in_(cids),
-            Comment.level <= 6
-        ).join(
+        comms=comms.join(
             votes,
             votes.c.comment_id == Comment.id,
+            isouter=True
+        ).join(
+            cte,
+            cte.c.id==Comment.id,
             isouter=True
         ).join(
             blocking,
@@ -623,9 +631,10 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             aliased(ModAction, alias=exile)
         ).options(
             Load(User).joinedload(User.title)
-        ).filter(
-            Comment.id.in_(cids),
-            Comment.level <= 6
+        ).join(
+            cte,
+            cte.c.id==Comment.id,
+            isouter=True
         ).join(
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
