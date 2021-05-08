@@ -247,7 +247,7 @@ def retry(f):
         try:
             return f(self, *args, **kwargs)
         except OperationalError as e:
-            self.session.rollback()
+            #self.session.rollback()
             raise(DatabaseOverload)
         except:
             self.session.rollback()
