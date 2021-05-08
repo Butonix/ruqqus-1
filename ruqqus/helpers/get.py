@@ -577,7 +577,13 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         ).options(
             lazyload('*'),
             joinedload(Comment.comment_aux),
-            joinedload(Comment.author).joinedload(User.title)
+            joinedload(Comment.author),
+            Load(User).lazyload('*'),
+            Load(User).joinedload(User.title),
+            joinedload(Comment.post),
+            Load(Submission).lazyload('*'),
+            Load(Submission).joinedload(Submission.submission_aux),
+            Load(Submission).joinedload(Submission.board)
         ).filter(
             Comment.id.in_(cids)
         )
