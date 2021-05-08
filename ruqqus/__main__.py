@@ -67,6 +67,7 @@ class Flask_Timeout(Flask):
     def full_dispatch_request(self, *args, **kwargs):
         
         
+        @copy_current_request_context
         @time_limit(10)
         @copy_current_request_context
         def thread_target(self, *args, **kwargs):   
@@ -74,7 +75,7 @@ class Flask_Timeout(Flask):
         
         return thread_target(self, *args, **kwargs)
 
-app = Flask_Timeout(__name__,
+app = Flask(__name__,
             template_folder='./templates',
             static_folder='./static'
             )
