@@ -226,18 +226,18 @@ _engine=create_engine(
 
 #These two classes monkey patch sqlalchemy
 
-class RoutingSession(Session):
-    def get_bind(self, mapper=None, clause=None):
-        try:
-            if self._flushing or request.method == "POST":
-                return engines['leader']
-            else:
-                return random.choice(engines['followers'])
-        except BaseException:
-            if self._flushing:
-                return engines['leader']
-            else:
-                return random.choice(engines['followers'])
+# class RoutingSession(Session):
+#     def get_bind(self, mapper=None, clause=None):
+#         try:
+#             if self._flushing or request.method == "POST":
+#                 return engines['leader']
+#             else:
+#                 return random.choice(engines['followers'])
+#         except BaseException:
+#             if self._flushing:
+#                 return engines['leader']
+#             else:
+#                 return random.choice(engines['followers'])
 
 
 def retry(f):
@@ -258,9 +258,6 @@ def retry(f):
 
 
 class RetryingQuery(_Query):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
     @retry
     def all(self):
@@ -301,12 +298,6 @@ r=redis.Redis(
 #        #message_queue=app.config["CACHE_REDIS_URL"]
 #        )
 #    from ruqqus.chat.chat import *
-
-
-@app.before_first_request
-def app_setup():
-    # app.config["databases"]=scoped_session(sessionmaker(class_=RoutingSession))
-    pass
 
 local_ban_cache={}
 

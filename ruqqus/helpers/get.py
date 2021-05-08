@@ -539,15 +539,17 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
     if not cids:
         return []
 
+    cids=tuple(cids)
+
     #construct  temp 1column table because in_() is slow af
-    cte = select(
-        [cast(
-            literal(x), 
-            Integer
-            ).label("id")
-        for x in cids
-        ]
-        ).cte()
+    # cte = select(
+    #     [cast(
+    #         literal(x), 
+    #         Integer
+    #         ).label("id")
+    #     for x in cids
+    #     ]
+    #     ).cte()
 
     nSession = nSession or kwargs.get('session') or g.db
 
@@ -574,12 +576,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             aliased(ModAction, alias=exile)
         ).options(
             Load(User).joinedload(User.title)
-        ).select_from(
-            cte
-        ).join(
-            Comment,
-            Comment.id==cte.c.id,
-            isouter=False
+        ).filter(
+            Comment.id.in_(cids)
         )
 
 
@@ -637,10 +635,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             aliased(ModAction, alias=exile)
         ).options(
             Load(User).joinedload(User.title)
-        ).join(
-            cte,
-            cte.c.id==Comment.id,
-            isouter=True
+        ).filter(
+            Comment.id.in_(cids)
         ).join(
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
