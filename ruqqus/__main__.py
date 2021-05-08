@@ -239,7 +239,7 @@ class RoutingSession(Session):
 
 def retry(f):
 
-    @timer(1)
+    @time_limit(1)
     def wrapper(self, *args, **kwargs):
 
         try:
