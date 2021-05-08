@@ -594,10 +594,10 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
             comms=comms.options(joinedload(Comment.oauth_app))
 
-        # comms=comms.join(
-        #     votes,
-        #     votes.c.comment_id == Comment.id,
-        #     isouter=True
+        comms=comms.join(
+            votes,
+            votes.c.comment_id == Comment.id,
+            isouter=True
         # ).join(
         #     blocking,
         #     blocking.c.target_id == Comment.author_id,
@@ -610,7 +610,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         #     exile,
         #     and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
         #     isouter=True
-        # )
+        )
 
         if sort_type == "hot":
             comments = comms.order_by(Comment.score_hot.desc()).all()
