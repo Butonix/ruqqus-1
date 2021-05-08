@@ -2073,7 +2073,7 @@ def board_mod_log(boardname, v):
 
     actions=g.db.query(ModAction).options(
         joinedload(Modaction.target_submission).lazyload('*'),
-        Load(Submission).joinedload(Submission.submission_aux)
+        Load(Submission).joinedload(Submission.submission_aux),
         joinedload(ModAction.target_comment).lazyload('*'),
         joinedload(ModAction.target_user).lazyload('*'),
         joinedload(Modaction.user).lazyload('*')
