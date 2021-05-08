@@ -246,7 +246,7 @@ def retry(f):
 
         try:
             return f(self, *args, **kwargs)
-        except psycopg2.errors.QueryCanceled as e:
+        except OperationalError as e:
             self.session.rollback()
             raise(DatabaseOverload)
         except:
