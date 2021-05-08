@@ -247,7 +247,7 @@ def retry(f):
 
         try:
             return f(self, *args, **kwargs)
-        except sqlalchemy.exc.OperationalError as e:
+        except psycopg2.errors.QueryCanceled as e:
             self.session.rollback()
             abort(500)
         except:
