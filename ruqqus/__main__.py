@@ -18,6 +18,7 @@ from flask_socketio import SocketIO
 from time import sleep
 from collections import deque
 import psycopg2
+import sqlalchemy.exc.OperationalError
 
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
