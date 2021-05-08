@@ -180,9 +180,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             Submission,
             # aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Submission.author).joinedload(User.title),
-            joinedload(Submission.submission_aux),
-            joinedload(Submission.board)
+            Load(User).joinedload(User.title)
         # ).join(
         #     exile,
         #     and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
