@@ -2,7 +2,7 @@ from .base36 import *
 from .sqla_values import *
 from ruqqus.classes import *
 from flask import g
-from sqlalchemy.orm import joinedload, aliased
+from sqlalchemy.orm import joinedload, aliased, lazyload, aliased
 from urllib.parse import urlparse
 
 import re
@@ -125,8 +125,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             aliased(Subscription, alias=sub)
             # aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Submission.author).joinedload(User.title),
-            joinedload(Submission.submission_aux),
+            Load(User).joinedload(User.title),
             joinedload(Submission.board)
         )
 
