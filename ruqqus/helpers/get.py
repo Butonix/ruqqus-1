@@ -333,8 +333,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             blocked.c.id,
             aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Comment.author).joinedload(User.title),
-            joinedload(Comment.comment_aux),
+            joinedload(Comment.author).joinedload(User.title)
         )
         if v.admin_level >=4:
 
@@ -393,8 +392,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Comment.author).joinedload(User.title),
-            joinedload(Comment.comment_aux)
+            joinedload(Comment.author).joinedload(User.title)
         ).filter(
             Comment.parent_submission == post.id,
             Comment.level <= 6
