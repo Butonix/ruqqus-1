@@ -580,9 +580,12 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
                 aliased(ModRelationship, alias=mod),
                 aliased(ModAction, alias=exile)
             ).options(
-                joinedload(Comment.author).joinedload(User.title),
-                joinedload(Comment.post).joinedload(Submission.board),
-                joinedload(Comment.comment_aux)
+                joinedload(Comment.author).joinedload(User.title)
+            )
+
+        if "+" not in request.path:
+            query=query.options(
+                joinedload(Comment.post).joinedload(Submission.board)
             )
 
         if v.admin_level >=4:
@@ -622,10 +625,15 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Comment.author).joinedload(User.title),
-            joinedload(Comment.post).joinedload(Submission.board),
-            joinedload(Comment.comment_aux)
-        ).filter(
+            joinedload(Comment.author).joinedload(User.title)
+        )
+
+        if "+" not in request.path:
+            query=query.options(
+                joinedload(Comment.post).joinedload(Submission.board)
+            )
+
+        query=query.filter(
             Comment.id.in_(cids)
         ).join(
             exile,
