@@ -575,7 +575,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
         if "+" not in request.path:
             query=query.options(
-                joinedload(Comment.post).joinedload(Submission.board)
+                joinedload(Comment.post).joinedload(Submission.board),
+                joinedload(Comment.post).joinedload(Submission.submission_aux)
             )
 
         if v.admin_level >=4:
@@ -620,7 +621,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
         if "+" not in request.path:
             query=query.options(
-                joinedload(Comment.post).joinedload(Submission.board)
+                joinedload(Comment.post).joinedload(Submission.board),
+                joinedload(Comment.post).joinedload(Submission.submission_aux)
             )
 
         query=query.filter(
