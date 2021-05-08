@@ -576,7 +576,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             # aliased(ModAction, alias=exile)
         ).options(
             lazyload('*'),
-            joinedload(Comment.comment_aux)
+            joinedload(Comment.comment_aux),
             joinedload(Comment.author).joinedload(User.title)
         ).filter(
             Comment.id.in_(cids)
@@ -638,7 +638,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             # aliased(ModAction, alias=exile)
         ).options(
             lazyload('*'),
-            joinedload(Comment.comment_aux)
+            joinedload(Comment.comment_aux),
             joinedload(Comment.author).joinedload(User.title)
         ).filter(
             Comment.id.in_(cids)
