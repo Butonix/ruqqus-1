@@ -571,7 +571,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             comms=comms.options(joinedload(Comment.oauth_app))
 
         comms=comms.filter(
-            Comment.parent_submission == post.id,
+            Comment.id.in_(cids),
             Comment.level <= 6
         ).join(
             votes,
@@ -624,7 +624,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         ).options(
             Load(User).joinedload(User.title)
         ).filter(
-            Comment.parent_submission == post.id,
+            Comment.id.in_(cids),
             Comment.level <= 6
         ).join(
             exile,
