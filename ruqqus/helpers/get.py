@@ -551,102 +551,115 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         ).distinct(ModAction.target_comment_id).subquery()
 
     if v:
-        vt = nSession.query(CommentVote).options(lazyload('*')).filter(
-            CommentVote.comment_id.in_(cids), 
-            CommentVote.user_id==v.id
-            ).subquery()
+        votes = nSession.query(CommentVote).filter_by(user_id=v.id).subquery()
 
-        mod=nSession.query(ModRelationship
-            ).options(lazyload('*')).filter_by(
-            user_id=v.id,
-            accepted=True
-            ).subquery()
+        blocking = v.blocking.subquery()
 
+        blocked = v.blocked.subquery()
 
-
-        query = nSession.query(
-                Comment, 
-                aliased(CommentVote, alias=vt),
-                aliased(ModRelationship, alias=mod),
-                aliased(ModAction, alias=exile)
-            ).options(
-                joinedload(Comment.author).joinedload(User.title)
-            )
-
-        if "+" not in request.path:
-            query=query.options(
-                joinedload(Comment.post).joinedload(Submission.board),
-                joinedload(Comment.post).joinedload(Submission.submission_aux)
-            )
-
-        if v.admin_level >=4:
-            query=query.options(joinedload(Comment.oauth_app))
-
-        query = query.join(
-            vt,
-            vt.c.comment_id == Comment.id,
-            isouter=True
-            ).join(
-            mod,
-            mod.c.board_id==Comment.original_board_id,
-            isouter=True
-            ).join(
-            exile,
-            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-            isouter=True
-            ).filter(
-            Comment.id.in_(cids)
-            )
-
-
-        query=query.order_by(None).all()
-
-        comments=[x for x in query]
-
-        output = [x[0] for x in comments]
-        for i in range(len(output)):
-            output[i]._voted = comments[i][1].vote_type if comments[i][1] else 0
-            output[i]._is_guildmaster = comments[i][2]
-            output[i]._is_exiled_for = comments[i][3]
-
-
-
-    else:
-        query = nSession.query(
+        comms = nSession.query(
             Comment,
+            votes.c.vote_type,
+            blocking.c.id,
+            blocked.c.id,
             aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Comment.author).joinedload(User.title)
+            Load(User).joinedload(User.title)
         )
+        if v.admin_level >=4:
 
-        if "+" not in request.path:
-            query=query.options(
-                joinedload(Comment.post).joinedload(Submission.board),
-                joinedload(Comment.post).joinedload(Submission.submission_aux)
-            )
+            comms=comms.options(joinedload(Comment.oauth_app))
 
-        query=query.filter(
-            Comment.id.in_(cids)
+        comms=comms.filter(
+            Comment.parent_submission == post.id,
+            Comment.level <= 6
+        ).join(
+            votes,
+            votes.c.comment_id == Comment.id,
+            isouter=True
+        ).join(
+            blocking,
+            blocking.c.target_id == Comment.author_id,
+            isouter=True
+        ).join(
+            blocked,
+            blocked.c.user_id == Comment.author_id,
+            isouter=True
         ).join(
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
         )
 
-        query=query.order_by(None).all()
+        if sort_type == "hot":
+            comments = comms.order_by(Comment.score_hot.desc()).all()
+        elif sort_type == "top":
+            comments = comms.order_by(Comment.score_top.desc()).all()
+        elif sort_type == "new":
+            comments = comms.order_by(Comment.created_utc.desc()).all()
+        elif sort_type == "old":
+            comments = comms.order_by(Comment.created_utc.asc()).all()
+        elif sort_type == "disputed":
+            comments = comms.order_by(Comment.score_disputed.desc()).all()
+        elif sort_type == "random":
+            c = comms.all()
+            comments = random.sample(c, k=len(c))
+        else:
+            abort(422)
 
-        comments=[x for x in query]
+        output = []
+        for c in comments:
+            comment = c[0]
+            comment._voted = c[1] or 0
+            comment._is_blocking = c[2] or 0
+            comment._is_blocked = c[3] or 0
+            comment._is_guildmaster=post._is_guildmaster
+            comment._is_exiled_for=c[4]
+            output.append(comment)
 
-        output=[x[0] for x in comments]
-        for i in range(len(output)):
-            output[i]._is_exiled_for=comments[i][1]
+    else:
+        comms = nSession.query(
+            Comment,
+            aliased(ModAction, alias=exile)
+        ).options(
+            Load(User).joinedload(User.title)
+        ).filter(
+            Comment.parent_submission == post.id,
+            Comment.level <= 6
+        ).join(
+            exile,
+            and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
+            isouter=True
+        )
+
+        if sort_type == "hot":
+            comments = comms.order_by(Comment.score_hot.desc()).all()
+        elif sort_type == "top":
+            comments = comms.order_by(Comment.score_top.desc()).all()
+        elif sort_type == "new":
+            comments = comms.order_by(Comment.created_utc.desc()).all()
+        elif sort_type == "old":
+            comments = comms.order_by(Comment.created_utc.asc()).all()
+        elif sort_type == "disputed":
+            comments = comms.order_by(Comment.score_disputed.desc()).all()
+        elif sort_type == "random":
+            c = comms.all()
+            comments = random.sample(c, k=len(c))
+        else:
+            abort(422)
+
+        output = []
+        for c in comments:
+            comment=c[0]
+            comment._is_exiled_for=c[1]
+            output.append(comment)
 
 
     output = sorted(output, key=lambda x: cids.index(x.id))
 
     if load_parent:
         parents=get_comments(
-            [x.parent_comment_id for x in output if x], 
+            [x.parent_comment_id for x in output if x.parent_comment_id], 
             v=v, 
             nSession=nSession, 
             load_parent=False
