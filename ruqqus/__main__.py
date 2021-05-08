@@ -74,7 +74,7 @@ class Flask_Timeout(Flask):
         
         return thread_target(self, *args, **kwargs)
 
-app = Flask(__name__,
+app = Flask_Timeout(__name__,
             template_folder='./templates',
             static_folder='./static'
             )
@@ -239,7 +239,7 @@ class RoutingSession(Session):
 
 def retry(f):
 
-    @time_limit(1)
+    #@time_limit(1)
     def wrapper(self, *args, **kwargs):
 
         try:
