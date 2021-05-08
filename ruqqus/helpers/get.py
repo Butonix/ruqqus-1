@@ -536,8 +536,36 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 def get_comments(cids, v=None, nSession=None, sort_type="new",
                  load_parent=False, **kwargs):
 
-    if not cids:
-        return []
+    nSession = nSession or kwargs.get('session') or g.db
+
+    if not cids: return []
+
+    #ugly brute force?
+    output = [
+        get_comment(
+            x,
+            v=v,
+            nSession=nSession,
+            sort_type=sort_type
+            ) for x in cids
+        ]
+
+    if load_parents:
+        parents=get_comments(
+            [x.parent_comment_id for x in output if x.parent_comment_id], 
+            v=v, 
+            nSession=nSession, 
+            load_parent=False
+            )
+
+        parents={x.id: x for x in parents}
+
+        for c in output:
+            c.parent_comment=parents.get(c.parent_comment_id)
+
+    return output
+
+
 
     #construct  temp 1column table because in_() is slow af
     cte = select(
@@ -549,7 +577,6 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         ]
         ).cte()
 
-    nSession = nSession or kwargs.get('session') or g.db
 
     exile=nSession.query(ModAction
         ).options(
