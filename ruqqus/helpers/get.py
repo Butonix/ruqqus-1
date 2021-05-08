@@ -562,7 +562,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
     #     ).distinct(ModAction.target_comment_id).subquery()
 
     if v:
-        # votes = nSession.query(CommentVote).filter_by(user_id=v.id).subquery()
+        votes = nSession.query(CommentVote).filter_by(user_id=v.id).subquery()
 
         #blocking = v.blocking.subquery()
 
@@ -570,7 +570,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
         comms = nSession.query(
             Comment
-            # votes.c.vote_type,
+            votes.c.vote_type,
             # blocking.c.id,
             # blocked.c.id,
             # aliased(ModAction, alias=exile)
@@ -629,8 +629,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
         output = []
         for c in comments:
-            comment = c
-            # comment._voted = c[1] or 0
+            comment = c[0]
+            comment._voted = c[1] or 0
             # comment._is_blocking = c[2] or 0
             # comment._is_blocked = c[3] or 0
             # comment._is_guildmaster=post._is_guildmaster
