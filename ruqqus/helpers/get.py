@@ -4,6 +4,7 @@ from ruqqus.classes import *
 from flask import g
 from sqlalchemy import *
 from sqlalchemy.orm import *
+from sqlalchemy.sql.expression import values
 from urllib.parse import urlparse
 
 import re
