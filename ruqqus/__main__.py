@@ -160,6 +160,7 @@ redispool=ConnectionPool(
 app.config["CACHE_OPTIONS"]={'connection_pool':redispool} if app.config["CACHE_TYPE"]=="redis" else {}
 
 app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", False)))
+app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
 
 
 Markdown(app)
@@ -348,6 +349,9 @@ def before_request():
 
     if request.method.lower() != "get" and app.config["READ_ONLY"]:
         return jsonify({"error":f"{app.config['SITE_NAME']} is currently in read-only mode."}), 500
+
+    if app.config["BOT_DISABLE"] and request.headers.get("X-User-Type")=="Bot":
+        abort(503)
 
 
 
