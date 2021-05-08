@@ -551,13 +551,13 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         ).distinct(ModAction.target_comment_id).subquery()
 
     if v:
-        vt = nSession.query(CommentVote).filter(
+        vt = nSession.query(CommentVote).options(lazyload('*')).filter(
             CommentVote.comment_id.in_(cids), 
             CommentVote.user_id==v.id
             ).subquery()
 
         mod=nSession.query(ModRelationship
-            ).filter_by(
+            ).options(lazyload('*')).filter_by(
             user_id=v.id,
             accepted=True
             ).subquery()
@@ -674,7 +674,7 @@ def get_board(bid,v=None, graceful=False):
             joinedload(Board.moderators).joinedload(ModRelationship.user),
             joinedload(Board.subcat).joinedload(SubCategory.category)
             ).filter(
-                    Board.id==base36decode(bid)
+                Board.id==base36decode(bid)
             ).join(
             sub,
             sub.c.board_id==Board.id,
