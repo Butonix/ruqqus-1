@@ -88,7 +88,6 @@ class User(Base, Stndrd, Age_times):
     hide_bot = Column(Boolean, default=False)
     show_nsfl = Column(Boolean, default=False)
     is_private = Column(Boolean, default=False)
-    read_announcement_utc = Column(Integer, default=0)
     unban_utc = Column(Integer, default=0)
     is_deleted = Column(Boolean, default=False)
     delete_reason = Column(String(500), default='')
