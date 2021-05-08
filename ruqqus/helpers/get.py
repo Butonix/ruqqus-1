@@ -577,9 +577,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         ).options(
             Load(User).joinedload(User.title)
         ).filter(
-            or_(
-                *tuple([Comment.id==x for x in cids])
-            )
+            Comment.id.in_(cids)
         )
 
 
@@ -638,9 +636,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         ).options(
             Load(User).joinedload(User.title)
         ).filter(
-            or_(
-                *tuple([Comment.id==x for x in cids])
-            )
+            Comment.id.in_(cids)
         ).join(
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
