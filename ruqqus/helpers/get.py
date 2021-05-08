@@ -2,7 +2,7 @@ from .base36 import *
 from .sqla_values import *
 from ruqqus.classes import *
 from flask import g
-from sqlalchemy import *
+from sqlalchemy import values
 from sqlalchemy.orm import joinedload, aliased, lazyload, aliased, Load
 from urllib.parse import urlparse
 
@@ -572,7 +572,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         ).options(
             Load(User).joinedload(User.title)
         )
-        
+
         if v.admin_level >=4:
 
             comms=comms.options(joinedload(Comment.oauth_app))
