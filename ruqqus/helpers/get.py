@@ -605,6 +605,11 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             Comment.id.in_(cids)
             )
 
+        query=query.options(
+            contains_eager(Comment.author),
+            contains_eager(Comment.post)
+            )
+
 
 
         query=query.order_by(None).all()
@@ -635,6 +640,11 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
         )
+
+        query=query.options(
+            contains_eager(Comment.author),
+            contains_eager(Comment.post)
+            )
 
         query=query.order_by(None).all()
 
