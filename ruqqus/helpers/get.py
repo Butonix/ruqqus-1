@@ -550,7 +550,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             ) for x in cids
         ]
 
-    if load_parent:
+    if load_parents:
         parents=get_comments(
             [x.parent_comment_id for x in output if x.parent_comment_id], 
             v=v, 
