@@ -571,8 +571,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         comms = nSession.query(
             Comment,
             votes.c.vote_type,
-            # blocking.c.id,
-            # blocked.c.id,
+            blocking.c.id,
+            blocked.c.id,
             aliased(ModAction, alias=exile)
         ).options(
             lazyload('*'),
