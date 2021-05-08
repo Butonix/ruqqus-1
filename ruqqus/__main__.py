@@ -246,7 +246,9 @@ def retry(f):
 
         try:
             return f(self, *args, **kwargs)
-
+        except psycopg2.errors.QueryCanceled as e:
+            self.session.rollback()
+            abort(500)
         except:
             self.session.rollback()
             return f(self, *args, **kwargs)
