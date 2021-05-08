@@ -4,7 +4,6 @@ from ruqqus.classes import *
 from flask import g
 from sqlalchemy import *
 from sqlalchemy.orm import *
-from sqlalchemy.sql.expression import values
 from urllib.parse import urlparse
 
 import re
@@ -541,11 +540,14 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         return []
 
     #construct  temp 1column table because in_() is slow af
-    cte = values(
-        column('id', Integer),
-    ).data(
-        [(x,) for x in cids]
-    )
+    cte = select(
+        [cast(
+            literal(x), 
+            Integer
+            ).label("id")
+        for x in cids
+        ]
+        ).cte()
 
     nSession = nSession or kwargs.get('session') or g.db
 
