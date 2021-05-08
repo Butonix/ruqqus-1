@@ -641,7 +641,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
     else:
         comms = nSession.query(
-            Comment
+            Comment,
             aliased(ModAction, alias=exile)
         ).options(
             lazyload('*'),
