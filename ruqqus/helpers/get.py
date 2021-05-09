@@ -497,6 +497,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
             Load(Submission).joinedload(Submission.board),
             Load(CommentVote).lazyload('*'),
             Load(UserBlock).lazyload('*'),
+            Load(ModAction).lazyload('*')
         )
 
         if v.admin_level >=4:
