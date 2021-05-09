@@ -413,7 +413,8 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             Load(UserBlock).lazyload('*'),
             Load(ModAction).lazyload('*')
         ).filter(
-            Comment.id.in_(cids)
+            Comment.parent_submission == post.id,
+            Comment.level <= 6
         ).join(
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
