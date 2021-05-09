@@ -328,16 +328,29 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             blocked.c.id,
             aliased(ModAction, alias=exile)
         ).options(
-            Load(User).joinedload(User.title)
+            lazyload('*'),
+            joinedload(Comment.comment_aux),
+            joinedload(Comment.author),
+            Load(User).lazyload('*'),
+            Load(User).joinedload(User.title),
+            joinedload(Comment.post),
+            Load(Submission).lazyload('*'),
+            Load(Submission).joinedload(Submission.submission_aux),
+            Load(Submission).joinedload(Submission.board),
+            Load(CommentVote).lazyload('*'),
+            Load(UserBlock).lazyload('*'),
+            Load(ModAction).lazyload('*')
+        ).filter(
+            Comment.parent_submission == post.id,
+            Comment.level <= 6
         )
+
+
         if v.admin_level >=4:
 
             comms=comms.options(joinedload(Comment.oauth_app))
 
-        comms=comms.filter(
-            Comment.parent_submission == post.id,
-            Comment.level <= 6
-        ).join(
+        comms=comms.join(
             votes,
             votes.c.comment_id == Comment.id,
             isouter=True
@@ -387,10 +400,20 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
-            Load(User).joinedload(User.title)
+            lazyload('*'),
+            joinedload(Comment.comment_aux),
+            joinedload(Comment.author),
+            Load(User).lazyload('*'),
+            Load(User).joinedload(User.title),
+            joinedload(Comment.post),
+            Load(Submission).lazyload('*'),
+            Load(Submission).joinedload(Submission.submission_aux),
+            Load(Submission).joinedload(Submission.board),
+            Load(CommentVote).lazyload('*'),
+            Load(UserBlock).lazyload('*'),
+            Load(ModAction).lazyload('*')
         ).filter(
-            Comment.parent_submission == post.id,
-            Comment.level <= 6
+            Comment.id.in_(cids)
         ).join(
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
@@ -463,7 +486,17 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
             aliased(ModRelationship, alias=mod),
             aliased(ModAction, alias=exile)
         ).options(
-            Load(User).joinedload(User.title)
+            lazyload('*'),
+            joinedload(Comment.comment_aux),
+            joinedload(Comment.author),
+            Load(User).lazyload('*'),
+            Load(User).joinedload(User.title),
+            joinedload(Comment.post),
+            Load(Submission).lazyload('*'),
+            Load(Submission).joinedload(Submission.submission_aux),
+            Load(Submission).joinedload(Submission.board),
+            Load(CommentVote).lazyload('*'),
+            Load(UserBlock).lazyload('*'),
         )
 
         if v.admin_level >=4:
@@ -540,16 +573,6 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         return []
 
     cids=tuple(cids)
-
-    #construct  temp 1column table because in_() is slow af
-    # cte = select(
-    #     [cast(
-    #         literal(x), 
-    #         Integer
-    #         ).label("id")
-    #     for x in cids
-    #     ]
-    #     ).cte()
 
     nSession = nSession or kwargs.get('session') or g.db
 

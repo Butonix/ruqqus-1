@@ -159,7 +159,18 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
                 blocked.c.id,
                 aliased(ModAction, alias=exile)
             ).select_from(Comment).options(
-                joinedload(Comment.author).joinedload(User.title)
+                lazyload('*'),
+                joinedload(Comment.comment_aux),
+                joinedload(Comment.author),
+                Load(User).lazyload('*'),
+                Load(User).joinedload(User.title),
+                joinedload(Comment.post),
+                Load(Submission).lazyload('*'),
+                Load(Submission).joinedload(Submission.submission_aux),
+                Load(Submission).joinedload(Submission.board),
+                Load(CommentVote).lazyload('*'),
+                Load(UserBlock).lazyload('*'),
+                Load(ModAction).lazyload('*')
             ).filter(
                 Comment.parent_comment_id.in_(current_ids)
             ).join(
