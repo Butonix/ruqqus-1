@@ -115,11 +115,11 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
         posts = posts.filter_by(is_offensive=False)
         posts = posts.options(Load(Board).lazyload('*'))
         posts = posts.join(Submission.board).filter(Board.subcat_id != 108)  #hide idpol if offensive filter is active
-        posts = posts.options(contains_eager(Submission.board))
+        posts = posts.options(contains_eager(Submission.board)
         
         
     if v and v.hide_bot:
-        posts = posts.filter_by(is_bot=False)
+        posts = posts.filter(Submission.is_bot==False)
 
     if v and v.admin_level >= 4:
         board_blocks = g.db.query(
@@ -160,7 +160,7 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
 
         posts = posts.filter(Submission.board_id.notin_(board_blocks))
     else:
-        posts = posts.filter_by(post_public=True)
+        posts = posts.filter(Submission.post_public==True)
 
     # board opt out of all
     if v:
