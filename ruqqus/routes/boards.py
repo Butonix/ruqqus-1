@@ -824,7 +824,16 @@ def mod_accept_board(bid, v):
 
     board = get_board(bid, v=v)
 
-    x = board.has_invite(v)
+    x = g.db.query(ModRelationship
+        ).options(
+        lazyload('*')
+        ).filter_by(
+        user_id=v.id,
+        board_id=board.id,
+        accepted=False,
+        invite_rescinded=False
+        ).first()
+
     if not x:
         abort(404)
 
