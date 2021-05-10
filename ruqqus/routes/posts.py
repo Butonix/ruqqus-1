@@ -683,6 +683,7 @@ def submit_post(v):
         app_id=v.client.application.id if v.client else None,
         creation_region=request.headers.get("cf-ipcountry"),
         is_bot = request.headers.get("X-User-Type","").lower()=="bot"
+    )
 
     g.db.add(new_post)
     g.db.flush()
