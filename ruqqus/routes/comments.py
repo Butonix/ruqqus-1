@@ -371,8 +371,7 @@ def api_comment(v):
         return jsonify({"error": "You can't comment on this."}), 403
 
     # get bot status
-    is_bot = request.headers.get("X-User-Type","")=="Bot"
-
+    is_bot = request.headers.get("X-User-Type","").lower()=="bot"
     # check spam - this should hopefully be faster
     if not is_bot:
         now = int(time.time())

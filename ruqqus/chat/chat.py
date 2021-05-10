@@ -300,7 +300,8 @@ def speak(text, user, guild, as_guild=False, event="speak", to=None):
             "time": now(),
             "userlink":user.permalink
         }
-        if request.headers.get("X-User-Type")=="Bot":
+
+        if request.headers.get("X-User-Type","").lower()=="bot":
             emit("bot", data, to=to)
         else:
             emit(event, data, to=to)
@@ -484,7 +485,7 @@ def print_ruqqie(args, guild, v):
         "time": now(),
         "userlink":v.permalink
     }
-    if request.headers.get("X-User-Type")=="Bot":
+    if request.headers.get("X-User-Type","").lower()=="bot":
         emit("bot", data, to=guild.fullname)
     else:
         emit("speak", data, to=guild.fullname)
@@ -861,3 +862,30 @@ def direct_message(args, guild, v):
     for sid in SIDS.get(v.id,[]):
         emit('msg-out', data, to=sid)
 
+##############
+#            #
+#  PICTURES  #
+#            #
+##############
+
+
+@app.route("/chat_upload", methods=["POST"])
+@is_not_banned
+def chat_upload_image(v):
+
+    if not v.has_premium:
+        abort(403)
+
+
+    file = request.files['image']
+    if not file.content_type.startswith('image/'):
+        abort(400)
+
+    now=int(time.time())
+    now=base36encode(now)
+    name = f'chat/{now}/{secrets.token_urlsafe(8)}'
+    upload_file(name, file)
+
+    check_csam_url(f"https://{BUCKET}/{name}", v, lambda:delete_file(name))
+
+    return jsonify({'url':f"https://{BUCKET}/{name}"})

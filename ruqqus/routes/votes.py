@@ -22,7 +22,7 @@ def api_vote_post(post_id, x, v):
         abort(400)
 
     # disallow bots
-    if request.headers.get("X-User-Type","") == "Bot":
+    if request.headers.get("X-User-Type","").lower()=="bot":
         abort(403)
 
     x = int(x)
@@ -112,7 +112,7 @@ def api_vote_comment(comment_id, x, v):
         abort(400)
 
     # disallow bots
-    if request.headers.get("X-User-Type","") == "Bot":
+    if request.headers.get("X-User-Type","").lower()=="bot":
         abort(403)
 
     x = int(x)
