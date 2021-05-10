@@ -751,8 +751,10 @@ def embed_comment_cid(cid, pid=None):
     return render_template("embeds/comment.html", c=comment)
 
 @app.route("/mod/comment_pin/<bid>/<cid>", methods=["POST"])
+@app.route("/api/v1/comment_pin/<bid>/<cid>", methods=["POST"])
 @auth_required
 @is_guildmaster("content")
+@api("guildmaster")
 @validate_formkey
 def mod_toggle_comment_pin(bid, cid, board, v):
 
