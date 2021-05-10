@@ -99,7 +99,8 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
     posts = g.db.query(
         Submission
         ).options(
-            lazyload('*')
+            lazyload('*'),
+            Load(Board).lazyload('*')
         ).filter_by(
             is_banned=False,
             stickied=False
@@ -113,9 +114,6 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
 
     if (v and v.hide_offensive) or not v:
         posts = posts.filter_by(is_offensive=False)
-        posts = posts.options(Load(Board).lazyload('*'))
-        posts = posts.join(Submission.board).filter(Board.subcat_id != 108)  #hide idpol if offensive filter is active
-        posts = posts.options(contains_eager(Submission.board))
     
     if v and v.hide_bot:
         posts = posts.filter(Submission.is_bot==False)
@@ -183,6 +181,9 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
     
     if categories:
         posts=posts.filter(Board.subcat_id.in_(tuple(categories)))
+        
+    if (v and v.hide_offensive) or not v:
+        posts=posts.filter(Board.subcat_id != 108)
 
     posts=posts.options(contains_eager(Submission.board))
 
