@@ -746,7 +746,6 @@ def get_board(bid,v=None, graceful=False):
         )
         items=query.first()
 
-        print(items)
         if items:
             
             board=items[0]
