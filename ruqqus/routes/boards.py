@@ -853,6 +853,8 @@ def mod_accept_board(bid, v):
         )
     g.db.add(ma)
 
+    g.db.commit()
+    
     return "", 204
 
 @app.route("/mod/<bid>/step_down", methods=["POST"])
