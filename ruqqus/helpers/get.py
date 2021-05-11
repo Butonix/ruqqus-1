@@ -725,8 +725,12 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
 def get_board(bid,v=None, graceful=False):
 
+    print(bid)
+
     if isinstance(bid, str):
         bid=base36decode(bid)
+
+    print(bid)
         
     if v:
         sub = g.db.query(Subscription).filter_by(user_id=v.id, board_id=bid, is_active=True).subquery()
@@ -744,6 +748,8 @@ def get_board(bid,v=None, graceful=False):
             isouter=True
         )
         items=query.first()
+
+        print(items)
         if items:
             
             board=items[0]
