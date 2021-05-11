@@ -835,7 +835,7 @@ def mod_accept_board(bid, v):
         ).first()
 
     if not x:
-        abort(404)
+        return jsonify({"error":"Unable to find invitation"}), 404
 
     if not v.can_join_gms:
         return jsonify({"error": f"You already lead enough guilds."}), 409
