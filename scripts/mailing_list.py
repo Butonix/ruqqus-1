@@ -29,8 +29,8 @@ i=0
 unable=0
 success=0
 
-#for user in x.order_by(classes.user.User.id.asc()).all():
-for user in [get_user('captainmeta4', nSession=db)]:
+for user in x.order_by(classes.user.User.id.asc()).all():
+#for user in [get_user('captainmeta4', nSession=db)]:
     i+=1
     # for user in db.query(classes.user.User).filter_by(id=7).all():
 
