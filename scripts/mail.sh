@@ -1,4 +1,4 @@
-\#!/bin/sh
+#!/bin/sh
 cd ~/
 source venv/bin/activate
 source env.sh
