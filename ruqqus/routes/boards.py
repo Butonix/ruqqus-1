@@ -822,7 +822,8 @@ def mod_rescind_bid_username(bid, username, board, v):
 @api("guildmaster")
 def mod_accept_board(bid, v):
 
-    board = get_board(bid, v=v)
+    board = get_board(bid, v=v, graceful=True)
+    print(board)
 
     x = g.db.query(ModRelationship
         ).options(
