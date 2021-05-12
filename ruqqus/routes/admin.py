@@ -1035,3 +1035,221 @@ def admin_get_ip_info(v):
             return f"{len(ips)} ips banned"
 
     return redirect(f"/admin/ip/{thing.creation_ip}")
+
+
+@app.route("/admin/siege_guild", methods=["POST"])
+@admin_level_required(3)
+@validate_formkey
+def siege_guild(v):
+
+    now = int(time.time())
+    guild = request.form.get("guild")
+
+    user=get_user(request.form.get("user"))
+    guild = get_guild(guild)
+
+
+    # check time
+    if user.last_siege_utc > now - (60 * 60 * 24 * 7):
+        return render_template("message.html",
+                               v=v,
+                               title=f"Siege on +{guild.name} Failed",
+                               error=f"@{user.username} needs to wait 7 days between siege attempts."
+                               ), 403
+    # check guild count
+    if not user.can_join_gms and guild not in user.boards_modded:
+        return render_template("message.html",
+                               v=v,
+                               title=f"Siege on +{guild.name} Failed",
+                               error=f"@{user.username} already leads the maximum number of guilds."
+                               ), 403
+
+    # Can't siege if exiled
+    if g.db.query(BanRelationship).filter_by(is_active=True, user_id=user.id, board_id=guild.id).first():
+        return render_template(
+            "message.html",
+            v=v,
+            title=f"Siege on +{guild.name} Failed",
+            error=f"@{user.username} is exiled from +{guild.name}."
+            ), 403
+
+    # Cannot siege +general, +ruqqus, +ruqquspress, +ruqqusdmca
+    if not guild.is_siegable:
+        return render_template("message.html",
+                               v=v,
+                               title=f"Siege on +{guild.name} Failed",
+                               error=f"+{guild.name} is an admin-controlled guild and is immune to siege."
+                               ), 403
+
+    # update siege date
+    user.last_siege_utc = now
+    g.db.add(user)
+    for alt in v.alts:
+        alt.last_siege_utc = now
+        g.db.add(user)
+
+
+    # check user activity
+    if guild not in user.boards_modded and user.guild_rep(guild, recent=180) < guild.siege_rep_requirement and not guild.has_contributor(v):
+        return render_template(
+            "message.html",
+            v=v,
+            title=f"Siege against +{guild.name} Failed",
+            error=f"@{user.username} does not have enough recent Reputation in +{guild.name} to siege it. +{guild.name} currently requires {guild.siege_rep_requirement} Rep within the last 180 days, and @{user.username} has {v.guild_rep(guild, recent=180)}."
+            ), 403
+
+    # Assemble list of mod ids to check
+    # skip any user with a perm site-wide ban
+    # skip any deleted mod
+
+    #check mods above user
+    mods=[]
+    for x in guild.mods_list:
+        if x.user_id==user.id:
+            break
+        mods.append(x)
+    # if no mods, skip straight to success
+    if mods:
+
+        ids = [x.user_id for x in mods]
+
+        # cutoff
+        cutoff = now - 60 * 60 * 24 * 60
+
+        # check submissions
+
+        post= g.db.query(Submission).filter(Submission.author_id.in_(tuple(ids)), 
+                                        Submission.created_utc > cutoff,
+                                        Submission.original_board_id==guild.id,
+                                        Submission.deleted_utc==0,
+                                        Submission.is_banned==False).first()
+        if post:
+            return render_template("message.html",
+                                   v=v,
+                                   title=f"Siege against +{guild.name} Failed",
+                                   error=f"One of the guildmasters created a post in +{guild.name} within the last 60 days. You may try again in 7 days.",
+                                   link=post.permalink,
+                                   link_text="View post"
+                                   ), 403
+
+        # check comments
+        comment= g.db.query(Comment).filter(
+            Comment.author_id.in_(tuple(ids)),
+            Comment.created_utc > cutoff,
+            Comment.original_board_id==guild.id,
+            Comment.deleted_utc==0,
+            Comment.is_banned==False).first()
+
+        if comment:
+            return render_template("message.html",
+                                   v=v,
+                                   title=f"Siege against +{guild.name} Failed",
+                                   error=f"One of the guildmasters created a comment in +{guild.name} within the last 60 days. You may try again in 7 days.",
+                                   link=comment.permalink,
+                                   link_text="View comment"
+                                   ), 403
+
+        # check mod actions
+        ma = g.db.query(ModAction).filter(
+            or_(
+                #option 1: mod action by user
+                and_(
+                    ModAction.user_id.in_(tuple(ids)),
+                    ModAction.created_utc > cutoff,
+
+                    ModAction.board_id==guild.id
+                    ),
+                #option 2: ruqqus adds user as mod due to siege
+                and_(
+                    ModAction.user_id==1,
+                    ModAction.target_user_id.in_(tuple(ids)),
+                    ModAction.kind=="add_mod",
+                    ModAction.board_id==guild.id
+                    )
+                )
+            ).first()
+        if ma:
+            return render_template("message.html",
+                                   v=v,
+                                   title=f"Siege against +{guild.name} Failed",
+                                   error=f" One of the guildmasters has performed a mod action in +{guild.name} within the last 60 days. You may try again in 7 days.",
+                                   link=ma.permalink,
+                                   link_text="View mod log record"
+                                   ), 403
+
+    #Siege is successful
+
+    #look up current mod record if one exists
+    m=guild.has_mod(user)
+
+    #remove current mods. If they are at or below existing mod, leave in place
+    for x in guild.moderators:
+
+        if m and x.id>=m.id and x.accepted:
+            continue
+
+        if x.accepted:
+            send_notification(x.user,
+                              f"You have been overthrown from +{guild.name}.")
+
+
+            ma=ModAction(
+                kind="remove_mod",
+                user_id=v.id,
+                board_id=guild.id,
+                target_user_id=x.user_id,
+                note="siege"
+            )
+            g.db.add(ma)
+        else:
+            ma=ModAction(
+                kind="uninvite_mod",
+                user_id=v.id,
+                board_id=guild.id,
+                target_user_id=x.user_id,
+                note="siege"
+            )
+            g.db.add(ma)
+
+        g.db.delete(x)
+
+
+    if not m:
+        new_mod = ModRelationship(user_id=user.id,
+                                  board_id=guild.id,
+                                  created_utc=now,
+                                  accepted=True,
+                                  perm_full=True,
+                                  perm_access=True,
+                                  perm_appearance=True,
+                                  perm_content=True,
+                                  perm_config=True
+                                  )
+
+        g.db.add(new_mod)
+        ma=ModAction(
+            kind="add_mod",
+            user_id=v.id,
+            board_id=guild.id,
+            target_user_id=user.id,
+            note="siege"
+        )
+        g.db.add(ma)
+
+    elif not m.perm_full:
+        m.perm_full=True
+        m.perm_access=True
+        m.perm_appearance=True
+        m.perm_config=True
+        m.perm_content=True
+        g.db.add(p)
+        ma=ModAction(
+            kind="change_perms",
+            user_id=v.id,
+            board_id=guild.id,
+            target_user_id=user.id,
+            note="siege"
+        )
+        g.db.add(ma)        
+
+    return redirect(f"/+{guild.name}/mod/mods")
