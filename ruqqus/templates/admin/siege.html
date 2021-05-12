@@ -1,0 +1,39 @@
+    <label>Your name:</label>
+    <input class="form-control" type="text" name="username" value="{{ v.username }}" readonly="readonly">
+
+    <form action="/siege_guild" method="post">
+      <input type="hidden" name="formkey" value="{{ v.formkey }}">
+
+      <label for="text-guild">Guild to siege:</label>
+      <input class="form-control" id="text-guild" type="text" name="guild">
+
+      <input class="btn btn-primary" type="submit" value="Siege Guild">
+    </form>
+
+{% extends "docs_default.html" %}
+
+{% block sidebarblock %}{% endblock %}
+{% block sidebarLeftblock %}{% endblock %}
+
+{% block title %}
+<title>Ruqqus - Help</title>
+<meta name="description" content="Ruqqus Help">
+{% endblock %}
+
+{% block content %}
+<h1>Siege Form</h1>
+
+<form action="/admin/siege_guild" method="post">
+  <label>User name:</label>
+  <input class="form-control" type="text" name="username" required>
+
+  <input type="hidden" name="formkey" value="{{ v.formkey }}">
+
+  <label for="text-guild">Guild to siege:</label>
+  <input class="form-control" id="text-guild" type="text" name="guild">
+
+  <input class="btn btn-primary" type="submit" value="Siege Guild">
+</form>
+
+
+{% endblock %}
