@@ -1146,7 +1146,7 @@ def admin_siege_guild(v):
             Comment.original_board_id==guild.id,
             Comment.deleted_utc==0,
             Comment.is_banned==False).join(
-            Comment.post).order_by(Submission.board_id==guild.id).contains_eager(Comment.post
+            Comment.post).order_by(Submission.board_id==guild.id).options(contains_eager(Comment.post)
             ).first()
 
         if comment:
