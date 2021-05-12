@@ -1109,8 +1109,8 @@ def siege_guild(v):
             break
         mods.append(x)
     # if no mods, skip straight to success
-    #if mods:
-    if False:
+    if mods:
+    #if False:
         ids = [x.user_id for x in mods]
 
         # cutoff
