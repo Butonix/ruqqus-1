@@ -1129,7 +1129,7 @@ def admin_siege_guild(v):
                                         Submission.created_utc > cutoff,
                                         Submission.original_board_id==guild.id,
                                         Submission.deleted_utc==0,
-                                        Submission.is_banned==False).first()
+                                        Submission.is_banned==False).order_by(Submission.board_id==guild.id).first()
         if post:
             return render_template("message.html",
                                    v=v,
@@ -1140,12 +1140,14 @@ def admin_siege_guild(v):
                                    ), 403
 
         # check comments
-        comment= g.db.query(Comment).filter(
+        comment= g.db.query(Comment).options(lazyload('*')).filter(
             Comment.author_id.in_(tuple(ids)),
             Comment.created_utc > cutoff,
             Comment.original_board_id==guild.id,
             Comment.deleted_utc==0,
-            Comment.is_banned==False).first()
+            Comment.is_banned==False).join(
+            Comment.post).order_by(Submission.board_id==guild.id).contains_eager(Comment.post
+            ).first()
 
         if comment:
             return render_template("message.html",
