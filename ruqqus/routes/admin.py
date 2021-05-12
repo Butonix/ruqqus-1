@@ -1109,7 +1109,7 @@ def admin_siege_guild(v):
             break
         mods.append(x)
     # if no mods, skip straight to success
-    if mods:
+    if mods and not request.values.get("activity_bypass"):
     #if False:
         ids = [x.user_id for x in mods]
 
