@@ -177,9 +177,12 @@
     {% else %}
     <li class="nav-item"><a class="nav-link" href="/settings/profile#referral"><i class="fad fa-toggle-off fa-fw mr-3"></i>Dark mode</a></li>
     {% endif %}
+    <li class="nav-item">
+      <a class="nav-link" href="/mine"><i class="fas fa-chess-rook fa-fw mr-3"></i>My Guilds</a>
+    </li>
     {% if v and v.can_make_guild %}
     <li class="nav-item">
-      <a class="nav-link" href="/create_guild"><i class="fas fa-chess-rook fa-fw mr-3"></i>Create Guild</a>
+      <a class="nav-link" href="/create_guild"><i class="fas fa-plus fa-fw mr-3"></i>Create Guild</a>
     </li>
     {% endif %}
     <li class="nav-item border-top border-bottom mt-2 pt-2">

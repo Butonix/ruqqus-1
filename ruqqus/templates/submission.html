@@ -247,21 +247,25 @@
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input type="submit" class="form-control" value="{% if p.stickied %}Un-sticky{% else %}Sticky{% endif %}">
 </form>
+<form action="/api/feature/{{ p.base36id }}" method="post" class="mt-3">
+  <input type="hidden" name="formkey", value="{{ v.formkey }}">
+  <button type="submit" class="btn btn-primary">{% if p.stickied %}Remove from featured{% else %}Add to featured{% endif %}</button>
+</form>
 {% endif %}
 {% if v.admin_level >=3 and v.id==p.author_id %}
-<form action="/api/distinguish/{{ p.base36id }}" method="post">
+<form action="/api/distinguish/{{ p.base36id }}" method="post" class="mt-3">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input type="submit" class="form-control" value="{% if p.distinguish_level %}Un-distinguish{% else %}Distinguish{% endif %}">
 </form>
 {% endif %}
 {% if v.admin_level >=1 and v.admin_level > p.author.admin_level %}
 {% if p.is_banned %}
-<form action="/api/unban_post/{{ p.base36id }}" method="post">
+<form action="/api/unban_post/{{ p.base36id }}" method="post" class="mt-3">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input type="submit" class="form-control" value="Approve Post">
 </form>
 {% else %}
-<form action="/api/ban_post/{{ p.base36id }}", method="post">
+<form action="/api/ban_post/{{ p.base36id }}", method="post" class="mt-3">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input id="post-ban-reason" type="text" class="form-control" name="reason" placeholder="Removal Reason">
   <input type="submit" class="btn btn-warning" value="Remove Post">

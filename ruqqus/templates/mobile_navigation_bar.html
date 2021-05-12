@@ -29,16 +29,14 @@
                 </div>
             </a>
         </div>
-{% if v %}
         <div class="col px-0">
-            <a href="{% if v %}/mine{% else %}/login{% endif %}" class="text-decoration-none" role="button">
-                <div class="text-center {% if request.path=='/mine' %}text-purple{% else %}text-muted{% endif %}">
+            <a href="{% if v %}/featured{% else %}/login{% endif %}" class="text-decoration-none" role="button">
+                <div class="text-center {% if request.path=='/featured' %}text-purple{% else %}text-muted{% endif %}">
                     <i class="fas fa-chess-rook text-lg d-block"></i>
-                    <div class="text-small">Guilds</div>
+                    <div class="text-small">Featured</div>
                 </div>
             </a>
         </div>
-{% endif %}
         <div class="col px-0">
             <a href="/browse" class="text-decoration-none" role="button">
                 <div class="text-center {% if request.path=='/browse' %}text-purple{% else %}text-muted{% endif %}">
