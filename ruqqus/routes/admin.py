@@ -1097,13 +1097,13 @@ def admin_siege_guild(v):
 
 
     # check user activity
-    if guild not in user.boards_modded and user.guild_rep(guild, recent=180) < guild.siege_rep_requirement and not guild.has_contributor(v):
-        return render_template(
-            "message.html",
-            v=v,
-            title=f"Siege against +{guild.name} Failed",
-            error=f"@{user.username} does not have enough recent Reputation in +{guild.name} to siege it. +{guild.name} currently requires {guild.siege_rep_requirement} Rep within the last 180 days, and @{user.username} has {v.guild_rep(guild, recent=180)}."
-            ), 403
+    #if guild not in user.boards_modded and user.guild_rep(guild, recent=180) < guild.siege_rep_requirement and not guild.has_contributor(v):
+    #    return render_template(
+    #       "message.html",
+    #        v=v,
+    #        title=f"Siege against +{guild.name} Failed",
+    #        error=f"@{user.username} does not have enough recent Reputation in +{guild.name} to siege it. +{guild.name} currently requires {guild.siege_rep_requirement} Rep within the last 180 days, and @{user.username} has {v.guild_rep(guild, recent=180)}."
+    #        ), 403
 
     # Assemble list of mod ids to check
     # skip any user with a perm site-wide ban
