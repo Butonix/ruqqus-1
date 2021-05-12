@@ -35,7 +35,7 @@
 
 # Guild Siege
 
-In order to ensure that Ruqqus Guilds can be curated and managed, users may use this page to try to "lay siege" to, and take over, a guild with inactive Guildmasters.
+In order to ensure that Ruqqus Guilds can be curated and managed, users may try to "lay siege" to, and take over, a guild with inactive Guildmasters.
 
 You may attempt to siege a guild once every 7 days. Any siege attempt - whether successful or not - will trigger this cool-down period.
 
@@ -72,17 +72,7 @@ Sieges against [+general](/+general), or admin-controlled Guilds such as [+Ruqqu
   {% endif %}
   {% if v.can_siege %}
 
-    <label>Your name:</label>
-    <input class="form-control" type="text" name="username" value="{{ v.username }}" readonly="readonly">
-
-    <form action="/siege_guild" method="post">
-      <input type="hidden" name="formkey" value="{{ v.formkey }}">
-
-      <label for="text-guild">Guild to siege:</label>
-      <input class="form-control" id="text-guild" type="text" name="guild">
-
-      <input class="btn btn-primary" type="submit" value="Siege Guild">
-    </form>
+    <p>Make a post in <a href="/+GuildSiege" target="_blank">+GuildSiege</a> to try to siege a Guild.</p>
 
   {% elif v.is_suspended %}
 
