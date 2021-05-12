@@ -1048,6 +1048,13 @@ def admin_siege_guild(v):
     user=get_user(request.form.get("username"))
     guild = get_guild(guild)
 
+    if v.is_suspended or v.is_deleted:
+        return render_template("message.html",
+                               v=v,
+                               title=f"Siege on +{guild.name} Failed",
+                               error=f"@{user.username} is deleted/suspended."
+                               ), 403
+
 
     # check time
     #if user.last_siege_utc > now - (60 * 60 * 24 * 7):
