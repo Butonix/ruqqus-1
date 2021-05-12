@@ -37,11 +37,11 @@ def check_phash(db, name):
 
 def upload_from_url(name, url):
 
-    print('upload from url')
+    #print('upload from url')
 
     x = requests.get(url)
 
-    print('got content')
+    #print('got content')
 
     tempname = name.replace("/", "_")
 
