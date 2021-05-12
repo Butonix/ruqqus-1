@@ -1050,12 +1050,12 @@ def siege_guild(v):
 
 
     # check time
-    if user.last_siege_utc > now - (60 * 60 * 24 * 7):
-        return render_template("message.html",
-                               v=v,
-                               title=f"Siege on +{guild.name} Failed",
-                               error=f"@{user.username} needs to wait 7 days between siege attempts."
-                               ), 403
+    #if user.last_siege_utc > now - (60 * 60 * 24 * 7):
+    #    return render_template("message.html",
+    #                           v=v,
+    #                           title=f"Siege on +{guild.name} Failed",
+    #                           error=f"@{user.username} needs to wait 7 days between siege attempts."
+    #                           ), 403
     # check guild count
     if not user.can_join_gms and guild not in user.boards_modded:
         return render_template("message.html",
@@ -1109,8 +1109,8 @@ def siege_guild(v):
             break
         mods.append(x)
     # if no mods, skip straight to success
-    if mods:
-
+    #if mods:
+    if False:
         ids = [x.user_id for x in mods]
 
         # cutoff
