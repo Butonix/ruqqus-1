@@ -390,7 +390,7 @@ class Board(Base, Stndrd, Age_times):
     def can_view(self, user):
 
         if user is None:
-            return False
+            return not self.is_private
 
         if user.admin_level >= 4:
             return True
@@ -399,8 +399,7 @@ class Board(Base, Stndrd, Age_times):
                 user) or self.has_invite(user):
             return True
 
-        if self.is_private:
-            return False
+        return not self.is_private
 
     def set_profile(self, file):
 
