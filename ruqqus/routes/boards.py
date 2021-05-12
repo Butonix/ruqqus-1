@@ -341,17 +341,15 @@ def multiboard(name, v):
                       sort=sort,
                       v=v)
 
-    return {'html': lambda: render_template("board.html",
+    return {'html': lambda: render_template("home.html",
                                             b=None,
                                             v=v,
                                             time_filter=t,
                                             listing=posts,
                                             next_exists=next_exists,
                                             sort_method=sort,
-                                            page=page,
-                                            is_subscribed=(v and board.has_subscriber(v)
-                                                           )
-                                            ),
+                                            page=page
+                                           ),
             'api': lambda: jsonify({"data": [x.json for x in posts],
                                     "next_exists": next_exists})}
 
