@@ -342,7 +342,7 @@ def multiboard(name, v):
                       v=v)
 
     return {'html': lambda: render_template("board.html",
-                                            b=board,
+                                            b=None,
                                             v=v,
                                             time_filter=t,
                                             listing=posts,
