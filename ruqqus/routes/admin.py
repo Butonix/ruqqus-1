@@ -1045,7 +1045,7 @@ def siege_guild(v):
     now = int(time.time())
     guild = request.form.get("guild")
 
-    user=get_user(request.form.get("user"))
+    user=get_user(request.form.get("username"))
     guild = get_guild(guild)
 
 
