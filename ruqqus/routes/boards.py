@@ -282,15 +282,14 @@ def multiboard(name, v):
         if not board.can_view(v): continue
 
         board_ids.append(board.id)
-        
-    blocking = g.db.query(
-        UserBlock.target_id).filter_by(
-        user_id=v.id).subquery()
 
     posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False).filter(Submission.deleted_utc == 0,
-                                                                                                                                                Submission.author_id.notin_(blocking),
-                                                                                                                                                Submission.board_id.in_(tuple(board_ids)))
-    
+                                                                                               Submission.board_id.in_(tuple(board_ids)))
+
+    if v:
+        blocking = g.db.query(UserBlock.target_id).filter_by(user_id=v.id).subquery()
+        posts = posts.filter(Submission.author_id.notin_(blocking))
+
     if v and not v.over_18:
         posts = posts.filter_by(over_18=False)
 
