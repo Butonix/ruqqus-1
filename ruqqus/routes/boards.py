@@ -254,12 +254,12 @@ def board_name(name, v):
                                     "next_exists": next_exists
                                     }
                                    )
-            }
+            }    
 
-#@app.route("/m/<name>", methods=["GET"])
-#@app.route("/api/v1/multi/<name>/listing", methods=["GET"])
-#@auth_desired
-#@api("read")
+@app.route("/m/<name>", methods=["GET"])
+@app.route("/api/v1/multi/<name>/listing", methods=["GET"])
+@auth_desired
+@api("read")
 def multiboard(name, v):
     
     if v:
@@ -272,7 +272,7 @@ def multiboard(name, v):
     sort = request.args.get("sort", defaultsorting)
     t = request.args.get("t", defaulttime)
     page = int(request.args.get("page", 1))
-    
+
     board_ids=[]
     
     for name in name.split("+"):
@@ -283,32 +283,61 @@ def multiboard(name, v):
 
         board_ids.append(board.id)
         
-    
-    ids = g.db.query(Submission).filter(
-        Submission.board_id.in_(tuple(board_ids))
-    )
-    
-    if sort=="hot":
-        ids=ids.order_by(Submission.rank_hot)
-    
-    ids=ids.offset((page-1)*25).limit(26)
-        
-        
-        
-        
-    ids += board.idlist(sort=sort,
-                           t=t,
-                           page=page,
-                           nsfw=(v and v.over_18) or session_over18(board),
-                           v=v,
-                           gt=int(request.args.get("utc_greater_than", 0)),
-                           lt=int(request.args.get("utc_less_than", 0))
-                           )
+    blocking = g.db.query(
+        UserBlock.target_id).filter_by(
+        user_id=v.id).subquery()
 
-    next_exists = (len(ids) == 26)
-    ids = ids[0:25]
+    posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False).filter(Submission.deleted_utc == 0,
+                                                                                                                                                Submission.author_id.notin_(blocking),
+                                                                                                                                                Submission.board_id.in_(tuple(board_ids)))
+    
+    if v and not v.over_18:
+        posts = posts.filter_by(over_18=False)
 
-    posts = get_posts(ids,
+    if v and v.hide_offensive:
+        posts = posts.filter_by(is_offensive=False)
+        
+    if v and v.hide_bot:
+        posts = posts.filter_by(is_bot=False)
+
+    if v and not v.show_nsfl:
+        posts = posts.filter_by(is_nsfl=False)
+
+    if t:
+        now = int(time.time())
+        if t == 'day':
+            cutoff = now - 86400
+        elif t == 'week':
+            cutoff = now - 604800
+        elif t == 'month':
+            cutoff = now - 2592000
+        elif t == 'year':
+            cutoff = now - 31536000
+        else:
+            cutoff = 0
+        posts = posts.filter(Submission.created_utc >= cutoff)
+
+    if sort == "hot":
+        posts = posts.order_by(Submission.score_best.desc())
+    elif sort == "new":
+        posts = posts.order_by(Submission.created_utc.desc())
+    elif sort == "old":
+        posts = posts.order_by(Submission.created_utc.asc())
+    elif sort == "disputed":
+        posts = posts.order_by(Submission.score_disputed.desc())
+    elif sort == "top":
+        posts = posts.order_by(Submission.score_top.desc())
+    elif sort == "activity":
+        posts = posts.order_by(Submission.score_activity.desc())
+    else:
+        abort(422)
+    
+    posts = [x[0] for x in posts.offset(25 * (page - 1)).limit(26).all()]
+    
+    next_exists = (len(posts) == 26)
+    posts = posts[0:25]
+
+    posts = get_posts(posts,
                       sort=sort,
                       v=v)
 
