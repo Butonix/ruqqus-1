@@ -1040,7 +1040,7 @@ def admin_get_ip_info(v):
 @app.route("/admin/siege_guild", methods=["POST"])
 @admin_level_required(3)
 @validate_formkey
-def siege_guild(v):
+def admin_siege_guild(v):
 
     now = int(time.time())
     guild = request.form.get("guild")
