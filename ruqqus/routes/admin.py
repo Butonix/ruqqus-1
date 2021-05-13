@@ -1037,6 +1037,12 @@ def admin_get_ip_info(v):
     return redirect(f"/admin/ip/{thing.creation_ip}")
 
 
+def print_(x):
+    try:
+        print(x)
+    except:
+        pass
+
 @app.route("/admin/siege_guild", methods=["POST"])
 @admin_level_required(3)
 @validate_formkey
@@ -1047,6 +1053,8 @@ def admin_siege_guild(v):
 
     user=get_user(request.form.get("username"))
     guild = get_guild(guild)
+
+    print_(guild, guild.id)
 
     if v.is_suspended or v.is_deleted:
         return render_template("message.html",
@@ -1140,13 +1148,22 @@ def admin_siege_guild(v):
                                    ), 403
 
         # check comments
-        comment= g.db.query(Comment).options(lazyload('*')).filter(
-            Comment.author_id.in_(tuple(ids)),
-            Comment.created_utc > cutoff,
-            Comment.original_board_id==guild.id,
-            Comment.deleted_utc==0,
-            Comment.is_banned==False).join(
-            Comment.post).order_by(Submission.board_id==guild.id).options(contains_eager(Comment.post)
+        comment= g.db.query(Comment
+            ).options(
+                lazyload('*')
+            ).filter(
+                Comment.author_id.in_(tuple(ids)),
+                Comment.created_utc > cutoff
+            ).filter_by(
+                original_board_id=guild.id,
+                deleted_utc=0,
+                is_banned=False
+            ).join(
+                Comment.post
+            ).order_by(
+                Submission.board_id==guild.id
+            ).options(
+                contains_eager(Comment.post)
             ).first()
 
         if comment:
