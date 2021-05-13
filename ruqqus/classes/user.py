@@ -895,7 +895,7 @@ class User(Base, Stndrd, Age_times):
     def json(self):
         data= self.json_core
 
-        if self.is_suspended or self.is_banned:
+        if self.is_suspended or self.is_deleted:
             return data
 
         data["badges"]=[x.json_core for x in self.badges]
