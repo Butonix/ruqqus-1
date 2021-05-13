@@ -1095,6 +1095,24 @@ def admin_siege_guild(v):
                                title=f"Siege on +{guild.name} Failed",
                                error=f"+{guild.name} is an admin-controlled guild and is immune to siege."
                                ), 403
+    
+    #cannot be installed within 7 days of a successful siege
+    recent = g.db.query(ModAction).filter(
+        ModAction.target_user_id==user.id,
+        ModAction.kind==add_mod,
+        ModAction.created_utc>int(time.time())-60*60*24*7
+    ).first()
+    
+    if recent:
+        return render_template("message.html",
+                               v=v,
+                               title=f"Siege on +{guild.name} Failed",
+                               error=f"@{user.username} sieged +{recent.board.name} within the past 7 days.",
+                               link=recent.permalink,
+                               link_text="View mod log record"
+                               ), 403
+        
+        
 
     # update siege date
     user.last_siege_utc = now
@@ -1181,10 +1199,9 @@ def admin_siege_guild(v):
             ).filter(
                 Comment.author_id.in_(tuple(ids)),
                 Comment.created_utc > cutoff
-            ).filter_by(
-                original_board_id=guild.id,
-                deleted_utc=0,
-                is_banned=False
+                Comment.original_board_id==guild.id,
+                Comment.deleted_utc==0,
+                Comment.is_banned==False
             ).join(
                 Comment.post
             ).order_by(
