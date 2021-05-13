@@ -593,12 +593,15 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
         blocked = v.blocked.subquery()
 
+        mod = v.moderates.filter_by(user_id=v.id, accepted=True).subquery()
+
         comms = nSession.query(
             Comment,
             votes.c.vote_type,
             blocking.c.id,
             blocked.c.id,
-            aliased(ModAction, alias=exile)
+            aliased(ModAction, alias=exile),
+            alieased(ModRelationship, alias=mod)
         ).options(
             lazyload('*'),
             joinedload(Comment.comment_aux),
@@ -637,6 +640,10 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
+        ).join(
+            mod,
+            and_(mod.c.board_id==Comment.original_board_id, mod.c.board_id==Submission.board_id),
+            isouter=True
         )
 
         if sort_type == "hot":
@@ -661,9 +668,9 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             comment._voted = c[1] or 0
             comment._is_blocking = c[2] or 0
             comment._is_blocked = c[3] or 0
-            # comment._is_guildmaster=post._is_guildmaster
             
             comment._is_exiled_for=c[4]
+            comment._is_guildmaster=c[5] or None
             output.append(comment)
 
     else:
