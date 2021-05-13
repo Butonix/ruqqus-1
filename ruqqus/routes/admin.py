@@ -1245,6 +1245,8 @@ def admin_siege_guild(v):
         )
         g.db.add(ma)
 
+        send_notification(user, f"You have been added as a Guildmaster to +{guild.name}")
+
     elif not m.perm_full:
         m.perm_full=True
         m.perm_access=True
