@@ -1037,9 +1037,9 @@ def admin_get_ip_info(v):
     return redirect(f"/admin/ip/{thing.creation_ip}")
 
 
-def print_(x):
+def print_(*x):
     try:
-        print(x)
+        print(*x)
     except:
         pass
 
