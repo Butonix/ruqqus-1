@@ -1104,7 +1104,7 @@ def admin_siege_guild(v):
     #cannot be installed within 7 days of a successful siege
     recent = g.db.query(ModAction).filter(
         ModAction.target_user_id==user.id,
-        ModAction.kind==add_mod,
+        ModAction.kind=="add_mod",
         ModAction.created_utc>int(time.time())-60*60*24*7
     ).first()
     
