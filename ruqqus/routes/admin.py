@@ -1198,7 +1198,7 @@ def admin_siege_guild(v):
                 lazyload('*')
             ).filter(
                 Comment.author_id.in_(tuple(ids)),
-                Comment.created_utc > cutoff
+                Comment.created_utc > cutoff,
                 Comment.original_board_id==guild.id,
                 Comment.deleted_utc==0,
                 Comment.is_banned==False
