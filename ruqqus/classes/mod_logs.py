@@ -108,7 +108,7 @@ class ModAction(Base, Stndrd, Age_times):
             data["target_comment_id"]=self.target_comment.base36id
 
         if self.target_submission_id:
-            data["target_submission_id"]=self.target_submission.base36id
+            data["target_submission_id"]=self.target_post.base36id
 
         if self._note:
             data["note"]=self._note

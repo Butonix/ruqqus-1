@@ -1037,6 +1037,12 @@ def admin_get_ip_info(v):
     return redirect(f"/admin/ip/{thing.creation_ip}")
 
 
+def print_(*x):
+    try:
+        print(*x)
+    except:
+        pass
+
 @app.route("/admin/siege_guild", methods=["POST"])
 @admin_level_required(3)
 @validate_formkey
@@ -1047,6 +1053,8 @@ def admin_siege_guild(v):
 
     user=get_user(request.form.get("username"))
     guild = get_guild(guild)
+
+    print_(guild, guild.id)
 
     if v.is_suspended or v.is_deleted:
         return render_template("message.html",
@@ -1123,41 +1131,6 @@ def admin_siege_guild(v):
         # cutoff
         cutoff = now - 60 * 60 * 24 * 60
 
-        # check submissions
-
-        post= g.db.query(Submission).filter(Submission.author_id.in_(tuple(ids)), 
-                                        Submission.created_utc > cutoff,
-                                        Submission.original_board_id==guild.id,
-                                        Submission.deleted_utc==0,
-                                        Submission.is_banned==False).order_by(Submission.board_id==guild.id).first()
-        if post:
-            return render_template("message.html",
-                                   v=v,
-                                   title=f"Siege against +{guild.name} Failed",
-                                   error=f"One of the guildmasters created a post in +{guild.name} within the last 60 days. You may try again in 7 days.",
-                                   link=post.permalink,
-                                   link_text="View post"
-                                   ), 403
-
-        # check comments
-        comment= g.db.query(Comment).options(lazyload('*')).filter(
-            Comment.author_id.in_(tuple(ids)),
-            Comment.created_utc > cutoff,
-            Comment.original_board_id==guild.id,
-            Comment.deleted_utc==0,
-            Comment.is_banned==False).join(
-            Comment.post).order_by(Submission.board_id==guild.id).options(contains_eager(Comment.post)
-            ).first()
-
-        if comment:
-            return render_template("message.html",
-                                   v=v,
-                                   title=f"Siege against +{guild.name} Failed",
-                                   error=f"One of the guildmasters created a comment in +{guild.name} within the last 60 days. You may try again in 7 days.",
-                                   link=comment.permalink,
-                                   link_text="View comment"
-                                   ), 403
-
         # check mod actions
         ma = g.db.query(ModAction).filter(
             or_(
@@ -1185,6 +1158,50 @@ def admin_siege_guild(v):
                                    link=ma.permalink,
                                    link_text="View mod log record"
                                    ), 403
+
+        #check submissions
+        post= g.db.query(Submission).filter(Submission.author_id.in_(tuple(ids)), 
+                                        Submission.created_utc > cutoff,
+                                        Submission.original_board_id==guild.id,
+                                        Submission.deleted_utc==0,
+                                        Submission.is_banned==False).order_by(Submission.board_id==guild.id).first()
+        if post:
+            return render_template("message.html",
+                                   v=v,
+                                   title=f"Siege against +{guild.name} Failed",
+                                   error=f"One of the guildmasters created a post in +{guild.name} within the last 60 days. You may try again in 7 days.",
+                                   link=post.permalink,
+                                   link_text="View post"
+                                   ), 403
+
+        # check comments
+        comment= g.db.query(Comment
+            ).options(
+                lazyload('*')
+            ).filter(
+                Comment.author_id.in_(tuple(ids)),
+                Comment.created_utc > cutoff
+            ).filter_by(
+                original_board_id=guild.id,
+                deleted_utc=0,
+                is_banned=False
+            ).join(
+                Comment.post
+            ).order_by(
+                Submission.board_id==guild.id
+            ).options(
+                contains_eager(Comment.post)
+            ).first()
+
+        if comment:
+            return render_template("message.html",
+                                   v=v,
+                                   title=f"Siege against +{guild.name} Failed",
+                                   error=f"One of the guildmasters created a comment in +{guild.name} within the last 60 days. You may try again in 7 days.",
+                                   link=comment.permalink,
+                                   link_text="View comment"
+                                   ), 403
+
 
     #Siege is successful
 
@@ -1244,6 +1261,8 @@ def admin_siege_guild(v):
             note="siege"
         )
         g.db.add(ma)
+
+        send_notification(user, f"You have been added as a Guildmaster to +{guild.name}")
 
     elif not m.perm_full:
         m.perm_full=True
