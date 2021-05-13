@@ -1054,7 +1054,12 @@ def admin_siege_guild(v):
     user=get_user(request.form.get("username"))
     guild = get_guild(guild)
 
-    print_(guild, guild.id)
+    if now-v.created_utc < 60*60*24*30:
+        return render_template("message.html",
+                               v=v,
+                               title=f"Siege on +{guild.name} Failed",
+                               error=f"@{user.username}'s account is too new."
+                               ), 403
 
     if v.is_suspended or v.is_deleted:
         return render_template("message.html",
