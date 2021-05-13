@@ -593,7 +593,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
         blocked = v.blocked.subquery()
 
-        mod = v.moderates.filter_by(user_id=v.id, accepted=True).subquery()
+        mod = g.db.query(ModRelationship).filter_by(user_id=v.id, accepted=True).subquery()
 
         comms = nSession.query(
             Comment,
