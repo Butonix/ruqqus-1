@@ -1131,8 +1131,35 @@ def admin_siege_guild(v):
         # cutoff
         cutoff = now - 60 * 60 * 24 * 60
 
-        # check submissions
+        # check mod actions
+        ma = g.db.query(ModAction).filter(
+            or_(
+                #option 1: mod action by user
+                and_(
+                    ModAction.user_id.in_(tuple(ids)),
+                    ModAction.created_utc > cutoff,
 
+                    ModAction.board_id==guild.id
+                    ),
+                #option 2: ruqqus adds user as mod due to siege
+                and_(
+                    ModAction.user_id==1,
+                    ModAction.target_user_id.in_(tuple(ids)),
+                    ModAction.kind=="add_mod",
+                    ModAction.board_id==guild.id
+                    )
+                )
+            ).first()
+        if ma:
+            return render_template("message.html",
+                                   v=v,
+                                   title=f"Siege against +{guild.name} Failed",
+                                   error=f" One of the guildmasters has performed a mod action in +{guild.name} within the last 60 days. You may try again in 7 days.",
+                                   link=ma.permalink,
+                                   link_text="View mod log record"
+                                   ), 403
+
+        #check submissions
         post= g.db.query(Submission).filter(Submission.author_id.in_(tuple(ids)), 
                                         Submission.created_utc > cutoff,
                                         Submission.original_board_id==guild.id,
@@ -1175,33 +1202,6 @@ def admin_siege_guild(v):
                                    link_text="View comment"
                                    ), 403
 
-        # check mod actions
-        ma = g.db.query(ModAction).filter(
-            or_(
-                #option 1: mod action by user
-                and_(
-                    ModAction.user_id.in_(tuple(ids)),
-                    ModAction.created_utc > cutoff,
-
-                    ModAction.board_id==guild.id
-                    ),
-                #option 2: ruqqus adds user as mod due to siege
-                and_(
-                    ModAction.user_id==1,
-                    ModAction.target_user_id.in_(tuple(ids)),
-                    ModAction.kind=="add_mod",
-                    ModAction.board_id==guild.id
-                    )
-                )
-            ).first()
-        if ma:
-            return render_template("message.html",
-                                   v=v,
-                                   title=f"Siege against +{guild.name} Failed",
-                                   error=f" One of the guildmasters has performed a mod action in +{guild.name} within the last 60 days. You may try again in 7 days.",
-                                   link=ma.permalink,
-                                   link_text="View mod log record"
-                                   ), 403
 
     #Siege is successful
 
