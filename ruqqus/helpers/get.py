@@ -601,7 +601,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             blocking.c.id,
             blocked.c.id,
             aliased(ModAction, alias=exile),
-            alieased(ModRelationship, alias=mod)
+            aliased(ModRelationship, alias=mod)
         ).options(
             lazyload('*'),
             joinedload(Comment.comment_aux),
