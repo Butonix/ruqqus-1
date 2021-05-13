@@ -180,6 +180,10 @@ def logout(v):
     session.pop("user_id", None)
     session.pop("session_id", None)
 
+    session.modified=True
+
+
+
     return redirect("/")
 
 # signing up
