@@ -1097,13 +1097,13 @@ def admin_siege_guild(v):
 
 
     # check user activity
-    if guild not in user.boards_modded and user.guild_rep(guild, recent=180) < guild.siege_rep_requirement and not guild.has_contributor(v):
-        return render_template(
-            "message.html",
-            v=v,
-            title=f"Siege against +{guild.name} Failed",
-            error=f"@{user.username} does not have enough recent Reputation in +{guild.name} to siege it. +{guild.name} currently requires {guild.siege_rep_requirement} Rep within the last 180 days, and @{user.username} has {v.guild_rep(guild, recent=180)}."
-            ), 403
+    #if guild not in user.boards_modded and user.guild_rep(guild, recent=180) < guild.siege_rep_requirement and not guild.has_contributor(v):
+    #    return render_template(
+    #       "message.html",
+    #        v=v,
+    #        title=f"Siege against +{guild.name} Failed",
+    #        error=f"@{user.username} does not have enough recent Reputation in +{guild.name} to siege it. +{guild.name} currently requires {guild.siege_rep_requirement} Rep within the last 180 days, and @{user.username} has {v.guild_rep(guild, recent=180)}."
+    #        ), 403
 
     # Assemble list of mod ids to check
     # skip any user with a perm site-wide ban
@@ -1129,7 +1129,7 @@ def admin_siege_guild(v):
                                         Submission.created_utc > cutoff,
                                         Submission.original_board_id==guild.id,
                                         Submission.deleted_utc==0,
-                                        Submission.is_banned==False).first()
+                                        Submission.is_banned==False).order_by(Submission.board_id==guild.id).first()
         if post:
             return render_template("message.html",
                                    v=v,
@@ -1140,12 +1140,14 @@ def admin_siege_guild(v):
                                    ), 403
 
         # check comments
-        comment= g.db.query(Comment).filter(
+        comment= g.db.query(Comment).options(lazyload('*')).filter(
             Comment.author_id.in_(tuple(ids)),
             Comment.created_utc > cutoff,
             Comment.original_board_id==guild.id,
             Comment.deleted_utc==0,
-            Comment.is_banned==False).first()
+            Comment.is_banned==False).join(
+            Comment.post).order_by(Submission.board_id==guild.id).options(contains_eager(Comment.post)
+            ).first()
 
         if comment:
             return render_template("message.html",

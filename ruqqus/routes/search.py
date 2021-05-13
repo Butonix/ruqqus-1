@@ -150,7 +150,7 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 
         posts = posts.filter(
             Submission.author_id.notin_(blocking),
-            Submission.author_id.notin_(blocked),
+            #Submission.author_id.notin_(blocked),
             Board.is_banned==False,
         )
     else:
