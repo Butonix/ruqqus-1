@@ -2155,7 +2155,6 @@ def siege_guild(v):
                     ),
                 #option 2: ruqqus adds user as mod due to siege
                 and_(
-                    ModAction.user_id==1,
                     ModAction.target_user_id.in_(tuple(ids)),
                     ModAction.kind=="add_mod",
                     ModAction.board_id==guild.id
