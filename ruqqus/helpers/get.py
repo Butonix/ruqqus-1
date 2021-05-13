@@ -601,14 +601,13 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             blocking.c.id,
             blocked.c.id,
             aliased(ModAction, alias=exile),
-            aliased(ModRelationship, alias=mod)
+            alieased(ModRelationship, alias=mod)
         ).options(
             lazyload('*'),
             joinedload(Comment.comment_aux),
             joinedload(Comment.author),
             Load(User).lazyload('*'),
             Load(User).joinedload(User.title),
-            joinedload(Comment.post),
             Load(Submission).lazyload('*'),
             Load(Submission).joinedload(Submission.submission_aux),
             Load(Submission).joinedload(Submission.board),
@@ -642,9 +641,13 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
         ).join(
+            Comment.post
+        ).join(
             mod,
             and_(mod.c.board_id==Comment.original_board_id, mod.c.board_id==Submission.board_id),
             isouter=True
+        ).options(
+            contains_eager(Submission.post)
         )
 
         if sort_type == "hot":
