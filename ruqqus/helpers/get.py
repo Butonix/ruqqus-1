@@ -647,7 +647,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             and_(mod.c.board_id==Comment.original_board_id, mod.c.board_id==Submission.board_id),
             isouter=True
         ).options(
-            contains_eager(Submission.post)
+            contains_eager(Comment.post)
         )
 
         if sort_type == "hot":
