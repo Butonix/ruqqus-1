@@ -183,7 +183,10 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
         posts=posts.filter(Board.subcat_id.in_(tuple(categories)))
         
     if (v and v.hide_offensive) or not v:
-        posts=posts.filter(Board.subcat_id != 108)
+        posts=posts.filter(
+            Board.subcat_id != 108,
+            Board.id != 1
+            )
 
     posts=posts.options(contains_eager(Submission.board))
 
