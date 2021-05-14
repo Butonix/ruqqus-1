@@ -7,7 +7,8 @@ reasons = {
     4: "Sites hosting digitally malicious content are not allowed.",
     5: "Spam",
     6: "Doxxing is not allowed.",
-    7: "Sexualizing minors is strictly prohibited."
+    7: "Sexualizing minors is strictly prohibited.",
+    8: 'User safety - This site is a Ruqqus clone which is still displaying "Ruqqus" as its site name.'
 }
 
 
