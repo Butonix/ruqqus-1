@@ -1160,7 +1160,6 @@ def admin_siege_guild(v):
                 #option 1: mod action by user
                 and_(
                     ModAction.user_id.in_(tuple(ids)),
-                    ModAction.created_utc > cutoff,
                     ModAction.board_id==guild.id
                     ),
                 #option 2: ruqqus adds user as mod due to siege
@@ -1169,9 +1168,9 @@ def admin_siege_guild(v):
                     ModAction.target_user_id.in_(tuple(ids)),
                     ModAction.kind=="add_mod",
                     ModAction.board_id==guild.id
-                    ModAction.created_utc > cutoff,
                     )
-                )
+                ),
+                ModAction.created_utc > cutoff
             ).first()
         if ma:
             return render_template("message.html",
