@@ -89,7 +89,7 @@ def get_account(base36id, v=None, nSession=None, graceful=False):
     return user
 
 
-def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
+def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs):
 
     if isinstance(pid, str):
         i = base36decode(pid)
@@ -129,6 +129,9 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
             Load(User).joinedload(User.title),
             joinedload(Submission.board)
         )
+        
+        if no_text:
+            items=items.options(lazyload(Submission.submission_aux))
 
         if v.admin_level>=4:
             items=items.options(joinedload(Submission.oauth_app))
@@ -451,7 +454,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
     return post
 
 
-def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
+def get_comment(cid, nSession=None, v=None, graceful=False, no_text=False, **kwargs):
 
     if isinstance(cid, str):
         i = base36decode(cid)
@@ -500,6 +503,9 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
             Load(UserBlock).lazyload('*'),
             Load(ModAction).lazyload('*')
         )
+        
+        if no_text:
+            items=items.options(lazyload(Comment.comment_aux))
 
         if v.admin_level >=4:
             items=items.options(joinedload(Comment.oauth_app))
