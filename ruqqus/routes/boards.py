@@ -1892,7 +1892,8 @@ def board_mod_log(boardname, v):
         Load(Submission).joinedload(Submission.submission_aux),
         joinedload(ModAction.target_comment).lazyload('*'),
         joinedload(ModAction.target_user).lazyload('*'),
-        joinedload(ModAction.user).lazyload('*')
+        joinedload(ModAction.user).lazyload('*'),
+        lazyload(ModAction.board)
         ).filter_by(
         board_id=board.id
         ).order_by(
