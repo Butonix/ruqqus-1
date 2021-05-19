@@ -130,7 +130,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             joinedload(Submission.submission_aux),
             joinedload(Submission.author).joinedload(User.title),
             joinedload(Submission.board),
-            joinedload(Submission.original_board)
+            joinedload(Submission.original_board),
             Load(UserBlock).lazyload('*'),
             joinedload(Submission.awards)
         )
@@ -193,7 +193,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             joinedload(Submission.submission_aux),
             joinedload(Submission.author).joinedload(User.title),
             joinedload(Submission.board),
-            joinedload(Submission.original_board)
+            joinedload(Submission.original_board),
             Load(UserBlock).lazyload('*'),
             joinedload(Submission.awards)
         # ).join(
@@ -254,7 +254,7 @@ def get_posts(pids, sort="hot", v=None):
             joinedload(Submission.submission_aux),
             joinedload(Submission.author).joinedload(User.title),
             joinedload(Submission.board),
-            joinedload(Submission.original_board)
+            joinedload(Submission.original_board),
             Load(UserBlock).lazyload('*'),
             joinedload(Submission.awards)
         ).filter(
@@ -308,7 +308,7 @@ def get_posts(pids, sort="hot", v=None):
             joinedload(Submission.submission_aux),
             joinedload(Submission.author).joinedload(User.title),
             joinedload(Submission.board),
-            joinedload(Submission.original_board)
+            joinedload(Submission.original_board),
             Load(UserBlock).lazyload('*'),
             joinedload(Submission.awards)
         ).filter(Submission.id.in_(pids)
