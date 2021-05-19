@@ -268,7 +268,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             'is_nsfl': self.is_nsfl,
             'is_distinguished': bool(self.distinguish_level),
             'is_heralded': bool(self.gm_distinguish),
-            'herald_guild': self.distinguished_board.name,
+            'herald_guild': self.distinguished_board.name if self.gm_distinguish else None,
             'permalink': self.permalink,
             'post_id': self.post.base36id,
             'score': self.score_fuzzed,
