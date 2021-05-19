@@ -128,6 +128,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
         ).options(
             lazyload('*'),
             joinedload(Submission.submission_aux),
+            joinedload(Submission.author),
             joinedload(Submission.author).joinedload(User.title),
             Load(Board).lazyload('*'),
             joinedload(Submission.board),
@@ -195,6 +196,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
         ).options(
             lazyload('*'),
             joinedload(Submission.submission_aux),
+            joinedload(Submission.author),
             joinedload(Submission.author).joinedload(User.title),
             Load(Board).lazyload('*'),
             joinedload(Submission.board),
@@ -260,6 +262,7 @@ def get_posts(pids, sort="hot", v=None):
         ).options(
             lazyload('*'),
             joinedload(Submission.submission_aux),
+            joinedload(Submission.author),
             joinedload(Submission.author).joinedload(User.title),
             Load(Board).lazyload('*'),
             joinedload(Submission.board),
@@ -318,6 +321,7 @@ def get_posts(pids, sort="hot", v=None):
         ).options(
             lazyload('*'),
             joinedload(Submission.submission_aux),
+            joinedload(Submission.author),
             joinedload(Submission.author).joinedload(User.title),
             Load(Board).lazyload('*'),
             joinedload(Submission.board),
