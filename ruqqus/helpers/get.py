@@ -557,7 +557,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, no_text=False, **kwa
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
-            Load(User).joinedload(User.title),
+            joinedload(Comment.author).joinedload(User.title),
         ).join(
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
