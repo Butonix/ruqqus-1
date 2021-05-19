@@ -127,7 +127,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             # aliased(ModAction, alias=exile)
         ).options(
             lazyload('*'),
-            joinedload(Submission.submission_aux)
+            joinedload(Submission.submission_aux),
             joinedload(Submission.author).joinedload(User.title),
             joinedload(Submission.board),
             joinedload(Submission.original_board)
@@ -190,7 +190,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             # aliased(ModAction, alias=exile)
         ).options(
             lazyload('*'),
-            joinedload(Submission.submission_aux)
+            joinedload(Submission.submission_aux),
             joinedload(Submission.author).joinedload(User.title),
             joinedload(Submission.board),
             joinedload(Submission.original_board)
@@ -251,7 +251,7 @@ def get_posts(pids, sort="hot", v=None):
             # aliased(ModAction, alias=exile)
         ).options(
             lazyload('*'),
-            joinedload(Submission.submission_aux)
+            joinedload(Submission.submission_aux),
             joinedload(Submission.author).joinedload(User.title),
             joinedload(Submission.board),
             joinedload(Submission.original_board)
@@ -305,7 +305,7 @@ def get_posts(pids, sort="hot", v=None):
             # aliased(ModAction, alias=exile)
         ).options(
             lazyload('*'),
-            joinedload(Submission.submission_aux)
+            joinedload(Submission.submission_aux),
             joinedload(Submission.author).joinedload(User.title),
             joinedload(Submission.board),
             joinedload(Submission.original_board)
