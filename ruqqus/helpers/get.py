@@ -261,7 +261,7 @@ def get_posts(pids, sort="hot", v=None):
             lazyload('*'),
             joinedload(Submission.submission_aux),
             joinedload(Submission.author).joinedload(User.title),
-            Load(Board).lazyload('*')
+            Load(Board).lazyload('*'),
             joinedload(Submission.board),
             joinedload(Submission.original_board),
             Load(UserBlock).lazyload('*'),
