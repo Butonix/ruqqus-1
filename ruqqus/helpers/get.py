@@ -126,9 +126,13 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             aliased(Subscription, alias=sub)
             # aliased(ModAction, alias=exile)
         ).options(
+            lazyload('*'),
+            joinedload(Submission.submission_aux)
             joinedload(Submission.author).joinedload(User.title),
             joinedload(Submission.board),
-            Load(UserBlock).lazyload('*')
+            joinedload(Submission.original_board)
+            Load(UserBlock).lazyload('*'),
+            joinedload(Submission.awards)
         )
         
         if no_text:
@@ -185,7 +189,13 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             Submission,
             # aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Submission.author).joinedload(User.title)
+            lazyload('*'),
+            joinedload(Submission.submission_aux)
+            joinedload(Submission.author).joinedload(User.title),
+            joinedload(Submission.board),
+            joinedload(Submission.original_board)
+            Load(UserBlock).lazyload('*'),
+            joinedload(Submission.awards)
         # ).join(
         #     exile,
         #     and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
@@ -240,7 +250,13 @@ def get_posts(pids, sort="hot", v=None):
             subs.c.id,
             # aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Submission.author).joinedload(User.title)
+            lazyload('*'),
+            joinedload(Submission.submission_aux)
+            joinedload(Submission.author).joinedload(User.title),
+            joinedload(Submission.board),
+            joinedload(Submission.original_board)
+            Load(UserBlock).lazyload('*'),
+            joinedload(Submission.awards)
         ).filter(
             Submission.id.in_(pids)
         ).join(
@@ -288,7 +304,13 @@ def get_posts(pids, sort="hot", v=None):
             Submission,
             # aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Submission.author).joinedload(User.title)
+            lazyload('*'),
+            joinedload(Submission.submission_aux)
+            joinedload(Submission.author).joinedload(User.title),
+            joinedload(Submission.board),
+            joinedload(Submission.original_board)
+            Load(UserBlock).lazyload('*'),
+            joinedload(Submission.awards)
         ).filter(Submission.id.in_(pids)
         # ).join(
         #     exile,
