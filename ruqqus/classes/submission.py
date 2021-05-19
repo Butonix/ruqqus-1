@@ -369,7 +369,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'is_offensive': self.is_offensive,
                 'meta_title': self.meta_title,
                 'meta_description': self.meta_description,
-                'is_pinned': self.is_pinned
+                'is_pinned': self.is_pinned,
+                'is_distinguished': bool(self.distinguish_level),
+                'is_heralded': bool(self.gm_distinguish),
+                'herald_guild': self.distinguished_board.name
                 }
         if self.ban_reason:
             data["ban_reason"]=self.ban_reason
