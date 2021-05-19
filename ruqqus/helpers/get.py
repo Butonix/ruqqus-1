@@ -347,7 +347,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             Load(UserBlock).lazyload('*'),
             Load(ModAction).lazyload('*'),
             Load(Board).lazyload('*'),
-            Load(AwardRelationship).lazylaod('*')
+            Load(AwardRelationship).lazyload('*')
         ).filter(
             Comment.parent_submission == post.id,
             Comment.level <= 6
