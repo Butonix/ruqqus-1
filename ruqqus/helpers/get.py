@@ -126,7 +126,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             aliased(Subscription, alias=sub)
             # aliased(ModAction, alias=exile)
         ).options(
-            Load(User).joinedload(User.title),
+            joinedload(Submission.author).joinedload(User.title),
             joinedload(Submission.board)
         )
         
