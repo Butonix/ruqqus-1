@@ -135,7 +135,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             Load(UserBlock).lazyload('*'),
             joinedload(Submission.awards),
             joinedload(Submission.domain_obj),
-            joinedload(Submission.reposts).lazyload('*')
+            joinedload(Submission.reposts).lazyload('*'),
             Load(AwardRelationship).lazyload('*')
         )
         
@@ -202,7 +202,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             Load(UserBlock).lazyload('*'),
             joinedload(Submission.awards),
             joinedload(Submission.domain_obj),
-            joinedload(Submission.reposts).lazyload('*')
+            joinedload(Submission.reposts).lazyload('*'),
             Load(AwardRelationship).lazyload('*')
         # ).join(
         #     exile,
@@ -267,7 +267,7 @@ def get_posts(pids, sort="hot", v=None):
             Load(UserBlock).lazyload('*'),
             joinedload(Submission.awards),
             joinedload(Submission.domain_obj),
-            joinedload(Submission.reposts).lazyload('*')
+            joinedload(Submission.reposts).lazyload('*'),
             Load(AwardRelationship).lazyload('*')
         ).filter(
             Submission.id.in_(pids)
@@ -325,7 +325,7 @@ def get_posts(pids, sort="hot", v=None):
             Load(UserBlock).lazyload('*'),
             joinedload(Submission.awards),
             joinedload(Submission.domain_obj),
-            joinedload(Submission.reposts).lazyload('*')
+            joinedload(Submission.reposts).lazyload('*'),
             Load(AwardRelationship).lazyload('*')
         ).filter(Submission.id.in_(pids)
         # ).join(
