@@ -127,8 +127,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             # aliased(ModAction, alias=exile)
         ).options(
             joinedload(Submission.author).joinedload(User.title),
-            joinedload(Submission.board),
-            Load(UserBlock).lazyload('*')
+            joinedload(Submission.board)
         )
         
         if no_text:
@@ -332,22 +331,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             blocked.c.id,
             aliased(ModAction, alias=exile)
         ).options(
-            lazyload('*'),
-            joinedload(Comment.comment_aux),
-            joinedload(Comment.author),
-            joinedload(Comment.distinguished_board),
-            joinedload(Comment.awards),
-            Load(User).lazyload('*'),
-            Load(User).joinedload(User.title),
-            joinedload(Comment.post),
-            Load(Submission).lazyload('*'),
-            Load(Submission).joinedload(Submission.submission_aux),
-            Load(Submission).joinedload(Submission.board),
-            Load(CommentVote).lazyload('*'),
-            Load(UserBlock).lazyload('*'),
-            Load(ModAction).lazyload('*'),
-            Load(Board).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+            joinedload(Comment.author).joinedload(User.title)
         ).filter(
             Comment.parent_submission == post.id,
             Comment.level <= 6
@@ -408,22 +392,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
-            lazyload('*'),
-            joinedload(Comment.comment_aux),
-            joinedload(Comment.author),
-            Load(User).lazyload('*'),
-            Load(User).joinedload(User.title),
-            joinedload(Comment.post),
-            Load(Submission).lazyload('*'),
-            Load(Submission).joinedload(Submission.submission_aux),
-            Load(Submission).joinedload(Submission.board),
-            Load(CommentVote).lazyload('*'),
-            Load(UserBlock).lazyload('*'),
-            Load(ModAction).lazyload('*'),
-            joinedload(Comment.distinguished_board),
-            joinedload(Comment.awards),
-            Load(Board).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+            joinedload(Comment.author).joinedload(User.title)
         ).filter(
             Comment.parent_submission == post.id,
             Comment.level <= 6
@@ -499,22 +468,10 @@ def get_comment(cid, nSession=None, v=None, graceful=False, no_text=False, **kwa
             aliased(ModRelationship, alias=mod),
             aliased(ModAction, alias=exile)
         ).options(
-            lazyload('*'),
             joinedload(Comment.comment_aux),
-            joinedload(Comment.author),
-            Load(User).lazyload('*'),
-            Load(User).joinedload(User.title),
-            joinedload(Comment.post),
-            Load(Submission).lazyload('*'),
-            Load(Submission).joinedload(Submission.submission_aux),
-            Load(Submission).joinedload(Submission.board),
-            Load(CommentVote).lazyload('*'),
-            Load(UserBlock).lazyload('*'),
-            Load(ModAction).lazyload('*'),
-            joinedload(Comment.distinguished_board),
-            joinedload(Comment.awards),
-            Load(Board).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+            joinedload(Comment.author).joinedload(User.title),
+            joinedload(Comment.post).joinedload(Submission.submission_aux),
+            joinedload(Comment.post).joinedload(Submission.board)
         )
         
         if no_text:
@@ -570,7 +527,10 @@ def get_comment(cid, nSession=None, v=None, graceful=False, no_text=False, **kwa
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
+            joinedload(Comment.comment_aux),
             joinedload(Comment.author).joinedload(User.title),
+            joinedload(Comment.post).joinedload(Submission.submission_aux),
+            joinedload(Comment.post).joinedload(Submission.board)
         ).join(
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
@@ -622,23 +582,10 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             aliased(ModAction, alias=exile),
             aliased(ModRelationship, alias=mod)
         ).options(
-            lazyload('*'),
             joinedload(Comment.comment_aux),
-            joinedload(Comment.author),
-            joinedload(Comment.post),
-            Load(User).lazyload('*'),
-            Load(User).joinedload(User.title),
-            Load(Submission).lazyload('*'),
-            Load(Submission).joinedload(Submission.submission_aux),
-            Load(Submission).joinedload(Submission.board),
-            Load(CommentVote).lazyload('*'),
-            Load(UserBlock).lazyload('*'),
-            Load(ModAction).lazyload('*'),
-            Load(ModRelationship).lazyload('*'),
-            joinedload(Comment.distinguished_board),
-            joinedload(Comment.awards),
-            Load(Board).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+            joinedload(Comment.author).joinedload(User.title),
+            joinedload(Comment.post).joinedload(Submission.submission_aux),
+            joinedload(Comment.post).joinedload(Submission.board)
         ).filter(
             Comment.id.in_(cids)
         )
@@ -706,23 +653,10 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
-            lazyload('*'),
-            joinedload(Comment.post),
             joinedload(Comment.comment_aux),
-            joinedload(Comment.author),
-            Load(User).lazyload('*'),
-            Load(User).joinedload(User.title),
-            Load(Submission).lazyload('*'),
-            Load(Submission).joinedload(Submission.submission_aux),
-            Load(Submission).joinedload(Submission.board),
-            Load(CommentVote).lazyload('*'),
-            Load(UserBlock).lazyload('*'),
-            Load(ModAction).lazyload('*'),
-            Load(ModRelationship).lazyload('*'),
-            joinedload(Comment.distinguished_board),
-            joinedload(Comment.awards),
-            Load(Board).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+            joinedload(Comment.author).joinedload(User.title),
+            joinedload(Comment.post).joinedload(Submission.submission_aux),
+            joinedload(Comment.post).joinedload(Submission.board)
         ).filter(
             Comment.id.in_(cids)
         ).join(
