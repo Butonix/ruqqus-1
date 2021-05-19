@@ -239,7 +239,7 @@ def get_posts(pids, sort="hot", v=None):
             subs.c.id,
             # aliased(ModAction, alias=exile)
         ).options(
-            Load(User).joinedload(User.title)
+            joinedload(Submission.author).joinedload(User.title)
         ).filter(
             Submission.id.in_(pids)
         ).join(
@@ -287,7 +287,7 @@ def get_posts(pids, sort="hot", v=None):
             Submission,
             # aliased(ModAction, alias=exile)
         ).options(
-            Load(User).joinedload(User.title)
+            joined(Submission.author).joinedload(User.title)
         ).filter(Submission.id.in_(pids)
         # ).join(
         #     exile,
