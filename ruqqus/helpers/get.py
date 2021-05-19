@@ -184,7 +184,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             Submission,
             # aliased(ModAction, alias=exile)
         ).options(
-            Load(User).joinedload(User.title)
+            joinedload(Submission.author).joinedload(User.title)
         # ).join(
         #     exile,
         #     and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
@@ -287,7 +287,7 @@ def get_posts(pids, sort="hot", v=None):
             Submission,
             # aliased(ModAction, alias=exile)
         ).options(
-            joined(Submission.author).joinedload(User.title)
+            joinedload(Submission.author).joinedload(User.title)
         ).filter(Submission.id.in_(pids)
         # ).join(
         #     exile,
