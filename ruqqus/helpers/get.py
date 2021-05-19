@@ -331,8 +331,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             blocked.c.id,
             aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Comment.author).joinedload(User.title),
-            joinedload(Comment.post)
+            joinedload(Comment.author).joinedload(User.title)
         ).filter(
             Comment.parent_submission == post.id,
             Comment.level <= 6
@@ -393,8 +392,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Comment.author).joinedload(User.title),
-            joinedload(Comment.post)
+            joinedload(Comment.author).joinedload(User.title)
         ).filter(
             Comment.parent_submission == post.id,
             Comment.level <= 6
@@ -470,6 +468,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, no_text=False, **kwa
             aliased(ModRelationship, alias=mod),
             aliased(ModAction, alias=exile)
         ).options(
+            joinedload(Comment.comment_aux),
             joinedload(Comment.author).joinedload(User.title),
             joinedload(Comment.post).joinedload(Submission.submission_aux),
             joinedload(Comment.post).joinedload(Submission.board)
@@ -528,6 +527,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, no_text=False, **kwa
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
+            joinedload(Comment.comment_aux),
             joinedload(Comment.author).joinedload(User.title),
             joinedload(Comment.post).joinedload(Submission.submission_aux),
             joinedload(Comment.post).joinedload(Submission.board)
@@ -582,6 +582,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             aliased(ModAction, alias=exile),
             aliased(ModRelationship, alias=mod)
         ).options(
+            joinedload(Comment.comment_aux),
             joinedload(Comment.author).joinedload(User.title),
             joinedload(Comment.post).joinedload(Submission.submission_aux),
             joinedload(Comment.post).joinedload(Submission.board)
@@ -652,6 +653,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
+            joinedload(Comment.comment_aux),
             joinedload(Comment.author).joinedload(User.title),
             joinedload(Comment.post).joinedload(Submission.submission_aux),
             joinedload(Comment.post).joinedload(Submission.board)
