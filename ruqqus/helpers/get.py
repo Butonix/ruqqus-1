@@ -132,7 +132,9 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             joinedload(Submission.board),
             joinedload(Submission.original_board),
             Load(UserBlock).lazyload('*'),
-            joinedload(Submission.awards)
+            joinedload(Submission.awards),
+            joinedload(Submission.domain_obj),
+            joinedload(Submission.reposts)
         )
         
         if no_text:
@@ -195,7 +197,9 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             joinedload(Submission.board),
             joinedload(Submission.original_board),
             Load(UserBlock).lazyload('*'),
-            joinedload(Submission.awards)
+            joinedload(Submission.awards),
+            joinedload(Submission.domain_obj),
+            joinedload(Submission.reposts)
         # ).join(
         #     exile,
         #     and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
@@ -256,7 +260,9 @@ def get_posts(pids, sort="hot", v=None):
             joinedload(Submission.board),
             joinedload(Submission.original_board),
             Load(UserBlock).lazyload('*'),
-            joinedload(Submission.awards)
+            joinedload(Submission.awards),
+            joinedload(Submission.domain_obj),
+            joinedload(Submission.reposts)
         ).filter(
             Submission.id.in_(pids)
         ).join(
@@ -310,7 +316,9 @@ def get_posts(pids, sort="hot", v=None):
             joinedload(Submission.board),
             joinedload(Submission.original_board),
             Load(UserBlock).lazyload('*'),
-            joinedload(Submission.awards)
+            joinedload(Submission.awards),
+            joinedload(Submission.domain_obj),
+            joinedload(Submission.reposts)
         ).filter(Submission.id.in_(pids)
         # ).join(
         #     exile,
