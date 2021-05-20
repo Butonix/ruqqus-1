@@ -243,7 +243,6 @@ _engine=create_engine(
 def retry(f):
 
     def wrapper(self, *args, **kwargs):
-        print(self.statement)
         try:
             return f(self, *args, **kwargs)
         except OperationalError as e:
