@@ -97,7 +97,8 @@ CREATE TABLE public.boards (
     subcat_id integer,
     secondary_color character(6) DEFAULT 'ffffff'::bpchar,
     public_chat boolean DEFAULT false,
-    motd character varying(1000) DEFAULT ''::character varying
+    motd character varying(1000) DEFAULT ''::character varying,
+    disallowbots boolean DEFAULT false
 );
 
 
@@ -285,7 +286,11 @@ CREATE TABLE public.users (
     original_username character varying(255),
     name_changed_utc integer DEFAULT 0,
     hide_bot boolean DEFAULT false,
-    auto_join_chat boolean DEFAULT true
+    auto_join_chat boolean DEFAULT true,
+    last_mfa character(6),
+    defaulttime character varying(8) DEFAULT 'all'::character varying,
+    defaultsorting character varying(8) DEFAULT 'hot'::character varying,
+    stored_follower_count integer DEFAULT 0
 );
 
 
@@ -1948,8 +1953,7 @@ CREATE TABLE public.ips (
     id integer NOT NULL,
     addr character varying(64),
     reason character varying(256),
-    banned_by integer,
-    until_utc integer
+    banned_by integer
 );
 
 
@@ -3829,6 +3833,13 @@ CREATE INDEX boards_sub_idx ON public.boards USING btree (stored_subscriber_coun
 
 
 --
+-- Name: boards_subcat_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX boards_subcat_idx ON public.boards USING btree (subcat_id);
+
+
+--
 -- Name: cflag_user_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3850,6 +3861,13 @@ CREATE INDEX client_refresh_token_idx ON public.client_auths USING btree (refres
 
 
 --
+-- Name: comment_banned_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX comment_banned_idx ON public.comments USING btree (is_banned);
+
+
+--
 -- Name: comment_body_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3864,17 +3882,24 @@ CREATE INDEX comment_body_trgm_idx ON public.comments_aux USING gin (body public
 
 
 --
+-- Name: comment_created_utc_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX comment_created_utc_idx ON public.comments USING btree (created_utc DESC);
+
+
+--
+-- Name: comment_deleted_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX comment_deleted_idx ON public.comments USING btree (deleted_utc DESC);
+
+
+--
 -- Name: comment_ip_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX comment_ip_idx ON public.comments USING btree (creation_ip);
-
-
---
--- Name: comment_parent_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX comment_parent_index ON public.comments USING btree (parent_comment_id);
 
 
 --
@@ -3906,13 +3931,6 @@ CREATE INDEX comments_aux_id_idx ON public.comments_aux USING btree (id);
 
 
 --
--- Name: comments_loader_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX comments_loader_idx ON public.comments USING btree (parent_submission, level, score_hot DESC) WHERE (level <= 8);
-
-
---
 -- Name: comments_original_board_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3938,13 +3956,6 @@ CREATE INDEX comments_score_disputed_idx ON public.comments USING btree (score_d
 --
 
 CREATE INDEX comments_score_hot_idx ON public.comments USING btree (score_hot DESC);
-
-
---
--- Name: comments_score_top_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX comments_score_top_idx ON public.comments USING btree (score_top DESC);
 
 
 --
@@ -3983,13 +3994,6 @@ CREATE INDEX contrib_active_index ON public.contributors USING btree (is_active)
 
 
 --
--- Name: contrib_board_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX contrib_board_index ON public.contributors USING btree (board_id);
-
-
---
 -- Name: contributors_board_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4025,13 +4029,6 @@ CREATE INDEX discord_id_idx ON public.users USING btree (discord_id);
 
 
 --
--- Name: domain_ref_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX domain_ref_idx ON public.submissions USING btree (domain_ref);
-
-
---
 -- Name: domains_domain_trgm_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4064,13 +4061,6 @@ CREATE INDEX follow_target_id_index ON public.follows USING btree (target_id);
 --
 
 CREATE INDEX follow_user_id_index ON public.follows USING btree (user_id);
-
-
---
--- Name: ips_until_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX ips_until_idx ON public.ips USING btree (until_utc DESC);
 
 
 --
@@ -4228,20 +4218,6 @@ CREATE INDEX post_app_id_idx ON public.submissions USING btree (app_id);
 
 
 --
--- Name: post_author_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX post_author_index ON public.submissions USING btree (author_id);
-
-
---
--- Name: post_offensive_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX post_offensive_index ON public.submissions USING btree (is_offensive);
-
-
---
 -- Name: post_public_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4277,13 +4253,6 @@ CREATE INDEX sub_active_index ON public.subscriptions USING btree (is_active);
 
 
 --
--- Name: sub_user_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX sub_user_index ON public.subscriptions USING btree (user_id);
-
-
---
 -- Name: subimssion_binary_group_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4295,13 +4264,6 @@ CREATE INDEX subimssion_binary_group_idx ON public.submissions USING btree (is_b
 --
 
 CREATE INDEX submission_activity_disputed_idx ON public.submissions USING btree (score_disputed DESC, board_id);
-
-
---
--- Name: submission_activity_hot_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX submission_activity_hot_idx ON public.submissions USING btree (score_hot DESC, board_id);
 
 
 --
@@ -4354,13 +4316,6 @@ CREATE INDEX submission_disputed_sort_idx ON public.submissions USING btree (is_
 
 
 --
--- Name: submission_domainref_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX submission_domainref_index ON public.submissions USING btree (domain_ref);
-
-
---
 -- Name: submission_hot_sort_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4410,17 +4365,17 @@ CREATE INDEX submission_pinned_idx ON public.submissions USING btree (is_pinned)
 
 
 --
+-- Name: submission_public_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX submission_public_idx ON public.submissions USING btree (post_public);
+
+
+--
 -- Name: submission_purge_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX submission_purge_idx ON public.submissions USING btree (purged_utc);
-
-
---
--- Name: submission_time_board_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX submission_time_board_idx ON public.submissions USING btree (created_utc, board_id) WHERE (created_utc > 1590859918);
 
 
 --
@@ -4473,13 +4428,6 @@ CREATE INDEX submissions_over18_index ON public.submissions USING btree (over_18
 
 
 --
--- Name: submissions_score_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX submissions_score_idx ON public.submissions USING btree (score_top);
-
-
---
 -- Name: submissions_sticky_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4505,13 +4453,6 @@ CREATE INDEX subscription_board_index ON public.subscriptions USING btree (board
 --
 
 CREATE INDEX subscription_user_index ON public.subscriptions USING btree (user_id);
-
-
---
--- Name: trending_all_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX trending_all_idx ON public.submissions USING btree (is_banned, deleted_utc, stickied, post_public, score_hot DESC);
 
 
 --
@@ -4550,13 +4491,6 @@ CREATE INDEX user_privacy_idx ON public.users USING btree (is_private);
 
 
 --
--- Name: user_private_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX user_private_idx ON public.users USING btree (is_private);
-
-
---
 -- Name: userblocks_both_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4578,17 +4512,17 @@ CREATE INDEX users_created_utc_index ON public.users USING btree (created_utc);
 
 
 --
--- Name: users_karma_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX users_karma_idx ON public.users USING btree (stored_karma);
-
-
---
 -- Name: users_neg_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX users_neg_idx ON public.users USING btree (negative_balance_cents);
+
+
+--
+-- Name: users_nofollow_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX users_nofollow_idx ON public.users USING btree (is_nofollow);
 
 
 --
