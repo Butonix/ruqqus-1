@@ -2,7 +2,6 @@ from urllib.parse import urlparse
 import mistletoe
 from sqlalchemy import func, literal
 from bs4 import BeautifulSoup
-from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 import secrets
 import threading
