@@ -113,7 +113,7 @@
 
         <div class="d-flex justify-content-between align-items-center">
           <div>
-           {% if v and v.id != u.id and not u.is_nofollow %}
+           {% if v and v.id != u.id and not u.is_private and not u.is_nofollow %}
            <div id="button-unsub" {% if not is_following %}class="d-none"{% endif %}><a class="btn btn-secondary" href="javascript:void(0)" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Unsubscribe</a></div>
            <div id="button-sub" {% if is_following %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Subscribe</a></div>
            {% elif v and v.id == u.id %}
