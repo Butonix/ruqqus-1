@@ -8,6 +8,7 @@ import subprocess
 import imagehash
 from os import remove
 from PIL import Image as IMAGE
+import gevent
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.alerts import *
@@ -870,21 +871,24 @@ def admin_purge_guild_images(boardname, v):
     posts = g.db.query(Submission).options(lazyload('*')).filter_by(board_id=board.id, has_thumb=True)
 
 
-    i=0
+    def del_function(post):
 
-    for post in posts:
-        i+=1
+        del_function
         aws.delete_file(urlparse(post.thumb_url).path.lstrip('/'))
-        post.has_thumb=False
+        #post.has_thumb=False
 
         if post.url and post.domain=="i.ruqqus.com":
             aws.delete_file(urlparse(post.url).path.lstrip('/'))
 
+    i=0
+    threads=[]
+    for post in posts.all():
+        i+=1
+        threads.append(gevent.spawn(del_function, post))
+        post.has_thumb=False
         g.db.add(post)
 
-        if not i%100:
-            g.db.commit()
-
+    gevent.joinall(threads)
 
     g.db.commit()
 
