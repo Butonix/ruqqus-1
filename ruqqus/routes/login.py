@@ -177,8 +177,13 @@ def me(v):
 @validate_formkey
 def logout(v):
 
-    session.pop("user_id", None)
-    session.pop("session_id", None)
+    try:
+        print(f"logout {v.username}")
+    except:
+        pass
+        
+    session["user_id"]=None
+    session["session_id"]=None
 
     session.modified=True
 
