@@ -271,6 +271,7 @@
         });
     </script>
 
+    {% if v.can_submit_image %}
     <script>
     document.onpaste = function(event) {
         f=document.getElementById('file-upload');
@@ -302,6 +303,7 @@
         checkForRequired();
     })
     </script>
+    {% endif %}
 
 </body>
 
