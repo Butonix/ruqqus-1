@@ -406,7 +406,17 @@ def submit_post(v):
     board = get_guild(board_name, graceful=True)
 
     if not board:
-        board = get_guild('general')
+
+        return {"html": lambda: (render_template("submit.html",
+                                                 v=v,
+                                                 error=f"Please enter a Guild to submit to.",
+                                                 title=title,
+                                                 url=url, body=request.form.get(
+                                                     "body", ""),
+                                                 b=None
+                                                 ), 403),
+                "api": lambda: (jsonify({"error": f"403 Forbidden - +{board.name} has been banned."}))
+                }
 
     if board.is_banned:
 
@@ -416,8 +426,7 @@ def submit_post(v):
                                                  title=title,
                                                  url=url, body=request.form.get(
                                                      "body", ""),
-                                                 b=get_guild("general",
-                                                             graceful=True)
+                                                 b=None
                                                  ), 403),
                 "api": lambda: (jsonify({"error": f"403 Forbidden - +{board.name} has been banned."}))
                 }
@@ -429,7 +438,7 @@ def submit_post(v):
                                                  title=title,
                                                  url=url, body=request.form.get(
                                                      "body", ""),
-                                                 b=get_guild("general")
+                                                 b=None
                                                  ), 403),
                 "api": lambda: (jsonify({"error": f"403 Not Authorized - You are exiled from +{board.name}"}), 403)
                 }
@@ -443,9 +452,7 @@ def submit_post(v):
                                                  url=url,
                                                  body=request.form.get(
                                                      "body", ""),
-                                                 b=get_guild(request.form.get("board", "general"),
-                                                             graceful=True
-                                                             )
+                                                 b=None
                                                  ), 403),
                 "api": lambda: (jsonify({"error": f"403 Not Authorized - You are not an approved contributor for +{board.name}"}), 403)
                 }
