@@ -123,9 +123,6 @@ def submit_get(v):
 
     board = request.args.get("guild", "general")
     b = get_guild(board, graceful=True)
-    if not b:
-
-        b = get_guild("general")
 
 
     return render_template("submit.html",
