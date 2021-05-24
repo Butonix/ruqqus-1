@@ -743,6 +743,8 @@ def submit_post(v):
         new_post.is_image = True
         new_post.domain_ref = 1  # id of i.ruqqus.com domain
         g.db.add(new_post)
+        g.db.add(new_post.submission_aux)
+        g.db.commit()
 
         #csam detection
         def del_function(db):
