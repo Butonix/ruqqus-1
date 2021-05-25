@@ -62,7 +62,7 @@ def jinja_is_mod(uid, bid):
     return bool(get_mod(uid, bid))
 
 @app.template_filter("coin_goal")
-@cache.cached(timeout=600, key_prefix="premium_coin_goal")
+#@cache.cached(timeout=600, key_prefix="premium_coin_goal")
 def coin_goal(x):
     
     now = time.gmtime()
