@@ -67,7 +67,7 @@ def coin_goal(x):
     
     now = time.gmtime()
     midnight_month_start = time.struct_time((now.tm_year,
-                                              now.tm_month,
+                                              now.tm_mon,
                                               1,
                                               0,
                                               0,
