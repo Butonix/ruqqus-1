@@ -62,7 +62,7 @@ def jinja_is_mod(uid, bid):
     return bool(get_mod(uid, bid))
 
 @app.template_filter("coin_goal")
-#@cache.cached(timeout=600, key_prefix="premium_coin_goal")
+@cache.cached(timeout=600, key_prefix="premium_coin_goal")
 def coin_goal(x):
     
     now = time.gmtime()
@@ -80,9 +80,7 @@ def coin_goal(x):
     
     coins=g.db.query(func.sum(PayPalTxn.coin_count)).filter(
         PayPalTxn.created_utc>cutoff,
-        PayPalTxn.status==3).all()[0]
-    
-    print(coins)
+        PayPalTxn.status==3).all()[0][0]
     
     
     return int(100*coins/250)
