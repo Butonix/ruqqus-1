@@ -76,7 +76,7 @@ def coin_goal(x):
                                               now.tm_yday,
                                               0)
                                              )
-    cutoff = calendar.timegm(midnight_cutoff_start)
+    cutoff = calendar.timegm(midnight_month_start)
     
     coins=g.db.query(func.sum(PayPalTxn.coin_count)).filter(
         PayPalTxn.created_utc>cutoff,
