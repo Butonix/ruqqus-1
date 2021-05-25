@@ -639,14 +639,15 @@ def my_subs(v):
 
     elif kind == "users":
 
-        u = g.db.query(User)
+        u = g.db.query(User).filter_by(is_banned=0, is_deleted=False)
+
         follows = g.db.query(Follow).filter_by(user_id=v.id).subquery()
 
         content = u.join(follows,
                          User.id == follows.c.target_id,
                          isouter=False)
 
-        content = content.order_by(User.follower_count.desc())
+        content = content.order_by(User.stored_subscriber_count.desc())
 
         content = [x for x in content.offset(25 * (page - 1)).limit(26)]
         next_exists = (len(content) == 26)
