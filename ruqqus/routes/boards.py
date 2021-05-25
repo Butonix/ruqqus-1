@@ -647,7 +647,7 @@ def user_kick_pid(pid, v):
         parent_submission=post.id
         ).all()
     for comment in pinned_comments:
-        pinned_comment.is_pinned=False
+        comment.is_pinned=False
         g.db.add(comment)
 
     g.db.commit()

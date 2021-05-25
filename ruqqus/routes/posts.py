@@ -743,9 +743,12 @@ def submit_post(v):
         new_post.is_image = True
         new_post.domain_ref = 1  # id of i.ruqqus.com domain
         g.db.add(new_post)
+        g.db.add(new_post.submission_aux)
+        g.db.commit()
 
         #csam detection
-        def del_function(db):
+        def del_function():
+            db=db_session()
             delete_file(name)
             new_post.is_banned=True
             db.add(new_post)
@@ -758,12 +761,13 @@ def submit_post(v):
                 )
             db.add(ma)
             db.commit()
+            db.close()
 
             
         csam_thread=threading.Thread(target=check_csam_url, 
                                      args=(f"https://{BUCKET}/{name}", 
                                            v, 
-                                           lambda:del_function(db=db_session())
+                                           del_function
                                           )
                                     )
         csam_thread.start()
