@@ -1881,7 +1881,7 @@ def board_mod_log(boardname, v):
     page=int(request.args.get("page",1))
     board=get_guild(boardname, v=v)
 
-    if board.is_banned:
+    if board.is_banned and not (v and v.admin_level>=4):
         return {
             "html":lambda:(render_template("board_banned.html", v=v, b=board), 403),
             "api":lambda:(jsonify({"error":f"+{board.name} is banned"}), 403)
