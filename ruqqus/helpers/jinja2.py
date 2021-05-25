@@ -1,8 +1,9 @@
 import time
 import json
 from os import environ, path
-from sqlalchemy import text
+from sqlalchemy import text, func
 from flask import g
+import calendar
 
 from ruqqus.classes.user import User
 from .get import *
@@ -63,9 +64,25 @@ def jinja_is_mod(uid, bid):
 @app.template_filter("coin_goal")
 @cache.cached(timeout=600, key_prefix="premium_coin_goal")
 def coin_goal(x):
-    premium_coins= g.db.query(User).filter(User.premium_expires_utc > x, User.premium_expires_utc < x+60*60*24*7).count()
-    name_change_coins = 20*g.db.query(User).filter(User.name_changed_utc > x-60*60*24*7).count()
-    coins = premium_coins + name_change_coins
+    
+    now=int(time.time())now = time.gmtime()
+    midnight_month_start = time.struct_time((now.tm_year,
+                                              now.tm_month,
+                                              1,
+                                              0,
+                                              0,
+                                              0,
+                                              now.tm_wday,
+                                              now.tm_yday,
+                                              0)
+                                             )
+    cutoff = calendar.timegm(midnight_cutoff_start)
+    
+    coins=g.db.query(func.sum(PayPalTxn.coin_count)).filter(
+        PayPalTxn.created_utc>cutoff,
+        PayPalTxn.status==3).all() 
+    
+    
     return int(100*coins/250)
 
 
