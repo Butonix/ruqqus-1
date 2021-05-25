@@ -65,7 +65,7 @@ def jinja_is_mod(uid, bid):
 @cache.cached(timeout=600, key_prefix="premium_coin_goal")
 def coin_goal(x):
     
-    now=int(time.time())now = time.gmtime()
+    now = time.gmtime()
     midnight_month_start = time.struct_time((now.tm_year,
                                               now.tm_month,
                                               1,
