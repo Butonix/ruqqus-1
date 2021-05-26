@@ -2,7 +2,6 @@ from flask import *
 import hmac
 import html
 from .front import frontlist
-from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 from ruqqus.classes import *
 from ruqqus.helpers.security import *
