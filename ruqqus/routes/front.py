@@ -18,6 +18,7 @@ def slash_post():
 
 
 @app.get("/notifications")
+@app.get("/notifications/all")
 @app.get("/notifications/mentions")
 @app.get("/notifications/replies")
 @app.route("/api/v1/notifications", methods=["GET"])
