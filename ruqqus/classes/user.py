@@ -632,11 +632,9 @@ class User(Base, Stndrd, Age_times):
             parent_comment=aliased(Comment)
             notifications = notifications.join(
                 parent_comment, 
-                main_comment.parent_comment, 
-                isouter=True
+                main_comment.parent_comment
                 ).join(
-                main_comment.parent_submission,
-                isouter=True
+                main_comment.parent_submission
                 )
 
             if replies_only:
