@@ -16,13 +16,38 @@
 
 {% block content %}
 
+<div class="row border-bottom bg-white sticky" style="overflow: visible;">
+  <div class="col">
+    <ul class="nav settings-nav">
+      <li class="nav-item">
+        <a class="nav-link active" href="/notifications?type=all">All</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/notifications">Unread</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/notifications?type=posts">Posts</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/notifications?type=replies">Replies</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/notifications?type=mentions">Mentions</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/notifications?type=meta">Meta</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
 <div class="p-3 p-md-0">
 
   <h1 class="h3 d-md-none">Inbox</h1>
 
   {% with comments=notifications %}
 
-    {% include "comments.html" %}
+  {% include "comments.html" %}
   {% endwith %}
 
   {% if not notifications %}
