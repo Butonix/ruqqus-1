@@ -20,32 +20,32 @@
   <div class="col">
     <ul class="nav settings-nav px-3">
       <li class="nav-item">
-        <a class="nav-link py-3 {% if request.path=='/notifications?all=true' %} active{% endif %}" href="/notifications?all=true">
+        <a class="nav-link py-3{% if request.path=='/notifications?all=true' %} active{% endif %}" href="/notifications?all=true">
           All
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link py-3 {% if request.path=='/notifications?unread=true' %} active{% endif %}" href="/notifications?unread=true">
+        <a class="nav-link py-3{% if request.path=='/notifications?unread=true' %} active{% endif %}" href="/notifications?unread=true">
           Unread
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link py-3 {% if request.path=='/notifications?posts=true' %} active{% endif %}" href="/notifications?posts=true">
+        <a class="nav-link py-3{% if request.path=='/notifications?posts=true' %} active{% endif %}" href="/notifications?posts=true">
           Posts
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link py-3 {% if request.path=='/notifications?replies=true' %} active{% endif %}" href="/notifications?replies=true">
+        <a class="nav-link py-3{% if request.path=='/notifications?replies=true' %} active{% endif %}" href="/notifications?replies=true">
           Replies
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link py-3 {% if request.path=='/notifications?mentions=true' %} active{% endif %}" href="/notifications?mentions=true">
+        <a class="nav-link py-3{% if request.path=='/notifications?mentions=true' %} active{% endif %}" href="/notifications?mentions=true">
           Mentions
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link py-3 {% if request.path=='/notifications?meta=true' %} active{% endif %}" href="/notifications?meta=true">
+        <a class="nav-link py-3{% if request.path=='/notifications?meta=true' %} active{% endif %}" href="/notifications?meta=true">
           Meta
         </a>
       </li>
