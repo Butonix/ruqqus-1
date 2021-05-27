@@ -642,14 +642,17 @@ class User(Base, Stndrd, Age_times):
                 notifications=notifications.filter(
                     or_(
                         parent_comment.author_id==self.id,
-                        Submission.author_id==self.id
+                        and_(
+                            Submission.author_id==self.id,
+                            main_comment.level==1
+                            )
                         )
                     )
-            elif mentions_only:
-                notifications=notifications.filter(
-                    parent_comment.author_id != self.id,
-                    Submission.author_id != self.id
-                    )
+            #elif mentions_only:
+            #    notifications=notifications.filter(
+            #        parent_comment.author_id != self.id,
+            #        Submission.author_id != self.id
+            #        )
 
             notifications=notifications.options(
                 contains_eager(Notification.comment).contains_eager(Comment.parent_comment),
