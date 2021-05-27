@@ -620,7 +620,7 @@ class User(Base, Stndrd, Age_times):
 
         main_comment=aliased(Comment)
 
-        notifications = self.notifications.join(main_comment, Notification.comment).filter(
+        notifications = self.notifications.join(Notification.comment.of_type(main_comment)).filter(
             main_comment.is_banned == False,
             main_comment.deleted_utc == 0)
 
@@ -631,8 +631,7 @@ class User(Base, Stndrd, Age_times):
 
             parent_comment=aliased(Comment)
             notifications = notifications.join(
-                parent_comment, 
-                main_comment.parent_comment
+                main_comment.parent_comment.of_type(parent_comment)
                 #).join(
                 #Submission,
                 #main_comment.parent_submission
@@ -642,10 +641,10 @@ class User(Base, Stndrd, Age_times):
                 notifications=notifications.filter(
                     or_(
                         parent_comment.author_id==self.id,
-                        and_(
-                            Submission.author_id==self.id,
-                            main_comment.level==1
-                            )
+                        #and_(
+                        #    Submission.author_id==self.id,
+                        #    main_comment.level==1
+                        #    )
                         )
                     )
             #elif mentions_only:
