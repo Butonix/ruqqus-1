@@ -310,7 +310,7 @@
       </div>
       <div id="button-unsub" class="btn-group {% if not b.has_subscriber(v) %}d-none{% endif %}" role="group" aria-label="Leave guild desktop">
         <button class="btn btn-secondary" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">Leave</button>
-        <button class="btn btn-secondary bell-button" data-toggle="tooltip" data-placement="bottom" title="Enable to be notified when new content is published.">
+        <button class="btn btn-secondary bell-button" data-toggle="tooltip" data-placement="bottom" title="Be notified when this guild has new content.">
           <i class="fas fa-fw fa-bell bell-icon"></i>
         </button>
       </div>
