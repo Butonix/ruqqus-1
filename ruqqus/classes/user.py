@@ -619,9 +619,8 @@ class User(Base, Stndrd, Age_times):
         #TODO: this function will become used only @mentions
 
         main_comment=aliased(Comment)
-        parent_comment=aliased(Comment)
 
-        notifications = self.notifications.join(Notification.comment.of_type(main_comment)).filter(
+        notifications = self.notifications.join(main_comment, Notification.comment).filter(
             main_comment.is_banned == False,
             main_comment.deleted_utc == 0)
 
@@ -629,8 +628,11 @@ class User(Base, Stndrd, Age_times):
             notifications = notifications.filter(Notification.read == False)
 
         if replies_only or mentions_only:
+
+            parent_comment=aliased(Comment)
             notifications = notifications.join(
-                main_comment.parent_comment.of_type(parent_comment), 
+                parent_comment, 
+                main_comment.parent_comment, 
                 isouter=True
                 ).join(
                 main_comment.parent_submission,
