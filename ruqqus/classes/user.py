@@ -94,9 +94,9 @@ class User(Base, Stndrd, Age_times):
     filter_nsfw = Column(Boolean, default=False)
     stored_karma = Column(Integer, default=0)
     stored_subscriber_count=Column(Integer, default=0)
-    posts_last_checked_utc = Column(Integer, default=0)
+    """posts_last_checked_utc = Column(Integer, default=0)
     replies_last_checked_utc = Column(Integer, default=0)
-    mentions_last_checked_utc = Column(Integer, default=0)
+    mentions_last_checked_utc = Column(Integer, default=0)"""
 
     auto_join_chat=Column(Boolean, default=False)
 
@@ -147,7 +147,7 @@ class User(Base, Stndrd, Age_times):
 
     _applications = relationship("OauthApp", lazy="dynamic")
     authorizations = relationship("ClientAuth", lazy="dynamic")
-    notification_subscriptions = relationship("PostNotificationSubscription", lazy="dynamic")
+    #notification_subscriptions = relationship("PostNotificationSubscriptions", lazy="dynamic")
 
     saved_posts=relationship(
         "SaveRelationship",
@@ -653,7 +653,8 @@ class User(Base, Stndrd, Age_times):
     @property
     @lazy
     def post_notifications_count(self):
-        return g.db.query(Submission)\
+        pass
+        """return g.db.query(Submission)\
             .filter(Submission.created_utc < self.posts_last_check_utc)\
             .filter(Submission.deleted_utc == 0)\
             .filter(Submission.is_banned == False)\
@@ -661,7 +662,8 @@ class User(Base, Stndrd, Age_times):
                     ) \
             .filter(Submission.author_id.in_(g.db.query(PostNotificationSubscriptions.subbed_to_user_id).filter_by(user_id=self.id).all()))\
             .distinct()\
-            .count()
+            .count()"""
+
 
 
     @property
@@ -681,17 +683,18 @@ class User(Base, Stndrd, Age_times):
     @property
     @lazy
     def post_notifications(self):
-        return g.db.query(Submission)\
+        pass
+        """return g.db.query(Submission)\
             .filter(Submission.created_utc < self.posts_last_check_utc)\
             .filter(Submission.deleted_utc == 0)\
             .filter(Submission.is_banned == False)\
             .filter(Submission.board_id.in_(g.db.query(PostNotificationSubscriptions.board_id).filter_by(user_id=self.id).all())
                     ) \
-            .filter(Submission.author_id.in_(g.db.query(PostNotificationSubscriptions.subbed_to_user_id).filter_by(user_id=self.id).all())).distinct()
+            .filter(Submission.author_id.in_(g.db.query(PostNotificationSubscriptions.subbed_to_user_id).filter_by(user_id=self.id).all())).distinct()"""
 
     @property
     def notifications_count(self):
-        return self.replies_notification_count + self.post_notifications_count + self.mentions_count
+        return self.mentions_count #self.replies_notification_count + self.post_notifications_count + self.mentions_count
 
 
     @property
