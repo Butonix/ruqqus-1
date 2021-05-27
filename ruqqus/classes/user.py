@@ -618,11 +618,10 @@ class User(Base, Stndrd, Age_times):
     def notification_commentlisting(self, page=1, all_=False, replies_only=False, mentions_only=False):
         #TODO: this function will become used only @mentions
 
-        main_comment=aliased(Comment)
 
-        notifications = self.notifications.join(Notification.comment.of_type(main_comment)).filter(
-            main_comment.is_banned == False,
-            main_comment.deleted_utc == 0)
+        notifications = self.notifications.join(Notification.comment).filter(
+            Comment.is_banned == False,
+            Comment.deleted_utc == 0)
 
         if not all_:
             notifications = notifications.filter(Notification.read == False)
@@ -631,21 +630,21 @@ class User(Base, Stndrd, Age_times):
 
             parent_comment=aliased(Comment)
             notifications = notifications.join(
-                main_comment.parent_comment.of_type(parent_comment),
+                Comment.parent_comment.of_type(parent_comment),
                 innerjoin=False
-                #).join(
-                #Submission,
-                #main_comment.parent_submission
+                ).join(
+                Comment.parent_submission,
+                innerjoin=False
                 )
 
             if replies_only:
                 notifications=notifications.filter(
                     or_(
                         parent_comment.author_id==self.id,
-                        #and_(
-                        #    Submission.author_id==self.id,
-                        #    main_comment.level==1
-                        #    )
+                        and_(
+                            Submission.author_id==self.id,
+                            Comment.level==1
+                            )
                         )
                     )
             #elif mentions_only:
