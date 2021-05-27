@@ -813,7 +813,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         parents={x.id: x for x in parents}
 
         for c in output:
-            c.parent_comment=parents.get(c.parent_comment_id)
+            c._parent_comment=parents.get(c.parent_comment_id)
 
     return output
 
