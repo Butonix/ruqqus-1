@@ -634,6 +634,7 @@ class User(Base, Stndrd, Age_times):
                 parent_comment, 
                 main_comment.parent_comment
                 ).join(
+                Submission,
                 main_comment.parent_submission
                 )
 
