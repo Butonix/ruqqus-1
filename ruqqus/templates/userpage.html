@@ -115,12 +115,12 @@
           <div>
            {% if v and v.id != u.id and not u.is_private and not u.is_nofollow %}
            <div id="button-sub" {% if not is_following %}class="d-none"{% endif %}>
-            <button class="btn btn-primary" onclick="post_toast('/api/follow/{{ u.username }}', callback=toggleSub)">
+            <button class="btn btn-primary" onclick="post('/api/follow/{{ u.username }}', callback=toggleSub)">
               Follow
             </button>
           </div>
           <div id="button-unsub" class="btn-group {% if is_following %}d-none{% endif %}" role="group" aria-label="Unfollow this user">
-            <button class="btn btn-secondary" onclick="post_toast('/api/unfollow/{{ u.username }}', callback=toggleSub)">
+            <button class="btn btn-secondary" onclick="post('/api/unfollow/{{ u.username }}', callback=toggleSub)">
               Unfollow
             </button>
             <button class="btn btn-secondary bell-button">
