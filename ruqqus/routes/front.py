@@ -74,7 +74,7 @@ def notifications(v):
 @api("read")
 def notifications_posts(v):
 
-    page=int(request.args.get("page"))
+    page=int(request.args.get("page", 1))
     all_=request.args.get('all', False)
 
     pids=v.notification_postlisting(
@@ -86,6 +86,15 @@ def notifications_posts(v):
     pids=pids[0:25]
 
     posts=get_posts(pids, v=v, sort="new")
+
+    return {'html': lambda: render_template("notifications_posts.html",
+                            v=v,
+                            notifications=posts,
+                            next_exists=next_exists,
+                            page=page,
+                            is_notification_page=True),
+            'api': lambda: jsonify({"data": [x.json for x in listing]})
+            }
 
 @cache.memoize(timeout=900)
 def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
