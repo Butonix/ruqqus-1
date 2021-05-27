@@ -633,9 +633,9 @@ class User(Base, Stndrd, Age_times):
             notifications = notifications.join(
                 parent_comment, 
                 main_comment.parent_comment
-                ).join(
-                Submission,
-                main_comment.parent_submission
+                #).join(
+                #Submission,
+                #main_comment.parent_submission
                 )
 
             if replies_only:
