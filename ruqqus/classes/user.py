@@ -147,7 +147,7 @@ class User(Base, Stndrd, Age_times):
 
     _applications = relationship("OauthApp", lazy="dynamic")
     authorizations = relationship("ClientAuth", lazy="dynamic")
-    notification_subscriptions = relationship("GuildNotificationSubscription", lazy="dynamic")
+    notification_subscriptions = relationship("PostNotificationSubscription", lazy="dynamic")
 
     saved_posts=relationship(
         "SaveRelationship",

@@ -246,7 +246,7 @@ class PostNotificationSubscriptions(Base):
     #post = relationship("Submission", lazy="subquery")
 
     def __repr__(self):
-        return f"<GuildNotificationSubscription(id={self.id}"
+        return f"<PostNotificationSubscription(id={self.id}"
 
 
 class BoardBlock(Base, Stndrd, Age_times):
