@@ -744,8 +744,11 @@ function toggleBell(e) {
   for (var i = 0; i < icon.length; i++){
     icon[i].classList.toggle('fa-bell');
     icon[i].classList.toggle('fa-bell-slash');
-    icon[i].title = "Enable to be notified when new content is published."
-    icon[i].title = "Disable notifications."
+    if (icon[i].title === "Disable notifications.") {
+      icon[i].title = "Enable to be notified when new content is published."
+    } else {
+      icon[i].title = "Disable notifications."
+    };
   }
 }
 
