@@ -641,7 +641,7 @@ class User(Base, Stndrd, Age_times):
         g.db.commit()
         return output
 
-    def notification_postlisting(self, page=1, all_=False):
+    def notification_postlisting(self, page=1):
 
         notifications=self.notifications.join(
             Notification.post
@@ -650,8 +650,8 @@ class User(Base, Stndrd, Age_times):
             Submission.deleted_utc==0
             )
 
-        if not all_:
-            notifications=notifications.filter(Notification.read==False)
+        #if not all_:
+        #    notifications=notifications.filter(Notification.read==False)
 
         notifications=notifications.options(
                 contains_eager(Notification.post)

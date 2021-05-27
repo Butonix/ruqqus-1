@@ -57,10 +57,11 @@
 
   <h1 class="h3 d-md-none">Inbox</h1>
 
-  {% with comments=notifications %}
-
-  {% include "comments.html" %}
-  {% endwith %}
+  {% block notif_content %}
+    {% with comments=notifications %}
+      {% include "comments.html" %}
+    {% endwith %}
+  {% endblock %}
 
   {% if not notifications %}
   <div class="text-center py-7 py-md-8">
