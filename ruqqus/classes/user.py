@@ -672,6 +672,7 @@ class User(Base, Stndrd, Age_times):
     def replies(self):
         #TODO: query for all new reply items for notifications
         # use self.replies_last_checked_utc
+        pass
 
     @property
     @lazy
