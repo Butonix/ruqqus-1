@@ -69,9 +69,25 @@ def notifications(v):
                             is_notification_page=True),
             'api': lambda: jsonify({"data": [x.json for x in listing]})}
 
+@app.get("/notifications/posts")
+@auth_required
+@api("read")
+def notifications_posts(v):
+
+    page=int(request.args.get("page"))
+    all_=request.args.get('all', False)
+
+    pids=v.notification_postlisting(
+        page=page,
+        all_=all_
+        )
+
+    next_exists=(len(pids)==26)
+    pids=pids[0:25]
+
+    posts=get_posts(pids, v=v, sort="new")
 
 @cache.memoize(timeout=900)
-
 def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
               t=None, ids_only=True, categories=[], filter_words='', **kwargs):
 

@@ -641,14 +641,19 @@ class User(Base, Stndrd, Age_times):
         g.db.commit()
         return output
 
-    def notification_postlisting(self, page=1):
+    def notification_postlisting(self, page=1, all_=False):
 
         notifications=self.notifications.join(
             Notification.post
             ).filter(
             Submission.is_banned==False, 
             Submission.deleted_utc==0
-            ).options(
+            )
+
+        if not all_:
+            notifications=notifications.filter(Notification.read==False)
+
+        notifications=notifications.options(
                 contains_eager(Notification.post)
             ).order_by(
                 Notification.id.desc()
