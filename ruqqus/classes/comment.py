@@ -471,10 +471,13 @@ class Notification(Base):
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    comment_id = Column(Integer, ForeignKey("comments.id"))
+    comment_id = Column(Integer, ForeignKey("comments.id"), default=None)
+    submission_id = Column(Integer, ForeignKey("submissions.id"), default=None)
+
     read = Column(Boolean, default=False)
 
-    comment = relationship("Comment", lazy="joined", innerjoin=True)
+    comment = relationship("Comment", lazy="joined")
+    post = relationship("Submission", lazy="joined")
     user=relationship("User", innerjoin=True)
 
     # Server side computed values (copied from corresponding comment)
