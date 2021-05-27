@@ -241,7 +241,7 @@ class PostNotificationSubscriptions(Base):
     subbed_to_user_id = Column(Integer, ForeignKey("users.id"), default=0)
     #post_id = Column(Integer,ForeignKey("submissions.id"), default=0)
 
-    user = relationship("User", lazy="subquery")
+    #user = relationship("User", lazy="subquery")
     board = relationship("Board", lazy="subquery")
     #post = relationship("Submission", lazy="subquery")
 
