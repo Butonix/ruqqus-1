@@ -631,7 +631,8 @@ class User(Base, Stndrd, Age_times):
 
             parent_comment=aliased(Comment)
             notifications = notifications.join(
-                main_comment.parent_comment.of_type(parent_comment)
+                main_comment.parent_comment.of_type(parent_comment),
+                innerjoin=False
                 #).join(
                 #Submission,
                 #main_comment.parent_submission
