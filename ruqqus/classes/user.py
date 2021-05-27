@@ -641,6 +641,28 @@ class User(Base, Stndrd, Age_times):
         g.db.commit()
         return output
 
+    def notification_postlisting(self, page=1):
+
+        notifications=self.notifications.join(
+            Notification.post
+            ).filter(
+            Submission.is_banned==False, 
+            Submission.deleted_utc==0
+            ).options(
+                contains_eager(Notification.post)
+            ).order_by(
+                Notification.id.desc()
+            ).offset(25*(page-1)).limit(26)
+
+        output=[]
+        for x in notifications:
+            x.read=True
+            g.db.add(x)
+            output.append(x.submission_id)
+
+        g.db.commit()
+        return output
+
     @property
     @lazy
     def mentions_count(self):
