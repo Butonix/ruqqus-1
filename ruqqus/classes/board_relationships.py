@@ -232,7 +232,7 @@ class PostRelationship(Base):
     def __repr__(self):
         return f"<PostRel(id={self.id}, pid={self.post_id}, board_id={self.board_id})>"
 
-class PostNotificationSubscriptions(Base):
+"""class PostNotificationSubscriptions(Base):
 
     __tablename__ = "post_notification_subscriptions"
     id = Column(BigInteger, primary_key=True)
@@ -247,6 +247,7 @@ class PostNotificationSubscriptions(Base):
 
     def __repr__(self):
         return f"<PostNotificationSubscription(id={self.id}"
+"""
 
 
 class BoardBlock(Base, Stndrd, Age_times):
