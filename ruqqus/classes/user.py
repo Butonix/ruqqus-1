@@ -147,7 +147,7 @@ class User(Base, Stndrd, Age_times):
 
     _applications = relationship("OauthApp", lazy="dynamic")
     authorizations = relationship("ClientAuth", lazy="dynamic")
-    notification_subscriptions = relationship("PostNotificationSubscription", lazy="dynamic")
+    #notification_subscriptions = relationship("PostNotificationSubscriptions", lazy="dynamic")
 
     saved_posts=relationship(
         "SaveRelationship",
@@ -653,6 +653,7 @@ class User(Base, Stndrd, Age_times):
     @property
     @lazy
     def post_notifications_count(self):
+        pass
         """return g.db.query(Submission)\
             .filter(Submission.created_utc < self.posts_last_check_utc)\
             .filter(Submission.deleted_utc == 0)\
@@ -662,7 +663,7 @@ class User(Base, Stndrd, Age_times):
             .filter(Submission.author_id.in_(g.db.query(PostNotificationSubscriptions.subbed_to_user_id).filter_by(user_id=self.id).all()))\
             .distinct()\
             .count()"""
-        pass
+
 
 
     @property
@@ -682,6 +683,7 @@ class User(Base, Stndrd, Age_times):
     @property
     @lazy
     def post_notifications(self):
+        pass
         """return g.db.query(Submission)\
             .filter(Submission.created_utc < self.posts_last_check_utc)\
             .filter(Submission.deleted_utc == 0)\
@@ -689,7 +691,6 @@ class User(Base, Stndrd, Age_times):
             .filter(Submission.board_id.in_(g.db.query(PostNotificationSubscriptions.board_id).filter_by(user_id=self.id).all())
                     ) \
             .filter(Submission.author_id.in_(g.db.query(PostNotificationSubscriptions.subbed_to_user_id).filter_by(user_id=self.id).all())).distinct()"""
-        pass
 
     @property
     def notifications_count(self):
