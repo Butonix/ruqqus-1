@@ -303,7 +303,11 @@
       {% endblock %}
 
       {% if v %}
-      <div id="button-sub" {% if b.has_subscriber(v) %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=toggleSub)">Join guild</a></div>
+      <div id="button-sub" {% if b.has_subscriber(v) %}class="d-none"{% endif %}>
+        <button class="btn btn-primary" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=toggleSub)">
+          Join guild
+        </button>
+      </div>
       <div id="button-unsub" class="btn-group {% if not b.has_subscriber(v) %}d-none{% endif %}" role="group" aria-label="Leave guild desktop">
         <button class="btn btn-secondary" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">Leave</button>
         <button class="btn btn-secondary bell-button">

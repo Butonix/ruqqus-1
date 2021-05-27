@@ -114,12 +114,23 @@
         <div class="d-flex justify-content-between align-items-center">
           <div>
            {% if v and v.id != u.id and not u.is_private and not u.is_nofollow %}
-           <div id="button-unsub" {% if not is_following %}class="d-none"{% endif %}><a class="btn btn-secondary" href="javascript:void(0)" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Unsubscribe</a></div>
-           <div id="button-sub" {% if is_following %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Subscribe</a></div>
-           {% elif v and v.id == u.id %}
-           <a href="/settings/profile" class="btn btn-secondary">Edit profile</a>
-           {% endif %}
-         </div>
+           <div id="button-sub" {% if not is_following %}class="d-none"{% endif %}>
+            <button class="btn btn-primary" onclick="post_toast('/api/follow/{{ u.username }}', callback=toggleSub)">
+              Follow
+            </button>
+          </div>
+          <div id="button-unsub" class="btn-group {% if is_following %}d-none{% endif %}" role="group" aria-label="Unfollow this user">
+            <button class="btn btn-secondary" onclick="post_toast('/api/unfollow/{{ u.username }}', callback=toggleSub)">
+              Unfollow
+            </button>
+            <button class="btn btn-secondary bell-button">
+              <i class="fas fa-fw fa-bell bell-icon"></i>
+            </button>
+          </div>
+          {% elif v and v.id == u.id %}
+          <a href="/settings/profile" class="btn btn-secondary">Edit profile</a>
+          {% endif %}
+        </div>
 
         <div>
           {% for b in u.badges %}
@@ -156,9 +167,9 @@
         <a href="{{ u.permalink }}" class="text-black">
           <h1 class="h5 d-inline-block">{{ u.username }}
             {% if u.username != u.original_username %}
-              <span>
-                <i class="fad fa-user-tag text-info align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Original Username: @{{ u.original_username }}"></i>
-              </span>
+            <span>
+              <i class="fad fa-user-tag text-info align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Original Username: @{{ u.original_username }}"></i>
+            </span>
             {% endif %}
             <!--{% if u.over_18 %}
             <span class="badge badge-danger text-small align-middle mx-1">nsfw</span>
