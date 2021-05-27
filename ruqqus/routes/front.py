@@ -18,6 +18,8 @@ def slash_post():
 
 
 @app.route("/notifications", methods=["GET"])
+@app.get("/notifications/mentions")
+@app.get("/notifications/replies")
 @app.route("/api/v1/notifications", methods=["GET"])
 @auth_required
 @api("read")
@@ -27,7 +29,9 @@ def notifications(v):
     all_ = request.args.get('all', False)
 
     cids = v.notification_commentlisting(page=page,
-                                         all_=all_
+                                         all_=all_,
+                                         mentions_only=request.path=="/notifications/mentions",
+                                         replies_only=request.path=="/notifications/replies"
                                          )
     next_exists = (len(cids) == 26)
     cids = cids[0:25]

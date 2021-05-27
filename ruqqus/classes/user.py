@@ -615,15 +615,45 @@ class User(Base, Stndrd, Age_times):
     def __repr__(self):
         return f"<User(username={self.username})>"
 
-    def notification_commentlisting(self, page=1, all_=False):
+    def notification_commentlisting(self, page=1, all_=False, replies_only=False, mentions_only=False):
         #TODO: this function will become used only @mentions
 
-        notifications = self.notifications.join(Notification.comment).filter(
-            Comment.is_banned == False,
-            Comment.deleted_utc == 0)
+        main_comment=aliased(Comment)
+        parent_comment=aliased(Comment)
+
+        notifications = self.notifications.join(Notification.comment.of_type(main_comment)).filter(
+            main_comment.is_banned == False,
+            main_comment.deleted_utc == 0)
 
         if not all_:
             notifications = notifications.filter(Notification.read == False)
+
+        if replies_only or mentions_only:
+            notifications = notifications.join(
+                main_comment.parent_comment.of_type(parent_comment), 
+                isouter=True
+                ).join(
+                main_comment.parent_submission,
+                isouter=True
+                )
+
+            if replies_only:
+                notifications=notifications.filter(
+                    or_(
+                        parent_comment.author_id==self.id,
+                        Submission.author_id==self.id
+                        )
+                    )
+            elif mentions_only:
+                notifications=notifications.filter(
+                    parent_comment.author_id != self.id,
+                    Submission.author_id != self.id
+                    )
+
+            notifications=notifications.options(
+                contains_eager(Notification.comment).contains_eager(Comment.parent_comment),
+                contains_eager(Notification.comment).contains_eager(Comment.parent_submission)
+                )
 
         notifications = notifications.options(
             contains_eager(Notification.comment)
