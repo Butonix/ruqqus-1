@@ -481,7 +481,7 @@ class Notification(Base):
 
     read = Column(Boolean, default=False)
 
-    comment = relationship("Comment", lazy="joined")
+    comment = relationship("Comment", lazy="joined", primaryjoin="Notification.comment_id==Comment.id")
     post = relationship("Submission", lazy="joined")
     user=relationship("User", innerjoin=True)
 
