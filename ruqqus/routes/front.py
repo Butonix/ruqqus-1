@@ -17,7 +17,7 @@ def slash_post():
     return redirect("/")
 
 
-@app.route("/notifications", methods=["GET"])
+@app.get("/notifications")
 @app.get("/notifications/mentions")
 @app.get("/notifications/replies")
 @app.route("/api/v1/notifications", methods=["GET"])
@@ -29,7 +29,7 @@ def notifications(v):
     all_ = request.args.get('all', False)
 
     cids = v.notification_commentlisting(page=page,
-                                         all_=all_,
+                                         all_=request.path=="/notifications/all",
                                          mentions_only=request.path=="/notifications/mentions",
                                          replies_only=request.path=="/notifications/replies"
                                          )
