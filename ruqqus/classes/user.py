@@ -687,8 +687,7 @@ class User(Base, Stndrd, Age_times):
             .filter(Submission.is_banned == False)\
             .filter(Submission.board_id.in_(g.db.query(PostNotificationSubscriptions.board_id).filter_by(user_id=self.id).all())
                     ) \
-            .filter(Submission.author_id.in_(g.db.query(PostNotificationSubscriptions.subbed_to_user_id).filter_by(user_id=self.id).all())
-            .distinct()
+            .filter(Submission.author_id.in_(g.db.query(PostNotificationSubscriptions.subbed_to_user_id).filter_by(user_id=self.id).all())).distinct()
 
     @property
     def notifications_count(self):
