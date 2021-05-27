@@ -656,8 +656,7 @@ class User(Base, Stndrd, Age_times):
             .filter(Submission.created_utc < self.guilds_last_check_utc)\
             .filter(Submission.deleted_utc == 0)\
             .filter(Submission.is_banned == False)\
-            .filter(Submission.board_id.in_(g.db.query(GuildNotificationSubscriptions.id)
-                                            .filter_by(user_id=self.id))
+            .filter(Submission.board_id.in_(g.db.query(GuildNotificationSubscriptions.id).filter_by(user_id=self.id))
                     ).count()
 
 
