@@ -5,27 +5,27 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<meta name="thumbnail" content="https://ruqqus.com/assets/images/preview-images/ruqqus_og_image.png">
+	<meta name="thumbnail" content="/assets/images/preview-images/ruqqus_og_image.png">
 
-	<link rel="icon" type="image/png" href="/assets/favicon.ico">
-
+  <link rel="icon" type="image/png" href="/assets/images/logo/favicon.png">
+  
 	{% block title %}
-	<title>Ruqqus: Awesome Online Communities, Without Censorship</title>
+	<title>{{ "SITE_NAME" | app_config }}: Awesome Online Communities, Without Censorship</title>
 
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="Ruqqus: Awesome Online Communities, Without Censorship" />
-  <meta property="og:site_name" content="ruqqus.com" />
+  <meta property="og:title" content="{{ 'SITE_NAME' | app_config }}: Awesome Online Communities, Without Censorship" />
+  <meta property="og:site_name" content="{{ 'SERVER_NAME' | app_config }}" />
   <meta property="og:image" content="{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}" />
   <meta property="og:url" content="{{ request.path | full_link }}">
-  <meta property="og:description" name="description" content="Ruqqus is an open-source platform for online communities, free of censorship and moderator abuse by design.">
-  <meta property="og:author" name="author" content="@ruqqus" />
-  <meta property="og:site_name" content="ruqqus.com" />
+  <meta property="og:description" name="description" content="{{ 'SITE_NAME' | app_config }} is an open-source platform for online communities, free of censorship and moderator abuse by design.">
+  <meta property="og:author" name="author" content="@{{ 'SITE_NAME' | app_config }}" />
+  <meta property="og:site_name" content="{{ 'SERVER_NAME' | app_config }}" />
 
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:site" content="@ruqqus">
-  <meta name="twitter:title" content="Ruqqus: Awesome Online Communities, Without Censorship" />
-  <meta name="twitter:creator" content="@ruqqus">
-  <meta name="twitter:description" content="Ruqqus is an open-source platform for online communities, free of censorship and moderator abuse by design." />
+  <meta name="twitter:site" content="@{{ 'SITE_NAME' | app_config }}">
+  <meta name="twitter:title" content="{{ 'SITE_NAME' | app_config }}: Awesome Online Communities, Without Censorship" />
+  <meta name="twitter:creator" content="@{{ 'SITE_NAME' | app_config }}">
+  <meta name="twitter:description" content="{{ 'SITE_NAME' | app_config }} is an open-source platform for online communities, free of censorship and moderator abuse by design." />
   <meta name="twitter:image" content="/assets/images/preview-images/ruqqus_og_image.png" />
   <meta name="twitter:url" content="{{ request.path | full_link }}" />
   {% endblock %}
@@ -46,13 +46,12 @@
     <link rel="manifest" href="/assets/manifest.json">
     <link rel="mask-icon" href="/assets/images/favicons/safari-pinned-tab.svg" color="#805ad5">
     <link rel="shortcut icon" href="/assets/images/favicons/favicon.ico">
-    <meta name="apple-mobile-web-app-title" content="Ruqqus">
-    <meta name="application-name" content="Ruqqus">
+    <meta name="apple-mobile-web-app-title" content="{{ 'SITE_NAME' | app_config }}">
+    <meta name="application-name" content="{{ 'SITE_NAME' | app_config }}">
     <meta name="msapplication-TileColor" content="#805ad5">
     <meta name="msapplication-config" content="/assets/images/favicons/browserconfig.xml">
     <meta name="theme-color" content="#805ad5">
 
-    <link rel="icon" type="image/png" href="/assets/images/logo/favicon.png">
 
 
     <link
@@ -188,9 +187,9 @@
     {% block stylesheets %}
 
     {% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
-    <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.31.3">
+    <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.35.94">
     {% else %}
-    <link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.31.3">
+    <link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.35.94">
     {% endif %}
 
     {% endblock %}
@@ -210,8 +209,9 @@
    </script>
    {% endif %}
 
+<!---
    <script async defer data-domain="{{ 'SERVER_NAME' | app_config }}" src="https://plausible.ruqqus.com/js/plausible.js"></script>
-
+--->
  </head>
 
  <body id="{% block pagetype %}frontpage{% endblock %}" class="">
@@ -219,7 +219,7 @@
   {% if request.path=='/' and g.system and g.timestamp>session.get('tooltip_last_dismissed',0)+60*60*24 and (g.system.endswith('/chrome') or g.system.endswith('/other')) %}
   <div class="row fixed-top" style="z-index:2000" id="mobile-prompt-row">
     <div id="mobile-prompt-container" class="ml-auto mr-5">
-      <div id="mobile-prompt" href="javascript:void(0)" data-toggle="tooltip" data-container="#mobile-prompt-row" data-placement="top" data-trigger="click" title="" data-original-title="Install the Ruqqus webapp by saving this page to your home screen!">
+      <div id="mobile-prompt" href="javascript:void(0)" data-toggle="tooltip" data-container="#mobile-prompt-row" data-placement="top" data-trigger="click" title="" data-original-title="Install the {{ 'SITE_NAME' | app_config }} webapp by saving this page to your home screen!">
       </div>
     </div>
   </div>
@@ -230,7 +230,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-md navbar-light shadow shadow-md fixed-top" id="navbar">
     <div class="container-fluid">
-      <div class="flex-grow-1"><a href="/" class="navbar-brand">{{ "SITE_NAME" | app_config }}<span class="text-small-extra text-uppercase text-gray-400"> Beta</span></a></div>
+      <div class="flex-grow-1"><a href="/" class="navbar-brand text-purple">{{ "SITE_NAME" | app_config | lower }}<span class="text-small-extra text-uppercase text-gray-400"> Beta</span></a></div>
       <div class="flex-grow-1 d-fl d-none d-md-block">
         <form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="{% if b %}/+{{ b.name }}{% endif %}/search" method="get">
           <input class="form-control w-100" type="search" placeholder="Search posts{% if b %} in +{{ b.name }}{% else %}, +guilds, and @users{% endif %}" aria-label="Search posts{% if b %} in +{{ b.name }}{% else %}, +guilds, and @users{% endif %}" name="q" value="{{ request.args.get('q', '') }}">
@@ -350,7 +350,7 @@
             </div>
             <hr class="my-2">
             <div class="px-2">
-              <button class="dropdown-item copy-link" data-clipboard-text="https://ruqqus.com/signup?ref={{ v.username }}"><i class="fad fa-user-friends fa-fw text-left mr-3"></i>Invite friends</button>
+              <button class="dropdown-item copy-link" data-clipboard-text="{{ ('/signup?ref='+v.username) | full_link }}"><i class="fad fa-user-friends fa-fw text-left mr-3"></i>Invite friends</button>
             </div>
             <hr class="my-2">
             <div class="px-2">
@@ -443,7 +443,10 @@
       <a class="nav-link text-small-extra" href="/help/contact">Contact</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">Github</a>
+      <a class="nav-link text-small-extra" href="https://github.com/ruqqus/ruqqus">GitHub</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-small-extra" href="/discord">Discord</a>
     </li>
   </ul>
 
@@ -472,7 +475,7 @@
     {% endblock %}
     {% endblock %}
 
-    <div class="col h-100 {% block customPadding %}custom-gutters{% endblock %}" id="main-content-col">
+    <div class="col h-100 bg-white {% block customPadding %}custom-gutters{% endblock %}" id="main-content-col">
 
       {% block desktopUserBanner %}
       {% endblock %}
@@ -501,30 +504,10 @@
       {% block sidebarblock %}
       <div class="sidebar-section">
         <div class="title">
-          <i class="fas fa-heart mr-2"></i>Support Ruqqus
+          <i class="fas fa-heart mr-2"></i>Support {{ "SITE_NAME" | app_config }}
         </div>
         <div class="body">
-          <p>Exclusive patron titles, merch, and more. Support Ruqqus today!</p>
-
-          {% if v %}
-
-          <a href="/settings#patreon" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
-            <span class="fa-stack fa-1x ml-n1 mr-2">
-              <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
-              <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
-            </span>Unlock Patron Titles
-          </a>
-
-          {% else %}
-
-          <a href="https://patreon.com/ruqqus" target="blank" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
-            <span class="fa-stack fa-1x ml-n1 mr-2">
-              <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
-              <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
-            </span>Become a Patron
-          </a>
-
-          {% endif %}
+          <p>Exclusive titles, merch, and more. Support {{ "SITE_NAME" | app_config }} today!</p>
 
           <a href="https://www.bonfire.com/store/ruqqus/" target="blank" class="btn btn-block btn-link text-info text-left text-decoration-none px-1 mt-0">
             <span class="fa-stack fa-1x ml-n1 mr-2">
@@ -561,7 +544,7 @@
             </span>Report Bugs
           </a>
 
-          <a href="https://ruqqus.com/discord" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #7289DA!important;">
+          <a href="/discord" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #7289DA!important;">
             <span class="fa-stack fa-1x ml-n1 mr-2">
               <i class="fas fa-square fa-stack-2x text-gray-300" style="font-size: 2rem!important;"></i>
               <i class="fab fa-discord fa-stack-1x text-base fa-inverse" style="color: #7289DA!important;"></i>
@@ -653,7 +636,7 @@
 
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/all_js.js?v=2.31.3"></script>
+<script src="/assets/js/all_js.js?v=2.35.94"></script>
 
 <!-- ClipboardJS -->
 
@@ -684,7 +667,7 @@
 {% if request.path=='/' and g.system and g.timestamp>session.get('tooltip_last_dismissed',0)+60*60*24 and (not g.system.endswith('/chrome') and not g.system.endswith('/other')) and not g.system.endswith('/webview') %}
 
 <div id="mobile-prompt-container" class="fixed-bottom">
-  <div id="mobile-prompt" href="javascript:void(0)" data-toggle="tooltip" data-container="#mobile-prompt-container" data-placement="top" data-trigger="click" title="Install the Ruqqus webapp by saving this page to your home screen!"></div>
+  <div id="mobile-prompt" href="javascript:void(0)" data-toggle="tooltip" data-container="#mobile-prompt-container" data-placement="top" data-trigger="click" title="Install the {{ "SITE_NAME" | app_config }} webapp by saving this page to your home screen!"></div>
 </div>
 {% endif %}
 

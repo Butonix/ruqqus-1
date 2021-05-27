@@ -1,6 +1,6 @@
 {% extends "settings.html" %}
 
-{% block pagetitle %}Premium Settings - Ruqqus{% endblock %}
+{% block pagetitle %}Premium Settings - {{ 'SITE_NAME' | app_config }}{% endblock %}
 
 {% block content %}
 
@@ -26,7 +26,7 @@
               </div>
               <div class="body w-lg-100">
                   <p class="font-weight-bold text-danger">-${{ v.negative_balance_cents/100 }}</p>
-                  <p>Your account balance is negative. You will not be able to participate on Ruqqus until you bring your balance up to zero.</p>
+                  <p>Your account balance is negative. You will not be able to participate on {{ 'SITE_NAME' | app_config }} until you bring your balance up to zero.</p>
                   <form action="/shop/negative_balance" method="post">
                     <input type="hidden" name="formkey" value="{{ v.formkey }}">
                     <input id="buy-coin-btn" type="submit" class="btn btn-primary mt-2" value="Pay ${{ v.negative_balance_cents/100 }}">
@@ -36,7 +36,7 @@
           </div>
                 {% else %}
 
-          <h2 id="ruqqus-premium" class="h5">Ruqqus Premium</h2>
+          <h2 id="ruqqus-premium" class="h5">{{ 'SITE_NAME' | app_config }} Premium</h2>
 
           {% if request.args.get('msg')=="success" %}
           <p>Your purchase was successful. A receipt will be emailed to you from Paypal.</p>
@@ -81,7 +81,7 @@
                       <li class="py-1"><span class="fa-stack fa-1x mr-2">
                       <i class="fas fa-square fa-stack-2x" style="color: #bef9cc!important; font-size: 2rem!important;"></i>
                       <i class="fas fa-hand-peace fa-stack-1x text-success text-base fa-inverse"></i>
-                      </span>Keeping the Ruqqus servers alive
+                      </span>Keeping the {{ 'SITE_NAME' | app_config }} servers alive
                       </li>
                     </ul>
                   </div>
@@ -111,7 +111,7 @@
                     <p id="promo-text" class="text-small text-danger"></p>
                     <input id="buy-coin-btn" type="submit" class="btn btn-primary mt-2" value="Buy Coins">
                   </form>
-                <p class="text-small-extra text-muted">Coins have no cash value and cannot be redeemed for anything other than Premium membership time.</p>
+                <p class="text-small-extra text-muted">Coins have no cash value and cannot be redeemed for anything other than Premium membership time and username changes.</p>
 
                 <p class="text-small-extra text-muted"><a href="/settings/purchase_history" target="_blank">Purchase history</a></p>
 

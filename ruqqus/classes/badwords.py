@@ -18,19 +18,3 @@ class BadWord(Base):
                               re.IGNORECASE
                               )
                     )
-
-
-class PoliticsWord(Base):
-
-    __tablename__ = "politicswords"
-
-    id = Column(Integer, primary_key=True)
-    keyword = Column(String(64))
-    regex = Column(String(256))
-
-    def check(self, text):
-        return bool(re.search(self.regex,
-                              text,
-                              re.IGNORECASE
-                              )
-                    )

@@ -3,7 +3,7 @@
 {% block pagetype %}search{% endblock %}
 
 {% block title %}
-<title>Search {% if b %}+{{ b.name }} {% endif %}for "{{ query }}" - Ruqqus"</title> <!-- include dynamic jinja-generated text in title -->
+<title>Search {% if b %}+{{ b.name }} {% endif %}for "{{ query }}" - {{ 'SITE_NAME' | app_config }}"</title> <!-- include dynamic jinja-generated text in title -->
 <meta name="description" content="{{ total }} result{{ 's' if total != 1 else '' }}">
 {% endblock %}
 
@@ -18,7 +18,7 @@
 {% block PseudoSubmitForm %}{% endblock %}
 
 {% block navbar %}
-      <div class="font-weight-bold py-3">Ruqqus Search</div>
+      <div class="font-weight-bold py-3">{{ 'SITE_NAME' | env }} Search</div>
 
       <div class="d-flex align-items-center">
         <div class="text-small font-weight-bold mr-2">Filter by</div>
@@ -46,6 +46,7 @@
             {% if sort_method=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
             {% if sort_method=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
             {% if sort_method=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+            {% if sort_method=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
             {% if sort_method=="disputed" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
             {% if sort_method=="activity" %}<i class="fas fa-comments mr-1"></i>{% endif %}
             {{ sort_method | capitalize }}
@@ -54,6 +55,7 @@
             {% if not sort_method=="hot" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=hot&t={{ time_filter }}"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
             {% if not sort_method=="top" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=top&t={{ time_filter }}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
             {% if not sort_method=="new" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=new&t={{ time_filter }}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+            {% if not sort_method=="old" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=old&t={{ time_filter }}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
             {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=disputed&t={{ time_filter }}"><i class="fas fa-bullhorn mr-2"></i>Disputed</a>{% endif %}
             {% if not sort_method=="activity" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=activity&t={{ time_filter }}"><i class="fas fa-comments mr-2"></i>Activity</a>{% endif %}
           </div>
@@ -82,7 +84,7 @@
 
           <div class="text-muted text-small mb-1">Showing {% block listinglength %}{{ listing | length }}{% endblock %} of {{ total }} result{{ 's' if total != 1 else '' }} for</div>
           <h1 class="h4 mb-0">{{ query }}</h1>
-          {% if b %}<div class="text-muted text-small mb-1">Showing results in +{{ b.name }}. <a href="/search?q={{ query | urlencode }}">Did you want to search all of Ruqqus instead?</a></div>{% endif %}
+          {% if b %}<div class="text-muted text-small mb-1">Showing results in +{{ b.name }}. <a href="/search?q={{ query | urlencode }}">Did you want to search all of {{ 'SITE_NAME' | app_config }} instead?</a></div>{% endif %}
 
         </div>
       </div>
@@ -105,6 +107,9 @@
     </li>
     <li class="nav-item">
       <a class="nav-link{% if sort_method=='new' %} active{% endif %}" href="?sort=new&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-sparkles"></i>New</a> 
+    </li>
+    <li class="nav-item">
+      <a class="nav-link{% if sort_method=='old' %} active{% endif %}" href="?sort=old&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-book"></i>Old</a> 
     </li>
     <li class="nav-item">
       <a class="nav-link{% if sort_method=='fiery' %} active{% endif %}" href="?sort=fiery&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-bullhorn"></i>Disputed</a>
@@ -174,6 +179,7 @@
                 {% if sort_method=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
                 {% if sort_method=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
                 {% if sort_method=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+                {% if sort_method=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
                 {% if sort_method=="disputed" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
                 {% if sort_method=="activity" %}<i class="fas fa-comments mr-1"></i>{% endif %}
                 {{ sort_method }}
@@ -182,6 +188,7 @@
                 {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-fire text-primary mr-3"></i>Hot</a>{% endif %}
                 {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-arrow-alt-circle-up text-primary mr-3"></i>Top</a>{% endif %}
                 {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-sparkles text-primary mr-3"></i>New</a>{% endif %}
+                {% if not sort_method=="old" %}<a class="dropdown-item" href="?sort=old&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-book text-primary mr-3"></i>Old</a>{% endif %}
                 {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-bullhorn text-primary mr-3"></i>Disputed</a>{% endif %}
                 {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-comments text-primary mr-3"></i>Activity</a>{% endif %}
               </div>
@@ -235,3 +242,27 @@
   </nav>
   {% endif %}
   {% endblock %}
+
+
+{% block adminpanel %}
+
+{% if domain %}
+  <p><b>{{ domain }}</b></p>
+  <p>{{ "Banned" if domain_obj and not domain_obj.can_submit else "Not banned" }}</p>
+
+  <form action="/admin/ban_domain" method="post">
+    <input type="hidden" name="formkey" value="{{ v.formkey }}">
+    <input type="hidden" name="domain" value="{{ domain }}">
+    <label for="reason_select">Select Ban reason</label>
+    <select id="reason_select" class="form-control mt-2" name="reason" onchange="$('#ban-submit').prop('disabled', false)">
+        <option value="0">---Select Ban Reason---</option>
+        {% for i in reasons %}
+            <option value="{{ i }}"{% if i==domain.reason %} selected{% endif %}>{{ reasons[i] }}</option>
+        {% endfor %}
+    </select>
+    <input id="ban-submit" type="submit" class="btn btn-primary mt-2" value="Ban {{ domain_name }}" disabled>
+</form>
+
+{% endif %}
+
+{% endblock %}

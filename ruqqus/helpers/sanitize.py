@@ -36,7 +36,8 @@ _allowed_tags = tags = ['b',
                         ]
 
 _allowed_tags_with_links = _allowed_tags + ["a",
-                                            "img"
+                                            "img",
+                                            'span'
                                             ]
 
 _allowed_tags_in_bio = [
@@ -54,12 +55,21 @@ _allowed_tags_in_bio = [
     'sup'
 ]
 
-_allowed_attributes = {'a': ['href', 'title', "rel"],
-                       'i': [],
-                       'img': ['src', 'class']
-                       }
+_allowed_attributes = {
+    'a': ['href', 'title', "rel", "data-original-name"],
+    'i': [],
+    'img': ['src', 'class'],
+    'span': ['style']
+    }
 
-_allowed_protocols = ['http', 'https']
+_allowed_protocols = [
+    'http', 
+    'https'
+    ]
+
+_allowed_styles =[
+    'color'
+]
 
 # filter to make all links show domain on hover
 
@@ -71,9 +81,9 @@ def a_modify(attrs, new=False):
         parsed_url = urlparse(raw_url)
 
         domain = parsed_url.netloc
+        attrs[(None, "target")] = "_blank"
         if domain and not domain.endswith(("ruqqus.com", "ruqq.us")):
             attrs[(None, "rel")] = "nofollow noopener"
-            attrs[(None, "target")] = "_blank"
 
             # Force https for all external links in comments
             # (Ruqqus already forces its own https)
@@ -89,6 +99,10 @@ def a_modify(attrs, new=False):
     return attrs
 
 
+
+
+
+
 _clean_wo_links = bleach.Cleaner(tags=_allowed_tags,
                                  attributes=_allowed_attributes,
                                  protocols=_allowed_protocols,
@@ -96,6 +110,7 @@ _clean_wo_links = bleach.Cleaner(tags=_allowed_tags,
 _clean_w_links = bleach.Cleaner(tags=_allowed_tags_with_links,
                                 attributes=_allowed_attributes,
                                 protocols=_allowed_protocols,
+                                styles=_allowed_styles,
                                 filters=[partial(LinkifyFilter,
                                                  skip_tags=["pre"],
                                                  parse_email=False,
@@ -141,6 +156,7 @@ def sanitize(text, bio=False, linkgen=False):
             if not(netloc) or (domain and domain.show_thumbnail):
 
                 if "profile-pic-20" not in tag.get("class", ""):
+                    #print(tag.get('class'))
                     # set classes and wrap in link
 
                     tag["rel"] = "nofollow"
@@ -168,12 +184,7 @@ def sanitize(text, bio=False, linkgen=False):
         #disguised link preventer
         for tag in soup.find_all("a"):
 
-            tag.contents=[x if x.name=='img' else x.string if x.string else '' for x in tag.contents]
-
-            display=''.join([x.string for x in tag.contents if x.string])
-            display=re.sub("\s",'', display)
-
-            if re.match("https?://\S+", display):
+            if re.match("https?://\S+", str(tag.string)):
                 try:
                     tag.string = tag["href"]
                 except:
@@ -182,6 +193,19 @@ def sanitize(text, bio=False, linkgen=False):
         #clean up tags in code
         for tag in soup.find_all("code"):
             tag.contents=[x.string for x in tag.contents if x.string]
+
+        #whatever else happens with images, there are only two sets of classes allowed
+        for tag in soup.find_all("img"):
+            if 'profile-pic-20' not in tag.attrs.get("class",""):
+                tag.attrs['class']="in-comment-image rounded-sm my-2"
+
+        #table format
+        for tag in soup.find_all("table"):
+            tag.attrs['class']="table table-striped"
+
+        for tag in soup.find_all("thead"):
+            tag.attrs['class']="bg-primary text-white"
+
 
         sanitized = str(soup)
 

@@ -10,18 +10,21 @@ from ruqqus.helpers.security import *
 from ruqqus.helpers.sanitize import *
 from ruqqus.helpers.filters import filter_comment_html
 from ruqqus.helpers.markdown import *
-from ruqqus.helpers.discord import remove_user
-from ruqqus.helpers.aws import check_csam_url
+from ruqqus.helpers.discord import remove_user, set_nick
+from ruqqus.helpers.aws import *
 from ruqqus.mail import *
 from .front import frontlist
 from ruqqus.__main__ import app, cache
 
 
+valid_username_regex = re.compile("^[a-zA-Z0-9_]{3,25}$")
 valid_password_regex = re.compile("^.{8,100}$")
 
 
 @app.route("/settings/profile", methods=["POST"])
+@app.route("/api/vue/settings/profile", methods=["POST"])
 @auth_required
+@api()
 @validate_formkey
 def settings_profile_post(v):
 
@@ -36,6 +39,12 @@ def settings_profile_post(v):
                           v.hide_offensive) != v.hide_offensive:
         updated = True
         v.hide_offensive = request.values.get("hide_offensive", None) == 'true'
+        cache.delete_memoized(User.idlist, v)
+		
+    if request.values.get("hide_bot",
+                          v.hide_bot) != v.hide_bot:
+        updated = True
+        v.hide_bot = request.values.get("hide_bot", None) == 'true'
         cache.delete_memoized(User.idlist, v)
 
     if request.values.get("show_nsfl", v.show_nsfl) != v.show_nsfl:
@@ -52,13 +61,13 @@ def settings_profile_post(v):
         updated = True
         v.is_private = request.values.get("private", None) == 'true'
 
-    if request.values.get("politics", v.is_hiding_politics) != v.is_hiding_politics:
-        updated = True
-        v.is_hiding_politics = request.values.get("politics", None) == 'true'
-
     if request.values.get("nofollow", v.is_nofollow) != v.is_nofollow:
         updated = True
         v.is_nofollow = request.values.get("nofollow", None) == 'true'
+
+    if request.values.get("join_chat", v.auto_join_chat) != v.auto_join_chat:
+        updated = True
+        v.auto_join_chat = request.values.get("join_chat", None) == 'true'
 
     if request.values.get("bio") is not None:
         bio = request.values.get("bio")[0:256]
@@ -66,9 +75,11 @@ def settings_profile_post(v):
         bio=preprocess(bio)
 
         if bio == v.bio:
-            return render_template("settings_profile.html",
+            return {"html":lambda:render_template("settings_profile.html",
                                    v=v,
-                                   error="You didn't change anything")
+                                   error="You didn't change anything"),
+		    "api":lambda:jsonify({"error":"You didn't change anything"})
+		   }
 
 
         with CustomRenderer() as renderer:
@@ -92,24 +103,28 @@ def settings_profile_post(v):
         v.bio = bio
         v.bio_html=bio_html
         g.db.add(v)
-        return render_template("settings_profile.html",
+        return {"html":lambda:render_template("settings_profile.html",
                                v=v,
-                               msg="Your bio has been updated.")
+                               msg="Your bio has been updated."),
+		"api":lambda:jsonify({"message":"Your bio has been updated."})}
 
     if request.values.get("filters") is not None:
 
         filters=request.values.get("filters")[0:1000].lstrip().rstrip()
 
         if filters==v.custom_filter_list:
-            return render_template("settings_profile.html",
+            return {"html":lambda:render_template("settings_profile.html",
                                    v=v,
-                                   error="You didn't change anything")
+                                   error="You didn't change anything"),
+		    "api":lambda:jsonify({"error":"You didn't change anything"})
+		   }
 
         v.custom_filter_list=filters
         g.db.add(v)
-        return render_template("settings_profile.html",
+        return {"html":lambda:render_template("settings_profile.html",
                                v=v,
-                               msg="Your custom filters have been updated.")
+                               msg="Your custom filters have been updated."),
+		"api":lambda:jsonify({"message":"Your custom filters have been updated"})}
 
 
 
@@ -126,6 +141,22 @@ def settings_profile_post(v):
                 updated = True
             else:
                 return jsonify({"error": f"You don't meet the requirements for title `{title.text}`."}), 403
+        else:
+            abort(400)
+
+    defaultsorting = request.values.get("defaultsorting")
+    if defaultsorting:
+        if defaultsorting in ["hot", "new", "old", "activity", "disputed", "top"]:
+            v.defaultsorting = defaultsorting
+            updated = True
+        else:
+            abort(400)
+
+    defaulttime = request.values.get("defaulttime")
+    if defaulttime:
+        if defaulttime in ["day", "week", "month", "year", "all"]:
+            v.defaulttime = defaulttime
+            updated = True
         else:
             abort(400)
 
@@ -234,7 +265,7 @@ def settings_security_post(v):
 
         token = request.form.get("2fa_remove")
 
-        if not v.validate_2fa(token):
+        if not v.validate_2fa(token) and not safe_compare(v.mfa_removal_code, token.lower().replace(' ','')):
             return redirect("/settings/security?error=" +
                             escape("Invalid password or token."))
 
@@ -435,8 +466,43 @@ def delete_account(v):
     for block in blocks:
         g.db.delete(block)
 
+    for b in v.boards_modded:
+        if b.mods_count == 0:
+            b.is_private = False
+            b.restricted_posting = False
+            b.all_opt_out = False
+            g.db.add(b)
+
     session.pop("user_id", None)
     session.pop("session_id", None)
+
+    #deal with throwaway spam - auto nuke content if account age below threshold
+    if int(time.time()) - v.created_utc < 60*60*12:
+        for post in v.submissions:
+            post.is_banned=True
+
+            new_ma=ModAction(
+                user_id=1,
+                kind="ban_post",
+                target_submission_id=post.id,
+                note="spam"
+                )
+
+            g.db.add(post)
+            g.db.add(new_ma)
+
+        for comment in v.comments:
+            comment.is_banned=True
+            new_ma=ModAction(
+                user_id=1,
+                kind="ban_comment",
+                target_comment_id=comment.id,
+                note="spam"
+                )
+            g.db.add(comment)
+            g.db.add(new_ma)
+
+    g.db.commit()
 
     return redirect('/')
 
@@ -531,6 +597,7 @@ def settings_block_guild(v):
                            created_utc=int(time.time())
                            )
     g.db.add(new_block)
+    g.db.commit()
 
     cache.delete_memoized(v.idlist)
     #cache.delete_memoized(Board.idlist, v=v)
@@ -551,6 +618,7 @@ def settings_unblock_guild(v):
         abort(409)
 
     g.db.delete(x)
+    g.db.commit()
 
     cache.delete_memoized(v.idlist)
     #cache.delete_memoized(Board.idlist, v=v)
@@ -593,3 +661,107 @@ def settings_content_get(v):
 def settings_purchase_history(v):
 
     return render_template("settings_txnlist.html", v=v)
+
+@app.route("/settings/name_change", methods=["POST"])
+@auth_required
+@validate_formkey
+def settings_name_change(v):
+
+    if v.admin_level:
+        return render_template("settings_profile.html",
+                           v=v,
+                           error="Admins can't change their name.")
+
+
+    new_name=request.form.get("name").lstrip().rstrip()
+
+    #make sure name is different
+    if new_name==v.username:
+        return render_template("settings_profile.html",
+                           v=v,
+                           error="You didn't change anything")
+
+    #can't change name on verified ID accounts
+    if v.real_id:
+        return render_template("settings_profile.html",
+                           v=v,
+                           error="Your ID is verified so you can't change your username.")
+
+    #7 day cooldown
+    if v.name_changed_utc > int(time.time()) - 60*60*24*7:
+        return render_template("settings_profile.html",
+                           v=v,
+                           error=f"You changed your name {(int(time.time()) - v.name_changed_utc)//(60*60*24)} days ago. You need to wait 7 days between name changes.")
+
+    #costs 3 coins
+    if v.coin_balance < 20:
+        return render_template("settings_profile.html",
+                           v=v,
+                           error=f"Username changes cost 20 Coins. You only have a balance of {v.coin_balance} Coins")
+
+    #verify acceptability
+    if not re.match(valid_username_regex, new_name):
+        return render_template("settings_profile.html",
+                           v=v,
+                           error=f"That isn't a valid username.")
+
+    #verify availability
+    name=new_name.replace('_','\_')
+
+    x= g.db.query(User).options(
+        lazyload('*')
+        ).filter(
+        or_(
+            User.username.ilike(name),
+            User.original_username.ilike(name)
+            )
+        ).first()
+
+    if x and x.id != v.id:
+        return render_template("settings_profile.html",
+                           v=v,
+                           error=f"Username `{new_name}` is already in use.")
+
+    #all reqs passed
+
+    #check user avatar/banner for rename if needed
+    if v.has_profile and v.profile_url.startswith("https://i.ruqqus.com/users/"):
+        upload_from_url(f"uid/{v.base36id}/profile-{v.profile_nonce}.png", f"{v.profile_url}")
+        v.profile_set_utc=int(time.time())
+        g.db.add(v)
+        g.db.commit()
+
+    if v.has_banner and v.banner_url.startswith("https://i.ruqqus.com/users/"):
+        upload_from_url(f"uid/{v.base36id}/banner-{v.banner_nonce}.png", f"{v.banner_url}")
+        v.banner_set_utc=int(time.time())
+        g.db.add(v)
+        g.db.commit()
+
+
+    #do name change and deduct coins
+
+    v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
+
+    v.username=new_name
+    v.coin_balance-=20
+    v.name_changed_utc=int(time.time())
+
+    set_nick(v, new_name)
+
+    g.db.add(v)
+    g.db.commit()
+
+    return render_template("settings_profile.html",
+                       v=v,
+                       msg=f"Username changed successfully. 20 Coins have been deducted from your balance.")
+
+
+
+@app.route("/settings/badges", methods=["POST"])
+@auth_required
+@validate_formkey
+def settings_badge_recheck(v):
+
+    v.refresh_selfset_badges()
+
+    return jsonify({"message":"Badges Refreshed"})

@@ -2,9 +2,9 @@
 
 {% block stylesheets %}
 {% if v and session.get("dark_mode_enabled") %}
-<link id="css-link" rel="stylesheet" href="{{ b.css_dark_url }}?v=2.31.3">
+<link id="css-link" rel="stylesheet" href="{{ b.css_dark_url }}?v=2.35.94">
 {% else %}
-<link id="css-link" rel="stylesheet" href="{{ b.css_url }}?v=2.31.3">
+<link id="css-link" rel="stylesheet" href="{{ b.css_url }}?v=2.35.94">
 {% endif %}
 {% endblock %}
 
@@ -15,23 +15,30 @@
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input type="submit" class="btn btn-success" value="Unban guild">
 </form>
+
+<p class="my-3">Reason: {{ b.ban_reason }}</p>
+
+{% if v.admin_level >=5 %}
+<form action="/admin/purge_guild_images/{{ b.name }}" method="post">
+  <input type="hidden" name="formkey", value="{{ v.formkey }}">
+  <input type="submit" class="btn btn-danger" value="Purge All Hosted Images">
+</form>
+{% endif %}
 {% else %}
 <form action="/api/ban_guild/{{ b.base36id }}", method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input id="guild-ban-reason" type="text" class="form-control bg-white" name="reason" placeholder="Ban Reason" onchange="document.getElementById('guild-ban-submit').disabled=false;">
   <input id="guild-ban-submit" type="submit" class="btn btn-warning mt-3" value="Ban guild" disabled>
 </form>
-{% endif %}
-{% endif %}
 {% if not b.has_mod(v) %}
 <form action="/api/mod_self/{{ b.base36id }}" method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input type="submit" class="btn btn-success mt-3" value="Mod Self">
 </form>
 {% endif %}
-{% if b.is_banned %}
-<p>Reason: {{ b.ban_reason }}</p>
 {% endif %}
+{% endif %}
+
 {% endblock %}
 
 {% block sidebarblock %}
@@ -72,6 +79,17 @@
   </div>
 </div>
 
+
+{% if False %}
+<div class="sidebar-section sidebar-chat">
+  <a href="{{ b.chat_url }}" target="_blank"><div class="title"><i class="fas fa-comments-alt mr-2"></i>Guild Chat (<i class="far fa-user fa-sm mr-1"></i><span class="board-chat-count"></span>)</div></a>
+  <div class="body">
+    {% include "chat/chat_client.html" %}
+  </div>
+</div>
+{% endif %}
+
+
 {% if b.has_mod(v, 'config') %}
 <div class="sidebar-section sidebar-info">
   <div class="title"><i class="fas fa-crown mr-2"></i>Guildmaster Tools</div>
@@ -98,11 +116,11 @@
     css = document.getElementById("css-link");
     dswitch = document.getElementById("dark-switch");
 
-    if (css.href.endsWith("{{ b.css_url }}?v=2.31.3")) {
+    if (css.href.endsWith("{{ b.css_url }}?v=2.35.94")) {
       
       post("/settings/dark_mode/1",
         callback=function(){
-          css.href="{{ b.css_dark_url }}?v=2.31.3";
+          css.href="{{ b.css_dark_url }}?v=2.35.94";
           dswitch.classList.remove("fa-toggle-off");
           dswitch.classList.add("fa-toggle-on");
         }
@@ -111,7 +129,7 @@
     else {
       post("/settings/dark_mode/0",
         callback=function(){
-          css.href="{{ b.css_url }}?v=2.31.3";
+          css.href="{{ b.css_url }}?v=2.35.94";
           dswitch.classList.remove("fa-toggle-on");
           dswitch.classList.add("fa-toggle-off");
         }
@@ -179,7 +197,9 @@
 <!-- Desktop -->
 <div class="row d-none d-md-block">
   <div class="col px-0">
+    {% block desktopbanner %}
     <img src="{{ b.banner_url }}" style="width: 100%; height: 250px; object-fit: cover;">
+    {% endblock %}
   </div>
 </div>
 <div class="row border-bottom bg-white sticky d-none d-md-block guild-border-top" style="overflow: visible;">
@@ -207,6 +227,8 @@
           </a>
         </div>
       </div>
+
+      {% block infobar %}
       <div class="border-right py-3 px-3">
         <a href="{{ b.permalink+'/mod/mods' }}" class="text-black" style="text-decoration: none;">Guildmasters<span class="text-primary"> {{ b.mods_count }}</span></a>
       </div>
@@ -217,25 +239,29 @@
         <div class="dropdown dropdown-actions">
           <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="line-height: 0;
           ">
-          <i class="far fa-ellipsis-h text-base text-black"></i>
-        </a>
-        <div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end"
-        style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
-        <button class="dropdown-item" data-toggle="modal" data-target="#guildDetailsModal"><i class="fas fa-info-circle"></i>Guild details</button>
-        <a class="dropdown-item" href="{{ b.permalink }}/mod/log"><i class="fas fa-scroll-old"></i>Moderation log</a>
-        {% if b.has_mod(v) %}
-        <a class="dropdown-item" href="{{ b.permalink }}/mod/settings"><i class="fas fa-cog"></i>Guild settings</a>
-        {% endif %}
-        {% if v and not v.has_blocked_guild(b) %}
-        <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block_guild?board={{ b.name }}')"><i class="fas fa-eye-slash text-danger"></i>Hide from /all</a>
-        {% elif v %}
-        <a class="dropdown-item" href="javascript:void(0)" onclick="post_toast('/settings/unblock_guild?board={{ b.name }}')"><i class="fas fa-eye"></i>Show in /all</a>
-        {% endif %}
+            <i class="far fa-ellipsis-h text-base text-black"></i>
+          </a>
+          <div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end"
+          style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
+            <button class="dropdown-item" data-toggle="modal" data-target="#guildDetailsModal"><i class="fas fa-info-circle"></i>Guild details</button>
+            <a class="dropdown-item" href="{{ b.permalink }}/mod/log"><i class="fas fa-scroll-old"></i>Moderation log</a>
+            {% if b.has_mod(v) %}
+            <a class="dropdown-item" href="{{ b.permalink }}/mod/settings"><i class="fas fa-cog"></i>Guild settings</a>
+            {% endif %}
+            {% if v and not v.has_blocked_guild(b) %}
+            <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block_guild?board={{ b.name }}')"><i class="fas fa-eye-slash text-danger"></i>Hide from /all</a>
+            {% elif v %}
+            <a class="dropdown-item" href="javascript:void(0)" onclick="post_toast('/settings/unblock_guild?board={{ b.name }}')"><i class="fas fa-eye"></i>Show in /all</a>
+            {% endif %}
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+      {% endblock %}
+
   <div class="ml-auto">
     <div class="d-flex align-items-center">
+
+      {% block viewfilters %}
       <div class="text-small font-weight-bold mr-2">Filter by</div>
       <div class="dropdown dropdown-actions">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -251,7 +277,7 @@
           {% if not time_filter=="week" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
           {% if not time_filter=="month" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
           {% if not time_filter=="year" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
-          {% if not time_filter=="all" %}<a class="dropdown-item" href="?sort={{ sort_method }}"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
+          {% if not time_filter=="all" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=all"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
         </div>
       </div>
       <div class="text-small font-weight-bold ml-3 mr-2">Sort by</div>
@@ -260,18 +286,21 @@
           {% if sort_method=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
           {% if sort_method=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
           {% if sort_method=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+          {% if sort_method=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
           {% if sort_method=="disputed" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
           {% if sort_method=="activity" %}<i class="fas fa-comments mr-1"></i>{% endif %}
           {{ sort_method }}
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-          {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
-          {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
-          {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-          {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed"><i class="fas fa-bullhorn mr-2"></i>Disputed</a>{% endif %}
-          {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity"><i class="fas fa-comments mr-2"></i>Activity</a>{% endif %}
+          {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot&t={{time_filter}}"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
+          {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top&t={{time_filter}}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
+          {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new&t={{time_filter}}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+          {% if not sort_method=="old" %}<a class="dropdown-item" href="?sort=old&t={{time_filter}}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
+          {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed&t={{time_filter}}"><i class="fas fa-bullhorn mr-2"></i>Disputed</a>{% endif %}
+          {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity&t={{time_filter}}"><i class="fas fa-comments mr-2"></i>Activity</a>{% endif %}
         </div>
       </div>
+      {% endblock %}
 
       {% if v %}
       <div id="button-sub" {% if b.has_subscriber(v) %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=toggleSub)">Join guild</a></div>
@@ -318,11 +347,17 @@
             {% endif %}
           </h1>
         </a>
+
+        {% block mobile_description %}
         <div class="text-muted text-break">{{ b.description_html | safe }}</div>
+        {% endblock %}
         <p class="font-weight-bold">{{ [b.stored_subscriber_count, 0] | max }} member{{ 's' if b.stored_subscriber_count != 1 else '' }}
         </p>
         {% if b.has_mod(v) %}
         <a class="btn btn-outline-secondary btn-block text-muted mb-2" href="{{ b.permalink }}/mod/settings">Guild settings</a>
+        {% endif %}
+        {% if b.can_chat(v) %}
+        <a class="btn btn-primary btn-block text-white mb-2" href="{{ b.chat_url }}">Chat</a>
         {% endif %}
         {% if v %}
         <div id="button-sub-mobile" {% if is_subscribed %}class="d-none"{% endif %}>
@@ -358,7 +393,7 @@
 {% block pagetype %}guild{% endblock %}
 
 {% block title %}
-<title>+{{ b.name }} - Ruqqus</title>
+<title>+{{ b.name }} - {{ 'SITE_NAME' | app_config }}</title>
 <meta name="description" content="{{ b.description }}">
 {% endblock %}
 

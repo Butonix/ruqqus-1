@@ -1,6 +1,6 @@
 // Colors
 
-$primary: #805AD5;
+$primary: #{boardcolor};
 $dark: #23183E;
 $secondary: #E2E8F0;
 $danger: #E53E3E;
@@ -12,7 +12,7 @@ $muted: #718096;
 $info: #168EEA;
 
 
-$purple: #805AD5;
+$purple: #{maincolor};
 $red:  #E53E3E;
 $gray: #718096;
 $green: #38A169;
@@ -31,6 +31,7 @@ $banned: #FEB2B2;
 $deleted: #FEFCBF;
 $deletedandbanned: #ffcc99;
 $mod: #07c20c;
+$code: #e83e8c;
 
 $gold: #ECC94B;
 $reddit: #ED4630;
@@ -143,7 +144,7 @@ $yiq-contrasted-threshold:  160 !default;
     }
   }
 
-@import "node_modules/bootstrap/scss/bootstrap";
+@import "/home/ubuntu/ruqqus/ruqqus/assets/style/node_modules/bootstrap/scss/bootstrap.scss";
 
 html {
     font-size: 14px;
@@ -917,11 +918,11 @@ th {
     transform: rotate(-45deg);
 }
 
-.sidebar-section .fa, .sidebar-section .fas, .sidebar-section .far, .sidebar-section .fab, .sidebar-section .fal, .sidebar-section .fad {
+.sidebar-right .fa, .sidebar-right .fas, .sidebar-right .far, .sidebar-right .fab, .sidebar-right .fal, .sidebar-right .fad {
     font-size: $small-font-size;
 }
 
-.sidebar-section .title .fa, .sidebar-section .title .fas, .sidebar-section .title .far, .sidebar-section .title .fab, .sidebar-section .title .fal, .sidebar-section .title .fad {
+.sidebar .title .fa, .sidebar .title .fas, .sidebar .title .far, .sidebar .title .fab, .sidebar .title .fal, .sidebar-section .title .fad {
     font-size: $small-font-size;
 }
 
@@ -1489,7 +1490,6 @@ color: $dark;
 }
 
 .guild-recommendations-list .guild-recommendations-item .fa, .guild-recommendations-list .guild-recommendations-item .fas, .guild-recommendations-list .guild-recommendations-item .far, .guild-recommendations-list .guild-recommendations-item .fab, .guild-recommendations-list .guild-recommendations-item .fal {
-    font-size: $small-font-size;
     margin-right: 0.5rem;
     color: $gray-600;
     text-align: center;
@@ -1668,6 +1668,15 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .profile-pic-25 {
     width: 25px;
     height: 25px;
+    border-radius: 50%;
+    text-align: center;
+    object-fit: cover;
+    background-color: $white;
+}
+
+.profile-pic-28 {
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
@@ -2181,7 +2190,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .jumbotron-guild {
     position: relative;
-    height: 225px;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -2191,6 +2199,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     padding: 0;
     display: flex;
     align-items: center;
+    z-index: 1;
 }
 
 .jumbotron-guild .guild-banner-contents {
@@ -2205,6 +2214,8 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     height: 100%;
     bottom: 0;
     left: 0;
+    z-index: -1;
+    pointer-events: none;
 }
 
 .jumbotron-guild .guild-icon-square-lg {
@@ -3233,7 +3244,7 @@ ul.comment-section {
 pre code {
     word-break: break-word;
     white-space: break-spaces;
-    color: $black;
+    color: $code;
 }
 
 // Code Prettify

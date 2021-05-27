@@ -19,7 +19,7 @@ from secrets import token_hex
 from ruqqus.mail import *
 from ruqqus.__main__ import app, limiter
 
-valid_username_regex = re.compile("^[a-zA-Z0-9_]{5,25}$")
+valid_username_regex = re.compile("^[a-zA-Z0-9_]{3,25}$")
 valid_password_regex = re.compile("^.{8,100}$")
 # valid_email_regex=re.compile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
@@ -122,8 +122,12 @@ def login_post():
                              formhash
                              ):
             return redirect("/login")
-
-        if not account.validate_2fa(request.form.get("2fa_token", "").strip()):
+        
+        is_2fa=account.validate_2fa(request.form.get("2fa_token", "").strip())
+        is_recovery=safe_compare(request.form.get("2fa_token","").lower().replace(' ',''), account.mfa_removal_code)
+        
+        if not is_2fa and not is_recovery:
+            
             hash = generate_hash(f"{account.id}+{time}+2fachallenge")
             return render_template("login_2fa.html",
                                    v=account,
@@ -132,20 +136,16 @@ def login_post():
                                    failed=True,
                                    i=random_image()
                                    )
+        elif is_recovery:
+            account.mfa_secret=None
+            g.db.add(account)
+            g.db.commit()
 
     else:
         abort(400)
 
     if account.is_banned and account.unban_utc > 0 and time.time() > account.unban_utc:
         account.unban()
-
-    #dev server - primo only
-    if app.config["SERVER_NAME"]=="dev.ruqqus.com" and account.admin_level < 2 and not account.has_premium:
-        return render_template(
-            "login_premium.html", 
-            i=random_image()
-            )
-
 
     # set session and user id
     session["user_id"] = account.id
@@ -177,8 +177,17 @@ def me(v):
 @validate_formkey
 def logout(v):
 
-    session.pop("user_id", None)
-    session.pop("session_id", None)
+    try:
+        print(f"logout {v.username}")
+    except:
+        pass
+        
+    session["user_id"]=None
+    session["session_id"]=None
+
+    session.modified=True
+
+
 
     return redirect("/")
 
@@ -388,16 +397,18 @@ def sign_up_post(v):
 
     # make new user
     try:
-        new_user = User(username=username,
-                        password=request.form.get("password"),
-                        email=email,
-                        created_utc=int(time.time()),
-                        creation_ip=request.remote_addr,
-                        referred_by=ref_id or None,
-                        tos_agreed_utc=int(time.time()),
-                        creation_region=request.headers.get("cf-ipcountry"),
-                        ban_evade =  int(any([x.is_banned for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x]))
-                        )
+        new_user = User(
+            username=username,
+            original_username = username,
+            password=request.form.get("password"),
+            email=email,
+            created_utc=int(time.time()),
+            creation_ip=request.remote_addr,
+            referred_by=ref_id or None,
+            tos_agreed_utc=int(time.time()),
+            creation_region=request.headers.get("cf-ipcountry"),
+            ban_evade =  int(any([x.is_suspended for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x]))
+            )
 
     except Exception as e:
         #print(e)
@@ -555,95 +566,3 @@ def post_reset(v):
     return render_template("message_success.html",
                            title="Password reset successful!",
                            message="Login normally to access your account.")
-
-@app.route("/lost_2fa")
-@auth_desired
-def lost_2fa(v):
-
-    return render_template(
-        "lost_2fa.html",
-        i=random_image(),
-        v=v
-        )
-
-@app.route("/request_2fa_disable", methods=["POST"])
-@limiter.limit("6/minute")
-def request_2fa_disable():
-
-    username=request.form.get("username")
-    user=get_user(username, graceful=True)
-    if not user or not user.email or not user.mfa_secret:
-        return render_template("message.html",
-                           title="Removal request received",
-                           message="If username, password, and email match, we will send you an email.")
-
-
-    email=request.form.get("email")
-    if email and email.endswith("@gmail.com"):
-        gmail_username=email.split('@')[0]
-        gmail_username=gmail_username.split('+')[0]
-        gmail_username=gmail_username.replace('.','')
-        email=f"{gmail_username}@gmail.com"
-
-    if email != user.email:
-        return render_template("message.html",
-                           title="Removal request received",
-                           message="If username, password, and email match, we will send you an email.")
-
-
-    password =request.form.get("password")
-    if not user.verifyPass(password):
-        return render_template("message.html",
-                           title="Removal request received",
-                           message="If username, password, and email match, we will send you an email.")
-
-    #compute token
-    valid=int(time.time())+60*60*24*3
-    token=generate_hash(f"{user.id}+{user.username}+disable2fa+{valid}+{user.mfa_secret}+{user.login_nonce}")
-
-    action_url=f"https://{app.config['SERVER_NAME']}/reset_2fa?id={user.base36id}&t={valid}&token={token}"
-    
-    send_mail(to_address=user.email,
-              subject="Ruqqus - 2FA Removal Request",
-              html=render_template("email/2fa_remove.html",
-                                   action_url=action_url,
-                                   v=user)
-              )
-
-    return render_template("message.html",
-                           title="Removal request received",
-                           message="If username, password, and email match, we will send you an email.")
-
-@app.route("/reset_2fa", methods=["GET"])
-def reset_2fa():
-
-    now=int(time.time())
-    t=int(request.args.get("t"))
-
-    if now<t:
-        return render_template("message.html",
-                           title="Inactive Link",
-                           error="That link isn't active yet. Try again later.")
-    elif now > t+3600*24:
-        return render_template("message.html",
-                           title="Expired Link",
-                           error="That link has expired.")
-
-    token=request.args.get("token")
-    uid=request.args.get("id")
-
-    user=get_account(uid)
-
-    if not validate_hash(f"{user.id}+{user.username}+disable2fa+{t}+{user.mfa_secret}+{user.login_nonce}", token):
-        abort(403)
-
-    #validation successful, remove 2fa
-    user.mfa_secret=None
-
-    g.db.add(user)
-    g.db.commit()
-
-    return render_template("message_success.html",
-                           title="Two-factor authentication removed.",
-                           message="Login normally to access your account.")
-

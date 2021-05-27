@@ -1,6 +1,6 @@
 {% extends "settings.html" %}
 
-{% block pagetitle %}Security Settings - Ruqqus{% endblock %}
+{% block pagetitle %}Security Settings - {{ 'SITE_NAME' | app_config }}{% endblock %}
 
 {% block content %}
 
@@ -185,7 +185,7 @@
 
   <h2 class="h5">Log Out Everywhere</h2>
 
-  <p class="text-small text-muted">Log all other devices out of your Ruqqus account.</p>
+  <p class="text-small text-muted">Log all other devices out of your {{ 'SITE_NAME' | app_config }} account.</p>
 
   <div class="settings-section rounded">
 
@@ -233,7 +233,7 @@
 
     <label for="delete_account">Delete Account</label>
 
-    <p>This will permanently delete your Ruqqus Account. Be careful, this cannot be undone.</p>
+    <p>This will permanently delete your {{ 'SITE_NAME' | app_config }} Account. Be careful, this cannot be undone.</p>
 
   </div>
 
@@ -269,7 +269,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Delete your Ruqqus account</h5>
+        <h5 class="modal-title">Delete your {{ 'SITE_NAME' | app_config }} account</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true"><i class="far fa-times"></i></span>
         </button>
@@ -311,7 +311,7 @@
 
               <div class="w-lg-100">
 
-                  <textarea class="form-control mb-2" id="delete-reason" name="delete_reason" placeholder="Tell us why you're leaving Ruqqus. (Optional)"></textarea>
+                  <textarea class="form-control mb-2" id="delete-reason" name="delete_reason" placeholder="Tell us why you're leaving {{ 'SITE_NAME' | app_config }}. (Optional)"></textarea>
 
               </div>
 

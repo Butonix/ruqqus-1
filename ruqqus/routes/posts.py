@@ -9,6 +9,7 @@ import requests
 import re
 import bleach
 import time
+import gevent
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -24,7 +25,7 @@ from ruqqus.helpers.alerts import send_notification
 from ruqqus.classes import *
 from .front import frontlist
 from flask import *
-from ruqqus.__main__ import app, limiter, cache
+from ruqqus.__main__ import app, limiter, cache, db_session
 
 BAN_REASONS = ['',
                "URL shorteners are not permitted.",
@@ -32,7 +33,7 @@ BAN_REASONS = ['',
                "Copyright infringement is not permitted."
                ]
 
-BUCKET = "i.ruqqus.com"
+BUCKET = app.config.get("S3_BUCKET", "i.ruqqus.com")
 
 
 @app.route("/post_short/", methods=["GET"])
@@ -120,11 +121,8 @@ def post_base36id_noboard(base36id, anything=None, v=None):
 @no_negative_balance("html")
 def submit_get(v):
 
-    board = request.args.get("guild", "general")
-    b = get_guild(board, graceful=True)
-    if not b:
-
-        b = get_guild("general")
+    board = request.args.get("guild")
+    b = get_guild(board, graceful=True) if board else None
 
 
     return render_template("submit.html",
@@ -156,6 +154,51 @@ def edit_post(pid, v):
         body_md = renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
 
+
+    # Run safety filter
+    bans = filter_comment_html(body_html)
+    if bans:
+        ban = bans[0]
+        reason = f"Remove the {ban.domain} link from your post and try again."
+        if ban.reason:
+            reason += f" {ban.reason_text}"
+            
+        #auto ban for digitally malicious content
+        if any([x.reason==4 for x in bans]):
+            v.ban(days=30, reason="Digitally malicious content is not allowed.")
+            abort(403)
+            
+        return {"error": reason}, 403
+
+    # check spam
+    soup = BeautifulSoup(body_html, features="html.parser")
+    links = [x['href'] for x in soup.find_all('a') if x.get('href')]
+
+    for link in links:
+        parse_link = urlparse(link)
+        check_url = ParseResult(scheme="https",
+                                netloc=parse_link.netloc,
+                                path=parse_link.path,
+                                params=parse_link.params,
+                                query=parse_link.query,
+                                fragment='')
+        check_url = urlunparse(check_url)
+
+        badlink = g.db.query(BadLink).filter(
+            literal(check_url).contains(
+                BadLink.link)).first()
+        if badlink:
+            if badlink.autoban:
+                text = "Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+                send_notification(v, text)
+                v.ban(days=1, reason="spam")
+
+                return redirect('/notifications')
+            else:
+
+                return {"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}
+
+
     p.body = body
     p.body_html = body_html
     p.edited_utc = int(time.time())
@@ -167,21 +210,13 @@ def edit_post(pid, v):
             p.is_offensive = True
             break
 
-
-    # politics
-    p.is_politics = False
-    for x in g.db.query(PoliticsWord).all():
-        if (p.body and x.check(p.body)) or x.check(p.title):
-            p.is_politics = True
-            break
-
     g.db.add(p)
 
     return redirect(p.permalink)
 
 
 @app.route("/submit/title", methods=['GET'])
-#@limiter.limit("3/minute")
+@limiter.limit("6/minute")
 @is_not_banned
 @no_negative_balance("html")
 #@tos_agreed
@@ -371,7 +406,17 @@ def submit_post(v):
     board = get_guild(board_name, graceful=True)
 
     if not board:
-        board = get_guild('general')
+
+        return {"html": lambda: (render_template("submit.html",
+                                                 v=v,
+                                                 error=f"Please enter a Guild to submit to.",
+                                                 title=title,
+                                                 url=url, body=request.form.get(
+                                                     "body", ""),
+                                                 b=None
+                                                 ), 403),
+                "api": lambda: (jsonify({"error": f"403 Forbidden - +{board.name} has been banned."}))
+                }
 
     if board.is_banned:
 
@@ -381,8 +426,7 @@ def submit_post(v):
                                                  title=title,
                                                  url=url, body=request.form.get(
                                                      "body", ""),
-                                                 b=get_guild("general",
-                                                             graceful=True)
+                                                 b=None
                                                  ), 403),
                 "api": lambda: (jsonify({"error": f"403 Forbidden - +{board.name} has been banned."}))
                 }
@@ -394,7 +438,7 @@ def submit_post(v):
                                                  title=title,
                                                  url=url, body=request.form.get(
                                                      "body", ""),
-                                                 b=get_guild("general")
+                                                 b=None
                                                  ), 403),
                 "api": lambda: (jsonify({"error": f"403 Not Authorized - You are exiled from +{board.name}"}), 403)
                 }
@@ -408,12 +452,13 @@ def submit_post(v):
                                                  url=url,
                                                  body=request.form.get(
                                                      "body", ""),
-                                                 b=get_guild(request.form.get("board", "general"),
-                                                             graceful=True
-                                                             )
+                                                 b=None
                                                  ), 403),
                 "api": lambda: (jsonify({"error": f"403 Not Authorized - You are not an approved contributor for +{board.name}"}), 403)
                 }
+
+    if board.disallowbots and request.headers.get("X-User-Type")=="Bot":
+        return {"api": lambda: (jsonify({"error": f"403 Not Authorized - +{board.name} disallows bots from posting and commenting!"}), 403)}
 
     # similarity check
     now = int(time.time())
@@ -611,6 +656,9 @@ def submit_post(v):
     else:
         repost = None
 
+    if repost and request.values.get("no_repost"):
+        return redirect(repost.permalink)
+
     if request.files.get('file') and not v.can_submit_image:
         abort(403)
 
@@ -619,13 +667,6 @@ def submit_post(v):
     for x in g.db.query(BadWord).all():
         if (body and x.check(body)) or x.check(title):
             is_offensive = True
-            break
-
-    #politics
-    is_politics=False
-    for x in g.db.query(PoliticsWord).all():
-        if (body and x.check(body)) or x.check(title):
-            is_politics = True
             break
 
     new_post = Submission(
@@ -643,10 +684,10 @@ def submit_post(v):
         post_public=not board.is_private,
         repost_id=repost.id if repost else None,
         is_offensive=is_offensive,
-        is_politics=is_politics,
         app_id=v.client.application.id if v.client else None,
-        creation_region=request.headers.get("cf-ipcountry")
-        )
+        creation_region=request.headers.get("cf-ipcountry"),
+        is_bot = request.headers.get("X-User-Type","").lower()=="bot"
+    )
 
     g.db.add(new_post)
     g.db.flush()
@@ -688,7 +729,7 @@ def submit_post(v):
                                                              "body", ""),
                                                          b=board
                                                          ), 400),
-                        "api": lambda: ({"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}, 400)
+                        "api": lambda: ({"error": f"Image files only"}, 400)
                         }
 
         name = f'post/{new_post.base36id}/{secrets.token_urlsafe(8)}'
@@ -702,21 +743,25 @@ def submit_post(v):
         new_post.is_image = True
         new_post.domain_ref = 1  # id of i.ruqqus.com domain
         g.db.add(new_post)
+        g.db.add(new_post.submission_aux)
+        g.db.commit()
 
         #csam detection
         def del_function():
+            db=db_session()
             delete_file(name)
             new_post.is_banned=True
-            g.db.add(new_post)
-            g.db.commit()
+            db.add(new_post)
+            db.commit()
             ma=ModAction(
                 kind="ban_post",
                 user_id=1,
-                note="csam detected",
+                note="banned image",
                 target_submission_id=new_post.id
                 )
-            g.db.add(ma)
-            g.db.commit()
+            db.add(ma)
+            db.commit()
+            db.close()
 
             
         csam_thread=threading.Thread(target=check_csam_url, 
@@ -730,12 +775,11 @@ def submit_post(v):
     g.db.commit()
 
     # spin off thumbnail generation and csam detection as  new threads
-    if new_post.url or request.files.get('file'):
-        new_thread = threading.Thread(target=thumbnail_thread,
-                                      args=(new_post.base36id,)
-                                      )
-        new_thread.start()
-
+    if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"):
+        new_thread = gevent.spawn(
+            thumbnail_thread,
+            new_post.base36id
+        )
 
     # expire the relevant caches: front page new, board new
     cache.delete_memoized(frontlist)
@@ -898,11 +942,19 @@ def retry_thumbnail(pid, v):
     if post.author_id != v.id and v.admin_level < 3:
         abort(403)
 
-    new_thread = threading.Thread(target=thumbnail_thread,
-                                  args=(new_post.base36id,)
-                                  )
-    new_thread.start()
-    return jsonify({"message": "Thumbnail Retry Queued"})
+    if post.is_archived:
+        return jsonify({"error": "Post is archived"}), 409
+
+    try:
+        success, msg = thumbnail_thread(post.base36id, debug=True)
+    except Exception as e:
+        return jsonify({"error":str(e)}), 500
+
+    if not success:
+        return jsonify({"error":msg}), 500
+
+
+    return jsonify({"message": "Success"})
 
 
 @app.route("/save_post/<pid>", methods=["POST"])

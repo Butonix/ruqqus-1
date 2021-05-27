@@ -13,7 +13,7 @@
     <div class="d-flex justify-content-between align-items-center">
 
       {% block navbar %}
-      <div class="font-weight-bold py-3">Ruqqus {% if request.path=="/all" %}All{% else %}Homepage{% endif %}</div>
+      <div class="font-weight-bold py-3">{{ 'SITE_NAME' | app_config }} {% if request.path=="/all" %}All{% else %}Homepage{% endif %}</div>
 
       <div class="d-flex align-items-center">
         <div class="text-small font-weight-bold mr-2">Filter by</div>
@@ -31,7 +31,7 @@
             {% if not time_filter=="week" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
             {% if not time_filter=="month" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
             {% if not time_filter=="year" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
-            {% if not time_filter=="all" %}<a class="dropdown-item" href="?sort={{ sort_method }}"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
+            {% if not time_filter=="all" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=all"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
           </div>
         </div>
 
@@ -41,16 +41,18 @@
             {% if sort_method=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
             {% if sort_method=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
             {% if sort_method=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+            {% if sort_method=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
             {% if sort_method=="disputed" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
             {% if sort_method=="activity" %}<i class="fas fa-comments mr-1"></i>{% endif %}
             {{ sort_method | capitalize }}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-            {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
-            {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
-            {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-            {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed"><i class="fas fa-bullhorn mr-2"></i>Disputed</a>{% endif %}
-            {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity"><i class="fas fa-comments mr-2"></i>Activity</a>{% endif %}
+            {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot&t={{ time_filter }}"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
+            {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top&t={{ time_filter }}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
+            {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new&t={{ time_filter }}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+            {% if not sort_method=="old" %}<a class="dropdown-item" href="?sort=old&t={{ time_filter }}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
+            {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed&t={{ time_filter }}"><i class="fas fa-bullhorn mr-2"></i>Disputed</a>{% endif %}
+            {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity&t={{ time_filter }}"><i class="fas fa-comments mr-2"></i>Activity</a>{% endif %}
           </div>
         </div>
       </div>
@@ -79,13 +81,13 @@
         {% if v %}
         <a href="/submit">
           <input type="text" class="form-control"
-          placeholder="Share something with the Ruqqus community..." aria-label="Username"
+          placeholder="Share something with the {{ 'SITE_NAME' | app_config }} community..." aria-label="Username"
           aria-describedby="basic-addon1">
         </a>
         {% else %}
         <a href="/signup">
           <input type="text" class="form-control"
-          placeholder="Share something with the Ruqqus community..." aria-label="Username"
+          placeholder="Share something with the {{ 'SITE_NAME' | app_config }} community..." aria-label="Username"
           aria-describedby="basic-addon1">
         </a>
         {% endif %}
@@ -156,16 +158,18 @@
                   {% if sort_method=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
                   {% if sort_method=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
                   {% if sort_method=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+                  {% if sort_method=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
                   {% if sort_method=="disputed" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
                   {% if sort_method=="activity" %}<i class="fas fa-comments mr-1"></i>{% endif %}
                   {{ sort_method | capitalize }}
                 </button>
                 <div class="dropdown-menu" id="mobileSortDropdown" aria-labelledby="dropdownMenuButtonMobile" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-                  {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot"><i class="fas fa-fire text-primary mr-3"></i>Hot</a>{% endif %}
-                  {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top"><i class="fas fa-arrow-alt-circle-up text-primary mr-3"></i>Top</a>{% endif %}
-                  {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles text-primary mr-3"></i>New</a>{% endif %}
-                  {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed"><i class="fas fa-bullhorn text-primary mr-3"></i>Disputed</a>{% endif %}
-                  {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity"><i class="fas fa-comments text-primary mr-3"></i>Activity</a>{% endif %}
+                  {% if not sort_method=="hot" %}<a class="dropdown-item" href="?sort=hot&t={{ time_filter }}"><i class="fas fa-fire text-primary mr-3"></i>Hot</a>{% endif %}
+                  {% if not sort_method=="top" %}<a class="dropdown-item" href="?sort=top&t={{ time_filter }}"><i class="fas fa-arrow-alt-circle-up text-primary mr-3"></i>Top</a>{% endif %}
+                  {% if not sort_method=="new" %}<a class="dropdown-item" href="?sort=new&t={{ time_filter }}"><i class="fas fa-sparkles text-primary mr-3"></i>New</a>{% endif %}
+                  {% if not sort_method=="old" %}<a class="dropdown-item" href="?sort=old&t={{ time_filter }}"><i class="fas fa-book text-primary mr-3"></i>Old</a>{% endif %}
+                  {% if not sort_method=="disputed" %}<a class="dropdown-item" href="?sort=disputed&t={{ time_filter }}"><i class="fas fa-bullhorn text-primary mr-3"></i>Disputed</a>{% endif %}
+                  {% if not sort_method=="activity" %}<a class="dropdown-item" href="?sort=activity&t={{ time_filter }}"><i class="fas fa-comments text-primary mr-3"></i>Activity</a>{% endif %}
                 </div>
               </div>
 
@@ -183,7 +187,7 @@
                   {% if not time_filter=="week" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=week"><i class="fas fa-calendar-week text-primary mr-3"></i>Week</a>{% endif %}
                   {% if not time_filter=="month" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=month"><i class="fas fa-calendar-alt text-primary mr-3"></i>Month</a>{% endif %}
                   {% if not time_filter=="year" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=year"><i class="fas fa-calendar text-primary mr-3"></i>Year</a>{% endif %}
-                  {% if not time_filter=="all" %}<a class="dropdown-item" href="?sort={{ sort_method }}"><i class="fas fa-infinity text-primary mr-3"></i>All</a>{% endif %}
+                  {% if not time_filter=="all" %}<a class="dropdown-item" href="?sort={{ sort_method }}&t=all"><i class="fas fa-infinity text-primary mr-3"></i>All</a>{% endif %}
                 </div>
               </div>
 
@@ -259,12 +263,22 @@
     </div>
     {% endif %}
 
+{% if False %}
+    <div class="sidebar-section sidebar-chat">
+      <a href="/+general/chat" target="_blank"><div class="title"><i class="fas fa-comments-alt mr-2"></i>+general Chat (<i class="far fa-user fa-sm mr-1"></i><span class="board-chat-count"></span>)</div></a>
+      <div class="body">
+        {% include "chat/chat_client.html" %}
+      </div>
+    </div>
+{% endif %}
+
+
     <div class="sidebar-section">
       <div class="title">
-        <i class="fas fa-heart mr-2"></i>Support Ruqqus
+        <i class="fas fa-heart mr-2"></i>Support {{ 'SITE_NAME' | app_config }}
       </div>
       <div class="body">
-        <p>Merch and more. Support Ruqqus today!</p>
+        <p>Merch and more. Support {{ 'SITE_NAME' | app_config }} today!</p>
 
         <a href="https://www.bonfire.com/store/ruqqus/" target="blank" class="btn btn-block btn-link text-info text-left text-decoration-none px-1 mt-0">
           <span class="fa-stack fa-1x ml-n1 mr-2">
@@ -300,7 +314,7 @@
           <span class="fa-stack fa-1x ml-n1 mr-2">
             <i class="fas fa-square fa-stack-2x" style="color: #dabef9!important; font-size: 2rem!important;"></i>
             <i class="fas fa-coins fa-stack-1x text-base fa-inverse" style="color: #805ad5!important;"></i>
-          </span>Ruqqus Premium
+          </span>{{ 'SITE_NAME' | app_config }} Premium
         </a>
 
         <a href="https://github.com/ruqqus/ruqqus/issues" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #DC143C!important">
@@ -310,14 +324,14 @@
           </span>Report Bugs
         </a>
 
-        <a href="https://ruqqus.com/discord" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #7289DA!important;">
+        <a href="/discord" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #7289DA!important;">
           <span class="fa-stack fa-1x ml-n1 mr-2">
             <i class="fas fa-square fa-stack-2x text-gray-300" style="font-size: 2rem!important;"></i>
             <i class="fab fa-discord fa-stack-1x text-base fa-inverse" style="color: #7289DA!important;"></i>
           </span>Discord Server
         </a>
 
-        <div data-toggle="tooltip" data-placement="bottom" title="Based on coins redeemed in the last 7 days">
+        <div data-toggle="tooltip" data-placement="bottom" title="Based on coins purchased since the beginning of the month.">
           <div class="text-center text-small">{{ g.timestamp | coin_goal }}% of goal</div>
           <div class="progress" style="border-radius: 3px;">
             <div class="progress-bar bg-primary" role="progressbar" style="width: {{ g.timestamp | coin_goal }}%;" aria-valuenow="{{ g.timestamp | coin_goal }}" aria-valuemin="0" aria-valuemax="100"></div>

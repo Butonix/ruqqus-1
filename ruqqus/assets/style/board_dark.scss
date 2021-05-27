@@ -12,7 +12,7 @@ $success: #38A169;
 $muted: #AAAAAA;
 $info: #168EEA;
 
-$purple: #805AD5;
+$purple: #{maincolor};
 $red:  #E53E3E;
 $gray: #383838;
 $green: #38A169;
@@ -34,6 +34,7 @@ $banned: #960000;
 $deleted: #969600;
 $deletedandbanned: #964000;
 $mod: #07c20c;
+$code: #e83e8c;
 
 $gold: #ECC94B;
 $reddit: #ED4630;
@@ -942,11 +943,11 @@ th {
     transform: rotate(-45deg);
 }
 
-.sidebar-section .fa, .sidebar-section .fas, .sidebar-section .far, .sidebar-section .fab, .sidebar-section .fal, .sidebar-section .fad {
+.sidebar-right .fa, .sidebar-right .fas, .sidebar-right .far, .sidebar-right .fab, .sidebar-right .fal, .sidebar-right .fad {
     font-size: $small-font-size;
 }
 
-.sidebar-section .title .fa, .sidebar-section .title .fas, .sidebar-section .title .far, .sidebar-section .title .fab, .sidebar-section .title .fal, .sidebar-section .title .fad {
+.sidebar .title .fa, .sidebar .title .fas, .sidebar .title .far, .sidebar .title .fab, .sidebar .title .fal, .sidebar .title .fad {
     font-size: $small-font-size;
 }
 
@@ -1269,7 +1270,7 @@ color: $dark;
     margin-bottom: 1rem;
 }
 
-.sidebar .sidebar-section .title {
+.sidebar title {
     font-size: $small-font-size;
     font-weight: $font-weight-bold;
     letter-spacing: 0.025rem;
@@ -1520,7 +1521,6 @@ color: $dark;
 }
 
 .guild-recommendations-list .guild-recommendations-item .fa, .guild-recommendations-list .guild-recommendations-item .fas, .guild-recommendations-list .guild-recommendations-item .far, .guild-recommendations-list .guild-recommendations-item .fab, .guild-recommendations-list .guild-recommendations-item .fal {
-    font-size: $small-font-size;
     margin-right: 0.5rem;
     color: $gray-600;
     text-align: center;
@@ -1693,7 +1693,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #1f2023;
+    background-color: $gray-600;
 }
 
 .profile-pic-25 {
@@ -1702,7 +1702,16 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #1f2023;
+    background-color: $gray-600;
+}
+
+.profile-pic-28 {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    text-align: center;
+    object-fit: cover;
+    background-color: $gray-600;
 }
 
 .profile-pic-30 {
@@ -1711,7 +1720,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #1f2023;
+    background-color: $gray-600;
 }
 
 .profile-pic-35 {
@@ -1720,7 +1729,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #1f2023;
+    background-color: $gray-600;
 }
 
 .profile-pic-40 {
@@ -1729,7 +1738,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #1f2023;
+    background-color: $gray-600;
 }
 
 .profile-pic-50 {
@@ -1738,7 +1747,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #1f2023;
+    background-color: $gray-600;
 }
 
 .profile-pic-65 {
@@ -1747,7 +1756,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #1f2023;
+    background-color: $gray-600;
 }
 
 .profile-pic-75 {
@@ -1756,7 +1765,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #1f2023;
+    background-color: $gray-600;
 }
 
 .profile-pic-100 {
@@ -1765,7 +1774,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
     border-radius: 50%;
     text-align: center;
     object-fit: cover;
-    background-color: #1f2023;
+    background-color: $gray-600;
 }
 
 .profile-pic-overlap {
@@ -3281,7 +3290,7 @@ ul.comment-section {
 pre code {
     word-break: break-word;
     white-space: break-spaces;
-    color: $white;
+    color: $code;
 }
 
 // Code Prettify

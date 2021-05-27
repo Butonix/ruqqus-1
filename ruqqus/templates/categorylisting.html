@@ -10,7 +10,7 @@
 <div class="col col-md-8 col-xl-6 mx-auto mt-n5 mt-md-0">
   <div class="mt-4 text-center">
     {% if request.path=="/" %}
-      <h1>Welcome to Ruqqus</h1>
+      <h1>Welcome to {{ 'SITE_NAME' | app_config }}</h1>
       <p class="text-muted">To get started, pick some topics that interest you. (You can always change these later.)</p>
     {% else %}
       <h1>Select Categories</h1>

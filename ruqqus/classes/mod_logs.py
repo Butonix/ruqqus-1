@@ -56,6 +56,8 @@ class ModAction(Base, Stndrd, Age_times):
                 return f'for <a href="{self.target_post.permalink}">post</a>'
             elif self.target_comment:
                 return f'for <a href="{self.target_comment.permalink}">comment</a>'
+        elif self.kind=="chatban_user":
+            return f'Reason: {self._note}' if self._note else ''
         else:
             return self._note or ""
 
@@ -87,6 +89,32 @@ class ModAction(Base, Stndrd, Age_times):
 
         else:
             return ''
+
+    @property
+    def json(self):
+        data={
+            "id":self.base36id,
+            "guild": self.board.name,
+            "kind": self.kind,
+            "created_utc": self.created_utc,
+            "mod": self.user.username,
+        }
+
+        if self.target_user_id:
+            data["target_user_id"]=self.target_user.base36id
+            data["target_user"]=self.target_user.username
+
+        if self.target_comment_id:
+            data["target_comment_id"]=self.target_comment.base36id
+
+        if self.target_submission_id:
+            data["target_submission_id"]=self.target_post.base36id
+
+        if self._note:
+            data["note"]=self._note
+
+        return data
+    
 
 
 
@@ -142,6 +170,18 @@ ACTIONTYPES={
         "color": "bg-muted",
         "title": 'un-exiled user {self.target_user.username}'
     },
+    "chatban_user":{
+        "str":'chatbanned user {self.target_link}',
+        "icon":"fa-comments-alt",
+        "color": "bg-danger",
+        "title": 'chatbanned user {self.target_user.username}'
+    },
+    "unchatban_user":{
+        "str":'un-chatbanned user {self.target_link}',
+        "icon": "fa-comments-alt",
+        "color": "bg-muted",
+        "title": 'un-chatbanned user {self.target_user.username}'
+    },
     "contrib_user":{
         "str":'added contributor {self.target_link}',
         "icon": "fa-user-check",
@@ -185,7 +225,7 @@ ACTIONTYPES={
         "title": 'pinned a comment'
     },
     "unpin_comment":{
-        "str":'un-pinned a {self.target_link}>',
+        "str":'un-pinned a {self.target_link}',
         "icon":"fa-thumbtack fa-rotate--45",
         "color": "bg-muted",
         "title": 'un-pinned a comment'

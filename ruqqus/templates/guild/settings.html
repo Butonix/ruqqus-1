@@ -342,6 +342,68 @@
 
         </div>
 
+        <div id="disallow_bots">
+
+          <h2 class="h5">Disallow Bots</h2>
+
+          <p class="text-small text-muted">Disallow bots from posting and commenting in +{{ b.name }}.</p>
+
+          <div class="settings-section rounded">
+
+            <div class="d-lg-flex">
+
+              <div class="title w-lg-25">
+                <label for="disallowbots">Disallow Bots</label>
+              </div>
+
+              <div class="body w-lg-100">
+
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="disallowbots" name="disallowbots"{% if b.disallowbots %} checked{% endif %} onchange="mod_post('/mod/{{ b.base36id }}/settings/disallowbots','disallowbots')">
+                  <label class="custom-control-label" for="disallowbots"></label>
+                </div>
+
+                <span class="text-small-extra text-muted">Disallow bots from posting and commenting in +{{ b.name }}.</span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div id="chatsetting">
+
+          <h2 class="h5">Chat Availability</h2>
+
+          <p class="text-small text-muted">Enable Chat for this guild.</p>
+
+          <div class="settings-section rounded">
+
+            <div class="d-lg-flex">
+
+              <div class="title w-lg-25">
+                <label for="public_chat">Turn on Public Chat</label>
+              </div>
+
+              <div class="body w-lg-100">
+
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="public_chat" name="public_chat"{% if b.public_chat %} checked{% endif %} onchange="mod_post('/mod/{{ b.base36id }}/settings/public_chat','public_chat')">
+                  <label class="custom-control-label" for="public_chat"></label>
+                </div>
+
+                <span class="text-small-extra text-muted">If off, <a href="{{ b.permalink }}/chat" target="_blank">#{{ b.name }}</a> will only be accessible to moderators and approved contributors.</span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
   </div>
 
 </div>

@@ -11,12 +11,10 @@ from .alerts import send_notification
 from ruqqus.__main__ import Base, app, db_session
 
 
-def get_logged_in_user():
+def get_logged_in_user(db=None):
 
-    try:
+    if not db:
         db=g.db
-    except AttributeError:
-        db=db_session()
 
     if request.path.startswith("/api/v1"):
 
@@ -48,10 +46,7 @@ def get_logged_in_user():
             ClientAuth.access_token_expire_utc > int(time.time())
         ).first()
 
-        if app.config["SERVER_NAME"]=="dev.ruqqus.com" and client.user.admin_level < 2 and not client.user.has_premium:
-            x=(None, None)
-        else:
-            x = (client.user, client) if client else (None, None)
+        x = (client.user, client) if client else (None, None)
 
 
     elif "user_id" in session:
@@ -69,9 +64,6 @@ def get_logged_in_user():
             is_deleted=False
             ).first()
 
-        if app.config["SERVER_NAME"]=="dev.ruqqus.com" and v.admin_level < 2 and not v.has_premium:
-            x= (None, None)
-
         if v and (nonce < v.login_nonce):
             x= (None, None)
         else:
@@ -85,6 +77,62 @@ def get_logged_in_user():
 
     return x
 
+def check_ban_evade(v):
+
+    if not v or not v.ban_evade:
+        return
+    
+    if random.randint(0,30) < v.ban_evade:
+        v.ban(reason="Evading a site-wide ban")
+        send_notification(v, "Your Ruqqus account has been permanently suspended for the following reason:\n\n> ban evasion")
+
+        for post in g.db.query(Submission).filter_by(author_id=v.id).all():
+            if post.is_banned:
+                continue
+
+            post.is_banned=True
+            post.ban_reason="Ban evasion. This submission's owner was banned from Ruqqus on another account."
+            g.db.add(post)
+
+            ma=ModAction(
+                kind="ban_post",
+                user_id=1,
+                target_submission_id=post.id,
+                board_id=post.board_id,
+                note="ban evasion"
+                )
+            g.db.add(ma)
+
+        g.db.commit()
+
+        for comment in g.db.query(Comment).filter_by(author_id=v.id).all():
+            if comment.is_banned:
+                continue
+
+            comment.is_banned=True
+            comment.ban_reason="Ban evasion. This comment's owner was banned from Ruqqus on another account."
+            g.db.add(comment)
+
+            ma=ModAction(
+                kind="ban_comment",
+                user_id=1,
+                target_comment_id=comment.id,
+                board_id=comment.post.board_id,
+                note="ban evasion"
+                )
+            g.db.add(ma)
+
+        g.db.commit()
+        abort(403)
+
+    else:
+        v.ban_evade +=1
+        g.db.add(v)
+        g.db.commit()
+
+
+
+
 # Wrappers
 def auth_desired(f):
     # decorator for any view that changes if user is logged in (most pages)
@@ -95,6 +143,8 @@ def auth_desired(f):
 
         if c:
             kwargs["c"] = c
+            
+        check_ban_evade(v)
 
         resp = make_response(f(*args, v=v, **kwargs))
         if v:
@@ -121,56 +171,8 @@ def auth_required(f):
 
         if not v:
             abort(401)
-        elif v and v.ban_evade and not v.is_suspended:
-            if random.randint(0,100) < v.ban_evade:
-                v.ban(reason="Evading a site-wide ban")
-                send_notification(v, "Your Ruqqus account has been permanently suspended for the following reason:\n\n> ban evasion")
-
-                for post in g.db.query(Submission).filter_by(author_id=v.id).all():
-                    if post.is_banned:
-                        continue
-                        
-                    post.is_banned=True
-                    post.ban_reason="Ban evasion. This submission's owner was was banned from Ruqqus on another account."
-                    g.db.add(post)
-
-                    ma=ModAction(
-                        kind="ban_post",
-                        user_id=1,
-                        target_submission_id=post.id,
-                        board_id=post.board_id,
-                        note="ban evasion"
-                        )
-                    g.db.add(ma)
-
-                g.db.commit()
-
-                for comment in g.db.query(Comment).filter_by(author_id=v.id).all():
-                    if comment.is_banned:
-                        continue
-
-                    comment.is_banned=True
-                    comment.ban_reason="Ban evasion. This comment's owner was was banned from Ruqqus on another account."
-                    g.db.add(comment)
-
-                    ma=ModAction(
-                        kind="ban_comment",
-                        user_id=1,
-                        target_comment_id=comment.id,
-                        board_id=comment.post.board_id,
-                        note="ban evasion"
-                        )
-                    g.db.add(ma)
-
-                g.db.commit()
-                abort(403)
-
-            else:
-                v.ban_evade +=1
-                g.db.add(v)
-                g.db.commit()
-
-
+            
+        check_ban_evade(v)
 
         if c:
             kwargs["c"] = c
@@ -201,6 +203,8 @@ def is_not_banned(f):
 
         if not v:
             abort(401)
+            
+        check_ban_evade(v)
 
         if v.is_suspended:
             abort(403)
@@ -283,7 +287,7 @@ def no_negative_balance(s):
 
     return wrapper_maker
 
-def is_guildmaster(perm=None):
+def is_guildmaster(*perms):
     # decorator that enforces guildmaster status and verifies permissions
     # use under auth_required
     def wrapper_maker(f):
@@ -308,9 +312,10 @@ def is_guildmaster(perm=None):
             if not m:
                 return jsonify({"error":f"You aren't a guildmaster of +{board.name}"}), 403
 
-            if perm:
-                if not m.__dict__.get(f"perm_{perm}"):
-                    return jsonify({"error":f"Permission `{perm}` required"}), 403
+            if perms:
+                for perm in perms:
+                    if not m.__dict__.get(f"perm_{perm}") and not m.perm_full:
+                        return jsonify({"error":f"Permission `{perm}` required"}), 403
 
 
             if v.is_banned and not v.unban_utc:
@@ -422,7 +427,7 @@ def api(*scopes, no_ban=False):
 
         def wrapper(*args, **kwargs):
 
-            if request.path.startswith('/api/v1'):
+            if request.path.startswith(('/api/v1','/api/v2')):
 
                 v = kwargs.get('v')
                 client = kwargs.get('c')

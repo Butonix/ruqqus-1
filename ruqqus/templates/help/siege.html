@@ -56,7 +56,9 @@ Additionally, no current Guildmaster (or no Guildmaster above you, if you are a 
 
 Guildmasters who are permanently banned, or who have deactivated their Ruqqus account, will always count as inactive, regardless of actual activity.
 
-Sieges against [+general](/+general), or admin-controlled Guilds such as [+Ruqqus](/+Ruqqus) or [+RuqqusPress](/+RuqqusPress), will always fail.
+Sieges against [+general](/+general), or admin-controlled Guilds such as [+Ruqqus](/+Ruqqus), [+RuqqusPress](/+RuqqusPress) or [+GuildSiege](/+GuildSiege) will always fail.
+
+Finally, you may not Siege a guild with the intention of vandalizing it or subverting its purpose. Such sieges will be reverted by Ruqqus admins.
 
 ## Siege a Guild
 
@@ -72,6 +74,8 @@ Sieges against [+general](/+general), or admin-controlled Guilds such as [+Ruqqu
   {% endif %}
   {% if v.can_siege %}
 
+    <p>If automated siege does not work, you can make a post in +SiegeGuild to request manual intervention.</p>
+
     <label>Your name:</label>
     <input class="form-control" type="text" name="username" value="{{ v.username }}" readonly="readonly">
 
@@ -86,7 +90,7 @@ Sieges against [+general](/+general), or admin-controlled Guilds such as [+Ruqqu
 
   {% elif v.is_suspended %}
 
-    <p>You have been banned from Ruqqus. You cannot siege any guilds.</p>
+    <p>You are currently suspended from Ruqqus. You cannot siege any guilds at this time.</p>
 
   {% else %}
 

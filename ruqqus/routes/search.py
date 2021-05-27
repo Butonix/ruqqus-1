@@ -6,6 +6,7 @@ import re
 from sqlalchemy import *
 
 from flask import *
+from ruqqus.classes.domains import reasons as REASONS
 from ruqqus.__main__ import app, cache
 
 
@@ -13,6 +14,7 @@ from ruqqus.__main__ import app, cache
 query_regex=re.compile("(\w+):(\S+)")
 valid_params=[
     'author',
+    'domain',
     'guild',
     'url'
 ]
@@ -37,9 +39,7 @@ def searchparse(text):
 
 
 @cache.memoize(300)
-def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
-
-    criteria = searchparse(q)
+def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 
     posts = g.db.query(Submission).options(
                 lazyload('*')
@@ -47,17 +47,16 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
                 Submission.submission_aux,
             ).join(
                 Submission.author
+            ).join(
+                Submission.board
             )
-
+    
     if 'q' in criteria:
-        posts=posts.filter(
-        SubmissionAux.title.ilike(
-            '%' +
-            criteria['q'] +
-            '%'
-            )
-        )
-
+        words=criteria['q'].split()
+        words=[SubmissionAux.title.ilike('%'+x+'%') for x in words]
+        words=tuple(words)
+        posts=posts.filter(*words)
+        
     if 'author' in criteria:
         posts=posts.filter(
                 Submission.author_id==get_user(criteria['author']).id,
@@ -68,20 +67,46 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
     if b:
         posts=posts.filter(Submission.board_id==b.id)
     elif 'guild' in criteria:
+        board=get_guild(criteria["guild"])
         posts=posts.filter(
-                Submission.board_id==get_guild(criteria['guild']).id
+                Submission.board_id==board.id,
             )
 
     if 'url' in criteria:
+        url=criteria['url']
+        url=url.replace('%','\%')
+        url=url.replace('_','\_')
         posts=posts.filter(
             SubmissionAux.url.ilike("%"+criteria['url']+"%")
             )
 
+    if 'domain' in criteria:
+        domain=criteria['domain']
 
-    posts=posts.options(
-            contains_eager(Submission.submission_aux),
-            contains_eager(Submission.author)
+        #sanitize domain by removing anything that isn't [a-z0-9.]
+        domain=domain.lower()
+        domain=re.sub("[^a-z0-9.]","", domain)
+        #escape periods
+        domain=domain.replace(".","\.")
+
+        posts=posts.filter(
+            SubmissionAux.url.op('~')(
+                "https?://([^/]*\.)?"+domain+"(/|$)"
+                )
             )
+
+            # or_(
+            #     SubmissionAux.url.ilike("https://"+domain+'/%'),
+            #     SubmissionAux.url.ilike("http://"+domain+'/%'),
+            #     SubmissionAux.url.ilike("https://"+domain),
+            #     SubmissionAux.url.ilike("http://"+domain),
+            #     SubmissionAux.url.ilike("https://%."+domain+'/%'),
+            #     SubmissionAux.url.ilike("http://%."+domain+'/%'),
+            #     SubmissionAux.url.ilike("https://%."+domain),
+            #     SubmissionAux.url.ilike("http://%."+domain)
+            #     ),
+            # not_(SubmissionAux.url.ilike("https://%/%"+domain)),
+            # not_(SubmissionAux.url.ilike("http://%/%"+domain))
 
 
     if not (v and v.over_18):
@@ -89,6 +114,9 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
     if v and v.hide_offensive:
         posts = posts.filter(Submission.is_offensive == False)
+		
+    if v and v.hide_bot:
+        posts = posts.filter(Submission.is_bot == False)
 
     if not(v and v.admin_level >= 3):
         posts = posts.filter(
@@ -122,10 +150,14 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
 
         posts = posts.filter(
             Submission.author_id.notin_(blocking),
-            Submission.author_id.notin_(blocked)
+            #Submission.author_id.notin_(blocked),
+            Board.is_banned==False,
         )
     else:
-        posts = posts.filter(Submission.post_public == True)
+        posts = posts.filter(
+            Submission.post_public == True,
+            Board.is_banned==False,
+            )
 
     if t:
         now = int(time.time())
@@ -141,10 +173,18 @@ def searchlisting(q, v=None, page=1, t="None", sort="top", b=None):
             cutoff = 0
         posts = posts.filter(Submission.created_utc >= cutoff)
 
+    posts=posts.options(
+        contains_eager(Submission.submission_aux),
+        contains_eager(Submission.author),
+        contains_eager(Submission.board)
+        )
+
     if sort == "hot":
         posts = posts.order_by(Submission.score_hot.desc())
     elif sort == "new":
         posts = posts.order_by(Submission.created_utc.desc())
+    elif sort == "old":
+        posts = posts.order_by(Submission.created_utc.asc())
     elif sort == "disputed":
         posts = posts.order_by(Submission.score_disputed.desc())
     elif sort == "top":
@@ -278,12 +318,20 @@ def search(v, search_type="posts"):
 
         # posts search
 
-        total, ids = searchlisting(query, v=v, page=page, t=t, sort=sort)
+        criteria=searchparse(query)
+        total, ids = searchlisting(criteria, v=v, page=page, t=t, sort=sort)
 
         next_exists = (len(ids) == 26)
         ids = ids[0:25]
 
         posts = get_posts(ids, v=v)
+
+        if v and v.admin_level>3 and "domain" in criteria:
+            domain=criteria['domain']
+            domain_obj=get_domain(domain)
+        else:
+            domain=None
+            domain_obj=None
 
         return {"html":lambda:render_template("search.html",
                                v=v,
@@ -293,7 +341,10 @@ def search(v, search_type="posts"):
                                listing=posts,
                                sort_method=sort,
                                time_filter=t,
-                               next_exists=next_exists
+                               next_exists=next_exists,
+                               domain=domain,
+                               domain_obj=domain_obj,
+                               reasons=REASONS
                                ),
                 "api":lambda:jsonify({"data":[x.json for x in posts]})
                 }
@@ -313,6 +364,9 @@ def search_guild(name, v, search_type="posts"):
     if not b:
         abort(404)
 
+    if b.is_banned:
+        return render_template("board_banned.html", v=v, b=b)
+
     page=max(1, int(request.args.get("page", 1)))
 
     sort=request.args.get("sort", "hot").lower()
@@ -322,7 +376,7 @@ def search_guild(name, v, search_type="posts"):
 
     #posts search
 
-    total, ids = searchlisting(query, v=v, page=page, t=t, sort=sort, b=b)
+    total, ids = searchlisting(searchparse(query), v=v, page=page, t=t, sort=sort, b=b)
 
     next_exists=(len(ids)==26)
     ids=ids[0:25]

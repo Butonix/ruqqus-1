@@ -117,39 +117,18 @@
                  <form action="/mod/{{ b.base36id }}/color" id="color-form" method="post" class="color-picker" style="line-height: 0">
                     <input type="hidden" name="formkey" value="{{ v.formkey }}">
 
-                    <input type="radio" name="color" id="purple" value="805AD5" {% if b.color == '805AD5' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-                    <label class="color-radio" for="purple"><span class="purple" style="background-color: #805AD5">
-                    {% if b.color == '805AD5' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}</span></label>
-
-                    <input type="radio" name="color" id="blue" value="2A96F3" {% if b.color == '2A96F3' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-                    <label class="color-radio" for="blue"><span class="blue" style="background-color: #2A96F3">{% if b.color == '2A96F3' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}</span></label>
-
-                    <input type="radio" name="color" id="green" value="62CA56" {% if b.color == '62CA56' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-                    <label class="color-radio" for="green"><span class="green" style="background-color: #62CA56">{% if b.color == '62CA56' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}</span></label>
-
-                    <input type="radio" name="color" id="hot-pink" value="EB4963" {% if b.color == 'EB4963' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-                    <label class="color-radio" for="hot-pink"><span class="hot-pink" style="background-color: #EB4963">{% if b.color == 'EB4963' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}</span></label>
-
-                    <input type="radio" name="color" id="orange" value="F39731" {% if b.color == 'F39731' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-                    <label class="color-radio" for="orange"><span class="orange" style="background-color: #F39731">{% if b.color == 'F39731' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}</span></label>
-
-                    <input type="radio" name="color" id="deep-blue" value="30409F" {% if b.color == '30409F' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-                    <label class="color-radio" for="deep-blue"><span class="deep-blue" style="background-color: #30409F">{% if b.color == '30409F' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}</span></label>
-
-                    <input type="radio" name="color" id="teal" value="3E98A7" {% if b.color == '3E98A7' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-                    <label class="color-radio" for="teal"><span class="teal" style="background-color: #3E98A7">{% if b.color == '3E98A7' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}</span></label>
-
-                    <input type="radio" name="color" id="red" value="E4432D" {% if b.color == 'E4432D' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-                    <label class="color-radio" for="red"><span class="red" style="background-color: #E4432D">{% if b.color == 'E4432D' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}</span></label>
-
-                    <input type="radio" name="color" id="blurple" value="7B9AE4" {% if b.color == '7B9AE4' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-                    <label class="color-radio" for="blurple"><span class="blurple" style="background-color: #7B9AE4">{% if b.color == '7B9AE4' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}</span></label>
-
-                    <input type="radio" name="color" id="pink" value="EC72DE" {% if b.color == 'EC72DE' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-                    <label class="color-radio" for="pink"><span class="pink" style="background-color: #EC72DE">{% if b.color == 'EC72DE' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}</span></label>
-
-                    <input type="radio" name="color" id="gray" value="7F8FA6" {% if b.color == '7F8FA6' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-                    <label class="color-radio" for="gray"><span class="gray" style="background-color: #7F8FA6">{% if b.color == '7F8FA6' %}<i class="fas fa-check text-white"></i>{% else %}&nbsp;{% endif %}</span></label>
+                    {% for color in [('SITE_COLOR' | app_config | lower),'2a96f3','62ca56','eb4963','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6'] %}
+                    <input type="radio" name="color" id="color-{{ color }}" value="{{ color }}" {% if b.color == color %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+                    <label class="color-radio" for="color-{{ color }}">
+                      <span style="background-color: #{{ color }}">
+                      {% if b.color.lower() == color %}
+                        <i class="fas fa-check text-white"></i>
+                      {% else %}
+                        &nbsp;
+                      {% endif %}
+                      </span>
+                    </label>
+                    {% endfor %}
 
                 </form>
 

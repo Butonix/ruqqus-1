@@ -1,3 +1,10 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.5
+-- Dumped by pg_dump version 12.3
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -9,140 +16,249 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-SET default_tablespace = '';
+--
+-- Data for Name: badge_defs; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO public.badge_defs VALUES (3, 'Code Contributor', 'Contributed to Ruqqus source code', 'git.png', 3, 3, NULL);
+INSERT INTO public.badge_defs VALUES (4, 'White Hat', 'Responsibly reported a security issue', 'whitehat.png', 3, 3, NULL);
+INSERT INTO public.badge_defs VALUES (7, 'Sitebreaker', 'Inadvertantly broke Ruqqus', 'sitebreaker.png', 3, 2, NULL);
+INSERT INTO public.badge_defs VALUES (8, 'Unsilenced', 'Ruqqus rejected a foreign order to take down this user''s content.', 'unsilenced.png', 3, 4, NULL);
+INSERT INTO public.badge_defs VALUES (1, 'Alpha User', 'Joined Ruqqus during open alpha', 'alpha.png', 4, 4, NULL);
+INSERT INTO public.badge_defs VALUES (6, 'Beta User', 'Joined Ruqqus during open beta', 'beta.png', 4, 3, NULL);
+INSERT INTO public.badge_defs VALUES (9, 'Unknown', 'Ruqqus rejected a foreign order to turn over this user''s information', 'unknowable.png', 3, 4, NULL);
+INSERT INTO public.badge_defs VALUES (2, 'Verified Email', 'Verified Email', 'mail.png', 1, 1, 'v.is_activated');
+INSERT INTO public.badge_defs VALUES (13, 'New User', 'Been on Ruqqus for less than 30 days', 'baby.png', 1, 1, 'v.age < 2592000');
+INSERT INTO public.badge_defs VALUES (15, 'Idea Maker', 'Had a good idea for Ruqqus which was implemented by the developers', 'idea.png', 3, 2, NULL);
+INSERT INTO public.badge_defs VALUES (16, 'Game Night Participant', 'Participated in a Ruqqus community gaming event', 'game-participant.png', 3, 2, NULL);
+INSERT INTO public.badge_defs VALUES (17, 'Game Night Finalist', 'Had a top finish in a Ruqqus community gaming event', 'game-highfinish.png', 3, 3, NULL);
+INSERT INTO public.badge_defs VALUES (18, 'Artisan', 'Contributed to Ruqqus artwork or text', 'art.png', 3, 3, NULL);
+INSERT INTO public.badge_defs VALUES (20, 'Dumpster Arsonist', 'Awarded to 8535 tenacious users who managed to sign up for Ruqqus while the servers were getting crushed', 'dumpsterfire.png', 5, 6, NULL);
+INSERT INTO public.badge_defs VALUES (19, 'Fire Extinguisher', 'Awarded to users who provide major technical expertise. Current awardees: @mutageno, @AmoralAtBest, @p2hang', 'fire.png', 5, 5, NULL);
+INSERT INTO public.badge_defs VALUES (25, 'Lab Rat', 'Helped test features in development', 'labrat.png', 3, 3, NULL);
+INSERT INTO public.badge_defs VALUES (21, 'Bronze Patron', 'Contributed at least $1/month', 'patreon-1.png', 4, 1, NULL);
+INSERT INTO public.badge_defs VALUES (22, 'Silver Patron', 'Contributed at least $5/month', 'patreon-2.png', 4, 2, NULL);
+INSERT INTO public.badge_defs VALUES (23, 'Gold Patron', 'Contributed at least $20/month', 'patreon-3.png', 4, 3, NULL);
+INSERT INTO public.badge_defs VALUES (24, 'Diamond Patron', 'Contributed at least $50/month', 'patreon-4.png', 4, 4, NULL);
+INSERT INTO public.badge_defs VALUES (58, 'Diamond Recruiter', 'Recruited 1000 friends to join Ruqqus', 'recruit-1000.png', 1, 4, 'v.referral_count >= 1000');
+INSERT INTO public.badge_defs VALUES (10, 'Bronze Recruiter', 'Recruited 1 friend to join Ruqqus', 'recruit-1.png', 1, 1, 'v.referral_count>=1 and v.referral_count<9');
+INSERT INTO public.badge_defs VALUES (11, 'Silver Recruiter', 'Recruited 10 friends to join Ruqqus', 'recruit-10.png', 1, 2, 'v.referral_count>=10 and v.referral_count <= 99');
+INSERT INTO public.badge_defs VALUES (12, 'Gold Recruiter', 'Recruited 100 friends to join Ruqqus', 'recruit-100.png', 1, 3, 'v.referral_count>=100 and v.referral_count <=999');
+INSERT INTO public.badge_defs VALUES (14, 'Charter Supporter', 'Financially supported Ruqqus during start-up', 'charter.png', 4, 4, NULL);
+INSERT INTO public.badge_defs VALUES (59, 'One Year', 'On Ruqqus for one year', 'year-1.png', 1, 5, 'v.age_string=="1 year ago"');
 
 
-SET default_table_access_method = heap;
+--
+-- Data for Name: categories; Type: TABLE DATA; Schema: public; Owner: -
+--
 
--- Insert test user (username = "ruqqie", password = "password")
-INSERT INTO public.users (id, username, email, passhash, created_utc, creation_ip, tos_agreed_utc, login_nonce, admin_level, has_banner, has_profile, is_nsfw, profile_nonce, banner_nonce )
-VALUES (NEXTVAL('public.users_id_seq'), 'ruqqie', 'ruqqie@ruqqus.com', 'pbkdf2:sha512:150000$vmPzuBFj$24cde8a6305b7c528b0428b1e87f256c65741bb035b4356549c13e745cc0581701431d5a2297d98501fcf20367791b4334dcd19cf063a6e60195abe8214f91e8',1592672337, '127.0.0.1', 1592672337, 1, 4, 'false', 'false', 'false', 0, 0);
-
-INSERT INTO public.boards(name, is_banned, created_utc, description, description_html, creator_id, color, has_banner, banner_nonce, has_profile, profile_nonce, color_nonce, stored_subscriber_count, subcat_id) VALUES('general', 'false', 1592984412, 'board description', '<p>general description</p>+', 1, '805ad5', 'false', 0, 'false', 0, 0, 0, 1);
-INSERT INTO public.boards(name, is_banned, created_utc, description, description_html, creator_id, color, has_banner, banner_nonce, has_profile, profile_nonce, color_nonce, stored_subscriber_count, subcat_id) VALUES('ruqqus', 'false', 1592984412, 'board description', '<p>ruqqus description</p>+', 1, '805ad5', 'false', 0, 'false', 0, 0, 0, 1);
-INSERT INTO public.categories(name, id, description, color, is_nsfw, visible, icon) VALUES('Finance', 1, 'the /biz/', '805ad5', False, 'true',  'fa-btc');
-INSERT INTO public.subcategories(name, id, cat_id, description, _visible) VALUES('CryptoCurrency', 1, 1, 'ANCAPS ONLY', 'true');
-
-COPY public.badge_defs (id, name, description, icon, kind, rank, qualification_expr) FROM stdin;
-3	Code Contributor	Contributed to Ruqqus source code	git.png	3	3	\N
-4	White Hat	Responsibly reported a security issue	whitehat.png	3	3	\N
-7	Sitebreaker	Inadvertently broke Ruqqus	sitebreaker.png	3	2	\N
-8	Unsilenced	Ruqqus rejected a foreign order to take down this user's content.	unsilenced.png	3	4	\N
-1	Alpha User	Joined Ruqqus during open alpha	alpha.png	4	4	\N
-6	Beta User	Joined Ruqqus during open beta	beta.png	4	3	\N
-9	Unknown	Ruqqus rejected a foreign order to turn over this user's information	unknowable.png	3	4	\N
-10	Recruiter	Recruited 1 friend to join Ruqqus	recruit-1.png	1	1	v.referral_count>=1 and v.referral_count<9
-11	Recruiter	Recruited 10 friends to join Ruqqus	recruit-10.png	1	2	v.referral_count>=10 and v.referral_count <= 99
-12	Recruiter	Recruited 100 friends to join Ruqqus	recruit-100.png	1	3	v.referral_count>=100
-2	Verified Email	Verified Email	mail.png	1	1	v.is_activated
-13	New User	Been on Ruqqus for less than 30 days	baby.png	1	1	v.age < 2592000
-15	Idea Maker	Had a good idea for Ruqqus which was implemented by the developers	idea.png	3	2	\N
-16	Game Night Participant	Participated in a Ruqqus community gaming event	game-participant.png	3	2	\N
-17	Game Night Finalist	Had a top finish in a Ruqqus community gaming event	game-highfinish.png	3	3	\N
-18	Artisan	Contributed to Ruqqus artwork or text	art.png	3	3	\N
-14	Charter Supporter	Financially supported Ruqqus during start-up	charter.png	4	4	\N
-19	Fire Extinguisher	Awarded to @mutageno and @AmoralAtBest for contributing highly advanced technical experience and wisdom during scale-up operations resulting from the flood of new users.	fire.png	5	5	\N
-20	Dumpster Arsonist	Awarded to 8535 tenacious users who managed to sign up for Ruqqus while the servers were getting crushed	dumpsterfire.png	5	6	\N
-\.
+INSERT INTO public.categories VALUES (1, '805ad5', true, 'Arts', '', 'fa-palette', false);
+INSERT INTO public.categories VALUES (2, '805ad5', true, 'Business', '', 'fa-chart-line', false);
+INSERT INTO public.categories VALUES (3, '805ad5', true, 'Culture', '', 'fa-users', false);
+INSERT INTO public.categories VALUES (4, '805ad5', true, 'Discussion', '', 'fa-podium', false);
+INSERT INTO public.categories VALUES (5, '805ad5', true, 'Entertainment', '', 'fa-theater-masks', false);
+INSERT INTO public.categories VALUES (6, '805ad5', true, 'Gaming', '', 'fa-alien-monster', false);
+INSERT INTO public.categories VALUES (8, '805ad5', true, 'Health', '', 'fa-heart', false);
+INSERT INTO public.categories VALUES (9, '805ad5', true, 'Lifestyle', '', 'fa-tshirt', false);
+INSERT INTO public.categories VALUES (10, '805ad5', true, 'Memes', '', 'fa-grin', false);
+INSERT INTO public.categories VALUES (11, '805ad5', true, 'News', '', 'fa-newspaper', false);
+INSERT INTO public.categories VALUES (13, '805ad5', true, 'Science', '', 'fa-flask', false);
+INSERT INTO public.categories VALUES (14, '805ad5', true, 'Sports', '', 'fa-baseball-ball', false);
+INSERT INTO public.categories VALUES (15, '805ad5', true, 'Technology', '', 'fa-microchip', false);
+INSERT INTO public.categories VALUES (7, '805ad5', true, 'Hobbies', '', 'fa-wrench', false);
+INSERT INTO public.categories VALUES (12, '805ad5', true, 'Politics', '', 'fa-university', false);
 
 
-COPY public.titles (id, is_before, text, qualification_expr, requirement_string, color, kind, background_color_1, background_color_2, gradient_angle, box_shadow_color, text_shadow_color) FROM stdin;
-9	f	, Guildmaker	v.boards_created.first()	Create your first Guild	aa8855	1	\N	\N	0	\N	\N
-10	f	, Guildbuilder	v.boards_created.filter(Board.subscriber_count>=10).first()	A Guild you created grows past 10 members.	aa8855	1	\N	\N	0	\N	\N
-11	f	, Guildsmith	v.boards_created.filter(Board.subscriber_count>=100).first()	A Guild you created grows past 100 members.	aa8855	1	\N	\N	0	\N	\N
-13	f	, Arch Guildmaster	v.boards_created.filter(Board.subscriber_count>=10000).first()	A Guild you created grows past 10,000 members.	aa8855	1	\N	\N	0	\N	\N
-27	f	, the Innovative	v.has_badge(15)	Had a good idea for Ruqqus	603abb	1	\N	\N	0	\N	\N
-22	f	 the Likeable	v.follower_count>=10	Have at least 10 subscribers	5555dd	1	\N	\N	0	\N	\N
-23	f	 the Popular	v.follower_count>=100	Have at least 100 subscribers	5555dd	1	\N	\N	0	\N	\N
-16	f	 the Spymaster	v.has_badge(4)	Responsibly report a security issue to us	666666	3	\N	\N	0	\N	\N
-8	f	, the Invited	v.referred_by	Joined Ruqqus from another user's referral	55aa55	4	\N	\N	0	\N	\N
-1	f	, Novice Recruiter	v.referral_count>=1	Refer 1 friend to join Ruqqus.	bb00bb	1	\N	\N	0	\N	\N
-28	f	 the Gamer	v.has_badge(16)	Participate in Ruqqus gaming night	bb00bb	1	\N	\N	0	\N	\N
-29	f	 [Level 1337]	v.has_badge(17)	Earn a top finish in a Ruqqus gaming night	aaaa66	1	\N	\N	0	\N	\N
-4	f	, Breaker of Ruqqus	v.has_badge(7)	Inadvertently break Ruqqus	dd5555	3	\N	\N	0	\N	\N
-2	f	, Expert Recruiter	v.referral_count>=10	Refer 10 friends to join Ruqqus.	bb00bb	1	\N	\N	0	\N	\N
-17	f	, the Unsilenced	v.has_badge(8)	We rejected a foreign order to take down your content	666666	3	\N	\N	0	\N	\N
-3	f	, Master Recruiter	v.referral_count>=100	Refer 100 friends to join Ruqqus.	bb00bb	1	\N	\N	0	\N	\N
-5	f	 the Codesmith	v.has_badge(3)	Make a contribution to the Ruqqus codebase	5555dd	3	\N	\N	0	\N	\N
-6	f	, Early Adopter	v.has_badge(6)	Joined during open beta	aaaa22	4	\N	\N	0	\N	\N
-7	f	, Very Early Adopter	v.has_badge(1)	Joined during open alpha	5555ff	4	\N	\N	0	\N	\N
-12	f	, Guildmaster	v.boards_created.filter(Board.subscriber_count>=1000).first()	A Guild you created grows past 1,000 members.	aa8855	1	\N	\N	0	\N	\N
-21	f	 the Friendly	v.follower_count>=1	Have at least 1 subscriber	5555dd	1	\N	\N	0	\N	\N
-24	f	 the Influential	v.follower_count>=1000	Have at least 1,000 subscribers	5555dd	1	\N	\N	0	\N	\N
-25	f	, the Famous	v.follower_count>=10000	Have at least 10,000 subscribers	5555dd	1	\N	\N	0	\N	\N
-26	f	 the Generous	v.has_badge(14)	Financially supported Ruqqus during start-up	bb00bb	4	\N	\N	0	\N	\N
-18	f	, the Unknown	v.has_badge(9)	We rejected a foreign order for your user information	666666	3	\N	\N	0	\N	\N
-20	f	 the Hot	v.submissions.filter(Submission.score>=100).first()	Get at least 100 Reputation from a single post.	dd5555	1	\N	\N	0	\N	\N
-19	f	, Bane of Tyrants	v.has_badge(8) and v.has_badge(9)	We rejected foreign orders for your information and to take down your content.	666666	3	\N	\N	0	\N	\N
-14	f	, Guildlord	v.boards_created.filter(Board.subscriber_count>=100000).first()	A Guild you created grows past 100,000 members.	aa8855	1	\N	\N	0	\N	\N
-15	f	, Ultimate Guildlord	v.boards_created.filter(Board.subscriber_count>=1000000).first()	A Guild you created grows past 1,000,000 members.	aa8855	1	\N	\N	0	\N	\N
-32	f	, Bronze Patron	v.patreon_pledge_cents>=100 and v.patreon_pledge_cents<500	Contribute at least $1/month on Patreon	aa8855	2	\N	\N	0	\N	\N
-30	f	 the Artisan	v.has_badge(18)	Made a contribution to Ruqqus text or art.	5555dd	3	\N	\N	0	\N	\N
-34	f	Gold Patron	v.patreon_pledge_cents>=2000 and v.patreon_pledge_cents<5000	Contribute at least $20/month on Patreon	502e0e	2	ce9632	f7ce68	5	216, 178, 84	240, 188, 120
-35	f	Diamond Patron	v.patreon_pledge_cents>=5000	Contribute at least $50/month on Patreon	2a4042	2	54c0c0	89e5ee	10	88, 195, 199	191, 220, 216
-31	f	 the Dumpster Arsonist	v.has_badge(20)	Joined Ruqqus despite the flood of users crashing the site	885588	4	\N	\N	0	\N	\N
-33	f	Silver Patron	v.patreon_pledge_cents>=500 and v.patreon_pledge_cents<2000	Contribute at least $5/month on Patreon	30363c	2	899caa	c6d1dc	4	\N	\N
-\.
+--
+-- Data for Name: images; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO public.images VALUES (10, 'SD', 'Mount Rushmore, South Dakota', 1);
+INSERT INTO public.images VALUES (11, 'ME', 'Acadia National Park, Maine', 1);
+INSERT INTO public.images VALUES (14, 'UT', 'Arches National Park, Utah', 1);
+INSERT INTO public.images VALUES (15, 'NV', 'Las Vegas, NV', 1);
+INSERT INTO public.images VALUES (12, 'NY', 'Freedom Tower, New York', 1);
+INSERT INTO public.images VALUES (13, 'SC', 'The Peachoid, South Carolina', 1);
+INSERT INTO public.images VALUES (16, 'NH', 'Kancamangus Highway, New Hampshire', 2);
+INSERT INTO public.images VALUES (17, 'FL', 'Everglades, Florida', 1);
+INSERT INTO public.images VALUES (18, 'MT', 'Glacier National Park, Montana', 1);
+INSERT INTO public.images VALUES (19, 'WY', 'Jackson Hole Valley, Wyoming', 1);
+INSERT INTO public.images VALUES (2, 'AK', 'Mount Denali, Alaska', 1);
+INSERT INTO public.images VALUES (3, 'AZ', 'Horseshoe Bend, Arizona', 1);
+INSERT INTO public.images VALUES (4, 'CA', 'Redwood National Forest, California', 1);
+INSERT INTO public.images VALUES (5, 'DC', 'Lincoln Memorial, Washington DC', 1);
+INSERT INTO public.images VALUES (6, 'MA', 'USS Constitution, Massachusetts', 1);
+INSERT INTO public.images VALUES (7, 'NE', 'Downtown Omaha, Nebraska', 1);
+INSERT INTO public.images VALUES (9, 'OK', 'Gaylord Stadium, Oklahoma', 1);
 
 
-COPY public.submissions (id, upvotes, downvotes, author_id, created_utc, is_banned, over_18, distinguish_level, created_str, stickied, board_id, is_deleted, domain_ref, is_approved, approved_utc, original_board_id, edited_utc, creation_ip, mod_approved, is_image, has_thumb, accepted_utc, post_public, score_hot, score_top, score_activity, score_disputed, is_offensive, is_pinned, is_nsfl, repost_id, score_best) FROM stdin;
-99999991	10	0	1	1611022409	f	f	0	01:17 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-99999993	10	0	1	1611022409	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-99999994	10	0	1	1611022409	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-99999995	10	0	1	1611022409	f	f	0	01:18 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-99999996	10	0	1	1611022409	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-99999997	10	0	1	1611022409	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-99999998	10	0	1	1611022409	f	f	0	01:19 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-99999999	10	0	1	1611022409	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999910	10	0	1	1611022409	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999911	10	0	1	1611022409	f	f	0	01:20 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999912	10	0	1	1611022409	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999913	10	0	1	1611022409	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999914	10	0	1	1611022409	f	f	0	01:21 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999915	10	0	1	1611022409	f	f	0	01:22 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999916	10	0	1	1611022409	f	f	0	01:22 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	3	0
-99999992	10	0	1	1611022409	f	t	0	01:17 AM on 22 Jul 2020	f	2	f	\N	0	0	2	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999917	10	0	1	1611022409	f	t	0	01:23 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999918	10	0	1	1611022409	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999919	10	0	1	1611022409	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999920	10	0	1	1611022409	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999921	10	0	1	1611022409	f	f	0	01:24 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999922	10	0	1	1611022409	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999923	10	0	1	1611022409	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999924	10	0	1	1611022409	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999925	10	0	1	1611022409	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-999999926	10	0	1	1611022409	f	f	0	01:25 AM on 22 Jul 2020	f	1	f	\N	0	0	1	0	172.27.0.1	\N	f	f	0	t	0	1	0	0	f	f	f	0	0
-\.
+--
+-- Data for Name: subcategories; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO public.subcategories VALUES (85, 2, 'Startups', NULL, NULL);
+INSERT INTO public.subcategories VALUES (86, 3, 'Architecture', NULL, NULL);
+INSERT INTO public.subcategories VALUES (109, 13, 'Space', NULL, NULL);
+INSERT INTO public.subcategories VALUES (87, 3, 'Philosophy', NULL, NULL);
+INSERT INTO public.subcategories VALUES (88, 3, 'Cuisine', NULL, NULL);
+INSERT INTO public.subcategories VALUES (9, 1, 'Photography', '', NULL);
+INSERT INTO public.subcategories VALUES (10, 1, 'Music', '', NULL);
+INSERT INTO public.subcategories VALUES (11, 2, 'Finance', '', NULL);
+INSERT INTO public.subcategories VALUES (43, 10, 'Political', '', NULL);
+INSERT INTO public.subcategories VALUES (44, 10, 'Offensive', '', NULL);
+INSERT INTO public.subcategories VALUES (89, 5, 'Influencers', NULL, NULL);
+INSERT INTO public.subcategories VALUES (23, 5, 'News', '', NULL);
+INSERT INTO public.subcategories VALUES (67, 14, 'Combat', '', NULL);
+INSERT INTO public.subcategories VALUES (90, 14, 'Individual', NULL, NULL);
+INSERT INTO public.subcategories VALUES (91, 14, 'Team', NULL, NULL);
+INSERT INTO public.subcategories VALUES (92, 14, 'Extreme', NULL, NULL);
+INSERT INTO public.subcategories VALUES (93, 14, 'Partner', NULL, NULL);
+INSERT INTO public.subcategories VALUES (95, 15, 'Computers', NULL, NULL);
+INSERT INTO public.subcategories VALUES (96, 15, 'Mechanics', NULL, NULL);
+INSERT INTO public.subcategories VALUES (75, 15, 'Help', '', NULL);
+INSERT INTO public.subcategories VALUES (74, 15, 'News', '', NULL);
+INSERT INTO public.subcategories VALUES (97, 15, 'Engineering', NULL, NULL);
+INSERT INTO public.subcategories VALUES (60, 13, 'News', '', NULL);
+INSERT INTO public.subcategories VALUES (98, 13, 'Hard Sciences', NULL, NULL);
+INSERT INTO public.subcategories VALUES (99, 13, 'Soft Sciences', NULL, NULL);
+INSERT INTO public.subcategories VALUES (100, 13, 'Natural Sciences', NULL, NULL);
+INSERT INTO public.subcategories VALUES (101, 13, 'Mathematics', NULL, NULL);
+INSERT INTO public.subcategories VALUES (55, 12, 'News', '', NULL);
+INSERT INTO public.subcategories VALUES (33, 7, 'Skills', '', NULL);
+INSERT INTO public.subcategories VALUES (102, 9, 'Career', NULL, NULL);
+INSERT INTO public.subcategories VALUES (103, 9, 'Personal Finance', NULL, NULL);
+INSERT INTO public.subcategories VALUES (38, 9, 'Beauty', '', NULL);
+INSERT INTO public.subcategories VALUES (76, 3, 'Counter-Culture', NULL, NULL);
+INSERT INTO public.subcategories VALUES (78, 1, 'Sculpture', NULL, NULL);
+INSERT INTO public.subcategories VALUES (79, 9, 'Animals', NULL, NULL);
+INSERT INTO public.subcategories VALUES (8, 1, 'Film & TV', '', NULL);
+INSERT INTO public.subcategories VALUES (80, 1, 'Dance', NULL, NULL);
+INSERT INTO public.subcategories VALUES (81, 1, 'Literature', NULL, NULL);
+INSERT INTO public.subcategories VALUES (82, 1, 'Theater', NULL, NULL);
+INSERT INTO public.subcategories VALUES (83, 2, 'Management', NULL, NULL);
+INSERT INTO public.subcategories VALUES (84, 2, 'Product', NULL, NULL);
+INSERT INTO public.subcategories VALUES (37, 9, 'Fashion', '', NULL);
+INSERT INTO public.subcategories VALUES (104, 10, 'Wholesome', NULL, NULL);
+INSERT INTO public.subcategories VALUES (105, 8, 'Support', NULL, NULL);
+INSERT INTO public.subcategories VALUES (106, 1, 'Visual Arts', NULL, NULL);
+INSERT INTO public.subcategories VALUES (107, 6, 'Puzzle', NULL, NULL);
+INSERT INTO public.subcategories VALUES (108, 12, 'Identity Politics', NULL, NULL);
+INSERT INTO public.subcategories VALUES (13, 2, 'Entrepreneurship', '', NULL);
+INSERT INTO public.subcategories VALUES (14, 3, 'History', '', NULL);
+INSERT INTO public.subcategories VALUES (15, 3, 'Language', '', NULL);
+INSERT INTO public.subcategories VALUES (16, 3, 'Religion', '', NULL);
+INSERT INTO public.subcategories VALUES (17, 4, 'Casual Discussion', '', NULL);
+INSERT INTO public.subcategories VALUES (18, 4, 'Serious', '', NULL);
+INSERT INTO public.subcategories VALUES (19, 4, 'Drama', '', NULL);
+INSERT INTO public.subcategories VALUES (20, 4, 'Ruqqus Meta', '', NULL);
+INSERT INTO public.subcategories VALUES (21, 4, 'Q&A', '', NULL);
+INSERT INTO public.subcategories VALUES (22, 5, 'Celebrities', '', NULL);
+INSERT INTO public.subcategories VALUES (24, 5, 'Film & TV', '', NULL);
+INSERT INTO public.subcategories VALUES (25, 6, 'PC', '', NULL);
+INSERT INTO public.subcategories VALUES (26, 6, 'Console', '', NULL);
+INSERT INTO public.subcategories VALUES (27, 6, 'Tabletop', '', NULL);
+INSERT INTO public.subcategories VALUES (28, 6, 'Gaming news', '', NULL);
+INSERT INTO public.subcategories VALUES (29, 6, 'Development', '', NULL);
+INSERT INTO public.subcategories VALUES (30, 7, 'Crafts', '', NULL);
+INSERT INTO public.subcategories VALUES (31, 7, 'Outdoors', '', NULL);
+INSERT INTO public.subcategories VALUES (32, 7, 'DIY', '', NULL);
+INSERT INTO public.subcategories VALUES (34, 8, 'Medical', '', NULL);
+INSERT INTO public.subcategories VALUES (35, 8, 'Fitness', '', NULL);
+INSERT INTO public.subcategories VALUES (36, 8, 'Mental Health', '', NULL);
+INSERT INTO public.subcategories VALUES (39, 9, 'Food', '', NULL);
+INSERT INTO public.subcategories VALUES (40, 9, 'Relationships', '', NULL);
+INSERT INTO public.subcategories VALUES (45, 11, 'Local', '', NULL);
+INSERT INTO public.subcategories VALUES (46, 11, 'North America', '', NULL);
+INSERT INTO public.subcategories VALUES (47, 11, 'World', '', NULL);
+INSERT INTO public.subcategories VALUES (48, 11, 'Upbeat', '', NULL);
+INSERT INTO public.subcategories VALUES (49, 12, 'Left', '', NULL);
+INSERT INTO public.subcategories VALUES (50, 12, 'Right', '', NULL);
+INSERT INTO public.subcategories VALUES (51, 12, 'Authoritarian', '', NULL);
+INSERT INTO public.subcategories VALUES (52, 12, 'Libertarian', '', NULL);
+INSERT INTO public.subcategories VALUES (53, 12, 'Activism', '', NULL);
+INSERT INTO public.subcategories VALUES (69, 15, 'Gadgets', '', NULL);
+INSERT INTO public.subcategories VALUES (70, 15, 'Programming', '', NULL);
+INSERT INTO public.subcategories VALUES (71, 15, 'Hardware', '', NULL);
+INSERT INTO public.subcategories VALUES (72, 15, 'Software', '', NULL);
+INSERT INTO public.subcategories VALUES (41, 10, 'Casual', '', NULL);
+INSERT INTO public.subcategories VALUES (42, 10, 'Dank', '', NULL);
 
 
-COPY public.submissions_aux (id, title, url, body, body_html, embed_url, ban_reason, key_id) FROM stdin;
-99999991	test 1		test 1	<p>test 1</p>\n			99999991
-99999992	test 2		test 2	<p>test 2</p>\n			99999992
-99999993	test 3	https://ruqqus.com	test 3	<p>test 3</p>\n			99999993
-99999994	test 4		test 4	<p>test 4</p>\n			99999994
-99999995	test 5		test 5	<p>test 5</p>\n			99999995
-99999996	test 6		test 6	<p>test 6</p>\n			99999996
-99999997	test 7		test 7	<p>test 7</p>\n			99999997
-99999998	test 8		test 8	<p>test 8</p>\n			99999998
-99999999	test 9		test 9	<p>test 9</p>\n			99999999
-999999910	test 10		test 10	<p>test 10</p>\n			999999910
-999999911	test 11		test 11	<p>test 11</p>\n			999999911
-999999912	test 12		test 12	<p>test 12</p>\n			999999912
-999999913	test 13		test 13	<p>test 13</p>\n			999999913
-999999914	test 14		test 14	<p>test 14</p>\n			999999914
-999999915	test 15		test 15	<p>test 15</p>\n			999999915
-999999916	test 16	https://ruqqus.com					999999916
-999999917	test 17		test 17	<p>test 17</p>\n			999999917
-999999918	test 18		test 18	<p>test 18</p>\n			999999918
-999999919	test 19		test 19	<p>test 19</p>\n			999999919
-999999920	test 20	https://ruqqus.com	test 20	<p>test 20</p>\n			999999920
-999999921	test 21		test 21	<p>test 21</p>\n			999999921
-999999922	test 22		test 22	<p>test 22</p>\n			999999922
-999999923	test 23		test 23	<p>test 23</p>\n			999999923
-999999924	test 24		test 24	<p>test 24</p>\n			999999924
-999999925	test 25		test 25	<p>test 25</p>\n			999999925
-999999926	test 26		test 26	<p>test 26</p>\n			999999926
-\.
+--
+-- Data for Name: titles; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO public.titles VALUES (9, false, ', Guildmaker', 'v.boards_created.first()', 'Create your first Guild', 'aa8855', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (27, false, ', the Innovative', 'v.has_badge(15)', 'Had a good idea for Ruqqus', '603abb', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (22, false, ' the Likeable', 'v.follower_count>=10', 'Have at least 10 subscribers', '5555dd', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (23, false, ' the Popular', 'v.follower_count>=100', 'Have at least 100 subscribers', '5555dd', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (16, false, ' the Spymaster', 'v.has_badge(4)', 'Responsibly report a security issue to us', '666666', 3, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (8, false, ', the Invited', 'v.referred_by', 'Joined Ruqqus from another user''s referral', '55aa55', 4, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (28, false, ' the Gamer', 'v.has_badge(16)', 'Participate in Ruqqus gaming night', 'bb00bb', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (29, false, ' [Level 1337]', 'v.has_badge(17)', 'Earn a top finish in a Ruqqus gaming night', 'aaaa66', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (4, false, ', Breaker of Ruqqus', 'v.has_badge(7)', 'Inadvertently break Ruqqus', 'dd5555', 3, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (17, false, ', the Unsilenced', 'v.has_badge(8)', 'We rejected a foreign order to take down your content', '666666', 3, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (5, false, ' the Codesmith', 'v.has_badge(3)', 'Make a contribution to the Ruqqus codebase', '5555dd', 3, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (6, false, ', Early Adopter', 'v.has_badge(6)', 'Joined during open beta', 'aaaa22', 4, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (7, false, ', Very Early Adopter', 'v.has_badge(1)', 'Joined during open alpha', '5555ff', 4, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (21, false, ' the Friendly', 'v.follower_count>=1', 'Have at least 1 subscriber', '5555dd', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (24, false, ' the Influential', 'v.follower_count>=1000', 'Have at least 1,000 subscribers', '5555dd', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (25, false, ', the Famous', 'v.follower_count>=10000', 'Have at least 10,000 subscribers', '5555dd', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (26, false, ' the Generous', 'v.has_badge(14)', 'Financially supported Ruqqus during start-up', 'bb00bb', 4, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (18, false, ', the Unknown', 'v.has_badge(9)', 'We rejected a foreign order for your user information', '666666', 3, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (19, false, ', Bane of Tyrants', 'v.has_badge(8) and v.has_badge(9)', 'We rejected foreign orders for your information and to take down your content.', '666666', 3, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (30, false, ' the Artisan', 'v.has_badge(18)', 'Made a contribution to Ruqqus text or art.', '5555dd', 3, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (20, false, ' the Hot', 'v.submissions.filter(Submission.score_top>=100).count()', 'Get at least 100 Reputation from a single post.', 'dd5555', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (31, false, ' the Dumpster Arsonist', 'v.has_badge(20)', 'Joined Ruqqus despite the flood of users crashing the site', '885588', 4, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (40, false, ' the Test Dummy', 'v.has_badge(25)', 'Help test features in development', '5555dd', 3, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.titles VALUES (10, false, ', Guildbuilder', 'v.boards_created.filter(Board.stored_subscriber_count>=10).first()', 'A Guild you created grows past 10 members.', 'aa8855', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (11, false, ', Guildsmith', 'v.boards_created.filter(Board.stored_subscriber_count>=100).first()', 'A Guild you created grows past 100 members.', 'aa8855', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (12, false, ', Guildmaster', 'v.boards_created.filter(Board.stored_subscriber_count>=1000).first()', 'A Guild you created grows past 1,000 members.', 'aa8855', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (13, false, ', Arch Guildmaster', 'v.boards_created.filter(Board.stored_subscriber_count>=10000).first()', 'A Guild you created grows past 10,000 members.', 'aa8855', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (14, false, ', Guildlord', 'v.boards_created.filter(Board.stored_subscriber_count>=100000).first()', 'A Guild you created grows past 100,000 members.', 'aa8855', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (15, false, ', Ultimate Guildlord', 'v.boards_created.filter(Board.stored_subscriber_count>=1000000).first()', 'A Guild you created grows past 1,000,000 members.', 'aa8855', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (73, false, ', Diamond Recruiter', 'v.referral_count>=1000', 'Refer 1000 friends to join Ruqqus', 'bb00bb', 1, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.titles VALUES (1, false, ', Bronze Recruiter', 'v.referral_count>=1', 'Refer 1 friend to join Ruqqus.', 'bb00bb', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (2, false, ', Silver Recruiter', 'v.referral_count>=10', 'Refer 10 friends to join Ruqqus.', 'bb00bb', 1, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.titles VALUES (3, false, ', Gold Recruiter', 'v.referral_count>=100', 'Refer 100 friends to join Ruqqus.', 'bb00bb', 1, NULL, NULL, 0, NULL, NULL);
 
 
+--
+-- Name: badge_list_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.badge_list_id_seq', 59, true);
+
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.categories_id_seq', 15, true);
+
+
+--
+-- Name: images_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.images_id_seq', 19, true);
+
+
+--
+-- Name: subcategories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.subcategories_id_seq', 109, true);
+
+
+--
+-- Name: titles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.titles_id_seq', 73, true);
+
+
+--
+-- PostgreSQL database dump complete
+--
 

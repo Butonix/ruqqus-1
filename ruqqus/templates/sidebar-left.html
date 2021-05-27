@@ -6,7 +6,7 @@
       <div class="mb-4">
         <div class="sidebar-collapsed-hidden collapsed-toggle-parent">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="text-small font-weight-bold text-muted text-uppercase" style="letter-spacing: 0.025rem;">Ruqqus Feeds</div>
+            <div class="text-small font-weight-bold text-muted text-uppercase" style="letter-spacing: 0.025rem;">{{ "SITE_NAME" | app_config }} Feeds</div>
             <button class="btn" data-toggle="tooltip" data-placement="right" title="Collapse" onclick="toggle_sidebar_collapse();post('/settings/toggle_collapse');"><span class="collapsed-toggle"></span></button>
           </div>
         </div>
@@ -14,58 +14,69 @@
           <button class="btn mb-3" onclick="toggle_sidebar_expand();post('/settings/toggle_collapse');"><span class="collapsed-toggle"></span></button>
         </div>
         <div class="sidebar-collapsed-visible">
-          <i class="fas fa-newspaper text-muted mb-3" style="font-size: 1rem;"></i>
+          <span class="fa-stack">
+            <i class="fas fa-newspaper text-muted mb-3" style="font-size: 1rem;"></i>
+          </span>
         </div>
         <ul class="no-bullets guild-recommendations-list pl-0 sidebar-collapsed-hidden">
           <li class="guild-recommendations-item">
             <a href="/">
               <div class="d-flex">
-                <div>
-                  <img src="/assets/images/icons/house-alt.png" class="profile-pic profile-pic-30"></div>
-                  <div class="my-auto ml-2">
-                    <div class="text-black font-weight-normal">Home</div>
-                  </div>
-                </div>
+                <span class="fa-stack">
+                  <i class="fa-2x fas fa-circle text-purple fa-stack-2x" style=""></i>
+                  <i class="fa-stack-1x fas fa-home fa-inverse d-inline-block text-white"></i>
+                </span>
+                <span class="my-auto ml-2 text-black font-weight-normal">Home</span>
+              </div>
               </a>
             </li>
             <li class="guild-recommendations-item">
               <a href="/all?sort=new">
                 <div class="d-flex">
-                  <div>
-                    <img src="/assets/images/icons/planet.png" class="profile-pic profile-pic-30"></div>
-                    <div class="my-auto ml-2">
-                      <div class="text-black font-weight-normal">All</div>
-                    </div>
-                  </div>
-                </a>
+                  <span class="fa-stack">
+                    <i class="fa-2x fas fa-circle text-purple fa-stack-2x" style=""></i>
+                    <i class="fa-stack-1x fas fa-globe-americas fa-inverse d-inline-block text-white"></i>
+                  </span>
+                  <span class="my-auto ml-2 text-black font-weight-normal">All</span>
+                </div>
+              </a>
+            </li>
+            <li class="guild-recommendations-item">
+              <a href="/all/?sort=hot">
+                <div class="d-flex">
+                  <span class="fa-stack">
+                    <i class="fa-2x fas fa-circle text-purple fa-stack-2x" style=""></i>
+                    <i class="fa-stack-1x fas fa-fire fa-inverse d-inline-block text-white"></i>
+                  </span>
+                  <span class="my-auto ml-2 text-black font-weight-normal">Trending</span>
+                </div>
+              </a>
               </li>
-              <li class="guild-recommendations-item">
-                <a href="/all">
-                  <div class="d-flex">
-                    <div>
-                      <img src="/assets/images/icons/flame.png" class="profile-pic profile-pic-30"></div>
-                      <div class="my-auto ml-2">
-                        <div class="text-black font-weight-normal">Trending</div>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-              </ul>
+            </ul>
               <!-- Show this list when sidebar is collapsed-->
               <ul class="no-bullets guild-recommendations-list pl-0 sidebar-collapsed-visible">
                 <li class="guild-recommendations-item">
                   <a href="/">
-                    <img src="/assets/images/icons/house-alt.png" class="profile-pic profile-pic-30 transition-square">
+                    <span class="fa-stack">
+                      <i class="fa-2x fas fa-circle text-purple fa-stack-2x" style=""></i>
+                      <i class="fa-stack-1x fas fa-home fa-inverse d-inline-block text-white"></i>
+                    </span>
                   </a>
                 </li>
                 <li class="guild-recommendations-item">
                   <a href="/all?sort=new">
-                    <img src="/assets/images/icons/planet.png" class="profile-pic profile-pic-30 transition-square">
+                    <span class="fa-stack">
+                      <i class="fa-2x fas fa-circle text-purple fa-stack-2x" style=""></i>
+                      <i class="fa-stack-1x fas fa-globe-americas fa-inverse d-inline-block text-white"></i>
+                  </span>
                   </a>
                 </li>
                 <li class="guild-recommendations-item">
                   <a href="/all?sort=hot">
-                    <img src="/assets/images/icons/flame.png" class="profile-pic profile-pic-30 transition-square">
+                    <span class="fa-stack">
+                      <i class="fa-2x fas fa-circle text-purple fa-stack-2x" style=""></i>
+                      <i class="fa-stack-1x fas fa-fire fa-inverse d-inline-block text-white"></i>
+                    </span>
                   </a>
                 </li>
               </ul>
@@ -76,11 +87,13 @@
               <div class="sidebar-collapsed-hidden">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                   <div class="text-small font-weight-bold text-muted text-uppercase" style="letter-spacing: 0.025rem;">My guilds</div>
-                  <span><a href="/browse" class="btn btn-link text-small-extra font-weight-normal px-0">Discover guilds</a></span>
+                  <span><a href="/browse" class="btn btn-link text-small-extra font-weight-normal text-purple px-0">Discover guilds</a></span>
                 </div>
               </div>
               <div class="sidebar-collapsed-visible">
-                <i class="fas fa-chess-rook text-muted mb-3" style="font-size: 1rem;"></i>
+                <span class="fa-stack">
+                  <i class="fas fa-chess-rook text-muted mb-3" style="font-size: 1rem;"></i>
+                </span>
               </div>
               <ul class="no-bullets guild-recommendations-list pl-0 sidebar-collapsed-hidden">
                 {% for board in v.boards_subscribed[0:10] %}
@@ -88,7 +101,7 @@
                   <a href="{{ board.permalink }}">
                     <div class="d-flex">
                       <div>
-                        <img src="{{ board.profile_url }}" class="profile-pic profile-pic-30 mr-2">
+                        <img src="{{ board.profile_url }}" class="profile-pic profile-pic-28 ml-1 mr-2">
                       </div>
                       <div class="my-auto">
                         <div class="text-black font-weight-normal">+{{ board.name }}</div>
@@ -104,7 +117,7 @@
                 {% for board in v.boards_subscribed[0:10] %}
                 <li class="guild-recommendations-item">
                   <a href="{{ board.permalink }}">
-                    <img src="{{ board.profile_url }}" class="profile-pic profile-pic-30 transition-square">
+                    <img src="{{ board.profile_url }}" class="profile-pic profile-pic-28 transition-square">
                   </a>
                 </li>
                 {% endfor %}
@@ -129,7 +142,10 @@
               </div>
             </div>
             <div class="sidebar-collapsed-visible">
-              <i class="fas fa-crown text-warning mb-3" style="font-size: 1rem;"></i>
+              
+              <span class="fa-stack">
+                <i class="fas fa-crown text-warning mb-3" style="font-size: 1rem;"></i>
+              </span>
             </div>
             <ul class="no-bullets guild-recommendations-list pl-0 sidebar-collapsed-hidden">
               {% for board in v.boards_modded[0:10] %}
@@ -137,7 +153,7 @@
                 <a href="{{ board.permalink }}">
                   <div class="d-flex">
                     <div>
-                      <img src="{{ board.profile_url }}" class="profile-pic profile-pic-30 mr-2">
+                      <img src="{{ board.profile_url }}" class="profile-pic profile-pic-28 mr-2">
                     </div>
                     <div class="my-auto">
                       <div class="text-black font-weight-normal">+{{ board.name }}</div>
@@ -152,7 +168,7 @@
               {% for board in v.boards_modded[0:10] %}
               <li class="guild-recommendations-item">
                 <a href="{{ board.permalink }}">
-                  <img src="{{ board.profile_url }}" class="profile-pic profile-pic-30 transition-square">
+                  <img src="{{ board.profile_url }}" class="profile-pic profile-pic-28 transition-square">
                 </a>
               </li>
               {% endfor %}
@@ -167,8 +183,8 @@
             <div class="my-3" style="">
               <i class="fad fa-telescope text-purple" style="font-size:3rem"></i>
             </div>
-            <h5>Discover amazing communities across <span class="text-purple">Ruqqus</span>.</h5>
-            <p class="text-small">Create a Ruqqus account and join your favorite communities, no email address required.</p>
+            <h5>Discover amazing communities across <span class="text-purple">{{ "SITE_NAME" | app_config }}</span>.</h5>
+            <p class="text-small">Create a {{ "SITE_NAME" | app_config }} account and join your favorite communities, no email address required.</p>
             <a href="/signup" class="btn btn-purple btn-block">Sign up</a>
           </div>
         </div>
