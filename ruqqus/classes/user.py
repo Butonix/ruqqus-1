@@ -658,8 +658,7 @@ class User(Base, Stndrd, Age_times):
             .filter(Submission.is_banned == False)\
             .filter(Submission.board_id.in_(g.db.query(GuildNotificationSubscriptions.id)
                                             .filter_by(user_id=self.id))
-                    )\
-            .count()
+                    ).count()
 
 
     @property
@@ -678,14 +677,12 @@ class User(Base, Stndrd, Age_times):
     @property
     @lazy
     def guild_notifications(self):
-        return g.db.query(Submission) \
-            .filter(Submission.created_utc < self.guild_last_check_utc) \
-            .filter(Submission.deleted_utc == 0) \
+        return g.db.query(Submission).filter(Submission.created_utc < self.guild_last_check_utc)\
+            .filter(Submission.deleted_utc == 0)\
             .filter(Submission.is_banned == False)\
             .filter(Submission.board_id.in_(g.db.query(GuildNotificationSubscriptions.id)
                                             .filter_by(user_id=self.id))
-                    )\
-            .all()
+                    ).all()
 
     @property
     def notifications_count(self):
