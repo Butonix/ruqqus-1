@@ -460,15 +460,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @lazy
     def board(self):
         return self.post.board
-
-    @property
-    def parent_comment(self):
-        return self.__dict__.get("_parent_comment", self.__dict__.get("parent_comment"))
     
-    
-    
-    
-
 
 class Notification(Base):
 
