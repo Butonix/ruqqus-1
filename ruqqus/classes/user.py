@@ -623,8 +623,7 @@ class User(Base, Stndrd, Age_times):
             Comment.is_banned == False,
             Comment.deleted_utc == 0)
 
-        if not all_:
-            notifications = notifications.filter(Notification.read == False)
+
 
         if replies_only:
             cs=g.db.query(Comment.id).filter(Comment.author_id==self.id)
@@ -653,6 +652,9 @@ class User(Base, Stndrd, Age_times):
                         )
                     )
                 )
+
+        elif not all_:
+            notifications = notifications.filter(Notification.read == False)
 
 
         notifications = notifications.options(
