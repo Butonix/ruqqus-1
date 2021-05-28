@@ -654,7 +654,7 @@ class User(Base, Stndrd, Age_times):
                     )
                 )
         elif system_only:
-            pass #notifications=notifications.filter(Comment.author_id==1)
+            notifications=notifications.filter(Comment.author_id==1)
 
         elif not all_:
             notifications = notifications.filter(Notification.read == False)
@@ -666,6 +666,8 @@ class User(Base, Stndrd, Age_times):
 
         notifications = notifications.order_by(
             Notification.id.desc()).offset(25 * (page - 1)).limit(26)
+
+        print(notifications)
 
         output = []
         for x in notifications:
