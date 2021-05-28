@@ -39,6 +39,8 @@ def notifications(v):
     next_exists = (len(cids) == 26)
     cids = cids[0:25]
 
+    print(cids)
+
     comments = get_comments(cids, v=v, sort_type="new", load_parent=True)
 
     listing = []

@@ -679,7 +679,6 @@ class User(Base, Stndrd, Age_times):
 
         g.db.commit()
 
-        print(output)
         return output
 
     def notification_postlisting(self, page=1):
