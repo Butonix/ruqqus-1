@@ -673,6 +673,7 @@ class User(Base, Stndrd, Age_times):
 
         output = []
         for x in notifications:
+            print(x)
             x.read = True
             g.db.add(x)
             output.append(x.comment_id)
