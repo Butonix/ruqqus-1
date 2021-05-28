@@ -628,7 +628,6 @@ class User(Base, Stndrd, Age_times):
 
         if replies_only:
             cs=g.db.query(Comment.id).filter(Comment.author_id==self.id)
-            print(cs)
             ps=g.db.query(Submission.id).filter(Submission.author_id==self.id)
             notifications=notifications.filter(
                 or_(
@@ -639,6 +638,7 @@ class User(Base, Stndrd, Age_times):
                         )
                     )
                 )
+            print(notifications)
 
 
         elif mentions_only:
