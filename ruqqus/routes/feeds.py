@@ -117,7 +117,7 @@ def feeds_user(sort=None, username=None, key=None):
     return Response( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+ doc.getvalue(), mimetype="application/xml")
 
 
-@app.route('/feeds/+<guildname>/<sort>', methods=["GET"])
+#@app.route('/feeds/+<guildname>/<sort>', methods=["GET"])
 def feeds_guild(sort=None, guildname=None):
     if not guildname:
         abort(404)
