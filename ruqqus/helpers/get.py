@@ -685,7 +685,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         #     isouter=True
         ).join(
             mod,
-            and_(mod.c.board_id==Comment.original_board_id, mod.c.board_id==Submission.board_id),
+            and_(mod.c.board_id==Comment.original_board_id),
             isouter=True
         # ).options(
         #     contains_eager(Comment.post)
