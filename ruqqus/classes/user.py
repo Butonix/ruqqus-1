@@ -616,7 +616,6 @@ class User(Base, Stndrd, Age_times):
         return f"<User(username={self.username})>"
 
     def notification_commentlisting(self, page=1, all_=False, replies_only=False, mentions_only=False, system_only=False):
-        #TODO: this function will become used only @mentions
 
 
         notifications = self.notifications.join(Notification.comment).filter(
@@ -652,6 +651,7 @@ class User(Base, Stndrd, Age_times):
                 )
         elif system_only:
             notifications=notifications.filter(Comment.author_id==1)
+            print(notifications)
 
         elif not all_:
             notifications = notifications.filter(Notification.read == False)
