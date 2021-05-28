@@ -77,7 +77,7 @@ def feeds_user(sort=None, username=None, key=None):
         doc.stag("link", href=request.url_root)
 
         for post in posts:
-            print("POST IMAGE "+ str( post.is_image ))
+            #print("POST IMAGE "+ str( post.is_image ))
             board_name = f"+{post.board.name}"
             with tag("entry", ("xml:base", request.url)):
                 with tag("title", type="text"):
@@ -106,7 +106,7 @@ def feeds_user(sort=None, username=None, key=None):
                 doc.stag("category", term=board_name, label=board_name, schema=full_link("/" + board_name))
 
                 image_url = post.thumb_url or post.embed_url or post.url
-                print("IS IMAGE")
+                #print("IS IMAGE")
 
                 doc.stag("media:thumbnail", url=image_url)
 
