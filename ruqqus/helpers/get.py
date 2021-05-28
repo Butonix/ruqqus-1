@@ -631,7 +631,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
     exile=nSession.query(ModAction
         ).options(
         lazyload('*'),
-        joinedload("ModAction.board")
+        joinedload(ModAction.board)
         ).filter(
         ModAction.kind=="exile_user",
         ModAction.target_comment_id.in_(cids)
