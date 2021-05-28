@@ -669,8 +669,6 @@ class User(Base, Stndrd, Age_times):
         notifications = notifications.order_by(
             Notification.id.desc()).offset(25 * (page - 1)).limit(26)
 
-        print(notifications)
-
         output = []
         for x in notifications:
             x.read = True
