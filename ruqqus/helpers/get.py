@@ -656,7 +656,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             joinedload(Comment.comment_aux),
             joinedload(Comment.author).joinedload(User.title),
             joinedload(Comment.post).joinedload(Submission.board),
-            joinedload(Comment.post).joinedload(Submission.submission_aux)
+            Load(Submission).joinedload(Submission.submission_aux)
         ).filter(
             Comment.id.in_(cids)
         )
@@ -724,7 +724,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             joinedload(Comment.comment_aux),
             joinedload(Comment.author).joinedload(User.title),
             joinedload(Comment.post).joinedload(Submission.board),
-            joinedload(Comment.post).joinedload(Submission.submission_aux)
+            Load(Submission).joinedload(Submission.submission_aux)
         ).filter(
             Comment.id.in_(cids)
         ).join(
