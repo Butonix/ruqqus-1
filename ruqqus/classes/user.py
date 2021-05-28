@@ -627,7 +627,7 @@ class User(Base, Stndrd, Age_times):
             notifications = notifications.filter(Notification.read == False)
 
         if replies_only:
-            cs=g.db.query(Comment.id).filter(Comment.author_id==sFaself.id).as_scalar()
+            cs=g.db.query(Comment.id).filter(Comment.author_id==self.id).as_scalar()
             ps=g.db.query(Submission.id).filter(Submission.author_id==self.id).as_scalar()
             notifications=notifications.filter(
                 or_(
