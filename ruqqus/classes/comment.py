@@ -40,7 +40,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     parent_submission = Column(Integer, ForeignKey("submissions.id"))
     # this column is foreignkeyed to comment(id) but we can't do that yet as
     # "comment" class isn't yet defined
-    parent_fullname = Column(Integer)
+    #parent_fullname = Column(Integer)
+
     created_utc = Column(Integer, default=0)
     edited_utc = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
