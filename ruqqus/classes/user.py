@@ -618,12 +618,12 @@ class User(Base, Stndrd, Age_times):
     def notification_commentlisting(self, page=1, all_=False, replies_only=False, mentions_only=False, system_only=False):
 
 
-        notifications = self.notifications.join(
-            Notification.comment
-            ).options(
+        notifications = self.notifications.options(
             lazyload('*'),
             joinedload(Notification.comment).lazyload('*'),
             joinedload(Notification.comment).joinedload(Comment.comment_aux)
+            ).join(
+            Notification.comment
             ).filter(
             Comment.is_banned == False,
             Comment.deleted_utc == 0)
