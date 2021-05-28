@@ -622,7 +622,7 @@ class User(Base, Stndrd, Age_times):
             Notification.comment
             ).options(
             lazyload('*'),
-            joinedload(Comment).lazyload('*'),
+            joinedload(Notification.comment).lazyload('*'),
             Load(Comment).joinedload(Comment.comment_aux)
             ).filter(
             Comment.is_banned == False,
