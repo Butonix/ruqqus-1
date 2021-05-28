@@ -545,22 +545,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, no_text=False, **kwa
             aliased(ModRelationship, alias=mod),
             aliased(ModAction, alias=exile)
         ).options(
-            lazyload('*'),
-            joinedload(Comment.comment_aux),
-            joinedload(Comment.author),
-            Load(User).lazyload('*'),
-            Load(User).joinedload(User.title),
-            joinedload(Comment.post),
-            Load(Submission).lazyload('*'),
-            Load(Submission).joinedload(Submission.submission_aux),
-            Load(Submission).joinedload(Submission.board),
-            Load(CommentVote).lazyload('*'),
-            Load(UserBlock).lazyload('*'),
-            Load(ModAction).lazyload('*'),
-            joinedload(Comment.distinguished_board),
-            joinedload(Comment.awards),
-            Load(Board).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+            joinedload(Comment.author).joinedload(User.title)
         )
         
         if no_text:
@@ -667,27 +652,12 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             blocked.c.id,
             aliased(ModAction, alias=exile),
             aliased(ModRelationship, alias=mod)
-        ).options(
-            lazyload('*'),
-            joinedload(Comment.comment_aux),
-            joinedload(Comment.author),
-            joinedload(Comment.post),
-            Load(User).lazyload('*'),
-            Load(User).joinedload(User.title),
-            Load(Submission).lazyload('*'),
-            Load(Submission).joinedload(Submission.submission_aux),
-            Load(Submission).joinedload(Submission.board),
-            Load(CommentVote).lazyload('*'),
-            Load(UserBlock).lazyload('*'),
-            Load(ModAction).lazyload('*'),
-            Load(ModRelationship).lazyload('*'),
-            joinedload(Comment.distinguished_board),
-            joinedload(Comment.awards),
-            Load(Board).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+        ).options(joinedload(Comment.comment_aux),
+            joinedload(Comment.author).joinedload(User.title)
         ).filter(
             Comment.id.in_(cids)
         )
+
 
 
         if v.admin_level >=4:
@@ -711,13 +681,9 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
         ).join(
-            Comment.post
-        ).join(
             mod,
-            and_(mod.c.board_id==Comment.original_board_id, mod.c.board_id==Submission.board_id),
+            and_(mod.c.board_id==Comment.original_board_id),
             isouter=True
-        ).options(
-            contains_eager(Comment.post)
         )
 
         if sort_type == "hot":
@@ -752,23 +718,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
-            lazyload('*'),
-            joinedload(Comment.post),
-            joinedload(Comment.comment_aux),
-            joinedload(Comment.author),
-            Load(User).lazyload('*'),
-            Load(User).joinedload(User.title),
-            Load(Submission).lazyload('*'),
-            Load(Submission).joinedload(Submission.submission_aux),
-            Load(Submission).joinedload(Submission.board),
-            Load(CommentVote).lazyload('*'),
-            Load(UserBlock).lazyload('*'),
-            Load(ModAction).lazyload('*'),
-            Load(ModRelationship).lazyload('*'),
-            joinedload(Comment.distinguished_board),
-            joinedload(Comment.awards),
-            Load(Board).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+            joinedload(Comment.author).joinedload(User.title)
         ).filter(
             Comment.id.in_(cids)
         ).join(
@@ -813,7 +763,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         parents={x.id: x for x in parents}
 
         for c in output:
-            c.parent_comment=parents.get(c.parent_comment_id)
+            c._parent_comment=parents.get(c.parent_comment_id)
 
     return output
 

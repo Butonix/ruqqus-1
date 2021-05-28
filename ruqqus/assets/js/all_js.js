@@ -723,12 +723,12 @@ function post_toast(url, callback) {
         window.location.href = JSON.parse(xhr.response)["redirect"]
       } else {
         data=JSON.parse(xhr.response);
-        
+
         $('#toast-post-error').toast('dispose');
         $('#toast-post-error').toast('show');
         document.getElementById('toast-post-error-text').innerText = data["error"];
         return false
-        
+
       }
     };
 
@@ -736,8 +736,34 @@ function post_toast(url, callback) {
 
   }
 
+// Bell Notifications
+
+function toggleBell(e) {
+  let icon = document.getElementsByClassName('bell-icon');
+
+  for (var i = 0; i < icon.length; i++){
+    icon[i].classList.toggle('fa-bell');
+    icon[i].classList.toggle('fa-bell-slash');
+  }
+}
+
+const registerBell = function() {
+  let button = document.getElementsByClassName('bell-button');
+
+  for (var i = 0; i < button.length; i++) {
+    button[i].addEventListener('click', toggleBell, false);
+    button[i].addEventListener('keydown', function(event) {
+      if (event.keyCode === 13) {
+        toggleBell(event)
+      }
+    }, false)
+  };
+}
+
+registerBell()
 
 //Admin post modding
+
 function removePost(post_id) {
   url="/api/ban_post/"+post_id
 
@@ -1008,7 +1034,6 @@ var downvote = function(event) {
   post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection);
   
 }
-
 
 var register_votes = function() {
   var upvoteButtons = document.getElementsByClassName('upvote-button')
@@ -2068,7 +2093,7 @@ if (("standalone" in window.navigator) &&       // Check if "standalone" propert
     try {
       $('#mobile-prompt').tooltip('show')
       $('.tooltip')[0].addEventListener(
-        'click', 
+        'click',
         function(event){
           $('#mobile-prompt').tooltip('hide')
           var xhr = new XMLHttpRequest();

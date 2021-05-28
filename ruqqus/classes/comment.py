@@ -38,9 +38,11 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         primaryjoin="Comment.id==CommentAux.id")
     author_id = Column(Integer, ForeignKey("users.id"))
     parent_submission = Column(Integer, ForeignKey("submissions.id"))
+
     # this column is foreignkeyed to comment(id) but we can't do that yet as
     # "comment" class isn't yet defined
-    parent_fullname = Column(Integer)
+    #parent_fullname = Column(Integer)
+
     created_utc = Column(Integer, default=0)
     edited_utc = Column(Integer, default=0)
     is_banned = Column(Boolean, default=False)
@@ -460,10 +462,17 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @lazy
     def board(self):
         return self.post.board
-    
-    
-    
 
+    @property
+    def parent_fullname(self):
+        if self.parent_comment_id:
+            return f't3_{base36encode(self.parent_comment_id)}'
+        elif self.parent_submission:
+            return f't2_{base36encode(self.parent_submission)}'
+        else:
+            return None
+    
+    
 
 class Notification(Base):
 
@@ -471,14 +480,14 @@ class Notification(Base):
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    comment_id = Column(Integer, ForeignKey("comments.id"))
+    comment_id = Column(Integer, ForeignKey("comments.id"), default=None)
+    submission_id = Column(Integer, ForeignKey("submissions.id"), default=None)
+
     read = Column(Boolean, default=False)
 
-    comment = relationship("Comment", lazy="joined", innerjoin=True)
+    comment = relationship("Comment", primaryjoin="Notification.comment_id==Comment.id")
+    post = relationship("Submission")
     user=relationship("User", innerjoin=True)
-
-    # Server side computed values (copied from corresponding comment)
-    created_utc = Column(Integer, server_default=FetchedValue())
 
     def __repr__(self):
 
@@ -487,3 +496,13 @@ class Notification(Base):
     @property
     def voted(self):
         return 0
+
+    @property
+    def target(self):
+        return self.comment if self.comment_id else self.post
+
+    @property
+    def created_utc(self):
+        return self.target.created_utc
+    
+    

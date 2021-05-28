@@ -232,6 +232,23 @@ class PostRelationship(Base):
     def __repr__(self):
         return f"<PostRel(id={self.id}, pid={self.post_id}, board_id={self.board_id})>"
 
+"""class PostNotificationSubscriptions(Base):
+
+    __tablename__ = "post_notification_subscriptions"
+    id = Column(BigInteger, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    board_id = Column(Integer,ForeignKey("boards.id"), default=0)
+    subbed_to_user_id = Column(Integer, ForeignKey("users.id"), default=0)
+    #post_id = Column(Integer,ForeignKey("submissions.id"), default=0)
+
+    #user = relationship("User", lazy="subquery")
+    board = relationship("Board", lazy="subquery")
+    #post = relationship("Submission", lazy="subquery")
+
+    def __repr__(self):
+        return f"<PostNotificationSubscription(id={self.id}"
+"""
+
 
 class BoardBlock(Base, Stndrd, Age_times):
 

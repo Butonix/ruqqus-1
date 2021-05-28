@@ -2,7 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import *
 import time
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, deferred, joinedload, lazyload, contains_eager, aliased
+from sqlalchemy.orm import relationship, deferred, joinedload, lazyload, contains_eager, aliased, Load
 from os import environ
 from secrets import token_hex
 import random
@@ -94,6 +94,10 @@ class User(Base, Stndrd, Age_times):
     filter_nsfw = Column(Boolean, default=False)
     stored_karma = Column(Integer, default=0)
     stored_subscriber_count=Column(Integer, default=0)
+    """posts_last_checked_utc = Column(Integer, default=0)
+    replies_last_checked_utc = Column(Integer, default=0)
+    mentions_last_checked_utc = Column(Integer, default=0)"""
+
     auto_join_chat=Column(Boolean, default=False)
 
     coin_balance=Column(Integer, default=0)
@@ -143,6 +147,7 @@ class User(Base, Stndrd, Age_times):
 
     _applications = relationship("OauthApp", lazy="dynamic")
     authorizations = relationship("ClientAuth", lazy="dynamic")
+    #notification_subscriptions = relationship("PostNotificationSubscriptions", lazy="dynamic")
 
     saved_posts=relationship(
         "SaveRelationship",
@@ -195,20 +200,20 @@ class User(Base, Stndrd, Age_times):
 
         x = pyotp.TOTP(self.mfa_secret)
         return x.verify(token, valid_window=1)
-    
+
     @property
     def mfa_removal_code(self):
-        
+
         hashstr = f"{self.mfa_secret}+{self.id}+{self.original_username}"
-        
+
         hashstr= generate_hash(hashstr)
-        
+
         removal_code = base36encode(int(hashstr,16))
-        
+
         #should be 25char long, left pad if needed
         while len(removal_code)<25:
             removal_code="0"+removal_code
-            
+
         return removal_code
 
     @property
@@ -235,7 +240,7 @@ class User(Base, Stndrd, Age_times):
 
         if self.hide_offensive:
             posts = posts.filter_by(is_offensive=False)
-			
+
         if self.hide_bot:
             posts = posts.filter_by(is_bot=False)
 
@@ -351,7 +356,7 @@ class User(Base, Stndrd, Age_times):
 
         if v and v.hide_offensive:
             submissions = submissions.filter_by(is_offensive=False)
-			
+
         if v and v.hide_bot:
             submissions = submissions.filter_by(is_bot=False)
 
@@ -420,7 +425,7 @@ class User(Base, Stndrd, Age_times):
 
         if v and v.hide_offensive:
             comments = comments.filter(Comment.is_offensive == False)
-			
+
         if v and v.hide_bot:
             comments = comments.filter(Comment.is_bot == False)
 
@@ -481,7 +486,7 @@ class User(Base, Stndrd, Age_times):
         else:
             cutoff = 0
         comments = comments.filter(Comment.created_utc >= cutoff)
-            
+
         comments = comments.offset(25 * (page - 1)).limit(26)
 
         listing = [c.id for c in comments]
@@ -605,19 +610,57 @@ class User(Base, Stndrd, Age_times):
     @property
     def original_link(self):
         return f"/@{self.original_username}"
-    
+
 
     def __repr__(self):
         return f"<User(username={self.username})>"
 
-    def notification_commentlisting(self, page=1, all_=False):
+    def notification_commentlisting(self, page=1, all_=False, replies_only=False, mentions_only=False, system_only=False):
 
-        notifications = self.notifications.join(Notification.comment).filter(
+
+        notifications = self.notifications.options(
+            lazyload('*'),
+            joinedload(Notification.comment).lazyload('*'),
+            joinedload(Notification.comment).joinedload(Comment.comment_aux)
+            ).join(
+            Notification.comment
+            ).filter(
             Comment.is_banned == False,
             Comment.deleted_utc == 0)
 
-        if not all_:
+
+
+        if replies_only:
+            cs=g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
+            ps=g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
+            notifications=notifications.filter(
+                or_(
+                    Comment.parent_comment_id.in_(cs),
+                    and_(
+                        Comment.level==1,
+                        Comment.parent_submission.in_(ps)
+                        )
+                    )
+                )
+
+        elif mentions_only:
+            cs=g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
+            ps=g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
+            notifications=notifications.filter(
+                and_(
+                    Comment.parent_comment_id.notin_(cs),
+                    or_(
+                        Comment.level>1,
+                        Comment.parent_submission.notin_(ps)
+                        )
+                    )
+                )
+        elif system_only:
+            notifications=notifications.filter(Comment.author_id==1)
+
+        elif not all_:
             notifications = notifications.filter(Notification.read == False)
+
 
         notifications = notifications.options(
             contains_eager(Notification.comment)
@@ -633,13 +676,91 @@ class User(Base, Stndrd, Age_times):
             output.append(x.comment_id)
 
         g.db.commit()
+
+        return output
+
+    def notification_postlisting(self, page=1):
+
+        notifications=self.notifications.join(
+            Notification.post
+            ).filter(
+            Submission.is_banned==False, 
+            Submission.deleted_utc==0
+            )
+
+        #if not all_:
+        #    notifications=notifications.filter(Notification.read==False)
+
+        notifications=notifications.options(
+                contains_eager(Notification.post)
+            ).order_by(
+                Notification.id.desc()
+            ).offset(25*(page-1)).limit(26)
+
+        output=[]
+        for x in notifications:
+            x.read=True
+            g.db.add(x)
+            output.append(x.submission_id)
+
+        g.db.commit()
         return output
 
     @property
     @lazy
-    def notifications_count(self):
+    def mentions_count(self):
+        return self.notifications\
+            .join(Notification.comment)\
+            .filter(Notification.read == False,
+                    Comment.is_banned == False,
+                    Comment.deleted_utc == 0)\
+            .count()
+    @property
+    @lazy
+    def post_notifications_count(self):
+        pass
+        """return g.db.query(Submission)\
+            .filter(Submission.created_utc < self.posts_last_check_utc)\
+            .filter(Submission.deleted_utc == 0)\
+            .filter(Submission.is_banned == False)\
+            .filter(Submission.board_id.in_(g.db.query(PostNotificationSubscriptions.board_id).filter_by(user_id=self.id).all())
+                    ) \
+            .filter(Submission.author_id.in_(g.db.query(PostNotificationSubscriptions.subbed_to_user_id).filter_by(user_id=self.id).all()))\
+            .distinct()\
+            .count()"""
 
-        return self.notifications.join(Notification.comment).filter(Notification.read==False, Comment.is_banned==False, Comment.deleted_utc==0).count()
+
+
+    @property
+    @lazy
+    def reply_notifications_count(self):
+        #TODO: query for count of new replies
+        # use self.replies_last_checked_utc
+        pass
+
+    @property
+    @lazy
+    def replies(self):
+        #TODO: query for all new reply items for notifications
+        # use self.replies_last_checked_utc
+        pass
+
+    @property
+    @lazy
+    def post_notifications(self):
+        pass
+        """return g.db.query(Submission)\
+            .filter(Submission.created_utc < self.posts_last_check_utc)\
+            .filter(Submission.deleted_utc == 0)\
+            .filter(Submission.is_banned == False)\
+            .filter(Submission.board_id.in_(g.db.query(PostNotificationSubscriptions.board_id).filter_by(user_id=self.id).all())
+                    ) \
+            .filter(Submission.author_id.in_(g.db.query(PostNotificationSubscriptions.subbed_to_user_id).filter_by(user_id=self.id).all())).distinct()"""
+
+    @property
+    def notifications_count(self):
+        return self.mentions_count #self.replies_notification_count + self.post_notifications_count + self.mentions_count
+
 
     @property
     def post_count(self):
@@ -836,7 +957,7 @@ class User(Base, Stndrd, Age_times):
         # Has 1000 Rep, or 500 for older accounts
         # if connecting through Tor, must have verified email
         return (self.has_premium or self.true_score >= 1000 or (
-            self.created_utc <= 1592974538 and self.true_score >= 500)) and (self.is_activated or request.headers.get("cf-ipcountry")!="T1") 
+            self.created_utc <= 1592974538 and self.true_score >= 500)) and (self.is_activated or request.headers.get("cf-ipcountry")!="T1")
 
     @property
     def can_upload_avatar(self):
@@ -1188,7 +1309,7 @@ class User(Base, Stndrd, Age_times):
     @property
     def can_upload_comment_image(self):
         return self.has_premium and (request.headers.get("cf-ipcountry")!="T1" or self.is_activated)
-    
+
     @property
     def can_change_name(self):
         return self.name_changed_utc < int(time.time())-60*60*24*7 and self.coin_balance>=20
@@ -1199,4 +1320,4 @@ class User(Base, Stndrd, Age_times):
         self.refresh_selfset_badges()
         g.db.commit()
         return self._badges.all()
-        
+

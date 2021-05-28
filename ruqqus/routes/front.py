@@ -17,7 +17,11 @@ def slash_post():
     return redirect("/")
 
 
-@app.route("/notifications", methods=["GET"])
+@app.get("/notifications")
+@app.get("/notifications/all")
+@app.get("/notifications/mentions")
+@app.get("/notifications/replies")
+@app.get("/notifications/system")
 @app.route("/api/v1/notifications", methods=["GET"])
 @auth_required
 @api("read")
@@ -27,7 +31,10 @@ def notifications(v):
     all_ = request.args.get('all', False)
 
     cids = v.notification_commentlisting(page=page,
-                                         all_=all_
+                                         all_=request.path=="/notifications/all",
+                                         mentions_only=request.path=="/notifications/mentions",
+                                         replies_only=request.path=="/notifications/replies",
+                                         system_only=request.path=="/notifications/system"
                                          )
     next_exists = (len(cids) == 26)
     cids = cids[0:25]
@@ -69,9 +76,32 @@ def notifications(v):
                             is_notification_page=True),
             'api': lambda: jsonify({"data": [x.json for x in listing]})}
 
+@app.get("/notifications/posts")
+@auth_required
+@api("read")
+def notifications_posts(v):
+
+    page=int(request.args.get("page", 1))
+
+    pids=v.notification_postlisting(
+        page=page
+        )
+
+    next_exists=(len(pids)==26)
+    pids=pids[0:25]
+
+    posts=get_posts(pids, v=v, sort="new")
+
+    return {'html': lambda: render_template("notifications_posts.html",
+                            v=v,
+                            notifications=posts,
+                            next_exists=next_exists,
+                            page=page,
+                            is_notification_page=True),
+            'api': lambda: jsonify({"data": [x.json for x in listing]})
+            }
 
 @cache.memoize(timeout=900)
-
 def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
               t=None, ids_only=True, categories=[], filter_words='', **kwargs):
 

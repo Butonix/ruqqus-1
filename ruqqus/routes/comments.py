@@ -455,7 +455,7 @@ def api_comment(v):
     # create comment
     c = Comment(author_id=v.id,
                 parent_submission=parent_submission,
-                parent_fullname=parent.fullname,
+                #parent_fullname=parent.fullname,
                 parent_comment_id=parent_comment_id,
                 level=level,
                 over_18=post.over_18,
