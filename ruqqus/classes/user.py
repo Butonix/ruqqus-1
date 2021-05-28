@@ -618,7 +618,11 @@ class User(Base, Stndrd, Age_times):
     def notification_commentlisting(self, page=1, all_=False, replies_only=False, mentions_only=False, system_only=False):
 
 
-        notifications = self.notifications.join(Notification.comment).filter(
+        notifications = self.notifications.join(
+            Notification.comment
+            ).options(
+            Comment.lazyload('*')
+            ).filter(
             Comment.is_banned == False,
             Comment.deleted_utc == 0)
 
@@ -651,7 +655,6 @@ class User(Base, Stndrd, Age_times):
                 )
         elif system_only:
             notifications=notifications.filter(Comment.author_id==1)
-            print(notifications)
 
         elif not all_:
             notifications = notifications.filter(Notification.read == False)
