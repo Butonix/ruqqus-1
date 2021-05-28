@@ -38,6 +38,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
         primaryjoin="Comment.id==CommentAux.id")
     author_id = Column(Integer, ForeignKey("users.id"))
     parent_submission = Column(Integer, ForeignKey("submissions.id"))
+
     # this column is foreignkeyed to comment(id) but we can't do that yet as
     # "comment" class isn't yet defined
     #parent_fullname = Column(Integer)
@@ -461,6 +462,16 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
     @lazy
     def board(self):
         return self.post.board
+
+    @property
+    def parent_fullname(self):
+        if self.parent_comment_id:
+            return f't3_{base36encode(self.parent_comment_id)}'
+        elif self.parent_submission:
+            return f't2_{base36encode(self.parent_submission)}'
+        else:
+            return None
+    
     
 
 class Notification(Base):
