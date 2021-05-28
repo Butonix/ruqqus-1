@@ -621,8 +621,9 @@ class User(Base, Stndrd, Age_times):
         notifications = self.notifications.join(
             Notification.comment
             ).options(
-            lazyload(Notification.post),
-            Load(Comment).lazyload('*')
+            lazyload('*'),
+            Load(Comment).lazyload('*'),
+            Load(Comment).joinedload(Comment.comment_aux)
             ).filter(
             Comment.is_banned == False,
             Comment.deleted_utc == 0)
