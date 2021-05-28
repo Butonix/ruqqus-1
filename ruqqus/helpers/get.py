@@ -637,13 +637,13 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         ).distinct(ModAction.target_comment_id).subquery()
 
     if v:
-        votes = nSession.query(CommentVote).filter_by(user_id=v.id).subquery()
+        votes = nSession.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).subquery()
 
-        blocking = v.blocking.subquery()
+        blocking = v.blocking.options(lazyload('*')).subquery()
 
-        blocked = v.blocked.subquery()
+        blocked = v.blocked.options(lazyload('*')).subquery()
 
-        mod = g.db.query(ModRelationship).filter_by(user_id=v.id, accepted=True).subquery()
+        mod = g.db.query(ModRelationship).options(lazyload('*')).filter_by(user_id=v.id, accepted=True).subquery()
 
         comms = nSession.query(
             Comment,
