@@ -654,7 +654,7 @@ class User(Base, Stndrd, Age_times):
                     )
                 )
         elif system_only:
-            notifications=notifications.filter(Comment.author_id==1)
+            pass #notifications=notifications.filter(Comment.author_id==1)
 
         elif not all_:
             notifications = notifications.filter(Notification.read == False)
