@@ -627,31 +627,28 @@ class User(Base, Stndrd, Age_times):
             notifications = notifications.filter(Notification.read == False)
 
         if replies_only:
+            cs=g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
+            ps=g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
             notifications=notifications.filter(
                 or_(
-                    Comment.parent_comment_id.in_(
-                        g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
-                        ),
+                    Comment.parent_comment_id.in_(cs),
                     and_(
                         Comment.level==1,
-                        Comment.parent_submission.in_(
-                            g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
-                            )
+                        Comment.parent_submission.in_(ps)
                         )
                     )
                 )
 
+
         elif mentions_only:
+            cs=g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
+            ps=g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
             notifications=notifications.filter(
                 and_(
-                    Comment.parent_comment_id.notin_(
-                        g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
-                        ),
+                    Comment.parent_comment_id.notin_(cs),
                     or_(
                         Comment.level>1,
-                        Comment.parent_submission.notin_(
-                            g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
-                            )
+                        Comment.parent_submission.notin_(ps)
                         )
                     )
                 )
