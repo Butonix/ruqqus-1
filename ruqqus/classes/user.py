@@ -630,16 +630,32 @@ class User(Base, Stndrd, Age_times):
             notifications=notifications.filter(
                 or_(
                     Comment.parent_comment_id.in_(
-                        g.db.query(Comment.id).filter_by(author_id=self.id).subquery()
+                        g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
                         ),
                     and_(
                         Comment.level==1,
                         Comment.parent_submission.in_(
-                            g.db.query(Submission.id).filter_by(author_id=self.id).subquery()
+                            g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
                             )
                         )
                     )
                 )
+
+        elif mentions_only:
+            notifications=notifications.filter(
+                and(
+                    Comment.parent_comment_id.notin_(
+                        g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
+                        ),
+                    or_(
+                        Comment.level>1,
+                        Comment.parent_submission.notin_(
+                            g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
+                            )
+                        )
+                    )
+                )
+
 
         notifications = notifications.options(
             contains_eager(Notification.comment)
