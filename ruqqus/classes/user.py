@@ -621,7 +621,8 @@ class User(Base, Stndrd, Age_times):
         notifications = self.notifications.options(
             lazyload('*'),
             joinedload(Notification.comment).lazyload('*'),
-            joinedload(Notification.comment).joinedload(Comment.comment_aux)
+            joinedload(Notification.comment).joinedload(Comment.comment_aux),
+            Load(Comment).joinedload(Comment.post).joinedload(Submission.board)
             ).join(
             Notification.comment
             ).filter(
