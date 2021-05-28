@@ -626,8 +626,8 @@ class User(Base, Stndrd, Age_times):
 
 
         if replies_only:
-            cs=g.db.query(Comment.id).filter(Comment.author_id==self.id)
-            ps=g.db.query(Submission.id).filter(Submission.author_id==self.id)
+            cs=g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
+            ps=g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
             notifications=notifications.filter(
                 or_(
                     Comment.parent_comment_id.in_(cs),
@@ -639,8 +639,8 @@ class User(Base, Stndrd, Age_times):
                 )
 
         elif mentions_only:
-            cs=g.db.query(Comment.id).filter(Comment.author_id==self.id)
-            ps=g.db.query(Submission.id).filter(Submission.author_id==self.id)
+            cs=g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
+            ps=g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
             notifications=notifications.filter(
                 and_(
                     Comment.parent_comment_id.notin_(cs),
