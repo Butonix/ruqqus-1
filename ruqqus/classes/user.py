@@ -673,12 +673,13 @@ class User(Base, Stndrd, Age_times):
 
         output = []
         for x in notifications:
-            print(x)
             x.read = True
             g.db.add(x)
             output.append(x.comment_id)
 
         g.db.commit()
+
+        print(output)
         return output
 
     def notification_postlisting(self, page=1):
