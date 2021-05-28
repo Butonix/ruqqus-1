@@ -644,7 +644,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
 
         blocked = v.blocked.options(lazyload('*')).subquery()
 
-        mod = g.db.query(ModRelationship).options(lazyload('*'), joinedload(ModAction.board)).filter_by(user_id=v.id, accepted=True).subquery()
+        mod = g.db.query(ModRelationship).options(lazyload('*'), joinedload(ModRelationship.board)).filter_by(user_id=v.id, accepted=True).subquery()
 
         comms = nSession.query(
             Comment,
