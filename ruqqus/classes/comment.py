@@ -485,12 +485,9 @@ class Notification(Base):
 
     read = Column(Boolean, default=False)
 
-    comment = relationship("Comment", lazy="joined", primaryjoin="Notification.comment_id==Comment.id")
-    post = relationship("Submission", lazy="joined")
+    comment = relationship("Comment", primaryjoin="Notification.comment_id==Comment.id")
+    post = relationship("Submission")
     user=relationship("User", innerjoin=True)
-
-    # Server side computed values (copied from corresponding comment)
-    created_utc = Column(Integer, server_default=FetchedValue())
 
     def __repr__(self):
 
@@ -499,3 +496,13 @@ class Notification(Base):
     @property
     def voted(self):
         return 0
+
+    @property
+    def target(self):
+        return self.comment if self.comment_id else self.post
+
+    @property
+    def created_utc(self):
+        return self.target.created_utc
+    
+    
