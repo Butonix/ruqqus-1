@@ -545,22 +545,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, no_text=False, **kwa
             aliased(ModRelationship, alias=mod),
             aliased(ModAction, alias=exile)
         ).options(
-            lazyload('*'),
-            joinedload(Comment.comment_aux),
-            joinedload(Comment.author),
-            Load(User).lazyload('*'),
-            Load(User).joinedload(User.title),
-            joinedload(Comment.post),
-            Load(Submission).lazyload('*'),
-            Load(Submission).joinedload(Submission.submission_aux),
-            Load(Submission).joinedload(Submission.board),
-            Load(CommentVote).lazyload('*'),
-            Load(UserBlock).lazyload('*'),
-            Load(ModAction).lazyload('*'),
-            joinedload(Comment.distinguished_board),
-            joinedload(Comment.awards),
-            Load(Board).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+            joinedload(Comment.author).joinedload(User.title)
         )
         
         if no_text:
@@ -672,6 +657,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
         ).filter(
             Comment.id.in_(cids)
         )
+
+        print(comms)
 
 
         if v.admin_level >=4:
