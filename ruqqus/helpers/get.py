@@ -658,7 +658,6 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             Comment.id.in_(cids)
         )
 
-        print(comms)
 
 
         if v.admin_level >=4:
@@ -709,6 +708,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             abort(422)
 
         output = []
+        print(comments)
         for c in comments:
             comment = c[0]
             comment._voted = c[1] or 0
