@@ -626,35 +626,19 @@ class User(Base, Stndrd, Age_times):
         if not all_:
             notifications = notifications.filter(Notification.read == False)
 
-        if replies_only or mentions_only:
-
-            notifications = notifications.filter(
-                Comment.level==1
-                ).join(
-                Comment.parent_submission
-                ).join(
-                Comment.parent_comment
-                )
-
-            if replies_only:
-                notifications=notifications.filter(
-                    or_(
-                        Comment.author_id==self.id,
-                        and_(
-                            Submission.author_id==self.id,
-                            Comment.level==1
+        if replies_only:
+            notifications=notifications.filter(
+                or_(
+                    Comment.parent_comment_id.in_(
+                        g.db.query(Comment.id).filter_by(author_id=self.id).subquery()
+                        ),
+                    and_(
+                        Comment.level==1,
+                        Comment.parent_submission.in_(
+                            g.db.query(Submission.id).filter_by(author_id=self.id).subquery()
                             )
                         )
                     )
-            #elif mentions_only:
-            #    notifications=notifications.filter(
-            #        parent_comment.author_id != self.id,
-            #        Submission.author_id != self.id
-            #        )
-
-            notifications=notifications.options(
-                contains_eager(Notification.comment).contains_eager(Comment.parent_comment),
-                contains_eager(Notification.comment).contains_eager(Comment.parent_submission)
                 )
 
         notifications = notifications.options(
