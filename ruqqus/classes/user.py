@@ -637,8 +637,6 @@ class User(Base, Stndrd, Age_times):
                         )
                     )
                 )
-            print(notifications)
-
 
         elif mentions_only:
             cs=g.db.query(Comment.id).filter(Comment.author_id==self.id)
