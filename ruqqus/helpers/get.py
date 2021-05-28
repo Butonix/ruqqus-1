@@ -652,8 +652,11 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             blocked.c.id,
             aliased(ModAction, alias=exile),
             aliased(ModRelationship, alias=mod)
-        ).options(joinedload(Comment.comment_aux),
-            joinedload(Comment.author).joinedload(User.title)
+        ).options(
+            joinedload(Comment.comment_aux),
+            joinedload(Comment.author).joinedload(User.title),
+            joinedload(Comment.post).joinedload(Submission.board),
+            joinedload(Comment.post).joinedload(Submission.submission_aux)
         ).filter(
             Comment.id.in_(cids)
         )
