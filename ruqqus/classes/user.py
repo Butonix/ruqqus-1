@@ -628,17 +628,18 @@ class User(Base, Stndrd, Age_times):
 
         if replies_only or mentions_only:
 
-            parent_comment=aliased(Comment)
-            notifications = notifications.join(
-                Comment.parent_comment.of_type(parent_comment)
+            notifications = notifications.filter(
+                Comment.level==1
                 ).join(
                 Comment.parent_submission
+                ).join(
+                Comment.parent_comment
                 )
 
             if replies_only:
                 notifications=notifications.filter(
                     or_(
-                        parent_comment.author_id==self.id,
+                        Comment.author_id==self.id,
                         and_(
                             Submission.author_id==self.id,
                             Comment.level==1
