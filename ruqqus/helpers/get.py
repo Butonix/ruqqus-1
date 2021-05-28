@@ -704,7 +704,7 @@ def get_comments(cids, v=None, nSession=None, sort_type=None,
             c = comms.all()
             comments = random.sample(c, k=len(c))
         else:
-            comments=comments.all()
+            comments=comms.all()
 
         output = []
         for c in comments:
@@ -748,7 +748,7 @@ def get_comments(cids, v=None, nSession=None, sort_type=None,
             c = comms.all()
             comments = random.sample(c, k=len(c))
         else:
-            abort(422)
+            comments=comms.all()
 
         output = []
         for c in comments:
