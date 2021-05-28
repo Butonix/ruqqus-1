@@ -618,7 +618,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, no_text=False, **kwa
     return x
 
 
-def get_comments(cids, v=None, nSession=None, sort_type="new",
+def get_comments(cids, v=None, nSession=None, sort_type=None,
                  load_parent=False, **kwargs):
 
     if not cids:
@@ -657,7 +657,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             joinedload(Comment.comment_aux),
             joinedload(Comment.author).joinedload(User.title),
             joinedload(Comment.post).joinedload(Submission.board),
-            Load(Submission).joinedload(Submission.submission_aux)
+            joinedload(Comment.post).joinedload(Submission.submission_aux)
         ).filter(
             Comment.id.in_(cids)
         )
@@ -704,7 +704,7 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             c = comms.all()
             comments = random.sample(c, k=len(c))
         else:
-            abort(422)
+            comments=comments.all()
 
         output = []
         for c in comments:
