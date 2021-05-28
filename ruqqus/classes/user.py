@@ -2,7 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import *
 import time
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, deferred, joinedload, lazyload, contains_eager, aliased
+from sqlalchemy.orm import relationship, deferred, joinedload, lazyload, contains_eager, aliased, Load
 from os import environ
 from secrets import token_hex
 import random
@@ -621,7 +621,7 @@ class User(Base, Stndrd, Age_times):
         notifications = self.notifications.join(
             Notification.comment
             ).options(
-            Comment.lazyload('*')
+            Load(Comment).lazyload('*')
             ).filter(
             Comment.is_banned == False,
             Comment.deleted_utc == 0)
