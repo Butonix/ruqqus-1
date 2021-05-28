@@ -18,7 +18,7 @@
 
 <div class="row border-bottom bg-white sticky" style="overflow: visible;">
   <div class="col">
-    <ul class="nav settings-nav px-1 px-lg-0">
+    <ul class="nav settings-nav px-0">
       <li class="nav-item">
         <a class="nav-link py-3{% if request.path=='/notifications/all' %} active{% endif %}" href="/notifications/all">
           All
@@ -47,7 +47,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link py-3{% if request.path=='/notifications/system' %} active{% endif %}" href="/notifications/system">
+        <a class="nav-link py-3 {% if request.path=='/notifications/system' %} active{% endif %}" href="/notifications/system">
           System
         </a>
       </li>
