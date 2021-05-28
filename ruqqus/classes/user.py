@@ -643,7 +643,7 @@ class User(Base, Stndrd, Age_times):
 
         elif mentions_only:
             notifications=notifications.filter(
-                and(
+                and_(
                     Comment.parent_comment_id.notin_(
                         g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
                         ),
