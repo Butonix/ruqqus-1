@@ -695,7 +695,8 @@ def get_comments(cids, v=None, nSession=None, sort_type="new",
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
         ).join(
-            Comment.post
+            Comment.post,
+            isouter=True
         ).join(
             mod,
             and_(mod.c.board_id==Comment.original_board_id, mod.c.board_id==Submission.board_id),
