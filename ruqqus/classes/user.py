@@ -623,6 +623,7 @@ class User(Base, Stndrd, Age_times):
             joinedload(Notification.comment).lazyload('*'),
             joinedload(Notification.comment).joinedload(Comment.comment_aux),
             joinedload(Notification.comment).joinedload(Comment.post).joinedload(Submission.board)
+            joinedload(Notification.comment).joinedload(Comment.post).joinedload(Submission.submission_aux)
             ).join(
             Notification.comment
             ).filter(
