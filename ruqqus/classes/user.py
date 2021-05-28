@@ -622,7 +622,7 @@ class User(Base, Stndrd, Age_times):
             lazyload('*'),
             joinedload(Notification.comment).lazyload('*'),
             joinedload(Notification.comment).joinedload(Comment.comment_aux),
-            Load(Comment).joinedload(Comment.post).joinedload(Submission.board)
+            joinedload(Notification.comment).joinedload(Comment.post).joinedload(Submission.board)
             ).join(
             Notification.comment
             ).filter(
