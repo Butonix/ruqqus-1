@@ -707,7 +707,7 @@ class User(Base, Stndrd, Age_times):
         return output
 
     @property
-    @lazy
+    #@lazy
     def mentions_count(self):
         cs=g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
         ps=g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
@@ -730,7 +730,7 @@ class User(Base, Stndrd, Age_times):
 
 
     @property
-    @lazy
+    #@lazy
     def replies_count(self):
         cs=g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
         ps=g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
@@ -766,7 +766,7 @@ class User(Base, Stndrd, Age_times):
             ).count()
 
     @property
-    @lazy
+    #@lazy
     def system_notif_count(self):
         return g.db.query(Notification).options(
             lazyload('*')
