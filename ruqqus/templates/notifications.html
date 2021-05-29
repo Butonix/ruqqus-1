@@ -46,7 +46,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link py-3 {% if request.path=='/notifications/system' %} active{% endif %}" href="/notifications/system">
-          System{% if self.system_notifs_count %}<span class="text-danger font-weight-bold">{{ self.system_notifs_count }}</span>{% endif %}
+          System{% if self.system_notif_count %}<span class="text-danger font-weight-bold">{{ self.system_notif_count }}</span>{% endif %}
         </a>
       </li>
     </ul>
