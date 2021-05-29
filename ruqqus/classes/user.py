@@ -1321,3 +1321,7 @@ class User(Base, Stndrd, Age_times):
         g.db.commit()
         return self._badges.all()
 
+    @property
+    def is_following(self):
+        return self.__dict__.get('_is_following',None)
+    
