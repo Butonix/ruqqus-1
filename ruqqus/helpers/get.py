@@ -936,6 +936,8 @@ def get_guild(name, v=None, graceful=False, db=None):
             abort(404)
         else:
             return None
+
+    print(board.is_subscribed)
     return board
 
 
