@@ -321,7 +321,7 @@ class Board(Base, Stndrd, Age_times):
     @property
     def is_subscribed(self):
 
-        print self._is_subscribed
+        print(self._is_subscribed)
 
         return self.__dict__.get("_is_subscribed")
     
