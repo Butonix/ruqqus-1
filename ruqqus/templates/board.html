@@ -375,7 +375,7 @@
               Leave
             </button>
             <button class="btn btn-secondary bell-button" data-url="/+{{ b.name }}/toggle_bell">
-              <i class="fas bell-icon {% if b.is_subscribed and b.is_subscribed.get_notifs %}fa-bell-on text-purple{% else %}fa-bell{% endif %}"></i>
+              <i class="fas bell-icon fa-fw {% if b.is_subscribed and b.is_subscribed.get_notifs %}fa-bell-on text-purple{% else %}fa-bell{% endif %}"></i>
             </button>
           </div>
         </div>
