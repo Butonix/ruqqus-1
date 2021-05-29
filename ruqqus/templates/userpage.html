@@ -124,8 +124,8 @@
               Unfollow
             </button>
             
-            <button class="btn btn-secondary bell-button" data-toggle="tooltip" data-placement="bottom" title="Be notified when this user publishes new content.">
-              <i class="fas fa-fw fa-bell bell-icon"></i>
+            <button class="btn btn-secondary bell-button" data-toggle="tooltip" data-placement="bottom" title="Be notified when this user publishes new content." data-url="/@{{ u.username }}/toggle_bell">
+              <i class="fas fa-fw bell-icon {% if u.is_following and u.is_following.get_notifs %}fa-bell-on{% else %}fa-bell{% endif %}"></i>
             </button>
 
           </div>
@@ -207,8 +207,8 @@
             <button class="btn btn-primary" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">
               Subscribe
             </button>
-            <button class="btn btn-secondary bell-button">
-              <i class="fas fa-bell bell-icon"></i>
+            <button class="btn btn-secondary bell-button" data-url="/@{{ u.username }}/toggle_bell">
+              <i class="fas bell-icon {% if u.is_following and u.is_following.get_notifs %}fa-bell-on{% else %}fa-bell{% endif %}"></i>
             </button>
           </div>
         </div>

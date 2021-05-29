@@ -310,7 +310,7 @@
       </div>
       <div id="button-unsub" class="btn-group {% if not b.has_subscriber(v) %}d-none{% endif %}" role="group" aria-label="Leave guild desktop">
         <button class="btn btn-secondary" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">Leave</button>
-        <button class="btn btn-secondary bell-button" data-toggle="tooltip" data-placement="bottom" title="Be notified when this guild has new content.">
+        <button class="btn btn-secondary bell-button" data-toggle="tooltip" data-placement="bottom" title="Be notified when this guild has new content." data-url="/+{{ b.name }}/toggle_bell">
           <i class="fas fa-fw bell-icon {% if b.is_subscribed and b.is_subscribed.get_notifs %}fa-bell-on{% else %}fa-bell{% endif %}"></i>
         </button>
       </div>
@@ -374,7 +374,7 @@
             <button class="btn btn-secondary btn-block" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">
               Leave
             </button>
-            <button class="btn btn-secondary bell-button">
+            <button class="btn btn-secondary bell-button" data-url="/+{{ b.name }}/toggle_bell">
               <i class="fas bell-icon {% if b.is_subscribed and b.is_subscribed.get_notifs %}fa-bell-on{% else %}fa-bell{% endif %}"></i>
             </button>
           </div>

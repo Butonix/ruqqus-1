@@ -745,6 +745,10 @@ function toggleBell(e) {
     icon[i].classList.toggle('fa-bell');
     icon[i].classList.toggle('fa-bell-on');
   }
+
+  post_toast(e.target.dataset['url'])
+
+
 }
 
 const registerBell = function() {
