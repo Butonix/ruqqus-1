@@ -176,18 +176,11 @@ def me(v):
 @auth_required
 @validate_formkey
 def logout(v):
-
-    try:
-        print(f"logout {v.username}")
-    except:
-        pass
         
     session["user_id"]=None
     session["session_id"]=None
 
     session.modified=True
-
-
 
     return redirect("/")
 
