@@ -757,7 +757,8 @@ class User(Base, Stndrd, Age_times):
         return self.notifications.filter(
             Notification.read==False
             ).join(
-            Notification.post
+            Submission,
+            Submission.id==Notification.submission_id
             ).filter(
             Submission.is_banned==False,
             Submission.deleted_utc==0
