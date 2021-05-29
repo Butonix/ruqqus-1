@@ -1,7 +1,9 @@
 {% extends "notifications.html" %}
 
 {% block notif_content %}
+  <div class="my-3">
   {% with listing=notifications %}
     {% include "submission_listing.html" %}
   {% endwith %}
+  </div>
 {% endblock %}
