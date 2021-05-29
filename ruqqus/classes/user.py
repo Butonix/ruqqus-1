@@ -716,7 +716,7 @@ class User(Base, Stndrd, Age_times):
             ).join(
             Notification.comment
             ).filter(
-            Notification.read==False
+            Notification.read==False,
             Comment.is_banned == False,
             Comment.deleted_utc == 0
             ).filter(
