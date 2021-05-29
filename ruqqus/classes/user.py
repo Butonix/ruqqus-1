@@ -790,7 +790,7 @@ class User(Base, Stndrd, Age_times):
                         Submission.deleted_utc==0
                     )
                 )
-            )
+            ).count()
 
 
 
