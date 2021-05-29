@@ -866,7 +866,6 @@ def get_board(bid,v=None, graceful=False):
         items=query.first()
 
         if items:
-            
             board=items[0]
             board._is_subscribed=items[1]
         else:
