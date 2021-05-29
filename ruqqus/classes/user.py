@@ -776,7 +776,7 @@ class User(Base, Stndrd, Age_times):
         return self.notifications.options(
             lazyload('*')
             ).filter(
-                Notification.read=False
+                Notification.read==False
             ).join(Notification.comment
             ).join(Notification.post
             ).filter(
