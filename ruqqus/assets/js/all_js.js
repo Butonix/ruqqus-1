@@ -746,6 +746,7 @@ $('.bell-button').click(function (event) {
 
   $('.bell-icon').toggleClass('fa-bell')
   $('.bell-icon').toggleClass('fa-bell-on')
+  $('.bell-icon').toggleClass('text-purple')
 
   post_toast($(this).data('url'))
 
