@@ -794,20 +794,22 @@ def submit_post(v):
 
     board_uids = g.db.query(
         Subscription.user_id
-        ).options(lazyload('*')).filter_by(
-        board_id=new_post.board_id, 
-        is_active=True,
-        get_notifs=True
+        ).options(lazyload('*')).filter(
+        Subscription.board_id==new_post.board_id, 
+        Subscription.is_active==True,
+        Subscription.get_notifs==True,
+        Subscription.user_id != v.id
         )
 
     follow_uids=g.db.query(
         Follow.user_id
-        ).options(lazyload('*')).filter_by(
-        target_id=v.id,
-        get_notifs=True
+        ).options(lazyload('*')).filter(
+        Follow.target_id==v.id,
+        Follow.get_notifs==True,
+        Follow.user_id!=v.id
         ).join(Follow.target).filter(
         User.is_private==False,
-        User.is_nofollow==False
+        User.is_nofollow==False,
         )
 
     if not new_post.is_public:
@@ -844,7 +846,7 @@ def submit_post(v):
                     contribs.c.id !=None
                 )
             )
-            
+
     uids=list(set([x[0] for x in board_uids.all()] + [x[0] for x in follow_uids.all()]))
 
     for uid in uids:
