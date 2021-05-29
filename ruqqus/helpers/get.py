@@ -849,7 +849,7 @@ def get_board(bid,v=None, graceful=False):
 
         
     if v:
-        sub = g.db.query(Subscription).filter_by(user_id=v.id, board_id=bid, is_active=True).subquery()
+        sub = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
         query = g.db.query(
             Board,
             aliased(Subscription, alias=sub)
@@ -902,7 +902,7 @@ def get_guild(name, v=None, graceful=False, db=None):
     name = name.replace('%', '')
 
     if v:
-        sub = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).join(Subscription.board).filter(Board.name.ilike(name)).subquery()
+        sub = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
         query = g.db.query(
             Board,
             aliased(Subscription, alias=sub)
