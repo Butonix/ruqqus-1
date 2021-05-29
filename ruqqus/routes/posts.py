@@ -791,29 +791,32 @@ def submit_post(v):
 
     #Bell notifs
 
-    board_uids = g.db.query(
-        Subscription.user_id
-        ).filter_by(
-        board_id=new_post.board_id, 
-        is_active=True,
-        get_notifs=True
-        ).all()
-    follow_uids=g.db.query(
-        Follow.user_id
-        ).filter_by(
-        target_id=v.id,
-        get_notifs=True
-        ).all() if not v.is_private and not v.is_nofollow else []
+    if new_post.is_public:
 
-    uids=list(set([x[0] for x in board_uids] + [x[0] for x in follow_uids]))
+        board_uids = g.db.query(
+            Subscription.user_id
+            ).filter_by(
+            board_id=new_post.board_id, 
+            is_active=True,
+            get_notifs=True
+            ).all()
 
-    for uid in uids:
-        new_notif=Notification(
-            user_id=uid,
-            submission_id=new_post.id
-            )
-        g.db.add(new_notif)
-    g.db.commit()
+        follow_uids=g.db.query(
+            Follow.user_id
+            ).filter_by(
+            target_id=v.id,
+            get_notifs=True
+            ).all() if not v.is_private and not v.is_nofollow else []
+
+        uids=list(set([x[0] for x in board_uids] + [x[0] for x in follow_uids]))
+
+        for uid in uids:
+            new_notif=Notification(
+                user_id=uid,
+                submission_id=new_post.id
+                )
+            g.db.add(new_notif)
+        g.db.commit()
 
 
     return {"html": lambda: redirect(new_post.permalink),
