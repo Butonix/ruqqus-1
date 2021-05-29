@@ -850,7 +850,7 @@ def get_board(bid,v=None, graceful=False):
         
     if v:
         sub = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
-        query = g.db.query(
+        items = g.db.query(
             Board,
             aliased(Subscription, alias=sub)
             ).options(
@@ -862,8 +862,7 @@ def get_board(bid,v=None, graceful=False):
             sub,
             sub.c.board_id==Board.id,
             isouter=True
-        )
-        items=query.first()
+        ).first()
 
         if items:
             board=items[0]
@@ -902,7 +901,8 @@ def get_guild(name, v=None, graceful=False, db=None):
 
     if v:
         sub = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
-        query = g.db.query(
+
+        items = g.db.query(
             Board,
             aliased(Subscription, alias=sub)
             ).options(
@@ -914,9 +914,10 @@ def get_guild(name, v=None, graceful=False, db=None):
             sub,
             sub.c.board_id==Board.id,
             isouter=True
-            )
-        items=query.first()
+            ).first()
+
         if items:
+            print(items)
             board=items[0]
             board._is_subscribed=items[1]
         else:
