@@ -179,7 +179,7 @@ def error_503(e):
     except AttributeError:
         pass
 
-    return{"html": lambda: (render_template('errors/503.html', v=v), 503),
+    return{"html": lambda: (render_template('errors/503.html'), 503),
            "api": lambda: (jsonify({"error": "503 Service Unavailable"}), 503)
            }
 
