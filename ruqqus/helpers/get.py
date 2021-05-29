@@ -30,7 +30,7 @@ def get_user(username, v=None, nSession=None, graceful=False):
         items=nSession.query(
             User,
             aliased(UserBlock, alias=isblocking),
-            aliased(UserBlock, alias=isblock),
+            aliased(UserBlock, alias=isblocked),
             aliased(Follow, alias=follow)
             ).filter(or_(
                 User.username.ilike(username),
