@@ -738,33 +738,19 @@ function post_toast(url, callback) {
 
 // Bell Notifications
 
-function toggleBell(e) {
-  let icon = document.getElementsByClassName('bell-icon');
+$('.bell-icon').click(function (event) {
 
-  for (var i = 0; i < icon.length; i++){
-    icon[i].classList.toggle('fa-bell');
-    icon[i].classList.toggle('fa-bell-on');
+  if (event.which != 1) {
+    return
   }
 
-  post_toast(e.target.dataset['url'])
+  $('.bell-icon').toggleClass('fa-bell')
+  $('.bell-icon').toggleClass('fa-bell-on')
 
+  post_toast($(this).data('url'))
 
-}
+});
 
-const registerBell = function() {
-  let button = document.getElementsByClassName('bell-button');
-
-  for (var i = 0; i < button.length; i++) {
-    button[i].addEventListener('click', toggleBell, false);
-    button[i].addEventListener('keydown', function(event) {
-      if (event.keyCode === 13) {
-        toggleBell(event)
-      }
-    }, false)
-  };
-}
-
-registerBell()
 
 //Admin post modding
 
