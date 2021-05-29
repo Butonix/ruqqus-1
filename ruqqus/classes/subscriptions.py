@@ -13,6 +13,7 @@ class Subscription(Base):
     board_id = Column(BigInteger, ForeignKey("boards.id"))
     created_utc = Column(BigInteger, default=0)
     is_active = Column(Boolean, default=True)
+    get_notifs=Column(Boolean, default=False)
 
     user = relationship("User", uselist=False)
     board = relationship("Board", uselist=False)
@@ -33,6 +34,7 @@ class Follow(Base):
     user_id = Column(BigInteger, ForeignKey("users.id"))
     target_id = Column(BigInteger, ForeignKey("users.id"))
     created_utc = Column(BigInteger, default=0)
+    get_notifs=Column(Boolean, default=False)
 
     user = relationship(
         "User",

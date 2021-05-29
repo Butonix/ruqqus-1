@@ -29,26 +29,24 @@
           Unread
         </a>
       </li>
-    <!-- This part comes later
       <li class="nav-item">
         <a class="nav-link py-3{% if request.path=='/notifications/posts' %} active{% endif %}" href="/notifications/posts">
-          Posts
+          Posts{% if v.post_notifications_count %} <span class="text-purple font-weight-bold">({{ v.post_notifications_count }})</span>{% endif %}
         </a>
       </li>
-    -->
       <li class="nav-item">
         <a class="nav-link py-3{% if request.path=='/notifications/replies' %} active{% endif %}" href="/notifications/replies">
-          Replies
+          Replies{% if v.replies_count %} <span class="text-purple font-weight-bold">({{ v.replies_count }})</span>{% endif %}
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link py-3{% if request.path=='/notifications/mentions' %} active{% endif %}" href="/notifications/mentions">
-          Mentions
+          Mentions{% if v.mentions_count %} <span class="text-purple font-weight-bold">({{ v.mentions_count }})</span>{% endif %}
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link py-3 {% if request.path=='/notifications/system' %} active{% endif %}" href="/notifications/system">
-          System
+          System{% if v.system_notif_count %} <span class="text-purple font-weight-bold">({{ v.system_notif_count }})</span>{% endif %}
         </a>
       </li>
     </ul>

@@ -18,7 +18,50 @@ def get_user(username, v=None, nSession=None, graceful=False):
     if not nSession:
         nSession = g.db
 
-    user = nSession.query(
+    if v:
+        isblocking = nSession.query(UserBlock).filter(
+            UserBlock.user_id == v.id).subquery()
+
+        isblocked =  nSession.query(UserBlock).filter(
+            UserBlock.target_id==v.id).subquery()
+
+        follow=nSession.query(Follow).filter_by(user_id=v.id).subquery()
+
+        items=nSession.query(
+            User,
+            aliased(UserBlock, alias=isblocking),
+            aliased(UserBlock, alias=isblocked),
+            aliased(Follow, alias=follow)
+            ).filter(or_(
+                User.username.ilike(username),
+                User.original_username.ilike(username)
+            )).join(
+            isblocking,
+            isblocking.c.target_id==User.id,
+            isouter=True
+            ).join(
+            isblocked,
+            isblocked.c.user_id==User.id,
+            isouter=True
+            ).join(
+            follow,
+            follow.c.target_id==User.id,
+            isouter=True
+            ).first()
+
+        if not items:
+            if not graceful:
+                abort(404)
+            else:
+                return None
+
+        user=items[0]
+        user._is_blocking = items[1]
+        user._is_blocked = items[2]
+        user._is_following = items[3]
+
+    else:
+        user = nSession.query(
         User
         ).filter(
         or_(
@@ -27,27 +70,12 @@ def get_user(username, v=None, nSession=None, graceful=False):
             )
         ).first()
 
-    if not user:
-        if not graceful:
-            abort(404)
-        else:
-            return None
+        if not user:
+            if not graceful:
+                abort(404)
+            else:
+                return None
 
-    if v:
-        block = nSession.query(UserBlock).filter(
-            or_(
-                and_(
-                    UserBlock.user_id == v.id,
-                    UserBlock.target_id == user.id
-                ),
-                and_(UserBlock.user_id == user.id,
-                     UserBlock.target_id == v.id
-                     )
-            )
-        ).first()
-
-        user._is_blocking = block and block.user_id == v.id
-        user._is_blocked = block and block.target_id == v.id
 
     return user
 

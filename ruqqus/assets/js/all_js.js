@@ -401,7 +401,7 @@ function switch_css() {
   if (css.href.includes("/assets/style/main.css")) {
     post("/settings/dark_mode/1",
       callback=function(){
-        css.href="/assets/style/main_dark.css?v=2.36.0";
+        css.href="/assets/style/main_dark.css?v=2.36.3";
         dswitch.classList.remove("fa-toggle-off");
         dswitch.classList.add("fa-toggle-on");
         dswitchmobile.classList.remove("fa-toggle-off");
@@ -412,7 +412,7 @@ function switch_css() {
   else {
     post("/settings/dark_mode/0",
       callback=function(){
-        css.href="/assets/style/main.css?v=2.36.0";
+        css.href="/assets/style/main.css?v=2.36.3";
         dswitch.classList.remove("fa-toggle-on");
         dswitch.classList.add("fa-toggle-off");
         dswitchmobile.classList.remove("fa-toggle-on");
@@ -738,29 +738,20 @@ function post_toast(url, callback) {
 
 // Bell Notifications
 
-function toggleBell(e) {
-  let icon = document.getElementsByClassName('bell-icon');
+$('.bell-button').click(function (event) {
 
-  for (var i = 0; i < icon.length; i++){
-    icon[i].classList.toggle('fa-bell');
-    icon[i].classList.toggle('fa-bell-slash');
+  if (event.which != 1) {
+    return
   }
-}
 
-const registerBell = function() {
-  let button = document.getElementsByClassName('bell-button');
+  $('.bell-icon').toggleClass('fa-bell')
+  $('.bell-icon').toggleClass('fa-bell-on')
+  $('.bell-icon').toggleClass('text-purple')
 
-  for (var i = 0; i < button.length; i++) {
-    button[i].addEventListener('click', toggleBell, false);
-    button[i].addEventListener('keydown', function(event) {
-      if (event.keyCode === 13) {
-        toggleBell(event)
-      }
-    }, false)
-  };
-}
+  post_toast($(this).data('url'))
 
-registerBell()
+});
+
 
 //Admin post modding
 

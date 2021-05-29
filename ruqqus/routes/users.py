@@ -373,6 +373,27 @@ def saved_listing(v):
             }
 
 
+@app.post("/@<username>/toggle_bell")
+@app.post("/api/v2/users/<username>/toggle_bell")
+@auth_required
+@api("update")
+def toggle_user_bell(username, v):
+
+    user=get_user(username, v=v, graceful=True)
+    if not user:
+        return jsonify({"error": f"User '@{username}' not found."}), 404
+
+    follow=g.db.query(Follow).filter_by(user_id=v.id, target_id=user.id).first()
+    if not follow:
+        return jsonify({"error": f"You aren't following @{user.username}"}), 404
+
+    follow.get_notifs = not follow.get_notifs
+    g.db.add(follow)
+    g.db.commit()
+
+    return jsonify({"message":f"Notifications {'en' if follow.get_notifs else 'dis'}abled for @{user.username}"})
+
+
 def convert_file(html):
 
     if not isinstance(html, str):
@@ -518,3 +539,6 @@ def my_info_post(v):
     gevent.spawn_later(5, info_packet, v.username, method=method)
 
     return "started"
+
+
+

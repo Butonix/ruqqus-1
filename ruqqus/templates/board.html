@@ -2,9 +2,9 @@
 
 {% block stylesheets %}
 {% if v and session.get("dark_mode_enabled") %}
-<link id="css-link" rel="stylesheet" href="{{ b.css_dark_url }}?v=2.36.0">
+<link id="css-link" rel="stylesheet" href="{{ b.css_dark_url }}?v=2.36.3">
 {% else %}
-<link id="css-link" rel="stylesheet" href="{{ b.css_url }}?v=2.36.0">
+<link id="css-link" rel="stylesheet" href="{{ b.css_url }}?v=2.36.3">
 {% endif %}
 {% endblock %}
 
@@ -116,11 +116,11 @@
     css = document.getElementById("css-link");
     dswitch = document.getElementById("dark-switch");
 
-    if (css.href.endsWith("{{ b.css_url }}?v=2.36.0")) {
+    if (css.href.endsWith("{{ b.css_url }}?v=2.36.3")) {
       
       post("/settings/dark_mode/1",
         callback=function(){
-          css.href="{{ b.css_dark_url }}?v=2.36.0";
+          css.href="{{ b.css_dark_url }}?v=2.36.3";
           dswitch.classList.remove("fa-toggle-off");
           dswitch.classList.add("fa-toggle-on");
         }
@@ -129,7 +129,7 @@
     else {
       post("/settings/dark_mode/0",
         callback=function(){
-          css.href="{{ b.css_url }}?v=2.36.0";
+          css.href="{{ b.css_url }}?v=2.36.3";
           dswitch.classList.remove("fa-toggle-on");
           dswitch.classList.add("fa-toggle-off");
         }
@@ -162,13 +162,13 @@
         </ul>
       </div>
       <div class="card-body">
-        {% if v and not is_subscribed %}
+        {% if v and not b.is_subscribed %}
         <a href="/submit?guild={{ b.name | urlencode }}">
           <input type="text" class="form-control"
           placeholder="Share something with this guild..." aria-label="Username"
           aria-describedby="basic-addon1">
         </a>
-        {% elif v and is_subscribed %}
+        {% elif v and b.is_subscribed %}
         <a href="/submit?guild={{ b.name | urlencode }}">
           <input type="text" class="form-control"
           placeholder="Share something with your guild..." aria-label="Username"
@@ -310,10 +310,9 @@
       </div>
       <div id="button-unsub" class="btn-group {% if not b.has_subscriber(v) %}d-none{% endif %}" role="group" aria-label="Leave guild desktop">
         <button class="btn btn-secondary" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">Leave</button>
-        <!--
-        <button class="btn btn-secondary bell-button" data-toggle="tooltip" data-placement="bottom" title="Be notified when this guild has new content.">
-          <i class="fas fa-fw fa-bell bell-icon"></i>
-        </button>-->
+        <button class="btn btn-secondary bell-button" data-toggle="tooltip" data-placement="bottom" title="Be notified when this guild has new content." data-url="/+{{ b.name }}/toggle_bell">
+          <i class="fas fa-fw bell-icon {% if b.is_subscribed and b.is_subscribed.get_notifs %}fa-bell-on text-purple{% else %}fa-bell{% endif %}"></i>
+        </button>
       </div>
       {% elif not v %}
       <a class="btn btn-primary" href="/signup">Join guild</a>
@@ -365,18 +364,18 @@
         <a class="btn btn-primary btn-block text-white mb-2" href="{{ b.chat_url }}">Chat</a>
         {% endif %}
         {% if v %}
-        <div id="button-sub-mobile" {% if is_subscribed %}class="d-none"{% endif %}>
+        <div id="button-sub-mobile" {% if b.is_subscribed %}class="d-none"{% endif %}>
           <button class="btn btn-primary btn-block" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=toggleSub)">
             Join guild
           </button>
         </div>
-        <div id="button-unsub-mobile" {% if not is_subscribed %}class="d-none"{% endif %}>
+        <div id="button-unsub-mobile" {% if not b.is_subscribed %}class="d-none"{% endif %}>
           <div class="btn-group d-flex" role="group" aria-label="Leave guild mobile">
             <button class="btn btn-secondary btn-block" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">
               Leave
             </button>
-            <button class="btn btn-secondary bell-button">
-              <i class="fas fa-bell bell-icon"></i>
+            <button class="btn btn-secondary bell-button" data-url="/+{{ b.name }}/toggle_bell">
+              <i class="fas bell-icon fa-fw {% if b.is_subscribed and b.is_subscribed.get_notifs %}fa-bell-on text-purple{% else %}fa-bell{% endif %}"></i>
             </button>
           </div>
         </div>

@@ -709,57 +709,98 @@ class User(Base, Stndrd, Age_times):
     @property
     @lazy
     def mentions_count(self):
-        return self.notifications\
-            .join(Notification.comment)\
-            .filter(Notification.read == False,
-                    Comment.is_banned == False,
-                    Comment.deleted_utc == 0)\
-            .count()
+        cs=g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
+        ps=g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
+        return self.notifications.options(
+            lazyload('*')
+            ).join(
+            Notification.comment
+            ).filter(
+            Notification.read==False,
+            Comment.is_banned == False,
+            Comment.deleted_utc == 0
+            ).filter(
+                and_(
+                    Comment.parent_comment_id.notin_(cs),
+                    or_(
+                        Comment.level>1,
+                        Comment.parent_submission.notin_(ps)
+                    )
+                )
+            ).count()
+
+
+    @property
+    @lazy
+    def replies_count(self):
+        cs=g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
+        ps=g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
+        return self.notifications.options(
+            lazyload('*')
+            ).join(
+            Notification.comment
+            ).filter(
+            Comment.is_banned == False,
+            Comment.deleted_utc == 0
+            ).filter(
+            Notification.read==False,
+            or_(
+                Comment.parent_comment_id.in_(cs),
+                and_(
+                    Comment.level==1,
+                    Comment.parent_submission.in_(ps)
+                    )
+                )
+            ).count()
+
     @property
     @lazy
     def post_notifications_count(self):
-        pass
-        """return g.db.query(Submission)\
-            .filter(Submission.created_utc < self.posts_last_check_utc)\
-            .filter(Submission.deleted_utc == 0)\
-            .filter(Submission.is_banned == False)\
-            .filter(Submission.board_id.in_(g.db.query(PostNotificationSubscriptions.board_id).filter_by(user_id=self.id).all())
-                    ) \
-            .filter(Submission.author_id.in_(g.db.query(PostNotificationSubscriptions.subbed_to_user_id).filter_by(user_id=self.id).all()))\
-            .distinct()\
-            .count()"""
-
-
+        return self.notifications.filter(
+            Notification.read==False
+            ).join(
+            Submission,
+            Submission.id==Notification.submission_id
+            ).filter(
+            Submission.is_banned==False,
+            Submission.deleted_utc==0,
+            ).count()
 
     @property
     @lazy
-    def reply_notifications_count(self):
-        #TODO: query for count of new replies
-        # use self.replies_last_checked_utc
-        pass
+    def system_notif_count(self):
+        return self.notifications.options(
+            lazyload('*')
+            ).join(
+            Notification.comment
+            ).filter(
+            Notification.read==False,
+            Comment.author_id==1
+            ).count()
 
     @property
     @lazy
-    def replies(self):
-        #TODO: query for all new reply items for notifications
-        # use self.replies_last_checked_utc
-        pass
-
-    @property
-    @lazy
-    def post_notifications(self):
-        pass
-        """return g.db.query(Submission)\
-            .filter(Submission.created_utc < self.posts_last_check_utc)\
-            .filter(Submission.deleted_utc == 0)\
-            .filter(Submission.is_banned == False)\
-            .filter(Submission.board_id.in_(g.db.query(PostNotificationSubscriptions.board_id).filter_by(user_id=self.id).all())
-                    ) \
-            .filter(Submission.author_id.in_(g.db.query(PostNotificationSubscriptions.subbed_to_user_id).filter_by(user_id=self.id).all())).distinct()"""
-
-    @property
     def notifications_count(self):
-        return self.mentions_count #self.replies_notification_count + self.post_notifications_count + self.mentions_count
+        return self.notifications.options(
+            lazyload('*')
+            ).filter(
+                Notification.read==False
+            ).join(Notification.comment, isouter=True
+            ).join(Notification.post, isouter=True
+            ).filter(
+                or_(
+                    and_(
+                        Comment.is_banned==False,
+                        Comment.deleted_utc==0
+                    ),
+                    and_(
+                        Submission.is_banned==False,
+                        Submission.deleted_utc==0
+                    )
+                )
+            ).count()
+
+
 
 
     @property
@@ -1321,3 +1362,7 @@ class User(Base, Stndrd, Age_times):
         g.db.commit()
         return self._badges.all()
 
+    @property
+    def is_following(self):
+        return self.__dict__.get('_is_following',None)
+    

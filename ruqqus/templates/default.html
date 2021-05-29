@@ -187,9 +187,9 @@
     {% block stylesheets %}
 
     {% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
-    <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.36.0">
+    <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.36.3">
     {% else %}
-    <link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.36.0">
+    <link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.36.3">
     {% endif %}
 
     {% endblock %}
@@ -271,16 +271,10 @@
           <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger"></i><span class="badge-count font-weight-bolder">{{ v.notifications_count }}</span></a>
         </li>
 
-        {% elif v.notifications_count > 9 %}
-
-        <li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-          <a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger"></i><span class="badge-count font-weight-bolder" style="width: 24px;">9+</span></a>
-        </li>
-
         {% else %}
 
         <li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-          <a class="nav-link" href="/notifications?all=true" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Notifications"><i class="fas fa-bell"></i></a>
+          <a class="nav-link" href="/notifications/all" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Notifications"><i class="fas fa-bell"></i></a>
         </li>
 
         {% endif %}
@@ -636,7 +630,7 @@
 
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/all_js.js?v=2.36.0"></script>
+<script src="/assets/js/all_js.js?v=2.36.3"></script>
 
 <!-- ClipboardJS -->
 
