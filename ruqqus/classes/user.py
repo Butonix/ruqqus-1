@@ -754,7 +754,8 @@ class User(Base, Stndrd, Age_times):
     @property
     @lazy
     def post_notifications_count(self):
-        return self.notifications.filter(
+        return g.db.query(Notifications).filter(
+            Notification.user_id==self.id,
             Notification.read==False
             ).join(
             Submission,
@@ -769,10 +770,12 @@ class User(Base, Stndrd, Age_times):
     def system_notif_count(self):
         return g.db.query(Notification).options(
             lazyload('*')
-            ).join(Notification.comment
+            ).join(
+            Notification.comment
             ).filter(
             Notification.user_id==self.id,
-            Comment.author_id==1).count()
+            Comment.author_id==1
+            ).count()
     
 
 
