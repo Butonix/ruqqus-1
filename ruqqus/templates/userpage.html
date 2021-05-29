@@ -198,15 +198,15 @@
         <a href="/settings/profile" class="btn btn-secondary btn-sm">Edit profile</a>
         {% endif %}
         {% if v and v.id != u.id and not u.is_nofollow %}
-        <div id="button-unsub-mobile" {% if not is_following %}class="d-none"{% endif %}>
-          <button class="btn btn-secondary" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">Unsubscribe
+        <div id="button-unsub-mobile" {% if not is_following %}class="d-none"{% endif %} class="btn-group d-flex">
+          <button class="btn btn-secondary btn-block" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">Unsubscribe
           </button>
             <button class="btn btn-secondary bell-button" data-url="/@{{ u.username }}/toggle_bell">
               <i class="fas bell-icon {% if u.is_following and u.is_following.get_notifs %}fa-bell-on{% else %}fa-bell{% endif %}"></i>
             </button>
         </div>
         <div id="button-sub-mobile" {% if is_following %}class="d-none"{% endif %}>
-          <div class="btn-group d-flex" role="group" aria-label="Unsubscribe user mobile">
+          <div class="btn-group d-flex" aria-label="Unsubscribe user mobile">
             <button class="btn btn-primary" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">
               Subscribe
             </button>
