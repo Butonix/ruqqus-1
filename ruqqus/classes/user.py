@@ -754,14 +754,14 @@ class User(Base, Stndrd, Age_times):
     @property
     @lazy
     def post_notifications_count(self):
-        return g.db.query(Notification).options(
-            lazyload('*')
-            ).filter(
-            Notification.user_id==self.id,
+        return self.notifications.filter(
             Notification.read==False
-            ).join(Notification.post
+            ).join(
+            Notification.post
             ).filter(
-            Submission.is_banned==False, Submission.deleted_utc==0).count()
+            Submission.is_banned==False,
+            Submission.deleted_utc==0
+            ).count()
 
     @property
     @lazy
