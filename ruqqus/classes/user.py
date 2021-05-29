@@ -752,7 +752,7 @@ class User(Base, Stndrd, Age_times):
             ).count()
 
     @property
-    @lazy
+    #@lazy
     def post_notifications_count(self):
         return g.db.query(Notifications).filter(
             Notification.user_id==self.id,
