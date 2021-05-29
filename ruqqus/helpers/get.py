@@ -917,9 +917,9 @@ def get_guild(name, v=None, graceful=False, db=None):
             ).first()
 
         if items:
-            print(items)
             board=items[0]
             board._is_subscribed=items[1]
+            print(board.is_subscribed, board._is_subscribed)
         else:
             board=None
     else:
