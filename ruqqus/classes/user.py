@@ -716,6 +716,7 @@ class User(Base, Stndrd, Age_times):
             ).join(
             Notification.comment
             ).filter(
+            Notification.read==False
             Comment.is_banned == False,
             Comment.deleted_utc == 0
             ).filter(
@@ -742,6 +743,7 @@ class User(Base, Stndrd, Age_times):
             Comment.is_banned == False,
             Comment.deleted_utc == 0
             ).filter(
+            Notification.read==False,
             or_(
                 Comment.parent_comment_id.in_(cs),
                 and_(
@@ -761,7 +763,7 @@ class User(Base, Stndrd, Age_times):
             Submission.id==Notification.submission_id
             ).filter(
             Submission.is_banned==False,
-            Submission.deleted_utc==0
+            Submission.deleted_utc==0,
             ).count()
 
     @property
@@ -772,6 +774,7 @@ class User(Base, Stndrd, Age_times):
             ).join(
             Notification.comment
             ).filter(
+            Notification.read==False
             Comment.author_id==1
             ).count()
 
