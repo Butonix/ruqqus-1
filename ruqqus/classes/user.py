@@ -670,7 +670,7 @@ class User(Base, Stndrd, Age_times):
             Notification.id.desc()).offset(25 * (page - 1)).limit(26)
 
         output = []
-        for x in notifications:
+        for x in notifications[1:25]:
             x.read = True
             g.db.add(x)
             output.append(x.comment_id)
@@ -698,7 +698,7 @@ class User(Base, Stndrd, Age_times):
             ).offset(25*(page-1)).limit(26)
 
         output=[]
-        for x in notifications:
+        for x in notifications[1:25]:
             x.read=True
             g.db.add(x)
             output.append(x.submission_id)
