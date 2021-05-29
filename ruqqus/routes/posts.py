@@ -803,7 +803,7 @@ def submit_post(v):
         ).filter_by(
         target_id=v.id,
         get_notifs=True
-        ).all()
+        ).all() if not v.is_private and not v.is_nofollow else []
 
     uids=list(set([x[0] for x in board_uids] + [x[0] for x in follow_uids]))
 
