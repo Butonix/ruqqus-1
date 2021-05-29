@@ -785,7 +785,7 @@ class User(Base, Stndrd, Age_times):
     @property
     @lazy
     def notifications_count(self):
-        returun self.notifications.options(
+        return self.notifications.options(
             lazyload('*')
             ).filter(
                 Notification.read==False
