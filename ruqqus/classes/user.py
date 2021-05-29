@@ -755,7 +755,6 @@ class User(Base, Stndrd, Age_times):
     #@lazy
     def post_notifications_count(self):
         return self.notifications.filter(
-            Notification.user_id==self.id,
             Notification.read==False
             ).join(
             Submission,
@@ -773,7 +772,6 @@ class User(Base, Stndrd, Age_times):
             ).join(
             Notification.comment
             ).filter(
-            Notification.user_id==self.id,
             Comment.author_id==1
             ).count()
 
