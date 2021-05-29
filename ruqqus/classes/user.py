@@ -781,8 +781,8 @@ class User(Base, Stndrd, Age_times):
             lazyload('*')
             ).filter(
                 Notification.read==False
-            ).join(Notification.comment
-            ).join(Notification.post
+            ).join(Notification.comment, isouter=True
+            ).join(Notification.post, isouter=True
             ).filter(
                 or_(
                     and_(
