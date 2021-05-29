@@ -342,8 +342,8 @@ def board_name(name, v):
                                             listing=posts,
                                             next_exists=next_exists,
                                             sort_method=sort,
-                                            page=page,
-                                            is_subscribed=board.is_subscribed
+                                            page=page#,
+                                            #is_subscribed=board.is_subscribed
                                             ),
             'api': lambda: jsonify({"data": [x.json for x in posts],
                                     "next_exists": next_exists
