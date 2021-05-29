@@ -31,22 +31,22 @@
       </li>
       <li class="nav-item">
         <a class="nav-link py-3{% if request.path=='/notifications/posts' %} active{% endif %}" href="/notifications/posts">
-          Posts <span class="text-danger font-weight-bold">{{ self.post_notifications_count }}</span>
+          Posts <span class="text-danger font-weight-bold">{{ v.post_notifications_count }}</span>
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link py-3{% if request.path=='/notifications/replies' %} active{% endif %}" href="/notifications/replies">
-          Replies <span class="text-danger font-weight-bold">{{ self.replies_count }}</span>
+          Replies <span class="text-danger font-weight-bold">{{ v.replies_count }}</span>
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link py-3{% if request.path=='/notifications/mentions' %} active{% endif %}" href="/notifications/mentions">
-          Mentions <span class="text-danger font-weight-bold">{{ self.mentions_count }}</span>
+          Mentions <span class="text-danger font-weight-bold">{{ v.mentions_count }}</span>
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link py-3 {% if request.path=='/notifications/system' %} active{% endif %}" href="/notifications/system">
-          System <span class="text-danger font-weight-bold">{{ self.system_notif_count }}</span>
+          System <span class="text-danger font-weight-bold">{{ v.system_notif_count }}</span>
         </a>
       </li>
     </ul>
