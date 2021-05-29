@@ -319,6 +319,7 @@ class Board(Base, Stndrd, Age_times):
         return self.is_subscribed
     
     @property
+    @lazy
     def is_subscribed(self):
 
         print(self._is_subscribed)
