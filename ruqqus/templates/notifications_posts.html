@@ -1,7 +1,9 @@
 {% extends "notifications.html" %}
 
+{% block pagetype}frontpage{% endblock %}
+
 {% block notif_content %}
-    <div class="row no-gutters {% if listing %}mt-md-3{% elif not listing %}my-md-3{% endif %}">
+    <div class="row no-gutters mt-md-3">
       <div class="col-12">
         <div class="posts" id="posts">
   {% with listing=notifications %}
