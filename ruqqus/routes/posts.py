@@ -791,32 +791,69 @@ def submit_post(v):
 
     #Bell notifs
 
-    if new_post.is_public:
 
-        board_uids = g.db.query(
-            Subscription.user_id
-            ).filter_by(
-            board_id=new_post.board_id, 
-            is_active=True,
-            get_notifs=True
-            ).all()
+    board_uids = g.db.query(
+        Subscription.user_id
+        ).options(lazyload('*')).filter_by(
+        board_id=new_post.board_id, 
+        is_active=True,
+        get_notifs=True
+        )
 
-        follow_uids=g.db.query(
-            Follow.user_id
-            ).filter_by(
-            target_id=v.id,
-            get_notifs=True
-            ).all() if not v.is_private and not v.is_nofollow else []
+    follow_uids=g.db.query(
+        Follow.user_id
+        ).options(lazyload('*')).filter_by(
+        target_id=v.id,
+        get_notifs=True
+        ).join(Follow.target).filter(
+        User.is_private==False,
+        User.is_nofollow==False
+        )
 
-        uids=list(set([x[0] for x in board_uids] + [x[0] for x in follow_uids]))
+    if not new_post.is_public:
 
-        for uid in uids:
-            new_notif=Notification(
-                user_id=uid,
-                submission_id=new_post.id
+        contribs=g.db.query(ContributorRelationship).filter_by(board_id=new_post.board_id, is_active=True).subquery()
+        mods=g.db.query(ModRelationship).filter_by(board_id=new_post.board_id, accepted=True).subquery()
+
+        board_uids=board.uids.join(
+            contribs,
+            contribs.c.user_id==Subscription.user_id,
+            isouter=True
+            ).join(
+            mods,
+            mods.c.user_id==Subscription.user_id,
+            isouter=True
+            ).filter(
+                or_(
+                    mods.c.id != None,
+                    contribs.c.id !=None
                 )
-            g.db.add(new_notif)
-        g.db.commit()
+            )
+
+        follow_uids=follow_uids.join(
+            contribs,
+            contribs.c.user_id==Follow.user_id,
+            isouter=True
+            ).join(
+            mods,
+            mods.c.user_id==Follow.user_id,
+            isouter=True
+            ).filter(
+                or_(
+                    mods.c.id != None,
+                    contribs.c.id !=None
+                )
+            )
+            
+    uids=list(set([x[0] for x in board_uids.all()] + [x[0] for x in follow_uids.all()]))
+
+    for uid in uids:
+        new_notif=Notification(
+            user_id=uid,
+            submission_id=new_post.id
+            )
+        g.db.add(new_notif)
+    g.db.commit()
 
 
     return {"html": lambda: redirect(new_post.permalink),
