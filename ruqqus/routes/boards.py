@@ -2271,3 +2271,24 @@ def siege_guild(v):
         g.db.add(ma)        
 
     return redirect(f"/+{guild.name}/mod/mods")
+
+
+@app.post("/+<guildname>/toggle_bell")
+@app.post("/api/v2/guilds/<guildname>/toggle_bell")
+@auth_required
+@api("update")
+def toggle_guild_bell(guildname, v):
+
+    guild=get_guild(guildname, v=v, graceful=True)
+    if not guild:
+        return jsonify({"error": f"Guild '+{guildname}' not found."}), 404
+
+    sub=g.db.query(Subscription).filter_by(user_id=v.id, target_id=user.id, is_active=True).first()
+    if not sub:
+        return jsonify({"error": f"You aren't a member of +{guild.name}"}), 404
+
+    sub.get_notifs = not sub.get_notifs
+    g.db.add(sub)
+    g.db.commit()
+
+    return jsonify({"message":f"Notifications {'en' if sub.get_notifs else 'dis'}abled for @{guild.name}"})
