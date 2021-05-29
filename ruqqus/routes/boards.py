@@ -274,7 +274,7 @@ def board_name(name, v):
 
     board = get_guild(name, v=v)
 
-    print(board.is_subscribed)
+    #print(board.is_subscribed)
 
     #if not board.name == name and not request.path.startswith('/api/v1'):
         #return redirect(request.path.replace(name, board.name))
