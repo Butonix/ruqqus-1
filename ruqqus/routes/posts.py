@@ -789,6 +789,33 @@ def submit_post(v):
     # print(f"Content Event: @{new_post.author.username} post
     # {new_post.base36id}")
 
+    #Bell notifs
+
+    board_uids = g.db.query(
+        Subscription.user_id
+        ).filter_by(
+        board_id=new_post.board_id, 
+        is_active=True,
+        get_notifs=True
+        ).all()
+    follow_uids=g.db.query(
+        Follow.user_id
+        ).filter_by(
+        target_id=v.id,
+        get_notifs=True
+        ).all()
+
+    uids=list(set([x[0] for x in board_uids] + [x[0] for x in follow_uids]))
+
+    for uid in uids:
+        new_notif=Notification(
+            user_id=uid,
+            submission_id=new_post.id
+            )
+        g.db.add(new_notif)
+    g.db.commit()
+
+
     return {"html": lambda: redirect(new_post.permalink),
             "api": lambda: jsonify(new_post.json)
             }
