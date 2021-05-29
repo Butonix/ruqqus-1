@@ -1,9 +1,13 @@
 {% extends "notifications.html" %}
 
 {% block notif_content %}
-  <div class="my-3">
+    <div class="row no-gutters {% if listing %}mt-md-3{% elif not listing %}my-md-3{% endif %}">
+      <div class="col-12">
+        <div class="posts" id="posts">
   {% with listing=notifications %}
     {% include "submission_listing.html" %}
   {% endwith %}
+      </div>
+    </div>
   </div>
 {% endblock %}
