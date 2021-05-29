@@ -2293,4 +2293,4 @@ def toggle_guild_bell(guildname, v):
     g.db.add(sub)
     g.db.commit()
 
-    return jsonify({"message":f"Notifications {'en' if sub.get_notifs else 'dis'}abled for @{guild.name}"})
+    return jsonify({"message":f"Notifications {'en' if sub.get_notifs else 'dis'}abled for +{guild.name}"})
