@@ -743,7 +743,7 @@ function toggleBell(e) {
 
   for (var i = 0; i < icon.length; i++){
     icon[i].classList.toggle('fa-bell');
-    icon[i].classList.toggle('fa-bell-slash');
+    icon[i].classList.toggle('fa-bell-on');
   }
 }
 
