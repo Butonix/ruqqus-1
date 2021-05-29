@@ -919,7 +919,7 @@ def get_guild(name, v=None, graceful=False, db=None):
         if items:
             board=items[0]
             board._is_subscribed=items[1]
-            print(board.is_subscribed, board._is_subscribed)
+            print(board.is_subscribed, board._is_subscribed, board.is_subscribed.get_notifs)
         else:
             board=None
     else:
