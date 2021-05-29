@@ -2283,7 +2283,7 @@ def toggle_guild_bell(guildname, v):
     if not guild:
         return jsonify({"error": f"Guild '+{guildname}' not found."}), 404
 
-    sub=g.db.query(Subscription).filter_by(user_id=v.id, target_id=user.id, is_active=True).first()
+    sub=g.db.query(Subscription).filter_by(user_id=v.id, board_id=guild.id, is_active=True).first()
     if not sub:
         return jsonify({"error": f"You aren't a member of +{guild.name}"}), 404
 
