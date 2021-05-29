@@ -766,9 +766,11 @@ class User(Base, Stndrd, Age_times):
     @property
     @lazy
     def system_notif_count(self):
-        return self.notifications.options(
+        return g.db.query(Notification).options(
             lazyload('*')
-            ).join(Notification.comment).filter(Comment.author_id==1).count()
+            ).join(Notification.comment).filter(
+            Notificaiton.user_id==self.id,
+            Comment.author_id==1).count()
     
 
 
