@@ -117,7 +117,7 @@
     dswitch = document.getElementById("dark-switch");
 
     if (css.href.endsWith("{{ b.css_url }}?v=2.36.3")) {
-      
+
       post("/settings/dark_mode/1",
         callback=function(){
           css.href="{{ b.css_dark_url }}?v=2.36.3";
@@ -311,7 +311,7 @@
       <div id="button-unsub" class="{% if not b.is_subscribed %}d-none{% endif %}" role="group" aria-label="Leave guild desktop">
         <button class="btn btn-secondary" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">Leave</button>
         <button class="btn btn-transparent bell-button" data-toggle="tooltip" data-placement="bottom" title="Be notified when this guild has new content." data-url="/+{{ b.name }}/toggle_bell">
-          <i class="fas fa-fw bell-icon {% if b.is_subscribed and b.is_subscribed.get_notifs %}fa-bell-on text-purple{% else %}fa-bell{% endif %}"></i>
+          <i class="fas fa-fw bell-icon {% if b.is_subscribed and b.is_subscribed.get_notifs %}fa-bell-on text-primary{% else %}fa-bell{% endif %}"></i>
         </button>
       </div>
       {% elif not v %}
@@ -374,7 +374,7 @@
             Leave
           </button>
           <button class="btn btn-transparent bell-button" data-url="/+{{ b.name }}/toggle_bell">
-            <i class="fas bell-icon fa-fw {% if b.is_subscribed and b.is_subscribed.get_notifs %}fa-bell-on text-purple{% else %}fa-bell{% endif %}"></i>
+            <i class="fas bell-icon fa-fw {% if b.is_subscribed and b.is_subscribed.get_notifs %}fa-bell-on text-primary{% else %}fa-bell{% endif %}"></i>
           </button>
         </div>
         {% elif not v %}
