@@ -324,7 +324,10 @@ class Board(Base, Stndrd, Age_times):
 
         #print(self._is_subscribed)
 
-        return self.__dict__.get("_is_subscribed")
+        x=self.__dict__.get("_is_subscribed")
+        if isinstance(x,int):
+            x=g.db.query(Subscription).get(x)
+        return x
     
     def has_contributor(self, user):
 
