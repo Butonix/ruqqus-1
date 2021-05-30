@@ -798,7 +798,10 @@ def submit_post(v):
         Subscription.board_id==new_post.board_id, 
         Subscription.is_active==True,
         Subscription.get_notifs==True,
-        Subscription.user_id != v.id
+        Subscription.user_id != v.id,
+        Subscription.user_id.notin_(
+            g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
+            )
         )
 
     follow_uids=g.db.query(
@@ -806,7 +809,13 @@ def submit_post(v):
         ).options(lazyload('*')).filter(
         Follow.target_id==v.id,
         Follow.get_notifs==True,
-        Follow.user_id!=v.id
+        Follow.user_id!=v.id,
+        Follow.user_id.notin_(
+            g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
+            ),
+        Follow.user_id.notin_(
+            g.db.query(UserBlock.target_id).filter_by(user_id=v.id).subquery()
+            )
         ).join(Follow.target).filter(
         User.is_private==False,
         User.is_nofollow==False,
