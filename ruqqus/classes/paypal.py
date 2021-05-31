@@ -230,7 +230,7 @@ class PromoCode(Base):
 			return cents
 
 	@property
-	def promo_is_active:
+	def promo_is_active(self):
 		now=int(time.time())
 
 		if self.promo_start_utc and now<self.promo_start_utc:
