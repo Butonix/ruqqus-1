@@ -80,7 +80,7 @@ def coin_goal(x):
     
     coins=g.db.query(func.sum(PayPalTxn.coin_count)).filter(
         PayPalTxn.created_utc>cutoff,
-        PayPalTxn.status==3).all()[0][0]
+        PayPalTxn.status==3).all()[0][0] or 0
     
     
     return int(100*coins/1000)
