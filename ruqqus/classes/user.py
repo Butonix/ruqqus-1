@@ -846,6 +846,23 @@ class User(Base, Stndrd, Age_times):
             output.append(user)
 
         return output
+    
+    def alts_subquery(self):
+        return g.db.query(User.id).filter(
+            or_(
+                User.id.in_(
+                    g.db.query(Alt.user1).filter(
+                        Alt.user2==self.id
+                    ).subquery()
+                ),
+                User.id.in_(
+                    g.db.query(Alt.user2).filter(
+                        Alt.user1==self.id
+                    ).subquery()
+                ).subquery()
+            )
+        ).subquery()
+        
 
     def alts_threaded(self, db):
 
