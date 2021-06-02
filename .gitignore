@@ -109,6 +109,7 @@ teedee/.DS_Store
 #node_modules/
 package-lock.json
 .css.map
+*.scssc
 *.map
 tee_dee_templates/
 local.txt
