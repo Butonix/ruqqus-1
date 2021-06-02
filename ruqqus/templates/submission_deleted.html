@@ -12,7 +12,7 @@
 {% endif %}
 
 {% block title %}
-{% if comment_info and not comment_info.is_banned and not linked_comment.is_deleted %}
+{% if comment_info and not comment_info.is_banned and linked_comment.deleted_utc == 0 %}
 <title>@{{ comment_info.author.username }} comments in +{{ p.board.name }} on "{{ p.title }}"</title>
 <meta name="description" content="{{ comment_info.body }}">
 {% else %}
@@ -227,6 +227,7 @@
               </a>
               <span class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMenuLink">
                 <a class="dropdown-item" href="?sort=new">New</a>
+                <a class="dropdown-item" href="?sort=old">Old</a>
                 <a class="dropdown-item" href="?sort=top">Top</a>
                 <a class="dropdown-item" href="?sort=disputed">Disputed</a>
                 <a class="dropdown-item d-none" href="#">Based</a>
@@ -254,7 +255,7 @@
       {% include "comments.html" %}
      {% endwith %}
    </div>
-       {% elif not p.replies and not p.is_deleted %}
+       {% elif not p.replies and p.deleted_utc == 0 %}
        <div class="comment-section text-center py-7">
         <i class="fad fa-ghost text-gray-500 mb-4" style="
         font-size: 3.5rem;"></i>

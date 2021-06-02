@@ -1,13 +1,15 @@
 import time
 import json
 from os import environ, path
-from sqlalchemy import text
+from sqlalchemy import text, func
+from flask import g
+import calendar
 
 from ruqqus.classes.user import User
 from .get import *
 import requests
-from ruqqus.__main__ import app, cache
 
+from ruqqus.__main__ import app, cache
 
 
 @app.template_filter("total_users")
@@ -18,35 +20,40 @@ def total_users(x):
 
 
 @app.template_filter("source_code")
-@cache.memoize(timeout=60*60*24)
+@cache.memoize(timeout=60 * 60 * 24)
 def source_code(file_name):
 
-    return open(path.expanduser('~')+'/ruqqus/'+file_name, mode="r+").read()
+    return open(path.expanduser('~') + '/ruqqus/' +
+                file_name, mode="r+").read()
+
 
 @app.template_filter("full_link")
 def full_link(url):
 
     return f"https://{app.config['SERVER_NAME']}{url}"
 
+
 @app.template_filter("env")
 def env_var_filter(x):
 
-    x=environ.get(x, 1)
+    x = environ.get(x, 1)
 
     try:
         return int(x)
-    except:
+    except BaseException:
         try:
             return float(x)
-        except:
+        except BaseException:
             return x
-        
+
+
 @app.template_filter("js_str_escape")
 def js_str_escape(s):
-    
-    s=s.replace("'", r"\'")
+
+    s = s.replace("'", r"\'")
 
     return s
+
 
 @app.template_filter("is_mod")
 @cache.memoize(60)
@@ -54,49 +61,35 @@ def jinja_is_mod(uid, bid):
 
     return bool(get_mod(uid, bid))
 
-@app.template_filter('goals')
-@cache.memoize(3600)
-def patreon_goals():
+@app.template_filter("coin_goal")
+@cache.cached(timeout=600, key_prefix="premium_coin_goal")
+def coin_goal(x):
+    
+    now = time.gmtime()
+    midnight_month_start = time.struct_time((now.tm_year,
+                                              now.tm_mon,
+                                              1,
+                                              0,
+                                              0,
+                                              0,
+                                              now.tm_wday,
+                                              now.tm_yday,
+                                              0)
+                                             )
+    cutoff = calendar.timegm(midnight_month_start)
+    
+    coins=g.db.query(func.sum(PayPalTxn.coin_count)).filter(
+        PayPalTxn.created_utc>cutoff,
+        PayPalTxn.status==3).all()[0][0] or 0
+    
+    
+    return int(100*coins/1000)
 
-    refresh_token = environ.get('PATREON_REFRESH_TOKEN')
-    client_id = environ.get("PATREON_CLIENT_ID")
-    client_secret = environ.get("PATREON_CLIENT_SECRET")
 
-    # step 1: obtain new access token
-    url = "https://www.patreon.com/api/oauth2/token"
-    params = {"grant_type": 'refresh_token',
-              "client_id": client_id,
-              "client_secret": client_secret,
-              "refresh_token": refresh_token}
+@app.template_filter("app_config")
+def app_config(x):
+    return app.config.get(x)
 
-    x = requests.get(url, params=params)
-
-    access_token = x.json()["access_token"]
-
-    # step 2: obtain campaign info
-    url = "https://www.patreon.com/api/oauth2/api/current_user/campaigns"
-    headers = {"Authorization": "Bearer: " + access_token}
-
-    x = requests.get(url, headers=headers)
-
-    data = x.json()
-
-    # get current support total
-    total_support_cents = data["data"][0]["attributes"]["pledge_sum"]
-
-    # get goal amounts - looking for lowest incomplete goal
-    goal_cents = 99999999
-    progress = 0
-    for entry in data["included"]:
-
-        if "completed_percentage" not in entry["attributes"]:
-            continue
-
-        if entry["attributes"]['amount_cents'] < goal_cents and entry["attributes"]["completed_percentage"] < 100:
-            goal_cents = entry["attributes"]['amount_cents']
-            progress = entry["attributes"]['completed_percentage']
-
-    #print("goal cents: " + goal_cents)
-    #print("percent there: " + progress)
-    return {'cents': goal_cents,
-            'percent': progress}
+# @app.template_filter("general_chat_count")
+# def general_chat_count(x):
+#     return get_guild("general").chat_count

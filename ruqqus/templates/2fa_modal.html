@@ -23,13 +23,17 @@
               <div class="text-small text-muted">Or enter this code: {{ mfa_secret }}</div>
             </div>
             <p>
-              <span class="font-weight-bold">Step 2:</span> Enter the six-digit code generated in the authenticator app and your Ruqqus account password.
+              <span class="font-weight-bold">Step 2:</span> Write down your Two-Factor Recovery Code and store it in a safe place. This code will <span class="font-weight-bold">not</span> be shown again. <span class="font-weight-bold">If you lose your two-factor device, you will not be able to recover your account without this code.</span>
+            </p>
+            <p class="font-weight-bold text-purple text-center text-monospace">{{ recovery }}</p>
+            <p>
+              <span class="font-weight-bold">Step 3:</span> Enter the six-digit code generated in the authenticator app and your {{ 'SITE_NAME' | app_config }} account password.
             </p>
             <label for="2fa_input">6-digit code</label>
             <input type="text" class="form-control mb-2" id="2fa_input" name="2fa_token" placeholder="# # # # # #" required>
 
             <label for="2fa_input_password">Password</label>
-            <input type="password" autocomplete="new-password" class="form-control mb-2" id="2fa_input_password" name="password" oninput="document.getElementById('enable2faButton').disabled=false" required>
+            <input type="password" autocomplete="new-password" class="form-control mb-2" id="2fa_input_password" name="password" oninput="document.getElementById('enable2faButton').disabled=false" autocomplete="off" required>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
@@ -46,11 +50,11 @@
 
             <div class="alert alert-warning" role="alert">
               <i class="fas fa-info-circle"></i>
-              To disable two-step login, please enter your Ruqqus account password and the 6-digit code generated in your authentication app.
+              To disable two-step login, please enter your {{ 'SITE_NAME' | app_config }} account password and the 6-digit code generated in your authentication app. If you no longer have your two-step device, enter your Two-Factor Recovery Code instead.
             </div>
 
             <label for="2fa_input_password">Password</label>
-            <input type="password" autocomplete="new-password" class="form-control mb-2" id="2fa_input_password" name="password" required>
+            <input type="password" autocomplete="new-password" class="form-control mb-2" id="2fa_input_password" name="password" autocomplete="off" required>
 
             <label for="2fa_input">6-digit code</label>
             <input type="text" class="form-control mb-2" id="2fa_input" name="2fa_remove" placeholder="# # # # # #" oninput="document.getElementById('disable2faButton').disabled=false" required>

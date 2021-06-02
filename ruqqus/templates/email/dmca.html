@@ -1,19 +1,4 @@
 {% extends "email/default.html" %}
 
 {% block title %}DMCA Takedown Request{% endblock %}
-
-{% block content %}
-
-<table>
-	<tr>
-		<th>Key</th>
-		<th>Value</th>
-	</tr>
-	{% for entry in data %}
-	<tr>
-		<td>{{ entry[0] }}</td>
-		<td>{{ entry[1] }}
-	</tr>
-	{% endfor %}
-</table>
-{% endblock %}
+{% block preheader %}DMCA Takedown Request{% endblock %}

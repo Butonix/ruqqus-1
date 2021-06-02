@@ -4,7 +4,6 @@ from .api import *
 from .boards import *
 from .comments import *
 from .discord import *
-from .patreon import *
 from .errors import *
 from .flagging import *
 from .front import *
@@ -13,6 +12,7 @@ from .legal import *
 from .login import *
 from .messaging import *
 from .oauth import *
+from .paypal import *
 from .posts import *
 from .search import *
 from .settings import *

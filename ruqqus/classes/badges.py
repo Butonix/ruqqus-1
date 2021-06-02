@@ -2,20 +2,21 @@ from flask import render_template
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
-from ruqqus.__main__ import Base
+from ruqqus.__main__ import Base, app
+
 
 class BadgeDef(Base):
 
-    __tablename__="badge_defs"
+    __tablename__ = "badge_defs"
 
     id = Column(BigInteger, primary_key=True)
-    name=Column(String(64))
-    description=Column(String(64))
-    icon=Column(String(64))
-    kind=Column(Integer, default=1)
-    rank=Column(Integer, default=1)
-    qualification_expr=Column(String(128), default=None)
-    
+    name = Column(String(64))
+    description = Column(String(64))
+    icon = Column(String(64))
+    kind = Column(Integer, default=1)
+    rank = Column(Integer, default=1)
+    qualification_expr = Column(String(128), default=None)
+
     def __repr__(self):
 
         return f"<BadgeDef(badge_id={self.id})>"
@@ -24,20 +25,29 @@ class BadgeDef(Base):
     def path(self):
 
         return f"/assets/images/badges/{self.icon}"
+
+    @property
+    def json_core(self):
+        data={
+            "name": self.name,
+            "description": self.description,
+            "icon": self.icon
+        }
     
+
 
 class Badge(Base):
 
-    __tablename__="badges"
+    __tablename__ = "badges"
 
-    id=Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
 
     user_id = Column(Integer, ForeignKey('users.id'))
-    badge_id=Column(Integer, ForeignKey("badge_defs.id"))
-    description=Column(String(64))
-    url=Column(String(256))
-    created_utc=Column(Integer)
-    badge=relationship("BadgeDef", lazy="joined", innerjoin=True)
+    badge_id = Column(Integer, ForeignKey("badge_defs.id"))
+    description = Column(String(64))
+    url = Column(String(256))
+    created_utc = Column(Integer)
+    badge = relationship("BadgeDef", lazy="joined", innerjoin=True)
 
     def __repr__(self):
 
@@ -58,7 +68,6 @@ class Badge(Base):
     def name(self):
         return self.badge.name
 
-
     @property
     def path(self):
         return self.badge.path
@@ -69,10 +78,15 @@ class Badge(Base):
         return render_template("badge.html", b=self)
 
     @property
-    def json(self):
+    def json_core(self):
 
-        return {'text':self.text,
-                'name':self.name,
+        return {'text': self.text,
+                'name': self.name,
                 'created_utc': self.created_utc,
-                'url':self.url
+                'url': self.url,
+                'icon_url':f"https://{app.config['SERVER_NAME']}{self.path}"
                 }
+
+    property
+    def json(self):
+        return self.json_core

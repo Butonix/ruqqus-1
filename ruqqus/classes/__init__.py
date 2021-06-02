@@ -5,6 +5,7 @@ from .boards import *
 from .board_relationships import *
 from .clients import *
 from .comment import *
+from .custom_errors import *
 from .domains import Domain
 from .flags import *
 from .user import *
@@ -17,3 +18,7 @@ from .subscriptions import *
 from .ips import *
 from .titles import *
 from .messaging import *
+from .paypal import *
+from .mod_logs import *
+from .categories import *
+#from lodges import *

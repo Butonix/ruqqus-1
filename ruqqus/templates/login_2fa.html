@@ -5,10 +5,10 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Sign in to Ruqqus">
+    <meta name="description" content="Sign in to {{ 'SITE_NAME' | app_config }}">
     <meta name="author" content="">
 
-    <title>2-Step Login - Ruqqus</title>
+    <title>2-Step Login - {{ 'SITE_NAME' | app_config }}</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -45,7 +45,7 @@
                     <a class="nav-link" href="/help/terms">Terms</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="mailto:info@ruqqus.com">Contact</a>
+                    <a class="nav-link" href="/help/contact">Contact</a>
                 </li>
             </ul>
         </div>
@@ -54,7 +54,7 @@
 
 <!-- Page Content -->
 
-<div class="container-fluid position-absolute h-100 p-0">
+<div class="container-fluid position-absolute h-100 p-0 overflow-auto">
     <div class="row no-gutters h-100">
 
         <div class="col-12 col-md-6 my-auto p-3">
@@ -64,7 +64,7 @@
                 <div class="col-10 col-md-7">
 
                     <div class="mb-5">
-                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">ruqqus</span></a>
+                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">{{ 'SITE_NAME' | app_config | lower }}</span></a>
                     </div>
 
                     <div id="login-form" class="">
@@ -96,10 +96,13 @@
                         <label for="2fa_token" class="mt-3">Your verification code</label>
 
                         <input class="form-control" id="2fa_token" name="2fa_token" type="text" placeholder="6-digit code">
+                        
+                        <small>If you don't have your 2FA device, enter your Recovery Code instead. Entering your Recovery Code will also disable 2FA on your account.</small>
 
                         <button class="btn btn-primary login w-100 mt-3" id="login_button">Sign in</button>
 
                     </form>
+
 
                 </div>
 

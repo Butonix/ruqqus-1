@@ -14,7 +14,7 @@
 <meta property="og:article:author" content="@{{ u.username }}" />
 <meta property="article:section" content="{{ u.username }}'s profile - Ruqqus" />
 <meta property="article:published_time" content="{{ u.created_date }}" />
-<meta property="og:description" name="description" content="{{ u.true_score }} Rep · Joined {{ u.created_date }} · {% if u.follower_count >=1 and not u.is_private %}{{ u.follower_count }} Subscribers · {% endif %}{% if not u.is_private %}{{ u.post_count }} Posts · {{ u.comment_count }} Comments · {% endif %}{{u.bio}}" />
+<meta property="og:description" name="description" content="{{ u.true_score }} Rep · Joined {{ u.created_date }} · {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{ u.stored_subscriber_count }} Subscribers · {% endif %}{% if not u.is_private %}{{ u.post_count }} Posts · {{ u.comment_count }} Comments · {% endif %}{{u.bio}}" />
 <meta property="og:author" name="author" content="@{{ u.username }}" />
 <meta property="og:title" content="{{ u.username }}" />
 <meta property="og:image" content="{% if u.has_banner %}{{ u.banner_url }}{% else %}{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}{% endif %}" />
@@ -25,7 +25,7 @@
 <meta name="twitter:site" content="@ruqqus">
 <meta name="twitter:title" content="{{ u.username }}'s profile - Ruqqus" />
 <meta name="twitter:creator" content="@{{ u.username }}">
-<meta name="twitter:description" content="{{ u.true_score }} Rep · Joined {{ u.created_date }} ·{% if u.follower_count >=1 and not u.is_private %}{{ u.follower_count }} Subscribers ·{% endif %} {% if not u.is_private %} {{ u.post_count }} Posts · {{ u.comment_count }} Comments ·{% endif %} {{u.bio}}" />
+<meta name="twitter:description" content="{{ u.true_score }} Rep · Joined {{ u.created_date }} ·{% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{ u.stored_subscriber_count }} Subscribers ·{% endif %} {% if not u.is_private %} {{ u.post_count }} Posts · {{ u.comment_count }} Comments ·{% endif %} {{u.bio}}" />
 <meta name="twitter:image" content="{% if u.has_banner %}{{ u.banner_url }}{% else %}{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}{% endif %}" />
 <meta name="twitter:url" content="{{ u.permalink | full_link}}" />
 {% endblock %}
@@ -42,7 +42,7 @@
   <div class="col px-0">
     <div class="jumbotron jumbotron-fluid jumbotron-guild d-none d-md-block" style="background-image: url({{ u.banner_url }})">
       <div class="jumbotron-overlay"></div>
-      <div class="position-absolute w-100" style="bottom: 1rem;">
+      <div class="w-100 my-3">
         <div class="container-fluid">
           <div class="d-md-flex text-center text-md-left">
             <div>
@@ -51,6 +51,11 @@
             <div class="ml-3 w-100">
               <div class="d-flex align-items-center mt-1 mb-2">
                 <h1 class="h3 mb-0">{{ u.username }}</h1>
+                {% if u.username != u.original_username %}
+                <span>
+                  <i class="fad fa-user-tag text-info align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Original Username: @{{ u.original_username }}"></i>
+                </span>
+                {% endif %}
                 {% if u.admin_level > 1 %}
                 <span>
                   <i class="fad fa-shield text-admin align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Admin"></i>
@@ -96,38 +101,51 @@
         </div>
 
         <div class="font-weight-normal">
-          <span class="font-weight-bold">{{ u.true_score }}</span> rep · {% if u.follower_count >=1 %}<span class="font-weight-bold">{{ u.follower_count }}</span> subscriber{{ 's' if u.follower_count != 1 else '' }} · {% endif %}joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ u.created_datetime }}" class="font-weight-bold">{{ u.created_date }}</span>
+          <span class="font-weight-bold">{{ u.true_score }}</span> rep · {% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<span class="font-weight-bold">{{ u.stored_subscriber_count }}</span> subscriber{{ 's' if u.stored_subscriber_count != 1 else '' }} · {% endif %}joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ u.created_datetime }}" class="font-weight-bold">{{ u.created_date }}</span>
         </div>
-          {% if u.bio_html %}
-          <p class="text-muted">{{ u.bio_html | safe }}</p>
-          {% else %}
-          <p class="text-muted">No bio...</p>
-          {% endif %}
-          {% if u.bio_html and v %}
-          {% endif %}
+        {% if u.bio_html %}
+        <p class="text-muted">{{ u.bio_html | safe }}</p>
+        {% else %}
+        <p class="text-muted">No bio...</p>
+        {% endif %}
+        {% if u.bio_html and v %}
+        {% endif %}
 
         <div class="d-flex justify-content-between align-items-center">
           <div>
-           {% if v and v.id != u.id  %}
-           <div id="button-unsub" {% if not is_following %}class="d-none"{% endif %}><a class="btn btn-secondary" href="javascript:void(0)" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Unsubscribe</a></div>
-           <div id="button-sub" {% if is_following %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Subscribe</a></div>
-           {% elif v and v.id == u.id %}
-           <a href="/settings/profile" class="btn btn-secondary">Edit profile</a>
-           {% endif %}
-         </div>
-
-          <div>
-            {% for b in u.badges %}
-            {% include "badge.html" %}
-            {% else %}
-            {% endfor %}
+           {% if v and v.id != u.id and not u.is_private and not u.is_nofollow %}
+           <div id="button-sub" {% if is_following %}class="d-none"{% endif %}>
+            <button class="btn btn-primary" onclick="post('/api/follow/{{ u.username }}', callback=toggleSub)">
+              Follow
+            </button>
           </div>
+          <div id="button-unsub" class="btn-group {% if not is_following %}d-none{% endif %}" role="group" aria-label="Unfollow this user">
+            <button class="btn btn-secondary" onclick="post('/api/unfollow/{{ u.username }}', callback=toggleSub)">
+              Unfollow
+            </button>
+            
+            <button class="btn btn-secondary bell-button" data-toggle="tooltip" data-placement="bottom" title="Be notified when this user publishes new content." data-url="/@{{ u.username }}/toggle_bell">
+              <i class="fas fa-fw bell-icon {% if u.is_following and u.is_following.get_notifs %}fa-bell-on text-purple{% else %}fa-bell{% endif %}"></i>
+            </button>
 
-       </div>
+          </div>
+          {% elif v and v.id == u.id %}
+          <a href="/settings/profile" class="btn btn-secondary">Edit profile</a>
+          {% endif %}
+        </div>
 
-     </div>
-   </div>
- </div>
+        <div>
+          {% for b in u.badges %}
+          {% include "badge.html" %}
+          {% else %}
+          {% endfor %}
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
 </div>
 </div>
 </div>
@@ -150,10 +168,15 @@
       <div class="mt-n3 py-3">
         <a href="{{ u.permalink }}" class="text-black">
           <h1 class="h5 d-inline-block">{{ u.username }}
+            {% if u.username != u.original_username %}
+            <span>
+              <i class="fad fa-user-tag text-info align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Original Username: @{{ u.original_username }}"></i>
+            </span>
+            {% endif %}
             <!--{% if u.over_18 %}
             <span class="badge badge-danger text-small align-middle mx-1">nsfw</span>
             {% endif %}-->
-            {% if v and v.has_follower(u) %}
+            {% if v and v.has_follower(u) and not v.is_nofollow %}
             <span class="badge badge-secondary text-small align-middle mx-1">Follows you</span>
             {% endif %}
           </h1>
@@ -162,19 +185,33 @@
         {% if u.bio_html %}
         <p class="text-muted text-break">{{ u.bio_html | safe }}</p>
         {% endif %}
-        <p class="font-weight-bold">{{ u.follower_count }} subscriber{{ 's' if u.follower_count != 1 else '' }}</p>
+        {% if u.stored_subscriber_count >=1 and not u.is_nofollow %}
+        <p class="font-weight-bold">{{ u.stored_subscriber_count }} subscriber{{ 's' if u.stored_subscriber_count != 1 else '' }}</p>
+        {% endif %}
         <div class="mb-3">
-            {% for b in u.badges %}
-            {% include "badge.html" %}
-            {% else %}
-            {% endfor %}
+          {% for b in u.badges %}
+          {% include "badge.html" %}
+          {% else %}
+          {% endfor %}
         </div>
         {% if v and v.id == u.id %}
-           <a href="/settings/profile" class="btn btn-secondary btn-sm">Edit profile</a>
+        <a href="/settings/profile" class="btn btn-secondary btn-sm">Edit profile</a>
         {% endif %}
-        {% if v and v.id != u.id %}
-        <div id="button-unsub-mobile" {% if not is_following %}class="d-none"{% endif %}><a class="btn btn-secondary" href="javascript:void(0)" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">Unsubscribe</a></div>
-        <div id="button-sub-mobile" {% if is_following %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">Subscribe</a></div>
+        {% if v and v.id != u.id and not u.is_nofollow %}
+        <div id="button-unsub-mobile" {% if not is_following %}class="d-none"{% endif %} class="btn-group d-flex">
+          <button class="btn btn-secondary btn-block" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">Unsubscribe
+          </button>
+            <button class="btn btn-secondary bell-button" data-url="/@{{ u.username }}/toggle_bell">
+              <i class="fas bell-icon fa-fw {% if u.is_following and u.is_following.get_notifs %}fa-bell-on text-purple{% else %}fa-bell{% endif %}"></i>
+            </button>
+        </div>
+        <div id="button-sub-mobile" {% if is_following %}class="d-none"{% endif %}>
+          <div class="btn-group d-flex" aria-label="Unsubscribe user mobile">
+            <button class="btn btn-primary" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">
+              Subscribe
+            </button>
+          </div>
+        </div>
         {% endif %}
       </div>
     </div>
@@ -183,114 +220,87 @@
 {% endblock %}
 
 {% block sidebarblock %}
-<!-- Hide other sidebar content for now
-<div class="sidebar-section sidebar-profile-stats">
- <div class="title">Profile</div>
- <div class="body">
-   <div class="text-muted text-small"><i class="fas fa-medal fa-width-rem text-muted mr-2"></i><span data-toggle="tooltip" data-placement="bottom" title="Post Rep">{{ u.karma }}</span> • <span data-toggle="tooltip" data-placement="bottom" title="Comment Rep">{{ u.comment_karma }}</span></div>
-   <div class="text-muted text-small mt-2"><i class="fas fa-feather-alt fa-width-rem text-muted mr-2"></i>{{ u.post_count }} Post{{ 's' if u.post_count!=1 else '' }}
-   </div>
-   <div class="text-muted text-small mt-2"><i class="fas fa-comment-dots fa-width-rem text-muted mr-2"></i>{{ u.comment_count }} Comment{{ 's' if u.comment_count !=1 else '' }}
-   </div>
-   {% if u.follower_count >=1 %}<div class="text-muted text-small mt-2"><i class="fas fa-user-friends fa-width-rem text-muted mr-2"></i>{{ u.follower_count }} Subscriber{{ 's' if u.follower_count !=1 else '' }}
-   </div>{% endif %}
-   <div class="text-muted text-small mt-2"><i class="fas fa-birthday-cake fa-width-rem text-muted mr-2"></i>User since {{ u.created_date }}
-   </div>
-
-   {% if v and v.has_follower(u) %}
-   <div class="text-info text-small mt-2"><i class="fas fa-user-friends fa-width-rem text-info mr-2"></i>Subscribed to you</div>
-   {% endif %}
-
- </div>
-</div>
-
-<div class="sidebar-section sidebar-profile-badges">
-  <div class="title">Badges</div>
-  <div class="body">
-    {% for b in u.badges %}
-    {% include "badge.html" %}
-    {% else %}
-    <p class="text-small text-muted">Nothing yet!</p>
-    {% endfor %}
+{% if not v.has_premium %}
+<div class="sidebar-section">
+  <div class="title">
+    <i class="fas fa-heart mr-2"></i>Support Ruqqus
   </div>
-</div>
--->
+  <div class="body">
+    <p>Merch and more. Support Ruqqus today!</p>
 
-    <div class="sidebar-section">
-      <div class="title">
-        <i class="fas fa-heart mr-2"></i>Support Ruqqus
-      </div>
-      <div class="body">
-        <p>Exclusive patron titles, merch, and more. Support Ruqqus today!</p>
+    <a href="https://www.bonfire.com/store/ruqqus/" target="blank" class="btn btn-block btn-link text-info text-left text-decoration-none px-1 mt-0">
+      <span class="fa-stack fa-1x ml-n1 mr-2">
+        <i class="fas fa-square fa-stack-2x" style="color: #BEE3F8!important; font-size: 2rem!important;"></i>
+        <i class="fas fa-tshirt fa-stack-1x text-info text-base fa-inverse"></i>
+      </span>Awesome T-Shirts
+    </a>
 
-        {% if v %}
+    <a href="https://gumroad.com/l/XpCXQ" target="blank" class="btn btn-block btn-link text-success text-left text-decoration-none px-1 mt-0">
+      <span class="fa-stack fa-1x ml-n1 mr-2">
+        <i class="fas fa-square fa-stack-2x" style="color: #9AE6B4!important; font-size: 2rem!important;"></i>
+        <i class="fas fa-laugh fa-stack-1x text-success text-base fa-inverse"></i>
+      </span>Custom Stickers
+    </a>
 
-        <a href="/settings#patreon" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
-            <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
-          </span>Unlock Patron Titles
-        </a>
+    <a href="https://github.com/ruqqus/ruqqus" target="blank" class="btn btn-block btn-link text-black text-left text-decoration-none px-1 mt-0">
+      <span class="fa-stack fa-1x ml-n1 mr-2">
+        <i class="fas fa-square fa-stack-2x text-gray-300" style="font-size: 2rem!important;"></i>
+        <i class="fab fa-github fa-stack-1x text-black text-base fa-inverse"></i>
+      </span>Contribute Code
+    </a>
 
-        {% else %}
+    <a href="/help/donate" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #F7931A!important">
+      <span class="fa-stack fa-1x ml-n1 mr-2">
+        <i class="fas fa-square fa-stack-2x" style="color: #FEEBC8!important; font-size: 2rem!important;"></i>
+        <i class="fab fa-bitcoin fa-stack-1x text-base fa-inverse" style="color: #F7931A!important;"></i>
+      </span>Donate Cash or Crypto
+    </a>
 
-        <a href="https://patreon.com/ruqqus" target="blank" class="btn btn-block btn-link text-purple text-left text-decoration-none px-1 mt-0">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x" style="color: #D6BCFA!important; font-size: 2rem!important;"></i>
-            <i class="fas fa-star fa-stack-1x text-primary text-base fa-inverse"></i>
-          </span>Become a Patron
-        </a>
-
-        {% endif %}
-
-        <a href="https://www.bonfire.com/store/ruqqus/" target="blank" class="btn btn-block btn-link text-info text-left text-decoration-none px-1 mt-0">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x" style="color: #BEE3F8!important; font-size: 2rem!important;"></i>
-            <i class="fas fa-tshirt fa-stack-1x text-info text-base fa-inverse"></i>
-          </span>Awesome T-Shirts
-        </a>
-
-        <a href="https://gumroad.com/l/XpCXQ" target="blank" class="btn btn-block btn-link text-success text-left text-decoration-none px-1 mt-0">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x" style="color: #9AE6B4!important; font-size: 2rem!important;"></i>
-            <i class="fas fa-laugh fa-stack-1x text-success text-base fa-inverse"></i>
-          </span>Custom Stickers
-        </a>
-
-        <a href="https://github.com/ruqqus/ruqqus" target="blank" class="btn btn-block btn-link text-black text-left text-decoration-none px-1 mt-0">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x text-gray-300" style="font-size: 2rem!important;"></i>
-            <i class="fab fa-github fa-stack-1x text-black text-base fa-inverse"></i>
-          </span>Contribute Code
-        </a>
-
-        <a href="https://github.com/ruqqus/ruqqus#sponsors" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #F7931A!important">
-          <span class="fa-stack fa-1x ml-n1 mr-2">
-            <i class="fas fa-square fa-stack-2x" style="color: #FEEBC8!important; font-size: 2rem!important;"></i>
-            <i class="fab fa-bitcoin fa-stack-1x text-base fa-inverse" style="color: #F7931A!important;"></i>
-          </span>Donate Crypto
-        </a>
-
+    <a href="/settings/premium" target="blank" class="btn btn-block btn-link text-left text-decoration-none px-1 mt-0" style="color: #805ad5!important">
+      <span class="fa-stack fa-1x ml-n1 mr-2">
+        <i class="fas fa-square fa-stack-2x" style="color: #dabef9!important; font-size: 2rem!important;"></i>
+        <i class="fas fa-coins fa-stack-1x text-base fa-inverse" style="color: #805ad5!important;"></i>
+      </span>Ruqqus Premium
+    </a>
+    <div data-toggle="tooltip" data-placement="bottom" title="Based on coins redeemed in the last 7 days">
+      <div class="text-center text-small">{{ g.timestamp | coin_goal }}% of goal</div>
+      <div class="progress" style="border-radius: 3px;">
+        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ g.timestamp | coin_goal }}%;" aria-valuenow="{{ g.timestamp | coin_goal }}" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
     </div>
+  </div>
 
-
+</div>
+{% endif %}
 {% endblock %}
 
 {% block adminpanel %}
 {% if u.is_private %}
 <p>User has private mode enabled.</p>
 {% endif %}
+{% if u.is_deleted %}
+<p>User account is deleted</p>
+{% endif %}
+<p>Premium: {{ u.has_premium_no_renew }}</p>
 <p>user id: {{ u.base36id }}</p>
+{% if u.ban_evade %}
+<p>Ban Evasion Counter: {{ u.ban_evade }}</p>
+{% endif %}
 {% if v.admin_level >=3 and v.admin_level > u.admin_level %}
 {% if u.is_suspended %}
+<p>IP: <a href="/admin/ip/{{ u.creation_ip }}" target="_blank">{{ u.creation_ip }}</a></p>
 <form action="/api/unban_user/{{ u.id }}" method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input type="submit" class="btn btn-success" value="Unban user">
 </form>
-{% else %}
-<form action="/api/ban_user/{{ u.id }}", method="post">
+<form action="/admin/nuke_user" method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
+  <input type="hidden" name="user" value="{{ u.username }}">
+  <input type="submit" class="btn btn-danger" value="Nuke User's Content">
+</form>
+{% else %}
+<form action="/api/ban_user/{{ u.id }}" method="post">
+  <input type="hidden" name="formkey" value="{{ v.formkey }}">
   <input id="user-ban-message" type="text" class="form-control" name="message" placeholder="Ban Message Reason" onchange="document.getElementById('user-ban-submit').disabled=false">
   <input id="user-ban-reason" type="text" class="form-control" name="reason" placeholder="Ban Reason (public)" onchange="document.getElementById('user-ban-submit').disabled=false">
   <input id="user-ban-days" type="number" class="form-control" name="days" placeholder="Days (blank = permanent)">
@@ -306,10 +316,17 @@
 <p>Alts:</p>
 <ul>
   {% for account in u.alts %}
-  <li><a href="{{ account.permalink }}">@{{ account.username }}</a></li>
+  <li><a href="{{ account.permalink }}">@{{ account.username }}</a>{% if account._is_manual %} [m]{% endif %}</li>
   {% endfor %}
 </ul>
 {% endif %}
+
+<a href="javascript:void(0)" class="btn btn-warning w-100" onclick="document.getElementById('demod-user').classList.toggle('d-none')">De-Mod User</a>
+<form action="/admin/demod_user" method="post">
+  <input type="hidden" name="formkey" value="{{ v.formkey }}">
+  <input type="hidden" name="user" value="{{ v.username }}">
+  <input type="submit" class="d-none btn btn-danger" id="demod-user" value="Confirm De-Mod User">
+</form>
 {% endblock %}
 
 {% block content %}

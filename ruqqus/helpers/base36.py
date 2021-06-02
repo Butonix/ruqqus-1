@@ -1,3 +1,5 @@
+from flask import abort
+
 def base36encode(number, alphabet='0123456789abcdefghijklmnopqrstuvwxyz'):
     """Converts an integer to a base36 string."""
     if not isinstance(number, int):
@@ -19,16 +21,20 @@ def base36encode(number, alphabet='0123456789abcdefghijklmnopqrstuvwxyz'):
 
     return sign + base36
 
+
 def base36decode(number):
-    return int(str(number), 36)
+    try:
+        return int(str(number), 36)
+    except ValueError:
+        abort(400)
 
 
 def base_encode(number, base):
 
     alphabet = '0123456789abcdefghijklmnopqrstuvwxyz'[0:base]
 
-    output=''
-    sign=''
+    output = ''
+    sign = ''
 
     if number < 0:
         sign = '-'
@@ -42,3 +48,21 @@ def base_encode(number, base):
         output = alphabet[i] + output
 
     return sign + output
+
+#got this one from stackoverflow
+def hex2bin(hexstr): 
+    value = int(hexstr, 16) 
+    bindigits = [] 
+     
+    # Seed digit: 2**0 
+    digit = (value % 2) 
+    value //= 2 
+    bindigits.append(digit) 
+     
+    while value > 0: 
+        # Next power of 2**n 
+        digit = (value % 2) 
+        value //= 2 
+        bindigits.append(digit) 
+         
+    return ''.join([str(d) for d in bindigits])

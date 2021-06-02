@@ -1,0 +1,48 @@
+version: '2.3'
+
+services:
+  ruqqus:
+    build:
+      context: .
+    volumes:
+      - "./:/opt/ruqqus/service"
+    environment:
+      - domain=ruqqus.localhost:8000
+      - REDIS_URL=redis://redis
+      - DATABASE_URL=postgres://postgres@postgres:5432/postgres
+      - DATABASE_CONNECTION_POOL_URL=postgres://postgres@postgres:5432/postgres
+      - PYTHONPATH="/opt/ruqqus/service"
+      - MASTER_KEY=${MASTER_KEY:-KTVciAUQFpFh2WdJ/oiHJlxl6FvzRZp8kYzAAv3l2OA=}
+      - HCAPTCHA_SECRET="asdffgfsdfgdfgg1234"
+      - CLOUDFLARE_KEY="vcbxnsdfdfgdfggh455445"
+      - AWS_ACCESS_KEY_ID="asdd34rtsfdgd23"
+      - AWS_SECRET_ACCESS_KEY="12312sdfgfgdfgdfg3"
+      - SESSION_COOKIE_SECURE=false
+      - DISCORD_BOT_TOKEN="asdfsdgsdgsdg45"
+      - GIPHY_KEY="sdgsdg345345345345"
+      - FLASK_DEBUG=1
+      - FLASK_ENV=development
+      - FORCE_HTTPS=0
+    links:
+      - "redis"
+      - "postgres"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - postgres
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:12.3
+    volumes:
+      - "./schema.sql:/docker-entrypoint-initdb.d/00-schema.sql"
+      - "./seed-db.sql:/docker-entrypoint-initdb.d/10-seed-db.sql"
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5432:5432"

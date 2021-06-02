@@ -21,9 +21,10 @@
 
 <h1>Info</h1>
 <p><a href="{{ thing.permalink }}">{{ thing.permalink }}</a></p>
-
-
+<p><b>Created From:</b> {{ thing.creation_ip }}</p>
+<p><b>Created At:</b> {{ thing.created_utc }} ({{ thing.created_datetime }} UTC)</p>
 <p><b>Author:</b> <a href="{{ thing.author.permalink }}">@{{ thing.author.username }}</a></p>
+<p><b>Author Created At:</b> {{ thing.author.created_utc }} ({{ thing.author.created_datetime }} UTC)</p>
 <p><b>Counted Upvotes:</b> {{ thing.upvotes }} out of {{ ups | length }}</p>
 <p><b>Counted Downvotes:</b> {{ thing.downvotes }} out of {{ downs | length }}</p>
 
@@ -39,9 +40,9 @@
 
 	{% for vote in ups %}
 	<tr>
-		<td>{{ vote.user.username }}</td>
-		<td>{{ vote.creation_ip }}</td>
-		<td>{{ vote.user.creation_ip }}</td>
+		<td><a href="{{ vote.user.permalink }}" target="_blank">{{ vote.user.username }}</a></td>
+		<td><a href="/admin/ip/{{ vote.creation_ip}}" target="_blank">{{ vote.creation_ip }}</a></td>
+		<td><a href="/admin/ip/{{ vote.user.creation_ip}}" target="_blank">{{ vote.user.creation_ip }}</a></td>
 	</tr>
 	{% endfor %}
 </table>
@@ -58,9 +59,9 @@
 
 	{% for vote in downs %}
 	<tr>
-		<td>{{ vote.user.username }}</td>
-		<td>{{ vote.creation_ip }}</td>
-		<td>{{ vote.user.creation_ip }}</td>
+		<td><a href="{{ vote.user.permalink }}" target="_blank">{{ vote.user.username }}</a></td>
+		<td><a href="/admin/ip/{{ vote.creation_ip}}" target="_blank">{{ vote.creation_ip }}</a></td>
+		<td><a href="/admin/ip/{{ vote.user.creation_ip}}" target="_blank">{{ vote.user.creation_ip }}</a></td>
 	</tr>
 	{% endfor %}
 </table>

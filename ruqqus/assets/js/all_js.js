@@ -112,7 +112,12 @@ $('#new_email').on('input', function () {
         if (max < 48 && max > 0) {
           for (var i = 0; i <= max; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/200w_d.gif";
-            container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            if (response.data[i].username==''){
+              container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            }
+            else {
+              container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" title="by '+response.data[i].username+' on GIPHY" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            }
             noGIFs.innerHTML = null;
             loadGIFs.innerHTML = '<div class="text-center py-3"><div class="mb-3"><i class="fad fa-grin-beam-sweat text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Thou&#39;ve reached the end of the list!</p></div>';
           }
@@ -125,7 +130,12 @@ $('#new_email').on('input', function () {
         else {
           for (var i = 0; i <= 48; i++) {
             gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/200w_d.gif";
-            container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            if (response.data[i].username==''){
+              container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            }
+            else {
+              container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" title="by '+response.data[i].username+' on GIPHY" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
+            }
             noGIFs.innerHTML = null;
             loadGIFs.innerHTML = '<div class="text-center py-3"><div class="mb-3"><i class="fad fa-grin-beam-sweat text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Thou&#39;ve reached the end of the list!</p></div>';
           }
@@ -284,58 +294,34 @@ function approveComment(post_id) {
   post(url, callback, "Unable to approve post at this time. Please try again later.")
 }
 
-function distinguishModComment(post_id) {
-  url="/api/distinguish_comment/"+post_id
+admin_comment=function(cid){
 
-  callback=function(){
-    document.getElementById("comment-"+post_id+"-only").classList.add("distinguish-mod");
 
-    button=document.getElementById("distinguish-"+post_id);
-    button.onclick=function(){undistinguishModComment(post_id)};
-    button.innerHTML="undistinguish"
+  var xhr = new XMLHttpRequest();
+  xhr.open("post", "/api/distinguish_comment/"+cid);
+
+  var form = new FormData();
+
+  form.append('formkey', formkey());
+
+  xhr.withCredentials=true;
+  xhr.onload=function(){
+    if (xhr.status==200) {
+      comment=document.getElementById('comment-'+cid+'-only');
+      comment.innerHTML=JSON.parse(xhr.response)["html"];
+    }
+    else {
+      var commentError = document.getElementById("comment-error-text");
+      $('#toast-comment-success').toast('dispose');
+      $('#toast-comment-error').toast('dispose');
+      $('#toast-comment-error').toast('show');
+      commentError.textContent = JSON.parse(xhr.response)["error"];
+    }
   }
-
-  post(url, callback, "Unable to distinguish comment at this time. Please try again later.")
-};
-
-function undistinguishModComment(post_id) {
-  url="/api/undistinguish_comment/"+post_id
-
-  callback=function(){
-    document.getElementById("comment-"+post_id+"-only").classList.remove("distinguish-mod");
-
-    button=document.getElementById("distinguish-"+post_id);
-    button.onclick=function(){distinguishModComment(post_id)};
-    button.innerHTML="distinguish"
-  }
-  post(url, callback, "Unable to undistinguish comment at this time. Please try again later.")
-};
-
-function distinguishAdminComment(post_id) {
-  url="/api/distinguish_comment/"+post_id
-
-  callback=function(){
-    document.getElementById("comment-"+post_id+"-only").classList.add("distinguish-admin");
-
-    button=document.getElementById("distinguish-"+post_id);
-    button.onclick=function(){undistinguishAdminComment(post_id)};
-    button.innerHTML="undistinguish"
-  }
-  post(url, callback, "Unable to distinguish comment at this time. Please try again later.")
-};
-
-function undistinguishAdminComment(post_id) {
-  url="/api/undistinguish_comment/"+post_id
-
-  callback=function(){
-    document.getElementById("comment-"+post_id+"-only").classList.remove("distinguish-admin");
-
-    button=document.getElementById("distinguish-"+post_id);
-    button.onclick=function(){distinguishAdminComment(post_id)};
-    button.innerHTML="distinguish"
-  }
-  post(url, callback, "Unable to undistinguish post at this time. Please try again later.")
+  xhr.send(form)
 }
+
+
 
 //comment replies
 
@@ -412,10 +398,10 @@ function switch_css() {
   dswitch = document.getElementById("dark-switch");
   dswitchmobile = document.getElementById("dark-switch-mobile");
 
-  if (css.href.endsWith("/assets/style/main.css")) {
+  if (css.href.includes("/assets/style/main.css")) {
     post("/settings/dark_mode/1",
       callback=function(){
-        css.href="/assets/style/main_dark.css";
+        css.href="/assets/style/main_dark.css?v=2.36.3";
         dswitch.classList.remove("fa-toggle-off");
         dswitch.classList.add("fa-toggle-on");
         dswitchmobile.classList.remove("fa-toggle-off");
@@ -426,7 +412,7 @@ function switch_css() {
   else {
     post("/settings/dark_mode/0",
       callback=function(){
-        css.href="/assets/style/main.css";
+        css.href="/assets/style/main.css?v=2.36.3";
         dswitch.classList.remove("fa-toggle-on");
         dswitch.classList.add("fa-toggle-off");
         dswitchmobile.classList.remove("fa-toggle-on");
@@ -725,27 +711,50 @@ function post_toast(url, callback) {
   xhr.withCredentials=true;
 
   xhr.onload = function() {
-    if (xhr.status >= 200 && xhr.status < 300) {
-      $('#toast-post-success').toast('dispose');
-      $('#toast-post-success').toast('show');
-      document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
-      callback(xhr)
+    if (xhr.status==204) {}
+      else if (xhr.status >= 200 && xhr.status < 300) {
+        $('#toast-post-success').toast('dispose');
+        $('#toast-post-success').toast('show');
+        document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+        callback(xhr)
+        return true
 
-    } else if (xhr.status >= 300 && xhr.status < 400) {
-      window.location.href = JSON.parse(xhr.response)["redirect"]
-    } else {
-      $('#toast-post-error').toast('dispose');
-      $('#toast-post-error').toast('show');
-      document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];
-    }
-  };
+      } else if (xhr.status >= 300 && xhr.status < 400) {
+        window.location.href = JSON.parse(xhr.response)["redirect"]
+      } else {
+        data=JSON.parse(xhr.response);
 
-  xhr.send(form);
+        $('#toast-post-error').toast('dispose');
+        $('#toast-post-error').toast('show');
+        document.getElementById('toast-post-error-text').innerText = data["error"];
+        return false
 
-}
+      }
+    };
+
+    xhr.send(form);
+
+  }
+
+// Bell Notifications
+
+$('.bell-button').click(function (event) {
+
+  if (event.which != 1) {
+    return
+  }
+
+  $('.bell-icon').toggleClass('fa-bell')
+  $('.bell-icon').toggleClass('fa-bell-on')
+  $('.bell-icon').toggleClass('text-purple')
+
+  post_toast($(this).data('url'))
+
+});
 
 
 //Admin post modding
+
 function removePost(post_id) {
   url="/api/ban_post/"+post_id
 
@@ -816,7 +825,7 @@ $('#username-register').on('input', function () {
 
   var ruqqusAPI = '/api/is_available/' + charCount;
 
-  if (charCount.length >= 5) {
+  if (charCount.length >= 3) {
 
     $.getJSON(ruqqusAPI, function(result) {
       $.each(result, function(i, field) {
@@ -832,8 +841,8 @@ $('#username-register').on('input', function () {
     // Change alert text
     id.innerHTML = '<span class="form-text font-weight-bold text-success mt-1">Username is a-okay!';
 
-    if (charCount.length < 5) {
-      id.innerHTML = '<span class="form-text font-weight-bold text-muted mt-1">Username must be at least 5 characters long.';
+    if (charCount.length < 3) {
+      id.innerHTML = '<span class="form-text font-weight-bold text-muted mt-1">Username must be at least 3 characters long.';
     }
     else if (charCount.length > 25) {
       id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">Username must be 25 characters or less.';
@@ -918,6 +927,7 @@ function toggle_sidebar_expand() {
 // Voting
 
 var upvote = function(event) {
+
   var type = event.target.dataset.contentType;
   var id = event.target.dataset.idUp;
 
@@ -962,14 +972,12 @@ var upvote = function(event) {
     }
   }
 
-  for (var n = 0; n < 1; n++) {
-    callback=function() {
-    }
-    post("/api/vote/" + type + "/" + id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
-  }
+  post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection);
+  
 }
 
 var downvote = function(event) {
+
   var type = event.target.dataset.contentType;
   var id = event.target.dataset.idDown;
 
@@ -1014,36 +1022,37 @@ var downvote = function(event) {
     }
   }
 
-  for (var n = 0; n < 1; n++) {
-    callback=function() {
-    }
-    post("/api/vote/" + type + "/" + id + "/" + voteDirection, callback, "Unable to vote at this time. Please try again later.")
-  }
+  post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection);
+  
 }
 
-var upvoteButtons = document.getElementsByClassName('upvote-button')
+var register_votes = function() {
+  var upvoteButtons = document.getElementsByClassName('upvote-button')
 
-var downvoteButtons = document.getElementsByClassName('downvote-button')
+  var downvoteButtons = document.getElementsByClassName('downvote-button')
 
-var voteDirection = 0
+  var voteDirection = 0
 
-for (var i = 0; i < upvoteButtons.length; i++) {
-  upvoteButtons[i].addEventListener('click', upvote, false);
-  upvoteButtons[i].addEventListener('keydown', function(event) {
-    if (event.keyCode === 13) {
-      upvote(event)
-    }
-  }, false)
-};
+  for (var i = 0; i < upvoteButtons.length; i++) {
+    upvoteButtons[i].addEventListener('click', upvote, false);
+    upvoteButtons[i].addEventListener('keydown', function(event) {
+      if (event.keyCode === 13) {
+        upvote(event)
+      }
+    }, false)
+  };
 
-for (var i = 0; i < downvoteButtons.length; i++) {
-  downvoteButtons[i].addEventListener('click', downvote, false);
-  downvoteButtons[i].addEventListener('keydown', function(event) {
-    if (event.keyCode === 13) {
-      downvote(event)
-    }
-  }, false)
-};
+  for (var i = 0; i < downvoteButtons.length; i++) {
+    downvoteButtons[i].addEventListener('click', downvote, false);
+    downvoteButtons[i].addEventListener('keydown', function(event) {
+      if (event.keyCode === 13) {
+        downvote(event)
+      }
+    }, false)
+  };
+}
+
+register_votes()
 
 /*
 
@@ -1248,25 +1257,23 @@ var attribution = document.getElementById("modal-image-attribution");
 // Link text
 
 var linkText = document.getElementById("desktop-expanded-image-link");
+var imgLink = document.getElementById("desktop-expanded-image-wrap-link");
 
 var inlineImage = document.getElementById("desktop-expanded-image");
 
 inlineImage.src = image;
 
+linkText.href = link;
+imgLink.href=link;
+
 if (image.includes("i.ruqqus.com")) {
-	linkText.href = link;
 	linkText.textContent = 'Go to website';
 }
-else if (image.includes("imgur.com") || image.includes("cdn.discordapp.com")){
-	linkText.href = image;
-	linkText.textContent = 'View original';
-}
 else {
-	linkText.href = image;
 	linkText.textContent = 'View original';
 }
 
-if (image.includes("media.giphy.com")) {
+if (image.startsWith("https://media.giphy.com")) {
 	attribution.innerHTML = '<img src="/assets/images/icons/PoweredBy_200px-Black_HorizLogo.png" style="width: 100px;">';
 
   var GIPHYsrc = image.replace(/\b100w\b~?/g, 'giphy');
@@ -1551,7 +1558,7 @@ function autoSuggestTitle()  {
         checkForRequired()
       }
     }
-    x.open('get','/api/submit/title?url=' + urlField.value);
+    x.open('get','/submit/title?url=' + urlField.value);
     x.send(null);
 
   };
@@ -1694,7 +1701,7 @@ block_user=function() {
     f.append("username", username);
     f.append("formkey", formkey());
     xhr.onload=function(){
-      if (xhr.status==204) {
+      if (xhr.status<300) {
         window.location.reload(true);
       }
       else {
@@ -1710,7 +1717,6 @@ block_user=function() {
 
 post_comment=function(fullname){
 
-  var commentError = document.getElementById("comment-error-text");
 
   var form = new FormData();
 
@@ -1718,6 +1724,7 @@ post_comment=function(fullname){
   form.append('parent_fullname', fullname);
   form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
   form.append('body', document.getElementById('reply-form-body-'+fullname).value);
+  form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
 
 
   var xhr = new XMLHttpRequest();
@@ -1732,6 +1739,37 @@ post_comment=function(fullname){
       $('#toast-comment-success').toast('show');
     }
     else {
+      var commentError = document.getElementById("comment-error-text");
+      $('#toast-comment-success').toast('dispose');
+      $('#toast-comment-error').toast('dispose');
+      $('#toast-comment-error').toast('show');
+      commentError.textContent = JSON.parse(xhr.response)["error"];
+    }
+  }
+  xhr.send(form)
+
+  document.getElementById('save-reply-to-'+fullname).classList.add('disabled');
+
+}
+
+herald_comment=function(bid,cid){
+
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("post", "/mod/distinguish_comment/"+bid+'/'+cid);
+
+  var form = new FormData();
+
+  form.append('formkey', formkey());
+
+  xhr.withCredentials=true;
+  xhr.onload=function(){
+    if (xhr.status==200) {
+      comment=document.getElementById('comment-'+cid+'-only');
+      comment.innerHTML=JSON.parse(xhr.response)["html"];
+    }
+    else {
+      var commentError = document.getElementById("comment-error-text");
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-error').toast('show');
@@ -1741,6 +1779,37 @@ post_comment=function(fullname){
   xhr.send(form)
 
 }
+
+pin_comment=function(bid,cid){
+
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("post", "/mod/comment_pin/"+bid+'/'+cid);
+
+  var form = new FormData();
+
+  form.append('formkey', formkey());
+
+  xhr.withCredentials=true;
+  xhr.onload=function(){
+    if (xhr.status==200) {
+      comment=document.getElementById('comment-'+cid+'-only');
+      comment.innerHTML=JSON.parse(xhr.response)["html"];
+    }
+    else {
+      var commentError = document.getElementById("comment-error-text");
+      $('#toast-comment-success').toast('dispose');
+      $('#toast-comment-error').toast('dispose');
+      $('#toast-comment-error').toast('show');
+      commentError.textContent = JSON.parse(xhr.response)["error"];
+    }
+  }
+  xhr.send(form)
+
+}
+
+
+
 //part of submit page js
 
 hide_image=function(){
@@ -1814,12 +1883,242 @@ filter_guild=function() {
         window.location.reload(true);
       }
       else {
-      $('#toast-exile-error').toast('dispose');
-      $('#toast-exile-error').toast('show');
-      exileError.textContent = JSON.parse(xhr.response)["error"];
+        $('#toast-exile-error').toast('dispose');
+        $('#toast-exile-error').toast('show');
+        exileError.textContent = JSON.parse(xhr.response)["error"];
       }
     }
     xhr.send(f)
   }
 
 }
+
+coin_quote = function() {
+
+  var coins = document.getElementById('select-coins');
+  var btn = document.getElementById('buy-coin-btn')
+  var promo=document.getElementById('promo-code')
+  var promotext=document.getElementById('promo-text')
+
+  coin_count = coins.selectedOptions[0].value
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('get', '/shop/get_price?coins='+coin_count+'&promo='+promo.value)
+
+  xhr.onload=function(){
+    var s = 'Buy '+ coin_count + ' Coin';
+
+    if (coin_count > 1){s = s+'s'};
+
+    s=s+': $'+JSON.parse(xhr.response)["price"];
+
+    btn.value=s;
+
+    promotext.innerText=JSON.parse(xhr.response)["promo"];
+  }
+  xhr.send()
+}
+
+
+var tipModal2 = function(id, content, link, recipient, recipientPFP) {
+  console.log('opened modal, tipModal2 function triggered')
+
+  document.getElementById('tip-recipient-pfp').src = recipientPFP;
+
+  document.getElementById("tip-content-type").innerText = content
+  document.getElementById("tip-recipient-username").innerText = recipient
+
+  document.getElementById("sendTipButton").onclick = function() {
+    post_toast('/gift_'+ content +'/' + id + '?coins=1',
+      callback = function() {
+        location.href = link
+      }
+      )
+  }
+
+  console.log(recipientPFP, id, content, link, recipient)
+}
+
+var togglecat = function(sort, reload=false, delay=1000, page="/all") {
+  var cbs = document.getElementsByClassName('cat-check');
+  var l = []
+  for (var i=0; i< cbs.length; i++) {
+    l.push(cbs[i].checked)
+  }
+  setTimeout(function(){triggercat(sort, l, reload, page)}, delay)
+  return l;
+}
+
+var triggercat=function(sort, cats, reload, page) {
+
+  var cbs = document.getElementsByClassName('cat-check');
+  var l = []
+  for (var i=0; i< cbs.length; i++) {
+    l.push(cbs[i].checked)
+  }
+
+
+
+  for (var i=0; i<l.length; i++){
+    if (cats[i] != l[i]){
+      console.log("triggerfail");
+      return false;
+    }
+  }
+
+  console.log("triggercat")
+
+  var catlist=[]
+  for (var i=0; i< cbs.length; i++) {
+    if(cbs[i].checked){
+      catlist.push(cbs[i].dataset.cat);
+    }
+  }
+
+  var groups = document.getElementsByClassName('cat-group');
+  var grouplist=[];
+  for (i=0; i<groups.length; i++){
+    if(groups[i].checked){
+      grouplist.push(groups[i].dataset.group);
+    }
+  }
+
+  var url='/inpage/all?sort='+ sort +'&cats=' + catlist.join(',') + '&groups=' + grouplist.join(',');
+  
+
+  xhr = new XMLHttpRequest();
+  xhr.open('get', url);
+  xhr.withCredentials=true;
+
+  xhr.onload=function(){
+    if (reload){
+      document.location.href=page
+    }
+    else {
+      var l = document.getElementById('posts');
+      l.innerHTML=xhr.response;
+      register_votes();
+    }
+  }
+  xhr.send()
+}
+
+
+var permsEdit = function(username, permstring) {
+
+  document.getElementById('permedit-user').innerText = username
+  document.getElementById('edit-perm-username').value = username
+
+  cbs = document.getElementsByClassName('perm-box')
+
+  for (i=0; i< cbs.length; i++) {
+    cbs[i].checked = permstring.includes(cbs[i].dataset.perm) || permstring.includes('full')
+  }
+
+}
+
+var permfull=function() {
+
+  cbs = document.getElementsByClassName('perm-box')
+
+  full = cbs[0]
+
+  if (full.checked) {
+    for (i=1; i< cbs.length; i++) {
+      cbs[i].checked = true;
+    }
+  }
+}
+var permother=function() {
+
+  cbs = document.getElementsByClassName('perm-box')
+
+  full = cbs[0]
+
+  for (i=1; i< cbs.length; i++) {
+    if(cbs[i].checked == false) {
+      full.checked=false;
+    }
+  }
+}
+
+var cattoggle=function(id){
+
+  var check = document.getElementById('group-'+id);
+
+  check.click()
+
+  var x=document.getElementsByClassName('group-'+id);
+  for (i=0;i<x.length;i++) {
+    x[i].checked=check.checked
+  }
+
+  card=document.getElementById('cat-card-'+id)
+  card.classList.toggle('selected');
+}
+
+var all_cats=function(page) {
+  var x=document.getElementsByClassName('cat-check');
+  for(i=0;i<x.length;i++){
+    x[i].checked=true;
+  };
+  
+  var y=document.getElementsByClassName('cat-group');
+  for(i=0;i<y.length;i++){
+    y[i].checked=true;
+  };
+
+  togglecat('hot', reload=true, delay=0, page=page)  
+}
+
+
+//mobile prompt
+if (("standalone" in window.navigator) &&       // Check if "standalone" property exists
+    window.navigator.standalone){               // Test if using standalone navigator
+
+    // Web page is loaded via app mode (full-screen mode)
+    // (window.navigator.standalone is TRUE if user accesses website via App Mode)
+
+} else {
+  if (window.innerWidth <= 737){
+    try {
+      $('#mobile-prompt').tooltip('show')
+      $('.tooltip')[0].addEventListener(
+        'click',
+        function(event){
+          $('#mobile-prompt').tooltip('hide')
+          var xhr = new XMLHttpRequest();
+          xhr.withCredentials=true;
+          xhr.open("POST", '/dismiss_mobile_tip', true);
+          xhr.send();
+        }
+      )
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}
+
+$('.mention-user').click(function (event) {
+
+  if (event.which != 1) {
+    return
+  }
+
+  event.preventDefault();
+
+  window.location.href='/@' + $(this).data('original-name');
+
+});
+
+$('.expandable-image').click( function(event) {
+
+  if (event.which != 1) {
+    return
+  }
+  event.preventDefault();
+
+  var url= $(this).data('url');
+
+  expandDesktopImage(url,url);
+})

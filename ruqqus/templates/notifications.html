@@ -16,14 +16,52 @@
 
 {% block content %}
 
+<div class="row border-bottom bg-white sticky w-100 pr-0" style="overflow: visible;">
+  <div class="col pr-0 w-100">
+    <ul class="nav settings-nav px-0">
+      <li class="nav-item">
+        <a class="nav-link py-3{% if request.path=='/notifications/all' %} active{% endif %}" href="/notifications/all">
+          All
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link py-3{% if request.path=='/notifications' %} active{% endif %}" href="/notifications">
+          Unread
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link py-3{% if request.path=='/notifications/posts' %} active{% endif %}" href="/notifications/posts">
+          Posts{% if v.post_notifications_count %} <span class="text-purple font-weight-bold">({{ v.post_notifications_count }})</span>{% endif %}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link py-3{% if request.path=='/notifications/replies' %} active{% endif %}" href="/notifications/replies">
+          Replies{% if v.replies_count %} <span class="text-purple font-weight-bold">({{ v.replies_count }})</span>{% endif %}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link py-3{% if request.path=='/notifications/mentions' %} active{% endif %}" href="/notifications/mentions">
+          Mentions{% if v.mentions_count %} <span class="text-purple font-weight-bold">({{ v.mentions_count }})</span>{% endif %}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link py-3 {% if request.path=='/notifications/system' %} active{% endif %}" href="/notifications/system">
+          System{% if v.system_notif_count %} <span class="text-purple font-weight-bold">({{ v.system_notif_count }})</span>{% endif %}
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
 <div class="p-3 p-md-0">
 
   <h1 class="h3 d-md-none">Inbox</h1>
 
-  {% with comments=notifications %}
-
-    {% include "comments.html" %}
-  {% endwith %}
+  {% block notif_content %}
+    {% with comments=notifications %}
+      {% include "comments.html" %}
+    {% endwith %}
+  {% endblock %}
 
   {% if not notifications %}
   <div class="text-center py-7 py-md-8">
@@ -34,8 +72,8 @@
     </span>
 
     <div class="h5">No unread messages</div>
-    <div class="text-small text-muted mb-3">When someone comments or replies, it will show up here.</div>
-    <a href="/notifications?all=true" class="btn btn-primary btn-sm">View entire inbox</a>
+    <div class="text-small text-muted mb-3">When you receive new posts, replies, or mentions, they will show up here.</div>
+    <a href="/notifications/all" class="btn btn-primary btn-sm">View all</a>
   </div>
 
   {% endif %}
