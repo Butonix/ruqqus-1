@@ -22,7 +22,7 @@ class Conversation(Base, Stndrd, Age_times):
     
     def __repr__(self):
 
-        return f"<Conversation(id={self.id})>"
+        return f"<Conversation(id={self.base36id})>"
 
     @property
     def permalink(self):
@@ -34,6 +34,10 @@ class Conversation(Base, Stndrd, Age_times):
 
     def has_member(self, user):
         return user.id in [x.user_id for x in self.members]
+
+    @property
+    def fullname(self):
+        return f"t6_{self.base36id}"
 
 
 
@@ -54,11 +58,16 @@ class Message(Base, Stndrd, Age_times):
 
     def __repr__(self):
 
-        return f"<Message(id={self.id})>"
+        return f"<Message(id={self.base36id}, from={self.author.username})>"
 
     @property
     def permalink(self):
         return f"{self.conversation.permalink}/{self.base36id}"
+
+    @property
+    def convo_fullname(self):
+        return f"t6_{base36encode(self.convo_id)}"
+    
 
 class ConvoMember(Base, Stndrd, Age_times):
 
@@ -73,7 +82,7 @@ class ConvoMember(Base, Stndrd, Age_times):
 
     def __repr__(self):
 
-        return f"<ConvoMember(id={self.id})>"
+        return f"<ConvoMember(id={self.base36id})>"
 
 class MessageNotif(Base, Stndrd, Age_times):
 

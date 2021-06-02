@@ -1027,19 +1027,17 @@ def get_from_permalink(link, v=None):
         return get_post(post_id, v=v)
 
 
-def get_convo(convo_id, v=None):
+def get_convo(convo_id, v):
 
-    id=base36decode(convo_id)
+    id=base36decode(convo_id) if isinstance(convo_id, str) else convo_id
     
     convo=g.db.query(Conversation).filter_by(id=id).first()
 
     if not convo:
         abort(404)
 
-    if v:
-        cm=g.db.query(ConvoMember).filter_by(user_id=v.id, convo_id=convo_id)
-        if not cm:
-            abort(403)
+    if v and not convo.has_member(v):
+        abort(403)
 
     return convo
 

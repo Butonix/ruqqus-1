@@ -198,6 +198,83 @@ def error_handler_default(e):
     except:
         pass
 
+############
+#          #
+# DM STUFF #
+#          #
+############
+
+@socketio.on('join_convo')
+@socket_auth_required
+def join_dm_convo(data, v):
+
+    convo_id=data['convo']:
+
+    convo=get_convo(convo_id, v=v)
+    # ^ that function takes care of verifying membership
+
+    join_room(convo.fullname)
+
+def speak_convo(msg):
+
+
+
+
+    data={
+        "avatar": msg.author.profile_url,
+        "username":msg.author.username,
+        "text": msg.body_html,
+        "room": convo.fullname,
+        "time": now(),
+        'userlink':msg.author.permalink,
+        'message_id': msg.base36id
+    }
+
+    emit('speak_convo', data=data, to=f"t6_{msg.convo_fullname}")
+
+
+
+
+@socketio.on('speak_convo')
+@socket_auth_required
+def speak_to_convo(data, v):
+
+    convo_id=data['convo_id']
+    convo=get_convo(convo_id, v=v) #this also includes membership check
+
+    text=data['text']
+
+    html=preprocess(text)
+    with CustomRenderer() as renderer:
+        html = renderer.render(mistletoe.Document(html))
+    html = sanitize(html, linkgen=True)
+
+    message=Message(
+        author_id=v.id,
+        created_utc=int(time.time()),
+        body=text,
+        body_html=html,
+        distinguish_level=0,
+        convo_id=convo.id
+    )
+    g.db.add(message)
+    g.db.commit()
+
+
+
+
+
+
+
+
+
+
+
+####################
+#                  #
+# GUILD CHAT STUFF #
+#                  #
+####################
 
 
 def now():
