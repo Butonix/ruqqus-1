@@ -16,7 +16,7 @@ class Conversation(Base, Stndrd, Age_times):
     created_utc=Column(Integer)
     subject=Column(String(256))
 
-    members=relationship("ConvoMember")
+    members=relationship("ConvoMember", lazy="joined")
     _messages=relationship("Message", lazy="dynamic")
 
     
@@ -30,8 +30,12 @@ class Conversation(Base, Stndrd, Age_times):
 
     @property
     def messages(self):
-
         return self._messages.order_by(Message.created_utc.asc()).all()
+
+    def has_member(self, user):
+        return user.id in [x.user_id for x in self.members]
+
+
 
 
 class Message(Base, Stndrd, Age_times):
@@ -48,7 +52,6 @@ class Message(Base, Stndrd, Age_times):
     conversation=relationship("Conversation")
     author=relationship("User", lazy="joined")
 
-    
     def __repr__(self):
 
         return f"<Message(id={self.id})>"

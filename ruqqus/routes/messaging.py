@@ -32,7 +32,7 @@ def create_new_convo(v):
         return jsonify({"error": "You may only include 10 other users in this conversation."}), 400
 
     for name in names:
-        user=get_user(name, graceful=True)
+        user=get_user(name, v=v, graceful=True)
 
         if user.id==v.id:
             return jsonify({"error":"You can't send messages to yourself."})
@@ -58,7 +58,7 @@ def create_new_convo(v):
 
     with CustomRenderer() as renderer:
         message_md=renderer.render(mistletoe.Document(message))
-    message_html=sanitize(messge_md, linkgen=True)
+    message_html=sanitize(message_md, linkgen=True)
 
     new_message=Message(author_id=v.id,
         created_utc=new_convo.created_utc,
@@ -117,6 +117,9 @@ view conversation
 def message_perma(v, convo_id):
 
     convo=get_convo(convo_id, v=v)
+
+    if not convo.has_member(v):
+        abort(403)
 
     return render_template("messages.html",
         v=v,
