@@ -83,7 +83,7 @@ def coin_goal(x):
         PayPalTxn.status==3).all()[0][0] or 0
     
     
-    return int(100*coins/1000)
+    return int(100*coins/500)
 
 
 @app.template_filter("app_config")
