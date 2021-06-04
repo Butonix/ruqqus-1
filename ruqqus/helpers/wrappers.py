@@ -145,6 +145,8 @@ def auth_desired(f):
             kwargs["c"] = c
             
         check_ban_evade(v)
+        
+        g.v=v
 
         resp = make_response(f(*args, v=v, **kwargs))
         if v:
