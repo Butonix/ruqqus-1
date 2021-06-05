@@ -441,7 +441,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return self.submission_aux.title
 
     @title.setter
-    def title_set(self, x):
+    def title(self, x):
         self.submission_aux.title = x
         g.db.add(self.submission_aux)
 
