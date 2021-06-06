@@ -260,6 +260,8 @@ def speak_to_convo(data, v):
     g.db.add(message)
     g.db.commit()
 
+    speak_convo(message)
+
 
 
 
