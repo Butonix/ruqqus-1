@@ -84,7 +84,8 @@ def notifications_posts(v):
     page=int(request.args.get("page", 1))
 
     pids=v.notification_postlisting(
-        page=page
+        page=page,
+        all_=request.args.get("all")
         )
 
     next_exists=(len(pids)==26)

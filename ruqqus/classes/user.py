@@ -679,7 +679,7 @@ class User(Base, Stndrd, Age_times):
 
         return output
 
-    def notification_postlisting(self, page=1):
+    def notification_postlisting(self, all_=False, page=1):
 
         notifications=self.notifications.join(
             Notification.post
@@ -688,8 +688,8 @@ class User(Base, Stndrd, Age_times):
             Submission.deleted_utc==0
             )
 
-        #if not all_:
-        #    notifications=notifications.filter(Notification.read==False)
+        if not all_:
+            notifications=notifications.filter(Notification.read==False)
 
         notifications=notifications.options(
                 contains_eager(Notification.post)
