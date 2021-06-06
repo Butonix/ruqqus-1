@@ -18,7 +18,7 @@
     <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
 
     <div class="voting d-none d-md-block pr-2">
-      {% if v and request.path.startswith(('/@', '/notifications/')) %}
+      {% if v and request.path.startswith(('/@',)) %}
 
       {% if voted==1 %}
       <div class="mx-auto arrow-up post-{{ p.base36id }}-up active"></div>
@@ -253,7 +253,7 @@
         </a>
       </li>
       {% endif %}
-      {% if v and request.path.startswith(('/@',"/notifications/")) %}
+      {% if v and request.path.startswith(('/@',)) %}
       <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none">
 
         {% if voted==1 %}
