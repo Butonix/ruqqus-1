@@ -158,7 +158,7 @@
 <span id="guild-name-reference" class="d-none">{{ p.board.name }}</span>
 
 <!-- Desktop -->
-<div class="row border-bottom bg-white sticky guild-border-top d-none d-md-block" style="overflow: visible;">
+<div class="row border-bottom sticky guild-border-top d-none d-md-block" style="overflow: visible;">
   <div class="col">
     <div class="d-flex align-items-center">
       <div class="d-flex align-items-center border-right py-2 pr-3">
@@ -374,7 +374,7 @@
 
   <div class="col-12">
 
-    <div id="post-{{ p.base36id }}" class="card border-0 mt-3 bg-white{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+    <div id="post-{{ p.base36id }}" class="card border-0 mt-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
       <div class="d-flex flex-row-reverse flex-nowrap justify-content-end">
 
         {% if p.thumb_url and not p.embed_url %}
