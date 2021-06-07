@@ -659,6 +659,9 @@ def my_subs(v):
         content = [x for x in content.offset(25 * (page - 1)).limit(26)]
         next_exists = (len(content) == 26)
         content = content[0:25]
+        
+        for board in content:
+            board._is_subscribed=True
 
         return {"html": lambda: render_template("mine/boards.html",
                                v=v,
