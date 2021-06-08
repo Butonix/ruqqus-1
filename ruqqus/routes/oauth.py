@@ -146,7 +146,8 @@ def oauth_authorize_post(v):
         scope_delete="delete" in scopes,
         scope_vote="vote" in scopes,
         scope_guildmaster="guildmaster" in scopes,
-        refresh_token=secrets.token_urlsafe(128)[0:128] if permanent else None
+        refresh_token=secrets.token_urlsafe(128)[0:128] if permanent else None,
+        access_token_expire_utc=int(time.time())+3600
     )
 
     g.db.add(new_auth)
