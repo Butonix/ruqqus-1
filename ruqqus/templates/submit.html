@@ -284,6 +284,8 @@
         fileReader.addEventListener("load", function () {
             $('#image-preview').attr('src', this.result);
     });  
+        
+        $('#file-upload').attr('required', false);
 
         checkForRequired();
 
