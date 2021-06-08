@@ -125,6 +125,7 @@ class Age_times:
                              time.gmtime(self.edited_utc))
     
     @property
+    @lazy
     def age_years(self):
         
         now=time.gmtime()
