@@ -71,6 +71,44 @@
   </div>
 </div>
 
+{{ set b=p.board }}
+<div class="sidebar-section sidebar-guildmake">
+  <div class="title"><i class="fas fa-info-circle mr-2"></i>About Guild</div>
+  <div class="body">
+    {{ b.description_html | safe }}
+
+    <div class="text-small font-weight-bold text-muted text-uppercase mb-1" style="letter-spacing: 0.025rem;">Founded</div>
+    <p>{{ b.created_date }}</p>
+    <div class="text-small font-weight-bold text-muted text-uppercase mb-2" style="letter-spacing: 0.025rem;">Guildmasters</div>
+    <div class="d-flex align-items-center">
+      {% for mod in b.mods_list[0:3] %}
+      <a href="{{ mod.user.permalink }}">
+        <img src="{{ mod.user.profile_url }}" class="profile-pic profile-pic-30 profile-stacked {% if not loop.first %}ml-n2{% endif %}" data-toggle="tooltip" data-placement="bottom" title="{{ '@' + mod.user.username }}">
+      </a>
+      {% if loop.last %}
+      {% if b.mods_count - loop.index > 0 %}
+      <div class="text-small text-primary ml-2">
+        <a href="{{ b.permalink+'/mod/mods' }}">+{{ b.mods_count - loop.index }} more guildmaster{% if b.mods_count - loop.index > 1 %}s{% endif %}</a>
+      </div>
+      {% endif %}
+      {% endif %}
+      {% else %}
+      <small class="text-muted">No guildmasters</small>
+      {% endfor %}
+    </div>
+
+    <div class="text-small font-weight-bold text-muted text-uppercase mb-2 mt-3" style="letter-spacing: 0.025rem;">Settings</div>
+    <div class="text-primary">
+      <i class="fas fa-filter"data-toggle="tooltip" data-placement="bottom" title="Category: {% if b.subcat %}{{ b.subcat.category.name }} / {{ b.subcat.name }}{% else %}Uncategorized{% endif %}"></i>
+      {% if b.is_private %}<i class="fas fa-eye-slash"data-toggle="tooltip" data-placement="bottom" title="Private mode."></i>{% endif %}
+      {% if b.restricted_posting %}<i class="fas fa-user-lock"data-toggle="tooltip" data-placement="bottom" title="Restricted posting mode."></i>{% endif %}
+      {% if b.over_18 %}<i class="fas fa-eye-evil" data-toggle="tooltip" data-placement="bottom" title="NSFW"></i>{% endif %}
+      {% if b.all_opt_out %}<i class="fad fa-list" data-toggle="tooltip" data-placement="bottom" title="Opted out of All/Trending"></i>{% endif %}        
+    </div>
+
+  </div>
+</div>
+
 
 {% if False %}
 <div class="sidebar-section sidebar-chat">
