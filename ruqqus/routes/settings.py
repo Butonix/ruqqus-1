@@ -485,7 +485,8 @@ def delete_account(v):
                 user_id=1,
                 kind="ban_post",
                 target_submission_id=post.id,
-                note="spam"
+                note="spam",
+		board_id=post.board_id
                 )
 
             g.db.add(post)
@@ -497,7 +498,8 @@ def delete_account(v):
                 user_id=1,
                 kind="ban_comment",
                 target_comment_id=comment.id,
-                note="spam"
+                note="spam",
+		board_id=comment.post.board_id
                 )
             g.db.add(comment)
             g.db.add(new_ma)
