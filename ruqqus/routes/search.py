@@ -283,8 +283,11 @@ def search(v, search_type="posts"):
             User.is_private==False,
             User.is_deleted==False,
             or_(
-                User.is_banned==0,
+              User.is_banned==0,
+              and_(
+                User.is_banned>0,
                 User.unban_utc<now
+              )
             )
         )
         users=users.order_by(User.username.ilike(term).desc(), User.stored_subscriber_count.desc())
