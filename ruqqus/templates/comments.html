@@ -354,11 +354,11 @@
 
           &nbsp;
           <label class="btn btn-secondary format d-inline-block m-0" for="gif-reply-btn-{{c.fullname}}">
-            <i id="emoji-reply-btn-{{c.fullname}}" class="fas fa-smile-beam" onclick="commentForm('reply-form-body-{{c.fullname}}');loadEmojis" aria-hidden="true" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom" title="Add EMOJI"></i>
+             <i id="emoji-reply-btn-{{c.fullname}}" class="fas fa-smile-beam" onclick="commentForm('reply-form-body-{{c.fullname}}');loadEmojis" aria-hidden="true" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom" title="Add EMOJI"></i>
           </label>
           &nbsp;
 
-            <label class="format btn btn-secondary m-0 ml-1 {% if v.can_upload_comment_image %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-reply-{{ c.fullname }}">
+          <label class="format btn btn-secondary m-0 ml-1 {% if v.can_upload_comment_image %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-reply-{{ c.fullname }}">
                 <div id="filename-show-reply-{{ c.base36id }}"><i class="far fa-image"></i></div>
                 <input id="file-upload-reply-{{ c.fullname }}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{ c.base36id }}').innerHTML=document.getElementById('file-upload-reply-{{ c.fullname }}').files[0].name;" hidden>
           </label>
