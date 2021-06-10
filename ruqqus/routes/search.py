@@ -286,6 +286,7 @@ def search(v, search_type="posts"):
               User.is_banned==0,
               and_(
                 User.is_banned>0,
+		User.unban_utc>0,
                 User.unban_utc<now
               )
             )
