@@ -4,6 +4,7 @@
 {% set ups=c.upvotes_fuzzed %}
 {% set downs=c.downvotes_fuzzed %}
 {% set score=ups-downs %}
+{% include "emoji_modal.html" %}
 
 <!--conditions under which a comment might be hidden-->
 
@@ -149,7 +150,8 @@
          <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('comment-edit-body-{{ c.base36id }}')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> 
          <small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote('comment-edit-body-{{ c.base36id }}')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small>
          <small class="format"><span class="font-weight-bolder text-uppercase" aria-hidden="true" onclick="getGif();commentForm('comment-edit-body-{{ c.base36id }}')" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Add GIF">GIF</span></small> 
-         <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
+         &nbsp;
+         <small class="format"><i class="fas fa-smile-beam" aria-hidden="true" onclick="commentForm('comment-edit-body-{{c.base36id}}');loadEmojis()" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom"  title="Emojis"></i></small>          <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
          <a id="cancel-edit-{{ c.base36id }}" href="javascript:void(0)" onclick="toggleEdit('{{ c.base36id }}')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
          <a href="javascript:void(0)" form="comment-edit-form-{{ c.base36id }}" class="btn btn-primary ml-2" onclick="comment_edit('{{ c.base36id }}')">Save Edit</a> </div> </form>
        </div>
@@ -349,7 +351,13 @@
             <span id="gif-reply-btn-{{ c.fullname }}" class="font-weight-bolder text-uppercase" onclick="getGif();commentForm('reply-form-body-{{ c.fullname }}')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF">GIF</span>
           </label> 
 
-          <label class="format btn btn-secondary m-0 ml-1 {% if v.can_upload_comment_image %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-reply-{{ c.fullname }}">
+          &nbsp;
+          <label class="btn btn-secondary format d-inline-block m-0" for="gif-reply-btn-{{c.fullname}}">
+            <i id="emoji-reply-btn-{{c.fullname}}" class="fas fa-smile-beam" onclick="commentForm('reply-form-body-{{c.fullname}}');loadEmojis" aria-hidden="true" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom" title="Add EMOJI"></i>
+          </label>
+          &nbsp;
+
+            <label class="format btn btn-secondary m-0 ml-1 {% if v.can_upload_comment_image %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-reply-{{ c.fullname }}">
                 <div id="filename-show-reply-{{ c.base36id }}"><i class="far fa-image"></i></div>
                 <input id="file-upload-reply-{{ c.fullname }}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{ c.base36id }}').innerHTML=document.getElementById('file-upload-reply-{{ c.fullname }}').files[0].name;" hidden>
           </label>
