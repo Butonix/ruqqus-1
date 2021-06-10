@@ -225,7 +225,7 @@
           {% endif %}
           <li class="list-inline-item d-none d-md-inline-block">
             <div class="dropdown show">
-              <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true"
+              <a href="javascript:void(0)" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
               <i class="fas fa-ellipsis-h text-small align-middle mr-0"></i>
             </a>
@@ -293,7 +293,7 @@
           </div>
         </li>
         <li class="list-inline-item d-inline-block d-md-none">
-          <a href="#" data-toggle="modal" data-target="#actionsModal-{{ c.base36id }}" data-focus="false"><i class="fas fa-ellipsis-h"></i></a>
+          <a href="javascript:void(0)" data-toggle="modal" data-target="#actionsModal-{{ c.base36id }}" data-focus="false"><i class="fas fa-ellipsis-h"></i></a>
         </li>
         {% if v and request.path.startswith('/@') %}
         {% if voted==1 %}
