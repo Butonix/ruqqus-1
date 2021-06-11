@@ -50,9 +50,7 @@ class Spoiler(SpanToken):
 
     def __init__(self, match_obj):
 
-        x=match_obj.group(1)
-        print(x)
-        self.target=x
+        self.target=match_obj.group(1)
 
 
 
@@ -121,7 +119,9 @@ class CustomRenderer(HTMLRenderer):
 
     def render_spoiler(self, token):
 
-        return f'<span class="spoiler">{token}</span>'
+        x=f'<span class="spoiler">{token}</span>'
+        print(x)
+        return x
 
     # def render_op_mention(self, token):
 
