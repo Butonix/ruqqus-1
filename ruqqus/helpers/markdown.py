@@ -119,7 +119,7 @@ class CustomRenderer(HTMLRenderer):
 
     def render_spoiler(self, token):
 
-        x=f'<span class="spoiler">{token}</span>'
+        x=f'<span class="spoiler">{token.target}</span>'
         print(x)
         return x
 
