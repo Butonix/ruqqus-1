@@ -62,7 +62,7 @@ $('#new_email').on('input', function () {
         
       var container = document.getElementById('EMOJIS');
 
-      container.innerHTML = '<div class="emojicard" href="javascript:void(0)" onclick="getEmoji(\'poggers\')" style="overflow: hidden;"><img width=25 src="/assets/images/emojis/poggers.png"></div>'
+      container.innerHTML = '<div class="emojicard" href="javascript:void(0)" onclick="getEmoji(\'poggers\')" style="overflow: hidden;"><img width=25 src="/assets/images/emojis/poggers.gif"></div>'
 
   }
 
