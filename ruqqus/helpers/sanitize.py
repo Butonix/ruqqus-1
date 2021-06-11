@@ -201,8 +201,7 @@ def sanitize(text, bio=False, linkgen=False):
 
         #same goes for span
         for tag in soup.find_all("span"):
-            if tag.attrs.get("class","") not in ['','spoiler']:
-                tag.attrs['class']=''
+            tag.attrs['class']='spoiler' if 'spoiler' in tag.attrs.get('class','') else ''
 
         #table format
         for tag in soup.find_all("table"):
