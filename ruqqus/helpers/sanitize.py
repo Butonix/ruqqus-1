@@ -59,7 +59,7 @@ _allowed_attributes = {
     'a': ['href', 'title', "rel", "data-original-name"],
     'i': [],
     'img': ['src', 'class'],
-    'span': ['style']
+    'span': ['style', "class"]
     }
 
 _allowed_protocols = [
@@ -194,10 +194,15 @@ def sanitize(text, bio=False, linkgen=False):
         for tag in soup.find_all("code"):
             tag.contents=[x.string for x in tag.contents if x.string]
 
-        #whatever else happens with images, there are only two sets of classes allowed
+        #whatever else happens with images, there are only two sets of classes allowed for images
         for tag in soup.find_all("img"):
             if 'profile-pic-20' not in tag.attrs.get("class",""):
                 tag.attrs['class']="in-comment-image rounded-sm my-2"
+
+        #same goes for span
+        for tag in soup.find_all("span"):
+            if tag.attrs.get("class","") not in ['','spoiler']:
+                tag.attrs['class']=''
 
         #table format
         for tag in soup.find_all("table"):
