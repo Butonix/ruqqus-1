@@ -45,7 +45,7 @@ class ChatMention(SpanToken):
 
 class Spoiler(SpanToken):
 
-    pattern=re.compile("<s>(.+)</s>")
+    pattern=re.compile("(>!|<s>|\|\|)(.+)(\|\||</s>|!<)")
     parse_inner=True
 
     def __init__(self, match_obj):
