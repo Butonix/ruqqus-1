@@ -62,7 +62,7 @@ $('#new_email').on('input', function () {
         
       var container = document.getElementById('EMOJIS');
 
-      container.innerHTML = '<button class="emojicard" onclick="getEmoji(\'poggers\')" style="overflow: hidden;"><img width=25 src="/assets/images/emojis/poggers.gif"></button><button class="emojicard" onclick="getEmoji(\'poggers-excited\')" style="overflow: hidden;"><img width=25 src="/assets/images/emojis/poggers-excited.gif"></button><button class="emojicard" onclick="getEmoji(\'ruqqking\')" style="overflow: hidden;"><img width=25 src="/assets/images/emojis/ruqqking.gif"></button>'
+      container.innerHTML = '<button class="btn my-2 px-2 py-0" onclick="getEmoji(\'poggers\')" style="overflow: hidden;"><img width=25 src="/assets/images/emojis/poggers.gif"></button><button class="btn my-2 px-2 py-0" onclick="getEmoji(\'poggers-excited\')" style="overflow: hidden;"><img width=25 src="/assets/images/emojis/poggers-excited.gif"></button><button class="btn my-2 px-2 py-0" onclick="getEmoji(\'ruqqking\')" style="overflow: hidden;"><img width=25 src="/assets/images/emojis/ruqqking.gif"></button>'
 
   }
 
