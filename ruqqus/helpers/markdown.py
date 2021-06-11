@@ -119,9 +119,7 @@ class CustomRenderer(HTMLRenderer):
 
     def render_spoiler(self, token):
 
-        x=f'<span class="spoiler">{token.target}</span>'
-        print(x)
-        return x
+        return f'<span class="spoiler">{token.target}</span>'
 
     # def render_op_mention(self, token):
 
