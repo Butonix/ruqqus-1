@@ -4,7 +4,6 @@ from bleach.linkifier import LinkifyFilter
 from urllib.parse import urlparse, ParseResult, urlunparse
 from functools import partial
 from .get import *
-import os.path
 
 _allowed_tags = tags = ['b',
                         'blockquote',
@@ -212,8 +211,5 @@ def sanitize(text, bio=False, linkgen=False):
 
     else:
         sanitized = _clean_wo_links.clean(text)
-
-    for i in re.finditer(':(.{1,30}?):', sanitized):
-      if os.path.isfile(f'/d/ruqqus/assets/images/emojis/{i.group(1)}.gif'): sanitized = sanitized.replace(f':{i.group(1)}:', f'<img height=25 src="/assets/images/emojis/{i.group(1)}.gif"<span>')
 
     return sanitized
