@@ -3845,3 +3845,13 @@ div.deleted.banned {
         display: block;
     }
 }
+
+/* Light mode spoiler */
+.spoiler{ 
+  color: black; 
+  background-color:black;
+  font-weight: 600 !important;
+}
+
+.spoiler:hover { 
+  color: white; 

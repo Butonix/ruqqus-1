@@ -211,5 +211,5 @@ def sanitize(text, bio=False, linkgen=False):
 
     else:
         sanitized = _clean_wo_links.clean(text)
-
+    
     return sanitized

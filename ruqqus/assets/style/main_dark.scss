@@ -3925,3 +3925,14 @@ div.deleted.banned {
         display: block;
     }
 }
+
+/* Dark mode spoiler */
+.spoiler{ 
+  color: white; 
+  background-color:white;
+  font-weight: 600 !important;
+}
+
+.spoiler:hover { 
+  color: black; 
+}

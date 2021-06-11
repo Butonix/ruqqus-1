@@ -43,6 +43,16 @@ class ChatMention(SpanToken):
         self.target = (match_obj.group(1), match_obj.group(2))
 
 
+class Spoiler(SpanToken):
+
+    pattern=re.compile("<s>(.+)</s>")
+    parse_inner=True
+
+    def __init__(self, match_obj):
+
+        self.target=match_obj.group(1)
+
+
 
 
 # class OpMention(SpanToken):
@@ -105,6 +115,10 @@ class CustomRenderer(HTMLRenderer):
             return f"{space}#{target}"
         else:
             return f'{space}<a href="{board.permalink}/chat" class="d-inline-block"><img src="/+{board.name}/pic/profile" class="profile-pic-20 mr-1">#{board.name}</a>'
+
+    def render_spoiler(self, token):
+
+        return f'<span class="spoiler">{token}</span>'
 
     # def render_op_mention(self, token):
 
