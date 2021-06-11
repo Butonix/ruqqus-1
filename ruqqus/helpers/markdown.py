@@ -50,7 +50,9 @@ class Spoiler(SpanToken):
 
     def __init__(self, match_obj):
 
-        self.target=match_obj.group(1)
+        x=match_obj.group(1)
+        print(x)
+        self.target=x
 
 
 
