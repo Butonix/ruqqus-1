@@ -116,7 +116,7 @@ $('#new_email').on('input', function () {
       let str = ''
 
       for (i = 0; i < emojis.length; i++) { 
-        str += `<button class="btn btn-white p-0" onclick="getEmoji(\'${emojis[i]}\')" style="width:36px; height:36px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${emojis[i]}.gif" alt="${emojis[i]}-emoji"/></button>`;
+        str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${emojis[i]}\')" style="width:36px; height:36px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${emojis[i]}.gif" alt="${emojis[i]}-emoji"/></button>`;
       }
 
       container.innerHTML = str
