@@ -101,6 +101,7 @@ $('#new_email').on('input', function () {
       'strong-doge',
       'stonks',
       'not-stonks',
+      'tobey-sad',
       'think-mark',
       'this-tbh',
       'tom-unsettled',
