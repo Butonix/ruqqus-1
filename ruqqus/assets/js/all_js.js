@@ -60,25 +60,19 @@ $('#new_email').on('input', function () {
 
   function loadEmojis() {
 
-      const emojisRuqqus = [
-      // 'ruqqking',
-      // 'ruqqie-clapping',
-      // 'ruqqie-crown',
-      // 'ruqqie-laughing',
-      // 'ruqqie-lifting',
-      // 'ruqqie-sad',
-      // 'ruqqie-scowling',
-      // 'ruqqie-smug',
-      // 'ruqqie-surprised',
-      // 'ruqqie-weak',
-      // 'ruqqie-what',
+    const emojis = [
+    {
+      type:'ruqqus',
+      emojis: [
       '500',
       '503',
       'poggers',
-      'ruqqking',
-      ];
-
-      const emojisMemes = [
+      'ruqqking'
+      ]
+    },
+    {
+      type:'memes',
+      emojis: [
       'anime-dance',
       'breadstare',
       'cat-vibe',
@@ -112,25 +106,50 @@ $('#new_email').on('input', function () {
       'wavy-sad',
       'who',
       'yoshi-hammer'
-      ];
+      ]
+    }
+    ]
 
-      const ruqqusContainer = document.getElementById('EMOJIS_RUQQUS');
-      const memesContainer = document.getElementById('EMOJIS_MEMES');
+      // const ruqqusContainer = document.getElementById('EMOJIS_RUQQUS');
+      // const memesContainer = document.getElementById('EMOJIS_MEMES');
 
-      let ruqqusEmojiStr = '', memesEmojiStr = ''
+      // let ruqqusEmojiStr = '', memesEmojiStr = ''
 
-      for (i = 0; i < emojisRuqqus.length; i++) { 
-        ruqqusEmojiStr += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${emojisRuqqus[i]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${emojisRuqqus[i]}.gif" alt="${emojisRuqqus[i]}-emoji"/></button>`;
+      for (i=0; i < emojis.length; i++) {
+
+        let container = document.getElementById(`EMOJIS_${emojis[i].type}`)
+        let str = ''
+
+        let arr = emojis[i].emojis
+
+        for (j=0; j < arr.length; j++) { 
+          str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${arr[j]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${arr[j]}.gif" alt="${arr[j]}-emoji"/></button>`;
+        }
+
+        container.innerHTML = str
       }
 
-      for (i = 0; i < emojisMemes.length; i++) { 
-        memesEmojiStr += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${emojisMemes[i]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${emojisMemes[i]}.gif" alt="${emojisMemes[i]}-emoji"/></button>`;
-      }
+      // for (i = 0; i < emojisRuqqus.length; i++) { 
+      //   ruqqusEmojiStr += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${emojisRuqqus[i]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${emojisRuqqus[i]}.gif" alt="${emojisRuqqus[i]}-emoji"/></button>`;
+      // }
 
-      ruqqusContainer.innerHTML = ruqqusEmojiStr
-      memesContainer.innerHTML = memesEmojiStr
+      // for (i = 0; i < emojisMemes.length; i++) { 
+      //   memesEmojiStr += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${emojisMemes[i]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${emojisMemes[i]}.gif" alt="${emojisMemes[i]}-emoji"/></button>`;
+      // }
 
-  }
+      // for (i = 0; i < emojisGaming.length; i++) { 
+      //   gamingEmojiStr += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${emojisGaming[i]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${emojisGaming[i]}.gif" alt="${emojisGaming[i]}-emoji"/></button>`;
+      // }
+
+      // for (i=0; i < tabs.length; i++) {
+      //   `${tabs[i]}Container`.innerHTML = `${tabs[i]}EmojiStr`
+      // }
+
+      // ruqqusContainer.innerHTML = ruqqusEmojiStr
+      // memesContainer.innerHTML = memesEmojiStr
+      // gamingContainer.innerHTML = memesGamingStr
+
+    }
 
   function getGif(searchTerm) {
 
