@@ -207,7 +207,6 @@ def sanitize(text, bio=False, linkgen=False):
         for tag in soup.find_all("thead"):
             tag.attrs['class']="bg-primary text-white"
 
-
         sanitized = str(soup)
 
     else:
