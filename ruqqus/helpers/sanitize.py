@@ -213,6 +213,6 @@ def sanitize(text, bio=False, linkgen=False):
         sanitized = _clean_wo_links.clean(text)
 
     for i in re.finditer(':(.{1,30}?):', sanitized):
-      if os.path.isfile(f'/home/ubuntu/ruqqus/ruqqus/assets/images/emojis/{i.group(1)}.gif'): sanitized = sanitized.replace(f':{i.group(1)}:', f'<img height=20 src="/assets/images/emojis/{i.group(1)}.gif" data-toggle="tooltip" data-original-title=":{i.group(1)}:"/>')
+      if os.path.isfile(f'/home/ubuntu/ruqqus/ruqqus/assets/images/emojis/{i.group(1)}.gif'): sanitized = sanitized.replace(f':{i.group(1)}:', f'<img height=30 src="/assets/images/emojis/{i.group(1)}.gif" data-toggle="tooltip" data-original-title=":{i.group(1)}:"/>')
 
     return sanitized
