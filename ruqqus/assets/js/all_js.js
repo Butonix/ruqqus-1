@@ -49,7 +49,7 @@ $('#new_email').on('input', function () {
 	function getEmoji(searchTerm) {
 
 		var emoji = ' :'+searchTerm+': '
-		
+
 		var commentBox = document.getElementById(commentFormID);
 
 		var old    = commentBox.value;
@@ -60,7 +60,7 @@ $('#new_email').on('input', function () {
 
 	function loadEmojis() {
 
-		const emojis = ['poggers','ruqqkin'];
+		const emojis = ['poggers','ruqqking'];
 		const container = document.getElementById('EMOJIS');
 
 		let str = ''
