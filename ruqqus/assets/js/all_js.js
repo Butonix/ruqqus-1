@@ -60,7 +60,7 @@ $('#new_email').on('input', function () {
 
   function loadEmojis() {
 
-      const emojis = [
+      const emojisRuqqus = [
       // 'ruqqking',
       // 'ruqqie-clapping',
       // 'ruqqie-crown',
@@ -74,6 +74,11 @@ $('#new_email').on('input', function () {
       // 'ruqqie-what',
       '500',
       '503',
+      'poggers',
+      'ruqqking',
+      ];
+
+      const emojisMemes = [
       'anime-dance',
       'breadstare',
       'cat-vibe',
@@ -92,11 +97,9 @@ $('#new_email').on('input', function () {
       'pepe-cozy',
       'pepe-saber',
       'pepe-sus',
-      'poggers',
       'pog-champ',
       'pop-cat',
       'press-f',
-      'ruqqking',
       'shrek-yep',
       'strong-doge',
       'stonks',
@@ -111,15 +114,20 @@ $('#new_email').on('input', function () {
       'yoshi-hammer'
       ];
 
-      const container = document.getElementById('EMOJIS');
+      const ruqqusContainer = document.getElementById('EMOJIS_RUQQUS');
+      const memesContainer = document.getElementById('EMOJIS_MEMES');
 
       let str = ''
 
-      for (i = 0; i < emojis.length; i++) { 
-        str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${emojis[i]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${emojis[i]}.gif" alt="${emojis[i]}-emoji"/></button>`;
+      for (i = 0; i < emojisRuqqus.length; i++) { 
+        ruqqusEmojiStr += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${emojisRuqqus[i]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${emojisRuqqus[i]}.gif" alt="${emojisRuqqus[i]}-emoji"/></button>`;
+      }
+      for (i = 0; i < emojisMemes.length; i++) { 
+        memesEmojiStr += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${emojisMemes[i]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${emojisMemes[i]}.gif" alt="${emojisMemes[i]}-emoji"/></button>`;
       }
 
-      container.innerHTML = str
+      ruqqusContainer.innerHTML = ruqqusEmojiStr
+      memesContainer.innerHTML = memesEmojiStr
 
   }
 
