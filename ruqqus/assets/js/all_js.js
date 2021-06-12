@@ -121,7 +121,7 @@ $('#new_email').on('input', function () {
     ]
 
     for (i=0; i < emojis.length; i++) {
-
+      
       let container = document.getElementById(`EMOJIS_${emojis[i].type}`);
       let str = '';
       let arr = emojis[i].emojis;
