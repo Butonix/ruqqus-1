@@ -117,11 +117,12 @@ $('#new_email').on('input', function () {
       const ruqqusContainer = document.getElementById('EMOJIS_RUQQUS');
       const memesContainer = document.getElementById('EMOJIS_MEMES');
 
-      let str = ''
+      let ruqqusEmojiStr = '', memesEmojiStr = ''
 
       for (i = 0; i < emojisRuqqus.length; i++) { 
         ruqqusEmojiStr += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${emojisRuqqus[i]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${emojisRuqqus[i]}.gif" alt="${emojisRuqqus[i]}-emoji"/></button>`;
       }
+
       for (i = 0; i < emojisMemes.length; i++) { 
         memesEmojiStr += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${emojisMemes[i]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${emojisMemes[i]}.gif" alt="${emojisMemes[i]}-emoji"/></button>`;
       }
