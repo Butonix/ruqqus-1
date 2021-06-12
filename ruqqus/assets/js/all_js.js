@@ -60,7 +60,34 @@ $('#new_email').on('input', function () {
 
   function loadEmojis() {
 
-      const emojis = ['ruqqking','ruqqie-clapping','ruqqie-crown','ruqqie-laughing','ruqqie-lifting','ruqqie-sad','ruqqie-scowling','ruqqie-smug','ruqqie-surprised','ruqqie-weak','ruqqie-what','pepe-blanket','pepe-cozy','pepe-sus','poggers','kekw','falling-kermit'];
+      const emojis = [
+      'ruqqking',
+      'ruqqie-clapping',
+      'ruqqie-crown',
+      'ruqqie-laughing',
+      'ruqqie-lifting',
+      'ruqqie-sad',
+      'ruqqie-scowling',
+      'ruqqie-smug',
+      'ruqqie-surprised',
+      'ruqqie-weak',
+      'ruqqie-what',
+      'pepe-blanket',
+      'pepe-cozy',
+      'pepe-sus',
+      'pepe-saber',
+      'poggers',
+      'kekw',
+      'falling-kermit',
+      'vibe-cat',
+      'sad-cat',
+      'vue',
+      'peace',
+      'excuseme',
+      'who',
+      'press-f',
+      ];
+
       const container = document.getElementById('EMOJIS');
 
       let str = ''
