@@ -60,7 +60,7 @@ $('#new_email').on('input', function () {
 
   function loadEmojis() {
 
-      const emojis = ['poggers','ruqqking',''];
+      const emojis = ['poggers','ruqqking','falling-kermit',];
       const container = document.getElementById('EMOJIS');
 
       let str = ''
