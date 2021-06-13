@@ -119,9 +119,9 @@ class CustomRenderer(HTMLRenderer):
         
         name=token.target
         
-        if os.path.isfile(f"/home/ubuntu/ruqqus/ruqqus/assets/images/emojis/{name}"):
+        #if os.path.isfile(f"/home/ubuntu/ruqqus/ruqqus/assets/images/emojis/{name}"):
             
-            return f'<span data-toggle="tooltip" data-title=":{name}:"><img src="/assets/images/emojis/{name}.png"></span>'
+        return f'<span data-toggle="tooltip" data-title=":{name}:"><img src="/assets/images/emojis/{name}.png"></span>'
         
         elif g.v.has_premium and os.path.isfile(f"/home/ubuntu/ruqqus/ruqqus/assets/images/primojis/{name}"):
             
