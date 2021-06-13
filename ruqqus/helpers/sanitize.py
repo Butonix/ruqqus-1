@@ -59,7 +59,7 @@ _allowed_tags_in_bio = [
 _allowed_attributes = {
     'a': ['href', 'title', "rel", "data-original-name"],
     'i': [],
-    'img': ['src', 'class'],
+    'img': ['src', 'class', 'width','height'],
     'span': ['style', 'data-toggle', 'data-title', 'data-original-title']
     }
 
@@ -197,6 +197,13 @@ def sanitize(text, bio=False, linkgen=False):
 
         #whatever else happens with images, there are only three sets of classes allowed
         for tag in soup.find_all("img"):
+          
+            if tag.attrs.get('width'):
+                tag.attrs['width'] = max(100, int(tag.attrs['width']))
+                
+            if tag.attrs.get('height'):
+                tag.attrs['height'] = max(100, int(tag.attrs['height']))
+                
             if tag.attrs.get('class') and 'profile-pic-20' not in tag.attrs.get("class",""):
                 tag.attrs['class']="in-comment-image rounded-sm my-2"
 
