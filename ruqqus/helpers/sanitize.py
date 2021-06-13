@@ -156,7 +156,7 @@ def sanitize(text, bio=False, linkgen=False):
             domain = get_domain(netloc)
             if not(netloc) or (domain and domain.show_thumbnail):
 
-                if "profile-pic-20" not in tag.get("class", ""):
+                if tag.get("class") and "profile-pic-20" not in tag.get("class", ""):
                     #print(tag.get('class'))
                     # set classes and wrap in link
 
