@@ -123,12 +123,12 @@ class CustomRenderer(HTMLRenderer):
             
         return f'<span data-toggle="tooltip" data-title=":{name}:"><img src="/assets/images/emojis/{name}.png"></span>'
         
-        elif g.v.has_premium and os.path.isfile(f"/home/ubuntu/ruqqus/ruqqus/assets/images/primojis/{name}"):
+        #elif g.v.has_premium and os.path.isfile(f"/home/ubuntu/ruqqus/ruqqus/assets/images/primojis/{name}"):
             
-            return f'<span data-toggle="tooltip" data-title=":{name}:"><img src="/assets/images/primojis/{name}.gif"></span>'
+          #  return f'<span data-toggle="tooltip" data-title=":{name}:"><img src="/assets/images/primojis/{name}.gif"></span>'
 
-        else:
-            return f":{name}:"
+      #  else:
+    #        return f":{name}:"
         
         
     # def render_op_mention(self, token):
