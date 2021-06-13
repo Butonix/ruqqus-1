@@ -195,9 +195,9 @@ def sanitize(text, bio=False, linkgen=False):
         for tag in soup.find_all("code"):
             tag.contents=[x.string for x in tag.contents if x.string]
 
-        #whatever else happens with images, there are only two sets of classes allowed
+        #whatever else happens with images, there are only three sets of classes allowed
         for tag in soup.find_all("img"):
-            if 'profile-pic-20' not in tag.attrs.get("class",""):
+            if 'profile-pic-20' not in tag.attrs.get("class","") and "emoji" not in tag.attrs.get("class",""):
                 tag.attrs['class']="in-comment-image rounded-sm my-2"
 
         #table format
@@ -211,8 +211,5 @@ def sanitize(text, bio=False, linkgen=False):
 
     else:
         sanitized = _clean_wo_links.clean(text)
-
-    for i in re.finditer(':(.{1,30}?):', sanitized):
-      if os.path.isfile(f'/home/ubuntu/ruqqus/ruqqus/assets/images/emojis/{i.group(1)}.gif'): sanitized = sanitized.replace(f':{i.group(1)}:', f'<span data-toggle="tooltip" data-original-title=":{i.group(1)}:"><img width=30 height=30 src="/assets/images/emojis/{i.group(1)}.gif" style="object-fit:contain;"/></span>')
 
     return sanitized
