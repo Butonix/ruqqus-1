@@ -63,6 +63,7 @@ $('#new_email').on('input', function () {
     const emojis = [
     {
       type:'ruqqus',
+      folder: 'emoji',
       emojis: [
       '500',
       '503',
@@ -71,16 +72,29 @@ $('#new_email').on('input', function () {
       ]
     },
     {
-      type:'memes',
+      type:'animated',
+      folder: 'primoji',
       emojis: [
       'anime-dance',
-      'breadstare',
       'cat-vibe',
       'crumb-dance',
       'dance-kid',
       'dance',
-      'facepalm',
       'falling-kermit',
+      'minecraft',
+      'pepe-saber',
+      'pop-cat',
+      'wavy-sad',
+      'who',
+      'yoshi-hammer'
+      ]
+    }
+    {
+      type:'meme',
+      folder: 'emoji',
+      emojis: [
+      'breadstare',
+      'facepalm',
       'jackie-chan-wtf',
       'kekw',
       'leo',
@@ -88,10 +102,8 @@ $('#new_email').on('input', function () {
       'pathetic',
       'pepe-blanket',
       'pepe-cozy',
-      'pepe-saber',
       'pepe-sus',
       'pog-champ',
-      'pop-cat',
       'press-f',
       'shrek-yep',
       'strong-doge',
@@ -100,22 +112,16 @@ $('#new_email').on('input', function () {
       'tobey-sad',
       'think-mark',
       'tom-unsettled',
-      'vue',
-      'wavy-sad',
-      'who'
-      ]
-    },
-    {
-      type:'gaming',
-      emojis: [
-      'minecraft',
-      'yoshi-hammer'
+      'vue'
       ]
     },
     {
       type:'text',
+      folder: 'emoji',
       emojis: [
-      'this-tbh'
+      'this-tbh',
+      '500',
+      '503'
       ]
     }
     ]
@@ -125,9 +131,10 @@ $('#new_email').on('input', function () {
       let container = document.getElementById(`EMOJIS_${emojis[i].type}`);
       let str = '';
       let arr = emojis[i].emojis;
+      let dir = emojis[i].folder;
 
       for (j=0; j < arr.length; j++) { 
-        str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${arr[j]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${arr[j]}.gif" alt="${arr[j]}-emoji"/></button>`;
+        str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${arr[j]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/${dir[j]}/${arr[j]}.gif" alt="${arr[j]}-emoji"/></button>`;
       }
 
       container.innerHTML = str
