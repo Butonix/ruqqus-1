@@ -2218,3 +2218,15 @@ $('.expandable-image').click( function(event) {
 
   expandDesktopImage(url,url);
 })
+
+$('.text-expand').click(function(event){
+  if (event.which != 1) {
+    return
+  }
+
+
+  $('#post-text-{{ p.base36id }}').toggleClass('d-none');
+  $('.text-expand-icon').toggleClass('fa-expand-alt');
+  $('.text-expand-icon').toggleClass('fa-compress-arrows-alt');
+  
+})
