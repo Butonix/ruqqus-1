@@ -46,6 +46,102 @@ $('#new_email').on('input', function () {
     commentFormID = form;
   };
 
+  function getEmoji(searchTerm) {
+
+    var emoji = ' :'+searchTerm+': '
+    
+    var commentBox = document.getElementById(commentFormID);
+
+    var old = commentBox.value;
+
+    commentBox.value = old + emoji;
+
+  }
+
+  function loadEmojis() {
+
+    const emojis = [
+    {
+      type:'ruqqus',
+      folder: 'emojis',
+      emojis: [
+      '500',
+      '503',
+      'poggers',
+      'ruqqking'
+      ]
+    },
+    {
+      type:'animated',
+      folder: 'primojis',
+      emojis: [
+      'anime-dance',
+      'cat-vibe',
+      'crumb-dance',
+      'dance-kid',
+      'dance',
+      'falling-kermit',
+      'minecraft',
+      'pepe-saber',
+      'pop-cat',
+      'wavy-sad',
+      'who',
+      'yoshi-hammer'
+      ]
+    },
+    {
+      type:'meme',
+      folder: 'emojis',
+      emojis: [
+      'breadstare',
+      'facepalm',
+      'jackie-chan-wtf',
+      'kekw',
+      'leo',
+      'mikewazowski',
+      'pathetic',
+      'pepe-blanket',
+      'pepe-cozy',
+      'pepe-sus',
+      'pog-champ',
+      'press-f',
+      'shrek-yep',
+      'strong-doge',
+      'stonks',
+      'not-stonks',
+      'tobey-sad',
+      'think-mark',
+      'tom-unsettled',
+      'vue'
+      ]
+    },
+    {
+      type:'text',
+      folder: 'emojis',
+      emojis: [
+      'this-tbh',
+      '500',
+      '503'
+      ]
+    }
+    ]
+
+    for (i=0; i < emojis.length; i++) {
+      
+      let container = document.getElementById(`EMOJIS_${emojis[i].type}`);
+      let str = '';
+      let arr = emojis[i].emojis;
+      let dir = emojis[i].folder;
+
+      for (j=0; j < arr.length; j++) { 
+        str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${arr[j]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/${dir}/${arr[j]}.gif" alt="${arr[j]}-emoji"/></button>`;
+      }
+
+      container.innerHTML = str
+    }
+
+  }
+
   function getGif(searchTerm) {
 
     if (searchTerm !== undefined) {
