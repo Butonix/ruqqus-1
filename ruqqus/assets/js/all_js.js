@@ -2222,11 +2222,12 @@ $('.expandable-image').click( function(event) {
 $('.text-expand').click(function(event){
   if (event.which != 1) {
     return
-  }
+  };
+  id=$(this).data('id');
 
 
-  $('#post-text-{{ p.base36id }}').toggleClass('d-none');
-  $('.text-expand-icon').toggleClass('fa-expand-alt');
-  $('.text-expand-icon').toggleClass('fa-compress-arrows-alt');
+  $('#post-text-'+id).toggleClass('d-none');
+  $('.text-expand-icon-'+id).toggleClass('fa-expand-alt');
+  $('.text-expand-icon-'+id).toggleClass('fa-compress-arrows-alt');
   
 })
