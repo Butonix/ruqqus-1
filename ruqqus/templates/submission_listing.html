@@ -240,6 +240,12 @@
       </ul>
     </div>
 
+{% if p.body_html %}
+      <div class="d-none card rounded border-bottom" id="post-text-{{ p.base36id }}">
+        {{ p.body_html | safe }}
+      </div>
+{% endif %}
+          
   </div>
 
 </div>
@@ -302,14 +308,8 @@
 
     </ul>
     
-    
-{% if p.body_html %}
-      <div class="d-none card rounded border-bottom" id="post-text-{{ p.base36id }}">
-        {{ p.body_html | safe }}
-      </div>
-{% endif %}
-    
   </div>
+  
 </div>
       
 
