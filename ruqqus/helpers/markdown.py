@@ -121,11 +121,11 @@ class CustomRenderer(HTMLRenderer):
         
         if os.path.isfile(f"/home/ubuntu/ruqqus/ruqqus/assets/images/emojis/{name}.gif"):
             
-            return f'<span data-toggle="tooltip" data-title=":{name}:"><img class="emoji" src="/assets/images/emojis/{name}.gif"></span>'
+            return f'<span data-toggle="tooltip" data-original-title=":{name}:"><img class="emoji" src="/assets/images/emojis/{name}.gif"></span>'
         
         elif g.v.has_premium and os.path.isfile(f"/home/ubuntu/ruqqus/ruqqus/assets/images/primojis/{name}.gif"):
             
-            return f'<span data-toggle="tooltip" data-title=":{name}:"><img class="emoji" src="/assets/images/primojis/{name}.gif"></span>'
+            return f'<span data-toggle="tooltip" data-original-title=":{name}:"><img class="emoji" src="/assets/images/primojis/{name}.gif"></span>'
 
         else:
             return f":{name}:"
