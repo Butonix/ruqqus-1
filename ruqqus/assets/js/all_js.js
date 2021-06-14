@@ -134,7 +134,7 @@ $('#new_email').on('input', function () {
       let dir = emojis[i].folder;
 
       for (j=0; j < arr.length; j++) { 
-        str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${arr[j]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/${dir[j]}/${arr[j]}.gif" alt="${arr[j]}-emoji"/></button>`;
+        str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${arr[j]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/${dir}/${arr[j]}.gif" alt="${arr[j]}-emoji"/></button>`;
       }
 
       container.innerHTML = str
