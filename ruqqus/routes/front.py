@@ -598,27 +598,8 @@ def browse_guilds(v):
 
     # check if ids exist
     if ids:
-        # assemble list of tuples
-        i = 1
-        tups = []
-        for x in ids:
-            tups.append((x, i))
-            i += 1
 
-        # tuple string
-        tups = str(tups).lstrip("[").rstrip("]")
-
-        # hit db for entries
-
-        boards = g.db.query(
-            Board).options(
-            lazyload(
-                '*'
-            )).filter(
-            Board.id.in_(ids)
-            ).all()
-
-        boards=sorted(boards, key=lambda x: ids.index(x.id))
+        boards = get_boards(ids, v=v)
     else:
         boards = []
 

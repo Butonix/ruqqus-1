@@ -912,29 +912,26 @@ def get_boards(bids, v=None, graceful=False):
             board=entry[0]
             board._is_subscribed=entry[1]
             output.append(board)
-        else:
-            return []
     else:
             
-        query = g.db.query(Board).options(
+        output = g.db.query(Board).options(
             joinedload(Board.moderators).joinedload(ModRelationship.user),
             joinedload(Board.subcat).joinedload(SubCategory.category)
             ).filter(
                     Board.id.in_(bids)
-        )
-        boards=query.all()
+        ).all()
     
     
     
-    if not boards:
+    if not output:
         if graceful:
-            return None
+            return []
         else:
             abort(404)
             
-    boards=sorted(boards, key=lambda x:bids.index(x.id))
+    output=sorted(output, key=lambda x:bids.index(x.id))
     
-    return boards
+    return output
 
 
 

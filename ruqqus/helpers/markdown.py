@@ -2,6 +2,7 @@ from .get import *
 
 from mistletoe.span_token import SpanToken
 from mistletoe.html_renderer import HTMLRenderer
+import os.path
 import re
 
 from flask import g
@@ -41,6 +42,14 @@ class ChatMention(SpanToken):
     def __init__(self, match_obj):
 
         self.target = (match_obj.group(1), match_obj.group(2))
+        
+class Emoji(SpanToken):
+    
+    pattern=re.compile(":(\w+):")
+    parse_inner=False
+    
+    def __init__(self, match_obj):
+        self.target=match_obj.group(1)
 
 
 class Spoiler(SpanToken):
@@ -70,6 +79,7 @@ class CustomRenderer(HTMLRenderer):
         super().__init__(UserMention,
                          BoardMention,
                          ChatMention,
+                         Emoji,
                          Spoiler #,
                          #OpMention
                          )
@@ -117,6 +127,21 @@ class CustomRenderer(HTMLRenderer):
         else:
             return f'{space}<a href="{board.permalink}/chat" class="d-inline-block"><img src="/+{board.name}/pic/profile" class="profile-pic-20 mr-1">#{board.name}</a>'
 
+    def render_emoji(self, token):
+        
+        name=token.target
+        
+        if os.path.isfile(f"/home/ubuntu/ruqqus/ruqqus/assets/images/emojis/{name}.gif"):
+            
+            return f'<span data-toggle="tooltip" title=":{name}:"><img class="emoji" src="/assets/images/emojis/{name}.gif"></span>'
+        
+        elif g.v.has_premium and os.path.isfile(f"/home/ubuntu/ruqqus/ruqqus/assets/images/primojis/{name}.gif"):
+            
+            return f'<span data-toggle="tooltip" title=":{name}:"><img class="emoji" src="/assets/images/primojis/{name}.gif"></span>'
+
+        else:
+            return f":{name}:"
+        
     def render_spoiler(self, token):
 
         return f'<span class="spoiler">{token.target}</span>'

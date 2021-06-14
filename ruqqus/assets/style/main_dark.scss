@@ -3926,6 +3926,12 @@ div.deleted.banned {
     }
 }
 
+
+
+img.emoji {
+    width: 30px;
+    height: 30px
+}
 /* Dark mode spoiler */
 .spoiler{ 
   color: white; 
@@ -3934,5 +3940,5 @@ div.deleted.banned {
 }
 
 .spoiler:hover { 
-  color: black; 
+  color: black;
 }

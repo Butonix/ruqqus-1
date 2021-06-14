@@ -4,6 +4,7 @@
 {% set ups=c.upvotes_fuzzed %}
 {% set downs=c.downvotes_fuzzed %}
 {% set score=ups-downs %}
+{% include "emoji_modal.html" %}
 
 <!--conditions under which a comment might be hidden-->
 
@@ -95,7 +96,7 @@
 
     <div id="comment-{{ c.base36id }}-only" class="{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc  %} deleted{% endif %}">
 
-      <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %} {% if c.is_pinned %}<i class="text-info fas fa-thumbtack fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Pinned comment"></i> · {% endif %} {% if c.author.is_deleted %}[deleted account]{% else %}<a href="/@{{ c.author.username }}" class="user-name {% if c.is_op %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.title %}{{ c.title.rendered | safe }}{% endif %}{% endif %}
+      <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %} {% if c.is_pinned %}<i class="text-info fas fa-thumbtack fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Pinned comment"></i> · {% endif %} {% if c.author.is_deleted %}[deleted account]{% else %}<a href="/@{{ c.author.username }}" class="user-name {% if c.is_op %}text-info{% endif %}"><img src="{{ c.author.profile_url }}" class="d-md-inline d-none profile-pic-25 mr-2"/>{{ c.author.username }}</a>{% if c.title %}{{ c.title.rendered | safe }}{% endif %}{% endif %}
 
         {% if c.distinguish_level %}
         <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ 'SITE_NAME' | app_config }} Administrator, speaking officially"></i>
@@ -134,7 +135,7 @@
       <div id="comment-banned-warning" class="comment-text text-danger text-small mb-0">Reason: {{ c.ban_reason }}</div>
       {% endif %}
 
-      <div id="comment-text-{{ c.base36id }}" class="comment-text mb-0">
+      <div id="comment-text-{{ c.base36id }}" class="comment-text mt-md-2 mb-0">
         {{ c.body_html | safe }}
       </div>
 
@@ -149,6 +150,8 @@
          <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('comment-edit-body-{{ c.base36id }}')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> 
          <small class="format"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote('comment-edit-body-{{ c.base36id }}')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i></small>
          <small class="format"><span class="font-weight-bolder text-uppercase" aria-hidden="true" onclick="getGif();commentForm('comment-edit-body-{{ c.base36id }}')" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Add GIF">GIF</span></small> 
+         &nbsp;
+         <small class="format"><i class="fas fa-smile-beam" aria-hidden="true" onclick="commentForm('comment-edit-body-{{c.base36id}}');loadEmojis()" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom"  title="Emojis"></i></small>          
          <small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
          <a id="cancel-edit-{{ c.base36id }}" href="javascript:void(0)" onclick="toggleEdit('{{ c.base36id }}')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
          <a href="javascript:void(0)" form="comment-edit-form-{{ c.base36id }}" class="btn btn-primary ml-2" onclick="comment_edit('{{ c.base36id }}')">Save Edit</a> </div> </form>
@@ -348,6 +351,12 @@
           <label class="btn btn-secondary format d-inline-block m-0" for="gif-reply-btn-{{ c.fullname }}">
             <span id="gif-reply-btn-{{ c.fullname }}" class="font-weight-bolder text-uppercase" onclick="getGif();commentForm('reply-form-body-{{ c.fullname }}')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF">GIF</span>
           </label> 
+
+          &nbsp;
+          <label class="btn btn-secondary format d-inline-block m-0" for="gif-reply-btn-{{c.fullname}}">
+             <i id="emoji-reply-btn-{{c.fullname}}" class="fas fa-smile-beam" onclick="commentForm('reply-form-body-{{c.fullname}}');loadEmojis()" aria-hidden="true" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom" title="Add EMOJI"></i>
+          </label>
+          &nbsp;
 
           <label class="format btn btn-secondary m-0 ml-1 {% if v.can_upload_comment_image %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-reply-{{ c.fullname }}">
                 <div id="filename-show-reply-{{ c.base36id }}"><i class="far fa-image"></i></div>
