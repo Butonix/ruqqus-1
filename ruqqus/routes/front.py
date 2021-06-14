@@ -597,7 +597,7 @@ def browse_guilds(v):
     # check if ids exist
     if ids:
 
-        boards = get_boards(ids)
+        boards = get_boards(ids, v=v)
     else:
         boards = []
 
