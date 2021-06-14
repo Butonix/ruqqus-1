@@ -60,7 +60,7 @@ _allowed_attributes = {
     'a': ['href', 'title', "rel", "data-original-name"],
     'i': [],
     'img': ['src', 'class', 'width','height'],
-    'span': ['style', 'data-toggle', 'data-title', 'data-original-title']
+    'span': ['style', 'data-toggle', 'title']
     }
 
 _allowed_protocols = [
