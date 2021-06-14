@@ -916,7 +916,7 @@ def get_boards(bids, v=None, graceful=False):
             return []
     else:
             
-        query = g.db.query(Board).options(
+        output = g.db.query(Board).options(
             joinedload(Board.moderators).joinedload(ModRelationship.user),
             joinedload(Board.subcat).joinedload(SubCategory.category)
             ).filter(
@@ -932,9 +932,9 @@ def get_boards(bids, v=None, graceful=False):
         else:
             abort(404)
             
-    boards=sorted(boards, key=lambda x:bids.index(x.id))
+    output=sorted(output, key=lambda x:bids.index(x.id))
     
-    return boards
+    return output
 
 
 
