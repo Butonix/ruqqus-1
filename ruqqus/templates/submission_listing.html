@@ -160,7 +160,7 @@
         <ul class="list-inline text-right d-flex">
           
           {% if p.body_html %}
-          <li class="list-inline-item"><a href="javascript:void(0)" onclick="$('#post-text-{{ p.base36id }}').toggleClass('d-none')" class="text-expand"><i class="fas fa-text mr-0"></i><i class="fas fa-expand-arrows mr-0"></i></a></li>
+          <li class="list-inline-item"><a href="javascript:void(0)" onclick="$('#post-text-{{ p.base36id }}').toggleClass('d-none')" class="text-expand"><i class="fas fa-expand-arrows mr-0"></i></a></li>
           {% endif %}
           
           <li class="list-inline-item"><a href="{{ p.permalink }}"{% if p.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
@@ -256,7 +256,7 @@
       <li class="list-inline-item mr-auto"><a href="{{ p.permalink }}"{% if p.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
 
       {% if p.body_html %}
-          <li class="list-inline-item"><a href="javascript:void(0)" onclick="$('#post-text-{{ p.base36id }}').toggleClass('d-none')" class="text-expand"><i class="fas fa-text mr-0"></i><i class="fas fa-expand-arrows mr-0"></i></a></li>
+          <li class="list-inline-item"><a href="javascript:void(0)" onclick="$('#post-text-{{ p.base36id }}').toggleClass('d-none')" class="text-expand"><i class="fas fa-expand-arrows mr-0"></i></a></li>
       {% endif %}
       
       <li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link}}"><i class="fas fa-link"></i>Share</a></li>
