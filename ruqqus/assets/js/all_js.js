@@ -88,7 +88,7 @@ $('#new_email').on('input', function () {
       'who',
       'yoshi-hammer'
       ]
-    }
+    },
     {
       type:'meme',
       folder: 'emoji',
