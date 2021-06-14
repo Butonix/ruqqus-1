@@ -63,7 +63,7 @@ $('#new_email').on('input', function () {
     const emojis = [
     {
       type:'ruqqus',
-      folder: 'emoji',
+      folder: 'emojis',
       emojis: [
       '500',
       '503',
@@ -73,7 +73,7 @@ $('#new_email').on('input', function () {
     },
     {
       type:'animated',
-      folder: 'primoji',
+      folder: 'primojis',
       emojis: [
       'anime-dance',
       'cat-vibe',
@@ -91,7 +91,7 @@ $('#new_email').on('input', function () {
     },
     {
       type:'meme',
-      folder: 'emoji',
+      folder: 'emojis',
       emojis: [
       'breadstare',
       'facepalm',
@@ -117,7 +117,7 @@ $('#new_email').on('input', function () {
     },
     {
       type:'text',
-      folder: 'emoji',
+      folder: 'emojis',
       emojis: [
       'this-tbh',
       '500',
