@@ -2228,6 +2228,6 @@ $('.text-expand').click(function(event){
 
   $('#post-text-'+id).toggleClass('d-none');
   $('.text-expand-icon-'+id).toggleClass('fa-expand-alt');
-  $('.text-expand-icon-'+id).toggleClass('fa-compress-arrows-alt');
+  $('.text-expand-icon-'+id).toggleClass('fa-compress-alt');
   
 })
