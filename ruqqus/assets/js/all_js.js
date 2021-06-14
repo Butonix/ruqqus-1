@@ -46,102 +46,6 @@ $('#new_email').on('input', function () {
     commentFormID = form;
   };
 
-  function getEmoji(searchTerm) {
-
-  var emoji = ' :'+searchTerm+': '
-        
-  var commentBox = document.getElementById(commentFormID);
-
-  var old = commentBox.value;
-
-  commentBox.value = old + emoji;
-
-  }
-
-    function loadEmojis() {
-
-    const emojis = [
-    {
-      type:'ruqqus',
-      folder: 'emojis',
-      emojis: [
-      '500',
-      '503',
-      'poggers',
-      'ruqqking'
-      ]
-    },
-    {
-      type:'animated',
-      folder: 'primojis',
-      emojis: [
-      'anime-dance',
-      'cat-vibe',
-      'crumb-dance',
-      'dance-kid',
-      'dance',
-      'falling-kermit',
-      'minecraft',
-      'pepe-saber',
-      'pop-cat',
-      'wavy-sad',
-      'who',
-      'yoshi-hammer'
-      ]
-    },
-    {
-      type:'meme',
-      folder: 'emojis',
-      emojis: [
-      'breadstare',
-      'facepalm',
-      'jackie-chan-wtf',
-      'kekw',
-      'leo',
-      'mikewazowski',
-      'pathetic',
-      'pepe-blanket',
-      'pepe-cozy',
-      'pepe-sus',
-      'pog-champ',
-      'press-f',
-      'shrek-yep',
-      'strong-doge',
-      'stonks',
-      'not-stonks',
-      'tobey-sad',
-      'think-mark',
-      'tom-unsettled',
-      'vue'
-      ]
-    },
-    {
-      type:'text',
-      folder: 'emojis',
-      emojis: [
-      'this-tbh',
-      '500',
-      '503'
-      ]
-    }
-    ]
-
-    for (i=0; i < emojis.length; i++) {
-      
-      let container = document.getElementById(`EMOJIS_${emojis[i].type}`);
-      let str = '';
-      let arr = emojis[i].emojis;
-      let dir = emojis[i].folder;
-
-      for (j=0; j < arr.length; j++) { 
-        str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${arr[j]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/${dir}/${arr[j]}.gif" alt="${arr[j]}-emoji"/></button>`;
-      }
-
-      container.innerHTML = str
-    }
-
-  }
-
   function getGif(searchTerm) {
 
     if (searchTerm !== undefined) {
@@ -308,9 +212,9 @@ $('#new_email').on('input', function () {
 
 function collapse_comment(comment_id) {
 
-	var comment = "comment-" + comment_id;
+  var comment = "comment-" + comment_id;
 
-	document.getElementById(comment).classList.toggle("collapsed");
+  document.getElementById(comment).classList.toggle("collapsed");
 
 };
 
@@ -457,18 +361,18 @@ $(".toggle-collapse").click(function (event) {
 
 function autoExpand (field) {
 
-	//get current scroll position
-	xpos=window.scrollX;
-	ypos=window.scrollY;
+  //get current scroll position
+  xpos=window.scrollX;
+  ypos=window.scrollY;
 
-	// Reset field height
-	field.style.height = 'inherit';
+  // Reset field height
+  field.style.height = 'inherit';
 
-	// Get the computed styles for the element
-	var computed = window.getComputedStyle(field);
+  // Get the computed styles for the element
+  var computed = window.getComputedStyle(field);
 
-	// Calculate the height
-	var height = parseInt(computed.getPropertyValue('border-top-width'), 10)
+  // Calculate the height
+  var height = parseInt(computed.getPropertyValue('border-top-width'), 10)
   + parseInt(computed.getPropertyValue('padding-top'), 10)
   + field.scrollHeight
   + parseInt(computed.getPropertyValue('padding-bottom'), 10)
@@ -477,14 +381,14 @@ function autoExpand (field) {
 
   field.style.height = height + 'px';
 
-	//keep window position from changing
-	window.scrollTo(xpos,ypos);
+  //keep window position from changing
+  window.scrollTo(xpos,ypos);
 
 };
 
 document.addEventListener('input', function (event) {
-	if (event.target.tagName.toLowerCase() !== 'textarea') return;
-	autoExpand(event.target);
+  if (event.target.tagName.toLowerCase() !== 'textarea') return;
+  autoExpand(event.target);
 }, false);
 
 //dark mode
@@ -497,7 +401,7 @@ function switch_css() {
   if (css.href.includes("/assets/style/main.css")) {
     post("/settings/dark_mode/1",
       callback=function(){
-        css.href="/assets/style/main_dark.css?v=2.36.3";
+        css.href="/assets/style/main_dark.css?v=2.37.0";
         dswitch.classList.remove("fa-toggle-off");
         dswitch.classList.add("fa-toggle-on");
         dswitchmobile.classList.remove("fa-toggle-off");
@@ -508,7 +412,7 @@ function switch_css() {
   else {
     post("/settings/dark_mode/0",
       callback=function(){
-        css.href="/assets/style/main.css?v=2.36.3";
+        css.href="/assets/style/main.css?v=2.37.0";
         dswitch.classList.remove("fa-toggle-on");
         dswitch.classList.add("fa-toggle-off");
         dswitchmobile.classList.remove("fa-toggle-on");
@@ -683,7 +587,7 @@ $('#reportPostModal').on('hidden.bs.modal', function () {
 
 enlarge_thumb = function(post_id) {
 
-	document.getElementById(post_id).classList.toggle("enlarged");
+  document.getElementById(post_id).classList.toggle("enlarged");
 
 };
 
@@ -885,8 +789,8 @@ function approvePost(post_id) {
 //Element deleter
 
 function deleteElement(eid) {
-	x=document.getElementById(eid)
-	x.parentElement.removeChild(x)
+  x=document.getElementById(eid)
+  x.parentElement.removeChild(x)
 
 }
 
@@ -966,7 +870,7 @@ $(".form-control").focusout(function () {
 //spinner effect
 
 $(document).ready(function() {
-	$('#login').submit(function() {
+  $('#login').submit(function() {
       // disable button
       $("#login_button").prop("disabled", true);
       // add spinner to button
@@ -975,7 +879,7 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-	$('#signup').submit(function() {
+  $('#signup').submit(function() {
       // disable button
       $("#register_button").prop("disabled", true);
       // add spinner to button
@@ -984,7 +888,7 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-	$('#submitform').submit(function() {
+  $('#submitform').submit(function() {
       // disable button
       $("#create_button").prop("disabled", true);
       // add spinner to button
@@ -998,25 +902,25 @@ $(document).ready(function() {
 
 if (document.getElementById("sidebar-left") && localStorage.sidebar_pref == 'collapsed') {
 
-	document.getElementById('sidebar-left').classList.add('sidebar-collapsed');
+  document.getElementById('sidebar-left').classList.add('sidebar-collapsed');
 
 };
 
 function toggle_sidebar_collapse() {
 
-	// Store Pref
-	localStorage.setItem('sidebar_pref', 'collapsed');
+  // Store Pref
+  localStorage.setItem('sidebar_pref', 'collapsed');
 
-	document.getElementById('sidebar-left').classList.toggle('sidebar-collapsed');
+  document.getElementById('sidebar-left').classList.toggle('sidebar-collapsed');
 
 };
 
 function toggle_sidebar_expand() {
 
-	// Remove Pref
-	localStorage.removeItem('sidebar_pref');
+  // Remove Pref
+  localStorage.removeItem('sidebar_pref');
 
-	document.getElementById('sidebar-left').classList.toggle('sidebar-collapsed');
+  document.getElementById('sidebar-left').classList.toggle('sidebar-collapsed');
 
 }
 
@@ -1363,14 +1267,14 @@ linkText.href = link;
 imgLink.href=link;
 
 if (image.includes("i.ruqqus.com")) {
-	linkText.textContent = 'Go to website';
+  linkText.textContent = 'Go to website';
 }
 else {
-	linkText.textContent = 'View original';
+  linkText.textContent = 'View original';
 }
 
 if (image.startsWith("https://media.giphy.com")) {
-	attribution.innerHTML = '<img src="/assets/images/icons/PoweredBy_200px-Black_HorizLogo.png" style="width: 100px;">';
+  attribution.innerHTML = '<img src="/assets/images/icons/PoweredBy_200px-Black_HorizLogo.png" style="width: 100px;">';
 
   var GIPHYsrc = image.replace(/\b100w\b~?/g, 'giphy');
 
@@ -1384,19 +1288,19 @@ if (image.startsWith("https://media.giphy.com")) {
 
 $('#expandImageModal').on('hidden.bs.modal', function (e) {
 
-  	// GIPHY attribution div
+    // GIPHY attribution div
 
-  	var attribution = document.getElementById("modal-image-attribution");
+    var attribution = document.getElementById("modal-image-attribution");
 
-  	// remove the attribution
+    // remove the attribution
 
-  	attribution.innerHTML = null;
+    attribution.innerHTML = null;
 
-	// remove image src and link
+  // remove image src and link
 
-	document.getElementById("desktop-expanded-image").src = '';
+  document.getElementById("desktop-expanded-image").src = '';
 
-	document.getElementById("desktop-expanded-image-link").href = '';
+  document.getElementById("desktop-expanded-image-link").href = '';
 
 });
 
