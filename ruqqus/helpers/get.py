@@ -919,14 +919,13 @@ def get_boards(bids, v=None, graceful=False):
             joinedload(Board.subcat).joinedload(SubCategory.category)
             ).filter(
                     Board.id.in_(bids)
-        )
-        boards=output.all()
+        ).all()
     
     
     
-    if not boards:
+    if not output:
         if graceful:
-            return None
+            return []
         else:
             abort(404)
             
