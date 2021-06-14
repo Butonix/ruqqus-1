@@ -931,6 +931,9 @@ def get_boards(bids, v=None, graceful=False):
             return None
         else:
             abort(404)
+            
+    boards=sorted(boards, key=lambda x:bids.index(x.id))
+    
     return boards
 
 
