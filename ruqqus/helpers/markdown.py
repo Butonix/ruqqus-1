@@ -45,7 +45,7 @@ class ChatMention(SpanToken):
         
 class Emoji(SpanToken):
     
-    pattern=re.compile(":(\w+):")
+    pattern=re.compile(":([A-Za-z0-9_-]+):")
     parse_inner=False
     
     def __init__(self, match_obj):
