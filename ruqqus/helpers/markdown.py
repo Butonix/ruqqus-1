@@ -52,6 +52,16 @@ class Emoji(SpanToken):
         self.target=match_obj.group(1)
 
 
+class Spoiler(SpanToken):
+
+    pattern=re.compile("(>!|<s>|\|\|)(.+?)(\|\||</s>|!<)")
+    parse_inner=True
+
+    def __init__(self, match_obj):
+
+        self.target=match_obj.group(2)
+
+
 
 
 # class OpMention(SpanToken):
@@ -69,7 +79,9 @@ class CustomRenderer(HTMLRenderer):
         super().__init__(UserMention,
                          BoardMention,
                          ChatMention,
-                         Emoji
+                         Emoji,
+                         Spoiler #,
+                         #OpMention
                          )
 
         for i in kwargs:
@@ -130,7 +142,10 @@ class CustomRenderer(HTMLRenderer):
         else:
             return f":{name}:"
         
-        
+    def render_spoiler(self, token):
+
+        return f'<span class="spoiler">{token.target}</span>'
+
     # def render_op_mention(self, token):
 
     #     space = token.target[0]

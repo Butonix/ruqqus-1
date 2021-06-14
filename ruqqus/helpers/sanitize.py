@@ -59,8 +59,8 @@ _allowed_tags_in_bio = [
 _allowed_attributes = {
     'a': ['href', 'title', "rel", "data-original-name"],
     'i': [],
-    'img': ['src', 'class', 'width','height'],
     'span': ['style', 'data-toggle', 'title']
+    'img': ['src', 'class'],
     }
 
 _allowed_protocols = [
@@ -201,6 +201,10 @@ def sanitize(text, bio=False, linkgen=False):
             if not any([x in tag.attrs.get("class","") for x in ['emoji', 'profile-pic-20']]):
                 tag.attrs['class']="in-comment-image rounded-sm my-2"
 
+        #same goes for span
+        for tag in soup.find_all("span"):
+            tag.attrs['class']='spoiler' if 'spoiler' in tag.attrs.get('class','') else ''
+
         #table format
         for tag in soup.find_all("table"):
             tag.attrs['class']="table table-striped"
@@ -212,5 +216,5 @@ def sanitize(text, bio=False, linkgen=False):
 
     else:
         sanitized = _clean_wo_links.clean(text)
-
+    
     return sanitized

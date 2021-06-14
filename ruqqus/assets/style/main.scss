@@ -3850,3 +3850,14 @@ img.emoji {
     width: 30px;
     height: 30px
 }
+
+/* Light mode spoiler */
+.spoiler{ 
+  color: black; 
+  background-color:black;
+  font-weight: 600 !important;
+}
+
+.spoiler:hover { 
+  color: white; 
+}

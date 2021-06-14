@@ -641,6 +641,7 @@ def admin_nuke_user(v):
             continue
             
         post.is_banned=True
+        post.ban_reason=user.ban_reason
         g.db.add(post)
 
         ma=ModAction(
