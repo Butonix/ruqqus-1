@@ -58,11 +58,12 @@ $('#new_email').on('input', function () {
 
   }
 
-  function loadEmojis() {
+    function loadEmojis() {
 
     const emojis = [
     {
       type:'ruqqus',
+      folder: 'emojis',
       emojis: [
       '500',
       '503',
@@ -72,6 +73,7 @@ $('#new_email').on('input', function () {
     },
     {
       type:'animated',
+      folder: 'primojis',
       emojis: [
       'anime-dance',
       'cat-vibe',
@@ -83,12 +85,13 @@ $('#new_email').on('input', function () {
       'pepe-saber',
       'pop-cat',
       'wavy-sad',
-      'who'
+      'who',
       'yoshi-hammer'
       ]
-    }
+    },
     {
       type:'meme',
+      folder: 'emojis',
       emojis: [
       'breadstare',
       'facepalm',
@@ -114,8 +117,11 @@ $('#new_email').on('input', function () {
     },
     {
       type:'text',
+      folder: 'emojis',
       emojis: [
-      'this-tbh'
+      'this-tbh',
+      '500',
+      '503'
       ]
     }
     ]
@@ -125,9 +131,10 @@ $('#new_email').on('input', function () {
       let container = document.getElementById(`EMOJIS_${emojis[i].type}`);
       let str = '';
       let arr = emojis[i].emojis;
+      let dir = emojis[i].folder;
 
       for (j=0; j < arr.length; j++) { 
-        str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${arr[j]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${arr[j]}.gif" alt="${arr[j]}-emoji"/></button>`;
+        str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${arr[j]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/${dir}/${arr[j]}.gif" alt="${arr[j]}-emoji"/></button>`;
       }
 
       container.innerHTML = str
