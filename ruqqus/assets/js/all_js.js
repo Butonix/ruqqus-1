@@ -52,7 +52,7 @@ $('#new_email').on('input', function () {
         
   var commentBox = document.getElementById(commentFormID);
 
-  var old    = commentBox.value;
+  var old = commentBox.value;
 
   commentBox.value = old + emoji;
 
