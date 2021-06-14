@@ -912,8 +912,6 @@ def get_boards(bids, v=None, graceful=False):
             board=entry[0]
             board._is_subscribed=entry[1]
             output.append(board)
-        else:
-            return []
     else:
             
         output = g.db.query(Board).options(
