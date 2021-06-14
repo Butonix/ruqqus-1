@@ -197,14 +197,8 @@ def sanitize(text, bio=False, linkgen=False):
 
         #whatever else happens with images, there are only three sets of classes allowed
         for tag in soup.find_all("img"):
-          
-            if tag.attrs.get('width'):
-                tag.attrs['width'] = max(100, int(tag.attrs['width']))
                 
-            if tag.attrs.get('height'):
-                tag.attrs['height'] = max(100, int(tag.attrs['height']))
-                
-            if tag.attrs.get('class') and 'profile-pic-20' not in tag.attrs.get("class",""):
+            if not any([x in tag.attrs.get("class","") for x in ['emoji', 'profile-pic-20']]):
                 tag.attrs['class']="in-comment-image rounded-sm my-2"
 
         #table format
