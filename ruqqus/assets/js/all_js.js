@@ -63,7 +63,6 @@ $('#new_email').on('input', function () {
     const emojis = [
     {
       type:'ruqqus',
-      folder: 'emojis',
       emojis: [
       '500',
       '503',
@@ -73,7 +72,6 @@ $('#new_email').on('input', function () {
     },
     {
       type:'animated',
-      folder: 'primojis',
       emojis: [
       'anime-dance',
       'cat-vibe',
@@ -85,13 +83,12 @@ $('#new_email').on('input', function () {
       'pepe-saber',
       'pop-cat',
       'wavy-sad',
-      'who',
+      'who'
       'yoshi-hammer'
       ]
-    },
+    }
     {
       type:'meme',
-      folder: 'emojis',
       emojis: [
       'breadstare',
       'facepalm',
@@ -117,11 +114,8 @@ $('#new_email').on('input', function () {
     },
     {
       type:'text',
-      folder: 'emojis',
       emojis: [
-      'this-tbh',
-      '500',
-      '503'
+      'this-tbh'
       ]
     }
     ]
@@ -131,10 +125,9 @@ $('#new_email').on('input', function () {
       let container = document.getElementById(`EMOJIS_${emojis[i].type}`);
       let str = '';
       let arr = emojis[i].emojis;
-      let dir = emojis[i].folder;
 
       for (j=0; j < arr.length; j++) { 
-        str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${arr[j]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/${dir}/${arr[j]}.gif" alt="${arr[j]}-emoji"/></button>`;
+        str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${arr[j]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/emojis/${arr[j]}.gif" alt="${arr[j]}-emoji"/></button>`;
       }
 
       container.innerHTML = str
@@ -497,7 +490,7 @@ function switch_css() {
   if (css.href.includes("/assets/style/main.css")) {
     post("/settings/dark_mode/1",
       callback=function(){
-        css.href="/assets/style/main_dark.css?v=2.36.4";
+        css.href="/assets/style/main_dark.css?v=2.36.3";
         dswitch.classList.remove("fa-toggle-off");
         dswitch.classList.add("fa-toggle-on");
         dswitchmobile.classList.remove("fa-toggle-off");
@@ -508,7 +501,7 @@ function switch_css() {
   else {
     post("/settings/dark_mode/0",
       callback=function(){
-        css.href="/assets/style/main.css?v=2.36.4";
+        css.href="/assets/style/main.css?v=2.36.3";
         dswitch.classList.remove("fa-toggle-on");
         dswitch.classList.add("fa-toggle-off");
         dswitchmobile.classList.remove("fa-toggle-on");
