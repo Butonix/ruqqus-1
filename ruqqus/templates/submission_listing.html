@@ -138,15 +138,6 @@
 
       <h5 class="card-title post-title text-left w-lg-75 mb-0 pb-0 pb-md-1"><a href="{{ p.permalink }}" class="stretched-link" {% if p.author.is_private %} rel="nofollow"{% endif %}>{{ p.title | safe }}</a></h5>
 
-      {% if p.body_html %}
-      <div class="post-preview-lg">
-        <div class="post-body"> 
-          <p>{{ p.body | truncate(140, False, '...', 0) }}</p>
-        </div>
-      </div>
-      {% endif %}
-
-
 
       {% if p.thumb_url %}
       <div class="row post-img-lg mb-3">
@@ -160,7 +151,7 @@
         <ul class="list-inline text-right d-flex">
           
           {% if p.body_html %}
-          <li class="list-inline-item"><a href="javascript:void(0)" class="text-expand"><i class="fas fa-expand-alt mr-0 text-expand-icon"></i></a></li>
+          <li class="list-inline-item"><a href="javascript:void(0)" class="text-expand" data-id="{{ p.base36id }}"><i class="fas fa-expand-alt mr-0 text-expand-icon"></i></a></li>
           {% endif %}
           
           <li class="list-inline-item"><a href="{{ p.permalink }}"{% if p.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
@@ -256,7 +247,7 @@
       <li class="list-inline-item mr-auto"><a href="{{ p.permalink }}"{% if p.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
 
       {% if p.body_html %}
-          <li class="list-inline-item"><a href="javascript:void(0)" class="text-expand"><i class="fas fa-expand-alt mr-0 text-expand-icon"></i></a></li>
+          <li class="list-inline-item"><a href="javascript:void(0)" class="text-expand" data-id="{{ p.base36id }}"><i class="fas fa-expand-alt mr-0 text-expand-icon"></i></a></li>
       {% endif %}
       
       <li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link}}"><i class="fas fa-link"></i>Share</a></li>
