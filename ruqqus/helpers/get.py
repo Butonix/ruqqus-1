@@ -922,7 +922,7 @@ def get_boards(bids, v=None, graceful=False):
             ).filter(
                     Board.id.in_(bids)
         )
-        boards=query.all()
+        boards=output.all()
     
     
     
