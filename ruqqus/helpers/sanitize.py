@@ -156,7 +156,7 @@ def sanitize(text, bio=False, linkgen=False):
             domain = get_domain(netloc)
             if not(netloc) or (domain and domain.show_thumbnail):
 
-                if tag.get("class") and not any([x in tag.attrs.get("class","") for x in ['emoji', 'profile-pic-20']]):
+                if not any([x in tag.attrs.get("class","") for x in ['emoji', 'profile-pic-20']]):
                     #print(tag.get('class'))
                     # set classes and wrap in link
 
