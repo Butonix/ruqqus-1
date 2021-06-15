@@ -546,8 +546,11 @@ def settings_block_user(v):
         return jsonify({"error": f"You have already blocked @{user.username}."}), 409
 
     if user.id == 1:
-        return jsonify({"error": "You can't block @ruqqus."}), 409
+        return jsonify({"error": "You can't block @{user.username}."}), 409
 
+    if user.is_deleted:
+        return jsonify({"error": "That account has been deactivated"}), 410
+    
     new_block = UserBlock(user_id=v.id,
                           target_id=user.id,
                           created_utc=int(time.time())
