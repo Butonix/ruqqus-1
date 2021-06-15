@@ -574,7 +574,7 @@
                     {% endif %}
                     {% endif %}
 
-                    {% if v and not v.id==p.author_id and not v.author.is_deleted %}
+                    {% if v and not v.id==p.author_id and not p.author.is_deleted %}
                     <li class="list-inline-item d-none d-md-inline-block">
                     	<div class="dropdown show">
                     		<a href="#" role="button" id="dropdownMoreLink-{{ p.base36id }}" data-toggle="dropdown" aria-haspopup="true"
