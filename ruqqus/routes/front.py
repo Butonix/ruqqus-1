@@ -259,6 +259,8 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
         posts = posts.order_by(Submission.score_best.desc()).all()
     elif sort == "new":
         posts = posts.order_by(Submission.created_utc.desc()).all()
+    elif sort == "old":
+        posts = posts.order_by(Submission.created_utc.asc()).all()
     elif sort == "disputed":
         posts = posts.order_by(Submission.score_disputed.desc()).all()
     elif sort == "top":
