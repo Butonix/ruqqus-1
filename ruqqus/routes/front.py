@@ -256,26 +256,39 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
         posts = posts.filter(Submission.created_utc < lt)
 
     if sort == "hot":
-        posts = posts.order_by(Submission.score_best.desc())
+        posts = posts.order_by(Submission.score_best.desc()).all()
     elif sort == "new":
-        posts = posts.order_by(Submission.created_utc.desc())
-    elif sort == "old":
-        posts = posts.order_by(Submission.created_utc.asc())
+        posts = posts.order_by(Submission.created_utc.desc()).all()
     elif sort == "disputed":
-        posts = posts.order_by(Submission.score_disputed.desc())
+        posts = posts.order_by(Submission.score_disputed.desc()).all()
     elif sort == "top":
-        posts = posts.order_by(Submission.score_top.desc())
+        posts = posts.order_by(Submission.score_top.desc()).all()
     elif sort == "activity":
-        posts = posts.order_by(Submission.score_activity.desc())
+        posts = posts.order_by(Submission.score_activity.desc()).all()
     else:
         abort(400)
 
-    if ids_only:
-        posts = [x.id for x in posts.offset(25 * (page - 1)).limit(26).all()]
-        return posts
-    else:
-        return [x for x in posts.offset(25 * (page - 1)).limit(25).all()]
+    if sort == "hot":
+        guilds = []
+        subcats = {}
+        posts2 = []
+        for post in posts:
+            if post.board_id in guilds: continue
+            guilds.append(post.board_id)
+            if post.board.subcat_id not in subcats:
+                subcats[post.board.subcat_id] = 1
+                posts2.append(post)
+            elif subcats[post.board.subcat_id] == 1:
+                subcats[post.board.subcat_id] = 2
+                posts2.append(post)
+        posts = posts2
 
+    firstrange = 0+25*(page-1)
+    secondrange = (25*page)+1
+    posts = posts[firstrange:secondrange]
+
+    if ids_only: return [x.id for x in posts]
+    else: return posts
 
 @app.route("/", methods=["GET"])
 @app.route("/api/v1/front/listing", methods=["GET"])
