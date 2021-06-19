@@ -274,7 +274,6 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
         guilds = []
         subcats = {}
         posts2 = []
-        limit = 0
         firstrange = 0+25*(page-1)
         secondrange = (25*page)+1
         while True:
