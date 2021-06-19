@@ -275,7 +275,7 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
         subcats = {}
         posts2 = []
         firstrange = 25*(page-1)
-        while len(posts2) <= 26:
+        while len(posts2) < 26:
             for post in posts.offset(firstrange).limit(25).all():
                 if len(posts2) == 26: break
                 guilds.append(post.board_id)
