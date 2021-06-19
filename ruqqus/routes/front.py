@@ -288,7 +288,7 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
             firstrange += 25
 
         if ids_only: return [x.id for x in posts2]
-        else: return posts2
+        else: return posts2[:-1]
     
     else:
         if ids_only: return [x.id for x in posts.offset(25 * (page - 1)).limit(26).all()]
