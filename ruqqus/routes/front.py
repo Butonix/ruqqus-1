@@ -256,17 +256,17 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
         posts = posts.filter(Submission.created_utc < lt)
 
     if sort == "hot":
-        posts = posts.order_by(Submission.score_best.desc()).all()
+        posts = posts.order_by(Submission.score_best.desc())
     elif sort == "new":
-        posts = posts.order_by(Submission.created_utc.desc()).all()
+        posts = posts.order_by(Submission.created_utc.desc())
     elif sort == "old":
-        posts = posts.order_by(Submission.created_utc.asc()).all()
+        posts = posts.order_by(Submission.created_utc.asc())
     elif sort == "disputed":
-        posts = posts.order_by(Submission.score_disputed.desc()).all()
+        posts = posts.order_by(Submission.score_disputed.desc())
     elif sort == "top":
-        posts = posts.order_by(Submission.score_top.desc()).all()
+        posts = posts.order_by(Submission.score_top.desc())
     elif sort == "activity":
-        posts = posts.order_by(Submission.score_activity.desc()).all()
+        posts = posts.order_by(Submission.score_activity.desc())
     else:
         abort(400)
 
@@ -274,23 +274,30 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
         guilds = []
         subcats = {}
         posts2 = []
-        for post in posts:
-            if post.board_id in guilds: continue
-            guilds.append(post.board_id)
-            if post.board.subcat_id not in subcats:
-                subcats[post.board.subcat_id] = 1
-                posts2.append(post)
-            elif subcats[post.board.subcat_id] == 1:
-                subcats[post.board.subcat_id] = 2
-                posts2.append(post)
+		limit = 0
+		while True:
+			limit += 25
+			for post in posts.offset(limit-25).limit(limit).all():
+				if len(posts2) > 26: break
+				guilds.append(post.board_id)
+				if post.board.subcat_id not in subcats:
+					subcats[post.board.subcat_id] = 1
+					posts2.append(post)
+				elif subcats[post.board.subcat_id] == 1:
+					subcats[post.board.subcat_id] = 2
+					posts2.append(post)
         posts = posts2
 
-    firstrange = 0+25*(page-1)
-    secondrange = (25*page)+1
-    posts = posts[firstrange:secondrange]
+		firstrange = 0+25*(page-1)
+		secondrange = (25*page)+1
+		posts = posts[firstrange:secondrange]
 
-    if ids_only: return [x.id for x in posts]
-    else: return posts
+		if ids_only: return [x.id for x in posts]
+		else: return posts
+	
+	else:
+	    if ids_only: return [x.id for x in posts.offset(25 * (page - 1)).limit(26).all()]
+		else: return [x for x in posts.offset(25 * (page - 1)).limit(25).all()]
 
 @app.route("/", methods=["GET"])
 @app.route("/api/v1/front/listing", methods=["GET"])
