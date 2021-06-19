@@ -278,8 +278,7 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
         firstrange = 0+25*(page-1)
         secondrange = (25*page)+1
         while True:
-            limit += 25
-            for post in posts.offset(firstrange+limit-25).limit(limit).all():
+            for post in posts.offset(firstrange).limit(25).all():
                 if len(posts2) > secondrange: break
                 guilds.append(post.board_id)
                 if post.board.subcat_id not in subcats:
@@ -288,6 +287,7 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
                 elif subcats[post.board.subcat_id] == 1:
                     subcats[post.board.subcat_id] = 2
                     posts2.append(post)
+			firstrange += 25
 
         if ids_only: return [x.id for x in posts2]
         else: return posts2
