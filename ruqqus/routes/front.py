@@ -274,30 +274,30 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
         guilds = []
         subcats = {}
         posts2 = []
-		limit = 0
-		while True:
-			limit += 25
-			for post in posts.offset(limit-25).limit(limit).all():
-				if len(posts2) > 26: break
-				guilds.append(post.board_id)
-				if post.board.subcat_id not in subcats:
-					subcats[post.board.subcat_id] = 1
-					posts2.append(post)
-				elif subcats[post.board.subcat_id] == 1:
-					subcats[post.board.subcat_id] = 2
-					posts2.append(post)
+        limit = 0
+        while True:
+            limit += 25
+            for post in posts.offset(limit-25).limit(limit).all():
+                if len(posts2) > 26: break
+                guilds.append(post.board_id)
+                if post.board.subcat_id not in subcats:
+                    subcats[post.board.subcat_id] = 1
+                    posts2.append(post)
+                elif subcats[post.board.subcat_id] == 1:
+                    subcats[post.board.subcat_id] = 2
+                    posts2.append(post)
         posts = posts2
 
-		firstrange = 0+25*(page-1)
-		secondrange = (25*page)+1
-		posts = posts[firstrange:secondrange]
+        firstrange = 0+25*(page-1)
+        secondrange = (25*page)+1
+        posts = posts[firstrange:secondrange]
 
-		if ids_only: return [x.id for x in posts]
-		else: return posts
-	
-	else:
-	    if ids_only: return [x.id for x in posts.offset(25 * (page - 1)).limit(26).all()]
-		else: return [x for x in posts.offset(25 * (page - 1)).limit(25).all()]
+        if ids_only: return [x.id for x in posts]
+        else: return posts
+    
+    else:
+        if ids_only: return [x.id for x in posts.offset(25 * (page - 1)).limit(26).all()]
+        else: return [x for x in posts.offset(25 * (page - 1)).limit(25).all()]
 
 @app.route("/", methods=["GET"])
 @app.route("/api/v1/front/listing", methods=["GET"])
