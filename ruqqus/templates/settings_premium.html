@@ -86,7 +86,7 @@
                     </ul>
                   </div>
 
-                <div class="mt-4 mb-4" data-toggle="tooltip" data-placement="bottom" title="Based on coins redeemed in the last 7 days">
+                <div class="mt-4 mb-4" data-toggle="tooltip" data-placement="bottom" title="Based on coins purchased since the beginning of the month">
                   <div class="text-center text-small">{{ g.timestamp | coin_goal }}% of goal</div>
                   <div class="progress" style="border-radius: 3px;">
                     <div class="progress-bar bg-primary" role="progressbar" style="width: {{ g.timestamp | coin_goal }}%;" aria-valuenow="{{ g.timestamp | coin_goal }}" aria-valuemin="0" aria-valuemax="100"></div>
