@@ -1617,10 +1617,8 @@ def board_css(board_fullname, theme, x):
         name=os.path.join(os.path.expanduser('~'), path)
         print(name)
         with open(name, "r") as file:
-            print('file found')
             raw = file.read()
     except FileNotFoundError:
-        print('file not found')
         return redirect("/assets/style/main.css")
 
     # This doesn't use python's string formatting because
@@ -1630,7 +1628,9 @@ def board_css(board_fullname, theme, x):
 
     try:
         resp = Response(sass.compile(string=scss), mimetype='text/css')
+        print('made resp')
     except sass.CompileError:
+        print('compile error')
         return redirect("/assets/style/main.css")
 
     resp.headers.add("Cache-Control", "public")
