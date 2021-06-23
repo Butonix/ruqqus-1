@@ -88,7 +88,7 @@ app.config["SITE_NAME"]=environ.get("SITE_NAME", "Ruqqus").lstrip().rstrip()
 
 app.config["SITE_COLOR"]=environ.get("SITE_COLOR", "805ad5").lstrip().rstrip()
 
-app.config["RUQQUSPATH"]=os.path.dirname(os.path.realpath(__file__))
+app.config["RUQQUSPATH"]=environ.get("RUQQUSPATH", os.path.dirname(os.path.realpath(__file__)))
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get(
@@ -165,6 +165,8 @@ app.config["CACHE_OPTIONS"]={'connection_pool':redispool} if app.config["CACHE_T
 
 app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", False)))
 app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
+
+app.config["TENOR_KEY"]=environ.get("TENOR_KEY",'').lstrip().rstrip()
 
 
 Markdown(app)
