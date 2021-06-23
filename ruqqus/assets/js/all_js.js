@@ -1321,7 +1321,7 @@ $('#ytEmbed').html('<iframe width="100%" height="475" src="//www.youtube.com/emb
 
 // Expand Images on Desktop
 
-function expandDesktopImage(image, link) {
+function expandDesktopImage(image) {
 
 // GIPHY attribution div
 
@@ -1336,8 +1336,8 @@ var inlineImage = document.getElementById("desktop-expanded-image");
 
 inlineImage.src = image;
 
-linkText.href = link;
-imgLink.href = link;
+linkText.href = image;
+imgLink.href = image;
 
 if (image.includes("i.ruqqus.com")) {
   linkText.textContent = 'Go to website';
@@ -2184,7 +2184,7 @@ $('.expandable-image').click( function(event) {
 
   var url= $(this).data('url');
 
-  expandDesktopImage(url,url);
+  expandDesktopImage(url);
 })
 
 $('.text-expand').click(function(event){
