@@ -1337,7 +1337,7 @@ var inlineImage = document.getElementById("desktop-expanded-image");
 inlineImage.src = image;
 
 linkText.href = link;
-imgLink.href=link;
+imgLink.href = link;
 
 if (image.includes("i.ruqqus.com")) {
   linkText.textContent = 'Go to website';
@@ -1346,28 +1346,19 @@ else {
   linkText.textContent = 'View original';
 }
 
-if (image.startsWith("https://media.giphy.com")) {
-  attribution.innerHTML = '<img src="/assets/images/icons/PoweredBy_200px-Black_HorizLogo.png" style="width: 100px;">';
-
-  var GIPHYsrc = image.replace(/\b100w\b~?/g, 'giphy');
-
-  inlineImage.src = GIPHYsrc;
-  linkText.href = GIPHYsrc;
-}
-
 };
 
 // When image modal is closed
 
 $('#expandImageModal').on('hidden.bs.modal', function (e) {
 
-    // GIPHY attribution div
+    // // attribution div
 
-    var attribution = document.getElementById("modal-image-attribution");
+    // var attribution = document.getElementById("modal-image-attribution");
 
-    // remove the attribution
+    // // remove the attribution
 
-    attribution.innerHTML = null;
+    // attribution.innerHTML = null;
 
   // remove image src and link
 
