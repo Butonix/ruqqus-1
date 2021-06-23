@@ -1611,7 +1611,7 @@ def board_css(board_fullname, theme, x):
     if theme=="main":
         path=f"{app.config['RUQQUSPATH']}/assets/style/main.scss"
     else:
-        path=f"{app.config['RUQQUSPATH']}/style/main_dark.scss"
+        path=f"{app.config['RUQQUSPATH']}/assets/style/main_dark.scss"
 
     try:
         with open(path, "r") as file:
