@@ -1615,7 +1615,7 @@ def board_css(board_fullname, theme, x):
 
     try:
         name=os.path.join(os.path.expanduser('~'), path)
-        print(name)
+        #print(name)
         with open(name, "r") as file:
             raw = file.read()
     except FileNotFoundError:
