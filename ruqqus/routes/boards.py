@@ -1614,7 +1614,9 @@ def board_css(board_fullname, theme, x):
         path="ruqqus/ruqqus/assets/style/main_dark.scss"
 
     try:
-        with open(os.path.join(os.path.expanduser('~'), path), "r") as file:
+        name=os.path.join(os.path.expanduser('~'), path)
+        print(name)
+        with open(name, "r") as file:
             raw = file.read()
     except FileNotFoundError:
         return redirect("/assets/style/main.css")
