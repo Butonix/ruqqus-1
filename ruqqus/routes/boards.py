@@ -1617,8 +1617,10 @@ def board_css(board_fullname, theme, x):
         name=os.path.join(os.path.expanduser('~'), path)
         print(name)
         with open(name, "r") as file:
+            print('file found')
             raw = file.read()
     except FileNotFoundError:
+        print('file not found')
         return redirect("/assets/style/main.css")
 
     # This doesn't use python's string formatting because
