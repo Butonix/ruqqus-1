@@ -657,7 +657,9 @@ def submit_post(v):
         repost = None
 
     if repost and request.values.get("no_repost"):
-        return redirect(repost.permalink)
+        return {'html':lambda:redirect(repost.permalink),
+		'api': lambda:({"error":"This content has already been posted", "repost":repost.json}, 409)
+	       }
 
     if request.files.get('file') and not v.can_submit_image:
         abort(403)
