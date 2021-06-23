@@ -1625,12 +1625,11 @@ def board_css(board_fullname, theme, x):
     # of some odd behavior with css files
     scss = raw.replace("{boardcolor}", board.color)
     scss = scss.replace("{maincolor}", app.config["SITE_COLOR"])
+    scss = scss.replace("{ruqquspath}", app.config["RUQQUSPATH"])
 
     try:
         resp = Response(sass.compile(string=scss), mimetype='text/css')
-        print('made resp')
     except sass.CompileError:
-        print('compile error')
         return redirect("/assets/style/main.css")
 
     resp.headers.add("Cache-Control", "public")
