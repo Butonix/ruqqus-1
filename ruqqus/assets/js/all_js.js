@@ -1344,7 +1344,7 @@ $('#ytEmbed').html('<iframe width="100%" height="475" src="//www.youtube.com/emb
 
 // Expand Images on Desktop
 
-function expandDesktopImage(image, link) {
+function expandDesktopImage(image) {
 
 // GIPHY attribution div
 
@@ -2216,7 +2216,7 @@ $('.expandable-image').click( function(event) {
 
   var url= $(this).data('url');
 
-  expandDesktopImage(url,url);
+  expandDesktopImage(url);
 })
 
 $('.text-expand').click(function(event){
