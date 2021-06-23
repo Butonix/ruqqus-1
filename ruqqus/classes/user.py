@@ -114,6 +114,11 @@ class User(Base, Stndrd, Age_times):
     banner_upload_ip=deferred(Column(String(255), default=None))
     profile_upload_region=deferred(Column(String(2)))
     banner_upload_region=deferred(Column(String(2)))
+    
+    color=Column(String(6), default="805ad5")
+    secondary_color=Column(String(6), default="ffff00")
+    signature=Column(String(280), default='')
+    signature_html=Column(String(512), default="")
 
     #stuff to support name changes
     profile_set_utc=deferred(Column(Integer, default=0))

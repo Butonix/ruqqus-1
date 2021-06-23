@@ -7,6 +7,7 @@ gevent.monkey.patch_all()
 #import psycogreen.gevent
 #psycogreen.gevent.patch_psycopg()
 
+import os
 from os import environ
 import secrets
 from flask import *
@@ -86,6 +87,8 @@ app.url_map.strict_slashes = False
 app.config["SITE_NAME"]=environ.get("SITE_NAME", "Ruqqus").lstrip().rstrip()
 
 app.config["SITE_COLOR"]=environ.get("SITE_COLOR", "805ad5").lstrip().rstrip()
+
+app.config["RUQQUSPATH"]=os.path.dirname(os.path.realpath(__file__))
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get(
