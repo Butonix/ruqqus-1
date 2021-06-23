@@ -263,10 +263,13 @@
               {% endif %}
               {% if v.admin_level>=3 %}
                 {% if not c.is_banned %}
-                  <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times fa-fw"></i>Remove</a>
+                  <a class="dropdown-item" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="removeComment('{{ c.base36id }}')"><i class="fas fa-comment-times fa-fw"></i>Remove</a>
                 {% endif %}
                 {% if c.is_banned or request.path.startswith('/admin/') %}
-                  <a class="dropdown-item removeDropdownItem" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-comment-check fa-fw"></i>Approve</a>
+                  <a class="dropdown-item" id="moderate-{{ c.base36id }}" href="javascript:void(0)" onclick="approveComment('{{ c.base36id }}')"><i class="fas fa-comment-check fa-fw"></i>Approve</a>
+                {% endif %}
+                {% if c.author.is_deleted %}
+                  <a class="dropdown-item" href="{{ c.author.permalink }}"><i class="fas fa-user-minus"></i>@{{ c.author.username }}</a>
                 {% endif %}
               {% endif %}
               {% if v.admin_level >=4 and c.oauth_app %}
