@@ -184,7 +184,7 @@ $('#new_email').on('input', function () {
 				cancelBtn.innerHTML = '<button class="btn btn-link pl-3 pr-0" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
 
 				let gifs = [];
-				let apiKey = "";
+				let apiKey = tenor_api_key();
 				let lmt = 30;
 				let url = "https://g.tenor.com/v1/search?q=" + searchTerm + "&key=" + apiKey + "&limit=" + lmt;
 				fetch(url)
