@@ -90,6 +90,20 @@ def coin_goal(x):
 def app_config(x):
     return app.config.get(x)
 
+@app.template_filter("post_embed")
+def post_embed(b36id):
+
+    p = get_post(b36id, v=g.v, graceful=True)
+
+    if not p: # or not p.is_public:
+        return ""
+
+    return render_template(
+        "submission_listing.html",
+        listing=[p],
+        v=g.v
+        )
+
 # @app.template_filter("general_chat_count")
 # def general_chat_count(x):
 #     return get_guild("general").chat_count
