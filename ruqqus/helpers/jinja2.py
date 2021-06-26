@@ -108,7 +108,7 @@ def crosspost_embed(url):
 
     p = get_post(b36id, v=g.v, graceful=True)
 
-    if not p: # or not p.is_public:
+    if not p or p.is_deleted or p.is_banned: # or not p.is_public:
         return ""
 
     return render_template(
