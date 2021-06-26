@@ -356,6 +356,10 @@
             <button class="btn btn-link btn-block btn-lg text-danger text-left" onclick="post_toast('/retry_thumb/{{ p.base36id }}',callback=function(){window.location.reload(true);})"><i class="far fa-image text-center text-muted mr-3"></i>Retry Thumbnail</button>
             {% endif %}
 
+            {% if v and not v.is_suspended %}
+            <button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="/submit?url={{ p.permalink | full_link | urlencode }}"><i class="far fa-retweet text-center text-muted mr-3"></i>Resubmit</a></button>
+              {% endif %}
+
             {% if p.is_guildmaster('content') %}
 
               {% if v.id == p.author_id %}
