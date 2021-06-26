@@ -336,6 +336,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             self.is_offensive = False
 
     @property
+    @lazy
     def is_crosspost(self):
         return self.domain==app.config["SERVER_NAME"] and re.match("^https?://[a-zA-Z0-9_.-]+/\+\w+/post/(\w+)(/[a-zA-Z0-9_-]+/?)?$", self.url)
     
