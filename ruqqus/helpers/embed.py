@@ -42,6 +42,8 @@ def ruqqus_embed(url):
     post_id = matches.group(1)
     comment_id = matches.group(3)
 
+    print(post_id, comment_id)
+
     if comment_id:
         return f"https://{app.config['SERVER_NAME']}/embed/comment/{comment_id}"
     else:
