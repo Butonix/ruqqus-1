@@ -366,6 +366,7 @@ def submit_post(v):
 
     # check ban status
     domain_obj = get_domain(domain)
+    print('domain_obj', domain_obj)
     if domain_obj:
         if not domain_obj.can_submit:
           
@@ -388,9 +389,11 @@ def submit_post(v):
 
         # check for embeds
         if domain_obj.embed_function:
+            print('domainobj embed function', domain_obj.embed_function)
             try:
                 embed = eval(domain_obj.embed_function)(url)
-            except BaseException:
+            except BaseException as e:
+                print('exception', e)
                 embed = ""
         else:
             embed = ""
