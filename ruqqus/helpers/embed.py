@@ -4,6 +4,7 @@ import requests
 from os import environ
 from flask import *
 from ruqqus.__main__ import app
+from .get import *
 
 youtube_regex = re.compile(
     "^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*")
