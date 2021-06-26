@@ -102,7 +102,7 @@ def app_config(x):
 @app.template_filter("post_embed")
 def crosspost_embed(url):
 
-    matches = re.match(ruqqus_regex, url)
+    matches = re.match(post_regex, url)
 
     b36id = matches.group(1)
 
