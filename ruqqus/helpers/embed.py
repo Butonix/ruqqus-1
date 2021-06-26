@@ -52,7 +52,7 @@ def ruqqus_embed(url):
     else:
         return render_template(
             "site_embeds/ruqqus_post.html", 
-            p=get_post(post_id),
+            b36id=post_id,
             v=g.v
             )
 
