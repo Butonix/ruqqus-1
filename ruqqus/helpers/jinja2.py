@@ -94,10 +94,10 @@ def coin_goal(x):
 def app_config(x):
     return app.config.get(x)
 
-@app.template_filter("eval"):
-def eval_filter(s):
+# @app.template_filter("eval")
+# def eval_filter(s):
 
-    return render_template_string(s)
+#     return render_template_string(s)
 
 @app.template_filter("post_embed")
 def crosspost_embed(url):
