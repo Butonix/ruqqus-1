@@ -508,7 +508,7 @@
           {% if p.domain==('SERVER_NAME' | app_config) %}
           <div id="crosspost-embed">
             <div class="row no-gutters">
-              <div class="col-12">
+              <div id="frontpage" class="col-12">
                 <div class="posts" id="posts">
                   {{ p.url | post_embed | safe }}
                 </div>
