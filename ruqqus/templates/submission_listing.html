@@ -250,14 +250,19 @@
           <li class="list-inline-item"><a href="javascript:void(0)" class="text-expand" data-id="{{ p.base36id }}"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{ p.base36id }}"></i></a></li>
       {% endif %}
       
-      <li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link}}"><i class="fas fa-link"></i>Share</a></li>
-      {% if v %}
-      <li class="list-inline-item">
-        <a href="#" data-toggle="modal" data-target="#actionsModal-{{ p.base36id }}">
-          <i class="fas fa-ellipsis-h"></i>
-        </a>
-      </li>
+
+      {% if loop.length > 1 or '/post/' not in request.path %}
+        <li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link}}"><i class="fas fa-link"></i>Share</a></li>
+        {% if v %}
+        <li class="list-inline-item">
+          <a href="#" data-toggle="modal" data-target="#actionsModal-{{ p.base36id }}">
+            <i class="fas fa-ellipsis-h"></i>
+          </a>
+        </li>
+        {% endif %}
       {% endif %}
+
+
       {% if v and request.path.startswith(('/@',)) %}
       <li id="voting-{{ p.base36id }}-mobile" class="voting list-inline-item d-md-none">
 
