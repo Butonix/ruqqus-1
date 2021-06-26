@@ -483,6 +483,18 @@
 
           </div>
 
+          {% if p.domain==('SERVER_NAME' | app_config) %}
+          <div id="crosspost-embed">
+            <div class="row no-gutters mt-md-3">
+              <div class="col-12">
+                <div class="posts" id="posts">
+                  {{ p.url | crosspost_embed }}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
           {% if v and v.id==p.author_id and not v.is_banned %}
           <div id="edit-post-body-{{ p.base36id }}" class="d-none comment-write collapsed child">
             <form id="post-edit-form-{{ p.base36id }}" action="/edit_post/{{ p.base36id }}" method="post" class="input-group">

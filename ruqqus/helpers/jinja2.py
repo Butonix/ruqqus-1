@@ -4,12 +4,16 @@ from os import environ, path
 from sqlalchemy import text, func
 from flask import g
 import calendar
+import re
 
 from ruqqus.classes.user import User
 from .get import *
 import requests
 
 from ruqqus.__main__ import app, cache
+
+
+post_regex = re.compile(f"^https?://{app.config['SERVER_NAME']}/\+\w+/post/(\w+)(/[a-zA-Z0-9_-]+/?$")
 
 
 @app.template_filter("total_users")
@@ -90,8 +94,17 @@ def coin_goal(x):
 def app_config(x):
     return app.config.get(x)
 
+@app.template_filter("eval"):
+def eval_filter(s):
+
+    return render_template_string(s)
+
 @app.template_filter("post_embed")
-def post_embed(b36id):
+def crosspost_embed(url):
+
+    matches = re.match(ruqqus_regex, url)
+
+    b36id = matches.group(1)
 
     p = get_post(b36id, v=g.v, graceful=True)
 
