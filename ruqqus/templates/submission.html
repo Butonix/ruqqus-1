@@ -488,7 +488,7 @@
             <div class="row no-gutters mt-md-3">
               <div class="col-12">
                 <div class="posts" id="posts">
-                  {{ p.url | post_embed }}
+                  {{ p.url | post_embed | safe }}
                 </div>
               </div>
             </div>
