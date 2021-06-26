@@ -8,7 +8,7 @@ from ruqqus.__main__ import app
 youtube_regex = re.compile(
     "^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*")
 
-ruqqus_regex = re.compile("^.*ruqqus.com/+\w+/post/(\w+)(/[a-zA-Z0-9_-]+/(\w+))?")
+ruqqus_regex = re.compile("^https?://.*ruqqus\.com/\+\w+/post/(\w+)(/[a-zA-Z0-9_-]+/(\w+))?")
 
 twitter_regex=re.compile("/status/(\d+)")
 
