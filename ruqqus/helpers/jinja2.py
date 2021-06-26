@@ -5,6 +5,7 @@ from sqlalchemy import text, func
 from flask import g
 import calendar
 import re
+from urllib.parse import quote_plus
 
 from ruqqus.classes.user import User
 from .get import *
@@ -98,6 +99,11 @@ def app_config(x):
 # def eval_filter(s):
 
 #     return render_template_string(s)
+
+@app.template_filter("urlencode")
+def urlencode(s):
+    return quote_plus(s)
+
 
 @app.template_filter("post_embed")
 def crosspost_embed(url):
