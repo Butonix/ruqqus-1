@@ -590,7 +590,7 @@
                   {% endif %}
                   {% endif %}
 
-                  <li class="list-inline-item"><a href="/submit?url={{ p.permalink | full_link | urlencode }}"><i class="fas fa-retweet"></i>Resubmit</a></li>
+                  {% if v and not v.is_suspended %}<li class="list-inline-item"><a href="/submit?url={{ p.permalink | full_link | urlencode }}"><i class="fas fa-retweet"></i>Resubmit</a></li>{% endif %}
 
                   {% if v and not v.id==p.author_id and not p.author.is_deleted %}
                   <li class="list-inline-item d-none d-md-inline-block">
