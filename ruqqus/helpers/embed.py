@@ -37,6 +37,8 @@ def youtube_embed(url):
 
 def ruqqus_embed(url):
 
+    print(f'embedding {url=}')
+
     matches = re.match(ruqqus_regex, url)
 
     post_id = matches.group(1)
