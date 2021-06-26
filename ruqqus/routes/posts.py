@@ -840,7 +840,7 @@ def submit_post(v):
         contribs=g.db.query(ContributorRelationship).filter_by(board_id=new_post.board_id, is_active=True).subquery()
         mods=g.db.query(ModRelationship).filter_by(board_id=new_post.board_id, accepted=True).subquery()
 
-        board_uids=board.uids.join(
+        board_uids=board_uids.join(
             contribs,
             contribs.c.user_id==Subscription.user_id,
             isouter=True
