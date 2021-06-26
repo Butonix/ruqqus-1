@@ -336,6 +336,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
             self.is_offensive = False
 
     @property
+    def is_crosspost(self):
+        return self.domain==app.config["SERVER_NAME"] and re.match("^https?://[a-zA-Z0-9_.-]+/\+\w+/post/(\w+)(/[a-zA-Z0-9_-]+/?)?$", self.url)
+    
+
+    @property
 
     def json_raw(self):
         data = {'author_name': self.author.username if not self.author.is_deleted else None,
@@ -372,6 +377,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'is_pinned': self.is_pinned,
                 'is_distinguished': bool(self.distinguish_level),
                 'is_heralded': bool(self.gm_distinguish),
+                'is_crosspost': self.is_crosspost,
                 'herald_guild': self.distinguished_board.name if self.gm_distinguish else None
                 }
         if self.ban_reason:
