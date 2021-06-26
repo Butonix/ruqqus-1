@@ -13,7 +13,7 @@ import requests
 from ruqqus.__main__ import app, cache
 
 
-post_regex = re.compile("^https?://[a-zA-Z0-9_.-]/\+\w+/post/(\w+)(/[a-zA-Z0-9_-]+/?)?$")
+post_regex = re.compile("^https?://[a-zA-Z0-9_.-]+/\+\w+/post/(\w+)(/[a-zA-Z0-9_-]+/?)?$")
 
 
 @app.template_filter("total_users")
