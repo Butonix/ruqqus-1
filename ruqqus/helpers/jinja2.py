@@ -4,12 +4,17 @@ from os import environ, path
 from sqlalchemy import text, func
 from flask import g
 import calendar
+import re
+from urllib.parse import quote_plus
 
 from ruqqus.classes.user import User
 from .get import *
 import requests
 
 from ruqqus.__main__ import app, cache
+
+
+post_regex = re.compile("^https?://[a-zA-Z0-9_.-]+/\+\w+/post/(\w+)(/[a-zA-Z0-9_-]+/?)?$")
 
 
 @app.template_filter("total_users")
@@ -89,6 +94,34 @@ def coin_goal(x):
 @app.template_filter("app_config")
 def app_config(x):
     return app.config.get(x)
+
+# @app.template_filter("eval")
+# def eval_filter(s):
+
+#     return render_template_string(s)
+
+@app.template_filter("urlencode")
+def urlencode(s):
+    return quote_plus(s)
+
+
+@app.template_filter("post_embed")
+def crosspost_embed(url):
+
+    matches = re.match(post_regex, url)
+
+    b36id = matches.group(1)
+
+    p = get_post(b36id, v=g.v, graceful=True)
+
+    if not p or p.is_deleted or p.is_banned or not p.is_public:
+        return ""
+
+    return render_template(
+        "submission_listing.html",
+        listing=[p],
+        v=g.v
+        )
 
 # @app.template_filter("general_chat_count")
 # def general_chat_count(x):

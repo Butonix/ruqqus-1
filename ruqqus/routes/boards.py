@@ -1609,12 +1609,12 @@ def board_css(board_fullname, theme, x):
         return redirect(board.css_url)
 
     if theme=="main":
-        path="ruqqus/ruqqus/assets/style/main.scss"
+        path=f"{app.config['RUQQUSPATH']}/assets/style/main.scss"
     else:
-        path="ruqqus/ruqqus/assets/style/main_dark.scss"
+        path=f"{app.config['RUQQUSPATH']}/assets/style/main_dark.scss"
 
     try:
-        with open(os.path.join(os.path.expanduser('~'), path), "r") as file:
+        with open(path, "r") as file:
             raw = file.read()
     except FileNotFoundError:
         return redirect("/assets/style/main.css")
@@ -1623,6 +1623,7 @@ def board_css(board_fullname, theme, x):
     # of some odd behavior with css files
     scss = raw.replace("{boardcolor}", board.color)
     scss = scss.replace("{maincolor}", app.config["SITE_COLOR"])
+    scss = scss.replace("{ruqquspath}", app.config["RUQQUSPATH"])
 
     try:
         resp = Response(sass.compile(string=scss), mimetype='text/css')

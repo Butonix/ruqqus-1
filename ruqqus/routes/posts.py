@@ -366,6 +366,7 @@ def submit_post(v):
 
     # check ban status
     domain_obj = get_domain(domain)
+    #print('domain_obj', domain_obj)
     if domain_obj:
         if not domain_obj.can_submit:
           
@@ -388,9 +389,11 @@ def submit_post(v):
 
         # check for embeds
         if domain_obj.embed_function:
+            #print('domainobj embed function', domain_obj.embed_function)
             try:
                 embed = eval(domain_obj.embed_function)(url)
-            except BaseException:
+            except BaseException as e:
+                #print('exception', e)
                 embed = ""
         else:
             embed = ""
@@ -657,7 +660,9 @@ def submit_post(v):
         repost = None
 
     if repost and request.values.get("no_repost"):
-        return redirect(repost.permalink)
+        return {'html':lambda:redirect(repost.permalink),
+		'api': lambda:({"error":"This content has already been posted", "repost":repost.json}, 409)
+	       }
 
     if request.files.get('file') and not v.can_submit_image:
         abort(403)
@@ -838,7 +843,7 @@ def submit_post(v):
         contribs=g.db.query(ContributorRelationship).filter_by(board_id=new_post.board_id, is_active=True).subquery()
         mods=g.db.query(ModRelationship).filter_by(board_id=new_post.board_id, accepted=True).subquery()
 
-        board_uids=board.uids.join(
+        board_uids=board_uids.join(
             contribs,
             contribs.c.user_id==Subscription.user_id,
             isouter=True
@@ -915,7 +920,10 @@ def delete_post_pid(pid, v):
     post = get_post(pid)
     if not post.author_id == v.id:
         abort(403)
-
+        
+    if post.is_deleted:
+        abort(404)
+        
     post.deleted_utc = int(time.time())
     post.is_pinned = False
     post.stickied = False
