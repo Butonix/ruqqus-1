@@ -2,12 +2,13 @@ import re
 from urllib.parse import *
 import requests
 from os import environ
+from flask import *
 from ruqqus.__main__ import app
 
 youtube_regex = re.compile(
     "^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*")
 
-ruqqus_regex = re.compile("^.*ruqqus.com/post/+\w+/(\w+)(/\w+/(\w+))?")
+ruqqus_regex = re.compile("^.*ruqqus.com/+\w+/post/(\w+)(/[a-zA-Z0-9_-]+/(\w+))?")
 
 twitter_regex=re.compile("/status/(\d+)")
 
@@ -44,7 +45,11 @@ def ruqqus_embed(url):
     if comment_id:
         return f"https://{app.config['SERVER_NAME']}/embed/comment/{comment_id}"
     else:
-        return f"https://{app.config['SERVER_NAME']}/embed/post/{post_id}"
+        return render_template(
+            "site_embeds/ruqqus_post.html", 
+            p=get_post(post_id),
+            v=g.v
+            )
 
 
 def bitchute_embed(url):
