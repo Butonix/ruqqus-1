@@ -590,6 +590,8 @@
                   {% endif %}
                   {% endif %}
 
+                  <li class="list-inline-item"><a href="/submit?url={{ p.permalink | full_link | quote }}"><i class="fas fa-retweet"></i>Resubmit</a></li>
+
                   {% if v and not v.id==p.author_id and not p.author.is_deleted %}
                   <li class="list-inline-item d-none d-md-inline-block">
                   	<div class="dropdown show">
@@ -611,8 +613,6 @@
                     </div>
                   </li>
                   {% endif %}
-
-                  <li class="list-inline-item"><a href="/submit?url={{ p.permalink }}"><i class="fas fa-retweet"></i>Resubmit</a></li>
 
                 </ul>
               </div>
