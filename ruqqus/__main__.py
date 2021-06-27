@@ -294,14 +294,14 @@ r=redis.Redis(
 #import and bind chat function
 #the if statement is needed because chat includes its own db session
 #and if it's not used then every worker connection will spawn a new db session
-#from ruqqus.chat.chat_routes import *
-#if "load_chat" in sys.argv:
-#    socketio=SocketIO(
-#        app,
-#        cors_allowed_origins=CorsMatch()
-#        #message_queue=app.config["CACHE_REDIS_URL"]
-#        )
-#    from ruqqus.chat.chat import *
+from ruqqus.chat.chat_routes import *
+if "load_chat" in sys.argv:
+   socketio=SocketIO(
+       app,
+       cors_allowed_origins=CorsMatch()
+#       message_queue=app.config["CACHE_REDIS_URL"]
+       )
+   from ruqqus.chat.chat import *
 
 local_ban_cache={}
 
