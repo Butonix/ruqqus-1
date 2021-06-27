@@ -360,7 +360,7 @@
         {% if b.has_mod(v) %}
         <a class="btn btn-outline-secondary btn-block text-muted mb-2" href="{{ b.permalink }}/mod/settings">Guild settings</a>
         {% endif %}
-        {% if b.can_chat(v) %}
+        {% if False and b.can_chat(v) %}
         <a class="btn btn-primary btn-block text-white mb-2" href="{{ b.chat_url }}">Chat</a>
         {% endif %}
         {% if v %}
