@@ -1591,7 +1591,7 @@ def mod_board_images_delete_banner(bid, board, v):
 
 
 @app.route("/assets/<board_fullname>/<theme>/<x>.css", methods=["GET"])
-#@cache.memoize(60*6*24)
+@cache.memoize()
 def board_css(board_fullname, theme, x):
 
     if theme not in ["main", "dark"]:
