@@ -2141,7 +2141,7 @@ def siege_guild(v):
         # check submissions
 
         post= g.db.query(Submission).filter(Submission.author_id.in_(tuple(ids)), 
-                                        Submission.created_utc > cutoff,
+                                        or_(Submission.created_utc > cutoff, Submission.edited_utc > cutoff),
                                         Submission.original_board_id==guild.id,
                                         Submission.deleted_utc==0,
                                         Submission.is_banned==False).first()
@@ -2149,7 +2149,7 @@ def siege_guild(v):
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
-                                   error=f"Your siege failed. One of the guildmasters created a post in +{guild.name} within the last 60 days. You may try again in 7 days.",
+                                   error=f"Your siege failed. One of the guildmasters created or edited a post in +{guild.name} within the last 60 days. You may try again in 7 days.",
                                    link=post.permalink,
                                    link_text="View post"
                                    ), 403
@@ -2157,7 +2157,7 @@ def siege_guild(v):
         # check comments
         comment= g.db.query(Comment).filter(
             Comment.author_id.in_(tuple(ids)),
-            Comment.created_utc > cutoff,
+            or_(Comment.created_utc > cutoff, Comment.edited_utc > cutoff),
             Comment.original_board_id==guild.id,
             Comment.deleted_utc==0,
             Comment.is_banned==False).first()
@@ -2166,7 +2166,7 @@ def siege_guild(v):
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
-                                   error=f"Your siege failed. One of the guildmasters created a comment in +{guild.name} within the last 60 days. You may try again in 7 days.",
+                                   error=f"Your siege failed. One of the guildmasters created or edited a comment in +{guild.name} within the last 60 days. You may try again in 7 days.",
                                    link=comment.permalink,
                                    link_text="View comment"
                                    ), 403
