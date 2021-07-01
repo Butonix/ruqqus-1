@@ -315,6 +315,10 @@ import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
 
+#purge css from cache
+cache.delete_memoized(ruqqus.routes.boards.board_css)
+cache.delete_memoized(ruqqus.routes.static.main_css)
+
 
 @cache.memoize(UA_BAN_CACHE_TTL)
 def get_useragent_ban_response(user_agent_str):
