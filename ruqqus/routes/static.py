@@ -14,7 +14,7 @@ from ruqqus.__main__ import app, limiter
 # take care of misc pages that never really change (much)
 
 @app.route("/assets/style/<file>.css", methods=["GET"])
-#@cache.memoize(60*6*24)
+@cache.memoize()
 def main_css(file):
 
 	#print(file, color)
