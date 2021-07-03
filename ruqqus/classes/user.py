@@ -1273,7 +1273,7 @@ class User(Base, Stndrd, Age_times):
 
         posts=posts.all()
 
-        post_rep= sum([x[0] for x in posts])
+        post_rep= sum([x[0] for x in posts]) - len(posts)
 
 
         comments=g.db.query(Comment.score_top).filter_by(
@@ -1287,7 +1287,7 @@ class User(Base, Stndrd, Age_times):
 
         comments=comments.all()
 
-        comment_rep=sum([x[0] for x in comments])
+        comment_rep=sum([x[0] for x in comments]) - len(comments)
 
         return int(post_rep + comment_rep)
 
