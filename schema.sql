@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 12.5
--- Dumped by pg_dump version 12.3
+-- Dumped by pg_dump version 12.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -129,7 +129,6 @@ CREATE TABLE public.comments (
     edited_utc integer,
     deleted_utc integer NOT NULL,
     is_approved integer NOT NULL,
-    author_name character varying(64),
     approved_utc integer,
     creation_ip character varying(64) NOT NULL,
     score_disputed double precision,
@@ -293,9 +292,9 @@ CREATE TABLE public.users (
     stored_follower_count integer DEFAULT 0,
     color character(6) DEFAULT '805ad5'::bpchar,
     secondary_color character(6) DEFAULT 'ffff00'::bpchar,
-    signature character varying(280) DEFAULT ''::character varying,
-    signature_html character varying(512) DEFAULT ''::character varying
-	);
+    signature character varying(280),
+    signature_html character varying(512)
+);
 
 
 --
@@ -407,8 +406,8 @@ CREATE TABLE public.notifications (
     id integer NOT NULL,
     user_id integer,
     comment_id integer,
-    submission_id integer,
-    read boolean NOT NULL
+    read boolean NOT NULL,
+    submission_id integer
 );
 
 
@@ -1907,7 +1906,7 @@ CREATE TABLE public.follows (
     user_id integer,
     target_id integer,
     created_utc integer,
-    get_notifs Boolean default false
+    get_notifs boolean DEFAULT false
 );
 
 
@@ -2471,7 +2470,7 @@ CREATE TABLE public.subscriptions (
     board_id integer,
     created_utc integer NOT NULL,
     is_active boolean,
-    get_notifs Boolean default false
+    get_notifs boolean DEFAULT false
 );
 
 
