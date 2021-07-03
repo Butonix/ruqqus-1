@@ -9,9 +9,9 @@ server {
     client_max_body_size 64m;
 
     listen      80;
-    #listen [::]:80;
+    listen [::]:80;
     listen      443 ssl;
-    #listen [::]:443 ssl;
+    listen [::]:443 ssl;
 
     ssl_certificate /etc/letsencrypt/live/aws.ruqqus.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/aws.ruqqus.com/privkey.pem;
@@ -73,7 +73,7 @@ server {
 server {
     
     listen 80;
-    listen [::][:80];
+    listen [::]:80;
 
     return 444;
 }
