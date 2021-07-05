@@ -1483,7 +1483,7 @@ def all_mod_queue(v):
     
     print(ids)
 
-    ids = [x for x in ids]
+    ids = [x[0] for x in ids]
    
     next_exists = (len(ids) == 26)
 
