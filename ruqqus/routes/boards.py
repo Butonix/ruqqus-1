@@ -1466,6 +1466,8 @@ def all_mod_queue(v):
         ModRelationship.accepted==True, 
         or_(ModRelationship.perm_content==True, ModRelationship.perm_full==True)
     ).subquery()
+    
+    print(board_ids)
 
     ids = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.board_id.in_(board_ids),
                                                                   Submission.mod_approved is None,
@@ -1478,6 +1480,8 @@ def all_mod_queue(v):
     ids = ids.order_by(Submission.id.desc()).offset((page - 1) * 25).limit(26)
 
     ids = [x for x in ids]
+    
+    print(ids)
 
     next_exists = (len(ids) == 26)
 
