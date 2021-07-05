@@ -572,7 +572,10 @@ class User(Base, Stndrd, Age_times):
         if not self.over_18:
             posts=posts.filter(Submission.over_18==False)
             
-        return bool(posts.first())
+        x=posts.first()
+        print(x)
+        return bool(x)
+#        return bool(posts.first())
            
 
     @property
