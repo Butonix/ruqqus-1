@@ -131,13 +131,13 @@ class CustomRenderer(HTMLRenderer):
         
         name=token.target
         
-        if os.path.isfile(f"{app.config['RUQQUSPATH']}/assets/images/emojis/{name}.gif"):
+        if os.path.isfile(f"{app.config['RUQQUSPATH']}/assets/images/emojis/{name}"):
             
-            return f'<span data-toggle="tooltip" title=":{name}:"><img class="emoji" src="/assets/images/emojis/{name}.gif"></span>'
+            return f'<span data-toggle="tooltip" title=":{name}:"><img class="emoji" src="/assets/images/emojis/{name}"></span>'
         
-        elif g.v.has_premium and os.path.isfile(f"{app.config['RUQQUSPATH']}/assets/images/primojis/{name}.gif"):
+        elif g.v.has_premium and os.path.isfile(f"{app.config['RUQQUSPATH']}/assets/images/primojis/{name}"):
             
-            return f'<span data-toggle="tooltip" title=":{name}:"><img class="emoji" src="/assets/images/primojis/{name}.gif"></span>'
+            return f'<span data-toggle="tooltip" title=":{name}:"><img class="emoji" src="/assets/images/primojis/{name}"></span>'
 
         else:
             return f":{name}:"
