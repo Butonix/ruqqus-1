@@ -549,11 +549,18 @@ class User(Base, Stndrd, Age_times):
     @property
     @cache.memoize(timeout=60)
     def has_report_queue(self):
-        board_ids = [
-            x.board_id for x in self.moderates.filter_by(
-                accepted=True).all()]
-        return bool(g.db.query(Submission).filter(Submission.board_id.in_(
-            board_ids), Submission.mod_approved == 0, Submission.is_banned == False).join(Submission.reports).first())
+        board_ids = g.db.query(ModRelationship.id).filter_by(
+                user_id=self.id
+                accepted=True).subquery()
+        
+        return bool(g.db.query(Submission).filter(
+            Submission.board_id.in_(
+                board_ids
+            ), 
+            Submission.mod_approved == 0, 
+            Submission.is_banned == False,
+            Submission.deleted_utc==0
+            ).join(Submission.reports).first())
 
     @property
     def banned_by(self):
