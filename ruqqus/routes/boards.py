@@ -1464,7 +1464,7 @@ def all_mod_queue(v):
     board_ids = g.db.query(ModRelationship.board_id).filter(
         ModRelationship.user_id==v.id, 
         ModRelationship.accepted==True, 
-        or_(ModRelationship.perm_content==True, ModRelationship.perm_full=True)
+        or_(ModRelationship.perm_content==True, ModRelationship.perm_full==True)
     ).subquery()
 
     ids = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.board_id.in_(board_ids),
