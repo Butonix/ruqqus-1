@@ -4,6 +4,7 @@ import requests
 from os import environ
 from flask import *
 from bs4 import BeautifulSoup
+import json
 from ruqqus.__main__ import app
 from .get import *
 
@@ -14,7 +15,7 @@ ruqqus_regex = re.compile("^https?://.*ruqqus\.com/\+\w+/post/(\w+)(/[a-zA-Z0-9_
 
 twitter_regex=re.compile("/status/(\d+)")
 
-rumble_regex=re.compile("rumble\.com/(\w+)-\S+$")
+rumble_regex=re.compile("/embed/(\w+)-/")
 
 FACEBOOK_TOKEN=environ.get("FACEBOOK_TOKEN","").lstrip().rstrip()
 
@@ -99,10 +100,8 @@ def rumble_embed(url):
     print(url)
     r=requests.get(url)
     
-    soup=BeautifulSoup(r.content)
-    vid=soup.find("div", attrs={"class":"videoPlayer-Rumble-cls"})
-    rumble_id=vid['id'].split('_')[1]
+    soup=BeautifulSoup(r.content, features="html.parser")
     
-    print(f"{rumble_id}")
+    script=soup.find("script", attrs={"type":"application/ld+json"})
     
-    return f"https://rumble.com/embed/{rumble_id}/?pub=4"
+    return json.loads(script.string)[0]['embedUrl']
