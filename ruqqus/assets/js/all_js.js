@@ -68,7 +68,13 @@ $('#new_email').on('input', function () {
       '500',
       '503',
       'poggers',
-      'ruqqking'
+      'ruqqking',
+      'ruqqie',
+      'ruqqie-cowboy',
+      'ruqqie-love',
+      'ruqqie-pensive',
+      'ruqqie-sip',
+      'ruqqie-upvote',
       ]
     },
     {
@@ -86,14 +92,26 @@ $('#new_email').on('input', function () {
       'pop-cat',
       'wavy-sad',
       'who',
-      'yoshi-hammer'
+      'yoshi-hammer',
+      'lmao-spin',
+      'gigachad-gif',
+      'yes-cat',
+      'no-cat',
+      'is4me',
+      'frogroll'
       ]
     },
     {
-      type:'meme',
+      type:'reaction',
       folder: 'emojis',
       emojis: [
       'breadstare',
+      'finger-guns',
+      'lmao',
+      'lfg',
+      'clueless',
+      'trollface',
+      'hahayes',
       'facepalm',
       'jackie-chan-wtf',
       'kekw',
@@ -103,7 +121,11 @@ $('#new_email').on('input', function () {
       'pepe-blanket',
       'pepe-cozy',
       'pepe-sus',
-      'pog-champ',
+      'pepe-toast',
+      'pepe-flushed',
+      'weirdhd',
+      'copium',
+      'pogchamp',
       'press-f',
       'shrek-yep',
       'strong-doge',
@@ -112,16 +134,10 @@ $('#new_email').on('input', function () {
       'tobey-sad',
       'think-mark',
       'tom-unsettled',
-      'vue'
-      ]
-    },
-    {
-      type:'text',
-      folder: 'emojis',
-      emojis: [
+      'vue',
       'this-tbh',
-      '500',
-      '503'
+      'king',
+      'gigachad',
       ]
     }
     ]
@@ -134,7 +150,7 @@ $('#new_email').on('input', function () {
       let dir = emojis[i].folder;
 
       for (j=0; j < arr.length; j++) { 
-        str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${arr[j]}\')" style="width:40px; height:40px; overflow: hidden;"><img width=30 src="/assets/images/${dir}/${arr[j]}" alt="${arr[j]}-emoji"/></button>`;
+        str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${arr[j]}\')" style="width:45px; height:45px; overflow: hidden;"><img width=35 src="/assets/images/${dir}/${arr[j]}" alt="${arr[j]}-emoji"/></button>`;
       }
 
       container.innerHTML = str
