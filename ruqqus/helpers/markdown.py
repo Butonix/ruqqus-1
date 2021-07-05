@@ -131,7 +131,7 @@ class CustomRenderer(HTMLRenderer):
         
         name=token.target
         
-        if os.path.isfile(f"{app.config['RUQQUSPATH'}/assets/images/emojis/{name}.gif"):
+        if os.path.isfile(f"{app.config['RUQQUSPATH']}/assets/images/emojis/{name}.gif"):
             
             return f'<span data-toggle="tooltip" title=":{name}:"><img class="emoji" src="/assets/images/emojis/{name}.gif"></span>'
         
