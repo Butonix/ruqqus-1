@@ -102,6 +102,7 @@ def rumble_embed(url):
     soup=BeautifulSoup(r.content)
     vid=soup.find("div", attrs={"class":"videoPlayer-Rumble-cls"})
     rumble_id=vid['id'].split('_')[1]
-    print(F"{rumble_id=}")
+    
+    print(f"{rumble_id=}")
     
     return f"https://rumble.com/embed/{rumble_id}/?pub=4"
