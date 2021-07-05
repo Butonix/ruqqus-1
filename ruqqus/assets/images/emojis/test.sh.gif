@@ -1,4 +1,0 @@
-#!/bin/sh
-for f in *; do
-    cp -- "$f" "$f.gif"
-done
