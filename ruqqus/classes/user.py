@@ -550,7 +550,7 @@ class User(Base, Stndrd, Age_times):
     @cache.memoize(timeout=60)
     def has_report_queue(self):
         board_ids = g.db.query(ModRelationship.id).filter_by(
-                user_id=self.id
+                user_id=self.id,
                 accepted=True).subquery()
         
         return bool(g.db.query(Submission).filter(
