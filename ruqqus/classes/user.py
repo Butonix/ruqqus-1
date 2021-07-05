@@ -27,7 +27,7 @@ from .userblock import *
 from .badges import *
 from .clients import *
 from .paypal import PayPalTxn
-from .reports import Report
+from .flags import Report
 from ruqqus.__main__ import Base, cache
 
 
