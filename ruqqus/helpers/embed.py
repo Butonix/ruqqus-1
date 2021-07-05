@@ -13,6 +13,8 @@ ruqqus_regex = re.compile("^https?://.*ruqqus\.com/\+\w+/post/(\w+)(/[a-zA-Z0-9_
 
 twitter_regex=re.compile("/status/(\d+)")
 
+rumble_regex=re.compile("rumble\.com/(\w+)-\S+$")
+
 FACEBOOK_TOKEN=environ.get("FACEBOOK_TOKEN","").lstrip().rstrip()
 
 
@@ -89,3 +91,10 @@ def instagram_embed(url):
     x=requests.get(oembed_url, params=params, headers=headers)
 
     return x.json()["html"]
+
+
+def rumble_embed(url):
+    
+    rumble_id=re.match(rumble_regex, url).group(1)
+    
+    return f"https://rumble.com/embed/{rumble_id}/?pub=4"
