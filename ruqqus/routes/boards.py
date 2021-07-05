@@ -1465,11 +1465,7 @@ def all_mod_queue(v):
         ModRelationship.user_id==v.id, 
         ModRelationship.accepted==True, 
         or_(ModRelationship.perm_content==True, ModRelationship.perm_full==True)
-    )
-    
-    print(board_ids.all())
-    
-    board_ids=board_ids.subquery()
+    ).subquery()
 
     ids = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.board_id.in_(board_ids),
                                                                   Submission.mod_approved is None,
