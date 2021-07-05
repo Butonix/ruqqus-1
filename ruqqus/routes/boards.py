@@ -1461,8 +1461,7 @@ def all_mod_queue(v):
 
     page = int(request.args.get("page", 1))
 
-    board_ids = [
-        x.id for x in v.boards_modded]
+    board_ids = g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, accepted=True, perm_content=True).subquery()
 
     ids = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.board_id.in_(board_ids),
                                                                   Submission.mod_approved is None,
