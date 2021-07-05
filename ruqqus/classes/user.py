@@ -557,7 +557,7 @@ class User(Base, Stndrd, Age_times):
             Submission.board_id.in_(
                 board_ids
             ), 
-            Submission.mod_approved == 0, 
+            Submission.mod_approved == None, 
             Submission.is_banned == False,
             Submission.deleted_utc==0
             ).join(Submission.reports).first())
