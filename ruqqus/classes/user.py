@@ -560,7 +560,7 @@ class User(Base, Stndrd, Age_times):
             Submission.mod_approved == None, 
             Submission.is_banned == False,
             Submission.deleted_utc==0
-            ).join(Report, Report.post_id==Submission.id).first()
+            ).join(Submission.reports, innerjoin=True).first()
             )
 
     @property
