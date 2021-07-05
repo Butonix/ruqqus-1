@@ -123,7 +123,7 @@
                                 <input id="file-upload" type="file" accept="image/*" hidden disabled>
                             </label>
 
-                            <small class="form-text text-muted">You can upload images directly at 1000 Rep.{% if request.headers.get("cf-ipcountry")=="T1" and not v.is_activated %} Additionally, you must have a verified email address to upload images via Tor.{% endif %}</small>
+                            <small class="form-text text-muted">You can upload images directly at 500 Rep, or earlier with <a href="/settings/premium" target="_blank">premium</a>.{% if request.headers.get("cf-ipcountry")=="T1" and not v.is_activated %} Additionally, you must have a verified email address to upload images via Tor.{% endif %}</small>
                         </div>
                         {% endif %}
                         </div>
