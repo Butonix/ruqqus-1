@@ -1479,8 +1479,6 @@ def all_mod_queue(v):
 
     ids = ids.order_by(Submission.id.desc()).offset((page - 1) * 25).limit(26).all()
     
-    print(ids)
-
     ids = [x[0] for x in ids]
    
     next_exists = (len(ids) == 26)
