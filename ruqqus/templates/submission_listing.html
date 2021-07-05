@@ -17,7 +17,7 @@
 
     <!-- Voting on "medium" devices or larger, hidden on smaller devices -->
 
-
+    {% if not (loop.length==1 and '/post/' in request.path) %}
     <div class="voting my-2 d-none d-md-block pr-2">
       {% if v and request.path.startswith(('/@',)) %}
 
@@ -31,7 +31,6 @@
       <div class="text-muted mx-auto arrow-down post-{{ p.base36id }}-down active"></div>
       {% endif %}
 
-      {% elif (loop.length==1 and '/post/' in request.path) %}
       
       {% elif v %}
 
@@ -53,6 +52,7 @@
       {% endif %}
 
     </div>
+    {% endif %}
 
     <div class="card-header bg-transparent border-0 d-flex flex-row flex-nowrap pl-2 pl-md-0 p-0 mr-md-2">
 
