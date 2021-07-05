@@ -560,7 +560,8 @@ class User(Base, Stndrd, Age_times):
             Submission.mod_approved == None, 
             Submission.is_banned == False,
             Submission.deleted_utc==0
-            ).join(Submission.reports).first())
+            ).join(Report, Report.post_id==Submission.id).first()
+            )
 
     @property
     def banned_by(self):
