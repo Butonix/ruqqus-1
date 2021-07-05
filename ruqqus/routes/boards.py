@@ -1431,7 +1431,8 @@ def board_mod_queue(boardname, board, v):
 
     ids = g.db.query(Submission.id).filter_by(board_id=board.id,
                                               is_banned=False,
-                                              mod_approved=None
+                                              mod_approved=None,
+                                              deleted_utc=0
                                               ).join(Report, Report.post_id == Submission.id)
 
     if not v.over_18:
@@ -1469,7 +1470,8 @@ def all_mod_queue(v):
 
     ids = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.board_id.in_(board_ids),
                                                                   Submission.mod_approved==None,
-                                                                  Submission.is_banned == False
+                                                                  Submission.is_banned == False,
+                                                                  Submission.deleted_utc==0
                                                                   ).join(Report, Report.post_id == Submission.id)
 
     if not v.over_18:
