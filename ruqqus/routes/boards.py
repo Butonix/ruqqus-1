@@ -1468,7 +1468,7 @@ def all_mod_queue(v):
     ).subquery()
 
     ids = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.board_id.in_(board_ids),
-                                                                  Submission.mod_approved is None,
+                                                                  Submission.mod_approved==None,
                                                                   Submission.is_banned == False
                                                                   ).join(Report, Report.post_id == Submission.id)
 
