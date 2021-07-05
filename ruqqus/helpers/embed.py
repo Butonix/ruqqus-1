@@ -95,6 +95,6 @@ def instagram_embed(url):
 
 def rumble_embed(url):
     
-    rumble_id=re.match(rumble_regex, url).group(1)
+    rumble_id=re.search(rumble_regex, url).group(1)
     
     return f"https://rumble.com/embed/{rumble_id}/?pub=4"
