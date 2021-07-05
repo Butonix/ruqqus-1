@@ -3,6 +3,7 @@ from urllib.parse import *
 import requests
 from os import environ
 from flask import *
+from bs4 import BeautifulSoup
 from ruqqus.__main__ import app
 from .get import *
 
@@ -95,6 +96,10 @@ def instagram_embed(url):
 
 def rumble_embed(url):
     
-    rumble_id=re.search(rumble_regex, url).group(1)
+    r=requests.get(url)
+    
+    soup=BeautifulSoup(r.content)
+    vid=soup.find("div", attrs={"class":"videoPlayer-Rumble-cls"})
+    rumble_id=vid['id'].split('_')[1]
     
     return f"https://rumble.com/embed/{rumble_id}/?pub=4"
