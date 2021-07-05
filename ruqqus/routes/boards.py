@@ -1431,13 +1431,14 @@ def board_mod_queue(boardname, board, v):
 
     ids = g.db.query(Submission.id).filter_by(board_id=board.id,
                                               is_banned=False,
-                                              mod_approved=None
+                                              mod_approved=None,
+                                              deleted_utc=0
                                               ).join(Report, Report.post_id == Submission.id)
 
     if not v.over_18:
         ids = ids.filter(Submission.over_18 == False)
 
-    ids = ids.order_by(Submission.id.desc()).offset((page - 1) * 25).limit(26)
+    ids = ids.order_by(Submission.id.desc()).offset((page - 1) * 25).limit(26).all()
 
     ids = [x[0] for x in ids]
 
@@ -1461,21 +1462,25 @@ def all_mod_queue(v):
 
     page = int(request.args.get("page", 1))
 
-    board_ids = [
-        x.id for x in v.boards_modded]
+    board_ids = g.db.query(ModRelationship.board_id).filter(
+        ModRelationship.user_id==v.id, 
+        ModRelationship.accepted==True, 
+        or_(ModRelationship.perm_content==True, ModRelationship.perm_full==True)
+    ).subquery()
 
     ids = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.board_id.in_(board_ids),
-                                                                  Submission.mod_approved is None,
-                                                                  Submission.is_banned == False
+                                                                  Submission.mod_approved==None,
+                                                                  Submission.is_banned == False,
+                                                                  Submission.deleted_utc==0
                                                                   ).join(Report, Report.post_id == Submission.id)
 
     if not v.over_18:
         ids = ids.filter(Submission.over_18 == False)
 
-    ids = ids.order_by(Submission.id.desc()).offset((page - 1) * 25).limit(26)
-
-    ids = [x for x in ids]
-
+    ids = ids.order_by(Submission.id.desc()).offset((page - 1) * 25).limit(26).all()
+    
+    ids = [x[0] for x in ids]
+   
     next_exists = (len(ids) == 26)
 
     ids = ids[0:25]
