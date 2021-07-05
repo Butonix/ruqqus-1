@@ -19,7 +19,7 @@
 
 
     <div class="voting my-2 d-none d-md-block pr-2">
-      {% if v and (request.path.startswith(('/@',)) or (loop.length==1 and '/post/' in request.path)) %}
+      {% if v and request.path.startswith(('/@',)) %}
 
       {% if voted==1 %}
       <div class="mx-auto arrow-up post-{{ p.base36id }}-up active"></div>
@@ -31,6 +31,8 @@
       <div class="text-muted mx-auto arrow-down post-{{ p.base36id }}-down active"></div>
       {% endif %}
 
+      {% elif (loop.length==1 and '/post/' in request.path) %}
+      
       {% elif v %}
 
       <div id="post-{{ p.base36id }}-up" tabindex="0" data-id-up="{{ p.base36id }}" data-content-type="post" class="mx-auto arrow-up upvote-button post-{{ p.base36id }}-up {% if voted==1 %}active{% endif %}"></div>
