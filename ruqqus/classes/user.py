@@ -548,21 +548,32 @@ class User(Base, Stndrd, Age_times):
         return f"t1_{self.base36id}"
 
     @property
-    @cache.memoize(timeout=60)
+    #@cache.memoize(timeout=60)
+    @lazy
     def has_report_queue(self):
-        board_ids = g.db.query(ModRelationship.id).filter_by(
-                user_id=self.id,
-                accepted=True).subquery()
+        board_ids = g.db.query(ModRelationship.id).options(lazyload('*')).filter(
+                ModRelationship.user_id==self.id,
+                ModRelationship.accepted==True,
+                or_(
+                    ModRelationship.perm_full==True,
+                    ModRelationship.perm_content==True
+                )
+                ).subquery()
         
-        return bool(g.db.query(Submission).filter(
+        posts=g.db.query(Submission).options(lazyload('*')).filter(
             Submission.board_id.in_(
                 board_ids
             ), 
             Submission.mod_approved == None, 
             Submission.is_banned == False,
             Submission.deleted_utc==0
-            ).join(Report, Report.post_id==Submission.id).first()
-            )
+            ).join(Report, Report.post_id==Submission.id)
+        
+        if not self.over_18:
+            posts=posts.filter(Submission.over_18==False)
+            
+        return bool(posts.first())
+           
 
     @property
     def banned_by(self):
