@@ -372,6 +372,8 @@ def submit_post(v):
           
             if domain_obj.reason==4:
                 v.ban(days=30, reason="Digitally malicious content")
+            elif domain_obj.reason==9:
+                v.ban(days=7, reason="Engaging in illegal activity")
             elif domain_obj.reason==7:
                 v.ban(reason="Sexualizing minors")
 
