@@ -12,6 +12,6 @@ COPY requirements.txt /opt/ruqqus/service/requirements.txt
 RUN cd /opt/ruqqus/service \
     && pip3 install -r requirements.txt
 
-EXPOSE 8000/tcp
+EXPOSE 80/tcp
 
 CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]

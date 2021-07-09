@@ -467,9 +467,9 @@ def front_all(v):
                                    )
             }
 
-#@app.route("/subcat/<name>", methods=["GET"])
-#@auth_desired
-#@api("read")
+@app.route("/subcat/<name>", methods=["GET"])
+@auth_desired
+@api("read")
 def subcat(name, v):
 
     if v:
@@ -529,7 +529,7 @@ def subcat(name, v):
                                             v=v,
                                             listing=posts,
                                             next_exists=next_exists,
-                                            sort_method=sort_method,
+                                            sort_method=sort,
                                             time_filter=t,
                                             page=page,
                                             CATEGORIES=CATEGORIES
