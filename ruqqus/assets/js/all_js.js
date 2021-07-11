@@ -762,6 +762,18 @@ $('#kickPostModal').on('hidden.bs.modal', function () {
 
 });
 
+$('.kick-button-listing').click(function(event) {
+  if (event.which != 1) {return}
+
+  bid=$(this).data('bid')
+  pid=$(this).data('pid')
+
+  post_response('/mod/kick/'+bid+'/'+pid, callback=function(xhr){
+    $("#post-"+bid).replaceWith(JSON.parse(xhr.response)['data'])
+    }
+  )
+}
+
 //POST
 
 function post(url, callback, errortext) {
@@ -774,6 +786,23 @@ function post(url, callback, errortext) {
   xhr.onload = function() {
     if (xhr.status >= 200 && xhr.status < 300) {
       callback();
+    } else {
+      xhr.onerror();
+    }
+  };
+  xhr.send(form);
+};
+
+function post_response(url, callback, errortext) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  var form = new FormData()
+  form.append("formkey", formkey());
+  xhr.withCredentials=true;
+  xhr.onerror=function() { alert(errortext); };
+  xhr.onload = function() {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      callback(xhr);
     } else {
       xhr.onerror();
     }
