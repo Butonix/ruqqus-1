@@ -1302,6 +1302,27 @@ def board_about_css(boardname, v):
         "api":lambda:jsonify({"data":board.css})
         }
 
+@app.post("/+<boardname>/mod/css")
+@auth_required
+@is_guildmaster("config", "appearance")
+@api("guildmaster")
+def board_edit_css(boardname, v):
+
+    board.css = request.form.get("css")
+    board.css_nonce += 1
+
+    g.db.add(board)
+    g.db.commit()
+
+    return '', 204
+
+@app.get("/+<boardname>/css")
+def board_get_css(boardname):
+
+    board=get_guild(boardname)
+
+    return board.css
+
 
 @app.route("/+<boardname>/mod/exiled", methods=["GET"])
 @app.route("/api/v1/<boardname>/mod/exiled", methods=["GET"])
