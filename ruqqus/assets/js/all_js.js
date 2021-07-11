@@ -490,7 +490,7 @@ function switch_css() {
   if (css.href.includes("/assets/style/main.css")) {
     post("/settings/dark_mode/1",
       callback=function(){
-        css.href="/assets/style/main_dark.css?v=2.37.6";
+        css.href="/assets/style/main_dark.css?v=2.37.7";
         dswitch.classList.remove("fa-toggle-off");
         dswitch.classList.add("fa-toggle-on");
         dswitchmobile.classList.remove("fa-toggle-off");
@@ -501,7 +501,7 @@ function switch_css() {
   else {
     post("/settings/dark_mode/0",
       callback=function(){
-        css.href="/assets/style/main.css?v=2.37.6";
+        css.href="/assets/style/main.css?v=2.37.7";
         dswitch.classList.remove("fa-toggle-on");
         dswitch.classList.add("fa-toggle-off");
         dswitchmobile.classList.remove("fa-toggle-on");
@@ -2245,3 +2245,48 @@ $('.text-expand').click(function(event){
   $('.text-expand-icon-'+id).toggleClass('fa-compress-alt');
   
 })
+
+
+
+function mod_post(url, type, id) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        var form = new FormData()
+        form.append("formkey", "{{ v.formkey }}");
+        item=document.getElementById(type);
+        button=document.getElementById(id);
+        if (item.type=="checkbox") {
+          form.append(item.name, item.checked)
+          if (item.checked) {
+            form.append(item.name, true);
+          } else {
+            form.append(item.name, false);
+          }
+        }
+        else {
+          form.append(item.name, item.value);
+        }
+        xhr.withCredentials=true;
+        xhr.onprogress=function(){
+          button.classList.add("btn-primary");
+          button.disabled = true;
+          button.innerHTML = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Saving';
+        }
+        xhr.onload=function(){
+          if (xhr.status >= 400)
+          {
+            button.classList.add("btn-primary");
+            button.disabled=false;
+            button.innerHTML="Save"
+            data=JSON.parse(xhr.response);
+            $('#toast-post-error').toast('dispose');
+            $('#toast-post-error').toast('show');
+            document.getElementById('toast-post-error-text').innerText = data["error"];
+            return;
+          }
+          button.classList.remove("btn-danger");
+          button.classList.add("btn-success");
+          button.innerHTML = `<i class="fas fa-check mr-2"></i>Saved`;
+        }
+      xhr.send(form);
+    }
