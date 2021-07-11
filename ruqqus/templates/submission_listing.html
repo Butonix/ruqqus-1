@@ -187,7 +187,7 @@
             {% endif %}
 
             {% if p.is_guildmaster('content') %}
-            <li class="list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}else{window.location.href='{{ p.permalink }}';}})"><i class="fas fa-sign-out fa-flip-horizontal text-danger"></i>Kick</a></li>
+            <li class="list-inline-item"><a class="text-danger kick-button" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}else{$('.kick-text').text('Kicked');$('.kick-button').attr('onclick','');}})"><i class="fas fa-sign-out fa-flip-horizontal text-danger"></i><span class="kick-text">Kick</span></a></li>
             {% if not p.is_banned and p.report_count %}
             <li class="list-inline-item"><a class="text-success" href="javascript:void(0)" onclick="post('/mod/accept/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}})"><i class="fas fa-check text-success"></i>Approve</a></li>
             {% endif %}
@@ -359,6 +359,7 @@
           {% endif %}
           {% if p.is_guildmaster('content') %}
           <button class="btn btn-link btn-block btn-lg text-left text-danger" id="kick-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}})"><i class="far fa-sign-out fa-fw fa-flip-horizontal text-center text-danger mr-3"></i>Kick</button>
+          <button class="btn btn-link btn-block btn-lg text-left text-danger" id="kick-post-{{ p.base36id }}" class="kick-button" href="javascript:void(0)" onclick="post('/mod/kick/{{ p.board_base36id }}/{{ p.base36id }}', callback=function(){if (window.location.pathname.endsWith('/mod/queue')){deleteElement('post-{{ p.base36id }}')}else{$('.kick-text').text('Kicked');$('.kick-button').attr('onclick','');}})"><i class="far fa-sign-out fa-fw fa-flip-horizontal text-center text-danger mr-3"></i><span class="kick-text">Kick</span></button>
 
           {% if p.is_pinned %}
           <button class="btn btn-link btn-block btn-lg text-left text-info" id="pin-post-{{ p.base36id }}" href="javascript:void(0)" onclick="post('/mod/post_pin/{{ p.board.base36id }}/{{ p.base36id }}/0', callback=function(){window.location.reload(true)})"><i class="fas fa-thumbtack fa-fw fa-rotate--45 text-center text-info mr-3"></i>Unpin</button>
