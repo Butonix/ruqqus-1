@@ -6,7 +6,7 @@ import threading
 import time
 import os.path
 from bs4 import BeautifulSoup
-import cssutils
+#import cssutils
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
