@@ -1312,8 +1312,9 @@ def board_edit_css(bid, board, v):
     new_css = request.form.get("css")
 
     #css validation / sanitization
+    parser=cssutils.CSSParser(raiseExceptions=True)
     try:
-        css = cssutils.parseString(
+        css = parser.parseString(
             new_css,
             raiseExceptions=True)
     except Exception as e:
