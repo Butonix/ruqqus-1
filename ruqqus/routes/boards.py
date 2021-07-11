@@ -1322,7 +1322,7 @@ def board_get_css(boardname):
     board=get_guild(boardname)
 
     resp=make_response(board.css)
-    resp.add_header("Content-Type", "text/css")
+    resp.headers.add("Content-Type", "text/css")
     return resp
 
 
