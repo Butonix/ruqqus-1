@@ -1321,7 +1321,9 @@ def board_get_css(boardname):
 
     board=get_guild(boardname)
 
-    return board.css
+    resp=make_response(board.css)
+    resp.add_header("Content-Type", "text/css")
+    return resp
 
 
 @app.route("/+<boardname>/mod/exiled", methods=["GET"])
