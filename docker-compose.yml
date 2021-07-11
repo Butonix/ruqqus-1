@@ -7,25 +7,25 @@ services:
     volumes:
       - "./:/opt/ruqqus/service"
     environment:
-      - domain = localhost
-      - REDIS_URL = redis://redis
-      - DATABASE_URL = postgres://postgres@postgres:5432/postgres
-      - DATABASE_CONNECTION_POOL_URL = postgres://postgres@postgres:5432/postgres
-      - PYTHONPATH = "/opt/ruqqus/service"
-      - MASTER_KEY = ${MASTER_KEY:-KTVciAUQFpFh2WdJ/oiHJlxl6FvzRZp8kYzAAv3l2OA=}
-      - SESSION_COOKIE_SECURE = false
-      - FLASK_DEBUG = 1
-      - FLASK_ENV = development
-      - FORCE_HTTPS = 0
+      - domain=localhost
+      - REDIS_URL=redis://redis
+      - DATABASE_URL=postgres://postgres@postgres:5432/postgres
+      - DATABASE_CONNECTION_POOL_URL=postgres://postgres@postgres:5432/postgres
+      - PYTHONPATH="/opt/ruqqus/service"
+      - MASTER_KEY=${MASTER_KEY:-KTVciAUQFpFh2WdJ/oiHJlxl6FvzRZp8kYzAAv3l2OA=}
+      - SESSION_COOKIE_SECURE=false
+      - FLASK_DEBUG=1
+      - FLASK_ENV=development
+      - FORCE_HTTPS=0
 
-      - HCAPTCHA_SECRET = 5436ertfgcvbnfgcy
-      - CLOUDFLARE_KEY = 5436ertfgcvbnfgcy
-      - AWS_ACCESS_KEY_ID = 5436ertfgcvbnfgcy
-      - AWS_SECRET_ACCESS_KEY = 5436ertfgcvbnfgcy
-      - DISCORD_BOT_TOKEN = 5436ertfgcvbnfgcy
-      - GIPHY_KEY =p 5436ertfgcvbnfgcy
-      - MAINGUN_KEY = 5436ertfgcvbnfgcy
-      - CLOUDFLARE_ZONE = 5436ertfgcvbnfgcy
+      - HCAPTCHA_SECRET=5436ertfgcvbnfgcy
+      - CLOUDFLARE_KEY=5436ertfgcvbnfgcy
+      - AWS_ACCESS_KEY_ID=5436ertfgcvbnfgcy
+      - AWS_SECRET_ACCESS_KEY=5436ertfgcvbnfgcy
+      - DISCORD_BOT_TOKEN=5436ertfgcvbnfgcy
+      - GIPHY_KEY=p 5436ertfgcvbnfgcy
+      - MAINGUN_KEY=5436ertfgcvbnfgcy
+      - CLOUDFLARE_ZONE=5436ertfgcvbnfgcy
     links:
       - "redis"
       - "postgres"
