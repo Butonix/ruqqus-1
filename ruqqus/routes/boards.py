@@ -1313,7 +1313,7 @@ def board_edit_css(bid, board, v):
 
     #css validation / sanitization
     parser=cssutils.CSSParser(
-        raiseExceptions=True,
+        raiseExceptions= lambda x: raise x,
         fetcher= lambda url: None
         )
     try:
