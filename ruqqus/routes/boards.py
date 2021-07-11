@@ -1312,11 +1312,13 @@ def board_edit_css(bid, board, v):
     new_css = request.form.get("css")
 
     #css validation / sanitization
-    parser=cssutils.CSSParser(raiseExceptions=True)
+    parser=cssutils.CSSParser(
+        raiseExceptions=True,
+        fetcher= lambda url: None
+        )
     try:
         css = cssutils.parseString(
-            new_css,
-            fetcher=lambda url: None
+            new_css
             )
     except Exception as e:
         return jsonify({"error": e}), 400
