@@ -1280,6 +1280,28 @@ def board_about_mods(boardname, v):
         "api":lambda:jsonify({"data":[x.json for x in board.mods_list]})
         }
 
+@app.route("/+<boardname>/mod/css", methods=["GET"])
+@app.route("/api/vue/+<boardname>/mod/css",  methods=["GET"])
+@app.route("/api/v1/<boardname>/mod/css", methods=["GET"])
+@auth_desired
+@api("read")
+def board_about_css(boardname, v):
+
+    board = get_guild(boardname, v=v)
+
+    if board.is_banned:
+        return {
+        "html":lambda:(render_template("board_banned.html", v=v, b=board), 403),
+        "api":lambda:(jsonify({"error":f"+{board.name} is banned"}), 403)
+        }
+
+    me = board.has_mod(v)
+
+    return {
+        "html":lambda:render_template("guild/css.html", v=v, b=board, me=me),
+        "api":lambda:jsonify({"data":board.css})
+        }
+
 
 @app.route("/+<boardname>/mod/exiled", methods=["GET"])
 @app.route("/api/v1/<boardname>/mod/exiled", methods=["GET"])
