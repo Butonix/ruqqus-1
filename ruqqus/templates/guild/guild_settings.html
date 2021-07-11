@@ -211,7 +211,7 @@
         xhr.onprogress=function(){
           button.classList.add("btn-primary");
           button.disabled = true;
-          button.innerHTML = `<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Saving`;
+          button.innerHTML = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Saving';
         }
         xhr.onload=function(){
           if (xhr.status >= 400)
