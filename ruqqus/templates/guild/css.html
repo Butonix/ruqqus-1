@@ -119,7 +119,7 @@
 
               <div class="w-lg-100">
                 <div class="input-group mb-2">
-                  <textarea class="form-control rounded" id="css" aria-label="With textarea" placeholder="custom_css" rows="3" name="description" form="profile-settings" maxlength="1000">{{ b.description }}</textarea>
+                  <textarea class="form-control rounded" id="css" aria-label="With textarea" placeholder="custom_css" rows="{{ b.css | lines }}" name="description" form="profile-settings" maxlength="1000">{{ b.description }}</textarea>
                 </div>
 
                 <small>Limit of 50000 characters</small>
@@ -145,7 +145,27 @@
             </div>
 
           </div>
-          {% endif %}
+          {% else %}
+          <p class="text-small text-muted">This is the guild's custom CSS file.</p>
+
+          <div class="settings-section rounded">
+
+            <div class="body d-lg-flex">
+
+              <label for="css" class="text-black w-lg-25">CSS</label>
+
+              <div class="w-lg-100">
+                <div class="input-group mb-2">
+                  <textarea class="form-control rounded" id="css" aria-label="With textarea" placeholder="custom_css" rows="{{ b.css | lines }}" name="description" form="profile-settings" maxlength="1000" readonly>{{ b.css }}</textarea>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {% endif}
         </div>
 
   </div>
