@@ -51,6 +51,9 @@ class Board(Base, Stndrd, Age_times):
     public_chat=Column(Boolean, default=False)
     motd = Column(String(1000), default='')
 
+    css_nonce=Column(Integer, default=0)
+    css=deferred(Column(String(65536), default=''))
+
     subcat=relationship("SubCategory")
     moderators=relationship("ModRelationship")
     subscribers=relationship("Subscription", lazy="dynamic")
