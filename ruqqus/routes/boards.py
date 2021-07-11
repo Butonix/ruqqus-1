@@ -1323,9 +1323,20 @@ def board_edit_css(bid, board, v):
     except Exception as e:
         return jsonify({"error": e}), 400
 
-    #if any([x in new_css for x in ["@import", "http"]]):
-    #    return jsonify({"error": "@import and external urls are not allowed"}), 400
+    allowed_rules=[
+        cssutils.css.CSSComment,
+        cssutils.css.CSSFontFaceRule,
+        cssutils.css.MarginRule,
+        cssutils.css.CSSMediaRule,
+        cssutils.css.CSSStyleRule
+    ]
 
+    for rule in css:
+
+
+        if not any([isinstance(rule, x) for x in allowed_rules]):
+            css.deleteRule(rule)
+        
     board.css = css.cssText.decode('utf-8')
     board.css_nonce += 1
 
