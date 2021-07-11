@@ -1315,7 +1315,7 @@ def board_edit_css(bid, board, v):
     #css = cssutils.parseString(new_css)
 
     if any([x in new_css for x in ["@import", "http"]]):
-        return jsonify({"error": "bad css"})
+        return jsonify({"error": "@import and external urls are not allowed"}), 400
 
 
 
