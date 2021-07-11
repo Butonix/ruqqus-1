@@ -625,7 +625,11 @@ class Board(Base, Stndrd, Age_times):
     @property
     def chat_url(self):
         return f"{self.permalink}/chat"
-    
+
+    @property
+    def css_url(self):
+        return f"{self.permalink}/css"
+
     # @property
     # def chat_count(self):
     #     count= r.get(f"{self.fullname}_chat_count")
