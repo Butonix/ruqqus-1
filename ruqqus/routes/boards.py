@@ -1326,7 +1326,7 @@ def board_edit_css(bid, board, v):
     if any([x in new_css for x in ["@import", "http"]]):
         return jsonify({"error": "@import and external urls are not allowed"}), 400
 
-    board.css = decode(css.cssText, 'utf-8')
+    board.css = css.cssText.decode('utf-8')
     board.css_nonce += 1
 
     g.db.add(board)
