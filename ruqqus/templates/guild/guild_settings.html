@@ -214,7 +214,7 @@
         button.innerHTML = `<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Saving`;
       }
       xhr.onload=function(){
-        if (xhr.status >=400)
+        if (xhr.status >= 400)
         {
           button.classList.add("btn-primary");
           button.disabled=false;
@@ -228,11 +228,6 @@
         button.classList.remove("btn-danger");
         button.classList.add("btn-success");
         button.innerHTML = `<i class="fas fa-check mr-2"></i>Saved`;
-      }
-      xhr.onerror=function(){
-        button.disabled = false;
-        button.classList.add("btn-danger");
-        button.innerHTML = `<i class="fas fa-times mr-2"></i>Setting not saved. Try again.`;
       }
       xhr.send(form);
     }
