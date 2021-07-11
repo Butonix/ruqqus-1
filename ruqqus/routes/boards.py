@@ -1315,18 +1315,18 @@ def board_edit_css(bid, board, v):
     parser=cssutils.CSSParser(raiseExceptions=True)
     try:
         css = cssutils.parseString(
-            new_css)
+            new_css,
+            fetcher=lambda url: None
+            )
     except Exception as e:
-        jsonify({"error": e}), 400
-
-
-
-
+        return jsonify({"error": e}), 400
 
     if any([x in new_css for x in ["@import", "http"]]):
         return jsonify({"error": "@import and external urls are not allowed"}), 400
 
-
+    print(css)
+    print(css.cssText)
+    print(str(css))
 
     board.css = css.cssText
     board.css_nonce += 1
