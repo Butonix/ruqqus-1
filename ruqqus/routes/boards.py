@@ -1313,7 +1313,7 @@ def board_edit_css(bid, board, v):
 
     #css validation / sanitization
     parser=cssutils.CSSParser(
-        raiseExceptions= lambda x: raise x,
+        raiseExceptions=True,
         fetcher= lambda url: None
         )
     try:
@@ -1323,8 +1323,8 @@ def board_edit_css(bid, board, v):
     except Exception as e:
         return jsonify({"error": e}), 400
 
-    if any([x in new_css for x in ["@import", "http"]]):
-        return jsonify({"error": "@import and external urls are not allowed"}), 400
+    #if any([x in new_css for x in ["@import", "http"]]):
+    #    return jsonify({"error": "@import and external urls are not allowed"}), 400
 
     board.css = css.cssText.decode('utf-8')
     board.css_nonce += 1
