@@ -442,7 +442,7 @@ def mod_kick_bid_pid(bid, pid, board, v):
         abort(400)
 
     post.board_id = 1
-    post.guild_name = "general"
+    #post.guild_name = "general"
     post.is_pinned = False
     g.db.add(post)
 
@@ -455,8 +455,14 @@ def mod_kick_bid_pid(bid, pid, board, v):
         board_id=board.id
         )
     g.db.add(ma)
+    g.db.commit()
 
-    return "", 204
+    return jsonify({
+        'data':render_template(
+            "submission_listing.html",
+            v=v,
+            listing=[post])
+        })
 
 
 @app.route("/mod/accept/<bid>/<pid>", methods=["POST"])
