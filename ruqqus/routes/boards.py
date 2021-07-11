@@ -1313,7 +1313,9 @@ def board_edit_css(bid, board, v):
 
     #css validation / sanitization
     try:
-        css = cssutils.parseString(new_css)
+        css = cssutils.parseString(
+            new_css,
+            raiseExceptions=True)
     except Exception as e:
         jsonify({"error": e}), 400
 
