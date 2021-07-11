@@ -627,7 +627,7 @@ class Board(Base, Stndrd, Age_times):
         return f"{self.permalink}/chat"
 
     @property
-    def css_url(self):
+    def custom_css_url(self):
         return f"{self.permalink}/css"
 
     # @property
