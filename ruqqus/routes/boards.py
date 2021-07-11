@@ -1326,7 +1326,7 @@ def board_edit_css(bid, board, v):
 
 
 
-    board.css = new_css
+    board.css = css.cssText
     board.css_nonce += 1
 
     g.db.add(board)
