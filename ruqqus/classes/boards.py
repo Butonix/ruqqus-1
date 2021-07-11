@@ -628,7 +628,7 @@ class Board(Base, Stndrd, Age_times):
 
     @property
     def custom_css_url(self):
-        return f"{self.permalink}/css"
+        return f"{self.permalink}/css?v={self.css_nonce}"
 
     # @property
     # def chat_count(self):

@@ -1302,11 +1302,11 @@ def board_about_css(boardname, v):
         "api":lambda:jsonify({"data":board.css})
         }
 
-@app.post("/+<boardname>/mod/css")
+@app.post("/mod/<bid>/settings/css")
 @auth_required
 @is_guildmaster("config", "appearance")
 @api("guildmaster")
-def board_edit_css(boardname, v):
+def board_edit_css(bid, board, v):
 
     board.css = request.form.get("css")
     board.css_nonce += 1
