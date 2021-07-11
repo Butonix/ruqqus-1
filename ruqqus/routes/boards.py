@@ -6,6 +6,7 @@ import threading
 import time
 import os.path
 from bs4 import BeautifulSoup
+import cssutils
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -1308,7 +1309,17 @@ def board_about_css(boardname, v):
 @api("guildmaster")
 def board_edit_css(bid, board, v):
 
-    board.css = request.form.get("css")
+    new_css = request.form.get("css")
+
+    #css validation / sanitization
+    #css = cssutils.parseString(new_css)
+
+    if any([x in new_css for x in ["@import", "http"]]):
+        return jsonify({"error": "bad css"})
+
+
+
+    board.css = new_css
     board.css_nonce += 1
 
     g.db.add(board)
