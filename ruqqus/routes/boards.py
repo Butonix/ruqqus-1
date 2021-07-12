@@ -1336,7 +1336,7 @@ def board_edit_css(bid, board, v):
         if not any([isinstance(rule, x) for x in allowed_rules]):
             css.deleteRule(rule)
 
-    css=css.css.cssText.decode('utf-8')
+    css=css.cssText.decode('utf-8')
 
     if "http" in css:
         return jsonify({"error":"No external links allowed (for now)"}), 422
