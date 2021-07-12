@@ -1359,7 +1359,7 @@ def board_get_css(boardname):
 
 
 
-    resp=make_response(board.css)
+    resp=make_response(css)
     resp.headers.add("Content-Type", "text/css")
     return resp
 
