@@ -1328,7 +1328,8 @@ def board_edit_css(bid, board, v):
         cssutils.css.CSSFontFaceRule,
         cssutils.css.MarginRule,
         cssutils.css.CSSMediaRule,
-        cssutils.css.CSSStyleRule
+        cssutils.css.CSSStyleRule,
+        cssutils.css.CSSUnknownRule
     ]
 
     for rule in css:
