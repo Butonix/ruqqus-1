@@ -1333,11 +1333,15 @@ def board_edit_css(bid, board, v):
 
     for rule in css:
 
-
         if not any([isinstance(rule, x) for x in allowed_rules]):
             css.deleteRule(rule)
-        
-    board.css = css.cssText.decode('utf-8')
+
+    css=css.css.cssText.decode('utf-8')
+
+    if "http" in css:
+        return jsonify({"error":"No external links allowed (for now)"}), 422
+
+    board.css = css
     board.css_nonce += 1
 
     g.db.add(board)
