@@ -91,7 +91,7 @@
                   {% endif %}
                   {% if mod and mod.perm_appearance and mod.perm_config %}
                   <li class="nav-item">
-                    <a class="nav-link{% if request.path.endswith('/mod/css') %} active {% endif %}" href="/+{{ b.name }}/mod/css"><i class="fab fa-css3"></i>CSS</a>
+                    <a class="nav-link{% if request.path.endswith('/mod/css') %} active {% endif %}" href="/+{{ b.name }}/mod/css"><i class="fab fa-css3-alt"></i>CSS</a>
                   </li>
                   {% endif %}
                   <li class="nav-item">
@@ -152,7 +152,6 @@
             {% endif %}
             {% if mod and mod.perm_appearance and mod.perm_config %}
             <li class="nav-item">
-              <a class="nav-link{% if request.path.endswith('/mod/css') %} active {% endif %}" href="/+{{ b.name }}/mod/css"><i class="fab fa-css3 text-lg mr-0"></i></a>
             </li>
             {% endif %}
             <li class="nav-item">
@@ -189,48 +188,6 @@
   {% endif %}
 
 <script>
-      function mod_post(url, type, id) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", url, true);
-        var form = new FormData()
-        form.append("formkey", "{{ v.formkey }}");
-        item=document.getElementById(type);
-        button=document.getElementById(id);
-        if (item.type=="checkbox") {
-          form.append(item.name, item.checked)
-          if (item.checked) {
-            form.append(item.name, true);
-          } else {
-            form.append(item.name, false);
-          }
-        }
-        else {
-          form.append(item.name, item.value);
-        }
-        xhr.withCredentials=true;
-        xhr.onprogress=function(){
-          button.classList.add("btn-primary");
-          button.disabled = true;
-          button.innerHTML = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Saving';
-        }
-        xhr.onload=function(){
-          if (xhr.status >= 400)
-          {
-            button.classList.add("btn-primary");
-            button.disabled=false;
-            button.innerHTML="Save"
-            data=JSON.parse(xhr.response);
-            $('#toast-post-error').toast('dispose');
-            $('#toast-post-error').toast('show');
-            document.getElementById('toast-post-error-text').innerText = data["error"];
-            return;
-          }
-          button.classList.remove("btn-danger");
-          button.classList.add("btn-success");
-          button.innerHTML = `<i class="fas fa-check mr-2"></i>Saved`;
-        }
-      xhr.send(form);
-    }
 
     function detect_change(id, button) {
 
