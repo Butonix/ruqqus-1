@@ -1355,7 +1355,7 @@ def board_get_css(boardname):
 
     board=get_guild(boardname)
 
-    css="@media (min-width: 992px) {" + board.css +"}"
+    css="@media (min-width: 992px) {\n" + board.css +"\n}"
 
 
 
