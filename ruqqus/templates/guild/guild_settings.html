@@ -152,6 +152,7 @@
             {% endif %}
             {% if mod and mod.perm_appearance and mod.perm_config %}
             <li class="nav-item">
+              <a class="nav-link{% if request.path.endswith('/mod/css') %} active {% endif %}" href="/+{{ b.name }}/mod/css"><i class="fab fa-css3-alt text-lg mr-0"></i></a>
             </li>
             {% endif %}
             <li class="nav-item">
