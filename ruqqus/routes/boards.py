@@ -1317,7 +1317,7 @@ def board_edit_css(bid, board, v):
         fetcher= lambda url: None
         )
     try:
-        css = cssutils.parseString(
+        css = parser.parseString(
             new_css
             )
     except Exception as e:
