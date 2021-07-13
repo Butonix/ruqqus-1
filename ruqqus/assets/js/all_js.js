@@ -2257,7 +2257,7 @@ function mod_post(url, type, id) {
         var xhr = new XMLHttpRequest();
         xhr.open("POST", url, true);
         var form = new FormData()
-        form.append("formkey", "{{ v.formkey }}");
+        form.append("formkey", formkey());
         item=document.getElementById(type);
         button=document.getElementById(id);
         if (item.type=="checkbox") {
