@@ -500,6 +500,8 @@ function switch_css() {
         dswitch.classList.add("fa-toggle-on");
         dswitchmobile.classList.remove("fa-toggle-off");
         dswitchmobile.classList.add("fa-toggle-on");
+	$('body').toggleClass('light');
+	$('body').toggleClass('dark');
       }
       );
   }
@@ -511,6 +513,8 @@ function switch_css() {
         dswitch.classList.add("fa-toggle-off");
         dswitchmobile.classList.remove("fa-toggle-on");
         dswitchmobile.classList.add("fa-toggle-off");
+	$('body').toggleClass('light');
+	$('body').toggleClass('dark');
       }
       );
   }
