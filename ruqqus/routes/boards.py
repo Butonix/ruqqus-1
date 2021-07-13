@@ -1329,6 +1329,7 @@ def board_edit_css(bid, board, v):
         cssutils.css.MarginRule,
         cssutils.css.CSSMediaRule,
         cssutils.css.CSSStyleRule,
+        cssutils.css.CSSUnknownRule,
         cssutils.css.CSSStyleDeclaration,
         cssutils.css.CSSVariablesRule
     ]
