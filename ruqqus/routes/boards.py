@@ -1352,6 +1352,7 @@ def board_edit_css(bid, board, v):
         user_id=v.id,
         board_id=board.id,
     )
+    g.db.add(ma)
     g.db.commit()
 
     return '', 204
