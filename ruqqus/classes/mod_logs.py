@@ -360,6 +360,6 @@ ACTIONTYPES={
         "str": 'updated the stylesheet',
         "icon": "fa-pencil-paintbrush",
         "color": "bg-info",
-        "title": 'updated the stylesheet"
+        "title": 'updated the stylesheet'
     }
 }
