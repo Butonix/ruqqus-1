@@ -1321,7 +1321,7 @@ def board_edit_css(bid, board, v):
             new_css
             )
     except Exception as e:
-        return jsonify({"error": e}), 400
+        return jsonify({"error": str(e)}), 400
 
     allowed_rules=[
         cssutils.css.CSSComment,
