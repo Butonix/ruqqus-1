@@ -1329,13 +1329,20 @@ def board_edit_css(bid, board, v):
         cssutils.css.MarginRule,
         cssutils.css.CSSMediaRule,
         cssutils.css.CSSStyleRule,
-        cssutils.css.CSSUnknownRule
+        cssutils.css.CSSStyleDeclaration,
+        cssutils.css.CSSVariablesRule
     ]
 
-    for rule in css:
-
+    def clean_block(rule):
         if not any([isinstance(rule, x) for x in allowed_rules]):
             return jsonify({"error": f"Invalid rule: {str(rule)}"}), 422
+
+        for child in rule.children():
+            clean_block(child)
+
+
+    for rule in css:
+        clean_block(rule)
 
     css=css.cssText.decode('utf-8')
 
