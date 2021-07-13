@@ -355,5 +355,11 @@ ACTIONTYPES={
         "icon": "fa-chess-rook",
         "color": "bg-primary",
         "title": "created +{self.board.name}"
+    },
+    "update_stylesheet":{
+        "str": 'updated the stylesheet',
+        "icon": "fa-pencil-paintbrush",
+        "color": "bg-info",
+        "title": 'updated the stylesheet"
     }
 }
