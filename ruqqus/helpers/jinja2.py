@@ -126,3 +126,9 @@ def crosspost_embed(url):
 # @app.template_filter("general_chat_count")
 # def general_chat_count(x):
 #     return get_guild("general").chat_count
+
+
+@app.template_filter("lines")
+def lines_count(x):
+
+    return x.count("\n")+1

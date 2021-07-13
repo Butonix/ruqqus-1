@@ -6,6 +6,7 @@ import threading
 import time
 import os.path
 from bs4 import BeautifulSoup
+import cssutils
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -1279,6 +1280,88 @@ def board_about_mods(boardname, v):
         "html":lambda:render_template("guild/mods.html", v=v, b=board, me=me),
         "api":lambda:jsonify({"data":[x.json for x in board.mods_list]})
         }
+
+@app.route("/+<boardname>/mod/css", methods=["GET"])
+@app.route("/api/vue/+<boardname>/mod/css",  methods=["GET"])
+@app.route("/api/v1/<boardname>/mod/css", methods=["GET"])
+@auth_desired
+@api("read")
+def board_about_css(boardname, v):
+
+    board = get_guild(boardname, v=v)
+
+    if board.is_banned:
+        return {
+        "html":lambda:(render_template("board_banned.html", v=v, b=board), 403),
+        "api":lambda:(jsonify({"error":f"+{board.name} is banned"}), 403)
+        }
+
+    me = board.has_mod(v)
+
+    return {
+        "html":lambda:render_template("guild/css.html", v=v, b=board, me=me),
+        "api":lambda:jsonify({"data":board.css})
+        }
+
+@app.post("/mod/<bid>/settings/css")
+@auth_required
+@is_guildmaster("config", "appearance")
+@api("guildmaster")
+def board_edit_css(bid, board, v):
+
+    new_css = request.form.get("css")
+
+    #css validation / sanitization
+    parser=cssutils.CSSParser(
+        raiseExceptions=True,
+        fetcher= lambda url: None
+        )
+    try:
+        css = cssutils.parseString(
+            new_css
+            )
+    except Exception as e:
+        return jsonify({"error": e}), 400
+
+    allowed_rules=[
+        cssutils.css.CSSComment,
+        cssutils.css.CSSFontFaceRule,
+        cssutils.css.MarginRule,
+        cssutils.css.CSSMediaRule,
+        cssutils.css.CSSStyleRule,
+        cssutils.css.CSSUnknownRule
+    ]
+
+    for rule in css:
+
+        if not any([isinstance(rule, x) for x in allowed_rules]):
+            css.deleteRule(rule)
+
+    css=css.cssText.decode('utf-8')
+
+    if "http" in css:
+        return jsonify({"error":"No external links allowed (for now)"}), 422
+
+    board.css = css
+    board.css_nonce += 1
+
+    g.db.add(board)
+    g.db.commit()
+
+    return '', 204
+
+@app.get("/+<boardname>/css")
+def board_get_css(boardname):
+
+    board=get_guild(boardname)
+
+    css="@media (min-width: 992px) {\n" + board.css +"\n}"
+
+
+
+    resp=make_response(css)
+    resp.headers.add("Content-Type", "text/css")
+    return resp
 
 
 @app.route("/+<boardname>/mod/exiled", methods=["GET"])

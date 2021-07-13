@@ -65,9 +65,9 @@
   {% endblock %}
 
   <!-- tabs container -->
-  {% block subNav %}
+{% block subNav %}
 
-{% if '+' in request.path %}
+  {% if '+' in request.path %}
   {% set mod = b.has_mod(v) %}
   <!-- Desktop -->
   <div class="container-fluid bg-white sticky d-none d-md-block">
@@ -89,6 +89,9 @@
                     <a class="nav-link{% if request.path.endswith('/mod/appearance') %} active{% endif %}" href="/+{{ b.name }}/mod/appearance"><i class="fas fa-palette"></i>Appearance</a>
                   </li>
                   {% endif %}
+                  <li class="nav-item">
+                    <a class="nav-link{% if request.path.endswith('/mod/css') %} active {% endif %}" href="/+{{ b.name }}/mod/css"><i class="fab fa-css3-alt"></i>CSS</a>
+                  </li>
                   <li class="nav-item">
                     <a class="nav-link{% if request.path.endswith('/mod/mods') %} active{% endif %}" href="/+{{ b.name }}/mod/mods"><i class="fas fa-crown"></i>Guildmasters</a>
                   </li>
@@ -146,6 +149,9 @@
             </li> 
             {% endif %}
             <li class="nav-item">
+              <a class="nav-link{% if request.path.endswith('/mod/css') %} active {% endif %}" href="/+{{ b.name }}/mod/css"><i class="fab fa-css3-alt text-lg mr-0"></i></a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link{% if request.path.endswith('/mod/mods') %} active{% endif %}" href="/+{{ b.name }}/mod/mods"><i class="fas fa-crown text-lg mr-0"></i></a>
             </li>
             <li class="nav-item">
@@ -177,7 +183,27 @@
     </div>
   </div>
   {% endif %}
-  {% endblock %}
+
+<script>
+
+    function detect_change(id, button) {
+
+      var new_val = id.value;
+
+      var original_val = id.defaultValue;
+
+      var save_button = document.getElementById(button);
+
+      if (original_val !== new_val) {
+        save_button.disabled = false;
+      }
+      else {
+        save_button.disabled = true;
+      }
+
+    }
+</script>
+{% endblock %}
 
   <!-- Settings content -->
   <div class="container mt-5">

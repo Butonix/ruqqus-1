@@ -51,6 +51,9 @@ class Board(Base, Stndrd, Age_times):
     public_chat=Column(Boolean, default=False)
     motd = Column(String(1000), default='')
 
+    css_nonce=Column(Integer, default=0)
+    css=deferred(Column(String(65536), default=''))
+
     subcat=relationship("SubCategory")
     moderators=relationship("ModRelationship")
     subscribers=relationship("Subscription", lazy="dynamic")
@@ -622,7 +625,11 @@ class Board(Base, Stndrd, Age_times):
     @property
     def chat_url(self):
         return f"{self.permalink}/chat"
-    
+
+    @property
+    def custom_css_url(self):
+        return f"{self.permalink}/css?v={self.css_nonce}"
+
     # @property
     # def chat_count(self):
     #     count= r.get(f"{self.fullname}_chat_count")
