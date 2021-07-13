@@ -1346,6 +1346,12 @@ def board_edit_css(bid, board, v):
     board.css_nonce += 1
 
     g.db.add(board)
+    
+    ma=ModAction(
+        kind="update_stylesheet",
+        user_id=v.id,
+        board_id=board.id,
+    )
     g.db.commit()
 
     return '', 204
