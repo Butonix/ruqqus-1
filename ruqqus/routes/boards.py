@@ -1335,7 +1335,7 @@ def board_edit_css(bid, board, v):
     for rule in css:
 
         if not any([isinstance(rule, x) for x in allowed_rules]):
-            css.deleteRule(rule)
+            return jsonify({"error": f"Invalid rule: {str(rule)}"}), 422
 
     css=css.cssText.decode('utf-8')
 
