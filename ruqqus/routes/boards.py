@@ -1352,9 +1352,10 @@ def board_edit_css(bid, board, v):
         if isinstance(rule, cssutils.css.CSSStyleRule):
             
             for property in rule.style.children():
-                print([x for x in property.propertyValue])
-                if any([isinstance(x, cssutils.css.URIValue) for x in property.propertyValue]):
-                    return jsonify({"error":"No external links allowed."}), 422
+                for pv in property.propertyValue:
+                    print(pv)
+                    if isinstance(pv, cssutils.css.URIValue):
+                        return jsonify({"error":"No external links allowed."}), 422
 
         if getattr(rule, "children", None):
             for child in rule.children():
