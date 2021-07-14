@@ -471,7 +471,21 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
             return f't2_{base36encode(self.parent_submission)}'
         else:
             return None
-    
+        
+    @property
+    def notif_type(self):
+        
+        #system notif
+        if self.author_id==1:
+            return 1 
+        
+        #reply
+        if g.v and self.parent.author_id==g.v.id:
+            return 2
+        
+        #mention
+        else:
+            return 3
     
 
 class Notification(Base):
@@ -504,5 +518,3 @@ class Notification(Base):
     @property
     def created_utc(self):
         return self.target.created_utc
-    
-    

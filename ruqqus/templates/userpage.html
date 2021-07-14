@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block title %}
-<title>{{ u.username }}'s profile - Ruqqus</title>
+<title>{{ u.username }}'s profile - {{ 'SITE_NAME' | app_config }}</title>
 {% if u.is_private %}
 <meta name="robots" content="noindex">
 {% endif %}

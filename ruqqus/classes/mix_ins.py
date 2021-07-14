@@ -123,6 +123,20 @@ class Age_times:
     def edited_datetime(self):
         return time.strftime("%d %B %Y at %H:%M:%S",
                              time.gmtime(self.edited_utc))
+    
+    @property
+    @lazy
+    def age_years(self):
+        
+        now=time.gmtime()
+        ctd=time.gmtime(self.created_utc)
+        
+        years = now.tm_year - ctd.tm_year
+        
+        if now.tm_yday < ctd.tm_yday:
+            years-=1
+            
+        return years
 
 
 class Scores:

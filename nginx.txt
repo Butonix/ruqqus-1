@@ -57,15 +57,3 @@ server {
 
 
 }
-
-server {
-
-    listen 80;
-    listen [::]:80;
-    
-    server_name fa.ruqqus.com testfa.ruqqus.com;
-    
-    location / {
-        alias ~/fa;
-    }
-}

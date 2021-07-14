@@ -332,10 +332,13 @@ def api_comment(v):
             reason += f" {ban.reason_text}"
             
         #auto ban for digitally malicious content
-        if any([x.reason==4 for x in bans]):
-            v.ban(days=30, reason="Digitally malicious content")
         if any([x.reason==7 for x in bans]):
-            v.ban( reason="Sexualizing minors")
+            v.ban(reason="Sexualizing minors")
+        elif any([x.reason==4 for x in bans]):
+            v.ban(days=30, reason="Digitally malicious content")
+        elif any([x.reason==9 for x in bans]):
+            v.ban(days=7, reason="Engaging in illegal activity")
+        
         return jsonify({"error": reason}), 401
 
     # check existing

@@ -187,9 +187,9 @@
     {% block stylesheets %}
 
     {% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
-    <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.36.3">
+    <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.37.7">
     {% else %}
-    <link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.36.3">
+    <link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.37.7">
     {% endif %}
 
     {% endblock %}
@@ -214,7 +214,7 @@
 --->
  </head>
 
- <body id="{% block pagetype %}frontpage{% endblock %}" class="">
+ <body id="{% block pagetype %}frontpage{% endblock %}" class="{% if v and session.get('dark_mode_enabled') %}dark{% else %}light{% endif %}">
 
   {% if request.path=='/' and g.system and g.timestamp>session.get('tooltip_last_dismissed',0)+60*60*24 and (g.system.endswith('/chrome') or g.system.endswith('/other')) %}
   <div class="row fixed-top" style="z-index:2000" id="mobile-prompt-row">
@@ -259,7 +259,7 @@
 
         {% if v and v.mods_anything %}
         <li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-          <a class="nav-link" href="{{ '/+'+b.name if b and b.has_mod(v) else '' }}/mod/queue" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Guildmaster tools"><i class="fas fa-crown{% if v.has_report_queue %} text-success{% endif %}"></i></a>
+          <a class="nav-link" href="/mod/queue" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"0"}' title="Guildmaster tools"><i class="fas fa-crown{% if v.has_report_queue %} text-warning{% endif %}"></i></a>
         </li>
         {% endif %}
 
@@ -289,7 +289,7 @@
               <i class="fas fa-random"></i>
             </a>
             <div class="dropdown-menu border-0 shadow fade px-0 mt-2" aria-labelledby="dropdownMenuButton">
-              <h6 class="dropdown-header">View random</h6>
+              <h6 class="dropdown-header text-white">View random</h6>
               <div class="px-2">
                 <a class="dropdown-item" href="/random/guild"><i class="fas fa-chess-rook fa-fw text-center mr-3"></i>Guild</a>
                 <a class="dropdown-item" href="/random/post"><i class="fas fa-feather-alt fa-fw text-center mr-3"></i>Post</a>
@@ -630,11 +630,11 @@
 
 {% include "bootstrap.html" %}
 
-<script src="/assets/js/all_js.js?v=2.36.3"></script>
+<script src="/assets/js/all_js.js?v=2.37.7" importance="high" ></script>
 
 <!-- ClipboardJS -->
 
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" importance="high"></script>
 
 <!-- Instantiate clipboard by passing a string selector -->
 <script type="text/javascript">

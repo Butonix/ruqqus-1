@@ -27,6 +27,7 @@ from .userblock import *
 from .badges import *
 from .clients import *
 from .paypal import PayPalTxn
+from .flags import Report
 from ruqqus.__main__ import Base, cache
 
 
@@ -114,6 +115,11 @@ class User(Base, Stndrd, Age_times):
     banner_upload_ip=deferred(Column(String(255), default=None))
     profile_upload_region=deferred(Column(String(2)))
     banner_upload_region=deferred(Column(String(2)))
+    
+    color=Column(String(6), default="805ad5")
+    secondary_color=Column(String(6), default="ffff00")
+    signature=Column(String(280), default='')
+    signature_html=Column(String(512), default="")
 
     #stuff to support name changes
     profile_set_utc=deferred(Column(Integer, default=0))
@@ -542,13 +548,32 @@ class User(Base, Stndrd, Age_times):
         return f"t1_{self.base36id}"
 
     @property
-    @cache.memoize(timeout=60)
+    #@cache.memoize(timeout=60)
+    @lazy
     def has_report_queue(self):
-        board_ids = [
-            x.board_id for x in self.moderates.filter_by(
-                accepted=True).all()]
-        return bool(g.db.query(Submission).filter(Submission.board_id.in_(
-            board_ids), Submission.mod_approved == 0, Submission.is_banned == False).join(Submission.reports).first())
+        board_ids = g.db.query(ModRelationship.board_id).options(lazyload('*')).filter(
+                ModRelationship.user_id==self.id,
+                ModRelationship.accepted==True,
+                or_(
+                    ModRelationship.perm_full==True,
+                    ModRelationship.perm_content==True
+                )
+                ).subquery()
+        
+        posts=g.db.query(Submission).options(lazyload('*')).filter(
+            Submission.board_id.in_(
+                board_ids
+            ), 
+            Submission.mod_approved == None, 
+            Submission.is_banned == False,
+            Submission.deleted_utc==0
+            ).join(Report, Report.post_id==Submission.id)
+        
+        if not self.over_18:
+            posts=posts.filter(Submission.over_18==False)
+            
+        return bool(posts.first())
+           
 
     @property
     def banned_by(self):
@@ -679,7 +704,7 @@ class User(Base, Stndrd, Age_times):
 
         return output
 
-    def notification_postlisting(self, page=1):
+    def notification_postlisting(self, all_=False, page=1):
 
         notifications=self.notifications.join(
             Notification.post
@@ -688,8 +713,8 @@ class User(Base, Stndrd, Age_times):
             Submission.deleted_utc==0
             )
 
-        #if not all_:
-        #    notifications=notifications.filter(Notification.read==False)
+        if not all_:
+            notifications=notifications.filter(Notification.read==False)
 
         notifications=notifications.options(
                 contains_eager(Notification.post)
@@ -846,6 +871,23 @@ class User(Base, Stndrd, Age_times):
             output.append(user)
 
         return output
+    
+    def alts_subquery(self):
+        return g.db.query(User.id).filter(
+            or_(
+                User.id.in_(
+                    g.db.query(Alt.user1).filter(
+                        Alt.user2==self.id
+                    ).subquery()
+                ),
+                User.id.in_(
+                    g.db.query(Alt.user2).filter(
+                        Alt.user1==self.id
+                    ).subquery()
+                ).subquery()
+            )
+        ).subquery()
+        
 
     def alts_threaded(self, db):
 
@@ -997,8 +1039,7 @@ class User(Base, Stndrd, Age_times):
         # Has premium
         # Has 1000 Rep, or 500 for older accounts
         # if connecting through Tor, must have verified email
-        return (self.has_premium or self.true_score >= 1000 or (
-            self.created_utc <= 1592974538 and self.true_score >= 500)) and (self.is_activated or request.headers.get("cf-ipcountry")!="T1")
+        return (self.has_premium or self.true_score >= 500) and (self.is_activated or request.headers.get("cf-ipcountry")!="T1")
 
     @property
     def can_upload_avatar(self):
@@ -1251,7 +1292,7 @@ class User(Base, Stndrd, Age_times):
 
         posts=posts.all()
 
-        post_rep= sum([x[0] for x in posts])
+        post_rep= sum([x[0] for x in posts]) - len(posts)
 
 
         comments=g.db.query(Comment.score_top).filter_by(
@@ -1265,7 +1306,7 @@ class User(Base, Stndrd, Age_times):
 
         comments=comments.all()
 
-        comment_rep=sum([x[0] for x in comments])
+        comment_rep=sum([x[0] for x in comments]) - len(comments)
 
         return int(post_rep + comment_rep)
 

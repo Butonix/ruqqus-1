@@ -485,7 +485,8 @@ def delete_account(v):
                 user_id=1,
                 kind="ban_post",
                 target_submission_id=post.id,
-                note="spam"
+                note="spam",
+		board_id=post.board_id
                 )
 
             g.db.add(post)
@@ -497,7 +498,8 @@ def delete_account(v):
                 user_id=1,
                 kind="ban_comment",
                 target_comment_id=comment.id,
-                note="spam"
+                note="spam",
+		board_id=comment.post.board_id
                 )
             g.db.add(comment)
             g.db.add(new_ma)
@@ -544,8 +546,11 @@ def settings_block_user(v):
         return jsonify({"error": f"You have already blocked @{user.username}."}), 409
 
     if user.id == 1:
-        return jsonify({"error": "You can't block @ruqqus."}), 409
+        return jsonify({"error": "You can't block @{user.username}."}), 409
 
+    if user.is_deleted:
+        return jsonify({"error": "That account has been deactivated"}), 410
+    
     new_block = UserBlock(user_id=v.id,
                           target_id=user.id,
                           created_utc=int(time.time())

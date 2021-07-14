@@ -254,7 +254,7 @@ def get_post_title(v):
 @app.route("/submit", methods=['POST'])
 @app.route("/api/v1/submit", methods=["POST"])
 @app.route("/api/vue/submit", methods=["POST"])
-#@limiter.limit("6/minute")
+@limiter.limit("6/minute")
 @is_not_banned
 @no_negative_balance('html')
 @tos_agreed
@@ -366,11 +366,14 @@ def submit_post(v):
 
     # check ban status
     domain_obj = get_domain(domain)
+    #print('domain_obj', domain_obj)
     if domain_obj:
         if not domain_obj.can_submit:
           
             if domain_obj.reason==4:
                 v.ban(days=30, reason="Digitally malicious content")
+            elif domain_obj.reason==9:
+                v.ban(days=7, reason="Engaging in illegal activity")
             elif domain_obj.reason==7:
                 v.ban(reason="Sexualizing minors")
 
@@ -388,9 +391,11 @@ def submit_post(v):
 
         # check for embeds
         if domain_obj.embed_function:
+            #print('domainobj embed function', domain_obj.embed_function)
             try:
                 embed = eval(domain_obj.embed_function)(url)
-            except BaseException:
+            except BaseException as e:
+                #print('exception', e)
                 embed = ""
         else:
             embed = ""
@@ -657,7 +662,9 @@ def submit_post(v):
         repost = None
 
     if repost and request.values.get("no_repost"):
-        return redirect(repost.permalink)
+        return {'html':lambda:redirect(repost.permalink),
+		'api': lambda:({"error":"This content has already been posted", "repost":repost.json}, 409)
+	       }
 
     if request.files.get('file') and not v.can_submit_image:
         abort(403)
@@ -785,7 +792,19 @@ def submit_post(v):
     cache.delete_memoized(frontlist)
     g.db.commit()
     cache.delete_memoized(Board.idlist, board, sort="new")
-
+    
+    
+    # queue up notifications for username mentions
+    notify_users = set()
+	
+    soup = BeautifulSoup(body_html, features="html.parser")
+    for mention in soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3):
+        username = mention["href"].split("@")[1]
+        user = g.db.query(User).filter_by(username=username).first()
+        if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
+		
+    for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: https://ruqqus.com{new_post.permalink}")
+    
     # print(f"Content Event: @{new_post.author.username} post
     # {new_post.base36id}")
 
@@ -826,7 +845,7 @@ def submit_post(v):
         contribs=g.db.query(ContributorRelationship).filter_by(board_id=new_post.board_id, is_active=True).subquery()
         mods=g.db.query(ModRelationship).filter_by(board_id=new_post.board_id, accepted=True).subquery()
 
-        board_uids=board.uids.join(
+        board_uids=board_uids.join(
             contribs,
             contribs.c.user_id==Subscription.user_id,
             isouter=True
@@ -903,7 +922,10 @@ def delete_post_pid(pid, v):
     post = get_post(pid)
     if not post.author_id == v.id:
         abort(403)
-
+        
+    if post.is_deleted:
+        abort(404)
+        
     post.deleted_utc = int(time.time())
     post.is_pinned = False
     post.stickied = False

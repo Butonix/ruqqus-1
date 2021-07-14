@@ -9,7 +9,7 @@
     <meta name="author" content="">
 
     {% block title %}
-    <title>Create a post - Ruqqus</title>
+    <title>Create a post - {{ 'SITE_NAME' | app_config }}</title>
     {% endblock %}
   
   <link rel="icon" type="image/png" href="/assets/images/logo/favicon.png">
@@ -95,7 +95,7 @@
 
                         <div id="urlblock">
                             <label for="URL" class="mt-3">URL</label>
-                            <input class="form-control" id="post-URL" aria-describedby="URLHelp" type="url" name="url" placeholder="Optional if you have text." value="{{ request.args.get('url','') }}" required oninput="checkForRequired();autoSuggestTitle();hide_image()">
+                            <input class="form-control" id="post-URL" aria-describedby="URLHelp" type="url" name="url" placeholder="Optional if you have text." value="{{ request.args.get('url','') }}" required oninput="checkForRequired();hide_image()" onchange="autoSuggestTitle();">
                             <small class="form-text text-muted">To post an image, use a direct image link such as i.imgur.com</small>
                         </div>
 
@@ -123,7 +123,7 @@
                                 <input id="file-upload" type="file" accept="image/*" hidden disabled>
                             </label>
 
-                            <small class="form-text text-muted">You can upload images directly at 1000 Rep.{% if request.headers.get("cf-ipcountry")=="T1" and not v.is_activated %} Additionally, you must have a verified email address to upload images via Tor.{% endif %}</small>
+                            <small class="form-text text-muted">You can upload images directly at 500 Rep, or earlier with <a href="/settings/premium" target="_blank">premium</a>.{% if request.headers.get("cf-ipcountry")=="T1" and not v.is_activated %} Additionally, you must have a verified email address to upload images via Tor.{% endif %}</small>
                         </div>
                         {% endif %}
                         </div>
@@ -216,7 +216,7 @@
                             <li class="list-inline-item"><a href="/discord" class="text-gray-500">Discord</a></li>
                         </ul>
 
-                        <div class="text-muted text-small-extra mt-1">v. 2.36.3, © 2021 Ruqqus, LLC</div>
+                        <div class="text-muted text-small-extra mt-1">v. 2.37.7, © 2021 Ruqqus, LLC</div>
 
                     </div>
 
@@ -246,7 +246,7 @@
 
     <!-- Ruqqus JS -->
 
-    <script src="/assets/js/all_js.js?v=2.36.3"></script>
+    <script src="/assets/js/all_js.js?v=2.37.7"></script>
 
     <!-- ClipboardJS -->
 
@@ -284,6 +284,8 @@
         fileReader.addEventListener("load", function () {
             $('#image-preview').attr('src', this.result);
     });  
+        
+        $('#file-upload').attr('required', false);
 
         checkForRequired();
 

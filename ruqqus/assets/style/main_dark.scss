@@ -147,7 +147,7 @@ $yiq-contrasted-threshold:  160 !default;
     }
   }
 
-@import "/home/ubuntu/ruqqus/ruqqus/assets/style/node_modules/bootstrap/scss/bootstrap.scss";
+@import "{ruqquspath}/assets/style/node_modules/bootstrap/scss/bootstrap.scss";
 
 html {
     font-size: 14px;
@@ -3924,4 +3924,23 @@ div.deleted.banned {
     &.selected {
         display: block;
     }
+}
+
+
+
+img.emoji {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+/* Dark mode spoiler */
+.spoiler{ 
+  color: white; 
+  background-color:white;
+  font-weight: 600 !important;
+}
+
+.spoiler:hover { 
+  color: black;
 }

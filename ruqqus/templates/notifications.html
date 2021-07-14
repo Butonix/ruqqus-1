@@ -30,8 +30,10 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link py-3{% if request.path=='/notifications/posts' %} active{% endif %}" href="/notifications/posts">
-          Posts{% if v.post_notifications_count %} <span class="text-purple font-weight-bold">{{ v.post_notifications_count }}</span>{% endif %}
+
+        <a class="nav-link py-3{% if request.path=='/notifications/posts' %} active{% endif %}" href="/notifications/posts{% if not v.post_notifications_count %}?all=true{% endif %}">
+          Posts{% if v.post_notifications_count %} <span class="text-purple font-weight-bold">({{ v.post_notifications_count }})</span>{% endif %}
+
         </a>
       </li>
       <li class="nav-item">

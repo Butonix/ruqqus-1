@@ -6,6 +6,7 @@ import threading
 import time
 import os.path
 from bs4 import BeautifulSoup
+import cssutils
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -324,12 +325,17 @@ def board_name(name, v):
     ids = ids[0:25]
 
     if page == 1 and sort != "new" and sort != "old" and not ignore_pinned:
-        stickies = g.db.query(Submission.id).filter_by(board_id=board.id,
+        if (v and v.over_18) or session_over18(board):
+            stickies = g.db.query(Submission.id).filter_by(board_id=board.id,
+                                                        is_banned=False,
+                                                        is_pinned=True,
+                                                        deleted_utc=0).order_by(Submission.id.asc()).limit(4)
+        else:
+            stickies = g.db.query(Submission.id).filter_by(board_id=board.id,
                                                        is_banned=False,
                                                        is_pinned=True,
-                                                       deleted_utc=0).order_by(Submission.id.asc()
-
-                                                                                ).limit(4)
+                                                       over_18=False,
+                                                       deleted_utc=0).order_by(Submission.id.asc()).limit(4)
         stickies = [x[0] for x in stickies]
         ids = stickies + ids
 
@@ -442,7 +448,7 @@ def mod_kick_bid_pid(bid, pid, board, v):
         abort(400)
 
     post.board_id = 1
-    post.guild_name = "general"
+    #post.guild_name = "general"
     post.is_pinned = False
     g.db.add(post)
 
@@ -455,8 +461,14 @@ def mod_kick_bid_pid(bid, pid, board, v):
         board_id=board.id
         )
     g.db.add(ma)
+    g.db.commit()
 
-    return "", 204
+    return jsonify({
+        'data':render_template(
+            "submission_listing.html",
+            v=v,
+            listing=[post])
+        })
 
 
 @app.route("/mod/accept/<bid>/<pid>", methods=["POST"])
@@ -1274,6 +1286,103 @@ def board_about_mods(boardname, v):
         "api":lambda:jsonify({"data":[x.json for x in board.mods_list]})
         }
 
+@app.route("/+<boardname>/mod/css", methods=["GET"])
+@app.route("/api/vue/+<boardname>/mod/css",  methods=["GET"])
+@app.route("/api/v1/<boardname>/mod/css", methods=["GET"])
+@auth_desired
+@api("read")
+def board_about_css(boardname, v):
+
+    board = get_guild(boardname, v=v)
+
+    if board.is_banned:
+        return {
+        "html":lambda:(render_template("board_banned.html", v=v, b=board), 403),
+        "api":lambda:(jsonify({"error":f"+{board.name} is banned"}), 403)
+        }
+
+    me = board.has_mod(v)
+
+    return {
+        "html":lambda:render_template("guild/css.html", v=v, b=board, me=me),
+        "api":lambda:jsonify({"data":board.css})
+        }
+
+@app.post("/mod/<bid>/settings/css")
+@auth_required
+@is_guildmaster("config", "appearance")
+@api("guildmaster")
+def board_edit_css(bid, board, v):
+
+    new_css = request.form.get("css")
+
+    #css validation / sanitization
+    parser=cssutils.CSSParser(
+        raiseExceptions=True,
+        fetcher= lambda url: None
+        )
+    try:
+        css = parser.parseString(
+            new_css
+            )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+    allowed_rules=[
+        cssutils.css.CSSComment,
+        cssutils.css.CSSFontFaceRule,
+        cssutils.css.MarginRule,
+        cssutils.css.CSSMediaRule,
+        cssutils.css.CSSStyleRule,
+        cssutils.css.CSSUnknownRule,
+        cssutils.css.CSSStyleDeclaration,
+        cssutils.css.CSSVariablesRule
+    ]
+
+    def clean_block(rule):
+        if not any([isinstance(rule, x) for x in allowed_rules]):
+            return jsonify({"error": f"Invalid rule: {str(rule)}"}), 422
+
+        for child in rule.children():
+            clean_block(child)
+
+
+    for rule in css:
+        clean_block(rule)
+
+    css=css.cssText.decode('utf-8')
+
+    if "http" in css:
+        return jsonify({"error":"No external links allowed (for now)"}), 422
+
+    board.css = css
+    board.css_nonce += 1
+
+    g.db.add(board)
+    
+    ma=ModAction(
+        kind="update_stylesheet",
+        user_id=v.id,
+        board_id=board.id,
+    )
+    g.db.add(ma)
+    g.db.commit()
+
+    return '', 204
+
+@app.get("/+<boardname>/css")
+def board_get_css(boardname):
+
+    board=get_guild(boardname)
+
+    css="@media (min-width: 992px) {\n" + board.css +"\n}"
+
+
+
+    resp=make_response(css)
+    resp.headers.add("Content-Type", "text/css")
+    return resp
+
 
 @app.route("/+<boardname>/mod/exiled", methods=["GET"])
 @app.route("/api/v1/<boardname>/mod/exiled", methods=["GET"])
@@ -1431,13 +1540,14 @@ def board_mod_queue(boardname, board, v):
 
     ids = g.db.query(Submission.id).filter_by(board_id=board.id,
                                               is_banned=False,
-                                              mod_approved=None
+                                              mod_approved=None,
+                                              deleted_utc=0
                                               ).join(Report, Report.post_id == Submission.id)
 
     if not v.over_18:
         ids = ids.filter(Submission.over_18 == False)
 
-    ids = ids.order_by(Submission.id.desc()).offset((page - 1) * 25).limit(26)
+    ids = ids.order_by(Submission.id.desc()).offset((page - 1) * 25).limit(26).all()
 
     ids = [x[0] for x in ids]
 
@@ -1461,21 +1571,25 @@ def all_mod_queue(v):
 
     page = int(request.args.get("page", 1))
 
-    board_ids = [
-        x.id for x in v.boards_modded]
+    board_ids = g.db.query(ModRelationship.board_id).filter(
+        ModRelationship.user_id==v.id, 
+        ModRelationship.accepted==True, 
+        or_(ModRelationship.perm_content==True, ModRelationship.perm_full==True)
+    ).subquery()
 
     ids = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.board_id.in_(board_ids),
-                                                                  Submission.mod_approved is None,
-                                                                  Submission.is_banned == False
+                                                                  Submission.mod_approved==None,
+                                                                  Submission.is_banned == False,
+                                                                  Submission.deleted_utc==0
                                                                   ).join(Report, Report.post_id == Submission.id)
 
     if not v.over_18:
         ids = ids.filter(Submission.over_18 == False)
 
-    ids = ids.order_by(Submission.id.desc()).offset((page - 1) * 25).limit(26)
-
-    ids = [x for x in ids]
-
+    ids = ids.order_by(Submission.id.desc()).offset((page - 1) * 25).limit(26).all()
+    
+    ids = [x[0] for x in ids]
+   
     next_exists = (len(ids) == 26)
 
     ids = ids[0:25]
@@ -1591,7 +1705,7 @@ def mod_board_images_delete_banner(bid, board, v):
 
 
 @app.route("/assets/<board_fullname>/<theme>/<x>.css", methods=["GET"])
-#@cache.memoize(60*6*24)
+@cache.memoize()
 def board_css(board_fullname, theme, x):
 
     if theme not in ["main", "dark"]:
@@ -1609,12 +1723,12 @@ def board_css(board_fullname, theme, x):
         return redirect(board.css_url)
 
     if theme=="main":
-        path="ruqqus/ruqqus/assets/style/main.scss"
+        path=f"{app.config['RUQQUSPATH']}/assets/style/main.scss"
     else:
-        path="ruqqus/ruqqus/assets/style/main_dark.scss"
+        path=f"{app.config['RUQQUSPATH']}/assets/style/main_dark.scss"
 
     try:
-        with open(os.path.join(os.path.expanduser('~'), path), "r") as file:
+        with open(path, "r") as file:
             raw = file.read()
     except FileNotFoundError:
         return redirect("/assets/style/main.css")
@@ -1623,6 +1737,7 @@ def board_css(board_fullname, theme, x):
     # of some odd behavior with css files
     scss = raw.replace("{boardcolor}", board.color)
     scss = scss.replace("{maincolor}", app.config["SITE_COLOR"])
+    scss = scss.replace("{ruqquspath}", app.config["RUQQUSPATH"])
 
     try:
         resp = Response(sass.compile(string=scss), mimetype='text/css')
@@ -2140,7 +2255,7 @@ def siege_guild(v):
         # check submissions
 
         post= g.db.query(Submission).filter(Submission.author_id.in_(tuple(ids)), 
-                                        Submission.created_utc > cutoff,
+                                        or_(Submission.created_utc > cutoff, Submission.edited_utc > cutoff),
                                         Submission.original_board_id==guild.id,
                                         Submission.deleted_utc==0,
                                         Submission.is_banned==False).first()
@@ -2148,7 +2263,7 @@ def siege_guild(v):
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
-                                   error=f"Your siege failed. One of the guildmasters created a post in +{guild.name} within the last 60 days. You may try again in 7 days.",
+                                   error=f"Your siege failed. One of the guildmasters created or edited a post in +{guild.name} within the last 60 days. You may try again in 7 days.",
                                    link=post.permalink,
                                    link_text="View post"
                                    ), 403
@@ -2156,7 +2271,7 @@ def siege_guild(v):
         # check comments
         comment= g.db.query(Comment).filter(
             Comment.author_id.in_(tuple(ids)),
-            Comment.created_utc > cutoff,
+            or_(Comment.created_utc > cutoff, Comment.edited_utc > cutoff),
             Comment.original_board_id==guild.id,
             Comment.deleted_utc==0,
             Comment.is_banned==False).first()
@@ -2165,7 +2280,7 @@ def siege_guild(v):
             return render_template("message.html",
                                    v=v,
                                    title=f"Siege against +{guild.name} Failed",
-                                   error=f"Your siege failed. One of the guildmasters created a comment in +{guild.name} within the last 60 days. You may try again in 7 days.",
+                                   error=f"Your siege failed. One of the guildmasters created or edited a comment in +{guild.name} within the last 60 days. You may try again in 7 days.",
                                    link=comment.permalink,
                                    link_text="View comment"
                                    ), 403

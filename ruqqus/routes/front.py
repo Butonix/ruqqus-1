@@ -84,7 +84,8 @@ def notifications_posts(v):
     page=int(request.args.get("page", 1))
 
     pids=v.notification_postlisting(
-        page=page
+        page=page,
+        all_=request.args.get("all")
         )
 
     next_exists=(len(pids)==26)
@@ -214,7 +215,7 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
         
     if (v and v.hide_offensive) or not v:
         posts=posts.filter(
-            Board.subcat_id != 108
+            Board.subcat_id.notin_([44, 108]) 
             )
 
     posts=posts.filter(Submission.board_id!=1)
@@ -466,9 +467,9 @@ def front_all(v):
                                    )
             }
 
-#@app.route("/subcat/<name>", methods=["GET"])
-#@auth_desired
-#@api("read")
+@app.route("/subcat/<name>", methods=["GET"])
+@auth_desired
+@api("read")
 def subcat(name, v):
 
     if v:
@@ -528,7 +529,7 @@ def subcat(name, v):
                                             v=v,
                                             listing=posts,
                                             next_exists=next_exists,
-                                            sort_method=sort_method,
+                                            sort_method=sort,
                                             time_filter=t,
                                             page=page,
                                             CATEGORIES=CATEGORIES
@@ -545,7 +546,9 @@ def subcat(name, v):
 def guild_ids(sort="subs", page=1, nsfw=False, cats=[]):
     # cutoff=int(time.time())-(60*60*24*30)
 
-    guilds = g.db.query(Board).filter_by(is_banned=False)
+    guilds = g.db.query(Board).filter_by(is_banned=False).filter(
+        Board.subcat_id != 108
+    )
 
     if not nsfw:
         guilds = guilds.filter_by(over_18=False)
@@ -595,27 +598,8 @@ def browse_guilds(v):
 
     # check if ids exist
     if ids:
-        # assemble list of tuples
-        i = 1
-        tups = []
-        for x in ids:
-            tups.append((x, i))
-            i += 1
 
-        # tuple string
-        tups = str(tups).lstrip("[").rstrip("]")
-
-        # hit db for entries
-
-        boards = g.db.query(
-            Board).options(
-            lazyload(
-                '*'
-            )).filter(
-            Board.id.in_(ids)
-            ).all()
-
-        boards=sorted(boards, key=lambda x: ids.index(x.id))
+        boards = get_boards(ids, v=v)
     else:
         boards = []
 
@@ -658,6 +642,9 @@ def my_subs(v):
         content = [x for x in content.offset(25 * (page - 1)).limit(26)]
         next_exists = (len(content) == 26)
         content = content[0:25]
+        
+        for board in content:
+            board._is_subscribed=True
 
         return {"html": lambda: render_template("mine/boards.html",
                                v=v,

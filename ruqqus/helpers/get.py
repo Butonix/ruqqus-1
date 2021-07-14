@@ -888,6 +888,53 @@ def get_board(bid,v=None, graceful=False):
     return board
 
 
+def get_boards(bids, v=None, graceful=False):
+        
+    if v:
+        sub = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
+        items = g.db.query(
+            Board,
+            aliased(Subscription, alias=sub)
+            ).options(
+            joinedload(Board.moderators).joinedload(ModRelationship.user),
+            joinedload(Board.subcat).joinedload(SubCategory.category)
+            ).filter(
+                Board.id.in_(tuple(bids))
+            ).join(
+            sub,
+            sub.c.board_id==Board.id,
+            isouter=True
+        ).all()
+
+        
+        output=[]
+        for entry in items:
+            board=entry[0]
+            board._is_subscribed=entry[1]
+            output.append(board)
+    else:
+            
+        output = g.db.query(Board).options(
+            joinedload(Board.moderators).joinedload(ModRelationship.user),
+            joinedload(Board.subcat).joinedload(SubCategory.category)
+            ).filter(
+                    Board.id.in_(bids)
+        ).all()
+    
+    
+    
+    if not output:
+        if graceful:
+            return []
+        else:
+            abort(404)
+            
+    output=sorted(output, key=lambda x:bids.index(x.id))
+    
+    return output
+
+
+
 def get_guild(name, v=None, graceful=False, db=None):
 
     if not db:
