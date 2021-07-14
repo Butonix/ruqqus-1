@@ -1349,7 +1349,7 @@ def board_edit_css(bid, board, v):
         if not any([isinstance(rule, x) for x in allowed_rules]):
             return jsonify({"error": f"Invalid rule: {str(rule)}"}), 422
 
-        if rule.getattr("children"):
+        if getattr(rule, "children", None):
             for child in rule.children():
                 clean_block(child)
 
