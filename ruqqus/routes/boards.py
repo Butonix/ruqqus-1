@@ -1349,10 +1349,9 @@ def board_edit_css(bid, board, v):
         if not any([isinstance(rule, x) for x in allowed_rules]):
             return jsonify({"error": f"Invalid rule: {str(rule)}"}), 422
         
-        if isinstance(rule, cssutils.css.CSSStyleDeclaration):
-            print(rule)
-#            print(rule.parent)
-            print(rule.style)
+        if isinstance(rule, cssutils.css.Property):
+            if isinstance(rule.propertyValue, cssutils.css.URIValue):
+                return jsonify({"error":"No external links allowed."}), 422
 
         if getattr(rule, "children", None):
             for child in rule.children():
@@ -1363,9 +1362,6 @@ def board_edit_css(bid, board, v):
         clean_block(rule)
 
     css=css.cssText.decode('utf-8')
-
-    if any([x in css for x in ['http','//', 'url']]):
-        return jsonify({"error":"No external links allowed (for now)"}), 422
 
     board.css = css
     board.css_nonce += 1
