@@ -268,6 +268,9 @@ def submit_post(v):
     title = title.replace("\n", "")
     title = title.replace("\r", "")
     title = title.replace("\t", "")
+    
+    # sanitize title
+    title = bleach.clean(title)
 
     url = request.form.get("url", "")
 
@@ -326,6 +329,7 @@ def submit_post(v):
                                                  ), 400),
                 "api": lambda: ({"error": "`url` or `body` parameter required."}, 400)
                 }
+
     # sanitize title
     title = bleach.clean(title, tags=[])
 
