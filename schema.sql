@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 12.5
--- Dumped by pg_dump version 12.1
+-- Dumped by pg_dump version 12.3
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -98,7 +98,9 @@ CREATE TABLE public.boards (
     secondary_color character(6) DEFAULT 'ffffff'::bpchar,
     public_chat boolean DEFAULT false,
     motd character varying(1000) DEFAULT ''::character varying,
-    disallowbots boolean DEFAULT false
+    disallowbots boolean DEFAULT false,
+    css_nonce integer DEFAULT 0,
+    css character varying(65536) DEFAULT ''::character varying
 );
 
 
