@@ -19,7 +19,7 @@
 
     <div class="comment-body">
 
-        <div id="comment-{{ c.base36id }}-only" class="">
+        <div id="comment-{{ c.base36id }}-only" class="{% if c.gm_distinguish %}heralded{% endif %}">
 
             <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger">NSFW</span> {% endif %}
                 [{% if c.is_banned %}Removed by administrators{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{ c.author.username }}{% elif c.is_blocked %}This user has blocked you{% endif %}]
