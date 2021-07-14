@@ -325,12 +325,17 @@ def board_name(name, v):
     ids = ids[0:25]
 
     if page == 1 and sort != "new" and sort != "old" and not ignore_pinned:
-        stickies = g.db.query(Submission.id).filter_by(board_id=board.id,
+        if (v and v.over_18) or session_over18(board):
+            stickies = g.db.query(Submission.id).filter_by(board_id=board.id,
+                                                        is_banned=False,
+                                                        is_pinned=True,
+                                                        deleted_utc=0).order_by(Submission.id.asc()).limit(4)
+        else:
+            stickies = g.db.query(Submission.id).filter_by(board_id=board.id,
                                                        is_banned=False,
                                                        is_pinned=True,
-                                                       deleted_utc=0).order_by(Submission.id.asc()
-
-                                                                                ).limit(4)
+                                                       over_18=False,
+                                                       deleted_utc=0).order_by(Submission.id.asc()).limit(4)
         stickies = [x[0] for x in stickies]
         ids = stickies + ids
 
