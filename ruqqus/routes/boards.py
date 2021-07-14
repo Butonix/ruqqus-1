@@ -1346,6 +1346,7 @@ def board_edit_css(bid, board, v):
     ]
 
     def clean_block(rule):
+        print(rule)
         if not any([isinstance(rule, x) for x in allowed_rules]):
             return jsonify({"error": f"Invalid rule: {str(rule)}"}), 422
         
