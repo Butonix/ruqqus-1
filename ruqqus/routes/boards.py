@@ -5,7 +5,7 @@ import sass
 import threading
 import time
 import os.path
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup 
 import cssutils
 
 from ruqqus.helpers.wrappers import *
@@ -1352,7 +1352,7 @@ def board_edit_css(bid, board, v):
         if isinstance(rule, cssutils.css.CSSStyleRule):
             
             for property in rule.style.children():
-                print(property, property.propertyValue)
+                print([x for x in property.propertyValue])
                 if any([isinstance(x, cssutils.css.URIValue) for x in property.propertyValue]):
                     return jsonify({"error":"No external links allowed."}), 422
 
