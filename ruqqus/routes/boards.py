@@ -1350,6 +1350,7 @@ def board_edit_css(bid, board, v):
             return jsonify({"error": f"Invalid rule: {str(rule)}"}), 422
         
         if isinstance(rule, cssutils.css.Property):
+            print(rule.propertyValue)
             if any([isinstance(x, cssutils.css.URIValue) for x in rule.propertyValue]):
                 return jsonify({"error":"No external links allowed."}), 422
 
