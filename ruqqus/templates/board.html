@@ -120,7 +120,7 @@
     dswitch = document.getElementById("dark-switch");
 
     if (css.href.endsWith("{{ b.css_url }}?v=2.37.7")) {
-      
+
       post("/settings/dark_mode/1",
         callback=function(){
           css.href="{{ b.css_dark_url }}?v=2.37.7";
@@ -242,24 +242,24 @@
         <div class="dropdown dropdown-actions">
           <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="line-height: 0;
           ">
-            <i class="far fa-ellipsis-h text-base text-black"></i>
-          </a>
-          <div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end"
-          style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
-            <button class="dropdown-item" data-toggle="modal" data-target="#guildDetailsModal"><i class="fas fa-info-circle"></i>Guild details</button>
-            <a class="dropdown-item" href="{{ b.permalink }}/mod/log"><i class="fas fa-scroll-old"></i>Moderation log</a>
-            {% if b.has_mod(v) %}
-            <a class="dropdown-item" href="{{ b.permalink }}/mod/settings"><i class="fas fa-cog"></i>Guild settings</a>
-            {% endif %}
-            {% if v and not v.has_blocked_guild(b) %}
-            <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block_guild?board={{ b.name }}')"><i class="fas fa-eye-slash text-danger"></i>Hide from /all</a>
-            {% elif v %}
-            <a class="dropdown-item" href="javascript:void(0)" onclick="post_toast('/settings/unblock_guild?board={{ b.name }}')"><i class="fas fa-eye"></i>Show in /all</a>
-            {% endif %}
-          </div>
-        </div>
+          <i class="far fa-ellipsis-h text-base text-black"></i>
+        </a>
+        <div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end"
+        style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
+        <button class="dropdown-item" data-toggle="modal" data-target="#guildDetailsModal"><i class="fas fa-info-circle"></i>Guild details</button>
+        <a class="dropdown-item" href="{{ b.permalink }}/mod/log"><i class="fas fa-scroll-old"></i>Moderation log</a>
+        {% if b.has_mod(v) %}
+        <a class="dropdown-item" href="{{ b.permalink }}/mod/settings"><i class="fas fa-cog"></i>Guild settings</a>
+        {% endif %}
+        {% if v and not v.has_blocked_guild(b) %}
+        <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block_guild?board={{ b.name }}')"><i class="fas fa-eye-slash text-danger"></i>Hide from /all</a>
+        {% elif v %}
+        <a class="dropdown-item" href="javascript:void(0)" onclick="post_toast('/settings/unblock_guild?board={{ b.name }}')"><i class="fas fa-eye"></i>Show in /all</a>
+        {% endif %}
       </div>
-      {% endblock %}
+    </div>
+  </div>
+  {% endblock %}
 
   <div class="ml-auto">
     <div class="d-flex align-items-center">
@@ -311,10 +311,10 @@
           Join guild
         </button>
       </div>
-      <div id="button-unsub" class="btn-group {% if not b.is_subscribed %}d-none{% endif %}" role="group" aria-label="Leave guild desktop">
+      <div id="button-unsub" class="{% if not b.is_subscribed %}d-none{% endif %}" role="group" aria-label="Leave guild desktop">
         <button class="btn btn-secondary" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">Leave</button>
-        <button class="btn btn-secondary bell-button" data-toggle="tooltip" data-placement="bottom" title="Be notified when this guild has new content." data-url="/+{{ b.name }}/toggle_bell">
-          <i class="fas fa-fw bell-icon {% if b.is_subscribed and b.is_subscribed.get_notifs %}fa-bell-on text-purple{% else %}fa-bell{% endif %}"></i>
+        <button class="btn btn-transparent bell-button" data-toggle="tooltip" data-placement="bottom" title="Be notified when this guild has new content." data-url="/+{{ b.name }}/toggle_bell">
+          <i class="fas fa-fw bell-icon {% if b.is_subscribed and b.is_subscribed.get_notifs %}fa-bell-on text-primary{% else %}fa-bell{% endif %}"></i>
         </button>
       </div>
       {% elif not v %}
@@ -363,24 +363,24 @@
         {% if b.has_mod(v) %}
         <a class="btn btn-outline-secondary btn-block text-muted mb-2" href="{{ b.permalink }}/mod/settings">Guild settings</a>
         {% endif %}
+
         {% if False and b.can_chat(v) %}
         <a class="btn btn-primary btn-block text-white mb-2" href="{{ b.chat_url }}">Chat</a>
         {% endif %}
-        {% if v %}
+
+      {% if v %}
         <div id="button-sub-mobile" {% if b.is_subscribed %}class="d-none"{% endif %}>
           <button class="btn btn-primary btn-block" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=toggleSub)">
             Join guild
           </button>
         </div>
         <div id="button-unsub-mobile" {% if not b.is_subscribed %}class="d-none"{% endif %}>
-          <div class="btn-group d-flex" role="group" aria-label="Leave guild mobile">
-            <button class="btn btn-secondary btn-block" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">
-              Leave
-            </button>
-            <button class="btn btn-secondary bell-button" data-url="/+{{ b.name }}/toggle_bell">
-              <i class="fas bell-icon fa-fw {% if b.is_subscribed and b.is_subscribed.get_notifs %}fa-bell-on text-purple{% else %}fa-bell{% endif %}"></i>
-            </button>
-          </div>
+          <button class="btn btn-secondary btn-block" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=toggleSub)">
+            Leave
+          </button>
+          <button class="btn btn-transparent bell-button" data-url="/+{{ b.name }}/toggle_bell">
+            <i class="fas bell-icon fa-fw {% if b.is_subscribed and b.is_subscribed.get_notifs %}fa-bell-on text-primary{% else %}fa-bell{% endif %}"></i>
+          </button>
         </div>
         {% elif not v %}
         <a class="btn btn-primary btn-block" href="/signup">Join guild</a>
