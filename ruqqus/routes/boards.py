@@ -1349,9 +1349,9 @@ def board_edit_css(bid, board, v):
         if not any([isinstance(rule, x) for x in allowed_rules]):
             return jsonify({"error": f"Invalid rule: {str(rule)}"}), 422
         
-        if isinstance(rule, cssutils.css.CSSStyleRule):
+        if isinstance(rule, cssutils.css.CSSStyleDeclaration):
             print(rule)
-            print(rule.parent)
+#            print(rule.parent)
             print(rule.style)
 
         if getattr(rule, "children", None):
