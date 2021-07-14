@@ -1359,7 +1359,7 @@ def board_edit_css(bid, board, v):
 
     css=css.cssText.decode('utf-8')
 
-    if any([x in css for x in ['http','//']]):
+    if any([x in css for x in ['http','//', 'url']]):
         return jsonify({"error":"No external links allowed (for now)"}), 422
 
     board.css = css
