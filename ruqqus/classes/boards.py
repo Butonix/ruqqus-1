@@ -84,8 +84,7 @@ class Board(Base, Stndrd, Age_times):
     @property
     def mods_list(self):
 
-        z = [x for x in self.moderators if x.accepted and not (
-            x.user.is_deleted or (x.user.is_banned and not x.user.unban_utc))]
+        z = [x for x in self.moderators if x.accepted and not x.user.is_deleted]
 
         z = sorted(z, key=lambda x: x.id)
         return z
@@ -105,7 +104,7 @@ class Board(Base, Stndrd, Age_times):
     def invited_mods(self):
 
         z = [x.user for x in self.moderators if x.accepted ==
-             False and x.invite_rescinded == False]
+             False and x.invite_rescinded == False and not x.user.is_deleted]
         z = sorted(z, key=lambda x: x.id)
         return z
 
@@ -604,6 +603,7 @@ class Board(Base, Stndrd, Age_times):
     def user_guild_rep(self, user):
 
         return user.guild_rep(self)
+
 
     def is_guildmaster(self, perm=None):
         mod=self.__dict__.get('_is_guildmaster', False)

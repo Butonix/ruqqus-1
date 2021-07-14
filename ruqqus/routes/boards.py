@@ -518,7 +518,7 @@ def mod_ban_bid_user(bid, board, v):
         if item.original_board_id != board.id:
             return jsonify({"error":f"That was originally created in +{item.original_board.name}, not +{board.name}"}), 400
 
-    if not user:
+    if not user or user.is_deleted:
         return jsonify({"error": "That user doesn't exist."}), 404
 
     if user.id == v.id:
@@ -782,6 +782,12 @@ def mod_invite_username(bid, board, v):
         return jsonify({"error": f"@{user.username} is exiled from +{board.name} and can't currently become a guildmaster."}), 409
     if not user.can_join_gms:
         return jsonify({"error": f"@{user.username} already leads enough guilds."}), 409
+        
+    if user.is_deleted:
+        return jsonify({"error": f"@{user.username} is deleted."}), 409
+        
+    if user.is_suspended:
+        return jsonify({"error": f"@{user.username} is suspended."}), 409
 
     x = g.db.query(ModRelationship).filter_by(
         user_id=user.id, board_id=board.id).first()
@@ -1396,7 +1402,9 @@ def board_about_exiled(boardname, board, v):
     bans = board.bans.filter_by(is_active=True).order_by(
         BanRelationship.created_utc.desc()).offset(25 * (page - 1)).limit(26)
 
-    bans = [ban for ban in bans]
+    # Deleted users will still remove a spot on the page but this will stop them from cluttering it
+    bans = [ban for ban in bans if not ban.user.is_deleted]
+
     next_exists = (len(bans) == 26)
     bans = bans[0:25]
 
@@ -1452,7 +1460,9 @@ def board_about_contributors(boardname, board, v):
     contributors = board.contributors.filter_by(is_active=True).order_by(
         ContributorRelationship.created_utc.desc()).offset(25 * (page - 1)).limit(26)
 
-    contributors = [x for x in contributors]
+    # Deleted users will still remove a spot on the page but this will stop them from cluttering it
+    contributors = [x for x in contributors if not x.user.is_deleted]
+
     next_exists = (len(contributors) == 26)
     contributors = contributors[0:25]
 
@@ -1807,7 +1817,7 @@ def mod_approve_bid_user(bid, board, v):
 
     user = get_user(request.form.get("username"), graceful=True)
 
-    if not user:
+    if not user or user.is_deleted:
         return jsonify({"error": "That user doesn't exist."}), 404
 
     if board.has_ban(user):
@@ -2195,6 +2205,14 @@ def siege_guild(v):
                                v=v,
                                title=f"Siege against +{guild.name} Failed",
                                error="You already lead the maximum number of guilds."
+                               ), 403
+                               
+    # Cannot siege banned guilds
+    if guild.is_banned:
+        return render_template("message.html",
+                               v=v,
+                               title=f"Siege against +{guild.name} Failed",
+                               error=f"+{guild.name} is banned."
                                ), 403
 
     # Can't siege if exiled
