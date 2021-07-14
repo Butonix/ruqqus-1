@@ -1360,10 +1360,14 @@ def board_edit_css(bid, board, v):
         if getattr(rule, "children", None):
             for child in rule.children():
                 clean_block(child)
+         
+        return False
 
 
     for rule in css:
-        clean_block(rule)
+        x=clean_block(rule)
+        if x:
+            return x
 
     css=css.cssText.decode('utf-8')
 
