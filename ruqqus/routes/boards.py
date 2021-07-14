@@ -1353,7 +1353,6 @@ def board_edit_css(bid, board, v):
             
             for property in rule.style.children():
                 for pv in property.propertyValue:
-                    print(isinstance(pv, cssutils.css.URIValue))
                     if isinstance(pv, cssutils.css.URIValue):
                         return jsonify({"error":"No external links allowed."}), 422
 
