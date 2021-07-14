@@ -1320,7 +1320,7 @@ def board_about_css(boardname, v):
 @api("guildmaster")
 def board_edit_css(bid, board, v):
 
-    new_css = request.form.get("css")
+    new_css = request.form.get("css").replace('\\','')
 
     #css validation / sanitization
     parser=cssutils.CSSParser(
