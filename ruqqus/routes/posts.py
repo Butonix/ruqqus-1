@@ -268,6 +268,9 @@ def submit_post(v):
     title = title.replace("\n", "")
     title = title.replace("\r", "")
     title = title.replace("\t", "")
+    
+    # sanitize title
+    title = bleach.clean(title)
 
     url = request.form.get("url", "")
 
@@ -299,17 +302,17 @@ def submit_post(v):
     #                            )
 
 
-    elif len(title) > 500:
+    elif len(title) > 250:
         return {"html": lambda: (render_template("submit.html",
                                                  v=v,
-                                                 error="500 character limit for titles.",
-                                                 title=title[0:500],
+                                                 error="250 character limit for titles.",
+                                                 title=title[0:250],
                                                  url=url,
                                                  body=request.form.get(
                                                      "body", ""),
                                                  b=board
                                                  ), 400),
-                "api": lambda: ({"error": "500 character limit for titles"}, 400)
+                "api": lambda: ({"error": "250 character limit for titles"}, 400)
                 }
 
     parsed_url = urlparse(url)
@@ -326,6 +329,7 @@ def submit_post(v):
                                                  ), 400),
                 "api": lambda: ({"error": "`url` or `body` parameter required."}, 400)
                 }
+
     # sanitize title
     title = bleach.clean(title, tags=[])
 
