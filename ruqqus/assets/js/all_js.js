@@ -312,7 +312,26 @@ function collapse_comment(comment_id) {
 
 };
 
-//Commenting form
+// Text Area Input handling
+
+function textAreaOnKeyDown(e, func){
+  if (isCtrlEnterSubmit(e))
+    func();
+
+  return;
+}
+
+function isCtrlEnterSubmit(e) {
+  // If the user has pressed enter + ctrl/command
+  if ((e.keyCode == 10 || e.keyCode == 13) && (e.ctrlKey || e.metaKey))
+  {
+     return true;
+  }
+  
+  return false;
+}
+
+// Commenting form
 
 // Expand comment box on focus, hide otherwise
 

@@ -495,7 +495,7 @@
             <form id="post-edit-form-{{ p.base36id }}" action="/edit_post/{{ p.base36id }}" method="post" class="input-group">
               <input type="hidden" name="formkey" value="{{ v.formkey }}">
               <input type="hidden" name="current_page" value="{{ request.path }}">
-              <textarea name="body" id="post-edit-box-{{ p.base36id }}" form="post-edit-form-{{ p.base36id }}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="3">{{ p.body }}</textarea> 
+              <textarea name="body" id="post-edit-box-{{ p.base36id }}" form="post-edit-form-{{ p.base36id }}" class="comment-box form-control rounded" onkeydown="textAreaOnKeyDown(event, ()=>{document.getElementById('post-edit-form-{{ p.base36id }}').submit()})" aria-label="With textarea" placeholder="Add text to your post..." rows="3">{{ p.body }}</textarea> 
               <div class="comment-format"> 
                 <small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold('post-edit-box-{{ p.base36id }}')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> 
                 <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('post-edit-box-{{ p.base36id }}')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> 
@@ -745,7 +745,7 @@
       <input type="hidden" name="parent_fullname" value="t2_{{ p.base36id }}">
       <input id="reply-form-submission-{{ p.fullname }}" type="hidden" name="submission" value="{{ p.base36id }}">
       {% if v %}
-      <textarea id="reply-form-body-{{ p.fullname }}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{ p.fullname }}" aria-label="With textarea" placeholder="Add your comment..." rows="1"></textarea>
+      <textarea id="reply-form-body-{{ p.fullname }}" class="comment-box form-control rounded" id="comment-form" onkeydown="textAreaOnKeyDown(event, (fullname = '{{ p.fullname }}') => post_comment(fullname))" name="body" form="reply-to-{{ p.fullname }}" aria-label="With textarea" placeholder="Add your comment..." rows="1"></textarea>
       {% endif %}
       <div class="comment-format">
         <small class="format pl-0"><i class="fas fa-bold" onclick="makeBold('reply-form-body-{{ p.fullname }}')" data-toggle="tooltip" data-placement="bottom" data-delay='{"show":"700", "hide":"300"}' title="Bold"></i></small>

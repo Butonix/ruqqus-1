@@ -156,11 +156,15 @@
 
     <div class="col-12">
 
+      {% block listing_template %}
+      
       <div class="posts" id="posts">
 
-        {% block listing_template %}{% include "submission_listing.html" %}{% endblock %}
-
+        {% include "submission_listing.html" %}
+    
       </div>
+
+      {% endblock %}
     </div>
   </div>
 
