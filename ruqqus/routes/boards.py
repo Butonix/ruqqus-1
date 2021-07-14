@@ -1346,11 +1346,11 @@ def board_edit_css(bid, board, v):
     ]
 
     def clean_block(rule):
-        print(rule)
         if not any([isinstance(rule, x) for x in allowed_rules]):
             return jsonify({"error": f"Invalid rule: {str(rule)}"}), 422
         
         if isinstance(rule, cssutils.css.CSSStyleRule):
+            print(rule.style)
             for property in rule.style:
                 if any([isinstance(x, cssutils.css.URIValue) for x in property.propertyValue]):
                     return jsonify({"error":"No external links allowed."}), 422
