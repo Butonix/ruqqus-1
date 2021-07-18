@@ -15,7 +15,7 @@ from ruqqus.helpers.markdown import *
 from ruqqus.helpers.get import *
 from ruqqus.helpers.alerts import *
 from ruqqus.helpers.session import *
-from ruqqus.helpers.aws import check_csam_url
+from ruqqus.helpers.aws import *
 from ruqqus.classes import *
 from .front import guild_ids
 from ruqqus.classes.rules import *
@@ -1387,6 +1387,50 @@ def board_edit_css(bid, board, v):
     g.db.commit()
 
     return '', 204
+
+@app.post("/mod/<bid>/settings/css_image")
+@auth_required
+@is_guildmaster('config', 'appearance')
+@api('guildmaster')
+def upload_guild_css_image(bid, board, v):
+
+    img = GuildImage(
+        board_id = board.id,
+        user_id = v.id
+        )
+    g.db.add(img)
+    g.db.flush()
+
+    upload_file(
+        img.S3_name,
+        request.files["file"])
+
+    check_csam_url(
+        img.permalink,
+        v,
+        lambda:delete_file(img.S3_name)
+        )
+
+    g.db.commit()
+
+    return "", 204
+
+@app.post("/mod/<bid>/settings/delete_css_image")
+@auth_required
+@is_guildmaster('config', 'appearance')
+@api('guildmaster')
+def delete_guild_css_image(bid, board, v):
+    img = g.db.query(GuildImage).filter_by(id=base36decode(request.form.get("img_id"))).first()
+
+    delete_file(img.S3_name)
+    g.db.delete(img)
+    g.db.commit()
+
+    return "", 204
+
+
+
+
 
 @app.get("/+<boardname>/css")
 def board_get_css(boardname):
