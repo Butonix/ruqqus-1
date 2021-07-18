@@ -1354,7 +1354,10 @@ def board_edit_css(bid, board, v):
             for property in rule.style.children():
                 for pv in property.propertyValue:
                     if isinstance(pv, cssutils.css.URIValue):
-                        return jsonify({"error":"No external links allowed."}), 422
+                        domain = urlparse(pv.uri).netloc
+
+                        if domain != app.config["S3_BUCKET"]:
+                            return jsonify({"error":"No external links allowed."}), 422
 
         if getattr(rule, "children", None):
             for child in rule.children():
