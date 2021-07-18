@@ -5,13 +5,13 @@ services:
     build:
       context: .
     volumes:
-      - "./:/opt/ruqqus/service"
+      - "./:/ruqqus/service"
     environment:
       - domain=localhost
       - REDIS_URL=redis://redis
       - DATABASE_URL=postgres://postgres@postgres:5432/postgres
       - DATABASE_CONNECTION_POOL_URL=postgres://postgres@postgres:5432/postgres
-      - PYTHONPATH="/opt/ruqqus/service"
+      - PYTHONPATH="/ruqqus/service"
       - MASTER_KEY=${MASTER_KEY:-KTVciAUQFpFh2WdJ/oiHJlxl6FvzRZp8kYzAAv3l2OA=}
       - SESSION_COOKIE_SECURE=false
       - FLASK_DEBUG=1
@@ -38,7 +38,7 @@ services:
   redis:
     image: redis
     volumes:
-      - ./redis.conf:/opt/ruqqus/redis.conf
+      - ./redis.conf:/ruqqus/redis.conf
     ports:
       - "6379:6379"
 
