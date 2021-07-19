@@ -360,7 +360,7 @@ class User(Base, Stndrd, Age_times):
         if not (v and v.over_18):
             submissions = submissions.filter_by(over_18=False)
 
-        if v and v.hide_offensive:
+        if v and v.hide_offensive and v.id!=self.id:
             submissions = submissions.filter_by(is_offensive=False)
 
         if v and v.hide_bot:
@@ -429,7 +429,7 @@ class User(Base, Stndrd, Age_times):
         if not (v and v.over_18):
             comments = comments.filter(Submission.over_18 == False)
 
-        if v and v.hide_offensive:
+        if v and v.hide_offensive and v.id != self.id:
             comments = comments.filter(Comment.is_offensive == False)
 
         if v and v.hide_bot:
