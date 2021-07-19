@@ -103,6 +103,12 @@ def settings_profile_post(v):
         v.bio = bio
         v.bio_html=bio_html
         g.db.add(v)
+        
+        #seo profile spam
+        if int(time.time())-v.created_utc < 60*60*24 and not v.post_count and not v.comment_count and BeautifulSoup(bio_html).find('a'):
+            v.ban(reason="seo spam")
+        
+        
         return {"html":lambda:render_template("settings_profile.html",
                                v=v,
                                msg="Your bio has been updated."),
