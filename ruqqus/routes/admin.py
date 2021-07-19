@@ -193,9 +193,13 @@ def users_list(v):
 
     page = int(request.args.get("page", 1))
 
-    users = g.db.query(User).filter_by(is_banned=0
-                                       ).order_by(User.created_utc.desc()
-                                                  ).offset(25 * (page - 1)).limit(26)
+    users = g.db.query(User)
+    
+    
+    if not request.args.get('all'):
+        users=users.filter_by(is_banned=0)
+        
+    users=users.order_by(User.created_utc.desc()).offset(25 * (page - 1)).limit(26)
 
     users = [x for x in users]
 
