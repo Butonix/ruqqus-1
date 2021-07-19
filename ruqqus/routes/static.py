@@ -13,17 +13,12 @@ from ruqqus.__main__ import app, limiter
 
 # take care of misc pages that never really change (much)
 
-@app.route("/assets/style/<file>.css", methods=["GET"])
+@app.route("/assets/style/main.css", methods=["GET"])
 @cache.memoize()
 def main_css(file):
 
-	#print(file, color)
-
-	if file not in ["main", "main_dark"]:
-		abort(404)
-
 	try:
-		name=f"{app.config['RUQQUSPATH']}/assets/style/{file}.scss"
+		name=f"{app.config['RUQQUSPATH']}/assets/style/main.scss"
 		#print(name)
 		with open(name, "r") as file:
 			raw = file.read()
