@@ -43,6 +43,7 @@ class BadPic(Base):
 class GuildImage(Base, Stndrd):
 
     __tablename__="guild_images"
+    id = Column(BigInteger, primary_key=True)
     board_id = Column(Integer, ForeignKey("boards.id"))
     user_id = Column(Integer, ForeignKey("users.id"))
     created_utc = Column(Integer)
