@@ -721,8 +721,12 @@ document.addEventListener('input', function (event) {
 //dark mode
 
 function switch_css() {
-  $('body').toggleClass('dark');
-  $('body').toggleClass('light')
+	$('body').toggleClass('light');
+	$('body').toggleClass('dark');
+  $('#dark-switch').toggleClass('fa-toggle-on');
+  $('#dark-switch').toggleClass('fa-toggle-off');
+  $('#dark-switch-mobile').toggleClass('fa-toggle-on');
+  $('#dark-switch-mobile').toggleClass('fa-toggle-off');
 }
 
 // Delete Post
