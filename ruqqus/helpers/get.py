@@ -1125,3 +1125,25 @@ def get_promocode(code):
     code = g.db.query(PromoCode).filter(PromoCode.code.ilike(code)).first()
 
     return code
+
+def get_guild_members(board, limit=25, page=1):
+    limit = int(limit)
+    page = int(page)
+
+    if limit > 250:
+        limit = 250
+    elif limit < 10:
+        limit = 10
+
+
+    g.db.query(User)\
+        .filter(
+            User.id.in_(
+                g.db.query(Subscription.user_id)
+                    .filter(
+                        board_id=board.id,
+                        is_active=True,
+                        show_membership=True
+                    )
+            )
+        ).offset(limit * (page - 1)).limit(limit).all()

@@ -132,7 +132,6 @@ class User(Base, Stndrd, Age_times):
     banned_from = relationship("BanRelationship",
                                primaryjoin="BanRelationship.user_id==User.id")
     subscriptions = relationship("Subscription")
-    HideMembership = relationship("hide_guild_membership")
     boards_created = relationship("Board", lazy="dynamic")
     contributes = relationship(
         "ContributorRelationship",

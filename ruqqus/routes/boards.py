@@ -1293,6 +1293,7 @@ def board_about_mods(boardname, v):
         }
 
 @app.route("/+<boardname>/hide_member", methods=["POST"])
+@app.route("/api/vue/<boardname>/hide_member", methods=["POST"])
 @auth_required
 @api("update")
 def hide_guild_member_post(boardname, v):

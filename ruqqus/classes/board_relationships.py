@@ -233,19 +233,6 @@ class PostRelationship(Base):
         return f"<PostRel(id={self.id}, pid={self.post_id}, board_id={self.board_id})>"
 
 
-class HideGuildMembership(Base):
-
-    __tablename__ = "hide_guild_membership"
-    id = Column(BigInteger, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    board_id = Column(Integer, ForeignKey("boards.id"))
-
-    post = relationship("User", lazy="subquery")
-    board = relationship("Board", lazy="subquery")
-
-    def __repr__(self):
-        return f"<HideGuildMembership(id={self.id}, pid={self.user_id}, board_id={self.board_id})>"
-
 
 """class PostNotificationSubscriptions(Base):
 
