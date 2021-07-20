@@ -1300,16 +1300,19 @@ def hide_guild_member_post(boardname, v):
 
     board = get_guild(boardname, v)
     if not board:
-        return jsonify({"error": "No board found"}), 404
-    check_hidden_member = g.db.query(HideGuildMembership).filter(board_id=board.id, user_id=v.id).first()
+        return jsonify({"error": "No Guild found"}), 404
 
-    if check_hidden_member:
-        g.db.delete(check_hidden_member)
-    else:
-        hide_membership = HideGuildMembership(user_id=v.id, board_id=board.id)
-        g.db.add(hide_membership)
-    g.db.commit()
-    return "", 204
+    subscriber = g.db.query(Subscription).filter(board_id=board.id, user_id=v.id).first()
+
+    if not subscriber:
+        return jsonify({"error": "You are not a member of this guild."}), 403
+
+    if subscriber:
+        subscriber.show_membership = not subscriber.show_membership
+        g.db.commit()
+        return "", 204
+
+    return "", 400
 
 
 @app.route("/+<boardname>/mod/css", methods=["GET"])
