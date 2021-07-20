@@ -70,4 +70,4 @@ class GuildImage(Base, Stndrd):
     @property
     def permalink(self):
 
-        return f'https://{app.config["S3_BUCKET"]}/{self.S3_name}''
+        return f'https://{app.config["S3_BUCKET"]}/{self.S3_name}'
