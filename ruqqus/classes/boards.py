@@ -62,6 +62,7 @@ class Board(Base, Stndrd, Age_times):
     bans=relationship("BanRelationship", lazy="dynamic")
     chatbans=relationship("ChatBan", lazy="dynamic")
     postrels=relationship("PostRelationship", lazy="dynamic")
+    css_images=relationship("GuildImage")
 
     trending_rank=deferred(Column(Float, server_default=FetchedValue()))
 

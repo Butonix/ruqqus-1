@@ -1394,9 +1394,15 @@ def board_edit_css(bid, board, v):
 @api('guildmaster')
 def upload_guild_css_image(bid, board, v):
 
+    name=request.form.get('name', f'untitled_{int(time.time())}').lower()
+
+    #delete any name character that isn't a-z, 0-9, or underscore
+    name=re.sub("[^a-z0-9_]", "", name)
+
     img = GuildImage(
         board_id = board.id,
-        user_id = v.id
+        user_id = v.id,
+        name = name
         )
     g.db.add(img)
     g.db.flush()
