@@ -973,13 +973,13 @@
       overflow-wrap: normal;
   }
 
-  &#frontpage& .voting, #search .voting, &#userpage .voting, &#guild .voting {
+  &#frontpage .voting, &#search .voting, &#userpage .voting, &#guild .voting {
       margin: auto 0;
   }
 
   /*
 
-  &#frontpage&.toggle-card-view .voting, #search.toggle-card-view .voting, &#userpage.toggle-card-view .voting, &#guild.toggle-card-view .voting {
+  &#frontpage.toggle-card-view .voting, &#search.toggle-card-view .voting, &#userpage.toggle-card-view .voting, &#guild.toggle-card-view .voting {
       margin: 0;
   }
 
@@ -1142,23 +1142,23 @@
 
   // Main Content
 
-  &#frontpage& .pseudo-submit-form.card, #search .search-results.card, &#guild .pseudo-submit-form.card {
+  &#frontpage .pseudo-submit-form.card, &#search .search-results.card, &#guild .pseudo-submit-form.card {
       background-color: $white;
       border-radius: $border-radius;
       border: 1px solid $border-color;
       //box-shadow: $box-shadow-sm;
   }
 
-  &#frontpage& .pseudo-submit-form.card .card-body, #search .search-results.card .card-body, &#guild .pseudo-submit-form.card .card-body {
+  &#frontpage .pseudo-submit-form.card .card-body, &#search .search-results.card .card-body, &#guild .pseudo-submit-form.card .card-body {
       padding-left: 15px;
       padding-right: 15px;
   }
 
-  &#frontpage& .pseudo-submit-form.card .card-body .form-control, &#guild .pseudo-submit-form.card .card-body .form-control {
+  &#frontpage .pseudo-submit-form.card .card-body .form-control, &#guild .pseudo-submit-form.card .card-body .form-control {
       background-color: $gray-100;
   }
 
-  &#frontpage& .pseudo-submit-form.card .card-body .form-control:hover, &#frontpage& .pseudo-submit-form.card .card-body .form-control:active, &#frontpage& .pseudo-submit-form.card .card-body .form-control:focus {
+  &#frontpage .pseudo-submit-form.card .card-body .form-control:hover, &#frontpage .pseudo-submit-form.card .card-body .form-control:active, &#frontpage .pseudo-submit-form.card .card-body .form-control:focus {
       background-color: $white;
   }
 
@@ -1760,52 +1760,52 @@
 
   /*
 
-  &#frontpage&.toggle-card-view .tab-bar, &#userpage.toggle-card-view .tab-bar, #search.toggle-card-view .tab-bar, &#guild.toggle-card-view .tab-bar {
+  &#frontpage.toggle-card-view .tab-bar, &#userpage.toggle-card-view .tab-bar, &#search.toggle-card-view .tab-bar, &#guild.toggle-card-view .tab-bar {
       border-radius: 0;
   }
 
-  &#frontpage&.toggle-card-view .posts .card, &#userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card, &#guild.toggle-card-view .posts .card {
+  &#frontpage.toggle-card-view .posts .card, &#userpage.toggle-card-view .posts .card, &#search.toggle-card-view .posts .card, &#guild.toggle-card-view .posts .card {
       border: none;
       border-radius: $border-radius;
       margin-top: 1rem;
       box-shadow: $box-shadow-sm;
   }
 
-  &#frontpage&.toggle-card-view .posts .card:last-of-type, &#userpage.toggle-card-view .posts .card:last-of-type, #search.toggle-card-view .posts .card:last-of-type, &#guild.toggle-card-view .posts .card:last-of-type {
+  &#frontpage.toggle-card-view .posts .card:last-of-type, &#userpage.toggle-card-view .posts .card:last-of-type, &#search.toggle-card-view .posts .card:last-of-type, &#guild.toggle-card-view .posts .card:last-of-type {
       border-bottom-left-radius: $border-radius;
       border-bottom-right-radius: $border-radius;
       //border: 1px solid $border-color;
       border-radius: $border-radius;
   }
 
-  &#frontpage&.toggle-card-view .posts .card:first-of-type, &#userpage.toggle-card-view .posts .card:first-of-type, #search.toggle-card-view .posts .card:first-of-type, &#guild.toggle-card-view .posts .card:first-of-type {
+  &#frontpage.toggle-card-view .posts .card:first-of-type, &#userpage.toggle-card-view .posts .card:first-of-type, &#search.toggle-card-view .posts .card:first-of-type, &#guild.toggle-card-view .posts .card:first-of-type {
       margin-top: 0;
   }
 
-  &#frontpage&.toggle-card-view .posts .card .post-img, &#userpage.toggle-card-view .posts .card .post-img, #search.toggle-card-view .posts .card .post-img, &#guild.toggle-card-view .posts .card .post-img { 
+  &#frontpage.toggle-card-view .posts .card .post-img, &#userpage.toggle-card-view .posts .card .post-img, &#search.toggle-card-view .posts .card .post-img, &#guild.toggle-card-view .posts .card .post-img { 
       display: none;
   }
 
-  &#frontpage&.toggle-card-view .posts .card .post-img-lg, &#userpage.toggle-card-view .posts .card .post-img-lg, #search.toggle-card-view .posts .card .post-img-lg, &#guild.toggle-card-view .posts .card .post-img-lg { 
+  &#frontpage.toggle-card-view .posts .card .post-img-lg, &#userpage.toggle-card-view .posts .card .post-img-lg, &#search.toggle-card-view .posts .card .post-img-lg, &#guild.toggle-card-view .posts .card .post-img-lg { 
       display: block;
       text-align: center;
   }
 
-  &#frontpage&.toggle-card-view .posts .card .post-img-lg img, &#userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img, &#guild.toggle-card-view .posts .card .post-img-lg img { 
+  &#frontpage.toggle-card-view .posts .card .post-img-lg img, &#userpage.toggle-card-view .posts .card .post-img-lg img, &#search.toggle-card-view .posts .card .post-img-lg img, &#guild.toggle-card-view .posts .card .post-img-lg img { 
       max-width: 55%;
       height: auto;
   }
 
-  &#frontpage&.toggle-card-view .posts .card .embed-lg, &#userpage.toggle-card-view .posts .card .embed-lg, #search.toggle-card-view .posts .card .embed-lg, &#guild.toggle-card-view .posts .card .embed-lg { 
+  &#frontpage.toggle-card-view .posts .card .embed-lg, &#userpage.toggle-card-view .posts .card .embed-lg, &#search.toggle-card-view .posts .card .embed-lg, &#guild.toggle-card-view .posts .card .embed-lg { 
       display: flex;
       z-index: 2;
   }
 
-  &#frontpage&.toggle-card-view .posts .card .post-preview-lg, &#userpage.toggle-card-view .posts .card .post-preview-lg, #search.toggle-card-view .posts .card .post-preview-lg, &#guild.toggle-card-view .posts .card .post-preview-lg { 
+  &#frontpage.toggle-card-view .posts .card .post-preview-lg, &#userpage.toggle-card-view .posts .card .post-preview-lg, &#search.toggle-card-view .posts .card .post-preview-lg, &#guild.toggle-card-view .posts .card .post-preview-lg { 
       display: block;
   }
 
-  &#frontpage&.toggle-card-view .posts .card .post-preview-lg .post-body, &#userpage.toggle-card-view .posts .card .post-preview-lg .post-body, #search.toggle-card-view .posts .card .post-preview-lg .post-body, &#guild.toggle-card-view .posts .card .post-preview-lg .post-body { 
+  &#frontpage.toggle-card-view .posts .card .post-preview-lg .post-body, &#userpage.toggle-card-view .posts .card .post-preview-lg .post-body, &#search.toggle-card-view .posts .card .post-preview-lg .post-body, &#guild.toggle-card-view .posts .card .post-preview-lg .post-body { 
       -webkit-mask-image: linear-gradient(180deg,#000 40%,transparent);
       mask-image: linear-gradient(180deg,#000 40%,transparent);
       overflow: hidden;
@@ -1862,18 +1862,18 @@
       border-bottom: 1px solid $input-border-color;
   }
 
-  &#frontpage& .posts .card:first-of-type, &#userpage .posts .card:first-of-type, #search .posts .card:first-of-type, &#guild .posts .card:first-of-type, &#settings-guild .posts .card:first-of-type {
+  &#frontpage .posts .card:first-of-type, &#userpage .posts .card:first-of-type, &#search .posts .card:first-of-type, &#guild .posts .card:first-of-type, &#settings-guild .posts .card:first-of-type {
       border-top-left-radius: $border-radius;
       border-top-right-radius: $border-radius;
   }
 
-  &#frontpage& .posts .card:nth-last-of-type(2), &#userpage .posts .card:nth-last-of-type(2), #search .posts .card:nth-last-of-type(2), &#guild .posts .card:nth-last-of-type(2), &#settings-guild .posts .card:last-of-type  {
+  &#frontpage .posts .card:nth-last-of-type(2), &#userpage .posts .card:nth-last-of-type(2), &#search .posts .card:nth-last-of-type(2), &#guild .posts .card:nth-last-of-type(2), &#settings-guild .posts .card:last-of-type  {
       border-bottom-left-radius: $border-radius;
       border-bottom-right-radius: $border-radius;
       border-bottom: 1px solid $border-color;
   }
 
-  &#frontpage& .posts .card, &#userpage .posts .card, #search .posts .card, &#guild .posts .card, &#settings-guild .posts .card {
+  &#frontpage .posts .card, &#userpage .posts .card, &#search .posts .card, &#guild .posts .card, &#settings-guild .posts .card {
       border-width: 1px 1px 0 1px;
       border-color: $border-color;
       border-style: solid;
@@ -1881,7 +1881,7 @@
       padding: 0.5rem;
   }
 
-  &#frontpage& .posts .card:hover, &#userpage .posts .card:hover, #search .posts .card:hover, &#guild .posts .card:hover, &#settings-guild .posts .card:hover {
+  &#frontpage .posts .card:hover, &#userpage .posts .card:hover, &#search .posts .card:hover, &#guild .posts .card:hover, &#settings-guild .posts .card:hover {
       background-color: $gray-200;
   }
 
@@ -1901,11 +1901,11 @@
       color: $primary;
   }
 
-  &#frontpage& .post-title a {
+  &#frontpage .post-title a {
       color: $black;
   }
 
-  &#frontpage& .post-title a:hover, &#frontpage& .post-title a:active, &#frontpage& .post-title a:focus  {
+  &#frontpage .post-title a:hover, &#frontpage .post-title a:active, &#frontpage .post-title a:focus  {
       text-decoration: none;
       color: $black;
   }
@@ -1922,7 +1922,7 @@
       width: fit-content;
   }
 
-  &#frontpage& .posts .card .card-footer, &#userpage .posts .card .card-footer, &#thread .card .card-footer, #search .posts .card .card-footer, &#guild .posts .card .card-footer {
+  &#frontpage .posts .card .card-footer, &#userpage .posts .card .card-footer, &#thread .card .card-footer, &#search .posts .card .card-footer, &#guild .posts .card .card-footer {
       border: 0;
       background-color: transparent;
       padding: 0;
@@ -3353,7 +3353,7 @@
 
   // Medium devices (tablets, less than 992px)
   @media (max-width: 991.98px) {
-      &#frontpage&, #search {
+      &#frontpage, &#search {
           padding-top: 49px;
       }
   }
@@ -3422,38 +3422,38 @@
       padding: 0.25rem 0.75rem;
   }
 
-  &#frontpage&, #search, &#guild{
+  &#frontpage, &#search, &#guild{
       padding-top: 98px;
   }
 
-  #search .search-results.card  {
+  &#search .search-results.card  {
       border-bottom: 1px solid #e3e3e3;
       border-width: 0 0 1px 0;
       border-radius: 0;
   }
 
-  &#frontpage& .posts .card, &#userpage .posts .card, #search .posts .card, &#guild .posts .card {
+  &#frontpage .posts .card, &#userpage .posts .card, &#search .posts .card, &#guild .posts .card {
       padding: 7px 15px;
       border-width: 0 0 1px 0;
   }
 
-  &#frontpage& .posts .card:first-of-type, &#userpage .posts .card:first-of-type, #search .posts .card:first-of-type, &#guild .posts .card:first-of-type {
+  &#frontpage .posts .card:first-of-type, &#userpage .posts .card:first-of-type, &#search .posts .card:first-of-type, &#guild .posts .card:first-of-type {
       border-radius: 0;
   }
 
-  &#frontpage& .posts .card:nth-last-of-type(2), #search .posts .card:nth-last-of-type(2) {
+  &#frontpage .posts .card:nth-last-of-type(2), &#search .posts .card:nth-last-of-type(2) {
       border-bottom: 1px solid $border-color;
   }
 
-  &#frontpage& .posts .card:hover, #search .posts .card:hover {
+  &#frontpage .posts .card:hover, &#search .posts .card:hover {
       background-color: transparent;
   }
 
-  &#frontpage& .posts .card .post-img, #search .posts .card .post-img {
+  &#frontpage .posts .card .post-img, &#search .posts .card .post-img {
       z-index: 3;
   }
 
-  &#frontpage& .posts .card.enlarged .mobile-thumb-enlarged, &#userpage .posts .card.enlarged .mobile-thumb-enlarged, #search .posts .card.enlarged .mobile-thumb-enlarged, &#guild .posts .card.enlarged .mobile-thumb-enlarged {
+  &#frontpage .posts .card.enlarged .mobile-thumb-enlarged, &#userpage .posts .card.enlarged .mobile-thumb-enlarged, &#search .posts .card.enlarged .mobile-thumb-enlarged, &#guild .posts .card.enlarged .mobile-thumb-enlarged {
       display: block;
   }
 
@@ -3472,7 +3472,7 @@
 
   /*
 
-  &#frontpage&.toggle-card-view .posts .card, &#userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card, &#guild.toggle-card-view .posts .card {
+  &#frontpage.toggle-card-view .posts .card, &#userpage.toggle-card-view .posts .card, &#search.toggle-card-view .posts .card, &#guild.toggle-card-view .posts .card {
       border-width: 0 0 1px 0;
       border-color: $border-color;
       border-style: solid;
@@ -3481,7 +3481,7 @@
       box-shadow: none;
   }
 
-  &#frontpage&.toggle-card-view .posts .card .post-img-lg img, &#userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img, &#guild.toggle-card-view .posts .card .post-img-lg img { 
+  &#frontpage.toggle-card-view .posts .card .post-img-lg img, &#userpage.toggle-card-view .posts .card .post-img-lg img, &#search.toggle-card-view .posts .card .post-img-lg img, &#guild.toggle-card-view .posts .card .post-img-lg img { 
       max-width: 100%;
       height: auto;
   }
@@ -3528,7 +3528,7 @@
       font-size: $font-size-base;
   }
 
-  &#frontpage& .voting, #search .voting, &#userpage .voting, &#guild .voting {
+  &#frontpage .voting, &#search .voting, &#userpage .voting, &#guild .voting {
       margin: 0;
   }
 
@@ -4865,13 +4865,13 @@
       overflow-wrap: normal;
   }
 
-  &#frontpage& .voting, #search .voting, &#userpage .voting, &#guild .voting {
+  &#frontpage .voting, &#search .voting, &#userpage .voting, &#guild .voting {
       margin: auto 0;
   }
 
   /*
 
-  &#frontpage&.toggle-card-view .voting, #search.toggle-card-view .voting, &#userpage.toggle-card-view .voting, &#guild.toggle-card-view .voting {
+  &#frontpage.toggle-card-view .voting, &#search.toggle-card-view .voting, &#userpage.toggle-card-view .voting, &#guild.toggle-card-view .voting {
       margin: 0;
   }
 
@@ -5038,23 +5038,23 @@
       background-color: $gray-600!important;
   }
 
-  &#frontpage& .pseudo-submit-form.card, #search .search-results.card, &#guild .pseudo-submit-form.card {
+  &#frontpage .pseudo-submit-form.card, &#search .search-results.card, &#guild .pseudo-submit-form.card {
       background-color: $gray-600;
       border-radius: $border-radius;
       border: none;
       //box-shadow: $box-shadow-sm;
   }
 
-  &#frontpage& .pseudo-submit-form.card .card-body, #search .search-results.card .card-body, &#guild .pseudo-submit-form.card .card-body {
+  &#frontpage .pseudo-submit-form.card .card-body, &#search .search-results.card .card-body, &#guild .pseudo-submit-form.card .card-body {
       padding-left: 15px;
       padding-right: 15px;
   }
 
-  &#frontpage& .pseudo-submit-form.card .card-body .form-control, &#guild .pseudo-submit-form.card .card-body .form-control {
+  &#frontpage .pseudo-submit-form.card .card-body .form-control, &#guild .pseudo-submit-form.card .card-body .form-control {
       background-color: $light;
   }
 
-  &#frontpage& .pseudo-submit-form.card .card-body .form-control:hover, &#frontpage& .pseudo-submit-form.card .card-body .form-control:active, &#frontpage& .pseudo-submit-form.card .card-body .form-control:focus {
+  &#frontpage .pseudo-submit-form.card .card-body .form-control:hover, &#frontpage .pseudo-submit-form.card .card-body .form-control:active, &#frontpage .pseudo-submit-form.card .card-body .form-control:focus {
       background-color: $light;
   }
 
@@ -5654,52 +5654,52 @@
 
   /*
 
-  &#frontpage&.toggle-card-view .tab-bar, &#userpage.toggle-card-view .tab-bar, #search.toggle-card-view .tab-bar, &#guild.toggle-card-view .tab-bar {
+  &#frontpage.toggle-card-view .tab-bar, &#userpage.toggle-card-view .tab-bar, &#search.toggle-card-view .tab-bar, &#guild.toggle-card-view .tab-bar {
       border-radius: 0;
   }
 
-  &#frontpage&.toggle-card-view .posts .card, &#userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card, &#guild.toggle-card-view .posts .card{
+  &#frontpage.toggle-card-view .posts .card, &#userpage.toggle-card-view .posts .card, &#search.toggle-card-view .posts .card, &#guild.toggle-card-view .posts .card{
       border: 1px solid $border-color;
       border-radius: $border-radius;
       margin-top: 1rem;
       //box-shadow: $box-shadow-sm;
   }
 
-  &#frontpage&.toggle-card-view .posts .card:last-of-type, &#userpage.toggle-card-view .posts .card:last-of-type, #search.toggle-card-view .posts .card:last-of-type, &#guild.toggle-card-view .posts .card:last-of-type {
+  &#frontpage.toggle-card-view .posts .card:last-of-type, &#userpage.toggle-card-view .posts .card:last-of-type, &#search.toggle-card-view .posts .card:last-of-type, &#guild.toggle-card-view .posts .card:last-of-type {
       border-bottom-left-radius: $border-radius;
       border-bottom-right-radius: $border-radius;
       border: 1px solid $border-color;
       border-radius: $border-radius;
   }
 
-  &#frontpage&.toggle-card-view .posts .card:first-of-type, &#userpage.toggle-card-view .posts .card:first-of-type, #search.toggle-card-view .posts .card:first-of-type, &#guild.toggle-card-view .posts .card:first-of-type {
+  &#frontpage.toggle-card-view .posts .card:first-of-type, &#userpage.toggle-card-view .posts .card:first-of-type, &#search.toggle-card-view .posts .card:first-of-type, &#guild.toggle-card-view .posts .card:first-of-type {
       margin-top: 0;
   }
 
-  &#frontpage&.toggle-card-view .posts .card .post-img, &#userpage.toggle-card-view .posts .card .post-img, #search.toggle-card-view .posts .card .post-img, &#guild.toggle-card-view .posts .card .post-img {
+  &#frontpage.toggle-card-view .posts .card .post-img, &#userpage.toggle-card-view .posts .card .post-img, &#search.toggle-card-view .posts .card .post-img, &#guild.toggle-card-view .posts .card .post-img {
       display: none;
   }
 
-  &#frontpage&.toggle-card-view .posts .card .post-img-lg, &#userpage.toggle-card-view .posts .card .post-img-lg, #search.toggle-card-view .posts .card .post-img-lg, &#guild.toggle-card-view .posts .card .post-img-lg {
+  &#frontpage.toggle-card-view .posts .card .post-img-lg, &#userpage.toggle-card-view .posts .card .post-img-lg, &#search.toggle-card-view .posts .card .post-img-lg, &#guild.toggle-card-view .posts .card .post-img-lg {
       display: block;
       text-align: center;
   }
 
-  &#frontpage&.toggle-card-view .posts .card .post-img-lg img, &#userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img, &#guild.toggle-card-view .posts .card .post-img-lg img {
+  &#frontpage.toggle-card-view .posts .card .post-img-lg img, &#userpage.toggle-card-view .posts .card .post-img-lg img, &#search.toggle-card-view .posts .card .post-img-lg img, &#guild.toggle-card-view .posts .card .post-img-lg img {
       max-width: 55%;
       height: auto;
   }
 
-  &#frontpage&.toggle-card-view .posts .card .embed-lg, &#userpage.toggle-card-view .posts .card .embed-lg, #search.toggle-card-view .posts .card .embed-lg, &#guild.toggle-card-view .posts .card .embed-lg {
+  &#frontpage.toggle-card-view .posts .card .embed-lg, &#userpage.toggle-card-view .posts .card .embed-lg, &#search.toggle-card-view .posts .card .embed-lg, &#guild.toggle-card-view .posts .card .embed-lg {
       display: flex;
       z-index: 2;
   }
 
-  &#frontpage&.toggle-card-view .posts .card .post-preview-lg, &#userpage.toggle-card-view .posts .card .post-preview-lg, #search.toggle-card-view .posts .card .post-preview-lg, &#guild.toggle-card-view .posts .card .post-preview-lg {
+  &#frontpage.toggle-card-view .posts .card .post-preview-lg, &#userpage.toggle-card-view .posts .card .post-preview-lg, &#search.toggle-card-view .posts .card .post-preview-lg, &#guild.toggle-card-view .posts .card .post-preview-lg {
       display: block;
   }
 
-  &#frontpage&.toggle-card-view .posts .card .post-preview-lg .post-body, &#userpage.toggle-card-view .posts .card .post-preview-lg .post-body, #search.toggle-card-view .posts .card .post-preview-lg .post-body, &#guild.toggle-card-view .posts .card .post-preview-lg .post-body {
+  &#frontpage.toggle-card-view .posts .card .post-preview-lg .post-body, &#userpage.toggle-card-view .posts .card .post-preview-lg .post-body, &#search.toggle-card-view .posts .card .post-preview-lg .post-body, &#guild.toggle-card-view .posts .card .post-preview-lg .post-body {
       -webkit-mask-image: linear-gradient(180deg,#000 40%,transparent);
       mask-image: linear-gradient(180deg,#000 40%,transparent);
       overflow: hidden;
@@ -5764,18 +5764,18 @@
       background-color: $gray-700;
   }
 
-  &#frontpage& .posts .card:first-of-type, &#userpage .posts .card:first-of-type, #search .posts .card:first-of-type, &#guild .posts .card:first-of-type, &#settings-guild .posts .card:first-of-type {
+  &#frontpage .posts .card:first-of-type, &#userpage .posts .card:first-of-type, &#search .posts .card:first-of-type, &#guild .posts .card:first-of-type, &#settings-guild .posts .card:first-of-type {
       border-top-left-radius: $border-radius;
       border-top-right-radius: $border-radius;
   }
 
-  &#frontpage& .posts .card:nth-last-of-type(2), &#userpage .posts .card:nth-last-of-type(2), #search .posts .card:nth-last-of-type(2), &#guild .posts .card:nth-last-of-type(2), &#settings-guild .posts .card:last-of-type  {
+  &#frontpage .posts .card:nth-last-of-type(2), &#userpage .posts .card:nth-last-of-type(2), &#search .posts .card:nth-last-of-type(2), &#guild .posts .card:nth-last-of-type(2), &#settings-guild .posts .card:last-of-type  {
       border-bottom-left-radius: $border-radius;
       border-bottom-right-radius: $border-radius;
       border-bottom: 1px solid $border-color;
   }
 
-  &#frontpage& .posts .card, &#userpage .posts .card, #search .posts .card, &#guild .posts .card, &#settings-guild .posts .card {
+  &#frontpage .posts .card, &#userpage .posts .card, &#search .posts .card, &#guild .posts .card, &#settings-guild .posts .card {
       border-width: 1px 1px 0 1px;
       border-color: $border-color;
       border-style: solid;
@@ -5783,7 +5783,7 @@
       padding: 0.5rem;
   }
 
-  &#frontpage& .posts .card:hover, &#userpage .posts .card:hover, #search .posts .card:hover, &#guild .posts .card:hover, &#settings-guild .posts .card:hover {
+  &#frontpage .posts .card:hover, &#userpage .posts .card:hover, &#search .posts .card:hover, &#guild .posts .card:hover, &#settings-guild .posts .card:hover {
       background-color: $gray-600;
   }
 
@@ -5803,11 +5803,11 @@
       color: $primary;
   }
 
-  &#frontpage& .post-title a {
+  &#frontpage .post-title a {
       color: $black;
   }
 
-  &#frontpage& .post-title a:hover, &#frontpage& .post-title a:active, &#frontpage& .post-title a:focus  {
+  &#frontpage .post-title a:hover, &#frontpage .post-title a:active, &#frontpage .post-title a:focus  {
       text-decoration: none;
       color: $black;
   }
@@ -5824,7 +5824,7 @@
       width: fit-content;
   }
 
-  &#frontpage& .posts .card .card-footer, &#userpage .posts .card .card-footer, &#thread .card .card-footer, #search .posts .card .card-footer, &#guild .posts .card .card-footer {
+  &#frontpage .posts .card .card-footer, &#userpage .posts .card .card-footer, &#thread .card .card-footer, &#search .posts .card .card-footer, &#guild .posts .card .card-footer {
       border: 0;
       background-color: transparent;
       padding: 0;
@@ -6003,7 +6003,7 @@
           border-top-right-radius: 1rem;
           border-top-left-radius: 1rem;
       }
-      &#frontpage&, #search, &#guild {
+      &#frontpage, &#search, &#guild {
           padding-top: 98px;
           background-color: $gray-700;
       }
@@ -7281,7 +7281,7 @@
 
   // Medium devices (tablets, less than 992px)
   @media (max-width: 991.98px) {
-      &#frontpage&, #search {
+      &#frontpage, &#search {
           padding-top: 49px;
       }
   }
@@ -7358,43 +7358,43 @@
       background-color: $light;
   }
 
-  &#frontpage&, #search, &#guild {
+  &#frontpage, &#search, &#guild {
       padding-top: 98px;
       background-color: $light;
   }
 
-  #search .search-results.card  {
+  &#search .search-results.card  {
       border-bottom: 1px solid $border-color;
       border-width: 0 0 1px 0;
       border-radius: 0;
   }
 
-  &#frontpage& .posts .card, &#userpage .posts .card, #search .posts .card, &#guild .posts .card {
+  &#frontpage .posts .card, &#userpage .posts .card, &#search .posts .card, &#guild .posts .card {
       padding: 7px 15px;
       border-width: 0 0 1px 0;
   }
 
-  &#frontpage& .posts .card:first-of-type, &#userpage .posts .card:first-of-type, #search .posts .card:first-of-type, &#guild .posts .card:first-of-type {
+  &#frontpage .posts .card:first-of-type, &#userpage .posts .card:first-of-type, &#search .posts .card:first-of-type, &#guild .posts .card:first-of-type {
       border-radius: 0;
   }
 
-  &#frontpage& .posts .card, &#userpage .posts .card, #search .posts .card, &#userpage .posts .card {
+  &#frontpage .posts .card, &#userpage .posts .card, &#search .posts .card, &#userpage .posts .card {
       background-color: $gray-600;
   }
 
-  &#frontpage& .posts .card:last-of-type, #search .posts .card:last-of-type {
+  &#frontpage .posts .card:last-of-type, &#search .posts .card:last-of-type {
       border-bottom: 1px solid $border-color;
   }
 
-  &#frontpage& .posts .card:hover .post-title a, #search .posts .card:hover .post-title a{
+  &#frontpage .posts .card:hover .post-title a, &#search .posts .card:hover .post-title a{
       color: $primary;
   }
 
-  &#frontpage& .posts .card .post-img, #search .posts .card .post-img {
+  &#frontpage .posts .card .post-img, &#search .posts .card .post-img {
       z-index: 3;
   }
 
-  &#frontpage& .posts .card.enlarged .mobile-thumb-enlarged, &#userpage .posts .card.enlarged .mobile-thumb-enlarged, #search .posts .card.enlarged .mobile-thumb-enlarged, &#guild .posts .card.enlarged .mobile-thumb-enlarged {
+  &#frontpage .posts .card.enlarged .mobile-thumb-enlarged, &#userpage .posts .card.enlarged .mobile-thumb-enlarged, &#search .posts .card.enlarged .mobile-thumb-enlarged, &#guild .posts .card.enlarged .mobile-thumb-enlarged {
       display: block;
   }
 
@@ -7413,7 +7413,7 @@
 
   /*
 
-  &#frontpage&.toggle-card-view .posts .card, &#userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card, &#guild.toggle-card-view .posts .card {
+  &#frontpage.toggle-card-view .posts .card, &#userpage.toggle-card-view .posts .card, &#search.toggle-card-view .posts .card, &#guild.toggle-card-view .posts .card {
       border-width: 0 0 1px 0;
       border-color: $border-color;
       border-style: solid;
@@ -7422,7 +7422,7 @@
       box-shadow: none;
   }
 
-  &#frontpage&.toggle-card-view .posts .card .post-img-lg img, &#userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img, &#guild.toggle-card-view .posts .card .post-img-lg img {
+  &#frontpage.toggle-card-view .posts .card .post-img-lg img, &#userpage.toggle-card-view .posts .card .post-img-lg img, &#search.toggle-card-view .posts .card .post-img-lg img, &#guild.toggle-card-view .posts .card .post-img-lg img {
       max-width: 100%;
       height: auto;
   }
@@ -7478,7 +7478,7 @@
   }
 
 
-  &#frontpage& .voting, #search .voting, &#userpage .voting, &#guild .voting {
+  &#frontpage .voting, &#search .voting, &#userpage .voting, &#guild .voting {
       margin: 0;
   }
 
