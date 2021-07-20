@@ -150,7 +150,6 @@ def create_board_get(v):
         categories=CATEGORIES
         )
 
-
 @app.route("/api/board_available/<name>", methods=["GET"])
 @app.route("/api/v1/board_available/<name>", methods=["GET"])
 @auth_desired
@@ -670,6 +669,7 @@ def user_kick_pid(pid, v):
     cache.delete_memoized(Board.idlist, current_board)
 
     return "", 204
+
 
 
 @app.route("/mod/take/<pid>", methods=["POST"])
@@ -1291,6 +1291,25 @@ def board_about_mods(boardname, v):
         "html":lambda:render_template("guild/mods.html", v=v, b=board, me=me),
         "api":lambda:jsonify({"data":[x.json for x in board.mods_list]})
         }
+
+@app.route("/+<boardname>/hide_member", methods=["POST"])
+@auth_required
+@api("update")
+def hide_guild_member_post(boardname, v):
+
+    board = get_guild(boardname, v)
+    if not board:
+        return jsonify({"error": "No board found"}), 404
+    check_hidden_member = g.db.query(HideGuildMembership).filter(board_id=board.id, user_id=v.id).first()
+
+    if check_hidden_member:
+        g.db.delete(check_hidden_member)
+    else:
+        hide_membership = HideGuildMembership(user_id=v.id, board_id=board.id)
+        g.db.add(hide_membership)
+    g.db.commit()
+    return "", 204
+
 
 @app.route("/+<boardname>/mod/css", methods=["GET"])
 @app.route("/api/vue/+<boardname>/mod/css",  methods=["GET"])
