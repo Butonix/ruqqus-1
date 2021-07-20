@@ -1136,7 +1136,7 @@ def get_guild_members(board, limit=25, page=1):
         limit = 10
 
 
-    g.db.query(User)\
+    members = g.db.query(User)\
         .filter(
             User.id.in_(
                 g.db.query(Subscription.user_id)
@@ -1147,3 +1147,4 @@ def get_guild_members(board, limit=25, page=1):
                     )
             )
         ).offset(limit * (page - 1)).limit(limit).all()
+    return [x for x in members.json_core]
