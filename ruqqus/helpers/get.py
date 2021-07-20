@@ -1144,7 +1144,7 @@ def get_guild_members(board, limit=25, page=1):
                         board_id=board.id,
                         is_active=True,
                         show_membership=True
-                    )
+                    ).subquery()
             )
         ).offset(limit * (page - 1)).limit(limit).all()
     return [x for x in members.json_core]
