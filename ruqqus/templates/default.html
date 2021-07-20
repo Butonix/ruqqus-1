@@ -186,11 +186,7 @@
     
     {% block stylesheets %}
 
-    {% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
-    <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css?v=2.37.8">
-    {% else %}
     <link id="css-link" rel="stylesheet" href="/assets/style/main.css?v=2.37.8">
-    {% endif %}
 
     {% endblock %}
 
