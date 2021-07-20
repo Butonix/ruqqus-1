@@ -47,7 +47,7 @@ class GuildImage(Base, Stndrd):
     board_id = Column(Integer, ForeignKey("boards.id"))
     user_id = Column(Integer, ForeignKey("users.id"))
     created_utc = Column(Integer)
-    creation_ip = Column(String(128)),
+    creation_ip = Column(String(128))
     creation_region = Column(String(2))
     name=Column(String(64))
 
