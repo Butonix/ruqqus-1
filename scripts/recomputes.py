@@ -21,7 +21,7 @@ def recompute():
     while True:
 
         cycle +=1
-        print(f"cycle {cycle}")
+        print_(f"cycle {cycle}")
 
         #purge deleted content older than 90 days
 
