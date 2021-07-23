@@ -56,7 +56,7 @@ def recompute():
             db.add(p.submission_aux)
 
             if not x % 100:
-                print(f"purged {x} posts")
+                print_(f"purged {x} posts")
                 db.commit()
 
         db.commit()
@@ -85,7 +85,7 @@ def recompute():
             db.add(c.comment_aux)
 
             if not x % 100:
-                print(f"purged {x} comments")
+                print_(f"purged {x} comments")
                 db.commit()
 
         db.commit()
@@ -95,10 +95,10 @@ def recompute():
         boards = db.query(Board).options(
             lazyload('*')).filter_by(is_banned=False).order_by(Board.rank_trending.desc())
         if cycle % 10:
-            print("top 1000 boards only")
+            print_("top 1000 boards only")
             boards = boards.limit(1000)
         else:
-            print("all boards")
+            print_("all boards")
 
         i = 0
         for board in boards.all():
@@ -110,7 +110,7 @@ def recompute():
             if not i % 100:
                 db.commit()
 
-        print(f"Re-ranked {i} boards")
+        print_(f"Re-ranked {i} boards")
 
 
         cutoff = now - (60 * 60 * 24 * 180)
@@ -158,18 +158,18 @@ def recompute():
             page += 1
             print_(f"re-scored {post_count} posts")
 
-        print("Done with posts. Rescored {")
+        print_("Done with posts. Rescored {")
 
         db.commit()
 
-        print("Deleting old mod actions")
+        print_("Deleting old mod actions")
 
         actions=db.query(ModAction).filter(ModAction.created_utc<int(time.time())-60*60*24*180)
         count=actions.count()
         actions.delete()
         db.commit()
 
-        print(f"deleted {count} old mod actions")
+        print_(f"deleted {count} old mod actions")
 
 
 
