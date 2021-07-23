@@ -153,23 +153,6 @@ def recompute():
 
                 db.add(post)
 
-                comment_count = 0
-                for comment in post._comments.filter_by(
-                        is_banned=False, deleted_utc=0).all():
-
-                    comment_count += 1
-
-                    comment.upvotes = comment.ups
-                    comment.downvotes = comment.downs
-                    db.add(comment)
-                    db.flush()
-
-                    comment.score_disputed = comment.rank_fiery
-                    comment.score_hot = comment.rank_hot
-                    # comment.score_top=comment.score
-
-                    db.add(comment)
-
             db.commit()
 
             page += 1
