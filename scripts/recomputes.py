@@ -2,7 +2,7 @@ from ruqqus.__main__ import db_session
 from ruqqus.classes import *
 
 import time
-import daemon
+import gevent
 
 db = db_session()
 
@@ -174,7 +174,8 @@ def recompute():
 
 
 if __name__=="__main__":
-    with daemon.DaemonContext():
-        recompute()
+    #with daemon.DaemonContext():
+    
+    gevent.spawn(recompute)
 
 #recompute()
