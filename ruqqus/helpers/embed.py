@@ -97,8 +97,11 @@ def instagram_embed(url):
 
 def rumble_embed(url):
     
-    print(url)
-    r=requests.get(url)
+    #print(url)
+    headers={
+        "User-Agent":"Rumble embedder for Ruqqus"
+    }
+    r=requests.get(url, headers=headers)
     
     soup=BeautifulSoup(r.content, features="html.parser")
     
