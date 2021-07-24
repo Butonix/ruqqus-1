@@ -174,8 +174,7 @@ def recompute():
 
 
 if __name__=="__main__":
-    #with daemon.DaemonContext():
-    
-    gevent.spawn(recompute)
+    with daemon.DaemonContext():
+        recompute()
 
 #recompute()
