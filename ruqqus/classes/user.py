@@ -1425,7 +1425,7 @@ class User(Base, Stndrd, Age_times):
 
             minutes=wait//60
 
-            text=f"{days:02d}:{hours:02d}:{minutes:02d}"
+            text=f"{days}d {hours:02d}h {minutes:02d}m"
 
         return f"Unban in {text}"
     
