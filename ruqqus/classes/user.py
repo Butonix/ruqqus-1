@@ -1407,3 +1407,25 @@ class User(Base, Stndrd, Age_times):
     def is_following(self):
         return self.__dict__.get('_is_following',None)
     
+    @property
+    def unban_string(self):
+        if self.unban_utc==0:
+            return "Permanent Ban"
+
+        wait = self.unban_utc - int(time.time())
+
+        if wait<60:
+            text="just a moment"
+        else:
+            days = wait // (60*60*24)
+            wait -= days*60*60*24
+
+            hours=wait // (60*60)
+            wait -= hours*60*60
+
+            minutes=wait//60
+
+            text=f"{days:02d}:{hours:02d}:{minutes:02d}"
+
+        return f"Unban in {text}"
+    

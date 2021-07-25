@@ -285,6 +285,7 @@
 {% if v.admin_level >=3 and v.admin_level > u.admin_level %}
 {% if u.is_suspended %}
 <p>IP: <a href="/admin/ip/{{ u.creation_ip }}" target="_blank">{{ u.creation_ip }}</a></p>
+<p>{{ u.unban_string }}</p>
 <form action="/api/unban_user/{{ u.id }}" method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input type="submit" class="btn btn-success" value="Unban user">
