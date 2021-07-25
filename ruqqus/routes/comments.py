@@ -47,7 +47,8 @@ def comment_cid_api_redirect(c_id=None, p_id=None):
 
 @app.route("/api/v1/comment/<c_id>", methods=["GET"])
 @app.route("/+<boardname>/post/<p_id>/<anything>/<c_id>", methods=["GET"])
-@app.route("/api/vue/comment/<c_id>")
+@app.get("/api/vue/comment/<c_id>")
+@app.get("/api/v2/comments/<c_id>")
 @auth_desired
 @api("read")
 def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None):
@@ -278,6 +279,7 @@ def post_pid_comment_cid_noboard(p_id, c_id, anything=None, v=None):
 
 @app.route("/api/comment", methods=["POST"])
 @app.route("/api/v1/comment", methods=["POST"])
+@app.poset("/api/v2/comments")
 @limiter.limit("6/minute")
 @is_not_banned
 @no_negative_balance('toast')
@@ -572,6 +574,7 @@ def api_comment(v):
 
 
 @app.route("/edit_comment/<cid>", methods=["POST"])
+@app.patch("/api/v2/comments/<cid>")
 @is_not_banned
 @validate_formkey
 @api("edit")
@@ -706,6 +709,7 @@ def edit_comment(cid, v):
 
 @app.route("/delete/comment/<cid>", methods=["POST"])
 @app.route("/api/v1/delete/comment/<cid>", methods=["POST"])
+@app.delete("/api/v2/comments/<cid>")
 @auth_required
 @validate_formkey
 @api("delete")
@@ -751,13 +755,14 @@ def embed_comment_cid(cid, pid=None):
 
     return render_template("embeds/comment.html", c=comment)
 
-@app.route("/mod/comment_pin/<bid>/<cid>", methods=["POST"])
-@app.route("/api/v1/comment_pin/<bid>/<cid>", methods=["POST"])
+@app.route("/mod/comment_pin/<boardname>/<cid>", methods=["POST"])
+@app.route("/api/v1/comment_pin/<boardname>/<cid>", methods=["POST"])
+@app.post("/api/v2/boards/<boardname>/comments/<cid>/pin")
 @auth_required
 @is_guildmaster("content")
 @api("guildmaster")
 @validate_formkey
-def mod_toggle_comment_pin(bid, cid, board, v):
+def mod_toggle_comment_pin(boardname, cid, board, v):
 
     comment = get_comment(cid, v=v)
 

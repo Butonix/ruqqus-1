@@ -2132,11 +2132,11 @@ herald_comment=function(bid,cid){
 
 }
 
-pin_comment=function(bid,cid){
+pin_comment=function(name,cid){
 
 
   var xhr = new XMLHttpRequest();
-  xhr.open("post", "/mod/comment_pin/"+bid+'/'+cid);
+  xhr.open("post", "/mod/comment_pin/"+name+'/'+cid);
 
   var form = new FormData();
 
