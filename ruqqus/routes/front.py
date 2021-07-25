@@ -279,6 +279,7 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
 
 @app.route("/", methods=["GET"])
 @app.route("/api/v1/front/listing", methods=["GET"])
+@app.route("/api/v2/me/submissions")
 @auth_desired
 @api("read")
 def home(v):
@@ -373,6 +374,7 @@ def categories_select(v):
 @app.route("/all", methods=["GET"])
 @app.route("/api/v1/all/listing", methods=["GET"])
 @app.route("/inpage/all")
+@app.get("/api/v2/submissions")
 @auth_desired
 @api("read")
 def front_all(v):
@@ -572,7 +574,8 @@ def guild_ids(sort="subs", page=1, nsfw=False, cats=[]):
 
 
 @app.route("/browse", methods=["GET"])
-@app.route("/api/v1/guilds")
+@app.get("/api/v1/guilds")
+@app.get("/api/v2/guilds")
 @auth_desired
 @api("read")
 def browse_guilds(v):
@@ -616,11 +619,12 @@ def browse_guilds(v):
 
 @app.route('/mine', methods=["GET"])
 @app.route("/api/v1/mine", methods=["GET"])
+@app.get("/api/v2/me/<kind>")
 @auth_required
 @api("read")
-def my_subs(v):
+def my_subs(v, kind=None):
 
-    kind = request.args.get("kind", "guilds")
+    kind = kind if kind else request.args.get("kind", "guilds")
     page = max(int(request.args.get("page", 1)), 1)
 
     if kind == "guilds":
@@ -851,6 +855,7 @@ def comment_idlist(page=1, v=None, nsfw=False, **kwargs):
 
 @app.route("/all/comments", methods=["GET"])
 @app.route("/api/v1/front/comments", methods=["GET"])
+@app.get("/api/v2/comments")
 @auth_desired
 @api("read")
 def all_comments(v):
