@@ -313,11 +313,11 @@ def sign_up_post(v):
         return new_signup("Passwords did not match. Please try again.")
 
     # check username/pass conditions
-    if not re.match(valid_username_regex, request.form.get("username")):
+    if not re.fullmatch(valid_username_regex, username):
         #print(f"signup fail - {username } - mismatched passwords")
         return new_signup("Invalid username")
 
-    if not re.match(valid_password_regex, request.form.get("password")):
+    if not re.fullmatch(valid_password_regex, request.form.get("password")):
         #print(f"signup fail - {username } - invalid password")
         return new_signup("Password must be between 8 and 100 characters.")
 
