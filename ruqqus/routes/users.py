@@ -87,6 +87,7 @@ def redditor_moment_redirect(username):
 
 @app.route("/@<username>", methods=["GET"])
 @app.route("/api/v1/user/<username>/listing", methods=["GET"])
+@app.get("/api/v2/users/<username>/submissions")
 @auth_desired
 @api("read")
 def u_username(username, v=None):
@@ -170,6 +171,7 @@ def u_username(username, v=None):
 
 @app.route("/@<username>/comments", methods=["GET"])
 @app.route("/api/v1/user/<username>/comments", methods=["GET"])
+@app.get("/api/v2/users/<username>/comments")
 @auth_desired
 @api("read")
 def u_username_comments(username, v=None):
@@ -258,6 +260,7 @@ def u_username_comments(username, v=None):
             }
 
 @app.route("/api/v1/user/<username>/info", methods=["GET"])
+@app.get("/api/v2/users/<username>")
 @auth_desired
 @api("read")
 def u_username_info(username, v=None):
@@ -273,6 +276,7 @@ def u_username_info(username, v=None):
 
 
 @app.route("/api/follow/<username>", methods=["POST"])
+@app.post("/api/v2/users/<username>/follow")
 @auth_required
 def follow_user(username, v):
 
@@ -300,6 +304,7 @@ def follow_user(username, v):
 
 
 @app.route("/api/unfollow/<username>", methods=["POST"])
+@app.delete("/api/v2/users/<username>/follow")
 @auth_required
 def unfollow_user(username, v):
 
@@ -330,13 +335,13 @@ def api_agree_tos(v):
     return redirect("/help/terms")
 
 
-@app.route("/@<username>/pic/profile")
+@app.get("/@<username>/pic/profile")
 @limiter.exempt
 def user_profile(username):
     x = get_user(username)
     return redirect(x.profile_url)
 
-@app.route("/uid/<uid>/pic/profile")
+@app.get("/uid/<uid>/pic/profile")
 @limiter.exempt
 def user_profile_uid(uid):
     x=get_account(uid)
@@ -345,6 +350,7 @@ def user_profile_uid(uid):
 
 @app.route("/saved", methods=["GET"])
 @app.route("/api/v1/saved", methods=["GET"])
+@app.get("/api/v2/me/saved")
 @auth_required
 @api("read")
 def saved_listing(v):
