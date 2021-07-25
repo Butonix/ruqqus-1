@@ -59,9 +59,8 @@ def incoming_post_shortlink(base36id=None):
 @app.route("/+<boardname>/post/<base36id>/", methods=["GET"])
 @app.route("/+<boardname>/post/<base36id>/<anything>", methods=["GET"])
 @app.route("/api/v1/post/<base36id>", methods=["GET"])
-@app.route("/test/post/<base36id>", methods=["GET"])
+@app.get("/api/v2/submissions/<base36id>")
 @auth_desired
-
 @api("read")
 def post_base36id(base36id, boardname=None, anything=None, v=None):
     
@@ -131,13 +130,14 @@ def submit_get(v):
                            )
 
 
-@app.route("/edit_post/<pid>", methods=["POST"])
+@app.route("/edit_post/<base36id>", methods=["POST"])
+@app.patch("/api/v2/submissions/<base36id>")
 @is_not_banned
 @no_negative_balance("html")
 @validate_formkey
-def edit_post(pid, v):
+def edit_post(base36id, v):
 
-    p = get_post(pid)
+    p = get_post(base36id)
 
     if not p.author_id == v.id:
         abort(403)
@@ -254,6 +254,7 @@ def get_post_title(v):
 @app.route("/submit", methods=['POST'])
 @app.route("/api/v1/submit", methods=["POST"])
 @app.route("/api/vue/submit", methods=["POST"])
+@app.post("/api/v2/submissions")
 @limiter.limit("6/minute")
 @is_not_banned
 @no_negative_balance('html')
@@ -916,14 +917,15 @@ def submit_post(v):
 #     return "", 204
 
 
-@app.route("/delete_post/<pid>", methods=["POST"])
-@app.route("/api/v1/delete_post/<pid>", methods=["POST"])
+@app.route("/delete_post/<base36id>", methods=["POST"])
+@app.route("/api/v1/delete_post/<base36id>", methods=["POST"])
+@app.delete("/api/v2/submissions/<base36id>")
 @auth_required
 @api("delete")
 @validate_formkey
-def delete_post_pid(pid, v):
+def delete_post_pid(base36id, v):
 
-    post = get_post(pid)
+    post = get_post(base36id)
     if not post.author_id == v.id:
         abort(403)
         
@@ -970,14 +972,15 @@ def embed_post_pid(pid):
     return render_template("embeds/submission.html", p=post)
 
 
-@app.route("/api/toggle_post_nsfw/<pid>", methods=["POST"])
-@app.route("/api/v1/toggle_post_nsfw/<pid>", methods=["POST"])
+@app.route("/api/toggle_post_nsfw/<base36id>", methods=["POST"])
+@app.route("/api/v1/toggle_post_nsfw/<base36id>", methods=["POST"])
+@app.post("/api/v2/submissions/<base36id>/is_nsfw")
 @is_not_banned
 @api("update")
 @validate_formkey
-def toggle_post_nsfw(pid, v):
+def toggle_post_nsfw(base36id, v):
 
-    post = get_post(pid)
+    post = get_post(base36id)
 
     mod=post.board.has_mod(v)
 
@@ -1003,14 +1006,15 @@ def toggle_post_nsfw(pid, v):
     return "", 204
 
 
-@app.route("/api/toggle_post_nsfl/<pid>", methods=["POST"])
-@app.route("/api/v1/toggle_post_nsfl/<pid>", methods=["POST"])
+@app.route("/api/toggle_post_nsfl/<base36id>", methods=["POST"])
+@app.route("/api/v1/toggle_post_nsfl/<base36id>", methods=["POST"])
+@app.post("/api/v2/submissions/<base36id>/is_nsfl")
 @is_not_banned
 @api("update")
 @validate_formkey
-def toggle_post_nsfl(pid, v):
+def toggle_post_nsfl(base36id, v):
 
-    post = get_post(pid)
+    post = get_post(base36id)
 
     mod=post.board.has_mod(v)
 
@@ -1036,12 +1040,14 @@ def toggle_post_nsfl(pid, v):
     return "", 204
 
 
-@app.route("/retry_thumb/<pid>", methods=["POST"])
+@app.route("/retry_thumb/<base36id>", methods=["POST"])
+@app.post("/api/v2/submissions/<base36id>/thumb")
 @is_not_banned
+@api()
 @validate_formkey
-def retry_thumbnail(pid, v):
+def retry_thumbnail(base36id, v):
 
-    post = get_post(pid, v=v)
+    post = get_post(base36id, v=v)
 
     if post.author_id != v.id and v.admin_level < 3:
         abort(403)
@@ -1061,12 +1067,13 @@ def retry_thumbnail(pid, v):
     return jsonify({"message": "Success"})
 
 
-@app.route("/save_post/<pid>", methods=["POST"])
+@app.route("/save_post/<base36id>", methods=["POST"])
+@app.post("/api/v2/submissions/<base36id>/save")
 @auth_required
 @validate_formkey
-def save_post(pid, v):
+def save_post(base36id, v):
 
-    post=get_post(pid)
+    post=get_post(base36id)
 
     new_save=SaveRelationship(
         user_id=v.id,
@@ -1082,12 +1089,13 @@ def save_post(pid, v):
     return "", 204
 
 
-@app.route("/unsave_post/<pid>", methods=["POST"])
+@app.route("/unsave_post/<base36id>", methods=["POST"])
+@app.delete("/api/v2/submissions/<base36id>/save")
 @auth_required
 @validate_formkey
-def unsave_post(pid, v):
+def unsave_post(base36id, v):
 
-    post=get_post(pid)
+    post=get_post(base36id)
 
     save=g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id).first()
 
