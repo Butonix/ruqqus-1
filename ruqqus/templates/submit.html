@@ -274,21 +274,27 @@
     {% if v.can_submit_image %}
     <script>
     document.onpaste = function(event) {
-        f=document.getElementById('file-upload');
-        f.files = event.clipboardData.files;
-        $('#filename-show').text(f.files[0].name);
-        $('#urlblock').addClass('d-none');
 
-        var fileReader = new FileReader();
-        fileReader.readAsDataURL(f.files[0]);
-        fileReader.addEventListener("load", function () {
-            $('#image-preview').attr('src', this.result);
-    });  
-        
-        $('#file-upload').attr('required', false);
+        f = document.getElementById('file-upload');
+        files = event.clipboardData.files;
+        filename = files[0].name.toLowerCase();
 
-        checkForRequired();
+        if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".gif"))
+        {
+            f.files = files;
+            $('#filename-show').text(filename);
+            $('#urlblock').addClass('d-none');
 
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(f.files[0]);
+            fileReader.addEventListener("load", function () {
+                $('#image-preview').attr('src', this.result);
+            });
+
+            $('#file-upload').attr('required', false);
+
+            checkForRequired();
+        }
     }
 
     $('#file-upload').on('change', function(e){
