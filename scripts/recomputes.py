@@ -94,13 +94,24 @@ def recompute():
 
         print_("beginning guild trend recompute")
         boards = db.query(Board).options(
-            lazyload('*')).filter_by(is_banned=False).order_by(Board.rank_trending.desc())
-        if cycle % 10:
-            print_("top 1000 boards only")
-            boards = boards.limit(1000)
-        else:
-            print_("all boards")
-
+            lazyload('*')
+        ).filter_by(is_banned=False).filter(
+                or_(
+                    Board.id.in_(
+                        db.query(Board.id).order_by(Board.rank_trending.desc()).limit(1000)
+                    ),
+                    Board.id.in_(
+                        db.query(Board.id).order_by(Board.stored_subscriber_count.desc()).limit(1000)
+                    )
+                )
+        )
+        #if cycle % 10:
+        #    print_("top 1000 boards only")
+        #    boards = boards.limit(1000)
+        #else:
+        #    print_("all boards")
+        board_count=boards.count()
+        print_(f"{board_count} boards to re-rank")
         i = 0
         for board in boards.all():
             i += 1
