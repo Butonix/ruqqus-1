@@ -1126,25 +1126,24 @@ def get_promocode(code):
 
     return code
 
-def get_guild_members(board, limit=25, page=1):
-    limit = int(limit)
-    page = int(page)
-
-    if limit > 250:
-        limit = 250
-    elif limit < 10:
-        limit = 10
-
+def get_guild_members(bid, limit=25, page=1):
 
     members = g.db.query(User)\
         .filter(
             User.id.in_(
                 g.db.query(Subscription.user_id)
                     .filter(
-                        board_id=board.id,
+                        board_id=bid,
                         is_active=True,
                         show_membership=True
                     ).subquery()
             )
-        ).offset(limit * (page - 1)).limit(limit).all()
-    return [x for x in members.json_core]
+        ).offset(limit * (page - 1)).limit(limit + 1).all()
+
+    members = [x for x in members.json_core]
+    next_exists = (len(members) == limit + 1)
+
+    return {"results": members,
+            "page": page,
+            "limit": limit,
+            "next_exists": next_exists}

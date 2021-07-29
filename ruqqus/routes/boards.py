@@ -1292,8 +1292,8 @@ def board_about_mods(boardname, v):
         "api":lambda:jsonify({"data":[x.json for x in board.mods_list]})
         }
 
-@app.route("/+<boardname>/hide_member", methods=["POST"])
-@app.route("/api/vue/<boardname>/hide_member", methods=["POST"])
+@app.route("/+<boardname>/hide_member", methods=["PUT"])
+@app.route("/api/vue/<boardname>/members", methods=["PUT"])
 @auth_required
 @api("update")
 def hide_guild_member_post(boardname, v):
@@ -1313,6 +1313,32 @@ def hide_guild_member_post(boardname, v):
         return "", 204
 
     return "", 400
+
+@app.route("/+<boardname>/members", methods=["GET"])
+@app.route("/api/vue/<boardname>/members", methods=["GET"])
+@auth_required
+@api("update")
+def hide_guild_member_post(boardname, v):
+
+    board = get_guild(boardname, v)
+
+    if not board:
+        return jsonify({"error": "No Guild found"}), 404
+
+    page = int(request.args.get("page", 1))
+    limit = int(request.args.get("limit", 25))
+
+    if limit > 250:
+        limit = 250
+    elif limit < 10:
+        limit = 10
+
+    members = get_guild_members(board.id, limit, page)
+
+    if not members['results']:
+        return jsonify({"error": "This Guild has no members."}), 400
+
+    return jsonify(members), 200
 
 
 @app.route("/+<boardname>/mod/css", methods=["GET"])
