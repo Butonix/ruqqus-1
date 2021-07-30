@@ -1292,8 +1292,8 @@ def board_about_mods(boardname, v):
         "api":lambda:jsonify({"data":[x.json for x in board.mods_list]})
         }
 
-@app.route("/+<boardname>/hide_member", methods=["PUT"])
-@app.route("/api/vue/<boardname>/members", methods=["PUT"])
+@app.route("/+<boardname>/hide_member", methods=["PATCH"])
+@app.route("/api/vue/<boardname>/members", methods=["PATCH"])
 @auth_required
 @api("update")
 def hide_guild_member_post(boardname, v):
