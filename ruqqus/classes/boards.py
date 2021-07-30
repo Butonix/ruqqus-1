@@ -143,7 +143,12 @@ class Board(Base, Stndrd, Age_times):
             posts = posts.filter_by(over_18=False)
 
         if v and v.hide_offensive:
-            posts = posts.filter_by(is_offensive=False)
+            posts = posts.filter(
+                or_(
+                    Board.is_offensive==False,
+                    Board.author_id==v.id
+                )
+            )
 			
         if v and v.hide_bot and not self.has_mod(v, "content"):
             posts = posts.filter_by(is_bot=False)
