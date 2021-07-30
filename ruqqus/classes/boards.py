@@ -145,8 +145,8 @@ class Board(Base, Stndrd, Age_times):
         if v and v.hide_offensive:
             posts = posts.filter(
                 or_(
-                    Board.is_offensive==False,
-                    Board.author_id==v.id
+                    Submission.is_offensive==False,
+                    Submission.author_id==v.id
                 )
             )
 			
