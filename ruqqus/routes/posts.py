@@ -1088,7 +1088,7 @@ URL path parameters:
 
 
 @app.route("/retry_thumb/<base36id>", methods=["POST"])
-@app.post("/api/v2/submissions/<base36id>/thumb")
+@app.put("/api/v2/submissions/<base36id>/thumb")
 @is_not_banned
 @api()
 @validate_formkey
