@@ -2,7 +2,7 @@ from ruqqus.__main__ import app
 
 class Doc():
 
-    def __init(self, **kwargs):
+    def __init__(self, **kwargs):
         for entry in kwargs:
             self.__dict__[entry]=kwargs[entry]
 
