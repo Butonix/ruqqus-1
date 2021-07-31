@@ -519,7 +519,7 @@ def mod_accept_bid_pid(boardname, pid, board, v):
 
 @app.route("/mod/exile/<boardname>", methods=["POST"])
 @app.route("/api/v1/exile/<boardname>", methods=["POST"])
-@app.post("/api/v2/boards/<boardname>/exiles")
+@app.post("/api/v2/guilds/<boardname>/exiles")
 @auth_required
 @is_guildmaster('access')
 @api("guildmaster")
@@ -614,7 +614,7 @@ def mod_ban_bid_user(boardname, board, v):
 
 @app.route("/mod/unexile/<boardname>/<username>", methods=["POST"])
 @app.route("/api/v1/unexile/<boardname>/<username>", methods=["POST"])
-@app.delete("/api/v2/boards/<boardname>/exiles/<username>")
+@app.delete("/api/v2/guilds/<boardname>/exiles/<username>")
 @auth_required
 @is_guildmaster('access')
 @api("guildmaster")
@@ -2047,7 +2047,7 @@ def change_guild_category(v, board, bid, category):
 
 @app.route("/+<boardname>/mod/log", methods=["GET"])
 @app.route("/api/v1/mod_log/<boardname>", methods=["GET"])
-@app.get("/api/v2/boards/<boardname>/modlog")
+@app.get("/api/v2/guilds/<boardname>/modlog")
 @auth_desired
 @api("read")
 def board_mod_log(boardname, v):
