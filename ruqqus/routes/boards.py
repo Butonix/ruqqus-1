@@ -279,7 +279,7 @@ def reddit_moment_redirect(name):
     return redirect(f"/+{name}")
 
 
-@app.route("/+<name>", methods=["GET"])
+@app.route("/+<guildname>", methods=["GET"])
 @app.route("/api/v1/guild/<guildname>/listing", methods=["GET"])
 @app.get("/api/v2/guilds/<guildname>/submissions")
 @auth_desired
