@@ -278,7 +278,7 @@ def post_pid_comment_cid_noboard(p_id, c_id, anything=None, v=None):
 
 @app.route("/api/comment", methods=["POST"])
 @app.route("/api/v1/comment", methods=["POST"])
-@app.poset("/api/v2/comments")
+@app.post("/api/v2/comments")
 @limiter.limit("6/minute")
 @is_not_banned
 @no_negative_balance('toast')
