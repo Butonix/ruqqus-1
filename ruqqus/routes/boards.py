@@ -703,7 +703,7 @@ URL path parameters:
 @app.route("/user/kick/<pid>", methods=["POST"])
 @app.patch("/api/v2/me/submissions/<pid>/unyank")
 @auth_required
-@api("edit")
+@api("update")
 @validate_formkey
 def user_kick_pid(pid, v):
     """
