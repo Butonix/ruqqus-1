@@ -275,7 +275,7 @@ def delete_oauth_app(v, aid):
 
     g.db.delete(app)
 
-    return redirect('/help/apps')
+    return redirect('/settings/apps')
 
 
 @app.route("/edit_app/<aid>", methods=["POST"])
@@ -308,7 +308,7 @@ Get information about the currently authenticated user. Does not include email o
 
 
 @app.route("/admin/app/approve/<aid>", methods=["POST"])
-@admin_level_required(3)
+@admin_level_required(4)
 @validate_formkey
 def admin_app_approve(v, aid):
 
@@ -318,11 +318,11 @@ def admin_app_approve(v, aid):
 
     g.db.add(app)
 
-    return jsonify({"message": f"{app.app_name} unbanned"})
+    return redirect(app.permalink)
 
 
 @app.route("/admin/app/revoke/<aid>", methods=["POST"])
-@admin_level_required(3)
+@admin_level_required(4)
 @validate_formkey
 def admin_app_revoke(v, aid):
 
@@ -332,7 +332,7 @@ def admin_app_revoke(v, aid):
 
     g.db.add(app)
 
-    return jsonify({"message": f"{app.app_name} banned"})
+    return redirect(app.permalink)
 
 
 @app.route("/app/<aid>", methods=["GET"])
