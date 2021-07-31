@@ -159,7 +159,7 @@ URL path parameters:
 
         vote = CommentVote(user_id=v.id,
                            vote_type=x,
-                           cid=base36decode(cid),
+                           comment_id=base36decode(cid),
                            creation_ip=request.remote_addr,
                            app_id=v.client.application.id if v.client else None
                            )
