@@ -303,7 +303,7 @@ def is_guildmaster(*perms):
         def wrapper(*args, **kwargs):
 
             v = kwargs["v"]
-            boardname = kwargs.get("boardname")
+            boardname = kwargs.get("guildname", kwargs.get("boardname"))
             board_id = kwargs.get("bid")
             bid=request.values.get("bid", request.values.get("board_id"))
 
