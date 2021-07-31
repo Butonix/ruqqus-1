@@ -88,6 +88,17 @@ def redditor_moment_redirect(username):
 @auth_desired
 @api("read")
 def u_username(username, v=None):
+    """
+Get posts created by another user.
+
+URL path parameters:
+* `username` - The user whose posts are being fetched.
+
+Optional query parameters:
+* `sort` - One of `hot`, `new`, `old`, `top`, `activity`, or `disputed`. Default `new`.
+* `t` - One of `day`, `week`, `month`, `year`, `all`. Default `all`.
+* `page` - Page of results to return. Default `1`.
+"""
 
     # username is unique so at most this returns one result. Otherwise 404
 
@@ -172,6 +183,17 @@ def u_username(username, v=None):
 @auth_desired
 @api("read")
 def u_username_comments(username, v=None):
+    """
+Get comments created by another user.
+
+URL path parameters:
+* `username` - The user whose comments are being fetched.
+
+Optional query parameters:
+* `sort` - One of `hot`, `new`, `old`, `top`, or `disputed`. Default `new`.
+* `t` - One of `day`, `week`, `month`, `year`, `all`. Default `all`.
+* `page` - Page of results to return. Default `1`.
+"""
 
     # username is unique so at most this returns one result. Otherwise 404
 
@@ -261,6 +283,12 @@ def u_username_comments(username, v=None):
 @auth_desired
 @api("read")
 def u_username_info(username, v=None):
+    """
+Get information about another user.
+
+URL path parameters:
+* `username` - A user's name.
+"""
 
     user=get_user(username, v=v)
 
@@ -276,6 +304,12 @@ def u_username_info(username, v=None):
 @app.post("/api/v2/users/<username>/follow")
 @auth_required
 def follow_user(username, v):
+    """
+Follow another user.
+
+URL path parameters:
+* `username` - A user's name.
+"""
 
     target = get_user(username)
 
@@ -304,6 +338,12 @@ def follow_user(username, v):
 @app.delete("/api/v2/users/<username>/follow")
 @auth_required
 def unfollow_user(username, v):
+    """
+Unfollow another user.
+
+URL path parameters:
+* `username` - A user's name.
+"""
 
     target = get_user(username)
 
@@ -381,6 +421,12 @@ def saved_listing(v):
 @auth_required
 @api("update")
 def toggle_user_bell(username, v):
+    """
+Toggle notifications for new posts by a user. You must be following the user.
+
+URL path parameters:
+* `username` - Another user's name
+"""
 
     user=get_user(username, v=v, graceful=True)
     if not user:
