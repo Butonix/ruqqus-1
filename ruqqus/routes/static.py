@@ -3,9 +3,11 @@ import jinja2
 import pyotp
 import pprint
 import sass
+import mistletoe
 from flask import *
 
 from ruqqus.helpers.wrappers import *
+from ruqqus.helpers.markdown import *
 import ruqqus.classes
 from ruqqus.classes import *
 from ruqqus.mail import *
@@ -275,6 +277,12 @@ def docs():
 	    @property
 	    def docstring(self):
 	        return self.target_function.__doc__
+
+	    @property
+	    def docstring_html(self):
+	    	with CustomRenderer() as enderer:
+	    		renderer.render(mistletoe.Document(self.docstring))
+	    
 
 	docs=[]
 
