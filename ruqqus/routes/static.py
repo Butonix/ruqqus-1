@@ -276,7 +276,7 @@ def docs():
 
 	    @property
 	    def docstring(self):
-	        return self.target_function.__doc__
+	        return self.target_function.__doc__ if self.target_function.__doc__ else "[docstring not present]"
 
 	    @property
 	    def docstring_html(self):
