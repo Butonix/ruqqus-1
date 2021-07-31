@@ -526,6 +526,13 @@ URL path parameters:
 @api("guildmaster")
 @validate_formkey
 def mod_accept_bid_pid(guildname, pid, board, v):
+    """
+Dismiss reports on submission and keep it in your guild.
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+* `pid` - The base 36 id of the post
+"""
 
     post = get_post(pid)
     if not post.board_id == board.id:
