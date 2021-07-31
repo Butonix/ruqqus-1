@@ -1006,13 +1006,13 @@ def embed_post_pid(pid):
     return render_template("embeds/submission.html", p=post)
 
 
-@app.route("/api/toggle_post_nsfw/<base36id>", methods=["POST"])
-@app.route("/api/v1/toggle_post_nsfw/<base36id>", methods=["POST"])
-@app.patch("/api/v2/submissions/<base36id>/toggle_nsfw")
+@app.route("/api/toggle_post_nsfw/<pid>", methods=["POST"])
+@app.route("/api/v1/toggle_post_nsfw/<pid>", methods=["POST"])
+@app.patch("/api/v2/submissions/<pid>/toggle_nsfw")
 @is_not_banned
 @api("update")
 @validate_formkey
-def toggle_post_nsfw(base36id, v):
+def toggle_post_nsfw(pid, v):
     """
 Toggle "NSFW" status on a post.
 
@@ -1021,7 +1021,7 @@ URL path parameters:
 """
 
 
-    post = get_post(base36id)
+    post = get_post(pid)
 
     mod=post.board.has_mod(v)
 
@@ -1047,13 +1047,13 @@ URL path parameters:
     return "", 204
 
 
-@app.route("/api/toggle_post_nsfl/<base36id>", methods=["POST"])
-@app.route("/api/v1/toggle_post_nsfl/<base36id>", methods=["POST"])
-@app.patch("/api/v2/submissions/<base36id>/toggle_nsfl")
+@app.route("/api/toggle_post_nsfl/<pid>", methods=["POST"])
+@app.route("/api/v1/toggle_post_nsfl/<pid>", methods=["POST"])
+@app.patch("/api/v2/submissions/<pid>/toggle_nsfl")
 @is_not_banned
 @api("update")
 @validate_formkey
-def toggle_post_nsfl(base36id, v):
+def toggle_post_nsfl(pid, v):
     """
 Toggle "NSFL" status on a post.
 
@@ -1061,7 +1061,7 @@ URL path parameters:
 * `pid` - The base 36 post id.
 """
 
-    post = get_post(base36id)
+    post = get_post(pid)
 
     mod=post.board.has_mod(v)
 
@@ -1087,12 +1087,12 @@ URL path parameters:
     return "", 204
 
 
-@app.route("/retry_thumb/<base36id>", methods=["POST"])
-@app.put("/api/v2/submissions/<base36id>/thumb")
+@app.route("/retry_thumb/<pid>", methods=["POST"])
+@app.put("/api/v2/submissions/<pid>/thumb")
 @is_not_banned
 @api()
 @validate_formkey
-def retry_thumbnail(base36id, v):
+def retry_thumbnail(pid, v):
     """
 Retry thumbnail scraping on your post.
 
@@ -1100,7 +1100,7 @@ URL path parameters:
 * `pid` - The base 36 post id.
 """
 
-    post = get_post(base36id, v=v)
+    post = get_post(pid, v=v)
 
     if post.author_id != v.id and v.admin_level < 3:
         return jsonify({"error": "That isn't your post."}), 403
