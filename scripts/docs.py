@@ -34,3 +34,6 @@ for rule in app.url_map.iter_rules():
         target_function = eval(rule.endpoint)
         )
 
+
+print(docs)
+

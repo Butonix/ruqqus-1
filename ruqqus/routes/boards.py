@@ -2037,7 +2037,7 @@ def change_guild_category(v, board, bid, category):
 
 @app.route("/+<boardname>/mod/log", methods=["GET"])
 @app.route("/api/v1/mod_log/<boardname>", methods=["GET"])
-@app.get("/api/v2/boards/<boardname/modlog")
+@app.get("/api/v2/boards/<boardname>/modlog")
 @auth_desired
 @api("read")
 def board_mod_log(boardname, v):
