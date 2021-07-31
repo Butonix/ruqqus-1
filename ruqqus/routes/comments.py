@@ -756,7 +756,7 @@ def embed_comment_cid(cid, pid=None):
 
 @app.route("/mod/comment_pin/<boardname>/<cid>", methods=["POST"])
 @app.route("/api/v1/comment_pin/<boardname>/<cid>", methods=["POST"])
-@app.post("/api/v2/guilds/<boardname>/comments/<cid>/pin")
+@app.patch("/api/v2/guilds/<boardname>/comments/<cid>/pin")
 @auth_required
 @is_guildmaster("content")
 @api("guildmaster")
