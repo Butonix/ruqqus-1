@@ -663,6 +663,13 @@ Optional form data:
 @api("guildmaster")
 @validate_formkey
 def mod_unban_bid_user(guildname, username, board, v):
+    """
+Un-exile a user from a Guild
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+* `username` - The username of the user to exile.
+"""
 
     user = get_user(username)
 
@@ -687,14 +694,17 @@ def mod_unban_bid_user(guildname, username, board, v):
 
 
 @app.route("/user/kick/<pid>", methods=["POST"])
-@app.patch("/api/v2/me/submissions/<pid>/kick")
+@app.patch("/api/v2/me/submissions/<pid>/unyank")
 @auth_required
 @api("edit")
 @validate_formkey
 def user_kick_pid(pid, v):
+    """
+Un-yank your post back to +general
 
-    # allows a user to yank their content back to +general if it was there
-    # previously
+URL path parameters:
+* `pid` - The base 36 id of the post to un-yank
+"""
 
     post = get_post(pid)
 
@@ -1342,6 +1352,12 @@ def board_about_appearance(guildname, board, v):
 @auth_desired
 @api("read")
 def board_about_mods(guildname, v):
+    """
+Get a list of users who are guildmasters of a guild.
+
+URL path parameters:
+* `guildname` - The name of a guild
+"""
 
     board = get_guild(guildname, v=v)
 
@@ -1547,6 +1563,15 @@ def board_about_chatbanned(guildname, board, v):
 @is_guildmaster("access")
 @api("read", "guildmaster")
 def board_about_contributors(guildname, board, v):
+    """
+View guild contributor list.
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+
+Optional query parameters
+* `page` - The page of items to view. Default `1`.
+"""
 
     page = int(request.args.get("page", 1))
 
@@ -1578,6 +1603,12 @@ def board_about_contributors(guildname, board, v):
 @app.post("/api/v2/me/subscriptions/<guildname>")
 @auth_required
 def subscribe_board(guildname, v):
+    """
+Subscribe to a Guild.
+
+URL path parameters:
+* `guildname` - The name of a guild
+"""
 
     board = get_guild(guildname, v=v)
 
@@ -1616,6 +1647,12 @@ def subscribe_board(guildname, v):
 @app.delete("/api/v2/me/subscriptions/<guildname>")
 @auth_required
 def unsubscribe_board(guildname, v):
+    """
+Unsubscribe from a Guild.
+
+URL path parameters:
+* `guildname` - The name of a guild
+"""
 
     board = get_guild(guildname, v=v)
 
@@ -1642,9 +1679,17 @@ def unsubscribe_board(guildname, v):
 
 
 @app.route("/+<guildname>/mod/queue", methods=["GET"])
+@app.get("/api/v2/guilds/<guildname>/modqueue")
 @auth_required
+@api("read", "guildmaster")
 @is_guildmaster("content")
 def board_mod_queue(guildname, board, v):
+    """
+Get reported posts in a guild.
+
+URL path parameters:
+* `guildname` - The name of a guild
+"""
 
     page = int(request.args.get("page", 1))
 
@@ -1667,17 +1712,21 @@ def board_mod_queue(guildname, board, v):
 
     posts = get_posts(ids, v=v)
 
-    return render_template("guild/reported_posts.html",
+    return {"html":lambda:render_template("guild/reported_posts.html",
                            listing=posts,
                            next_exists=next_exists,
                            page=page,
                            v=v,
-                           b=board)
+                           b=board),
+            "api":lambda:jsonify({"data":[x.json for x in posts]})
+            }
 
 
 @app.route("/mod/queue", methods=["GET"])
+@app.get("/api/v2/me/modqueue")
 @auth_required
 def all_mod_queue(v):
+    """Get reported posts in all of your guilds."""
 
     page = int(request.args.get("page", 1))
 
@@ -1706,12 +1755,14 @@ def all_mod_queue(v):
 
     posts = get_posts(ids, v=v)
 
-    return render_template("guild/reported_posts.html",
+    return {"html":lambda:render_template("guild/reported_posts.html",
                            listing=posts,
                            next_exists=next_exists,
                            page=page,
                            v=v,
-                           b=None)
+                           b=None),
+            "api":lambda:jsonify({"data":[x.json for x in posts]})
+            }
 
 
 @app.route("/mod/<bid>/images/profile", methods=["POST"])
@@ -1909,13 +1960,24 @@ def mod_board_color(bid, board, v):
     return redirect(f"/+{board.name}/mod/appearance?msg=Success")
 
 
-@app.route("/mod/approve/<bid>", methods=["POST"])
+@app.route("/mod/approve/<guildname>", methods=["POST"])
+@app.post("/api/v2/guilds/<guildname>/contributors")
 @auth_required
 @is_guildmaster("access")
+@api("guildmaster")
 @validate_formkey
-def mod_approve_bid_user(bid, board, v):
+def mod_approve_bid_user(guildname, board, v):
+    """
+Approve a user as a Contributor in a Guild
 
-    user = get_user(request.form.get("username"), graceful=True)
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+
+Required form data:
+* `username` - The username of the user to approve.
+"""
+
+    user = get_user(request.values.get("username"), graceful=True)
 
     if not user or user.is_deleted:
         return jsonify({"error": "That user doesn't exist."}), 404
@@ -1957,10 +2019,21 @@ def mod_approve_bid_user(bid, board, v):
 
 
 @app.route("/mod/unapprove/<bid>", methods=["POST"])
+@app.delete("/api/v2/guilds/<guildname>/contributors")
 @auth_required
 @is_guildmaster("access")
+@api("guildmaster")
 @validate_formkey
 def mod_unapprove_bid_user(bid, board, v):
+    """
+Un-approve a user as a Contributor in a Guild
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+
+Required form data:
+* `username` - The username of the user to remove contributor status from.
+"""
 
     user = get_user(request.values.get("username"))
 
@@ -1995,15 +2068,21 @@ def guild_profile(guild):
     else:
         return redirect(x.profile_url)
 
-
-
-
-
-@app.route("/mod/post_pin/<bid>/<pid>/<x>", methods=["POST"])
+@app.route("/mod/post_pin/<guildname>/<pid>/<x>", methods=["POST"])
+@app.patch("/api/v2/guilds/<guildname>/submissions/<pid>/pin/<x>")
 @auth_required
 @is_guildmaster("content")
+@api("guildmaster")
 @validate_formkey
-def mod_toggle_post_pin(bid, pid, x, board, v):
+def mod_toggle_post_pin(guildname, pid, x, board, v):
+    """
+Set pin status on a post
+
+URL path parameters:
+* `guildname` - The guild to pin the post in
+* `pid` - The base 36 id of the post to pin
+* `x` - One of `0` or `1`, corresponding to unpinned and pinned statuses respectively
+"""
 
     post = get_post(pid)
 
