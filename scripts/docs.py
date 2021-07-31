@@ -31,7 +31,7 @@ for rule in app.url_map.iter_rules():
     new_doc=Doc(
         method=method,
         endpoint=endpoint,
-        target_function = eval(rule.endpoint)
+        target_function = app.view_functions[rule.endpoint]
         )
 
 
