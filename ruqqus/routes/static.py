@@ -280,8 +280,9 @@ def docs():
 
 	    @property
 	    def docstring_html(self):
-	    	with CustomRenderer() as enderer:
-	    		renderer.render(mistletoe.Document(self.docstring))
+	    	with CustomRenderer() as renderer:
+	    		html = renderer.render(mistletoe.Document(self.docstring))
+	    	return html
 	    
 
 	docs=[]
