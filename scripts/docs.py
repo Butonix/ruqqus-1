@@ -36,6 +36,3 @@ for rule in app.url_map.iter_rules():
 
     docs.append(new_doc)
 
-
-print(docs)
-
