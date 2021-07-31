@@ -265,7 +265,7 @@ def request_api_keys(v):
 @validate_formkey
 def delete_oauth_app(v, aid):
 
-    aid = int(aid)
+    aid = base36decode(aid)
     app = g.db.query(OauthApp).filter_by(id=aid).first()
 
     for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all():
