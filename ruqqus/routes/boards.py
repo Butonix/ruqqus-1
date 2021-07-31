@@ -293,8 +293,8 @@ URL path parameter:
 
 Optional query parameters:
 * `page` - Page number. Contents are returned in pages of 25 entries. Default `1`.
-* `sort` - Sort order. Valid options are `hot`, `top`, `new`, `old`, `disputed`, and `activity`. Default `hot`.
-* `t` - Time filter. Valid options are `day`, `week`, `month`, `year`, and `all`. Default `all`.
+* `sort` - Sort order. One of `hot`, `top`, `new`, `old`, `disputed`, and `activity`. Default `hot`.
+* `t` - Time filter. One of `day`, `week`, `month`, `year`, and `all`. Default `all`.
     """
 
     board = get_guild(guildname, v=v)
