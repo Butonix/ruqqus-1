@@ -54,6 +54,11 @@ def post_pid_comment_cid(cid, pid=None, guildname=None, anything=None, v=None):
     """
 Fetch a single comment and up to 5 total layers above and below.
 
+URL path parameters:
+* `cid` - The base 36 comment id
+
+Optional query parameters:
+* `context` - Integer between `0` and `4` inclusive. Number of generations of parent comments to fetch. Default `0`
 """
 
     comment = get_comment(cid, v=v)
@@ -290,8 +295,16 @@ def post_pid_comment_cid_noboard(pid, cid, anything=None, v=None):
 @validate_formkey
 @api("create")
 def api_comment(v):
+    """
+Create a comment
 
-    parent_submission = base36decode(request.form.get("submission"))
+Required form data:
+* `parent_fullname` - The fullname of the post or comment that is being replied to
+* `body` - Raw comment text
+
+Optional file data:
+* `file` - An image to upload and append to the comment body. Requires premium.
+"""
     parent_fullname = request.form.get("parent_fullname")
 
     # get parent item info
@@ -582,6 +595,15 @@ def api_comment(v):
 @validate_formkey
 @api("edit")
 def edit_comment(cid, v):
+    """
+Edit your comment.
+
+URL path parameters:
+* `cid` - The base 36 id of the comment to edit
+
+Required form data:
+* `body` - The new raw comment text
+"""
 
     c = get_comment(cid, v=v)
 
@@ -717,6 +739,13 @@ def edit_comment(cid, v):
 @validate_formkey
 @api("delete")
 def delete_comment(cid, v):
+    """
+Delete your comment.
+
+URL path parameters:
+* `cid` - The base 36 id of the comment to delete
+"""
+
 
     c = g.db.query(Comment).filter_by(id=base36decode(cid)).first()
 
@@ -766,6 +795,16 @@ def embed_comment_cid(cid, pid=None):
 @api("guildmaster")
 @validate_formkey
 def mod_toggle_comment_pin(guildname, cid, board, v):
+    """
+Toggle pin status on a top-level comment.
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+* `cid` - The base 36 id of the comment to pin/unpin
+
+Required form data:
+* `body` - The new raw comment text
+"""
 
     comment = get_comment(cid, v=v)
 
