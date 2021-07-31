@@ -55,14 +55,14 @@ def incoming_post_shortlink(base36id=None):
     post = get_post(base36id)
     return redirect(post.permalink)
 
-@app.route("/+<boardname>/post/<base36id>", methods=["GET"])
-@app.route("/+<boardname>/post/<base36id>/", methods=["GET"])
-@app.route("/+<boardname>/post/<base36id>/<anything>", methods=["GET"])
-@app.route("/api/v1/post/<base36id>", methods=["GET"])
-@app.get("/api/v2/submissions/<base36id>")
+@app.route("/+<boardname>/post/<pid>", methods=["GET"])
+@app.route("/+<boardname>/post/<pid>/", methods=["GET"])
+@app.route("/+<boardname>/post/<pid>/<anything>", methods=["GET"])
+@app.route("/api/v1/post/<pid>", methods=["GET"])
+@app.get("/api/v2/submissions/<pid>")
 @auth_desired
 @api("read")
-def post_base36id(base36id, boardname=None, anything=None, v=None):
+def post_base36id(pid, boardname=None, anything=None, v=None):
     """
 Get a single submission and its comments.
 
@@ -71,7 +71,7 @@ Optional query parameters:
 """
     
     post = get_post_with_comments(
-        base36id, v=v, sort_type=request.args.get(
+        pid, v=v, sort_type=request.args.get(
             "sort", "top"))
 
     board = post.board
