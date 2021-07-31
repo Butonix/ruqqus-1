@@ -482,7 +482,13 @@ URL path parameters:
 @api("guildmaster")
 @validate_formkey
 def mod_kick_bid_pid(guildname, pid, board, v):
+    """
+Kick a post from your guild.
 
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+* `pid` - The base 36 post ID
+"""
     post = get_post(pid)
 
     if not post.board_id == board.id:
@@ -2076,6 +2082,15 @@ def change_guild_category(v, board, bid, category):
 @auth_desired
 @api("read")
 def board_mod_log(guildname, v):
+    """
+View guild mod log data.
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+
+Optional query parameters
+* `page` - The page of items to view. Default `1`.
+"""
 
     page=int(request.args.get("page",1))
     board=get_guild(guildname, v=v)
@@ -2481,10 +2496,16 @@ def siege_guild(v):
 
 
 @app.post("/+<guildname>/toggle_bell")
-@app.post("/api/v2/guilds/<guildname>/toggle_bell")
+@app.patch("/api/v2/guilds/<guildname>/toggle_bell")
 @auth_required
 @api("update")
 def toggle_guild_bell(guildname, v):
+    """
+Toggle notifications for new posts in a guild.
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+"""
 
     guild=get_guild(guildname, v=v, graceful=True)
     if not guild:
