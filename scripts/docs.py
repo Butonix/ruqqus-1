@@ -34,6 +34,8 @@ for rule in app.url_map.iter_rules():
         target_function = app.view_functions[rule.endpoint]
         )
 
+    docs.append(new_doc)
+
 
 print(docs)
 
