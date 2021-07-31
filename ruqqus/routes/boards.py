@@ -556,6 +556,18 @@ def mod_accept_bid_pid(guildname, pid, board, v):
 @api("guildmaster")
 @validate_formkey
 def mod_ban_bid_user(guildname, board, v):
+    """
+Exile a user from a Guild
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+
+Required form data:
+* `username` - The username of the user to exile.
+
+Optional form data:
+* `thing` - The fullname of the post or comment to associate with the exile
+"""
 
     user = get_user(request.values.get("username"), graceful=True)
 
@@ -1463,14 +1475,26 @@ def board_get_css(guildname):
 @is_guildmaster("access")
 @api("read", "guildmaster")
 def board_about_exiled(guildname, board, v):
+    """
+View guild exile entries.
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+
+Optional query parameters
+* `page` - The page of items to view. Default `1`.
+"""
 
     page = int(request.args.get("page", 1))
 
-    bans = board.bans.filter_by(is_active=True).order_by(
-        BanRelationship.created_utc.desc()).offset(25 * (page - 1)).limit(26)
-
-    # Deleted users will still remove a spot on the page but this will stop them from cluttering it
-    bans = [ban for ban in bans if not ban.user.is_deleted]
+    bans = board.bans.filter_by(
+        is_active=True
+        ).join(BanRelationship.user
+        ).filter(
+        User.is_deleted==False
+        ).order_by(
+        BanRelationship.created_utc.desc()
+        ).offset(25 * (page - 1)).limit(26)
 
     next_exists = (len(bans) == 26)
     bans = bans[0:25]
