@@ -451,7 +451,7 @@ def mod_distinguish_comment(bid, cid, board, v):
 
 @app.route("/mod/kick/<boardname>/<pid>", methods=["POST"])
 @app.route("/api/v1/kick/<boardname>/<pid>", methods=["POST"])
-@app.patch("/api/v2/guild/<boardname>/submissions/<pid>/kick")
+@app.patch("/api/v2/guilds/<boardname>/submissions/<pid>/kick")
 @auth_required
 @is_guildmaster('content')
 @api("guildmaster")
