@@ -320,7 +320,7 @@ def docs():
 
 	method_order=["POST", "GET", "PATCH", "PUT", "DELETE"]
 
-	docs.sort(key=lambda x: (x.endpoint, method_order.index(x.method))
+	docs.sort(key=lambda x: (x.endpoint, method_order.index(x.method)))
 
 	fulldocs={}
 
