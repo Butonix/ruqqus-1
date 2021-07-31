@@ -346,6 +346,9 @@ def admin_app_id(v, aid):
             OauthApp.author)).filter_by(
         id=aid).first()
 
+    if not oauth:
+        abort(404)
+
     if v.id != oauth.author_id and v.admin_level<4:
         abort(403)
 
