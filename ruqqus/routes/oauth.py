@@ -298,6 +298,9 @@ def edit_oauth_app(v, aid):
 @auth_required
 @api("identity")
 def api_v1_identity(v):
+    """
+Get information about the currently authenticated user. Does not include email or security information.
+"""
 
     return jsonify(v.json)
 
