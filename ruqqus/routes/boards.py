@@ -1970,8 +1970,9 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
     return "", 204
 
 
-@app.route("/+<boardname>/comments")
-@app.route("/api/v1/guild/<boardname>/comments")
+@app.get("/+<boardname>/comments")
+@app.get("/api/v1/guild/<boardname>/comments")
+@app.get("/api/v2/guilds/<boardname>/comments")
 @auth_desired
 @api("read")
 def board_comments(boardname, v):
@@ -2036,6 +2037,7 @@ def change_guild_category(v, board, bid, category):
 
 @app.route("/+<boardname>/mod/log", methods=["GET"])
 @app.route("/api/v1/mod_log/<boardname>", methods=["GET"])
+@app.get("/api/v2/boards/<boardname/modlog")
 @auth_desired
 @api("read")
 def board_mod_log(boardname, v):
