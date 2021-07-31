@@ -440,6 +440,7 @@ def oauth_rescind_app(aid, v):
 @auth_required
 @api()
 def oauth_release_auth(v):
+    """Revoke the current Access Token. A new Access Token may be obtained using the Refresh Token. Permanent authorizations only."""
 
     token=request.headers.get("Authorization").split()[1]
 
@@ -460,6 +461,7 @@ def oauth_release_auth(v):
 @auth_required
 @api()
 def oauth_kill_auth(v):
+    """Revoke the current authorization. A new Access Token may not be obtained without the user going through the OAuth process again."""
 
     token=request.headers.get("Authorization").split()[1]
 
