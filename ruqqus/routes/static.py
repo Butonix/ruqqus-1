@@ -318,7 +318,7 @@ def docs():
 
 	    docs.append(new_doc)
 
-	docs.sort(key=lambda x: x.endpoint)
+	docs.sort(key=lambda x: x.frag)
 
 	fulldocs={}
 
