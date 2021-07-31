@@ -142,6 +142,7 @@ def submit_get(v):
 @app.patch("/api/v2/submissions/<pid>")
 @is_not_banned
 @no_negative_balance("html")
+@api("update")
 @validate_formkey
 def edit_post(pid, v):
     """

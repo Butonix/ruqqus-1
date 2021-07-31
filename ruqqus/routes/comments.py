@@ -593,7 +593,7 @@ Optional file data:
 @app.patch("/api/v2/comments/<cid>")
 @is_not_banned
 @validate_formkey
-@api("edit")
+@api("update")
 def edit_comment(cid, v):
     """
 Edit your comment.
