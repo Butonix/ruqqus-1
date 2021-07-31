@@ -66,6 +66,9 @@ def post_base36id(pid, boardname=None, anything=None, v=None):
     """
 Get a single submission and its comments.
 
+URL path parameters:
+* `pid` - The base 36 post id
+
 Optional query parameters:
 * `sort` - Comment sort order. One of `hot`, `new`, `top`, `disputed`, `old`. Default `hot`.
 """
