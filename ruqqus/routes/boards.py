@@ -431,7 +431,7 @@ URL path parameters:
 @auth_required
 @is_guildmaster('content')
 @api("guildmaster")
-def mod_distinguish_comment(bid, cid, board, v):
+def mod_distinguish_comment(guildname, cid, board, v):
     """
 Toggle Herald status on your comment.
 
