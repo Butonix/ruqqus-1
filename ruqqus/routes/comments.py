@@ -800,10 +800,7 @@ Toggle pin status on a top-level comment.
 
 URL path parameters:
 * `guildname` - The guild in which you are a guildmaster
-* `cid` - The base 36 id of the comment to pin/unpin
-
-Required form data:
-* `body` - The new raw comment text
+* `cid` - The base 36 comment id
 """
 
     comment = get_comment(cid, v=v)
