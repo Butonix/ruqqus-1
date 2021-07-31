@@ -16,12 +16,12 @@
 
 
 {% for resource in docs %}
-	<h2 id="{{ resource }}"><a href="#{{ resource }}" class="text-black">{{ resource }}</a></h2>
-	{% for doc in docs[resource] %}
-		<h3 id="{{ doc.frag }}"><a href="#{{ doc.frag }}"><code>{{ doc.method }} {{ doc.endpoint }}</code></a></h3>
-		{{ doc.docstring_html | safe }}
-		<hr>
-	{% endfor %}
+  <h2 id="{{ resource }}"><a href="#{{ resource }}" class="text-black">{{ resource }}</a></h2>
+  {% for doc in docs[resource] %}
+    <h3 id="{{ doc.frag }}"><a href="#{{ doc.frag }}"><code>{{ doc.method }} {{ doc.endpoint }}</code></a></h3>
+    {{ doc.docstring_html | safe }}
+    <hr>
+  {% endfor %}
 {% endfor %}
 {% endblock %}
 
@@ -31,21 +31,17 @@
 {% block sidebarLeftblock %}
 
 <div class="col sidebar d-none d-lg-block p-3">
-	<div class="sidebar-section">
-			<div class="title">Table of Contents</div>
+  <div class="sidebar-section">
+    <div class="title">Table of Contents</div>
       <div class="body">
 
-      	{% for resource in docs %}
-      	<p><a href="#{{ resource }}" class="text-black">{{ resource }}</a></p>
-      	<ul>
-      		{% for doc in docs[resource] %}
-      		<li><a href="#{{ doc.frag }}">{{ doc.method }} {{ doc.endpoint }}</a></li>
-      		{% endfor %}
-      	</ul>
-      	{% endfor %}
-      </div>
-	</div>
-
-	</div>
+      <ul>
+        {% for resource in docs %}
+        <li><a href="#{{ resource }}">{{ resource}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
