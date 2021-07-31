@@ -496,7 +496,7 @@ def api(*scopes, no_ban=False):
                     return result
 
         wrapper.__name__ = f.__name__
-        wrapper.__doc__ = f"<p><sup><code>{", ".join(scopes)}</code></sup></p>{f.__doc__}"
+        wrapper.__doc__ = f"<p><sup><code>{', '.join(scopes)}</code></sup></p>{f.__doc__}"
         return wrapper
 
     return wrapper_maker
