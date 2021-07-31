@@ -1093,7 +1093,7 @@ URL path parameters:
 @app.route("/retry_thumb/<pid>", methods=["POST"])
 @app.put("/api/v2/submissions/<pid>/thumb")
 @is_not_banned
-@api()
+@api("identity")
 @validate_formkey
 def retry_thumbnail(pid, v):
     """
