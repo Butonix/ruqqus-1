@@ -169,7 +169,6 @@ def api_board_available(name, v):
 @api("create")
 @validate_formkey
 def create_board_post(v):
-
     """
     Create a Guild
 
