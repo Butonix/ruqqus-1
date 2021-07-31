@@ -579,6 +579,14 @@ def guild_ids(sort="subs", page=1, nsfw=False, cats=[]):
 @auth_desired
 @api("read")
 def browse_guilds(v):
+    """
+Get a listing of guilds
+
+Optional query parameters:
+* `sort` - One of `trending`, `new`, or `subs`. Default `trending`.
+* `page` - Page of results to return. Defualt `1`.
+"""
+
 
     page = int(request.args.get("page", 1))
 
