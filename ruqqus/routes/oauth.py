@@ -457,7 +457,7 @@ def oauth_release_auth(v):
     return jsonify({"message":"Authorization released"})
 
 @app.route("/api/v1/kill", methods=["POST"])
-@app.delete("/api/v2/auth")
+@app.route("/api/v2/auth", methods=["DELETE"])
 @auth_required
 @api()
 def oauth_kill_auth(v):
