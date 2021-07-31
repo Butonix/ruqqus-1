@@ -300,4 +300,4 @@ def docs():
 
 	docs.sort(key=lambda x: x.endpoint)
 
-	return "\n\n<hr>\n\n".join([str(x) for x in docs])
+	return render_template("docs.html", docs=docs)
