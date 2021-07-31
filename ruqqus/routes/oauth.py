@@ -53,8 +53,12 @@ def oauth_authorize_prompt(v):
         if scope not in SCOPES:
             return jsonify({"oauth_error": f"The provided scope `{scope}` is not valid."}), 400
 
-    if any(x in scopes for x in ["create", "update",
-                                 "guildmaster"]) and "identity" not in scopes:
+    if any(
+        x in scopes for x in [
+        "create", 
+        "update",
+        "guildmaster"
+        ]) and "identity" not in scopes:
         return jsonify({"oauth_error": f"`identity` scope required when requesting `create`, `update`, or `guildmaster` scope."}), 400
 
     redirect_uri = request.args.get("redirect_uri")
@@ -248,12 +252,16 @@ def request_api_keys(v):
         app_name=request.form.get('name'),
         redirect_uri=request.form.get('redirect_uri'),
         author_id=v.id,
-        description=request.form.get("description")[0:256]
+        description=request.form.get("description")[0:256],
+        client_id=secrets.token_urlsafe(32)[0:32],
+        client_secret=secrets.token_urlsafe(64)[0:64]
     )
 
     g.db.add(new_app)
 
-    return redirect('/settings/apps')
+    g.db.commit()
+
+    return redirect(new_app.permalink)
 
 
 @app.route("/delete_app/<aid>", methods=["POST"])
@@ -261,7 +269,7 @@ def request_api_keys(v):
 @validate_formkey
 def delete_oauth_app(v, aid):
 
-    aid = int(aid)
+    aid = base36decode(aid)
     app = g.db.query(OauthApp).filter_by(id=aid).first()
 
     for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all():
@@ -271,8 +279,7 @@ def delete_oauth_app(v, aid):
 
     g.db.delete(app)
 
-    return redirect('/help/apps')
-
+    return jsonify({"redirect":"/settings/apps"}), 302
 
 @app.route("/edit_app/<aid>", methods=["POST"])
 @is_not_banned
@@ -291,63 +298,48 @@ def edit_oauth_app(v, aid):
     return redirect('/settings/apps')
 
 
-@app.route("/api/v1/identity")
+@app.get("/api/v1/identity")
+@app.get("/api/v2/me")
 @auth_required
 @api("identity")
 def api_v1_identity(v):
+    """
+Get information about the currently authenticated user. Does not include email or security information.
+"""
 
     return jsonify(v.json)
 
 
 @app.route("/admin/app/approve/<aid>", methods=["POST"])
-@admin_level_required(3)
+@admin_level_required(4)
 @validate_formkey
 def admin_app_approve(v, aid):
 
     app = g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
 
-    app.client_id = secrets.token_urlsafe(64)[0:64]
-    app.client_secret = secrets.token_urlsafe(128)[0:128]
+    app.is_banned=False
 
     g.db.add(app)
 
-    return jsonify({"message": f"{app.app_name} approved"})
+    return "", 204
 
 
 @app.route("/admin/app/revoke/<aid>", methods=["POST"])
-@admin_level_required(3)
+@admin_level_required(4)
 @validate_formkey
 def admin_app_revoke(v, aid):
 
     app = g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
 
-    app.client_id = None
-    app.client_secret = None
+    app.is_banned=True
 
     g.db.add(app)
 
-    return jsonify({"message": f"{app.app_name} revoked"})
+    return "", 204
 
 
-@app.route("/admin/app/reject/<aid>", methods=["POST"])
-@admin_level_required(3)
-@validate_formkey
-def admin_app_reject(v, aid):
-
-    app = g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
-
-    for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all():
-        g.db.delete(auth)
-
-    g.db.flush()
-
-    g.db.delete(app)
-
-    return jsonify({"message": f"{app.app_name} rejected"})
-
-
-@app.route("/admin/app/<aid>", methods=["GET"])
-@admin_level_required(3)
+@app.route("/app/<aid>", methods=["GET"])
+@auth_required
 def admin_app_id(v, aid):
 
     aid=base36decode(aid)
@@ -356,6 +348,12 @@ def admin_app_id(v, aid):
         joinedload(
             OauthApp.author)).filter_by(
         id=aid).first()
+
+    if not oauth:
+        abort(404)
+
+    if v.id != oauth.author_id and v.admin_level<4:
+        abort(403)
 
     pids=oauth.idlist(page=int(request.args.get("page",1)),
         )
@@ -425,12 +423,11 @@ def reroll_oauth_tokens(aid, v):
     if a.author_id != v.id:
         abort(403)
 
-    a.client_id = secrets.token_urlsafe(64)[0:64]
-    a.client_secret = secrets.token_urlsafe(128)[0:128]
+    a.client_secret = secrets.token_urlsafe(64)[0:64]
 
     g.db.add(a)
 
-    return jsonify({"message": "Tokens Rerolled",
+    return jsonify({"message": "Secret Rerolled",
                     "id": a.client_id,
                     "secret": a.client_secret
                     }
@@ -453,9 +450,11 @@ def oauth_rescind_app(aid, v):
     return jsonify({"message": f"{auth.application.app_name} Revoked"})
 
 @app.route("/api/v1/release", methods=["POST"])
+@app.patch("/api/v2/auth")
 @auth_required
 @api()
 def oauth_release_auth(v):
+    """Revoke the current Access Token. A new Access Token may be obtained using the Refresh Token. Permanent authorizations only."""
 
     token=request.headers.get("Authorization").split()[1]
 
@@ -472,9 +471,11 @@ def oauth_release_auth(v):
     return jsonify({"message":"Authorization released"})
 
 @app.route("/api/v1/kill", methods=["POST"])
+@app.delete("/api/v2/auth")
 @auth_required
 @api()
 def oauth_kill_auth(v):
+    """Revoke the current authorization. A new Access Token may not be obtained without the user going through the OAuth process again."""
 
     token=request.headers.get("Authorization").split()[1]
 
@@ -484,4 +485,4 @@ def oauth_kill_auth(v):
 
     g.db.delete(auth)
 
-    return jsonify({"message":"Authorization released"})
+    return jsonify({"message":"Authorization revoked"})

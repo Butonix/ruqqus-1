@@ -728,7 +728,7 @@ function switch_css() {
   if (css.href.includes("/assets/style/main.css")) {
     post("/settings/dark_mode/1",
       callback=function(){
-        css.href="/assets/style/main_dark.css?v=2.37.7";
+        css.href="/assets/style/main_dark.css?v=2.38.0";
         dswitch.classList.remove("fa-toggle-off");
         dswitch.classList.add("fa-toggle-on");
         dswitchmobile.classList.remove("fa-toggle-off");
@@ -741,7 +741,7 @@ function switch_css() {
   else {
     post("/settings/dark_mode/0",
       callback=function(){
-        css.href="/assets/style/main.css?v=2.37.7";
+        css.href="/assets/style/main.css?v=2.38.0";
         dswitch.classList.remove("fa-toggle-on");
         dswitch.classList.add("fa-toggle-off");
         dswitchmobile.classList.remove("fa-toggle-on");
@@ -1007,10 +1007,10 @@ $('#kickPostModal').on('hidden.bs.modal', function () {
 $('.kick-button-listing').click(function(event) {
   if (event.which != 1) {return}
 
-  bid=$(this).data('bid')
+  boardname=$(this).data('boardname')
   pid=$(this).data('pid')
 
-  post_response('/mod/kick/'+bid+'/'+pid, callback=function(xhr){
+  post_response('/mod/kick/'+ boardname+'/'+pid, callback=function(xhr){
     $("#post-"+pid).replaceWith(JSON.parse(xhr.response)['data'])
       }
     )
@@ -1925,7 +1925,7 @@ if (window.location.pathname=='/submit') {
 
 // Exile Member
 
-function exile_from_guild(boardid) {
+function exile_from_guild(boardname) {
 
   var exileForm = document.getElementById("exile-form");
 
@@ -1940,7 +1940,7 @@ function exile_from_guild(boardid) {
   if (isValidUsername) {
 
     var xhr = new XMLHttpRequest();
-    xhr.open("post", "/mod/exile/"+boardid);
+    xhr.open("post", "/mod/exile/"+boardname);
     xhr.withCredentials=true;
     f=new FormData();
     f.append("username", username);
@@ -2104,11 +2104,11 @@ post_comment=function(fullname){
 
 }
 
-herald_comment=function(bid,cid){
+herald_comment=function(name,cid){
 
 
   var xhr = new XMLHttpRequest();
-  xhr.open("post", "/mod/distinguish_comment/"+bid+'/'+cid);
+  xhr.open("post", "/mod/distinguish_comment/"+name+'/'+cid);
 
   var form = new FormData();
 
@@ -2132,11 +2132,11 @@ herald_comment=function(bid,cid){
 
 }
 
-pin_comment=function(bid,cid){
+pin_comment=function(name,cid){
 
 
   var xhr = new XMLHttpRequest();
-  xhr.open("post", "/mod/comment_pin/"+bid+'/'+cid);
+  xhr.open("post", "/mod/comment_pin/"+name+'/'+cid);
 
   var form = new FormData();
 

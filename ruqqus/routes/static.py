@@ -3,9 +3,11 @@ import jinja2
 import pyotp
 import pprint
 import sass
+import mistletoe
 from flask import *
 
 from ruqqus.helpers.wrappers import *
+from ruqqus.helpers.markdown import *
 import ruqqus.classes
 from ruqqus.classes import *
 from ruqqus.mail import *
@@ -258,3 +260,72 @@ def dismiss_mobile_tip():
 
 	return "", 204
 
+@app.route("/help/docs")
+@cache.memoize(10)
+def docs():
+
+	class Doc():
+
+	    def __init__(self, **kwargs):
+	        for entry in kwargs:
+	            self.__dict__[entry]=kwargs[entry]
+
+	    def __str__(self):
+
+	        return f"{self.method.upper()} {self.endpoint}\n\n{self.docstring}"
+
+	    @property
+	    def docstring(self):
+	    	return self.target_function.__doc__ if self.target_function.__doc__ else "[doc pending]"
+
+	    @property
+	    def docstring_html(self):
+	    	return mistletoe.markdown(self.docstring)
+
+	    @property
+	    def resource(self):
+	    	return self.endpoint.split('/')[1]
+
+	    @property
+	    def frag(self):
+	    	tail=self.endpoint.replace('/','_')
+	    	tail=tail.replace("<","")
+	    	tail=tail.replace(">","")
+	    	return f"{self.method.lower()}{tail}"
+	    
+	    
+
+	docs=[]
+
+	for rule in app.url_map.iter_rules():
+
+	    if not rule.rule.startswith("/api/v2/"):
+	        continue
+
+	    endpoint=rule.rule.split("/api/v2")[1]
+
+	    for method in rule.methods:
+	        if method not in ["OPTIONS","HEAD"]:
+	            break
+
+	    new_doc=Doc(
+	        method=method,
+	        endpoint=endpoint,
+	        target_function=app.view_functions[rule.endpoint]
+	        )
+
+	    docs.append(new_doc)
+
+	method_order=["POST", "GET", "PATCH", "PUT", "DELETE"]
+
+	docs.sort(key=lambda x: (x.endpoint, method_order.index(x.method)))
+
+	fulldocs={}
+
+	for doc in docs:
+		if doc.resource not in fulldocs:
+			fulldocs[doc.resource]=[doc]
+		else:
+			fulldocs[doc.resource].append(doc)
+
+	return render_template("docs.html", docs=fulldocs, v=None)

@@ -16,12 +16,15 @@
     {% for scope in scopes %}
         <li>{{ SCOPES[scope] }}</li>
     {% endfor %}
-    {% if permanent %}
-    <li>Maintain this access indefinitely, or until you revoke it</li>
-    {% endif %}
     </ul>
 
-    <p class="mb-md-5">It will not be able to see your password, or change your account settings.</p>
+    {% if permanent %}
+    <p>{{ application.app_name }} will be able to maintain this access indefinitely, unless and until you revoke it.</p>
+    {% else %}
+    <p>This access will expire in one hour, or earlier if you revoke it.</p>
+    {% endif %}
+
+    <p class="mb-md-5">It will not be able to see your password or personal data, or change your account settings.</p>
 
     <form action="/oauth/authorize" method="post" class="mt-md-3" id="login">
 

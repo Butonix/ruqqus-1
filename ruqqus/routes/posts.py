@@ -55,23 +55,30 @@ def incoming_post_shortlink(base36id=None):
     post = get_post(base36id)
     return redirect(post.permalink)
 
-@app.route("/+<boardname>/post/<base36id>", methods=["GET"])
-@app.route("/+<boardname>/post/<base36id>/", methods=["GET"])
-@app.route("/+<boardname>/post/<base36id>/<anything>", methods=["GET"])
-@app.route("/api/v1/post/<base36id>", methods=["GET"])
-@app.route("/test/post/<base36id>", methods=["GET"])
+@app.route("/+<boardname>/post/<pid>", methods=["GET"])
+@app.route("/+<boardname>/post/<pid>/", methods=["GET"])
+@app.route("/+<boardname>/post/<pid>/<anything>", methods=["GET"])
+@app.route("/api/v1/post/<pid>", methods=["GET"])
+@app.get("/api/v2/submissions/<pid>")
 @auth_desired
-
 @api("read")
-def post_base36id(base36id, boardname=None, anything=None, v=None):
+def post_base36id(pid, boardname=None, anything=None, v=None):
+    """
+Get a single submission and its comments.
+
+URL path parameters:
+* `pid` - The base 36 post id
+
+Optional query parameters:
+* `sort` - Comment sort order. One of `hot`, `new`, `top`, `disputed`, `old`. Default `hot`.
+"""
     
     post = get_post_with_comments(
-        base36id, v=v, sort_type=request.args.get(
+        pid, v=v, sort_type=request.args.get(
             "sort", "top"))
 
     board = post.board
     #if the guild name is incorrect, fix the link and redirect
-
 
     if boardname and not boardname == board.name:
         return redirect(post.permalink)
@@ -132,10 +139,21 @@ def submit_get(v):
 
 
 @app.route("/edit_post/<pid>", methods=["POST"])
+@app.patch("/api/v2/submissions/<pid>")
 @is_not_banned
 @no_negative_balance("html")
+@api("update")
 @validate_formkey
 def edit_post(pid, v):
+    """
+Edit your post text.
+
+URL path parameters:
+* `pid` - The base 36 id of the post to edit
+
+Required form data:
+* `body` - The new raw comment text
+"""
 
     p = get_post(pid)
 
@@ -254,6 +272,7 @@ def get_post_title(v):
 @app.route("/submit", methods=['POST'])
 @app.route("/api/v1/submit", methods=["POST"])
 @app.route("/api/vue/submit", methods=["POST"])
+@app.post("/api/v2/submissions")
 @limiter.limit("6/minute")
 @is_not_banned
 @no_negative_balance('html')
@@ -261,6 +280,20 @@ def get_post_title(v):
 @validate_formkey
 @api("create")
 def submit_post(v):
+    """
+Create a post
+
+Required form data:
+* `title` - The post title
+* `guild` - The name of the guild to submit to
+
+At least one of the following form items is required:
+* `url` - The link being submitted. Uploading an image file counts as a url.
+* `body` - The text body of the post
+
+Optional file data:
+* `file` - An image to upload as the post target. Requires premium or 500 Rep.
+"""
 
     title = request.form.get("title", "").lstrip().rstrip()
 
@@ -274,7 +307,7 @@ def submit_post(v):
 
     url = request.form.get("url", "")
 
-    board = get_guild(request.form.get('board', 'general'), graceful=True)
+    board = get_guild(request.form.get('board', request.form.get("guild")), graceful=True)
     if not board:
         board = get_guild('general')
 
@@ -918,10 +951,17 @@ def submit_post(v):
 
 @app.route("/delete_post/<pid>", methods=["POST"])
 @app.route("/api/v1/delete_post/<pid>", methods=["POST"])
+@app.delete("/api/v2/submissions/<pid>")
 @auth_required
 @api("delete")
 @validate_formkey
 def delete_post_pid(pid, v):
+    """
+Delete your post.
+
+URL path parameters:
+* `pid` - The base 36 id of the post being deleted
+"""
 
     post = get_post(pid)
     if not post.author_id == v.id:
@@ -972,10 +1012,18 @@ def embed_post_pid(pid):
 
 @app.route("/api/toggle_post_nsfw/<pid>", methods=["POST"])
 @app.route("/api/v1/toggle_post_nsfw/<pid>", methods=["POST"])
+@app.patch("/api/v2/submissions/<pid>/toggle_nsfw")
 @is_not_banned
 @api("update")
 @validate_formkey
 def toggle_post_nsfw(pid, v):
+    """
+Toggle "NSFW" status on a post.
+
+URL path parameters:
+* `pid` - The base 36 post id.
+"""
+
 
     post = get_post(pid)
 
@@ -1005,10 +1053,17 @@ def toggle_post_nsfw(pid, v):
 
 @app.route("/api/toggle_post_nsfl/<pid>", methods=["POST"])
 @app.route("/api/v1/toggle_post_nsfl/<pid>", methods=["POST"])
+@app.patch("/api/v2/submissions/<pid>/toggle_nsfl")
 @is_not_banned
 @api("update")
 @validate_formkey
 def toggle_post_nsfl(pid, v):
+    """
+Toggle "NSFL" status on a post.
+
+URL path parameters:
+* `pid` - The base 36 post id.
+"""
 
     post = get_post(pid)
 
@@ -1037,14 +1092,22 @@ def toggle_post_nsfl(pid, v):
 
 
 @app.route("/retry_thumb/<pid>", methods=["POST"])
+@app.put("/api/v2/submissions/<pid>/thumb")
 @is_not_banned
+@api("identity")
 @validate_formkey
 def retry_thumbnail(pid, v):
+    """
+Retry thumbnail scraping on your post.
+
+URL path parameters:
+* `pid` - The base 36 post id.
+"""
 
     post = get_post(pid, v=v)
 
     if post.author_id != v.id and v.admin_level < 3:
-        abort(403)
+        return jsonify({"error": "That isn't your post."}), 403
 
     if post.is_archived:
         return jsonify({"error": "Post is archived"}), 409
@@ -1061,12 +1124,13 @@ def retry_thumbnail(pid, v):
     return jsonify({"message": "Success"})
 
 
-@app.route("/save_post/<pid>", methods=["POST"])
+@app.route("/save_post/<base36id>", methods=["POST"])
+#@app.post("/api/v2/submissions/<base36id>/save")
 @auth_required
 @validate_formkey
-def save_post(pid, v):
+def save_post(base36id, v):
 
-    post=get_post(pid)
+    post=get_post(base36id)
 
     new_save=SaveRelationship(
         user_id=v.id,
@@ -1082,12 +1146,13 @@ def save_post(pid, v):
     return "", 204
 
 
-@app.route("/unsave_post/<pid>", methods=["POST"])
+@app.route("/unsave_post/<base36id>", methods=["POST"])
+#@app.delete("/api/v2/submissions/<base36id>/save")
 @auth_required
 @validate_formkey
-def unsave_post(pid, v):
+def unsave_post(base36id, v):
 
-    post=get_post(pid)
+    post=get_post(base36id)
 
     save=g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id).first()
 

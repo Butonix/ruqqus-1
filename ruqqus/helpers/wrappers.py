@@ -159,6 +159,7 @@ def auth_desired(f):
         return resp
 
     wrapper.__name__ = f.__name__
+    wrapper.__doc__ = f.__doc__
     return wrapper
 
 
@@ -191,6 +192,7 @@ def auth_required(f):
         return resp
 
     wrapper.__name__ = f.__name__
+    wrapper.__doc__ = f.__doc__
     return wrapper
 
 
@@ -224,6 +226,7 @@ def is_not_banned(f):
         return resp
 
     wrapper.__name__ = f.__name__
+    wrapper.__doc__ = f.__doc__
     return wrapper
 
 # Require tos agreement
@@ -243,6 +246,7 @@ def tos_agreed(f):
             return redirect("/help/terms#agreebox")
 
     wrapper.__name__ = f.__name__
+    wrapper.__doc__ = f.__doc__
     return wrapper
 
 def premium_required(f):
@@ -260,6 +264,7 @@ def premium_required(f):
         return f(*args, **kwargs)
 
     wrapper.__name__=f.__name__
+    wrapper.__doc__ = f.__doc__
     return wrapper
 
 
@@ -285,6 +290,7 @@ def no_negative_balance(s):
             return f(*args, **kwargs)
 
         wrapper.__name__=f.__name__
+        wrapper.__doc__ = f.__doc__
         return wrapper
 
     return wrapper_maker
@@ -297,7 +303,7 @@ def is_guildmaster(*perms):
         def wrapper(*args, **kwargs):
 
             v = kwargs["v"]
-            boardname = kwargs.get("boardname")
+            boardname = kwargs.get("guildname", kwargs.get("boardname"))
             board_id = kwargs.get("bid")
             bid=request.values.get("bid", request.values.get("board_id"))
 
@@ -326,6 +332,7 @@ def is_guildmaster(*perms):
             return f(*args, board=board, **kwargs)
 
         wrapper.__name__ = f.__name__
+        wrapper.__doc__ = f"<small>guildmaster permissions: <code>{', '.join(perms)}</code></small><br>{f.__doc__}" if perms else f.__doc__
         return wrapper
 
     return wrapper_maker
@@ -368,6 +375,7 @@ def admin_level_required(x):
             return resp
 
         wrapper.__name__ = f.__name__
+        wrapper.__doc__ = f.__doc__
         return wrapper
 
     return wrapper_maker
@@ -392,6 +400,7 @@ def validate_formkey(f):
         return f(*args, v=v, **kwargs)
 
     wrapper.__name__ = f.__name__
+    wrapper.__doc__ = f.__doc__
     return wrapper
 
 
@@ -416,6 +425,7 @@ def no_cors(f):
         return resp
 
     wrapper.__name__ = f.__name__
+    wrapper.__doc__ = f.__doc__
     return wrapper
 
 # wrapper for api-related things that discriminates between an api url
@@ -486,6 +496,7 @@ def api(*scopes, no_ban=False):
                     return result
 
         wrapper.__name__ = f.__name__
+        wrapper.__doc__ = f"<small>oauth scopes: <code>{', '.join(scopes)}</code></small><br>{f.__doc__}" if scopes else f.__doc__
         return wrapper
 
     return wrapper_maker
@@ -510,6 +521,7 @@ def no_sanctions(f):
         return f(*args, **kwargs)
 
     wrapper.__name__=f.__name__
+    wrapper.__doc__ = f.__doc__
     return wrapper
 
 

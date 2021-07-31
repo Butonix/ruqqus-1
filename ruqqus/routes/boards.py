@@ -163,10 +163,22 @@ def api_board_available(name, v):
 
 
 @app.route("/create_guild", methods=["POST"])
+@app.post("/api/v2/guilds")
 @is_not_banned
 @no_negative_balance("html")
+@api("create")
 @validate_formkey
 def create_board_post(v):
+    """
+Create a Guild
+
+Required form data:
+* `name` - Name of Guild to create
+
+Optional form data:
+* `description` - Guild description
+    """
+
     if not v.can_make_guild:
         return render_template("make_board.html",
                                title="Unable to make board",
@@ -267,13 +279,25 @@ def reddit_moment_redirect(name):
     return redirect(f"/+{name}")
 
 
-@app.route("/+<name>", methods=["GET"])
-@app.route("/api/v1/guild/<name>/listing", methods=["GET"])
+@app.route("/+<guildname>", methods=["GET"])
+@app.route("/api/v1/guild/<guildname>/listing", methods=["GET"])
+@app.get("/api/v2/guilds/<guildname>/submissions")
 @auth_desired
 @api("read")
-def board_name(name, v):
+def board_name(guildname, v):
+    """
+Get a guild's submissions
 
-    board = get_guild(name, v=v)
+URL path parameter:
+* `guildname` - The name of the guild
+
+Optional query parameters:
+* `page` - Page number. Contents are returned in pages of 25 entries. Default `1`.
+* `sort` - Sort order. One of `hot`, `top`, `new`, `old`, `disputed`, and `activity`. Default `hot`.
+* `t` - Time filter. One of `day`, `week`, `month`, `year`, and `all`. Default `all`.
+    """
+
+    board = get_guild(guildname, v=v)
 
     #print(board.is_subscribed)
 
@@ -359,12 +383,21 @@ def board_name(name, v):
                                    )
             }    
 
-@app.route("/mod/distinguish_post/<bid>/<pid>", methods=["POST"])
-@app.route("/api/v1/distinguish_post/<bid>/<pid>", methods=["POST"])
+@app.route("/mod/distinguish_post/<guildname>/<pid>", methods=["POST"])
+@app.route("/api/v1/distinguish_post/<guildname>/<pid>", methods=["POST"])
+@app.patch("/api/v2/guilds/<guildname>/submissions/<pid>/herald")
 @auth_required
 @is_guildmaster("content")
 @api("guildmaster")
-def mod_distinguish_post(bid, pid, board, v):
+def mod_distinguish_post(guildname, pid, board, v):
+
+    """
+Toggle Herald status on your post.
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+* `pid` - The base 36 post ID
+"""
 
     #print(pid, board, v)
 
@@ -392,13 +425,20 @@ def mod_distinguish_post(bid, pid, board, v):
 
     return "", 204
 
-@app.route("/mod/distinguish_comment/<bid>/<cid>", methods=["POST"])
-@app.route("/api/v1/distinguish_comment/<bid>/<cid>", methods=["POST"])
+@app.route("/mod/distinguish_comment/<guildname>/<cid>", methods=["POST"])
+@app.route("/api/v1/distinguish_comment/<guildname>/<cid>", methods=["POST"])
+@app.patch("/api/v2/guilds/<guildname>/comments/<cid>/herald")
 @auth_required
 @is_guildmaster('content')
 @api("guildmaster")
 def mod_distinguish_comment(bid, cid, board, v):
+    """
+Toggle Herald status on your comment.
 
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+* `cid` - The base 36 comment ID
+"""
     comment = get_comment(cid, v=v)
 
     if not comment.post.board_id==board.id:
@@ -434,14 +474,21 @@ def mod_distinguish_comment(bid, cid, board, v):
 
     return jsonify({"html":html})
 
-@app.route("/mod/kick/<bid>/<pid>", methods=["POST"])
-@app.route("/api/v1/kick/<bid>/<pid>", methods=["POST"])
+@app.route("/mod/kick/<guildname>/<pid>", methods=["POST"])
+@app.route("/api/v1/kick/<guildname>/<pid>", methods=["POST"])
+@app.patch("/api/v2/guilds/<guildname>/submissions/<pid>/kick")
 @auth_required
 @is_guildmaster('content')
 @api("guildmaster")
 @validate_formkey
-def mod_kick_bid_pid(bid, pid, board, v):
+def mod_kick_bid_pid(guildname, pid, board, v):
+    """
+Kick a post from your guild.
 
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+* `pid` - The base 36 post ID
+"""
     post = get_post(pid)
 
     if not post.board_id == board.id:
@@ -471,13 +518,21 @@ def mod_kick_bid_pid(bid, pid, board, v):
         })
 
 
-@app.route("/mod/accept/<bid>/<pid>", methods=["POST"])
-@app.route("/api/v1/accept/<bid>/<pid>", methods=["POST"])
+@app.route("/mod/accept/<guildname>/<pid>", methods=["POST"])
+@app.route("/api/v1/accept/<guildname>/<pid>", methods=["POST"])
+@app.patch("/api/v2/guilds/<guildname>/submissions/<pid>/approve")
 @auth_required
 @is_guildmaster('content')
 @api("guildmaster")
 @validate_formkey
-def mod_accept_bid_pid(bid, pid, board, v):
+def mod_accept_bid_pid(guildname, pid, board, v):
+    """
+Dismiss reports on submission and keep it in your guild.
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+* `pid` - The base 36 id of the post
+"""
 
     post = get_post(pid)
     if not post.board_id == board.id:
@@ -500,13 +555,26 @@ def mod_accept_bid_pid(bid, pid, board, v):
     return "", 204
 
 
-@app.route("/mod/exile/<bid>", methods=["POST"])
-@app.route("/api/v1/exile/<bid>", methods=["POST"])
+@app.route("/mod/exile/<guildname>", methods=["POST"])
+@app.route("/api/v1/exile/<guildname>", methods=["POST"])
+@app.post("/api/v2/guilds/<guildname>/exiles")
 @auth_required
 @is_guildmaster('access')
 @api("guildmaster")
 @validate_formkey
-def mod_ban_bid_user(bid, board, v):
+def mod_ban_bid_user(guildname, board, v):
+    """
+Exile a user from a Guild
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+
+Required form data:
+* `username` - The username of the user to exile.
+
+Optional form data:
+* `thing` - The fullname of the post or comment to associate with the exile
+"""
 
     user = get_user(request.values.get("username"), graceful=True)
 
@@ -594,15 +662,23 @@ def mod_ban_bid_user(bid, board, v):
         return "", 204
 
 
-@app.route("/mod/unexile/<bid>", methods=["POST"])
-@app.route("/api/v1/unexile/<bid>", methods=["POST"])
+@app.route("/mod/unexile/<guildname>/<username>", methods=["POST"])
+@app.route("/api/v1/unexile/<guildname>/<username>", methods=["POST"])
+@app.delete("/api/v2/guilds/<guildname>/exiles/<username>")
 @auth_required
 @is_guildmaster('access')
 @api("guildmaster")
 @validate_formkey
-def mod_unban_bid_user(bid, board, v):
+def mod_unban_bid_user(guildname, username, board, v):
+    """
+Un-exile a user from a Guild
 
-    user = get_user(request.values.get("username"))
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+* `username` - The username of the user to exile.
+"""
+
+    user = get_user(username)
 
     x =  g.db.query(BanRelationship).filter_by(board_id=board.id, user_id=user.id, is_active=True).first()
 
@@ -625,12 +701,17 @@ def mod_unban_bid_user(bid, board, v):
 
 
 @app.route("/user/kick/<pid>", methods=["POST"])
+@app.patch("/api/v2/me/submissions/<pid>/unyank")
 @auth_required
+@api("update")
 @validate_formkey
 def user_kick_pid(pid, v):
+    """
+Un-yank your post back to +general
 
-    # allows a user to yank their content back to +general if it was there
-    # previously
+URL path parameters:
+* `pid` - The base 36 id of the post to un-yank
+"""
 
     post = get_post(pid)
 
@@ -673,7 +754,8 @@ def user_kick_pid(pid, v):
 
 
 @app.route("/mod/take/<pid>", methods=["POST"])
-@app.route("/api/v1/mod/take/<pid>")
+@app.post("/api/v1/mod/take/<pid>")
+#@app.patch("/api/v2/guilds/<guildname>/submissions/<pid>/yank")
 @auth_required
 @is_guildmaster("content")
 @validate_formkey
@@ -1249,10 +1331,10 @@ def mod_edit_rule(bid, board, v):
     return "", 204
 
 
-@app.route("/+<boardname>/mod/settings", methods=["GET"])
+@app.route("/+<guildname>/mod/settings", methods=["GET"])
 @auth_required
 @is_guildmaster("config")
-def board_about_settings(boardname, board, v):
+def board_about_settings(guildname, board, v):
 
     return render_template(
         "guild/settings.html",
@@ -1262,22 +1344,29 @@ def board_about_settings(boardname, board, v):
         )
 
 
-@app.route("/+<boardname>/mod/appearance", methods=["GET"])
+@app.route("/+<guildname>/mod/appearance", methods=["GET"])
 @auth_required
 @is_guildmaster("appearance")
-def board_about_appearance(boardname, board, v):
+def board_about_appearance(guildname, board, v):
 
     return render_template("guild/appearance.html", v=v, b=board)
 
 
-@app.route("/+<boardname>/mod/mods", methods=["GET"])
-@app.route("/api/vue/+<boardname>/mod/mods",  methods=["GET"])
-@app.route("/api/v1/<boardname>/mod/mods", methods=["GET"])
+@app.route("/+<guildname>/mod/mods", methods=["GET"])
+@app.route("/api/vue/+<guildname>/mod/mods",  methods=["GET"])
+@app.route("/api/v1/<guildname>/mod/mods", methods=["GET"])
+@app.get("/api/v2/guilds/<guildname>/mods")
 @auth_desired
 @api("read")
-def board_about_mods(boardname, v):
+def board_about_mods(guildname, v):
+    """
+Get a list of users who are guildmasters of a guild.
 
-    board = get_guild(boardname, v=v)
+URL path parameters:
+* `guildname` - The name of a guild
+"""
+
+    board = get_guild(guildname, v=v)
 
     if board.is_banned:
         return {
@@ -1292,14 +1381,14 @@ def board_about_mods(boardname, v):
         "api":lambda:jsonify({"data":[x.json for x in board.mods_list]})
         }
 
-@app.route("/+<boardname>/mod/css", methods=["GET"])
-@app.route("/api/vue/+<boardname>/mod/css",  methods=["GET"])
-@app.route("/api/v1/<boardname>/mod/css", methods=["GET"])
+@app.route("/+<guildname>/mod/css", methods=["GET"])
+@app.route("/api/vue/+<guildname>/mod/css",  methods=["GET"])
+@app.route("/api/v1/<guildname>/mod/css", methods=["GET"])
 @auth_desired
 @api("read")
-def board_about_css(boardname, v):
+def board_about_css(guildname, v):
 
-    board = get_guild(boardname, v=v)
+    board = get_guild(guildname, v=v)
 
     if board.is_banned:
         return {
@@ -1388,10 +1477,10 @@ def board_edit_css(bid, board, v):
 
     return '', 204
 
-@app.get("/+<boardname>/css")
-def board_get_css(boardname):
+@app.get("/+<guildname>/css")
+def board_get_css(guildname):
 
-    board=get_guild(boardname)
+    board=get_guild(guildname)
 
     css="@media (min-width: 992px) {\n" + board.css +"\n}"
 
@@ -1402,20 +1491,33 @@ def board_get_css(boardname):
     return resp
 
 
-@app.route("/+<boardname>/mod/exiled", methods=["GET"])
-@app.route("/api/v1/<boardname>/mod/exiled", methods=["GET"])
+@app.route("/+<guildname>/mod/exiled", methods=["GET"])
+@app.route("/api/v1/<guildname>/mod/exiled", methods=["GET"])
+@app.get("/api/v2/guilds/<guildname>/exiles")
 @auth_required
 @is_guildmaster("access")
 @api("read", "guildmaster")
-def board_about_exiled(boardname, board, v):
+def board_about_exiled(guildname, board, v):
+    """
+View guild exile entries.
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+
+Optional query parameters
+* `page` - The page of items to view. Default `1`.
+"""
 
     page = int(request.args.get("page", 1))
 
-    bans = board.bans.filter_by(is_active=True).order_by(
-        BanRelationship.created_utc.desc()).offset(25 * (page - 1)).limit(26)
-
-    # Deleted users will still remove a spot on the page but this will stop them from cluttering it
-    bans = [ban for ban in bans if not ban.user.is_deleted]
+    bans = board.bans.filter_by(
+        is_active=True
+        ).join(BanRelationship.user
+        ).filter(
+        User.is_deleted==False
+        ).order_by(
+        BanRelationship.created_utc.desc()
+        ).offset(25 * (page - 1)).limit(26)
 
     next_exists = (len(bans) == 26)
     bans = bans[0:25]
@@ -1432,12 +1534,12 @@ def board_about_exiled(boardname, board, v):
         "api":lambda:jsonify({"data":[x.json for x in bans]})
         }
 
-@app.route("/+<boardname>/mod/chatbans", methods=["GET"])
-@app.route("/api/v1/<boardname>/mod/chatbans", methods=["GET"])
+@app.route("/+<guildname>/mod/chatbans", methods=["GET"])
+@app.route("/api/v1/<guildname>/mod/chatbans", methods=["GET"])
 @auth_required
 @is_guildmaster("chat")
 @api("read", "guildmaster")
-def board_about_chatbanned(boardname, board, v):
+def board_about_chatbanned(guildname, board, v):
 
     page = int(request.args.get("page", 1))
 
@@ -1462,10 +1564,21 @@ def board_about_chatbanned(boardname, board, v):
 
 
 
-@app.route("/+<boardname>/mod/contributors", methods=["GET"])
+@app.route("/+<guildname>/mod/contributors", methods=["GET"])
+@app.route("/api/v2/guilds/<guildname>/contributors")
 @auth_required
 @is_guildmaster("access")
-def board_about_contributors(boardname, board, v):
+@api("read", "guildmaster")
+def board_about_contributors(guildname, board, v):
+    """
+View guild contributor list.
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+
+Optional query parameters
+* `page` - The page of items to view. Default `1`.
+"""
 
     page = int(request.args.get("page", 1))
 
@@ -1478,21 +1591,33 @@ def board_about_contributors(boardname, board, v):
     next_exists = (len(contributors) == 26)
     contributors = contributors[0:25]
 
-    return render_template(
-        "guild/contributors.html", 
-        v=v,
-        b=board, 
-        contributors=contributors,
-        page=page,
-        next_exists=next_exists
-        )
+    return {
+        'html':
+            lambda:render_template(
+                "guild/contributors.html", 
+                v=v,
+                b=board, 
+                contributors=contributors,
+                page=page,
+                next_exists=next_exists
+                ),
+        "api":lambda:jsonify({"data":[x.json for x in contributors]})
+        }
 
 
-@app.route("/api/subscribe/<boardname>", methods=["POST"])
+
+@app.route("/api/subscribe/<guildname>", methods=["POST"])
+@app.post("/api/v2/me/subscriptions/<guildname>")
 @auth_required
-def subscribe_board(boardname, v):
+def subscribe_board(guildname, v):
+    """
+Subscribe to a Guild.
 
-    board = get_guild(boardname, v=v)
+URL path parameters:
+* `guildname` - The name of a guild
+"""
+
+    board = get_guild(guildname, v=v)
 
     # check for existing subscription, canceled or otherwise
     sub = g.db.query(Subscription).filter_by(
@@ -1525,11 +1650,18 @@ def subscribe_board(boardname, v):
     return jsonify({"message": f"Joined +{board.name}"}), 200
 
 
-@app.route("/api/unsubscribe/<boardname>", methods=["POST"])
+@app.route("/api/unsubscribe/<guildname>", methods=["POST"])
+@app.delete("/api/v2/me/subscriptions/<guildname>")
 @auth_required
-def unsubscribe_board(boardname, v):
+def unsubscribe_board(guildname, v):
+    """
+Unsubscribe from a Guild.
 
-    board = get_guild(boardname, v=v)
+URL path parameters:
+* `guildname` - The name of a guild
+"""
+
+    board = get_guild(guildname, v=v)
 
     # check for existing subscription
     sub = g.db.query(Subscription).filter_by(
@@ -1553,10 +1685,18 @@ def unsubscribe_board(boardname, v):
     return jsonify({"message": f"Left +{board.name}"}), 200
 
 
-@app.route("/+<boardname>/mod/queue", methods=["GET"])
+@app.route("/+<guildname>/mod/queue", methods=["GET"])
+@app.get("/api/v2/guilds/<guildname>/modqueue")
 @auth_required
+@api("read", "guildmaster")
 @is_guildmaster("content")
-def board_mod_queue(boardname, board, v):
+def board_mod_queue(guildname, board, v):
+    """
+Get reported posts in a guild.
+
+URL path parameters:
+* `guildname` - The name of a guild
+"""
 
     page = int(request.args.get("page", 1))
 
@@ -1579,17 +1719,21 @@ def board_mod_queue(boardname, board, v):
 
     posts = get_posts(ids, v=v)
 
-    return render_template("guild/reported_posts.html",
+    return {"html":lambda:render_template("guild/reported_posts.html",
                            listing=posts,
                            next_exists=next_exists,
                            page=page,
                            v=v,
-                           b=board)
+                           b=board),
+            "api":lambda:jsonify({"data":[x.json for x in posts]})
+            }
 
 
 @app.route("/mod/queue", methods=["GET"])
+@app.get("/api/v2/me/modqueue")
 @auth_required
 def all_mod_queue(v):
+    """Get reported posts in all of your guilds."""
 
     page = int(request.args.get("page", 1))
 
@@ -1618,12 +1762,14 @@ def all_mod_queue(v):
 
     posts = get_posts(ids, v=v)
 
-    return render_template("guild/reported_posts.html",
+    return {"html":lambda:render_template("guild/reported_posts.html",
                            listing=posts,
                            next_exists=next_exists,
                            page=page,
                            v=v,
-                           b=None)
+                           b=None),
+            "api":lambda:jsonify({"data":[x.json for x in posts]})
+            }
 
 
 @app.route("/mod/<bid>/images/profile", methods=["POST"])
@@ -1821,13 +1967,24 @@ def mod_board_color(bid, board, v):
     return redirect(f"/+{board.name}/mod/appearance?msg=Success")
 
 
-@app.route("/mod/approve/<bid>", methods=["POST"])
+@app.route("/mod/approve/<guildname>", methods=["POST"])
+@app.post("/api/v2/guilds/<guildname>/contributors")
 @auth_required
 @is_guildmaster("access")
+@api("guildmaster")
 @validate_formkey
-def mod_approve_bid_user(bid, board, v):
+def mod_approve_bid_user(guildname, board, v):
+    """
+Approve a user as a Contributor in a Guild
 
-    user = get_user(request.form.get("username"), graceful=True)
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+
+Required form data:
+* `username` - The username of the user to approve.
+"""
+
+    user = get_user(request.values.get("username"), graceful=True)
 
     if not user or user.is_deleted:
         return jsonify({"error": "That user doesn't exist."}), 404
@@ -1869,10 +2026,21 @@ def mod_approve_bid_user(bid, board, v):
 
 
 @app.route("/mod/unapprove/<bid>", methods=["POST"])
+@app.delete("/api/v2/guilds/<guildname>/contributors")
 @auth_required
 @is_guildmaster("access")
+@api("guildmaster")
 @validate_formkey
 def mod_unapprove_bid_user(bid, board, v):
+    """
+Un-approve a user as a Contributor in a Guild
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+
+Required form data:
+* `username` - The username of the user to remove contributor status from.
+"""
 
     user = get_user(request.values.get("username"))
 
@@ -1907,15 +2075,21 @@ def guild_profile(guild):
     else:
         return redirect(x.profile_url)
 
-
-
-
-
-@app.route("/mod/post_pin/<bid>/<pid>/<x>", methods=["POST"])
+@app.route("/mod/post_pin/<guildname>/<pid>/<x>", methods=["POST"])
+@app.patch("/api/v2/guilds/<guildname>/submissions/<pid>/pin/<x>")
 @auth_required
 @is_guildmaster("content")
+@api("guildmaster")
 @validate_formkey
-def mod_toggle_post_pin(bid, pid, x, board, v):
+def mod_toggle_post_pin(guildname, pid, x, board, v):
+    """
+Set pin status on a post
+
+URL path parameters:
+* `guildname` - The guild to pin the post in
+* `pid` - The base 36 id of the post to pin
+* `x` - One of `0` or `1`, corresponding to unpinned and pinned statuses respectively
+"""
 
     post = get_post(pid)
 
@@ -1947,13 +2121,23 @@ def mod_toggle_post_pin(bid, pid, x, board, v):
     return "", 204
 
 
-@app.route("/+<boardname>/comments")
-@app.route("/api/v1/guild/<boardname>/comments")
+@app.get("/+<guildname>/comments")
+@app.get("/api/v1/guild/<guildname>/comments")
+@app.get("/api/v2/guilds/<guildname>/comments")
 @auth_desired
 @api("read")
-def board_comments(boardname, v):
+def board_comments(guildname, v):
+    """
+Get comments in a guild
 
-    b = get_guild(boardname, v=v)
+URL parameters:
+* `guildname` - The name of a guild
+
+Optional query parameters:
+* `page` - Page of comments to get. Default `1`.
+"""
+
+    b = get_guild(guildname, v=v)
 
     page = int(request.args.get("page", 1))
 
@@ -2011,14 +2195,24 @@ def change_guild_category(v, board, bid, category):
 
 
 
-@app.route("/+<boardname>/mod/log", methods=["GET"])
-@app.route("/api/v1/mod_log/<boardname>", methods=["GET"])
+@app.route("/+<guildname>/mod/log", methods=["GET"])
+@app.route("/api/v1/mod_log/<guildname>", methods=["GET"])
+@app.get("/api/v2/guilds/<guildname>/modlogs")
 @auth_desired
 @api("read")
-def board_mod_log(boardname, v):
+def board_mod_log(guildname, v):
+    """
+View guild mod log data.
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+
+Optional query parameters
+* `page` - The page of items to view. Default `1`.
+"""
 
     page=int(request.args.get("page",1))
-    board=get_guild(boardname, v=v)
+    board=get_guild(guildname, v=v)
 
     if board.is_banned and not (v and v.admin_level>=4):
         return {
@@ -2055,17 +2249,26 @@ def board_mod_log(boardname, v):
         "api":lambda:jsonify({"data":[x.json for x in actions]})
         }
 
-@app.route("/+<boardname>/mod/log/<aid>", methods=["GET"])
+@app.route("/+<guildname>/mod/log/<id>", methods=["GET"])
+@app.get("/api/v2/guilds/<guildname>/modlogs/<id>")
 @auth_desired
-def mod_log_item(boardname, aid, v):
+@api("read")
+def mod_log_item(guildname, id, v):
+    """
+View a guild mod log entry.
 
-    action=g.db.query(ModAction).filter_by(id=base36decode(aid)).first()
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+* `id` - The base 36 id of the mod log entry
+"""
+
+    action=g.db.query(ModAction).filter_by(id=base36decode(id)).first()
 
     if not action:
         abort(404)
 
-    if request.path != action.permalink:
-        return redirect(action.permalink)
+    if action.board.name.lower() != guildname.lower():
+        abort(404)
 
     return render_template("guild/modlog.html",
         v=v,
@@ -2076,11 +2279,11 @@ def mod_log_item(boardname, aid, v):
         action=action
         )
 
-@app.route("/+<boardname>/mod/edit_perms", methods=["POST"])
+@app.route("/+<guildname>/mod/edit_perms", methods=["POST"])
 @auth_required
 @is_guildmaster("full")
 @validate_formkey
-def board_mod_perms_change(boardname, board, v):
+def board_mod_perms_change(guildname, board, v):
 
     user=get_user(request.form.get("username"))
 
@@ -2421,10 +2624,16 @@ def siege_guild(v):
 
 
 @app.post("/+<guildname>/toggle_bell")
-@app.post("/api/v2/guilds/<guildname>/toggle_bell")
+@app.patch("/api/v2/guilds/<guildname>/toggle_bell")
 @auth_required
 @api("update")
 def toggle_guild_bell(guildname, v):
+    """
+Toggle notifications for new posts in a guild. You must be a member of the guild.
+
+URL path parameters:
+* `guildname` - The name of a guild.
+"""
 
     guild=get_guild(guildname, v=v, graceful=True)
     if not guild:

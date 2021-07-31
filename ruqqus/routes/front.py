@@ -279,9 +279,18 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
 
 @app.route("/", methods=["GET"])
 @app.route("/api/v1/front/listing", methods=["GET"])
+@app.route("/api/v2/me/submissions")
 @auth_desired
 @api("read")
 def home(v):
+    """
+Get personalized home page based on subscriptions and personal settings.
+
+Optional query parameters:
+* `sort` - One of `hot`, `new`, `top`, `disputed`, `activity`. Default `hot`.
+* `t` - One of `day`, `week`, `month`, `year`, `all`. Default `all`.
+* `page` - Page of results to return. Default `1`.
+"""
 
     if v and [i for i in v.subscriptions if i.is_active]:
 
@@ -308,7 +317,7 @@ def home(v):
 
                      # these arguments don't really do much but they exist for
                      # cache memoization differentiation
-                       allow_nsfw=v.over_18,
+                     allow_nsfw=v.over_18,
                      hide_offensive=v.hide_offensive,
                      hide_bot=v.hide_bot,
 
@@ -373,9 +382,18 @@ def categories_select(v):
 @app.route("/all", methods=["GET"])
 @app.route("/api/v1/all/listing", methods=["GET"])
 @app.route("/inpage/all")
+@app.get("/api/v2/submissions")
 @auth_desired
 @api("read")
 def front_all(v):
+    """
+Get all posts, minus filtered content based on personal settings.
+
+Optional query parameters:
+* `sort` - One of `hot`, `new`, `top`, `disputed`, `activity`. Default `hot`.
+* `t` - One of `day`, `week`, `month`, `year`, `all`. Default `all`.
+* `page` - Page of results to return. Default `1`.
+"""
 
     page = int(request.args.get("page") or 1)
 
@@ -572,10 +590,19 @@ def guild_ids(sort="subs", page=1, nsfw=False, cats=[]):
 
 
 @app.route("/browse", methods=["GET"])
-@app.route("/api/v1/guilds")
+@app.get("/api/v1/guilds")
+@app.get("/api/v2/guilds")
 @auth_desired
 @api("read")
 def browse_guilds(v):
+    """
+Get a listing of guilds
+
+Optional query parameters:
+* `sort` - One of `trending`, `new`, or `subs`. Default `trending`.
+* `page` - Page of results to return. Defualt `1`.
+"""
+
 
     page = int(request.args.get("page", 1))
 
@@ -614,72 +641,93 @@ def browse_guilds(v):
             }
 
 
-@app.route('/mine', methods=["GET"])
-@app.route("/api/v1/mine", methods=["GET"])
+@app.route('/mine/guilds', methods=["GET"])
+@app.route("/api/v1/mine/guilds", methods=["GET"])
+@app.get("/api/v2/me/guilds")
 @auth_required
 @api("read")
-def my_subs(v):
+def my_guilds(v, kind=None):
 
-    kind = request.args.get("kind", "guilds")
+    """
+Get guilds with which the user has a connection
+
+Optional query parameters:
+`page` - Page of results to return. Default `1`
+
+"""
     page = max(int(request.args.get("page", 1)), 1)
 
-    if kind == "guilds":
 
-        b = g.db.query(Board)
-        contribs = g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id, is_active=True).subquery()
-        m = g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, accepted=True).subquery()
-        s = g.db.query(Subscription.board_id).filter_by(user_id=v.id, is_active=True).subquery()
+    b = g.db.query(Board)
 
-        content = b.filter(
-            or_(
-                Board.id.in_(contribs),
-                Board.id.in_(m),
-                Board.id.in_(s)
-                )
+    contribs = g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id, is_active=True).subquery()
+    m = g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, accepted=True).subquery()
+    s = g.db.query(Subscription.board_id).filter_by(user_id=v.id, is_active=True).subquery()
+
+    content = b.filter(
+        or_(
+            Board.id.in_(contribs),
+            Board.id.in_(m),
+            Board.id.in_(s)
             )
-        content = content.order_by(Board.name.asc())
+        )
+    content = content.order_by(Board.name.asc())
 
-        content = [x for x in content.offset(25 * (page - 1)).limit(26)]
-        next_exists = (len(content) == 26)
-        content = content[0:25]
-        
-        for board in content:
-            board._is_subscribed=True
+    content = [x for x in content.offset(25 * (page - 1)).limit(26)]
+    next_exists = (len(content) == 26)
+    content = content[0:25]
+    
+    for board in content:
+        board._is_subscribed=True
 
-        return {"html": lambda: render_template("mine/boards.html",
-                               v=v,
-                               boards=content,
-                               next_exists=next_exists,
-                               page=page,
-                               kind="guilds"),
-                "api": lambda: jsonify({"data": [x.json for x in content]})}
+    return {"html": lambda: render_template("mine/boards.html",
+                           v=v,
+                           boards=content,
+                           next_exists=next_exists,
+                           page=page,
+                           kind="guilds"),
+            "api": lambda: jsonify({"data": [x.json for x in content]})}
 
-    elif kind == "users":
 
-        u = g.db.query(User).filter_by(is_banned=0, is_deleted=False)
 
-        follows = g.db.query(Follow).filter_by(user_id=v.id).subquery()
 
-        content = u.join(follows,
-                         User.id == follows.c.target_id,
-                         isouter=False)
+@app.route('/mine', methods=["GET"])
+@app.route("/api/v1/mine", methods=["GET"])
+@app.get("/api/v2/me/users")
+@auth_required
+@api("read")
+def my_subs(v, kind=None):
 
-        content = content.order_by(User.stored_subscriber_count.desc())
+    """
+Get users that the authenticated user is following
 
-        content = [x for x in content.offset(25 * (page - 1)).limit(26)]
-        next_exists = (len(content) == 26)
-        content = content[0:25]
+Optional query parameters:
+`page` - Page of results to return. Default `1`
 
-        return {"html": lambda: render_template("mine/users.html",
-                               v=v,
-                               users=content,
-                               next_exists=next_exists,
-                               page=page,
-                               kind="users"),
-                "api": lambda: jsonify({"data": [x.json for x in content]})}
+"""
+    page = max(int(request.args.get("page", 1)), 1)
 
-    else:
-        abort(400)
+    u = g.db.query(User).filter_by(is_banned=0, is_deleted=False)
+
+    follows = g.db.query(Follow).filter_by(user_id=v.id).subquery()
+
+    content = u.join(follows,
+                     User.id == follows.c.target_id,
+                     isouter=False)
+
+    content = content.order_by(User.stored_subscriber_count.desc())
+
+    content = [x for x in content.offset(25 * (page - 1)).limit(26)]
+    next_exists = (len(content) == 26)
+    content = content[0:25]
+
+    return {"html": lambda: render_template("mine/users.html",
+                           v=v,
+                           users=content,
+                           next_exists=next_exists,
+                           page=page,
+                           kind="users"),
+            "api": lambda: jsonify({"data": [x.json for x in content]})}
 
 
 @app.route("/random/post", methods=["GET"])
@@ -851,9 +899,16 @@ def comment_idlist(page=1, v=None, nsfw=False, **kwargs):
 
 @app.route("/all/comments", methods=["GET"])
 @app.route("/api/v1/front/comments", methods=["GET"])
+@app.get("/api/v2/comments")
 @auth_desired
 @api("read")
 def all_comments(v):
+    """
+Get all comments
+
+Optional query parameters:
+* `page` - Page of results to return. Default `1`
+"""
 
     page = int(request.args.get("page", 1))
 

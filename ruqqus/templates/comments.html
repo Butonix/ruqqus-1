@@ -21,7 +21,7 @@
 
         <div id="comment-{{ c.base36id }}-only">
 
-            <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger">NSFW</span> {% endif %}
+            <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger">NSFW<span> {% endif %}
                 [{% if c.is_banned %}Removed by administrators{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{ c.author.username }}{% elif c.is_blocked %}This user has blocked you{% endif %}]
             </div>
 
@@ -219,7 +219,7 @@
           
 
           {% if v and v.id==c.author_id and c.post and c.is_guildmaster('content') %}
-          <li class="list-inline-item d-none d-md-inline-block"><a href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="herald_comment('{{ c.board.base36id }}','{{ c.base36id }}')" class="text-warning"><i class="fas fa-crown text-warning"></i><span class="d-none d-md-inline-block">Herald</span></a></li>
+          <li class="list-inline-item d-none d-md-inline-block"><a href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="herald_comment('{{ c.board.name }}','{{ c.base36id }}')" class="text-warning"><i class="fas fa-crown text-warning"></i><span class="d-none d-md-inline-block">Herald</span></a></li>
           {% endif %}
 
           {% if v and v.admin_level>=3 and request.path.startswith ('/admin') %}
@@ -286,7 +286,7 @@
             {% if v and c.post and c.is_guildmaster('content') %}
             <div class="dropdown-divider"></div>
               {% if c.is_top_level %}
-                <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="pin_comment('{{ c.board.base36id }}','{{ c.base36id }}')"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>{{ "Unpin" if c.is_pinned else "Pin" }}</a>
+                <a class="dropdown-item text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="pin_comment('{{ c.board.name }}','{{ c.base36id }}')"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>{{ "Unpin" if c.is_pinned else "Pin" }}</a>
               {% endif %}
             {% endif %}
             {% if v and c.post and c.is_guildmaster('access') %}
@@ -449,12 +449,12 @@
           {% endif %}
 
           {% if v and v.id==c.author_id and c.post and c.is_guildmaster('content') %}
-          <li class="list-group-item"><a href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="herald_comment('{{ c.board.base36id }}','{{ c.base36id }}')" class="text-warning"><i class="fas fa-crown text-warning"></i><span>Herald</span></a></li>
+          <li class="list-group-item"><a href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="herald_comment('{{ c.board.name }}','{{ c.base36id }}')" class="text-warning"><i class="fas fa-crown text-warning"></i><span>Herald</span></a></li>
           {% endif %}
             
           {% if v and c.post and c.is_guildmaster('content') %}
             {% if c.is_top_level %}
-              <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="pin_comment('{{ c.board.base36id }}','{{ c.base36id }}')"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>{{ 'Unpin' if c.is_pinned else 'Pin' }}</a>
+              <li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{ c.base36id }}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="pin_comment('{{ c.board.name }}','{{ c.base36id }}')"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>{{ 'Unpin' if c.is_pinned else 'Pin' }}</a>
               </li>
             {% endif %}
           {% endif %}
