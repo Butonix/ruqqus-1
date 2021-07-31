@@ -318,7 +318,9 @@ def docs():
 
 	    docs.append(new_doc)
 
-	docs.sort(key=lambda x: (x.endpoint, x.method))
+	method_order=["POST", "GET", "PATCH", "PUT", "DELETE"]
+
+	docs.sort(key=lambda x: (x.endpoint, method_order.index(x.method))
 
 	fulldocs={}
 
