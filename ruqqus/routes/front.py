@@ -867,6 +867,12 @@ def comment_idlist(page=1, v=None, nsfw=False, **kwargs):
 @auth_desired
 @api("read")
 def all_comments(v):
+    """
+Get all comments
+
+Optional query parameters:
+* `page` - Page of results to return. Default `1`
+"""
 
     page = int(request.args.get("page", 1))
 
