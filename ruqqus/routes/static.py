@@ -275,6 +275,10 @@ def docs():
 	        return f"{self.method.upper()} {self.endpoint}\n\n{self.docstring}"
 
 	    @property
+	    def docstring(self):
+	    	return self.target_function.__doc__ if self.target_function.__doc__ else "[doc pending]"
+
+	    @property
 	    def docstring_html(self):
 	    	with CustomRenderer() as renderer:
 	    		html = renderer.render(mistletoe.Document(self.docstring))
@@ -294,14 +298,10 @@ def docs():
 	        if method not in ["OPTIONS","HEAD"]:
 	            break
 
-	    docstring=getattr(app.view_functions[rule.endpoint], '__doc__')
-	    if not docstring:
-	    	docstring="[no docstring (yet)]"
-
 	    new_doc=Doc(
 	        method=method,
 	        endpoint=endpoint,
-	        docstring = docstring
+	        target_function=app.view_functions[rule.endpoint]
 	        )
 
 	    docs.append(new_doc)
