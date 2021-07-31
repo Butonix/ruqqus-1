@@ -40,32 +40,36 @@ def comment_cid(cid, pid=None):
         abort(403)
     return redirect(comment.permalink)
 
-@app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
-def comment_cid_api_redirect(c_id=None, p_id=None):
-    redirect(f'/api/v1/comment/<c_id>')
+@app.route("/api/v1/post/<pid>/comment/<cid>", methods=["GET"])
+def comment_cid_api_redirect(cid=None, pid=None):
+    redirect(f'/api/v1/comment/<cid>')
 
-@app.route("/api/v1/comment/<c_id>", methods=["GET"])
-@app.route("/+<guildname>/post/<p_id>/<anything>/<c_id>", methods=["GET"])
-@app.get("/api/vue/comment/<c_id>")
-@app.get("/api/v2/comments/<c_id>")
+@app.route("/api/v1/comment/<cid>", methods=["GET"])
+@app.route("/+<guildname>/post/<pid>/<anything>/<cid>", methods=["GET"])
+@app.get("/api/vue/comment/<cid>")
+@app.get("/api/v2/comments/<cid>")
 @auth_desired
 @api("read")
-def post_pid_comment_cid(c_id, p_id=None, guildname=None, anything=None, v=None):
+def post_pid_comment_cid(cid, pid=None, guildname=None, anything=None, v=None):
+    """
+Fetch a single comment and up to 5 total layers above and below.
 
-    comment = get_comment(c_id, v=v)
+"""
+
+    comment = get_comment(cid, v=v)
     
     # prevent api shenanigans
-    if not p_id:
-        p_id = base36encode(comment.parent_submission)
+    if not pid:
+        pid = base36encode(comment.parent_submission)
     
-    post = get_post(p_id, v=v)
+    post = get_post(pid, v=v)
     board = post.board
     
     if not guildname:
         guildname = board.name
     
     # fix incorrect guildname and pid
-    if board.name != guildname or comment.parent_submission != post.id:
+    if (board.name != guildname or comment.parent_submission != post.id) and not request.path.startswith("/api/"):
         return redirect(comment.permalink)
 
     if board.is_banned and not (v and v.admin_level > 3):
@@ -266,12 +270,12 @@ def post_pid_comment_cid(c_id, p_id=None, guildname=None, anything=None, v=None)
             }
 
 #if the guild name is missing, add it to the url and redirect
-@app.route("/post/<p_id>/<anything>/<c_id>", methods=["GET"])
-@app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
+@app.route("/post/<pid>/<anything>/<cid>", methods=["GET"])
+@app.route("/api/v1/post/<pid>/comment/<cid>", methods=["GET"])
 @auth_desired
 @api("read")
-def post_pid_comment_cid_noboard(p_id, c_id, anything=None, v=None):
-    comment=get_comment(c_id, v=v)
+def post_pid_comment_cid_noboard(pid, cid, anything=None, v=None):
+    comment=get_comment(cid, v=v)
     
     return redirect(comment.permalink)
 
@@ -467,7 +471,7 @@ def api_comment(v):
                 is_offensive=is_offensive,
                 original_board_id=parent_post.board_id,
                 is_bot=is_bot,
-                app_id=v.client.application.id if v.client else None,
+                appid=v.client.application.id if v.client else None,
                 creation_region=request.headers.get("cf-ipcountry")
                 )
 
