@@ -280,7 +280,7 @@ def docs():
 
 	    @property
 	    def docstring_html(self):
-	    	return mistletoe.markdown(mistletoe.Document(self.docstring))
+	    	return mistletoe.markdown(self.docstring)
 
 	    @property
 	    def resource(self):
