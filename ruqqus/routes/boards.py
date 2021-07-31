@@ -391,6 +391,14 @@ Optional query parameters:
 @api("guildmaster")
 def mod_distinguish_post(guildname, pid, board, v):
 
+    """
+Toggle Herald status on your post.
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+* `pid` - The base 36 post ID
+"""
+
     #print(pid, board, v)
 
     post = get_post(pid, v=v)
@@ -424,7 +432,13 @@ def mod_distinguish_post(guildname, pid, board, v):
 @is_guildmaster('content')
 @api("guildmaster")
 def mod_distinguish_comment(bid, cid, board, v):
+    """
+Toggle Herald status on your comment.
 
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+* `cid` - The base 36 comment ID
+"""
     comment = get_comment(cid, v=v)
 
     if not comment.post.board_id==board.id:
