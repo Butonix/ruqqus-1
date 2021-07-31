@@ -280,13 +280,24 @@ def reddit_moment_redirect(name):
 
 
 @app.route("/+<name>", methods=["GET"])
-@app.route("/api/v1/guild/<name>/listing", methods=["GET"])
-@app.get("/api/v2/guilds/<name>/submissions")
+@app.route("/api/v1/guild/<guildname>/listing", methods=["GET"])
+@app.get("/api/v2/guilds/<guildname>/submissions")
 @auth_desired
 @api("read")
-def board_name(name, v):
+def board_name(guildname, v):
+    """
+Get a guild's submissions
 
-    board = get_guild(name, v=v)
+URL path parameter:
+* `guildname` - The name of the guild
+
+Optional query parameters:
+* `page` - Page number. Contents are returned in pages of 25 entries. Default `1`.
+* `sort` - Sort order. Valid options are `hot`, `top`, `new`, `old`, `disputed`, and `activity`. Default `hot`.
+* `t` - Time filter. Valid options are `day`, `week`, `month`, `year`, and `all`. Default `all`.
+    """
+
+    board = get_guild(guildname, v=v)
 
     #print(board.is_subscribed)
 
