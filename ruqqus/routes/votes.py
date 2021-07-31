@@ -151,7 +151,7 @@ URL path parameters:
 
     # check for existing vote
     existing = g.db.query(CommentVote).filter_by(
-        user_id=v.id, cid=comment.id).first()
+        user_id=v.id, comment_id=comment.id).first()
     if existing:
         existing.change_to(x)
         g.db.add(existing)
