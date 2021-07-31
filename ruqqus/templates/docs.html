@@ -16,9 +16,9 @@
 
 
 {% for resource in docs %}
-	<h2>{{ resource }}</h2>
+	<h2 id="{{ resource }}">{{ resource }}</h2>
 	{% for doc in docs[resource] %}
-		<h3><code>{{ doc.method }} {{ doc.endpoint }}</code></h3>
+		<h3 id="{{ doc.frag }}"><a href="#{{ doc.frag }}"><code>{{ doc.method }} {{ doc.endpoint }}</code></a></h3>
 		{{ doc.docstring_html | safe }}
 		<hr>
 	{% endfor %}

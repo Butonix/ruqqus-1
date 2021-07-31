@@ -287,6 +287,13 @@ def docs():
 	    @property
 	    def resource(self):
 	    	return self.endpoint.split('/')[1]
+
+	    @property
+	    def frag(self):
+	    	tail=self.endpoint.replace('/','_')
+	    	tail=tail.replace("<","")
+	    	tail=tail.replace(">","")
+	    	return f"{self.method.lower()}_{tail}"
 	    
 	    
 
