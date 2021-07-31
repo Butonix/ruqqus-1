@@ -260,7 +260,7 @@ def dismiss_mobile_tip():
 
 	return "", 204
 
-@app.route("/docs")
+@app.route("/help/docs")
 @cache.memoize(10)
 def docs():
 

@@ -250,12 +250,14 @@ def request_api_keys(v):
         author_id=v.id,
         description=request.form.get("description")[0:256],
         client_id=secrets.token_urlsafe(32)[0:32],
-        client_secret=secrets.token_urlsafe(64)[0:128]
+        client_secret=secrets.token_urlsafe(64)[0:64]
     )
 
     g.db.add(new_app)
 
-    return redirect('/settings/apps')
+    g.db.commit()
+
+    return redirect(new_app.permalink)
 
 
 @app.route("/delete_app/<aid>", methods=["POST"])
