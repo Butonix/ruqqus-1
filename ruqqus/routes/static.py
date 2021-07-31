@@ -292,7 +292,7 @@ def docs():
 	    if not rule.rule.startswith("/api/v2/"):
 	        continue
 
-	    endpoint=rule.rule
+	    endpoint=rule.rule.split("/api/v2")[1]
 
 	    for method in rule.methods:
 	        if method not in ["OPTIONS","HEAD"]:
