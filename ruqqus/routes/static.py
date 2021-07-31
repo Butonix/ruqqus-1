@@ -293,7 +293,7 @@ def docs():
 	    	tail=self.endpoint.replace('/','_')
 	    	tail=tail.replace("<","")
 	    	tail=tail.replace(">","")
-	    	return f"{self.method.lower()}_{tail}"
+	    	return f"{self.method.lower()}{tail}"
 	    
 	    
 
