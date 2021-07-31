@@ -335,8 +335,8 @@ def admin_app_revoke(v, aid):
     return jsonify({"message": f"{app.app_name} banned"})
 
 
-@app.route("/admin/app/<aid>", methods=["GET"])
-@admin_level_required(3)
+@app.route("/app/<aid>", methods=["GET"])
+@auth_required
 def admin_app_id(v, aid):
 
     aid=base36decode(aid)
@@ -345,6 +345,9 @@ def admin_app_id(v, aid):
         joinedload(
             OauthApp.author)).filter_by(
         id=aid).first()
+
+    if v.id != oauth.author_id and v.admin_level<4:
+        abort(403)
 
     pids=oauth.idlist(page=int(request.args.get("page",1)),
         )
