@@ -308,4 +308,4 @@ def docs():
 
 	docs.sort(key=lambda x: x.endpoint)
 
-	return render_template("docs.html", docs=docs)
+	return render_template("docs.html", docs=docs, v=None)
