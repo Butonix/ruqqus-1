@@ -603,7 +603,7 @@ def mod_ban_bid_user(boardname, board, v):
 
 
 @app.route("/mod/unexile/<boardname>/<username>", methods=["POST"])
-@app.route("/api/v1/unexile/<boardname>/<username", methods=["POST"])
+@app.route("/api/v1/unexile/<boardname>/<username>", methods=["POST"])
 @app.delete("/api/v2/boards/<boardname>/exiles/<username>")
 @auth_required
 @is_guildmaster('access')
