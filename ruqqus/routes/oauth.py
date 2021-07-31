@@ -53,8 +53,12 @@ def oauth_authorize_prompt(v):
         if scope not in SCOPES:
             return jsonify({"oauth_error": f"The provided scope `{scope}` is not valid."}), 400
 
-    if any(x in scopes for x in ["create", "update",
-                                 "guildmaster"]) and "identity" not in scopes:
+    if any(
+        x in scopes for x in [
+        "create", 
+        "update",
+        "guildmaster"
+        ]) and "identity" not in scopes:
         return jsonify({"oauth_error": f"`identity` scope required when requesting `create`, `update`, or `guildmaster` scope."}), 400
 
     redirect_uri = request.args.get("redirect_uri")
