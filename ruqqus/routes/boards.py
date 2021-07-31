@@ -1427,7 +1427,7 @@ def board_get_css(guildname):
 
 @app.route("/+<guildname>/mod/exiled", methods=["GET"])
 @app.route("/api/v1/<guildname>/mod/exiled", methods=["GET"])
-@app.get("/api/v2/guilds/<guildname>/exiled")
+@app.get("/api/v2/guilds/<guildname>/exiles")
 @auth_required
 @is_guildmaster("access")
 @api("read", "guildmaster")
