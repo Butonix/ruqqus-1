@@ -279,8 +279,7 @@ def delete_oauth_app(v, aid):
 
     g.db.delete(app)
 
-    return redirect('/settings/apps')
-
+    return jsonify({"redirect":"/settings/apps"}), 302
 
 @app.route("/edit_app/<aid>", methods=["POST"])
 @is_not_banned

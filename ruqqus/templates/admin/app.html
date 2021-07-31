@@ -43,7 +43,7 @@
 				{% endif %}
 			{% endif %}
 			{% if v.id==app.author_id %}
-				<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post('/delete_app/{{ app.base36id }}')">Delete App</a>
+				<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post_toast('/delete_app/{{ app.base36id }}')">Delete App</a>
 			{% endif %}
 		</div>
 	</div>
