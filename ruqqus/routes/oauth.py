@@ -322,7 +322,7 @@ def admin_app_approve(v, aid):
 
     g.db.add(app)
 
-    return redirect(app.permalink)
+    return "", 204
 
 
 @app.route("/admin/app/revoke/<aid>", methods=["POST"])
@@ -336,7 +336,7 @@ def admin_app_revoke(v, aid):
 
     g.db.add(app)
 
-    return redirect(app.permalink)
+    return "", 204
 
 
 @app.route("/app/<aid>", methods=["GET"])

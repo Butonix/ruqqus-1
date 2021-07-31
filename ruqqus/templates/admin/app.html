@@ -37,9 +37,9 @@
 		<div class="d-flex">
 			{% if v.admin_level>=4%}
 				{% if app.is_banned %}
-				<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post('/admin/app/approve/{{ app.base36id }}')">Unban App</a>
+				<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post('/admin/app/approve/{{ app.base36id }}', callback=function(){window.location.reload(true)})">Unban App</a>
 				{% else %}
-				<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post('/admin/app/revoke/{{ app.base36id }}')">Ban App</a>
+				<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post('/admin/app/revoke/{{ app.base36id }}', callback=function(){window.location.reload(true)})">Ban App</a>
 				{% endif %}
 			{% endif %}
 			{% if v.id==app.author_id %}
