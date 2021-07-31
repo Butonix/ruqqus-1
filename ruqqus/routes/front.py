@@ -625,73 +625,93 @@ Optional query parameters:
             }
 
 
+@app.route('/mine/guilds', methods=["GET"])
+@app.route("/api/v1/mine/guilds", methods=["GET"])
+@app.get("/api/v2/me/guilds")
+@auth_required
+@api("read")
+def my_guilds(v, kind=None):
+
+    """
+Get guilds with which the user has a connection
+
+Optional query parameters:
+`page` - Page of results to return. Default `1`
+
+"""
+    page = max(int(request.args.get("page", 1)), 1)
+
+
+    b = g.db.query(Board)
+
+    contribs = g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id, is_active=True).subquery()
+    m = g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, accepted=True).subquery()
+    s = g.db.query(Subscription.board_id).filter_by(user_id=v.id, is_active=True).subquery()
+
+    content = b.filter(
+        or_(
+            Board.id.in_(contribs),
+            Board.id.in_(m),
+            Board.id.in_(s)
+            )
+        )
+    content = content.order_by(Board.name.asc())
+
+    content = [x for x in content.offset(25 * (page - 1)).limit(26)]
+    next_exists = (len(content) == 26)
+    content = content[0:25]
+    
+    for board in content:
+        board._is_subscribed=True
+
+    return {"html": lambda: render_template("mine/boards.html",
+                           v=v,
+                           boards=content,
+                           next_exists=next_exists,
+                           page=page,
+                           kind="guilds"),
+            "api": lambda: jsonify({"data": [x.json for x in content]})}
+
+
+
+
 @app.route('/mine', methods=["GET"])
 @app.route("/api/v1/mine", methods=["GET"])
-@app.get("/api/v2/me/<kind>")
+@app.get("/api/v2/me/users")
 @auth_required
 @api("read")
 def my_subs(v, kind=None):
 
-    kind = kind if kind else request.args.get("kind", "guilds")
+    """
+Get users that the authenticated user is following
+
+Optional query parameters:
+`page` - Page of results to return. Default `1`
+
+"""
     page = max(int(request.args.get("page", 1)), 1)
 
-    if kind == "guilds":
+    u = g.db.query(User).filter_by(is_banned=0, is_deleted=False)
 
-        b = g.db.query(Board)
-        contribs = g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id, is_active=True).subquery()
-        m = g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, accepted=True).subquery()
-        s = g.db.query(Subscription.board_id).filter_by(user_id=v.id, is_active=True).subquery()
+    follows = g.db.query(Follow).filter_by(user_id=v.id).subquery()
 
-        content = b.filter(
-            or_(
-                Board.id.in_(contribs),
-                Board.id.in_(m),
-                Board.id.in_(s)
-                )
-            )
-        content = content.order_by(Board.name.asc())
+    content = u.join(follows,
+                     User.id == follows.c.target_id,
+                     isouter=False)
 
-        content = [x for x in content.offset(25 * (page - 1)).limit(26)]
-        next_exists = (len(content) == 26)
-        content = content[0:25]
-        
-        for board in content:
-            board._is_subscribed=True
+    content = content.order_by(User.stored_subscriber_count.desc())
 
-        return {"html": lambda: render_template("mine/boards.html",
-                               v=v,
-                               boards=content,
-                               next_exists=next_exists,
-                               page=page,
-                               kind="guilds"),
-                "api": lambda: jsonify({"data": [x.json for x in content]})}
+    content = [x for x in content.offset(25 * (page - 1)).limit(26)]
+    next_exists = (len(content) == 26)
+    content = content[0:25]
 
-    elif kind == "users":
-
-        u = g.db.query(User).filter_by(is_banned=0, is_deleted=False)
-
-        follows = g.db.query(Follow).filter_by(user_id=v.id).subquery()
-
-        content = u.join(follows,
-                         User.id == follows.c.target_id,
-                         isouter=False)
-
-        content = content.order_by(User.stored_subscriber_count.desc())
-
-        content = [x for x in content.offset(25 * (page - 1)).limit(26)]
-        next_exists = (len(content) == 26)
-        content = content[0:25]
-
-        return {"html": lambda: render_template("mine/users.html",
-                               v=v,
-                               users=content,
-                               next_exists=next_exists,
-                               page=page,
-                               kind="users"),
-                "api": lambda: jsonify({"data": [x.json for x in content]})}
-
-    else:
-        abort(400)
+    return {"html": lambda: render_template("mine/users.html",
+                           v=v,
+                           users=content,
+                           next_exists=next_exists,
+                           page=page,
+                           kind="users"),
+            "api": lambda: jsonify({"data": [x.json for x in content]})}
 
 
 @app.route("/random/post", methods=["GET"])
