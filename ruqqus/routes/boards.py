@@ -2613,10 +2613,10 @@ def siege_guild(v):
 @api("update")
 def toggle_guild_bell(guildname, v):
     """
-Toggle notifications for new posts in a guild.
+Toggle notifications for new posts in a guild. You must be a member of the guild.
 
 URL path parameters:
-* `guildname` - The guild in which you are a guildmaster
+* `guildname` - The name of a guild.
 """
 
     guild=get_guild(guildname, v=v, graceful=True)
