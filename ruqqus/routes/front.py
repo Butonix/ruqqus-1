@@ -283,6 +283,14 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
 @auth_desired
 @api("read")
 def home(v):
+    """
+Get personalized home page based on subscriptions and personal settings.
+
+Optional query parameters:
+* `sort` - One of `hot`, `new`, `top`, `disputed`, `activity`. Default `hot`.
+* `t` - One of `day`, `week`, `month`, `year`, `all`. Default `all`.
+* `page` - Page of results to return. Default `1`.
+"""
 
     if v and [i for i in v.subscriptions if i.is_active]:
 
@@ -309,7 +317,7 @@ def home(v):
 
                      # these arguments don't really do much but they exist for
                      # cache memoization differentiation
-                       allow_nsfw=v.over_18,
+                     allow_nsfw=v.over_18,
                      hide_offensive=v.hide_offensive,
                      hide_bot=v.hide_bot,
 
@@ -378,6 +386,14 @@ def categories_select(v):
 @auth_desired
 @api("read")
 def front_all(v):
+    """
+Get all posts, minus filtered content based on personal settings.
+
+Optional query parameters:
+* `sort` - One of `hot`, `new`, `top`, `disputed`, `activity`. Default `hot`.
+* `t` - One of `day`, `week`, `month`, `year`, `all`. Default `all`.
+* `page` - Page of results to return. Default `1`.
+"""
 
     page = int(request.args.get("page") or 1)
 
