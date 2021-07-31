@@ -283,6 +283,11 @@ def docs():
 	    	with CustomRenderer() as renderer:
 	    		html = renderer.render(mistletoe.Document(self.docstring))
 	    	return html
+
+	    @property
+	    def resource(self):
+	    	return self.endpoint.split('/')[1]
+	    
 	    
 
 	docs=[]
@@ -308,4 +313,12 @@ def docs():
 
 	docs.sort(key=lambda x: x.endpoint)
 
-	return render_template("docs.html", docs=docs, v=None)
+	fulldocs={}
+
+	for doc in docs:
+		if doc.resource not in fulldocs:
+			fulldocs[resource]=[doc]
+		else:
+			fulldocs[resource].append(doc)
+
+	return render_template("docs.html", docs=fulldocs, v=None)
