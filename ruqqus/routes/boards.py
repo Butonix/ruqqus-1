@@ -2127,6 +2127,15 @@ URL path parameters:
 @auth_desired
 @api("read")
 def board_comments(guildname, v):
+    """
+Get comments in a guild
+
+URL parameters:
+* `guildname` - The name of a guild
+
+Optional query parameters:
+* `page` - Page of comments to get. Default `1`.
+"""
 
     b = get_guild(guildname, v=v)
 
