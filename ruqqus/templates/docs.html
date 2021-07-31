@@ -24,3 +24,28 @@
 	{% endfor %}
 {% endfor %}
 {% endblock %}
+
+
+
+
+{% block sidebarLeftblock %}
+
+<div class="col sidebar d-none d-lg-block p-3">
+	<div class="sidebar-section">
+			<div class="title">Table of Contents</div>
+      <div class="body">
+
+      	{% for resource in docs %}
+      	<p><a href="#{{ resource }}" class="text-black">{{ resource }}</a></p>
+      	<ul>
+      		{% for doc in docs[resource] %}
+      		<li><a href="#{{ doc.frag }}">{{ doc.method }} {{ doc.endpoint }}</a></li>
+      		{% endfor %}
+      	</ul>
+      	{% endfor %}
+      </div>
+	</div>
+
+	</div>
+
+{% endblock %}
