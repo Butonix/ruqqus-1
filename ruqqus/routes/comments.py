@@ -45,12 +45,12 @@ def comment_cid_api_redirect(c_id=None, p_id=None):
     redirect(f'/api/v1/comment/<c_id>')
 
 @app.route("/api/v1/comment/<c_id>", methods=["GET"])
-@app.route("/+<boardname>/post/<p_id>/<anything>/<c_id>", methods=["GET"])
+@app.route("/+<guildname>/post/<p_id>/<anything>/<c_id>", methods=["GET"])
 @app.get("/api/vue/comment/<c_id>")
 @app.get("/api/v2/comments/<c_id>")
 @auth_desired
 @api("read")
-def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None):
+def post_pid_comment_cid(c_id, p_id=None, guildname=None, anything=None, v=None):
 
     comment = get_comment(c_id, v=v)
     
@@ -61,11 +61,11 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
     post = get_post(p_id, v=v)
     board = post.board
     
-    if not boardname:
-        boardname = board.name
+    if not guildname:
+        guildname = board.name
     
-    # fix incorrect boardname and pid
-    if board.name != boardname or comment.parent_submission != post.id:
+    # fix incorrect guildname and pid
+    if board.name != guildname or comment.parent_submission != post.id:
         return redirect(comment.permalink)
 
     if board.is_banned and not (v and v.admin_level > 3):
@@ -754,14 +754,14 @@ def embed_comment_cid(cid, pid=None):
 
     return render_template("embeds/comment.html", c=comment)
 
-@app.route("/mod/comment_pin/<boardname>/<cid>", methods=["POST"])
-@app.route("/api/v1/comment_pin/<boardname>/<cid>", methods=["POST"])
-@app.patch("/api/v2/guilds/<boardname>/comments/<cid>/pin")
+@app.route("/mod/comment_pin/<guildname>/<cid>", methods=["POST"])
+@app.route("/api/v1/comment_pin/<guildname>/<cid>", methods=["POST"])
+@app.patch("/api/v2/guilds/<guildname>/comments/<cid>/pin")
 @auth_required
 @is_guildmaster("content")
 @api("guildmaster")
 @validate_formkey
-def mod_toggle_comment_pin(boardname, cid, board, v):
+def mod_toggle_comment_pin(guildname, cid, board, v):
 
     comment = get_comment(cid, v=v)
 
