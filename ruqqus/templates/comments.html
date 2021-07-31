@@ -219,7 +219,7 @@
           
 
           {% if v and v.id==c.author_id and c.post and c.is_guildmaster('content') %}
-          <li class="list-inline-item d-none d-md-inline-block"><a href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="herald_comment('{{ c.board.base36id }}','{{ c.base36id }}')" class="text-warning"><i class="fas fa-crown text-warning"></i><span class="d-none d-md-inline-block">Herald</span></a></li>
+          <li class="list-inline-item d-none d-md-inline-block"><a href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="herald_comment('{{ c.board.name }}','{{ c.base36id }}')" class="text-warning"><i class="fas fa-crown text-warning"></i><span class="d-none d-md-inline-block">Herald</span></a></li>
           {% endif %}
 
           {% if v and v.admin_level>=3 and request.path.startswith ('/admin') %}
@@ -449,7 +449,7 @@
           {% endif %}
 
           {% if v and v.id==c.author_id and c.post and c.is_guildmaster('content') %}
-          <li class="list-group-item"><a href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="herald_comment('{{ c.board.base36id }}','{{ c.base36id }}')" class="text-warning"><i class="fas fa-crown text-warning"></i><span>Herald</span></a></li>
+          <li class="list-group-item"><a href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{ c.base36id }}" onclick="herald_comment('{{ c.board.name }}','{{ c.base36id }}')" class="text-warning"><i class="fas fa-crown text-warning"></i><span>Herald</span></a></li>
           {% endif %}
             
           {% if v and c.post and c.is_guildmaster('content') %}

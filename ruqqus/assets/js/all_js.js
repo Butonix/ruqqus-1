@@ -1007,10 +1007,10 @@ $('#kickPostModal').on('hidden.bs.modal', function () {
 $('.kick-button-listing').click(function(event) {
   if (event.which != 1) {return}
 
-  bid=$(this).data('bid')
+  boardname=$(this).data('boardname')
   pid=$(this).data('pid')
 
-  post_response('/mod/kick/'+bid+'/'+pid, callback=function(xhr){
+  post_response('/mod/kick/'+ boardname+'/'+pid, callback=function(xhr){
     $("#post-"+pid).replaceWith(JSON.parse(xhr.response)['data'])
       }
     )
@@ -1925,7 +1925,7 @@ if (window.location.pathname=='/submit') {
 
 // Exile Member
 
-function exile_from_guild(boardid) {
+function exile_from_guild(boardname) {
 
   var exileForm = document.getElementById("exile-form");
 
@@ -1940,7 +1940,7 @@ function exile_from_guild(boardid) {
   if (isValidUsername) {
 
     var xhr = new XMLHttpRequest();
-    xhr.open("post", "/mod/exile/"+boardid);
+    xhr.open("post", "/mod/exile/"+boardname);
     xhr.withCredentials=true;
     f=new FormData();
     f.append("username", username);
@@ -2104,11 +2104,11 @@ post_comment=function(fullname){
 
 }
 
-herald_comment=function(bid,cid){
+herald_comment=function(name,cid){
 
 
   var xhr = new XMLHttpRequest();
-  xhr.open("post", "/mod/distinguish_comment/"+bid+'/'+cid);
+  xhr.open("post", "/mod/distinguish_comment/"+name+'/'+cid);
 
   var form = new FormData();
 

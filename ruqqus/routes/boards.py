@@ -163,8 +163,10 @@ def api_board_available(name, v):
 
 
 @app.route("/create_guild", methods=["POST"])
+@app.post("/api/v2/guilds")
 @is_not_banned
 @no_negative_balance("html")
+@api("create")
 @validate_formkey
 def create_board_post(v):
     if not v.can_make_guild:
@@ -269,6 +271,7 @@ def reddit_moment_redirect(name):
 
 @app.route("/+<name>", methods=["GET"])
 @app.route("/api/v1/guild/<name>/listing", methods=["GET"])
+@app.get("/api/v2/guilds/<name>/submissions")
 @auth_desired
 @api("read")
 def board_name(name, v):
@@ -359,12 +362,13 @@ def board_name(name, v):
                                    )
             }    
 
-@app.route("/mod/distinguish_post/<bid>/<pid>", methods=["POST"])
-@app.route("/api/v1/distinguish_post/<bid>/<pid>", methods=["POST"])
+@app.route("/mod/distinguish_post/<boardname>/<pid>", methods=["POST"])
+@app.route("/api/v1/distinguish_post/<boardname>/<pid>", methods=["POST"])
+@app.patch("/api/v2/guilds/<boardname>/submissions/<pid>/herald")
 @auth_required
 @is_guildmaster("content")
 @api("guildmaster")
-def mod_distinguish_post(bid, pid, board, v):
+def mod_distinguish_post(boardname, pid, board, v):
 
     #print(pid, board, v)
 
@@ -392,8 +396,9 @@ def mod_distinguish_post(bid, pid, board, v):
 
     return "", 204
 
-@app.route("/mod/distinguish_comment/<bid>/<cid>", methods=["POST"])
-@app.route("/api/v1/distinguish_comment/<bid>/<cid>", methods=["POST"])
+@app.route("/mod/distinguish_comment/<boardname>/<cid>", methods=["POST"])
+@app.route("/api/v1/distinguish_comment/<boardname>/<cid>", methods=["POST"])
+@app.patch("/api/v2/guilds/<boardname>/comments/<cid>/herald")
 @auth_required
 @is_guildmaster('content')
 @api("guildmaster")
@@ -434,13 +439,14 @@ def mod_distinguish_comment(bid, cid, board, v):
 
     return jsonify({"html":html})
 
-@app.route("/mod/kick/<bid>/<pid>", methods=["POST"])
-@app.route("/api/v1/kick/<bid>/<pid>", methods=["POST"])
+@app.route("/mod/kick/<boardname>/<pid>", methods=["POST"])
+@app.route("/api/v1/kick/<boardname>/<pid>", methods=["POST"])
+@app.patch("/api/v2/guild/<boardname>/submissions/<pid>/kick")
 @auth_required
 @is_guildmaster('content')
 @api("guildmaster")
 @validate_formkey
-def mod_kick_bid_pid(bid, pid, board, v):
+def mod_kick_bid_pid(boardname, pid, board, v):
 
     post = get_post(pid)
 
@@ -471,13 +477,14 @@ def mod_kick_bid_pid(bid, pid, board, v):
         })
 
 
-@app.route("/mod/accept/<bid>/<pid>", methods=["POST"])
-@app.route("/api/v1/accept/<bid>/<pid>", methods=["POST"])
+@app.route("/mod/accept/<boardname>/<pid>", methods=["POST"])
+@app.route("/api/v1/accept/<boardname>/<pid>", methods=["POST"])
+@app.patch("/api/v2/guilds/<boardname>/submissions/<pid>/approve")
 @auth_required
 @is_guildmaster('content')
 @api("guildmaster")
 @validate_formkey
-def mod_accept_bid_pid(bid, pid, board, v):
+def mod_accept_bid_pid(boardname, pid, board, v):
 
     post = get_post(pid)
     if not post.board_id == board.id:
@@ -500,13 +507,14 @@ def mod_accept_bid_pid(bid, pid, board, v):
     return "", 204
 
 
-@app.route("/mod/exile/<bid>", methods=["POST"])
-@app.route("/api/v1/exile/<bid>", methods=["POST"])
+@app.route("/mod/exile/<boardname>", methods=["POST"])
+@app.route("/api/v1/exile/<boardname>", methods=["POST"])
+@app.post("/api/v2/boards/<boardname>/exiles")
 @auth_required
 @is_guildmaster('access')
 @api("guildmaster")
 @validate_formkey
-def mod_ban_bid_user(bid, board, v):
+def mod_ban_bid_user(boardname, board, v):
 
     user = get_user(request.values.get("username"), graceful=True)
 
@@ -594,15 +602,16 @@ def mod_ban_bid_user(bid, board, v):
         return "", 204
 
 
-@app.route("/mod/unexile/<bid>", methods=["POST"])
-@app.route("/api/v1/unexile/<bid>", methods=["POST"])
+@app.route("/mod/unexile/<boardname>/<username>", methods=["POST"])
+@app.route("/api/v1/unexile/<boardname>/<username", methods=["POST"])
+@app.delete("/api/v2/boards/<boardname>/exiles/<username>")
 @auth_required
 @is_guildmaster('access')
 @api("guildmaster")
 @validate_formkey
-def mod_unban_bid_user(bid, board, v):
+def mod_unban_bid_user(boardname, username, board, v):
 
-    user = get_user(request.values.get("username"))
+    user = get_user(username)
 
     x =  g.db.query(BanRelationship).filter_by(board_id=board.id, user_id=user.id, is_active=True).first()
 
@@ -625,7 +634,9 @@ def mod_unban_bid_user(bid, board, v):
 
 
 @app.route("/user/kick/<pid>", methods=["POST"])
+@app.patch("/api/v2/me/submissions/<pid>/kick")
 @auth_required
+@api("edit")
 @validate_formkey
 def user_kick_pid(pid, v):
 
@@ -673,7 +684,8 @@ def user_kick_pid(pid, v):
 
 
 @app.route("/mod/take/<pid>", methods=["POST"])
-@app.route("/api/v1/mod/take/<pid>")
+@app.post("/api/v1/mod/take/<pid>")
+#@app.patch("/api/v2/guilds/<boardname>/submissions/<pid>/yank")
 @auth_required
 @is_guildmaster("content")
 @validate_formkey
@@ -1273,6 +1285,7 @@ def board_about_appearance(boardname, board, v):
 @app.route("/+<boardname>/mod/mods", methods=["GET"])
 @app.route("/api/vue/+<boardname>/mod/mods",  methods=["GET"])
 @app.route("/api/v1/<boardname>/mod/mods", methods=["GET"])
+@app.get("/api/v2/guilds/<boardname>/mods")
 @auth_desired
 @api("read")
 def board_about_mods(boardname, v):
@@ -1404,6 +1417,7 @@ def board_get_css(boardname):
 
 @app.route("/+<boardname>/mod/exiled", methods=["GET"])
 @app.route("/api/v1/<boardname>/mod/exiled", methods=["GET"])
+@app.get("/api/v2/guilds/<boardname>/exiled")
 @auth_required
 @is_guildmaster("access")
 @api("read", "guildmaster")
@@ -1463,8 +1477,10 @@ def board_about_chatbanned(boardname, board, v):
 
 
 @app.route("/+<boardname>/mod/contributors", methods=["GET"])
+@app.route("/api/v2/guilds/<boardname>/contributors")
 @auth_required
 @is_guildmaster("access")
+@api("read", "guildmaster")
 def board_about_contributors(boardname, board, v):
 
     page = int(request.args.get("page", 1))
@@ -1478,17 +1494,23 @@ def board_about_contributors(boardname, board, v):
     next_exists = (len(contributors) == 26)
     contributors = contributors[0:25]
 
-    return render_template(
-        "guild/contributors.html", 
-        v=v,
-        b=board, 
-        contributors=contributors,
-        page=page,
-        next_exists=next_exists
-        )
+    return {
+        'html':
+            lambda:render_template(
+                "guild/contributors.html", 
+                v=v,
+                b=board, 
+                contributors=contributors,
+                page=page,
+                next_exists=next_exists
+                ),
+        "api":lambda:jsonify({"data":[x.json for x in contributors]})
+        }
+
 
 
 @app.route("/api/subscribe/<boardname>", methods=["POST"])
+@app.post("/api/v2/me/subscriptions/<boardname>")
 @auth_required
 def subscribe_board(boardname, v):
 
@@ -1526,6 +1548,7 @@ def subscribe_board(boardname, v):
 
 
 @app.route("/api/unsubscribe/<boardname>", methods=["POST"])
+@app.delete("/api/v2/me/subscriptions/<boardname>")
 @auth_required
 def unsubscribe_board(boardname, v):
 
