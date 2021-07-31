@@ -344,7 +344,7 @@ def admin_app_id(v, aid):
     oauth = g.db.query(OauthApp).options(
         joinedload(
             OauthApp.author)).filter_by(
-        id=aid).first()
+        id=base36decode(aid)).first()
 
     if not oauth:
         abort(404)
