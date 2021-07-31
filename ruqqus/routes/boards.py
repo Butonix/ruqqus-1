@@ -169,6 +169,17 @@ def api_board_available(name, v):
 @api("create")
 @validate_formkey
 def create_board_post(v):
+
+    """
+    Create a Guild
+
+    Required form data:
+    * `name` - Name of Guild to create
+
+    Optional form data:
+    * `description` - Guild description
+    """
+
     if not v.can_make_guild:
         return render_template("make_board.html",
                                title="Unable to make board",
