@@ -280,9 +280,7 @@ def docs():
 
 	    @property
 	    def docstring_html(self):
-	    	with CustomRenderer() as renderer:
-	    		html = renderer.render(mistletoe.Document(self.docstring))
-	    	return html
+	    	return mistletoe.markdown(mistletoe.Document(self.docstring))
 
 	    @property
 	    def resource(self):
