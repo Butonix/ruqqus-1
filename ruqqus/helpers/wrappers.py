@@ -332,7 +332,7 @@ def is_guildmaster(*perms):
             return f(*args, board=board, **kwargs)
 
         wrapper.__name__ = f.__name__
-        wrapper.__doc__ = f"<small>guildmaster permissions: <code>{', '.join(perms)}</code></small><br>{f.__doc__}"
+        wrapper.__doc__ = f"<small>guildmaster permissions: <code>{', '.join(perms)}</code></small><br>{f.__doc__}" if perms else f.__doc__
         return wrapper
 
     return wrapper_maker
@@ -496,7 +496,7 @@ def api(*scopes, no_ban=False):
                     return result
 
         wrapper.__name__ = f.__name__
-        wrapper.__doc__ = f"<small>oauth scopes: <code>{', '.join(scopes)}</code></small><br>{f.__doc__}"
+        wrapper.__doc__ = f"<small>oauth scopes: <code>{', '.join(scopes)}</code></small><br>{f.__doc__}" if scopes else f.__doc__
         return wrapper
 
     return wrapper_maker
