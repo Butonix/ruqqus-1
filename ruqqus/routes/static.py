@@ -317,8 +317,8 @@ def docs():
 
 	for doc in docs:
 		if doc.resource not in fulldocs:
-			fulldocs[resource]=[doc]
+			fulldocs[doc.resource]=[doc]
 		else:
-			fulldocs[resource].append(doc)
+			fulldocs[doc.resource].append(doc)
 
 	return render_template("docs.html", docs=fulldocs, v=None)
