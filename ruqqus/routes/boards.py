@@ -2078,7 +2078,7 @@ def change_guild_category(v, board, bid, category):
 
 @app.route("/+<guildname>/mod/log", methods=["GET"])
 @app.route("/api/v1/mod_log/<guildname>", methods=["GET"])
-@app.get("/api/v2/guilds/<guildname>/modlog")
+@app.get("/api/v2/guilds/<guildname>/modlogs")
 @auth_desired
 @api("read")
 def board_mod_log(guildname, v):
@@ -2130,17 +2130,26 @@ Optional query parameters
         "api":lambda:jsonify({"data":[x.json for x in actions]})
         }
 
-@app.route("/+<guildname>/mod/log/<aid>", methods=["GET"])
+@app.route("/+<guildname>/mod/log/<id>", methods=["GET"])
+@app.get("/api/v2/guilds/<guildname>/modlogs/<id>")
 @auth_desired
-def mod_log_item(guildname, aid, v):
+@api("read")
+def mod_log_item(guildname, id, v):
+    """
+View a guild mod log entry.
 
-    action=g.db.query(ModAction).filter_by(id=base36decode(aid)).first()
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+* `id` - The base 36 id of the mod log entry
+"""
+
+    action=g.db.query(ModAction).filter_by(id=base36decode(id)).first()
 
     if not action:
         abort(404)
 
-    if request.path != action.permalink:
-        return redirect(action.permalink)
+    if action.board.name.lower() != guildname.lower():
+        abort(404)
 
     return render_template("guild/modlog.html",
         v=v,
