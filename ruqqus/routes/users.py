@@ -62,10 +62,7 @@ def api_is_available(name, v):
 
 @app.route("/uid/<uid>", methods=["GET"])
 def user_uid(uid):
-
-    user = get_account(uid)
-
-    return redirect(user.permalink)
+    return redirect(get_account(uid).permalink)
 
 # Allow Id of user to be queryied, and then redirect the bot to the
 # actual user api endpoint.
