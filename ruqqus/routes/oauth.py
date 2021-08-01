@@ -62,6 +62,9 @@ def oauth_authorize_prompt(v):
         ]) and "identity" not in scopes:
         return jsonify({"oauth_error": f"`identity` scope required when requesting `create`, `update`, or `guildmaster` scope."}), 400
 
+    if 'admin' in scopes and not application.author.admin_level:
+        return jsonify({"oauth_error": "Only administrator-owned applications may request `admin` scope."})
+
     redirect_uri = request.args.get("redirect_uri")
     if not redirect_uri:
         return jsonify({"oauth_error": f"`redirect_uri` must be provided."}), 400
@@ -135,6 +138,12 @@ def oauth_authorize_post(v):
                                  "guildmaster"]) and "identity" not in scopes:
         return jsonify({"oauth_error": f"`identity` scope required when requesting `create`, `update`, or `guildmaster` scope."}), 400
 
+    if 'admin' in scopes and not application.author.admin_level:
+        return jsonify({"oauth_error": "Only administrator-owned applications may request `admin` scope."})
+
+    if 'admin' in scopes and application.author_id != v.id:
+        return jsonify({"oauth_error": "Applications requesting `admin` scope may only be authorized to the application owner's account."})
+
     if not state:
         return jsonify({'oauth_error': 'state argument required'}), 400
 
@@ -151,6 +160,7 @@ def oauth_authorize_post(v):
         scope_delete="delete" in scopes,
         scope_vote="vote" in scopes,
         scope_guildmaster="guildmaster" in scopes,
+        scope_admin="admin" in scopes,
         refresh_token=secrets.token_urlsafe(128)[0:128] if permanent else None,
         access_token_expire_utc=int(time.time())+3600
     )
