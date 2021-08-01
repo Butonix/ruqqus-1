@@ -62,6 +62,7 @@ class ClientAuth(Base, Stndrd):
     oauth_client = Column(Integer, ForeignKey("oauth_apps.id"))
     oauth_code = Column(String(128))
     user_id = Column(Integer, ForeignKey("users.id"))
+    
     scope_identity = Column(Boolean, default=False)
     scope_create = Column(Boolean, default=False)
     scope_read = Column(Boolean, default=False)
@@ -69,6 +70,8 @@ class ClientAuth(Base, Stndrd):
     scope_delete = Column(Boolean, default=False)
     scope_vote = Column(Boolean, default=False)
     scope_guildmaster = Column(Boolean, default=False)
+    scope_admin = Column(Boolean, default = False)
+
     access_token = Column(String(128))
     refresh_token = Column(String(128))
     access_token_expire_utc = Column(Integer)
@@ -79,15 +82,16 @@ class ClientAuth(Base, Stndrd):
     @property
     def scopelist(self):
 
-        output = ""
-        output += "identity," if self.scope_identity else ""
-        output += "create," if self.scope_create else ""
-        output += "read," if self.scope_read else ""
-        output += "update," if self.scope_update else ""
-        output += "delete," if self.scope_delete else ""
-        output += "vote," if self.scope_vote else ""
-        output += "guildmaster," if self.scope_guildmaster else ""
-
-        output = output.rstrip(',')
-
-        return output
+        return ', '.join(
+            [x for x in [
+                'identity',
+                'create',
+                'read',
+                'update',
+                'delete',
+                'vote',
+                'guildmaster',
+                'admin'
+                ] if self.__dict__[f'scope_{x}']
+            ]
+        )
