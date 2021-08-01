@@ -19,6 +19,7 @@ SCOPES = {
     'delete': 'Delete your posts and comments',
     'vote': 'Cast votes as you',
     'guildmaster': 'Perform Guildmaster actions'
+    'admin': 'Perform site administrator actions'
 }
 
 
