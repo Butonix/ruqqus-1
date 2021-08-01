@@ -55,16 +55,58 @@ def incoming_post_shortlink(base36id=None):
     post = get_post(base36id)
     return redirect(post.permalink)
 
-@app.route("/+<boardname>/post/<pid>", methods=["GET"])
-@app.route("/+<boardname>/post/<pid>/", methods=["GET"])
-@app.route("/+<boardname>/post/<pid>/<anything>", methods=["GET"])
-@app.route("/api/v1/post/<pid>", methods=["GET"])
+@app.get("/+<boardname>/post/<pid>")
 @app.get("/api/v2/submissions/<pid>")
 @auth_desired
 @api("read")
-def post_base36id(pid, boardname=None, anything=None, v=None):
+def post_base36id_no_comments(pid, v=None):
     """
-Get a single submission and its comments.
+Get a single submission (without comments).
+
+URL path parameters:
+* `pid` - The base 36 post id
+"""
+    
+    post = get_post(
+        pid,
+        v=v
+        )
+    board = post.board
+
+    if board.is_banned and not (v and v.admin_level > 3):
+        return render_template("board_banned.html",
+                               v=v,
+                               b=board,
+                               p=True)
+
+    if post.over_18 and not (v and v.over_18) and not session_over18(board):
+        t = int(time.time())
+        return {"html":lambda:render_template("errors/nsfw.html",
+                               v=v,
+                               t=t,
+                               lo_formkey=make_logged_out_formkey(t),
+                               board=post.board
+
+                               ),
+                "api":lambda:(jsonify({"error":"Must be 18+ to view"}), 451)
+                }
+
+
+    return {
+        "html":lambda:post.rendered_page(v=v),
+        "api":lambda:jsonify({"data":[x.json for x in post.replies]})
+        }
+
+
+@app.route("/+<boardname>/post/<pid>/", methods=["GET"])
+@app.route("/+<boardname>/post/<pid>/<anything>", methods=["GET"])
+@app.route("/api/v1/post/<pid>", methods=["GET"])
+@app.get("/api/v2/submissions/<pid>/comments")
+@auth_desired
+@api("read")
+def post_base36id_with_comments(pid, boardname=None, anything=None, v=None):
+    """
+Get the comment tree for a submission.
 
 URL path parameters:
 * `pid` - The base 36 post id
@@ -105,7 +147,7 @@ Optional query parameters:
 
     return {
         "html":lambda:post.rendered_page(v=v),
-        "api":lambda:jsonify(post.json)
+        "api":lambda:jsonify({"data":[x.json for x in post.replies]})
         }
 
 #if the guild name is missing from the url, add it and redirect
