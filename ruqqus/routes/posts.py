@@ -56,10 +56,13 @@ def incoming_post_shortlink(base36id=None):
     return redirect(post.permalink)
 
 @app.get("/+<boardname>/post/<pid>")
+def post_redirect(pid):
+    return redirect(get_post(pid).permalink)
+
 @app.get("/api/v2/submissions/<pid>")
 @auth_desired
 @api("read")
-def post_base36id_no_comments(pid, v=None):
+def post_base36id_no_comments(pid,v=None):
     """
 Get a single submission (without comments).
 
