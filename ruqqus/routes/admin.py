@@ -1299,7 +1299,7 @@ def admin_siege_guild(v):
         m.perm_appearance=True
         m.perm_config=True
         m.perm_content=True
-        g.db.add(p)
+        g.db.add(m)
         ma=ModAction(
             kind="change_perms",
             user_id=v.id,
