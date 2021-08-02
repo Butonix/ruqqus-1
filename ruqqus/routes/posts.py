@@ -56,7 +56,7 @@ def incoming_post_shortlink(base36id=None):
     return redirect(post.permalink)
 
 @app.get("/+<boardname>/post/<pid>")
-def post_redirect(pid):
+def post_redirect(boardname, pid):
     return redirect(get_post(pid).permalink)
 
 @app.get("/api/v2/submissions/<pid>")
