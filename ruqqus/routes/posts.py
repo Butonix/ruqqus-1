@@ -956,7 +956,7 @@ Optional file data:
                 )
             )
 
-    uids=list(set([x[0] for x in board_uids.all()] + [x[0] for x in follow_uids.all()]) + notify_users)
+    uids=list(set([x[0] for x in board_uids.all()] + [x[0] for x in follow_uids.all()]).union(notify_users))
 
     for uid in uids:
         new_notif=Notification(
