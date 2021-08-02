@@ -884,15 +884,7 @@ Optional file data:
         username = mention["href"].split("@")[1]
         user = g.db.query(User).filter_by(username=username).first()
         if user and not v.any_block_exists(user) and user.id != v.id: 
-            notify_users.add(user)
-		
-    for x in notify_users:
-        n=Notification(
-            user_id=x.id,
-            submission_id=new_post.id
-            )
-        g.db.add(n)
-    g.db.commit()
+            notify_users.add(user.id)
     
     # print(f"Content Event: @{new_post.author.username} post
     # {new_post.base36id}")
@@ -964,7 +956,7 @@ Optional file data:
                 )
             )
 
-    uids=list(set([x[0] for x in board_uids.all()] + [x[0] for x in follow_uids.all()]))
+    uids=list(set([x[0] for x in board_uids.all()] + [x[0] for x in follow_uids.all()]+notify_users))
 
     for uid in uids:
         new_notif=Notification(
