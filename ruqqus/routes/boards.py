@@ -1517,7 +1517,7 @@ Optional query parameters
         User.is_deleted==False
         ).order_by(
         BanRelationship.created_utc.desc()
-        ).offset(25 * (page - 1)).limit(26)
+        ).offset(25 * (page - 1)).limit(26).all()
 
     next_exists = (len(bans) == 26)
     bans = bans[0:25]
