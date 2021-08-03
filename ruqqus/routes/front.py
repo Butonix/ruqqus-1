@@ -692,6 +692,11 @@ Optional query parameters:
 
 
 @app.route('/mine', methods=["GET"])
+@auth_required
+def mine_redirect():
+    return redirect("/mine/guilds")
+
+@app.get("/mine/users")
 @app.route("/api/v1/mine", methods=["GET"])
 @app.get("/api/v2/me/users")
 @auth_required
