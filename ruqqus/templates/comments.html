@@ -84,7 +84,7 @@
 </div>
 {% endif %}
 
-<div id="comment-{{ c.base36id }}" class="comment rounded{% if standalone and level==1 %} mt-0{% endif %}{% if (not standalone) and c.collapse_for_user(v) %} collapsed{% endif %}">
+<div id="comment-{{ c.base36id }}" class="comment rounded{% if standalone and level==1 %} mt-0{% endif %}{% if (not standalone) and c.collapse_for_user(v) %} collapsed{% elif c.is_exiled_for %} collapsed{% endif %}">
 
 
 
