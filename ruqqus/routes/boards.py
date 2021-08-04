@@ -1732,6 +1732,7 @@ URL path parameters:
 @app.route("/mod/queue", methods=["GET"])
 @app.get("/api/v2/me/modqueue")
 @auth_required
+@api("read", "guildmaster")
 def all_mod_queue(v):
     """Get reported posts in all of your guilds."""
 
