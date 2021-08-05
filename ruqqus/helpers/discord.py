@@ -89,7 +89,7 @@ def discord_log_event(action, target_user, admin_user, reason=None):
         ]
     }
     x=requests.post(url, headers=headers, json=data)
-    print(x.status_code, x.content)
+#    print(x.status_code, x.content)
 
 
 @discord_wrap
