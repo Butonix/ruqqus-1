@@ -52,8 +52,7 @@ def discord_log_event(action, target_user, reason):
     channel_id=CHANNELS['log']
     url=f"{DISCORD_ENDPOINT}/channels/{channel_id}/messages"
     headers={
-        "Authorization": f"Bot {BOT_TOKEN}",
-        "Content-Type": "application/json"
+        "Authorization": f"Bot {BOT_TOKEN}"
     }
     data={
         "embeds":[
@@ -63,7 +62,8 @@ def discord_log_event(action, target_user, reason):
              "description": reason,
              "color": 8415957
             }
-        ]
+        ],
+        "content": "f{action.upper()} @{target_user.username} - Reason: {reason}"
     }
     x=requests.post(url, headers=headers, json=data)
     print(x.status_code, x.content)
