@@ -331,7 +331,7 @@ def settings_log_out_others(v):
 
 
 @app.route("/settings/images/profile", methods=["POST"])
-@auth_required
+@is_not_banned
 @validate_formkey
 def settings_images_profile(v):
     if v.can_upload_avatar:
@@ -354,7 +354,7 @@ def settings_images_profile(v):
 
 
 @app.route("/settings/images/banner", methods=["POST"])
-@auth_required
+@is_not_banned
 @validate_formkey
 def settings_images_banner(v):
     if v.can_upload_banner:
