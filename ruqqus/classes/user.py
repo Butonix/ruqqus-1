@@ -1170,9 +1170,8 @@ class User(Base, Stndrd, Age_times):
         except:
             pass
         
-        discord_ban_action = f"{days} day ban" if days else "perm ban"
-        discord_ban_reason = f"{reason} - issued by @{admin.username}"
-        discord_log_event(discord_ban_action, self, discord_ban_reason)
+        discord_ban_action = f"{days} Day Ban" if days else "Perm Ban"
+        discord_log_event(discord_ban_action, self, g.v, reason=reason)
 
     def unban(self):
 
@@ -1185,7 +1184,7 @@ class User(Base, Stndrd, Age_times):
 
         g.db.add(self)
         
-        discord_log_event("unban", self, f"unbanned by @{g.v.username}")
+        discord_log_event("unban", self, g.v)
 
 
     @property
