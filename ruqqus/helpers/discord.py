@@ -52,7 +52,10 @@ def discord_log_event(action, target_user, reason):
     
     channel_id=CHANNELS['log']
     url=f"{DISCORD_ENDPOINT}/channels/{channel_id}/messages"
-    headers={"Authorization": f"Bot {BOT_TOKEN}"}
+    headers={
+        "Authorization": f"Bot {BOT_TOKEN}",
+        "Content-Type": "application/json"
+    }
     data={
         "embeds":[
             {"title": f"{action.upper()} @{target_user.username}",
@@ -63,7 +66,7 @@ def discord_log_event(action, target_user, reason):
             }
         ]
     }
-    requests.post(url, headers=headers, data=data)
+    requests.post(url, headers=headers, json=data)
 
 
 @discord_wrap
