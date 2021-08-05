@@ -2,7 +2,7 @@ from os import environ
 import requests
 import threading
 
-DOMAIN=environ.get("SERVER_NAME",environ.get("domain"))
+DOMAIN=environ.get("SERVER_NAME",environ.get("domain")).lstrip().rstrip()
 
 SERVER_ID = environ.get("DISCORD_SERVER_ID",'').rstrip()
 CLIENT_ID = environ.get("DISCORD_CLIENT_ID",'').rstrip()
