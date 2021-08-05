@@ -56,13 +56,13 @@ def discord_log_event(action, target_user, reason):
     }
     data={
         "embeds":[
-            {"title": f"{action.upper()} @{target_user.username}",
-             "url": target_user.permalink,
-             "description": reason,
-             "color": 8415957
+            {
+                "title": f"{action.upper()} {target_user.username}",
+                #"url": target_user.permalink,
+                "description": reason,
+                "color": 8415957
             }
-        ],
-        "content": "f{action.upper()} @{target_user.username} - Reason: {reason}"
+        ]
     }
     x=requests.post(url, headers=headers, json=data)
     print(x.status_code, x.content)
