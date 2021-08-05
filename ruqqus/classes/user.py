@@ -997,7 +997,7 @@ class User(Base, Stndrd, Age_times):
             if self.profile_set_utc>1616443200:
                 return f"https://{app.config['S3_BUCKET']}/uid/{self.base36id}/profile-{self.profile_nonce}.png"
             else:
-                return f"https://{app.config['S3_BUCKET]}/users/{self.username}/profile-{self.profile_nonce}.png"
+                return f"https://{app.config['S3_BUCKET']}/users/{self.username}/profile-{self.profile_nonce}.png"
         else:
             return "/assets/images/profiles/default-profile-pic.png"
 
