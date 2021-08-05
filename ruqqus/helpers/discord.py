@@ -47,7 +47,6 @@ def req_wrap(f):
     wrapper.__name__=f.__name__
     return wrapper
 
-@req_wrap
 def discord_log_event(action, target_user, reason):
     
     channel_id=CHANNELS['log']
