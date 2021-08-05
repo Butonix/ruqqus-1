@@ -1185,10 +1185,7 @@ class User(Base, Stndrd, Age_times):
 
         g.db.add(self)
         
-        
-        discord_ban_action = f"{days} day ban" if days else "perm ban"
-        discord_ban_reason = f"unbanned by @{admin.username}"
-        discord_log_event("unban", self, discord_ban_reason)
+        discord_log_event("unban", self, f"unbanned by @{admin.username}")
 
 
     @property
