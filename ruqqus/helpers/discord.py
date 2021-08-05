@@ -64,7 +64,8 @@ def discord_log_event(action, target_user, admin_user, reason=None):
                 #"url": f"https://{DOMAIN}{target_user.permalink}",
                 "color": 8415957,
                 "author": {
-                    "name": admin_user.username
+                    "name": admin_user.username,
+                    "icon_url": admin_user.profile_url
                     #"url": f"https://{DOMAIN}{admin_user.permalink}"
                 },
                 "fields": [
