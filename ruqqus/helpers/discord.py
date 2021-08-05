@@ -38,7 +38,7 @@ def discord_wrap(f):
     return wrapper
 
 @discord_wrap
-def log_event(action, target_user, reason):
+def discord_log_event(action, target_user, reason):
     
     channel_id=CHANNELS['log']
     url=f"{DISCORD_ENDPOINT}/channels/{channel_id}/messages"
