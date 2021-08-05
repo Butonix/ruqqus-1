@@ -999,7 +999,7 @@ class User(Base, Stndrd, Age_times):
             else:
                 return f"https://{app.config['S3_BUCKET']}/users/{self.username}/profile-{self.profile_nonce}.png"
         else:
-            return "/assets/images/profiles/default-profile-pic.png"
+            return f"{app.config['SERVER_NAME']}/assets/images/profiles/default-profile-pic.png"
 
     @property
     def available_titles(self):
