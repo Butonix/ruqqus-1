@@ -57,7 +57,6 @@ def discord_log_event(action, target_user, reason):
     data={
         "embeds":[
             {"title": f"{action.upper()} @{target_user.username}",
-             "type": "rich",
              "url": target_user.permalink,
              "description": reason,
              "color": 8415957
