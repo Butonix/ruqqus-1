@@ -1184,7 +1184,7 @@ class User(Base, Stndrd, Age_times):
 
         g.db.add(self)
         
-        discord_log_event("unban", self, g.v)
+        discord_log_event("unban", self, g.v, reason=self.ban_reason)
 
 
     @property
