@@ -64,22 +64,20 @@ def discord_log_event(action, target_user, admin_user, reason=None):
                 "url": f"https://{DOMAIN}{target_user.permalink}",
                 "description": action,
                 "color": 8415957,
-                "fields": {
-                    [
-                        {
-                            "name": "User",
-                            "value": f"@{target_user.username}"
-                        },
-                        {
-                            "name": "Reason",
-                            "value": reason
-                        },
-                        {
-                            "name": "Admin",
-                            "value": f"@{admin_user.username}"
-                        }
-                    ]
-                }
+                "fields": [
+                    {
+                        "name": "User",
+                        "value": f"@{target_user.username}"
+                    },
+                    {
+                        "name": "Reason",
+                        "value": reason
+                    },
+                    {
+                        "name": "Admin",
+                        "value": f"@{admin_user.username}"
+                    }
+                ]
             }
         ]
     }
