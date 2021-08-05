@@ -1169,6 +1169,10 @@ class User(Base, Stndrd, Age_times):
             g.db.add(self)
         except:
             pass
+        
+        discord_ban_action = f"{days} day ban" if days else "perm ban"
+        discord_ban_reason = f"{reason} - issued by @{admin.username}"
+        discord_log_action(discord_ban_action, self, discord_ban_reason)
 
     def unban(self):
 
