@@ -2,6 +2,8 @@ from os import environ
 import requests
 import threading
 
+DOMAIN=environ.get("SERVER_NAME",environ.get("domain"))
+
 SERVER_ID = environ.get("DISCORD_SERVER_ID",'').rstrip()
 CLIENT_ID = environ.get("DISCORD_CLIENT_ID",'').rstrip()
 CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET",'').rstrip()
@@ -47,7 +49,8 @@ def req_wrap(f):
     wrapper.__name__=f.__name__
     return wrapper
 
-def discord_log_event(action, target_user, reason):
+@req_wrap
+def discord_log_event(action, target_user, admin_user, reason=None):
     
     channel_id=CHANNELS['log']
     url=f"{DISCORD_ENDPOINT}/channels/{channel_id}/messages"
@@ -57,10 +60,26 @@ def discord_log_event(action, target_user, reason):
     data={
         "embeds":[
             {
-                "title": f"{action.upper()} {target_user.username}",
-                #"url": target_user.permalink,
-                "description": reason,
-                "color": 8415957
+                "title": f"{action} {target_user.username}",
+                "url": f"https://{DOMAIN}{target_user.permalink}",
+                "description": action
+                "color": 8415957,
+                "fields": {
+                    [
+                        {
+                            "name": "User",
+                            "value": f"@{target_user.username}"
+                        },
+                        {
+                            "name": "Reason",
+                            "value": reason
+                        },
+                        {
+                            "name": "Admin",
+                            "value": f"@{admin_user.username}"
+                        }
+                    ]
+                }
             }
         ]
     }
