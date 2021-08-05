@@ -37,7 +37,17 @@ def discord_wrap(f):
     wrapper.__name__=f.__name__
     return wrapper
 
-@discord_wrap
+def req_wrap(f):
+
+    def wrapper(*args, **kwargs):
+
+        thread=threading.Thread(target=f, args=args, kwargs=kwargs)
+        thread.start()
+
+    wrapper.__name__=f.__name__
+    return wrapper
+
+@req_wrap
 def discord_log_event(action, target_user, reason):
     
     channel_id=CHANNELS['log']
