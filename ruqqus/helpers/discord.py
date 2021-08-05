@@ -16,7 +16,11 @@ ROLES={
     "linked":  "779872346219610123",
     "realid":  "779904545194508290",
     "premium": "780084870176702484",
-    }
+}
+
+CHANNELS={
+    "log": "599260022492495882"
+}
 
 def discord_wrap(f):
 
@@ -33,6 +37,23 @@ def discord_wrap(f):
     wrapper.__name__=f.__name__
     return wrapper
 
+@discord_wrap
+def log_event(action, target_user, reason):
+    
+    channel_id=CHANNELS['log']
+    url=f"{DISCORD_ENDPOINT}/channels/{channel_id}/messages"
+    headers={"Authorization": f"Bot {BOT_TOKEN}"}
+    data={
+        "embeds":[
+            {"title": f"{action.upper()} @{target_user.username}",
+             "type": "rich",
+             "url": target_user.permalink,
+             "description": reason,
+             "color": 8415957
+            }
+        ]
+    }
+    requests.post(url, headers=headers, data=data}
 
 
 @discord_wrap
