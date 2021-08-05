@@ -61,7 +61,7 @@ def discord_log_event(action, target_user, admin_user, reason=None):
         "embeds":[
             {
                 "title": f"{action} @{target_user.username}",
-                "url": f"https://{app.config['SERVER_NAME']}{target_user.permalink}",
+                "url": f"https://{DOMAIN}{target_user.permalink}",
                 "color": 8415957,
                 "author": {
                     "name": admin_user.username,
