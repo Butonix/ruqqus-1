@@ -53,7 +53,7 @@ def discord_log_event(action, target_user, reason):
             }
         ]
     }
-    requests.post(url, headers=headers, data=data}
+    requests.post(url, headers=headers, data=data)
 
 
 @discord_wrap
