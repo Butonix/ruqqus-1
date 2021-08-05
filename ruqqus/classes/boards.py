@@ -14,7 +14,7 @@ from .subscriptions import *
 from .board_relationships import *
 from .comment import Comment
 from .mix_ins import *
-from ruqqus.__main__ import Base, cache
+from ruqqus.__main__ import Base, cache, app
 
 class Board(Base, Stndrd, Age_times):
 
@@ -457,7 +457,7 @@ class Board(Base, Stndrd, Age_times):
     def banner_url(self):
 
         if self.has_banner:
-            return f"https://i.ruqqus.com/board/{self.name.lower()}/banner-{self.banner_nonce}.png"
+            return f"https://{app.config['S3_BUCKET']}/board/{self.name.lower()}/banner-{self.banner_nonce}.png"
         else:
             return "/assets/images/guilds/default-guild-banner.png"
 
@@ -465,7 +465,7 @@ class Board(Base, Stndrd, Age_times):
     def profile_url(self):
 
         if self.has_profile:
-            return f"https://i.ruqqus.com/board/{self.name.lower()}/profile-{self.profile_nonce}.png"
+            return f"https://{app.config['S3_BUCKET']}/board/{self.name.lower()}/profile-{self.profile_nonce}.png"
         else:
             if self.over_18:
                 return "/assets/images/icons/nsfw_guild_icon.png"
