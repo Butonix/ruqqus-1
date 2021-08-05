@@ -60,7 +60,7 @@ def discord_log_event(action, target_user, admin_user, reason=None):
     data={
         "embeds":[
             {
-                "title": action,
+                "title": f"{action} @{target_user.username}",
                 "url": f"https://{app.config['SERVER_NAME']}{target_user.permalink}",
                 "color": 8415957,
                 "author": {
