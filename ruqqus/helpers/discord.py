@@ -65,7 +65,8 @@ def discord_log_event(action, target_user, reason):
             }
         ]
     }
-    requests.post(url, headers=headers, json=data)
+    x=requests.post(url, headers=headers, json=data)
+    print(x.response)
 
 
 @discord_wrap
