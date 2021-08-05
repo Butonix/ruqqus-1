@@ -66,15 +66,18 @@ def discord_log_event(action, target_user, admin_user, reason=None):
                 "fields": [
                     {
                         "name": "User",
-                        "value": f"@{target_user.username}"
+                        "value": f"@{target_user.username}",
+                        "inline": True
                     },
                     {
                         "name": "Reason",
-                        "value": reason
+                        "value": reason,
+                        "inline": True
                     },
                     {
                         "name": "Admin",
-                        "value": f"@{admin_user.username}"
+                        "value": f"@{admin_user.username}",
+                        "inline": True
                     }
                 ]
             }
