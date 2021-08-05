@@ -12,7 +12,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import lazy
 import ruqqus.helpers.aws as aws
-from ruqqus.helpers.discord import add_role, delete_role
+from ruqqus.helpers.discord import add_role, delete_role, discord_log_action
 #from ruqqus.helpers.alerts import send_notification
 from .votes import Vote
 from .alts import Alt
