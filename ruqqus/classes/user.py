@@ -28,7 +28,7 @@ from .badges import *
 from .clients import *
 from .paypal import PayPalTxn
 from .flags import Report
-from ruqqus.__main__ import Base, cache
+from ruqqus.__main__ import Base, cache, app
 
 
 class User(Base, Stndrd, Age_times):
@@ -995,9 +995,9 @@ class User(Base, Stndrd, Age_times):
 
         if self.has_profile and not self.is_deleted:
             if self.profile_set_utc>1616443200:
-                return f"https://i.ruqqus.com/uid/{self.base36id}/profile-{self.profile_nonce}.png"
+                return f"https://{app.config['S3_BUCKET']}/uid/{self.base36id}/profile-{self.profile_nonce}.png"
             else:
-                return f"https://i.ruqqus.com/users/{self.username}/profile-{self.profile_nonce}.png"
+                return f"https://{app.config['S3_BUCKET]}/users/{self.username}/profile-{self.profile_nonce}.png"
         else:
             return "/assets/images/profiles/default-profile-pic.png"
 
