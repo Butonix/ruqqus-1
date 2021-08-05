@@ -12,7 +12,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import lazy
 import ruqqus.helpers.aws as aws
-from ruqqus.helpers.discord import add_role, delete_role, discord_log_action
+from ruqqus.helpers.discord import add_role, delete_role, discord_log_event
 #from ruqqus.helpers.alerts import send_notification
 from .votes import Vote
 from .alts import Alt
@@ -1172,7 +1172,7 @@ class User(Base, Stndrd, Age_times):
         
         discord_ban_action = f"{days} day ban" if days else "perm ban"
         discord_ban_reason = f"{reason} - issued by @{admin.username}"
-        discord_log_action(discord_ban_action, self, discord_ban_reason)
+        discord_log_event(discord_ban_action, self, discord_ban_reason)
 
     def unban(self):
 
@@ -1188,7 +1188,7 @@ class User(Base, Stndrd, Age_times):
         
         discord_ban_action = f"{days} day ban" if days else "perm ban"
         discord_ban_reason = f"unbanned by @{admin.username}"
-        discord_log_action("unban", self, discord_ban_reason)
+        discord_log_event("unban", self, discord_ban_reason)
 
 
     @property
