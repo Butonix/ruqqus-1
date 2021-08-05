@@ -66,7 +66,7 @@ def discord_log_event(action, target_user, admin_user, reason=None):
                 "author": {
                     "name": admin_user.username,
                     "url": f"https://{DOMAIN}{admin_user.permalink}"
-                }
+                },
                 "fields": [
                     {
                         "name": "User",
