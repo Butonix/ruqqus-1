@@ -1134,6 +1134,8 @@ class User(Base, Stndrd, Age_times):
     
 
     def ban(self, admin=None, reason=None,  days=0):
+        
+        admin=admin if admin else g.db.query(User).filter_by(id=1).first()
 
         self.is_banned = admin.id if admin else 1
         if reason:
@@ -1171,7 +1173,7 @@ class User(Base, Stndrd, Age_times):
             pass
         
         discord_ban_action = f"{days} Day Ban" if days else "Perm Ban"
-        discord_log_event(discord_ban_action, self, g.v, reason=reason)
+        discord_log_event(discord_ban_action, self, admin, reason=reason)
 
     def unban(self):
 
