@@ -82,7 +82,7 @@ def check_ban_evade(v):
     if not v or not v.ban_evade:
         return
     
-    if random.randint(0,30) < v.ban_evade:
+    if random.randint(0,30) < v.ban_evade and not v.is_suspended:
         v.ban(reason="Evading a site-wide ban")
         send_notification(v, "Your Ruqqus account has been permanently suspended for the following reason:\n\n> ban evasion")
 
