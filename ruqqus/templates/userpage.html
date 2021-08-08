@@ -216,6 +216,31 @@
 {% endblock %}
 
 {% block sidebarblock %}
+{% if u.mods_anything %}
+<div class="sidebar-section">
+  <div class="title">
+    <i class="fas fa-crown mr-2"></i>Guildmaster Of
+  </div>
+  <div class="body">
+    <ul class="no-bullets guild-recommendations-list pl-0 sidebar-collapsed-hidden">
+        <li class="guild-recommendations-item">
+          <a href="{{ board.permalink }}">
+            <div class="d-flex">
+              <div>
+                <img src="{{ board.profile_url }}" class="profile-pic profile-pic-28 ml-1 mr-2">
+              </div>
+              <div class="my-auto">
+                <div class="text-black font-weight-normal">+{{ board.name }}</div>
+              </div>
+            </div>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endif %}
+
 {% if not v.has_premium %}
 <div class="sidebar-section">
   <div class="title">
