@@ -17,3 +17,24 @@
 {% block navbar %}{% endblock %}
 
 {% block sidebar %}{% endblock %}
+
+{% block pagenav %}
+<nav aria-label="Page navigation">
+  <ul class="pagination pagination-sm mb-0">
+    {% if page>1 %}
+    <li class="page-item">
+      <small><a class="page-link" href="?all={{ show_all }}&page={{ page-1 }}" tabindex="-1">Prev</a></small>
+    </li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link">Prev</span></li>
+    {% endif %}
+    {% if next_exists %}
+    <li class="page-item">
+      <small><a class="page-link" href="?all={{ show_all }}&page={{ page+1 }}">Next</a></small>
+    </li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link">Next</span></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endblock %}

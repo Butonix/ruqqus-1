@@ -195,8 +195,9 @@ def users_list(v):
 
     users = g.db.query(User)
     
+    show_all=int(request.args.get('all','0'))
     
-    if not request.args.get('all'):
+    if not show_all:
         users=users.filter_by(is_banned=0)
         
     users=users.order_by(User.created_utc.desc()).offset(25 * (page - 1)).limit(26)
@@ -211,6 +212,7 @@ def users_list(v):
                            users=users,
                            next_exists=next_exists,
                            page=page,
+                           show_all=show_all
                            )
 
 @app.route("/admin/data", methods=["GET"])
