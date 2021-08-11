@@ -212,7 +212,8 @@ limiter = Limiter(
     key_func=limiter_key_func,
     default_limits=["100/minute"],
     headers_enabled=True,
-    strategy="fixed-window"
+    strategy="fixed-window",
+    storage_options={'connection_pool':redispool}
 )
 
 # setup db
