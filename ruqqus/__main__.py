@@ -9,7 +9,7 @@ gevent.monkey.patch_all()
 
 import os
 from os import environ
-import secrets
+import secretsφ
 from flask import *
 from flask_caching import Cache
 from flask_limiter import Limiter
@@ -198,8 +198,8 @@ class CorsMatch(str):
 app.config["RATELIMIT_STORAGE_URL"] = environ.get("REDIS_URL").lstrip().rstrip() if environ.get("REDIS_URL") else 'memory://'
 app.config["RATELIMIT_KEY_PREFIX"] = "flask_limiting_"
 app.config["RATELIMIT_ENABLED"] = True
-app.config["RATELIMIT_DEFAULTS_DEDUCT_WHEN"]=lambda:True
-app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
+app.config["RATELIMIT_DEFAULTS_DEDUCT_WHEN"]=lambda x:True
+app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda x:False
 app.config["RATELIMIT_HEADERS_ENABLED"]=True
 
 
