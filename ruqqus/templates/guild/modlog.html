@@ -47,7 +47,7 @@
 
                 {% if not ma.user.is_deleted %}
                   {% if hide %}
-                  <a href="/@{{ 'SITE_NAME' | app_config }}" class="font-weight-bold text-black" target="_self">@{{ "SITE_NAME" | app_config | lower }}</a>
+                  <a href="/@{{ 'SITE_NAME' | app_config | lower }}" class="font-weight-bold text-black" target="_self">@{{ "SITE_NAME" | app_config | lower }}</a>
                   {% else %}
                   <a href="{{ ma.user.permalink }}" class="font-weight-bold text-black">@{{ ma.user.username }}</a>
                   {% endif %}
