@@ -29,7 +29,7 @@
     <div class="rounded border bg-white mx-auto">
       {% for ma in actions %}
 
-        {% set hide= (ma.user.admin_level and "admin action" in ma.note and (not v or not v.admin_level>=2)) %}}
+        {% set hide= (ma.user.admin_level and "admin action" in ma.note and (not v or not v.admin_level>=2)) %}
 
         <div id="action-{{ ma.base36id }}" class="position-relative d-flex justify-content-between flex-wrap align-items-center h-min-16 px-3 py-3 mb-3 mb-md-2 bg-white{% if loop.index > 1 %} border-top{% endif %}">
 
