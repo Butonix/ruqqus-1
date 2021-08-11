@@ -40,7 +40,11 @@
              <div class="text-muted pl-3">
               <div>
                 {% if not ma.user.is_deleted %}
-                  <a href="{{ ma.user.permalink }}" class="font-weight-bold text-black" target="_self">@{{ ma.user.username }}</a>
+                  {% if ma.user.admin_level and "admin" in ma.note and (not v or not v.admin_level>=2) %}
+                  <a href="/uid/1" class="font-weight-bold text-black" target="_self">@{{ "SITE_NAME" | app_config | lower }}</a>
+                  {% else %}
+                  <a href="{{ ma.user.permalink }}" class="font-weight-bold text-black">@{{ ma.user.username }}</a>
+                  {% endif %}
                 {% else %}
                   [deleted user]
                 {% endif %}
