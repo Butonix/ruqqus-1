@@ -4,7 +4,7 @@ import math
 import random
 import time
 
-from ruqqus.__main__ import cache
+from ruqqus.__main__ import cache, app
 
 
 class Stndrd:
@@ -31,6 +31,11 @@ class Stndrd:
 
         t = time.gmtime(self.created_utc)
         return time.strftime("%Y-%m-%dT%H:%M:%S+00:00", t)
+
+    @property
+    def permalink_full(self):
+        return f"http{'s' if app['FORCE_HTTPS'] else ''}://{app['SERVER_NAME']}{self.permalink}"
+    
 
 
 class Age_times:
