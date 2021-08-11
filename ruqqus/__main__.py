@@ -9,7 +9,7 @@ gevent.monkey.patch_all()
 
 import os
 from os import environ
-import secretsφ
+import secrets
 from flask import *
 from flask_caching import Cache
 from flask_limiter import Limiter
@@ -213,7 +213,8 @@ limiter = Limiter(
     default_limits=["100/minute"],
     headers_enabled=True,
     strategy="fixed-window",
-    storage_options={'max_connections':100}
+    #storage_options={'max_connections':100}
+    storage_options={'connection_pool':redispool}
 )
 
 # setup db
