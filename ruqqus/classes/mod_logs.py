@@ -134,7 +134,7 @@ class ModAction(Base, Stndrd, Age_times):
     def title_text(self):
         if self.user.is_deleted:
             return f"[deleted user] {self.actiontype['title'].format(self=self)}"
-        elif 'admin action' in self.note:
+        elif 'admin action' in self.note or 'admin_action' in self.note:
             return f"@{app.config['SITE_NAME'].lower()} {self.actiontype['title'].format(self=self)}"
         else:
             return f"@{self.user.username} {self.actiontype['title'].format(self=self)}"
