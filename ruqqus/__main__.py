@@ -213,7 +213,7 @@ limiter = Limiter(
     default_limits=["100/minute"],
     headers_enabled=True,
     strategy="fixed-window",
-    storage_options={'connection_pool':redispool}
+    storage_options={'max_connections':1000}
 )
 
 # setup db
@@ -288,7 +288,6 @@ r=redis.Redis(
     host=app.config["CACHE_REDIS_URL"][8:], 
     decode_responses=True, 
     ssl_cert_reqs=None,
-    max_connections=1000,
     ) if app.config["CACHE_REDIS_URL"] else None
 
 
