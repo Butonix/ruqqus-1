@@ -14,7 +14,7 @@ class Subscription(Base):
     created_utc = Column(BigInteger, default=0)
     is_active = Column(Boolean, default=True)
     get_notifs = Column(Boolean, default=False)
-    show_membership = Column(Boolean, default=False)
+    show_membership = Column(Boolean, default=True)
 
     user = relationship("User", uselist=False)
     board = relationship("Board", uselist=False)
