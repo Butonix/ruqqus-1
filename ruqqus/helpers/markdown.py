@@ -78,7 +78,7 @@ class CustomRenderer(HTMLRenderer):
     def __init__(self, **kwargs):
         super().__init__(UserMention,
                          BoardMention,
-                         ChatMention,
+                         #ChatMention,
                          Emoji,
                          Spoiler #,
                          #OpMention
