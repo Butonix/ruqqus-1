@@ -347,7 +347,7 @@
 <a href="javascript:void(0)" class="btn btn-warning w-100" onclick="document.getElementById('demod-user').classList.toggle('d-none')">De-Mod User</a>
 <form action="/admin/demod_user" method="post">
   <input type="hidden" name="formkey" value="{{ v.formkey }}">
-  <input type="hidden" name="user" value="{{ v.username }}">
+  <input type="hidden" name="user" value="{{ u.username }}">
   <input type="submit" class="d-none btn btn-danger" id="demod-user" value="Confirm De-Mod User">
 </form>
 {% endblock %}
