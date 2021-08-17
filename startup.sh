@@ -9,8 +9,8 @@ pip3 install -r requirements.txt
 export PYTHONPATH=$PYTHONPATH:~/ruqqus
 cd ~/
 
-#echo "starting background worker"
-#python ruqqus/scripts/recomputes.py
+echo "starting background worker"
+python ruqqus/scripts/recomputes.py
 
 #echo "starting chat worker"
 #gunicorn ruqqus.__main__:app load_chat -k eventlet  -w 1 --worker-connections 1000 --max-requests 1000000 --preload --bind 127.0.0.1:5001 -D
