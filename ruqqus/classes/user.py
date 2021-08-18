@@ -461,10 +461,12 @@ class User(Base, Stndrd, Age_times):
                                            Submission.post_public == True,
                                            Board.is_private == False,
                                            m.c.board_id != None,
-                                           c.c.board_id != None))
+                                           c.c.board_id != None),
+                                      Board.is_banned==False
+                                      )
         else:
             comments = comments.join(Board, Board.id == Submission.board_id).filter(
-                or_(Submission.post_public == True, Board.is_private == False))
+                or_(Submission.post_public == True, Board.is_private == False), Board.is_banned==False)
 
         comments = comments.options(contains_eager(Comment.post))
 
