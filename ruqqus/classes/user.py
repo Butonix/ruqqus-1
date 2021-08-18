@@ -370,7 +370,7 @@ class User(Base, Stndrd, Age_times):
             submissions = submissions.filter_by(deleted_utc=0)
 
         if not (v and (v.admin_level >= 3 or v.id == self.id)):
-            submissions = submissions.filter_by(is_banned=False)
+            submissions = submissions.filter_by(is_banned=False).join(Submission.board).filter(Board.is_banned==False)
 
         if v and v.admin_level >= 4:
             pass
