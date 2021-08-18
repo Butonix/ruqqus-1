@@ -1312,3 +1312,18 @@ def admin_siege_guild(v):
         g.db.add(ma)        
 
     return redirect(f"/+{guild.name}/mod/mods")
+
+@app.get('/admin/email/<email>')
+@admin_level_required(4)
+def user_by_email(email, v):
+    
+    email=email.replace('_', '\_')
+    
+    user=g.db.query(User).filter(User.email.ilike(email)).first()
+    
+    if not user:
+        abort(404)
+    
+    return redirect(user.permalink)
+    
+    
