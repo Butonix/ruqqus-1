@@ -77,6 +77,18 @@ def thumbnail_thread(pid, debug=False):
     if x.status_code != 200:
         db.close()
         return False, f"Source returned status {x.status_code}."
+    
+    #detect if there was a redirect
+    requested_domain = post.domain
+    fetched_domain = urlparse(x.url).netloc
+    
+    if requested_domain.lower() != fetched_domain.lower():
+        post.is_banned=True
+        post.ban_reason="No redirection services"
+        g.db.add(post)
+        g.db.add(post.submission_aux)
+        g.db.commit()
+        return
 
     #if content is image, stick with that. Otherwise, parse html.
 
