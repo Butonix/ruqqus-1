@@ -27,7 +27,7 @@ def expand_url(post_url, fragment_url):
 
 def thumbnail_thread(pid, debug=False):
 
-    #define debug print function
+    #define debug print functionf
     def print_(x):
         if debug:
             try:
@@ -82,7 +82,7 @@ def thumbnail_thread(pid, debug=False):
     requested_domain = post.domain
     fetched_domain = urlparse(x.url).netloc
     
-    if requested_domain.lower() != fetched_domain.lower():
+    if requested_domain.lower() != fetched_domain.lower() and not post.domain_obj:
         post.is_banned=True
         post.ban_reason="No redirection services"
         g.db.add(post)
