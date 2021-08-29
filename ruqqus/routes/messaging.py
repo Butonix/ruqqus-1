@@ -79,7 +79,7 @@ def create_new_convo(v):
         g.db.add(new_cm)
 
 
-    return jsonify({"redirect":new_convo.permalink})
+    return redirect(new_convo.permalink)
 
 
 '''
