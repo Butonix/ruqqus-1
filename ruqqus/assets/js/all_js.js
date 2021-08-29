@@ -46,107 +46,415 @@ $('#new_email').on('input', function () {
     commentFormID = form;
   };
 
-  function getGif(searchTerm) {
+  function getEmoji(searchTerm) {
 
-    if (searchTerm !== undefined) {
-      document.getElementById('gifSearch').value = searchTerm;
-    }
-    else {
-      document.getElementById('gifSearch').value = null;
-    }
+    var emoji = ' :'+searchTerm+': '
+    
+    var commentBox = document.getElementById(commentFormID);
 
-    // load more gifs div
+    var old = commentBox.value;
 
-    var loadGIFs = document.getElementById('gifs-load-more');
+    commentBox.value = old + emoji;
 
-    // error message div
-
-    var noGIFs = document.getElementById('no-gifs-found');
-
-    // categories div
-
-    var cats = document.getElementById('GIFcats');
-
-    // container div
-
-    var container = document.getElementById('GIFs');
-
-    // modal body div
-
-    var modalBody = document.getElementById('gif-modal-body')
-
-    // UI buttons
-
-    var backBtn = document.getElementById('gifs-back-btn');
-
-    var cancelBtn = document.getElementById('gifs-cancel-btn');
-
-    container.innerHTML = '';
-
-    if (searchTerm == undefined) {
-      container.innerHTML = '<div class="card" onclick="getGif(\'agree\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Agree</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/wGhYz3FHaRJgk/200w_d.gif"> </div> <div class="card" onclick="getGif(\'laugh\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Laugh</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/O5NyCibf93upy/200w_d.gif"> </div> <div class="card" onclick="getGif(\'confused\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Confused</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3o7btPCcdNniyf0ArS/200w_d.gif"> </div> <div class="card" onclick="getGif(\'sad\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Sad</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/ISOckXUybVfQ4/200w_d.gif"> </div> <div class="card" onclick="getGif(\'happy\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Happy</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/XR9Dp54ZC4dji/200w_d.gif"> </div> <div class="card" onclick="getGif(\'awesome\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Awesome</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3ohzdIuqJoo8QdKlnW/200w_d.gif"> </div> <div class="card" onclick="getGif(\'yes\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Yes</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/J336VCs1JC42zGRhjH/200w_d.gif"> </div> <div class="card" onclick="getGif(\'no\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">No</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1zSz5MVw4zKg0/200w_d.gif"> </div> <div class="card" onclick="getGif(\'love\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Love</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/4N1wOi78ZGzSB6H7vK/200w_d.gif"> </div> <div class="card" onclick="getGif(\'please\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Please</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/qUIm5wu6LAAog/200w_d.gif"> </div> <div class="card" onclick="getGif(\'scared\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Scared</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/bEVKYB487Lqxy/200w_d.gif"> </div> <div class="card" onclick="getGif(\'angry\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Angry</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/12Pb87uq0Vwq2c/200w_d.gif"> </div> <div class="card" onclick="getGif(\'awkward\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Awkward</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/unFLKoAV3TkXe/200w_d.gif"> </div> <div class="card" onclick="getGif(\'cringe\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Cringe</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1jDvQyhGd3L2g/200w_d.gif"> </div> <div class="card" onclick="getGif(\'omg\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">OMG</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3o72F8t9TDi2xVnxOE/200w_d.gif"> </div> <div class="card" onclick="getGif(\'why\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Why</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1M9fmo1WAFVK0/200w_d.gif"> </div> <div class="card" onclick="getGif(\'gross\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Gross</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/pVAMI8QYM42n6/200w_d.gif"> </div> <div class="card" onclick="getGif(\'meh\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Meh</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/xT77XTpyEzJ4OJO06c/200w_d.gif"> </div>'
-
-      backBtn.innerHTML = null;
-
-      cancelBtn.innerHTML = null;
-
-      noGIFs.innerHTML = null;
-
-      loadGIFs.innerHTML = null;
-    }
-    else {
-      backBtn.innerHTML = '<button class="btn btn-link pl-0 pr-3" id="gifs-back-btn" onclick="getGif();"><i class="fas fa-long-arrow-left text-muted"></i></button>';
-
-      cancelBtn.innerHTML = '<button class="btn btn-link pl-3 pr-0" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
-
-      $.ajax({
-        url: "/giphy?searchTerm=" + searchTerm + "&limit=48",
-        type: "GET",
-        success: function(response) {
-        var max = response.data.length - 1 //length of response, minus 1 (cuz array starts at index 0)
-        var randomNumber = Math.round(Math.random() * 6) //random number between 0 and max -1
-        // GIF array
-        var gifURL = [];
-
-        // loop for fetching mutliple GIFs and creating the card divs
-        if (max < 48 && max > 0) {
-          for (var i = 0; i <= max; i++) {
-            gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/200w_d.gif";
-            if (response.data[i].username==''){
-              container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
-            }
-            else {
-              container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" title="by '+response.data[i].username+' on GIPHY" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
-            }
-            noGIFs.innerHTML = null;
-            loadGIFs.innerHTML = '<div class="text-center py-3"><div class="mb-3"><i class="fad fa-grin-beam-sweat text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Thou&#39;ve reached the end of the list!</p></div>';
-          }
-        }
-        else if (max <= 0) {
-          noGIFs.innerHTML = '<div class="text-center py-3 mt-3"><div class="mb-3"><i class="fad fa-frown text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Aw shucks. No GIFs found...</p></div>';
-          container.innerHTML = null;
-          loadGIFs.innerHTML = null;
-        }
-        else {
-          for (var i = 0; i <= 48; i++) {
-            gifURL[i] = "https://media.giphy.com/media/" + response.data[i].id + "/200w_d.gif";
-            if (response.data[i].username==''){
-              container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
-            }
-            else {
-              container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" title="by '+response.data[i].username+' on GIPHY" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + response.data[i].id + '/100w.gif' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifURL[i] + '"></div>');
-            }
-            noGIFs.innerHTML = null;
-            loadGIFs.innerHTML = '<div class="text-center py-3"><div class="mb-3"><i class="fad fa-grin-beam-sweat text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Thou&#39;ve reached the end of the list!</p></div>';
-          }
-        }
-      },
-      error: function(e) {
-        alert(e);
-      }
-    });
-    };
   }
+
+  function loadEmojis() {
+
+    const emojis = [
+    {
+      type:'ruqqus',
+      folder: 'emojis',
+      emojis: [
+      '500',
+      '503',
+      'poggers',
+      'ruqqking',
+      'ruqqie',
+      'ruqqie-cowboy',
+      'ruqqie-love',
+      'ruqqie-pensive',
+      'ruqqie-sip',
+      'ruqqie-upvote',
+      'dexter',
+      ]
+    },
+    {
+      type:'animated',
+      folder: 'primojis',
+      emojis: [
+      'anime-dance',
+      'cat-vibe',
+      'crumb-dance',
+      'dance-kid',
+      'dance',
+      'falling-kermit',
+      'minecraft',
+      'pepe-saber',
+      'pop-cat',
+      'wavy-sad',
+      'who',
+      'yoshi-hammer',
+      'lmao-spin',
+      'gigachad-gif',
+      'yes-cat',
+      'no-cat',
+      'is4me',
+      'frogroll',
+      'alert',
+      'shrug',
+      ]
+    },
+    {
+      type:'reaction',
+      folder: 'emojis',
+      emojis: [
+      'finger-guns',
+      'isforme',
+      'lmao',
+      'lfg',
+      'pepe-blanket',
+      'pepe-cozy',
+      'pepe-sus',
+      'pepe-toast',
+      'pepe-flushed',
+      'weirdhd',
+      'copium',
+      'clueless',
+      'trollface',
+      'gigachad',
+      'hahayes',
+      'mikewazowski',
+      'breadstare',
+      'pain',
+      'tobey-sad',
+      'facepalm',
+      'kekw',
+      'jackie-chan-wtf',
+      'leo',
+      'pathetic',
+      'pogchamp',
+      'press-f',
+      'shrek-yep',
+      'strong-doge',
+      'stonks',
+      'not-stonks',
+      'think-mark',
+      'tom-unsettled',
+      'vue',
+      'this-tbh',
+      'king',
+      ]
+    },
+    {
+      type: 'classic',
+      folder: 'emojis',
+      emojis: [
+      '2thumbsup',
+      'aliendj',
+      'ambulance',
+      'angry',
+      'angrywhip',
+      'argue',
+      'aroused',
+      'ashamed',
+      'badass',
+      'banana',
+      'band',
+      'banghead',
+      'batman',
+      'bigeyes',
+      'bite',
+      'blind',
+      'blowkiss',
+      'blush',
+      'bong',
+      'bounce',
+      'bow',
+      'breakheart',
+      'bs',
+      'cartwheel',
+      'cat',
+      'celebrate',
+      'chad',
+      'chainsaw',
+      'cheers',
+      'clap',
+      'cold',
+      'confused',
+      'crazyeyes',
+      'cry',
+      'cthulhu',
+      'cute',
+      'D',
+      'daydream',
+      'ddr',
+      'deadpool',
+      'devilsmile',
+      'diddle',
+      'die',
+      'distress',
+      'disturbing',
+      'dizzy',
+      'domo',
+      'doughboy',
+      'drink',
+      'drool',
+      'dudeweedlmao',
+      'edward',
+      'electro',
+      'elephant',
+      'embarrassed',
+      'emo',
+      'emo2',
+      'evil',
+      'evilclown',
+      'evilgrin',
+      'facepalm',
+      'fap',
+      'flamethrower',
+      'flipbird',
+      'flirt',
+      'frown',
+      'gasp',
+      'glomp',
+      'go',
+      'gooby',
+      'grr',
+      'gtfo',
+      'guitar',
+      'haha',
+      'handshake',
+      'happydance',
+      'headbang',
+      'heart',
+      'heartbeat',
+      'hearts',
+      'highfive',
+      'hmm','hmph',
+      'holdhands',
+      'horny',
+      'hug',
+      'hugging',
+      'hugs',
+      'hump',
+      'humpbed',
+      'hysterical',
+      'ily',
+      'inlove',
+      'jason',
+      'jawdrop',
+      'jedi',
+      'jester',
+      'kaboom',
+      'kick',
+      'kiss',
+      'kitty',
+      'laughchair',
+      'lick',
+      'link',
+      'lol',
+      'lolbeat',
+      'loving',
+      'makeout',
+      'medal',
+      'megaman',
+      'megamanguitar',
+      'meow',
+      'metime',
+      'mooning',
+      'mummy',
+      'na',
+      'nauseous',
+      'nervous',
+      'ninja',
+      'nod',
+      'nono',
+      'omg',
+      'onfire',
+      'ooo',
+      'orly',
+      'p',
+      'paddle',
+      'panda',
+      'pandabutt',
+      'paranoid',
+      'party',
+      'pat',
+      'peek',
+      'pikachu',
+      'pimp',
+      'plzdie',
+      'poke',
+      'popcorn',
+      'pout',
+      'probe',
+      'puke',
+      'punch',
+      'quote',
+      'raccoon',
+      'roar',
+      'rofl',
+      'roflmao',
+      'rolleyes',
+      'sad',
+      'sadeyes',
+      'sadhug',
+      'samurai',
+      'sarcasm',
+      'scoot',
+      'scream',
+      'shmoopy',
+      'shrug',
+      'skull',
+      'slap',
+      'slapfight',
+      'sleepy',
+      'smackfish',
+      'smackhead',
+      'smh',
+      'smile',
+      'smoke',
+      'sonic',
+      'spank',
+      'sparta',
+      'sperm',
+      'spiderman',
+      'stab',
+      'star',
+      'stare',
+      'stfu',
+      'suicide',
+      'surprisehug',
+      'suspicious',
+      'sweat',
+      'swordfight',
+      'taco',
+      'talk2hand',
+      'tantrum',
+      'teehee',
+      'thinking',
+      'threesome',
+      'throw',
+      'throwaway',
+      'tickle',
+      'typing',
+      'uhuh',
+      'vampbat',
+      'viking',
+      'violin',
+      'vulgar',
+      'wah',
+      'wat',
+      'whip',
+      'whipping',
+      'wink',
+      'witch',
+      'wizard',
+      'woah',
+      'woo','work',
+      'worship',
+      'wow',
+      'XD',
+      'yay',
+      'zzz'
+      ]
+    }
+    ]
+
+    for (i=0; i < emojis.length; i++) {
+      
+      let container = document.getElementById(`EMOJIS_${emojis[i].type}`);
+      let str = '';
+      let arr = emojis[i].emojis;
+      let dir = emojis[i].folder;
+
+      for (j=0; j < arr.length; j++) { 
+        str += `<button class="btn btn-white m-1 p-0" onclick="getEmoji(\'${arr[j]}\')" style="width:45px; height:45px; overflow: hidden;"><img width=35 src="/assets/images/${dir}/${arr[j]}" alt="${arr[j]}-emoji"/></button>`;
+      }
+
+      container.innerHTML = str
+    }
+
+  }
+
+	function getGif(searchTerm) {
+
+		if (searchTerm !== undefined) {
+			document.getElementById('gifSearch').value = searchTerm;
+		}
+		else {
+			document.getElementById('gifSearch').value = null;
+		}
+
+			// load more gifs div
+			var loadGIFs = document.getElementById('gifs-load-more');
+
+			// error message div
+			var noGIFs = document.getElementById('no-gifs-found');
+
+			// categories div
+			var cats = document.getElementById('GIFcats');
+
+			// container div
+			var container = document.getElementById('GIFs');
+
+			// modal body div
+			var modalBody = document.getElementById('gif-modal-body')
+
+			// UI buttons
+			var backBtn = document.getElementById('gifs-back-btn');
+			var cancelBtn = document.getElementById('gifs-cancel-btn');
+
+			container.innerHTML = '';
+
+			if (searchTerm == undefined) {
+				container.innerHTML = '<div class="card" onclick="getGif(\'agree\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Agree</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/wGhYz3FHaRJgk/200w_d.gif"> </div> <div class="card" onclick="getGif(\'laugh\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Laugh</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/O5NyCibf93upy/200w_d.gif"> </div> <div class="card" onclick="getGif(\'confused\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Confused</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3o7btPCcdNniyf0ArS/200w_d.gif"> </div> <div class="card" onclick="getGif(\'sad\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Sad</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/ISOckXUybVfQ4/200w_d.gif"> </div> <div class="card" onclick="getGif(\'happy\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Happy</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/XR9Dp54ZC4dji/200w_d.gif"> </div> <div class="card" onclick="getGif(\'awesome\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Awesome</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3ohzdIuqJoo8QdKlnW/200w_d.gif"> </div> <div class="card" onclick="getGif(\'yes\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Yes</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/J336VCs1JC42zGRhjH/200w_d.gif"> </div> <div class="card" onclick="getGif(\'no\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">No</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1zSz5MVw4zKg0/200w_d.gif"> </div> <div class="card" onclick="getGif(\'love\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Love</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/4N1wOi78ZGzSB6H7vK/200w_d.gif"> </div> <div class="card" onclick="getGif(\'please\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Please</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/qUIm5wu6LAAog/200w_d.gif"> </div> <div class="card" onclick="getGif(\'scared\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Scared</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/bEVKYB487Lqxy/200w_d.gif"> </div> <div class="card" onclick="getGif(\'angry\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Angry</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/12Pb87uq0Vwq2c/200w_d.gif"> </div> <div class="card" onclick="getGif(\'awkward\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Awkward</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/unFLKoAV3TkXe/200w_d.gif"> </div> <div class="card" onclick="getGif(\'cringe\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Cringe</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1jDvQyhGd3L2g/200w_d.gif"> </div> <div class="card" onclick="getGif(\'omg\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">OMG</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/3o72F8t9TDi2xVnxOE/200w_d.gif"> </div> <div class="card" onclick="getGif(\'why\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Why</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/1M9fmo1WAFVK0/200w_d.gif"> </div> <div class="card" onclick="getGif(\'gross\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Gross</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/pVAMI8QYM42n6/200w_d.gif"> </div> <div class="card" onclick="getGif(\'meh\');" style="overflow: hidden;"> <div class="gif-cat-overlay"> <div style="position: relative;top: 50%;transform: translateY(-50%);color: #ffffff;font-weight: bold;">Meh</div> </div> <img class="img-fluid" src="https://media.giphy.com/media/xT77XTpyEzJ4OJO06c/200w_d.gif"> </div>'
+				backBtn.innerHTML = null;
+				cancelBtn.innerHTML = null;
+				noGIFs.innerHTML = null;
+				loadGIFs.innerHTML = null;
+			} else {
+				backBtn.innerHTML = '<button class="btn btn-link pl-0 pr-3" id="gifs-back-btn" onclick="getGif();"><i class="fas fa-long-arrow-left text-muted"></i></button>';
+
+				cancelBtn.innerHTML = '<button class="btn btn-link pl-3 pr-0" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
+
+				let gifs = [];
+				let apiKey = tenor_api_key();
+				let lmt = 30;
+				let url = "https://g.tenor.com/v1/search?q=" + searchTerm + "&key=" + apiKey + "&limit=" + lmt;
+				fetch(url)
+				.then(response => {
+					return response.json();
+				})
+				.then(json => {
+					let results = json.results.map(function(obj) {
+						return {
+							id: obj.id,
+							preview: obj.media[0].tinygif.url,
+							url: obj.media[0].gif.url,
+							source: obj.url,
+							bgColor: obj.bg_color
+						}
+					});
+					
+					gifs = results
+
+					// loop for fetching mutliple GIFs and creating the card divs
+					if (gifs.length) {
+						for (var i = 0; i < gifs.length; i++) {
+							container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + gifs[i].url + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img class="img-fluid" src="' + gifs[i].preview + '"></div>');
+							noGIFs.innerHTML = null;
+							loadGIFs.innerHTML = '<div class="text-center py-3"><div class="mb-3"><i class="fad fa-grin-beam-sweat text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Thou&#39;ve reached the end of the list!</p></div>';
+						}
+					} else {
+						noGIFs.innerHTML = '<div class="text-center py-3 mt-3"><div class="mb-3"><i class="fad fa-frown text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Aw shucks. No GIFs found...</p></div>';
+						container.innerHTML = null;
+						loadGIFs.innerHTML = null;
+					}
+				})
+				.catch(err => alert(err));
+			};
+		}
 
   // Insert GIF markdown into comment box function
 
@@ -212,13 +520,32 @@ $('#new_email').on('input', function () {
 
 function collapse_comment(comment_id) {
 
-	var comment = "comment-" + comment_id;
+  var comment = "comment-" + comment_id;
 
-	document.getElementById(comment).classList.toggle("collapsed");
+  document.getElementById(comment).classList.toggle("collapsed");
 
 };
 
-//Commenting form
+// Text Area Input handling
+
+function textAreaOnKeyDown(e, func){
+  if (isCtrlEnterSubmit(e))
+    func();
+
+  return;
+}
+
+function isCtrlEnterSubmit(e) {
+  // If the user has pressed enter + ctrl/command
+  if ((e.keyCode == 10 || e.keyCode == 13) && (e.ctrlKey || e.metaKey))
+  {
+     return true;
+  }
+  
+  return false;
+}
+
+// Commenting form
 
 // Expand comment box on focus, hide otherwise
 
@@ -361,18 +688,18 @@ $(".toggle-collapse").click(function (event) {
 
 function autoExpand (field) {
 
-	//get current scroll position
-	xpos=window.scrollX;
-	ypos=window.scrollY;
+  //get current scroll position
+  xpos=window.scrollX;
+  ypos=window.scrollY;
 
-	// Reset field height
-	field.style.height = 'inherit';
+  // Reset field height
+  field.style.height = 'inherit';
 
-	// Get the computed styles for the element
-	var computed = window.getComputedStyle(field);
+  // Get the computed styles for the element
+  var computed = window.getComputedStyle(field);
 
-	// Calculate the height
-	var height = parseInt(computed.getPropertyValue('border-top-width'), 10)
+  // Calculate the height
+  var height = parseInt(computed.getPropertyValue('border-top-width'), 10)
   + parseInt(computed.getPropertyValue('padding-top'), 10)
   + field.scrollHeight
   + parseInt(computed.getPropertyValue('padding-bottom'), 10)
@@ -381,14 +708,14 @@ function autoExpand (field) {
 
   field.style.height = height + 'px';
 
-	//keep window position from changing
-	window.scrollTo(xpos,ypos);
+  //keep window position from changing
+  window.scrollTo(xpos,ypos);
 
 };
 
 document.addEventListener('input', function (event) {
-	if (event.target.tagName.toLowerCase() !== 'textarea') return;
-	autoExpand(event.target);
+  if (event.target.tagName.toLowerCase() !== 'textarea') return;
+  autoExpand(event.target);
 }, false);
 
 //dark mode
@@ -401,22 +728,26 @@ function switch_css() {
   if (css.href.includes("/assets/style/main.css")) {
     post("/settings/dark_mode/1",
       callback=function(){
-        css.href="/assets/style/main_dark.css?v=2.36.3";
+        css.href="/assets/style/main_dark.css?v=2.38.0";
         dswitch.classList.remove("fa-toggle-off");
         dswitch.classList.add("fa-toggle-on");
         dswitchmobile.classList.remove("fa-toggle-off");
         dswitchmobile.classList.add("fa-toggle-on");
+	$('body').toggleClass('light');
+	$('body').toggleClass('dark');
       }
       );
   }
   else {
     post("/settings/dark_mode/0",
       callback=function(){
-        css.href="/assets/style/main.css?v=2.36.3";
+        css.href="/assets/style/main.css?v=2.38.0";
         dswitch.classList.remove("fa-toggle-on");
         dswitch.classList.add("fa-toggle-off");
         dswitchmobile.classList.remove("fa-toggle-on");
         dswitchmobile.classList.add("fa-toggle-off");
+	$('body').toggleClass('light');
+	$('body').toggleClass('dark');
       }
       );
   }
@@ -587,7 +918,7 @@ $('#reportPostModal').on('hidden.bs.modal', function () {
 
 enlarge_thumb = function(post_id) {
 
-	document.getElementById(post_id).classList.toggle("enlarged");
+  document.getElementById(post_id).classList.toggle("enlarged");
 
 };
 
@@ -673,6 +1004,19 @@ $('#kickPostModal').on('hidden.bs.modal', function () {
 
 });
 
+$('.kick-button-listing').click(function(event) {
+  if (event.which != 1) {return}
+
+  boardname=$(this).data('boardname')
+  pid=$(this).data('pid')
+
+  post_response('/mod/kick/'+ boardname+'/'+pid, callback=function(xhr){
+    $("#post-"+pid).replaceWith(JSON.parse(xhr.response)['data'])
+      }
+    )
+  }
+)
+
 //POST
 
 function post(url, callback, errortext) {
@@ -685,6 +1029,23 @@ function post(url, callback, errortext) {
   xhr.onload = function() {
     if (xhr.status >= 200 && xhr.status < 300) {
       callback();
+    } else {
+      xhr.onerror();
+    }
+  };
+  xhr.send(form);
+};
+
+function post_response(url, callback, errortext) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  var form = new FormData()
+  form.append("formkey", formkey());
+  xhr.withCredentials=true;
+  xhr.onerror=function() { alert(errortext); };
+  xhr.onload = function() {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      callback(xhr);
     } else {
       xhr.onerror();
     }
@@ -789,8 +1150,8 @@ function approvePost(post_id) {
 //Element deleter
 
 function deleteElement(eid) {
-	x=document.getElementById(eid)
-	x.parentElement.removeChild(x)
+  x=document.getElementById(eid)
+  x.parentElement.removeChild(x)
 
 }
 
@@ -870,7 +1231,7 @@ $(".form-control").focusout(function () {
 //spinner effect
 
 $(document).ready(function() {
-	$('#login').submit(function() {
+  $('#login').submit(function() {
       // disable button
       $("#login_button").prop("disabled", true);
       // add spinner to button
@@ -879,7 +1240,7 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-	$('#signup').submit(function() {
+  $('#signup').submit(function() {
       // disable button
       $("#register_button").prop("disabled", true);
       // add spinner to button
@@ -888,7 +1249,7 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-	$('#submitform').submit(function() {
+  $('#submitform').submit(function() {
       // disable button
       $("#create_button").prop("disabled", true);
       // add spinner to button
@@ -902,25 +1263,25 @@ $(document).ready(function() {
 
 if (document.getElementById("sidebar-left") && localStorage.sidebar_pref == 'collapsed') {
 
-	document.getElementById('sidebar-left').classList.add('sidebar-collapsed');
+  document.getElementById('sidebar-left').classList.add('sidebar-collapsed');
 
 };
 
 function toggle_sidebar_collapse() {
 
-	// Store Pref
-	localStorage.setItem('sidebar_pref', 'collapsed');
+  // Store Pref
+  localStorage.setItem('sidebar_pref', 'collapsed');
 
-	document.getElementById('sidebar-left').classList.toggle('sidebar-collapsed');
+  document.getElementById('sidebar-left').classList.toggle('sidebar-collapsed');
 
 };
 
 function toggle_sidebar_expand() {
 
-	// Remove Pref
-	localStorage.removeItem('sidebar_pref');
+  // Remove Pref
+  localStorage.removeItem('sidebar_pref');
 
-	document.getElementById('sidebar-left').classList.toggle('sidebar-collapsed');
+  document.getElementById('sidebar-left').classList.toggle('sidebar-collapsed');
 
 }
 
@@ -1248,7 +1609,7 @@ $('#ytEmbed').html('<iframe width="100%" height="475" src="//www.youtube.com/emb
 
 // Expand Images on Desktop
 
-function expandDesktopImage(image, link) {
+function expandDesktopImage(image) {
 
 // GIPHY attribution div
 
@@ -1263,23 +1624,14 @@ var inlineImage = document.getElementById("desktop-expanded-image");
 
 inlineImage.src = image;
 
-linkText.href = link;
-imgLink.href=link;
+linkText.href = image;
+imgLink.href = image;
 
 if (image.includes("i.ruqqus.com")) {
-	linkText.textContent = 'Go to website';
+  linkText.textContent = 'Go to website';
 }
 else {
-	linkText.textContent = 'View original';
-}
-
-if (image.startsWith("https://media.giphy.com")) {
-	attribution.innerHTML = '<img src="/assets/images/icons/PoweredBy_200px-Black_HorizLogo.png" style="width: 100px;">';
-
-  var GIPHYsrc = image.replace(/\b100w\b~?/g, 'giphy');
-
-  inlineImage.src = GIPHYsrc;
-  linkText.href = GIPHYsrc;
+  linkText.textContent = 'View original';
 }
 
 };
@@ -1288,19 +1640,19 @@ if (image.startsWith("https://media.giphy.com")) {
 
 $('#expandImageModal').on('hidden.bs.modal', function (e) {
 
-  	// GIPHY attribution div
+    // // attribution div
 
-  	var attribution = document.getElementById("modal-image-attribution");
+    // var attribution = document.getElementById("modal-image-attribution");
 
-  	// remove the attribution
+    // // remove the attribution
 
-  	attribution.innerHTML = null;
+    // attribution.innerHTML = null;
 
-	// remove image src and link
+  // remove image src and link
 
-	document.getElementById("desktop-expanded-image").src = '';
+  document.getElementById("desktop-expanded-image").src = '';
 
-	document.getElementById("desktop-expanded-image-link").href = '';
+  document.getElementById("desktop-expanded-image-link").href = '';
 
 });
 
@@ -1573,7 +1925,7 @@ if (window.location.pathname=='/submit') {
 
 // Exile Member
 
-function exile_from_guild(boardid) {
+function exile_from_guild(boardname) {
 
   var exileForm = document.getElementById("exile-form");
 
@@ -1588,7 +1940,7 @@ function exile_from_guild(boardid) {
   if (isValidUsername) {
 
     var xhr = new XMLHttpRequest();
-    xhr.open("post", "/mod/exile/"+boardid);
+    xhr.open("post", "/mod/exile/"+boardname);
     xhr.withCredentials=true;
     f=new FormData();
     f.append("username", username);
@@ -1752,11 +2104,11 @@ post_comment=function(fullname){
 
 }
 
-herald_comment=function(bid,cid){
+herald_comment=function(name,cid){
 
 
   var xhr = new XMLHttpRequest();
-  xhr.open("post", "/mod/distinguish_comment/"+bid+'/'+cid);
+  xhr.open("post", "/mod/distinguish_comment/"+name+'/'+cid);
 
   var form = new FormData();
 
@@ -1780,11 +2132,11 @@ herald_comment=function(bid,cid){
 
 }
 
-pin_comment=function(bid,cid){
+pin_comment=function(name,cid){
 
 
   var xhr = new XMLHttpRequest();
-  xhr.open("post", "/mod/comment_pin/"+bid+'/'+cid);
+  xhr.open("post", "/mod/comment_pin/"+name+'/'+cid);
 
   var form = new FormData();
 
@@ -2120,5 +2472,63 @@ $('.expandable-image').click( function(event) {
 
   var url= $(this).data('url');
 
-  expandDesktopImage(url,url);
+  expandDesktopImage(url);
 })
+
+$('.text-expand').click(function(event){
+  if (event.which != 1) {
+    return
+  };
+  id=$(this).data('id');
+
+
+  $('#post-text-'+id).toggleClass('d-none');
+  $('.text-expand-icon-'+id).toggleClass('fa-expand-alt');
+  $('.text-expand-icon-'+id).toggleClass('fa-compress-alt');
+  
+})
+
+
+
+function mod_post(url, type, id) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        var form = new FormData()
+        form.append("formkey", formkey());
+        item=document.getElementById(type);
+        button=document.getElementById(id);
+        if (item.type=="checkbox") {
+          form.append(item.name, item.checked)
+          if (item.checked) {
+            form.append(item.name, true);
+          } else {
+            form.append(item.name, false);
+          }
+        }
+        else {
+          form.append(item.name, item.value);
+        }
+        xhr.withCredentials=true;
+        xhr.onprogress=function(){
+          button.classList.add("btn-primary");
+          button.disabled = true;
+          button.innerHTML = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Saving';
+        }
+        xhr.onload=function(){
+          if (xhr.status >= 400)
+          {
+            button.classList.add("btn-primary");
+            button.disabled=false;
+            button.innerHTML="Save"
+            data=JSON.parse(xhr.response);
+            $('#toast-post-error').toast('dispose');
+            $('#toast-post-error').toast('show');
+            document.getElementById('toast-post-error-text').innerText = data["error"];
+            return;
+          }
+          button.classList.remove("btn-danger");
+          button.classList.add("btn-success");
+          button.innerHTML = `<i class="fas fa-check mr-2"></i>Saved`;
+        }
+      xhr.send(form);
+    }

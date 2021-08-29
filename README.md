@@ -6,7 +6,7 @@
 
 # Ruqqus
 
-Ruqqus is an open-source platform for online communities, free of censorship and moderator abuse by design.
+Ruquqs is an open-source platform for independent internet communities.
 
 [![Build status](https://travis-ci.com/ruqqus/ruqqus.svg?branch=master)](https://travis-ci.com/ruqqus) ![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/ruqqus/ruqqus) [![Website](https://img.shields.io/website/https/www.ruqqus.com?down_color=red&down_message=down&up_message=up)](https://www.ruqqus.com) ![GitHub language count](https://img.shields.io/github/languages/count/ruqqus/ruqqus) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ruqqus/ruqqus) [![Discord](https://img.shields.io/discord/599258778520518676)](https://ruqqus.com/discord)
 
@@ -95,7 +95,7 @@ In order to build your docs, you need to add the following to your hosts file:
 ```
 127.0.0.1    ruqqus.localhost
 ```
-
+Before deploying, make sure to compile .scss files in `ruqqus/assets/style/` with a package called "sass" (or ruby-sass)
 
 To deploy the stack with docker, simply use:
 

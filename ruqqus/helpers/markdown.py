@@ -2,6 +2,7 @@ from .get import *
 
 from mistletoe.span_token import SpanToken
 from mistletoe.html_renderer import HTMLRenderer
+import os.path
 import re
 
 from flask import g
@@ -41,6 +42,24 @@ class ChatMention(SpanToken):
     def __init__(self, match_obj):
 
         self.target = (match_obj.group(1), match_obj.group(2))
+        
+class Emoji(SpanToken):
+    
+    pattern=re.compile(":([A-Za-z0-9_-]+):")
+    parse_inner=False
+    
+    def __init__(self, match_obj):
+        self.target=match_obj.group(1)
+
+
+class Spoiler(SpanToken):
+
+    pattern=re.compile("(>!|<s>|\|\|)(.+?)(\|\||</s>|!<)")
+    parse_inner=True
+
+    def __init__(self, match_obj):
+
+        self.target=match_obj.group(2)
 
 
 
@@ -59,7 +78,9 @@ class CustomRenderer(HTMLRenderer):
     def __init__(self, **kwargs):
         super().__init__(UserMention,
                          BoardMention,
-                         ChatMention #,
+                         #ChatMention,
+                         Emoji,
+                         Spoiler #,
                          #OpMention
                          )
 
@@ -105,6 +126,25 @@ class CustomRenderer(HTMLRenderer):
             return f"{space}#{target}"
         else:
             return f'{space}<a href="{board.permalink}/chat" class="d-inline-block"><img src="/+{board.name}/pic/profile" class="profile-pic-20 mr-1">#{board.name}</a>'
+
+    def render_emoji(self, token):
+        
+        name=token.target
+        
+        if os.path.isfile(f"{app.config['RUQQUSPATH']}/assets/images/emojis/{name}"):
+            
+            return f'<span data-toggle="tooltip" title=":{name}:"><img class="emoji" src="/assets/images/emojis/{name}"></span>'
+        
+        elif g.v.has_premium and os.path.isfile(f"{app.config['RUQQUSPATH']}/assets/images/primojis/{name}"):
+            
+            return f'<span data-toggle="tooltip" title=":{name}:"><img class="emoji" src="/assets/images/primojis/{name}"></span>'
+
+        else:
+            return f":{name}:"
+        
+    def render_spoiler(self, token):
+
+        return f'<span class="spoiler">{token.target}</span>'
 
     # def render_op_mention(self, token):
 

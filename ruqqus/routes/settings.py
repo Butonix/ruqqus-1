@@ -103,6 +103,12 @@ def settings_profile_post(v):
         v.bio = bio
         v.bio_html=bio_html
         g.db.add(v)
+        
+        #seo profile spam
+        if int(time.time())-v.created_utc < 60*60*24 and not v.post_count and not v.comment_count and BeautifulSoup(bio_html).find('a'):
+            v.ban(reason="seo spam")
+        
+        
         return {"html":lambda:render_template("settings_profile.html",
                                v=v,
                                msg="Your bio has been updated."),
@@ -325,7 +331,7 @@ def settings_log_out_others(v):
 
 
 @app.route("/settings/images/profile", methods=["POST"])
-@auth_required
+@is_not_banned
 @validate_formkey
 def settings_images_profile(v):
     if v.can_upload_avatar:
@@ -348,7 +354,7 @@ def settings_images_profile(v):
 
 
 @app.route("/settings/images/banner", methods=["POST"])
-@auth_required
+@is_not_banned
 @validate_formkey
 def settings_images_banner(v):
     if v.can_upload_banner:
@@ -485,7 +491,8 @@ def delete_account(v):
                 user_id=1,
                 kind="ban_post",
                 target_submission_id=post.id,
-                note="spam"
+                note="spam",
+		board_id=post.board_id
                 )
 
             g.db.add(post)
@@ -497,7 +504,8 @@ def delete_account(v):
                 user_id=1,
                 kind="ban_comment",
                 target_comment_id=comment.id,
-                note="spam"
+                note="spam",
+		board_id=comment.post.board_id
                 )
             g.db.add(comment)
             g.db.add(new_ma)
@@ -544,8 +552,11 @@ def settings_block_user(v):
         return jsonify({"error": f"You have already blocked @{user.username}."}), 409
 
     if user.id == 1:
-        return jsonify({"error": "You can't block @ruqqus."}), 409
+        return jsonify({"error": "You can't block @{user.username}."}), 409
 
+    if user.is_deleted:
+        return jsonify({"error": "That account has been deactivated"}), 410
+    
     new_block = UserBlock(user_id=v.id,
                           target_id=user.id,
                           created_utc=int(time.time())

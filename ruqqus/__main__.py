@@ -7,6 +7,7 @@ gevent.monkey.patch_all()
 #import psycogreen.gevent
 #psycogreen.gevent.patch_psycopg()
 
+import os
 from os import environ
 import secrets
 from flask import *
@@ -37,7 +38,7 @@ from redis import BlockingConnectionPool, ConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.36.3"
+_version = "2.38.0"
 
 # def time_limit(s):
 #     def wrapper_maker(f):
@@ -86,6 +87,8 @@ app.url_map.strict_slashes = False
 app.config["SITE_NAME"]=environ.get("SITE_NAME", "Ruqqus").lstrip().rstrip()
 
 app.config["SITE_COLOR"]=environ.get("SITE_COLOR", "805ad5").lstrip().rstrip()
+
+app.config["RUQQUSPATH"]=environ.get("RUQQUSPATH", os.path.dirname(os.path.realpath(__file__)))
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get(
@@ -163,6 +166,8 @@ app.config["CACHE_OPTIONS"]={'connection_pool':redispool} if app.config["CACHE_T
 app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", False)))
 app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
 
+app.config["TENOR_KEY"]=environ.get("TENOR_KEY",'').lstrip().rstrip()
+
 
 Markdown(app)
 cache = Cache(app)
@@ -193,7 +198,7 @@ class CorsMatch(str):
 app.config["RATELIMIT_STORAGE_URL"] = environ.get("REDIS_URL").lstrip().rstrip() if environ.get("REDIS_URL") else 'memory://'
 app.config["RATELIMIT_KEY_PREFIX"] = "flask_limiting_"
 app.config["RATELIMIT_ENABLED"] = True
-app.config["RATELIMIT_DEFAULTS_DEDUCT_WHEN"]=lambda:True
+app.config["RATELIMIT_DEFAULTS_DEDUCT_WHEN"]=lambda x:True
 app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
 app.config["RATELIMIT_HEADERS_ENABLED"]=True
 
@@ -207,7 +212,9 @@ limiter = Limiter(
     key_func=limiter_key_func,
     default_limits=["100/minute"],
     headers_enabled=True,
-    strategy="fixed-window"
+    strategy="fixed-window",
+    storage_options={'max_connections':100}
+    #storage_options={'connection_pool':redispool}
 )
 
 # setup db
@@ -282,7 +289,6 @@ r=redis.Redis(
     host=app.config["CACHE_REDIS_URL"][8:], 
     decode_responses=True, 
     ssl_cert_reqs=None,
-    connection_pool=redispool
     ) if app.config["CACHE_REDIS_URL"] else None
 
 
@@ -309,6 +315,10 @@ UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
 import ruqqus.classes
 from ruqqus.routes import *
 import ruqqus.helpers.jinja2
+
+#purge css from cache
+cache.delete_memoized(ruqqus.routes.board_css)
+cache.delete_memoized(ruqqus.routes.main_css)
 
 
 @cache.memoize(UA_BAN_CACHE_TTL)

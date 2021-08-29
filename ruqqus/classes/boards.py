@@ -14,7 +14,7 @@ from .subscriptions import *
 from .board_relationships import *
 from .comment import Comment
 from .mix_ins import *
-from ruqqus.__main__ import Base, cache
+from ruqqus.__main__ import Base, cache, app
 
 class Board(Base, Stndrd, Age_times):
 
@@ -51,6 +51,9 @@ class Board(Base, Stndrd, Age_times):
     public_chat=Column(Boolean, default=False)
     motd = Column(String(1000), default='')
 
+    css_nonce=Column(Integer, default=0)
+    css=deferred(Column(String(65536), default=''))
+
     subcat=relationship("SubCategory")
     moderators=relationship("ModRelationship")
     subscribers=relationship("Subscription", lazy="dynamic")
@@ -81,8 +84,7 @@ class Board(Base, Stndrd, Age_times):
     @property
     def mods_list(self):
 
-        z = [x for x in self.moderators if x.accepted and not (
-            x.user.is_deleted or (x.user.is_banned and not x.user.unban_utc))]
+        z = [x for x in self.moderators if x.accepted and not x.user.is_deleted]
 
         z = sorted(z, key=lambda x: x.id)
         return z
@@ -102,7 +104,7 @@ class Board(Base, Stndrd, Age_times):
     def invited_mods(self):
 
         z = [x.user for x in self.moderators if x.accepted ==
-             False and x.invite_rescinded == False]
+             False and x.invite_rescinded == False and not x.user.is_deleted]
         z = sorted(z, key=lambda x: x.id)
         return z
 
@@ -141,7 +143,12 @@ class Board(Base, Stndrd, Age_times):
             posts = posts.filter_by(over_18=False)
 
         if v and v.hide_offensive:
-            posts = posts.filter_by(is_offensive=False)
+            posts = posts.filter(
+                or_(
+                    Submission.is_offensive==False,
+                    Submission.author_id==v.id
+                )
+            )
 			
         if v and v.hide_bot and not self.has_mod(v, "content"):
             posts = posts.filter_by(is_bot=False)
@@ -325,7 +332,9 @@ class Board(Base, Stndrd, Age_times):
         #print(self._is_subscribed)
 
         x=self.__dict__.get("_is_subscribed")
-        if isinstance(x,int):
+        if isinstance(x, bool):
+            return x
+        elif isinstance(x,int):
             x=g.db.query(Subscription).get(x)
         return x
     
@@ -448,7 +457,7 @@ class Board(Base, Stndrd, Age_times):
     def banner_url(self):
 
         if self.has_banner:
-            return f"https://i.ruqqus.com/board/{self.name.lower()}/banner-{self.banner_nonce}.png"
+            return f"https://{app.config['S3_BUCKET']}/board/{self.name.lower()}/banner-{self.banner_nonce}.png"
         else:
             return "/assets/images/guilds/default-guild-banner.png"
 
@@ -456,7 +465,7 @@ class Board(Base, Stndrd, Age_times):
     def profile_url(self):
 
         if self.has_profile:
-            return f"https://i.ruqqus.com/board/{self.name.lower()}/profile-{self.profile_nonce}.png"
+            return f"https://{app.config['S3_BUCKET']}/board/{self.name.lower()}/profile-{self.profile_nonce}.png"
         else:
             if self.over_18:
                 return "/assets/images/icons/nsfw_guild_icon.png"
@@ -600,6 +609,7 @@ class Board(Base, Stndrd, Age_times):
 
         return user.guild_rep(self)
 
+
     def is_guildmaster(self, perm=None):
         mod=self.__dict__.get('_is_guildmaster', False)
         if not mod:
@@ -620,7 +630,11 @@ class Board(Base, Stndrd, Age_times):
     @property
     def chat_url(self):
         return f"{self.permalink}/chat"
-    
+
+    @property
+    def custom_css_url(self):
+        return f"{self.permalink}/css?v={self.css_nonce}"
+
     # @property
     # def chat_count(self):
     #     count= r.get(f"{self.fullname}_chat_count")

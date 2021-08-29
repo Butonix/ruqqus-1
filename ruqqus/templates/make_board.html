@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block pagetitle %}Create a Guild{% endblock %}
-{% block subtitle %}Launch your own guild on Ruqqus{% endblock %}
+{% block subtitle %}Launch your own guild on {{ 'SITE_NAME' | app_config }}{% endblock %}
 {% block sidebar %}{% endblock %}
 {% block stylesheets %}
 
@@ -113,7 +113,7 @@
                                 </a>
                             </li>
                             <div id="ruleCollapse2" class="collapse">
-                                <p style="padding: 0 0 0 22px;">Do not harass or threaten others on Ruqqus. You are not allowed to share or publish personal information, either yours or another person.</p>
+                                <p style="padding: 0 0 0 22px;">Do not harass or threaten others on {{ 'SITE_NAME' | app_config }}. You are not allowed to share or publish personal information, either yours or another person.</p>
                             </div>
                             <li>
                                 <a class="text-black font-weight-bold collapsed" data-toggle="collapse" href="#ruleCollapse3" role="button" aria-expanded="false" aria-controls="ruleCollapse3">No inciting violence<span class="float-right"><i class="fa"></i></span>

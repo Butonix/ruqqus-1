@@ -2,6 +2,7 @@ from ruqqus.__main__ import db_session
 from ruqqus.classes import *
 
 import time
+import gevent
 import daemon
 
 db = db_session()
@@ -21,7 +22,7 @@ def recompute():
     while True:
 
         cycle +=1
-        print(f"cycle {cycle}")
+        print_(f"cycle {cycle}")
 
         #purge deleted content older than 90 days
 
@@ -56,7 +57,7 @@ def recompute():
             db.add(p.submission_aux)
 
             if not x % 100:
-                print(f"purged {x} posts")
+                print_(f"purged {x} posts")
                 db.commit()
 
         db.commit()
@@ -85,7 +86,7 @@ def recompute():
             db.add(c.comment_aux)
 
             if not x % 100:
-                print(f"purged {x} comments")
+                print_(f"purged {x} comments")
                 db.commit()
 
         db.commit()
@@ -93,13 +94,24 @@ def recompute():
 
         print_("beginning guild trend recompute")
         boards = db.query(Board).options(
-            lazyload('*')).filter_by(is_banned=False).order_by(Board.rank_trending.desc())
-        if cycle % 10:
-            print("top 1000 boards only")
-            boards = boards.limit(1000)
-        else:
-            print("all boards")
-
+            lazyload('*')
+        ).filter_by(is_banned=False).filter(
+                or_(
+                    Board.id.in_(
+                        db.query(Board.id).order_by(Board.rank_trending.desc()).limit(1000)
+                    ),
+                    Board.id.in_(
+                        db.query(Board.id).order_by(Board.stored_subscriber_count.desc()).limit(1000)
+                    )
+                )
+        )
+        #if cycle % 10:
+        #    print_("top 1000 boards only")
+        #    boards = boards.limit(1000)
+        #else:
+        #    print_("all boards")
+        board_count=boards.count()
+        print_(f"{board_count} boards to re-rank")
         i = 0
         for board in boards.all():
             i += 1
@@ -110,7 +122,7 @@ def recompute():
             if not i % 100:
                 db.commit()
 
-        print(f"Re-ranked {i} boards")
+        print_(f"Re-ranked {i} boards")
 
 
         cutoff = now - (60 * 60 * 24 * 180)
@@ -153,45 +165,28 @@ def recompute():
 
                 db.add(post)
 
-                comment_count = 0
-                for comment in post._comments.filter_by(
-                        is_banned=False, deleted_utc=0).all():
-
-                    comment_count += 1
-
-                    comment.upvotes = comment.ups
-                    comment.downvotes = comment.downs
-                    db.add(comment)
-                    db.flush()
-
-                    comment.score_disputed = comment.rank_fiery
-                    comment.score_hot = comment.rank_hot
-                    # comment.score_top=comment.score
-
-                    db.add(comment)
-
             db.commit()
 
             page += 1
             print_(f"re-scored {post_count} posts")
 
-        print("Done with posts. Rescored {")
+        print_("Done with posts. Rescored {")
 
         db.commit()
 
-        print("Deleting old mod actions")
+        print_("Deleting old mod actions")
 
         actions=db.query(ModAction).filter(ModAction.created_utc<int(time.time())-60*60*24*180)
         count=actions.count()
         actions.delete()
         db.commit()
 
-        print(f"deleted {count} old mod actions")
+        print_(f"deleted {count} old mod actions")
 
 
 
-
-with daemon.DaemonContext():
-    recompute()
+if __name__=="__main__":
+    with daemon.DaemonContext():
+        recompute()
 
 #recompute()

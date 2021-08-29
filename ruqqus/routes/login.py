@@ -143,9 +143,6 @@ def login_post():
     else:
         abort(400)
 
-    if account.is_banned and account.unban_utc > 0 and time.time() > account.unban_utc:
-        account.unban()
-
     # set session and user id
     session["user_id"] = account.id
     session["session_id"] = token_hex(16)
@@ -312,11 +309,11 @@ def sign_up_post(v):
         return new_signup("Passwords did not match. Please try again.")
 
     # check username/pass conditions
-    if not re.match(valid_username_regex, request.form.get("username")):
+    if not re.fullmatch(valid_username_regex, username):
         #print(f"signup fail - {username } - mismatched passwords")
         return new_signup("Invalid username")
 
-    if not re.match(valid_password_regex, request.form.get("password")):
+    if not re.fullmatch(valid_password_regex, request.form.get("password")):
         #print(f"signup fail - {username } - invalid password")
         return new_signup("Password must be between 8 and 100 characters.")
 
@@ -409,12 +406,6 @@ def sign_up_post(v):
     g.db.add(new_user)
     g.db.commit()
 
-    # give a beta badge
-    beta_badge = Badge(user_id=new_user.id,
-                       badge_id=6)
-
-    g.db.add(beta_badge)
-
     # check alts
 
     check_for_alts(new_user.id)
@@ -426,10 +417,10 @@ def sign_up_post(v):
     # send welcome message
     text = f"""![](https://media.giphy.com/media/ehmupaq36wyALTJce6/200w.gif)
 \n\nWelcome to Ruqqus, {new_user.username}. We're glad to have you here.
-\n\nWhile you get settled in, here a couple things we recommend for newcomers:
+\n\nWhile you get settled in, here are a couple of things we recommend for newcomers:
 - View the [quickstart guide](https://ruqqus.com/post/86i)
 - Personalize your front page by [joining some guilds](/browse)
-\n\nYou're welcome to say anything protected by the First Amendment here - even if you don't live in the United States.
+\n\nYou're welcome to say almost anything protected by the First Amendment here - even if you don't live in the United States.
 And since we're committed to [open-source](https://github.com/ruqqus/ruqqus) transparency, your front page (and your posted content) won't be artificially manipulated.
 \n\nReally, it's what social media should have been doing all along.
 \n\nNow, go enjoy your digital freedom.

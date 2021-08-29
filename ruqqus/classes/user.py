@@ -12,7 +12,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from ruqqus.helpers.lazy import lazy
 import ruqqus.helpers.aws as aws
-from ruqqus.helpers.discord import add_role, delete_role
+from ruqqus.helpers.discord import add_role, delete_role, discord_log_event
 #from ruqqus.helpers.alerts import send_notification
 from .votes import Vote
 from .alts import Alt
@@ -27,7 +27,8 @@ from .userblock import *
 from .badges import *
 from .clients import *
 from .paypal import PayPalTxn
-from ruqqus.__main__ import Base, cache
+from .flags import Report
+from ruqqus.__main__ import Base, cache, app
 
 
 class User(Base, Stndrd, Age_times):
@@ -114,6 +115,11 @@ class User(Base, Stndrd, Age_times):
     banner_upload_ip=deferred(Column(String(255), default=None))
     profile_upload_region=deferred(Column(String(2)))
     banner_upload_region=deferred(Column(String(2)))
+    
+    color=Column(String(6), default="805ad5")
+    secondary_color=Column(String(6), default="ffff00")
+    signature=Column(String(280), default='')
+    signature_html=Column(String(512), default="")
 
     #stuff to support name changes
     profile_set_utc=deferred(Column(Integer, default=0))
@@ -362,7 +368,7 @@ class User(Base, Stndrd, Age_times):
         if not (v and v.over_18):
             submissions = submissions.filter_by(over_18=False)
 
-        if v and v.hide_offensive:
+        if v and v.hide_offensive and v.id!=self.id:
             submissions = submissions.filter_by(is_offensive=False)
 
         if v and v.hide_bot:
@@ -372,7 +378,7 @@ class User(Base, Stndrd, Age_times):
             submissions = submissions.filter_by(deleted_utc=0)
 
         if not (v and (v.admin_level >= 3 or v.id == self.id)):
-            submissions = submissions.filter_by(is_banned=False)
+            submissions = submissions.filter_by(is_banned=False).join(Submission.board).filter(Board.is_banned==False)
 
         if v and v.admin_level >= 4:
             pass
@@ -431,7 +437,7 @@ class User(Base, Stndrd, Age_times):
         if not (v and v.over_18):
             comments = comments.filter(Submission.over_18 == False)
 
-        if v and v.hide_offensive:
+        if v and v.hide_offensive and v.id != self.id:
             comments = comments.filter(Comment.is_offensive == False)
 
         if v and v.hide_bot:
@@ -463,10 +469,12 @@ class User(Base, Stndrd, Age_times):
                                            Submission.post_public == True,
                                            Board.is_private == False,
                                            m.c.board_id != None,
-                                           c.c.board_id != None))
+                                           c.c.board_id != None),
+                                      Board.is_banned==False
+                                      )
         else:
             comments = comments.join(Board, Board.id == Submission.board_id).filter(
-                or_(Submission.post_public == True, Board.is_private == False))
+                or_(Submission.post_public == True, Board.is_private == False), Board.is_banned==False)
 
         comments = comments.options(contains_eager(Comment.post))
 
@@ -550,13 +558,32 @@ class User(Base, Stndrd, Age_times):
         return f"t1_{self.base36id}"
 
     @property
-    @cache.memoize(timeout=60)
+    #@cache.memoize(timeout=60)
+    @lazy
     def has_report_queue(self):
-        board_ids = [
-            x.board_id for x in self.moderates.filter_by(
-                accepted=True).all()]
-        return bool(g.db.query(Submission).filter(Submission.board_id.in_(
-            board_ids), Submission.mod_approved == 0, Submission.is_banned == False).join(Submission.reports).first())
+        board_ids = g.db.query(ModRelationship.board_id).options(lazyload('*')).filter(
+                ModRelationship.user_id==self.id,
+                ModRelationship.accepted==True,
+                or_(
+                    ModRelationship.perm_full==True,
+                    ModRelationship.perm_content==True
+                )
+                ).subquery()
+        
+        posts=g.db.query(Submission).options(lazyload('*')).filter(
+            Submission.board_id.in_(
+                board_ids
+            ), 
+            Submission.mod_approved == None, 
+            Submission.is_banned == False,
+            Submission.deleted_utc==0
+            ).join(Report, Report.post_id==Submission.id)
+        
+        if not self.over_18:
+            posts=posts.filter(Submission.over_18==False)
+            
+        return bool(posts.first())
+           
 
     @property
     def banned_by(self):
@@ -687,7 +714,7 @@ class User(Base, Stndrd, Age_times):
 
         return output
 
-    def notification_postlisting(self, page=1):
+    def notification_postlisting(self, all_=False, page=1):
 
         notifications=self.notifications.join(
             Notification.post
@@ -696,8 +723,8 @@ class User(Base, Stndrd, Age_times):
             Submission.deleted_utc==0
             )
 
-        #if not all_:
-        #    notifications=notifications.filter(Notification.read==False)
+        if not all_:
+            notifications=notifications.filter(Notification.read==False)
 
         notifications=notifications.options(
                 contains_eager(Notification.post)
@@ -983,11 +1010,11 @@ class User(Base, Stndrd, Age_times):
 
         if self.has_profile and not self.is_deleted:
             if self.profile_set_utc>1616443200:
-                return f"https://i.ruqqus.com/uid/{self.base36id}/profile-{self.profile_nonce}.png"
+                return f"https://{app.config['S3_BUCKET']}/uid/{self.base36id}/profile-{self.profile_nonce}.png"
             else:
-                return f"https://i.ruqqus.com/users/{self.username}/profile-{self.profile_nonce}.png"
+                return f"https://{app.config['S3_BUCKET']}/users/{self.username}/profile-{self.profile_nonce}.png"
         else:
-            return "/assets/images/profiles/default-profile-pic.png"
+            return f"http{'s' if app.config['FORCE_HTTPS'] else ''}://{app.config['SERVER_NAME']}/assets/images/profiles/default-profile-pic.png"
 
     @property
     def available_titles(self):
@@ -1027,8 +1054,7 @@ class User(Base, Stndrd, Age_times):
         # Has premium
         # Has 1000 Rep, or 500 for older accounts
         # if connecting through Tor, must have verified email
-        return (self.has_premium or self.true_score >= 1000 or (
-            self.created_utc <= 1592974538 and self.true_score >= 500)) and (self.is_activated or request.headers.get("cf-ipcountry")!="T1")
+        return (self.has_premium or self.true_score >= 500) and (self.is_activated or request.headers.get("cf-ipcountry")!="T1")
 
     @property
     def can_upload_avatar(self):
@@ -1123,6 +1149,8 @@ class User(Base, Stndrd, Age_times):
     
 
     def ban(self, admin=None, reason=None,  days=0):
+        
+        admin=admin if admin else g.db.query(User).filter_by(id=1).first()
 
         self.is_banned = admin.id if admin else 1
         if reason:
@@ -1158,6 +1186,9 @@ class User(Base, Stndrd, Age_times):
             g.db.add(self)
         except:
             pass
+        
+        discord_ban_action = f"{days} Day Ban" if days else "Perm Ban"
+        discord_log_event(discord_ban_action, self, admin, reason=reason)
 
     def unban(self):
 
@@ -1169,6 +1200,8 @@ class User(Base, Stndrd, Age_times):
         delete_role(self, "banned")
 
         g.db.add(self)
+        
+        discord_log_event("Unban", self, g.v, reason=self.ban_reason)
 
 
     @property
@@ -1281,7 +1314,7 @@ class User(Base, Stndrd, Age_times):
 
         posts=posts.all()
 
-        post_rep= sum([x[0] for x in posts])
+        post_rep= sum([x[0] for x in posts]) - len(posts)
 
 
         comments=g.db.query(Comment.score_top).filter_by(
@@ -1295,7 +1328,7 @@ class User(Base, Stndrd, Age_times):
 
         comments=comments.all()
 
-        comment_rep=sum([x[0] for x in comments])
+        comment_rep=sum([x[0] for x in comments]) - len(comments)
 
         return int(post_rep + comment_rep)
 
@@ -1395,4 +1428,26 @@ class User(Base, Stndrd, Age_times):
     @property
     def is_following(self):
         return self.__dict__.get('_is_following',None)
+    
+    @property
+    def unban_string(self):
+        if self.unban_utc==0:
+            return "Permanent Ban"
+
+        wait = self.unban_utc - int(time.time())
+
+        if wait<60:
+            text="just a moment"
+        else:
+            days = wait // (60*60*24)
+            wait -= days*60*60*24
+
+            hours=wait // (60*60)
+            wait -= hours*60*60
+
+            minutes=wait//60
+
+            text=f"{days}d {hours:02d}h {minutes:02d}m"
+
+        return f"Unban in {text}"
     

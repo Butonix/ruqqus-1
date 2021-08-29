@@ -16,9 +16,9 @@
 
 {% block content %}
 
-<div class="row border-bottom bg-white sticky w-100 pr-0" style="overflow: visible;">
-  <div class="col pr-0 w-100">
-    <ul class="nav settings-nav px-0">
+<div class="row border-bottom bg-white sticky d-block x-scroll-parent" style="overflow: visible;">
+  <div class="col w-100">
+    <ul class="nav settings-nav px-0 x-scroll">
       <li class="nav-item">
         <a class="nav-link py-3{% if request.path=='/notifications/all' %} active{% endif %}" href="/notifications/all">
           All
@@ -30,23 +30,25 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link py-3{% if request.path=='/notifications/posts' %} active{% endif %}" href="/notifications/posts">
+
+        <a class="nav-link py-3{% if request.path=='/notifications/posts' %} active{% endif %}" href="/notifications/posts{% if not v.post_notifications_count %}?all=true{% endif %}">
           Posts{% if v.post_notifications_count %} <span class="text-purple font-weight-bold">({{ v.post_notifications_count }})</span>{% endif %}
+
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link py-3{% if request.path=='/notifications/replies' %} active{% endif %}" href="/notifications/replies">
-          Replies{% if v.replies_count %} <span class="text-purple font-weight-bold">({{ v.replies_count }})</span>{% endif %}
+          Replies{% if v.replies_count %} <span class="text-purple font-weight-bold">{{ v.replies_count }}</span>{% endif %}
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link py-3{% if request.path=='/notifications/mentions' %} active{% endif %}" href="/notifications/mentions">
-          Mentions{% if v.mentions_count %} <span class="text-purple font-weight-bold">({{ v.mentions_count }})</span>{% endif %}
+          Mentions{% if v.mentions_count %} <span class="text-purple font-weight-bold">{{ v.mentions_count }}</span>{% endif %}
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link py-3 {% if request.path=='/notifications/system' %} active{% endif %}" href="/notifications/system">
-          System{% if v.system_notif_count %} <span class="text-purple font-weight-bold">({{ v.system_notif_count }})</span>{% endif %}
+          System{% if v.system_notif_count %} <span class="text-purple font-weight-bold">{{ v.system_notif_count }}</span>{% endif %}
         </a>
       </li>
     </ul>
@@ -73,7 +75,7 @@
 
     <div class="h5">No unread messages</div>
     <div class="text-small text-muted mb-3">When you receive new posts, replies, or mentions, they will show up here.</div>
-    <a href="/notifications/all" class="btn btn-primary btn-sm">View all</a>
+    <a href="/notifications/all" class="btn btn-outline-primary">View all</a>
   </div>
 
   {% endif %}

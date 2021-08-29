@@ -53,7 +53,7 @@
         </tr>
       </thead>
       <tbody class="text-muted">
-        {% for block in v.blocking %}
+        {% for block in v.blocking if not block.target.is_deleted and not block.target.is_suspended %}
         <tr>
           <td>
             <a href="{{ block.target.permalink }}">

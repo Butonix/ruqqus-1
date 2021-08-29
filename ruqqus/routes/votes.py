@@ -10,13 +10,22 @@ from flask import *
 from ruqqus.__main__ import app
 
 
-@app.route("/api/v1/vote/post/<post_id>/<x>", methods=["POST"])
-@app.route("/api/vote/post/<post_id>/<x>", methods=["POST"])
+@app.route("/api/v1/vote/post/<pid>/<x>", methods=["POST"])
+@app.route("/api/vote/post/<pid>/<x>", methods=["POST"])
+@app.post("/api/v2/submissions/<pid>/votes/<x>")
 @is_not_banned
 @no_negative_balance("toast")
 @api("vote")
 @validate_formkey
-def api_vote_post(post_id, x, v):
+def api_vote_post(pid, x, v):
+
+    """
+Cast a vote on a post.
+
+URL path parameters:
+* `pid` - The base 36 post ID
+* `x` - One of `1`, `0`, or `-1`, indicating upvote, novote, or downvote respectively
+"""
 
     if x not in ["-1", "0", "1"]:
         abort(400)
@@ -40,7 +49,7 @@ def api_vote_post(post_id, x, v):
         if count >=15:
             return jsonify({"error": "You're doing that too much. Try again later."}), 403
 
-    post = get_post(post_id, v=v, no_text=True)
+    post = get_post(pid, v=v, no_text=True)
 
     if post.is_blocking:
         return jsonify({"error":"You can't vote on posts made by users who you are blocking."}), 403
@@ -65,7 +74,7 @@ def api_vote_post(post_id, x, v):
     else:
         vote = Vote(user_id=v.id,
                     vote_type=x,
-                    submission_id=base36decode(post_id),
+                    submission_id=base36decode(pid),
                     creation_ip=request.remote_addr,
                     app_id=v.client.application.id if v.client else None
                     )
@@ -95,18 +104,27 @@ def api_vote_post(post_id, x, v):
 
     g.db.commit()
 
-    # print(f"Vote Event: @{v.username} vote {x} on post {post_id}")
+    # print(f"Vote Event: @{v.username} vote {x} on post {pid}")
 
     return "", 204
 
 
-@app.route("/api/v1/vote/comment/<comment_id>/<x>", methods=["POST"])
-@app.route("/api/vote/comment/<comment_id>/<x>", methods=["POST"])
+@app.route("/api/v1/vote/comment/<cid>/<x>", methods=["POST"])
+@app.route("/api/vote/comment/<cid>/<x>", methods=["POST"])
+@app.post("/api/v2/comments/<cid>/votes/<x>")
 @is_not_banned
 @no_negative_balance("toast")
 @api("vote")
 @validate_formkey
-def api_vote_comment(comment_id, x, v):
+def api_vote_comment(cid, x, v):
+
+    """
+Cast a vote on a comment.
+
+URL path parameters:
+* `cid` - The base 36 comment ID
+* `x` - One of `1`, `0`, or `-1`, indicating upvote, novote, or downvote respectively
+"""
 
     if x not in ["-1", "0", "1"]:
         abort(400)
@@ -117,7 +135,7 @@ def api_vote_comment(comment_id, x, v):
 
     x = int(x)
 
-    comment = get_comment(comment_id, v=v, no_text=True)
+    comment = get_comment(cid, v=v, no_text=True)
 
     if comment.is_blocking:
         return jsonify({"error":"You can't vote on comments made by users who you are blocking."}), 403
@@ -141,7 +159,7 @@ def api_vote_comment(comment_id, x, v):
 
         vote = CommentVote(user_id=v.id,
                            vote_type=x,
-                           comment_id=base36decode(comment_id),
+                           comment_id=base36decode(cid),
                            creation_ip=request.remote_addr,
                            app_id=v.client.application.id if v.client else None
                            )
@@ -164,6 +182,6 @@ def api_vote_comment(comment_id, x, v):
     g.db.add(comment)
     g.db.commit()
 
-    # print(f"Vote Event: @{v.username} vote {x} on comment {comment_id}")
+    # print(f"Vote Event: @{v.username} vote {x} on comment {cid}")
 
     return make_response(""), 204

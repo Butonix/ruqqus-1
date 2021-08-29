@@ -2,7 +2,7 @@ from ruqqus.helpers.base36 import *
 from ruqqus.helpers.security import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from ruqqus.__main__ import Base, cache
+from ruqqus.__main__ import Base, cache, app
 from .mix_ins import *
 import time
 
@@ -129,10 +129,13 @@ class ModAction(Base, Stndrd, Age_times):
     @property
     def permalink(self):
         return f"{self.board.permalink}/mod/log/{self.base36id}"
+
     @property
     def title_text(self):
         if self.user.is_deleted:
             return f"[deleted user] {self.actiontype['title'].format(self=self)}"
+        elif 'admin action' in self.note or 'admin_action' in self.note:
+            return f"@{app.config['SITE_NAME'].lower()} {self.actiontype['title'].format(self=self)}"
         else:
             return f"@{self.user.username} {self.actiontype['title'].format(self=self)}"
     
@@ -355,5 +358,11 @@ ACTIONTYPES={
         "icon": "fa-chess-rook",
         "color": "bg-primary",
         "title": "created +{self.board.name}"
+    },
+    "update_stylesheet":{
+        "str": 'updated the stylesheet',
+        "icon": "fa-pencil-paintbrush",
+        "color": "bg-info",
+        "title": 'updated the stylesheet'
     }
 }

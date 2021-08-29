@@ -631,7 +631,7 @@ def admin_nuke_user(v):
 
     user=get_user(request.form.get("user"))
 
-    note='admin_action'
+    note='admin action'
     if user.ban_reason:
         note+=f" | {user.ban_reason}"
 
@@ -641,6 +641,7 @@ def admin_nuke_user(v):
             continue
             
         post.is_banned=True
+        post.ban_reason=user.ban_reason
         g.db.add(post)
 
         ma=ModAction(

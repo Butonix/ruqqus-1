@@ -23,8 +23,6 @@ In the [apps tab of Ruqqus settings](/settings/apps), fill in and submit the for
 
 Don't worry too much about accuracy; you will be able to change all of these later.
 
-Ruqqus administrators will review and approve or deny your request for API keys. You'll know when your request has been approved when a client ID and secret appear in your application information.
-
 DO NOT reveal your Client Secret. Anyone with your Client Secret will be able to pretend to be you. You are responsible for keeping your Client Secret a secret!
 
 <img src="/assets/images/illustrations/app.png" style="border:1px solid #805ad5">
@@ -94,7 +92,7 @@ If everything is good, we will respond with the following (example) JSON body:
 	}
 </pre>
 
-Store the access and refresh tokens. You should also store expiration timestamp and the scopes list, so that you pre-emptively avoid sending requests to Ruqqus that won't be accepted.
+Store the access and refresh tokens. You should also store expiration timestamp and the scopes list, so that you can avoid sending invalid requests to Ruqqus.
 
 ## Step 5: Using the Access Token
 
@@ -108,7 +106,7 @@ Python example, presuming that the application has obtained a valid `read` autho
 
 	headers={"Authorization": "Bearer " + access_token,
 			 "User-Agent": "Porpl Reader v1 by @captainmeta4"}
-	url="https://ruqqus.com/api/v1/front/listing"
+	url="https://ruqqus.com/api/v2/me/submissions"
 
 	r=requests.get(url, headers=headers)
 
@@ -116,6 +114,8 @@ Python example, presuming that the application has obtained a valid `read` autho
 </pre>
 
 The expected result of this would be a large JSON representation of the submissions that make up the user's personal front page.
+
+For more endpoints, see documentation [here](/help/docs)
 
 ## Step 6: Maintain Access
 

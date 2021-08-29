@@ -4,6 +4,7 @@ from bleach.linkifier import LinkifyFilter
 from urllib.parse import urlparse, ParseResult, urlunparse
 from functools import partial
 from .get import *
+import os.path
 
 _allowed_tags = tags = ['b',
                         'blockquote',
@@ -58,8 +59,8 @@ _allowed_tags_in_bio = [
 _allowed_attributes = {
     'a': ['href', 'title', "rel", "data-original-name"],
     'i': [],
-    'img': ['src', 'class'],
-    'span': ['style']
+    'span': ['style', 'class', 'data-toggle', 'title'],
+    'img': ['src', 'class']
     }
 
 _allowed_protocols = [
@@ -155,7 +156,7 @@ def sanitize(text, bio=False, linkgen=False):
             domain = get_domain(netloc)
             if not(netloc) or (domain and domain.show_thumbnail):
 
-                if "profile-pic-20" not in tag.get("class", ""):
+                if not any([x in tag.attrs.get("class","") for x in ['emoji', 'profile-pic-20']]):
                     #print(tag.get('class'))
                     # set classes and wrap in link
 
@@ -194,10 +195,15 @@ def sanitize(text, bio=False, linkgen=False):
         for tag in soup.find_all("code"):
             tag.contents=[x.string for x in tag.contents if x.string]
 
-        #whatever else happens with images, there are only two sets of classes allowed
+        #whatever else happens with images, there are only three sets of classes allowed
         for tag in soup.find_all("img"):
-            if 'profile-pic-20' not in tag.attrs.get("class",""):
+                
+            if not any([x in tag.attrs.get("class","") for x in ['emoji', 'profile-pic-20']]):
                 tag.attrs['class']="in-comment-image rounded-sm my-2"
+
+        #same goes for span
+        for tag in soup.find_all("span"):
+            tag.attrs['class']='spoiler' if 'spoiler' in tag.attrs.get('class','') else ''
 
         #table format
         for tag in soup.find_all("table"):
@@ -206,10 +212,9 @@ def sanitize(text, bio=False, linkgen=False):
         for tag in soup.find_all("thead"):
             tag.attrs['class']="bg-primary text-white"
 
-
         sanitized = str(soup)
 
     else:
         sanitized = _clean_wo_links.clean(text)
-
+    
     return sanitized

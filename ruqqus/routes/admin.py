@@ -193,9 +193,14 @@ def users_list(v):
 
     page = int(request.args.get("page", 1))
 
-    users = g.db.query(User).filter_by(is_banned=0
-                                       ).order_by(User.created_utc.desc()
-                                                  ).offset(25 * (page - 1)).limit(26)
+    users = g.db.query(User)
+    
+    show_all=int(request.args.get('all','0'))
+    
+    if not show_all:
+        users=users.filter_by(is_banned=0)
+        
+    users=users.order_by(User.created_utc.desc()).offset(25 * (page - 1)).limit(26)
 
     users = [x for x in users]
 
@@ -207,6 +212,7 @@ def users_list(v):
                            users=users,
                            next_exists=next_exists,
                            page=page,
+                           show_all=show_all
                            )
 
 @app.route("/admin/data", methods=["GET"])
@@ -1295,7 +1301,7 @@ def admin_siege_guild(v):
         m.perm_appearance=True
         m.perm_config=True
         m.perm_content=True
-        g.db.add(p)
+        g.db.add(m)
         ma=ModAction(
             kind="change_perms",
             user_id=v.id,
@@ -1306,3 +1312,18 @@ def admin_siege_guild(v):
         g.db.add(ma)        
 
     return redirect(f"/+{guild.name}/mod/mods")
+
+@app.get('/admin/email/<email>')
+@admin_level_required(4)
+def user_by_email(email, v):
+    
+    email=email.replace('_', '\_')
+    
+    user=g.db.query(User).filter(User.email.ilike(email)).first()
+    
+    if not user:
+        abort(404)
+    
+    return redirect(user.permalink)
+    
+    

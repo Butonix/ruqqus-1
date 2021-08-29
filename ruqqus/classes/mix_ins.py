@@ -4,7 +4,7 @@ import math
 import random
 import time
 
-from ruqqus.__main__ import cache
+from ruqqus.__main__ import cache, app
 
 
 class Stndrd:
@@ -31,6 +31,11 @@ class Stndrd:
 
         t = time.gmtime(self.created_utc)
         return time.strftime("%Y-%m-%dT%H:%M:%S+00:00", t)
+
+    @property
+    def permalink_full(self):
+        return f"http{'s' if app['FORCE_HTTPS'] else ''}://{app['SERVER_NAME']}{self.permalink}"
+    
 
 
 class Age_times:
@@ -123,6 +128,20 @@ class Age_times:
     def edited_datetime(self):
         return time.strftime("%d %B %Y at %H:%M:%S",
                              time.gmtime(self.edited_utc))
+    
+    @property
+    @lazy
+    def age_years(self):
+        
+        now=time.gmtime()
+        ctd=time.gmtime(self.created_utc)
+        
+        years = now.tm_year - ctd.tm_year
+        
+        if now.tm_yday < ctd.tm_yday:
+            years-=1
+            
+        return years
 
 
 class Scores:

@@ -2,6 +2,8 @@ from os import environ
 import requests
 import threading
 
+DOMAIN=environ.get("SERVER_NAME",environ.get("domain")).lstrip().rstrip()
+
 SERVER_ID = environ.get("DISCORD_SERVER_ID",'').rstrip()
 CLIENT_ID = environ.get("DISCORD_CLIENT_ID",'').rstrip()
 CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET",'').rstrip()
@@ -16,7 +18,11 @@ ROLES={
     "linked":  "779872346219610123",
     "realid":  "779904545194508290",
     "premium": "780084870176702484",
-    }
+}
+
+CHANNELS={
+    "log": "599260022492495882"
+}
 
 def discord_wrap(f):
 
@@ -33,6 +39,57 @@ def discord_wrap(f):
     wrapper.__name__=f.__name__
     return wrapper
 
+def req_wrap(f):
+
+    def wrapper(*args, **kwargs):
+
+        thread=threading.Thread(target=f, args=args, kwargs=kwargs)
+        thread.start()
+
+    wrapper.__name__=f.__name__
+    return wrapper
+
+@req_wrap
+def discord_log_event(action, target_user, admin_user, reason=None):
+    
+    channel_id=CHANNELS['log']
+    url=f"{DISCORD_ENDPOINT}/channels/{channel_id}/messages"
+    headers={
+        "Authorization": f"Bot {BOT_TOKEN}"
+    }
+    data={
+        "embeds":[
+            {
+                "title": f"{action} @{target_user.username}",
+                "url": f"https://{DOMAIN}{target_user.permalink}",
+                "color": 8415957,
+                "author": {
+                    "name": admin_user.username,
+                    "icon_url": admin_user.profile_url
+                    #"url": f"https://{DOMAIN}{admin_user.permalink}"
+                },
+                "fields": [
+                    {
+                        "name": "User",
+                        "value": f"@{target_user.username}",
+                        "inline": True
+                    },
+                    {
+                        "name": "Reason",
+                        "value": reason,
+                        "inline": True
+                    },
+                    {
+                        "name": "Admin",
+                        "value": f"@{admin_user.username}",
+                        "inline": True
+                    }
+                ]
+            }
+        ]
+    }
+    x=requests.post(url, headers=headers, json=data)
+#    print(x.status_code, x.content)
 
 
 @discord_wrap

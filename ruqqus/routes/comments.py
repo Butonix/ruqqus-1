@@ -26,7 +26,6 @@ BUCKET=app.config["S3_BUCKET"]
 
 
 @app.route("/comment/<cid>", methods=["GET"])
-@app.route("/comment/<cid>", methods=["GET"])
 @app.route("/post_short/<pid>/<cid>", methods=["GET"])
 @app.route("/post_short/<pid>/<cid>/", methods=["GET"])
 def comment_cid(cid, pid=None):
@@ -41,31 +40,41 @@ def comment_cid(cid, pid=None):
         abort(403)
     return redirect(comment.permalink)
 
-@app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
-def comment_cid_api_redirect(c_id=None, p_id=None):
-    redirect(f'/api/v1/comment/<c_id>')
+@app.route("/api/v1/post/<pid>/comment/<cid>", methods=["GET"])
+def comment_cid_api_redirect(cid=None, pid=None):
+    redirect(f'/api/v1/comment/<cid>')
 
-@app.route("/api/v1/comment/<c_id>", methods=["GET"])
-@app.route("/+<boardname>/post/<p_id>/<anything>/<c_id>", methods=["GET"])
-@app.route("/api/vue/comment/<c_id>")
+@app.route("/api/v1/comment/<cid>", methods=["GET"])
+@app.route("/+<guildname>/post/<pid>/<anything>/<cid>", methods=["GET"])
+@app.get("/api/vue/comment/<cid>")
+@app.get("/api/v2/comments/<cid>")
 @auth_desired
 @api("read")
-def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None):
+def post_pid_comment_cid(cid, pid=None, guildname=None, anything=None, v=None):
+    """
+Fetch a single comment and up to 5 total layers above and below.
 
-    comment = get_comment(c_id, v=v)
+URL path parameters:
+* `cid` - The base 36 comment id
+
+Optional query parameters:
+* `context` - Integer between `0` and `4` inclusive. Number of generations of parent comments to fetch. Default `0`
+"""
+
+    comment = get_comment(cid, v=v)
     
     # prevent api shenanigans
-    if not p_id:
-        p_id = base36encode(comment.parent_submission)
+    if not pid:
+        pid = base36encode(comment.parent_submission)
     
-    post = get_post(p_id, v=v)
+    post = get_post(pid, v=v)
     board = post.board
     
-    if not boardname:
-        boardname = board.name
+    if not guildname:
+        guildname = board.name
     
-    # fix incorrect boardname and pid
-    if board.name != boardname or comment.parent_submission != post.id:
+    # fix incorrect guildname and pid
+    if (board.name != guildname or comment.parent_submission != post.id) and not request.path.startswith("/api/"):
         return redirect(comment.permalink)
 
     if board.is_banned and not (v and v.admin_level > 3):
@@ -266,18 +275,19 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
             }
 
 #if the guild name is missing, add it to the url and redirect
-@app.route("/post/<p_id>/<anything>/<c_id>", methods=["GET"])
-@app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
+@app.route("/post/<pid>/<anything>/<cid>", methods=["GET"])
+@app.route("/api/v1/post/<pid>/comment/<cid>", methods=["GET"])
 @auth_desired
 @api("read")
-def post_pid_comment_cid_noboard(p_id, c_id, anything=None, v=None):
-    comment=get_comment(c_id, v=v)
+def post_pid_comment_cid_noboard(pid, cid, anything=None, v=None):
+    comment=get_comment(cid, v=v)
     
     return redirect(comment.permalink)
 
 
 @app.route("/api/comment", methods=["POST"])
 @app.route("/api/v1/comment", methods=["POST"])
+@app.post("/api/v2/comments")
 @limiter.limit("6/minute")
 @is_not_banned
 @no_negative_balance('toast')
@@ -285,8 +295,16 @@ def post_pid_comment_cid_noboard(p_id, c_id, anything=None, v=None):
 @validate_formkey
 @api("create")
 def api_comment(v):
+    """
+Create a comment
 
-    parent_submission = base36decode(request.form.get("submission"))
+Required form data:
+* `parent_fullname` - The fullname of the post or comment that is being replied to
+* `body` - Raw comment text
+
+Optional file data:
+* `file` - An image to upload and append to the comment body. Requires premium.
+"""
     parent_fullname = request.form.get("parent_fullname")
 
     # get parent item info
@@ -332,10 +350,13 @@ def api_comment(v):
             reason += f" {ban.reason_text}"
             
         #auto ban for digitally malicious content
-        if any([x.reason==4 for x in bans]):
-            v.ban(days=30, reason="Digitally malicious content")
         if any([x.reason==7 for x in bans]):
-            v.ban( reason="Sexualizing minors")
+            v.ban(reason="Sexualizing minors")
+        elif any([x.reason==4 for x in bans]):
+            v.ban(days=30, reason="Digitally malicious content")
+        elif any([x.reason==9 for x in bans]):
+            v.ban(days=7, reason="Engaging in illegal activity")
+        
         return jsonify({"error": reason}), 401
 
     # check existing
@@ -569,10 +590,20 @@ def api_comment(v):
 
 
 @app.route("/edit_comment/<cid>", methods=["POST"])
+@app.patch("/api/v2/comments/<cid>")
 @is_not_banned
 @validate_formkey
-@api("edit")
+@api("update")
 def edit_comment(cid, v):
+    """
+Edit your comment.
+
+URL path parameters:
+* `cid` - The base 36 id of the comment to edit
+
+Required form data:
+* `body` - The new raw comment text
+"""
 
     c = get_comment(cid, v=v)
 
@@ -703,10 +734,18 @@ def edit_comment(cid, v):
 
 @app.route("/delete/comment/<cid>", methods=["POST"])
 @app.route("/api/v1/delete/comment/<cid>", methods=["POST"])
+@app.delete("/api/v2/comments/<cid>")
 @auth_required
 @validate_formkey
 @api("delete")
 def delete_comment(cid, v):
+    """
+Delete your comment.
+
+URL path parameters:
+* `cid` - The base 36 id of the comment to delete
+"""
+
 
     c = g.db.query(Comment).filter_by(id=base36decode(cid)).first()
 
@@ -748,13 +787,21 @@ def embed_comment_cid(cid, pid=None):
 
     return render_template("embeds/comment.html", c=comment)
 
-@app.route("/mod/comment_pin/<bid>/<cid>", methods=["POST"])
-@app.route("/api/v1/comment_pin/<bid>/<cid>", methods=["POST"])
+@app.route("/mod/comment_pin/<guildname>/<cid>", methods=["POST"])
+@app.route("/api/v1/comment_pin/<guildname>/<cid>", methods=["POST"])
+@app.patch("/api/v2/guilds/<guildname>/comments/<cid>/pin")
 @auth_required
 @is_guildmaster("content")
 @api("guildmaster")
 @validate_formkey
-def mod_toggle_comment_pin(bid, cid, board, v):
+def mod_toggle_comment_pin(guildname, cid, board, v):
+    """
+Toggle pin status on a top-level comment.
+
+URL path parameters:
+* `guildname` - The guild in which you are a guildmaster
+* `cid` - The base 36 comment id
+"""
 
     comment = get_comment(cid, v=v)
 

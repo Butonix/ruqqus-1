@@ -55,23 +55,75 @@ def incoming_post_shortlink(base36id=None):
     post = get_post(base36id)
     return redirect(post.permalink)
 
-@app.route("/+<boardname>/post/<base36id>", methods=["GET"])
-@app.route("/+<boardname>/post/<base36id>/", methods=["GET"])
-@app.route("/+<boardname>/post/<base36id>/<anything>", methods=["GET"])
-@app.route("/api/v1/post/<base36id>", methods=["GET"])
-@app.route("/test/post/<base36id>", methods=["GET"])
-@auth_desired
+@app.get("/+<boardname>/post/<pid>")
+def post_redirect(boardname, pid):
+    return redirect(get_post(pid).permalink)
 
+@app.get("/api/v2/submissions/<pid>")
+@auth_desired
 @api("read")
-def post_base36id(base36id, boardname=None, anything=None, v=None):
+def post_base36id_no_comments(pid,v=None):
+    """
+Get a single submission (without comments).
+
+URL path parameters:
+* `pid` - The base 36 post id
+"""
+    
+    post = get_post(
+        pid,
+        v=v
+        )
+    board = post.board
+
+    if board.is_banned and not (v and v.admin_level > 3):
+        return render_template("board_banned.html",
+                               v=v,
+                               b=board,
+                               p=True)
+
+    if post.over_18 and not (v and v.over_18) and not session_over18(board):
+        t = int(time.time())
+        return {"html":lambda:render_template("errors/nsfw.html",
+                               v=v,
+                               t=t,
+                               lo_formkey=make_logged_out_formkey(t),
+                               board=post.board
+
+                               ),
+                "api":lambda:(jsonify({"error":"Must be 18+ to view"}), 451)
+                }
+
+
+    return {
+        "html":lambda:post.rendered_page(v=v),
+        "api":lambda:jsonify({"data":[x.json for x in post.replies]})
+        }
+
+
+@app.route("/+<boardname>/post/<pid>/", methods=["GET"])
+@app.route("/+<boardname>/post/<pid>/<anything>", methods=["GET"])
+@app.route("/api/v1/post/<pid>", methods=["GET"])
+@app.get("/api/v2/submissions/<pid>/comments")
+@auth_desired
+@api("read")
+def post_base36id_with_comments(pid, boardname=None, anything=None, v=None):
+    """
+Get the comment tree for a submission.
+
+URL path parameters:
+* `pid` - The base 36 post id
+
+Optional query parameters:
+* `sort` - Comment sort order. One of `hot`, `new`, `top`, `disputed`, `old`. Default `hot`.
+"""
     
     post = get_post_with_comments(
-        base36id, v=v, sort_type=request.args.get(
+        pid, v=v, sort_type=request.args.get(
             "sort", "top"))
 
     board = post.board
     #if the guild name is incorrect, fix the link and redirect
-
 
     if boardname and not boardname == board.name:
         return redirect(post.permalink)
@@ -98,7 +150,7 @@ def post_base36id(base36id, boardname=None, anything=None, v=None):
 
     return {
         "html":lambda:post.rendered_page(v=v),
-        "api":lambda:jsonify(post.json)
+        "api":lambda:jsonify({"data":[x.json for x in post.replies]})
         }
 
 #if the guild name is missing from the url, add it and redirect
@@ -132,10 +184,21 @@ def submit_get(v):
 
 
 @app.route("/edit_post/<pid>", methods=["POST"])
+@app.patch("/api/v2/submissions/<pid>")
 @is_not_banned
 @no_negative_balance("html")
+@api("update")
 @validate_formkey
 def edit_post(pid, v):
+    """
+Edit your post text.
+
+URL path parameters:
+* `pid` - The base 36 id of the post to edit
+
+Required form data:
+* `body` - The new raw comment text
+"""
 
     p = get_post(pid)
 
@@ -254,13 +317,28 @@ def get_post_title(v):
 @app.route("/submit", methods=['POST'])
 @app.route("/api/v1/submit", methods=["POST"])
 @app.route("/api/vue/submit", methods=["POST"])
-#@limiter.limit("6/minute")
+@app.post("/api/v2/submissions")
+@limiter.limit("6/minute")
 @is_not_banned
 @no_negative_balance('html')
 @tos_agreed
 @validate_formkey
 @api("create")
 def submit_post(v):
+    """
+Create a post
+
+Required form data:
+* `title` - The post title
+* `guild` - The name of the guild to submit to
+
+At least one of the following form items is required:
+* `url` - The link being submitted. Uploading an image file counts as a url.
+* `body` - The text body of the post
+
+Optional file data:
+* `file` - An image to upload as the post target. Requires premium or 500 Rep.
+"""
 
     title = request.form.get("title", "").lstrip().rstrip()
 
@@ -268,10 +346,13 @@ def submit_post(v):
     title = title.replace("\n", "")
     title = title.replace("\r", "")
     title = title.replace("\t", "")
+    
+    # sanitize title
+    title = bleach.clean(title)
 
     url = request.form.get("url", "")
 
-    board = get_guild(request.form.get('board', 'general'), graceful=True)
+    board = get_guild(request.form.get('board', request.form.get("guild")), graceful=True)
     if not board:
         board = get_guild('general')
 
@@ -299,17 +380,17 @@ def submit_post(v):
     #                            )
 
 
-    elif len(title) > 500:
+    elif len(title) > 250:
         return {"html": lambda: (render_template("submit.html",
                                                  v=v,
-                                                 error="500 character limit for titles.",
-                                                 title=title[0:500],
+                                                 error="250 character limit for titles.",
+                                                 title=title[0:250],
                                                  url=url,
                                                  body=request.form.get(
                                                      "body", ""),
                                                  b=board
                                                  ), 400),
-                "api": lambda: ({"error": "500 character limit for titles"}, 400)
+                "api": lambda: ({"error": "250 character limit for titles"}, 400)
                 }
 
     parsed_url = urlparse(url)
@@ -326,6 +407,7 @@ def submit_post(v):
                                                  ), 400),
                 "api": lambda: ({"error": "`url` or `body` parameter required."}, 400)
                 }
+
     # sanitize title
     title = bleach.clean(title, tags=[])
 
@@ -366,11 +448,14 @@ def submit_post(v):
 
     # check ban status
     domain_obj = get_domain(domain)
+    #print('domain_obj', domain_obj)
     if domain_obj:
         if not domain_obj.can_submit:
           
             if domain_obj.reason==4:
                 v.ban(days=30, reason="Digitally malicious content")
+            elif domain_obj.reason==9:
+                v.ban(days=7, reason="Engaging in illegal activity")
             elif domain_obj.reason==7:
                 v.ban(reason="Sexualizing minors")
 
@@ -388,9 +473,11 @@ def submit_post(v):
 
         # check for embeds
         if domain_obj.embed_function:
+            #print('domainobj embed function', domain_obj.embed_function)
             try:
                 embed = eval(domain_obj.embed_function)(url)
-            except BaseException:
+            except BaseException as e:
+                #print('exception', e)
                 embed = ""
         else:
             embed = ""
@@ -657,7 +744,9 @@ def submit_post(v):
         repost = None
 
     if repost and request.values.get("no_repost"):
-        return redirect(repost.permalink)
+        return {'html':lambda:redirect(repost.permalink),
+		'api': lambda:({"error":"This content has already been posted", "repost":repost.json}, 409)
+	       }
 
     if request.files.get('file') and not v.can_submit_image:
         abort(403)
@@ -785,7 +874,18 @@ def submit_post(v):
     cache.delete_memoized(frontlist)
     g.db.commit()
     cache.delete_memoized(Board.idlist, board, sort="new")
-
+    
+    
+    # queue up notifications for username mentions
+    notify_users = set()
+	
+    soup = BeautifulSoup(body_html, features="html.parser")
+    for mention in soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3):
+        username = mention["href"].split("@")[1]
+        user = g.db.query(User).filter_by(username=username).first()
+        if user and not v.any_block_exists(user) and user.id != v.id: 
+            notify_users.add(user.id)
+    
     # print(f"Content Event: @{new_post.author.username} post
     # {new_post.base36id}")
 
@@ -826,7 +926,7 @@ def submit_post(v):
         contribs=g.db.query(ContributorRelationship).filter_by(board_id=new_post.board_id, is_active=True).subquery()
         mods=g.db.query(ModRelationship).filter_by(board_id=new_post.board_id, accepted=True).subquery()
 
-        board_uids=board.uids.join(
+        board_uids=board_uids.join(
             contribs,
             contribs.c.user_id==Subscription.user_id,
             isouter=True
@@ -856,7 +956,7 @@ def submit_post(v):
                 )
             )
 
-    uids=list(set([x[0] for x in board_uids.all()] + [x[0] for x in follow_uids.all()]))
+    uids=list(set([x[0] for x in board_uids.all()] + [x[0] for x in follow_uids.all()]).union(notify_users))
 
     for uid in uids:
         new_notif=Notification(
@@ -895,15 +995,25 @@ def submit_post(v):
 
 @app.route("/delete_post/<pid>", methods=["POST"])
 @app.route("/api/v1/delete_post/<pid>", methods=["POST"])
+@app.delete("/api/v2/submissions/<pid>")
 @auth_required
 @api("delete")
 @validate_formkey
 def delete_post_pid(pid, v):
+    """
+Delete your post.
+
+URL path parameters:
+* `pid` - The base 36 id of the post being deleted
+"""
 
     post = get_post(pid)
     if not post.author_id == v.id:
         abort(403)
-
+        
+    if post.is_deleted:
+        abort(404)
+        
     post.deleted_utc = int(time.time())
     post.is_pinned = False
     post.stickied = False
@@ -946,10 +1056,18 @@ def embed_post_pid(pid):
 
 @app.route("/api/toggle_post_nsfw/<pid>", methods=["POST"])
 @app.route("/api/v1/toggle_post_nsfw/<pid>", methods=["POST"])
+@app.patch("/api/v2/submissions/<pid>/toggle_nsfw")
 @is_not_banned
 @api("update")
 @validate_formkey
 def toggle_post_nsfw(pid, v):
+    """
+Toggle "NSFW" status on a post.
+
+URL path parameters:
+* `pid` - The base 36 post id.
+"""
+
 
     post = get_post(pid)
 
@@ -979,10 +1097,17 @@ def toggle_post_nsfw(pid, v):
 
 @app.route("/api/toggle_post_nsfl/<pid>", methods=["POST"])
 @app.route("/api/v1/toggle_post_nsfl/<pid>", methods=["POST"])
+@app.patch("/api/v2/submissions/<pid>/toggle_nsfl")
 @is_not_banned
 @api("update")
 @validate_formkey
 def toggle_post_nsfl(pid, v):
+    """
+Toggle "NSFL" status on a post.
+
+URL path parameters:
+* `pid` - The base 36 post id.
+"""
 
     post = get_post(pid)
 
@@ -1011,14 +1136,22 @@ def toggle_post_nsfl(pid, v):
 
 
 @app.route("/retry_thumb/<pid>", methods=["POST"])
+@app.put("/api/v2/submissions/<pid>/thumb")
 @is_not_banned
+@api("identity")
 @validate_formkey
 def retry_thumbnail(pid, v):
+    """
+Retry thumbnail scraping on your post.
+
+URL path parameters:
+* `pid` - The base 36 post id.
+"""
 
     post = get_post(pid, v=v)
 
     if post.author_id != v.id and v.admin_level < 3:
-        abort(403)
+        return jsonify({"error": "That isn't your post."}), 403
 
     if post.is_archived:
         return jsonify({"error": "Post is archived"}), 409
@@ -1035,12 +1168,13 @@ def retry_thumbnail(pid, v):
     return jsonify({"message": "Success"})
 
 
-@app.route("/save_post/<pid>", methods=["POST"])
+@app.route("/save_post/<base36id>", methods=["POST"])
+#@app.post("/api/v2/submissions/<base36id>/save")
 @auth_required
 @validate_formkey
-def save_post(pid, v):
+def save_post(base36id, v):
 
-    post=get_post(pid)
+    post=get_post(base36id)
 
     new_save=SaveRelationship(
         user_id=v.id,
@@ -1056,12 +1190,13 @@ def save_post(pid, v):
     return "", 204
 
 
-@app.route("/unsave_post/<pid>", methods=["POST"])
+@app.route("/unsave_post/<base36id>", methods=["POST"])
+#@app.delete("/api/v2/submissions/<base36id>/save")
 @auth_required
 @validate_formkey
-def unsave_post(pid, v):
+def unsave_post(base36id, v):
 
-    post=get_post(pid)
+    post=get_post(base36id)
 
     save=g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id).first()
 

@@ -3,7 +3,7 @@
 {% block sidebarblock %}{% endblock %}
 
 {% block title %}	
-<title>Ruqqus - Help</title>	
+<title>{{ 'SITE_NAME' | app_config }} - Help</title>	
 <meta name="description" content="Ruqqus Help">	
 {% endblock %}	
 
@@ -13,7 +13,7 @@
 	<div class="sidebar-section">
 			<div class="title">Help</div>
       <div class="body">
-	<a href="/">Back to Ruqqus</a>
+	<a href="/">Back to {{ 'SITE_NAME' | app_config }}</a>
       </div>
 	</div>
 
@@ -37,7 +37,12 @@
 ## Account Cosmetics	
 
 * [Badges](/help/badges)	
-* [Titles](/help/titles)	
+* [Titles](/help/titles)
+
+## Developer Resources
+
+* [API Documentation](/help/docs)
+* [OAuth2 Guide](/help/oauth)
 
 ## Ruqqus Policies	
 

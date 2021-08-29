@@ -177,6 +177,12 @@
           </table>
         </div>
 
+	    {% if v and v.admin_level>=4 and not me %}
+<form action="/api/mod_self/{{ b.base36id }}" method="post">
+  <input type="hidden" name="formkey", value="{{ v.formkey }}">
+  <input type="submit" class="btn btn-success mt-3" value="Mod Self">
+</form>
+	    {% endif %}
 
       </div>
 
@@ -276,12 +282,14 @@
             <span class="custom-control-label">config</span>
           </label>
         </div>
+	      <!---
         <div class="form-group">
           <label class="custom-control custom-checkbox" for="check-perm-chat">
             <input type="checkbox" id="check-perm-chat" class="custom-control-input perm-box" onchange="permother()" data-perm="chat" name="perm_chat" value="chat">
             <span class="custom-control-label">chat</span>
           </label>
         </div>
+--->
         <div class="form-group">
           <label class="custom-control custom-checkbox" for="check-perm-content">
             <input type="checkbox" id="check-perm-content" class="custom-control-input perm-box" onchange="permother()" data-perm="content" name="perm_content" value="content">

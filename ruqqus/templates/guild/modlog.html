@@ -29,18 +29,28 @@
     <div class="rounded border bg-white mx-auto">
       {% for ma in actions %}
 
+        {% set hide= (ma.user.admin_level and ('admin action' in ma.note or 'admin_action' in ma.note) and (not v or not v.admin_level>=2)) %}
+
         <div id="action-{{ ma.base36id }}" class="position-relative d-flex justify-content-between flex-wrap align-items-center h-min-16 px-3 py-3 mb-3 mb-md-2 bg-white{% if loop.index > 1 %} border-top{% endif %}">
 
          <div class="d-flex flex-grow-1 align-items-center">
           <div class="d-flex align-items-center justify-content-center {{ ma.color }} mr-3 rounded-lg flex-shrink-0" style="width: 32px;height: 32px;"><i class="far text-center {{ ma.icon }} text-lg text-white fa-fw"></i></div>
           <div class="d-flex align-items-center">
+
+
+
             <span class="rounded">
-             <img src="{{ ma.user.profile_url }}" alt="avatar" style="width: 42px;height: 42px;" class="rounded-circle">
+             <img src="{{ ma.user.profile_url if not hide else '/uid/1/pic/profile' }}" alt="avatar" style="width: 42px;height: 42px;" class="rounded-circle">
            </span>
              <div class="text-muted pl-3">
               <div>
+
                 {% if not ma.user.is_deleted %}
-                  <a href="{{ ma.user.permalink }}" class="font-weight-bold text-black" target="_self">@{{ ma.user.username }}</a>
+                  {% if hide %}
+                  <a href="/@{{ 'SITE_NAME' | app_config | lower }}" class="font-weight-bold text-black" target="_self">@{{ "SITE_NAME" | app_config | lower }}</a>
+                  {% else %}
+                  <a href="{{ ma.user.permalink }}" class="font-weight-bold text-black">@{{ ma.user.username }}</a>
+                  {% endif %}
                 {% else %}
                   [deleted user]
                 {% endif %}

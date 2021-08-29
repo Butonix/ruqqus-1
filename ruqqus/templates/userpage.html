@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block title %}
-<title>{{ u.username }}'s profile - Ruqqus</title>
+<title>{{ u.username }}'s profile - {{ 'SITE_NAME' | app_config }}</title>
 {% if u.is_private %}
 <meta name="robots" content="noindex">
 {% endif %}
@@ -119,15 +119,13 @@
               Follow
             </button>
           </div>
-          <div id="button-unsub" class="btn-group {% if not is_following %}d-none{% endif %}" role="group" aria-label="Unfollow this user">
+          <div id="button-unsub" class="{% if not is_following %}d-none{% endif %}" role="group" aria-label="Unfollow this user">
             <button class="btn btn-secondary" onclick="post('/api/unfollow/{{ u.username }}', callback=toggleSub)">
               Unfollow
             </button>
-            
-            <button class="btn btn-secondary bell-button" data-toggle="tooltip" data-placement="bottom" title="Be notified when this user publishes new content." data-url="/@{{ u.username }}/toggle_bell">
+            <button class="btn btn-transparent bell-button" data-toggle="tooltip" data-placement="bottom" title="Be notified when this user publishes new content." data-url="/@{{ u.username }}/toggle_bell">
               <i class="fas fa-fw bell-icon {% if u.is_following and u.is_following.get_notifs %}fa-bell-on text-purple{% else %}fa-bell{% endif %}"></i>
             </button>
-
           </div>
           {% elif v and v.id == u.id %}
           <a href="/settings/profile" class="btn btn-secondary">Edit profile</a>
@@ -198,19 +196,17 @@
         <a href="/settings/profile" class="btn btn-secondary btn-sm">Edit profile</a>
         {% endif %}
         {% if v and v.id != u.id and not u.is_nofollow %}
-        <div id="button-unsub-mobile" {% if not is_following %}class="d-none"{% endif %} class="btn-group d-flex">
-          <button class="btn btn-secondary btn-block" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">Unsubscribe
+        <div id="button-unsub-mobile" {% if not is_following %}class="d-none"{% endif %}>
+          <button class="btn btn-secondary btn-block" onclick="post('/api/unfollow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">Unfollow
           </button>
-            <button class="btn btn-secondary bell-button" data-url="/@{{ u.username }}/toggle_bell">
-              <i class="fas bell-icon fa-fw {% if u.is_following and u.is_following.get_notifs %}fa-bell-on text-purple{% else %}fa-bell{% endif %}"></i>
-            </button>
+          <button class="btn btn-transparent bell-button" data-url="/@{{ u.username }}/toggle_bell">
+            <i class="fas bell-icon fa-fw {% if u.is_following and u.is_following.get_notifs %}fa-bell-on text-purple{% else %}fa-bell{% endif %}"></i>
+          </button>
         </div>
         <div id="button-sub-mobile" {% if is_following %}class="d-none"{% endif %}>
-          <div class="btn-group d-flex" aria-label="Unsubscribe user mobile">
-            <button class="btn btn-primary" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">
-              Subscribe
-            </button>
-          </div>
+          <button class="btn btn-primary" onclick="post('/api/follow/{{ u.username }}', callback=function(){document.getElementById('button-unsub-mobile').classList.toggle('d-none');document.getElementById('button-sub-mobile').classList.toggle('d-none');})">
+            Follow
+          </button>
         </div>
         {% endif %}
       </div>
@@ -220,6 +216,32 @@
 {% endblock %}
 
 {% block sidebarblock %}
+{% if u.mods_anything %}
+<div class="sidebar-section">
+  <div class="title">
+    <i class="fas fa-crown mr-2"></i>Guildmaster Of
+  </div>
+  <div class="body">
+    <ul class="no-bullets guild-recommendations-list pl-0 sidebar-collapsed-hidden">
+      {% for board in u.boards_modded %}
+        <li class="guild-recommendations-item">
+          <a href="{{ board.permalink }}">
+            <div class="d-flex">
+              <div>
+                <img src="{{ board.profile_url }}" class="profile-pic profile-pic-28 ml-1 mr-2">
+              </div>
+              <div class="my-auto">
+                <div class="text-black font-weight-normal">+{{ board.name }}</div>
+              </div>
+            </div>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endif %}
+
 {% if not v.has_premium %}
 <div class="sidebar-section">
   <div class="title">
@@ -289,6 +311,7 @@
 {% if v.admin_level >=3 and v.admin_level > u.admin_level %}
 {% if u.is_suspended %}
 <p>IP: <a href="/admin/ip/{{ u.creation_ip }}" target="_blank">{{ u.creation_ip }}</a></p>
+<p>{{ u.unban_string }}</p>
 <form action="/api/unban_user/{{ u.id }}" method="post">
   <input type="hidden" name="formkey", value="{{ v.formkey }}">
   <input type="submit" class="btn btn-success" value="Unban user">
@@ -324,7 +347,7 @@
 <a href="javascript:void(0)" class="btn btn-warning w-100" onclick="document.getElementById('demod-user').classList.toggle('d-none')">De-Mod User</a>
 <form action="/admin/demod_user" method="post">
   <input type="hidden" name="formkey" value="{{ v.formkey }}">
-  <input type="hidden" name="user" value="{{ v.username }}">
+  <input type="hidden" name="user" value="{{ u.username }}">
   <input type="submit" class="d-none btn btn-danger" id="demod-user" value="Confirm De-Mod User">
 </form>
 {% endblock %}
