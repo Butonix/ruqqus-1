@@ -126,7 +126,7 @@ def message_perma(v, convo_id, message_id=None):
 
     convo=get_convo(convo_id, v=v)
 
-    messages = convo.messages.sorted(key=lambda x: x.id)
+    messages = sorted(convo.messages, key=lambda x: x.id)
 
     if message_id:
 
