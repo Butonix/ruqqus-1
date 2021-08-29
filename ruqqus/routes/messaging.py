@@ -149,6 +149,6 @@ def message_perma(v, convo_id, message_id=None):
 def new_message(v):
 
     return render_template(
-        "create_convo.html"
+        "create_convo.html",
         v=v
         )
