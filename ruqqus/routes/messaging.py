@@ -142,7 +142,7 @@ def message_perma(v, convo_id, message_id=None):
 
     return render_template("messages.html",
         v=v,
-        conversations=[convo],
+        convo=convo,
         message=message
         )
 
