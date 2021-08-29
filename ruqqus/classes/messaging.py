@@ -17,7 +17,7 @@ class Conversation(Base, Stndrd, Age_times):
     subject=Column(String(256))
 
     members=relationship("ConvoMember", lazy="joined")
-    _messages=relationship("Message", lazy="dynamic")
+    messages=relationship("Message", lazy="joined")
 
     
     def __repr__(self):
@@ -26,11 +26,7 @@ class Conversation(Base, Stndrd, Age_times):
 
     @property
     def permalink(self):
-        return f"/message/{self.base36id}"
-
-    @property
-    def messages(self):
-        return self._messages.order_by(Message.created_utc.asc()).all()
+        return f"/messages/{self.base36id}"
 
     def has_member(self, user):
         return user.id in [x.user_id for x in self.members]
@@ -62,7 +58,7 @@ class Message(Base, Stndrd, Age_times):
 
     @property
     def permalink(self):
-        return f"{self.conversation.permalink}/{self.base36id}"
+        return f"{self.conversation.permalink}/message/{self.base36id}"
 
     @property
     def convo_fullname(self):
