@@ -43,6 +43,8 @@ def create_new_convo(v):
         if v.any_block_exists(user):
             return jsonify({"error": f"You can't send messages to {user.username}."}), 403
 
+        users.append(user)
+
 
     subject=sanitize(request.form.get("subject").lstrip().rstrip())
     if not subject:
