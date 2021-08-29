@@ -18,17 +18,17 @@
 
           <input type="hidden" name="formkey" value="{{ v.formkey }}">
 
-          <label for="subject">To</label>
-          <input class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="subject" placeholder="Enter up to 10 other users' names" minlength="1" maxlength="250" required>
+          <label for="to_users">To</label>
+          <input class="form-control" id="to_users" aria-describedby="titleHelpRegister" type="text" name="to_users" placeholder="Enter up to 10 other users' names" minlength="1" maxlength="250" required>
 
           <label for="subject">Subject</label>
-          <input class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="subject" placeholder="Required" minlength="1" maxlength="250" required>
+          <input class="form-control" id="subject" aria-describedby="titleHelpRegister" type="text" name="subject" placeholder="Required" minlength="1" maxlength="250" required>
 
-          <label for="body" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Uses markdown. Limited to 10000 characters."></i></label>
+          <label for="convo_text" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Uses markdown. Limited to 10000 characters."></i></label>
 
             <div class="input-group">
 
-              <textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="5" name="body" oninput="charLimit('post-text','character-count-submit-text-form')" maxlength="10000" required></textarea>
+              <textarea form="submitform" id="convo_text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="5" name="message" oninput="charLimit('post-text','character-count-submit-text-form')" maxlength="10000" required></textarea>
 
               <span class="position-absolute text-small font-weight-bold" id="character-count-submit-text-form" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></span>
 
