@@ -1,52 +1,64 @@
 {% extends "submit.html" %}
 
+{% block title %}
+<title>Create a conversation - {{ 'SITE_NAME' | app_config }}</title>
+{% endblock %}
+
 {% block form %}
+<form id="submitform" action="/new_message" method="post">
+  <div class="container">
+    <div class="row justify-content-center mb-4 pb-7">
+      <div class="col col-md-6 p-3 py-md-0">
 
- <form id="submitform" action="/new_message" method="post">
+        <h1 class="d-none d-md-block">Create a new conversation</h1>
 
-        <div class="container">
+        <h2 class="h3 d-md-none">Create a new conversation</h2>
 
-            <div class="row justify-content-center mb-4 pb-7">
+        <div class="body">
 
-                <div class="col col-md-6 p-3 py-md-0">
+          <input type="hidden" name="formkey" value="{{ v.formkey }}">
 
-                    <h1 class="d-none d-md-block">Create a new conversation</h1>
+          <label for="subject">To</label>
+          <input class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="subject" placeholder="Enter up to 10 other users' names" minlength="1" maxlength="250" required>
 
-                    <h2 class="h3 d-md-none">Create a new conversation</h2>
+          <label for="subject">Subject</label>
+          <input class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="subject" placeholder="Required" minlength="1" maxlength="250" required>
 
-                    <div class="body">
+          <label for="body" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Uses markdown. Limited to 10000 characters."></i></label>
 
-                        <input type="hidden" name="formkey" value="{{ v.formkey }}">
+            <div class="input-group">
 
-                        <label for="subject">To</label>
-                        <input class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="subject" placeholder="Enter up to 10 other users' names" minlength="1" maxlength="250" required>
+              <textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="5" name="body" oninput="charLimit('post-text','character-count-submit-text-form')" maxlength="10000" required></textarea>
 
-                        <label for="subject">Subject</label>
-                        <input class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="subject" placeholder="Required" minlength="1" maxlength="250" required>
+              <span class="position-absolute text-small font-weight-bold" id="character-count-submit-text-form" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></span>
 
-                        <label for="body" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Uses markdown. Limited to 10000 characters."></i></label>
+              <div class="bg-light text-format d-none">
+                <small class="format"><i class="fas fa-bold"></i></small>
+                <small class="format"><i class="fas fa-italic"></i></small>
+                <small class="format"><i class="fas fa-quote-right"></i></small>
+                <small class="format"><i class="fas fa-link"></i></small>
+              </div>
+            </div>
 
-                        <div class="input-group">
+            <div class="form-text text-small"><a href="/help/formatting" target="_blank">Formatting help</a>
+            </div>
+          </div>
+        </div>
 
-                            <textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="5" name="body" oninput="charLimit('post-text','character-count-submit-text-form')" maxlength="10000" required></textarea>
+      </div>
 
-                            <span class="position-absolute text-small font-weight-bold" id="character-count-submit-text-form" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></span>
+  </div>
 
-                            <div class="bg-light text-format d-none">
-                                <small class="format"><i class="fas fa-bold"></i></small>
-                                <small class="format"><i class="fas fa-italic"></i></small>
-                                <small class="format"><i class="fas fa-quote-right"></i></small>
-                                <small class="format"><i class="fas fa-link"></i></small>
-                            </div>
-                        </div>
-
-                        <div class="form-text text-small"><a href="/help/formatting" target="_blank">Formatting help</a></div>
-                        </div>
-
-
-                    </div>
-
-                </div>
-
-
+  <div class="container">
+    <div class="row fixed-bottom bg-white border-top p-3" id="" style="z-index: 100; bottom: 0px; transition: bottom 220ms cubic-bezier(0, 0, 0.2, 1) 0s;">
+      <div class="col">
+          <a href="/" class="btn btn-secondary">Cancel</a>
+      </div>
+      <div class="col text-right">
+        {% if error %}<span class="text-danger mr-2">{{ error }}</span>{% endif %}
+        <button class="btn btn-purple" id="create_button" type="submit" disabled>Send</button>
+      </div>
+    </div>
+  </div>
+</form>
 {% endblock %}
