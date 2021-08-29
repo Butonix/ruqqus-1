@@ -24,7 +24,7 @@ def create_new_convo(v):
 
 
     names=request.form.get("to_users")
-    names=names.split(',')
+    names=names.split()
     names=[x.lstrip().rstrip().lstrip('@') for x in names]
 
     users=[]
@@ -70,8 +70,10 @@ def create_new_convo(v):
     g.db.add(new_message)
 
     for user in [v]+users:
-        new_cm=ConvoMember(user_id=user.id,
-            convo_id=new_convo.id)
+        new_cm=ConvoMember(
+            user_id=user.id,
+            convo_id=new_convo.id
+            )
         g.db.add(new_cm)
 
 
@@ -112,16 +114,29 @@ def reply_to_message(v):
 view conversation
 '''
 
-@app.route("/message/<convo_id>")
+@app.route("/messages/<convo_id>")
+@app.route("/messages/<convo_id>/message/<message_id>")
 @auth_required
-def message_perma(v, convo_id):
+def message_perma(v, convo_id, message_id=None):
 
     convo=get_convo(convo_id, v=v)
 
-    if not convo.has_member(v):
-        abort(403)
+    messages = convo.messages.sorted(key=lambda x: x.id)
+
+    if message_id:
+
+        m_id = base36decode(message_id)
+
+        if message_id not in [x.id for x in messages]:
+            return redirect(convo.permalink)
+
+        message=[x for x in messages if x.id==m_id][0]
+
+    else:
+        message=None
 
     return render_template("messages.html",
         v=v,
-        conversations=[convo]
+        conversations=[convo],
+        message=message
         )
