@@ -18,7 +18,7 @@ create new conversation
 '''
 
 @app.route("/new_message", methods=["POST"])
-@is_not_banned
+@is_not_suspended
 @validate_formkey
 def create_new_convo(v):
 
@@ -44,7 +44,9 @@ def create_new_convo(v):
             return jsonify({"error": f"You can't send messages to {user.username}."}), 403
 
 
-    subject=sanitize(request.form.get("subject"))
+    subject=sanitize(request.form.get("subject").lstrip().rstrip())
+    if not subject:
+        return jsonify({"error":"Subject required"})
 
     new_convo=Conversation(author_id=v.id,
         created_utc=int(time.time()),
@@ -84,8 +86,8 @@ def create_new_convo(v):
 reply to existing conversation
 '''
 
-@app.route("/reply_message", methods=["POST"])
-@is_not_banned
+@app.post("/reply_message")
+@is_not_suspended
 @validate_formkey
 def reply_to_message(v):
 
@@ -110,13 +112,14 @@ def reply_to_message(v):
 
     return jsonify({"html":body_html})
 
+
 '''
 view conversation
 '''
 
-@app.route("/messages/<convo_id>")
-@app.route("/messages/<convo_id>/message/<message_id>")
-@auth_required
+@app.get("/messages/<convo_id>")
+@app.get("/messages/<convo_id>/message/<message_id>")
+@is_not_banned
 def message_perma(v, convo_id, message_id=None):
 
     convo=get_convo(convo_id, v=v)
@@ -139,4 +142,13 @@ def message_perma(v, convo_id, message_id=None):
         v=v,
         conversations=[convo],
         message=message
+        )
+
+@app.get("/new_message")
+@is_not_suspended
+def new_message(v):
+
+    return render_template(
+        "create_convo.html"
+        v=v
         )
