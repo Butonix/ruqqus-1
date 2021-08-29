@@ -25,7 +25,7 @@ def create_new_convo(v):
 
     names=request.form.get("to_users")
     names=names.split()
-    names=[x.lstrip().rstrip().lstrip('@') for x in names]
+    names=[x.lstrip().rstrip().rstrip(',').lstrip('@') for x in names]
 
     users=[]
     if len(names)>10:
