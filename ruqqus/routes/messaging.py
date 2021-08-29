@@ -18,7 +18,7 @@ create new conversation
 '''
 
 @app.route("/new_message", methods=["POST"])
-@is_not_suspended
+@is_not_banned
 @validate_formkey
 def create_new_convo(v):
 
@@ -87,7 +87,7 @@ reply to existing conversation
 '''
 
 @app.post("/reply_message")
-@is_not_suspended
+@is_not_banned
 @validate_formkey
 def reply_to_message(v):
 
@@ -145,7 +145,7 @@ def message_perma(v, convo_id, message_id=None):
         )
 
 @app.get("/new_message")
-@is_not_suspended
+@is_not_banned
 def new_message(v):
 
     return render_template(
