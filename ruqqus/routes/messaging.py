@@ -78,6 +78,8 @@ def create_new_convo(v):
             )
         g.db.add(new_cm)
 
+    g.db.commit()
+
 
     return redirect(new_convo.permalink)
 
