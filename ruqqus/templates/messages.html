@@ -217,3 +217,34 @@
 {% endfor %}
 </div>
 {% endblock %}
+
+{% block sidebar %}
+    <div class="col sidebar text-left d-none d-lg-block pt-3 bg-white border-left">
+      <div class="sidebar-section">
+        <div class="title">
+          <i class="fas fa-users mr-2"></i>Participants
+        </div>
+        <div class="body">
+          <ul>
+          {% for cm in convo.members %}
+            <li class="guild-recommendations-item">
+              <a href="{{ cm.user.permalink }}">
+                <div class="d-flex">
+                  <div>
+                    <img src="{{ cm.user.profile_url }}" class="profile-pic profile-pic-28 ml-1 mr-2">
+                  </div>
+                  <div class="my-auto">
+                    <div class="text-black font-weight-normal">@{{ cm.user.username }}</div>
+                  </div>
+                </div>
+              </a>
+            </li>
+          {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      {% include "footer.html" %}
+
+    </div>
+{% endblock %}
