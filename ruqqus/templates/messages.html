@@ -17,146 +17,7 @@
 
 
 
-{% macro single_message(m) %}
-<!---beginning of message {{ m.id }}--->
 
-
-<!--conditions under which a comment might be hidden-->
-{% if (m.is_blocking or m.is_blocked) and not m.distinguish_level and not (v and v.admin_level>=3) %}
-
-<div id="message-{{ m.base36id }}" class="comment rounded">
-    <span class="comment-collapse" onclick="collapse_comment('{{ m.base36id }}')"></span>
-    <div class="comment-body">
-        <div id="comment-{{ m.base36id }}-only" class="">
-            <div class="user-info">{% if standalone and m.over_18 %}<span class="badge badge-danger">NSFW</span> {% endif %}
-                [{% if m.is_banned %}Removed by administrators{% elif m.is_deleted %}Deleted by author{% elif m.is_blocking %}You are blocking @{{ m.author.username }}{% elif m.is_blocked %}This user has blocked you{% endif %}]
-            </div>
-         </div>
-    </div>
-</div>
-
-
-{% else %}
-
-<div id="message-{{ m.base36id }}" class="comment rounded{% if standalone and level==1 %} mt-0{% endif %}{% if m.is_offensive and not standalone and v and v.hide_offensive %} collapsed{% endif %}">
-
-
-  <span class="mr-2 d-block d-md-none"><a href="{{ m.author.permalink }}"><img src="{{ m.author.profile_url }}" class="profile-pic-25"></a></span>
-
-  <span class="comment-collapse d-md-block d-none" onclick="collapse_comment('{{ m.base36id }}')"></span>
-
-  <div class="comment-body">
-
-    <div id="comment-{{ m.base36id }}-only" class="{% if m.is_banned %} banned{% endif %}{% if m.is_deleted %} deleted{% endif %}">
-
-      <div class="user-info">{% if standalone and m.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span> {% endif %}{% if m.author.is_deleted %}[deleted account]{% else %}<a href="/@{{ m.author.username }}" class="user-name">{{ m.author.username }}</a>{% if m.title %}{{ m.title.rendered | safe }}{% endif %}{% endif %}
-        {% if m.distinguish_level %}
-        <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ruqqus Administrator, speaking officially"></i>
-        {% endif %}
-        <span class="time-stamp"> · {{ m.age_string }}</span>
-
-        <span class="comment-collapse d-md-none" onclick="collapse_comment('{{ m.base36id }}')"></span>
-
-      </div>
-
-      <div id="comment-text-{{ m.base36id }}" class="comment-text mb-0">
-        {{ m.body_html | safe }}
-      </div>
-
-       <div id="comment-{{ m.base36id }}-actions" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-        <ul class="list-inline text-right text-md-left">
-
-          </li>
-          <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ m.permalink  }}"{% if m.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-link"></i>Permalink</a>
-          </li>
-          <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ m.permalink | full_link}}"><i class="fas fa-copy"></i><span>Copy link</span></a>
-          </li>
-          <li class="list-inline-item d-none d-md-inline-block">
-            <div class="dropdown show">
-              <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">
-              <i class="fas fa-ellipsis-h text-small align-middle mr-0"></i>
-            </a>
-
-            <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
-
-              {% if v.admin_level>=1 and v.id==m.author_id %}
-                {% if m.distinguish_level %}
-
-                  <div class="dropdown-divider"></div>
-                  <h6 class="dropdown-header">Admin actions</h6>
-
-                  <a class="dropdown-item" id="distinguish-{{ m.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ m.base36id }}')"><i class="fas fa-id-badge fa-width-rem"></i>Undistinguish</a>
-                  {% else %}
-                  <a class="dropdown-item" id="distinguish-{{ m.base36id }}" href="javascript:void(0)" onclick="distinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ m.base36id }}')"><i class="fas fa-id-badge fa-width-rem"></i>Distinguish</a>
-
-                {% endif %}
-              {% endif %}
-
-            {% if v and not v.id==m.author_id %}
-            <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ m.author.username }}')"
-            ><i class="fas fa-user-slash text-danger fa-width-rem"></i>Block user</a>
-            {% endif %}
-
-            </div>
-          </div>
-        </li>
-        <li class="list-inline-item d-inline-block d-md-none">
-          <a href="#" data-toggle="modal" data-target="#actionsModal-{{ m.base36id }}" data-focus="false"><i class="fas fa-ellipsis-h"></i></a>
-        </li>
-      </ul>
-
-    </div>
-  </div>
-
-</div>
-
-
-<!-- Comment Actions Modal -->
-<div class="modal fade d-md-none" id="actionsModal-{{ m.base36id }}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title h6">More options</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true"><i class="far fa-times"></i></span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <ul class="list-group comment-actions">
-          <li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{{ m.permalink | full_link}}"><i class="fas fa-copy"></i><span>Copy Link</span></a></li>
-
-          <li class="list-group-item"><a href="{{ m.permalink }}"{% if m.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-link"></i>Permalink</a></li>
-
-          {% if v %}
-              {% if v.admin_level>=1 and v.id==m.author_id %}
-                  {% if m.distinguish_level %}
-
-                      <li class="list-group-item"><a class="d-block" id="distinguish-{{ m.base36id }}" href="javascript:void(0)" onclick="undistinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ m.base36id }}')"><i class="fas fa-id-badge"></i>Undistinguish</a></li>
-                  {% else %}
-                      <li class="list-group-item"><a class="d-block" id="distinguish-{{ m.base36id }}" href="javascript:void(0)" onclick="distinguish{% if v.admin_level>=4 %}Admin{% else %}Mod{% endif %}Comment('{{ m.base36id }}')"><i class="fas fa-id-badge"></i>Distinguish</a></li>
-
-                  {% endif %}
-              {% endif %}
-
-              {% if not v.id==m.author_id %}
-                  <li class="list-group-item">
-                    <a class="d-block" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ m.author.username }}')"><i class="fas fa-user-slash text-danger"></i>Block user</a>
-                  </li>
-              {% endif %}
-          {% endif %}
-
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-
-</div>
-
-{% endif %}
-
-{% endmacro %}
 
 
 {% block content %}
@@ -168,39 +29,39 @@
 <div class="post-info mt-5 mb-1">
   <span class="align-top font-weight-bold">{{ convo.subject or "Direct Message" }}</span>
 </div>
+  <div id="convo-messages-{{ convo.fullname }}">
   {% for m in convo.messages %}
-    {{ single_message(m) }}
+    {% include "dms.html" %}
   {% endfor %}
 
-  <div id="reply-to-{{ convo.base36id }}">
-    
-    <div id="comment-form-space-{{ convo.fullname }}" class="comment-write collapsed child">
-      <form id="reply-to-t5_{{ convo.base36id }}" action="/reply_message" method="post" class="input-group"> 
-        <input type="hidden" name="formkey" value="{{ v.formkey }}"> 
-        <input type="hidden" name="convo_id" value="{{ convo.id }}"> 
-        <textarea name="message" form="reply-to-t5_{{ convo.base36id }}" class="comment-box form-control rounded" id="reply-form-body-{{ convo.fullname }}" aria-label="With textarea" placeholder="Add your reply..." rows="3"></textarea> 
-        <div class="comment-format" id="comment-format-bar-{{ convo.base36id }}"> 
-          <small class="format pl-0">
-            <i class="fas fa-bold" aria-hidden="true" onclick="makeBold('reply-form-body-{{ convo.fullname }}')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i>
-          </small> 
-          <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('reply-form-body-{{ convo.fullname }}')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i>
-          </small> 
-          <small class="format">
-            <i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote('reply-form-body-{{ convo.fullname }}')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i>
-          </small> 
-          <small class="format d-none">
-            <i class="fas fa-link" aria-hidden="true"></i>
-          </small> 
-          <small class="format">
-            <span class="font-weight-bolder text-uppercase" onclick="getGif();commentForm('reply-form-body-{{ convo.fullname }}')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF">GIF</span>
-          </small> 
-          <a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{ convo.base36id }}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-          <a class="btn btn-primary text-white ml-2" onclick="post_comment('{{ convo.fullname }}');" href="javascript:void(0)">Comment</a> 
-        </div> 
-      </form> 
-    </div>
-
   </div>
+    
+  <div id="comment-form-space-{{ convo.fullname }}" class="comment-write collapsed child">
+    <form id="reply-to-{{ convo.fullname }}" action="/reply_message" method="post" class="input-group"> 
+      <input type="hidden" name="formkey" value="{{ v.formkey }}"> 
+      <input type="hidden" name="convo_id" value="{{ convo.id }}"> 
+      <textarea name="message" form="reply-to-{{ convo.fullname }}" class="comment-box form-control rounded" id="reply-text-{{ convo.fullname }}" aria-label="With textarea" placeholder="Add your reply..." rows="3"></textarea> 
+      <div class="comment-format" id="comment-format-bar-{{ convo.base36id }}"> 
+        <small class="format pl-0">
+          <i class="fas fa-bold" aria-hidden="true" onclick="makeBold('reply-form-body-{{ convo.fullname }}')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i>
+        </small> 
+        <small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('reply-form-body-{{ convo.fullname }}')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i>
+        </small> 
+        <small class="format">
+          <i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote('reply-form-body-{{ convo.fullname }}')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i>
+        </small> 
+        <small class="format d-none">
+          <i class="fas fa-link" aria-hidden="true"></i>
+        </small> 
+        <small class="format">
+          <span class="font-weight-bolder text-uppercase" onclick="getGif();commentForm('reply-form-body-{{ convo.fullname }}')" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF">GIF</span>
+        </small> 
+        <a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{ convo.base36id }}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
+        <a id="save-reply-to-{{ convo.fullname }}" class="btn btn-primary text-white ml-2" onclick="post_message('{{ convo.fullname }}');" href="javascript:void(0)">Reply</a> 
+      </div> 
+    </form> 
+  </div>
+
 
 <div class="toast" id="toast-comment-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
   <div class="toast-body bg-success text-center text-white">

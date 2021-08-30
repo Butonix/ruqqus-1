@@ -728,7 +728,7 @@ function switch_css() {
   if (css.href.includes("/assets/style/main.css")) {
     post("/settings/dark_mode/1",
       callback=function(){
-        css.href="/assets/style/main_dark.css?v=2.38.0";
+        css.href="/assets/style/main_dark.css?v=2.38.1";
         dswitch.classList.remove("fa-toggle-off");
         dswitch.classList.add("fa-toggle-on");
         dswitchmobile.classList.remove("fa-toggle-off");
@@ -741,7 +741,7 @@ function switch_css() {
   else {
     post("/settings/dark_mode/0",
       callback=function(){
-        css.href="/assets/style/main.css?v=2.38.0";
+        css.href="/assets/style/main.css?v=2.38.1";
         dswitch.classList.remove("fa-toggle-on");
         dswitch.classList.add("fa-toggle-off");
         dswitchmobile.classList.remove("fa-toggle-on");
@@ -2532,3 +2532,42 @@ function mod_post(url, type, id) {
         }
       xhr.send(form);
     }
+
+
+// DMs
+
+post_message=function(fullname){
+
+
+  var form = new FormData();
+
+  form.append('formkey', formkey());
+  form.append('convo_id', fullname);
+  form.append('body', document.getElementById('reply-text-'+fullname).value);
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("post", "/reply_message");
+  xhr.withCredentials=true;
+  xhr.onload=function(){
+    if (xhr.status==200) {
+      messages_list=document.getElementById('convo-messages-'+fullname);
+      messages_list.innerHTML = messages_list.innerHMTL + JSON.parse(xhr.response)["html"];
+      $('#toast-comment-success').toast('dispose');
+      $('#toast-comment-error').toast('dispose');
+      $('#toast-comment-success').toast('show');
+    }
+    else {
+      var commentError = document.getElementById("comment-error-text");
+      $('#toast-comment-success').toast('dispose');
+      $('#toast-comment-error').toast('dispose');
+      $('#toast-comment-error').toast('show');
+      commentError.textContent = JSON.parse(xhr.response)["error"];
+    }
+    document.getElementById('save-reply-to-'+fullname).classList.remove('disabled');
+  }
+  xhr.send(form)
+
+  document.getElementById('save-reply-to-'+fullname).classList.add('disabled');
+
+}
+
