@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship
 
 from .mix_ins import Stndrd, Age_times
 from ruqqus.helpers.base36 import *
+from ruqqus.helpers.lazy import lazy
 from ruqqus.__main__ import Base
 
 
@@ -32,8 +33,9 @@ class Conversation(Base, Stndrd, Age_times):
         return user.id in [x.user_id for x in self.members]
 
     @property
+    @lazy
     def members(self):
-        return sorted(self._memebers, key=lambda x: x.id)
+        return sorted(self._members, key=lambda x: x.id)
     
 
     @property
