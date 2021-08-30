@@ -147,11 +147,13 @@ def message_perma(v, convo_id, anything=None, message_id=None):
     if message_id:
 
         m_id = base36decode(message_id)
+        
+        message = [x for x in convo.messages if x.id==m_id]
 
-        if m_id not in [x.id for x in convo.messages]:
+        if not message:
             abort(404)
 
-        message=[x for x in convo.messages if x.id==m_id][0]
+        message=message[0]
 
     else:
         if request.path != convo.permalink:
