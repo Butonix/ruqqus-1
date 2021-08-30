@@ -34,8 +34,8 @@ class Conversation(Base, Stndrd, Age_times):
 
     @property
     @lazy
-    def members(self):
-        return sorted(self._members, key=lambda x: x.id)
+    def messages(self):
+        return sorted(self._messages, key=lambda x: x.id)
     
 
     @property
