@@ -1,4 +1,4 @@
-<div id="message-{{ m.base36id }}" class="comment rounded{% if standalone and level==1 %} mt-0{% endif %}{% if m.is_offensive and not standalone and v and v.hide_offensive %} collapsed{% endif %}">
+<div id="message-{{ m.base36id }}" class="comment rounded {% if m==linked_message %}bg-primary{% endif %}">
 
 
   <span class="mr-2 d-block d-md-none"><a href="{{ m.author.permalink }}"><img src="{{ m.author.profile_url }}" class="profile-pic-25"></a></span>
