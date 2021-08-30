@@ -109,7 +109,7 @@ def reply_to_message(v):
 
     with CustomRenderer() as renderer:
         message_md=renderer.render(mistletoe.Document(message))
-    message_html=sanitize(messge_md, linkgen=True)
+    message_html=sanitize(message_md, linkgen=True)
 
     new_message=Message(author_id=v.id,
         created_utc=int(time.time()),
