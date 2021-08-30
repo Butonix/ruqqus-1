@@ -120,7 +120,9 @@ def reply_to_message(v):
 
     g.db.add(new_message)
 
-    return jsonify({"html":body_html})
+    g.db.commit()
+
+    return jsonify({"html":render_template("dms.html", m=new_message)})
 
 
 '''
