@@ -143,13 +143,11 @@ def message_perma(v, convo_id, anything=None, message_id=None):
 
     convo=get_convo(convo_id, v=v)
 
-    messages = sorted(convo.messages, key=lambda x: x.id)
-
     if message_id:
 
         m_id = base36decode(message_id)
 
-        if message_id not in [x.id for x in messages]:
+        if message_id not in [x.id for x in convo.messages]:
             return redirect(convo.permalink)
 
         message=[x for x in messages if x.id==m_id][0]
