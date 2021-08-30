@@ -147,8 +147,8 @@ def message_perma(v, convo_id, anything=None, message_id=None):
 
         m_id = base36decode(message_id)
 
-        if message_id not in [x.id for x in convo.messages]:
-            return redirect(convo.permalink)
+        if m_id not in [x.id for x in convo.messages]:
+            abort(404)
 
         message=[x for x in messages if x.id==m_id][0]
 
@@ -157,7 +157,8 @@ def message_perma(v, convo_id, anything=None, message_id=None):
 
     return render_template("messages.html",
         v=v,
-        convo=convo
+        convo=convo,
+        linked_message=message
         )
 
 @app.get("/new_message")
