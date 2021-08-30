@@ -2552,7 +2552,7 @@ post_message=function(convo_id){
   xhr.onload=function(){
     if (xhr.status==200) {
       messages_list=document.getElementById('convo-messages-'+fullname);
-      messages_list.innerHTML = messages_list.innerHMTL + JSON.parse(xhr.response)["html"];
+      messages_list.innerHTML = messages_list.innerHTML + JSON.parse(xhr.response)["html"];
       $('#toast-comment-success').toast('dispose');
       $('#toast-comment-error').toast('dispose');
       $('#toast-comment-success').toast('show');
