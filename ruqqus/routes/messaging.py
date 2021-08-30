@@ -104,7 +104,7 @@ def reply_to_message(v):
 
     message=request.form.get("body")
 
-    if not body:
+    if not message:
         return jsonify({"error":"You need to actually write something!"}), 400
 
     with CustomRenderer() as renderer:
