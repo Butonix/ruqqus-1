@@ -135,7 +135,7 @@ def recompute():
         page = 1
         post_count = 0
         posts_exist=True
-        while i:
+        while posts_exist:
             posts = db.query(Submission
                 ).options(
                     lazyload('*')
@@ -174,7 +174,7 @@ def recompute():
             page += 1
             print_(f"re-scored {post_count} posts")
 
-        print_("Done with posts. Rescored {")
+        print_(f"Done with posts. Rescored {post_count} posts")
 
         db.commit()
 
