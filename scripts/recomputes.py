@@ -185,8 +185,7 @@ def recompute():
 
 
 
-if __name__=="__main__":
-    with daemon.DaemonContext():
-        recompute()
+#with daemon.DaemonContext():
+#    recompute()
 
-#recompute()
+recompute()
