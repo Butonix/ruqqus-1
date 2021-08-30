@@ -136,10 +136,10 @@ def reply_to_message(v):
 view conversation
 '''
 
-@app.get("/messages/<convo_id>")
-@app.get("/messages/<convo_id>/message/<message_id>")
+@app.get("/messages/<convo_id>/<anything>")
+@app.get("/messages/<convo_id>/<anything>/<message_id>")
 @is_not_banned
-def message_perma(v, convo_id, message_id=None):
+def message_perma(v, convo_id, anything=None, message_id=None):
 
     convo=get_convo(convo_id, v=v)
 
@@ -159,8 +159,7 @@ def message_perma(v, convo_id, message_id=None):
 
     return render_template("messages.html",
         v=v,
-        convo=convo,
-        message=message
+        convo=convo
         )
 
 @app.get("/new_message")

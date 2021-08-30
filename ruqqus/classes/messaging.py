@@ -27,7 +27,20 @@ class Conversation(Base, Stndrd, Age_times):
 
     @property
     def permalink(self):
-        return f"/messages/{self.base36id}"
+
+        output = self.subject.lower()
+
+        output = re.sub('&\w{2,3};', '', output)
+
+        output = [re.sub('\W', '', word) for word in output.split()]
+        output = [x for x in output if x][0:6]
+
+        output = '-'.join(output)
+
+        if not output:
+            output = '-'
+
+        return f"/messages/{self.base36id}/{output}"
 
     def has_member(self, user):
         return user.id in [x.user_id for x in self.members]

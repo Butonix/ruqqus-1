@@ -2565,7 +2565,7 @@ post_message=function(convo_id){
       commentError.textContent = JSON.parse(xhr.response)["error"];
     }
     document.getElementById('save-reply-to-'+fullname).classList.remove('disabled');
-    document.getElementById('reply-text-'+fullname).value=''
+    document.getElementById('reply-text-'+fullname).value='';
   }
   xhr.send(form)
 
