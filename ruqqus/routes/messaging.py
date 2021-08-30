@@ -59,6 +59,9 @@ def create_new_convo(v):
     g.db.flush()
 
     message=request.form.get("message")
+    if not message:
+        g.db.rollback()
+        return jsonify({"error":"You need to actually write something!"}), 400
 
     with CustomRenderer() as renderer:
         message_md=renderer.render(mistletoe.Document(message))
@@ -99,7 +102,10 @@ def reply_to_message(v):
 
     convo=get_convo(convo_id, v=v)
 
-    message=request.form.get("message")
+    message=request.form.get("body")
+
+    if not body:
+        return jsonify({"error":"You need to actually write something!"}), 400
 
     with CustomRenderer() as renderer:
         message_md=renderer.render(mistletoe.Document(message))

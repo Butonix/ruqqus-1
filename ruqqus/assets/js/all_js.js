@@ -2540,7 +2540,6 @@ post_message=function(convo_id){
 
   var fullname = 't6_' + convo_id
 
-
   var form = new FormData();
 
   form.append('formkey', formkey());
