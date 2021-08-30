@@ -38,7 +38,7 @@ from redis import BlockingConnectionPool, ConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.38.3"
+_version = "2.38.4"
 
 # def time_limit(s):
 #     def wrapper_maker(f):
