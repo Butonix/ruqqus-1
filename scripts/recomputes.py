@@ -93,7 +93,7 @@ def recompute():
         print_(f"Done with comment purge. Purged {x} comments")
 
         
-        if not cycle-1 % 10:
+        if not cycle-2 % 10:
             print_("beginning guild trend recompute")
             boards = db.query(Board).options(
                 lazyload('*')
