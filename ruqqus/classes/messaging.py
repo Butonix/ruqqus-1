@@ -79,7 +79,7 @@ class Message(Base, Stndrd, Age_times):
 
     @property
     def permalink(self):
-        return f"{self.conversation.permalink}/message/{self.base36id}"
+        return f"{self.conversation.permalink}/{self.base36id}"
 
     @property
     def convo_fullname(self):
