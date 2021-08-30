@@ -140,10 +140,13 @@ def recompute():
                 ).options(
                     lazyload('*')
                 ).filter_by(
-                    is_banned=False,
-                    deleted_utc=0
-                ).filter(
+                    Submission.is_banned==False,
+                    Submission.deleted_utc==0
                     Submission.created_utc > cutoff
+                ).join(
+                    Submission.board
+                ).filter(
+                    Board.is_banned==False
                 ).order_by(
                     Submission.id.asc()
                 ).offset(
