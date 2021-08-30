@@ -17,7 +17,7 @@ class Conversation(Base, Stndrd, Age_times):
     subject=Column(String(256))
 
     members=relationship("ConvoMember", lazy="joined")
-    messages=relationship("Message", lazy="joined")
+    _messages=relationship("Message", lazy="joined")
 
     
     def __repr__(self):
@@ -30,6 +30,11 @@ class Conversation(Base, Stndrd, Age_times):
 
     def has_member(self, user):
         return user.id in [x.user_id for x in self.members]
+
+    @property
+    def members(self):
+        return sorted(self._memebers, key=lambda x: x.id)
+    
 
     @property
     def fullname(self):
