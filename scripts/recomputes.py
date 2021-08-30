@@ -120,6 +120,7 @@ def recompute():
             db.add(board)
 
             if not i % 100:
+                print(f"re-ranked {i} boards")
                 db.commit()
 
         print_(f"Re-ranked {i} boards")
