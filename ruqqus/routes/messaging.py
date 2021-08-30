@@ -136,6 +136,7 @@ def reply_to_message(v):
 view conversation
 '''
 
+@app.get("/messages/<convo_id>")
 @app.get("/messages/<convo_id>/<anything>")
 @app.get("/messages/<convo_id>/<anything>/<message_id>")
 @is_not_banned
@@ -153,6 +154,9 @@ def message_perma(v, convo_id, anything=None, message_id=None):
         message=[x for x in messages if x.id==m_id][0]
 
     else:
+        if request.path != convo.permalink:
+            return redirect(convo.permalink)
+        
         message=None
 
     return render_template("messages.html",
