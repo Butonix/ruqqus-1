@@ -139,7 +139,7 @@ def recompute():
             posts = db.query(Submission
                 ).options(
                     lazyload('*')
-                ).filter_by(
+                ).filter(
                     Submission.is_banned==False,
                     Submission.deleted_utc==0,
                     Submission.created_utc > cutoff
