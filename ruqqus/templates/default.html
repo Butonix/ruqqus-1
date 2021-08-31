@@ -242,6 +242,7 @@
         </form>
       </div>
       {% if v %}
+      <a class="mobile-nav-icon d-block d-md-none" href="/new_message"><i class="fas fa-inbox-out align-middle text-gray-500"></i></a>
       <a class="mobile-nav-icon d-block d-md-none" href="/submit{{ '?guild='+b.name if b else '' }}"><i class="fas fa-feather-alt align-middle text-gray-500"></i></a>
       {% else %}
       <a class="mobile-nav-icon d-block d-md-none" href="/login"><i class="fas fa-feather-alt align-middle text-gray-500"></i></a>
@@ -389,6 +390,9 @@
         <i class="fas fa-circle text-danger position-absolute" style="left: 19px; top: 5px; font-size: 10px;"></i>
         {% endif %}
       </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/new_message"<i class="fas fa-inbox-out fa-fw mr-3"></i>Compose Message</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>My account</a>
