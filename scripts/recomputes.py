@@ -141,7 +141,7 @@ def recompute():
                     lazyload('*')
                 ).filter_by(
                     Submission.is_banned==False,
-                    Submission.deleted_utc==0
+                    Submission.deleted_utc==0,
                     Submission.created_utc > cutoff
                 ).join(
                     Submission.board
