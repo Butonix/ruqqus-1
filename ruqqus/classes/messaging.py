@@ -17,9 +17,12 @@ class Conversation(Base, Stndrd, Age_times):
     author_id=Column(Integer, ForeignKey("users.id"))
     created_utc=Column(Integer)
     subject=Column(String(256))
+    board_id=Column(Integer, ForeignKey("boards.id"))
 
     members=relationship("ConvoMember", lazy="joined")
     _messages=relationship("Message", lazy="joined")
+
+    board = relationship("Board")
 
     
     def __repr__(self):
