@@ -22,7 +22,7 @@ class Conversation(Base, Stndrd, Age_times):
     members=relationship("ConvoMember", lazy="joined")
     _messages=relationship("Message", lazy="joined")
 
-    board = relationship("Board")
+    board = relationship("Board", lazy="joined")
 
     
     def __repr__(self):
