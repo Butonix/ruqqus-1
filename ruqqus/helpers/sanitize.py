@@ -35,7 +35,37 @@ _allowed_tags = tags = ['b',
                         'tr',
                         'ul'
                         ]
-
+no_images = ['b',
+            'blockquote',
+            'br',
+            'code',
+            'del',
+            'em',
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
+            'hr',
+            'i',
+            'li',
+            'ol',
+            'p',
+            'pre',
+            'strong',
+            'sub',
+            'sup',
+            'table',
+            'tbody',
+            'th',
+            'thead',
+            'td',
+            'tr',
+            'ul',
+            'marquee',
+            'a',
+            'span']
 _allowed_tags_with_links = _allowed_tags + ["a",
                                             "img",
                                             'span'
@@ -132,9 +162,21 @@ _clean_bio = bleach.Cleaner(tags=_allowed_tags_in_bio,
                             )
 
 
-def sanitize(text, bio=False, linkgen=False):
+def sanitize(text, bio=False, linkgen=False, noimages=False):
 
     text = text.replace("\ufeff", "")
+    if noimages:
+        text = bleach.Cleaner(tags=no_images,
+                              attributes=_allowed_attributes,
+                              protocols=_allowed_protocols,
+                              styles=_allowed_styles,
+                              filters=[partial(LinkifyFilter,
+                                               skip_tags=["pre"],
+                                               parse_email=False,
+                                               callbacks=[a_modify]
+                                               )
+                                       ]
+                              ).clean(text)
 
     if linkgen:
         if bio:
