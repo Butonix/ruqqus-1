@@ -92,37 +92,41 @@ def recompute():
         db.commit()
         print_(f"Done with comment purge. Purged {x} comments")
 
-        print_("beginning guild trend recompute")
-        boards = db.query(Board).options(
-            lazyload('*')
-        ).filter_by(is_banned=False).filter(
-                or_(
-                    Board.id.in_(
-                        db.query(Board.id).order_by(Board.rank_trending.desc()).limit(1000)
-                    ),
-                    Board.id.in_(
-                        db.query(Board.id).order_by(Board.stored_subscriber_count.desc()).limit(1000)
+        
+        if not cycle-2 % 10:
+            print_("beginning guild trend recompute")
+            boards = db.query(Board).options(
+                lazyload('*')
+            ).filter_by(is_banned=False).filter(
+                    or_(
+                        Board.id.in_(
+                            db.query(Board.id).order_by(Board.rank_trending.desc()).limit(1000)
+                        ),
+                        Board.id.in_(
+                               db.query(Board.id).order_by(Board.stored_subscriber_count.desc()).limit(1000)
+                        )
                     )
-                )
-        )
-        #if cycle % 10:
-        #    print_("top 1000 boards only")
-        #    boards = boards.limit(1000)
-        #else:
-        #    print_("all boards")
-        board_count=boards.count()
-        print_(f"{board_count} boards to re-rank")
-        i = 0
-        for board in boards.all():
-            i += 1
-            board.rank_trending = board.trending_rank
-            board.stored_subscriber_count = board.subscriber_count
-            db.add(board)
+            )
+            #if cycle % 10:
+            #    print_("top 1000 boards only")
+            #    boards = boards.limit(1000)
+            #else:
+            #    print_("all boards")
+            board_count=boards.count()
+            print_(f"{board_count} boards to re-rank")
+            i = 0
+            for board in boards.all():
+                i += 1
+                board.rank_trending = board.trending_rank
+                board.stored_subscriber_count = board.subscriber_count
+                db.add(board)
 
-            if not i % 100:
-                db.commit()
+                if not i % 100:
+                    print(f"re-ranked {i} boards")
+                    db.commit()
 
-        print_(f"Re-ranked {i} boards")
+            print_(f"Re-ranked {i} boards")
+            db.commit()
 
 
         cutoff = now - (60 * 60 * 24 * 180)
@@ -131,15 +135,18 @@ def recompute():
         page = 1
         post_count = 0
         posts_exist=True
-        while i:
+        while posts_exist:
             posts = db.query(Submission
                 ).options(
                     lazyload('*')
-                ).filter_by(
-                    is_banned=False,
-                    deleted_utc=0
                 ).filter(
+                    Submission.is_banned==False,
+                    Submission.deleted_utc==0,
                     Submission.created_utc > cutoff
+                ).join(
+                    Submission.board
+                ).filter(
+                    Board.is_banned==False
                 ).order_by(
                     Submission.id.asc()
                 ).offset(
@@ -170,7 +177,7 @@ def recompute():
             page += 1
             print_(f"re-scored {post_count} posts")
 
-        print_("Done with posts. Rescored {")
+        print_(f"Done with posts. Rescored {post_count} posts")
 
         db.commit()
 
@@ -185,8 +192,7 @@ def recompute():
 
 
 
-if __name__=="__main__":
-    with daemon.DaemonContext():
-        recompute()
+with daemon.DaemonContext():
+    recompute()
 
 #recompute()
