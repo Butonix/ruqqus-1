@@ -31,19 +31,47 @@ def create_new_convo(v):
     if len(names)>10:
         return jsonify({"error": "You may only include 10 other users in this conversation."}), 400
 
-    for name in names:
-        user=get_user(name, v=v, graceful=True)
+    if names[0].startswith("+"):
+        #it's a modmail
 
-        if user.id==v.id:
-            return jsonify({"error":"You can't send messages to yourself."})
+        if len(names)>1:
+            return jsonify({"error":f"You can message one Guild or up to 10 users, but not both."})
 
-        if not user:
-            return jsonify({"error": f"No user named @{name}"}), 404
+        board = get_guild(names[0].lstrip('+'))
 
-        if v.any_block_exists(user):
-            return jsonify({"error": f"You can't send messages to {user.username}."}), 403
+        if board.is_banned:
+            return jsonify({"error":f"+{board.name} is banned and can't receive modmail."})
 
-        users.append(user)
+        for mod in board.moderators:
+            if not mod.perm_chat and not mod.perm_full:
+                continue
+
+            if mod.user.is_banned or mod.user.is_deleted:
+                continue
+
+            users.append(mod.user)
+
+        if not users:
+            return jsonify({"error":f"There are no Guildmasters of +{board.name} to receive your message"})
+
+        board_id=board.id
+
+
+    else:
+        for name in names:
+            user=get_user(name, v=v, graceful=True)
+
+            if user.id==v.id:
+                return jsonify({"error":"You can't send messages to yourself."})
+
+            if not user:
+                return jsonify({"error": f"No user named @{name}"}), 404
+
+            if v.any_block_exists(user):
+                return jsonify({"error": f"You can't send messages to {user.username}."}), 403
+
+            users.append(user)
+        board_id=0
 
 
     subject=sanitize(request.form.get("subject").lstrip().rstrip())
@@ -52,7 +80,8 @@ def create_new_convo(v):
 
     new_convo=Conversation(author_id=v.id,
         created_utc=int(time.time()),
-        subject=subject
+        subject=subject,
+        board_id=board_id
         )
 
     g.db.add(new_convo)
@@ -76,7 +105,7 @@ def create_new_convo(v):
 
     g.db.add(new_message)
 
-    for user in [v]+users:
+    for user in list(set([v]+users)):
         new_cm=ConvoMember(
             user_id=user.id,
             convo_id=new_convo.id
