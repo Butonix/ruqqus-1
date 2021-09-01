@@ -75,7 +75,7 @@ class ModRelationship(Base, Age_times):
             'perm_config':self.perm_full or self.perm_config,
             'perm_access':self.perm_full or self.perm_access,
             'perm_appearance':self.perm_full or self.perm_appearance,
-            'perm_full':self.perm_full
+            'perm_full':self.perm_full,
             'perm_mail': self.perm_full or self.perm_mail
         }
 
