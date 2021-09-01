@@ -43,7 +43,7 @@ def create_new_convo(v):
             return jsonify({"error":f"+{board.name} is banned and can't receive modmail."})
 
         for mod in board.moderators:
-            if not mod.perm_chat and not mod.perm_full:
+            if not mod.perm_mail and not mod.perm_full:
                 continue
 
             if mod.user.is_banned or mod.user.is_deleted:
