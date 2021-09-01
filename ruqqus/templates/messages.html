@@ -27,7 +27,7 @@
   <h1 class="h3 d-md-none">Inbox</h1>
 
 <div class="post-info mt-5 mb-1">
-  <span class="align-top font-weight-bold">{% if convo.board %}[<a href="{{ convo.board.permalink }}" target="_blank">+{{ convo.board.name }}</a>] {% endif %}{{ convo.subject or "Direct Message" }}</span>
+  <span class="align-top font-weight-bold">{% if convo.board %}<a href="{{ convo.board.permalink }}" class="d-inline-block"><img src="{{ convo.board.profile_url }}" class="profile-pic-20 mr-1">+{{ convo.board.name }}</a> | {% endif %}{{ convo.subject or "Direct Message" }}</span>
 </div>
   <div id="convo-messages-{{ convo.fullname }}">
   {% for m in convo.messages %}
