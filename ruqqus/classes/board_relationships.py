@@ -21,7 +21,7 @@ class ModRelationship(Base, Age_times):
     perm_config = Column(Boolean, default=False)
     perm_access = Column(Boolean, default=False)
     perm_full = Column(Boolean, default=False)
-    #perm_chat = Column(Boolean, default=False)
+    perm_mail = Column(Boolean, default=False)
     #permRules = Column(Boolean, default=False)
     #permTitles = Column(Boolean, default=False)
     #permLodges = Column(Boolean, default=False)
@@ -54,7 +54,7 @@ class ModRelationship(Base, Age_times):
     @property
     def permchangelist(self):
         output=[]
-        for p in ["full", "access","appearance","config","content"]:
+        for p in ["full", "access","appearance","config","content", "mail"]:
             if self.__dict__.get(f"perm_{p}"):
                 output.append(f"+{p}")
             else:
@@ -76,7 +76,7 @@ class ModRelationship(Base, Age_times):
             'perm_access':self.perm_full or self.perm_access,
             'perm_appearance':self.perm_full or self.perm_appearance,
             'perm_full':self.perm_full
-            #'perm_chat': self.perm_full or self.perm_chat
+            'perm_mail': self.perm_full or self.perm_mail
         }
 
 
