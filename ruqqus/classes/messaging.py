@@ -23,11 +23,35 @@ class Conversation(Base, Stndrd, Age_times):
     _messages=relationship("Message", lazy="joined")
 
     board = relationship("Board", lazy="joined")
+    author=relationship("User", lazy="joined")
 
     
     def __repr__(self):
 
         return f"<Conversation(id={self.base36id})>"
+
+    @property
+    def json_core(self):
+
+        data={
+            "id":self.base36id,
+            "subject":self.subject
+            "created_utc":self.created_utc,
+            "author_name": self.author.username if not self.author.is_deleted else None
+        }
+
+        if self.board:
+            data["guild"]=self.board.name
+
+    @property
+    def json(self):
+        data=self.json_core
+
+        data['messages'] = [x.json_core for x in self.messages]
+
+        return data
+    
+
 
     @property
     def permalink(self):
@@ -87,6 +111,31 @@ class Message(Base, Stndrd, Age_times):
     @property
     def convo_fullname(self):
         return f"t6_{base36encode(self.convo_id)}"
+
+
+    @property
+    def json_core(self):
+        data= {
+            "id": self.base36id,
+            "created_utc": self.created_utc,
+            "body": self.body,
+            "body_html": self.body_html,
+            "author_name": self.author.username if not self.author.is_deleted else None,
+            "conversation_id": self.conversation.base36id
+        }
+
+        if self.distinguish_level:
+            data["distinguished"]=True
+
+    @property
+    def json(self):
+        data=self.json_core
+
+        data["author"]=self.author.json_core
+
+        return data
+    
+    
     
 
 class ConvoMember(Base, Stndrd, Age_times):
