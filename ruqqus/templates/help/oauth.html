@@ -1,7 +1,7 @@
 {% extends "docs_default.html" %}
 
 {% block title %}
-<title>Ruqqus - OAuth2</title>
+<title>{{ 'SITE_NAME' | app_config }} - OAuth2</title>
 <meta name="description" content="Ruqqus OAuth2 Guide">
 {% endblock %}
 
@@ -15,7 +15,7 @@ This page explains how to obtain API application keys, how to prompt a user for 
 
 ## Step 1: Create your Application
 
-In the [apps tab of Ruqqus settings](/settings/apps), fill in and submit the form to request new API keys. You will need:
+In the [apps tab of settings](/settings/apps), fill in and submit the form to request new API keys. You will need:
 
 * an application name
 * a Redirect URI, or a comma-separated list of redirect URIs. May not use HTTP unless using localhost (use HTTPS instead).
