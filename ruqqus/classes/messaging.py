@@ -84,12 +84,11 @@ class Conversation(Base, Stndrd, Age_times):
 
         if self.board:
             users = [x.user for x in self.board.mods_list if x.perm_mail]
+            return list(set(users+self._members))
 
         else:
-            users=[]
-
-        return list(set(users+self._members))
-
+            return self._members
+            
     @property
     @lazy
     def messages(self):
