@@ -22,6 +22,7 @@ class ModRelationship(Base, Age_times):
     perm_access = Column(Boolean, default=False)
     perm_full = Column(Boolean, default=False)
     perm_mail = Column(Boolean, default=False)
+
     #permRules = Column(Boolean, default=False)
     #permTitles = Column(Boolean, default=False)
     #permLodges = Column(Boolean, default=False)
@@ -44,7 +45,7 @@ class ModRelationship(Base, Age_times):
             return "full"
 
         output=[]
-        for p in ["access","appearance", "config","content"]:
+        for p in ["access","appearance", "config","content", 'mail']:
             if self.__dict__[f"perm_{p}"]:
                 output.append(p)
 
