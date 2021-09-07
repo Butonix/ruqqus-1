@@ -894,7 +894,8 @@ def mod_invite_username(bid, board, v):
             perm_content=True,
             perm_appearance=True,
             perm_access=True,
-            perm_config=True
+            perm_config=True,
+            perm_mail=True
             )
 
         text = f"You have been invited to join +{board.name} as a guildmaster. You can [click here]({board.permalink}/mod/mods) and accept this invitation. Or, if you weren't expecting this, you can ignore it."

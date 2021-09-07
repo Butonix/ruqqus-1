@@ -19,7 +19,7 @@ class Conversation(Base, Stndrd, Age_times):
     subject=Column(String(256))
     board_id=Column(Integer, ForeignKey("boards.id"))
 
-    members=relationship("ConvoMember", lazy="joined")
+    _members=relationship("ConvoMember", lazy="joined")
     _messages=relationship("Message", lazy="joined")
 
     board = relationship("Board", lazy="joined")
@@ -71,7 +71,24 @@ class Conversation(Base, Stndrd, Age_times):
         return f"/messages/{self.base36id}/{output}"
 
     def has_member(self, user):
-        return user.id in [x.user_id for x in self.members]
+        if user.id in [x.user_id for x in self.members]:
+            return True
+
+        if self.board and self.board.has_mod(user, perm="mail"):
+            return True
+
+        return False
+
+    @property
+    def members(self):
+
+        if self.board:
+            users = [x.user for x in self.board.mods_list if x.perm_mail]
+
+        else:
+            users=[]
+
+        return list(set(users+self._members))
 
     @property
     @lazy
