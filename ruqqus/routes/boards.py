@@ -2655,7 +2655,7 @@ URL path parameters:
 @app.get("/api/v2/guilds/<guildname>")
 @auth_desired
 @api("read")
-def guild_info(guildname, v=None):
+def api_guild_info(guildname, v=None):
     """
 Get information about a guild.
 
