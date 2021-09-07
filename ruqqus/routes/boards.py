@@ -2650,3 +2650,17 @@ URL path parameters:
     g.db.commit()
 
     return jsonify({"message":f"Notifications {'en' if sub.get_notifs else 'dis'}abled for +{guild.name}"})
+
+
+@app.get("/api/v2/guilds/<guildname>")
+@auth_desired
+@api("read")
+def guild_info(guildname, v=None):
+    """
+Get information about a guild.
+
+URL path parameters:
+* `guildname` - A guild's name.
+"""
+
+    return jsonify(get_guild(guildname, v=v).json)
