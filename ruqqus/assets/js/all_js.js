@@ -2543,11 +2543,10 @@ post_message=function(convo_id){
   var form = new FormData();
 
   form.append('formkey', formkey());
-  form.append('convo_id', convo_id);
   form.append('body', document.getElementById('reply-text-'+fullname).value);
 
   var xhr = new XMLHttpRequest();
-  xhr.open("post", "/reply_message");
+  xhr.open("post", "/messages/"+convo_id+"/reply");
   xhr.withCredentials=true;
   xhr.onload=function(){
     if (xhr.status==200) {

@@ -109,7 +109,9 @@ Required form data:
         created_utc=new_convo.created_utc,
         body=message,
         body_html=message_html,
-        convo_id=new_convo.id
+        convo_id=new_convo.id,
+        creation_ip = request.remote_addr,
+        creation_region = request.headers.get("cf-ipcountry")
         )
 
     g.db.add(new_message)
