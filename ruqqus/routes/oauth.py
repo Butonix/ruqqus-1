@@ -14,11 +14,12 @@ from ruqqus.__main__ import app
 SCOPES = {
     'identity': 'See your username',
     'create': 'Save posts and comments as you',
-    'read': 'View Ruqqus as you, including private or restricted content',
+    'read': 'View Ruqqus as you, including content in private or restricted guilds.',
     'update': 'Edit your posts and comments',
     'delete': 'Delete your posts and comments',
     'vote': 'Cast votes as you',
-    'guildmaster': 'Perform Guildmaster actions'
+    'guildmaster': 'Perform Guildmaster actions',
+    'messages': 'Read and write direct messages.'
 }
 
 
@@ -57,9 +58,10 @@ def oauth_authorize_prompt(v):
         x in scopes for x in [
         "create", 
         "update",
-        "guildmaster"
+        "guildmaster",
+        "messages"
         ]) and "identity" not in scopes:
-        return jsonify({"oauth_error": f"`identity` scope required when requesting `create`, `update`, or `guildmaster` scope."}), 400
+        return jsonify({"oauth_error": f"`identity` scope required when requesting `create`, `update`, `guildmaster`, or `messages` scope."}), 400
 
     redirect_uri = request.args.get("redirect_uri")
     if not redirect_uri:
