@@ -202,6 +202,14 @@ view conversation
 @app.get("/api/v2/conversations/<cid>")
 def convo_perma(v, cid, anything=None):
 
+    """
+Get a conversation.
+
+URL path parameters:
+
+* `cid` - The conversation's base 36 ID.
+"""
+
     convo=get_convo(cid, v=v)
 
     return {
@@ -219,6 +227,15 @@ def convo_perma(v, cid, anything=None):
 @is_not_banned
 @api("messages", "read")
 def message_perma(v, cid, mid, anything=None):
+
+    """
+Get a message within a conversation.
+
+URL path parameters:
+
+* `cid` - The conversation's base 36 ID.
+* `mid` - The message's base 36 ID.
+"""
 
     convo=get_convo(cid, v=v)
 
@@ -244,6 +261,7 @@ def message_perma(v, cid, mid, anything=None):
 @app.get("/new_message")
 @is_not_banned
 def new_message(v):
+
 
     return render_template(
         "create_convo.html",
