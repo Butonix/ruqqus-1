@@ -58,6 +58,9 @@ Required form data:
             if mod.user.is_banned or mod.user.is_deleted:
                 continue
 
+            if mod.user==v:
+                continue
+
             users.append(mod.user)
 
         if not users:
