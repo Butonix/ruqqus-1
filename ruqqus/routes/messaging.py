@@ -17,13 +17,22 @@ from ruqqus.__main__ import app
 create new conversation
 '''
 
-@app.route("/new_message", methods=["POST"])
+@app.post("/new_message")
+@app.post("/api/v2/conversations")
 @is_not_banned
+@api("create", "messages")
 @validate_formkey
 def create_new_convo(v):
+    
+    """
+Create a new conversation thread.
 
+Required form data:
 
-    names=request.form.get("to_users")
+* `to` - Space-separated list of users to include. Alternatively, a single guildname beginning with a `+`.
+    """
+
+    names=request.form.get("to")
     names=names.split()
     names=[x.lstrip().rstrip().rstrip(',').lstrip('@') for x in names]
 
@@ -115,17 +124,33 @@ def create_new_convo(v):
     g.db.commit()
 
 
-    return redirect(new_convo.permalink)
+    return {"html": lambda:redirect(new_convo.permalink),
+            "api": lambda:jsonify(new_convo.json)
+           }
 
 
 '''
 reply to existing conversation
 '''
 
-@app.post("/reply_message")
+@app.post("/messages/<cid>/reply")
+@app.post("/api/v2/conversations/<cid>/reply")
 @is_not_banned
+@api("messages","create")
 @validate_formkey
 def reply_to_message(v):
+    
+    """
+Add a new message to an existing conversation.
+
+URL path parameters:
+
+* `cid` - The base 36 conversation ID
+
+Required form data:
+    
+`body` - The raw message text
+    """
 
     convo_id=request.form.get("convo_id")
 
@@ -151,31 +176,37 @@ def reply_to_message(v):
 
     g.db.commit()
 
-    return jsonify(
+    return {"html":lambda:jsonify(
         {"html":render_template(
             "dms.html", 
             m=new_message,
             v=v
             )
-        }
-        )
+        },
+        
+    ),
+            "api":lambda:jsonify(new_message.html)
+           }
 
 
 '''
 view conversation
 '''
 
-@app.get("/messages/<convo_id>")
-@app.get("/messages/<convo_id>/<anything>")
-@app.get("/messages/<convo_id>/<anything>/<message_id>")
+@app.get("/messages/<cid>")
+@app.get("/messages/<cid>/<anything>")
+@app.get("/messages/<cid>/<anything>/<mid>")
+@app.get("/api/v2/conversations/<cid>")
+@app.get("/api/v2/conversations/<cid>/messages/<mid>")
 @is_not_banned
-def message_perma(v, convo_id, anything=None, message_id=None):
+@api("messages", "read")
+def message_perma(v, cid, anything=None, mid=None):
 
-    convo=get_convo(convo_id, v=v)
+    convo=get_convo(cid, v=v)
 
     if message_id:
 
-        m_id = base36decode(message_id)
+        m_id = base36decode(mid)
         
         message = [x for x in convo.messages if x.id==m_id]
 
@@ -190,11 +221,13 @@ def message_perma(v, convo_id, anything=None, message_id=None):
         
         message=None
 
-    return render_template("messages.html",
+    return {"html":lambda:render_template("messages.html",
         v=v,
         convo=convo,
         linked_message=message
-        )
+        ),
+            "api":lambda:jsonify(message.json if mid else convo.json)
+           }
 
 @app.get("/new_message")
 @is_not_banned
