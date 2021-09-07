@@ -201,6 +201,8 @@ view conversation
 @app.get("/messages/<cid>")
 @app.get("/messages/<cid>/<anything>")
 @app.get("/api/v2/conversations/<cid>")
+@is_not_banned
+@api("messages")
 def convo_perma(v, cid, anything=None):
 
     """
@@ -226,7 +228,7 @@ URL path parameters:
 @app.get("/messages/<cid>/<anything>/<mid>")
 @app.get("/api/v2/conversations/<cid>/messages/<mid>")
 @is_not_banned
-@api("messages", "read")
+@api("messages")
 def message_perma(v, cid, mid, anything=None):
 
     """
