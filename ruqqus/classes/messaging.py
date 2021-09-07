@@ -96,6 +96,8 @@ class Message(Base, Stndrd, Age_times):
     body_html=Column(String(15000))
     distinguish_level=Column(Integer, default=0)
     convo_id=Column(Integer, ForeignKey("conversations.id"))
+    creation_ip = Column(String(64))
+    creation_region = Column(String(2))
 
     conversation=relationship("Conversation")
     author=relationship("User", lazy="joined")
