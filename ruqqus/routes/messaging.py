@@ -150,8 +150,9 @@ URL path parameters:
 * `cid` - The base 36 conversation ID
 
 Required form data:
-    
-`body` - The raw message text
+
+* `body` - The raw message text
+
     """
 
     convo_id=request.form.get("convo_id")
