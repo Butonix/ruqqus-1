@@ -1081,7 +1081,7 @@ def get_convo(convo_id, v):
     convo=g.db.query(
         Conversation
         ).options(
-        joinedload(Conversation.members).joinedload(ConversationMember.user)
+        joinedload(Conversation.members).joinedload(ConvoMember.user)
         ).filter_by(
         id=id
         ).first()
