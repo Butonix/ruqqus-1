@@ -1078,7 +1078,13 @@ def get_convo(convo_id, v):
 
     id=base36decode(convo_id) if isinstance(convo_id, str) else convo_id
     
-    convo=g.db.query(Conversation).filter_by(id=id).first()
+    convo=g.db.query(
+        Conversation
+        ).options(
+        joinedload(Conversation.members).joinedload(ConversationMember.user)
+        ).filter_by(
+        id=id
+        ).first()
 
     if not convo:
         abort(404)
