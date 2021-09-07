@@ -35,7 +35,7 @@ class Conversation(Base, Stndrd, Age_times):
 
         data={
             "id":self.base36id,
-            "subject":self.subject
+            "subject":self.subject,
             "created_utc":self.created_utc,
             "author_name": self.author.username if not self.author.is_deleted else None
         }
