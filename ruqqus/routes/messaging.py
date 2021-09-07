@@ -20,7 +20,7 @@ create new conversation
 @app.post("/new_message")
 @app.post("/api/v2/conversations")
 @is_not_banned
-@api("create", "messages")
+@api("messages")
 @validate_formkey
 def create_new_convo(v):
     
@@ -134,9 +134,9 @@ reply to existing conversation
 '''
 
 @app.post("/messages/<cid>/reply")
-@app.post("/api/v2/conversations/<cid>/reply")
+@app.post("/api/v2/conversations/<cid>/messages")
 @is_not_banned
-@api("messages","create")
+@api("messages")
 @validate_formkey
 def reply_to_message(v):
     
@@ -195,39 +195,47 @@ view conversation
 
 @app.get("/messages/<cid>")
 @app.get("/messages/<cid>/<anything>")
-@app.get("/messages/<cid>/<anything>/<mid>")
 @app.get("/api/v2/conversations/<cid>")
-@app.get("/api/v2/conversations/<cid>/messages/<mid>")
-@is_not_banned
-@api("messages", "read")
-def message_perma(v, cid, anything=None, mid=None):
+def convo_perma(v, cid, anything=None):
 
     convo=get_convo(cid, v=v)
 
-    if message_id:
+    return {
+        "html":lambda:render_template(
+            "messages.html",
+            v=v,
+            convo=convo
+            ),
+        "api":lambda:jsonify(convo.json)
+        }
 
-        m_id = base36decode(mid)
-        
-        message = [x for x in convo.messages if x.id==m_id]
 
-        if not message:
-            abort(404)
+@app.get("/messages/<cid>/<anything>/<mid>")
+@app.get("/api/v2/conversations/<cid>/messages/<mid>")
+@is_not_banned
+@api("messages", "read")
+def message_perma(v, cid, mid, anything=None):
 
-        message=message[0]
+    convo=get_convo(cid, v=v)
 
-    else:
-        if request.path != convo.permalink:
-            return redirect(convo.permalink)
-        
-        message=None
+    m_id = base36decode(mid)
+    
+    message = [x for x in convo.messages if x.id==m_id]
 
-    return {"html":lambda:render_template("messages.html",
-        v=v,
-        convo=convo,
-        linked_message=message
-        ),
-            "api":lambda:jsonify(message.json if mid else convo.json)
-           }
+    if not message:
+        abort(404)
+
+    message=message[0]
+
+    return {
+        "html":lambda:render_template(
+            "messages.html",
+            v=v,
+            convo=convo,
+            linked_message=message
+            ),
+        "api":lambda:jsonify(message.json)
+        }
 
 @app.get("/new_message")
 @is_not_banned
