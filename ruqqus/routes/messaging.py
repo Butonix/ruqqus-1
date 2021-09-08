@@ -143,7 +143,7 @@ reply to existing conversation
 @is_not_banned
 @api("messages")
 @validate_formkey
-def reply_to_message(v):
+def reply_to_message(cid, v):
     
     """
 Add a new message to an existing conversation.
@@ -158,9 +158,7 @@ Required form data:
 
     """
 
-    convo_id=request.form.get("convo_id")
-
-    convo=get_convo(convo_id, v=v)
+    convo=get_convo(cid, v=v)
 
     message=request.form.get("body")
 
