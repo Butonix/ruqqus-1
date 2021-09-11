@@ -102,9 +102,26 @@ app.config['SQLALCHEMY_READ_URIS'] = [
 ]
 
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
-app.config["SERVER_NAME"] = environ.get(
-    "domain", environ.get(
-        "SERVER_NAME", "")).lstrip().rstrip()
+
+SERVER_NAME = environ.get("SERVER_NAME", environ.get("domain")).lstrip().rstrip()
+ONION_NAME = environ.get("ONION_NAME", "")
+
+class DomainMatcher(str):
+
+    def __init__(self, *names):
+
+        self.names = list(names)
+
+    def __eq__(self, other):
+
+        return other in self.names
+
+app.config["SERVER_NAME"] = DomainMatcher(SERVER_NAME, ONION_NAME)
+
+#environ.get(
+#    "domain", environ.get(
+#        "SERVER_NAME", "")).lstrip().rstrip()
+
 
 app.config["SHORT_DOMAIN"]=environ.get("SHORT_DOMAIN","").lstrip().rstrip()
 app.config["SESSION_COOKIE_NAME"] = "session_ruqqus"
