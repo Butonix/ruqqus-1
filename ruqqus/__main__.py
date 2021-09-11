@@ -116,7 +116,7 @@ class DomainMatcher(str):
 
         return other in self.names
 
-app.config["SERVER_NAME"] = DomainMatcher(SERVER_NAME, ONION_NAME)
+app.config["SERVER_NAME"] = SERVER_NAME #DomainMatcher(SERVER_NAME, ONION_NAME)
 
 #environ.get(
 #    "domain", environ.get(
