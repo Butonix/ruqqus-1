@@ -2,7 +2,13 @@ server {
     
     server_name dev.ruqqus.com chat.ruqqus.com ruqqus.com ruqq.us c.ruqq.us ruqqus.org ruqqus.win *.amazonaws.com wuwmc6mzsn5kdrfdynrlil3a3oasab5zrcmee3gdodh2rhowidaz6jad.onion;
 
-    proxy_set_header Host $host;
+    if ($host = *.onion) {
+        proxy_set_header Host ruqqus.com;
+    }
+    else {
+        proxy_set_header Host $host;
+    }
+
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
