@@ -62,6 +62,8 @@ server {
     server_name wuwmc6mzsn5kdrfdynrlil3a3oasab5zrcmee3gdodh2rhowidaz6jad.onion;
     listen      9000;
     listen [::]:9000;
+    listen      9050;
+    listen [::]:9050;
     proxy_set_header Host ruqqus.com;
     client_max_body_size 64m;
     location / {
