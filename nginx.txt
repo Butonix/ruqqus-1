@@ -12,8 +12,8 @@ server {
     listen [::]:80;
     listen      443 ssl;
     listen [::]:443 ssl;
-    listen      8181;
-    listen [::]:8181;
+    listen      9000;
+    listen [::]:9000;
 
     ssl_certificate /etc/letsencrypt/live/aws.ruqqus.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/aws.ruqqus.com/privkey.pem;
