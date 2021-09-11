@@ -11,7 +11,7 @@ def send_notification(user, text):
     with CustomRenderer() as renderer:
         text_html = renderer.render(mistletoe.Document(text))
 
-    text_html = sanitize(text_html, linkgen=True)
+    text_html = sanitize(text_html, linkgen=True)#, noimages=True)
 
     new_comment = Comment(author_id=1,
                           # body=text,

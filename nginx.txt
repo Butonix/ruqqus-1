@@ -1,6 +1,6 @@
 server {
     
-    server_name dev.ruqqus.com chat.ruqqus.com ruqqus.com ruqq.us c.ruqq.us ruqqus.org ruqqus.win *.amazonaws.com cc5j4aqdgznut4ns.onion;
+    server_name dev.ruqqus.com chat.ruqqus.com ruqqus.com ruqq.us c.ruqq.us ruqqus.org ruqqus.win *.amazonaws.com wuwmc6mzsn5kdrfdynrlil3a3oasab5zrcmee3gdodh2rhowidaz6jad.onion;
 
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
@@ -12,6 +12,8 @@ server {
     listen [::]:80;
     listen      443 ssl;
     listen [::]:443 ssl;
+    listen      8181;
+    listen [::]:8181;
 
     ssl_certificate /etc/letsencrypt/live/aws.ruqqus.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/aws.ruqqus.com/privkey.pem;
@@ -48,6 +50,7 @@ server {
     location / {
         proxy_pass http://127.0.0.1:5000;
         add_header Permissions-Policy interest-cohort=();
+        add_header Onion-Location "https://wuwmc6mzsn5kdrfdynrlil3a3oasab5zrcmee3gdodh2rhowidaz6jad.onion$request_uri" always;
     }
 
     error_page 502 =500 /error_page/503.html;
