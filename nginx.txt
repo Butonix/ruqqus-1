@@ -2,7 +2,7 @@ server {
     
     server_name dev.ruqqus.com chat.ruqqus.com ruqqus.com ruqq.us c.ruqq.us ruqqus.org ruqqus.win *.amazonaws.com wuwmc6mzsn5kdrfdynrlil3a3oasab5zrcmee3gdodh2rhowidaz6jad.onion;
 
-    if ($host = *.onion) {
+    if ($host = wuwmc6mzsn5kdrfdynrlil3a3oasab5zrcmee3gdodh2rhowidaz6jad.onion) {
         proxy_set_header Host ruqqus.com;
     }
     else {
