@@ -27,10 +27,17 @@ from .front import frontlist
 from flask import *
 from ruqqus.__main__ import app, limiter, cache, db_session
 
-BAN_REASONS = ['',
+
+BAN_REASONS = ['',  #placeholder
                "URL shorteners are not permitted.",
-               "Pornographic material is not permitted.",  # defunct
-               "Copyright infringement is not permitted."
+               "",  # placeholder, formerly "no porn"
+               "Copyright infringement is not permitted.",
+               "Digitally malicious content is not permitted.",
+               "Spam",
+               "No doxxing",
+               "Sexualizing minors",
+               'User safety - This site is a Ruqqus clone which is still displaying "Ruqqus" as its site name.',
+               "Engaging in or planning unlawful activity"
                ]
 
 BUCKET = app.config.get("S3_BUCKET", "i.ruqqus.com")
@@ -459,17 +466,17 @@ Optional file data:
             elif domain_obj.reason==7:
                 v.ban(reason="Sexualizing minors")
 
-            return {"html": lambda: (render_template("submit.html",
-                                                     v=v,
-                                                     error=BAN_REASONS[domain_obj.reason],
-                                                     title=title,
-                                                     url=url,
-                                                     body=request.form.get(
-                                                         "body", ""),
-                                                     b=board
-                                                     ), 400),
-                    "api": lambda: ({"error": BAN_REASONS[domain_obj.reason]}, 400)
-                    }
+            # return {"html": lambda: (render_template("submit.html",
+            #                                          v=v,
+            #                                          error=BAN_REASONS[domain_obj.reason],
+            #                                          title=title,
+            #                                          url=url,
+            #                                          body=request.form.get(
+            #                                              "body", ""),
+            #                                          b=board
+            #                                          ), 400),
+            #         "api": lambda: ({"error": BAN_REASONS[domain_obj.reason]}, 400)
+            #         }
 
         # check for embeds
         if domain_obj.embed_function:
