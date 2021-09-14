@@ -104,7 +104,7 @@ def notifications_posts(v):
 
 @cache.memoize(timeout=900)
 def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
-              t=None, ids_only=True, categories=[], filter_words='', **kwargs):
+              t=None, categories=[], filter_words='', **kwargs):
 
     # cutoff=int(time.time())-(60*60*24*30)
 
@@ -270,12 +270,8 @@ def frontlist(v=None, sort=None, page=1, nsfw=False, nsfl=False,
     else:
         abort(400)
 
-    if ids_only:
-        posts = [x.id for x in posts.offset(25 * (page - 1)).limit(26).all()]
-        return posts
-    else:
-        return [x for x in posts.offset(25 * (page - 1)).limit(25).all()]
-
+    return [x.id for x in posts.offset(25 * (page - 1)).limit(26).all()]
+    
 
 @app.route("/", methods=["GET"])
 @app.route("/api/v1/front/listing", methods=["GET"])
