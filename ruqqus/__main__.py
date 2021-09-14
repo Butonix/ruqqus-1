@@ -306,6 +306,7 @@ r=redis.Redis(
     host=app.config["CACHE_REDIS_URL"][8:], 
     decode_responses=True, 
     ssl_cert_reqs=None,
+    connection_pool = redispool
     ) if app.config["CACHE_REDIS_URL"] else None
 
 
