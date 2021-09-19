@@ -1153,6 +1153,9 @@ def admin_siege_guild(v):
     #check mods above user
     mods=[]
     for x in guild.mods_list:
+        if (x.is_banned and not x.unban_utc) or x.is_deleted:
+            continue
+            
         if x.user_id==user.id:
             break
         mods.append(x)
