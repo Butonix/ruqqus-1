@@ -1165,7 +1165,15 @@ def admin_siege_guild(v):
         cutoff = now - 60 * 60 * 24 * 60
 
         # check mod actions
-        ma = g.db.query(ModAction).filter(
+        ma = g.db.query(ModAction).join(ModAction.user).filter(
+            User.is_deleted==False,
+            or_(
+                User.is_banned==0,
+                and_(
+                    User.is_banned>0,
+                    User.unban_utc>0
+                    )
+                ),
             or_(
                 #option 1: mod action by user
                 and_(
@@ -1181,6 +1189,7 @@ def admin_siege_guild(v):
                     )
                 ),
                 ModAction.created_utc > cutoff
+            ).options(contains_eager(ModAction.User)
             ).first()
         if ma:
             return render_template("message.html",
