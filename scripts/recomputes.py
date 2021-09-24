@@ -192,9 +192,9 @@ def recompute():
 
 
 
-with daemon.DaemonContext():
-    recompute()
+#with daemon.DaemonContext():
+#    recompute()
 
 #gevent.spawn()
 
-#recompute()
+recompute()
