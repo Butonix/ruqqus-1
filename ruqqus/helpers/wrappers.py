@@ -467,6 +467,9 @@ def api(*scopes, no_ban=False):
                 if not v:
                     return jsonify({"error": f"401 Not Authorized. You must log in."}), 401
 
+                if v.is_suspended:
+                    return jsonify({"error": f"403 Forbidden. You are banned."}), 403
+
                 if request.method != "GET" and not client:
                     return jsonify({"error": f"401 Not Authorized. You must use an OAuth access token to create or edit content."}), 401
                     
