@@ -444,23 +444,32 @@ def api(*scopes, no_ban=False):
                 v = kwargs.get('v')
                 client = kwargs.get('c')
 
-                if not v or not client:
-                    return jsonify(
-                        {"error": "401 Not Authorized. Invalid or Expired Token"}), 401
+                if client:
 
-                kwargs.pop('c')
+                    if not v or not client:
+                        return jsonify(
+                            {"error": "401 Not Authorized. Invalid or Expired Token"}), 401
 
-                # validate app associated with token
-                if client.application.is_banned:
-                    return jsonify({"error": f"403 Forbidden. The application `{client.application.app_name}` is suspended."}), 403
+                    kwargs.pop('c')
 
-                # validate correct scopes for request
-                for scope in scopes:
-                    if not client.__dict__.get(f"scope_{scope}"):
-                        return jsonify({"error": f"401 Not Authorized. Scope `{scope}` is required."}), 403
+                    # validate app associated with token
+                    if client.application.is_banned:
+                        return jsonify({"error": f"403 Forbidden. The application `{client.application.app_name}` is suspended."}), 403
 
-                if (request.method == "POST" or no_ban) and client.user.is_suspended:
-                    return jsonify({"error": f"403 Forbidden. The user account is suspended."}), 403
+                    # validate correct scopes for request
+                    for scope in scopes:
+                        if not client.__dict__.get(f"scope_{scope}"):
+                            return jsonify({"error": f"401 Not Authorized. Scope `{scope}` is required."}), 403
+
+                    if (request.method == "POST" or no_ban) and v.is_suspended:
+                        return jsonify({"error": f"403 Forbidden. The user account is suspended."}), 403
+
+                if not v:
+                    return jsonify({"error": f"401 Not Authorized. You must log in."}), 401
+
+                if request.method != "GET" and not client:
+                    return jsonify({"error": f"401 Not Authorized. You must use an OAuth access token to create or edit content."}), 401
+                    
 
                 result = f(*args, **kwargs)
 
