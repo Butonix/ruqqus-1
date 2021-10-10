@@ -123,7 +123,7 @@
 <!-- Guildmaster Approve User Modal -->
 <div class="modal fade" id="guildmasterApproveModal" tabindex="-1" role="dialog" aria-labelledby="guildmasterApproveModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
-		<form action="/mod/approve/{{ b.base36id }}" id="approve-form" method="post" onsubmit="return false;">
+		<form action="/mod/approve/{{ b.name }}" id="approve-form" method="post" onsubmit="return false;">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Approve user for +{{ b.name }}</h5>
