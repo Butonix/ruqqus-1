@@ -101,6 +101,9 @@ URL path parameters:
                 "api":lambda:(jsonify({"error":"Must be 18+ to view"}), 451)
                 }
 
+    if request.path.startswith("/api/v2"):
+        post.tree_comments()
+
 
     return {
         "html":lambda:post.rendered_page(v=v),
