@@ -300,7 +300,7 @@ class User(Base, Stndrd, Age_times):
             posts = posts.filter(
                 Submission.author_id.notin_(blocking) #,
                 #Submission.author_id.notin_(blocked)
-            )
+            ).join(Submission.board).filter(Board.is_banned==False)
 
         if filter_words:
             posts=posts.join(Submission.submission_aux)
