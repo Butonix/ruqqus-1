@@ -102,9 +102,10 @@ URL path parameters:
                 }
 
 
+
     return {
         "html":lambda:post.rendered_page(v=v),
-        "api":lambda:jsonify({"data":[x.json for x in post.replies]})
+        "api":lambda:jsonify(post.json)
         }
 
 
