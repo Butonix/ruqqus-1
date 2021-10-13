@@ -1,6 +1,6 @@
 server {
     
-    server_name dev.ruqqus.com chat.ruqqus.com ruqqus.com ruqq.us c.ruqq.us ruqqus.org ruqqus.win *.amazonaws.com wuwmc6mzsn5kdrfdynrlil3a3oasab5zrcmee3gdodh2rhowidaz6jad.onion;
+    server_name dev.ruqqus.com chat.ruqqus.com ruqqus.com ruqq.us c.ruqq.us ruqqus.org ruqqus.win *.amazonaws.com;
 
     proxy_set_header Host $host;
 
